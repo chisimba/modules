@@ -411,6 +411,36 @@ class dbThesis extends dbtable
     }
     
     /**
+    * Method to get the metadata for a given set of resources.
+    *
+    * @access public
+    * @param array $list The list of resource id's
+    * @return array The resources metadata
+    */
+    public function getFromList($list)
+    {
+        $sql = "SELECT dc_title, dc_creator, dc_subject, dc_identifier, thesis.id AS metaid, 
+            REPLACE(REPLACE(REPLACE(REPLACE(LOWER(dc_title), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort  
+            FROM {$this->table} AS thesis, {$this->dcTable} AS dc 
+            WHERE dc.id = thesis.dcmetaid ";
+            
+        // Add the list of id's to the sql
+        if(!empty($list)){
+            $listSql = '';
+            foreach($list as $id){
+                $listSql .= !empty($listSql) ? 'OR ' : '';
+                $listSql .= "thesis.id = '{$id}' ";
+            }
+            $sql .= "AND ({$listSql}) ";
+        }   
+            
+        $sql .= 'ORDER BY sort';
+            
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    
+    /**
     * Method to execute a search using a given filter - used by external searches.
     *
     * @access public
@@ -418,7 +448,7 @@ class dbThesis extends dbtable
     * @param string $limit The limit on the results returned.
     * @return array The result set and count
     */
-    function search2($keyword)
+    public function search2($keyword)
     {
         $sqlNorm = 'SELECT thesis.id AS id, dc.*, thesis.* ';
         $sqlCount = 'SELECT count(*) AS cnt ';

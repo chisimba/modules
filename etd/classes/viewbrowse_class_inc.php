@@ -88,6 +88,11 @@ class viewBrowse extends object
     private $showPrint = FALSE;
 
     /**
+    * @var string Property used to display a button for adding results to an e-shelf.
+    */
+    private $eShelf = FALSE;
+
+    /**
     * @var string Property used to add extra content to the page
     */
     private $extra = NULL;
@@ -164,14 +169,15 @@ class viewBrowse extends object
     {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
-        $this->objHeading = $this->getObject('htmlheading', 'htmlelements');
+        
         $this->objAlphabet = $this->getObject( 'alphabet', 'navigation' );
         $this->objIcon = $this->getObject( 'getIcon', 'htmlelements' );
-        $this->loadClass( 'htmltable', 'htmlelements' );
-        $this->objSortTable = $this->getObject( 'sorttable', 'htmlelements' );
 
+        $this->loadClass('htmlheading', 'htmlelements');
+        $this->loadClass( 'htmltable', 'htmlelements' );
         $this->loadClass('link', 'htmlelements');
         $this->loadClass( 'button', 'htmlelements' );
+        $this->loadClass('radio', 'htmlelements');
         $this->loadClass( 'textinput', 'htmlelements');
         $this->loadClass( 'label', 'htmlelements' );
         $this->loadClass( 'form', 'htmlelements' );
@@ -336,11 +342,18 @@ class viewBrowse extends object
 
     /**
     * Add a print button and email button to the page content.
-    * @param string $footer A print button and email button to add to the page below the search results.
     */
     public function showPrint()
     {
         $this->showPrint = TRUE;
+    }
+
+    /**
+    * Add a button for adding results to a virtual shelf
+    */
+    public function showEShelf()
+    {
+        $this->eShelf = TRUE;
     }
 
     /**
@@ -449,7 +462,7 @@ class viewBrowse extends object
         $addIcon = $this->objIcon->getAddIcon( $this->uri(array('action'=>'add'.$this->_browseType, 'joinId'=>$this->join), $this->module) );
 
         // Show Page Title
-        $pgTitle = $this->objHeading;
+        $pgTitle = new htmlheading();
         $pgTitle->type = 1;
         $pgTitle->str = $pageTitle.'&nbsp;';
         $pgTitle->str.= $this->allowManage ? $addIcon : NULL;
@@ -474,7 +487,7 @@ class viewBrowse extends object
         // Tabulate the results
         $str .= $this->getBrowse($action, $valueSearchForLetter);
 
-        // Print / email buttons
+        // Print / email buttons / e-shelf
         if($this->showPrint){
             // print button
             $lbPrint = $this->objLanguage->languageText('phrase_printfriendly');
@@ -500,6 +513,40 @@ class viewBrowse extends object
             $objLink->link = $objButton->show();*/
 
             $btns = $btnPrint.'&nbsp;&nbsp;&nbsp;'.$btnEmail;
+            
+            if($this->eShelf){
+                
+                $objDate = $this->getObject('dateandtime', 'utilities');
+                
+                $lbEShelf = $this->objLanguage->languageText('mod_etd_addtoeshelf', 'etd');
+                $lbConfirm = $this->objLanguage->languageText('mod_etd_confirmaddeshelf', 'etd');
+                
+                // Add results to an e-shelf
+                $urlArr = array('action' => 'saveeshelf', 'searchForString' => $this->findString, 'searchForLetter' => $this->findLetter, 'displayStart' => $this->displayStart, 'displayLimit' => $this->displayLimit, 'joinId' => $this->join, 'extraFilter' => $this->extraFilter);
+    
+                $onclick = "javascript: addToShelf();";
+                $objButton = new button('eshelf', $lbEShelf);
+                $objButton->setOnClick($onclick);
+    
+                $btns .= '&nbsp;&nbsp;&nbsp;'.$objButton->show();
+                
+                $this->objIcon->setIcon('loading_bar');
+                //$this->objIcon->extra = 'style="width: 100%; height: 20px"';
+                //$this->objIcon->title = $sendingLabel;
+                $loadIcon = $this->objIcon->show();
+                
+                $objLayer = new layer();
+                $objLayer->display = 'none';
+                $objLayer->str = $loadIcon;
+                $objLayer->id = 'loadIcon';
+                $str .= $objLayer->show();
+                
+                $objLayer = new layer();
+                $objLayer->display = 'none';
+                $objLayer->str = $lbConfirm.' '.$objDate->formatDate(date('Y-m-d H:m'));
+                $objLayer->id = 'confirm';
+                $str .= $objLayer->show();
+            }
 
             $objForm = new form('emailpage', $url);
             $objForm->addToForm($btns);
@@ -622,7 +669,7 @@ class viewBrowse extends object
 //        if( $valueSearchFor )
 //            $topText = $this->objLanguage->code2Txt('mod_etd_hdrSearchByString', 'etd', 
 //                array('TYPE'=>$setType, 'STRING'=>$valueSearchFor));
-        $topHeading = $this->objHeading;
+        $topHeading = new htmlheading();
         $topHeading->type = 4;
         $topHeading->str = $topText;
         $topNav['center'] = $topHeading->show();
@@ -680,7 +727,6 @@ class viewBrowse extends object
         $tblResults = new htmltable();
         $tblResults->width = '100%';
         $tblResults->cellpadding = 5;
-        //$tblResults->cellspacing = 2;
 
         $oddEven = 'even';
         if(empty($this->data)) {
@@ -699,6 +745,9 @@ class viewBrowse extends object
 
             $tblResults->row_attributes = 'name="row_'.$tblResults->id.'"';
             $tblResults->startRow();
+            
+                $this->eShelf ? $tblResults->addCell('', '2%', '','','heading') : '';
+            
                 $colWidth = '';
                 if($this->numCols <= 3){
                     $colWidth = '40%';
@@ -710,12 +759,21 @@ class viewBrowse extends object
                 $this->allowManage ? $tblResults->addCell('', '8%', '','','heading') : '';
             $tblResults->endRow();
 
+            $num = 1;
             foreach( $this->data as $row ) {
                 $tblResults->row_attributes = "name='row_".$tblResults->id."' onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className=''; \" class =''";
                 $tblResults->startRow();
                     $id = '';
                     if(isset($row['id'])){
                         $id = $row['id'];
+                    }
+
+                    // Check box for e-shelf
+                    if($this->eShelf){
+                        $objCheck = new checkbox('articles');
+                        $objCheck->setId('article'.$num++);
+                        $objCheck->setValue($id);
+                        $tblResults->addCell($objCheck->show());
                     }
 
                     // View item
@@ -744,10 +802,71 @@ class viewBrowse extends object
                     // Managed items
                     $this->allowManage ? $tblResults->addCell($this->getIcons($id, $row['col1'])) : NULL;
                 $tblResults->endRow();
-                $oddEven = $oddEven=='odd' ? 'even' : 'odd';
+                $oddEven = ($oddEven == 'odd') ? 'even' : 'odd';
             }
         }
-        return $tblResults->show();
+        
+        if($this->eShelf){
+            $objForm = new form('addeshelf', $this->uri(array('action' => 'addeshelf')));
+            $objForm->addToForm($tblResults->show());
+            $return = $objForm->show();
+        }else{
+            $return = $tblResults->show();
+        }
+        
+        $this->showJavascript();
+        return $return;
+    }
+    
+    /**
+    * Method to get the javascript needed for the class
+    *
+    * @access private
+    * @return void
+    */
+    private function showJavascript()
+    {
+        $url = $this->uri(array('action' => 'addeshelf'), $this->module);
+        /*
+        , 'searchForString' => $this->findString, 'searchForLetter' => $this->findLetter, 'displayStart' => $this->displayStart, 'displayLimit' => $this->displayLimit, 'joinId' => $this->join, 'extraFilter' => $this->extraFilter), $this->module);
+        */
+        
+        $javascript = "<script type=\"text/javascript\">
+        
+                function addToShelf()
+                {
+                    var a = $('loadIcon');
+                    var el1 = document.getElementsByName('articles');
+                    var len = el1.length;
+                    var num = 0;
+                    var arts = '';
+                    
+                    a.show();
+                    
+                    for(num = 0; num != len; num++){
+                        if(el1[num].checked == true){
+                            arts = arts+el1[num].value+'|';
+                        }
+                    }
+                    
+                    var url = '{$url}';
+                    var pars = 'articles='+arts;
+                    var eshelfAjax = new Ajax.Request(url, {method: 'post', parameters: pars, onSuccess: clearIcon()});
+                }
+                
+                function clearIcon()
+                {
+                    var a = $('loadIcon');
+                    var b = $('confirm');
+                    a.hide();
+                    b.show();
+                    
+                    setTimeout(\"var b = $('confirm'); b.hide()\", 15000);
+                }
+        
+            </script>";
+        
+        $this->appendArrayVar('headerParams', $javascript);
     }
 
     /**

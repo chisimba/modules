@@ -65,7 +65,8 @@ class block_etdlinks extends object
     */
     public function show()
     {   
-        $stats = $this->objLanguage->languageText('phrase_viewstatistics');
+        $stats = $this->objLanguage->languageText('word_statistics');
+        $eshelf = $this->objLanguage->languageText('mod_etd_eshelf', 'etd');
         $faq = $this->objLanguage->languageText('word_faq');
         $submit = $this->objLanguage->languageText('phrase_newsubmission');
         $submit2 = $this->objLanguage->languageText('phrase_continuesubmission');
@@ -76,11 +77,16 @@ class block_etdlinks extends object
 		$objLink->link = $stats;
 		$list = '<p>'.$objLink->show().'</p>';
 		
-        // Statistics page link
+        // E-shelf link
+		$objLink = new link($this->uri(array('action' => 'vieweshelf')));
+		$objLink->link = $eshelf;
+		$list .= '<p>'.$objLink->show().'</p>';
+		
+        // FAQ page link
 		$objLink = new link($this->uri(array('action' => 'viewfaq')));
 		$objLink->link = $faq;
 		$list .= '<p>'.$objLink->show().'</p>';
-
+		
 		// Check for a current submission - only submit one document at a time.
 		if(isset($this->access) && in_array('student', $this->access)){
     		$check = $this->checkSubmissions();

@@ -89,6 +89,118 @@ class etdresource extends object
     }
     
     /**
+    * Method to display items saved on the virtual shelf or E-shelf
+    * All items on the e-shelf are stored in session.
+    *
+    * @access public
+    * @return string html
+    */
+    public function showEShelf()
+    {
+        $eshelf = $this->getSession('eshelf');
+        $objThesis = $this->getObject('dbthesis', 'etd');
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        
+        $head = $this->objLanguage->languageText('mod_etd_eshelf', 'etd');
+        $lbNoSearches = $this->objLanguage->languageText('mod_etd_eshelfisempty', 'etd');
+        $lbNoArticles = $this->objLanguage->languageText('mod_etd_noarticlesselected', 'etd');
+        $hdSearches = $this->objLanguage->languageText('phrase_storedsearches');
+        $lbRemove = $this->objLanguage->languageText('phrase_removearticles');
+        $lbRepeat = $this->objLanguage->languageText('phrase_repeatsearch');
+        $lbClear = $this->objLanguage->languageText('phrase_clearsearch');
+        
+        $objHead = new htmlheading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
+        
+        if(!empty($eshelf)){
+            $eStr = ''; $i = 1;
+            foreach($eshelf as $key => $item){
+                $hdCirt = $item['criteria'];
+                $link = '';
+                
+                $objLink = new link($this->uri(array('action' => 'repeatsearch', 'search' => 'key_'.$key)));
+                $objLink->link = $lbRepeat;
+                $shelfStr = $objLink->show();
+                
+                $objLink = new link($this->uri(array('action' => 'clearsearch', 'search' => 'key_'.$key)));
+                $objLink->link = $lbClear;
+                $shelfStr .= '&nbsp;&nbsp;'.$objLink->show();
+                
+                $objTable = new htmltable();
+                $objTable->cellpadding = 5;
+                
+                if(!empty($item['selected'])){
+                    // Get resource data from the DB
+                    $data = $objThesis->getFromList($item['selected']);
+                    
+                    if(!empty($data)){
+                        $class = 'even';
+                        foreach($data as $article){
+                             $class = ($class == 'odd') ? 'even' : 'odd';
+                             
+                             // check box for removing articles from shelf
+                             $objCheck = new checkbox('articles[]');
+                             $objCheck->setValue($article['metaid']);
+                             $check = $objCheck->show();
+                             
+                             $objLink = new link($this->uri(array('action' => 'viewtitle', 'id' => $article['metaid'])));
+                             $objLink->link = $article['dc_title'];
+                             $title = $objLink->show();
+                             
+                             $objTable->startRow();
+                             $objTable->addCell($check, '3%', '','', $class);
+                             $objTable->addCell($title, '', '','', $class);
+                             $objTable->endRow();
+                        }
+                    }
+                    $objLink = new link('#');
+                    $objLink->extra = "onclick=\"javascript: document.forms['remove{$i}'].submit();\"";
+                    $objLink->link = $lbRemove;
+                    $link = '<p>'.$objLink->show().'</p>';
+                }else{
+                    $objTable->addRow(array($lbNoArticles), 'noRecordsMessage');
+                }
+                
+                // hidden element with the search criteria
+                $objInput = new textinput('criteria', $item['criteria'], 'hidden');
+                $hidden = $objInput->show();
+                
+                $objForm = new form('remove'.$i++, $this->uri(array('action' => 'removeeshelf')));
+                $objForm->addToForm($hidden.$objTable->show().$link);
+                $shelfStr .= $objForm->show();
+                
+                $eStr .= $this->objFeatureBox->showContent($hdCirt, $shelfStr);
+            }
+            
+            $str .= $eStr; //$this->objFeatureBox->showContent($hdSearches, $eStr);
+            
+        }else{
+            $str .= '<p class="noRecordsMessage">'.$lbNoSearches.'</p>';
+        }
+        
+        return $str;
+    }
+    
+    /**
+    * Method to display the javascript for the e-shelf
+    *
+    * @access private
+    * @return void
+    */
+    private function showJavascript()
+    {
+        $javascript = "<script type=\"text/javascript\">
+        
+                
+        
+            </script>";
+        
+        $this->appendArrayVar('headerParams', $javascript);
+    }
+    
+    /**
     * Method that generates metadata tags for display in the resource.
     *
     * @access public

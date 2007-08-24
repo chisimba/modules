@@ -329,7 +329,8 @@ class etd extends controller
                 $objViewBrowse->setAccess( FALSE );
                 $objViewBrowse->showAlpha(FALSE);
                 $objViewBrowse->showPrint();
-//                $objViewBrowse->useSortTable();
+                $objViewBrowse->showEShelf();
+                //$objViewBrowse->useSortTable();
                 $objViewBrowse->setNumCols(3);
                 $objViewBrowse->setPageTitle($pageTitle);
                 
@@ -380,6 +381,124 @@ class etd extends controller
                 $search = '<p class="confirm">'.$confirm.'</p><p>'.$objLink->show().'</p>';
                 $this->setVarByRef('search', $search);
                 return 'search_tpl.php';
+                
+            /* ** Functions for the e-shelf ** */
+            
+            case 'addeshelf':
+                // The e-shelf is saved in session
+                // Create the array containing the search criteria and results
+                $fullCriteria = $this->getSession('criteria');
+                $sqlFilter = $this->getSession('sql');
+                $articles = $this->getParam('articles');
+                
+                // Implode articles into an array
+                $artArr = explode('|', $articles);
+                if(!empty($artArr)){
+                    array_pop($artArr);
+                }
+                
+                $search['search'] = $sqlFilter;
+                $search['criteria'] = $fullCriteria;
+                $search['selected'] = $artArr;
+                
+                // Check current session
+                $eshelf = $this->getSession('eshelf');
+                
+                // Check if the search criteria have already been saved
+                $exists = FALSE;
+                if(!empty($eshelf)){
+                    foreach($eshelf as $key => $item){
+                        if($fullCriteria == $item['criteria']){
+                            // search criteria already exists - append new selection
+                            $current = $item['selected'];
+                            
+                            if(!empty($current)){
+                                foreach($current as $art){
+                                    if(!in_array($art, $artArr)){
+                                        $artArr[] = $art;
+                                    }
+                                }
+                            }
+                            
+                            $eshelf[$key]['selected'] = $artArr;
+                            $exists = TRUE;
+                            continue;
+                        }
+                    }
+                }
+                
+                if($exists === FALSE){
+                    // append new search to eshelf array
+                    $eshelf[] = $search;
+                }
+                
+                $this->setSession('eshelf', $eshelf);
+                break;
+                
+            case 'removeeshelf':
+                // get articles and remove from session
+                $eshelf = $this->getSession('eshelf');
+                $articles = $this->getParam('articles');
+                $criteria = $this->getParam('criteria');
+                
+                if(!empty($eshelf)){
+                    foreach($eshelf as $key => $item){
+                        if(rtrim($criteria) == rtrim($item['criteria'])){
+                            // find the search criteria containing the article to be removed
+                            $current = $item['selected'];
+                            
+                            if(!empty($current)){
+                                foreach($current as $k => $art){
+                                    if(in_array($art, $articles)){
+                                        // if in session - unset
+                                        unset($eshelf[$key]['selected'][$k]);
+                                    }
+                                }
+                            }
+                            continue;
+                        }
+                    }
+                }
+                
+                $this->setSession('eshelf', $eshelf);
+                return $this->nextAction('vieweshelf');
+                
+            case 'vieweshelf':
+                $session['action'] = 'vieweshelf';
+                $this->setSession('return', $session);
+                
+                $display = $this->etdResource->showEShelf();
+                $this->setVarByRef('search', $display);
+                return 'search_tpl.php';
+                break;
+                
+            case 'repeatsearch':
+                // get the search criteria and set them in session
+                $search = $this->getParam('search');
+                $eshelf = $this->getSession('eshelf');
+                
+                $arrKey = explode('_', $search);
+                $key = !empty($arrKey[1]) ? $arrKey[1] : 0;
+                $criteria = $eshelf[$key]['criteria'];
+                $sql = $eshelf[$key]['search'];
+                
+                // set the search session
+                $this->setSession('criteria', $criteria);
+                $this->setSession('sql', $sql);
+                return $this->nextAction('advsearch');
+                
+            case 'clearsearch':
+                // get the search criteria and unset it in session
+                $search = $this->getParam('search');
+                $eshelf = $this->getSession('eshelf');
+                
+                $arrKey = explode('_', $search);
+                $key = !empty($arrKey[1]) ? $arrKey[1] : 0;
+                unset($eshelf[$key]);
+                
+                // set the search session
+                $this->setSession('eshelf', $eshelf);
+                return $this->nextAction('vieweshelf');
 
             /* ** Functions for managing the archive ** */
 
@@ -454,6 +573,9 @@ class etd extends controller
             /* *** Additional Functionality *** */
 
             case 'viewstats':
+                $session['action'] = 'viewstats';
+                $this->setSession('return', $session);
+                
                 $view = $this->getParam('view');
                 $display = $this->dbStats->showAll($view);
                 $this->setVarByRef('search', $display);
@@ -658,6 +780,11 @@ class etd extends controller
             case 'printsearch':
             case 'emailsearch':
             case 'sendemail':
+            case 'addeshelf':
+            case 'removeeshelf':
+            case 'vieweshelf':
+            case 'repeatsearch':
+            case 'clearsearch':
             case 'viewstats':
             case 'viewfaq':
             case 'printstats':

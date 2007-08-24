@@ -366,7 +366,7 @@ class dbStatistics extends dbTable
         $objTab->addTabLabel($hdUser);
         $objTab->addBoxContent($str);
         
-        return '<p>'.$objTab->show().'</p>';
+        return $this->objFeatureBox->showContent($hdUser, $str); //$objTab->show();
     }
     
     /**
@@ -411,7 +411,7 @@ class dbStatistics extends dbTable
         $objTab->addTabLabel($hdSite);
         $objTab->addBoxContent($str);
         
-        return $objTab->show();        
+        return $this->objFeatureBox->showContent($hdSite, $str); //$objTab->show();        
     }
     
     /**
@@ -660,7 +660,7 @@ class dbStatistics extends dbTable
         $objTab->addTabLabel($hdResource);
         $objTab->addBoxContent($str);
         
-        return $objTab->show();
+        return $this->objFeatureBox->showContent($hdResource, $str); //$objTab->show();
     }
     
     /**
@@ -840,7 +840,7 @@ class dbStatistics extends dbTable
         $objTab->addTabLabel($hdResource);
         $objTab->addBoxContent($str);
         
-        return $objTab->show();
+        return $this->objFeatureBox->showContent($hdResource, $str); // $objTab->show();
     }
 
     /**
@@ -907,7 +907,7 @@ class dbStatistics extends dbTable
         // Print / email
         $layerStr .= '<p>'.$this->getButtons($view, $break).'</p>';
         
-        return $this->objFeatureBox->showContent($head, $layerStr);
+        return $str.$layerStr;
     }
 }
 ?>
