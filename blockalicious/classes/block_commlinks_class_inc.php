@@ -8,8 +8,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * 
-* The class provides a hello world block to demonstrate
-* how to use blockalicious
+* The class provides a block with links to the 
+* main communications modules. Use it to make it easy for
+* people to find the latest communication tools in 
+* Chisimba
 *
 * @author Derek Keats
 *
@@ -31,7 +33,8 @@ class block_commlinks extends object
     }
     
     /**
-    * Method to output a block with information on how help works
+    * Method to output a block with links to some of the communications
+    * modules
     */
     function show()
 	{
@@ -43,6 +46,7 @@ class block_commlinks extends object
 		//Add blog link
 		if ($objModule->checkIfRegistered('blog','blog')) {
 			$ln = new href;
+            $lArr = array(); //working here
 			$ln->link="index.php?module=blog";
 			$ln->text="Blog";
 			$ret .= $ln->show() . "<br />";
