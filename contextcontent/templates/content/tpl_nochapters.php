@@ -6,7 +6,8 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 
-
+//Width of the label column
+$tWidth=150;
 
 
     echo '<h1>'.$this->objLanguage->languageText('mod_contextcontent_contextpagesfor','contextcontent')." ".$this->objContext->getTitle().' - '.$this->objLanguage->languageText('mod_contextcontent_createachapter','contextcontent').'</h1>';
@@ -17,10 +18,10 @@ $form = new form ('addchapter', $this->uri(array('action'=>'savechapter')));
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $title = new textinput('chapter');
-$title->size = 60;
+$title->size = 90;
 $label = new label ($this->objLanguage->languageText('mod_contextcontent_chaptertitle','contextcontent'), 'input_chapter');
 $table->startRow();
-$table->addCell($label->show());
+$table->addCell($label->show(), $tWidth, 'top', 'left');
 $table->addCell($title->show());
 $table->endRow();
 
@@ -28,7 +29,7 @@ $label = new label ($this->objLanguage->languageText('mod_contextcontent_aboutch
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
 $htmlArea->name = 'intro';
 $table->startRow();
-$table->addCell($label->show());
+$table->addCell($label->show(), $tWidth, 'top', 'left');
 $table->addCell($htmlArea->show());
 $table->endRow();
 
@@ -41,7 +42,7 @@ $radio->setSelected('Y');
 $radio->setBreakSpace(' &nbsp; ');
 
 $table->startRow();
-$table->addCell($this->objLanguage->code2Txt('mod_contextcontent_visibletostudents','contextcontent'));
+$table->addCell($this->objLanguage->code2Txt('mod_contextcontent_visibletostudents','contextcontent'), $tWidth, 'top', 'left');
 $table->addCell($radio->show());
 $table->endRow();
 
