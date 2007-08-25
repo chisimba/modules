@@ -3130,9 +3130,17 @@ class blogops extends object
             'userid' => $userid
         )) , $this->objLanguage->languageText("mod_blog_viewtimelineof", "blog"));
         //go back to your blog
-        $viewmyblog = new href($this->uri(array(
-            'action' => 'viewblog'
-        )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+        if($this->objUser->isLoggedIn())
+        {
+        	$viewmyblog = new href($this->uri(array(
+            	'action' => 'viewblog'
+        	)) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
+        }
+        else {
+        	$viewmyblog = new href($this->uri(array(
+            	'action' => 'allblogs'
+        	)) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog"));
+        }
         $check = $this->objDbBlog->checkProfile($userid);
         if ($check != FALSE) {
             $link = new href($this->uri(array(
