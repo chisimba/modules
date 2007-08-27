@@ -176,17 +176,22 @@ class cmsadmin extends controller
                 $action = $this->getParam('action');
                 $this->setLayoutTemplate('cms_layout_tpl.php');
 				$this->setVar('pageSuppressXML',TRUE);
-                switch ($action) {
+				 $myid = $this->_objUser->userId();
+				try {
+					if ($this->_objUser->inAdminGroup($myid) != TRUE) {
+	                        throw new customException($this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin'));
+	                    }
+				}catch (customException $ex){
+					echo customException::diePage($ex);
+    				exit();
+				}
+	            switch ($action) {
 
                 default:
                     if ($this->inContextMode){
                     	return 'cms_context_view_tpl.php';//continue;// 'cms_notincontext_view_tpl.php';
                     }
-                    $myid = $this->_objUser->userId();
-
-                    if ($this->_objUser->inAdminGroup($myid) != TRUE) {
-                        die('<div id=featurebox>'.$this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin').'</div>');
-                    }
+                                     
                     $topNav = $this->_objUtils->topNav('home');
                     $cpanel =  $this->_objUtils->getControlPanel();
                     $this->setVarByRef('topNav',$topNav);
