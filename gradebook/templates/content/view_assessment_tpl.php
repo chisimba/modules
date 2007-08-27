@@ -287,7 +287,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+					//$this->TableInstructions->endRow();
 
 				break;
 				case 'MCQ Tests':
@@ -317,7 +317,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+					//$this->TableInstructions->endRow();
 				break;
 				case 'Online Worksheets':
 					//retrieve grades from Online Worksheets
@@ -347,7 +347,7 @@ if(!$numberStudents) {
 						}
 					}
 					$this->TableInstructions->addCell('&nbsp;&nbsp;'.($total?$total:""));
-					$this->TableInstructions->endRow();
+					//$this->TableInstructions->endRow();
 				break;
 				case 'Assignments':
 					//retrieve grades from assignments
