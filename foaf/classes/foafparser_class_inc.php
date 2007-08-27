@@ -985,7 +985,10 @@ return  $matches;
 
 }*/
 
-
+public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
+{
+}
+/*
 public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
 {
 
@@ -1026,9 +1029,9 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
  
 
 
-}
+}*/
 
-
+/*
  public function getFoafName($model , $person)
  {
 
@@ -1051,7 +1054,7 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
 
 
 
- }
+ }*/
 
 
 
