@@ -496,7 +496,7 @@ class utils extends object
         if(count($otherCourses) > 0)
         {
         	//set the headings
-        	$table->width = '60%';
+        	$table->width = '98%';
         	$table->startHeaderRow();
         	$table->addHeaderCell('Code');
         	$table->addHeaderCell('Title');
