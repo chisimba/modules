@@ -17,6 +17,12 @@ if ( !$GLOBALS['kewl_entry_point_run'] ) {
 
 class utils extends object 
 {
+    /**
+    * The calling module displaying the tabbed box of contexts
+    * @access private
+    * @var string $module
+    */
+    private $module = 'contextpostlogin';
     
     /**
      * The constructor
@@ -24,11 +30,27 @@ class utils extends object
     public function init()
     {
        
-          $this->_objContextModules = $this->newObject('dbcontextmodules', 'context');
-	      $this->_objLanguage = $this->newObject('language', 'language');
-	      $this->_objUser = $this->newObject('user', 'security');
-	      $this->_objModules = $this->newObject('modules', 'modulecatalogue');
-	      $this->_objDBContext = $this->newObject('dbcontext', 'context');
+          $this->_objContextModules = $this->getObject('dbcontextmodules', 'context');
+	      $this->_objLanguage = $this->getObject('language', 'language');
+	      $this->_objUser = $this->getObject('user', 'security');
+	      $this->_objModules = $this->getObject('modules', 'modulecatalogue');
+	      $this->_objDBContext = $this->getObject('dbcontext', 'context');
+	      $this->_objDBContextUtils = $this->getObject('utilities', 'context');
+	      
+	      // Set module to current by default
+	      $this->module = 'contextpostlogin';
+    }
+    
+    /**
+    * Method to set the calling module
+    *
+    * @access public
+    * @param string $moduleid The calling module id
+    * @return void
+    */
+    public function setModule($moduleid = 'contextpostlogin')
+    {
+        $this->module = $moduleid;
     }
     
     /**
@@ -61,9 +83,9 @@ class utils extends object
 	  {
 	  	 try
 	  	 {
-		  	$objGroups = & $this->getObject('managegroups', 'contextgroups');
+		  	$objGroups =  $this->getObject('managegroups', 'contextgroups');
 		  	$contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
-		  	$objMM = & $this->getObject('mmutils', 'mediamanager');
+		  	$objMM =  $this->getObject('mmutils', 'mediamanager');
 		  	
 		  	$arr = array();
 		  	foreach ($contextCodes as $code)
@@ -92,7 +114,7 @@ class utils extends object
 	  public function getOtherContextList($myCourses, $filter = NULL)
 	  {
 	  	try{
-		  	//$objGroups = & $this->newObject('managegroups', 'contextgroups');
+		  	//$objGroups = $this->getObject('managegroups', 'contextgroups');
 		    $objMM = $this->getObject('mmutils', 'mediamanager');
 		  	$arr = array();
 		  	if($filter)
@@ -138,9 +160,9 @@ class utils extends object
 	  {
 	  	
 	  	try {
-	  		$objAlphabet=& $this->getObject('alphabet','navigation');
+	  		$objAlphabet= $this->getObject('alphabet','navigation');
 	  		$linkarray=array('filter'=>'LETTER');
-			$url=$this->uri($linkarray,'contextpostlogin');
+			$url=$this->uri($linkarray, $this->module);
 	  		$str = $objAlphabet->putAlpha($url);
 	  		return $str;
 	  		
@@ -160,14 +182,14 @@ class utils extends object
 	  public function getLeftContent()
 	  {
 	  	//Put a block to test the blocks module
-		$objBlocks = & $this->getObject('blocks', 'blocks');
-		//$userMenu  = &$this->newObject('postloginmenu','toolbar');
+		$objBlocks = $this->getObject('blocks', 'blocks');
+		//$userMenu  = $this->getObject('postloginmenu','toolbar');
 		$leftSideColumn = $this->getUserPic();//$userMenu->show();;
 		//Add loginhistory block
 		
         		if($this->_objDBContext->isInContext())
         {
-            $objContextUtils = & $this->getObject('utilities','context');
+            $objContextUtils = $this->getObject('utilities','context');
             $cm = $objContextUtils->getHiddenContextMenu('home','none');
         } else {
             $cm = '';
@@ -206,11 +228,11 @@ class utils extends object
 	   */
 	  public function getUserPic()
 	  {
-	  	$objUserPic =& $this->getObject('imageupload', 'useradmin');
+	  	$objUserPic = $this->getObject('imageupload', 'useradmin');
 	  	$objGoups = $this->getObject('groupusersdb', 'groupadmin');
 	  	$groupsArr = $objGoups->getUserGroups($this->_objUser->userId());
 	  	//var_dump($groupsArr);
-	  	$objBox = & $this->newObject('featurebox', 'navigation');
+	  	$objBox = $this->newObject('featurebox', 'navigation');
 	  	$str = '<p align="center"><img src="'.$objUserPic->userpicture($this->_objUser->userId() ).'" alt="'.$this->_objUser->fullName().'" /></p>';
 	  	$str .= $this->getUserRole();
 	  	
@@ -227,8 +249,8 @@ class utils extends object
 	  {
 	       
 	      
-	      $objGroup = & $this->getObject('groupusersdb', 'groupadmin');
-	      $objGroupName = & $this->getObject('groupadminmodel', 'groupadmin');
+	      $objGroup = $this->getObject('groupusersdb', 'groupadmin');
+	      $objGroupName = $this->getObject('groupadminmodel', 'groupadmin');
 	      $arr = $objGroup->getUserRoles($this->_objUser->PKId());
 	     // var_dump($arr);
    	   $str = '';
@@ -293,7 +315,7 @@ class utils extends object
 	  public function getRightContent()
 	  {
 	     $rightSideColumn = "";
-	     $objBlocks = $this->newObject('blocks', 'blocks');
+	     $objBlocks = $this->getObject('blocks', 'blocks');
 	     
 	    
 	     
@@ -341,7 +363,7 @@ class utils extends object
 	   */
 	  public function getContextLecturers($contextCode)
 	  {
-	  		$objLeaf = $this->newObject('groupadminmodel', 'groupadmin');
+	  		$objLeaf = $this->getObject('groupadminmodel', 'groupadmin');
 	  		$leafId = $objLeaf->getLeafId(array($contextCode,'Lecturers'));
 	  		
 	  		$arr = $objLeaf->getGroupUsers($leafId);
@@ -361,9 +383,9 @@ class utils extends object
 	  {
 	  	$str = '';
 	  	$arr = $this->_objContextModules->getContextModules($contextCode);
-	  	$objIcon = & $this->newObject('geticon', 'htmlelements');
-	  	$objLink = & $this->newObject('link', 'htmlelements');
-	  	$objModule = & $this->newObject('modules', 'modulecatalogue');
+	  	$objIcon = $this->newObject('geticon', 'htmlelements');
+	  	$objLink = $this->newObject('link', 'htmlelements');
+	  	$objModule = $this->newObject('modules', 'modulecatalogue');
 	  	if(is_array($arr))
 	  	{
 	  		foreach($arr as $plugin)
@@ -386,6 +408,193 @@ class utils extends object
 	  	
 	  }
 	  
-	 
+    /**
+    * Method to display a tabbed box with the list of contexts for the current user and the public contexts
+    *
+    * @access public
+    * @param string $filter
+    * @return string html
+    */
+    public function showBox($filter)
+    {
+        $contextList = $this->getContextList();
+        $otherCourses = $this->getOtherContextList($contextList, $filter);
+	    $filter = $this->getFilterList($contextList);
+	    
+
+        $tabBox = $this->newObject('tabpane', 'htmlelements');
+        $featureBox = $this->newObject('featurebox', 'navigation');
+        $objLink = $this->newObject('link', 'htmlelements');
+        $icon = $this->newObject('geticon', 'htmlelements');
+        $table = $this->newObject('htmltable', 'htmlelements');
+        $domtt = $this->newObject('domtt', 'htmlelements');
+        $objContextGroups = $this->getObject('onlinecount', 'contextgroups');
+        
+        $str = '';
+        $other = '';
+        $lects = '';
+        $config = '';
+        //registered courses
+        //var_dump($contextList);
+        
+        if (count($contextList) > 0)
+        {
+        	foreach ($contextList as $context)
+        	{
+        
+        		$lecturers = $this->getContextLecturers($context['contextcode']);
+        		$lects = '';
+        		if(is_array($lecturers) && count($lecturers) > 0)
+        		{
+        			$c = 0;
+        			foreach($lecturers as $lecturer)
+        			{
+        			    $c++;
+        				$lects .= $this->_objUser->fullname($lecturer['userid']);
+        				$lects .= ($c < count($lecturers)) ? ', ' : '';
+        
+        
+        			}
+        		} else {
+        			$lects = $this->_objLanguage->code2Txt('mod_contextpostlogin_nolectforcourse', 'contextpostlogin'); //'No Instructor for this course';
+        		}
+        
+        		$content = '<span class="caption">'.$this->_objLanguage->code2Txt('word_lecturers').' : '.$lects.'</span>';// Instructors
+        		$content .= '<p>'.stripslashes($context['about']).'</p>';
+        		$content .= '<p>'.$this->getPlugins($context['contextcode']).'</p>';
+        
+        		$contextCode = $context['contextcode'];
+        
+        
+        		if($this->_objDBContext->getContextCode() == $context['contextcode'])
+        		{
+        		    $objLink->href = $this->uri(array('action' => 'leavecontext','contextCode'=>$contextCode), 'context');
+        		    $icon->setIcon('leavecourse');
+        		    $icon->alt = $this->_objLanguage->code2Txt('phrase_leavecourse'); //'Leave Course';
+            		$objLink->link = $icon->show();
+        		} else {
+        		    $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+            		$icon->setIcon('entercourse');
+            		$icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse'); //'Enter Course';
+            		$objLink->link =$icon->show();
+        		}
+        		$title = $objLink->show();
+        		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+                $objLink->link = $context['contextcode'] .' - '.$context['title'].'   ';
+                $title = $objLink->show().$title;
+        		$str .= $featureBox->show($title, $content ).'<hr />';
+        	}
+        } else {
+        	$str .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.
+        	$this->_objLanguage->code2Txt('mod_contextpostlogin_notassocanycourses', 'contextpostlogin').'</div>';//You are not associated with any courses
+        }
+        
+        
+        //public courses
+        $other = $featureBox->show($this->_objLanguage->code2Txt('phrase_browsecourses'), $filter); //'Browse Courses'
+        
+        if(count($otherCourses) > 0)
+        {
+        	//set the headings
+        	$table->width = '60%';
+        	$table->startHeaderRow();
+        	$table->addHeaderCell('Code');
+        	$table->addHeaderCell('Title');
+        	$table->addHeaderCell('Details');
+        	$table->addHeaderCell('&nbsp;');
+        	$table->endHeaderRow();
+        
+        	$rowcount = 0;
+        
+            //loop through the context
+        	foreach($otherCourses as $context)
+        	{
+        		//set the odd and even rows
+        		$oddOrEven = ($rowcount == 0) ? "even" : "odd";
+        
+                //get the lecturers
+        		$lecturers = $this->getContextLecturers($context['contextcode']);
+        
+                //reset the $lects
+                $lects = '';
+        
+                //check if there are lecturers
+        		if(is_array($lecturers))
+        		{
+                    //get their names
+        			$c = 0;
+        			foreach($lecturers as $lecturer)
+        			{
+        			    $c++;
+        				$lects .= $this->_objUser->fullname($lecturer['userid']);
+        				$lects .= ($c < count($lecturers)) ? ', ' : '';
+        
+        
+        			}
+        		} else {
+        			$lects = $this->_objLanguage->code2Txt('mod_contextpostlogin_nolectforcourse', 'contextpostlogin'); //'No Instructor for this course';
+        		}
+        
+        		$content = '<span class="caption">'.$this->_objLanguage->code2Txt('word_lecturers').' : '.$lects.'</span>';
+        		$content .= '<p>'.$context['about'].'</p>';
+        		$content .= '<p>'.$this->getPlugins($context['contextcode']).'</p>';
+        
+        
+        		//link to join the context
+        		$objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$context['contextcode']), 'context');
+        		$icon->setIcon('leavecourse');
+        		$icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse').' '.$context['title'];
+        		$objLink->link = $icon->show();
+        
+        
+                //check if this user can join this context before showing the link
+        	if($this->_objDBContextUtils->canJoin($context['contextcode']))
+        		{
+        			$config = $objLink->show();
+        		} else {
+        			$icon->setIcon('failed','png');
+        			$config = $icon->show();
+        		}
+        
+                //setup the information icon
+        		$icon->setIcon('info');
+        		$icon->alt = '';
+        
+                //formulate the message for the mouseover
+        		$mes = '';
+        		$mes .= ($context['access'] != '') ?  $this->_objLanguage->code2Txt('word_access').' : <span class="highlight">'.$context['access'].'</span>' : '' ;
+        		$mes .= ($context['startdate'] != '') ? '<br/>'.$this->_objLanguage->code2Txt('phrase_startdate').' : <span class="highlight">'.$context['startdate'].'</span>'  : '';
+        		$mes .= ($context['finishdate'] != '') ? '<br/>'.$this->_objLanguage->code2Txt('phrase_finishdate').' : <span class="highlight">'.$context['finishdate'].'</span>'  : '';
+        		$mes .= ($lects != '') ? '<br/>'.$this->_objLanguage->code2Txt('word_lecturers').' : <span class="highlight">'.$lects.'</span>'  : '';
+        		$scnt = $objContextGroups->getUserCount($context['contextcode']);
+        		$mes .= ($scnt > 0) ? '<br />'.$this->_objLanguage->code2Txt('mod_contextpostlogin_numregstudents', 'contextpostlogin').' : <span class="highlight">'.$scnt.'</span>' : '';
+        		$mes = htmlentities($mes);
+        
+        		$info = $domtt->show(htmlentities($context['title']),$mes,$icon->show());
+        		$tableRow = array();
+        
+        		$tableRow[] = $context['contextcode'];
+        		$tableRow[] = $context['title'];
+        		$tableRow[] = $info;
+        		$tableRow[] = $config;
+        
+        		$table->addRow($tableRow, $oddOrEven);
+        		 $rowcount = ($rowcount == 0) ? 1 : 0;
+        		//$other .= $featureBox->show($context['contextcode'] .' - '.$context['title'].'   '.$objLink->show(), $content ).'<hr />';
+        	}
+        
+        	$other .='<hr />'.$featureBox->show('Courses', $table->show() );
+        }else {
+        
+        	$other .= '<div align="center" style="font-size:large;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.
+        	$this->_objLanguage->code2Txt('mod_contextpostlogin_nopublicopencourses', 'contextpostlogin').'</div>';
+        }
+        
+        $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_mycourses'),'content' => $str));
+        
+        $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
+        return $tabBox->show();
+    }
+    	 
 }	
 ?>
