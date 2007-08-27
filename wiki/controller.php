@@ -181,7 +181,8 @@ class wiki extends controller {
                 $data = array();
                 $data['page_name'] = strip_tags($name);
                 $data['page_summary'] = strip_tags($summary);
-                $data['page_content'] = strip_tags($content, '<code>');
+                //$data['page_content'] = strip_tags($content, '<code>');
+                $data['page_content'] = $content;
                 $data['version_comment'] = $this->objLanguage->languageText('mod_wiki_newpage', 'wiki');
                 $pageId = $this->objDbwiki->addPage($data); 
                     
@@ -223,7 +224,9 @@ class wiki extends controller {
                 $data['main_page'] = $main;
                 $data['page_summary'] = strip_tags($summary);
                 $data['version_comment'] = strip_tags($comment);
-                $data['page_content'] = strip_tags($content, '<code>');
+                //$data['page_content'] = strip_tags($content, '<code>');
+                // removed stripping of tags
+                $data['page_content'] = $content;
                 $pageId = $this->objDbwiki->addPage($data); 
                 $this->objWikidisplay->sendMail($name);                   
                 $this->objLock->unlockEdit('tbl_wiki_pages', $id, $this->userId);
