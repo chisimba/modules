@@ -126,7 +126,8 @@ class contenttree extends object
 
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
+                        $text = wordwrap(trim($node['title']),20,'<p />');
+                        $link = '<a href="'.$nodeUri.'">'.$text.'</a>';
                     } else {
                         $link = $node['title'];
                     }
@@ -202,7 +203,7 @@ class contenttree extends object
                         $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
                         $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
                     } else {
-                        $link = $contentNode['title'];
+                        $link = wordwrap($contentNode['title']);
                     }
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                    
@@ -249,7 +250,7 @@ class contenttree extends object
 			                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
 			                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
 			                    } else {
-			                        $link = $contentNode['title'];
+			                        $link = wordwrap($contentNode['title']);
 			                    }
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
