@@ -126,7 +126,7 @@ class contenttree extends object
 
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $text = wordwrap(trim($node['title']),20,'<p />');
+                        $text = wordwrap(trim($node['title']),20,'<br />');
                         $link = '<a href="'.$nodeUri.'">'.$text.'</a>';
                     } else {
                         $link = $node['title'];
