@@ -69,8 +69,12 @@ if ($mode=='edit') {
 }
 $label = new label ('<strong>'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
 
+$jsForHeader = $this->objLanguage->languageText('mod_contextcontent_enterjavascriptmetatags','contextcontent', 'Enter any JavaScript or Meta Tags that you need to be loaded into the [-HEAD-] tags');
+
+$jsForHeader = str_replace('[-HEAD-]', '&lt;head&gt;', $jsForHeader);
+
 $formTable->startRow();
-$formTable->addCell($label->show().'<p>'.$this->objLanguage->languageText('mod_contextcontent_enterjavascript','contextcontent').'</p>', '240');
+$formTable->addCell($label->show().'<p>'.$jsForHeader.'</p>', '240');
 $formTable->addCell($textarea->show());
 $formTable->endRow();
 
