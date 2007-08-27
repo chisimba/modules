@@ -2157,7 +2157,7 @@ class blogops extends object
         $pexcerpt->setName('postexcerpt');
         $ptable->startRow();
         if (isset($editparams['post_excerpt'])) {
-            $pexcerpt->setcontent(stripslashes(htmlentities($editparams['post_excerpt']))); //nl2br - htmmlentittes +
+            $pexcerpt->setcontent(stripslashes($editparams['post_excerpt'])); //nl2br - htmmlentittes +
             
         }
         $ptable->addCell($pexcerptlabel->show());
