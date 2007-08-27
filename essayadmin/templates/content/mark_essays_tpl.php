@@ -12,7 +12,7 @@
 /**************** Set Layout template ***************************/
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
-$this->objDateformat =  $this->newObject('datetime', 'utilities');
+$this->objDateformat =  $this->newObject('dateandtime', 'utilities');
 $this->objFile=& $this->newObject('upload','filemanager');
 
 $topic=$topicdata[0]['name'];
