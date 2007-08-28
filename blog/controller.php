@@ -809,7 +809,7 @@ class blog extends controller
                 }
                 //return the default template for no mode set
                 $this->setVar('pageSuppressXML', TRUE);
-                return 'blogadmin_tpl.php';
+                return 'blogadminmenu_tpl.php';
                 break;
 
             case 'showarchives':
@@ -850,7 +850,7 @@ class blog extends controller
                         break;
                     }
                     $this->objblogOps->quickCatAdd($list, $userid);
-                    $this->nextAction('blogadmin');
+                    $this->nextAction('blogadmin', array('mode' => 'writepost'));
                     break;
                 }
                 if ($mode == 'edit') {
