@@ -69,6 +69,8 @@ if ($item=='bookmark') {
     $bkObject->size=30;
     $bkObject->fldType="text";
 
+// lines bayad wared shawad...........   $bkForm->addRule(..);
+
     $row=array($urlLabel->show(),$bkObject->show());
     $tblclass->addRow($row);
 
@@ -108,6 +110,10 @@ if ($item=='bookmark') {
     $row=array($parentLabel->show(),$dropdown->show());
     $tblclass->addRow($row);
     //button to save
+	
+     //$bkForm->addRule('url',$this->objLanguage->languageText('mod_bookmark_invalidurl', 'kbookmark'),'required');
+    // echo $bkForm->show();
+	
     $this->loadClass('button', 'htmlelements');
     $objElement = new button('submit');
     $objElement->setToSubmit();

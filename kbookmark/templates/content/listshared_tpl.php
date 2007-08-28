@@ -126,11 +126,11 @@ if (isset($listFolderContent)) {
              $newLink->title=$line['url'];
              $newLink->target='_blank';
              $bkLink=$newLink->show().' - '.stripslashes($line['description']);
-             $visitLink="<a href=\"".$this->uri(array('action'=>'visit','id'=>$line['id']))."\" class='".$objTableClass->trClass."'>";
+             //$visitLink="<a href=\"".$this->uri(array('action'=>'visit','id'=>$line['id']))."\" class='".$objTableClass->trClass."'>";
              
              $objTableClass->row_attributes=" onmouseover=\"this.className='tbl_ruler';\" onmouseout=\"this.className='".$objTableClass->trClass."'; \"";
              $objTableClass->startRow();
-             $objTableClass->addCell($bkLink."</a>","50%", NULL, NULL, NULL,"");
+             $objTableClass->addCell($bkLink,"50%", NULL, NULL, NULL,"");
              $objTableClass->addCell($line['visitcount'],"20", NULL, NULL, NULL,"");
              if (($line['datelastaccessed'])=='0000-00-00 00:00:00'){
 			    $dateAccessed=$this->objLanguage->LanguageText('mod_bookmarks_notaccessed','kbookmark');
