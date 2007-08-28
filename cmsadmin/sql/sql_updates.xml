@@ -1,5 +1,21 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
-<updates>		
+<updates>
+
+    <update>
+        <table>tbl_cms_content_frontpage</table>
+        <version>1.56</version>
+        <description>Added column to hide / display the full content on the front page or only display the summary.</description>
+        <data>
+           	<add>
+       			<name>show_content</name>
+    	    	<type>integer</type>
+       			<length>2</length>
+       			<notnull>TRUE</notnull>
+       			<default>0</default>
+    		</add>
+    	</data>
+	</update>
+	
     <update>
         <table>tbl_cms_sections</table>
         <version>1.53</version>

@@ -68,19 +68,25 @@ class dbcontentfrontpage extends dbTable
          */
         public function add($contentId, $ordering = 1)
         {
-            //Check for duplicate
+            $show_content = $this->getParam('show_content');
+                
+            $fields = array();
+            $fields['show_content'] = $show_content;
+            
+            // Check for duplicate
             if(!$this->valueExists('content_id',$contentId)) {
-                //Insert entry
-                return $this->insert(array(
-                                         'content_id' => $contentId,
-                                         'ordering' => $this->getOrdering()
-                                     ));
+                
+                $fields['content_id'] = $contentId;
+                $fields['ordering'] = $this->getOrdering();
+                
+                // Insert entry
+                return $this->insert($fields);
             } else {
-                $bln = FALSE;
-                return $bln;
+                // Update entry
+                return $this->update('content_id',$contentId, $fields);
             }
         }
-
+        
         /**
          * Method to remove a record
          *
@@ -188,6 +194,24 @@ class dbcontentfrontpage extends dbTable
         {
             $isFrontPage = $this->valueExists('content_id',$id);
             return $isFrontPage;
+        }
+        
+         /**
+         * Method to check if a page is a front page
+         *
+         * @param string $id The id to be checked
+         * @access public
+         * @return bool
+         */
+        public function getFrontPage($contentId)
+        {
+            $sql = "SELECT * FROM tbl_cms_content_frontpage WHERE content_id = '{$contentId}'";
+            $data = $this->getArray($sql);
+            
+            if(!empty($data)){
+                return $data[0];
+            }
+            return FALSE;
         }
 
         /**

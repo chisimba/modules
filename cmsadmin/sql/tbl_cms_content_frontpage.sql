@@ -12,6 +12,12 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 		),
+	'show_content' => array(
+		'type' => 'integer',
+		'length' => 2,
+		'notnull' => 1,
+		'default' => 0
+		),
 	'ordering' => array(
 		'type' => 'text',
 		'length' => 11,

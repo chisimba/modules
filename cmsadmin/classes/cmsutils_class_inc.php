@@ -2141,10 +2141,12 @@ class cmsutils extends object
 				{
 					if (document.forms[\'addfrm\'].frontpage.checked == true)
 					{
+					    document.getElementById(\'row_id\').style.display =\'\';
 						document.getElementById(\'introdiv\').style.display =\'block\';
 						document.getElementById(\'introrequiredtext\').style.display =\'inline\';
 						adjustLayout();
 					} else {
+					    document.getElementById(\'row_id\').style.display =\'none\';
 					    document.getElementById(\'introdiv\').style.display =\'none\';
 					    document.getElementById(\'introrequiredtext\').style.display =\'none\';
 					    adjustLayout();
@@ -2160,6 +2162,7 @@ class cmsutils extends object
             $objOrdering = new textinput();
             $objCCLicence = $this->newObject('licensechooser', 'creativecommons');
             $is_front = FALSE;
+            $show_content = '0';
             if ($contentId == NULL) {
                 $action = 'createcontent';
                 $editmode = FALSE;
@@ -2171,7 +2174,7 @@ class cmsutils extends object
                 $hide_title = '0';
                 $contentId = '';
                 $arrContent = null;
-
+                
                 if ( $this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
                     $is_front = TRUE;
@@ -2185,7 +2188,14 @@ class cmsutils extends object
                 $introInputValue = stripslashes($arrContent['introtext']);
                 $bodyInputValue = stripslashes($arrContent['body']);
 
-                $is_front = $this->_objFrontPage->isFrontPage($arrContent['id']);
+                $frontData = $this->_objFrontPage->getFrontPage($arrContent['id']);
+                if($frontData === FALSE){
+                    $is_front = FALSE;
+                }else{
+                    $show_content = $frontData['show_content'];
+                    $is_front = TRUE;
+                }
+                
                 $frontPage->setChecked($is_front);
                 $published->setChecked($arrContent['published']);
                 $visible = $arrContent['published'];
@@ -2266,6 +2276,23 @@ class cmsutils extends object
             $table->addCell($frontPage->show().'<span id="introrequiredtext" class="warning">'.$this->objLanguage->languageText('mod_cmsadmin_pleaseenterintrotext', 'cmsadmin').'</span>');
             $table->endRow();
             
+            // Radio button to display the full content or only the summary on the front page
+            $lbDisplay = $this->objLanguage->languageText('mod_cmsadmin_displaysummaryorcontent', 'cmsadmin');
+            $lbIntroOnly = $this->objLanguage->languageText('mod_cmsadmin_introonly', 'cmsadmin');
+            $lbFullContent = $this->objLanguage->languageText('mod_cmsadmin_fullcontent', 'cmsadmin');
+            
+            $objRadio = new radio('show_content');
+            $objRadio->addOption('0', $lbIntroOnly);
+            $objRadio->addOption('1', $lbFullContent);
+            $objRadio->setBreakSpace('&nbsp;&nbsp;');
+            $objRadio->setSelected($show_content);
+            
+            $table->row_attributes = "id='row_id'";
+            $table->startRow();
+            $table->addCell($lbDisplay.': ');
+            $table->addCell($objRadio->show(), '', 'center');
+            $table->endRow();
+            
             // Introduction Area
             $introInput = $this->newObject('htmlarea', 'htmlelements');
             $introInput->init('intro', $introInputValue);
@@ -2277,11 +2304,14 @@ class cmsutils extends object
             $h3 = $this->newObject('htmlheading', 'htmlelements');
             $h3->str = $this->objLanguage->languageText('word_introduction').' ('.$this->objLanguage->languageText('word_required').')';
             $h3->type = 3;
+            
             //add hidden text input
+            $table->row_attributes = '';
             $table->startRow();
             $table->addCell(NULL);
             $table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left');
             $table->endRow();
+            
             //add the main body
             $table2 = new htmltable();
             $table2->startRow();
