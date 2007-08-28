@@ -355,7 +355,7 @@ echo $objFeatureBox3->show($xbelTitle,$xbelOutput);
 
 //featurebox4 , this is for search
 $objFeatureBox4 = $this->newObject('featurebox','navigation');
-echo $objFeatureBox4->show($sharedTitle,$searchOutput);
+echo $objFeatureBox4->show($searchTitle,$searchOutput);
 
 //featurebox5 , this is for bookmark
 $objFeatureBox5 = $this->newObject('featurebox','navigation');
