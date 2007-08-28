@@ -348,7 +348,8 @@ class cmslayouts extends object
     		foreach ($arrFrontPages as $frontPage) {
     			//get the page content
     			$page = $this->_objContent->getContentPage($frontPage['content_id']);
-
+    			$show_content = $frontPage['show_content'];
+    			
     			// Check it's not the page displayed at the top.
     			if(!empty($displayId) && $displayId == $frontPage['content_id']){
     				// do nothing
@@ -364,30 +365,46 @@ class cmslayouts extends object
     					$this->objHead->str = $page['title'];
 
     					$pageStr = $this->objHead->show();
+    					
+    					if($show_content){
+    					    $pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+
+                            if(isset($page['created']) && !empty($page['created'])){
+                 				$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                 			}
+                 			$pageStr .= '</p>';
+                 			$pageStr .= stripslashes($page['introtext']);
+                 			$pageStr .= '<p />';
+    					}
     				}
 
-    				// Read more link
-    				$moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-    				//array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
-    				$readMoreLink = new link($moreLink);
-    				$readMoreLink->link = $lbRead.'...';
-    				$readMoreLink->title = $page['title'];
-    				$readMoreLink->cssClass = 'morelink';
-
-    				// Display the page title and introduction
-    				$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
-    				if(isset($page['created']) && !empty($page['created'])){
-    					$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-    				}
-    				$pageStr .= '</p>';
-    				$pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
-    				$pageStr .= '<p />';
-
-    				if(isset($page['modified']) && !empty($page['modified'])){
-    					$pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
-    				}
-
-    				$str .= $pageStr;
+                    if($show_content){
+                        $pageStr .= $page['body'];
+                        $str .= $pageStr;
+                    }else{
+        				// Read more link
+        				$moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+        				//array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+        				$readMoreLink = new link($moreLink);
+        				$readMoreLink->link = $lbRead.'...';
+        				$readMoreLink->title = $page['title'];
+        				$readMoreLink->cssClass = 'morelink';
+    
+        				// Display the page title and introduction
+        				$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+        				if(isset($page['created']) && !empty($page['created'])){
+        					$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+        				}
+        				$pageStr .= '</p>';
+        				$pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
+        				$pageStr .= '<p />';
+    
+        				if(isset($page['modified']) && !empty($page['modified'])){
+        					$pageStr .= '<p> <span class="date">Last updated : '.$this->objDate->formatDate($page['modified']).'</span></p>';
+        				}
+    
+        				$str .= $pageStr;
+                    }
     			}
     		}
     	}
