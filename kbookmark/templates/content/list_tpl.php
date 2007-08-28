@@ -23,6 +23,7 @@ $this->loadClass('link','htmlelements');
 $this->loadClass("hiddeninput", "htmlelements");
 
 //Table to list the links and icons of the bookmark menu
+
 $objTableClass=$this->newObject('htmltable','htmlelements');
 $objTableClass->width='99%';
 $objTableClass->attributes=" border='0'";
@@ -41,6 +42,8 @@ $objIcons->setIcon('add');
 $objIcons->alt=$this->objLanguage->languageText('mod_bookmark_addbookmark','kbookmark');
 $newBookmarkIcon=$objIcons->show();
 
+echo "<br/>";
+
 $objIcons->setIcon('add');
 $objIcons->alt=$this->objLanguage->languageText('mod_bookmark_addfolder','kbookmark');
 $newFolderIcon=$objIcons->show();
@@ -49,6 +52,7 @@ $action=$this->getParam('action');
 $folderId=$this->getParam('folderId');
 $titleLine='';
 $title='';
+
 
 $icon = $this->getObject('geticon', 'htmlelements');
 
@@ -72,11 +76,10 @@ $status=$this->getParam('status');
 $statusMsg=$this->getParam('title');
 
 //show all the users folders
-$searchTitle=$this->objLanguage->languageText('mod_bookmark_search','kbookmark');
-$bkSearchForm=new form('bkSearchForm');
-$mySearchAction=$this->uri(array('action'=>'search'));
-$bkSearchForm->setAction($mySearchAction);
 
+
+$searchTitle=$this->objLanguage->languageText('mod_bookmark_search','kbookmark');
+$bkSearchForm=new form('bkSearchForm', $this->uri(array('action'=>'search')));
 $searchLabel=new label('', 'input_searchTerm');
 
 //search term
@@ -94,7 +97,9 @@ $objButtonSearch = new button('search');
 $objButtonSearch->setToSubmit();
 $objButtonSearch->setValue('Search');
 $bkSearchForm->addToForm("".$objButtonSearch->show());
+
 $searchForm=$bkSearchForm->show();
+
 
 $searchFieldset = $this->getObject('fieldset', 'htmlelements');
 $searchFieldset->setLegend($searchTitle);
@@ -105,16 +110,18 @@ $xbelTitle=$this->objLanguage->languageText('mod_bookmark_xbel','kbookmark');
 $xbelUpload=$this->objLanguage->languageText('mod_bookmark_xbelupload','kbookmark');
 $xbelView=$this->objLanguage->languageText('mod_bookmark_xbelmanage','kbookmark');
 
-
 //Create the link Object
 $link = $this->newObject('link','htmlelements');
 $link->href = $this->uri(array('action'=>'xbelparse'));
 $link->link=$this->objLanguage->languageText('mod_bookmark_in_xbel','kbookmark');
 
+
 $xbelFieldset = $this->getObject('fieldset', 'htmlelements');
 $xbelFieldset->setLegend($xbelView);
 $xbelFieldset->addContent($link->show());
 $xbelOutput= $xbelFieldset->show();
+
+
 
 if (isset($listFolderContent)) {
 
@@ -244,6 +251,13 @@ if (isset($listFolders)){
     //output as a drop down list
     $foldersDropdown= new dropdown('folderId');
     
+    
+    
+//planning and formating for output
+$this->header = new htmlheading();
+$this->header->type=1;
+$this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolders','kbookmark').$titleLine.$newBookmark;
+echo $this->header->show();
 
     foreach($listFolders as $line) {
         $folderCount=count($listFolders);
@@ -257,6 +271,7 @@ if (isset($listFolders)){
             $foldersDropdown->addOption($line["id"],htmlentities(stripslashes($line["title"])));
             if (isset($folderId)) {
                 $foldersDropdown->setSelected($folderId);
+		
             }
         }
     }
@@ -300,6 +315,7 @@ $foldersFieldset->setLegend($folderTitle);
 $foldersFieldset->addContent($form->show() . $folders);
 $foldersOutput= $foldersFieldset->show();
 
+
 $sharedTitle=$this->objLanguage->languageText('mod_bookmark_sharedfolders','kbookmark');
 
 $sharedFieldset = $this->getObject('fieldset', 'htmlelements');
@@ -307,31 +323,53 @@ $sharedFieldset->setLegend($sharedTitle);
 $sharedFieldset->addContent($sharedFolderLink);
 $sharedOutput= $sharedFieldset->show();
 
+$bookmarksTitle = $this->objLanguage->languageText('mod_bookmark_bookmarkstitle','kbookmark');
 $bookmarks=$bkForm->addToForm($objTableClass->show());
 $bookmarks=$bkForm->show();
+
+/*
 //table of the final layout frame
 $objTableFrame=$this->newObject('htmltable','htmlelements');
 $objTableFrame->width='99%';
 $objTableFrame->align='top';
-
+//later on the table must be removed
 $objTableFrame->startRow();
 $objTableFrame->addCell($foldersOutput."<br />".$sharedOutput."<br />".$xbelOutput."<br />".$searchOutput,"20%","top",NULL,'',NULL);
 $objTableFrame->addCell($bookmarks,NULL,"top",NULL,'',NULL);
 $objTableFrame->endRow();
+*/
 
-//planning and formating for output
-$this->header = new htmlheading();
-$this->header->type=1;
-$this->header->str=$this->objLanguage->languageText('mod_bookmark_bookmarkfolders','kbookmark').$titleLine.$newBookmark;
-echo $this->header->show();
+
+
+//featurebox1 , this is for my folders
+$objFeatureBox1 = $this->newObject("featurebox","navigation");
+echo $objFeatureBox1->show($folderTitle, $foldersOutput);
+
+//featurebox2 , this is for shared folders
+$objFeatureBox2 = $this->newObject('featurebox','navigation');
+echo $objFeatureBox2->show($sharedTitle,$sharedOutput);
+
+//featurebox3 , this is for xbel
+$objFeatureBox3 = $this->newObject('featurebox','navigation');
+echo $objFeatureBox3->show($xbelTitle,$xbelOutput);
+
+//featurebox4 , this is for search
+$objFeatureBox4 = $this->newObject('featurebox','navigation');
+echo $objFeatureBox4->show($sharedTitle,$searchOutput);
+
+//featurebox5 , this is for bookmark
+$objFeatureBox5 = $this->newObject('featurebox','navigation');
+echo $objFeatureBox5->show($bookmarksTitle,$bookmarks);
+
+
 if (isset($statusMsg)){
     echo "<span class='confirm'>".$statusMsg."</span>";
 }
 if (!isset($searchResults) || count($searchResults) == 0){
     echo "<span>&nbsp;</span>";
 }
-$mainFrame=$objTableFrame->show();
-echo $mainFrame;
+//$mainFrame=$objTableFrame->show();
+//echo $mainFrame;
 
 if (isset($searchResults)){
     $objSearchTable=$this->newObject('htmltable','htmlelements');
@@ -387,7 +425,10 @@ if (isset($searchResults)){
     $searchFieldset->setLegend($legendString);
     $searchFieldset->addContent($objSearchTable->show());
     $searchOutput= $searchFieldset->show();
-    echo $searchOutput;
+    //echo $searchOutput;
+    //featurebox6
+    $objFeatureBox6 = $this->newObject('featurebox','navigation');
+    echo $objFeatureBox6->show($legendString,$searchOutput);
 }
 if (isset($xbookmark))
 {
