@@ -852,9 +852,9 @@ class viewBrowse extends object
                         }
                     }
                     
-                    var url = '{$url}';
-                    var pars = 'articles='+arts;
-                    var eshelfAjax = new Ajax.Request(url, {method: 'post', parameters: pars, onSuccess: clearIcon()});
+                    var url = 'index.php';
+                    var pars = 'module=etd&action=addeshelf&articles='+arts;
+                    var eshelfAjax = new Ajax.Request(url, {method: 'post', parameters: pars, onSuccess: clearIcon});          
                 }
                 
                 function clearIcon()
