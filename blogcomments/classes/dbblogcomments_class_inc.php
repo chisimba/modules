@@ -133,6 +133,20 @@ class dbblogcomments extends dbTable
 		$filter = "WHERE comment_parentid = '$pid' ORDER BY comment_date DESC";
 		return $this->getAll($filter);
 	}
+	
+	/**
+	 * Method to return the comments for the user
+	 * You need to supply a user id to the method. This will get all the extra data
+	 * attached to that user from the blogcomments table.
+	 *
+	 * @param string $pid
+	 * @return array
+	 */
+	public function grabCommentsByUser($userid)
+	{
+		$filter = "WHERE userid = '$userid' ORDER BY comment_date DESC";
+		return $this->getAll($filter);
+	}
 
 	/**
 	 * Method to return the count of comments for a particular post id

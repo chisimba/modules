@@ -1708,6 +1708,16 @@ class blogops extends object
             'format' => 'html',
             'userid' => $userid
         )) , $this->objLanguage->languageText("mod_blog_word_html", "blog"));
+        //Comment RSS2.0
+        $rss2comm = $this->getObject('geticon', 'htmlelements');
+        $rss2comm->align = "top";
+        $rss2comm->setIcon('rss', 'gif', 'icons/filetypes');
+        $link = new href($this->uri(array(
+            'action' => 'commentfeed',
+            'format' => 'rss2',
+            'userid' => $userid
+        )) , $this->objLanguage->languageText("mod_blog_word_commentrss2", "blog"));
+        $rss2comments = $rss2comm->show() . $link->show() . "<br />";
         $leftCol.= $html->show() . $link->show() . "<br />";
         /* scriptaculous moved to default page template / no need to suppress XML*/
         //$this->setVar('pageSuppressXML',true);

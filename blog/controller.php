@@ -647,7 +647,111 @@ class blog extends controller
                 echo htmlentities($feed);
                 break;
 
-            case 'showallposts':
+            
+           case 'commentfeed':
+           	$format = 'RSS2';
+                //and the userid of the blog we are interested in
+                $userid = $this->getParam('userid');
+                $bloggerprofile = $this->objDbBlog->checkProfile($userid);
+                //grab the feed items
+                $this->objDbBlogComments = $this->getObject('dbblogcomments', 'blogcomments');
+                $posts = $this->objDbBlogComments->grabCommentsByUser($userid);
+                if (empty($posts)) {
+                    $posts = $this->objDbBlog->getLastPosts(10, $userid);
+                }
+                //set up the feed...
+                //who's blog is this?
+                if (isset($bloggerprofile['blog_name'])) {
+                    $fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
+                    
+                } else {
+                    $fullname = htmlentities($this->objUser->fullname($userid));
+                }
+                //title of the feed
+                $feedtitle = htmlentities($fullname);
+                //description
+                if (isset($bloggerprofile['blog_descrip'])) {
+                    $feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
+                    
+                } else {
+                    $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
+                }
+                //link back to the blog
+                $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=blog&action=randblog&userid=" . $userid;
+                //sanitize the link
+                $feedLink = htmlentities($feedLink);
+                //set up the url
+                $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid . "action=feed&format=" . $format;
+                //print_r($feedURL);
+                $feedURL = htmlentities($feedURL);
+                //set up the feed
+                $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
+                //loop through the posts and create feed items from them
+                foreach($posts as $feeditems) {
+                    //use the post title as the feed item title
+                    $itemTitle = $feeditems['comment_author'];
+                    $itemLink = $this->uri(array(
+                        'action' => 'viewsingle',
+                        'postid' => $feeditems['comment_parentid'],
+                        'userid' => $userid
+                    )); 
+                    //description
+                    $itemDescription = $feeditems['comment_content'];
+                    //where are we getting this from
+                    $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
+                    //feed author
+                    $itemAuthor = htmlentities($feeditems['comment_author']);
+                    //add this item to the feed
+                    $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
+                }
+                //check which format was chosen and output according to that
+                switch ($format) {
+                    case 'rss2':
+                        $feed = $this->objFeedCreator->output('RSS2.0'); //defaults to RSS2.0
+                        break;
+
+                    case 'rss091':
+                        $feed = $this->objFeedCreator->output('RSS0.91');
+                        break;
+
+                    case 'rss1':
+                        $feed = $this->objFeedCreator->output('RSS1.0');
+                        break;
+
+                    case 'pie':
+                        $feed = $this->objFeedCreator->output('PIE0.1');
+                        break;
+
+                    case 'mbox':
+                        $feed = $this->objFeedCreator->output('MBOX');
+                        break;
+
+                    case 'opml':
+                        $feed = $this->objFeedCreator->output('OPML');
+                        break;
+
+                    case 'atom':
+                        $feed = $this->objFeedCreator->output('ATOM0.3');
+                        break;
+
+                    case 'html':
+                        $feed = $this->objFeedCreator->output('HTML');
+                        break;
+
+                    case 'js':
+                        $feed = $this->objFeedCreator->output('JS');
+                        break;
+
+                    default:
+                        $feed = $this->objFeedCreator->output(); //defaults to RSS2.0
+                        break;
+                }
+                //output the feed
+                $this->setVar('pageSuppressXML', TRUE);
+                echo htmlentities($feed);
+                break;
+     
+           case 'showallposts':
                 $catid = NULL;
                 $userid = $this->getParam('userid');
                 if (!isset($userid)) {
