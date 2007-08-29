@@ -234,23 +234,36 @@ class etdresource extends object
     */
     public function showCitation()
     {
-        $this->loadClass('tabbedbox', 'htmlelements');
-        $this->loadClass('dropdown', 'htmlelements');
+        /*
+        $this->loadClass('form', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('textarea', 'htmlelements');
         
-        $lbCitation = $this->objLanguage->languageText('phrase_displaycitation');
-        $lbSelect = $this->objLanguage->languageText('phrase_displaycitation');
+        $lbCitation = $this->objLanguage->languageText('word_citation');
+        $lbExportRW = $this->objLanguage->languageText('mod_etd_exportrefworks', 'etd');
+        /*
+        $formStr = '';
+        $import = '';
         
-        $formStr = $lbSelect.': <br />';
+        $objText = new textarea('ImportData', $import);
         
-        $objDrop = new dropdown('format');
-        $objDrop->addOption(' ', ' -- ');
-        $objDrop->addOption('demo', 'demo');
-        $objDrop->setSelected(' ');
-        $formStr .= $objDrop->show();
+        $url = "http://www.refworks.com/express/expressimport.asp";
+        $onclick = "javascript: openWindow('{$url}', 'RefWorksMain');";
+        $objButton = new button('export', $lbExportRW);
+        $objButton->setOnClick($onclick);
+        $formStr .= $objButton->show();
         
-        $objForm = new form('citation', $this->uri(''));
+        $refUrl = "http://www.refworks.com/express/ExpressImport.asp?vendor=Your%20Service%20Name&filter=RefWorks%20Tagged%20Format&encoding=65001";
+        $objForm = new form('ExportRWForm', $refUrl);
         $objForm->addToForm($formStr);
         $str = $objForm->show();
+        *
+        
+        $url = "http://www.refworks.com/express/expressimport.asp";
+        $onclick = "javascript: window.open('{$url}', 'RefWorksMain', 'top=0, left=0, screenX=0, screenY=0');";
+        $objButton = new button('export', $lbExportRW);
+        $objButton->setOnClick($onclick);
+        $str = $objButton->show();
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 2px;"';
@@ -258,6 +271,7 @@ class etdresource extends object
         $objTab->addBoxContent($str);
         
         return $objTab->show();
+        */
     }
 }
 ?>

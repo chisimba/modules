@@ -56,7 +56,7 @@ class etd extends controller
     
             $this->etdSearch = $this->getObject('search', 'etd');
             $this->etdSearch->setMetaType('thesis', 'etd');
-    
+
             $this->emailResults = $this->getObject('emailresults');
             $this->emailResults->setModuleName('etd');
     

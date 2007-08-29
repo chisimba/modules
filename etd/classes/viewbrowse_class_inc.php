@@ -181,6 +181,7 @@ class viewBrowse extends object
         $this->loadClass( 'textinput', 'htmlelements');
         $this->loadClass( 'label', 'htmlelements' );
         $this->loadClass( 'form', 'htmlelements' );
+        $this->loadClass( 'checkbox', 'htmlelements' );
     }
 
     /**
@@ -298,10 +299,12 @@ class viewBrowse extends object
     * @param string $module The name of the module using the class.
     * @param string $deleteConfirm The confirmation message code for the delete function.
     */
-    public function setModuleName($module, $deleteConfirm)
+    public function setModuleName($module, $deleteConfirm = NULL)
     {
         $this->module = $module;
-        $this->deleteConfirm = $deleteConfirm;
+        if(!empty($deleteConfirm)){
+            $this->deleteConfirm = $deleteConfirm;
+        }
     }
 
     /**

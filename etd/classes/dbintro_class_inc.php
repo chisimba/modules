@@ -199,8 +199,9 @@ class dbIntro extends dbtable
             return $footer;
         }
         $footer = $this->getContent('footer');
-        $this->setSession('footerStr', $footer['content_text']);
-        return $footer['content_text'];
+        $footerStr = isset($footer['content_text']) ? $footer['content_text'] : '';
+        $this->setSession('footerStr', $footerStr);
+        return $footerStr;
     }
     
     /**
@@ -212,7 +213,8 @@ class dbIntro extends dbtable
     public function showFaq()
     {
         $faq = $this->getContent('faq');
-        return $faq['content_text'];
+        $faqStr = isset($faq['content_text']) ? $faq['content_text'] : '';
+        return $faqStr;
     }
 }
 ?>

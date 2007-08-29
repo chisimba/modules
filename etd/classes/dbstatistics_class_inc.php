@@ -440,7 +440,7 @@ class dbStatistics extends dbTable
         $hdDownload = $this->objLanguage->languageText('mod_etd_mostdownloadedresources', 'etd');
         
         $objTable = new htmltable();
-        $objTable->width = '80%';
+        $objTable->width = '70%';
         $objTable->border = '1';
         $objTable->cellpadding = '5';
         

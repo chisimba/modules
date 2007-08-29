@@ -264,7 +264,7 @@ class search extends object
         $objInput->setId('inputbox1');
         $objInput->extra = "autocomplete='off'";
         $inputBox = $objInput->show();
-        $inputBox .= $this->getDegreeList(1).$this->getFacultyList(1).$this->getDepartmentList(1);
+        $inputBox .= $this->getDegreeList(1).$this->getFacultyList(1).$this->getDepartmentList(1).$this->getLanguageList(1);
         
         $this->objTable->addRow(array('', $this->getCriteria(1), $inputBox));
 
@@ -272,14 +272,14 @@ class search extends object
         $objInput->setId('inputbox2');
         $objInput->extra = "autocomplete='off'";
         $inputBox2 = $objInput->show();
-        $inputBox2 .= $this->getDegreeList(2).$this->getFacultyList(2).$this->getDepartmentList(2);
+        $inputBox2 .= $this->getDegreeList(2).$this->getFacultyList(2).$this->getDepartmentList(2).$this->getLanguageList(2);
         $this->objTable->addRow(array($this->getCrossRef(1), $this->getCriteria(2), $inputBox2));
 
         $objInput = new textinput('box3', '', NULL, '57');
         $objInput->setId('inputbox3');
         $objInput->extra = "autocomplete='off'";
         $inputBox3 = $objInput->show();
-        $inputBox3 .= $this->getDegreeList(3).$this->getFacultyList(3).$this->getDepartmentList(3);
+        $inputBox3 .= $this->getDegreeList(3).$this->getFacultyList(3).$this->getDepartmentList(3).$this->getLanguageList(3);
         $this->objTable->addRow(array($this->getCrossRef(2), $this->getCriteria(3), $inputBox3));
 
         // date search
@@ -361,22 +361,26 @@ class search extends object
                     var el2 = 'degreebox'+drop;
                     var el3 = 'departmentbox'+drop;
                     var el4 = 'facultybox'+drop;
+                    var el5 = 'languagebox'+drop;
                     var el = document.getElementById('criteria'+drop).value;
                     
                     document.getElementById('inputbox'+drop).name = 'input'+drop;
                     document.getElementById('degreebox'+drop).name = 'degree'+drop;
                     document.getElementById('departmentbox'+drop).name = 'depart'+drop;
                     document.getElementById('facultybox'+drop).name = 'fac'+drop;
+                    document.getElementById('languagebox'+drop).name = 'language'+drop;
                     
                     a = $(el1);
                     b = $(el2);
                     c = $(el3);
                     d = $(el4);
+                    e = $(el5);
                     
                     a.hide();
                     b.hide();
                     c.hide();
                     d.hide();
+                    e.hide();
                     
                     switch(el){
                         case 'thesis_degree_name':
@@ -391,6 +395,10 @@ class search extends object
                             document.getElementById('facultybox'+drop).name = 'box'+drop;
                             d.show();
                             break;
+                        case 'dc_language':
+                            document.getElementById('languagebox'+drop).name = 'box'+drop;
+                            e.show();
+                            break;
                         default:
                             document.getElementById('inputbox'+drop).name = 'box'+drop;
                             a.show();
@@ -400,6 +408,29 @@ class search extends object
             </script>";
             
             $this->appendArrayVar('headerParams', $javascript);
+    }
+    
+    /**
+    * Method to create a drop down of the list of languages
+    *
+    * @access private
+    * @return string html
+    */
+    private function getLanguageList($num = 1)
+    {
+        $objLangCode = $this->getObject('languagecode', 'language');
+        
+        $language = 'English';
+
+        $objDrop = new dropdown('lang'.$num);
+        $objDrop->setId('languagebox'.$num);
+        $objDrop->extra = "style='display: none;'";
+        foreach($objLangCode->iso_639_2_tags->codes as $key => $item){
+            $objDrop->addOption($item, $item);
+        }
+        $objDrop->setSelected($language);
+        
+        return $objDrop->show();
     }
     
     /**

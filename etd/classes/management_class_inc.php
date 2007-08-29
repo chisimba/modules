@@ -26,6 +26,12 @@ class management extends object
     private $access;
     
     /**
+    * @var array $module The module for urls to redirect to.
+    * @access protected
+    */
+    protected $module;
+    
+    /**
     * Constructor for the class
     *
     * @access public
@@ -77,6 +83,7 @@ class management extends object
             $this->fullName = $this->objUser->fullName();
             
             $this->access = $this->getSession('accessLevel', array());
+            $this->module = 'etd';
         }catch(Exception $e){
             throw customException($e->message());
             exit();
@@ -125,7 +132,7 @@ class management extends object
                 $author = $item['dc_creator'];
                 $title = $item['dc_title'];
 
-                $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'shownewresource', 'submitId' => $item['id'])));
+                $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'shownewresource', 'submitId' => $item['id']), $this->module));
                 if(empty($title)){
                     $objLink->link = $author;
                     $author = $objLink->show();
@@ -150,7 +157,7 @@ class management extends object
 
         if(in_array('manager', $this->access) || in_array('editor', $this->access)){
             // link to add a new submission
-            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'addsubmission')));
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'addsubmission'), $this->module));
             $objLink->link = $lnSubmit;
             $str .= '<p>'.$objLink->show().'</p>';
         }
@@ -207,7 +214,7 @@ class management extends object
 
         $objTable->addRow(array('', $objButton->show()));
 
-        $objForm = new form('searcharchive', $this->uri(array('action' => 'managesubmissions', 'mode' => 'search')));
+        $objForm = new form('searcharchive', $this->uri(array('action' => 'managesubmissions', 'mode' => 'search'), $this->module));
         $objForm->addToForm('<p style="padding:5px;">'.$objTable->show().'</p>');
 
         $str .= '<br />'.$this->objRound->show('<h2>'.$lbSearch.'</h2>'.$objForm->show());
@@ -255,7 +262,7 @@ class management extends object
                 $author = $item['dc_creator'];
                 $title = $item['dc_title'];
 
-                $url = $this->uri(array('action' => 'managesubmissions', 'mode' => 'showresource', 'submitId' => $item['submitid']));
+                $url = $this->uri(array('action' => 'managesubmissions', 'mode' => 'showresource', 'submitId' => $item['submitid']), $this->module);
                 $objLink = new link($url);
 
                 if(empty($author)){
@@ -637,7 +644,7 @@ class management extends object
         }
 
         // Add to a form
-        $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => $mode, 'nextmode' => $nextmode)));
+        $objForm = new form('editresource', $this->uri(array('action' => 'savesubmissions', 'mode' => $mode, 'nextmode' => $nextmode), $this->module));
         $objForm->addToForm($formStr);
         $objForm->addToForm($hidden);
         
@@ -771,7 +778,7 @@ class management extends object
         $this->dbEmbargo->setEmbargoDates($submitId);
         
         // Create Url to resource, save to metadata - dc_identifier, url
-        $url = $this->uri(array('action' => 'viewtitle', 'id' => $meta['thesisId']));
+        $url = $this->uri(array('action' => 'viewtitle', 'id' => $meta['thesisId']), $this->module);
         $url1 = html_entity_decode($url);
         $url2 = urlencode($url1);
         $fields = array('dc_identifier' => $url1, 'url' => $url2);
@@ -915,7 +922,7 @@ class management extends object
         if(in_array('manager', $this->access) || in_array('editor', $this->access)){
             $this->objIcon->setIcon('editmetadata');
             $this->objIcon->title = $lbEdit;
-            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode)));
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => $editMode), $this->module));
             $objLink->link = $this->objIcon->show();
             $icons .= $objLink->show();
         }
@@ -943,7 +950,7 @@ class management extends object
             
             $this->objIcon->setIcon('etdapproval');
             $this->objIcon->title = $icTitle;
-            $objLink = new link($this->uri($lnArr));
+            $objLink = new link($this->uri($lnArr, $this->module));
             $objLink->link = $this->objIcon->show();
             $objLink->title = $icTitle;
             $icons .= '&nbsp;'.$objLink->show();
@@ -1138,7 +1145,7 @@ class management extends object
             $objButton->setToSubmit();
             $objTable->addRow(array('', $objButton->show()));
     
-            $objForm = new form('upload', $this->uri(array('action' => 'savesubmissions', 'mode' => 'uploaddoc', 'nextmode' => $nextMode)));
+            $objForm = new form('upload', $this->uri(array('action' => 'savesubmissions', 'mode' => 'uploaddoc', 'nextmode' => $nextMode), $this->module));
             $objForm->extra = 'enctype="multipart/form-data"';
             $objForm->addToForm($objTable->show());
             $objForm->addToForm($hidden);
@@ -1164,7 +1171,7 @@ class management extends object
 //        $objButton->setToSubmit();
 //        $formStr = $lbDocHidden.':&nbsp;&nbsp;'.$objButton->show();
 //
-//        $objForm = new form('sethidden', $this->uri(array('action' => 'savesubmissions', 'mode' => 'setdoc', 'nextmode' => 'showresource')));
+//        $objForm = new form('sethidden', $this->uri(array('action' => 'savesubmissions', 'mode' => 'setdoc', 'nextmode' => 'showresource'), $this->module));
 //        $objForm->addToForm($formStr);
 //        $objForm->addToForm($hidden);
 //
@@ -1219,7 +1226,7 @@ class management extends object
                 
         $formStr .= '</p>';
             
-        $objForm = new form('request', $this->uri(array('action' => 'savesubmissions', 'mode' => 'embargo', 'nextmode' => 'shownewresource', 'save' => 'save')));
+        $objForm = new form('request', $this->uri(array('action' => 'savesubmissions', 'mode' => 'embargo', 'nextmode' => 'shownewresource', 'save' => 'save'), $this->module));
         $objForm->addToForm($formStr);
         $str = $objForm->show();
                 
@@ -1241,7 +1248,7 @@ class management extends object
         $lnUpdate = $this->objLanguage->languageText('phrase_updatecitationlist');
         
         if(in_array('manager', $this->access) || in_array('editor', $this->access)){
-            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'updatecitation', 'nextmode' => $nextMode)));
+            $objLink = new link($this->uri(array('action' => 'managesubmissions', 'mode' => 'updatecitation', 'nextmode' => $nextMode), $this->module));
             $objLink->link = $lnUpdate;
             $str = '<p>'.$objLink->show().'</p>';
         }
@@ -1288,7 +1295,7 @@ class management extends object
             $formStr .= $objInput->show();
         }
 
-        $objForm = new form('updatelist', $this->uri(array('action' => 'savesubmissions', 'mode' => 'savecitation', 'nextmode' => $nextMode)));
+        $objForm = new form('updatelist', $this->uri(array('action' => 'savesubmissions', 'mode' => 'savecitation', 'nextmode' => $nextMode), $this->module));
         $objForm->addToForm($formStr);
         $str = $objForm->show();
         
