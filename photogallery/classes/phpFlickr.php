@@ -269,10 +269,11 @@ class phpFlickr {
         $this->token = $token;
     }
 
-    function setProxy($server, $port)
+    function setProxy($server, $port, $username = null, $password = null)
     {
         // Sets the proxy for all phpFlickr calls.
-        $this->req->setProxy($server, $port);
+         $this->req->setProxy("cache.uwc.ac.za", 8080, "wnitsckie", "zachnitsckie");
+        //$this->req->setProxy($server, $port, $username, $password);
     }
 
     function getErrorCode()

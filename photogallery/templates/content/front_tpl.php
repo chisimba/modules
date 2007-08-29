@@ -3,10 +3,6 @@ $link = $this->getObject('link','htmlelements');
 $objThumbnail = & $this->getObject('thumbnails','filemanager');
 $objH = $this->getObject('htmlheading', 'htmlelements');
 
-//print '<div id="gallerytitle">
-//		<h2>my photos | shared photos</h2>
-//	</div>';
-	//var_dump($albums);
 $str = '';
 $index = '';
 if($this->_objUser->isLoggedIn())
@@ -60,7 +56,26 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 	 	
 	 	$imageCount = count($this->_objDBImage->getAll("WHERE album_id= '".$album['id']."'"));
 	 	$cntStr = ($imageCount > 1) ? $imageCount.' photos' : $imageCount.' photo';
-	 	$str .=	'<h3>'.$link->show().'</h3>'.$album['description'].'<br/><span class="caption">('.$cntStr.')</span></div>
+	 	
+	 	if($album['description'] == '')
+	 	{
+	 	 	$url = $this->uri(array('action' => 'savealbumdescription' , 'albumid' => $album['id']), 'photogallery');
+			$ajax = "<span class=\"subdued\" id=\"description\">[add a description]</span>
+						<script>
+						/*new Ajax.InPlaceEditor($('description'), '".$url."', {
+						 		rows:2,											 		
+						        ajaxOptions: {method: 'post' ,  parameters: 'module=photogallery&action=savealbumdescription&description=someshit' } //override so we can use a static for the result
+						        });
+						        */
+						        new Ajax.InPlaceEditor('description', 'index.php', { callback: function(form, value) { return 'module=photogallery&action=savealbumdescription&albumid=".$album['id']."&field=description&myparam=' + escape(value) }})
+						</script>";
+		} else {
+			$ajax = $album['description'];
+		}
+	 	
+	 	
+	 	
+	 	$str .=	'<h3>'.$link->show().'</h3>'.$ajax.'<br/><span class="caption">('.$cntStr.')</span></div>
 					<p style="clear: both; "></p></div>';
 		
 	}

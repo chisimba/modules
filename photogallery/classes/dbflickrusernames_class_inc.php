@@ -28,7 +28,7 @@ class dbflickrusernames extends dbTable
     {
         parent::init('tbl_photogallery_flickr_users');
         $this->_objUser = $this->getObject('user', 'security');
-        $this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773");
+       
         
     }
     
@@ -62,23 +62,23 @@ class dbflickrusernames extends dbTable
 	
 	/**
 	* Method to get all the albums from flickr
+	*
+	* @return array
 	*/
 	public function getFlickrSharedAlbums()
 	{
+	 	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773", "d01ff0f7a912a1e3");
 		$bigSet = array();
 		$users = $this->getAll();
 		foreach($users as $user)
 		{
 			$user['sets'] = array();
-			$usr = $this->_objFlickr->people_findByUsername($user['flickr_username']);//$f->photos_getRecent();
-			$sets = $this->_objFlickr->photosets_getList($usr['id']);
-			//array_push($bigSets, $sets);
+			$usr = $this->_objFlickr->people_findByUsername($user['flickr_username']);
+			$sets = $this->_objFlickr->photosets_getList($usr['id']);		
 			array_push($user['sets'], $sets);
-//			$newArr = array($user, $sets);
 			$bigSet[]=$user;
 		}
-		//print '<pre>';
-		//var_dump($bigSet);die;
+		
 		return $bigSet;
 	}
 	
@@ -93,5 +93,16 @@ class dbflickrusernames extends dbTable
 	{
 	
 		return $this->delete('flickr_username',$username);
+	}
+	
+	/**
+	* Method to check if a username exists in the database
+	*
+	* @return boolean
+	* @param string $username The flickr username
+	*/
+	public function usernameExist($username)
+	{
+		return $this->valueExists('flickr_username', $username);
 	}
 }

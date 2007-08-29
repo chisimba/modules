@@ -37,11 +37,12 @@ if(count($usernames) > 0)
 	$table->cssClass = 'bordered';
 	$table->startHeaderRow();
 	$table->width = '50%';
-	$table->addHeaderCell('Username',55);
-	$table->addHeaderCell('View Albums/Sets',30);
+	$table->addHeaderCell('Username');
+	/*$table->addHeaderCell('View Albums/Sets',30);
 	$table->addHeaderCell('Upload Images',30);
 	$table->addHeaderCell('Add Comments',30);
 	$table->addHeaderCell('Edit Images',30);
+	*/
 	$table->addHeaderCell('');
 	$table->endHeaderRow();
 
@@ -49,10 +50,11 @@ if(count($usernames) > 0)
 	{
 	 	$table->startRow();
 		$table->addCell($username['flickr_username']);		
+		/*$table->addCell('');
 		$table->addCell('');
 		$table->addCell('');
 		$table->addCell('');
-		$table->addCell('');
+		*/
 		$table->addCell($icon->getDeleteIconWithConfirm($username['flickr_username'],array('action' => 'deleteflickrusername', 'username' => $username['flickr_username']),'photogallery'),null,'center');
 		
 		$table->endRow();
@@ -62,7 +64,7 @@ if(count($usernames) > 0)
 } else {
 	//$list = 'No Flickr usernames available';
 }
-echo '<div id="main"><h2><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"> Flickr Usernames</h2>';
+echo '<div id="main"><h1><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7">My Flickr Usernames</h1>';
 if(isset($msg))
 {
 	echo '<span class="warning>"'.$msg.'</span>';

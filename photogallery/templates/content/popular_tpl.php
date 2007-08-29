@@ -21,11 +21,28 @@ if(!isset($tagged))
 	$tagged = NULL;
 }
 
-$link->href = $this->uri(array('action'=>'front'),'photogallery');
-$link->link = 'Photo Gallery';
+if($this->_objUser->isLoggedIn())
+{
+	
+	$link->href = $this->uri(array('action'=>'front'),'photogallery');
+	$link->link = 'My Gallery';
+	$mygal = $link->show();
+	
+	$link->href = $this->uri(array('action'=>'front', 'mode' => 'shared'),'photogallery');
+	$link->link = 'Shared Photos';
+	$shared = $link->show();
+	
+	$head = '<div id="gallerytitle">
+		<h2><span>'.$mygal.' | </span> <span>'.$shared.' | </span>Popular</h2></div>	';
 
-$head = '<div id="gallerytitle">
+	
+} else {
+	$link->href = $this->uri(array('action'=>'front'),'photogallery');
+	$link->link = 'Photo Gallery';
+	$head = '<div id="gallerytitle">
 		<h2><span>'.$link->show().' | </span> Popular</h2></div>	';
+
+}
 
 echo ' <div id="main2" style="align:center;">
                 '.$head.'

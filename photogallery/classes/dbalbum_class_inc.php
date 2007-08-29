@@ -160,5 +160,15 @@ class dbalbum extends dbTable
 			$this->update('id', $albums[$arr-1]['id'], array('position' => $cnt));
 		}
 	}
+	
+	/**
+	* Method to save an album
+	* @param string $albumId
+	* @param string $description
+	*/
+	public function saveDescription($albumId, $description='')
+	{echo $description;
+		return $this->update('id', $albumId, array('description' => $description));
+	}
 }
 ?>

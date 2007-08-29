@@ -5,27 +5,29 @@ $link = $this->getObject('link','htmlelements');
 $icon = $this->getObject('geticon', 'htmlelements');
 $cnt =0 ;
 $str = '';
-foreach($arrAlbum as $album)
+if(count($arrAlbum) > 0)
 {
-	$cnt++;
-	$table = new htmltable();
-	$table->cellspacing='0';
-	$table->width = '100%';
-	$table->startRow();
-	$link->href = $this->uri(array('action' => 'editalbum', 'albumid' => $album['id']));
-	$link->link = '<img height="40" width="40" src="'.$this->_objDBImage->getThumbNailFromFileId($album['thumbnail']).'" />';
-	$table->addCell($link->show(),20);
-	$link->link = $album['title'];
-	$table->addCell($link->show());
-	$link->href = 'javascript: confirmDeleteAlbum(\'?page=edit&action=deletealbum&album=zach\');';
-	$icon->setIcon('delete');
-	$link->link = $icon->show(); 
-	$table->addCell($icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
-	$table->endRow();
-	$str .= '<div id="id_'.$cnt.'">'.$table->show().'</div>';
-	
+	foreach($arrAlbum as $album)
+	{
+		$cnt++;
+		$table = new htmltable();
+		$table->cellspacing='0';
+		$table->width = '100%';
+		$table->startRow();
+		$link->href = $this->uri(array('action' => 'editalbum', 'albumid' => $album['id']));
+		$link->link = '<img height="40" width="40" src="'.$this->_objDBImage->getThumbNailFromFileId($album['thumbnail']).'" />';
+		$table->addCell($link->show(),20);
+		$link->link = $album['title'];
+		$table->addCell($link->show());
+		$link->href = 'javascript: confirmDeleteAlbum(\'?page=edit&action=deletealbum&album=zach\');';
+		$icon->setIcon('delete');
+		$link->link = $icon->show(); 
+		$table->addCell($icon->getDeleteIconWithConfirm($album['id'],array('action' => 'deletealbum', 'albumid' => $album['id']),'photogallery'),null,null,'right');
+		$table->endRow();
+		$str .= '<div id="id_'.$cnt.'">'.$table->show().'</div>';
+		
+	}
 }
-
 $table = new htmltable();
 $table->cssClass = 'bordered';
 $table->width = '400px';
@@ -107,6 +109,10 @@ if(count($flickrusernames) > 0)
 		$flickrTables .= '<h2>'.$username['flickr_username'].'</h2>'.$tbl->show();
 		$tbl = null;
 	}
+	
+	$flickrTables = '<br/><div style="padding: 15px;" id="box" class="box"><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"><br/>'.$flickrTables.'</div>';
+} else {
+	$flickrTables = '';
 }
 
 
@@ -139,7 +145,7 @@ echo '<div id="main"><h2>Edit Gallery</h2>
 Drag the albums into the order you wish them displayed. Select an album to edit its description and data';
 echo $table->show();
 
-echo '<br/><div style="padding: 15px;" id="box" class="box"><img src="http://l.yimg.com/www.flickr.com/images/flickr_logo_gamma.gif.v1.5.7"><br/>'.$flickrTables.'</div>';
+echo $flickrTables;
 ?>
         
                 
