@@ -80,7 +80,7 @@ class block_resourcemenu extends object
         
         $str .= $this->dbStats->showResourceStats($resourceId);
         
-        //$str .= $this->etdResources->showCitation($resourceId);
+        $str .= $this->etdResources->showCitation($resourceId);
         
 	    return $str;
     }

@@ -236,7 +236,6 @@ class etdresource extends object
     */
     public function showCitation($resourceId)
     {
-        /*
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
@@ -259,7 +258,7 @@ class etdresource extends object
         $objForm = new form('ExportRWForm', $refUrl);
         $objForm->addToForm($formStr);
         $str = $objForm->show();
-        *
+        */
         
         $actionUrl = urlencode($this->uri(array('action' => 'exportrefworks', 'resource_id' => $resourceId)));
         $url = "http://www.refworks.com/express/expressimport.asp?vendor=ETD&amp;filter=RefWorks%20Tagged%20Format&amp;encoding=65001&amp;url={$actionUrl}";
@@ -276,7 +275,6 @@ class etdresource extends object
         $objTab->addBoxContent($str);
         
         return $objTab->show();
-        */
     }
     
     /**
@@ -288,7 +286,6 @@ class etdresource extends object
     */
     public function getRefWorksFormat($resource)
     {   
-        /*
         // Add reference type
         $refStr = 'RT Dissertation/Thesis \n';
         
@@ -337,7 +334,6 @@ class etdresource extends object
         $refStr .= isset($resource['dc_language']) ? "LA {$resource['dc_language']} \n" : '';
         
         return $refStr;
-        */
     }
 }
 ?>
