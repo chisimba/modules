@@ -454,7 +454,7 @@ class etd extends controller
                 $articles = $this->getParam('articles');
                 $criteria = $this->getParam('criteria');
                 
-                if(!empty($eshelf)){
+                if(!empty($eshelf) !empty($articles)){
                     foreach($eshelf as $key => $item){
                         if(rtrim($criteria) == rtrim($item['criteria'])){
                             // find the search criteria containing the article to be removed
