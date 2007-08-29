@@ -28,6 +28,7 @@ class etdresource extends object
         $this->dbSubmit = $this->getObject('dbsubmissions', 'etd');
         
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objCountry = $this->getObject('languagecode', 'language');
         $this->objFeatureBox = $this->newObject('featureBox', 'navigation');
 
         $this->loadClass('htmltable', 'htmlelements');
@@ -230,9 +231,10 @@ class etdresource extends object
     * Method to display the citation in one of a given number of formats
     *
     * @access public
+    * @param string $resourceId The id of the resource to export
     * @return string html
     */
-    public function showCitation()
+    public function showCitation($resourceId)
     {
         /*
         $this->loadClass('form', 'htmlelements');
@@ -259,11 +261,14 @@ class etdresource extends object
         $str = $objForm->show();
         *
         
-        $url = "http://www.refworks.com/express/expressimport.asp";
+        $actionUrl = urlencode($this->uri(array('action' => 'exportrefworks', 'resource_id' => $resourceId)));
+        $url = "http://www.refworks.com/express/expressimport.asp?vendor=ETD&amp;filter=RefWorks%20Tagged%20Format&amp;encoding=65001&amp;url={$actionUrl}";
         $onclick = "javascript: window.open('{$url}', 'RefWorksMain', 'top=0, left=0, screenX=0, screenY=0');";
         $objButton = new button('export', $lbExportRW);
         $objButton->setOnClick($onclick);
         $str = $objButton->show();
+        
+        echo $url;
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 2px;"';
@@ -271,6 +276,67 @@ class etdresource extends object
         $objTab->addBoxContent($str);
         
         return $objTab->show();
+        */
+    }
+    
+    /**
+    * Method to return the resource in the refworks tagged format
+    *
+    * @access public
+    * @param array $resource The data for the resource to export
+    * @return string html
+    */
+    public function getRefWorksFormat($resource)
+    {   
+        /*
+        // Add reference type
+        $refStr = 'RT Dissertation/Thesis \n';
+        
+        // Add reference identifier - metaid
+        $refStr .= "ID {$resource['thesisid']} \n";
+        
+        // Add authors - explode if theres more than one
+        if(isset($resource['dc_creator']) && !empty($resource['dc_creator'])){
+            $authors = explode('; ', $resource['dc_creator']);
+            
+            foreach($authors as $val){
+                $refStr .= "A1 {$val} \n";
+            }
+        }
+        
+        // Add title and alternate title
+        $refStr .= "T1 {$resource['dc_title']} \n";
+        $refStr .= isset($resource['dc_title_alternate']) ? "T1 {$resource['dc_title_alternate']} \n" : '';
+        
+        // Add year
+        $refStr .= isset($resource['dc_date']) ? "YR {$resource['dc_date']} \n" : '';
+        
+        // Add keywords
+        if(isset($resource['dc_subject']) && !empty($resource['dc_subject'])){
+            $keywords = explode('; ', $resource['dc_subject']);
+            
+            foreach($keywords as $val){
+                $refStr .= "K1 {$val} \n";
+            }
+        }
+        
+        // Add abstract - strip html
+        $abstract = isset($resource['dc_description']) ? strip_tags($resource['dc_description']) : '';
+        $refStr .= !empty($abstract) ? "AB {$abstract} \n" : '';
+        
+        // Add notes - NO - ??
+        
+        // Add institution / publisher
+        $refStr .= isset($resource['dc_publisher']) ? "PB {$resource['dc_publisher']} \n" : '';
+        
+        // Country / place of publication
+        $country = isset($resource['dc_coverage']) ? $this->objCountry->getName($resource['dc_coverage']) : '';
+        $refStr .= !empty($country) ? "PP {$country} \n" : '';
+        
+        // Language
+        $refStr .= isset($resource['dc_language']) ? "LA {$resource['dc_language']} \n" : '';
+        
+        return $refStr;
         */
     }
 }

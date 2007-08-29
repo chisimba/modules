@@ -354,6 +354,10 @@ class search extends object
     */
     private function showJavascript()
     {
+        
+        $headerParams = $this->getJavascriptFile('etd.js', 'etd');
+        $this->appendArrayVar('headerParams', $headerParams);
+        /*
         $javascript = "<script type=\"text/javascript\">
         
                 function changeInput(drop){
@@ -408,6 +412,7 @@ class search extends object
             </script>";
             
             $this->appendArrayVar('headerParams', $javascript);
+            */
     }
     
     /**

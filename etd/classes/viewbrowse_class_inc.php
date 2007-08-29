@@ -813,11 +813,12 @@ class viewBrowse extends object
             $objForm = new form('addeshelf', $this->uri(array('action' => 'addeshelf')));
             $objForm->addToForm($tblResults->show());
             $return = $objForm->show();
+            
+            $this->showJavascript();
         }else{
             $return = $tblResults->show();
         }
         
-        $this->showJavascript();
         return $return;
     }
     
@@ -828,12 +829,11 @@ class viewBrowse extends object
     * @return void
     */
     private function showJavascript()
-    {
-        $url = $this->uri(array('action' => 'addeshelf'), $this->module);
-        /*
-        , 'searchForString' => $this->findString, 'searchForLetter' => $this->findLetter, 'displayStart' => $this->displayStart, 'displayLimit' => $this->displayLimit, 'joinId' => $this->join, 'extraFilter' => $this->extraFilter), $this->module);
-        */
+    {   
+        $headerParams = $this->getJavascriptFile('etd.js', 'etd');
+        $this->appendArrayVar('headerParams', $headerParams);
         
+        /*
         $javascript = "<script type=\"text/javascript\">
         
                 function addToShelf()
@@ -870,6 +870,7 @@ class viewBrowse extends object
             </script>";
         
         $this->appendArrayVar('headerParams', $javascript);
+        */
     }
 
     /**

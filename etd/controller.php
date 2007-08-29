@@ -137,6 +137,19 @@ class etd extends controller
                 $this->dbStats->recordDownload();
                 break;
                 
+            case 'exportrefworks':
+                $resourceId = $this->getParam('resource_id');
+                if(empty($resourceId)){
+                    $resourceId = $this->getSession('resourceId');
+                }
+                if(empty($resourceId)){
+                    break;
+                }
+                $resource = $this->dbThesis->getMetadata($resourceId);
+                $refStr = $this->etdResource->getRefWorksFormat($resource);
+                return $refStr;
+                break;
+                
             case 'showrecent':
                 $head = $this->objLanguage->languageText('mod_etd_name', 'etd');
                 $objHead = new htmlheading();
@@ -767,6 +780,7 @@ class etd extends controller
             case 'viewtitle':
             case 'printresource':
             case 'emailresource':
+            case 'exportrefworks':
             case 'viewdepartment':
             case 'browsedepartment':
             case 'viewfaculty':
