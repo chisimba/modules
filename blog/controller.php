@@ -649,7 +649,7 @@ class blog extends controller
 
             
            case 'commentfeed':
-           	$format = 'RSS2';
+           		$format = 'RSS2';
                 //and the userid of the blog we are interested in
                 $userid = $this->getParam('userid');
                 $bloggerprofile = $this->objDbBlog->checkProfile($userid);

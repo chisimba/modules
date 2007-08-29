@@ -1699,7 +1699,7 @@ class blogops extends object
             'userid' => $userid
         )) , $this->objLanguage->languageText("mod_blog_word_atom", "blog"));
         $atomfeed = $atom->show() . $link->show() . "<br />";
-        //$leftCol .= $atomfeed;
+        
         //Plain HTML
         $html = $this->getObject('geticon', 'htmlelements');
         $html->setIcon('rss', 'gif', 'icons/filetypes');

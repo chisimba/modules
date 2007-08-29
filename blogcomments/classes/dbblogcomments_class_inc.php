@@ -139,7 +139,7 @@ class dbblogcomments extends dbTable
 	 * You need to supply a user id to the method. This will get all the extra data
 	 * attached to that user from the blogcomments table.
 	 *
-	 * @param string $pid
+	 * @param string $userid
 	 * @return array
 	 */
 	public function grabCommentsByUser($userid)
