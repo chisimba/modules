@@ -1708,7 +1708,8 @@ class blogops extends object
             'format' => 'html',
             'userid' => $userid
         )) , $this->objLanguage->languageText("mod_blog_word_html", "blog"));
-        //Comment RSS2.0
+        
+        // Comment RSS2.0
         $rss2comm = $this->getObject('geticon', 'htmlelements');
         $rss2comm->align = "top";
         $rss2comm->setIcon('rss', 'gif', 'icons/filetypes');
