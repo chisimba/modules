@@ -267,7 +267,6 @@ class etdresource extends object
         $objButton->setOnClick($onclick);
         $str = $objButton->show();
         
-        echo $url;
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 2px;"';
