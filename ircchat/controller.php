@@ -5,12 +5,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 /**
- * Module class to serve the real-time communication tools 
- * 
+ * Module class to serve the real-time communication tools
+ *
  * @author Nic Appleby
- * 
+ *
  */
-class ircchat extends controller 
+class ircchat extends controller
 {
     /*
     Variables for creating the user, language object, etc
@@ -29,21 +29,21 @@ class ircchat extends controller
 
     }
     /**
-     * *The standard dispatch method for the module. The dispatch() method must 
-     * return the name of a page body template which will render the module 
+     * *The standard dispatch method for the module. The dispatch() method must
+     * return the name of a page body template which will render the module
      * output (for more details see Modules and templating)
      */
     function dispatch($action)
-    { 
+    {
         // retrieve the mode from the querystring
         switch ($action) {
-            case null:
+            case 'enabled':
                 return "chat_tpl.php";
-                break;
+            case 'notenabled':
+                return "nochat_tpl.php";
             default:
-                echo $objLanguage->languageText("phrase_unrecognizedaction");
-                break;
-        } 
+                return "default_tpl.php";
+        }
     }
 
     function requiresLogin() {
