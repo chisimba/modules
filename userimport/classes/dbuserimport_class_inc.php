@@ -138,7 +138,7 @@ class dbuserimport extends dbTable
         ."where tbl_importusers.batchId='$batchCode' and tbl_users.userId=tbl_importusers.userId";
         $list=$this->getArray($sql);
         $data2=$this->getAll("where batchId='$batchCode' LIMIT 1");
-        $contextCode=$data2[0]['contextCode'];
+        $contextCode=$data2[0]['contextcode'];
         $data=array();
         $data['batchCode']=$batchCode;
         $data['courseCode']=$contextCode;
