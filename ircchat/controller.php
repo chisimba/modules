@@ -8,6 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * Module class to serve the real-time communication tools
  *
  * @author Nic Appleby
+ * @author Jeremy O'Connor
  *
  */
 class ircchat extends controller
