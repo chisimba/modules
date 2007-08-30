@@ -13,7 +13,7 @@ $uriNotEnabled = $this->uri(array('action'=>'notenabled'));
 ?>
 <script type="text/javascript">
 // <![CDATA[
-if ( false && navigator.javaEnabled() ) {
+if ( navigator.javaEnabled() ) {
     window.location="<?= $uriEnabled ?>";
 }
 else {
