@@ -21,9 +21,9 @@ class management extends object
 {
     /**
     * @var array $access The users access level within the class - set in the controller according to the group in which the user is a member.
-    * @access private
+    * @access protected
     */
-    private $access;
+    protected $access;
     
     /**
     * @var array $module The module for urls to redirect to.
@@ -89,15 +89,30 @@ class management extends object
             exit();
         }
     }
+    
+    /**
+    * Method to set the submit type and the calling module
+    *
+    * @access public
+    * @param string $type The submit type
+    * @param string $module The calling module
+    * @return string html
+    */
+    public function setSubmitType($type, $module)
+    {
+        $this->dbSubmissions->setSubmitType($type);
+        $this->dbThesis->setSubmitType($type);
+        $this->module = $module;
+    }
 
     /**
     * Method to display a list of recent submissions requiring approval. And a link for submitting a new ETD.
     *
-    * @access private
+    * @access protected
     * @param array $data The submissions list
     * @return string html
     */
-    private function showSubmissions($data)
+    protected function showSubmissions($data)
     {
         $head = $this->objLanguage->languageText('phrase_newsubmissions');
         $hdTitle = $this->objLanguage->languageText('word_title');
@@ -168,10 +183,10 @@ class management extends object
     /**
     * Method to display a form for searching the archive for documents that need editing or deleting.
     *
-    * @access private
+    * @access protected
     * @return string html
     */
-    private function showManage()
+    protected function showManage()
     {
         $head = $this->objLanguage->languageText('phrase_managerepository');
         $lbSearch = $this->objLanguage->languageText('mod_etd_searcharchivedresources', 'etd');
@@ -225,12 +240,12 @@ class management extends object
     /**
     * Method to display the results from a search
     *
-    * @access private
+    * @access protected
     * @param array $data The search results
     * @param int $count The number of results
     * @return string html
     */
-    private function showResults($data, $count = 0)
+    protected function showResults($data, $count = 0)
     {
         $head = $this->objLanguage->languageText('phrase_requestedresources');
         $lbNone = $this->objLanguage->languageText('mod_etd_noresourcesmatchedsearchcriteria', 'etd');
@@ -292,10 +307,10 @@ class management extends object
     /**
     * Method to get resources using the entered search criteria
     *
-    * @access private
+    * @access protected
     * @return array $data
     */
-    private function getResults()
+    protected function getResults()
     {
         $author = $this->getParam('author');
         $title = $this->getParam('title');
@@ -326,11 +341,11 @@ class management extends object
     /**
     * Method to display a resource for editing.
     *
-    * @access private
+    * @access protected
     * @param array $data The resource data
     * @return string html
     */
-    private function editResource($data, $mode = 'saveresource', $nextmode = 'showresource')
+    protected function editResource($data, $mode = 'saveresource', $nextmode = 'showresource')
     {
         if(!empty($data)){
             $head = $this->objLanguage->languageText('phrase_editresource');
@@ -661,11 +676,11 @@ class management extends object
     /**
     * Method to save the new / updated metadata
     *
-    * @access private
+    * @access protected
     * @param string $submitId The submission id
     * @return void
     */
-    private function saveResource($submitId = NULL)
+    protected function saveResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
         $status = $this->getParam('status', 'metadata');
@@ -711,11 +726,11 @@ class management extends object
     /**
     * Method to save the new / updated metadata for a new submission not yet in the archive / database
     *
-    * @access private
+    * @access protected
     * @param string $submitId The submission id
     * @return void
     */
-    private function saveNewResource($submitId = NULL)
+    protected function saveNewResource($submitId = NULL)
     {
         // Update the submissions table to show who modified it and when
         $submitId = $this->dbSubmissions->editSubmission($this->userId, $submitId, 'metadata', 4);
@@ -763,11 +778,11 @@ class management extends object
     /**
     * Method to move a resource from xml to the repository / database.
     *
-    * @access private
+    * @access protected
     * @param string $submitId The submissions table id
     * @return void
     */
-    private function approveResource($submitId)
+    protected function approveResource($submitId)
     {   
         // Get xml metadata from file.
         $xmlData = $this->xmlMetadata->openXML('etd_'.$submitId);
@@ -799,7 +814,7 @@ class management extends object
     * @access protected
     * @param string $url The url to the resource
     */
-    private function writeToMap($url)
+    protected function writeToMap($url)
     {
         $objMap = $this->getObject('etdmap', 'etd');
         $objMap->readMap();
@@ -810,11 +825,11 @@ class management extends object
     /**
     * Method to delete a resource
     *
-    * @access private
+    * @access protected
     * @param string $submitId The submissions table id
     * @return void
     */
-    private function deleteResource($submitId)
+    protected function deleteResource($submitId)
     {
         // delete document
 //        $this->dbFiles->deleteAllFiles($submitId);
@@ -839,11 +854,11 @@ class management extends object
     /**
     * Method to delete a new resource that hasn't been archived yet
     *
-    * @access private
+    * @access protected
     * @param string $submitId The submissions table id
     * @return void
     */
-    private function deleteNewResource($submitId)
+    protected function deleteNewResource($submitId)
     {
         // delete document
 //        $this->dbFiles->deleteAllFiles($submitId);
@@ -863,11 +878,11 @@ class management extends object
     /**
     * Method to display a resource.
     *
-    * @access private
+    * @access protected
     * @param array $data The resource data
     * @return string html
     */
-    private function showResource($data, $editMode = 'editresource', $delMode = 'deleteresource', $nextMode = 'resources', $docMode = 'showresource')
+    protected function showResource($data, $editMode = 'editresource', $delMode = 'deleteresource', $nextMode = 'resources', $docMode = 'showresource')
     {
         $submitId = $this->getSession('submitId');
         $thesisId = '';
@@ -1038,10 +1053,10 @@ class management extends object
     /**
     * Method to get the attached document for viewing and updating.
     *
-    * @access private
+    * @access protected
     * @return string html
     */
-    private function showDocument($nextMode)
+    protected function showDocument($nextMode)
     {
         $submitId = $this->getSession('submitId');
         $data = $this->files->getFile($submitId);
@@ -1127,10 +1142,7 @@ class management extends object
         }
         
         // Only managers can replace existing documents
-        if(in_array('manager', $this->access)){
-            // set php.ini to 250MB
-            //ini_set('post_max_size', '250M');
-            //ini_set('upload_max_filesize', '250M');
+        if(in_array('manager', $this->access) || in_array('editor', $this->access)){
             
             $objInput = new textinput('submitId', $submitId, 'hidden');
             $hidden .= $objInput->show();
@@ -1155,38 +1167,16 @@ class management extends object
             $str = $objTable->show();
         }
 
-//        if($accessLevel == 'protected'){
-//            $inputValue = 'public';
-//        }else{
-//            $btnSet = $btnUnSet;
-//            $lbDocHidden = $lbDocAvail;
-//            $inputValue = 'protected';
-//        }
-//        $objInput = new textinput('access', $inputValue, 'hidden');
-//        $hidden = $objInput->show();
-//        $objInput = new textinput('save', 'save', 'hidden');
-//        $hidden .= $objInput->show();
-//
-//        $objButton = new button('set', $btnSet);
-//        $objButton->setToSubmit();
-//        $formStr = $lbDocHidden.':&nbsp;&nbsp;'.$objButton->show();
-//
-//        $objForm = new form('sethidden', $this->uri(array('action' => 'savesubmissions', 'mode' => 'setdoc', 'nextmode' => 'showresource'), $this->module));
-//        $objForm->addToForm($formStr);
-//        $objForm->addToForm($hidden);
-//
-//        $str .= '<p style="padding-top:5px;">'.$objForm->show().'</p>';
-
         return $str;
     }
     
     /**
     * Method to display embargo request
     *
-    * @access private
+    * @access protected
     * @return string html
     */
-    private function showEmbargo()
+    protected function showEmbargo()
     {   
         $submitId = $this->getSession('submitId');
         $data = $this->dbEmbargo->getEmbargoRequest($submitId);
@@ -1236,10 +1226,10 @@ class management extends object
     /**
     * Method to display the list of citations associated with a resource for adding / editing
     *
-    * @access private
+    * @access protected
     * @return string html
     */
-    private function showCitationList($nextMode)
+    protected function showCitationList($nextMode)
     {
         $submitId = $this->getSession('submitId');
         $data = $this->dbCitations->getList($submitId);
@@ -1262,11 +1252,11 @@ class management extends object
     /**
     * Method to display the citation list in a form for updating
     *
-    * @access private
+    * @access protected
     * @param array $data The citation list
     * @return string html
     */
-    private function editCitation($nextMode, $data = NULL)
+    protected function editCitation($nextMode, $data = NULL)
     {
         $list = ''; $id = '';
         if(!empty($data)){

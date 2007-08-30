@@ -297,7 +297,7 @@ class dbsubmissions extends dbtable
     private function getXmlMeta($submitId)
     {
         $xmlData = array();
-        $xml = $this->xmlMeta->openXML($this->subType.'_'.$submitId);
+        $xml = $this->xmlMeta->openXML('etd_'.$submitId);
         if(!empty($xml)){
             $xmlData = array_merge($xml['metadata']['dublincore'], $xml['metadata'][$this->metaType]);
         }

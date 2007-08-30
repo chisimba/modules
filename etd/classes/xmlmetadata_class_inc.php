@@ -142,6 +142,8 @@ class xmlmetadata extends object
     * Method to save the document details and metadata as xml.
     * The data is stored in an array and converted to xml. On updating, the modified data is compared
     * to the stored xml and only modified fields are saved.
+    *
+    * @deprecated
     */
     function _saveToXml($submitId, $file)
     {

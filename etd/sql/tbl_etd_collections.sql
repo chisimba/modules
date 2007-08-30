@@ -48,9 +48,6 @@ $fields = array(
 	'datecreated' => array(
 		'type' => 'timestamp'
 		),
-	'datemodified' => array(
-		'type' => 'timestamp'
-		),
 	'updated' => array(
 		'type' => 'timestamp'
 		),

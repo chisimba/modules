@@ -240,6 +240,10 @@ class etdresource extends object
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
         
+        $objConfig = $this->getObject('altconfig', 'config');
+        $institution = $objConfig->getinstitutionName();
+        $institution = rawurlencode($institution);
+        
         $lbCitation = $this->objLanguage->languageText('word_citation');
         $lbExportRW = $this->objLanguage->languageText('mod_etd_exportrefworks', 'etd');
         /*
@@ -261,12 +265,13 @@ class etdresource extends object
         */
         
         $actionUrl = urlencode($this->uri(array('action' => 'exportrefworks', 'resource_id' => $resourceId)));
-        $url = "http://www.refworks.com/express/expressimport.asp?vendor=ETD&amp;filter=RefWorks%20Tagged%20Format&amp;encoding=65001&amp;url={$actionUrl}";
+        $url = "http://www.refworks.com/express/expressimport.asp?vendor={$institution}&amp;filter=RefWorks%20Tagged%20Format&amp;encoding=65001&amp;url={$actionUrl}";
         $onclick = "javascript: window.open('{$url}', 'RefWorksMain', 'top=0, left=0, screenX=0, screenY=0');";
         $objButton = new button('export', $lbExportRW);
         $objButton->setOnClick($onclick);
         $str = $objButton->show();
         
+        echo $url;
         
         $objTab = new tabbedbox();
         $objTab->extra = 'style="background-color: #FCFAF2; padding: 2px;"';
