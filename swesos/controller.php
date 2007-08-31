@@ -9,6 +9,7 @@ class swesos extends controller
     public $objLog;
     public $objLanguage;
     public $objSweOps;
+    public $objGraph;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -18,6 +19,7 @@ class swesos extends controller
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objSweOps = $this->getObject('sweops');
+            $this->objGraph = $this->getObject('graph', 'utilities');
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -39,6 +41,15 @@ class swesos extends controller
         switch ($action) {
             default:
             	//return the upload form
+            	// graph example...
+            	$this->objGraph->setup(300, 300);
+            	$this->objGraph->addPlotArea();
+            	$data = array('month' => 'june', 'hits' => '1000');
+            	$param = 'month';
+            	$value = 'hits';
+            	$this->objGraph->addSimpleData($data, $param, $value);
+            	$this->objGraph->labelAxes('hits', 'months');
+            	echo $this->objGraph->show('/var/www/testgraph.png');
             	return 'upload_tpl.php';
             	break;
             case 'crondata':
