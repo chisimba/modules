@@ -40,7 +40,7 @@ $uri = $objConfig->getModuleURI();
 </div>
 <script type="text/javascript">
 // <![CDATA[
-if ( false && navigator.javaEnabled() ) {
+if ( navigator.javaEnabled() ) {
     //window.location="<?= $this->uri(array('action'=>'enabled')) ?>";
     document.getElementById('main').innerHTML =
 '<applet '
