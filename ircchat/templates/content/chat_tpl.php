@@ -1,4 +1,12 @@
 <?php
+
+/**
+ *
+ *
+ * @version $Id$
+ * @copyright 2007
+ */
+
 /* ------------icon request template----------------*/
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
@@ -6,6 +14,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 	die("You cannot view this page directly");
 }
 // end security check
+
+// Get the nick name
 if ($objUser->isLoggedIn()) {
     $userName = $this->objUser->userName();
 } else {
@@ -22,34 +32,31 @@ else {
 	$context = $objDbContext->getTitle();
 }
 $objConfig = $this->getObject('altconfig', 'config');
+$uri = $objConfig->getModuleURI();
 
 // Applet
-$applet = '
-<applet 
-codebase="'.$objConfig->getModuleURI().'/ircchat/resources/"
+?>
+<applet
+codebase="<?= $uri ?>/ircchat/resources/"
 code="IRCApplet.class"
 archive="
 	irc.jar,
 	pixx.jar
-" 
-width="640" 
+"
+width="640"
 height="400"
 >
-<param name="CABINETS" 
+<param name="CABINETS"
 value="
 	irc.cab,
 	securedirc.cab,
 	pixx.cab
 "
 />
-<param name="nick" value="'.$userName.'"/>
+<param name="nick" value="<?= $userName ?>"/>
 <param name="alternatenick" value="Guest"/>
 <param name="name" value="Java User"/>
 <param name="host" value="irc.uwc.ac.za"/>
 <param name="gui" value="pixx"/>
-<param name="command1" value="join #'.$context.'"/>
+<param name="command1" value="join #<?= $context ?>"/>
 </applet>
-';
-$content = $applet;
-echo $content;
-?>
