@@ -28,7 +28,7 @@ if ($mode == 'edit') {
 
 $label = new label ($this->objLanguage->languageText('mod_contextcontent_chaptertitle','contextcontent'), 'input_chapter');
 $table->startRow();
-$table->addCell($label->show(), 100);
+$table->addCell($label->show(), 150);
 $table->addCell($title->show());
 $table->endRow();
 

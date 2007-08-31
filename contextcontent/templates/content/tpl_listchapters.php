@@ -157,6 +157,8 @@ foreach ($chapters as $chapter)
         
         $content .= $chapter['introduction'];
         
+        $chapterOptions = array();
+        
         if ($chapter['visibility'] == 'I' && !$this->isValid('viewhiddencontent')) {
             $content .= '<p class="warning">'.ucfirst($this->objLanguage->code2Txt('mod_contextcontent_studentscannotaccesscontent','contextcontent')).'.</p>';
 				
@@ -176,7 +178,9 @@ foreach ($chapters as $chapter)
 				// Empty variable for use later on
 				$chapterPages = '';
             } else {
-                $chapterPages = '<div style="display:none" id="toc_'.$chapter['chapterid'].'"><p><strong>Content:</strong></p>'.$chapterPages.'</div>'.'<a href="javascript:showHideChapter(\'toc_'.$chapter['chapterid'].'\');"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
+                $chapterPages = '<div style="display:none" id="toc_'.$chapter['chapterid'].'"><p><strong>Content:</strong></p>'.$chapterPages.'</div>';
+
+                $chapterOptions[] = '<a href="javascript:showHideChapter(\'toc_'.$chapter['chapterid'].'\');"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
 				
 				$content .= $chapterPages;
             }
@@ -198,11 +202,22 @@ foreach ($chapters as $chapter)
         }
         
         if (count($chapters) > 1 && $counter > 1 && $this->isValid('movechapterup')) {
-            $content .= ' / '.$moveUpLink->show();
+            $chapterOptions[] = $moveUpLink->show();
         }
         
         if ($counter < count($chapters) && $this->isValid('movechapterdown')) {
-            $content .= ' / '.$moveDownLink->show();
+            $chapterOptions[] = $moveDownLink->show();
+        }
+        
+        if (count($chapterOptions) > 0) {
+            
+            $divider = '';
+            foreach ($chapterOptions as $option)
+            {
+                $content .= $divider.$option;
+                $divider = ' / ';
+            }
+            
         }
         
         $chapterList .= '<div>'.$content.'</div><hr />';

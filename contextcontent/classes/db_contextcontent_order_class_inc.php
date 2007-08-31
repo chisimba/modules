@@ -90,7 +90,7 @@ class db_contextcontent_order extends dbtable
     */
     public function getPage($pageId, $contextCode)
     {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, pagecontent, headerscripts, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, pagecontent, headerscripts, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, isbookmarked
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
@@ -142,7 +142,7 @@ class db_contextcontent_order extends dbtable
     */
     public function getContextPages($context, $chapter='')
     {
-        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked FROM tbl_contextcontent_order 
+        $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.titleid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id) 
         WHERE tbl_contextcontent_order.contextcode= \''.$context.'\'  ';
@@ -156,11 +156,22 @@ class db_contextcontent_order extends dbtable
         return $this->getArray($sql);
     }
     
+    
+    public function bookmarkPage($id)
+    {
+        return $this->update('id', $id, array('isbookmarked'=>'Y'));
+    }
+    
+    public function removeBookmark($id)
+    {
+        return $this->update('id', $id, array('isbookmarked'=>'N'));
+    }
+    
 	public function getBookmarkedPages($context, $chapter='', $defaultSelected='', $module='contextcontent')
 	{
 		$results = $this->getContextPages($context, $chapter);
 		
-		$str = '<ul>';
+		$str = '<ul class="bookmarkedpages">';
 		foreach($results as $page)
 		{
 			if($page['isbookmarked'] == 'Y')

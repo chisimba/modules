@@ -105,16 +105,42 @@ echo $topTable->show();
 //$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
 //echo $tab->show();
 
+if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid('changebookmark')) {
+    echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
+    echo '<h5><a href="javascript:togglePageOptions();">Page Options...</a></h5>';
+    echo '<div id="pageoptions" style="display:none">';
 
-echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
-echo '<h5><a href="javascript:togglePageOptions();">Page Options...</a></h5>';
-echo '<div id="pageoptions" style="display:none">';
-echo 'Edit Page<br />';
-echo 'Delete Page<br />';
+    $options = array();
+    
+    if ($this->isValid('editpage')) {
+        $options[] = $editLink->show();
+    }
+    
+    if ($this->isValid('deletepage')) {
+        $options[] = $deleteLink->show();
+    }
+    
+    if ($this->isValid('changebookmark')) {
+        if ($page['isbookmarked'] == 'Y') {
+            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'off\');">Remove Bookmark</a></div>';
+        } else {
+            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">Bookmark Page</a></div>';
+        }
+    }
+    
+    if (count($options) > 0) {
+        $divider = '';
+        foreach ($options as $option)
+        {
+            echo $divider.$option;
+            $divider = '<br />';
+        }
+    }
 
-echo '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">Bookmark Page</a></div>';
-echo '</div>';
-echo '</div>';
+    
+    echo '</div>';
+    echo '</div>';
+}
 $objWashout = $this->getObject('washout', 'utilities');
 echo $objWashout->parseText($page['pagecontent']);
 
@@ -123,7 +149,7 @@ echo '<hr />';
 
 echo $table->show();
 
-if (count($chapters) > 0) {
+if (count($chapters) > 1 && $this->isValid('movetochapter')) {
     $this->loadClass('form', 'htmlelements');
     $this->loadClass('dropdown', 'htmlelements');
     $this->loadClass('hiddeninput', 'htmlelements');

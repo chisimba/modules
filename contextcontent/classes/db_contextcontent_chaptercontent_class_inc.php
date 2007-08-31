@@ -1,6 +1,9 @@
 <?php
 /**
-* class that contains the content of pages in the contextcontent module
+* Class that contains the content of chapters in the contextcontent module
+*
+* Chapters can be multilingual, and this table contains the language version of a chapter
+* 
 * @author Tohir Solomons
 */
 class db_contextcontent_chaptercontent extends dbtable
@@ -78,6 +81,16 @@ class db_contextcontent_chaptercontent extends dbtable
                 'modifierid' => $this->objUser->userId(),
                 'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
     		));
+    }
+    
+    /**
+    * Method to delete a chapter
+    * @param string $id Chapter Id
+    * @return boolean
+    */
+    public function deleteChapterTitle($id)
+    {
+        return $this->delete('chapterid', $id);
     }
     
 

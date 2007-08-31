@@ -1,9 +1,11 @@
 <?php
 
 /**
-* Class to Arrange the order of pages
+* Class to Control which Chapters should be available in a context
 *
+* This allows for a single chapter to be reused in multiple contexts
 *
+* @author Tohir Solomons
 */
 class db_contextcontent_contextchapter extends dbtable
 {
@@ -27,22 +29,36 @@ class db_contextcontent_contextchapter extends dbtable
         return $this->getRecordCount('WHERE contextcode=\''.$contextCode.'\'');
     }
     
+    /**
+    * Method to get the list of chapters in a particular context
+    * @param string $context Context Code
+    * @return array List of Chapters
+    */
     public function getContextChapters($context)
     {
         
         return $this->query($this->getContextChaptersSQL($context));
     }
     
+    /**
+    * Method to get the SQL statement to get the list of chapters in a context
+    * @param string $context Context Code
+    * @return string SQL statement
+    */
     public function getContextChaptersSQL($context)
     {
-        $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid 
+        $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid, (Select count(id) FROM  tbl_contextcontent_order WHERE tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_order.chapterid) as pagecount 
 FROM tbl_contextcontent_chaptercontext, tbl_contextcontent_chaptercontent
 WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chaptercontext.chapterid) AND tbl_contextcontent_chaptercontext.contextcode=\''.$context.'\' ORDER BY tbl_contextcontent_chaptercontext.chapterorder';
         
         return $sql;
     }
     
-    
+    /**
+    * Method to get the title of a chapter by providing the record id of the chapter
+    * @param string $chapterId
+    * @return string Title of Chapter : FALSE
+    */
     function getContextChapterTitle($chapterId)
     {
         $sql = 'SELECT tbl_contextcontent_chaptercontent.chaptertitle FROM tbl_contextcontent_chapters, tbl_contextcontent_chaptercontent WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapters.id) AND tbl_contextcontent_chapters.id=\''.$chapterId.'\' LIMIT 1';
@@ -56,6 +72,11 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
         }
     }
     
+    /**
+    * Method to get the details of a chapter
+    * @param string $chapterid Record Id of the Chapter
+    * @return array Details of the chapter
+    */
     public function getChapter($chapterid)
     {
         $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid 
@@ -73,11 +94,10 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     
     
     /**
-    * Method to get a content page
-    * @param string $pageId Record Id of the Page
-    * @param string $contextCode Context the Page is In
-    * @return array Details of the Page, FALSE if does not exist
-    * @access private
+    * Method to add a chapter to a context
+    * @param string $chapterId Record Id of the CHapter
+    * @param string $context Context Code
+    * @param string $visibility Visibility status of chapter within a context
     */
     public function addChapterToContext($chapterId, $context, $visibility)
     {
@@ -87,7 +107,13 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     }
     
     
-    
+    /**
+    * Method to add a chapter to a context - Saves Record to Database
+    * @param string $chapterId Record Id of the CHapter
+    * @param string $context Context Code
+    * @param int $order Order of the Item
+    * @param string $visibility Visibility status of chapter within a context
+    */
     private function insertTitle($context, $chapterId, $order, $visibility='Y')
     {
         return $this->insert(array(
@@ -100,7 +126,11 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
             ));
     }
     
-    
+    /**
+    * Method to get the order of the last chapter in a context
+    * @param string $context Context Code
+    * @return integer
+    */
     private function getLastOrder($context)
     {
         $sql = 'WHERE contextcode =\''.$context.'\' ORDER BY chapterorder DESC LIMIT 1';
@@ -116,20 +146,27 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     
     
     /**
-     * Method to delete a page
+     * Method to remove a chapter from a context
      *
-     * @param string $id Record Id of the Page
+     * @param string $chapterId Record Id of the Chapter
+     * @param string $context Context Code
      * @return boolean Result of deletion
      */
-    function deletePage($id)
+    function removeChapterFromContext($chapterId, $context)
     {
-        return $this->delete('id', $id);
+        $results = $this->getAll('WHERE contextcode =\''.$context.'\' AND chapterid=\''.$chapterId.'\' ');
+        if (count($results) > 0) {
+            foreach ($results as $item)
+            {
+                $this->delete('id', $item['id']);
+            }
+        }
     }
     
     /**
-    * Method to move a page up
-    * @param string $id Record Id of the Page
-    * @return boolean Result of Page Move
+    * Method to move a chapter up
+    * @param string $id Record Id of the Chapter
+    * @return boolean Result of Chapter Move
     */
     function moveChapterUp($id)
     {
@@ -157,9 +194,9 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     }
     
     /**
-    * Method to move a page down
-    * @param string $id Record Id of the Page
-    * @return boolean Result of Page Move
+    * Method to move a Chapter down
+    * @param string $id Record Id of the Chapter
+    * @return boolean Result of Chapter Move
     */
     function moveChapterDown($id)
     {
@@ -186,23 +223,38 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
         
     }
     
+    /**
+    * Method to update the visibility status of a chapter
+    * @param string $id Record Id
+    * @param string $visibility Visibility Status
+    * @return boolean
+    */
     function updateChapterVisibility($id, $visibility)
     {
-        //echo '<pre>';
-        
-        //print_r($this->update('id', $id, array('visibility'=>$visibility)));
         return $this->update('id', $id, array('visibility'=>$visibility));
     }
     
     /**
-    * Function to check whether a chapter exists in a context or not
-    *
+    * Method to check whether a chapter exists in a context or not
+    * @param string $contextCode Context Code
+    * @param string $chapterId Chapter Id
+    * @return boolean
     */
-    function isContextChapter($contextCode, $chapterId)
+    public function isContextChapter($contextCode, $chapterId)
     {
         $result = $this->getRecordCount('WHERE contextcode=\''.$contextCode.'\' AND chapterid=\''.$chapterId.'\' ');
         
         return ($result == 0) ? FALSE : TRUE;
+    }
+
+    /**
+    * Method to check how many chapters are using a particular chapter
+    * @param string $chapterId Chapter Id
+    * @return boolean
+    */
+    public function getNumContextWithChapter($chapterId)
+    {
+        return $this->getRecordCount('WHERE chapterid=\''.$chapterId.'\' ');
     }
     
 
