@@ -20,15 +20,29 @@ $content = '<fieldset>
 
 ';
 
-
 $content .= '<h3>Chapters:</h3><ol>';
 
 foreach ($chapters as $chapter)
 {
-    $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-    $link->link = $chapter['chaptertitle'];
-
-    $content .= '<li>'.$link->show().'</li>';
+    $showChapter = TRUE;
+    
+    if ($chapter['visibility'] == 'N') {
+        $showChapter = FALSE;
+    }
+    
+    if ($this->isValid('viewhiddencontent')) {
+        $showChapter = TRUE;
+    }
+    
+    if ($showChapter) {
+        if ($chapter['pagecount'] == 0) {
+            $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'].'</li>';
+        } else {
+            $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
+            $link->link = $chapter['chaptertitle'];
+            $content .= '<li>'.$link->show().'</li>';
+        }
+    }
 }
 
 $content .= '</ol>';
@@ -37,8 +51,15 @@ $objDBContext = $this->getObject('dbcontext', 'context');
 
 if($objDBContext->isInContext())
 {
-    $objContextUtils = & $this->getObject('utilities','context');
-    $cm = $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+    
+    $objModules = $this->getObject('modules', 'modulecatalogue');
+    
+    if ($objModules->checkIfRegistered('contextdesigner')) {
+        $objContextUtils = & $this->getObject('utilities','context');
+        $cm = $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+    } else {
+        $cm = '';
+    }
 } else {
     $cm = '';
 }

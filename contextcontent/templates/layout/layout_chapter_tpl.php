@@ -90,10 +90,12 @@ if (isset($currentChapter)) {
         $left .= '</div>';
     }
     
-    $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage)));
-    $addLink->link = 'Add a Page';
-    
-    $left .= '<p>'.$addLink->show().'</p>';
+    if ($this->isValid('addpage')) {
+        $addLink = new link ($this->uri(array('action'=>'addpage', 'chapter'=>$currentChapter, 'id'=>$currentPage)));
+        $addLink->link = 'Add a Page';
+        
+        $left .= '<p>'.$addLink->show().'</p>';
+    }
     
     $returnLink = new link ($this->uri(NULL));
     $returnLink->link = 'Return to Chapter List';
@@ -104,8 +106,12 @@ if (isset($currentChapter)) {
 
 	if($objDBContext->isInContext())
 	{
-	    $objContextUtils = & $this->getObject('utilities','context');
-	    $left .= $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+	    $objModules = $this->getObject('modules', 'modulecatalogue');
+        
+        if ($objModules->checkIfRegistered('contextdesigner')) {
+            $objContextUtils = & $this->getObject('utilities','context');
+            $left .= $objContextUtils->getHiddenContextMenu('eventscalendar','show');
+        }
 	}	
 	//add the blog block
 	$objBlocks =  $this->getObject('blocks', 'blocks');
