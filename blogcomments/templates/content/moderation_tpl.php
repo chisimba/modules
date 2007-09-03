@@ -77,7 +77,8 @@ else {
 		$oclink = new href($this->uri(array('postid' => $c4m['comment_parentid'], 'action' => 'viewsingle','userid' => $c4m['userid']), 
 					   $c4m['comment_parentmod']), $this->uri(array('postid' => $c4m['comment_parentid'], 'action' => 'viewsingle','userid' => $c4m['userid']), 
 					   $c4m['comment_parentmod']));
-		$occontent = $c4m['comment_content']."<br />".$this->objLanguage->languageText("mod_blogcomments_viewincontext", "blogcomments").": ".$oclink->show();
+		$occontent = $c4m['comment_content']."<br />";
+		$foot = $this->objLanguage->languageText("mod_blogcomments_viewincontext", "blogcomments").": ".$oclink->show();
 		$this->objIcon = $this->getObject('geticon', 'htmlelements');
 		$delIcon = $this->objIcon->getDeleteIconWithConfirm($c4m['id'], array(
                  'module' => 'blogcomments',
@@ -85,7 +86,7 @@ else {
                  'commentid' => $c4m['id'],
                  'postid' => $c4m['comment_parentid']
                ) , 'blogcomments');
-		$ocfb[] .= $objFeatureBox->show($ocheader, $occontent."<br />".$delIcon);
+		$ocfb[] .= $objFeatureBox->show($ocheader, $occontent."<br />".$delIcon."<br />".$foot);
 	}
 }
 
