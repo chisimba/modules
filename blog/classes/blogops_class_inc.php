@@ -1170,6 +1170,10 @@ class blogops extends object
         $addeditpages = new href($this->uri(array(
             'action' => 'setpage'
         )) , $this->objLanguage->languageText("mod_blog_blogpages", "blog"));
+        // moderate comments
+        $modcomms = new href($this->uri(array(
+            'action' => 'moderate'
+        ), 'blogcomments') , $this->objLanguage->languageText("mod_blog_modcomms", "blog"));
         //view all other blogs
         $viewblogs = new href($this->uri(array(
             'action' => 'allblogs'
@@ -1225,14 +1229,14 @@ class blogops extends object
             if ($this->objUser->inAdminGroup($this->objUser->userId())) {
                 if ($this->mail2blog == FALSE) {
                     $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $viewblogs->show();
+                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
                 } else {
                     $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $mailsetup->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $viewblogs->show();
+                    $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $mailsetup->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
                 }
             } else {
                 $topper = $newpost->show() . "<br />" . $editpost->show() . "<br />" . $viewmyblog->show();
-                $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $viewblogs->show();
+                $ret.= $admin->show() . "<br />" . $profile->show() . "<br />" . $import->show() . "<br />" . $editcats->show() . "<br />" . $rssedits->show() . "<br />" . $linksedits->show() . "<br />" . $addeditpages->show() . "<br />" . $modcomms->show() . "<br />" . $viewblogs->show();
             }
         }
         if ($featurebox == FALSE) {
