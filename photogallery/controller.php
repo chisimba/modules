@@ -165,10 +165,17 @@ class photogallery extends controller
         		$this->_objDBImage->reOrderImages($this->getParam('albumid'));
         		return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
         	case 'savealbumdescription':
-        		//die('ha'.$this->getParam('albumid'));
+        		
         		$this->setPageTemplate('');
 				$this->setLayoutTemplate('');
         		$this->_objDBAlbum->saveDescription($this->getParam('albumid'), $this->getParam('myparam'));
+        		echo $this->getParam('myparam');
+        		break;
+        	case 'saveimage':
+        	die('ha'.$this->getParam('imageid'));
+        		$this->setPageTemplate('');
+				$this->setLayoutTemplate('');
+        		$this->_objDBImage->saveField($this->getParam('imageid'),$this->getParam('field'), $this->getParam('myparam'));
         		echo $this->getParam('myparam');
         		break;
 			//flickr	

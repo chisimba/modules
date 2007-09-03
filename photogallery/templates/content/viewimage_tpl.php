@@ -95,13 +95,23 @@ $head = '<div id="main2">'.$nav.'<div id="gallerytitle">
 		</h2></div>
 
 	';
+	
 
-$desc  = '<div id="narrow"><div id="iamgeDesc" style="display: block;">'.$image['description'].'</div>';
+$desc = ($image['description'] == '') ? '[add a description]' : $image['description'];	
+
+	$ajax = "<span class=\"subdued\" id=\"description\">[add a description]</span>
+						<script>
+						
+						        new Ajax.InPlaceEditor('description', 'index.php', { callback: function(form, value) { return 'module=photogallery&action=saveimage&imageid=".$image['id']."&field=description&myparam=' + escape(value) }})
+						</script>";
+
+$desc  = '<div id="narrow"><div id="imageDesc" style="display: block;">'./*$ajax*/$image['description'].'</div>';
 	
 print $head;
-
-echo $str;
 echo $desc;
+echo $str;
+
+//echo $desc;
 echo $strComment;
 echo $form->show().'</div></div>';
 

@@ -133,5 +133,16 @@ class dbimages extends dbTable
 		 return $rec[0];
 		 
 	  }
+	
+	/**
+	* Method to update an image field
+	* @param string $id
+	* @param string $field
+	* @param string $value
+	*/
+	public function saveField($id, $field, $value)
+	{
+		return $this->update('id', $id, array($field => $value));
+	}
 }
 ?>

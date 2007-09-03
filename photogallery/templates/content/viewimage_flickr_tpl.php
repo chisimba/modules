@@ -9,6 +9,10 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $h = $this->getObject('htmlheading','htmlelements');
 $form = $this->getObject('form', 'htmlelements');
+$objDomTT = $this->getObject('domtt','htmlelements');
+$objDomTT->putScripts();
+
+
 $str = '';
 $nav = '';
 $strComment = '';
@@ -67,7 +71,7 @@ $form->addToForm('<h3>Add a comment</h3>'/*.$table->show()*/);
 $form->addToForm($commentField->show().'<br/>'.$button->show());
 
 //print '<pre>';
-//var_dump($comments);
+//var_dump($this->_objFlickr->photos_getAllContexts($image['id']));
 if (array_key_exists('comment', $comments)) 
 {
 	
@@ -89,24 +93,31 @@ if (array_key_exists('comment', $comments))
 	}
 }
 $link->extra = '';
-$link->href = $this->uri(null,'photogallery');
+$link->href = $this->uri(array('action' => 'front'),'photogallery');
 $link->link = 'Photo Gallery';
 $galLink = $link->show();
 
-$link->href = $this->uri(array('action' => 'viewalbum', 'albumid' =>$this->getParam('albumid') ),'photogallery');
+$link->href = $this->uri(array('mode' => 'flickr','action' => 'viewalbum', 'albumid' =>$this->getParam('albumid') ),'photogallery');
 $link->link = $albums['title'];
 $albumLink = $link->show();
 
 echo $nav;
 
 $arrNav = $this->_objFlickr->photos_getContext($image['id']);
-
+//print '<pre>';
+//print_r($arrNav);
 $nav = '<div class="imgnav">';
 if($arrNav['prevphoto']['id'] != '')
 {
 	$nav .= '<div class="imgprevious">';
 	$nav .='<a href="'.$this->uri(array('action' => 'viewimage','mode' => 'flickr', 'imageid' => $arrNav['prevphoto']['id'], 'albumid' => $this->getParam('albumid'))).'" 
-				title="Previous Image - '.$arrNav['prevphoto']['title'].'">&laquo; prev</a></div>';	
+	onmouseover="domTT_activate(this, event, \'content\', document.getElementById(\'previousimage\'));">&laquo; prev</a></div>';	
+	
+	$nav .= '<div  style="display: none">
+							<div id="previousimage" >		
+								<img src="'.$arrNav['prevphoto']['thumb'].'" />
+							</div>
+						</div>';
 }
 if($arrNav['nextphoto']['id'] != '')
 {
@@ -128,12 +139,12 @@ $head = '<div id="main2">'.$nav.'<div id="gallerytitle">
 
 	';
 
-$desc  = '<div id="narrow"><div id="iamgeDesc" style="display: block;">'.$image['description'].'</div>';
+$desc  = '<div id="narrow"><div id="imageDesc" style="display: block;">'.$image['description'].'</div>';
 	
 print $head;
-
-echo $str;
 echo $desc;
+echo $str;
+
 echo $strComment;
 echo $form->show().'</div></div>';
 
