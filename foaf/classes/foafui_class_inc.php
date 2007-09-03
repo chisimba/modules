@@ -733,7 +733,7 @@ if(!empty($images))
 
    return  $table->show();
  } else {
- $noImages = newObject('htmlheading' , 'htmlelements');
+ $noImages = $this->newObject('htmlheading' , 'htmlelements');
  $noImages->type = 2;
  $noImages->align = 'center';
  $noImages->str = $this->objLanguageText('mod_foaf_emptygallery' ,'foaf');
