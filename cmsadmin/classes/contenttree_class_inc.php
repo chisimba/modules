@@ -122,8 +122,6 @@ class contenttree extends object
                 $htmlLevel = '';
                 foreach($nodes as $node) {
                     $item = '';
-                  
-
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
                         $text = wordwrap(trim($node['title']),24,'<br />');
@@ -132,7 +130,6 @@ class contenttree extends object
                         $link = $node['title'];
                     }
                     // small hack here to fix problem with wraparounds
-                    $link.="<p />\n";
                      // if node has further child nodes, recursively call buildLevel
                     if ($this->getChildNodes($node['id'], $admin)) {
                     	$htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
