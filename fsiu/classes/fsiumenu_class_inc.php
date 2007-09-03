@@ -19,7 +19,7 @@ class fsiumenu extends object
     	
         // List of Menu Items
         $this->menuItems = array(
-            array('title'=>'products and services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_3902_1188807445', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
+            array('title'=>'products and services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_1514_1188560676', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
             array('title'=>'portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_3902_1188807445', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
             array('title'=>'the team', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
             array('title'=>'contact us', 'module'=>'cms', 'action' => 'showfulltext','id' => 'gen9Srv59Nme5_2845_1188820504', 'sectionid' => 'init_1'),
