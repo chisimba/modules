@@ -289,8 +289,6 @@ if($key=='Accounts')
 $userFields.= '</ul></div></div></li>';
 }
 $userFields.= '</ul></div></div></li></ul></div></div>';
-//end My foaf menu
-
 
 
 
