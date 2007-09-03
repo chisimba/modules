@@ -204,8 +204,7 @@ class contenttree extends object
                     } else {
                         $link = wordwrap($contentNode['title']);
                     }
-                    // small hack here to fix problem with wraparounds
-                    $link.="<p />\n";
+       
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                    
                 }
@@ -253,8 +252,7 @@ class contenttree extends object
 			                    } else {
 			                        $link = wordwrap($contentNode['title']);
 			                    }
-                                            // small hack here to fix problem with wraparounds
-                                            $link.="<p />\n";
+                                           
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
 		                if ($this->getChildNodes($node['id'], $admin)) {
