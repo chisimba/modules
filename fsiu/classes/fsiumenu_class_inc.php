@@ -19,11 +19,10 @@ class fsiumenu extends object
     	
         // List of Menu Items
         $this->menuItems = array(
-            //array('title'=>'Home', 'module'=>'cms'), http://64.191.50.197/sanord/chisimba_framework/app/index.php?module=cms&action=showsection&pageid=gen10Srv58Nme22_2875_1181819042&id=init_1&sectionid=init_1
-            array('title'=>'products and services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen10Srv23Nme18_6739_1183729095', 'sectionid' => 'gen10Srv23Nme18_6739_1183729095'),
+            array('title'=>'products and services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_3902_1188807445', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
+            array('title'=>'portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_3902_1188807445', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
             array('title'=>'the team', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
-            array('title'=>'portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
-            array('title'=>'contact us', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
+            array('title'=>'contact us', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_2845_1188820504&parent=init_1', 'sectionid' => 'init_1'),
         );
         
         $this->objUser = $this->getObject('user', 'security');
