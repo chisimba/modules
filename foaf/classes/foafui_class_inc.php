@@ -22,6 +22,7 @@ class foafui extends object {
 			$this->loadClass('dropdown', 'htmlelements');
 			$this->loadClass('textinput', 'htmlelements');
 			$this->loadClass('fieldset', 'htmlelements');
+			$this->loadClass('href', 'htmlelements');
 			$this->objLanguage = $this->getObject('language', 'language');
 			//the object needed to create FOAF files (RDF)
 			$this->objFoaf = $this->getObject('foafcreator');
@@ -219,9 +220,20 @@ class foafui extends object {
 		return $addFriendsForm->show() .$remFriendsForm->show() .$myFbox;
 	}
 
+	public function manageOrgs()
+	{
+
+		return  $this->objFoafOps->orgaRemForm() . $this->objFoafOps->orgaAddForm();
+
+	}
+
 	public function foafOrgs($tcont)
 	{
-		$myorgs = $this->objFoafOps->orgaRemForm() . $this->objFoafOps->orgaAddForm();
+
+		$myorgs = NULL;
+		$manageOrgs = new href($this->uri(array('action' => 'admin' , 'content' => 'orgsadmin')) , $this->objLanguage->languageText('mod_foaf_mngorgs' , 'foaf'));
+		$myorgs .= $manageOrgs->show();
+
 		//build the featureboxen for the orgs
 		
 		if (!array_key_exists('knows', $tcont->foaf)) {
@@ -260,13 +272,21 @@ class foafui extends object {
 	}
 
 
-
-
+	public function manageFunders()
+	{
+		return $this->objFoafOps->remFunderForm() . $this->objFoafOps->addFunderForm();
+	}
+	
 
 
 	public function foafFunders($tcont)
 	{
-		$myfunders = $this->objFoafOps->remFunderForm() . $this->objFoafOps->addFunderForm();
+	
+
+		$myfunders = NULL;
+		$manageFuns = new href($this->uri(array('action' => 'admin' , 'content' => 'fnsadmin')) , $this->objLanguage->languageText('mod_foaf_mngfunders' , 'foaf'));
+		$myfunders .= $manageFuns->show();
+
 		//build the featureboxen for the funders
 
 		if (!array_key_exists('fundedby', $tcont->foaf)) {
@@ -314,7 +334,10 @@ class foafui extends object {
 
 
 
-
+	public function manageInterests()
+	{
+		return $this->objFoafOps->remInterestForm() . $this->objFoafOps->addInterestForm();
+	}
 
 
 
@@ -322,7 +345,10 @@ class foafui extends object {
 
 	public function foafInterests($tcont)
 	{
-		$myints = $this->objFoafOps->remInterestForm() . $this->objFoafOps->addInterestForm();
+		$myints = NULL;
+		$manageints = new href($this->uri(array('action' => 'admin' , 'content' => 'intadmin')) , $this->objLanguage->languageText('mod_foaf_mnginterests' , 'foaf'));
+		$myints .= $manageints->show();
+
 		//build the featureboxen for user interests
 
 		if (!array_key_exists('interest', $tcont->foaf)) {
@@ -369,11 +395,20 @@ class foafui extends object {
 
 
 
+	public function manageDepictions()
+	{
+		return $this->objFoafOps->remDepictionForm() . $this->objFoafOps->addDepictionForm();
+	}
+
 
 
 	public function foafDepictions($tcont)
 	{
-		$mydeps = $this->objFoafOps->remDepictionForm() . $this->objFoafOps->addDepictionForm();
+
+
+		$mydeps = NULL;
+		$managedeps = new href($this->uri(array('action' => 'admin' , 'content' => 'imgadmin')) , $this->objLanguage->languageText('mod_foaf_mngimages' , 'foaf'));
+		$mydeps .= $managedeps->show();
 		//build the featureboxen for user depictions
 
 		if (!array_key_exists('depiction', $tcont->foaf)) {
@@ -420,11 +455,19 @@ class foafui extends object {
 
 //pages
 
+	public function managePages()
+	{
+		return $this->objFoafOps->remPageForm() . $this->objFoafOps->addPageForm();
 
+	}
 
 	public function foafPages($tcont)
 	{
-		$mypages = $this->objFoafOps->remPageForm() . $this->objFoafOps->addPageForm();
+
+
+		$mypages = NULL;
+		$managepgs = new href($this->uri(array('action' => 'admin' , 'content' => 'pgsadmin')) , $this->objLanguage->languageText('mod_foaf_mngpages' , 'foaf'));
+		$mypages .= $managepgs->show();
 		//build the featureboxen for user pages
 
 		if (!array_key_exists('page', $tcont->foaf)) {
@@ -516,12 +559,21 @@ class foafui extends object {
 	}
 
 //accounts
-
+	public function manageAccounts()
+	{
+           $manageAcs = $this->objFoafOps->remAccountForm() . $this->objFoafOps->addAccountForm();
+	  	if($this->objUser->isAdmin())
+		{
+		    $manageAcs .= $this->foafAccountTypes();
+			
+		 }
+	   return $manageAcs;
+ 	}
 
 
 	public function foafAccounts($tcont)
 	{
-		$myaccounts = $this->objFoafOps->remAccountForm() . $this->objFoafOps->addAccountForm();
+
 		//build the featureboxen for user accounts
 
 		if (!array_key_exists('holdsaccount', $tcont->foaf)) {
@@ -532,8 +584,9 @@ class foafui extends object {
 		}
 
 
-		
-		
+	       $myaccounts = NULL;		
+	       $manageAcs = new href($this->uri(array('action' => 'admin' , 'content' => 'accadmin')) , $this->objLanguage->languageText('mod_foaf_mngaccounts' , 'foaf'));
+		$myaccounts .= $manageAcs->show();
 		
 	if(!empty($tcont->foaf['holdsaccount']))
 	{
@@ -596,16 +649,35 @@ class foafui extends object {
 
 //links
 
+/**
+  *Method that creates forms for adding and removing links
+  *returns add and remove links forms
+  */
+	public function linksAdmin()
+	{
+
+           return $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+  
+
+	}
 
 
 	public function foafLinks()
 	{
 	
-	$mylinks = " ";
+	$myLinks = NULL;
+	$manageLinks = NULL;
+
 	if($this->objUser->isAdmin())
 	{
-		$mylinks = $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+ 		//build admin links link
+                $manageLinks = new href($this->uri(array('action' => 'admin' , 'content' => 'lnkadmin')) , $this->objLanguage->languageText('mod_foaf_mnglinks' , 'foaf'));
+		
+		$mylinks .= $manageLinks->show();
 	}
+	
+
+
 	//build the featureboxen for the links
 	$links = $this->dbFoaf->getLinks();
 
@@ -646,10 +718,10 @@ class foafui extends object {
 			
 		}
 
-		$mylinkbox.= $tablelinks->show() ."<br />";
-		$mylinkFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_links', 'foaf'), $mylinkbox) ."<br />";
+		$mylinkbox .= $tablelinks->show() ."<br />";
+		$mylinkFbox .= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_links', 'foaf'), $mylinkbox) ."<br />";
 
-		$mylinks.= $mylinkFbox;
+		$mylinks .= $mylinkFbox;
 		
 	 }	
 		return $mylinks;

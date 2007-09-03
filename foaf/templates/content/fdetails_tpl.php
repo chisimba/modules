@@ -137,7 +137,7 @@ $form = new form('inviteform', $this->uri(array(
             'action' => 'inviteform'
         )));
 $textArea = new textarea('invitationtext',$this->objLanguage->languageText('mod_foaf_dear', 'foaf'),'4','18');
-$label = new label('To'.':', 'input_friendmail');
+$label = new label($this->objLanguage->languageText('word_to').':', 'input_friendmail');
 $mail = new textinput('friendmail','myfriend@foaf.com','text','25');
 $button = new button('sendmail');
 $button->setId('sendmail');
@@ -289,7 +289,7 @@ if($key=='Accounts')
 $userFields.= '</ul></div></div></li>';
 }
 $userFields.= '</ul></div></div></li></ul></div></div>';
-
+//end userfields (labeled My foaf in the interface) menu
 
 
 
@@ -329,12 +329,28 @@ switch($content){
 	));
 	break;
 
+	case 'orgsadmin':
+	     $pane->addTab(array(
+	    'name' => $myorganizations,
+	    'content' => $this->objUi->manageOrgs()
+	));
+	break;
+
+
 	case 'Funders':
 	    $pane->addTab(array(
     	    'name' => $myfunders,
 	    'content' => $this->objUi->foafFunders($tcont)
 	));
 	break;
+
+	case 'fnsadmin':
+	    $pane->addTab(array(
+    	    'name' => $myfunders,
+	    'content' => $this->objUi->manageFunders()
+	));
+	break;
+
 
 	case 'Interests':
 	     $pane->addTab(array(
@@ -343,6 +359,16 @@ switch($content){
 	));
 	break;
 
+
+	case 'intadmin':
+	     $pane->addTab(array(
+	    'name' => $myinterests,
+	    'content' => $this->objUi->manageInterests()
+	));
+	break;
+
+	
+
 	case 'Images':
 		$pane->addTab(array(
 	    'name' => $mydepictions,
@@ -350,12 +376,30 @@ switch($content){
  	));
 	break;
 
+
+	case 'imgadmin':
+		$pane->addTab(array(
+	    'name' => $mydepictions,
+	    'content' => $this->objUi->manageDepictions()
+ 	));
+	break;
+
+
+
 	case 'Pages':
 		$pane->addTab(array(
 	    'name' => $mypages,
 	    'content' => $this->objUi->foafPages($tcont)
 	));
 	break;
+
+	case 'pgsadmin':
+		$pane->addTab(array(
+	    'name' => $mypages,
+	    'content' => $this->objUi->managePages()
+	));
+	break;
+	
 	
 	case 'Accounts':
 		$pane->addTab(array(
@@ -363,6 +407,15 @@ switch($content){
 	    'content' =>  $this->objUi->foafAccounts($tcont)
 	));
 	break;
+
+	case 'accadmin':
+		$pane->addTab(array(
+	    'name' => $myaccounts,
+	    'content' =>  $this->objUi->manageAccounts()
+	));
+	break;
+
+
 
 	case 'search':
 		$pane->addTab(array(
@@ -377,6 +430,14 @@ switch($content){
 	    'content' => $this->objUi->foafLinks()
 	));
 	break;
+
+	case 'lnkadmin':
+		$pane->addTab(array(
+	    'name' => $foafLinks,
+	    'content' => $this->objUi->linksAdmin()
+	));
+	break;
+
 
 	case 'network':
 		$pane->addTab(array(

@@ -520,7 +520,11 @@ class foaf extends controller
 			$page = $this->getParam('page' , 1);
 			$this->nextAction(NULL , array('content' => $content , 'friend' => $fIndex , 'page' => $page));			
 			break;
-		
+			
+			case 'admin':
+			$content = $this->getParam('content');
+			$this->nextAction(NULL , array('content' => $content));
+			break;
 
 
 
