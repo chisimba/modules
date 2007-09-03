@@ -291,18 +291,18 @@ class photogallery extends controller
 	*/
 	public function viewSlideShow()
 	{
-		if($this->initFlickr())
-		{
+	
 		 	$albumid = $this->getParam('albumid');
-		 	$info = $this->_objFlickr->photosets_getInfo($albumid);
+		 	$owner = $this->getParam('owner');
+		 	$url = 'http://www.flickr.com/slideShow/index.gne?user_id='.$owner.'&setid='.$albumid;
 		 	
-		 	$url = 'http://www.flickr.com/photos/'.$info['owner'].'/sets/'.$info['id'].'/show/';		 	
-			$this->setVar('url',$url);		
+		 	//$url = 'http://www.flickr.com/photos/'.$info['owner'].'/sets/'.$info['id'].'/show/';		 	
+			$this->setVar('url',$url);	
+			$this->initFlickr();	
+			$this->setVar('albumInfo', $this->_objFlickr->photosets_getInfo($albumid) );
 			
 			return 'albumslideshow_tpl.php';
-		} else {
-			
-		}
+	
 		
 		
 	}
