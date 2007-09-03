@@ -148,6 +148,11 @@ class dbblogcomments extends dbTable
 		return $this->getAll($filter);
 	}
 
+	public function getMyComments($authorEmail)
+	{
+		$filter = "WHERE comment_author_email = '$authorEmail'";
+		return $this->getAll($filter);
+	}
 	/**
 	 * Method to return the count of comments for a particular post id
 	 *

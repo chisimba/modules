@@ -151,7 +151,24 @@ class blogcomments extends controller
             	$this->objDbcomm->deletecomment($commentid);
             	
             	$this->nextAction('viewsingle',array('postid' => $postid), $module);
-            	
+            
+            case 'moderate':
+            	$this->setVar('pageSuppressXML', TRUE);
+            	// Case to moderate comments based on a user id. 
+            	$userid = $this->objUser->userId();
+            	// grab all comments made against this userid...
+            	$comm4me = $this->objDbcomm->grabCommentsByUser($userid);
+            	// grab all comments made by me...
+            	$meemail = $this->objUser->email($userid); 
+            	// grab comments made by me from blogcomments table
+            	$mycomments = $this->objDbcomm->getMyComments($meemail);
+            	// set the two datasets as refs and send to the template
+            	$this->setVarByRef('mycomments', $mycomments);
+            	$this->setVarByRef('comm4me', $comm4me);     	
+            	// Interface to handle the moderation.
+            	return 'moderation_tpl.php';
+            	break;
+            		
             default:
             	die("unknown action");
             	break;
