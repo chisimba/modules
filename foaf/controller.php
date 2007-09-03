@@ -148,6 +148,8 @@ class foaf extends controller
 				 $schField = $this->getParam('schField');
 				 $schValue = $this->getParam('schValue');
 				 $content = $this->getParam('content');
+				 $fIndex = $this->getParam('friend'); 
+				 $page = $this->getParam('page' , 1); 
 				//create the basic foaf profile from tbl_users
 				$this->objFoafOps->newPerson($this->objUser->userId());
 				//add in other details if they exist
@@ -160,6 +162,8 @@ class foaf extends controller
 				$this->setVarByRef('predicate', $schField);
 				$this->setVarByRef('object', $schValue);
 				$this->setVarByRef('content', $content);
+				$this->setVarByRef('fIndex', $fIndex);
+				$this->setVarByRef('page', $page);
 				$foafFile =   $this->objConfig->getContentBasePath() . "users/" . $this->objUser->userId() . "/" . $this->objUser->userId() . ".rdf";
 				$this->setVarByRef('foafFile' , $foafFile);
 				return 'fdetails_tpl.php';
@@ -512,7 +516,9 @@ class foaf extends controller
 			
 			case 'fields':
 			$content = $this->getParam('content');
-			$this->nextAction(NULL , array('content' =>$content));			
+			$fIndex = $this->getParam('friend');
+			$page = $this->getParam('page' , 1);
+			$this->nextAction(NULL , array('content' => $content , 'friend' => $fIndex , 'page' => $page));			
 			break;
 		
 

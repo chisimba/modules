@@ -87,6 +87,7 @@ if ($msg == 'update') {
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
 $myfriends = $this->objLanguage->languageText('mod_foaf_myfriends', 'foaf');
+$allfriends = $this->objLanguage->languageText('mod_foaf_allfriends', 'foaf');
 $myorganizations = $this->objLanguage->languageText('mod_foaf_myorganizations', 'foaf');
 $myfunders = $this->objLanguage->languageText('mod_foaf_myfunders', 'foaf');
 $myinterests = $this->objLanguage->languageText('mod_foaf_myinterests', 'foaf');
@@ -95,6 +96,10 @@ $mypages = $this->objLanguage->languageText('mod_foaf_mypages', 'foaf');
 $myaccounts = $this->objLanguage->languageText('mod_foaf_myaccounts', 'foaf');
 $accountTypes = $this->objLanguage->languageText('mod_foaf_accounttypes', 'foaf');
 $invite = $this->objLanguage->languageText('mod_foaf_invite', 'foaf');
+$myevents = $this->objLanguage->languageText('mod_foaf_myevents', 'foaf');
+$allevents = $this->objLanguage->languageText('mod_foaf_allevents', 'foaf');
+$extras = $this->objLanguage->languageText('mod_foaf_extras', 'foaf');
+$gallery = $this->objLanguage->languageText('mod_foaf_gallery', 'foaf');
 $query = $this->objLanguage->languageText('mod_foaf_query', 'foaf');
 $visualise = $this->objLanguage->languageText('mod_foaf_visualize', 'foaf');
 $surprise = $this->objLanguage->languageText('mod_foaf_surprise', 'foaf');
@@ -122,21 +127,21 @@ $icon = $this->getObject('geticon', 'htmlelements');
 $icon->setIcon('rss', 'gif', 'icons/filetypes');
 $icon->align = 'left';
 
-$link1 = new href('http://www.google.com' , 'Gallery', 'class="itemlink"');
+$link1 = new href($this->uri(array('action' =>'fields', 'content' => 'gallery')) , $this->objLanguage->languageText('mod_foaf_gallery', 'foaf'), 'class="itemlink"');
 $link2 = new href($this->uri(array('action' =>'fields', 'content' => 'links')) , 'Links', 'class="itemlink"');
-$link3 = new href('http://www.google.com' , 'See the network', 'class="itemlink"');
+$link3 = new href($this->uri(array('action' =>'fields', 'content' => 'seenet')) , $this->objLanguage->languageText('mod_foaf_seenet', 'foaf'), 'class="itemlink"');
 
 //build invite friend form
 
 $form = new form('inviteform', $this->uri(array(
             'action' => 'inviteform'
         )));
-$textArea = new textarea('invitationtext','Dear','4','18');
+$textArea = new textarea('invitationtext',$this->objLanguage->languageText('mod_foaf_dear', 'foaf'),'4','18');
 $label = new label('To'.':', 'input_friendmail');
 $mail = new textinput('friendmail','myfriend@foaf.com','text','25');
 $button = new button('sendmail');
 $button->setId('sendmail');
-$button->setValue('Send');
+$button->setValue($this->objLanguage->languageText('mod_foaf_send', 'foaf'));
 $button->setToSubmit();
 
 $form->addToForm($label->show().$mail->show());
@@ -144,7 +149,7 @@ $form->addToForm($textArea->show());
 $form->addToForm('<center>'.$button->show().'</center>');
 
 
-$inviteBox = $box->show('Invite a friend', $form->show() , 'invitebox' ,'none',TRUE);
+$inviteBox = $box->show($invite, $form->show() , 'invitebox' ,'none',TRUE);
 
 $table = NULL;
 $table = $this->newObject('htmltable' , 'htmlelements');
@@ -164,20 +169,31 @@ $table->startRow();
 $table->addCell('<br />'.$inviteBox,NULL,'top',null,null, 'colspan="2"' , '0');
 $table->endRow();
 
-$linksBox = $box->showContent('<a href="#" class="headerlink">My extras</a>',$table->show());
+$linksBox = $box->showContent('<a href="#" class="headerlink">'.$extras.'</a>',$table->show());
 
 //friends
+
 $table = NULL;
 $table = $this->newObject('htmltable' , 'htmlelements');
-foreach($friends as $friend){
+
+foreach($friends as $key=>$friend){
+
+//Display only the first three friends
+if($key < 3){
+
 $table->startRow();
-$table->addCell('<h6><a href="#" title="See '.$friend['name'].' profile" class="itemlink" >'.$friend['name'].'</a></h6>');
+$fLink = new href($this->uri(array('action' =>'fields', 'content' => 'friend' , 'friend' => $key)) , $friend['name'].'>>', 'class="itemlink" title="See '.$friend['name'].' profile" id="friend'.$key.'"');
+$table->addCell('<h6>'.$fLink->show().'</h6>');
 $table->endRow();
+
 }
+
+}
+$friendsLink = new href($this->uri(array('action' =>'fields', 'content' => 'friends')) , $allfriends.'>>', 'class="itemlink"');
 $table->startRow();
-$table->addCell('<em><a href="#" class="itemlink">See all friends >></a></em>');
+$table->addCell('<em>'.$friendsLink->show().'</em>');
 $table->endRow();
-$friendsLink = new href($this->uri(array('action' =>'fields', 'content' => 'friends')) , 'My Friends', 'class="headerlink"');
+$friendsLink = new href($this->uri(array('action' =>'fields', 'content' => 'friends')) , $myfriends, 'class="headerlink" title="'.$allfriends.'"');
 $friendsBox = $box->showContent($friendsLink->show() , $table->show());
 
 
@@ -187,7 +203,7 @@ $profileBox = $box->show('<a href="#">Profile</a>', 'Profile content' , 'profile
 
 
 //events
-$eventsBox = $box->showContent('<a href="#" class="headerlink">My Events</a>','Events');
+$eventsBox = $box->showContent('<a href="#" class="headerlink" title="'.$allevents.'">'.$myevents.'</a>','Events');
 
 
 //Insert script for generating tree menu
@@ -213,13 +229,13 @@ $userFields = '
                        <div id="userfields" class="yuimenu">
                             <div class="bd">
                                 <ul class="first-of-type">
-                                    <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="http://communication.yahoo.com">My foaf</a>';
+                                    <li class="yuimenuitem first-of-type"><a class="yuimenuitemlabel" href="http://communication.yahoo.com">'.$this->objLanguage->languageText('mod_foaf_myfoaf', 'foaf').'</a>';
                                                     $userFields.= '<div id="me" class="yuimenu">
                                                                      <div class="bd">
                                                                        <ul>';
 //each field is a group of organizations or friends or interests , etc..
 foreach($fields as $key => $field){
-$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chisimba_framework/app/index.php?module=foaf&amp;action=fields&amp;content='.$key.'">'.$key.'</a>';
+$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chisimba_framework/app/index.php?module=foaf&amp;action=fields&amp;content='.$key.'" title="'.$this->objLanguage->languageText('mod_foaf_manage', 'foaf').' '.$key.'">'.$key.'</a>';
 	$userFields.= ' <div id="'.$key.'" class="yuimenu">
                            <div class="bd">
 			     <ul>';
@@ -260,10 +276,10 @@ foreach($field as $fld){
 if($key=='Accounts')
 {
 
-	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld['accountservicehomepage'].'" title="Go to '.$fld['accountservicehomepage'].'">'.$fld['accountname'].' ('.$fld['type'].')'.'</a></li>';
+	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld['accountservicehomepage'].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld['accountservicehomepage'].'">'.$fld['accountname'].' ('.$fld['type'].')'.'</a></li>';
 
 } else {
-	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld[$url].'" title="Go to '.$fld[$url].'">'.$fld[$key].'</a></li>';
+	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld[$url].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld[$url].'">'.$fld[$key].'</a></li>';
 }
 
 
@@ -273,6 +289,8 @@ if($key=='Accounts')
 $userFields.= '</ul></div></div></li>';
 }
 $userFields.= '</ul></div></div></li></ul></div></div>';
+//end My foaf menu
+
 
 
 
@@ -296,6 +314,13 @@ switch($content){
 	$pane->addTab(array(
     		'name' => $myfriends,
     		'content' => $this->objUi->foafFriends($tcont)
+	));
+	break;
+
+	case 'friend':
+	$pane->addTab(array(
+    		'name' => $this->objLanguage->languageText('mod_foaf_friend','foaf') ,
+    		'content' => $this->objUi->showFriend($tcont , $fIndex)
 	));
 	break;
 
@@ -366,10 +391,14 @@ switch($content){
 	$pane->addTab(array('name'=>$surprise,'content' => $game));
 	break;
 
+	case 'gallery':
+	$pane->addTab(array('name'=>$gallery,'content' => $this->objUi->foafGallery( $fields['Images'] , $page)));
+	break;
+	//account types
 	case 'actypes':
 		$pane->addTab(array(
     	'name' => $accountTypes,
-    	'content' =>  $this->objUi->foafAccountTypes()
+    	'content' => $this->objUi->foafAccountTypes()
 	));
 	break;
 
@@ -377,7 +406,7 @@ switch($content){
 	default:
 		$pane->addTab(array(
 		    'name' => 'FOAF',
-    		    'content' => '<div id="about"><h2>Welcome to FOAF !</h2>'.$this->objLanguage->languageText('mod_foaf_instructions','foaf').'</div>'
+    		    'content' => '<div id="about"><h2>'.$this->objLanguage->languageText('mod_foaf_welcometofoaf', 'foaf').'</h2>'.$this->objLanguage->languageText('mod_foaf_instructions','foaf').'</div>'
 		));
 
 

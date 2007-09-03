@@ -659,11 +659,135 @@ class foafui extends object {
 //search
 public function foafSearch()
 {
-
-
 return $this->objFoafOps->searchForm();
 }
 
+
+//gallery
+/**
+  *Method for creating a gallery made of user depictions
+   *@param images =>array => contains the urls of the online images
+   *return foaf gallery interface
+**/
+public function foafGallery($images = array() , $page = 1){
+
+if(!empty($images))
+{
+ //Lets divide images in groups of 16 , so we don't have hundreads 
+//of images beng displayed on the screen
+ $images = array_chunk($images , 12 , false);
+ 
+ $table = $this->newObject('htmltable', 'htmlelements');
+ $table->id = 'gallery';
+ $table->cellspacing = 4;
+/*Dumb row which contains invisible cells.
+  *Such row makes that every row and cell have the same size
+  *If you want to need such properties change it in the foaf.css file
+ */
+
+ $table->startRow('dumb');
+ for($i = 0; $i < 4 ; $i++)
+ {
+  $table->addCell('&nbsp;' , 0);
+ }
+ $table->endRow();
+
+ //Start row which cells have content
+ $table->startRow();
+       //$page specifies the group of images in the group array of images ($images)
+	//as $images is an array groups (indexes) start from 0
+ $page = $page - 1 ;
+ foreach($images[$page] as  $key => $image){
+    
+    $img = $this->newObject('image' , 'htmlelements');
+    $img->src = $image;
+    $img->width = '100%';
+    $img->height = '100%';	
+    $table->addCell('<a href="'.$image.'" title="'.$this->objLanguage->languageText('mod_foaf_imagelocation' ,'foaf').' '.$image.'" alt="'.$image.'">'.$img->show().'</a>');
+    //put only 4 images in each row
+    if(($key + 1) % 4 == 0)
+    {
+     $table->endRow();
+     $table->startRow();	
+    }
+
+  }
+   $table->endRow();	
+//controls row
+//addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+//addRow($content, $tdClass = null, $row_attributes = null)
+   $table->startRow('controlrow');
+   $pages = '';
+   for($page = 1 ; $page <= count($images); $page++){
+       $link = new href($this->uri(array('action' =>'fields', 'content' => 'gallery' , 'page' => $page)) , $page , 'class="pagelink" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.strtolower($this->objLanguage->languageText('mod_foaf_page' , 'foaf')).' '.$page.'"');
+      if($page != 1)
+      { 
+       $pages .= '- ';
+      }
+      $pages .= $link->show();
+  }
+
+
+   $table->addCell($pages,0,'middle','center',null,'colspan="4"');	
+   $table->endRow();
+
+   return  $table->show();
+ } else {
+ $noImages = newObject('htmlheading' , 'htmlelements');
+ $noImages->type = 2;
+ $noImages->align = 'center';
+ $noImages->str = $this->objLanguageText('mod_foaf_emptygallery' ,'foaf');
+ $noImages ->show();
+
+
+}
+   
+
+
+
+
+}
+
+
+
+
+
+
+/**
+   *Method for displaying a single friend profile
+   *@$tcont=>array contains an array with the friends of the user
+   *$@fIndex=>int the index of the friend in the friends array
+**/
+public function showFriend($tcont , $fIndex)
+{
+
+
+		if (isset($tcont->foaf['knows'])) {
+			if (is_array($tcont->foaf['knows'])) {
+				foreach($tcont->foaf['knows'] as $pals) {
+					$info[] = $this->objFoafOps->fFeatureBoxen($pals);
+				}
+			}
+			//build the featurebox
+			$mypfbox = NULL;
+			$myFbox = NULL;
+			$okes = $info[$fIndex];	
+				$objFeatureBox = $this->newObject('featurebox', 'navigation');
+				//take the pfimage and the pfbox
+				$table2 = $this->newObject('htmltable', 'htmlelements');
+				$table2->cellpadding = 5;
+				$table2->startRow();
+				$table2->addCell($okes[0]);
+				$table2->addCell($okes[1]);
+				$table2->endRow();
+				$mypfbox.= $table2->show() ."<br />";
+				$myFbox.= $objFeatureBox->show($okes[2], $mypfbox) ."<br />";
+
+
+		}
+		return $myFbox;
+
+}
 
 
 
