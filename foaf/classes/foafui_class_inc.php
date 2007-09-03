@@ -736,8 +736,9 @@ if(!empty($images))
  $noImages = $this->newObject('htmlheading' , 'htmlelements');
  $noImages->type = 2;
  $noImages->align = 'center';
- $noImages->str = $this->objLanguage->languageText('mod_foaf_emptygallery' ,'foaf');
- $noImages ->show();
+ $noImages->str = "<em>".$this->objLanguage->languageText('mod_foaf_emptygallery' ,'foaf')."</em>";
+ 
+ return $noImages ->show();
 
 
 }
