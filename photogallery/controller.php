@@ -84,6 +84,10 @@ class photogallery extends controller
             	
             case 'viewalbum':
             	return $this->viewAlbum();
+            
+            case 'viewslideshowalbum':
+            	return $this->viewSlideShow();
+
             	
             case 'viewimage':
             	return $this->viewImage();
@@ -240,28 +244,7 @@ class photogallery extends controller
     	
 		$objProxy = $this->getObject('proxy','utilities');
       	$arrProxy = $objProxy->getProxy();
-      	/*
-      	$url = "http://api.flickr.com/services/rest/";
-		$ch = curl_init("http://api.flickr.com/");
-	
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_PROXY, $arrProxy['proxyserver']);
-		curl_setopt($ch, CURLOPT_PROXYUSERPWD, $arrProxy['proxyusername'].':'.$arrProxy['proxypassword']);
-		curl_setopt($ch, CURLOPT_PROXYPORT, $arrProxy['proxyport']);
-		
-		$results = curl_exec($ch);
-	
-		curl_close($ch);
-		
-		//$results = $this->httpTestExistance($url);
-		var_dump($results);
-		if($results == false)
-		{
-		 	print curl_error ($ch); 
-			return false;	
-		}
-		*/
+      	
       	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773", "d01ff0f7a912a1e3");
     
 		//setup the proxy to get the flickr images      	
@@ -301,6 +284,28 @@ class photogallery extends controller
 		return $bigSet;
 	}
 	
+	
+	/**
+	* MEthod to view  a flickr SLide Show
+	*
+	*/
+	public function viewSlideShow()
+	{
+		if($this->initFlickr())
+		{
+		 	$albumid = $this->getParam('albumid');
+		 	$info = $this->_objFlickr->photosets_getInfo($albumid);
+		 	
+		 	$url = 'http://www.flickr.com/photos/'.$info['owner'].'/sets/'.$info['id'].'/show/';		 	
+			$this->setVar('url',$url);		
+			
+			return 'albumslideshow_tpl.php';
+		} else {
+			
+		}
+		
+		
+	}
     /**
      * Method to get the menu
      * @return string
@@ -336,7 +341,9 @@ class photogallery extends controller
 			case 'popular':
 				return FALSE;
 			case 'viewtag':
-				return FALSE;			 
+				return FALSE;	
+			case 'viewslideshowalbum':
+				return FALSE;		 
 			default:
 				return TRUE; 		
         	
