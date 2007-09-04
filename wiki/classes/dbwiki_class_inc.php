@@ -341,6 +341,7 @@ class dbwiki extends dbTable
         $sql .= " ON pages.wiki_id = wikis.id";
         $sql .= " WHERE wikis.wiki_name = '".$name."'";
         $sql .= " AND pages.page_name = '".$pageName."'";
+        $sql .= " AND pages.page_status < 4";
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getArray($sql);
         if(!empty($data)){
