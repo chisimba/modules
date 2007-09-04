@@ -124,12 +124,15 @@ class contenttree extends object
                     $item = '';
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $text = wordwrap(trim($node['title']),24,'<br />');
+                        $text = wordwrap(trim($node['title']),24,"<br />\n");
                         $link = '<a href="'.$nodeUri.'">'.$text.'</a>';
                     } else {
                         $link = $node['title'];
                     }
-                    // small hack here to fix problem with wraparounds
+                    // small fix here for problem with wraparounds
+		    if (strlen($node['title'])>24){
+		    	$link.="<br />\n";
+			}
                      // if node has further child nodes, recursively call buildLevel
                     if ($this->getChildNodes($node['id'], $admin)) {
                     	$htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
@@ -203,8 +206,11 @@ class contenttree extends object
                         $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
                     } else {
                         $link = wordwrap($contentNode['title']);
-                    }
-       
+                    } 
+                    // small fix here for problem with wraparounds
+		    if (strlen($node['title'])>24){
+		    	$link.="<br />\n";
+			}
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                    
                 }
@@ -252,7 +258,10 @@ class contenttree extends object
 			                    } else {
 			                        $link = wordwrap($contentNode['title']);
 			                    }
-                                           
+                                            // small fix here for problem with wraparounds
+		                            if (strlen($node['title'])>24){
+		    	                       $link.="<br />\n";
+			                    }
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
 		                if ($this->getChildNodes($node['id'], $admin)) {

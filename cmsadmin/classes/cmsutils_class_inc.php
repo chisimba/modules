@@ -1056,7 +1056,7 @@ class cmsutils extends object
             $currentNode = $this->getParam('sectionid');
             
             $nav = $objCMSTree->getCMSAdminTree($currentNode);
-            
+            $nav="<div id='cmsnavigation'>".$nav."</div>\n"; 
             $nav .= '<br/>'.'&nbsp;'.'<br />';
             //$nav .= $viewCmsLink.'<br /><br />';
 			$nav .= $objFeatureBox->showContent('Navigation Links',
