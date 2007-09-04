@@ -3306,5 +3306,42 @@ You can create tables using pairs of vertical bars:
         
         return $str;
     }
+    
+    /**
+    * Method to return a wiki page for use in an api
+    *
+    * @access public
+    * @param string $name: The name of the wiki
+    * @param string $pageName: The name of the wiki page (CamelCase)
+    * @return string $str: The rendered wiki page
+    */
+    public function showPage($name, $pageName)
+    {
+        $notFound = $this->objLanguage->languageText('mod_wiki_notfound', 'wiki');
+        
+        $data = $this->objDbwiki->getWikiPage($name, $pageName);
+        if(!empty($data)){
+            $pageTitle = $this->objWiki->renderTitle($data['page_name']);    
+            $array = array(
+                'date' => $this->objDate->formatDate($data['date_created']),
+            );
+            $modifiedLabel = $this->objLanguage->code2Txt('mod_wiki_modified', 'wiki', $array);        
+            
+            $objHeader = new htmlheading();
+            $objHeader->str = $pageTitle;
+            $objHeader->type = 1;
+            $heading = $objHeader->show();
+            
+            $str = $heading;                        
+            $str .= $this->objWiki->transform($data['page_content']);            
+            $str .= '<hr />'.$modifiedLabel;           
+            return $str;            
+        }else{
+            $str = '<ul>';
+            $str .= '<li><b>'.$notFound.'</b></li>';
+            $str .= '</ul>';
+            return $str;   
+        }
+    }
 }
 ?>

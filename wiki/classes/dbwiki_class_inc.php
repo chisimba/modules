@@ -327,6 +327,30 @@ class dbwiki extends dbTable
 /* ----- Functions for tbl_wiki_pages ----- */
 
     /**
+    * Method to get a wiki page
+    * @access public
+    * @param string $name: The name of the wiki
+    * @param string $pageName: The name of the wiki page
+    * @return array|bool $data: The wiki page data on success|FALSE on failure
+    */
+    public function getWikiPage($name, $pageName)
+    {
+        $this->_setPages();
+        $sql = "SELECT * FROM tbl_wiki_pages AS pages";
+        $sql .= " LEFT JOIN tbl_wiki_wikis AS wikis";
+        $sql .= " ON pages.wiki_id = wikis.id";
+        $sql .= " WHERE wikis.wiki_name = '".$name."'";
+        $sql .= " AND pages.page_name = '".$pageName."'";
+        $sql .= " ORDER BY page_version DESC";
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    
+    /**
     * Method to auto create the main page after creating a personal wiki
     *
     * @access public
