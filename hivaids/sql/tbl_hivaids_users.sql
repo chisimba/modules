@@ -27,6 +27,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 10
 		),
+	'language' => array(
+		'type' => 'text',
+		'length' => 255
+		),
 	'modifierid' => array(
 		'type' => 'timestamp'
 		),

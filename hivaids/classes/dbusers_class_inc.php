@@ -46,6 +46,7 @@ class dbusers extends dbtable
         $fields['staff_student'] = $this->getParam('staff_student');
         $fields['course'] = $this->getParam('course');
         $fields['study_year'] = $this->getParam('yearstudy');
+        $fields['language'] = $this->getParam('language');
         $fields['updated'] = $this->now();
         
         if(!empty($id)){

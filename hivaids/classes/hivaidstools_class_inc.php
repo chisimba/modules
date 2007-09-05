@@ -27,6 +27,7 @@ class hivaidstools extends object
         $this->dbUsers = $this->getObject('dbusers', 'hivaids');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCountries = $this->getObject('languagecode','language');
@@ -225,18 +226,20 @@ class hivaidstools extends object
     public function showRegistration()
     {
         $hdRegister = $this->objLanguage->languageText('mod_hivaids_registerhivaids', 'hivaids');
-        $lbRegister = $this->objLanguage->languageText('mod_hivaids_anonymousregister', 'hivaids');
+        $boldArr = array('bold' => '<b>', 'closebold' => '</b>');
+        $lbRegister = $this->objLanguage->code2Txt('mod_hivaids_anonymousregister', 'hivaids', $boldArr);
         $lbAccount = $this->objLanguage->languageText('phrase_accountdetails');
         $lbUser = $this->objLanguage->languageText('phrase_userdetails');
         $lbAdditional = $this->objLanguage->languageText('phrase_additionaldetails');
         $lbUsername = $this->objLanguage->languageText('word_username');
         $lbPassword = $this->objLanguage->languageText('word_password');
         $lbConfirm = $this->objLanguage->languageText('phrase_confirmpassword');
-        $lbFirstname = $this->objLanguage->languageText('phrase_firstname');
-        $lbSurname = $this->objLanguage->languageText('word_surname');
-        $lbTitle = $this->objLanguage->languageText('word_title');
+        //$lbFirstname = $this->objLanguage->languageText('phrase_firstname');
+        //$lbSurname = $this->objLanguage->languageText('word_surname');
+        //$lbTitle = $this->objLanguage->languageText('word_title');
         $lbGender = $this->objLanguage->languageText('word_gender');
         $lbCountry = $this->objLanguage->languageText('word_country');
+        $lbLanguage = $this->objLanguage->languageText('phrase_homelanguage');
         $lbSports = $this->objLanguage->languageText('word_sports');
         $lbHobbies = $this->objLanguage->languageText('word_hobbies');
         $lbMale = $this->objLanguage->languageText('word_male');
@@ -247,13 +250,18 @@ class hivaidstools extends object
         $lbCourse = $this->objLanguage->languageText('mod_hivaids_whatyoustudying', 'hivaids');
         $lbYearStudy = $this->objLanguage->languageText('mod_hivaids_yearofstudy', 'hivaids');
         $btnComplete = $this->objLanguage->languageText('phrase_completeregistration');
+        $lbStudNum = $this->objLanguage->languageText('mod_hivaids_studentstaffnum', 'hivaids');
         
         $errUsername = $this->objLanguage->languageText('mod_hivaids_errornousername', 'hivaids');
         $errPassword = $this->objLanguage->languageText('mod_hivaids_errornopassword', 'hivaids');
         $errConfirm = $this->objLanguage->languageText('mod_hivaids_errornoconfirmpw', 'hivaids');
-        $errFirstname = $this->objLanguage->languageText('mod_hivaids_errornofirstname', 'hivaids');
-        $errSurname = $this->objLanguage->languageText('mod_hivaids_errornosurname', 'hivaids');
+        //$errFirstname = $this->objLanguage->languageText('mod_hivaids_errornofirstname', 'hivaids');
+        //$errSurname = $this->objLanguage->languageText('mod_hivaids_errornosurname', 'hivaids');
         $errNoMatch = $this->objLanguage->languageText('mod_hivaids_errornomatchpw', 'hivaids');
+        $errCourse = $this->objLanguage->languageText('mod_hivaids_errornocourse', 'hivaids');
+        $errStud = $this->objLanguage->languageText('mod_hivaids_errornostudnum', 'hivaids');
+        
+        $useNum = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids');
         
         $institution = $this->objConfig->getinstitutionShortName();
         $array = array('institution' => $institution);
@@ -289,7 +297,7 @@ class hivaidstools extends object
         
         // User details - first name, surname, title, gender, country
         $objTable->addRow(array('<b>'.$lbUser.'</b>'));
-        
+        /*
         $objLabel = new label($lbTitle.': ', 'input_title');
         $objDrop = new dropdown('title');
         $objDrop->setId('input_title');
@@ -314,7 +322,7 @@ class hivaidstools extends object
         $objInput->setId('input_surname');
         
         $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
-        
+        */
         $objLabel = new label($lbGender.': ', 'input_gender');
         $objRadio = new radio('gender');
         $objRadio->setId('input_gender');
@@ -324,6 +332,16 @@ class hivaidstools extends object
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;');
         
         $objTable->addRow(array('', $objLabel->show(), $objRadio->show()));
+        
+        $objLabel = new label($lbLanguage.': ', 'input_language');
+        
+        $objDrop = new dropdown('language');
+        foreach($this->objCountries->iso_639_2_tags->codes as $key => $item){
+            $objDrop->addOption($item, $item);
+        }
+        $objDrop->setSelected('English');
+        
+        $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
         
         $objLabel = new label($lbCountry.': ', 'input_country');
         $list = $this->objCountries->country();
@@ -345,6 +363,14 @@ class hivaidstools extends object
         $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
         
         $objTable->addRow(array('', $objLabel->show(), $objRadio->show()));
+        
+        if($useNum == 'TRUE'){
+            $objLabel = new label($lbStudNum.': ', 'input_number');
+            $objInput = new textinput('number');
+            $objInput->setId('input_number');
+            
+            $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
+        }
         
         $objLabel = new label($lbCourse.': ', 'input_course');
         $objInput = new textinput('course');
@@ -376,8 +402,10 @@ class hivaidstools extends object
         $objForm->addRule('password', $errPassword, 'required');
         $objForm->addRule('confirmpassword', $errConfirm, 'required');
         $objForm->addRule(array('password', 'confirmpassword'), $errNoMatch, 'compare');
-        $objForm->addRule('firstname', $errFirstname, 'required');
-        $objForm->addRule('surname', $errSurname, 'required');
+        if($useNum == 'TRUE'){
+            $objForm->addRule('number', $errStud, 'required');
+        }
+        $objForm->addRule('course', $errCourse, 'required');
         $str .= $objForm->show();
         
         return $this->objFeatureBox->showContent($hdRegister, $str);

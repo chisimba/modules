@@ -146,18 +146,17 @@ class hivaids extends controller
     */
     private function saveRegister()
     {
+        $objLanguage = $this->getObject('language', 'language');
         $userId = $this->objUserAdmin->generateUserId();
         
         $username = $this->getParam('username');
         $password = $this->getParam('password');
         $password2 = $this->getParam('confirmpassword');
-        $title = $this->getParam('title');
-        $firstname = $this->getParam('firstname');
-        $surname = $this->getParam('surname');
+        $firstname = $this->getParam('username');
+        $surname = '';//$this->getParam('username');
         $gender = $this->getParam('gender');
+        $title = ($gender == 'M') ? $objLanguage->languageText('title_mr') : $objLanguage->languageText('title_miss');
         $country = $this->getParam('country');
-        $course = $this->getParam('course');
-        $yearstudy = $this->getParam('yearstudy');
         
         // Check that username is available
         if ($this->objUserAdmin->userNameAvailable($username) == FALSE) {
