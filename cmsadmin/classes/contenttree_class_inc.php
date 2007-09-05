@@ -208,7 +208,7 @@ class contenttree extends object
                         $link = wordwrap($contentNode['title']);
                     } 
                     // small fix here for problem with wraparounds
-		    if (strlen($node['title'])>24){
+		    if (strlen($contentNode['title'])>24){
 		    	$link.="<br />\n";
 			}
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
@@ -259,7 +259,7 @@ class contenttree extends object
 			                        $link = wordwrap($contentNode['title']);
 			                    }
                                             // small fix here for problem with wraparounds
-		                            if (strlen($node['title'])>24){
+		                            if (strlen($contentNode['title'])>24){
 		    	                       $link.="<br />\n";
 			                    }
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
