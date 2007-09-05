@@ -3,20 +3,23 @@
 $tablename = 'tbl_webpresent_tags';
 
 // Options line for comments, encoding and character set
-$option = array('comment' =>  'file tags', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'list of file uploaded', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
     'id' => array(
         'type' => 'text',
         'length' => 32,
+		'notnull' => TRUE,
         ),
-    'fileid' => array(  
-        'type'=> 'text',
+	'fileid' => array(
+        'type' => 'text',
         'length' => 32,
+		'notnull' => TRUE,
         ),
-    'tag' => array(
-        'type' => 'clob',
+	'tag' => array(
+        'type' => 'text',
+		'notnull' => TRUE,
         ),
     );
 
@@ -27,6 +30,7 @@ $name = 'webpresent_tags_index';
 $indexes = array(
     'fields' => array(
         'fileid' => array(),
+        'tag' => array(),
         ),
-);
+    );
 ?>

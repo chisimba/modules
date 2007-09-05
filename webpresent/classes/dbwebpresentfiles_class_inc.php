@@ -12,6 +12,7 @@ class dbwebpresentfiles extends dbtable
     {
         parent::init('tbl_webpresent_files');
         $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
     }
     
     public function getFile($id)
@@ -80,6 +81,92 @@ class dbwebpresentfiles extends dbtable
         }
         
         return $type;
+    }
+    
+    
+    private function getFilesForConversion()
+    {
+        return $this->getAll(' WHERE processstage=\'readyforconversion\' AND inprocess=\'N\'');
+    }
+    
+    private function isInProcess($id)
+    {
+        $row = $this->getRow('id', $id);
+        
+        return ($row['inprocess'] == 'Y' ? TRUE : FALSE);
+    }
+    
+    public function convertFiles()
+    {
+        //echo '<pre>';
+        $files = $this->getFilesForConversion();
+        
+        //print_r($files);
+        
+        foreach ($files as $file)
+        {
+            if (!$this->isInProcess($file['id'])) {
+                $this->convertFile($file);
+            }
+        }
+    }
+    
+    private function convertFile($file)
+    {
+        //print_r($file);
+        
+        $path_parts = pathinfo($file['filename']);
+        
+        $ext = $path_parts['extension'];
+        
+        //echo $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
+        
+        $result = $this->convertAlternative($file['id'], $ext);
+        
+        if ($result) {
+            $result = $this->convertFileFromFormat($file['id'], $ext, 'swf');
+        }
+        
+        if ($result) {
+            $result = $this->convertFileFromFormat($file['id'], $ext, 'pdf');
+        }
+        
+        if ($result) {
+            $result = $this->convertFileFromFormat($file['id'], $ext, 'html');
+        }
+        
+        return $result;
+    }
+    
+    private function convertAlternative($id, $ext)
+    {
+        $other = ($ext == 'odp' ? 'ppt' : 'odp');
+        
+        return $this->convertFileFromFormat($id, $ext, $other);
+    }
+    
+    private function convertFileFromFormat($id, $inputExt, $outputExt)
+    {
+        $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$inputExt;
+        $conv = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$outputExt;
+        
+        
+        if (!file_exists($conv)) {
+            $objConvertDoc = $this->getObject('convertdoc', 'documentconverter');
+            
+            $objConvertDoc->convert($source, $conv);
+            
+            if (file_exists($conv)) {
+                system ('chmod 777 '.$conv);
+                @chmod ($conv, 0777);
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return TRUE;
+        }
+        
     }
 }
 ?>

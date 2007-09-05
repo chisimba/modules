@@ -148,6 +148,8 @@ class webpresent extends controller
         
     }
     
+
+    
     function __process()
     {
         $id = $this->getParam('id');
@@ -223,6 +225,124 @@ class webpresent extends controller
         $this->setVarByRef('files', $files);
         
         return 'tag.php';
+    }
+    
+    function __testswf()
+    {
+        return 'testswf.php';
+    }
+    
+    function __testupload()
+    {
+        return 'testupload.php';
+    }
+    
+    function __tempiframe()
+    {
+        echo '<pre>';
+        print_r($_GET);
+    }
+    
+    function __uploadiframe()
+    {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+        
+        return 'uploadiframe.php';
+    }
+    
+    
+    function __doajaxupload()
+    {
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
+        
+        $id = $this->objFiles->autoCreateTitle();
+        
+        $objMkDir = $this->getObject('mkdir', 'files');
+        
+        $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent/'.$id;
+        $objMkDir->mkdirs($destinationDir);
+        
+        @chmod($destinationDir, 0777);
+        
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array('ppt', 'odp'); //'pps',
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir.'/';
+        
+        $result = $objUpload->doUpload(TRUE, $id);
+        
+        if ($result['success'] == FALSE) {
+            $this->objFiles->removeAutoCreatedTitle($id);
+            rmdir($this->objConfig->getcontentBasePath().'/webpresent/'.$id);
+            
+            return $this->nextAction('tempiframe', array('message'=>$result['message'], 'file'=>$_FILES['fileupload']['name']));
+        } else {
+            
+            //$filename = $_FILES['fileupload']['name'];
+            $mimetype = $_FILES['fileupload']['type'];
+            
+            $path_parts = pathinfo($_FILES['fileupload']['name']);
+        
+            $ext = $path_parts['extension'];
+            
+            
+            $file = $this->objConfig->getcontentBasePath().'/webpresent/'.$id.'/'.$id.'.'.$ext;
+            
+            if (is_file($file)) {
+                @chmod($file, 0777);
+            }
+            
+            $this->objFiles->updateReadyForConversion($id, $filename, $mimetype);
+            
+            $uploadedFiles = $this->getSession('uploadedfiles', array());
+            $uploadedFiles[] = $id;
+            $this->setSession('uploadedfiles', $uploadedFiles);
+            
+            return $this->nextAction('ajaxuploadresults', array('id'=>$generatedid, 'fileid'=>$id, 'filename'=>$filename));
+        }
+    }
+    
+    function __ajaxuploadresults()
+    {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+        
+        $filename = $this->getParam('filename');
+        $this->setVarByRef('filename', $filename);
+        
+        return 'ajaxuploadresults.php';
+    }
+    
+    function __ajaxprocessconversions()
+    {
+        $objBackground = $this->newObject('background', 'utilities');
+            
+        //check the users connection status,
+        //only needs to be done once, then it becomes internal 
+        $status = $objBackground->isUserConn();
+
+        //keep the user connection alive, even if browser is closed!
+        $callback = $objBackground->keepAlive(); 
+        
+        $result = $this->objFiles->convertFiles();
+        
+        $call2 = $objBackground->setCallback("john.doe@tohir.co.za","Your Script","The really long running process that you requested is complete!");
+        
+        if ($result == FALSE) {
+            echo 'could not convert files';
+        } else {
+            echo 'Files Converted';
+        }
     }
 }
 ?>

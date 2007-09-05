@@ -44,7 +44,7 @@ if (count($latestFiles) == 0) {
     
     $latestFilesContent .= '</ul>';
 }
-$table->addCell('<h3>Top 10 Quoted Presentations</h3>'.$latestFilesContent, '50%');
+$table->addCell('<h3>10 Newest Uploads</h3>'.$latestFilesContent, '50%');
 $table->addCell('<h3>Top 10 Quoted Presentations</h3><div class="noRecordsMessage">Under Construction</div>', '50%');
 $table->endRow();
 
