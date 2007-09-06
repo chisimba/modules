@@ -29,6 +29,7 @@ class hivaids extends controller
             $this->repository = $this->getObject('repository', 'hivaids');
             $this->dbVideos = $this->getObject('dbvideos', 'hivaids');
             $this->dbUsers = $this->getObject('dbusers', 'hivaids');
+            $this->dbSuggestions = $this->getObject('dbsuggestions', 'hivaids');
             
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
@@ -113,6 +114,16 @@ class hivaids extends controller
                 $this->setVarByRef('display', $display);
                 $this->setVar('suppressLeft', TRUE);
                 return 'home_tpl.php';
+                
+            /* ** Suggestion box ** */
+            case 'showbox':
+                $display = $this->hivTools->showSuggestionBox();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
+            case 'savesuggestion':
+                $this->dbSuggestions->addSuggestion();
+                return $this->nextAction('home', '', 'cms');
                 
             /* ** General actions ** */
             case 'playyourmoves':

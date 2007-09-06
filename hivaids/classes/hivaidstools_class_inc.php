@@ -410,5 +410,32 @@ class hivaidstools extends object
         
         return $this->objFeatureBox->showContent($hdRegister, $str);
     }
+    
+    /**
+    * Method to display a form for adding suggestions
+    *
+    * @access public
+    * @return string html
+    */
+    public function showSuggestionBox()
+    {
+        $hdBox = $this->objLanguage->languageText('phrase_suggestionbox');
+        $lbSuggestion = $this->objLanguage->languageText('mod_hivaids_submitsuggestions', 'hivaids');
+        $btnSubmit = $this->objLanguage->languageText('word_submit');
+        
+        $str = '<p>'.$lbSuggestion.'</p>';
+        
+        $objInput = new textarea('suggestion');
+        $str .= $objInput->show();
+        
+        $objButton = new button('save', $btnSubmit);
+        $objButton->setToSubmit();
+        $str .= '<p>'.$objButton->show().'</p>';
+        
+        $objForm = new form('box', $this->uri(array('action' => 'savesuggestion')));
+        $objForm->addToForm($str);
+        
+        return $this->objFeatureBox->showContent($hdBox, $objForm->show());
+    }
 }
 ?>
