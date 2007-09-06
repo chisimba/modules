@@ -53,17 +53,13 @@
         */
         try {
         	$method = $this->_getMethod($action);
+        	// Return the template determined by the method resulting from action
+        	return $this->$method();
         }
         catch (customException $e)
 		{
 			customException::cleanUp();
 			exit;
-
-        	/*
-        	 * Return the template determined by the method resulting
-        	 * from action
-        	 */
-        	return $this->$method();
         }
     }
   </code>
