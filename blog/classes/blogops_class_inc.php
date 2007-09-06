@@ -3087,7 +3087,7 @@ class blogops extends object
             'action' => 'viewblog'
         )) , $this->objLanguage->languageText("mod_blog_viewmyblog", "blog"));
         $check = $this->objDbBlog->checkProfile($userid);
-        if ($check != FALSE) {
+        if ($check != FALSE && $check['blog_name'] != NULL || $check['blog_descrip'] != NULL || $check['blogger_profile'] != NULL) {
             $link = new href($this->uri(array(
                 'module' => 'blog',
                 'action' => 'viewprofile',
