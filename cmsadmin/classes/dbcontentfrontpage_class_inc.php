@@ -68,7 +68,7 @@ class dbcontentfrontpage extends dbTable
          */
         public function add($contentId, $ordering = 1)
         {
-            $show_content = $this->getParam('show_content');
+            $show_content = $this->getParam('show_content',0);
                 
             $fields = array();
             $fields['show_content'] = $show_content;
