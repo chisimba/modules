@@ -69,7 +69,7 @@ class hivtools extends object
         $loginBlock = $this->objBlocks->showBlock('login', 'security');
         $manageBlock = $this->showManageList();
         
-        return $topicBlock.$loginBlock.$recentBlock.$categoryBlock.$manageBlock.'<br />';
+        return $categoryBlock.$topicBlock.$loginBlock.$recentBlock.$manageBlock.'<br />';
     }
     
     /**

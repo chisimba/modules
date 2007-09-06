@@ -25,7 +25,7 @@ class block_topiclist extends object
         
         
         //Set the title
-        $this->title = $this->objLanguage->languageText('word_topics');
+        $this->title = $this->objLanguage->languageText('phrase_topicsincategory');
     }
     
     /**

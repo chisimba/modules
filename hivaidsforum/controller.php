@@ -111,9 +111,14 @@ class hivaidsforum extends controller
     *
     * @access public
     */
-    public function requiresLogin()
+    public function requiresLogin($action)
     {
-        return FALSE;
+        switch($action){
+            case 'showreply':
+                return TRUE;
+            default:
+                return FALSE;
+        }
     }
 } // end of controller class
 ?>

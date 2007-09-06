@@ -74,7 +74,8 @@ class dbhivforum extends dbtable
 	{
 	    $topicId = $this->getSession('topicId');
 	    $data = $this->getPosts();
-	    $lbPosted = $this->objLanguage->languageText('word_posted');
+	    $lbPosted = $this->objLanguage->languageText('phrase_postedby');
+	    $lbOn = strtolower($this->objLanguage->languageText('word_on'));
 	    $lbReply = $this->objLanguage->languageText('phrase_replytotopic');
 	    
 	    $topStr = '';
@@ -101,17 +102,17 @@ class dbhivforum extends dbtable
 	                $topStr = $this->objRound->show($inStr.$lnReply);
 	            }else{
 	                if(!empty($item['userid'])){
-	                    $name = ' ... '.$this->objUser->fullname($item['userid']);
+	                    $name = $lbPosted.': '.$this->objUser->username($item['userid']);
 	                }
 	                if(!empty($item['datelastupdated'])){
 	                    $date = $this->objDate->formatDateOnly($item['datelastupdated']);
-	                    $posted = $lbPosted.': '.$date;
+	                    $posted = ' '.$lbOn.' '.$date;
 	                }
 	                
 	                $objTable = new htmltable();
 	                $objTable->startRow();
 	                $objTable->addCell('<b>'.$item['post_title'].'</b>');
-	                $objTable->addCell($posted, '', '', 'right');
+	                $objTable->addCell($name.$posted, '', '', 'right');
 	                $objTable->endRow();
     	            $inStr = $objTable->show();
     	            $inStr .= $item['post_text'];
@@ -189,26 +190,36 @@ class dbhivforum extends dbtable
 	public function showSinglePost($postId)
 	{
 	    $data = $this->getPost($postId);
-	    $lbPosted = $this->objLanguage->languageText('word_posted');
+	    $lbPosted = $this->objLanguage->languageText('phrase_postedby');
+	    $lbOn = strtolower($this->objLanguage->languageText('word_on'));
+	    $lbReply = $this->objLanguage->languageText('phrase_replytotopic');
 	    
+	    // Create reply link
+	    $objLink = new link($this->uri(array('action' => 'showreply')));
+	    $objLink->link = $lbReply;
+	    $lnReply = '<br />'.$objLink->show();
+
+        $name = ''; $posted = '';
 	    if(!empty($data)){
+	       $this->setSession('topicId', $data['topic_id']);
+	    
 	        if(!empty($data['userid'])){
-	            $name = ' ... '.$this->objUser->fullname($data['userid']);
+	            $name = $lbPosted.': '.$this->objUser->username($data['userid']);
 	        }
 	        if(!empty($data['datelastupdated'])){
 	            $date = $this->objDate->formatDateOnly($data['datelastupdated']);
-	            $posted = $lbPosted.': '.$date;
+	            $posted = ' '.$lbOn.' '.$date;
 	        }
 	        
 	        $objTable = new htmltable();
 	        $objTable->startRow();
 	        $objTable->addCell('<b>'.$data['post_title'].'</b>');
-	        $objTable->addCell($posted, '', '', 'right');
+	        $objTable->addCell($name.$posted, '', '', 'right');
 	        $objTable->endRow();
     	    $inStr = $objTable->show();
             $inStr .= $data['post_text'];
     	            
-	        return $this->objRound->show($inStr);
+	        return $this->objRound->show($inStr.$lnReply);
 	    }
 	}
 	
@@ -243,7 +254,7 @@ class dbhivforum extends dbtable
     public function showTopicList($dispType = 'box', $linkAll = FALSE)
     {
         $topicId = $this->getSession('topicId');
-        $lbTopics = $this->objLanguage->languageText('word_topics');
+        $lbTopics = $this->objLanguage->languageText('phrase_topicsincategory');
         $list = $this->getTopicList();
         
         $str = '';
@@ -393,8 +404,10 @@ class dbhivforum extends dbtable
     */
     public function showRecentPosts()
     {
+        $forumId = $this->getSession('forumId');
+        $list = $this->getRecentPosts($forumId);
+        
         $lbPosts = $this->objLanguage->languageText('phrase_recentposts');
-        $list = $this->getRecentPosts();
         
         $str = '';
         if(!empty($list)){
@@ -414,13 +427,13 @@ class dbhivforum extends dbtable
     * @access private
     * @return array $data The categories
     */
-    private function getRecentPosts()
+    private function getRecentPosts($forumId = '')
     {   
         // Get the list from the DB
         $this->_changeTable('tbl_forum_post');
         $sql = "SELECT *, post.id as postid FROM tbl_forum_post AS post, tbl_forum AS forum, tbl_forum_topic AS topic, tbl_forum_post_text AS posttext 
             WHERE forum.forum_context = '{$this->context}' AND topic.forum_id = forum.id 
-            AND post.topic_id = topic.id AND posttext.post_id = post.id
+            AND post.topic_id = topic.id AND posttext.post_id = post.id AND forum.id = '{$forumId}' 
             ORDER BY post.datelastupdated DESC LIMIT 5";
             
         $data = $this->getArray($sql);
