@@ -66,6 +66,6 @@ $uploadbutton->setOnClick('document.location=\''.$this->uri(array('action'=>'upl
 $uploadLink = new link ($this->uri(array('action'=>'upload')));
 $uploadLink->link = 'Upload Presentation';
 
-echo '<p>'.$uploadLink->show().'</p>';
+//echo '<p>'.$uploadLink->show().'</p>';
 ?>
 
