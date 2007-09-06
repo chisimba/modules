@@ -237,7 +237,8 @@ class search extends object {
               . ':<br />', 'scg_selector');
             $objForm->addToForm($pastLabel->show());
             //Create a dropdown for the history search selector
-            $objCat = $this->newObject("dropdown", "htmlelements");
+            $this->loadClass("dropdown", "htmlelements");
+            $objCat = new dropdown();
             $objCat->name = 'scg_selector';
            
             $objCat->addOption(""," ");
