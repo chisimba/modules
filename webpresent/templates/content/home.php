@@ -17,16 +17,20 @@ $form->addToForm($textinput->show().' '.$button->show());
 
 echo $form->show();
 
-echo '<p align="center">'.$tagCloud.'</p>';
-
-
 $table = $this->newObject('htmltable', 'htmlelements');
+
 $table->startRow();
 
+$table->addCell($tagCloud, '60%', 'top', 'center');
+
+
+
 if (count($latestFiles) == 0) {
-    $latestFilesContent = 'asfasf';
+    $latestFilesContent = '';
 } else {
-    $latestFilesContent = '<ul>';
+    $latestFilesContent = '';
+    
+    $objTrim = $this->getObject('trimstr', 'strings');
     
     foreach ($latestFiles as $file)
     {
@@ -36,16 +40,19 @@ if (count($latestFiles) == 0) {
             $filename = htmlentities($file['title']);
         }
         
-        $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-        $fileLink->link = $filename;
+        $linkname = $objTrim->strTrim($filename, 45);
         
-        $latestFilesContent .= '<li>'.$fileLink->show().'</li>';
+        $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+        $fileLink->link = $this->objFiles->getPresentationThumbnail($file['id']).'<br />'.$linkname;
+        $fileLink->title = $filename;
+        
+        $latestFilesContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;">'.$fileLink->show().'</div>';
     }
     
-    $latestFilesContent .= '</ul>';
+
 }
-$table->addCell('<h3>10 Newest Uploads</h3>'.$latestFilesContent, '50%');
-$table->addCell('<h3>Top 10 Quoted Presentations</h3><div class="noRecordsMessage">Under Construction</div>', '50%');
+$table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '40%');
+
 $table->endRow();
 
 echo $table->show();

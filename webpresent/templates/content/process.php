@@ -47,7 +47,7 @@ if (count($tags) > 0) {
     foreach ($tags as $tag)
     {
         $tagsInput->value .= $divider.$tag['tag'];
-        $divider .= ', ';
+        $divider = ', ';
     }
 }
 
@@ -89,6 +89,8 @@ $form->addToForm($hiddeninput->show());
 
 $left .= $form->show();
 
+echo $left;
+/*
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
@@ -97,6 +99,6 @@ $table->addCell($right, '30%');
 $table->endRow();
 
 echo $table->show();
-
+*/
 
 ?>

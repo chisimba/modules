@@ -27,8 +27,9 @@ class ajaxuploader extends object
         $objIframe->id = 'ifra_upload_'.$id;
         $objIframe->name = 'iframe_upload_'.$id;
         $objIframe->frameborder = 1;
-        $objIframe->width = '99%';
-        $objIframe->height = '350';
+        $objIframe->width = 0;
+        $objIframe->height = 0;
+        $objIframe->extra = ' style="display:none" ';
         
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('loading_bar');
@@ -52,7 +53,7 @@ class ajaxuploader extends object
         $form->addToForm($fileInput->show().' '.$button->show().$filename->show().$hiddenInput->show());
         $this->addJS();
         
-        return $form->show().'<div id="uploadresults"></div>'.$objIframe->show().'<div id="div_upload_'.$id.'" style="display:none;">'.$objIcon->show().' Upload in Progress</div>';
+        return $form->show().'<div id="uploadresults"></div><div id="updateform"></div>'.$objIframe->show().'<div id="div_upload_'.$id.'" style="display:none;">'.$objIcon->show().' Upload in Progress</div>';
     }
     
     /**
@@ -74,6 +75,7 @@ function doUpload(id)
     } else {
         document.getElementById(\'form_upload_\'+id).style.display=\'none\';
         document.getElementById(\'div_upload_\'+id).style.display=\'block\';
+        document.getElementById(\'uploadresults\').style.display=\'none\';
         document.forms[\'uploadfile_\'+id].submit();
     }
 }

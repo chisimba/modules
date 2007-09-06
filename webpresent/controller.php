@@ -18,6 +18,17 @@ class webpresent extends controller
         $this->objFiles = $this->getObject('dbwebpresentfiles');
         $this->objTags = $this->getObject('dbwebpresenttags');
     }
+    
+    public function requiresLogin($action)
+    {
+        $required = array('login', 'upload');
+        
+        if (in_array($action, $required)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     /**
     * Standard Dispatch Function for Controller
@@ -92,12 +103,12 @@ class webpresent extends controller
         return 'home.php';
     }
     
-    function __upload()
+    function __oldupload()
     {
         return 'upload.php';
     }
     
-    function __doupload()
+    function __olddoupload()
     {
         
         $id = $this->objFiles->autoCreateTitle();
@@ -152,6 +163,26 @@ class webpresent extends controller
     
     function __process()
     {
+        $id = $this->getParam('id');
+        
+        $file = $this->objFiles->getFile($id);
+        
+        if ($file == FALSE) {
+            return $this->nextAction('home', array('error'=>'norecord'));
+        }
+        
+        $tags = $this->objTags->getTags($id);
+        
+        $this->setVarByRef('file', $file);
+        $this->setVarByRef('tags', $tags);
+        
+        return 'process.php';
+    }
+    
+    function __ajaxprocess()
+    {
+        $this->setPageTemplate(NULL);
+        
         $id = $this->getParam('id');
         
         $file = $this->objFiles->getFile($id);
@@ -232,7 +263,7 @@ class webpresent extends controller
         return 'testswf.php';
     }
     
-    function __testupload()
+    function __upload()
     {
         return 'testupload.php';
     }
@@ -241,6 +272,21 @@ class webpresent extends controller
     {
         echo '<pre>';
         print_r($_GET);
+    }
+    
+    function __erroriframe()
+    {
+        $this->setVar('pageSuppressToolbar', TRUE);
+        $this->setVar('pageSuppressBanner', TRUE);
+        $this->setVar('suppressFooter', TRUE);
+        
+        $id = $this->getParam('id');
+        $this->setVarByRef('id', $id);
+        
+        $message = $this->getParam('message');
+        $this->setVarByRef('message', $message);
+        
+        return 'erroriframe.php';
     }
     
     function __uploadiframe()
@@ -281,7 +327,7 @@ class webpresent extends controller
             $this->objFiles->removeAutoCreatedTitle($id);
             rmdir($this->objConfig->getcontentBasePath().'/webpresent/'.$id);
             
-            return $this->nextAction('tempiframe', array('message'=>$result['message'], 'file'=>$_FILES['fileupload']['name']));
+            return $this->nextAction('erroriframe', array('message'=>$result['message'], 'file'=>$_FILES['fileupload']['name'], 'id'=>$generatedid));
         } else {
             
             //$filename = $_FILES['fileupload']['name'];
@@ -317,6 +363,9 @@ class webpresent extends controller
         $id = $this->getParam('id');
         $this->setVarByRef('id', $id);
         
+        $fileid = $this->getParam('fileid');
+        $this->setVarByRef('fileid', $fileid);
+        
         $filename = $this->getParam('filename');
         $this->setVarByRef('filename', $filename);
         
@@ -338,11 +387,7 @@ class webpresent extends controller
         
         $call2 = $objBackground->setCallback("john.doe@tohir.co.za","Your Script","The really long running process that you requested is complete!");
         
-        if ($result == FALSE) {
-            echo 'could not convert files';
-        } else {
-            echo 'Files Converted';
-        }
+        echo $result;
     }
 }
 ?>

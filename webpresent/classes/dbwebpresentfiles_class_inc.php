@@ -8,6 +8,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class dbwebpresentfiles extends dbtable
 {
     
+    /**
+    * Constructor
+    */
     public function init()
     {
         parent::init('tbl_webpresent_files');
@@ -15,11 +18,23 @@ class dbwebpresentfiles extends dbtable
         $this->objConfig = $this->getObject('altconfig', 'config');
     }
     
+    /**
+    * Method to get the details of a file
+    * @param string $id Record ID of the file
+    * @return array Details of the file
+    */
     public function getFile($id)
     {
         return $this->getRow('id', $id);
     }
     
+    /**
+    * Method to create a record id for the process of uploading
+    * This is needed to create a folder for the presentation
+    * All different formats of the same presentation are then stored in this folder
+    *
+    * @param string Record Id
+    */
     public function autoCreateTitle()
     {
         return $this->insert(array(
@@ -27,6 +42,12 @@ class dbwebpresentfiles extends dbtable
             ));
     }
     
+    /**
+    * Method to delete a record id autocreated for the process of uploading
+    * This is done when an error occurs
+    *
+    * @param string Record Id
+    */
     public function removeAutoCreatedTitle($id)
     {
         $row = $this->getRow('id', $id);
@@ -86,7 +107,7 @@ class dbwebpresentfiles extends dbtable
     
     private function getFilesForConversion()
     {
-        return $this->getAll(' WHERE processstage=\'readyforconversion\' AND inprocess=\'N\'');
+        return $this->getAll(' WHERE processstage != \'finished\' AND inprocess=\'N\'');
     }
     
     private function isInProcess($id)
@@ -101,14 +122,30 @@ class dbwebpresentfiles extends dbtable
         //echo '<pre>';
         $files = $this->getFilesForConversion();
         
-        //print_r($files);
-        
-        foreach ($files as $file)
-        {
-            if (!$this->isInProcess($file['id'])) {
-                $this->convertFile($file);
+        if (count($files) == 0) {
+            return 'allfilesconverted';
+        } else {
+            foreach ($files as $file)
+            {
+                if (!$this->isInProcess($file['id'])) {
+                    $result = $this->convertFile($file);
+                } else {
+                    $result = 'inprocess';
+                }
             }
+            
+            return $result;
         }
+    }
+    
+    private function setOutOfProcess($id)
+    {
+        return $this->update('id', $id, array('inprocess'=>'N'));
+    }
+    
+    private function setInProcess($id, $step)
+    {
+        return $this->update('id', $id, array('inprocess'=>'N', 'processstage'=>$step));
     }
     
     private function convertFile($file)
@@ -121,21 +158,39 @@ class dbwebpresentfiles extends dbtable
         
         //echo $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
         
+        
+        $step = 'otherconversion';
+        $this->setInProcess($file['id'], $step);
         $result = $this->convertAlternative($file['id'], $ext);
+        $this->setOutOfProcess($file['id']);
         
         if ($result) {
+            $step = 'flashconversion';
+            $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], $ext, 'swf');
+            $this->setOutOfProcess($file['id']);
         }
         
         if ($result) {
+            $step = 'pdfconversion';
+            $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], $ext, 'pdf');
+            $this->setOutOfProcess($file['id']);
         }
         
         if ($result) {
+            $step = 'htmlconversion';
+            $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], $ext, 'html');
+            $this->setOutOfProcess($file['id']);
+            
+            if ($result == TRUE) {
+                $this->update('id', $file['id'], array('processstage'=>'finished'));
+                $step = 'finishedconversion';
+            }
         }
         
-        return $result;
+        return $step;
     }
     
     private function convertAlternative($id, $ext)
@@ -167,6 +222,51 @@ class dbwebpresentfiles extends dbtable
             return TRUE;
         }
         
+    }
+    
+    public function getPresentationThumbnail($id)
+    {
+        $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
+        $relLink = $this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
+        
+        
+        if (file_exists($source)) {
+            
+            return '<img src="'.$relLink.'" style="border:1px solid #000;" />';
+        } else {
+            $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
+            $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
+            
+            if (file_exists($source)) {
+                $objMkDir = $this->getObject('mkdir', 'files');
+                $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
+                $objMkDir->mkdirs($destinationDir);
+                
+                $this->objImageResize = $this->getObject('imageresize', 'files');
+                
+                $this->objImageResize->setImg($source);
+                
+                // Resize to 100x100 Maintaining Aspect Ratio
+                $this->objImageResize->resize(120, 120, TRUE);
+                
+                //$this->objImageResize->show(); // Uncomment for testing purposes
+                
+                // Determine filename for file
+                // If thumbnail can be created, give it a unique file name
+                // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
+                if ($this->objImageResize->canCreateFromSouce) {
+                    $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';   
+                    $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';   
+                    $this->objImageResize->store($img);
+                    
+                    return '<img src="'.$imgRel.'" style="border:1px solid #000;" />';
+                } else {
+                    return 'Unable to generate thumbnail';
+                }
+            } else {
+                return 'No Preview Available';
+            }
+        }
     }
 }
 ?>

@@ -36,10 +36,10 @@ if (count($files) == 0) {
         }
         
         $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-        $link->link = 'Image of first slide goes here';
+        $link->link = $this->objFiles->getPresentationThumbnail($file['id']);
         
         $table->startRow();
-        $table->addCell('<div class="noRecordsMessage" style="border: 1px solid #000;">'.$link->show().'</div>', 150);
+        $table->addCell($link->show(), 120);
         $table->addCell('&nbsp;', 10);
         
         $rightContent = '';
