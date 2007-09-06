@@ -231,6 +231,8 @@ class hivaids extends controller
             case 'playyourmoves':
             case 'videolist':
             case 'podcast':
+            case 'showbox':
+            case 'savesuggestion':
                 return FALSE;
         }
         return TRUE;
