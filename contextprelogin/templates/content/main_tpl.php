@@ -153,7 +153,7 @@ $config = '';
 		$tableRow[] = $context['contextcode'];
 		$tableRow[] = $context['title'];
 		$tableRow[] = $info;
-		$tableRow[] = $objLink->show();// $config;
+		//$tableRow[] = $objLink->show();// $config;
 		
 		$table->addRow($tableRow, $oddOrEven);
 		 $rowcount = ($rowcount == 0) ? 1 : 0;
