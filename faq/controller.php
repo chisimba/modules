@@ -159,6 +159,20 @@ class faq extends controller
 
  
     }
+     /**
+         * 
+        * This is a method that overrides the parent class to stipulate whether
+        * the current module requires login. Having it set to false gives public
+        * access to this module including all its actions.
+        *
+        * @access public
+        * @return bool FALSE
+        */
+        public function requiresLogin() 
+        {
+            return FALSE;
+
+        }
 
     /**
     * View all FAQ entries.
