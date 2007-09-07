@@ -178,7 +178,7 @@ class cmsadmin extends controller
 				$this->setVar('pageSuppressXML',TRUE);
 				 $myid = $this->_objUser->userId();
 				try {
-					if ($this->_objUser->inAdminGroup($myid) != TRUE) {
+					if ($this->_objUser->inAdminGroup($myid,'CMSAuthors') != TRUE) {
 	                        throw new customException($this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin'));
 	                    }
 				}catch (customException $ex){
