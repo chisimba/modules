@@ -93,7 +93,7 @@ foreach ($fileTypes as $fileType=>$fileName)
     $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
     
     if (file_exists($fullPath)) {
-        $relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
+        $relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
         $link = new link($relLink);
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
         
@@ -112,5 +112,5 @@ $homeLink = new link ($this->uri(NULL));
 $homeLink->link = 'Back to Home';
 
 echo '<p>'.$homeLink->show().'</p>';
-?>
 
+?>
