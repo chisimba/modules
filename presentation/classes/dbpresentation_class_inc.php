@@ -65,8 +65,73 @@ class dbpresentation extends dbtable
     */
     public function init()
     {
-        //Set the parent table here
+        try {
+            parent::init('tbl_presentation');
+            //Instantiate the user object
+            $this->objUser = $this->getObject('user', 'security');
+        }
+        catch(customException $e) {
+            echo customException::cleanUp();
+            die();
+        }
     }
-    
-}
+  
+    /**
+    *
+    * Save method for tbl_presentation
+    * @param string $mode: edit if coming from edit, add if coming from add
+    *
+    */
+    public function saveData($mode)
+    {
+        //Retrieve the value of the primary keyfield $id
+        $id = $this->getParam('id', NULL);
+        //Retrieve the value of $title
+        $title = $this->getParam('title', NULL);
+        //Retrieve the value of $description
+        $description = $this->getParam('description', NULL);
+        //Retrieve the value of $slides
+        $slides = $this->getParam('slides', NULL);
+        //If coming from edit use the update code
+        if ($mode=="edit") {
+            $ar = array(
+              'title' => $title,
+              'description' => $description,
+              'slides' => $slides,
+              'modified' => $this->now(),
+              'modifierid' => $this->objUser->userId()
+            );
+            $this->update('id', $id, $ar);
+        } else {
+            $ar = array(
+              'title' => $title,
+              'description' => $description,
+              'slides' => $slides,
+              'created' => $this->now(),
+              'creatorid' => $this->objUser->userId()
+            );
+            $this->insert($ar);
+        }
+
+    }
+
+    /**
+    * Method to retrieve the data for edit and prepare the vars for
+    * the edit template.
+    *
+    * @param string $mode The mode should be edit or add
+    */
+    public function getForEdit()
+    {
+        $order = $this->getParam("order", NULL);
+        // retrieve the group ID from the querystring
+        $keyvalue=$this->getParam("id", NULL);
+        if (!$keyvalue) {
+          die($this->objLanguage->languageText("modules_badkey").": ".$keyvalue);
+        }
+        // Get the data for edit
+        $key="id";
+        return $this->getRow($key, $keyvalue);
+    }
+}    
 ?>
