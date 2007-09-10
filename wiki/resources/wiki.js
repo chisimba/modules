@@ -16,10 +16,16 @@ var lockTimer;
 */
 function validateCreatePage(err_page, err_summary, err_content)
 {
+    var val;
     var name_input = $("input_name");
     var summary_input = $("input_summary");
     var choice_input = $("input_choice");
     var content_input = $("input_content");
+    
+    val = validateName($name_input);
+    if(!val){
+        return false;
+    }
     
     if(name_input.value == ""){
         alert(err_page);
@@ -101,6 +107,7 @@ function validateName(name_input)
 */
 function validationEffects()
 {
+    var val;
     var name_input = $("input_name"); 
     var summary_input = $("input_summary");   
     var div_errorDiv = $("errorDiv");
@@ -108,11 +115,14 @@ function validationEffects()
         name_input.style.backgroundColor = "yellow";
         name_input.focus();
         name_input.select();
+        val = false;        
     }else{
         name_input.style.backgroundColor = "";
         summary_input.focus();
+        val = true;
     }
-    adjustLayout();        
+    adjustLayout();
+    return val;
 }
 
 /**
