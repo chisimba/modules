@@ -116,14 +116,45 @@ class hivaids extends controller
                 return 'home_tpl.php';
                 
             /* ** Suggestion box ** */
+            case 'viewsuggestions':
+                $display = $this->hivTools->viewSuggestions();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+            
             case 'showbox':
                 $display = $this->hivTools->showSuggestionBox();
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
                 
             case 'savesuggestion':
-                $this->dbSuggestions->addSuggestion();
+                $save = $this->getParam('save');
+                if(isset($save) && !empty($save)){
+                    $this->dbSuggestions->addSuggestion();
+                }
                 return $this->nextAction('home', '', 'cms');
+                
+            /* ** Links page ** */
+            case 'managelinks':
+                $display = $this->hivTools->manageLinks();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
+            case 'addlinks':
+                $display = $this->hivTools->addLinks();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+            
+            case 'savelinks':
+                $save = $this->getParam('save');
+                if(isset($save) && !empty($save)){
+                    $this->saveLinks();
+                }
+                return $this->nextAction('managelinks');
+                
+            case 'viewlinks':
+                $display = $this->hivTools->showLinks();
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
                 
             /* ** General actions ** */
             case 'playyourmoves':

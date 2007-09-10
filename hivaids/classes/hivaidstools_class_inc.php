@@ -412,6 +412,17 @@ class hivaidstools extends object
     }
     
     /**
+    * Method to display the suggestions
+    *
+    * @access public
+    * @return string html
+    */
+    public function viewSuggestions()
+    {
+        return '';
+    }
+    
+    /**
     * Method to display a form for adding suggestions
     *
     * @access public
@@ -436,6 +447,39 @@ class hivaidstools extends object
         $objForm->addToForm($str);
         
         return $this->objFeatureBox->showContent($hdBox, $objForm->show());
+    }
+    
+    /**
+    * Method to manage the links page
+    *
+    * @access public
+    * @return string html
+    */
+    public function manageLinks()
+    {
+        return '';
+    }
+    
+    /**
+    * Method to update the links page
+    *
+    * @access public
+    * @return string html
+    */
+    public function addLinks()
+    {
+        return '';
+    }
+    
+    /**
+    * Method to display the links page
+    *
+    * @access public
+    * @return string html
+    */
+    public function showLinks()
+    {
+        return '';
     }
 }
 ?>
