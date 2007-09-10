@@ -191,6 +191,8 @@ class foafops extends object
             if (isset($basednearlat) && isset($basednearlong)) {
                 $this->objFoaf->setBasedNear($basednearlat, $basednearlong);
             }
+
+	}
             //funded by from funded by table
             $this->_getFunders($userId);
             //depictions from depictions table
@@ -208,7 +210,7 @@ class foafops extends object
             $this->_getFriends($userId);
             //var_dump($this->objFoaf->foaftree);
             
-        }
+        
     }
     /**
      * Method to get the FOAF of a friend that you have added to your FOAF
