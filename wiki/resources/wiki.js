@@ -22,14 +22,14 @@ function validateCreatePage(err_page, err_summary, err_content)
     var choice_input = $("input_choice");
     var content_input = $("input_content");
     
-    val = validateName(name_input);
-    if(!val){
-        return false;
-    }
-    
     if(name_input.value == ""){
         alert(err_page);
         name_input.focus();
+        return false;
+    }
+    
+    val = validateName(name_input);
+    if(!val){
         return false;
     }
     
