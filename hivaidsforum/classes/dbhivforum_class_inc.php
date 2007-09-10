@@ -77,29 +77,114 @@ class dbhivforum extends dbtable
 	    $lbPosted = $this->objLanguage->languageText('phrase_postedby');
 	    $lbOn = strtolower($this->objLanguage->languageText('word_on'));
 	    $lbReply = $this->objLanguage->languageText('phrase_replytotopic');
+	    $lbThread = $this->objLanguage->languageText('phrase_replytopost');
+	    $lbReplyThread = $this->objLanguage->languageText('phrase_replytothread');
 	    
 	    $topStr = '';
 	    $replyStr = '';
 	    
-	    // Create reply link
+	    // Create reply links
 	    $objLink = new link($this->uri(array('action' => 'showreply')));
 	    $objLink->link = $lbReply;
 	    $lnReply = '<br />'.$objLink->show();
 	    
+	    //echo '<pre>'; print_r($data);
+	    
 	    if(!empty($data)){
+            
+            $parent = array();
+            $threads = array();
+            $parentId = '';
+            // Sort responses into threads
+            foreach($data as $item){
+                if($item['post_parent'] == '0'){
+                    $parent = $item;
+                    $parentId = $item['post_id'];
+                }else{
+                    $threads[$item['post_parent']][] = $item;
+                }   
+            }
+            
+            // Display topic parent
+            if(!empty($parent)){
+                $objHead = new htmlheading();
+    	        $objHead->str = $parent['post_title'];
+    	        $objHead->type = 4;
+    	        
+    	        $inStr = $objHead->show();
+    	        $inStr .= $parent['post_text'];
+	           
+	            $topStr = $this->objRound->show($inStr.$lnReply);
+            }
+            
+            // Display posts by thread
+            if(!empty($threads)){
+                foreach($threads[$parentId] as $item){
+                    if(!empty($item['userid'])){
+	                    $name = $lbPosted.': '.$this->objUser->username($item['userid']);
+	                }
+	                if(!empty($item['datelastupdated'])){
+	                    $date = $this->objDate->formatDateOnly($item['datelastupdated']);
+	                    $posted = ' '.$lbOn.' '.$date;
+	                }
+	                
+	                $objTable = new htmltable();
+	                $objTable->startRow();
+	                $objTable->addCell('<b>'.$item['post_title'].'</b>');
+	                $objTable->addCell($name.$posted, '', '', 'right');
+	                $objTable->endRow();
+    	            $inStr = $objTable->show();
+    	            $inStr .= $item['post_text'];
+    	            
+            	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
+            	    $objLink->link = $lbThread;
+            	    $lnThread = '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
+
+	                $replyStr .= $this->objRound->show($inStr.$lnReply.$lnThread);
+	                
+	                // Check for a thread on the post
+	                if(isset($threads[$item['post_id']]) && !empty($threads[$item['post_id']])){
+	                   
+	                   $objTableThread = new htmltable();
+	                   foreach($threads[$item['post_id']] as $val){
+	                       if(!empty($val['userid'])){
+         	                    $name = $lbPosted.': '.$this->objUser->username($val['userid']);
+         	                }
+         	                if(!empty($val['datelastupdated'])){
+         	                    $date = $this->objDate->formatDateOnly($val['datelastupdated']);
+         	                    $posted = ' '.$lbOn.' '.$date;
+         	                }
+         	                
+         	                $objTable = new htmltable();
+         	                $objTable->startRow();
+         	                $objTable->addCell('<b>'.$val['post_title'].'</b>');
+         	                $objTable->addCell($name.$posted, '', '', 'right');
+         	                $objTable->endRow();
+             	            $inStr = $objTable->show();
+             	            $inStr .= $val['post_text'];
+             	            
+                     	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
+                     	    $objLink->link = $lbReplyThread;
+                     	    $lnThread = $objLink->show();
+         
+         	                $div = $this->objRound->show($inStr.$lnThread);
+         	                $objTableThread->startRow();
+         	                $objTableThread->addCell('', '8%');
+         	                $objTableThread->addCell($div, '90%');
+         	                $objTableThread->endRow();
+	                   }
+	                   $replyStr .= $objTableThread->show();
+	                }
+                }
+            }
+            
+            /*
 	        foreach($data as $item){
 	            $name = ''; $posted = '';
 	            
 	            // check if post is the topic parent
 	            if($item['post_parent'] == '0'){
-    	            $objHead = new htmlheading();
-    	            $objHead->str = $item['post_title'];
-    	            $objHead->type = 4;
     	            
-    	            $inStr = $objHead->show();
-    	            $inStr .= $item['post_text'];
-	           
-	                $topStr = $this->objRound->show($inStr.$lnReply);
 	            }else{
 	                if(!empty($item['userid'])){
 	                    $name = $lbPosted.': '.$this->objUser->username($item['userid']);
@@ -117,9 +202,14 @@ class dbhivforum extends dbtable
     	            $inStr = $objTable->show();
     	            $inStr .= $item['post_text'];
     	            
-	                $replyStr .= $this->objRound->show($inStr.$lnReply);
+            	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
+            	    $objLink->link = $lbThread;
+            	    $lnThread = '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
+
+	                $replyStr .= $this->objRound->show($inStr.$lnReply.$lnThread);
 	            }
 	        }
+	        */
 	    }
 	    return $topStr.$replyStr;
 	}
@@ -221,6 +311,18 @@ class dbhivforum extends dbtable
     	            
 	        return $this->objRound->show($inStr.$lnReply);
 	    }
+	}
+	
+	/**
+	* Method to get the parent post for replying to a thread
+	*
+	* @access public
+	* @param string $parentId The post id of the parent
+	* @return array $data The post
+	*/
+	public function getPostParent($parentId)
+	{
+	   return $this->getPost($parentId);
 	}
 	
 	/**

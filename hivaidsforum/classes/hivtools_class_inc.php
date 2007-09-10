@@ -148,10 +148,20 @@ class hivtools extends object
         $lbSave = $this->objLanguage->languageText('word_save');
         
         $topicId = $this->getSession('topicId');
+        $parentId = $this->getParam('parent_id');
         
         $topic = $this->objTopic->getTopicPost();
         $str = $this->objTopic->displayTopPost($topic);
         $postId = $topic['postid'];
+        
+        if(!empty($parentId)){
+            $lbReply = ucwords($this->objLanguage->languageText('phrase_replytopost'));
+            $parent = $this->objTopic->getPostParent($parentId);
+            $str .= $this->objTopic->displayTopPost($parent);
+            
+            // hidden fields - parent post id if reply is to a post not the topic
+            $postId = $parentId;
+        }
         
         // Create reply form
         
@@ -170,6 +180,7 @@ class hivtools extends object
         $objButton->setToSubmit();
         $formStr .= '<p>'.$objButton->show().'</p>';
         
+        // hidden fields - top post id
         $objInput = new textinput('postid', $postId, 'hidden');
         $formStr .= $objInput->show();
         
