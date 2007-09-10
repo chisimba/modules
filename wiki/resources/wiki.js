@@ -22,7 +22,7 @@ function validateCreatePage(err_page, err_summary, err_content)
     var choice_input = $("input_choice");
     var content_input = $("input_content");
     
-    val = validateName($name_input);
+    val = validateName(name_input);
     if(!val){
         return false;
     }
