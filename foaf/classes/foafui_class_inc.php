@@ -183,11 +183,26 @@ class foafui extends object {
 		return $myFoafForm;
 	}
 
+
+//friends
+	public function manageFriends()
+	{
+
+			//add/remove friends
+	$addFriendsForm = $this->objFoafOps->addDD();
+	$remFriendsForm = $this->objFoafOps->remDD();
+	return $addFriendsForm->show() .$remFriendsForm->show() ;
+
+	}
+
 	public function foafFriends($tcont)
 	{
-		//add/remove friends
-		$addFriendsForm = $this->objFoafOps->addDD();
-		$remFriendsForm = $this->objFoafOps->remDD();
+
+
+		$manageFriends = new href($this->uri(array('action' => 'admin' , 'content' => 'fndadmin')) , $this->objLanguage->languageText('mod_foaf_mngfriends' , 'foaf'));
+
+
+	
 		if (isset($tcont->foaf['knows'])) {
 			if (is_array($tcont->foaf['knows'])) {
 				foreach($tcont->foaf['knows'] as $pals) {
@@ -198,6 +213,9 @@ class foafui extends object {
 			$mypfbox = NULL;
 			$myFbox = NULL;
 			foreach($info as $okes) {
+
+			      if($okes[2] == 'Person')
+			      {					
 				$objFeatureBox = $this->newObject('featurebox', 'navigation');
 				//take the pfimage and the pfbox
 				$table2 = $this->newObject('htmltable', 'htmlelements');
@@ -207,8 +225,9 @@ class foafui extends object {
 				$table2->addCell($okes[1]);
 				$table2->endRow();
 				$mypfbox.= $table2->show() ."<br />";
-				$myFbox.= $objFeatureBox->show($okes[2], $mypfbox) ."<br />";
+				$myFbox.= $objFeatureBox->show($okes[3], $mypfbox) ."<br />";
 				$mypfbox = NULL;
+                               }
 			}
 		} else {
 			$myFriendsForm = $this->objFoafOps->addDD();
@@ -217,9 +236,11 @@ class foafui extends object {
 			$myFbox = $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_nofriends', 'foaf') , $this->objLanguage->languageText('mod_foaf_nofriendstxt', 'foaf'));
 		}
 
-		return $addFriendsForm->show() .$remFriendsForm->show() .$myFbox;
+		return $manageFriends->show().$myFbox;
 	}
 
+
+//organizations
 	public function manageOrgs()
 	{
 

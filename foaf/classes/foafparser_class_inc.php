@@ -989,22 +989,26 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
 {
 }
 /*
-public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
+public function queryFoaf($foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
 {
 
   require_once(RDFAPI_INCLUDE_DIR . "RdfAPI.php");
   require_once(RDFAPI_INCLUDE_DIR . "syntax/RdfParser.php");
 
   $parser = new RdfParser();
-  $model = $parser->generateModel($path.$foafFile);  
+  $model = $parser->generateModel($foafFile);  
   $foafns = "http://xmlns.com/foaf/0.1/";
   $matches = NULL;
-  //echo "<br /> Function object >".$object."<br />";
-//  echo "Function predicate >".$predicate."<br />";
+  $info = array();
+  
+
+  echo "<div style='color:red'>";
+  echo "<br /> Function object >".$object."<br />";
+  echo "Function predicate >".$predicate."<br />";
  
   if($object != 'all')
   {	
-    $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/' , '/'.$object.'$/i');   
+    $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/i' , '/^'.$object.'/i');   
     
   } else {
      $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/' , '/$/');
@@ -1021,17 +1025,20 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
    echo "Object: " . $statement->getLabelObject();
    echo "</p>";
 
-  echo "This ".$predicate." belongs to ".$this->getFoafName($model ,  $statement->getLabelSubject());
+  $name = $this->getFoafName($model ,  $statement->getLabelSubject());
+  echo "This ".$predicate." belongs to ".$name;
+  array_push($info , array('field' => $predicate , 'name' => $name));
+
 
   }
-
-  return  $matches;
+  echo "</div>";
+  return  $info;
  
 
 
 }*/
 
-/*
+
  public function getFoafName($model , $person)
  {
 
@@ -1054,7 +1061,7 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
 
 
 
- }*/
+ }
 
 
 

@@ -64,9 +64,21 @@ $accounts = $dbFoaf->getAccounts();
 $interests = $dbFoaf->getInterests();
 $images = $dbFoaf->getDepictions();
 $friends = $dbFoaf->getFriends();
+
 $fields = array('Organizations' => $orgs , 'Funders' => $funders , 'Pages' => $pages , 'Accounts' => $accounts ,
 		'Interests' => $interests , 'Images' => $images);
 
+foreach($fields as $field) {
+	if(!is_array($field))
+	{
+		$field = array();
+	}
+}
+
+if(!is_array($friends))
+{
+   $friends = array();
+}
 
 
 //echo "path>".$filePath.$foafFile."<br />";
@@ -88,6 +100,7 @@ if ($msg == 'update') {
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
 $myfriends = $this->objLanguage->languageText('mod_foaf_myfriends', 'foaf');
 $allfriends = $this->objLanguage->languageText('mod_foaf_allfriends', 'foaf');
+$searchfriends = $this->objLanguage->languageText('mod_foaf_searchfriends', 'foaf');
 $myorganizations = $this->objLanguage->languageText('mod_foaf_myorganizations', 'foaf');
 $myfunders = $this->objLanguage->languageText('mod_foaf_myfunders', 'foaf');
 $myinterests = $this->objLanguage->languageText('mod_foaf_myinterests', 'foaf');
@@ -108,9 +121,13 @@ $noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array(
 //$noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('NR'FIELD' => $predicate ,'VALUE' => $object));
 $game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
 
-$matches = $this->objFoafParser->queryFoaf($filePath, $foafFile , $predicate , $object , $noResultsMsg);
+$matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object , $noResultsMsg);
+/*echo "<div style='color:white;'>";
 //var_dump($matches);
-
+echo "<h1>search field>".$predicate."</h1>";
+echo "<h1>search value>".$object."</h1>";
+echo "</div>";*/
+//echo "<h1>foaf file>".$foafFile."</h1>";
 
 //boxes
 $box = $this->getObject('featurebox', 'navigation');
@@ -182,7 +199,7 @@ foreach($friends as $key=>$friend){
 if($key < 3){
 
 $table->startRow();
-$fLink = new href($this->uri(array('action' =>'fields', 'content' => 'friend' , 'friend' => $key)) , $friend['name'].'>>', 'class="itemlink" title="See '.$friend['name'].' profile" id="friend'.$key.'"');
+$fLink = new href($this->uri(array('action' =>'fields', 'content' => 'friend' , 'friend' => $key)) , $friend['name'], 'class="itemlink" title="See '.$friend['name'].' profile" id="friend'.$key.'"');
 $table->addCell('<h6>'.$fLink->show().'</h6>');
 $table->endRow();
 
@@ -193,8 +210,15 @@ $friendsLink = new href($this->uri(array('action' =>'fields', 'content' => 'frie
 $table->startRow();
 $table->addCell('<em>'.$friendsLink->show().'</em>');
 $table->endRow();
-$friendsLink = new href($this->uri(array('action' =>'fields', 'content' => 'friends')) , $myfriends, 'class="headerlink" title="'.$allfriends.'"');
-$friendsBox = $box->showContent($friendsLink->show() , $table->show());
+
+$searchLink = new href($this->uri(array('action' =>'fields', 'content' => 'search')) , $searchfriends, 'class="itemlink"');
+$table->startRow();
+$table->addCell('<em>'.$searchLink->show().'</em>');
+$table->endRow();
+
+
+$friendsHeader = new href($this->uri(array('action' =>'fields', 'content' => 'friends')) , $myfriends, 'class="headerlink" title="'.$allfriends.'"');
+$friendsBox = $box->showContent($friendsHeader->show() , $table->show());
 
 
 //profilebox
@@ -315,6 +339,14 @@ switch($content){
 	));
 	break;
 
+	case 'fndadmin':
+	$pane->addTab(array(
+    		'name' => $myfriends,
+    		'content' => $this->objUi->manageFriends()
+	));
+	break;
+
+
 	case 'friend':
 	$pane->addTab(array(
     		'name' => $this->objLanguage->languageText('mod_foaf_friend','foaf') ,
@@ -419,7 +451,7 @@ switch($content){
 
 	case 'search':
 		$pane->addTab(array(
-	    'name' => $query,
+	    'name' => $searchfriends,
 	    'content' => $this->objUi->foafSearch()
 	));
 	break;

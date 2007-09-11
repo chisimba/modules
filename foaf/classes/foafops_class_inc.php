@@ -682,12 +682,19 @@ class foafops extends object
     function fFeatureBoxen($pals) 
     {
         $pftype = $pals['type'];
-        if (isset($pals['title']) && isset($pals['firstname']) && isset($pals['surname'])) {
+	$name  = NULL;
+      if($pftype == 'Person')
+      {	        
+	if (isset($pals['title']) && isset($pals['firstname']) && isset($pals['surname'])) {
             $pfbox = "<em>".$pals['title']." ".$pals['firstname']." ".$pals['surname']."</em><br />";
+	     $name = $pals['title'].' '.$pals['firstname'].' '.$pals['surname'];
         } else {
             $pfbox = "<em>".$pals['name']."</em><br />";
+	    $name = $this->objLanguage->languageText('mod_foaf_friend' , 'foaf');
             $pfimg = NULL;
         }
+
+
         //build a table of values etc...
         //var_dump($pals);
         if (isset($pals['img'])) {
@@ -758,8 +765,10 @@ class foafops extends object
         return array(
             $pfimg,
             $pfbox,
-            $pftype
+            $pftype,
+	    $name
         );
+     }
     }
 
 
