@@ -145,8 +145,8 @@ class foaf extends controller
 			default:
 			case 'createfoaf':
 				 $message = $this->getParam('message');
-				 $schField = $this->getParam('schField');
-				 $schValue = $this->getParam('schValue');
+				 $schField = $this->getParam('schfield');
+				 $schValue = $this->getParam('schvalue');
 				 $content = $this->getParam('content');
 				 $fIndex = $this->getParam('friend'); 
 				 $page = $this->getParam('page' , 1); 
@@ -217,7 +217,8 @@ class foaf extends controller
 					$this->dbFoaf->removeFriend(array('userid' => $myid, 'fuserid' => $remid));
 				}
 				$message = 'update';
-				$exists ='existence';
+				$this->nextAction('createfoaf',array('message' => $message));
+
 
 				break;
 
@@ -511,7 +512,7 @@ class foaf extends controller
 			      $schValue = 'all';
 			}
 
-			$this->nextAction(NULL , array('message' => $message , 'schField' => $schField , 'schValue' =>$schValue));
+			$this->nextAction(NULL , array('action' => 'fields' ,  'content' => 'search' , 'message' => $message , 'schfield' => $schField , 'schvalue' =>$schValue));
 			break;	
 			
 			case 'fields':
