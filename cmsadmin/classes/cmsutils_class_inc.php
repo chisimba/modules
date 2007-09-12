@@ -1902,16 +1902,7 @@ class cmsutils extends object
             $table->addCell($objRadio->show(),'','','','',"colspan='2'");
             $table->endRow();
 
-            $table->startRow();
-            $table->addCell($this->objLanguage->languageText('word_image').':&nbsp;');
-            $table->addCell($drp_image->show(),'','','','',"colspan='2'");
-            $table->endRow();
-
-            $table->startRow();
-            $table->addCell('&nbsp;');
-            $table->addCell($image.$imageThumb->show(),'','','','',"colspan='2'");
-            $table->endRow();
-            
+                       
             //layout
             $table->startRow();
             $table->addCell($this->objLanguage->languageText('mod_cmsadmin_layoutofpages', 'cmsadmin').': ','','center');
@@ -1961,9 +1952,10 @@ class cmsutils extends object
             $showdate->setBreakSpace(' &nbsp; ');
 
             //Intro text
-            $this->loadClass('textarea', 'htmlelements');
-            $introText = new textarea();
-            //$introText =& $this->newObject('htmlarea', 'htmlelements');
+            $introText = $this->newObject('htmlarea', 'htmlelements');
+            $introText->height = '200px';
+            $introText->width = '50%';
+
             $introText->name = 'introtext';
             $introText->height = '500px';
             if ($editmode) {

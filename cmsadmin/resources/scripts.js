@@ -175,20 +175,21 @@ function sa_processSection(sectionType)
         Element.hide("pagenumcol");
         Element.hide("dateshowlabel");
         Element.hide("dateshowcol");
+        Element.show("showintrolabel");
+        Element.show("showintrocol");
     } else {
         Element.show("pagenumlabel");
         Element.show("pagenumcol");
         Element.show("dateshowlabel");
         Element.show("dateshowcol");
+        Element.show("showintrolabel");
+        Element.show("showintrocol");
     }   
 
     if (sectionType == 'summaries' || sectionType == 'list') {
         Element.show("showintrolabel");
         Element.show("showintrocol");
-    } else {
-        Element.hide("showintrolabel");
-        Element.hide("showintrocol");
-    }            
+    }  
 }
 
 

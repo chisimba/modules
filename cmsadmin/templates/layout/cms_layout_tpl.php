@@ -39,11 +39,8 @@ YAHOO.example.onMenuReady = function() {
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("fonts/fonts.css", 'yahoolib').'" />';
 $css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("reset/reset.css", 'yahoolib').'" />';
-$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("container/assets/container.css", 'yahoolib').'" />';
-$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
+$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));

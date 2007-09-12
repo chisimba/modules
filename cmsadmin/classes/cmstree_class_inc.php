@@ -253,7 +253,7 @@ class cmstree extends object
 		{
 			//$menu = $this->getTree('cmsadmin', FALSE);
 			 $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
-			return $this->_objTree->show($current,TRUE,'cmsadmin','viewsection','addcontent');
+			return $this->_objTree->show($current,TRUE,'cmsadmin','viewsection','viewcontent');
 		}
 		
 		/**

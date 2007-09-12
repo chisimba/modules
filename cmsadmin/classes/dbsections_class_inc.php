@@ -237,7 +237,7 @@ class dbsections extends dbTable
                 $title = $this->getParam('title');
                 $menuText = $this->getParam('menutext');
                 $access = $this->getParam('access');
-                $description = $this->getParam('introtext');
+                $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
@@ -253,7 +253,7 @@ class dbsections extends dbTable
                 $ordering = $this->getOrdering($parentid);
 
                 //Add section
-                $result = $this->insert(array(
+                $index = array(
                 'rootid' => $rootid,
                 'parentid' => $parentid,
                 'title' => $title,
@@ -273,18 +273,11 @@ class dbsections extends dbTable
                 'userid' => $user,
                 'link' => $this->getParam('imagesrc'),
                 'contextcode' =>$contextcode
-                ));
-                
+                );
+                $result = $this->insert($index);
+                $this->luceneIndex($index);
                 return $result;
-                /*add to menu indexing by section id
-                if ($rootnode) {
-                    $orderNum = $this->TreeNodes->getNewOrderNum($rootnode);
-                	return $this->TreeNodes->add($this->getParam('title'), '1', $this->getParam('linkreference'), $this->getParam('banner'), $rootnode, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
-                }else{ 
-                	$orderNum = $this->TreeNodes->getNewOrderNum($this->getParam('parentid'));
-                   	return $this->TreeNodes->add($this->getParam('title'), '0', $this->getParam('linkreference'), $this->getParam('banner'), $parentid, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
-                }
-                */
+               
              
             } else {
                 $rootid = $this->getRootNodeId($id);
@@ -293,7 +286,7 @@ class dbsections extends dbTable
                 $title = $this->getParam('title');
                 $menuText = $this->getParam('menutext');
                 $access = $this->getParam('access');
-                $description = $this->getParam('introtext');
+                $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
                 $published = $this->getParam('published');
                 $layout = $this->getParam('display');
                 $showdate = $this->getParam('showdate');
@@ -309,7 +302,7 @@ class dbsections extends dbTable
                 $ordering = $this->getOrdering($parentid);
 
                 //Add section
-                $result = $this->insert(array(
+                $index = array(
                 'rootid' => $rootid,
                 'parentid' => $parentid,
                 'title' => $title,
@@ -329,17 +322,12 @@ class dbsections extends dbTable
                 'userid' => $user,
                 'link' => $this->getParam('imagesrc'),
                 'contextcode' =>$contextcode
-                ));
+                );
+                
+                $result = $this->insert($index);
+                $this->luceneIndex($index);
                 return $result;
-                /*add to menu indexing by section id
-                if ($rootnode) {
-                    $orderNum = $this->TreeNodes->getNewOrderNum($rootnode);
-                	return $this->TreeNodes->add($this->getParam('title'), '1', $this->getParam('linkreference'), $this->getParam('banner'), $rootnode, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
-                }else{ 
-                	$orderNum = $this->TreeNodes->getNewOrderNum($this->getParam('parentid'));
-                   	return $this->TreeNodes->add($this->getParam('title'), '0', $this->getParam('linkreference'), $this->getParam('banner'), $parentid, $this->getParam('layout'), $this->getParam('css'), $published,$user, $orderNum,$result);
-                }
-                */
+              
                 
             }
             
@@ -385,15 +373,14 @@ class dbsections extends dbTable
             //Set ordering
             $ordering = $this->getOrdering($parentid);
             //Add section
-            return $this->insert(array(
-                                     'rootid' => $rootid,
+            $newIndex =array(        'rootid' => $rootid,
                                      'parentid' => $parentid,
                                      'title' => $title,
                                      'menutext' => $menuText,
                                      'access' => $access,
                                      'layout' => $layout,
                                      'ordering' => $ordering,
-                                     'description' => $description,
+                                     'description' => str_ireplace("<br />", " <br /> ",$description),
                                      'published' => $published,
                                      'showdate' => $showdate,
                                      'showintroduction' => $showintroduction,
@@ -401,7 +388,10 @@ class dbsections extends dbTable
                                      'ordertype' => $ordertype,
                                      'nodelevel' => $this->getLevel($parentid) + '1',
                                      'contextcode' => $contextCode
-                                 ));
+                                 );
+            $result = $this->insert($newIndex);
+            $this->luceneIndex($newIndex);
+            return $result;
         }
 
         /**
@@ -419,7 +409,7 @@ class dbsections extends dbTable
             $title = $this->getParam('title');
             $menuText = $this->getParam('menutext');
             $access = $this->getParam('access');
-            $description = $this->getParam('introtext');
+            $description = str_ireplace("<br />", " <br /> ",$this->getParam('introtext'));
             $published = $this->getParam('published');
             $layout = $this->getParam('display');
             $showdate = $this->getParam('showdate');

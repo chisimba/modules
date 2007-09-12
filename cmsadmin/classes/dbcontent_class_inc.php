@@ -138,8 +138,6 @@ class dbcontent extends dbTable
 
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
-			$doc->introtext = $introText;
-			$doc->objTitle = $title;
 			$this->luceneIndex($newArr);
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
@@ -213,6 +211,7 @@ class dbcontent extends dbTable
                       );
 
             $newId = $this->insert($newArr);
+            $newArr['id'] = $newId;
 			$this->luceneIndex($newArr);
             if ($isFrontPage == 'on') {
                 $this->_objFrontPage->add($newId);

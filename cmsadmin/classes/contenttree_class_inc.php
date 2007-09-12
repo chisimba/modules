@@ -125,7 +125,7 @@ class contenttree extends object
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
                         $text = wordwrap(trim($node['title']),24,"<br />\n");
-                        $link = '<a href="'.$nodeUri.'">'.$text.'</a>';
+                        $link = '<a  class="yuimenuitemlabel" href="'.$nodeUri.'">'.$text.'</a>';
                     } else {
                         $link = $node['title'];
                     }
@@ -203,7 +203,7 @@ class contenttree extends object
                 foreach($contentNodes as $contentNode) {
                     if (!empty($action)) {
                         $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
+                        $link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.$contentNode['title'].'</a>';
                     } else {
                         $link = wordwrap($contentNode['title']);
                     } 
@@ -238,7 +238,7 @@ class contenttree extends object
                   
                     if (!empty($action)) {
                         $nodeUri = $this->uri(array('action' => $action, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $link = '<a href="'.$nodeUri.'">'.$node['title'].'</a>';
+                        $link = '<a  class="yuimenuitemlabel" href="'.$nodeUri.'">'.$node['title'].'</a>';
                     } else {
                         $link = $node['title'];
                     }
@@ -254,7 +254,7 @@ class contenttree extends object
 			             foreach($contentNodes as $contentNode) {
 			                    if (!empty($action)) {
 			                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-			                        $link = '<a href="'.$url.'">'.$contentNode['title'].'</a>';
+			                        $link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.$contentNode['title'].'</a>';
 			                    } else {
 			                        $link = wordwrap($contentNode['title']);
 			                    }
@@ -282,7 +282,7 @@ class contenttree extends object
                    				foreach ($cNodes as $value) {
                    					if (!empty($action)) {
 			                        	$url = $this->uri(array('action' => $action, 'id' => $value['id'], 'sectionid' => $value['sectionid']), $module);
-			                        	$link = '<a href="'.$url.'">'.$value['title'].'</a>';
+			                        	$link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.$value['title'].'</a>';
 			                    	} else {
 			                        	$link = $value['title'];
 			                    	}
