@@ -587,7 +587,30 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }  
+    
+    /**
+    * Method to get recently updated wiki pages
+    *
+    * @access public
+    * @return array|bool $data: Wiki page data on success | False on failure
+    */
+    public function getRecentlyUpdatedAPI($date)
+    {
+        $this->_setPages();
+        $sql = "WHERE (page_name, page_version)";
+        $sql .= " IN (SELECT page_name, MAX(page_version)";
+        $sql .= "     FROM tbl_wiki_pages GROUP BY page_name)";
+        $sql .= " AND page_version > 1";
+        $sql .= " AND page_status < 5";
+        $sql .= " AND wiki_id = '".$this->wikiId."'";
+        $sql .= " AND date_created > $date";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }      
 
     /**
     * Method to edit a field
