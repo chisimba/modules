@@ -37,9 +37,7 @@ YAHOO.example.onMenuReady = function() {
 
 // Create an instance of the CSS Layout
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
-$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("fonts/fonts.css", 'yahoolib').'" />';
-$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("reset/reset.css", 'yahoolib').'" />';
-$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
+$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
