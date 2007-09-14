@@ -456,7 +456,10 @@ class dbwiki extends dbTable
         $sql = "WHERE (page_name, page_version)";
         $sql .= " IN (SELECT page_name, MAX(page_version)";
         $sql .= "     FROM tbl_wiki_pages GROUP BY page_name)";
-        $sql .= " AND wiki_id = '".$this->wikiId."'";
+        if(isset($this->wikiId))
+        {
+        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+        }
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
@@ -587,7 +590,10 @@ class dbwiki extends dbTable
         $sql .= "     FROM tbl_wiki_pages GROUP BY page_name)";
         $sql .= " AND page_version > 1";
         $sql .= " AND page_status < 5";
-        $sql .= " AND wiki_id = '".$this->wikiId."'";
+        if(isset($this->wikiId))
+        {
+        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+        }
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
         if(!empty($data)){
