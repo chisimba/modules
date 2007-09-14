@@ -604,12 +604,10 @@ class dbwiki extends dbTable
         $sql .= " AND page_version > 1";
         $sql .= " AND page_status < 5";
         $sql .= " AND wiki_id = '".$this->wikiId."'";
-        $sql .= " AND date_created > $date";
+        $sql .= " AND date_created > '$date'";
+        //log_debug($sql);
         $data = $this->getAll($sql);
-        if(!empty($data)){
-            return $data;
-        }
-        return FALSE;
+        return $data;
     }      
 
     /**
