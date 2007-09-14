@@ -32,9 +32,9 @@ class dbwiki extends dbTable
 
     /**
     * @var string $wikiId: The id of the wiki the user is currently browsing
-    * @access private
+    * @access public
     */
-    private $wikiId;
+    public $wikiId;
 
     /**
     * @var object $objContext: The dbcontext class in the context module
