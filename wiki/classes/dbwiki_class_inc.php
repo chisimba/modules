@@ -476,8 +476,12 @@ class dbwiki extends dbTable
     {
         $this->_setPages();        
         $sql = "WHERE page_name = '".$name."'";
-        $sql .= " AND wiki_id = '".$this->wikiId."'";
+        if(isset($this->wikiId))
+        {
+        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+        }
         $sql .= " ORDER BY page_version DESC";
+        log_debug($sql);
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
@@ -500,7 +504,10 @@ class dbwiki extends dbTable
         if(!empty($version)){
             $sql .= " AND page_version = '".$version."'";
         }
-        $sql .= " AND wiki_id = '".$this->wikiId."'";
+        if(isset($this->wikiId))
+        {
+        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+        }
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
         if(!empty($data)){
