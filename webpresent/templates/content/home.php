@@ -32,8 +32,12 @@ if (count($latestFiles) == 0) {
     
     $objTrim = $this->getObject('trimstr', 'strings');
     
+    $counter = 0;
+    
     foreach ($latestFiles as $file)
     {
+        $counter++;
+        
         if (trim($file['title']) == '') {
             $filename = $file['filename'];
         } else {
@@ -46,7 +50,9 @@ if (count($latestFiles) == 0) {
         $fileLink->link = $this->objFiles->getPresentationThumbnail($file['id']).'<br />'.$linkname;
         $fileLink->title = $filename;
         
-        $latestFilesContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;">'.$fileLink->show().'</div>';
+        $extra = ($counter % 2 == 1) ? ' clear:both;' : '';
+        
+        $latestFilesContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
     }
     
 

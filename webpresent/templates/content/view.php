@@ -15,12 +15,33 @@ if ($file['title'] == '') {
     $heading->str = $file['title'];
 }
 
+$showDeleteLink = FALSE;
+
 if ($file['creatorid'] == $objUser->userId()) {
     $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$file['id'])));
     $editLink->link = $objIcon->show();
-    
+
     $heading->str .= ' '.$editLink->show();
+
+    $objIcon->setIcon('delete');
+
+    $deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$file['id'])));
+    $deleteLink->link = $objIcon->show();
+
+    $heading->str .= ' '.$deleteLink->show();
+
+    $showDeleteLink = TRUE;
 }
+
+if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
+    $objIcon->setIcon('delete');
+
+    $deleteLink = new link ($this->uri(array('action'=>'admindelete', 'id'=>$file['id'])));
+    $deleteLink->link = $objIcon->show();
+
+    $heading->str .= ' '.$deleteLink->show();
+}
+
 $heading->type = 1;
 
 echo $heading->show();
@@ -28,7 +49,7 @@ echo $heading->show();
 $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
 
 if (file_exists($flashFile)) {
-    
+
     $flashFile = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
     $flashContent = '
     <div style="border: 1px solid #000; width: 540px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="402">
@@ -38,7 +59,7 @@ if (file_exists($flashFile)) {
   <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="540" height="402"></embed>
 </object></div>';
 } else {
-    $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 402px; text-align: center;">Flash Version of Presentation Goes Here</div>';
+    $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
 }
 
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -64,7 +85,7 @@ if (count($tags) == 0) {
     {
         $tagLink = new link ($this->uri(array('action'=>'tag', 'tag'=>$tag['tag'])));
         $tagLink->link = $tag['tag'];
-        
+
         $rightCell .=  $divider.$tagLink->show();
         $divider = ', ';
     }
@@ -74,13 +95,13 @@ $rightCell .=  '</p>';
 $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
 $objDisplayLicense->icontype = 'big';
 
-$license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']); 
+$license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
 
 $rightCell .=  '<p>'.$objDisplayLicense->show($license).'</p>';
 
 $rightCell .=  '<h3>Download</h3>';
 
-$fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'pps'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
+$fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
 
 $objFileIcons = $this->getObject('fileicons', 'files');
 
@@ -90,23 +111,30 @@ foreach ($fileTypes as $fileType=>$fileName)
 {
     $ext = pathinfo($file['filename']);
     $ext = $ext['extension'];
-    $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
-    
+    $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
+
     if (file_exists($fullPath)) {
         $relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
         $link = new link($relLink);
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
-        
+
         $rightCell .= '<li>'.$link->show().'</li>';
     }
-    
+
 }
 
 $rightCell .= '</ul>';
 
+$uploaderLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
+$uploaderLink->link = $objUser->fullname($file['creatorid']);
+
+$rightCell .= '<p><strong>Uploaded by:</strong> '.$uploaderLink->show().'</p>';
+
 $table->addCell($rightCell);
 
 echo $table->show();
+
+ echo $this->objSlides->getPresentationSlidesFormatted($file['id']);
 
 $homeLink = new link ($this->uri(NULL));
 $homeLink->link = 'Back to Home';

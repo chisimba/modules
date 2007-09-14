@@ -11,13 +11,7 @@ $heading = new htmlheading();
 $heading->str = 'Update Details - '.$file['filename'];
 $heading->type = 1;
 
-$left = $heading->show();
-
-$heading = new htmlheading();
-$heading->str = 'Conversion Status';
-$heading->type = 3;
-
-$right = $heading->show();
+echo $heading->show();
 
 $form = new form ('updatedetails', $this->uri(array('action'=>'updatedetails')));
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -87,18 +81,8 @@ $form->addToForm('<p>'.$button->show().' '.$cancelButton->show().'</p>');
 $hiddeninput = new hiddeninput('id', $file['id']);
 $form->addToForm($hiddeninput->show());
 
-$left .= $form->show();
+echo $form->show();
 
-echo $left;
-/*
-$table = $this->newObject('htmltable', 'htmlelements');
 
-$table->startRow();
-$table->addCell($left, '70%');
-$table->addCell($right, '30%');
-$table->endRow();
-
-echo $table->show();
-*/
 
 ?>

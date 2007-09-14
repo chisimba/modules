@@ -7,7 +7,7 @@ $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
 
 $heading = new htmlheading();
-$heading->str = 'Tag - '.$tag;
+$heading->str = $objUser->fullname($userid).'\'s Slides';
 
 
 $heading->type = 1;
@@ -15,7 +15,7 @@ $heading->type = 1;
 echo $heading->show();
 
 if (count($files) == 0) {
-    echo '<div class="noRecordsMessage">No files matches this tag</div>';
+    echo '<div class="noRecordsMessage">User has not uploaded any files.</div>';
 } else {
     $table = $this->newObject('htmltable', 'htmlelements');
     
@@ -63,10 +63,7 @@ if (count($files) == 0) {
         
         $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
         
-        $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
-        $userLink->link = $objUser->fullname($file['creatorid']);
-        
-        $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
+        $rightContent .= '<strong>Uploaded By:</strong> '.$objUser->fullname($file['creatorid']).'<br />';
         $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
         
         $table->addCell($rightContent);
