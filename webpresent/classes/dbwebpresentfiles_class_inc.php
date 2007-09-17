@@ -159,6 +159,7 @@ class dbwebpresentfiles extends dbtable
         return $this->update('id', $id, array('inprocess'=>'N', 'processstage'=>$step));
     }
 
+
     private function convertFile($file)
     {
         //print_r($file);
@@ -204,7 +205,7 @@ class dbwebpresentfiles extends dbtable
         if ($result == TRUE)
         {
             $objSlides = $this->getObject('dbwebpresentslides');
-            $objSlides->scanPresentationDir($id);
+            $objSlides->scanPresentationDir($file['id']);
         }
 
 
@@ -223,6 +224,8 @@ class dbwebpresentfiles extends dbtable
         $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$inputExt;
         $conv = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$outputExt;
 
+
+        //echo $source.'<br />'.$conv;
 
         if (!file_exists($conv)) {
             $objConvertDoc = $this->getObject('convertdoc', 'documentconverter');
