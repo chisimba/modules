@@ -62,6 +62,8 @@ class hivaidstools extends object
         $lnSurvey = $this->objLanguage->languageText('mod_survey_name', 'survey');
         $lnPodcast = $this->objLanguage->languageText('mod_podcast_name', 'podcast');
         $lnRepository = $this->objLanguage->languageText('mod_hivaids_videorepository', 'hivaids');
+        $lnLinks = $this->objLanguage->languageText('mod_hivaids_linkspage', 'hivaids');
+        $lnSuggestions = $this->objLanguage->languageText('phrase_suggestionbox', 'hivaids');
         
         // Forum
         $url = $this->uri('', 'forum');
@@ -105,6 +107,16 @@ class hivaidstools extends object
         $name = 'podcast';
         $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnPodcast, 'gif', $iconfolder='icons/modules/');
         
+        /* Links page
+        $url = $this->uri('managelinks', 'hivaids');
+        $name = 'links';
+        $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnLinks, 'gif', $iconfolder='icons/modules/');
+
+        // Suggestion box page
+        $url = $this->uri('viewsuggestions', 'hivaids');
+        $name = 'suggestions';
+        $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnSuggestions, 'gif', $iconfolder='icons/modules/');
+        */
         // User profiles
         
         $objTable = new htmltable();
@@ -261,6 +273,14 @@ class hivaidstools extends object
         $errCourse = $this->objLanguage->languageText('mod_hivaids_errornocourse', 'hivaids');
         $errStud = $this->objLanguage->languageText('mod_hivaids_errornostudnum', 'hivaids');
         
+        $lbFirst = $this->objLanguage->languageText('phrase_firstyear');
+        $lbSecond = $this->objLanguage->languageText('phrase_secondyear');
+        $lbThird = $this->objLanguage->languageText('phrase_thirdyear');
+        $lbFourth = $this->objLanguage->languageText('phrase_fourthyear');
+        $lbHonours = $this->objLanguage->languageText('word_honours');
+        $lbMasters = $this->objLanguage->languageText('word_masters');
+        $lbPhd = $this->objLanguage->languageText('word_phd');
+        
         $useNum = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids');
         
         $institution = $this->objConfig->getinstitutionShortName();
@@ -383,11 +403,14 @@ class hivaidstools extends object
         //$objInput->setId('input_yearstudy');
         
         $objDrop = new dropdown('yearstudy');
-        $year = date('Y');
         $objDrop->addOption('NULL', ' ---- ');
-        for($i = $year; $i >= 1950; $i--){
-            $objDrop->addOption($i, $i);
-        }
+        $objDrop->addOption($lbFirst, $lbFirst);
+        $objDrop->addOption($lbSecond, $lbSecond);
+        $objDrop->addOption($lbThird, $lbThird);
+        $objDrop->addOption($lbFourth, $lbFourth);
+        $objDrop->addOption($lbHonours, $lbHonours);
+        $objDrop->addOption($lbMasters, $lbMasters);
+        $objDrop->addOption($lbPhd, $lbPhd);
         
         $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
 
