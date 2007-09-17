@@ -586,7 +586,7 @@ class hivaidstools extends object
     {
         $data = $this->dbLinks->getPage();
         
-        $head = $this->objLanguage->languageText('word_links');
+        $hdLinks = $this->objLanguage->languageText('word_links');
         
         $str = '';
         if(!empty($data)){
