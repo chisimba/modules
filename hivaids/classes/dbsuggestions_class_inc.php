@@ -32,6 +32,21 @@ class dbsuggestions extends dbtable
     }
     
     /**
+    * Method to get all the suggestions.
+    *
+    * @access public
+    * @return array $data
+    */
+    public function getSuggestions()
+    {
+        $sql = "SELECT * FROM {$this->table} 
+            ORDER BY updated DESC";
+        
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    
+    /**
     * Method to add a suggestion
     *
     * @access public

@@ -32,6 +32,22 @@ class dblinks extends dbtable
     }
     
     /**
+    * Method to get a page of links
+    *
+    * @access public
+    * @param string $reference
+    * @return array $data
+    */
+    public function getPage($reference = 'main')
+    {
+        $sql = "SELECT * FROM {$this->table}
+            WHERE reference = '{$reference}'";
+        
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    
+    /**
     * Method to add / update a new links page
     *
     * @access public
@@ -41,7 +57,7 @@ class dblinks extends dbtable
     public function addPage($id = NULL)
     {
         $fields = array();
-        $fields['reference'] = '';
+        $fields['reference'] = 'main';
         $fields['linkspage'] = $this->getParam('linkspage');
         $fields['updated'] = $this->now();
         

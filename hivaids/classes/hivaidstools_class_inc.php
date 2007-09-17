@@ -25,6 +25,8 @@ class hivaidstools extends object
     public function init()
     {
         $this->dbUsers = $this->getObject('dbusers', 'hivaids');
+        $this->dbSuggestions = $this->getObject('dbsuggestions', 'hivaids');
+        $this->dbLinks = $this->getObject('dblinks', 'hivaids');
         $this->objUser = $this->getObject('user', 'security');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -36,6 +38,7 @@ class hivaidstools extends object
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
+        $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
@@ -43,6 +46,7 @@ class hivaidstools extends object
         $this->loadClass('radio', 'htmlelements');
         $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
+        $this->loadClass('link', 'htmlelements');
     }
     
     /**
@@ -63,7 +67,7 @@ class hivaidstools extends object
         $lnPodcast = $this->objLanguage->languageText('mod_podcast_name', 'podcast');
         $lnRepository = $this->objLanguage->languageText('mod_hivaids_videorepository', 'hivaids');
         $lnLinks = $this->objLanguage->languageText('mod_hivaids_linkspage', 'hivaids');
-        $lnSuggestions = $this->objLanguage->languageText('phrase_suggestionbox', 'hivaids');
+        $lnSuggestions = $this->objLanguage->languageText('phrase_suggestionbox');
         
         // Forum
         $url = $this->uri('', 'forum');
@@ -107,16 +111,16 @@ class hivaidstools extends object
         $name = 'podcast';
         $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnPodcast, 'gif', $iconfolder='icons/modules/');
         
-        /* Links page
-        $url = $this->uri('managelinks', 'hivaids');
-        $name = 'links';
-        $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnLinks, 'gif', $iconfolder='icons/modules/');
+        // Links page
+        $url = $this->uri(array('action' => 'managelinks'), 'hivaids');
+        $name = 'linksadmin';
+        $blLinks = $this->objIcon->getBlockIcon($url, $name, $lnLinks, 'gif', $iconfolder='icons/modules/');
 
         // Suggestion box page
-        $url = $this->uri('viewsuggestions', 'hivaids');
-        $name = 'suggestions';
-        $blPodcast = $this->objIcon->getBlockIcon($url, $name, $lnSuggestions, 'gif', $iconfolder='icons/modules/');
-        */
+        $url = $this->uri(array('action' => 'viewsuggestions'), 'hivaids');
+        $name = 'suggestionbox';
+        $blSuggestions = $this->objIcon->getBlockIcon($url, $name, $lnSuggestions, 'gif', $iconfolder='icons/modules/');
+        
         // User profiles
         
         $objTable = new htmltable();
@@ -126,7 +130,7 @@ class hivaidstools extends object
         $objTable->addRow(array('&nbsp;'));
         $objTable->addRow(array($blLog, $blUsSt, $blPodcast));
         $objTable->addRow(array('&nbsp;'));
-        $objTable->addRow(array($blRepository));
+        $objTable->addRow(array($blRepository, $blLinks, $blSuggestions));
         $str = $objTable->show();
         
         $box = $this->objFeatureBox->showContent($head, $str);
@@ -442,7 +446,45 @@ class hivaidstools extends object
     */
     public function viewSuggestions()
     {
-        return '';
+        $data = $this->dbSuggestions->getSuggestions();
+        
+        $head = $this->objLanguage->languageText('phrase_suggestionbox');
+        $lbNoSuggestions = $this->objLanguage->languageText('mod_hivaids_nosuggestionsinbox', 'hivaids');
+        $hdSuggestion = $this->objLanguage->languageText('word_suggestion');
+        $hdDate = $this->objLanguage->languageText('phrase_dateposted');
+        
+        $objHead = new htmlheading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
+        
+        if(!empty($data)){
+            $objTable = new htmltable();
+            $objTable->cellspacing = '2';
+            $objTable->cellpadding = '5';
+            
+            $hdArr = array();
+            $hdArr[] = $hdSuggestion;
+            $hdArr[] = $hdDate;
+            
+            $objTable->addHeader($hdArr);
+            
+            $class = 'even';
+            foreach($data as $item){
+                $class = ($class == 'odd') ? 'even' : 'odd';
+                
+                $row = array();
+                $row[] = $item['suggestion'];
+                $row[] = $this->objDate->formatDate($item['updated']);
+                
+                $objTable->addRow($row, $class);
+            }
+            $str .= $objTable->show();
+        }else{
+            $str .= '<p class="noRecordsMessage">'.$lbNoSuggestions.'</p>';
+        }
+                
+        return $str;
     }
     
     /**
@@ -480,7 +522,20 @@ class hivaidstools extends object
     */
     public function manageLinks()
     {
-        return '';
+        $head = $this->objLanguage->languageText('phrase_managelinkspage');
+        $lnAdd = $this->objLanguage->languageText('phrase_addlinkspage');
+        
+        $objHead = new htmlheading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
+        
+        $str .= $this->showLinks();
+        
+        $objLink = new link($this->uri(array('action' => 'addlinks')));
+        $objLink->link = $lnAdd;
+        $str .= $objLink->show();
+        return $str;
     }
     
     /**
@@ -491,7 +546,34 @@ class hivaidstools extends object
     */
     public function addLinks()
     {
-        return '';
+        $data = $this->dbLinks->getPage();
+        
+        $head = $this->objLanguage->languageText('phrase_addlinkspage');
+        $btnSave = $this->objLanguage->languageText('word_save');
+        
+        $objHead = new htmlheading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
+        
+        $page = !empty($data) ? $data[0]['linkspage'] : '';
+        $objEditor = $this->newObject('htmlarea', 'htmlelements');
+        $objEditor->init('linkspage', $page);
+        $formStr = $objEditor->show();
+        
+        $objButton = new button('save', $btnSave);
+        $objButton->setToSubmit();
+        $formStr .= '<p>'.$objButton->show().'</p>';
+        
+        $id = !empty($data) ? $data[0]['id'] : '';
+        $objInput = new textinput('id', $id, 'hidden');
+        $formStr .= $objInput->show();
+        
+        $objForm = new form('newpage', $this->uri(array('action' => 'savelinks')));
+        $objForm->addToForm($formStr);
+        $str .= $objForm->show();
+        
+        return $str;
     }
     
     /**
@@ -502,7 +584,16 @@ class hivaidstools extends object
     */
     public function showLinks()
     {
-        return '';
+        $data = $this->dbLinks->getPage();
+        
+        $head = $this->objLanguage->languageText('word_links');
+        
+        $str = '';
+        if(!empty($data)){
+            $str = $data[0]['linkspage'];
+        }
+        
+        return $this->objFeatureBox->showContent($hdLinks, $str);
     }
 }
 ?>

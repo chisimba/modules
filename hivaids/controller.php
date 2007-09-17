@@ -30,6 +30,7 @@ class hivaids extends controller
             $this->dbVideos = $this->getObject('dbvideos', 'hivaids');
             $this->dbUsers = $this->getObject('dbusers', 'hivaids');
             $this->dbSuggestions = $this->getObject('dbsuggestions', 'hivaids');
+            $this->dbLinks = $this->getObject('dblinks', 'hivaids');
             
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
@@ -147,7 +148,8 @@ class hivaids extends controller
             case 'savelinks':
                 $save = $this->getParam('save');
                 if(isset($save) && !empty($save)){
-                    $this->saveLinks();
+                    $id = $this->getParam('id');
+                    $this->dbLinks->addPage($id);
                 }
                 return $this->nextAction('managelinks');
                 
