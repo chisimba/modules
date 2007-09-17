@@ -239,7 +239,7 @@ class dbwebpresentslides extends dbtable
         foreach ($slides as $slide)
         {
             $slidesContent .= '<li>'.$slide['slidetitle'].'<br />'.$this->getSlideThumbnail($slide['id']).'</li>';
-            $transcriptContent .= '<li><strong>'.$slide['slidetitle'].'</strong> - '.strip_tags($slide['slidecontent']).'</li>';
+            $transcriptContent .= '<li><strong>'.$slide['slidetitle'].'</strong> - '.preg_replace('/<.*?>/', ' ', $slide['slidecontent']).'</li>';
         }
 
         $slidesContent .= '</ul>';
