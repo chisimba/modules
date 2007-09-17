@@ -36,7 +36,7 @@ class utils extends object
 	      $this->_objModules = $this->getObject('modules', 'modulecatalogue');
 	      $this->_objDBContext = $this->getObject('dbcontext', 'context');
 	      $this->_objDBContextUtils = $this->getObject('utilities', 'context');
-	      
+	      $$this->objHelp=& $this->getObject('help','help');
 	      // Set module to current by default
 	      $this->module = 'contextpostlogin';
     }
@@ -594,6 +594,8 @@ class utils extends object
         
         $tabBox->addTab(array('name'=> $this->_objLanguage->code2Txt('phrase_othercourses'),'content' => $other));
         return $tabBox->show();
+        
+        echo ($this->objHelp->show('help','help'));
     }
     	 
 }	
