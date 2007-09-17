@@ -292,13 +292,83 @@ class dbwebpresentfiles extends dbtable
 
     public function deleteFile($id)
     {
-        $this->delete('id', $id);
+        // First Step is to scan presentation directory and delete all file in that folder
+        // Load Object
+        $objScanForDelete = $this->newObject('scanfordelete');
+
+        // Set Directory to Var
+        $presentationFolder = $this->objConfig->getcontentBasePath().'webpresent/'.$id;
+
+        // Scan Results
+        $results = $objScanForDelete->scanDirectory($presentationFolder);
+
+
+        // Variable to detect permission issues
+        $numNoDeletes = 0;
+
+        // First Delete Files, if they are any
+        if (count($results['files']) > 0)
+        {
+            // Loop through files
+            foreach ($results['files'] as $file)
+            {
+                // Extra Check that file exists
+                if (file_exists($file))
+                {
+                    // Delete File
+                    if(!unlink($file))
+                    {
+                        // If unable to, possible due to permissions
+                        // Flag Variable
+                        $numNoDeletes++;
+                    }
+                }
+            }
+        }
+
+        // IF all files deleted, and there are subdirectories
+        // Delete subdirectories
+        if ($numNoDeletes != 0 && count($results['folders'] > 0))
+        {
+            // Loop through array
+            foreach ($results['folders'] as $folder)
+            {
+                // Extra check that folder exists
+                if (file_exists($folder))
+                {
+                    // Delete Folder
+                    if(!rmdir($folder))
+                    {
+                        // If unable to, possible due to permissions
+                        // Flag Variable
+                        $numNoDeletes++;
+                    }
+                }
+            }
+        }
+
+        // Now Delete Folder itself
+        if ($numNoDeletes == 0 and file_exists($presentationFolder))
+        {
+            rmdir($presentationFolder);
+        }
+
+        $thumb = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
+        if (file_exists($thumb))
+        {
+            unlink ($thumb);
+        }
+
+
 
         $objTags = $this->getObject('dbwebpresenttags');
         $objTags->deleteTags($id);
 
         $objSlides = $this->getObject('dbwebpresentslides');
         $objSlides->deleteSlides($id);
+
+        $this->delete('id', $id);
+
     }
 }
 ?>

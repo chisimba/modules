@@ -290,7 +290,7 @@ class webpresent extends controller
         @chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
-        $objUpload->permittedTypes = array('ppt', 'odp'); //'pps',
+        $objUpload->permittedTypes = array('ppt', 'odp', 'pps'); //'pps',
         $objUpload->overWrite = TRUE;
         $objUpload->uploadFolder = $destinationDir.'/';
 
@@ -322,6 +322,8 @@ class webpresent extends controller
                 $rename = $this->objConfig->getcontentBasePath().'/webpresent/'.$id.'/'.$id.'.ppt';
 
                 rename($file, $rename);
+
+                $filename = $path_parts['filename'].'.ppt';
             }
 
 
@@ -411,6 +413,19 @@ class webpresent extends controller
         return $this->_deleteslide($file);
     }
 
+    function __admindelete()
+    {
+        $id = $this->getParam('id');
+
+        $file = $this->objFiles->getFile($id);
+
+        if ($file == FALSE) {
+            return $this->nextAction('home', array('error'=>'norecord'));
+        }
+
+        return $this->_deleteslide($file);
+    }
+
     private function _deleteslide($file)
     {
         $this->setVarByRef('file', $file);
@@ -425,25 +440,33 @@ class webpresent extends controller
 
     private function __deleteconfirm()
     {
+        // Get Id
         $id = $this->getParam('id');
+
+        // Get Value
         $deletevalue = $this->getParam('deletevalue');
 
+        // Get File
         $file = $this->objFiles->getFile($id);
 
+        // Check that File Exists
         if ($file == FALSE) {
             return $this->nextAction('home', array('error'=>'norecord'));
         }
 
-        if ($file['creatorid'] != $this->objUser->userId()) {
-            return $this->nextAction('view', array('id'=>$id, 'error'=>'cannotdeleteslidesofothers'));
-        }
+        // Check that user is owner of file, or is admin -> then delete
+        if ($file['creatorid'] == $this->objUser->userId() || $this->isValid('admindelete')) {
+            if ($deletevalue == $this->getSession('delete_'.$id))
+            {
+                $this->objFiles->deleteFile($id);
+                return $this->nextAction(NULL);
+            } else {
+                return $this->nextAction('view', array('id'=>$id, 'message'=>'deletecancelled'));
+            }
 
-        if ($deletevalue == $this->getSession('delete_'.$id))
-        {
-            $this->objFiles->deleteFile($id);
-            return $this->nextAction(NULL);
+        // Else User cannot delete files of others
         } else {
-            return $this->nextAction('view', array('id'=>$id, 'message'=>'deletecancelled'));
+            return $this->nextAction('view', array('id'=>$id, 'error'=>'cannotdeleteslidesofothers'));
         }
 
 

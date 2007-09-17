@@ -252,12 +252,32 @@ class dbwebpresentslides extends dbtable
         return $objTabs->show();
     }
 
-    public function deleteSlides($id)
+    public function deleteSlides($fileId)
     {
-        return $this->delete('fileid', $id);
+        $slides = $this->getSlides($fileId);
+
+        if (count($slides) > 0)
+        {
+            foreach ($slides as $slide)
+            {
+                $this->deleteSlideThumbnail($slide['id']);
+                $this->delete('id', $slide['id']);
+            }
+        }
     }
 
+    private function deleteSlideThumbnail($slideId)
+    {
+        $fullPath = $this->objConfig->getcontentBasePath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
 
+        if (file_exists($fullPath))
+        {
+            return unlink ($fullPath);
+        } else {
+            return FALSE;
+        }
+
+    }
 
 }
 ?>
