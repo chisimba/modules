@@ -7,7 +7,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 /**
 * Class to Display the Ajax Presentation Uploader
-* 
+*
 * This isn't really an Ajax Uploader, but gives that impression
 * Instead, it targets a form to a hidden iframe, and updated a div
 * on the parent window when the upload is completed.
@@ -19,7 +19,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 */
 class ajaxuploader extends object
 {
-    
+
     /**
     * Constructor
     */
@@ -32,7 +32,7 @@ class ajaxuploader extends object
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('hiddeninput', 'htmlelements');
     }
-    
+
     /**
     * Method to render the form
     * @return string Form
@@ -41,10 +41,10 @@ class ajaxuploader extends object
     {
         // Generate an ID - In case multiple uploads occur on one page
         $id = mktime().rand();
-        
+
         // Generate Iframe
         $objIframe = $this->newObject('iframe', 'htmlelements');
-        
+
         $objIframe->src = $this->uri(array('action'=>'tempiframe', 'id'=>$id));
         $objIframe->id = 'ifra_upload_'.$id;
         $objIframe->name = 'iframe_upload_'.$id;
@@ -52,37 +52,37 @@ class ajaxuploader extends object
         $objIframe->width = 0;
         $objIframe->height = 0;
         $objIframe->extra = ' style="display:none" ';
-        
+
         // Create Loading Icon - Hidden by Default
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('loading_bar');
-        
+
         // Create Form
         $form = new form ('uploadfile_'.$id, $this->uri(array('action'=>'doajaxupload')));
         $form->extra = 'enctype="multipart/form-data" target="iframe_upload_'.$id.'"';;
         $form->id = 'form_upload_'.$id;
-        
+
         // File Input
         $fileInput = new textinput('fileupload');
         $fileInput->fldType = 'file';
         $fileInput->extra = 'onchange="changeFileName(\''.$id.'\');"';
-        
+
         // Button
         $button = new button ('upload', 'Upload');
         $button->setOnClick('doUpload(\''.$id.'\');');
-        
+
         // Hidden Inputs
         $filename = new hiddeninput('filename', '');
         $hiddenInput = new hiddeninput('id', $id);
-        
+
         $form->addToForm($fileInput->show().' '.$button->show().$filename->show().$hiddenInput->show());
-        
+
         // Append JavaScript
         $this->addJS();
-        
-        return $form->show().'<div id="uploadresults"></div><div id="updateform"></div>'.$objIframe->show().'<div id="div_upload_'.$id.'" style="display:none;">'.$objIcon->show().' Upload in Progress</div>';
+
+        return $form->show().'<div id="div_upload_'.$id.'" style="display:none;">'.$objIcon->show().' Upload in Progress</div><div id="uploadresults"></div><div id="updateform"></div>'.$objIframe->show();
     }
-    
+
     /**
     * Method to append JavaScript to the header
     *
