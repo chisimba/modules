@@ -385,7 +385,7 @@ class dbhivforum extends dbtable
         if($dispType == 'nobox'){
             return $str;
         }
-        return $this->objFeatureBox->show($lbTopics, $str);
+        return $this->objFeatureBox->show($lbTopics, $str, NULL, 'default', TRUE, TRUE);
     }
     
     /**
@@ -413,7 +413,8 @@ class dbhivforum extends dbtable
         
         // Get the topic text
         $sql .= "AND topic.first_post = post.id AND post.post_parent = '0' 
-            AND posttext.post_id = post.id ";
+            AND posttext.post_id = post.id 
+            ORDER BY topic.datelastupdated";
         
         $data = $this->getArray($sql);
         
