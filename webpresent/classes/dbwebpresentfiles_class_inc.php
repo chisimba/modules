@@ -248,7 +248,7 @@ class dbwebpresentfiles extends dbtable
     public function getPresentationThumbnail($id)
     {
         $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
-        $relLink = $this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
+        $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
 
 
         if (file_exists($source)) {

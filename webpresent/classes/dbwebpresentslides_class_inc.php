@@ -146,7 +146,7 @@ class dbwebpresentslides extends dbtable
     public function getSlideThumbnail($slideId, $title='')
     {
         $full = $this->objConfig->getcontentBasePath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
-        $rel = $this->objConfig->getcontentPath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
+        $rel = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
 
         if (trim($title) == '')
         {
