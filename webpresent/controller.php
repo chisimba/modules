@@ -435,6 +435,15 @@ class webpresent extends controller
 
         $this->setVar('randNum', $randNum);
 
+        $mode = $this->getParam('mode', 'window');
+        $this->setVarByRef('mode', $mode);
+
+        if ($mode == 'submodal') {
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+        }
+
+
         return 'delete.php';
     }
 
@@ -456,7 +465,7 @@ class webpresent extends controller
 
         // Check that user is owner of file, or is admin -> then delete
         if ($file['creatorid'] == $this->objUser->userId() || $this->isValid('admindelete')) {
-            if ($deletevalue == $this->getSession('delete_'.$id))
+            if ($deletevalue == $this->getSession('delete_'.$id) && $this->getParam('confirm') == 'yes')
             {
                 $this->objFiles->deleteFile($id);
                 return $this->nextAction(NULL);
@@ -472,42 +481,6 @@ class webpresent extends controller
 
     }
 
-    function __contents()
-    {
-        $id = $this->getParam('id');
 
-        $file = $this->objFiles->getFile($id);
-
-        if ($file == FALSE)
-        {
-            return $this->nextAction(NULL, array('error'=>'filedoesnotexist'));
-        } else {
-            $numSlides = $this->objSlides->getNumSlides($id);
-
-            if ($numSlides == 0)
-            {
-                $objBackground = $this->newObject('background', 'utilities');
-
-                //check the users connection status,
-                //only needs to be done once, then it becomes internal
-                $status = $objBackground->isUserConn();
-
-                //keep the user connection alive, even if browser is closed!
-                $callback = $objBackground->keepAlive();
-
-                $this->objSlides->scanPresentationDir($id);
-
-                $call2 = $objBackground->setCallback("tohir@tohir.co.za","Your Script","The really long running process that you requested is complete!");
-
-
-            } else {
-                echo $this->objSlides->getPresentationSlidesFormatted($id);
-
-            }
-        }
-
-
-
-    }
 }
 ?>
