@@ -195,6 +195,9 @@ class webpresent extends controller
 
         $tags = $this->objTags->getTags($id);
 
+        $slideContent = $this->objSlides->getPresentationSlidesContent($id);
+
+        $this->setVarByRef('slideContent', $slideContent);
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
 
@@ -216,6 +219,14 @@ class webpresent extends controller
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
 
+        $mode = $this->getParam('mode', 'window');
+        $this->setVarByRef('mode', $mode);
+
+        if ($mode == 'submodal') {
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+        }
+
         return 'process.php';
     }
 
@@ -231,10 +242,6 @@ class webpresent extends controller
         return 'tag.php';
     }
 
-    function __testswf()
-    {
-        return 'testswf.php';
-    }
 
     function __upload()
     {

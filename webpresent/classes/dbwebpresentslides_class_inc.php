@@ -143,14 +143,22 @@ class dbwebpresentslides extends dbtable
             ));
     }
 
-    public function getSlideThumbnail($slideId)
+    public function getSlideThumbnail($slideId, $title='')
     {
         $full = $this->objConfig->getcontentBasePath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
         $rel = $this->objConfig->getcontentPath().'webpresent_slide_thumbnails/'.$slideId.'.jpg';
 
+        if (trim($title) == '')
+        {
+            $title = '';
+        } else {
+            $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
+        }
+
+
         if (file_exists($full))
         {
-            return '<img src="'.$rel.'" />';
+            return '<img src="'.$rel.'" '.$title.' />';
         } else {
             $slide = $this->getRow('id', $slideId);
 
@@ -161,7 +169,7 @@ class dbwebpresentslides extends dbtable
 
                 if ($this->generateSlideThumbnail($slide['fileid'], $slide['id'], $slide['slideorder']))
                 {
-                    return '<img src="'.$rel.'" />';
+                    return '<img src="'.$rel.'" '.$title.' />';
                 } else {
                     return 'Error: Could not generate thumbnail';
                 }
@@ -224,30 +232,49 @@ class dbwebpresentslides extends dbtable
         }
     }
 
-    public function getPresentationSlidesFormatted($id)
+    public function getPresentationSlidesContent($id)
     {
         $slides = $this->getSlides($id);
 
+        $objTrim = $this->getObject('trimstr', 'strings');
 
-
-
-        $objTabs = $this->newObject('tabcontent', 'htmlelements');
 
         $slidesContent = '<h1>Slides</h1><ul class="presentationslides">';
         $transcriptContent = '<h1>Transcript</h1><ul>';
 
+        $counter=1;
+
         foreach ($slides as $slide)
         {
-            $slidesContent .= '<li>'.$slide['slidetitle'].'<br />'.$this->getSlideThumbnail($slide['id']).'</li>';
-            $transcriptContent .= '<li><strong>'.$slide['slidetitle'].'</strong> - '.preg_replace('/<.*?>/', ' ', $slide['slidecontent']).'</li>';
+            $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br />'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</li>';
+
+            $content = preg_replace('/<.*?>/', ' ', $slide['slidecontent']);
+
+            if (trim($content) != '')
+            {
+                $transcriptContent .= '<li><strong>Slide '.$counter.'</strong> - '.$content.'</li>';
+            }
+
+            $counter++;
+
         }
 
         $slidesContent .= '</ul>';
         $transcriptContent .= '</ul>';
 
-        $objTabs->addTab('Slides', $slidesContent);
-        $objTabs->addTab('Transcript', $transcriptContent);
-        $objTabs->width = '90%';
+        return array('slides'=>$slidesContent, 'transcript'=>$transcriptContent);
+    }
+
+    public function getPresentationSlidesFormatted($id)
+    {
+        $content = $this->getPresentationSlidesContent($id);
+
+
+        $objTabs = $this->newObject('tabcontent', 'htmlelements');
+
+        $objTabs->addTab('Slides', $content['slides']);
+        $objTabs->addTab('Transcript', $content['transcript']);
+        $objTabs->width = '524px';
 
         return $objTabs->show();
     }

@@ -18,17 +18,17 @@ if ($file['title'] == '') {
 $showDeleteLink = FALSE;
 
 if ($file['creatorid'] == $objUser->userId()) {
-    $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$file['id'])));
-    $editLink->link = $objIcon->show();
+    $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
 
-    $heading->str .= ' '.$editLink->show();
+    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+
+    $heading->str .= ' '.$editLink;
 
     $objIcon->setIcon('delete');
 
-    $deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$file['id'])));
-    $deleteLink->link = $objIcon->show();
+    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    $heading->str .= ' '.$deleteLink->show();
+    $heading->str .= ' '.$deleteLink;
 
     $showDeleteLink = TRUE;
 }
@@ -36,10 +36,10 @@ if ($file['creatorid'] == $objUser->userId()) {
 if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
     $objIcon->setIcon('delete');
 
-    $deleteLink = new link ($this->uri(array('action'=>'admindelete', 'id'=>$file['id'])));
-    $deleteLink->link = $objIcon->show();
+    $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
+    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'admindelete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    $heading->str .= ' '.$deleteLink->show();
+    $heading->str .= ' '.$deleteLink;
 }
 
 $heading->type = 1;
@@ -52,20 +52,17 @@ if (file_exists($flashFile)) {
 
     $flashFile = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
     $flashContent = '
-    <div style="border: 1px solid #000; width: 540px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="402">
+    <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
 
   <param name="movie" value="'.$flashFile.'">
   <param name="quality" value="high">
-  <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="540" height="402"></embed>
+  <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
 </object></div>';
 } else {
     $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
 }
 
-$table = $this->newObject('htmltable', 'htmlelements');
-$table->startRow();
 
-$table->addCell($flashContent, 550);
 
 $rightCell = '';
 
@@ -130,11 +127,20 @@ $uploaderLink->link = $objUser->fullname($file['creatorid']);
 
 $rightCell .= '<p><strong>Uploaded by:</strong> '.$uploaderLink->show().'</p>';
 
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->startRow();
+
+$table->addCell($flashContent, 550);
 $table->addCell($rightCell);
 
-echo $table->show();
+$objTabs = $this->newObject('tabcontent', 'htmlelements');
 
- echo $this->objSlides->getPresentationSlidesFormatted($file['id']);
+$objTabs->addTab('Presentation', $table->show());
+$objTabs->addTab('Slides', $slideContent['slides']);
+$objTabs->addTab('Transcript', $slideContent['transcript']);
+$objTabs->width = '95%';
+
+echo $objTabs->show();
 
 $homeLink = new link ($this->uri(NULL));
 $homeLink->link = 'Back to Home';

@@ -14,6 +14,8 @@ $heading->type = 1;
 echo $heading->show();
 
 $form = new form ('updatedetails', $this->uri(array('action'=>'updatedetails')));
+$form->extra = ' target="_top" ';
+
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $title = new textinput ('title');
@@ -62,21 +64,23 @@ $objLicenseChooser->defaultValue = $defaultLicense;
 $table->addCell($objLicenseChooser->show());
 $table->endRow();
 
-$table->startRow();
-$table->addCell('&nbsp;');
-$table->addCell('&nbsp;');
-$table->endRow();
-
 $form->addToForm($table->show());
 
 $button = new button ('updatedetails', 'Update Presentation');
 $button->setToSubmit();
 
 $cancelButton = new button ('cancelButton', 'Cancel');
-$cancelButton->setOnClick("document.location='".$this->uri(array('action'=>'view', 'id'=>$file['id']))."'");
+
+if (isset($mode) && $mode == 'submodal')
+{
+    $cancelButton->setOnClick("parent.hidePopWin(false);");
+    $form->addToForm('<p align="center">'.$button->show().' '.$cancelButton->show().'</p>');
+} else {
+    $cancelButton->setOnClick("document.location='".$this->uri(array('action'=>'view', 'id'=>$file['id']))."'");
+    $form->addToForm('<p>'.$button->show().' '.$cancelButton->show().'</p>');
+}
 
 
-$form->addToForm('<p>'.$button->show().' '.$cancelButton->show().'</p>');
 
 $hiddeninput = new hiddeninput('id', $file['id']);
 $form->addToForm($hiddeninput->show());

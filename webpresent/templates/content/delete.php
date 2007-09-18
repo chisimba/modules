@@ -73,13 +73,24 @@ $table->addCell($form->show(), 400);
 
 $table->addCell($flashContent);
 
-echo $table->show();
+if ($mode == 'submodal')
+{
+    $form->extra = ' target="_top"';
 
+    $cancelButton = new button ('cancelButton', 'Cancel');
+    $cancelButton->setOnClick("parent.hidePopWin(false);");
+    $form->addToForm(' '.$cancelButton->show());
 
+    echo $form->show();
 
-$homeLink = new link ($this->uri(NULL));
-$homeLink->link = 'Back to Home';
+} else {
 
-echo '<p>'.$homeLink->show().'</p>';
+    echo $table->show();
+
+    $homeLink = new link ($this->uri(NULL));
+    $homeLink->link = 'Back to Home';
+
+    echo '<p>'.$homeLink->show().'</p>';
+}
 
 ?>
