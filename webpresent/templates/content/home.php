@@ -5,6 +5,8 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
+$objIcon = $this->newObject('geticon', 'htmlelements');
+
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
 $textinput = new textinput ('query');
 $textinput->size = 60;
@@ -29,32 +31,37 @@ if (count($latestFiles) == 0) {
     $latestFilesContent = '';
 } else {
     $latestFilesContent = '';
-    
+
     $objTrim = $this->getObject('trimstr', 'strings');
-    
+
     $counter = 0;
-    
+
     foreach ($latestFiles as $file)
     {
         $counter++;
-        
+
         if (trim($file['title']) == '') {
             $filename = $file['filename'];
         } else {
             $filename = htmlentities($file['title']);
         }
-        
+
         $linkname = $objTrim->strTrim($filename, 45);
-        
+
         $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
         $fileLink->link = $this->objFiles->getPresentationThumbnail($file['id']).'<br />'.$linkname;
         $fileLink->title = $filename;
-        
+
         $extra = ($counter % 2 == 1) ? ' clear:both;' : '';
-        
+
         $latestFilesContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
     }
-    
+
+    $objIcon->setIcon('rss');
+    $rssLink = new link ($this->uri(array('action'=>'latestrssfeed')));
+    $rssLink->link = $objIcon->show();
+
+    $latestFilesContent .= '<br clear="left" />'.$rssLink->show();
 
 }
 $table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '40%');
