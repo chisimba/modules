@@ -124,15 +124,20 @@ class contenttree extends object
                     $item = '';
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
-                        $text = wordwrap(trim($node['title']),24,"<br />\n");
+                        if (strlen($node['title'])>24){
+                        	$text = wordwrap(trim($node['title']),24,"<br />\n");
+                        }else{
+                        	$text = trim($node['title']);
+                        }
+                        
                         $link = '<a  class="yuimenuitemlabel" href="'.$nodeUri.'">'.$text.'</a>';
                     } else {
                         $link = $node['title'];
                     }
                     // small fix here for problem with wraparounds
-		    if (strlen($node['title'])>24){
-		    	$link.="<br />\n";
-			}
+				    if (strlen($node['title'])>24){
+				    	$link.="<br />\n";
+					}
                      // if node has further child nodes, recursively call buildLevel
                     if ($this->getChildNodes($node['id'], $admin)) {
                     	$htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
@@ -203,14 +208,11 @@ class contenttree extends object
                 foreach($contentNodes as $contentNode) {
                     if (!empty($action)) {
                         $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
-                        $link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.$contentNode['title'].'</a>';
+                        $link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.trim($contentNode['title']).'</a>';
                     } else {
-                        $link = wordwrap($contentNode['title']);
+                        $link = $contentNode['title'];
                     } 
-                    // small fix here for problem with wraparounds
-		    if (strlen($contentNode['title'])>24){
-		    	$link.="<br />\n";
-			}
+             
                     $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
                    
                 }
@@ -256,12 +258,8 @@ class contenttree extends object
 			                        $url = $this->uri(array('action' => $action, 'id' => $contentNode['id'], 'sectionid' => $contentNode['sectionid']), $module);
 			                        $link = '<a  class="yuimenuitemlabel" href="'.$url.'">'.$contentNode['title'].'</a>';
 			                    } else {
-			                        $link = wordwrap($contentNode['title']);
-			                    }
-                                            // small fix here for problem with wraparounds
-		                            if (strlen($contentNode['title'])>24){
-		    	                       $link.="<br />\n";
-			                    }
+			                        $link = $contentNode['title'];
+			                    }                                      
 			                    $htmlContent .='<li class="yuimenuitem">'.$link.'</li>';
 			                }
 		                if ($this->getChildNodes($node['id'], $admin)) {
@@ -270,7 +268,7 @@ class contenttree extends object
                  			foreach($sibling as $ctNodes) {
 			                     if (!empty($action)) {
                         			$nodeUri = $this->uri(array('action' => $action, 'id' => $ctNodes['id'], 'sectionid' => $ctNodes['id']), $module);
-                        			$link = '<a href="'.$nodeUri.'">'.$ctNodes['title'].'</a>';
+                        			$link = '<a class="yuimenuitemlabel" href="'.$nodeUri.'">'.$ctNodes['title'].'</a>';
                     			} else {
                         			$link = $ctNodes['title'];
                     			}
