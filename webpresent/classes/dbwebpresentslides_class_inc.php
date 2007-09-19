@@ -232,7 +232,7 @@ class dbwebpresentslides extends dbtable
         }
     }
 
-    public function getPresentationSlidesContent($id)
+    public function getPresentationSlidesContent($id, $withSlideShow = FALSE)
     {
         $slides = $this->getSlides($id);
 
@@ -241,12 +241,20 @@ class dbwebpresentslides extends dbtable
 
         $slidesContent = '<h1>Slides</h1><ul class="presentationslides">';
         $transcriptContent = '<h1>Transcript</h1><ul>';
+        $slideShow = array();
+
 
         $counter=1;
 
         foreach ($slides as $slide)
         {
-            $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br />'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</li>';
+            if ($withSlideShow)
+            {
+                $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br /><a href="javascript:void(viewer.show('.($counter-1).'))">'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</a></li>';
+                $slideShow[] = "viewer.add('usrfiles/webpresent/".$id."/img".($counter-1).".jpg', '".htmlentities($slide['slidetitle'])."');";
+            } else {
+                $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br />'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</li>';
+            }
 
             $content = preg_replace('/<.*?>/', ' ', $slide['slidecontent']);
 
@@ -262,7 +270,7 @@ class dbwebpresentslides extends dbtable
         $slidesContent .= '</ul>';
         $transcriptContent .= '</ul>';
 
-        return array('slides'=>$slidesContent, 'transcript'=>$transcriptContent);
+        return array('slides'=>$slidesContent, 'transcript'=>$transcriptContent, 'slideshow'=>$slideShow);
     }
 
     public function getPresentationSlidesFormatted($id)

@@ -1,5 +1,32 @@
 <?php
 
+// Add SlideShow if content is available
+if (count($slideContent['slideshow']) > 0) {
+    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('slide.js'));
+
+    $jsContent = "
+    <script type=\"text/javascript\">
+    <!--
+      var viewer = new PhotoViewer();
+
+    ";
+
+    foreach ($slideContent['slideshow'] as $jsSlide)
+    {
+        $jsContent .= $jsSlide;
+    }
+
+    $jsContent .= "
+
+      viewer.disableEmailLink();
+      viewer.disablePhotoLink();
+
+    //-->
+    </script>";
+
+    $this->appendArrayVar('headerParams', $jsContent);
+}
+
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('button', 'htmlelements');

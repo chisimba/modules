@@ -195,7 +195,7 @@ class webpresent extends controller
 
         $tags = $this->objTags->getTags($id);
 
-        $slideContent = $this->objSlides->getPresentationSlidesContent($id);
+        $slideContent = $this->objSlides->getPresentationSlidesContent($id, TRUE);
 
         $this->setVarByRef('slideContent', $slideContent);
         $this->setVarByRef('file', $file);
@@ -492,6 +492,8 @@ class webpresent extends controller
     {
         echo $this->objFiles->getLatestFeed();
     }
+
+
 
 
 }
