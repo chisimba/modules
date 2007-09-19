@@ -245,15 +245,21 @@ class dbwebpresentfiles extends dbtable
 
     }
 
-    public function getPresentationThumbnail($id)
+    public function getPresentationThumbnail($id, $title='')
     {
         $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
         $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
 
+        if (trim($title) == '')
+        {
+            $title = '';
+        } else {
+            $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
+        }
 
         if (file_exists($source)) {
 
-            return '<img src="'.$relLink.'" style="border:1px solid #000;" />';
+            return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
         } else {
             $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
             $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
@@ -280,7 +286,7 @@ class dbwebpresentfiles extends dbtable
                     $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
                     $this->objImageResize->store($img);
 
-                    return '<img src="'.$imgRel.'" style="border:1px solid #000;" />';
+                    return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
                 } else {
                     return 'Unable to generate thumbnail';
                 }
@@ -369,6 +375,44 @@ class dbwebpresentfiles extends dbtable
 
         $this->delete('id', $id);
 
+    }
+
+    public function getLatestFeed()
+    {
+        $objFeedCreator = $this->getObject('feeder', 'feed');
+        $objFeedCreator->setupFeed(TRUE, $this->objConfig->getSiteName().' - 10 Newest Uploads', 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site', $this->objConfig->getsiteRoot(),$this->uri(array('action'=>'latestrssfeed')));
+
+        $latestFiles = $this->getLatestPresentations();
+
+        if (count($latestFiles) > 0)
+        {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+
+            foreach ($latestFiles as $file)
+            {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $this->getPresentationThumbnail($file['id'], $filename);
+
+                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
+
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
+            }
+
+
+        }
+
+        return $objFeedCreator->output();
     }
 }
 ?>
