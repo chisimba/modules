@@ -251,7 +251,7 @@ class dbwebpresentslides extends dbtable
             if ($withSlideShow)
             {
                 $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br /><a href="javascript:void(viewer.show('.($counter-1).'))">'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</a></li>';
-                $slideShow[] = "viewer.add('usrfiles/webpresent/".$id."/img".($counter-1).".jpg', '".htmlentities($slide['slidetitle'])."');";
+                $slideShow[] = "viewer.add('usrfiles/webpresent/".$id."/img".($counter-1).".jpg', '".htmlentities(addslashes($slide['slidetitle']))."');";
             } else {
                 $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br />'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</li>';
             }
