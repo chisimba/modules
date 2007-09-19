@@ -16,11 +16,11 @@ class fsiumenu extends object
     */
     public function init()
     {
-    	
+    	    	
         // List of Menu Items
         $this->menuItems = array(
             array('title'=>'Products and Services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_1514_1188560676', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
-            array('title'=>'Portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_3902_1188807445', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
+            array('title'=>'Portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_9007_118967971', 'sectionid' => 'gen9Srv59Nme5_9007_1189679711'),
             array('title'=>'The team', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
             array('title'=>'FAQ', 'module'=>'faq'),
             array('title'=>'News', 'module'=>'prelogin'),
