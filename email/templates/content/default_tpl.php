@@ -545,6 +545,7 @@ if (empty($messageData)) {
     } else {
         $icons.= '';
     }
+    $washer = $this->getObject('washout', 'utilities');
     $objTable->startRow();
     $objTable->addCell('<b>'.$fromLabel.':</b>', '20%', '', '', '', '');
     $objTable->addCell($from, '', '', '', '', '');
@@ -562,7 +563,7 @@ if (empty($messageData)) {
     $objTable->addCell($emailData['subject'], '', '', '', '', '');
     $objTable->endRow();
     $objTable->startRow();
-    $objTable->addCell('<b>'.$messageLabel.':</b><br /><br />'.nl2br($emailData['message']) , '', '', '', '', 'colspan="2"');
+    $objTable->addCell('<b>'.$messageLabel.':</b><br /><br />'.nl2br($washer->parseText($emailData['message'])) , '', '', '', '', 'colspan="2"');
     $objTable->endRow();
 }
 $messageTable = $objTable->show();
