@@ -73,6 +73,7 @@ $heading->type = 1;
 
 echo $heading->show();
 
+//This should be in a reusable view class
 $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
 
 if (file_exists($flashFile)) {
@@ -91,25 +92,32 @@ if (file_exists($flashFile)) {
 
 
 
+
 $rightCell = '';
 
 //$rightCell = '<p><strong>Title of Presentation:</strong> '.$file['title'].'</p>';
 
 if ($file['description'] != '') {
-    $rightCell .= '<p><strong>Description:</strong><br /> '.nl2br(htmlentities($file['description'])).'</p>';
+    $rightCell .= '<p><strong>' 
+      . $this->objLanguage->languageText("word_description") 
+      . ':</strong><br /> '
+      .nl2br(htmlentities($file['description']))
+      .'</p>';
 }
 
-$rightCell .=  '<p><strong>Tags:</strong> ';
+$rightCell .=  '<p><strong>' 
+  . $this->objLanguage->languageText("word_tags") 
+  . ':</strong> ';
 
 if (count($tags) == 0) {
-    $rightCell .=  '<em>Presentation has no tags yet</em>';
+    $rightCell .=  '<em>' 
+    . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
+    . ' </em>';
 } else {
     $divider = '';
-    foreach ($tags as $tag)
-    {
+    foreach ($tags as $tag) {
         $tagLink = new link ($this->uri(array('action'=>'tag', 'tag'=>$tag['tag'])));
         $tagLink->link = $tag['tag'];
-
         $rightCell .=  $divider.$tagLink->show();
         $divider = ', ';
     }
@@ -123,7 +131,9 @@ $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
 
 $rightCell .=  '<p>'.$objDisplayLicense->show($license).'</p>';
 
-$rightCell .=  '<h3>Download</h3>';
+$rightCell .=  '<h3>' 
+  . $this->objLanguage->languageText("word_download") 
+  . '</h3>';
 
 $fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
 
@@ -154,6 +164,18 @@ $uploaderLink->link = $objUser->fullname($file['creatorid']);
 
 $rightCell .= '<p><strong>Uploaded by:</strong> '.$uploaderLink->show().'</p>';
 
+// Output the filter code.
+$this->loadClass('textinput','htmlelements');
+$filterBox=new textinput('filter');
+$filterBox->size=60;
+$filterBox->setValue("[WPRESENT: id=" . $file['id'] . "]");
+$rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filter", "webpresent") 
+  . "</strong>: " . $filterBox->show() . "<br />"
+  . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent") 
+  . "</p>";
+  
+ // End of output the filter code.
+
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
@@ -170,7 +192,9 @@ $objTabs->width = '95%';
 echo $objTabs->show();
 
 $homeLink = new link ($this->uri(NULL));
-$homeLink->link = 'Back to Home';
+$homeLink->link = $this->objLanguage->languageText("phrase_backhome");
+
+
 
 echo '<p>'.$homeLink->show().'</p>';
 

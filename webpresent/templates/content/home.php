@@ -23,7 +23,42 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
 
-$table->addCell($tagCloud, '60%', 'top', 'center');
+//--------- ADDED BY DEREK FOR EMAIL
+// Add the tag cloud to the left contents.
+$leftContents = "";
+// Make a tabbed box
+$objTabs = $this->newObject('tabcontent', 'htmlelements');
+// Add the tag cloud to the tabbed box
+$objTabs->addTab("Tags", "<span style=\"text-align:center\">" . $tagCloud . "</span>");
+
+if ($this->objUser->isLoggedIn()) {
+    $objModule = $this->getObject('modules','modulecatalogue');
+    //See if the youtube API module is registered and set a param
+    $emailRegistered = $objModule->checkIfRegistered('email', 'email');
+    if ($emailRegistered) {
+        //Add the email messages to the tabbed box
+        $msgs = $this->getObject("messagestpl", "webpresent");
+        $msgList = $msgs->show();
+        $msgTitle = $this->objLanguage->languageText("mod_webpresent_msgs", "webpresent")
+          .  $msgs->msgCount;
+        $objTabs->addTab($msgTitle, $msgList);
+    }
+    
+    $objModule = $this->getObject('modules','modulecatalogue');
+    //See if the youtube API module is registered and set a param
+    $buddiesRegistered = $objModule->checkIfRegistered('buddies', 'buddies');
+    if ($buddiesRegistered) {
+        //Add the email messages to the tabbed box
+        $buds = $this->getObject("buddiestpl", "webpresent");
+        $budList = $buds->show();
+        // Add buddies to the tabbed box
+        $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_buddieson", "webpresent")  .  $buds->budCount, $budList);
+    }
+}    
+$leftContents .= $objTabs->show();
+//----------- END ADDED BY DEREK FOR EMAIL & Buddies
+
+$table->addCell($leftContents, '60%', 'top', 'left');
 
 
 
