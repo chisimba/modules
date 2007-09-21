@@ -152,41 +152,50 @@ class cmslayouts extends object
 
         $script ='	<script type="text/javascript">
 					//<![CDATA[
-					YAHOO.example.onMenuReady = function() {
-					// Instantiate and render the menu
-					 var oMenu = new YAHOO.widget.Menu(
+					// Initialize and render the menu when it is available in the DOM
+
+            YAHOO.util.Event.onContentReady("productsandservices", function () {
+
+                /*
+                     Instantiate the menu.  The first argument passed to the 
+                     constructor is the id of the element in the DOM that 
+                     represents the menu; the second is an object literal 
+                     representing a set of configuration properties for 
+                     the menu.
+                */
+
+                var oMenu = new YAHOO.widget.Menu(
                                     "productsandservices", 
                                     {
-                                        position:"static", 
-                                        hidedelay:750, 
-                                        lazyload:true, 
-                                        effect:{ 
-                                            effect:YAHOO.widget.ContainerEffect.FADE,
-                                            duration:0.25
+                                        position: "static", 
+                                        hidedelay: 750, 
+                                        lazyload: true, 
+                                        effect: { 
+                                            effect: YAHOO.widget.ContainerEffect.FADE,
+                                            duration: 0.25
                                         } 
                                     }
                                 );
 
-                oMenu.render();
+                /*
+                     Call the "render" method with no arguments since the markup for 
+                     this menu already exists in the DOM.
+                */
 
-            };
-
-
-            // Initialize and render the menu when it is available in the DOM
-
-            YAHOO.util.Event.onContentReady("productsandservices", YAHOO.example.onMenuReady);
+                oMenu.render();            
+            
+            });
 					//]]>
 					</script>
 					';
 
 		//Insert script for generating tree menu
-		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
-		$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
-		$this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
+		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
+	    $this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
 		$this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
 		$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container_core.js', 'yahoolib'));
 		$this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', 'yahoolib'));
-	
+	    $this->setVar('bodyParams','class=" yui-skin-sam"');	
 		$this->appendArrayVar('headerParams', $css);
 		$this->appendArrayVar('headerParams',$script);
               

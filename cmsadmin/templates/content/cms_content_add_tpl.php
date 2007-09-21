@@ -12,64 +12,63 @@ $script ='
 
 YAHOO.namespace("example.container");
 
-				function init() {
-					
-					// Define various event handlers for Dialog
-					var handleSubmit = function() {
-						this.submit();
-					};
-					var handleCancel = function() {
-						this.cancel();
-					};
-					var handleSuccess = function(o) {
-						var response = o.responseText;
-						response = response.split("<!")[0];
-						document.getElementById("resp").innerHTML = response;
-						eval(response);
-					};
-					var handleFailure = function(o) {
-						alert("Submission failed: " + o.status);
-					};
+function init() {
+	
+	// Define various event handlers for Dialog
+	var handleSubmit = function() {
+		this.submit();
+	};
+	var handleCancel = function() {
+		this.cancel();
+	};
+	var handleSuccess = function(o) {
+		var response = o.responseText;
+		response = response.split("<!")[0];
+		eval(response);
+	};
+	var handleFailure = function(o) {
+		alert("Submission failed: " + o.status);
+	};
 
-					// Instantiate the Dialog
-					YAHOO.example.container.dialog1 = new YAHOO.widget.Dialog("dialog1", 
-																				{ width : "100%",
-																				  fixedcenter : true,
-																				  visible : false, 
-																				  constraintoviewport : true,
-																				 
-																				 } );
-					
-					// Validate the entries in the form to require that both first and last name are entered
-					YAHOO.example.container.dialog1.validate = function() {
-						var data = this.getData();
-						
-							return true;
-						
-					};
+	// Instantiate the Dialog
+	YAHOO.example.container.dialog1 = new YAHOO.widget.Dialog("dialog1", 
+																{ fixedcenter : true,
+																  visible : false, 
+																  constraintoviewport : true,
+																  buttons : [ { text:"Submit", handler:handleSubmit, isDefault:true },
+																			  { text:"Cancel", handler:handleCancel } ]
+																 } );
+	
+	// Validate the entries in the form to require that both first and last name are entered
+	YAHOO.example.container.dialog1.validate = function() {
+		var data = this.getData();
+		
+			return true;
+		
+	};
 
-					// Wire up the success and failure handlers
-					YAHOO.example.container.dialog1.callback = { success: handleSuccess,
-																 failure: handleFailure };
-					
-					// Render the Dialog
-					YAHOO.example.container.dialog1.render();
+	// Wire up the success and failure handlers
+	YAHOO.example.container.dialog1.callback = { success: handleSuccess,
+												 failure: handleFailure };
+	
+	// Render the Dialog
+	YAHOO.example.container.dialog1.render();
 
-					YAHOO.util.Event.addListener("show", "click", YAHOO.example.container.dialog1.show, YAHOO.example.container.dialog1, true);
-					YAHOO.util.Event.addListener("hide", "click", YAHOO.example.container.dialog1.hide, YAHOO.example.container.dialog1, true);
-				}
+	YAHOO.util.Event.addListener("show", "click", YAHOO.example.container.dialog1.show, YAHOO.example.container.dialog1, true);
+	YAHOO.util.Event.addListener("hide", "click", YAHOO.example.container.dialog1.hide, YAHOO.example.container.dialog1, true);
+}
 
-				YAHOO.util.Event.addListener(window, "load", init);
+YAHOO.util.Event.onDOMReady(init);
 
 //]]>
 </script>
 ';
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo/yahoo.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('event/event.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('dom/dom.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdrop.js', 'yahoolib'));
+$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("button/assets/skins/sam/button.css", 'yahoolib').'" />';
+$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("container/assets/skins/sam/container.css", 'yahoolib').'" />';
+$this->appendArrayVar('headerParams', $css);
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('utilities/utilities.js', 'yahoolib'));
+$this->appendArrayVar('headerParams', $this->getJavascriptFile('button/button-beta.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('connection/connection.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $script);
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $tbl = $this->newObject('htmltable', 'htmlelements');

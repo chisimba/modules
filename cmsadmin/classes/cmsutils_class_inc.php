@@ -753,7 +753,7 @@ class cmsutils extends object
         	 * First Tab
         	 */
         	//var_dump($arrContent);
-        	$tabs =$this->newObject('tabpane','htmlelements');
+        	$tabs =$this->newObject('tabcontent','htmlelements');
         	$tbl_basic = $this->newObject('htmltable','htmlelements');
         	$tbl_advanced = $this->newObject('htmltable','htmlelements');
         	$tbl_meta =  $this->newObject('htmltable','htmlelements');
@@ -972,11 +972,11 @@ class cmsutils extends object
             //$bodyInput->width = '50%';
         	$tbl_meta->endRow();
         	//Add items to tabs
-        	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin')}",'','content' => $bodyInput->show()),'winclassic-tab-style-sheet');
-        	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_basic','cmsadmin')}",'','content' => $tbl_basic->show()),'winclassic-tab-style-sheet');
-        	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_advanced','cmsadmin')}",'','content' => $tbl_advanced->show()),'winclassic-tab-style-sheet');
-        	$tabs->addTab(array('name'=>"{$this->objLanguage->languageText('mod_cmsadmin_meta','cmsadmin')}",'','content' => $tbl_meta->show()),'winclassic-tab-style-sheet');
-        	
+        	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'),$bodyInput->show(),'',TRUE,'');
+        	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_basic','cmsadmin'),$tbl_basic->show(),'',False,'');
+        	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_advanced','cmsadmin'),$tbl_advanced->show(),'',False,'');
+        	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_meta','cmsadmin'), $tbl_meta->show(),'',False,'');
+        	$tabs->width = '50%';
         	return $tabs->show();
         }
 
@@ -2309,9 +2309,9 @@ class cmsutils extends object
             $table2->startRow();
             
             if (!$editmode) {
-            	$table2->addCell($this->getConfigTabs(),null,'top','right');
+            	$table2->addCell($this->getConfigTabs());
             }else{
-            	$table2->addCell($this->getConfigTabs($arrContent),null,'top','right');
+            	$table2->addCell($this->getConfigTabs($arrContent));
             }
             $table2->endRow();
             // Content Area
