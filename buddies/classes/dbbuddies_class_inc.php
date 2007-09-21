@@ -21,7 +21,29 @@ class dbBuddies extends dbTable
         parent::init('tbl_buddies');
         //$this->USE_PREPARED_STATEMENTS=True;
     }
-
+    
+    /**
+    * 
+    * Method to get the buddies that are online, returning
+    * an array containing the buddyid and whenlast active.
+    * 
+    * Note: Added by Derek Keats on 2007 09 21 for use in the
+    * webpresent module
+    * 
+    * @access public
+    * @return string array An arrayof buddies online
+    * 
+    */
+    public function getBuddiesOnline($userId)
+    {
+        $sql = "SELECT buddies.buddyid, online.whenlastactive "
+          . " FROM tbl_buddies AS buddies," 
+          . " tbl_loggedinusers AS online "
+          . " WHERE buddies.buddyid = online.userid"
+          . " AND buddies.userid='". $userId."'";
+          return $this->getArray($sql);
+    }
+    
     /**
     * Returns an array that contains buddyId and Fullname 
     * ordered by first name where the person is my buddy, and 
