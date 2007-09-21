@@ -117,10 +117,11 @@ $blockIcon = $objIcon->show();
  $showDialog = '<div>
  			'.$objBlocksLink->show().'
 			</div>';
- echo $showDialog;
+ 
 			
 //Instantiating a Dialog
 if ($id != '') {
+	echo $showDialog;
 	 $h3->str =	$this->objLanguage->languageText('mod_cmsadmin_pageblocks', 'cmsadmin');
 	 $h3->type = 3;
 	 $dialog1 = '<div id="dialog1">';
