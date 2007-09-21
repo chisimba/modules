@@ -84,10 +84,7 @@ class gisops extends object
 
     }
     
-    public function processZip($file)
-    {
-    	
-    }
+    
     
     
 }

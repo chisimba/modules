@@ -42,7 +42,11 @@ class gis extends controller
             	//return the upload form
                 return 'upload_tpl.php';
             	break;
-            case 'crondata':
+            case 'addgeom':
+            	$this->objPostGis = $this->getObject('dbpostgis');
+            	$this->objGisOps = $this->getObject('gisops');
+            	$this->objPostGis->addGeomToGeonames(27700);
+            	//$this->objPostGis->createGeomFromPoints();
             	
             	break;
                
@@ -68,6 +72,7 @@ class gis extends controller
             	else {
             		throw new customException($this->objLanguage->languageText("mod_gis_nopostgis", "gis"));
             	}
+            	
             	$this->nextAction('');
             	break;
         }

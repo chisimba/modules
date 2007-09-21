@@ -14,6 +14,7 @@ class geonames extends controller
     public $objGeoOps;
     public $objDbGeo;
     
+    
     /**
      * Constructor method to instantiate objects and get variables
      */
@@ -25,6 +26,7 @@ class geonames extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
             $this->objConfig = $this->getObject('altconfig', 'config');
+            
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -57,7 +59,7 @@ class geonames extends controller
             	//print_r($dataArr);
             	// rename the file to a csv
             	$records = $this->objGeoOps->parseCSV($geozip);
-            	foreach($records as $entry)
+            	/*foreach($records as $entry)
             	{
             		@$insarr = array('userid' => $userid, 'geonameid' => $entry[0], 'name' => $entry[1], 'asciiname' => $entry[2], 'alternatenames' => $entry[3], 
             						'latitude' => $entry[4], 'longitude' => $entry[5], 'featureclass' => $entry[6], 'featurecode' => $entry[7], 
@@ -66,7 +68,7 @@ class geonames extends controller
             						'moddate' => $entry[16]
             						);
             		$this->objDbGeo->insertRecord($insarr);
-            	}
+            	}*/
             	$message = $this->objLanguage->languageText("mod_geonames_uploaddone", "geonames");
             	$this->setVarByRef('message', $message);
             	return 'main_tpl.php';

@@ -74,15 +74,26 @@ class geoops extends object
     
     public function parseCSV($csvfile)
 	{
-		$row = 1;
+		$this->objUser = $this->getObject('user', 'security');
+		$userid = $this->objUser->userId();
+		$this->objDbGeo = $this->getObject('dbgeonames');
+		// $row = 1;
 		$handle = fopen($csvfile, "r");
 		while (($data = fgetcsv($handle, 1000, "\t")) !== FALSE) {
-    		$num = count($data);
-    		$row++;
-    		$arr[] = $data;
+    		// $num = count($data);
+    		// $row++;
+    		//var_dump($data); die();
+    		@$insarr = array('userid' => $userid, 'geonameid' => $data[0], 'name' => $data[1], 'asciiname' => $data[2], 'alternatenames' => $data[3], 
+            						'latitude' => $data[4], 'longitude' => $data[5], 'featureclass' => $data[6], 'featurecode' => $data[7], 
+            						'countrycode' => $data[8], 'cc2' => $data[9], 'admin1code' => $data[10], 'admin2code' => $data[11], 
+            						'population' => $data[12], 'elevation' => $data[13], 'gtopo30' => $data[14], 'timezoneid' => $data[15], 
+            						'moddate' => $data[16]
+            						);
+            		$this->objDbGeo->insertRecord($insarr);
+    		//$arr[] = $data;
 		}
 		fclose($handle);
-		return $arr;
+		return TRUE;
 		
 	}
     
