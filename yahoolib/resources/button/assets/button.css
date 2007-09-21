@@ -20,7 +20,7 @@ version: 2.3.0
 
     /* Give the transparent background image to IE 6 */
     background-image:none;
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../build/button/assets/background.png', sizingMethod = 'scale');
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='background.png', sizingMethod = 'scale');
 
 }
 
