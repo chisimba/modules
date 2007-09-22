@@ -145,7 +145,7 @@ class dbwebpresentfiles extends dbtable
                     $result = 'inprocess';
                 }
 
-                echo $file['id'].' '.$result.'<br />';
+                echo $file['id'].' - '.$result.'<br />';
             }
 
             return $result;
@@ -176,7 +176,7 @@ class dbwebpresentfiles extends dbtable
         if ($file['filetype'] != 'powerpoint' || $file['filetype'] != 'openoffice')
         {
             $ext = $this->fixUnknownFileType($file['id'], $file['filename']);
-            echo $ext.'<br />';
+            //echo $ext.'<br />';
         }
 
 
@@ -236,10 +236,10 @@ class dbwebpresentfiles extends dbtable
         {
             foreach ($results['files'] as $file)
             {
-                echo $file.'<br />';
+                //echo $file.'<br />';
                 $file = basename($file);
 
-                if (preg_match('/gen7Srv57Nme8_6726_1190464390\.(odp|ppt)/', $file)) {
+                if (preg_match('/'.$id.'\.(odp|ppt)/', $file)) {
                     $path_parts = pathinfo($file);
 
                     $ext = $path_parts['extension'];
@@ -263,7 +263,7 @@ class dbwebpresentfiles extends dbtable
                         ));
                     }
 
-                    echo 'in here'.$ext;
+                    //echo 'in here'.$ext;
                     // Return Correct Extension
                     return $ext;
                 }
