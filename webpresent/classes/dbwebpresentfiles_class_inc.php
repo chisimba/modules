@@ -176,7 +176,7 @@ class dbwebpresentfiles extends dbtable
         if ($file['filetype'] != 'powerpoint' || $file['filetype'] != 'openoffice')
         {
             $ext = $this->fixUnknownFileType($file['id'], $file['filename']);
-            //return 'fix';
+            echo $ext.'<br />';
         }
 
 
