@@ -144,6 +144,8 @@ class dbwebpresentfiles extends dbtable
                 } else {
                     $result = 'inprocess';
                 }
+
+                echo $file['id'].' '.$result.'<br />';
             }
 
             return $result;
@@ -234,6 +236,7 @@ class dbwebpresentfiles extends dbtable
         {
             foreach ($results['files'] as $file)
             {
+                echo $file.'<br />';
                 $file = basename($file);
 
                 if (preg_match('/gen7Srv57Nme8_6726_1190464390\.(odp|ppt)/', $file)) {
