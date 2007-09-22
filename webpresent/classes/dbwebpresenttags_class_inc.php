@@ -74,6 +74,26 @@ class dbwebpresenttags extends dbtable
         return $this->getAll(' WHERE fileid=\''.$fileId.'\'');
     }
 
+    public function getTagsAsArray($fileId)
+    {
+        $tags = $this->getTags($fileId);
+
+        if (count($tags) == 0)
+        {
+            return array();
+        } else {
+            $tagsArray = array();
+
+            foreach ($tags as $tag)
+            {
+                $tagsArray[] = $tag['tag'];
+            }
+
+            return $tagsArray;
+        }
+
+    }
+
     /**
      * Method to get the list of all the tags, and the weight of each tag
      * @return array List of Tags and Corresponding Weight in alphabetical order
@@ -160,10 +180,21 @@ class dbwebpresenttags extends dbtable
      * @param string $tag Tag
      * @return array List of Files with tag associated
      */
-    public function getFilesWithTag($tag)
+    public function getFilesWithTag($tag, $order='dateuploaded DESC')
     {
-        $sql = 'SELECT DISTINCT tbl_webpresent_files.id, tbl_webpresent_files.* FROM tbl_webpresent_files, tbl_webpresent_tags
-        WHERE (tbl_webpresent_tags.fileid = tbl_webpresent_files.id) AND tbl_webpresent_tags.tag LIKE \''.$tag.'\' ';
+        if ($order == 'creatorname asc')
+        {
+            $order = 'firstname, surname, creatorid';
+        } else if ($order == 'creatorname desc')
+        {
+            $order = 'firstname DESC, surname DESC , creatorid DESC';
+        }
+
+
+        $sql = 'SELECT DISTINCT tbl_webpresent_files.id, tbl_webpresent_files.*, tbl_users.firstName as firstname, tbl_users.surname FROM tbl_webpresent_files, tbl_webpresent_tags, tbl_users
+        WHERE (tbl_webpresent_tags.fileid = tbl_webpresent_files.id AND tbl_webpresent_files.creatorid = tbl_users.userid) AND tbl_webpresent_tags.tag LIKE \''.$tag.'\' ORDER BY '.$order;
+
+        //echo $sql;
 
         return $this->getArray($sql);
     }
@@ -176,6 +207,48 @@ class dbwebpresenttags extends dbtable
     public function deleteTags($id)
     {
         return $this->delete('fileid', $id);
+    }
+
+    public function getTagFeed($tag)
+    {
+        $objUser = $this->getObject('user', 'security');
+        $objConfig = $this->getObject('altconfig', 'config');
+        $objFile = $this->getObject('dbwebpresentfiles');
+
+        $objFeedCreator = $this->getObject('feeder', 'feed');
+        $objFeedCreator->setupFeed(TRUE, $objConfig->getSiteName().' - Tag: '.$tag, 'A List of Presentations with tag - '.$tag, $objConfig->getsiteRoot(),$this->uri(array('action'=>'latestrssfeed')));
+
+        $latestFiles = $this->getFilesWithTag($tag);
+
+        if (count($latestFiles) > 0)
+        {
+            $this->loadClass('link', 'htmlelements');
+            $objDate = $this->getObject('dateandtime', 'utilities');
+
+            foreach ($latestFiles as $file)
+            {
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
+
+                $imgLink = new link($link);
+                $imgLink->link = $objFile->getPresentationThumbnail($file['id'], $filename);
+
+                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
+
+
+                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $objUser->fullName($file['creatorid']), $date);
+            }
+
+
+        }
+
+        return $objFeedCreator->output();
     }
 }
 ?>

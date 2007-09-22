@@ -67,6 +67,7 @@ class dbwebpresentfiles extends dbtable
     {
         return $this->update('id', $id, array(
                 'filename' => stripslashes($filename),
+                'title' => stripslashes($filename),
                 'mimetype' => $mimetype,
                 'filetype' => $this->getFileType($filename),
                 'processstage' => 'readyforconversion',
@@ -89,9 +90,9 @@ class dbwebpresentfiles extends dbtable
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 10');
     }
 
-    public function getByUser($user)
+    public function getByUser($user, $order='dateuploaded DESC')
     {
-        return $this->getAll(' WHERE creatorid=\''.$user.'\' ORDER BY dateuploaded DESC');
+        return $this->getAll(' WHERE creatorid=\''.$user.'\' ORDER BY '.$order);
     }
 
     private function getFileType($filename)
@@ -156,7 +157,7 @@ class dbwebpresentfiles extends dbtable
 
     private function setInProcess($id, $step)
     {
-        return $this->update('id', $id, array('inprocess'=>'N', 'processstage'=>$step));
+        return $this->update('id', $id, array('inprocess'=>'Y', 'processstage'=>$step));
     }
 
 
@@ -169,6 +170,13 @@ class dbwebpresentfiles extends dbtable
         $ext = $path_parts['extension'];
 
         //echo $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$ext;
+
+        if ($file['filetype'] != 'powerpoint' || $file['filetype'] != 'openoffice')
+        {
+            $ext = $this->fixUnknownFileType($file['id'], $file['filename']);
+            //return 'fix';
+        }
+
 
 
         $step = 'otherconversion';
@@ -210,6 +218,54 @@ class dbwebpresentfiles extends dbtable
 
 
         return $step;
+    }
+
+    private function fixUnknownFileType($id, $existingFilename)
+    {
+        $objScan = $this->getObject('scanfordelete');
+
+        // Set Directory to Var
+        $presentationFolder = $this->objConfig->getcontentBasePath().'webpresent/'.$id;
+
+        // Scan Results
+        $results = $objScan->scanDirectory($presentationFolder);
+
+        if (count($results['files']) > 0)
+        {
+            foreach ($results['files'] as $file)
+            {
+                $file = basename($file);
+
+                if (preg_match('/gen7Srv57Nme8_6726_1190464390\.(odp|ppt)/', $file)) {
+                    $path_parts = pathinfo($file);
+
+                    $ext = $path_parts['extension'];
+
+                    if ($existingFilename == '')
+                    {
+                        $existingFilename = $file;
+                    }
+
+
+                    if ($ext == 'odp')
+                    {
+                        $this->update('id', $id, array(
+                            'filename' => $existingFilename,
+                            'filetype' => 'openoffice',
+                        ));
+                    } else {
+                        $this->update('id', $id, array(
+                            'filename' => $existingFilename,
+                            'filetype' => 'powerpoint',
+                        ));
+                    }
+                    // Return Correct Extension
+                    return $ext;
+                }
+            }
+        }
+        // Unknown Item
+        return 'bug';
     }
 
     private function convertAlternative($id, $ext)
@@ -379,17 +435,38 @@ class dbwebpresentfiles extends dbtable
 
     public function getLatestFeed()
     {
+        $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
+        $description = 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site';
+        $url = $this->uri(array('action'=>'latestrssfeed'));
+
+        $files = $this->getLatestPresentations();
+
+        return $this->generateFeed($title, $description, $url, $files);
+    }
+
+    public function getUserFeed($userId)
+    {
+        $fullName = $this->objUser->fullName($userId);
+        $title = $fullName.'\'s Files';
+        $description = 'A List of the Latest Presentations uploaded by '.$fullName;
+        $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
+
+        $files = $this->getByUser($userId);
+
+        return $this->generateFeed($title, $description, $url, $files);
+    }
+
+    public function generateFeed($title, $description, $url, $files)
+    {
         $objFeedCreator = $this->getObject('feeder', 'feed');
-        $objFeedCreator->setupFeed(TRUE, $this->objConfig->getSiteName().' - 10 Newest Uploads', 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site', $this->objConfig->getsiteRoot(),$this->uri(array('action'=>'latestrssfeed')));
+        $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
 
-        $latestFiles = $this->getLatestPresentations();
-
-        if (count($latestFiles) > 0)
+        if (count($files) > 0)
         {
             $this->loadClass('link', 'htmlelements');
             $objDate = $this->getObject('dateandtime', 'utilities');
 
-            foreach ($latestFiles as $file)
+            foreach ($files as $file)
             {
 
                 if (trim($file['title']) == '') {
@@ -413,6 +490,95 @@ class dbwebpresentfiles extends dbtable
         }
 
         return $objFeedCreator->output();
+    }
+
+    public function displayAsTable($files)
+    {
+        if (count($files) == 0) {
+            return '';
+        } else {
+            $table = $this->newObject('htmltable', 'htmlelements');
+
+            $divider = '';
+
+            $objDateTime = $this->getObject('dateandtime', 'utilities');
+            $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
+            $objDisplayLicense->icontype = 'small';
+
+            $counter = 0;
+            $inRow = FALSE;
+
+            foreach ($files as $file)
+            {
+                $counter++;
+
+                if (($counter%2) == 1)
+                {
+                    $table->startRow();
+                }
+
+
+                $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $link->link = $this->getPresentationThumbnail($file['id']);
+
+                $table->addCell($link->show(), 120);
+                $table->addCell('&nbsp;', 10);
+
+                $rightContent = '';
+
+                if (trim($file['title']) == '') {
+                    $filename = $file['filename'];
+                } else {
+                    $filename = htmlentities($file['title']);
+                }
+
+                $link->link = $filename;
+                $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
+
+                if (trim($file['description']) == '') {
+                    $description = '<em>File has no description</em>';
+                } else {
+                    $description = nl2br(htmlentities($file['description']));
+                }
+
+                $rightContent .= $description.'</p>';
+
+                // Set License to copyright if none is set
+                if ($file['cclicense'] == '')
+                {
+                    $file['cclicense'] = 'copyright';
+                }
+
+                $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
+
+                $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
+                $userLink->link = $this->objUser->fullname($file['creatorid']);
+
+                $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
+                $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
+
+                $table->addCell($rightContent, '40%');
+
+
+                if (($counter%2) == 0)
+                {
+                    $table->endRow();
+                }
+
+                $divider = 'addrow';
+            }
+
+            if (($counter%2) == 1)
+            {
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->endRow();
+            }
+
+            return $table->show();
+
+        }
     }
 }
 ?>

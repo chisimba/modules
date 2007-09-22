@@ -3,12 +3,16 @@
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 
-$objIcon = $this->newObject('geticon', 'htmlelements');
-$objIcon->setIcon('edit');
-
 $heading = new htmlheading();
 $heading->str = 'Tag - '.$tag;
 
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('rss');
+
+$rssLink = new link ($this->uri(array('action'=>'tagrss', 'tag'=>$tag)));
+$rssLink->link = $objIcon->show();
+
+$heading->str .= ' '.$rssLink->show();
 
 $heading->type = 1;
 
@@ -17,66 +21,38 @@ echo $heading->show();
 if (count($files) == 0) {
     echo '<div class="noRecordsMessage">No files matches this tag</div>';
 } else {
-    $table = $this->newObject('htmltable', 'htmlelements');
-    
+    $sortOptions = array(
+        'dateuploaded_desc' => 'Newest First',
+        'dateuploaded_asc' => 'Oldest First',
+        'title_asc' => 'Alphabetical',
+        //'title_desc' => 'Alphabetical Reversed',
+        'creatorname_asc' => 'User',
+        //'creatorname_desc' => 'User Reversed',
+    );
+
+    echo '<p><strong>Sort By:</strong> ';
+
     $divider = '';
-    
-    $objDateTime = $this->getObject('dateandtime', 'utilities');
-    $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
-    $objDisplayLicense->icontype = 'small';
-    
-    foreach ($files as $file)
+    foreach ($sortOptions as $sortOption=>$optionText)
     {
-        if ($divider == 'addrow') {
-            $table->startRow();
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');
-            $table->endRow();
-        }
-        
-        $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-        $link->link = $this->objFiles->getPresentationThumbnail($file['id']);
-        
-        $table->startRow();
-        $table->addCell($link->show(), 120);
-        $table->addCell('&nbsp;', 10);
-        
-        $rightContent = '';
-        
-        if (trim($file['title']) == '') {
-            $filename = $file['filename'];
+        if ($sortOption == $sort)
+        {
+            echo $divider.$optionText;
         } else {
-            $filename = htmlentities($file['title']);
+            $sortLink = new link ($this->uri(array('action'=>'tag', 'tag'=>$tag, 'sort'=>$sortOption)));
+            $sortLink->link = $optionText;
+
+            echo $divider.$sortLink->show();
         }
-        
-        $link->link = $filename;
-        $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
-        
-        if (trim($file['description']) == '') {
-            $description = '<em>File has no description</em>';
-        } else {
-            $description = nl2br(htmlentities($file['description']));
-        }
-        
-        $rightContent .= $description.'</p>';
-        
-        $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
-        
-        $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
-        $userLink->link = $objUser->fullname($file['creatorid']);
-        
-        $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
-        $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
-        
-        $table->addCell($rightContent);
-        $table->endRow();
-        
-        $divider = 'addrow';
+
+        $divider = ' | ';
+
     }
-    
-    echo $table->show();
-    
+
+    echo '</strong></p>';
+
+    echo $this->objFiles->displayAsTable($files);
+
 }
 
 $homeLink = new link ($this->uri(NULL));

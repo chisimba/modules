@@ -119,10 +119,13 @@ class webpresent extends controller
 
 
 
-    function __ajaxprocess()
-    {
-        $this->setPageTemplate(NULL);
 
+    /**
+     * Method to edit the details of a presentation
+     *
+     */
+    function __edit()
+    {
         $id = $this->getParam('id');
 
         $file = $this->objFiles->getFile($id);
@@ -136,10 +139,22 @@ class webpresent extends controller
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
 
+        $mode = $this->getParam('mode', 'window');
+        $this->setVarByRef('mode', $mode);
+
+        if ($mode == 'submodal') {
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+        }
+
         return 'process.php';
     }
 
 
+    /**
+     * Method to update the details of a presentation
+     *
+     */
     function __updatedetails()
     {
         $id = $this->getParam('id');
@@ -160,9 +175,13 @@ class webpresent extends controller
         $this->objFiles->updateFileDetails($id, $title, $description, $license);
         $this->objTags->addTags($id, $tags);
 
-        return $this->nextAction('view', array('id'=>$id));
+        return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
     }
 
+    /**
+     * Method to view the details of a presentation
+     *
+     */
     function __view()
     {
         $id = $this->getParam('id');
@@ -204,50 +223,67 @@ class webpresent extends controller
         return 'view.php';
     }
 
-    function __edit()
-    {
-        $id = $this->getParam('id');
 
-        $file = $this->objFiles->getFile($id);
-
-        if ($file == FALSE) {
-            return $this->nextAction('home', array('error'=>'norecord'));
-        }
-
-        $tags = $this->objTags->getTags($id);
-
-        $this->setVarByRef('file', $file);
-        $this->setVarByRef('tags', $tags);
-
-        $mode = $this->getParam('mode', 'window');
-        $this->setVarByRef('mode', $mode);
-
-        if ($mode == 'submodal') {
-            $this->setVar('pageSuppressBanner', TRUE);
-            $this->setVar('suppressFooter', TRUE);
-        }
-
-        return 'process.php';
-    }
-
+    /**
+     * Method to view a list of presentations that match a particular tag
+     *
+     */
     function __tag()
     {
         $tag = $this->getParam('tag');
+        $sort = $this->getParam('sort', 'dateuploaded_desc');
 
-        $files = $this->objTags->getFilesWithTag($tag);
+        // Check that sort options provided is valid
+        if (!preg_match('/(dateuploaded|title|creatorname)_(asc|desc)/', strtolower($sort))) {
+            $sort = 'dateuploaded_desc';
+        }
+
+        $files = $this->objTags->getFilesWithTag($tag, str_replace('_', ' ',$sort));
 
         $this->setVarByRef('tag', $tag);
         $this->setVarByRef('files', $files);
+        $this->setVarByRef('sort', $sort);
 
         return 'tag.php';
     }
 
+    /**
+     * Method to view a list of presentations uploaded by a particular user
+     *
+     */
+    function __byuser()
+    {
+        $userid = $this->getParam('userid');
+        $sort = $this->getParam('sort', 'dateuploaded_desc');
 
+        // Check that sort options provided is valid
+        if (!preg_match('/(dateuploaded|title)_(asc|desc)/', strtolower($sort))) {
+            $sort = 'dateuploaded_desc';
+        }
+
+        $files = $this->objFiles->getByUser($userid, str_replace('_', ' ', $sort));
+
+        $this->setVarByRef('userid', $userid);
+        $this->setVarByRef('files', $files);
+        $this->setVarByRef('sort', $sort);
+
+        return 'byuser.php';
+    }
+
+    /**
+     * Method to show interface to upload a presentation
+     *
+     */
     function __upload()
     {
         return 'testupload.php';
     }
 
+    /**
+     * Method to show a temporary iframe
+     * (it is hidden, and thus does nothing)
+     *
+     */
     function __tempiframe()
     {
         echo '<pre>';
@@ -281,6 +317,29 @@ class webpresent extends controller
         return 'uploadiframe.php';
     }
 
+    function __ajaxprocess()
+    {
+        $this->setPageTemplate(NULL);
+
+        $id = $this->getParam('id');
+
+        $file = $this->objFiles->getFile($id);
+
+        if ($file == FALSE) {
+            return $this->nextAction('home', array('error'=>'norecord'));
+        }
+
+        // Set Filename as title in this process
+        // Based on the filename, it might make it easier for users to complete the name
+        $file['title'] = $file['filename'];
+
+        $tags = $this->objTags->getTags($id);
+
+        $this->setVarByRef('file', $file);
+        $this->setVarByRef('tags', $tags);
+
+        return 'process.php';
+    }
 
     function __doajaxupload()
     {
@@ -391,17 +450,7 @@ class webpresent extends controller
         echo $result;
     }
 
-    function __byuser()
-    {
-        $userid = $this->getParam('userid');
 
-        $files = $this->objFiles->getByUser($userid);
-
-        $this->setVarByRef('userid', $userid);
-        $this->setVarByRef('files', $files);
-
-        return 'byuser.php';
-    }
 
     function __delete()
     {
@@ -493,8 +542,156 @@ class webpresent extends controller
         echo $this->objFiles->getLatestFeed();
     }
 
+    function __tagrss()
+    {
+        $tag = $this->getParam('tag');
+        echo $this->objTags->getTagFeed($tag);
+    }
+
+    function __userrss()
+    {
+        $userid = $this->getParam('userid');
+        echo $this->objFiles->getUserFeed($userid);
+    }
+
+    function __rebuildsearch()
+    {
+        $files = $this->objFiles->getAll();
+
+        if (count($files) > 0)
+        {
+            $file = $files[0];
+            foreach ($files as $file)
+            {
+                $tags = $this->objTags->getTagsAsArray($file['id']);
+                $slides = $this->objSlides->getSlides($file['id']);
+
+                $file['tags'] = $tags;
+                $file['slides'] = $slides;
+
+                $this->_prepareDataForSearch($file);
+            }
+        }
+
+    }
+
+    private function _prepareDataForSearch($file)
+    {
+        $content = $file['filename'];
+
+        $content .= ($file['description'] == '') ? '' : ', '.$file['description'];
+        $content .= ($file['title'] == '') ? '' : ', '.$file['title'];
 
 
+        if (count($file['tags']) > 0)
+        {
+            $divider = '';
+            foreach ($file['tags'] as $tag)
+            {
+                $content .= $divider.$tag;
+                $divider = ', ';
+            }
+        }
+
+        $content .= ', ';
+
+        $divider = '';
+        foreach ($file['slides'] as $slide)
+        {
+            if (preg_match('/slide \d+/', $slide['slidetitle']))
+            {
+                $content .= $divider.$slide['slidetitle'];
+                $divider = ', ';
+            }
+
+            if ($slide['slidecontent'] != '<h1></h1>')
+            {
+                $content .= $divider.strip_tags($slide['slidecontent']);
+                $divider = ',';
+            }
+
+
+        }
+
+        $file['content'] = $content;
+
+        $this->_luceneIndex($file);
+    }
+
+    private function _luceneIndex($file)
+    {
+        //print_r($data); die();
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject('user', 'security');
+        $indexPath = $this->objConfig->getcontentBasePath();
+        if (file_exists($indexPath . 'chisimbaIndex/segments')) {
+            @chmod($indexPath . 'chisimbaIndex', 0777);
+            //we build onto the previous index
+            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', false);
+
+
+            echo 'Add to Index';
+        } else {
+            //instantiate the lucene engine and create a new index
+            @mkdir($indexPath . 'chisimbaIndex');
+            @chmod($indexPath . 'chisimbaIndex', 0777);
+            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', true);
+
+            echo 'Create New Index';
+        }
+        //hook up the document parser
+        $document = new Zend_Search_Lucene_Document();
+        //change directory to the index path
+        chdir($indexPath);
+        //set the properties that we want to use in our index
+        //id for the index and optimization
+        $document->addField(Zend_Search_Lucene_Field::Text('docid', 'webpresent_'.$file['id']));
+        //date
+        $document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $file['dateuploaded']));
+        //url
+        $document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array(
+            'module' => 'webpresent',
+            'action' => 'view',
+            'id' => $file['id'],
+        ))));
+        //createdBy
+        $document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($file['creatorid'])));
+        //document teaser
+        $document->addField(Zend_Search_Lucene_Field::Text('teaser', $file['description']));
+
+
+
+        if ($file['title'] == '') {
+            $title = $file['filename'];
+        } else {
+            $title = $file['title'];
+        }
+
+        //doc title
+        $document->addField(Zend_Search_Lucene_Field::Text('title', $title));
+        //doc author
+        $document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($file['creatorid'])));
+        //document body
+        //NOTE: this is not actually put into the index, so as to keep the index nice and small
+        //      only a reference is inserted to the index.
+        $document->addField(Zend_Search_Lucene_Field::Text('contents', $file['content']));
+        //what else do we need here???
+        //add the document to the index
+        $index->addDocument($document);
+        //commit the index to disc
+        $index->commit();
+        //optimize the thing
+        //$index->optimize();
+
+    }
+
+
+    public function __search_underconstruction()
+    {
+        $query = $this->getParam('q');
+
+        return 'search.php';
+    }
 
 }
 ?>

@@ -4,20 +4,28 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
-$textinput = new textinput ('query');
+$form->method = 'GET';
+
+$module = new hiddeninput('module', 'webpresent');
+$form->addToForm($module->show());
+
+$action = new hiddeninput('action', 'search');
+$form->addToForm($action->show());
+
+$textinput = new textinput ('q');
 $textinput->size = 60;
 $button = new button ('search', 'Search');
-$button->setOnClick("alert('I dont work yet');");
-
-
+$button->setToSubmit();
 
 $form->addToForm($textinput->show().' '.$button->show());
 
-echo $form->show();
+// Turn off so long
+//echo $form->show();
 
 $table = $this->newObject('htmltable', 'htmlelements');
 
@@ -28,14 +36,20 @@ $table->startRow();
 $leftContents = "";
 // Make a tabbed box
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
+$objTabs->width = '95%';
 // Add the tag cloud to the tabbed box
-$objTabs->addTab("Tags", "<span style=\"text-align:center\">" . $tagCloud . "</span>");
+$objTabs->addTab("Tag Cloud", "<span style=\"text-align:center\">" . $tagCloud . "</span>");
 
 if ($this->objUser->isLoggedIn()) {
+
+    // Counter for additional modules that may be registered
+    $moduleCounter = 0;
+
     $objModule = $this->getObject('modules','modulecatalogue');
     //See if the youtube API module is registered and set a param
     $emailRegistered = $objModule->checkIfRegistered('email', 'email');
     if ($emailRegistered) {
+        $moduleCounter++;
         //Add the email messages to the tabbed box
         $msgs = $this->getObject("messagestpl", "webpresent");
         $msgList = $msgs->show();
@@ -43,20 +57,32 @@ if ($this->objUser->isLoggedIn()) {
           .  $msgs->msgCount;
         $objTabs->addTab($msgTitle, $msgList);
     }
-    
+
     $objModule = $this->getObject('modules','modulecatalogue');
     //See if the youtube API module is registered and set a param
     $buddiesRegistered = $objModule->checkIfRegistered('buddies', 'buddies');
     if ($buddiesRegistered) {
+        $moduleCounter++;
         //Add the email messages to the tabbed box
         $buds = $this->getObject("buddiestpl", "webpresent");
         $budList = $buds->show();
         // Add buddies to the tabbed box
         $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_buddieson", "webpresent")  .  $buds->budCount, $budList);
     }
-}    
-$leftContents .= $objTabs->show();
+
+    // If no additional modules are registered, only show tag cloud
+    if ($moduleCounter == 0)
+    {
+        $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
+
+    } else { // Else show items in multi tab box
+        $leftContents .= $objTabs->show();
+    }
 //----------- END ADDED BY DEREK FOR EMAIL & Buddies
+} else {
+    $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
+}
+
 
 $table->addCell($leftContents, '60%', 'top', 'left');
 
