@@ -262,6 +262,8 @@ class dbwebpresentfiles extends dbtable
                             'filetype' => 'powerpoint',
                         ));
                     }
+
+                    echo 'in here'.$ext;
                     // Return Correct Extension
                     return $ext;
                 }
