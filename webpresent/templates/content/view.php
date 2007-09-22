@@ -73,10 +73,16 @@ $heading->type = 1;
 
 echo $heading->show();
 
-//This should be in a reusable view class
-$flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
+// Show the flash file using the viewer class
+$objView = $this->getObject("viewer", "webpresent");
+$flashContent = $objView->showFlash($file['id']);
 
-if (file_exists($flashFile)) {
+/*
+ * 
+ *
+ *REPLACE WITH VEIWER
+ *$flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
+ *if (file_exists($flashFile)) {
 
     $flashFile = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
     $flashContent = '
@@ -89,6 +95,7 @@ if (file_exists($flashFile)) {
 } else {
     $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
 }
+*/
 
 
 
