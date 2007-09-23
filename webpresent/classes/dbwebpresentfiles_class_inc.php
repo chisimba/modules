@@ -308,53 +308,8 @@ class dbwebpresentfiles extends dbtable
 
     public function getPresentationThumbnail($id, $title='')
     {
-        $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
-        $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
-
-        if (trim($title) == '')
-        {
-            $title = '';
-        } else {
-            $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
-        }
-
-        if (file_exists($source)) {
-
-            return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
-        } else {
-            $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
-            $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
-
-            if (file_exists($source)) {
-                $objMkDir = $this->getObject('mkdir', 'files');
-                $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
-                $objMkDir->mkdirs($destinationDir);
-
-                $this->objImageResize = $this->getObject('imageresize', 'files');
-
-                $this->objImageResize->setImg($source);
-
-                // Resize to 100x100 Maintaining Aspect Ratio
-                $this->objImageResize->resize(120, 120, TRUE);
-
-                //$this->objImageResize->show(); // Uncomment for testing purposes
-
-                // Determine filename for file
-                // If thumbnail can be created, give it a unique file name
-                // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
-                if ($this->objImageResize->canCreateFromSouce) {
-                    $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';
-                    $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
-                    $this->objImageResize->store($img);
-
-                    return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
-                } else {
-                    return 'Unable to generate thumbnail';
-                }
-            } else {
-                return 'No Preview Available';
-            }
-        }
+        $objViewer = $this->getObject('viewer');
+        return $objViewer->getPresentationThumbnail($id, $title);
     }
 
     public function deleteFile($id)
@@ -438,152 +393,62 @@ class dbwebpresentfiles extends dbtable
 
     }
 
-    public function getLatestFeed()
+
+    public function regenerateFile($id, $type)
     {
-        $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
-        $description = 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site';
-        $url = $this->uri(array('action'=>'latestrssfeed'));
-
-        $files = $this->getLatestPresentations();
-
-        return $this->generateFeed($title, $description, $url, $files);
-    }
-
-    public function getUserFeed($userId)
-    {
-        $fullName = $this->objUser->fullName($userId);
-        $title = $fullName.'\'s Files';
-        $description = 'A List of the Latest Presentations uploaded by '.$fullName;
-        $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
-
-        $files = $this->getByUser($userId);
-
-        return $this->generateFeed($title, $description, $url, $files);
-    }
-
-    public function generateFeed($title, $description, $url, $files)
-    {
-        $objFeedCreator = $this->getObject('feeder', 'feed');
-        $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
-
-        if (count($files) > 0)
+        switch ($type)
         {
-            $this->loadClass('link', 'htmlelements');
-            $objDate = $this->getObject('dateandtime', 'utilities');
-
-            foreach ($files as $file)
-            {
-
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
-                } else {
-                    $filename = htmlentities($file['title']);
-                }
-
-                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
-
-                $imgLink = new link($link);
-                $imgLink->link = $this->getPresentationThumbnail($file['id'], $filename);
-
-                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
-
-
-                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
-            }
-
-
+            case 'flash':
+                return $this->regenerateSWF($id); break;
+            case 'slides':
+                return $this->regenerateSlides($id); break;
+            case 'pdf':
+                return $this->regeneratePDF($id); break;
+            default: return FALSE;
         }
 
-        return $objFeedCreator->output();
     }
 
-    public function displayAsTable($files)
+    private function regenerateSWF($id)
     {
-        if (count($files) == 0) {
-            return '';
-        } else {
-            $table = $this->newObject('htmltable', 'htmlelements');
-
-            $divider = '';
-
-            $objDateTime = $this->getObject('dateandtime', 'utilities');
-            $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
-            $objDisplayLicense->icontype = 'small';
-
-            $counter = 0;
-            $inRow = FALSE;
-
-            foreach ($files as $file)
-            {
-                $counter++;
-
-                if (($counter%2) == 1)
-                {
-                    $table->startRow();
-                }
-
-
-                $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $link->link = $this->getPresentationThumbnail($file['id']);
-
-                $table->addCell($link->show(), 120);
-                $table->addCell('&nbsp;', 10);
-
-                $rightContent = '';
-
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
-                } else {
-                    $filename = htmlentities($file['title']);
-                }
-
-                $link->link = $filename;
-                $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
-
-                if (trim($file['description']) == '') {
-                    $description = '<em>File has no description</em>';
-                } else {
-                    $description = nl2br(htmlentities($file['description']));
-                }
-
-                $rightContent .= $description.'</p>';
-
-                // Set License to copyright if none is set
-                if ($file['cclicense'] == '')
-                {
-                    $file['cclicense'] = 'copyright';
-                }
-
-                $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
-
-                $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
-                $userLink->link = $this->objUser->fullname($file['creatorid']);
-
-                $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
-                $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
-
-                $table->addCell($rightContent, '40%');
-
-
-                if (($counter%2) == 0)
-                {
-                    $table->endRow();
-                }
-
-                $divider = 'addrow';
-            }
-
-            if (($counter%2) == 1)
-            {
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->endRow();
-            }
-
-            return $table->show();
-
+        $swfFile =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.swf';
+        if (file_exists($swfFile))
+        {
+            unlink($swfFile);
         }
+
+        return $this->convertFileFromFormat($id, 'odp', 'swf');
     }
+
+    private function regenerateSlides($id)
+    {
+        $objSlides = $this->getObject('dbwebpresentslides');
+        $objSlides->deleteSlides($id);
+
+        $result = $this->convertFileFromFormat($id, 'odp', 'html');
+
+        if ($result == TRUE)
+        {
+            $objSlides = $this->getObject('dbwebpresentslides');
+            $objSlides->scanPresentationDir($id);
+        }
+
+        return $result;
+    }
+
+    private function regeneratePDF($id)
+    {
+        $pdfFile =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.pdf';
+        if (file_exists($pdfFile))
+        {
+            unlink($pdfFile);
+        }
+
+        return $this->convertFileFromFormat($id, 'odp', 'swf');
+    }
+
+
+
+
 }
 ?>

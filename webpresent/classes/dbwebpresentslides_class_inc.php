@@ -252,7 +252,7 @@ class dbwebpresentslides extends dbtable
             if ($withSlideShow)
             {
                 $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br /><a href="javascript:void(viewer.show('.($counter-1).'))">'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</a></li>';
-                $slideShow[] = "viewer.add('usrfiles/webpresent/".$id."/img".($counter-1).".jpg', '".htmlentities(addslashes($slide['slidetitle']))."');";
+                $slideShow[] = "viewer.add('usrfiles/webpresent/".$id."/img".($counter-1).".jpg', '".(addslashes($slide['slidetitle']))."');";
             } else {
                 $slidesContent .= '<li>'.$objTrim->strTrim($slide['slidetitle'], 27).'<br />'.$this->getSlideThumbnail($slide['id'], $slide['slidetitle']).'</li>';
             }
@@ -298,6 +298,31 @@ class dbwebpresentslides extends dbtable
             {
                 $this->deleteSlideThumbnail($slide['id']);
                 $this->delete('id', $slide['id']);
+
+                $firstPage =  $this->objConfig->getcontentBasePath().'webpresent/'.$fileId.'/'.$fileId.'.html';
+                if (file_exists($firstPage))
+                {
+                    unlink($firstPage);
+                }
+
+                $img = $this->objConfig->getcontentBasePath().'webpresent/'.$fileId.'/img'.($slide['slideorder']-1).'.jpg';
+                if (file_exists($img))
+                {
+                    unlink($img);
+                }
+
+                $html = $this->objConfig->getcontentBasePath().'webpresent/'.$fileId.'/img'.($slide['slideorder']-1).'.html';
+                if (file_exists($html))
+                {
+                    unlink($html);
+                }
+
+                $text = $this->objConfig->getcontentBasePath().'webpresent/'.$fileId.'/text'.($slide['slideorder']-1).'.html';
+                if (file_exists($text))
+                {
+                    unlink($text);
+                }
+
             }
         }
     }

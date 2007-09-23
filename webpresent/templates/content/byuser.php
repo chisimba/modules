@@ -56,7 +56,8 @@ if (count($files) == 0) {
 
     echo '</strong></p>';
 
-    echo $this->objFiles->displayAsTable($files);
+    $objViewer = $this->getObject('viewer');
+    echo $objViewer->displayAsTable($files);
 
 
 }

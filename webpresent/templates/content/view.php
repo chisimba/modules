@@ -78,7 +78,7 @@ $objView = $this->getObject("viewer", "webpresent");
 $flashContent = $objView->showFlash($file['id']);
 
 /*
- * 
+ *
  *
  *REPLACE WITH VEIWER
  *$flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
@@ -105,19 +105,19 @@ $rightCell = '';
 //$rightCell = '<p><strong>Title of Presentation:</strong> '.$file['title'].'</p>';
 
 if ($file['description'] != '') {
-    $rightCell .= '<p><strong>' 
-      . $this->objLanguage->languageText("word_description") 
+    $rightCell .= '<p><strong>'
+      . $this->objLanguage->languageText("word_description")
       . ':</strong><br /> '
       .nl2br(htmlentities($file['description']))
       .'</p>';
 }
 
-$rightCell .=  '<p><strong>' 
-  . $this->objLanguage->languageText("word_tags") 
+$rightCell .=  '<p><strong>'
+  . $this->objLanguage->languageText("word_tags")
   . ':</strong> ';
 
 if (count($tags) == 0) {
-    $rightCell .=  '<em>' 
+    $rightCell .=  '<em>'
     . $this->objLanguage->languageText("mod_webpresent_notags", "webpresent")
     . ' </em>';
 } else {
@@ -138,8 +138,8 @@ $license = ($file['cclicense'] == '' ? 'copyright' : $file['cclicense']);
 
 $rightCell .=  '<p>'.$objDisplayLicense->show($license).'</p>';
 
-$rightCell .=  '<h3>' 
-  . $this->objLanguage->languageText("word_download") 
+$rightCell .=  '<h3>'
+  . $this->objLanguage->languageText("word_download")
   . '</h3>';
 
 $fileTypes = array('odp'=>'OpenOffice Impress Presentation', 'ppt'=>'PowerPoint Presentation', 'pdf'=>'PDF Document');
@@ -176,11 +176,11 @@ $this->loadClass('textinput','htmlelements');
 $filterBox=new textinput('filter');
 $filterBox->size=60;
 $filterBox->setValue("[WPRESENT: id=" . $file['id'] . "]");
-$rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filter", "webpresent") 
+$rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filter", "webpresent")
   . "</strong>: " . $filterBox->show() . "<br />"
-  . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent") 
+  . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent")
   . "</p>";
-  
+
  // End of output the filter code.
 
 $table = $this->newObject('htmltable', 'htmlelements');
@@ -201,8 +201,37 @@ echo $objTabs->show();
 $homeLink = new link ($this->uri(NULL));
 $homeLink->link = $this->objLanguage->languageText("phrase_backhome");
 
+$bottomLinks = array();
+
+$bottomLinks[] = $homeLink->show();
+
+if ($this->isValid('regenerate'))
+{
+    $flashLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
+    $flashLink->link = 'Regenerate Flash';
+    $bottomLinks[] = $flashLink->show();
+
+    $slidesLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'slides', 'id'=>$file['id'])));
+    $slidesLink->link = 'Slides';
+    $bottomLinks[] = $slidesLink->show();
+
+    $pdfLink = new link ($this->uri(array('action'=>'regenerate', 'type'=>'pdf', 'id'=>$file['id'])));
+    $pdfLink->link = 'PDF';
+    $bottomLinks[] = $pdfLink->show();
 
 
-echo '<p>'.$homeLink->show().'</p>';
+}
+
+
+
+echo '<p>';
+$divider = '';
+foreach ($bottomLinks as $link)
+{
+    echo $divider.$link;
+    $divider = ' | ';
+}
+
+echo '</p>';
 
 ?>

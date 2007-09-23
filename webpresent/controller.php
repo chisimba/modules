@@ -30,7 +30,7 @@ class webpresent extends controller
      */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -219,6 +219,8 @@ class webpresent extends controller
         $this->setVarByRef('slideContent', $slideContent);
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
+
+        $this->setVar('pageTitle', $this->objConfig->getSiteName().' - '.$file['title']);
 
         return 'view.php';
     }
@@ -539,19 +541,22 @@ class webpresent extends controller
 
     function __latestrssfeed()
     {
-        echo $this->objFiles->getLatestFeed();
+        $objViewer = $this->getObject('viewer');
+        echo $objViewer->getLatestFeed();
     }
 
     function __tagrss()
     {
         $tag = $this->getParam('tag');
-        echo $this->objTags->getTagFeed($tag);
+        $objViewer = $this->getObject('viewer');
+        echo $objViewer->getTagFeed($tag);
     }
 
     function __userrss()
     {
         $userid = $this->getParam('userid');
-        echo $this->objFiles->getUserFeed($userid);
+        $objViewer = $this->getObject('viewer');
+        echo $objViewer->getUserFeed($userid);
     }
 
     function __rebuildsearch()
@@ -691,6 +696,16 @@ class webpresent extends controller
         $query = $this->getParam('q');
 
         return 'search.php';
+    }
+
+    public function __regenerate()
+    {
+        $id = $this->getParam('id');
+        $type = $this->getParam('type');
+
+        $result = $this->objFiles->regenerateFile($id, $type);
+
+        return $this->nextAction('view', array('id'=>$id, 'message'=>'regeneration', 'type'=>$type, 'result'=>$result));
     }
 
 }

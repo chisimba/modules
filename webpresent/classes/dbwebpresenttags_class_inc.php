@@ -209,46 +209,6 @@ class dbwebpresenttags extends dbtable
         return $this->delete('fileid', $id);
     }
 
-    public function getTagFeed($tag)
-    {
-        $objUser = $this->getObject('user', 'security');
-        $objConfig = $this->getObject('altconfig', 'config');
-        $objFile = $this->getObject('dbwebpresentfiles');
 
-        $objFeedCreator = $this->getObject('feeder', 'feed');
-        $objFeedCreator->setupFeed(TRUE, $objConfig->getSiteName().' - Tag: '.$tag, 'A List of Presentations with tag - '.$tag, $objConfig->getsiteRoot(),$this->uri(array('action'=>'latestrssfeed')));
-
-        $latestFiles = $this->getFilesWithTag($tag);
-
-        if (count($latestFiles) > 0)
-        {
-            $this->loadClass('link', 'htmlelements');
-            $objDate = $this->getObject('dateandtime', 'utilities');
-
-            foreach ($latestFiles as $file)
-            {
-
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
-                } else {
-                    $filename = htmlentities($file['title']);
-                }
-
-                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
-
-                $imgLink = new link($link);
-                $imgLink->link = $objFile->getPresentationThumbnail($file['id'], $filename);
-
-                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
-
-
-                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $objUser->fullName($file['creatorid']), $date);
-            }
-
-
-        }
-
-        return $objFeedCreator->output();
-    }
 }
 ?>

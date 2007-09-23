@@ -51,7 +51,8 @@ if (count($files) == 0) {
 
     echo '</strong></p>';
 
-    echo $this->objFiles->displayAsTable($files);
+    $objViewer = $this->getObject('viewer');
+    echo $objViewer->displayAsTable($files);
 
 }
 
@@ -59,5 +60,5 @@ $homeLink = new link ($this->uri(NULL));
 $homeLink->link = 'Back to Home';
 
 echo '<p>'.$homeLink->show().'</p>';
-?>
 
+?>
