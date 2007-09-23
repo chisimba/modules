@@ -31,6 +31,7 @@ class webpresenttoolbar extends object
             array('action'=>'search', 'text'=>'Search', 'actioncheck'=>array('search'), 'module'=>'webpresent', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Blog', 'actioncheck'=>array(), 'module'=>'blog', 'status'=>'both'),
             array('action'=>NULL, 'text'=>'Admin', 'actioncheck'=>array(), 'module'=>'toolbar', 'status'=>'admin'),
+            array('action'=>NULL, 'text'=>'My Details', 'actioncheck'=>array(), 'module'=>'userdetails', 'status'=>'loggedin'),
             array('action'=>'login', 'text'=>'Login', 'actioncheck'=>array('login'), 'module'=>'webpresent', 'status'=>'login'),
             array('action'=>'login', 'text'=>'Register', 'actioncheck'=>array(), 'module'=>'userregistration', 'status'=>'login'),
             array('action'=>'logoff', 'text'=>'Logout', 'actioncheck'=>array(), 'module'=>'security', 'status'=>'loggedin'),
