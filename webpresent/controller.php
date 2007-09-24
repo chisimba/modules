@@ -222,7 +222,29 @@ class webpresent extends controller
 
         $this->setVar('pageTitle', $this->objConfig->getSiteName().' - '.$file['title']);
 
+        $objViewCounter = $this->getObject('dbwebpresentviewcounter');
+        $objViewCounter->addView($id);
+
         return 'view.php';
+    }
+
+    function __download()
+    {
+        $id = $this->getParam('id');
+        $type = $this->getParam('type');
+
+        $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.'.$type;
+
+        if (file_exists($fullPath)) {
+            $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/'.$id.'.'.$type;
+
+            $objDownloadCounter = $this->getObject('dbwebpresentdownloadcounter');
+            $objDownloadCounter->addDownload($id, $type);
+
+            header('Location:'.$relLink);
+        } else {
+            return $this->nextAction(NULL, array('error'=>'cannotfindfile'));
+        }
     }
 
 

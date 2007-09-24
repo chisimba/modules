@@ -155,8 +155,8 @@ foreach ($fileTypes as $fileType=>$fileName)
     $fullPath = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
 
     if (file_exists($fullPath)) {
-        $relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
-        $link = new link($relLink);
+        //$relLink = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.'.$fileType;
+        $link = new link($this->uri(array('action'=>'download', 'id'=>$file['id'], 'type'=>$fileType)));
         $link->link = $objFileIcons->getExtensionIcon($fileType).' '.$fileName;
 
         $rightCell .= '<li>'.$link->show().'</li>';
