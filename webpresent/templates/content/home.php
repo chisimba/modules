@@ -1,3 +1,4 @@
+<br />
 <?php
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -83,8 +84,25 @@ if ($this->objUser->isLoggedIn()) {
     $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
 }
 
+$objDownloadCounter = $this->getObject('dbwebpresentdownloadcounter');
+$downloadTable = $objDownloadCounter->getMostDownloadedTodayTable();
+
+$objViewCounter = $this->getObject('dbwebpresentviewcounter');
+$viewTable = $objViewCounter->getMostViewedTodayTable();
+
+$statsTable = $this->newObject('htmltable', 'htmlelements');
+$statsTable->startRow();
+$statsTable->addCell($viewTable, '49%');
+$statsTable->addCell('&nbsp;', '2%');
+$statsTable->addCell($downloadTable, '49%');
+$statsTable->endRow();
+
+$leftContents .= $statsTable->show();
+
+//$objLatestBlogs = $this->getObject('block_lastten'
 
 $table->addCell($leftContents, '60%', 'top', 'left');
+$table->addCell('&nbsp;&nbsp;&nbsp;', '3%');
 
 
 
@@ -125,7 +143,7 @@ if (count($latestFiles) == 0) {
     $latestFilesContent .= '<br clear="left" />'.$rssLink->show();
 
 }
-$table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '40%');
+$table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '37%');
 
 $table->endRow();
 

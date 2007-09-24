@@ -35,6 +35,75 @@ class dbwebpresentdownloadcounter extends dbtable
             ));
     }
 
+    public function getMostDownloadedToday()
+    {
+        $sql = 'SELECT tbl_webpresent_files . * , (
+
+SELECT count( * )
+FROM tbl_webpresent_downloads
+WHERE tbl_webpresent_files.id = tbl_webpresent_downloads.fileid
+) AS downloadcount
+FROM tbl_webpresent_files
+WHERE (
+
+SELECT count( * ) AS downloadcount
+FROM tbl_webpresent_downloads
+WHERE tbl_webpresent_files.id = tbl_webpresent_downloads.fileid
+) > 0
+ORDER BY (
+SELECT count( * ) AS downloadcount
+FROM tbl_webpresent_downloads
+WHERE tbl_webpresent_files.id = tbl_webpresent_downloads.fileid
+) DESC LIMIT 5';
+        return $this->getArray($sql);
+    }
+
+    public function getMostDownloadedTodayTable()
+    {
+        $files = $this->getMostDownloadedToday();
+
+        $str = 'Most Downloaded Today';
+
+        $content = '';
+
+        if (count($files) > 0)
+        {
+            $table = $this->newObject('htmltable', 'htmlelements');
+/*
+            $table->startHeaderRow();
+            $table->addHeaderCell('&nbsp;', 20);
+            $table->addHeaderCell('Presentation');
+            $table->addHeaderCell('Downloads', 20, NULL, 'center');
+            $table->endHeaderRow();
+*/
+            $counter = 0;
+
+            $this->loadClass('link', 'htmlelements');
+
+            foreach ($files as $file)
+            {
+                $counter++;
+                $table->startRow();
+                $table->addCell($counter.'.', 20, 'top', 'center');
+
+                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $fileLink->link = $file['title'];
+
+                $table->addCell($fileLink->show());
+                $table->addCell($file['downloadcount'], 20, 'top', 'center');
+
+                $table->endRow();
+            }
+
+            $content = $table->show();
+        }
+
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+
+        return $objFeatureBox->show($str, $content);
+
+    }
+
 
 }
 ?>
