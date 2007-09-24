@@ -18,7 +18,8 @@ $fields = array(
         'notnull' => TRUE,
         ),
     'url' => array (
-        'type'=>'text'
+        'type'=>'text',
+        'length'=>255,
         ),
     'dateembedded' => array(
         'type' => 'date',
@@ -37,7 +38,6 @@ $name = 'webpresent_embeds_index';
 $indexes = array(
     'fields' => array(
         'fileid' => array(),
-        'url' => array(),
         'dateembedded' => array()
         )
     );
