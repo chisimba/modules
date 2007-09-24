@@ -65,6 +65,7 @@ class ajaxuploader extends object
         // File Input
         $fileInput = new textinput('fileupload');
         $fileInput->fldType = 'file';
+        $fileInput->size = 60;
         $fileInput->extra = 'onchange="changeFileName(\''.$id.'\');"';
 
         // Button
