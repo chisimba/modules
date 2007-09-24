@@ -198,6 +198,8 @@ class viewer extends object
                 if (($counter%2) == 0)
                 {
                     $table->endRow();
+                } else {
+                    $table->addCell('&nbsp;', '20');
                 }
 
                 $divider = 'addrow';

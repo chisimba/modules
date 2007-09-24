@@ -97,7 +97,7 @@ $statsTable->addCell('&nbsp;', '2%');
 $statsTable->addCell($downloadTable, '49%');
 $statsTable->endRow();
 
-$leftContents .= $statsTable->show();
+$leftContents .= '<br />'.$statsTable->show();
 
 //$objLatestBlogs = $this->getObject('block_lastten'
 
