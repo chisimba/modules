@@ -306,7 +306,7 @@ class blog extends controller
 
 				//get the userid if set
 				$userid = $this->getParam('userid');
-				if (!isset($userid)) {
+				if ($userid == '') {
 					$this->nextAction('allblogs');
 					exit;
 					/**
