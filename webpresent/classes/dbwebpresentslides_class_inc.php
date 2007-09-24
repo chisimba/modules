@@ -58,7 +58,7 @@ class dbwebpresentslides extends dbtable
         $dir = $this->objConfig->getcontentBasePath().'webpresent/'.$id;
 
         // Load Scanner
-        $objScan = $this->getObject('scanpresentation');
+        $objScan = $this->newObject('scanpresentation');
 
         // Scan Directory - Only relevant files are returned
         $results = $objScan->scanDirectory($dir);
