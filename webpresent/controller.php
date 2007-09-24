@@ -708,5 +708,24 @@ class webpresent extends controller
         return $this->nextAction('view', array('id'=>$id, 'message'=>'regeneration', 'type'=>$type, 'result'=>$result));
     }
 
+    function __listall()
+    {
+        $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');
+
+        if (count($results) > 0)
+        {
+            $this->loadClass('link', 'htmlelements');
+
+            foreach ($results as $file)
+            {
+                $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'slides', 'id'=>$file['id'])));
+                $link->link = $file['title'];
+
+                echo $link->show().'<br />';
+            }
+        }
+
+    }
+
 }
 ?>
