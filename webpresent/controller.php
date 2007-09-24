@@ -585,6 +585,10 @@ class webpresent extends controller
     {
         $files = $this->objFiles->getAll();
 
+        $objWebPresentSearch = $this->getObject('webpresentsearch');
+        $objWebPresentSearch->clearCache();
+        //return '';
+
         if (count($files) > 0)
         {
             $file = $files[0];
@@ -599,6 +603,8 @@ class webpresent extends controller
                 $this->_prepareDataForSearch($file);
             }
         }
+
+        return $this->nextAction(NULL);
 
     }
 
@@ -651,20 +657,20 @@ class webpresent extends controller
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject('user', 'security');
         $indexPath = $this->objConfig->getcontentBasePath();
-        if (file_exists($indexPath . 'chisimbaIndex/segments')) {
-            @chmod($indexPath . 'chisimbaIndex', 0777);
+        if (file_exists($indexPath . 'webpresentsearch/segments')) {
+            @chmod($indexPath . 'webpresentsearch', 0777);
             //we build onto the previous index
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', false);
+            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', false);
 
 
-            echo 'Add to Index';
+            //echo 'Add to Index';
         } else {
             //instantiate the lucene engine and create a new index
-            @mkdir($indexPath . 'chisimbaIndex');
-            @chmod($indexPath . 'chisimbaIndex', 0777);
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', true);
+            @mkdir($indexPath . 'webpresentsearch');
+            @chmod($indexPath . 'webpresentsearch', 0777);
+            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', true);
 
-            echo 'Create New Index';
+            //echo 'Create New Index';
         }
         //hook up the document parser
         $document = new Zend_Search_Lucene_Document();
@@ -701,7 +707,7 @@ class webpresent extends controller
         //document body
         //NOTE: this is not actually put into the index, so as to keep the index nice and small
         //      only a reference is inserted to the index.
-        $document->addField(Zend_Search_Lucene_Field::Text('contents', $file['content']));
+        $document->addField(Zend_Search_Lucene_Field::Text('contents', strtolower($file['content'])));
         //what else do we need here???
         //add the document to the index
         $index->addDocument($document);
@@ -713,9 +719,11 @@ class webpresent extends controller
     }
 
 
-    public function __search_underconstruction()
+    public function __search()
     {
         $query = $this->getParam('q');
+
+        $this->setVarByRef('query', $query);
 
         return 'search.php';
     }

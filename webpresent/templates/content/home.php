@@ -9,6 +9,15 @@ $this->loadClass('hiddeninput', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
+
+
+$table = $this->newObject('htmltable', 'htmlelements');
+
+$table->startRow();
+
+//--------- ADDED BY DEREK FOR EMAIL
+// Add the tag cloud to the left contents.
+
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
 $form->method = 'GET';
 
@@ -23,18 +32,12 @@ $textinput->size = 60;
 $button = new button ('search', 'Search');
 $button->setToSubmit();
 
-$form->addToForm($textinput->show().' '.$button->show());
+$form->addToForm('<div align="center">'.$textinput->show().' '.$button->show().'</div>');
 
 // Turn off so long
-//echo $form->show();
 
-$table = $this->newObject('htmltable', 'htmlelements');
 
-$table->startRow();
-
-//--------- ADDED BY DEREK FOR EMAIL
-// Add the tag cloud to the left contents.
-$leftContents = "";
+$leftContents = $form->show();
 // Make a tabbed box
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->width = '95%';
