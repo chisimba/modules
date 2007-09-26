@@ -14,36 +14,21 @@ $fields = array(
 		'type' => 'text',
 		'length' => 25
 	),
-	'contactid' => array(
-		'type' => 'text',
+	'cellnumber' => array(
+		'type' => 'integer',
 		'length' => 25
 	),
-	'iscontact' => array(
-		'type' => 'text',
-		'length' => 1
+	'landlinenumber' => array(
+		'type' => 'integer',
+		'length' => 25
 	),
-	'isfriend' => array(
+	'address' => array(
 		'type' => 'text',
-		'length' => 1
+		'length' => 255
 	),	
 	'updated' => array(
 	'type' => 'timestamp'
 	),
-	'created_by' => array(
-		'type' => 'text',
-      'length' => 32,
-	),
-    'created_by_alias' => array(
-		'type' => 'text',
-   	'length' => 100
-	),
-    'modified' => array(
-		'type' => 'timestamp',
-	),
-	 'modified_by' => array(
-		'type' => 'integer',
-      'length' => 11,
-      'unsigned' => TRUE,
-   ),   
+	
 );
 ?>
