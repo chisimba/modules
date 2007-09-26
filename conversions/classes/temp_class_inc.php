@@ -124,6 +124,5 @@ class temp extends object
         }
     }
 }
-$final = new tempConv;
-echo $final->showAll(); 
+
 ?>
