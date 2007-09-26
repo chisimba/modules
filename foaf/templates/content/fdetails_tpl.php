@@ -120,7 +120,7 @@ $foafLinks = $this->objLanguage->languageText('mod_foaf_foaflinks', 'foaf');
 $noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('FIELD' => $predicate ,'VALUE' => $object));
 //$noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('NR'FIELD' => $predicate ,'VALUE' => $object));
 $game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
-
+$noResultsMsg = null;
 $matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object , $noResultsMsg);
 /*echo "<div style='color:white;'>";
 //var_dump($matches);
@@ -241,8 +241,8 @@ $this->appendArrayVar('headerParams',$script);
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
 $this->appendArrayVar('headerParams', $css);
 
-		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
-		$this->appendArrayVar('headerParams', $css);
+		//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
+		//$this->appendArrayVar('headerParams', $css);
 
 
 

@@ -184,14 +184,14 @@ class foafui extends object {
 	}
 
 
-//friends
+	//friends
 	public function manageFriends()
 	{
 
-			//add/remove friends
-	$addFriendsForm = $this->objFoafOps->addDD();
-	$remFriendsForm = $this->objFoafOps->remDD();
-	return $addFriendsForm->show() .$remFriendsForm->show() ;
+		//add/remove friends
+		$addFriendsForm = $this->objFoafOps->addDD();
+		$remFriendsForm = $this->objFoafOps->remDD();
+		return $addFriendsForm->show() .$remFriendsForm->show() ;
 
 	}
 
@@ -202,7 +202,7 @@ class foafui extends object {
 		$manageFriends = new href($this->uri(array('action' => 'admin' , 'content' => 'fndadmin')) , $this->objLanguage->languageText('mod_foaf_mngfriends' , 'foaf'));
 
 
-	
+
 		if (isset($tcont->foaf['knows'])) {
 			if (is_array($tcont->foaf['knows'])) {
 				foreach($tcont->foaf['knows'] as $pals) {
@@ -214,20 +214,20 @@ class foafui extends object {
 			$myFbox = NULL;
 			foreach($info as $okes) {
 
-			      if($okes[2] == 'Person')
-			      {					
-				$objFeatureBox = $this->newObject('featurebox', 'navigation');
-				//take the pfimage and the pfbox
-				$table2 = $this->newObject('htmltable', 'htmlelements');
-				$table2->cellpadding = 5;
-				$table2->startRow();
-				$table2->addCell($okes[0]);
-				$table2->addCell($okes[1]);
-				$table2->endRow();
-				$mypfbox.= $table2->show() ."<br />";
-				$myFbox.= $objFeatureBox->show($okes[3], $mypfbox) ."<br />";
-				$mypfbox = NULL;
-                               }
+				if($okes[2] == 'Person')
+				{
+					$objFeatureBox = $this->newObject('featurebox', 'navigation');
+					//take the pfimage and the pfbox
+					$table2 = $this->newObject('htmltable', 'htmlelements');
+					$table2->cellpadding = 5;
+					$table2->startRow();
+					$table2->addCell($okes[0]);
+					$table2->addCell($okes[1]);
+					$table2->endRow();
+					$mypfbox.= $table2->show() ."<br />";
+					$myFbox.= $objFeatureBox->show($okes[3], $mypfbox) ."<br />";
+					$mypfbox = NULL;
+				}
 			}
 		} else {
 			$myFriendsForm = $this->objFoafOps->addDD();
@@ -240,7 +240,7 @@ class foafui extends object {
 	}
 
 
-//organizations
+	//organizations
 	public function manageOrgs()
 	{
 
@@ -256,7 +256,7 @@ class foafui extends object {
 		$myorgs .= $manageOrgs->show();
 
 		//build the featureboxen for the orgs
-		
+
 		if (!array_key_exists('knows', $tcont->foaf)) {
 			$tcont->foaf['knows'] = array();
 		}
@@ -297,12 +297,12 @@ class foafui extends object {
 	{
 		return $this->objFoafOps->remFunderForm() . $this->objFoafOps->addFunderForm();
 	}
-	
+
 
 
 	public function foafFunders($tcont)
 	{
-	
+
 
 		$myfunders = NULL;
 		$manageFuns = new href($this->uri(array('action' => 'admin' , 'content' => 'fnsadmin')) , $this->objLanguage->languageText('mod_foaf_mngfunders' , 'foaf'));
@@ -311,42 +311,42 @@ class foafui extends object {
 		//build the featureboxen for the funders
 
 		if (!array_key_exists('fundedby', $tcont->foaf)) {
-		  $tcont->foaf['fundedby'] = array();
+			$tcont->foaf['fundedby'] = array();
 		}
 		if (!isset($tcont->foaf['fundedby'])) {
 			$tcont->foaf['fundedby'] = array();
 		}
-		
-	if(!empty($tcont->foaf['fundedby']))
-	{
-		$myfunFbox = NULL;
-		$myfunbox = NULL;
-       	$link = NULL;
 
-          
-		
+		if(!empty($tcont->foaf['fundedby']))
+		{
+			$myfunFbox = NULL;
+			$myfunbox = NULL;
+			$link = NULL;
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$tablefuns = $this->newObject('htmltable', 'htmlelements');
-		$tablefuns->cellpadding = 5;
 
-		foreach($tcont->foaf['fundedby'] as $funder) {
-			
-  				$page = new href(htmlentities($funder) , htmlentities($funder));
-    				$link = $page->show();					
+
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$tablefuns = $this->newObject('htmltable', 'htmlelements');
+			$tablefuns->cellpadding = 5;
+
+			foreach($tcont->foaf['fundedby'] as $funder) {
+
+				$page = new href(htmlentities($funder) , htmlentities($funder));
+				$link = $page->show();
 				$tablefuns->startRow();
 				$tablefuns->addCell("<em>".$funder."</em>");
 				$tablefuns->addCell($link);
 				$tablefuns->endRow();
-			
+
+			}
+
+			$myfunbox.= $tablefuns->show() ."<br />";
+			$myfunFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_funders', 'foaf'), $myfunbox) ."<br />";
+
+			$myfunders.= $myfunFbox;
+
 		}
-
-		$myfunbox.= $tablefuns->show() ."<br />";
-		$myfunFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_funders', 'foaf'), $myfunbox) ."<br />";
-
-		$myfunders.= $myfunFbox;
-		
-	 }	
 		return $myfunders;
 	}
 
@@ -373,42 +373,42 @@ class foafui extends object {
 		//build the featureboxen for user interests
 
 		if (!array_key_exists('interest', $tcont->foaf)) {
-		  $tcont->foaf['interest'] = array();
+			$tcont->foaf['interest'] = array();
 		}
 		if (!isset($tcont->foaf['interest'])) {
 			$tcont->foaf['interest'] = array();
 		}
-		
-	if(!empty($tcont->foaf['interest']))
-	{
-		$myintFbox = NULL;
-		$myintbox = NULL;
-       	$link = NULL;
 
-          
-		
+		if(!empty($tcont->foaf['interest']))
+		{
+			$myintFbox = NULL;
+			$myintbox = NULL;
+			$link = NULL;
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$table = $this->newObject('htmltable', 'htmlelements');
-		$table->cellpadding = 5;
 
-		foreach($tcont->foaf['interest'] as $interest) {
-			
-  				$page = new href(htmlentities($interest) , htmlentities($interest));
-    				$link = $page->show();					
+
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$table = $this->newObject('htmltable', 'htmlelements');
+			$table->cellpadding = 5;
+
+			foreach($tcont->foaf['interest'] as $interest) {
+
+				$page = new href(htmlentities($interest) , htmlentities($interest));
+				$link = $page->show();
 				$table->startRow();
 				$table->addCell("<em>".$interest."</em>");
 				$table->addCell($link);
 				$table->endRow();
-			
+
+			}
+
+			$myintbox.= $table->show() ."<br />";
+			$myintFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_interests', 'foaf'), $myintbox) ."<br />";
+
+			$myints.= $myintFbox;
+
 		}
-
-		$myintbox.= $table->show() ."<br />";
-		$myintFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_interests', 'foaf'), $myintbox) ."<br />";
-
-		$myints.= $myintFbox;
-		
-	 }	
 		return $myints;
 	}
 
@@ -433,48 +433,48 @@ class foafui extends object {
 		//build the featureboxen for user depictions
 
 		if (!array_key_exists('depiction', $tcont->foaf)) {
-		  $tcont->foaf['depiction'] = array();
+			$tcont->foaf['depiction'] = array();
 		}
 		if (!isset($tcont->foaf['depiction'])) {
 			$tcont->foaf['depiction'] = array();
 		}
-		
-	if(!empty($tcont->foaf['depiction']))
-	{
-		$mydepFbox = NULL;
-		$mydepbox = NULL;
-       	$link = NULL;
 
-          
-		
+		if(!empty($tcont->foaf['depiction']))
+		{
+			$mydepFbox = NULL;
+			$mydepbox = NULL;
+			$link = NULL;
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$table = $this->newObject('htmltable', 'htmlelements');
-		$table->cellpadding = 5;
 
-		foreach($tcont->foaf['depiction'] as $depiction) {
-			
-  				$page = new href(htmlentities($depiction) , htmlentities($depiction));
-    				$link = $page->show();					
+
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$table = $this->newObject('htmltable', 'htmlelements');
+			$table->cellpadding = 5;
+
+			foreach($tcont->foaf['depiction'] as $depiction) {
+
+				$page = new href(htmlentities($depiction) , htmlentities($depiction));
+				$link = $page->show();
 				$table->startRow();
 				$table->addCell("<em>".$depiction."</em>");
 				$table->addCell($link);
 				$table->endRow();
-			
+
+			}
+
+			$mydepbox.= $table->show() ."<br />";
+			$mydepFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_depictions', 'foaf'), $mydepbox) ."<br />";
+
+			$mydeps.= $mydepFbox;
+
 		}
-
-		$mydepbox.= $table->show() ."<br />";
-		$mydepFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_depictions', 'foaf'), $mydepbox) ."<br />";
-
-		$mydeps.= $mydepFbox;
-		
-	 }	
 		return $mydeps;
 	}
 
 
 
-//pages
+	//pages
 
 	public function managePages()
 	{
@@ -492,104 +492,104 @@ class foafui extends object {
 		//build the featureboxen for user pages
 
 		if (!array_key_exists('page', $tcont->foaf)) {
-		  $tcont->foaf['page'] = array();
+			$tcont->foaf['page'] = array();
 		}
 		if (!isset($tcont->foaf['page'])) {
 			$tcont->foaf['page'] = array();
 		}
 
 
-		
+
 		if (!array_key_exists('title', $tcont->foaf[0])) {
-		  $tcont->foaf[0]['title'] = array();
+			$tcont->foaf[0]['title'] = array();
 		}
 		if (!isset($tcont->foaf[0]['title'])) {
 			$tcont->foaf[0]['title'] = array();
 		}
 
-		
+
 		if (!array_key_exists('description', $tcont->foaf[0])) {
-		  $tcont->foaf[0]['description'] = array();
+			$tcont->foaf[0]['description'] = array();
 		}
 		if (!isset($tcont->foaf[0]['description'])) {
 			$tcont->foaf[0]['description'] = array();
 		}
 
 
-		
-		
-	if(!empty($tcont->foaf['page']))
-	{
-		$mypageFbox = NULL;
-		$mypagebox = NULL;
-       		
 
 
-		
-		//builds pages feature box
+		if(!empty($tcont->foaf['page']))
+		{
+			$mypageFbox = NULL;
+			$mypagebox = NULL;
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$table = $this->newObject('htmltable', 'htmlelements');
-		$table->cellpadding = 5;
-		$table->cellspacing = 5;
-		$table->startHeaderRow();
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_page', 'foaf'), NULL, 'top' , 'center');
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
-		$table->endHeaderRow();
-		
-		foreach($tcont->foaf['page'] as $pg)
- 		{
-			$pageTitle = NULL;
-			$pageDescription = NULL;
-			$link = NULL;	
 
-			if(array_key_exists($pg, $tcont->foaf[0]['title']))
+
+
+			//builds pages feature box
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$table = $this->newObject('htmltable', 'htmlelements');
+			$table->cellpadding = 5;
+			$table->cellspacing = 5;
+			$table->startHeaderRow();
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_page', 'foaf'), NULL, 'top' , 'center');
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
+			$table->endHeaderRow();
+
+			foreach($tcont->foaf['page'] as $pg)
 			{
-				$pageTitle = "".$tcont->foaf[0]['title'][$pg];
-			} else {
-				$pageTitle = "<em>".$this->objLanguage->languageText('mod_foaf_notitle', 'foaf')."</em>";
-			}
-         	
+				$pageTitle = NULL;
+				$pageDescription = NULL;
+				$link = NULL;
 
-		
-			if(array_key_exists($pg, $tcont->foaf[0]['description']))
-			{
-				$pageDescription = "". $tcont->foaf[0]['description'][$pg];
-			} else {
-				$pageDescription = "<em>".$this->objLanguage->languageText('mod_foaf_nodescription', 'foaf')."</em>";
-			}
-         	
-  				$page = new href(htmlentities($pg) , htmlentities($pg));
-    				$link = $page->show();					
+				if(array_key_exists($pg, $tcont->foaf[0]['title']))
+				{
+					$pageTitle = "".$tcont->foaf[0]['title'][$pg];
+				} else {
+					$pageTitle = "<em>".$this->objLanguage->languageText('mod_foaf_notitle', 'foaf')."</em>";
+				}
+
+
+
+				if(array_key_exists($pg, $tcont->foaf[0]['description']))
+				{
+					$pageDescription = "". $tcont->foaf[0]['description'][$pg];
+				} else {
+					$pageDescription = "<em>".$this->objLanguage->languageText('mod_foaf_nodescription', 'foaf')."</em>";
+				}
+
+				$page = new href(htmlentities($pg) , htmlentities($pg));
+				$link = $page->show();
 				$table->startRow();
 				$table->addCell($pageTitle);
 				$table->addCell("<em>".$link."</em>");
 				$table->addCell($pageDescription);
 				$table->endRow();
-			
+
+			}
+
+			$mypagebox.= $table->show() ."<br />";
+			$mypageFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_pages', 'foaf'), $mypagebox) ."<br />";
+
+			$mypages.= $mypageFbox;
+
 		}
-
-		$mypagebox.= $table->show() ."<br />";
-		$mypageFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_pages', 'foaf'), $mypagebox) ."<br />";
-
-		$mypages.= $mypageFbox;
-		
-	 }	
 		return $mypages;
 	}
 
-//accounts
+	//accounts
 	public function manageAccounts()
 	{
-           $manageAcs = $this->objFoafOps->remAccountForm() . $this->objFoafOps->addAccountForm();
-	  	if($this->objUser->isAdmin())
+		$manageAcs = $this->objFoafOps->remAccountForm() . $this->objFoafOps->addAccountForm();
+		if($this->objUser->isAdmin())
 		{
-		    $manageAcs .= $this->foafAccountTypes();
-			
-		 }
-	   return $manageAcs;
- 	}
+			$manageAcs .= $this->foafAccountTypes();
+
+		}
+		return $manageAcs;
+	}
 
 
 	public function foafAccounts($tcont)
@@ -598,62 +598,62 @@ class foafui extends object {
 		//build the featureboxen for user accounts
 
 		if (!array_key_exists('holdsaccount', $tcont->foaf)) {
-		  $tcont->foaf['holdsaccount'] = array();
+			$tcont->foaf['holdsaccount'] = array();
 		}
 		if (!isset($tcont->foaf['holdsaccount'])) {
 			$tcont->foaf['holdsaccount'] = array();
 		}
 
 
-	       $myaccounts = NULL;		
-	       $manageAcs = new href($this->uri(array('action' => 'admin' , 'content' => 'accadmin')) , $this->objLanguage->languageText('mod_foaf_mngaccounts' , 'foaf'));
+		$myaccounts = NULL;
+		$manageAcs = new href($this->uri(array('action' => 'admin' , 'content' => 'accadmin')) , $this->objLanguage->languageText('mod_foaf_mngaccounts' , 'foaf'));
 		$myaccounts .= $manageAcs->show();
-		
-	if(!empty($tcont->foaf['holdsaccount']))
-	{
-		$myaccountFbox = NULL;
-		$myaccountbox = NULL;
-       		
+
+		if(!empty($tcont->foaf['holdsaccount']))
+		{
+			$myaccountFbox = NULL;
+			$myaccountbox = NULL;
 
 
-		
-		//builds accountss feature box
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$table = $this->newObject('htmltable', 'htmlelements');
-		$table->cellpadding = 5;
-		$table->cellspacing = 5;
-		$table->startHeaderRow();
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_account', 'foaf'));
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_servicehomepage', 'foaf'));
-		$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_type', 'foaf'));
-		$table->endHeaderRow();
-		
-		foreach($tcont->foaf['holdsaccount'] as $account)
- 		{
-			$accountName = NULL;
-			$serviceHomepage = NULL;
-			$type = NULL;		
-			$link = NULL;	
 
-			
-         	
-  				$page = new href(htmlentities($account['accountservicehomepage']) , htmlentities($account['accountservicehomepage']));
-    				$link = $page->show();					
+			//builds accountss feature box
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$table = $this->newObject('htmltable', 'htmlelements');
+			$table->cellpadding = 5;
+			$table->cellspacing = 5;
+			$table->startHeaderRow();
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_account', 'foaf'));
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_servicehomepage', 'foaf'));
+			$table->addHeaderCell($this->objLanguage->languageText('mod_foaf_type', 'foaf'));
+			$table->endHeaderRow();
+
+			foreach($tcont->foaf['holdsaccount'] as $account)
+			{
+				$accountName = NULL;
+				$serviceHomepage = NULL;
+				$type = NULL;
+				$link = NULL;
+
+
+
+				$page = new href(htmlentities($account['accountservicehomepage']) , htmlentities($account['accountservicehomepage']));
+				$link = $page->show();
 				$table->startRow();
 				$table->addCell($account['accountname']);
 				$table->addCell("<em>".$link."</em>");
 				$table->addCell($account['type']);
 				$table->endRow();
-			
+
+			}
+
+			$myaccountbox.= $table->show() ."<br />";
+			$myaccountFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_accounts', 'foaf'), $myaccountbox) ."<br />";
+
+			$myaccounts.= $myaccountFbox;
+
 		}
-
-		$myaccountbox.= $table->show() ."<br />";
-		$myaccountFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_accounts', 'foaf'), $myaccountbox) ."<br />";
-
-		$myaccounts.= $myaccountFbox;
-		
-	 }	
 		return $myaccounts;
 	}
 
@@ -664,196 +664,196 @@ class foafui extends object {
 
 	public function foafAccountTypes()
 	{
-		 return $this->objFoafOps->addAccountTypeForm() . $this->objFoafOps->remAccountTypeForm();
-		 
+		return $this->objFoafOps->addAccountTypeForm() . $this->objFoafOps->remAccountTypeForm();
+
 	}
 
-//links
+	//links
 
-/**
+	/**
   *Method that creates forms for adding and removing links
   *returns add and remove links forms
   */
 	public function linksAdmin()
 	{
 
-           return $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
-  
+		return $this->objFoafOps->remLinkForm() . $this->objFoafOps->addLinkForm();
+
 
 	}
 
 
 	public function foafLinks()
 	{
-	
-	$myLinks = NULL;
-	$manageLinks = NULL;
 
-	if($this->objUser->isAdmin())
-	{
- 		//build admin links link
-                $manageLinks = new href($this->uri(array('action' => 'admin' , 'content' => 'lnkadmin')) , $this->objLanguage->languageText('mod_foaf_mnglinks' , 'foaf'));
-		
-		$mylinks .= $manageLinks->show();
-	}
-	
+		$myLinks = NULL;
+		$manageLinks = NULL;
+
+		if($this->objUser->isAdmin())
+		{
+			//build admin links link
+			$manageLinks = new href($this->uri(array('action' => 'admin' , 'content' => 'lnkadmin')) , $this->objLanguage->languageText('mod_foaf_mnglinks' , 'foaf'));
+
+			$mylinks .= $manageLinks->show();
+		}
 
 
-	//build the featureboxen for the links
-	$links = $this->dbFoaf->getLinks();
 
-	if(!isset($links))
-	{	
-	    $links = array();
-	}
-		
-	if(!empty($links))
-	{
-		$mylinkFbox = NULL;
-		$mylinkbox = NULL;
-      	 	$link = NULL;
+		//build the featureboxen for the links
+		$links = $this->dbFoaf->getLinks();
 
-          
-		
+		if(!isset($links))
+		{
+			$links = array();
+		}
 
-		$objFeatureBox = $this->newObject('featurebox', 'navigation');
-		$tablelinks = $this->newObject('htmltable', 'htmlelements');
-		$tablelinks->cellpadding = 5;
-		$tablelinks->cellspacing = 2;
-		$tablelinks->startHeaderRow();
-		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
-		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_url', 'foaf'), NULL, 'top' , 'center');
-		$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
-		$tablelinks->endHeaderRow();
-		
+		if(!empty($links))
+		{
+			$mylinkFbox = NULL;
+			$mylinkbox = NULL;
+			$link = NULL;
 
-		foreach($links as $lnk) {
-			
-  				$page = new href(htmlentities($lnk['url']) , htmlentities($lnk['url']));
-    				$link = $page->show();					
+
+
+
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			$tablelinks = $this->newObject('htmltable', 'htmlelements');
+			$tablelinks->cellpadding = 5;
+			$tablelinks->cellspacing = 2;
+			$tablelinks->startHeaderRow();
+			$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_title', 'foaf'), NULL, 'top' , 'center');
+			$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_url', 'foaf'), NULL, 'top' , 'center');
+			$tablelinks->addHeaderCell($this->objLanguage->languageText('mod_foaf_description', 'foaf'), NULL, 'top' , 'center');
+			$tablelinks->endHeaderRow();
+
+
+			foreach($links as $lnk) {
+
+				$page = new href(htmlentities($lnk['url']) , htmlentities($lnk['url']));
+				$link = $page->show();
 				$tablelinks->startRow();
 				$tablelinks->addCell($lnk['title']);
 				$tablelinks->addCell("<em>".$link."</em>");
 				$tablelinks->addCell($lnk['description']);
 				$tablelinks->endRow();
-			
+
+			}
+
+			$mylinkbox .= $tablelinks->show() ."<br />";
+			$mylinkFbox .= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_links', 'foaf'), $mylinkbox) ."<br />";
+
+			$mylinks .= $mylinkFbox;
+
 		}
-
-		$mylinkbox .= $tablelinks->show() ."<br />";
-		$mylinkFbox .= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_links', 'foaf'), $mylinkbox) ."<br />";
-
-		$mylinks .= $mylinkFbox;
-		
-	 }	
 		return $mylinks;
 	}
 
 
-//search
-public function foafSearch()
-{
-return $this->objFoafOps->searchForm();
-}
+	//search
+	public function foafSearch()
+	{
+		return $this->objFoafOps->searchForm();
+	}
 
 
-//gallery
-/**
+	//gallery
+	/**
   *Method for creating a gallery made of user depictions
    *@param images =>array => contains the urls of the online images
    *return foaf gallery interface
 **/
-public function foafGallery($images = array() , $page = 1){
+	public function foafGallery($images = array() , $page = 1){
 
-if(!empty($images))
-{
- //Lets divide images in groups of 16 , so we don't have hundreads 
-//of images beng displayed on the screen
- $images = array_chunk($images , 12 , false);
- 
- $table = $this->newObject('htmltable', 'htmlelements');
- $table->id = 'gallery';
- $table->cellspacing = 4;
-/*Dumb row which contains invisible cells.
-  *Such row makes that every row and cell have the same size
-  *If you want to need such properties change it in the foaf.css file
- */
+		if(!empty($images))
+		{
+			//Lets divide images in groups of 16 , so we don't have hundreads
+			//of images beng displayed on the screen
+			$images = array_chunk($images , 12 , false);
 
- $table->startRow('dumb');
- for($i = 0; $i < 4 ; $i++)
- {
-  $table->addCell('&nbsp;' , 0);
- }
- $table->endRow();
+			$table = $this->newObject('htmltable', 'htmlelements');
+			$table->id = 'gallery';
+			$table->cellspacing = 4;
+			/*Dumb row which contains invisible cells.
+			*Such row makes that every row and cell have the same size
+			*If you want to need such properties change it in the foaf.css file
+			*/
 
- //Start row which cells have content
- $table->startRow();
-       //$page specifies the group of images in the group array of images ($images)
-	//as $images is an array groups (indexes) start from 0
- $page = $page - 1 ;
- foreach($images[$page] as  $key => $image){
-    
-    $img = $this->newObject('image' , 'htmlelements');
-    $img->src = $image;
-    $img->width = '100%';
-    $img->height = '100%';	
-    $table->addCell('<a href="'.$image.'" title="'.$this->objLanguage->languageText('mod_foaf_imagelocation' ,'foaf').' '.$image.'" alt="'.$image.'">'.$img->show().'</a>');
-    //put only 4 images in each row
-    if(($key + 1) % 4 == 0)
-    {
-     $table->endRow();
-     $table->startRow();	
-    }
+			$table->startRow('dumb');
+			for($i = 0; $i < 4 ; $i++)
+			{
+				$table->addCell('&nbsp;' , 0);
+			}
+			$table->endRow();
 
-  }
-   $table->endRow();	
-//controls row
-//addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-//addRow($content, $tdClass = null, $row_attributes = null)
-   $table->startRow('controlrow');
-   $pages = '';
-   for($page = 1 ; $page <= count($images); $page++){
-       $link = new href($this->uri(array('action' =>'fields', 'content' => 'gallery' , 'page' => $page)) , $page , 'class="pagelink" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.strtolower($this->objLanguage->languageText('mod_foaf_page' , 'foaf')).' '.$page.'"');
-      if($page != 1)
-      { 
-       $pages .= '- ';
-      }
-      $pages .= $link->show();
-  }
+			//Start row which cells have content
+			$table->startRow();
+			//$page specifies the group of images in the group array of images ($images)
+			//as $images is an array groups (indexes) start from 0
+			$page = $page - 1 ;
+			foreach($images[$page] as  $key => $image){
 
+				$img = $this->newObject('image' , 'htmlelements');
+				$img->src = $image;
+				$img->width = '100%';
+				$img->height = '100%';
+				$table->addCell('<a href="'.$image.'" title="'.$this->objLanguage->languageText('mod_foaf_imagelocation' ,'foaf').' '.$image.'" alt="'.$image.'">'.$img->show().'</a>');
+				//put only 4 images in each row
+				if(($key + 1) % 4 == 0)
+				{
+					$table->endRow();
+					$table->startRow();
+				}
 
-   $table->addCell($pages,0,'middle','center',null,'colspan="4"');	
-   $table->endRow();
-
-   return  $table->show();
- } else {
- $noImages = $this->newObject('htmlheading' , 'htmlelements');
- $noImages->type = 2;
- $noImages->align = 'center';
- $noImages->str = "<em>".$this->objLanguage->languageText('mod_foaf_emptygallery' ,'foaf')."</em>";
- 
- return $noImages ->show();
+			}
+			$table->endRow();
+			//controls row
+			//addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
+			//addRow($content, $tdClass = null, $row_attributes = null)
+			$table->startRow('controlrow');
+			$pages = '';
+			for($page = 1 ; $page <= count($images); $page++){
+				$link = new href($this->uri(array('action' =>'fields', 'content' => 'gallery' , 'page' => $page)) , $page , 'class="pagelink" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.strtolower($this->objLanguage->languageText('mod_foaf_page' , 'foaf')).' '.$page.'"');
+				if($page != 1)
+				{
+					$pages .= '- ';
+				}
+				$pages .= $link->show();
+			}
 
 
-}
-   
+			$table->addCell($pages,0,'middle','center',null,'colspan="4"');
+			$table->endRow();
+
+			return  $table->show();
+		} else {
+			$noImages = $this->newObject('htmlheading' , 'htmlelements');
+			$noImages->type = 2;
+			$noImages->align = 'center';
+			$noImages->str = "<em>".$this->objLanguage->languageText('mod_foaf_emptygallery' ,'foaf')."</em>";
+
+			return $noImages ->show();
 
 
-
-
-}
+		}
 
 
 
 
 
+	}
 
-/**
+
+
+
+
+
+	/**
    *Method for displaying a single friend profile
    *@$tcont=>array contains an array with the friends of the user
    *$@fIndex=>int the index of the friend in the friends array
 **/
-public function showFriend($tcont , $fIndex)
-{
+	public function showFriend($tcont , $fIndex)
+	{
 
 
 		if (isset($tcont->foaf['knows'])) {
@@ -865,23 +865,23 @@ public function showFriend($tcont , $fIndex)
 			//build the featurebox
 			$mypfbox = NULL;
 			$myFbox = NULL;
-			$okes = $info[$fIndex];	
-				$objFeatureBox = $this->newObject('featurebox', 'navigation');
-				//take the pfimage and the pfbox
-				$table2 = $this->newObject('htmltable', 'htmlelements');
-				$table2->cellpadding = 5;
-				$table2->startRow();
-				$table2->addCell($okes[0]);
-				$table2->addCell($okes[1]);
-				$table2->endRow();
-				$mypfbox.= $table2->show() ."<br />";
-				$myFbox.= $objFeatureBox->show($okes[2], $mypfbox) ."<br />";
+			$okes = $info[$fIndex];
+			$objFeatureBox = $this->newObject('featurebox', 'navigation');
+			//take the pfimage and the pfbox
+			$table2 = $this->newObject('htmltable', 'htmlelements');
+			$table2->cellpadding = 5;
+			$table2->startRow();
+			$table2->addCell($okes[0]);
+			$table2->addCell($okes[1]);
+			$table2->endRow();
+			$mypfbox.= $table2->show() ."<br />";
+			$myFbox.= $objFeatureBox->show($okes[2], $mypfbox) ."<br />";
 
 
 		}
 		return $myFbox;
 
-}
+	}
 
 
 
