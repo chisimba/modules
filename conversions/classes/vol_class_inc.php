@@ -62,10 +62,10 @@ else{
     echo showForm();
     echo "Sorry, an error has occured.";
 }
-class volConversion
+class vol extends object
 {
     public $num;
-    public function __construct($num)
+    public function init($num)
     {
         $this->num = $num;     
     }    
