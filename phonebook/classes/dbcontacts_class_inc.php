@@ -1,5 +1,6 @@
 <?php
-/* ----------- data class extends dbTable for tbl_blog------------*/// security check - must be included in all scripts
+/* ----------- data class extends dbTable for ------------*/
+// security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
     {
         die("You cannot view this page directly");
@@ -9,25 +10,27 @@ if (!$GLOBALS['kewl_entry_point_run'])
 /**
 * Model class for the table tbl_phonebook
 * @author 
-
 */
-class dbPhoneContact extends dbTable
+
+class dbcontacts extends dbTable
 {
     /**
     * Constructor method to define the table
     */
     public function init() 
     {
+        // initialize the table
         parent::init('tbl_phonebook');
-        //$this->USE_PREPARED_STATEMENTS=True;
     }
 
     /**
     * Returns an array that contains contactId and Fullname 
+    *
     * ordered by first name where the person is a phonec contact, and 
     * nothing else in the array.
-	* @param string $userId The user ID
-	* @return array The phone details for a user
+    *
+    * @param string $userId The user ID
+    * @return array The phone details for a user
     */
 	public function getContact($userId)
 	{
@@ -42,3 +45,5 @@ class dbPhoneContact extends dbTable
         ORDER BY Fullname";
 		return $this->getArray($sql);
 	}
+}
+?>
