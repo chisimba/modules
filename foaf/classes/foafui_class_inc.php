@@ -686,7 +686,7 @@ class foafui extends object {
 	public function foafLinks()
 	{
 
-		$myLinks = NULL;
+		$mylinks = NULL;
 		$manageLinks = NULL;
 
 		if($this->objUser->isAdmin())
