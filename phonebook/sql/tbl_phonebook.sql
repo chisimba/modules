@@ -14,6 +14,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 25
 	),
+	'contactid' => array(
+		'type' => 'text',
+		'length' => 25
+	),
 	'cellnumber' => array(
 		'type' => 'integer',
 		'length' => 25
