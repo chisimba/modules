@@ -34,16 +34,8 @@ class dbcontacts extends dbTable
     */
 	public function getContact($userId)
 	{
-		$sql = "SELECT 
-            tbl_phonebook.contactId, 
-            CONCAT(tbl_users.firstName, ' ', tbl_users.surname) AS Fullname
-        FROM tbl_phoneboo, tbl_users
-		WHERE 
-		(tbl_buddies.buddyId = tbl_users.userId)
-        AND (tbl_phonebook.userId = '" . $userId . "')k
-        AND (tbl_phonebook.isContact = '1')
-        ORDER BY Fullname";
-		return $this->getArray($sql);
+		$sql = "WHERE userid = '$userId'";
+		return $this->getAll($sql);
 	}
 }
 ?>
