@@ -1,18 +1,27 @@
 <?php
- /*** converts temperature measurements: Kelvin, celcius, and fahrenheit 
-    * <longer description>
-    * @author Nazheera Khan <2524939@uwc.ac.za>, Ebrahim Vasta <2623441@uwc.ac.za> 
+   /**
+    * converts temperature measurements: Kelvin, celcius, and fahrenheit 
+    * 
+    * weihfilwe wepofhiopwef wepofjwopef wepofjpwoefuj
+    * @author Nazheera Khan <2524939@uwc.ac.za> 
+    * @author Ebrahim Vasta <2623441@uwc.ac.za> 
     * @package convertions
-    * copyright UWC 2007
+    * @copyright UWC 2007
     * @filesource
     */ 
-class temperature
+class temp extends object
 {
     public $val;
 
-    public function __construct()
+    public function init()
     {
-        $this->val = $val;
+        // $this->val = $val;
+    }
+
+    public function setup($val)
+    {
+      // set some val....
+      $this->val = $val;
     }
    
     public function convCelsToFahren($val)
