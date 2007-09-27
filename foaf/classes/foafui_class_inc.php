@@ -265,7 +265,7 @@ class foafui extends object {
 
 	public function foafOrgs($tcont)
 	{
-
+		$myorgFbox = NULL;
 		$myorgs = NULL;
 		$manageOrgs = new href($this->uri(array('action' => 'admin' , 'content' => 'orgsadmin')) , $this->objLanguage->languageText('mod_foaf_mngorgs' , 'foaf'));
 		$myorgs .= $manageOrgs->show();
@@ -321,7 +321,7 @@ class foafui extends object {
 			$myorgFbox.= $objFeatureBox->show($this->objLanguage->languageText('mod_foaf_myorganizations', 'foaf'), $myorgbox) ."<br />";
 		}
 		$myorgbox = NULL;
-
+		
 		$myorgs.= $myorgFbox;
 		return $myorgs;
 	}
