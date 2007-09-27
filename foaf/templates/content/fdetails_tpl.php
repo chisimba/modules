@@ -235,8 +235,8 @@ $this->appendArrayVar('headerParams',$script);
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
 $this->appendArrayVar('headerParams', $css);
 
-		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
-		$this->appendArrayVar('headerParams', $css);
+		//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
+		//$this->appendArrayVar('headerParams', $css);
 
 
 

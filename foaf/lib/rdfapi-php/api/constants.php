@@ -16,13 +16,13 @@
 // ----------------------------------------------------------------------------------
 // General
 // ----------------------------------------------------------------------------------
-
+/*
 define('RDFAPI_ERROR', 'RDFAPI error ');
 define('DEFAULT_ALGORITHM', 'MD5');
 define('DEFAULT_ENCODING', 'UTF-8');
 define('INDENTATION', '   ');
 define('LINEFEED', chr(10));
-
+*/
 // ----------------------------------------------------------------------------------
 // RAP Packages
 // ----------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ define('IN_PROPERTY_PARSE_TYPE_RESOURCE',8);
 define('IN_XML',9);
 define('IN_UNKNOWN',10);
 define('IN_PROPERTY_PARSE_TYPE_COLLECTION', 11);
-define('RDF_SUBJECT_TYPE_URI',0);
+/*define('RDF_SUBJECT_TYPE_URI',0);
 define('RDF_SUBJECT_TYPE_DISTRIBUTED',1);
 define('RDF_SUBJECT_TYPE_PREFIX',2);
 define('RDF_SUBJECT_TYPE_ANONYMOUS',3);
@@ -116,7 +116,7 @@ define('RDF_OBJECT_TYPE_RESOURCE',0);
 define('RDF_OBJECT_TYPE_LITERAL',1);
 define('RDF_OBJECT_TYPE_XML',2);
 define('RDF_OBJECT_TYPE_BNODE',3);
-
+*/
 // ----------------------------------------------------------------------------------
 // Serializer
 // ----------------------------------------------------------------------------------
@@ -178,10 +178,10 @@ define('HTML_TABLE_NS_ROW_COLOR0', '#E7E7EF');
 // ----------------------------------------------------------------------------------
 // RDF
 // ----------------------------------------------------------------------------------
-
+/*
 define('RDF_NAMESPACE_URI','http://www.w3.org/1999/02/22-rdf-syntax-ns#' );
-define('RDF_NAMESPACE_PREFIX','rdf' );
-define('RDF_RDF','RDF');
+define('RDF_NAMESPACE_PREFIX','rdf' );*/
+define('RDF_RDF','RDF');/*
 define('RDF_DESCRIPTION','Description');
 define('RDF_ID','ID');
 define('RDF_ABOUT','about');
@@ -212,14 +212,15 @@ define('RDF_NIL','nil');
 define('RDF_REST','rest');
 define('RDF_FIRST','first');
 define('RDF_XMLLITERAL', 'XMLLiteral');
-
+*/
 // ----------------------------------------------------------------------------------
 // RDF Schema
 // ----------------------------------------------------------------------------------
-
+/*
 define('RDF_SCHEMA_URI','http://www.w3.org/2000/01/rdf-schema#' );
 define('RDF_DATATYPE_SCHEMA_URI','http://www.w3.org/TR/xmlschema-2' );
 define('RDF_SCHEMA_PREFIX', 'rdfs');
+*/
 define('RDFS_SUBCLASSOF','subClassOf');
 define('RDFS_SUBPROPERTYOF','subPropertyOf');
 define('RDFS_RANGE','range');
@@ -316,7 +317,7 @@ define('ATOM_NS'    , 'http://purl.org/atom/ns#');
 define('DC_NS'      , 'http://purl.org/dc/elements/1.1/');
 define('DCTERM_NS'  , 'http://purl.org/dc/terms/');
 define('DCMITYPE_NS', 'http://purl.org/dc/dcmitype/');
-define('FOAF_NS'    , 'http://xmlns.com/foaf/0.1/');
+//define('FOAF_NS'    , 'http://xmlns.com/foaf/0.1/');
 define('OWL_NS'     , 'http://www.w3.org/2002/07/owl#');
 define('RSS_NS'     , 'http://purl.org/rss/1.0/');
 define('VCARD_NS'   , 'http://www.w3.org/2001/vcard-rdf/3.0#');
