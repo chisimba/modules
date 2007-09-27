@@ -43,6 +43,11 @@ class conversions extends controller
                 
                 return 'convertit_tpl.php';
             	break;
+
+	  case 'convert':
+                $type = $this->getParam('converttype');
+                $value = $this->getParam('value');
+                echo "Type: ".$type."    Value: ".$value; die();
         }
     }
 }
