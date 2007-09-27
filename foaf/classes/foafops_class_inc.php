@@ -1609,6 +1609,41 @@ class foafops extends object
 		}
 
 	}
+	
+	public function inviteForm()
+	{
+		$invite = $this->objLanguage->languageText('mod_foaf_invite', 'foaf');
+		$this->loadClass('textinput', 'htmlelements');
+		$this->loadClass('textarea', 'htmlelements');
+		$this->loadClass('label', 'htmlelements');
+		$this->loadClass('button', 'htmlelements');
+		$this->loadClass('link', 'htmlelements');
+		$this->loadClass('href', 'htmlelements');
+		$this->loadClass('htmlheading', 'htmlelements');
+		$this->loadClass('dropdown', 'htmlelements');
+		$this->loadClass('form', 'htmlelements');
+		$box = $this->getObject('featurebox', 'navigation');
+		
+		//build invite friend form
+		$form = new form('inviteform', $this->uri(array(
+		'action' => 'inviteform'
+		)));
+		$textArea = new textarea('invitationtext',$this->objLanguage->languageText('mod_foaf_dear', 'foaf'),'4','18');
+		$label = new label($this->objLanguage->languageText('word_to').':', 'input_friendmail');
+		$mail = new textinput('friendmail','myfriend@chisimba.com','text','25');
+		$button = new button('sendmail');
+		$button->setId('sendmail');
+		$button->setValue($this->objLanguage->languageText('mod_foaf_send', 'foaf'));
+		$button->setToSubmit();
+
+		$form->addToForm($label->show().$mail->show());
+		$form->addToForm($textArea->show());
+		$form->addToForm('<center>'.$button->show().'</center>');
+
+		$inviteBox = $box->show($invite, $form->show() , 'invitebox' ,'none',TRUE);
+
+		return $inviteBox;
+	}
         
 
 }

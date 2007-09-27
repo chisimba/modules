@@ -1,7 +1,4 @@
 <?php
-//var_dump($foafAr);
-//var_dump($tcont);
- 
 $script = '<script type="text/javascript">
 
 //<![CDATA[
@@ -37,6 +34,7 @@ $script = '<script type="text/javascript">
             });
  //]]>  
 </script>';
+
 //$this->setLayoutTemplate('flayout_tpl.php');
 $objmsg = $this->getObject('timeoutmessage', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -49,11 +47,10 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 
-
-
 $pane = $this->newObject('tabpane', 'htmlelements');
 $userMenu = $this->newObject('usermenu', 'toolbar');
 $dbFoaf= $this->getObject('dbfoaf' , 'foaf');
+
 // Create an instance of the css layout class
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
@@ -80,12 +77,8 @@ if(!is_array($friends))
    $friends = array();
 }
 
-
-//echo "path>".$filePath.$foafFile."<br />";
-//echo "predicate>".$predicate."<br />";
-//echo "object>".$object."<br />";
-
 $objmsg->timeout = 20000;
+
 if ($msg == 'update') {
     $objmsg->message = $this->objLanguage->languageText('mod_foaf_recupdated', 'foaf');
     echo $objmsg->show();
@@ -94,8 +87,6 @@ if ($msg == 'update') {
     echo $objmsg->show();
 }
 
-
-//set the userparams string that we get from tbl_users and should not be changed here...
 //Tab names
 $mydetails = $this->objLanguage->languageText('mod_foaf_mydetails', 'foaf');
 $myfriends = $this->objLanguage->languageText('mod_foaf_myfriends', 'foaf');
@@ -108,7 +99,6 @@ $mydepictions = $this->objLanguage->languageText('mod_foaf_myimages', 'foaf');
 $mypages = $this->objLanguage->languageText('mod_foaf_mypages', 'foaf');
 $myaccounts = $this->objLanguage->languageText('mod_foaf_myaccounts', 'foaf');
 $accountTypes = $this->objLanguage->languageText('mod_foaf_accounttypes', 'foaf');
-$invite = $this->objLanguage->languageText('mod_foaf_invite', 'foaf');
 $myevents = $this->objLanguage->languageText('mod_foaf_myevents', 'foaf');
 $allevents = $this->objLanguage->languageText('mod_foaf_allevents', 'foaf');
 $extras = $this->objLanguage->languageText('mod_foaf_extras', 'foaf');
@@ -118,6 +108,10 @@ $visualise = $this->objLanguage->languageText('mod_foaf_visualize', 'foaf');
 $surprise = $this->objLanguage->languageText('mod_foaf_surprise', 'foaf');
 $foafLinks = $this->objLanguage->languageText('mod_foaf_foaflinks', 'foaf');
 $noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('FIELD' => $predicate ,'VALUE' => $object));
+
+$noResultsMsg = null;
+$matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object , $noResultsMsg);
+
 //$noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('NR'FIELD' => $predicate ,'VALUE' => $object));
 $game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
 
@@ -142,18 +136,19 @@ $icon = $this->getObject('geticon', 'htmlelements');
 $icon->setIcon('rss', 'gif', 'icons/filetypes');
 $icon->align = 'left';
 
+$box = $this->getObject('featurebox', 'navigation');
+
 $link1 = new href($this->uri(array('action' =>'fields', 'content' => 'gallery')) , $this->objLanguage->languageText('mod_foaf_gallery', 'foaf'), 'class="itemlink"');
 $link2 = new href($this->uri(array('action' =>'fields', 'content' => 'links')) , 'Links', 'class="itemlink"');
 $link3 = new href($this->uri(array('action' =>'fields', 'content' => 'seenet')) , $this->objLanguage->languageText('mod_foaf_seenet', 'foaf'), 'class="itemlink"');
 
 //build invite friend form
-
 $form = new form('inviteform', $this->uri(array(
             'action' => 'inviteform'
         )));
 $textArea = new textarea('invitationtext',$this->objLanguage->languageText('mod_foaf_dear', 'foaf'),'4','18');
 $label = new label($this->objLanguage->languageText('word_to').':', 'input_friendmail');
-$mail = new textinput('friendmail','myfriend@foaf.com','text','25');
+$mail = new textinput('friendmail','myfriend@chisimba.com','text','25');
 $button = new button('sendmail');
 $button->setId('sendmail');
 $button->setValue($this->objLanguage->languageText('mod_foaf_send', 'foaf'));
@@ -164,7 +159,7 @@ $form->addToForm($textArea->show());
 $form->addToForm('<center>'.$button->show().'</center>');
 
 
-$inviteBox = $box->show($invite, $form->show() , 'invitebox' ,'block',true);
+$inviteBox = $this->objFoafOps->inviteForm();
 
 $table = NULL;
 $table = $this->newObject('htmltable' , 'htmlelements');

@@ -84,7 +84,7 @@ class alumni extends controller
     {
         switch ($action) {
             default:
-            	$this->nextAction('', array(), 'foaf');
+            	$this->nextAction(NULL, array(), 'foaf');
             	break;
         }
     }
