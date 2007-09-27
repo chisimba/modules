@@ -110,7 +110,12 @@ a.itemlink:active {
 	text-decoration:underline!important;
 }
 
+#container {
 
+	background-color:rgb(67,67,67);
+
+
+}
 
 #leftcontent, #rightcontent {
     border-top:none;
@@ -187,14 +192,40 @@ td .featurebox{
 	color:silver;
 	float:center;	
 }
-.dynamic-tab-pane-control .tab-page{
+.dynamic-tab-pane-control .tab-page {
 	background-color:gray!important;
 	border:2px silver ridge;
 }
-.dynamic-tab-pane-control .tab-page input,.dynamic-tab-pane-control .tab-page textarea{
+.dynamic-tab-pane-control .tab-page input,.dynamic-tab-pane-control .tab-page textarea {
 	color:white;
 	background-color:rgb(67,67,67)!important;
 	font-weight:bold;
 	border:1px solid white;
 	
+}
+
+//gallery
+
+table#gallery td , img{
+
+	width:80px;
+	height:80px;
+	border:5px inset red;
+}
+
+table {
+ table-layout:fixed;
+ empty-cells:show;
+}
+
+td {
+ overflow:hidden;
+}
+
+table#extras {
+table-layout:auto;
+
+}
+table#extras td {
+overflow:show;
 }
