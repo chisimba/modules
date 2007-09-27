@@ -120,23 +120,14 @@ echo "<div style='color:white;'>";
 //var_dump($matches);
 echo "</div>";
 
-
 //boxes
 $box = $this->getObject('featurebox', 'navigation');
-/*
-$linksBox = $this->getObject('featurebox', 'navigation');
-$profileBox = $this->getObject('featurebox', 'navigation'); 
-$friendsBox = $this->getObject('featurebox', 'navigation'); 
-$eventsBox = $this->getObject('featurebox', 'navigation');  
-*/
 
 //extras
 //icons
 $icon = $this->getObject('geticon', 'htmlelements');  
 $icon->setIcon('rss', 'gif', 'icons/filetypes');
 $icon->align = 'left';
-
-$box = $this->getObject('featurebox', 'navigation');
 
 $link1 = new href($this->uri(array('action' =>'fields', 'content' => 'gallery')) , $this->objLanguage->languageText('mod_foaf_gallery', 'foaf'), 'class="itemlink"');
 $link2 = new href($this->uri(array('action' =>'fields', 'content' => 'links')) , 'Links', 'class="itemlink"');

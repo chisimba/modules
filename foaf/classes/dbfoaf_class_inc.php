@@ -79,7 +79,7 @@ class dbfoaf extends dbtable
     public function getRecordSet($userId, $table , $filter = null) 
     {
         $this->_changeTable($table);
-        $sql = "WHERE userid = "."'".$userId."'";
+        $sql = "WHERE userid = '$userId'";
 	if($filter != null)
 	{
 	  $sql.= $filter;
@@ -124,12 +124,12 @@ class dbfoaf extends dbtable
     {
         $this->_changeTable('tbl_foaf_friends');
         $userid = $this->objUser->userId();
-        $frie = $this->getAll('WHERE userid = '.$userid);
+        $frie = $this->getAll("WHERE userid = '$userid'");
         foreach($frie as $friends) {
             //echo $friends['fuserid'];
             //lookup the userid and get a name for display
             $this->_changeTable('tbl_users');
-            $ret = $this->getAll('WHERE userid = '.'"'.$friends['fuserid'].'"');
+            $ret = $this->getAll("WHERE userid = '{$friends['fuserid']}'");
             $fullname = $ret[0]['firstname']." ".$ret[0]['surname'];
             $pkid = $friends['id'];
             $fid = $friends['fuserid'];
@@ -198,7 +198,7 @@ class dbfoaf extends dbtable
     {
         $userid = $this->objUser->userId();
         $this->_changeTable('tbl_foaf_organization');
-        $ret = $this->getAll("WHERE userid = ".$userid);
+        $ret = $this->getAll("WHERE userid = '$userid'");
         //print_r($ret);
         if(empty($ret))
         {
@@ -306,7 +306,7 @@ class dbfoaf extends dbtable
      public function getInterests()
      {
            $this->_changeTable('tbl_foaf_interests');
-           $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY interesturl ";									
+           $sql = "WHERE userid='".$this->objUser->userId()."' ORDER BY interesturl";									
 	    return $this->getAll($sql);
 	}
 	   

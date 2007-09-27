@@ -66,7 +66,7 @@ class dbfoaf extends dbtable
      */
     public function getRecordSet($userId) 
     {
-        $sql = "WHERE userid = $userId";
+        $sql = "WHERE userid = '$userId'";
         return $this->getAll($sql);
     }
 }
