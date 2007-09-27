@@ -120,14 +120,12 @@ $foafLinks = $this->objLanguage->languageText('mod_foaf_foaflinks', 'foaf');
 $noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('FIELD' => $predicate ,'VALUE' => $object));
 //$noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('NR'FIELD' => $predicate ,'VALUE' => $object));
 $game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
-$noResultsMsg = null;
-$matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object , $noResultsMsg);
-/*echo "<div style='color:white;'>";
+
+$matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object);
+echo "<div style='color:white;'>";
 //var_dump($matches);
-echo "<h1>search field>".$predicate."</h1>";
-echo "<h1>search value>".$object."</h1>";
-echo "</div>";*/
-//echo "<h1>foaf file>".$foafFile."</h1>";
+echo "</div>";
+
 
 //boxes
 $box = $this->getObject('featurebox', 'navigation');
@@ -166,22 +164,23 @@ $form->addToForm($textArea->show());
 $form->addToForm('<center>'.$button->show().'</center>');
 
 
-$inviteBox = $box->show($invite, $form->show() , 'invitebox' ,'none',TRUE);
+$inviteBox = $box->show($invite, $form->show() , 'invitebox' ,'block',true);
 
 $table = NULL;
 $table = $this->newObject('htmltable' , 'htmlelements');
+$table->id = 'extras' ;
 $table->startRow();
-$table->addCell($icon->show());
-$table->addCell($link1->show());
+$table->addCell($icon->show().'&nbsp;'.$link1->show());
 $table->endRow();
+
 $table->startRow();
-$table->addCell($icon->show());
-$table->addCell($link2->show());
+$table->addCell($icon->show().'&nbsp;'.$link2->show());
 $table->endRow();
+
 $table->startRow();
-$table->addCell($icon->show());
-$table->addCell($link3->show());
+$table->addCell($icon->show().'&nbsp;'.$link3->show());
 $table->endRow();
+
 $table->startRow();
 $table->addCell('<br />'.$inviteBox,NULL,'top',null,null, 'colspan="2"' , '0');
 $table->endRow();
@@ -193,7 +192,7 @@ $linksBox = $box->showContent('<a href="#" class="headerlink">'.$extras.'</a>',$
 $table = NULL;
 $table = $this->newObject('htmltable' , 'htmlelements');
 
-foreach($friends as $key=>$friend){
+foreach($friends as $key => $friend){
 
 //Display only the first three friends
 if($key < 3){
@@ -241,8 +240,8 @@ $this->appendArrayVar('headerParams',$script);
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
 $this->appendArrayVar('headerParams', $css);
 
-		//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
-		//$this->appendArrayVar('headerParams', $css);
+		$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
+		$this->appendArrayVar('headerParams', $css);
 
 
 
@@ -265,7 +264,8 @@ $userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chisim
 			     <ul>';
 //echo "<h1>".$key.'  '.$objUser->userId()."</h1>";
 //var_dump($field);
-
+if(!empty($field))
+{
 //each fld is an element of a group i.e. a single organization or a single friend or a single interest, etc.
 //display a usefull fld property i.e. display name (for organizations), urls(for funders), title (for pages) ,etc.
 $url = NULL;
@@ -294,19 +294,34 @@ switch($key){
 }
 
 foreach($field as $fld){        
-//As people use have only a name for several services it would be better
-//to show the account type ($fld['type']) as well , so the user knows what
-//service is the acoount refering to.
+//As people use the same name for several services it would be better
+//to show the account type ($fld['type']) in brackets as well , so the user knows what
+//service is the account refering to.
 if($key=='Accounts')
 {
 
 	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld['accountservicehomepage'].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld['accountservicehomepage'].'">'.$fld['accountname'].' ('.$fld['type'].')'.'</a></li>';
 
 } else {
+
+	//If it's a very long string to be displayed on screen
+	// then make it smaller
+	if(strlen($fld[$key]) > 20)
+	{
+	  $fld[$key] = substr($fld[$key] , 0 , 30).'....';
+	}
+
 	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld[$url].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld[$url].'">'.$fld[$key].'</a></li>';
 }
 
 
+
+
+}
+
+} else {
+
+	$userFields.= '<li class="yuimenuitem">'.$this->objLanguage->languageText('mod_foaf_noitems' , 'foaf').'</li>';
 
 
 }
@@ -455,6 +470,15 @@ switch($content){
 	    'content' => $this->objUi->foafSearch()
 	));
 	break;
+
+	case 'results':
+		$pane->addTab(array(
+	    'name' => 'Search Results',
+	    'content' => $this->objUi->foafResults($matches , $predicate)."<p>&nbsp;</p>".$this->objUi->foafSearch()
+	));
+	break;
+
+
 	
 	case 'links':
 		$pane->addTab(array(
@@ -517,6 +541,7 @@ $cssLayout->setNumColumns(3);
 $cssLayout->setLeftColumnContent($leftColumn);
 $cssLayout->setRightColumnContent($rightColumn);
 $cssLayout->setMiddleColumnContent($middleColumn);
+//$cssLayout->putThreeColumnFixInHeader();
 echo $cssLayout->show();
 
 

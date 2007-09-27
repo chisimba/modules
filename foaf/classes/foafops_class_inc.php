@@ -654,7 +654,7 @@ class foafops extends object
         $pftype = $pals['type'];
         $pfbox = "<em>".$pals['name']."</em><br />";
         if (isset($pals['homepage'])) {
-            $page = new href(htmlentities($pals['homepage'][0]) , htmlentities($pals['homepage'][0]));
+            $page = new href(htmlentities($pals['homepage'][0]) , htmlentities($pals['homepage'][0]) , "title='".$this->objLanguage->languageText('mod_foaf_goto' , 'foaf')."  ".$pals['homepage'][0]."'");
             $link = $page->show();
             return array(
                 $pfbox,
@@ -839,7 +839,8 @@ class foafops extends object
             //add in a dropdown to add/remove users as friends
             $remDrop = new dropdown('removeorg');
             foreach($remarray as $removal) {
-                $remDrop->addOption($removal['id'], $removal['name']);
+
+                $remDrop->addOption($removal['id'],$this->cutChars($removal['name'] , 20));
             }
             //delete
             $tableor->startRow();
@@ -928,7 +929,7 @@ class foafops extends object
 
 					$remDrop = new dropdown('removefuns');
             			foreach($remarray as $removal) {
-                			$remDrop->addOption($removal['id'], $removal['funderurl']);
+                			$remDrop->addOption($removal['id'], $this->cutChars($removal['funderurl']));
             			}
          		   
 			    $table->startRow();
@@ -1014,7 +1015,7 @@ class foafops extends object
 
 					$remDrop = new dropdown('removeint');
             			foreach($remarray as $removal) {
-                			$remDrop->addOption($removal['id'], $removal['interesturl']);
+                			$remDrop->addOption($removal['id'], $this->cutChars($removal['interesturl']));
             			}
          		   
 		      $table->startRow();
@@ -1097,7 +1098,7 @@ class foafops extends object
 
 					$remDrop = new dropdown('removedep');
             			foreach($remarray as $removal) {
-                			$remDrop->addOption($removal['id'], $removal['depictionurl']);
+                			$remDrop->addOption($removal['id'], $this->cutChars($removal['depictionurl']));
             			}
          		   
 			    $table->startRow();
@@ -1198,7 +1199,7 @@ class foafops extends object
 		      //add in a dropdown to add/remove users as friends
                      $remDrop = new dropdown('removepage');
                      foreach($remarray as $removal) {
-                     $remDrop->addOption($removal['id'], $removal['title']);
+                     $remDrop->addOption($removal['id'], $this->cutChars($removal['title']));
                      }
                     //delete
                     $table->startRow();
@@ -1264,7 +1265,7 @@ class foafops extends object
         $type = new dropdown('type');
 	foreach($accountTypes as $accountType)
 	{
-	     $type->addOption($accountType['type'], $accountType['type']);
+	     $type->addOption($accountType['type'], $this->cutChars($accountType['type']));
 	}	
         $table->addCell($labelType->show() , 150, NULL, 'right'); //label
         $table->addCell($type->show()); //input box
@@ -1320,7 +1321,7 @@ class foafops extends object
 		      //add in a dropdown to add/remove users as friends
                      $remDrop = new dropdown('removedaccount');
                      foreach($remarray as $key=>$removal) {
-	                   $remDrop->addOption($removal['id'], $removal['accountname'], 'title="'.$removal['accountservicehomepage'].'"');	
+	                   $remDrop->addOption($removal['id'], $this->cutChars($removal['accountname'], 'title="'.$removal['accountservicehomepage'].'"'));	
                      }
                     
 
@@ -1415,7 +1416,7 @@ class foafops extends object
             foreach($remarray as $key=>$removal)
 	    {
 	    	
-            $remDrop->addOption($removal['id'], $removal['type']);
+            $remDrop->addOption($removal['id'], $this->cutChars($removal['type']));
             }
 
              $fieldset = $this->newObject('fieldset', 'htmlelements');
@@ -1531,7 +1532,7 @@ class foafops extends object
 
 					$remDrop = new dropdown('removelinks');
             			foreach($remarray as $removal) {
-                			$remDrop->addOption($removal['id'], $removal['url']);
+                			$remDrop->addOption($removal['id'], $this->cutChars($removal['url']));
             			}
          		   
 		      $table->startRow();
@@ -1549,14 +1550,14 @@ class foafops extends object
     }
 
 //search
-///The "s" in front of each field name stands for search
+
 	public function searchForm()
 	{
 	   $searchForm = new form('searchform', $this->uri(array(
             'action' => 'search'
         )));
-	$fields = array("name","firstname","surname","title","mbox","homepage","weblog","phone","jabberid","geekcode","theme",
-"workplacehomepage","schoolhomepage","logo","img");
+	$fields = array("name" => "Name" ,"firstname" => "First name" , "surname" => "Surname" ,"title" => "Title","mbox" => "E-mail" , "homepage" => "Homepage" ,"weblog" => "Web blog" ,"phone" =>  "Phone","jabberid" => "Jabber Id","geekcode" => "Geek code" ,"theme" => "Theme",
+"workplacehomepage" => "Workplace Homepage" ,"schoolhomepage" => "School Homepage" ,"logo" => "Logo" ,"img" => "Image");
 
 
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -1565,9 +1566,9 @@ class foafops extends object
 	$dropdown = new dropdown('schfield');
 
 	
-	foreach($fields as $field)
+	foreach($fields as $key => $field)
 	{
-	  $dropdown->addOption($field , $field);
+	  $dropdown->addOption($key , $field);
 	
 	}
 
@@ -1591,6 +1592,24 @@ class foafops extends object
 
 
 	}
+
+	/**
+	   *Function for cutting characters of  string 
+	   *@param $string
+	   *@param size
+	   *@ return string
+       **/
+	public function cutChars($string , $size = 20)
+	{
+		if(strlen($string) > $size)
+		{
+			return substr($string , 0 , $size).'....';
+		} else {
+			return $string;
+		}
+
+	}
+        
 
 }
 ?>

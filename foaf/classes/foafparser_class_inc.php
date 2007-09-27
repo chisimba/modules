@@ -985,11 +985,11 @@ return  $matches;
 
 }*/
 
-public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
+/*public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
 {
-}
-/*
-public function queryFoaf($foafFile , $predicate = NULL , $object = NULL , $results = NULL , $noresults = NULL)
+}*/
+
+public function queryFoaf($foafFile , $predicate = NULL , $object = NULL)
 {
 
   require_once(RDFAPI_INCLUDE_DIR . "RdfAPI.php");
@@ -1003,8 +1003,8 @@ public function queryFoaf($foafFile , $predicate = NULL , $object = NULL , $resu
   
 
   echo "<div style='color:red'>";
-  echo "<br /> Function object >".$object."<br />";
-  echo "Function predicate >".$predicate."<br />";
+  //echo "<br /> Function object >".$object."<br />";
+  //echo "Function predicate >".$predicate."<br />";
  
   if($object != 'all')
   {	
@@ -1019,15 +1019,16 @@ public function queryFoaf($foafFile , $predicate = NULL , $object = NULL , $resu
 
   while ($it->hasNext()) {
    $statement = $it->next();
-   echo "<p>";
+ /*  echo "<p>";
    echo "Subject: " . $statement->getLabelSubject() . "<br />";
    echo "Predicate: " . $statement->getLabelPredicate() . "<br />";
    echo "Object: " . $statement->getLabelObject();
    echo "</p>";
-
+*/
   $name = $this->getFoafName($model ,  $statement->getLabelSubject());
-  echo "This ".$predicate." belongs to ".$name;
-  array_push($info , array('field' => $predicate , 'name' => $name));
+   $field = $statement->getLabelObject();
+ // echo "This ".$predicate." belongs to ".$name;
+  array_push($info , array('field' => $field , 'name' => $name));
 
 
   }
@@ -1036,7 +1037,7 @@ public function queryFoaf($foafFile , $predicate = NULL , $object = NULL , $resu
  
 
 
-}*/
+}
 
 
  public function getFoafName($model , $person)

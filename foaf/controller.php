@@ -214,10 +214,10 @@ class foaf extends controller
 				if(isset($remid))
 				{
 					$myid = $this->objUser->userId();
-					$this->dbFoaf->removeFriend(array('userid' => $myid, 'fuserid' => $remid));
+					$this->dbFoaf->removeFriend($remid);
 				}
 				$message = 'update';
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'friends'));
 
 
 				break;
@@ -239,7 +239,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Organizations'));
 				break;
 
 			case 'updatefunders':
@@ -272,7 +272,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Funders'));
 				break;				
 
 			case 'updateinterests':
@@ -303,7 +303,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Interests'));
 				break;
 
 			case 'updatedeps':
@@ -337,7 +337,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Images'));
 				break;
 
 
@@ -385,7 +385,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Pages'));
 				break;
 
 			case 'updateaccounttypes':
@@ -461,7 +461,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'Accounts'));
 				break;
 
 
@@ -497,7 +497,7 @@ class foaf extends controller
 				$message = 'update';
 				$this->setVarByRef('message', $message);
 
-				$this->nextAction('createfoaf',array('message' => $message));
+				$this->nextAction('createfoaf',array('message' => $message , 'content' => 'links'));
 				break;	
 
 
@@ -505,14 +505,14 @@ class foaf extends controller
 
 			$schField = $this->getParam('schfield');
 			$schValue = $this->getParam('schvalue');
-			$message = 'bulldozzer';
+
 
 			if(!isset($schValue) || empty($schValue))
 			{
 			      $schValue = 'all';
 			}
 
-			$this->nextAction(NULL , array('action' => 'fields' ,  'content' => 'search' , 'message' => $message , 'schfield' => $schField , 'schvalue' =>$schValue));
+			$this->nextAction(NULL , array('action' => 'fields' ,  'content' => 'results' , 'schfield' => $schField , 'schvalue' =>$schValue));
 			break;	
 			
 			case 'fields':

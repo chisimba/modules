@@ -79,7 +79,7 @@ class dbfoaf extends dbtable
     public function getRecordSet($userId, $table , $filter = null) 
     {
         $this->_changeTable($table);
-        $sql = "WHERE userid = $userId";
+        $sql = "WHERE userid = "."'".$userId."'";
 	if($filter != null)
 	{
 	  $sql.= $filter;
@@ -129,7 +129,7 @@ class dbfoaf extends dbtable
             //echo $friends['fuserid'];
             //lookup the userid and get a name for display
             $this->_changeTable('tbl_users');
-            $ret = $this->getAll('WHERE userid = '.$friends['fuserid']);
+            $ret = $this->getAll('WHERE userid = '.'"'.$friends['fuserid'].'"');
             $fullname = $ret[0]['firstname']." ".$ret[0]['surname'];
             $pkid = $friends['id'];
             $fid = $friends['fuserid'];
@@ -164,7 +164,10 @@ class dbfoaf extends dbtable
     {
         $this->_changeTable('tbl_foaf_friends');
         //print_r($friend);
-        return $this->delete('id', $friend['fuserid']);
+       $this->delete('id' , $friend);
+       $sql = "DELETE FROM tbl_foaf_friends WHERE fuserid is NULL";
+       $this->getArray($sql);			
+
     }
     /**
      * Method to insert an organization according to the current userid
@@ -284,7 +287,7 @@ class dbfoaf extends dbtable
     {
         $this->_changeTable('tbl_foaf_fundedby');
         $this->delete('id', $funderId);
-	  $sql = "DELETE FROM tbl_foaf_fundedby WHERE funderurl is NULL";
+	$sql = "DELETE FROM tbl_foaf_fundedby WHERE funderurl is NULL";
         $this->getArray($sql);			
     }
 
