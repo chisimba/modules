@@ -35,7 +35,6 @@ $script = '<script type="text/javascript">
  //]]>  
 </script>';
 
-//$this->setLayoutTemplate('flayout_tpl.php');
 $objmsg = $this->getObject('timeoutmessage', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
@@ -112,13 +111,7 @@ $noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array(
 $noResultsMsg = null;
 $matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object , $noResultsMsg);
 
-//$noresults = $this->objLanguage->code2Txt('mod_foaf_noresults' , 'foaf' , array('NR'FIELD' => $predicate ,'VALUE' => $object));
-$game = ''; //"<object width='550' height='400'><param name='movie' value='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' /><embed src='http://www.zipperfish.com/mediabase/cache/1456-184-blobs.swf' type='application/x-shockwave-flash' width='550' height='400'></embed></object>";
-
 $matches = $this->objFoafParser->queryFoaf($foafFile , $predicate , $object);
-echo "<div style='color:white;'>";
-//var_dump($matches);
-echo "</div>";
 
 //boxes
 $box = $this->getObject('featurebox', 'navigation');
@@ -129,50 +122,10 @@ $icon = $this->getObject('geticon', 'htmlelements');
 $icon->setIcon('rss', 'gif', 'icons/filetypes');
 $icon->align = 'left';
 
-$link1 = new href($this->uri(array('action' =>'fields', 'content' => 'gallery')) , $this->objLanguage->languageText('mod_foaf_gallery', 'foaf'), 'class="itemlink"');
-$link2 = new href($this->uri(array('action' =>'fields', 'content' => 'links')) , 'Links', 'class="itemlink"');
-$link3 = new href($this->uri(array('action' =>'fields', 'content' => 'seenet')) , $this->objLanguage->languageText('mod_foaf_seenet', 'foaf'), 'class="itemlink"');
-
-//build invite friend form
-$form = new form('inviteform', $this->uri(array(
-            'action' => 'inviteform'
-        )));
-$textArea = new textarea('invitationtext',$this->objLanguage->languageText('mod_foaf_dear', 'foaf'),'4','18');
-$label = new label($this->objLanguage->languageText('word_to').':', 'input_friendmail');
-$mail = new textinput('friendmail','myfriend@chisimba.com','text','25');
-$button = new button('sendmail');
-$button->setId('sendmail');
-$button->setValue($this->objLanguage->languageText('mod_foaf_send', 'foaf'));
-$button->setToSubmit();
-
-$form->addToForm($label->show().$mail->show());
-$form->addToForm($textArea->show());
-$form->addToForm('<center>'.$button->show().'</center>');
-
 
 $inviteBox = $this->objFoafOps->inviteForm();
 
-$table = NULL;
-$table = $this->newObject('htmltable' , 'htmlelements');
-$table->id = 'extras' ;
-$table->startRow();
-$table->addCell($icon->show().'&nbsp;'.$link1->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($icon->show().'&nbsp;'.$link2->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell($icon->show().'&nbsp;'.$link3->show());
-$table->endRow();
-
-$table->startRow();
-$table->addCell('<br />'.$inviteBox,NULL,'top',null,null, 'colspan="2"' , '0');
-$table->endRow();
-
-$linksBox = $box->showContent('<a href="#" class="headerlink">'.$extras.'</a>',$table->show());
-
+$linksBox = $this->objFoafOps->linksBox();
 //friends
 
 $table = NULL;

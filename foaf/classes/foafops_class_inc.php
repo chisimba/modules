@@ -1644,7 +1644,39 @@ class foafops extends object
 
 		return $inviteBox;
 	}
-        
+
+	public function linksBox()
+	{
+		$box = $this->getObject('featurebox', 'navigation');
+		
+		$link1 = new href($this->uri(array('action' =>'fields', 'content' => 'gallery')) , $this->objLanguage->languageText('mod_foaf_gallery', 'foaf'), 'class="itemlink"');
+		$link2 = new href($this->uri(array('action' =>'fields', 'content' => 'links')) , 'Links', 'class="itemlink"');
+		$link3 = new href($this->uri(array('action' =>'fields', 'content' => 'seenet')) , $this->objLanguage->languageText('mod_foaf_seenet', 'foaf'), 'class="itemlink"');
+
+		$table = NULL;
+		$table = $this->newObject('htmltable' , 'htmlelements');
+		$table->id = 'extras' ;
+		$table->startRow();
+		$table->addCell($link1->show());
+		$table->endRow();
+
+		$table->startRow();
+		$table->addCell($link2->show());
+		$table->endRow();
+
+		$table->startRow();
+		$table->addCell($link3->show());
+		$table->endRow();
+
+		$table->startRow();
+		$table->addCell('<br />'.$this->inviteForm(),NULL,'top',null,null, 'colspan="2"' , '0');
+		$table->endRow();
+		$extras = $this->objLanguage->languageText('mod_foaf_extras', 'foaf');
+		$linksBox = $box->showContent('<a href="#" class="headerlink">'.$extras.'</a>',$table->show());
+		
+		return $linksBox;
+	}
+
 
 }
 ?>

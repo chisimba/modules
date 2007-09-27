@@ -762,7 +762,7 @@ class foafui extends object {
 	public function foafLinks()
 	{
 	
-	$myLinks = NULL;
+	$mylinks = NULL;
 	$manageLinks = NULL;
 	$flinks = $this->objLanguage->languageText('mod_foaf_links', 'foaf');
 
