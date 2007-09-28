@@ -61,6 +61,9 @@ class bittorrent extends controller
      * @access public 
      */
 	public $objConfig;
+	
+	public $MakeTorrent;
+	
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -69,6 +72,7 @@ class bittorrent extends controller
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
+            require_once($this->getPearResource('File/Bittorrent2/MakeTorrent.php'));
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -84,7 +88,22 @@ class bittorrent extends controller
     {
         switch ($action) {
             default:
-            	echo "Bittorrent!"; die();
+            	
+            	
+            	break;
+            case 'createtorrent':
+            	$this->MakeTorrent = new File_Bittorrent2_MakeTorrent('/var/www/chisimba_framework/app/packages/blog/register.conf');
+            	// Set the announce URL
+				$this->MakeTorrent->setAnnounce($this->uri(array()));
+				// Set the comment
+				$this->MakeTorrent->setComment('Hello World!');
+				// Set the piece length (in KB)
+				$this->MakeTorrent->setPieceLength(256);
+				// Build the torrent
+				$metainfo = $this->MakeTorrent->buildTorrent();
+				// Then put this into a file, instead of echoing it normally...
+				echo $metainfo;
+				die();
             	break;
         }
     }
