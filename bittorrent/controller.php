@@ -68,6 +68,8 @@ class bittorrent extends controller
 	
 	public $decoder;
 	
+	public $torrentops;
+	
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -76,7 +78,7 @@ class bittorrent extends controller
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
-            require_once($this->getPearResource('File/Bittorrent2/MakeTorrent.php'));
+            $this->torrentops = $this->getObject('torrentops');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -98,25 +100,12 @@ class bittorrent extends controller
             	break;
             	
             case 'createtorrent':
-            	$this->MakeTorrent = new File_Bittorrent2_MakeTorrent('/var/www/chisimba_framework/app/packages/blog/register.conf');
-            	// Set the announce URL
-				$this->MakeTorrent->setAnnounce($this->uri(array()));
-				// Set the comment
-				$this->MakeTorrent->setComment('Hello World!');
-				// Set the piece length (in KB)
-				$this->MakeTorrent->setPieceLength(256);
-				// Build the torrent
-				$metainfo = $this->MakeTorrent->buildTorrent();
-				// Then put this into a file, instead of echoing it normally...
-				echo $metainfo;
+            	echo $this->torrentops->makeTorrent('/var/www/chisimba_framework/app/packages/blog/register.conf', $this->uri(array()), 'Test comment');
 				die();
             	break;
             	
             case 'gettorrentinfo':
-            	require_once($this->getPearResource('File/Bittorrent2/Decode.php'));
-            	$this->decoder = new File_Bittorrent2_Decode;
-            	$info = $this->decoder->decodeFile('/var/www/chisimba_modules/bittorrent/resources/Tryad-Public_Domain.torrent');
-            	print_r($info);
+            	print_r($this->torrentops->torrentInfo($this->getResourcePath('Tryad-Public_Domain.torrent')));
             	break;
         }
     }
