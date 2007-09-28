@@ -94,7 +94,8 @@ class bittorrent extends controller
     {
         switch ($action) {
             default:
-            	
+            	// I suppose I should do some kind of tracker code in here, so that it is a self contained system
+            	// sigh.
             	
             	break;
             	
