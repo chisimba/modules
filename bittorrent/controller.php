@@ -77,8 +77,6 @@ class bittorrent extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             require_once($this->getPearResource('File/Bittorrent2/MakeTorrent.php'));
-            //require_once($this->getPearResource('File/Bittorrent2/Encode.php'));
-			//require_once($this->getPearResource('File/Bittorrent2/Decode.php'));
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -96,7 +94,7 @@ class bittorrent extends controller
             default:
             	// I suppose I should do some kind of tracker code in here, so that it is a self contained system
             	// sigh.
-            	
+            	echo '<img src="'.$this->getResourceUri('torrents.gif').'">';
             	break;
             	
             case 'createtorrent':
