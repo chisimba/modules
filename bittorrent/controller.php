@@ -64,6 +64,10 @@ class bittorrent extends controller
 	
 	public $MakeTorrent;
 	
+	public $encoder;
+	
+	public $decoder;
+	
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -73,6 +77,8 @@ class bittorrent extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             require_once($this->getPearResource('File/Bittorrent2/MakeTorrent.php'));
+            //require_once($this->getPearResource('File/Bittorrent2/Encode.php'));
+			//require_once($this->getPearResource('File/Bittorrent2/Decode.php'));
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -91,6 +97,7 @@ class bittorrent extends controller
             	
             	
             	break;
+            	
             case 'createtorrent':
             	$this->MakeTorrent = new File_Bittorrent2_MakeTorrent('/var/www/chisimba_framework/app/packages/blog/register.conf');
             	// Set the announce URL
@@ -104,6 +111,13 @@ class bittorrent extends controller
 				// Then put this into a file, instead of echoing it normally...
 				echo $metainfo;
 				die();
+            	break;
+            	
+            case 'gettorrentinfo':
+            	require_once($this->getPearResource('File/Bittorrent2/Decode.php'));
+            	$this->decoder = new File_Bittorrent2_Decode;
+            	$info = $this->decoder->decodeFile('/var/www/chisimba_modules/bittorrent/resources/Tryad-Public_Domain.torrent');
+            	print_r($info);
             	break;
         }
     }
