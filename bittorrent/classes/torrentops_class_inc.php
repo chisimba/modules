@@ -43,9 +43,43 @@ class torrentops extends object
 		return $metainfo;
 	}
 	
-	public function scrapeTorrrent()
+	public function torrentFormattedInfo($torrent)
 	{
-		
+		if (!is_readable($torrent)) {
+			throw new customException($this->objLanguage->languageText('mod_bittorrent_torrentunreadable', 'bittorrent'));
+			// Pedant in me says we should exit here, although unnecessary
+			exit;
+		}
+
+		$File_Bittorrent2_Decode = new File_Bittorrent2_Decode;
+		$info = $File_Bittorrent2_Decode->decodeFile($torrent);
+		$ret = NULL;
+		foreach ($info as $key => $val) {
+			$ret .= str_pad($key . ': ', 20, ' ', STR_PAD_LEFT);
+			switch($key) {
+				case 'files':
+					$n = 1;
+					$files_n = count($val);
+					$n_length = strlen($files_n);
+					$ret .= '(' . $files_n . ")<br />";
+					foreach ($val as $file) {
+						$ret .= str_repeat(' ', 20) . '' . str_pad($n, $n_length, ' ', STR_PAD_LEFT) . ': ' . $file['filename'] . "<br />";
+						$n++;
+					}
+					break;
+				case 'announce_list':
+					$ret .= "<br />";
+					foreach ($val as $list) {
+						$ret .= str_repeat(' ', 20) . '- ' . join(', ', $list) . "<br />";
+					}
+					break;
+				default:
+					$ret .= $val . "<br />";
+			}
+		}
+
+		$ret .= "<br />";
+		return $ret;
 	}
 	
 	public function torrentInfo($file)

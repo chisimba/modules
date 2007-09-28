@@ -106,6 +106,8 @@ class bittorrent extends controller
             	
             case 'gettorrentinfo':
             	print_r($this->torrentops->torrentInfo($this->getResourcePath('Tryad-Public_Domain.torrent')));
+            	echo "<br /><hr />";
+            	echo $this->torrentops->torrentFormattedInfo($this->getResourcePath('Tryad-Public_Domain.torrent'));
             	break;
         }
     }
