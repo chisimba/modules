@@ -18,6 +18,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 	),
+	'emailAddressTwo' => array(
+		'type' => 'integer',
+		'length' => 13
+	),
 
 	'landlinenumber' => array(
 		'type' => 'integer',
