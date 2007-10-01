@@ -1,4 +1,4 @@
-<?php
+  <?php
    /**
     * converts temperature measurements: Kelvin, celcius, and fahrenheit 
     * 
@@ -24,6 +24,7 @@ class temp extends object
       $this->val = $val;
     }
    
+   
     public function convCelsToFahren($val)
     {
         $Answer = ((9/5) * ($val)+ 32) ;
@@ -35,94 +36,94 @@ class temp extends object
         return $Answer;
     }
 
-    public function convKelToFahren($val)
+    public function convkelToFahren($val)
     {
         $Answer = ($val - 273.15) * 9 / 5 + 32; 
         return $Answer;
     }
-    public function convFahrenToKel($val)
+    public function convFahrenTokel($val)
     {
         $Answer = (5 / 9) * ($val - 32)+273.15;  
         return $Answer;
     }
-    public function convKelToCels($val)
+    public function convkelToCels($val)
     {
-        $Answer = $val - 273.15; 
+        $Answer = $val-273.15; 
         return $Answer;
     }
-    public function convcelToKel($val)
+    public function convcelTokel($val)
     {
-        $Answer = $val + 273.15;
+        $Answer = $val+273.15;
         return $Answer;
     }
     
-    public function showForm()
-    {  
-        $form  = '<form method="POST" action="'.$_SELF.'">';
-        $form .= 'Temperature to be converted: <input type="text" size="12" name="val">';
-        $form .= '<Select name="temp">';
-        $form .= '<option selected value="1">Celsius To Fahrenheit</option>';
-        $form .= '<option value="2">Fahrenheit To Celsius</option>';
-        $form .= '<option value="3">Fahrenheit To Kelvin</option>';
-        $form .= '<option value="4">Kelvin to Fahrenheit</option>';
-        $form .= '<option value="5">Celsius to Kelvin</option>';
-        $form .= '<option value="6">Kelvin to Celsius</option>';
-        $form .= '</select><br />';
-        $form .= '<input type="submit" value="submit" name="submit">';
-        $form .= '<br />';
+    public function showForm($vals = NULL)
+    {
+		$valC = NULL;
+		if($vals != NULL){
+			$valC = $_POST['val'];
+		}
+		$form ='<table border=0 cellspacing=1 cellpadding=1 style="text-align:right;">';
+ 		$form .= '<tr><th>VALUE';
+        $form .= '</th><th width=100px>CONVERT FROM';
+        $form .= '</th><th>TO';
+        $form .= '</th></tr>';
+        $form .= '<form method="POST" action="'.$_SELF.'">';
+        $form .= '</td></tr><tr><td><input type="text" size="12" name="val" value='.$valC.'>';
+        $form .= '</td><td><select name="from">';
+        $form .= '<option selected value="1">Celsius</option>';
+        $form .= '<option value="2">Fahrenheit</option>';
+        $form .= '<option value="3">Kelvin</option>';
+        $form .= '</select>';
+        $form .= '</td><td><select name="to">';
+        $form .= '<option selected value="1">Celsius</option>';
+        $form .= '<option value="2">Fahrenheit</option>';
+        $form .= '<option value="3">Kelvin</option>';
+        $form .= '</select>';
+        $form .= '</td></tr><tr><td colspan=3><input type="submit" value="submit" name="submit">';
         $form .= '</form>';
-        echo $form;
+        $form .= '</td></tr></table><br />';
+        return $form;
     }
     public function showAll()
     {
-        $val = $_POST['val'];
-        $temp = $_POST['temp'];
-    if(empty($val)){
-            echo $this->showForm();
-            echo "Insert a value to be converted";
-            return false;
+        $from = $_POST['from'];
+		$to = $_POST['to'];
+   		if(isset($_POST['val']) == NULL){
+            return $this->showForm($_POST['val'])."Insert a value";
         }
-        elseif($temp == "1")
+		elseif($from == $to && isset($_POST['val']))
+		{
+            return $this->showForm($_POST['val']).'You cant convert a value to itselsf';
+		}
+        elseif($from == "1" && $to == "2")
         {
-            echo  $this->showForm();
-            echo $val." degrees celsius"." is converted to ".round(($this->convCelsToFahren($val)),2)." fahrenheit.";
-            return false;
+            return  $this->showForm($_POST['val']).$_POST['val']." degrees celsius"." is converted to ".round(($this->convCelsToFahren($_POST['val'])),2)." fahrenheit.";
         }
-        elseif($temp == "2"){
-            echo  $this->showForm();
-            echo $val." farenheit"." is converted to ".round(($this->convFahrenToCels($val)),2)." degrees celsius.";
-            return false;
+        elseif($from == "2" && $to == "1"){
+            return  $this->showForm($_POST['val']).$_POST['val']." farenheit"." is converted to ".round(($this->convFahrenToCels($_POST['val'])),2)." degrees celsius.";
         }
-        elseif($temp == "3")
+        elseif($from == "2" && $to == "3")
         {
-            echo  $this->showForm();
-            echo $val." fahreneit"." is converted to ".round(($this->convFahrenToKel($val)),2)." Kelvin.";
-            return false;
+            return  $this->showForm($_POST['val'])."tr".$_POST['val']." fahreneit"." is converted to ".round(($this->convFahrenTokel($_POST['val'])),2)." kelvin.";
         }
-        elseif($temp == "4")
+        elseif($from == "3" && $to == "2")
         {
-            echo  $this->showForm();
-            echo $val." Kelvin"." is converted to ".round(($this->convKelToFahren($val)),2)." fahrenheit.";
-            return false;
+            return $this->showForm($_POST['val']).$_POST['val']." kelvin"." is converted to ".round(($this->convkelToFahren($_POST['val'])),2)." fahrenheit.";
         }
-        elseif($temp == "5")
+        elseif($from == "1" && $to == "3")
         {
-            echo  $this->showForm();
-            echo $val." celsius"." is converted to ".round(($this->convcelToKel($val)),2)." Kelvin.";
-            return false;
+            return  $this->showForm($_POST['val']).$_POST['val']." celsius"." is converted to ".round(($this->convcelTokel($_POST['val'])),2)." kelvin.";
         }
- elseif($temp == "6")
+ elseif($from == "3" && $to == "1")
         {
-            echo  $this->showForm();
-            echo $val." Kelvin"." is converted to ".round(($this->convKelToCels($val)),2)." celcius.";
-            return false;
+            return  $this->showForm($_POST['val']).$_POST['val']." kelvin"." is converted to ".round(($this->convkelToCels($_POST['val'])),2)." celcius.";
         }
         else{
-            echo  $this->showForm();
-            echo "Sorry, an error has occured.";
-            return false;
+            return  $this->showForm($_POST['val'])."Sorry an error occured";
         }
     }
 }
-
+$final = new tempConv;
+echo $final->showAll(); 
 ?>
