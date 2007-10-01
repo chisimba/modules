@@ -12,19 +12,15 @@ $fields = array(
 	),
 	'userid' => array(
 		'type' => 'text',
-		'length' => 25
+		'length' => 32
 	),
 	'contactid' => array(
 		'type' => 'text',
-		'length' => 25
-	),
-	'cellnumber' => array(
-		'type' => 'integer',
-		'length' => 25
+		'length' => 32
 	),
 	'landlinenumber' => array(
 		'type' => 'integer',
-		'length' => 25
+		'length' => 13
 	),
 	'address' => array(
 		'type' => 'text',
