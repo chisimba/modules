@@ -18,6 +18,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 	),
+
 	'landlinenumber' => array(
 		'type' => 'integer',
 		'length' => 13
@@ -29,6 +30,32 @@ $fields = array(
 	'updated' => array(
 	'type' => 'timestamp'
 	),
+	  'modified' => array(
+		'type' => 'timestamp',
+	),
+  
+    'modified_by' => array(
+		'type' => 'integer',
+        'length' => 11,
+        'unsigned' => TRUE,
+
+	),
+   
+    'checked_out' => array(
+		'type' => 'integer',
+        'length' => 11,
+        'unsigned' => TRUE,
+   ), 
+     
+     'created' => array(
+		'type' => 'timestamp',
+
+		),
+
+    'created_by' => array(
+		'type' => 'text',
+        'length' => 32,
+
 	
 );
 ?>
