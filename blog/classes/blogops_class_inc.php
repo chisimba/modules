@@ -2055,9 +2055,10 @@ class blogops extends object
      *
      * @param  integer $userid
      * @param  integer $editid
+     * @param  string $defaultText Default Text to be populated in the Editor
      * @return boolean
      */
-    public function postEditor($userid, $editid = NULL) 
+    public function postEditor($userid, $editid = NULL, $defaultText = NULL) 
     {
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
@@ -2187,6 +2188,8 @@ class blogops extends object
         $pcon->setDefaultToolbarSet();
         if (isset($editparams['post_content'])) {
             $pcon->setcontent((stripslashes(($editparams['post_content']))));
+        } else if (!is_null($defaultText)) {
+            $pcon->setcontent($defaultText);
         }
         $ptable->startRow();
         $ptable->addCell($pclabel->show());
