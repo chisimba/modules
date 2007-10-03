@@ -1091,7 +1091,7 @@ class blog extends controller
 				if ($mode == 'quickadd') {
 					$this->objblogOps->quickPostAdd($userid, array(
 					'posttitle' => $posttitle,
-					'postcontent' => $postcontent,
+					'postcontent' => nl2br(htmlentities($postcontent)),
 					'postcat' => $cat,
 					'postexcerpt' => '',
 					'poststatus' => '0',
@@ -1985,16 +1985,23 @@ class blog extends controller
 		} //action
 
 	}
+
 	/**
-         * Ovveride the login object in the parent class
-         *
-         * @param  void  
-         * @return bool  
-         * @access public
-         */
-	public function requiresLogin()
+    * Overide the login object in the parent class
+    *
+    * @param  void  
+    * @return bool  
+    * @access public
+    */
+	public function requiresLogin($action)
 	{
-		return FALSE;
+		$actionsRequiringLogin = array('blogadmin');
+
+        if (in_array($action, $actionsRequiringLogin)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
 	}
 }
 ?>
