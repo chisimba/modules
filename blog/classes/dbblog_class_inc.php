@@ -564,8 +564,8 @@ class dbblog extends dbTable
                 'comment_count' => $postarr['commentcount'],
                 'post_ts' => time() ,
                 'post_lic' => $postarr['cclic'],
-                'stickypost' => $postarr['stickypost'],
-                'showpdf' => $postarr['showpdf']
+                'stickypost' => isset($postarr['stickypost']) ? $postarr['stickypost'] : 'N',
+                'showpdf' => isset($postarr['showpdf']) ? $postarr['showpdf'] : 'N'
             );
             $insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
             $this->luceneIndex($insarr);
