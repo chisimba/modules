@@ -59,7 +59,7 @@ $fields = array(
     'created_by' => array(
 		'type' => 'text',
         'length' => 32,
-
+	),
 	
 );
 ?>
