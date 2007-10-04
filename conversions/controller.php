@@ -19,7 +19,11 @@ class conversions extends controller
     {
         try {
             $this->objUser = $this->getObject('user', 'security');
+            $this->objConvertIt = $this->getObject('convertIt');
+            //$this->objDist = $this->getObject('dist');
             $this->objTemp = $this->getObject('temp');
+            $this->objVol = $this->getObject('vol');
+            //$this->objWeight = $this->getObject('weight');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
         }
@@ -28,6 +32,7 @@ class conversions extends controller
             die();
         }
     }
+
     /**
      * Method to process actions to be taken
      *
@@ -37,17 +42,51 @@ class conversions extends controller
     {
         switch ($action) {
             default:
-            	
-           case 'celstofarenheit':
-                $firstname = $this->getParam('cels');
-                
+           case 'default':
                 return 'convertit_tpl.php';
+                break;
+            	
+           case 'convert':
+                return $this->objConvertIt->doChange($this->getParam('to'));
             	break;
 
-	  case 'convert':
-                $type = $this->getParam('converttype');
+/*	  case 'dist':
                 $value = $this->getParam('value');
-                echo "Type: ".$type."    Value: ".$value; die();
+                $from = $this->getParam('from');
+                $to = $this->getParam('to');
+                //echo $value, $from, $to;		
+                $answer = $this->objDist->doConversion($value, $from, $to);
+                echo $answer;
+            	break;
+*/        
+	  case 'temp':
+                $value = $this->getParam('value');
+                $from = $this->getParam('from');
+                $to = $this->getParam('to');
+                //echo $value, $from, $to;		
+                $answer = $this->objTemp->doConversion($value, $from, $to);
+		echo $answer;
+            	break;
+
+
+	  case 'vol':
+                $value = $this->getParam('value');
+                $from = $this->getParam('from');
+                $to = $this->getParam('to');
+                //echo $value, $from, $to;		
+                $answer = $this->objTemp->doConversion($value, $from, $to);
+		echo $answer;
+            	break;
+
+/*	  case 'weight':
+                $value = $this->getParam('value');
+                $from = $this->getParam('from');
+                $to = $this->getParam('to');
+                //echo $value, $from, $to;		
+                $answer = $this->objWeight->doConversion($value, $from, $to);
+		echo $answer;
+            	break;
+*/        
         }
     }
 }

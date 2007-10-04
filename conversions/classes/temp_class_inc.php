@@ -1,8 +1,7 @@
-  <?php
+<?php
    /**
     * converts temperature measurements: Kelvin, celcius, and fahrenheit 
-    * 
-    * weihfilwe wepofhiopwef wepofjwopef wepofjpwoefuj
+    *
     * @author Nazheera Khan <2524939@uwc.ac.za> 
     * @author Ebrahim Vasta <2623441@uwc.ac.za> 
     * @package convertions
@@ -15,115 +14,75 @@ class temp extends object
 
     public function init()
     {
-        // $this->val = $val;
+            $this->objLanguage = $this->getObject('language', 'language');
     }
 
-    public function setup($val)
+    public function setup($val = NULL)
     {
-      // set some val....
       $this->val = $val;
     }
-   
-   
-    public function convCelsToFahren($val)
+
+    public function convCelsToFahren($val = NULL)
     {
-        $Answer = ((9/5) * ($val)+ 32) ;
-        return $Answer;
-    }
-    public function convFahrenToCels($val)
-    {
-        $Answer = (5 / 9) * ($val - 32);
-        return $Answer;
+        $answer = ((9/5) * ($val)+ 32) ;
+        return $answer;
     }
 
-    public function convkelToFahren($val)
+    public function convCelToKel($val = NULL)
     {
-        $Answer = ($val - 273.15) * 9 / 5 + 32; 
-        return $Answer;
+        $answer = $val + 273.15;
+        return $answer;
     }
-    public function convFahrenTokel($val)
+
+    public function convFahrenToCels($val = NULL)
     {
-        $Answer = (5 / 9) * ($val - 32)+273.15;  
-        return $Answer;
+        $answer = (5 / 9) * ($val - 32);
+        return $answer;
     }
-    public function convkelToCels($val)
+
+    public function convKelToCels($val = NULL)
     {
-        $Answer = $val-273.15; 
-        return $Answer;
+        $answer = $val - 273.15; 
+        return $answer;
     }
-    public function convcelTokel($val)
+
+    public function doConversion($val = NULL, $from = NULL, $to = NULL)
     {
-        $Answer = $val+273.15;
-        return $Answer;
-    }
-    
-    public function showForm($vals = NULL)
-    {
-		$valC = NULL;
-		if($vals != NULL){
-			$valC = $_POST['val'];
-		}
-		$form ='<table border=0 cellspacing=1 cellpadding=1 style="text-align:right;">';
- 		$form .= '<tr><th>VALUE';
-        $form .= '</th><th width=100px>CONVERT FROM';
-        $form .= '</th><th>TO';
-        $form .= '</th></tr>';
-        $form .= '<form method="POST" action="'.$_SELF.'">';
-        $form .= '</td></tr><tr><td><input type="text" size="12" name="val" value='.$valC.'>';
-        $form .= '</td><td><select name="from">';
-        $form .= '<option selected value="1">Celsius</option>';
-        $form .= '<option value="2">Fahrenheit</option>';
-        $form .= '<option value="3">Kelvin</option>';
-        $form .= '</select>';
-        $form .= '</td><td><select name="to">';
-        $form .= '<option selected value="1">Celsius</option>';
-        $form .= '<option value="2">Fahrenheit</option>';
-        $form .= '<option value="3">Kelvin</option>';
-        $form .= '</select>';
-        $form .= '</td></tr><tr><td colspan=3><input type="submit" value="submit" name="submit">';
-        $form .= '</form>';
-        $form .= '</td></tr></table><br />';
-        return $form;
-    }
-    public function showAll()
-    {
-        $from = $_POST['from'];
-		$to = $_POST['to'];
-   		if(isset($_POST['val']) == NULL){
-            return $this->showForm($_POST['val'])."Insert a value";
-        }
-		elseif($from == $to && isset($_POST['val']))
-		{
-            return $this->showForm($_POST['val']).'You cant convert a value to itselsf';
-		}
-        elseif($from == "1" && $to == "2")
+	if(empty($val)){
+   	    	return $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
+    	}
+	elseif($from == $to && !empty($val))
+	{
+    	    return $this->objLanguage->languageText('mod_conversions_itselfError', 'conversions');
+	}
+    	elseif($from == "1" && $to == "2")
+    	{
+    	    return  $val." ".$this->objLanguage->languageText("mod_conversions_Celsius", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convCelsToFahren($val)),2)." ".$this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions");
+    	}
+    	elseif($from == "2" && $to == "1"){
+    	    return  $val." ".$this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convFahrenToCels($val)),2)." ".$this->objLanguage->languageText("mod_conversions_Celsius", "conversions").".";
+    	}
+    	elseif($from == "2" && $to == "3")
+    	{
+			$tempVal = $this->convFahrenToCels($val);
+    	    return  $val." ".$this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convCelToKel($tempVal)),2)." ".$this->objLanguage->languageText("mod_conversions_Kelvin", "conversions").".";
+    	}
+    	elseif($from == "3" && $to == "2")
+    	{
+			$tempVal = $this->convKelToCels($val);
+    	    return $val." ".$this->objLanguage->languageText("mod_conversions_Kelvin", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convCelsToFahren($tempVal)),2)." ".$this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions").".";
+    	}
+    	elseif($from == "1" && $to == "3")
+    	{
+    	    return  $val." ".$this->objLanguage->languageText("mod_conversions_Celsius", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convCelToKel($val)),2)." ".$this->objLanguage->languageText("mod_conversions_Kelvin", "conversions").".";
+    	}
+ 		elseif($from == "3" && $to == "1")
         {
-            return  $this->showForm($_POST['val']).$_POST['val']." degrees celsius"." is converted to ".round(($this->convCelsToFahren($_POST['val'])),2)." fahrenheit.";
-        }
-        elseif($from == "2" && $to == "1"){
-            return  $this->showForm($_POST['val']).$_POST['val']." farenheit"." is converted to ".round(($this->convFahrenToCels($_POST['val'])),2)." degrees celsius.";
-        }
-        elseif($from == "2" && $to == "3")
-        {
-            return  $this->showForm($_POST['val'])."tr".$_POST['val']." fahreneit"." is converted to ".round(($this->convFahrenTokel($_POST['val'])),2)." kelvin.";
-        }
-        elseif($from == "3" && $to == "2")
-        {
-            return $this->showForm($_POST['val']).$_POST['val']." kelvin"." is converted to ".round(($this->convkelToFahren($_POST['val'])),2)." fahrenheit.";
-        }
-        elseif($from == "1" && $to == "3")
-        {
-            return  $this->showForm($_POST['val']).$_POST['val']." celsius"." is converted to ".round(($this->convcelTokel($_POST['val'])),2)." kelvin.";
-        }
- elseif($from == "3" && $to == "1")
-        {
-            return  $this->showForm($_POST['val']).$_POST['val']." kelvin"." is converted to ".round(($this->convkelToCels($_POST['val'])),2)." celcius.";
+           	return  $val." ".$this->objLanguage->languageText("mod_conversions_Kelvin", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convKelToCels($val)),2)." ".$this->objLanguage->languageText("mod_conversions_Celsius", "conversions").".";
         }
         else{
-            return  $this->showForm($_POST['val'])."Sorry an error occured";
+           	return  $this->objLanguage->languageText('mod_conversions_unknownError', 'conversions');
         }
     }
 }
-$final = new tempConv;
-echo $final->showAll(); 
 ?>
