@@ -97,6 +97,22 @@ class dbPhonebook extends dbTable
 	*/
 	public function deleteSingle($userId, $contactId)
 	{
+//<<<<<<< dbcontacts_class_inc.php
+//<<<<<<< dbcontacts_class_inc.php
+		$sql = "SELECT 
+            tbl_phonebook.contactId, 
+            CONCAT(tbl_users.firstName, ' ', tbl_users.surname) AS Fullname
+        FROM tbl_phoneboo, tbl_users
+		WHERE 
+		(tbl_phonebook.contactId = tbl_users.userId)
+        AND (tbl_phonebook.userId = '" . $userId . "')k
+        AND (tbl_phonebook.isContact = '1')
+        ORDER BY Fullname";
+		return $this->getArray($sql);
+	}=======
+		$sql = "WHERE userid = '$userId'";
+		return $this->getAll($sql);
+=======
         $list = $this->listSingle($buddyId, $userId);
         $this->update(
             'id',
@@ -112,6 +128,8 @@ class dbPhonebook extends dbTable
             );
         }
         return;
+>>>>>>> 1.4
 	}
 }
 ?>
+>>>>>>> 1.3
