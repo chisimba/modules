@@ -29,8 +29,10 @@ $middleColumn = NULL;
         $ct->cellpadding = 5;
 	//to dropdown
         $todrop = new dropdown('to');
-        $todrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Temperature", "conversions"));
-        $todrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
+        $todrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Distance", "conversions"));
+        $todrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Temperature", "conversions"));
+        $todrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
+        $todrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
         $ct->startRow();
         $tlabel = new label($this->objLanguage->languageText('mod_conversions_goTo', 'conversions') . ':', 'input_convertto');
         $ct->addCell($tlabel->show());

@@ -6,7 +6,12 @@ $cssLayout->setNumColumns(3);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
-
+$this->objVol = $this->newObject('vol');
+                $value = $this->getParam('value');
+                $from = $this->getParam('from');
+                $to = $this->getParam('to');
+                //echo $value, $from, $to;		
+                $answer = $this->objTemp->doConversion($value, $from, $to);
 // Initialize left column
 $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
@@ -61,7 +66,12 @@ $middleColumn = NULL;
         $ct->addCell($tlabel->show());
         $ct->addCell($todrop->show());
         $ct->endRow();
-
+        $ct->startRow();
+        $Answerlabel = new label($this->objLanguage->languageText('mod_conversions_convertto', 'conversions') . ':', 'input_convertto');
+        $ans = new textinput('answer');
+        $ct->addCell($Answerlabel->show());
+        $ct->addCell($ans->show());
+        $ct->endRow();
 
 	//end off the form and add the buttons
         $this->objconvButton = new button($this->objLanguage->languageText('mod_conversions_convert', 'conversions'));
