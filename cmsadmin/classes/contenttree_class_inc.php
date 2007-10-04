@@ -125,7 +125,6 @@ class contenttree extends object
                     if (!empty($sectionAction)) {
                         $nodeUri = $this->uri(array('action' => $sectionAction, 'id' => $node['id'], 'sectionid' => $node['id']), $module);
                         if (strlen($node['title'])>24){
-                        	echo("me");
                         	$text = wordwrap(trim($node['title']),24,"<br />\n");
                         }else{
                         	$text = trim($node['title']);
