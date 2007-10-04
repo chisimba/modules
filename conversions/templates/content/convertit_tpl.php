@@ -12,6 +12,9 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 
+
+
+ 
 	$this->objUser = $this->getObject('user', 'security');
         
 	$cform = new form('conversion', $this->uri(array(
@@ -20,45 +23,36 @@ $middleColumn = NULL;
 
         //start a fieldset
         $cfieldset = $this->getObject('fieldset', 'htmlelements');
-        // $cfieldset->setLegend($this->objLanguage->languageText('mod_conversions_formhead', 'conversions'));
+        // $cfieldset->setLegend($this->objLanguage->languageText('mod_conversions_head', 'conversions'));
         
 	$ct = $this->newObject('htmltable', 'htmlelements');
         $ct->cellpadding = 5;
-        
-	//conversions dropdown
-        $convdrop = new dropdown('converttype');
-        $convdrop->addOption("cels2farenheit", $this->objLanguage->languageText("mod_conversions_cels2faren", "conversions"));
-        $convdrop->addOption("cels2kelvin", $this->objLanguage->languageText("mod_conversions_cels2kelvin", "conversions"));
-    
-	$ct->startRow();
-        $convlabel = new label($this->objLanguage->languageText('mod_conversions_convertfrom', 'conversions') . ':', 'input_convertfrom');
-        $ct->addCell($convlabel->show());
-        $ct->addCell($convdrop->show());
+	//to dropdown
+        $todrop = new dropdown('to');
+        $todrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Temperature", "conversions"));
+        $todrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
+        $ct->startRow();
+        $tlabel = new label($this->objLanguage->languageText('mod_conversions_goTo', 'conversions') . ':', 'input_convertto');
+        $ct->addCell($tlabel->show());
+        $ct->addCell($todrop->show());
         $ct->endRow();
 
-        //value textfield
-        $ct->startRow();
-        $ctvlabel = new label($this->objLanguage->languageText('mod_conversions_value', 'conversions') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
-        
-        $ct->addCell($ctvlabel->show());
-        $ct->addCell($ctv->show());
-        $ct->endRow();
-        
+
 	//end off the form and add the buttons
-        $this->objconvButton = new button($this->objLanguage->languageText('mod_conversions_convert', 'conversions'));
-        $this->objconvButton->setValue($this->objLanguage->languageText('mod_conversions_convert', 'conversions'));
+        $this->objconvButton = new button($this->objLanguage->languageText('mod_conversions_goTo', 'conversions'));
+        $this->objconvButton->setValue($this->objLanguage->languageText('mod_conversions_goTo', 'conversions'));
         $this->objconvButton->setToSubmit();
-        
 	$cfieldset->addContent($ct->show());
         $cform->addToForm($cfieldset->show());
         $cform->addToForm($this->objconvButton->show());
         $cform = $cform->show();
         
 	$objFeatureBox = $this->getObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_convertvalue", "conversions") , $cform);
+        $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_goTo", "conversions") , $cform);
+
   
 $middleColumn = $ret; 
+
 
 
 
