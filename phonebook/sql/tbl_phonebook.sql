@@ -30,9 +30,9 @@ $fields = array(
 	'address' => array(
 		'type' => 'text',
 		'length' => 255
-	),	
+	),
 	'updated' => array(
-	'type' => 'timestamp'
+	'type' => 'timestamp',
 	),
 	  'modified' => array(
 		'type' => 'timestamp',
@@ -49,12 +49,12 @@ $fields = array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
-   ), 
+  	), 
      
      'created' => array(
 		'type' => 'timestamp',
 
-		),
+	),
 
     'created_by' => array(
 		'type' => 'text',
