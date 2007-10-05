@@ -8,7 +8,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * Model class for the table tbl_phonebook
-* @author 
+* @author Jacques Cilliers <2618315@uwc.ac.za>  
 * @copyright 2007 University of the Western Cape
 */
 class dbContacts extends dbTable
@@ -64,4 +64,3 @@ class dbContacts extends dbTable
         }
 }
 ?>
-
