@@ -31,31 +31,31 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class dbcalendar extends dbTable
 {
     /**
-	* @var boolean $showEditDelete A flag to indicate whether to show the edit delete buttons for a context calendar
-	*/
+    * @var boolean $showEditDelete A flag to indicate whether to show the edit delete buttons for a context calendar
+    */
     public $showEditDelete = TRUE;
 
-	/**
-	* @var array $editDeletePermission - An array with list of permissions for editing/deleting events
-	* The items in the array correspond with the userorcontext column.
-	* $editDeletePermission[1] being TRUE allows the user to edit a context calendar entry
-	*/
-	public $editDeletePermission = array (0=>TRUE, 1=>TRUE, 2=>TRUE, 4=>TRUE);
+    /**
+    * @var array $editDeletePermission - An array with list of permissions for editing/deleting events
+    * The items in the array correspond with the userorcontext column.
+    * $editDeletePermission[1] being TRUE allows the user to edit a context calendar entry
+    */
+    public $editDeletePermission = array (0=>TRUE, 1=>TRUE, 2=>TRUE, 4=>TRUE);
 
     /**
-	* @var string $module The calling module - This is needed for the module part in generating URIs. This class is in calendar base, and was causing links to this module.
-	*/
+    * @var string $module The calling module - This is needed for the module part in generating URIs. This class is in calendar base, and was causing links to this module.
+    */
     public $module = 'calendar';
 
-	/**
-	* @var string $editmodule The module to go to when adding / editing events. If Null, it uses $module. This check is done internally
-	*/
+    /**
+    * @var string $editmodule The module to go to when adding / editing events. If Null, it uses $module. This check is done internally
+    */
     public $editmodule = NULL;
 
-	/**
-	* @var string $eventsTag This is a string value for additions to next/previous month navigation. Parameter name is called 'events'
-	* An example would be when you need to generate: index.php?module=calendar&events={something}
-	*/
+    /**
+    * @var string $eventsTag This is a string value for additions to next/previous month navigation. Parameter name is called 'events'
+    * An example would be when you need to generate: index.php?module=calendar&events={something}
+    */
     public $eventsTag = NULL;
 
     /**
@@ -64,15 +64,15 @@ class dbcalendar extends dbTable
     public function init() {
         parent::init('tbl_calendar');
         $this->loadClass('link', 'htmlelements');
-        $this->objDateFunctions =& $this->getObject('datefunctions');
-        $this->objCalendar =& $this->getObject('calendargenerator');
-        $this->objSimpleCal =& $this->getObject('dateandtime','utilities');
+        $this->objDateFunctions = $this->getObject('dateandtime','utilities');
+        $this->objCalendar = $this->getObject('calendargenerator');
+        $this->objSimpleCal = $this->getObject('dateandtime','utilities');
         // Load Language Class
-        $this->objLanguage = &$this->getObject('language', 'language');
+        $this->objLanguage = $this->getObject('language', 'language');
 
-		//$this->objEventAttachments =& $this->getObject('dbeventattachments');
-		$this->objEventAttachments =& $this->getObject('attachments','calendar');
-		$this->objFileIcons =& $this->getObject('fileicons', 'files');
+        //$this->objEventAttachments =& $this->getObject('dbeventattachments');
+        $this->objEventAttachments =& $this->getObject('attachments','calendar');
+        $this->objFileIcons = $this->getObject('fileicons', 'files');
     }
 
     /**
@@ -157,7 +157,7 @@ class dbcalendar extends dbTable
             if ($dayDifference == 0) {
                 $event = $this->insertSingle($date, 0, NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified);
 
-				return $event;
+                return $event;
             } else {
                 // Multiday Event Processing
 
@@ -184,7 +184,7 @@ class dbcalendar extends dbTable
 
                 $this->commitTransaction();
 
-				return $eventStartId;
+                return $eventStartId;
             }
     }
 
@@ -319,12 +319,12 @@ class dbcalendar extends dbTable
     public function getEvents($origin, $id, $startDate = NULL, $endDate = NULL, $limit=NULL)
     {
         $sql = 'SELECT tbl_calendar.*, tbl_calendar_event_attachment.id as attachment_id, multiday_attachment_table.id AS multiday_attachment_id
-		FROM tbl_calendar
-		LEFT JOIN tbl_calendar_event_attachment ON (tbl_calendar_event_attachment.event_id = tbl_calendar.id)
-		LEFT JOIN tbl_calendar_event_attachment AS multiday_attachment_table ON (multiday_attachment_table.event_id = tbl_calendar.multiday_event_start_id)
-		';
+        FROM tbl_calendar
+        LEFT JOIN tbl_calendar_event_attachment ON (tbl_calendar_event_attachment.event_id = tbl_calendar.id)
+        LEFT JOIN tbl_calendar_event_attachment AS multiday_attachment_table ON (multiday_attachment_table.event_id = tbl_calendar.multiday_event_start_id)
+        ';
 
-		// Commence the sql filter based on origin.
+        // Commence the sql filter based on origin.
         switch ($origin)
         {
             case 'user': $where = ' WHERE userorcontext="0" AND userFirstEntry="'.$id.'" '; break;
@@ -349,7 +349,7 @@ class dbcalendar extends dbTable
             $where .= ' AND eventdate < "'.$endDate.'"';
         }
 
-		$where .= ' GROUP BY tbl_calendar.id';
+        $where .= ' GROUP BY tbl_calendar.id';
 
         // Set the Order of return
         $where .= ' ORDER BY eventdate';
@@ -359,7 +359,7 @@ class dbcalendar extends dbTable
             $where .= ' LIMIT '.$limit;
         }
 
-		//echo $sql.$where;
+        //echo $sql.$where;
 
         // Get the events
         return $this->getArray($sql.$where);
@@ -434,22 +434,22 @@ class dbcalendar extends dbTable
     {
         $preparedArray = array();
 
-		$objTrim =& $this->getObject('trimstr', 'strings');
+        $objTrim =& $this->getObject('trimstr', 'strings');
 
         foreach ($events as $event)
         {
             $day = $this->objDateFunctions->dayofMonth($event['eventdate']);
 
-			switch ($event['userorcontext'])
-			{
-				case '0': $image = 'event_user'; break;
-				case '1': $image = 'event_context'; break;
-				default: $image = NULL; break;
-			}
+            switch ($event['userorcontext'])
+            {
+                case '0': $image = 'event_user'; break;
+                case '1': $image = 'event_context'; break;
+                default: $image = NULL; break;
+            }
 
-			if ($event['userorcontext'] == 1 && $event['context'] == 'root') {
-				$image = 'event_site';
-			}
+            if ($event['userorcontext'] == 1 && $event['context'] == 'root') {
+                $image = 'event_site';
+            }
 
             if (array_key_exists($day, $preparedArray)) {
                 $temp = rtrim ($preparedArray[$day], '</ul>');
@@ -459,26 +459,26 @@ class dbcalendar extends dbTable
             }//&#8226;
         }
 
-		$calendarCSS = '<STYLE>
+        $calendarCSS = '<STYLE>
 .event_user {
-	list-style-image: url(modules/calendarbase/resources/event_user.gif);
-	list-style-position: inside;
+    list-style-image: url(modules/calendarbase/resources/event_user.gif);
+    list-style-position: inside;
 }
 .event_context {
-	list-style-image: url(modules/calendarbase/resources/event_context.gif);
-	list-style-position: inside;
+    list-style-image: url(modules/calendarbase/resources/event_context.gif);
+    list-style-position: inside;
 }
 .event_workgroup {
-	list-style-image: url(modules/calendarbase/resources/event_user.gif);
-	list-style-position: inside;
+    list-style-image: url(modules/calendarbase/resources/event_user.gif);
+    list-style-position: inside;
 }
 .event_site {
-	list-style-image: url(modules/calendarbase/resources/event_site.gif);
-	list-style-position: inside;
+    list-style-image: url(modules/calendarbase/resources/event_site.gif);
+    list-style-position: inside;
 }
 </STYLE>';
 
-		$this->appendArrayVar('headerParams', $calendarCSS);
+        $this->appendArrayVar('headerParams', $calendarCSS);
 
         return $preparedArray;
     }
@@ -537,44 +537,44 @@ class dbcalendar extends dbTable
         $eventsTable->addHeaderCell($this->objLanguage->languageText('mod_calendarbase_eventdetails','calendarbase'));
         $eventsTable->endHeaderRow();
 
-		// Find the module to go to for editing events
-		if ($this->editmodule != NULL) {
-			$internaleditmodule = $this->editmodule;
-		} else {
-			$internaleditmodule = $this->module;
-		}
+        // Find the module to go to for editing events
+        if ($this->editmodule != NULL) {
+            $internaleditmodule = $this->editmodule;
+        } else {
+            $internaleditmodule = $this->module;
+        }
 
 
-		$calendarCSS = '<STYLE>
+        $calendarCSS = '<STYLE>
 .cal_user_bkg {
-	background-image: url(modules/calendarbase/resources/user.gif);
-	background-repeat: no-repeat;
-	background-position: top left;
-	padding-left: 35px;
+    background-image: url(modules/calendarbase/resources/user.gif);
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 35px;
 }
 .cal_context_bkg {
-	background-image: url(modules/calendarbase/resources/context.gif);
-	background-repeat: no-repeat;
-	background-position: top left;
-	padding-left: 35px;
+    background-image: url(modules/calendarbase/resources/context.gif);
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 35px;
 }
 .cal_workgroup_bkg{
-	background-image: url(modules/calendarbase/resources/user.gif);
-	background-repeat: no-repeat;
-	background-position: top left;
-	padding-left: 35px;
+    background-image: url(modules/calendarbase/resources/user.gif);
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 35px;
 }
 .cal_site_bkg {
-	background-image: url(modules/calendarbase/resources/site.gif);
-	background-repeat: no-repeat;
-	background-position: top left;
-	padding-left: 35px;
+    background-image: url(modules/calendarbase/resources/site.gif);
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 35px;
 }
 .cal_other {
 }
 </STYLE>';
 
-		$this->appendArrayVar('headerParams', $calendarCSS);
+        $this->appendArrayVar('headerParams', $calendarCSS);
 
 
 
@@ -590,8 +590,8 @@ class dbcalendar extends dbTable
             $currentContent = '';
             // Counter
             $counter = 0;
-			//Inital Style
-			$tdrowclass = '';
+            //Inital Style
+            $tdrowclass = '';
 
             $icon = $this->getObject('geticon', 'htmlelements');
 
@@ -599,24 +599,24 @@ class dbcalendar extends dbTable
             {
                 $counter++;
 
-				switch ($event['userorcontext'])
-				{
-					case '0': $tdclass = 'cal_user_bkg'; break;
-					case '1': $tdclass = 'cal_context_bkg'; break;
-					default: $tdclass = 'cal_other'; break;
-				}
+                switch ($event['userorcontext'])
+                {
+                    case '0': $tdclass = 'cal_user_bkg'; break;
+                    case '1': $tdclass = 'cal_context_bkg'; break;
+                    default: $tdclass = 'cal_other'; break;
+                }
 
-				$prevRowClass = $tdrowclass;
+                $prevRowClass = $tdrowclass;
 
-				if ($event['eventdate'] == date('Y-m-d')) {
-					$tdrowclass = 'todaycal';
-				} else {
-					$tdrowclass = 'even';
-				}
+                if ($event['eventdate'] == date('Y-m-d')) {
+                    $tdrowclass = 'todaycal';
+                } else {
+                    $tdrowclass = 'even';
+                }
 
-				if ($event['userorcontext'] == 1 && $event['context'] == 'root') {
-					$tdclass = 'cal_site_bkg';
-				}
+                if ($event['userorcontext'] == 1 && $event['context'] == 'root') {
+                    $tdclass = 'cal_site_bkg';
+                }
 
 
                 // Get Day Part out of date
@@ -651,31 +651,31 @@ class dbcalendar extends dbTable
                     $cellContent .= '<p>'.$this->objLanguage->languageText('mod_calendarbase_relatedwebsite','calendar').': <a href="'.$event['eventurl'].'" target="calendarpop">'.$event['eventurl'].'</a></p>';
                 }
 
-				// Attachments
-				if ($event['attachment_id'] != '' || $event['multiday_attachment_id'] != '') {
-					//$files = $this->objEventAttachments->getListAttachments($eventId);
-					$files = $this->objEventAttachments->listFiles($eventId);
-					$nextLine = '';
-					if (count($files) > 0) {
-						//$cellContent .= '<hr width="50%" align="left" size="1" />';
-						$cellContent .= '<br /><p><em>'.$this->objLanguage->languageText('word_attachments','calendar').':</em></p>';
-						$cellContent .= '<div style="padding-left: 20px;">';
+                // Attachments
+                if ($event['attachment_id'] != '' || $event['multiday_attachment_id'] != '') {
+                    //$files = $this->objEventAttachments->getListAttachments($eventId);
+                    $files = $this->objEventAttachments->listFiles($eventId);
+                    $nextLine = '';
+                    if (count($files) > 0) {
+                        //$cellContent .= '<hr width="50%" align="left" size="1" />';
+                        $cellContent .= '<br /><p><em>'.$this->objLanguage->languageText('word_attachments','calendar').':</em></p>';
+                        $cellContent .= '<div style="padding-left: 20px;">';
 
-						foreach ($files as $file)
-						{
-							//$downloadLink = new link ($this->uri(array('action'=>'downloadattachment', 'id'=>$file['attachment_id'], 'event'=>$event['id']), $this->module));
-							//$downloadLink->link = $file['filename'];
-							//$cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
-							$downloadLink = new link ($file['path']);
-							$downloadLink->link = $file['filename'];
-							$cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
-							$nextLine =  '<br />';
-						}
-						$cellContent .= '</div>';
-					}
-				}
+                        foreach ($files as $file)
+                        {
+                            //$downloadLink = new link ($this->uri(array('action'=>'downloadattachment', 'id'=>$file['attachment_id'], 'event'=>$event['id']), $this->module));
+                            //$downloadLink->link = $file['filename'];
+                            //$cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
+                            $downloadLink = new link ($file['path']);
+                            $downloadLink->link = $file['filename'];
+                            $cellContent .= $nextLine.$this->objFileIcons->getFileIcon($file['filename']).' '.$downloadLink->show();
+                            $nextLine =  '<br />';
+                        }
+                        $cellContent .= '</div>';
+                    }
+                }
 
-				$cellContent .= '</div>';
+                $cellContent .= '</div>';
 
                 // If the Day Part != Current Day, and current day as a new table row.
                 // Else append data to to Current Day
@@ -689,7 +689,7 @@ class dbcalendar extends dbTable
                     $year = $this->objDateFunctions->getYearNumber($event['eventdate']);
                     $dateCell .= $month.' '.$year;
 
-					//echo $tdrowclass;
+                    //echo $tdrowclass;
                     $eventsTable->addCell($dateCell, 100, 'top', NULL, $prevRowClass);
 
                     // Add Content for right side
@@ -841,13 +841,13 @@ class dbcalendar extends dbTable
     }
 
 
-	/**
-	* This method out
-	*/
-	public function getCalendarSQL($user=NULL, $context=NULL, $month, $year)
-	{
-		// Determine Start and End Date
-		if (!isset($month)) {
+    /**
+    * This method out
+    */
+    public function getCalendarSQL($user=NULL, $context=NULL, $month, $year)
+    {
+        // Determine Start and End Date
+        if (!isset($month)) {
             $month = date('m');
         }
         if (!isset($year)) {
@@ -855,39 +855,39 @@ class dbcalendar extends dbTable
         }
 
         $startDate = $year.'-'.$month.'-01';
-		$startDate = $this->objDateFunctions->previousDay($startDate);
+        $startDate = $this->objDateFunctions->previousDay($startDate);
         $endDate = $this->objDateFunctions->lastDateMonth($month, $year);
-		$endDate = $this->objDateFunctions->nextDay($endDate);
-		// End Calculations of Dates
+        $endDate = $this->objDateFunctions->nextDay($endDate);
+        // End Calculations of Dates
 
-		$sqlArray = array();
-		$datesArray = array();
+        $sqlArray = array();
+        $datesArray = array();
 
-		if ($user != '') {
-			$sqlArray[] = '(userorcontext = "0" AND userFirstEntry="'.$user.'")';
-		}
+        if ($user != '') {
+            $sqlArray[] = '(userorcontext = "0" AND userFirstEntry="'.$user.'")';
+        }
 
-		if ($context != '') {
-			$sqlArray[] = '(userorcontext = "1" AND context ="'.$context.'")';
-		}
+        if ($context != '') {
+            $sqlArray[] = '(userorcontext = "1" AND context ="'.$context.'")';
+        }
 
-		$joiner = '';
-		$filterSQL = ' ';
-		$dateSQL = ' ';
+        $joiner = '';
+        $filterSQL = ' ';
+        $dateSQL = ' ';
 
-		if (count($sqlArray) > 0) {
+        if (count($sqlArray) > 0) {
 
-			foreach ($sqlArray AS $sqlStatement)
-			{
-				$filterSQL .= $joiner.' '.$sqlStatement;
-				$joiner = ' OR ';
-			}
-		}
+            foreach ($sqlArray AS $sqlStatement)
+            {
+                $filterSQL .= $joiner.' '.$sqlStatement;
+                $joiner = ' OR ';
+            }
+        }
 
-		$sql = '  ('.$filterSQL.') AND eventDate > "'.$startDate.'" AND eventDate < "'.$endDate.'"';
+        $sql = '  ('.$filterSQL.') AND eventDate > "'.$startDate.'" AND eventDate < "'.$endDate.'"';
 
-		return $sql;
-	}
+        return $sql;
+    }
 
 } //end of class
 ?>

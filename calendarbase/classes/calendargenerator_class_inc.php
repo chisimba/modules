@@ -73,8 +73,7 @@ class calendargenerator extends object
     */
     public function init()
     {
-        $this->objSimpleCal =& $this->getObject('dateandtime','utilities');
-        $this->objDateFunctions =& $this->getObject('datefunctions');
+        $this->objSimpleCal = $this->getObject('dateandtime','utilities');
         $this->month = date('m');
         $this->year = date('Y');
         $this->size = 'big';
@@ -102,19 +101,19 @@ class calendargenerator extends object
     */
     public function show()
     {
-    	$this->appendArrayVar('headerParams','<link href="modules/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
+        $this->appendArrayVar('headerParams','<link href="modules/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
         $first_of_month = gmmktime(0,0,0,$this->month,1,$this->year);
         #remember that mktime will automatically correct if invalid dates are entered
         # for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
         # this provides a built in "rounding" feature to generate_calendar()
 
         $day_names = array(); #generate all the day names according to the current locale
-        
+
 
         if ($this->first_day == 0) {
             $this->objSimpleCal->startweek='sun';
         }
-       
+
         if ($this->size == 'big') {
             $day_names = $this->objSimpleCal->getDaysAsArray();
             $toc = 'TOC';
@@ -157,7 +156,7 @@ class calendargenerator extends object
         {
             if($weekday == 7){
                 $weekday   = 0; // start a new week
-                
+
                 $calendar .= "</tr>\n<tr class=\"rows".$toc."\">";
             }
             if(isset($this->events[$day]) ){
@@ -188,8 +187,8 @@ class calendargenerator extends object
                 $calendar .= '<td class="s20'.$toc.'"><div class="today'.$toc.'">'.$day.'</div></td>';
             }
             else {
-            	
-            	$cssClass = ($weekday == 0 || $weekday==6) ? 's20'.$toc.'0' : 's20'.$toc; 
+
+                $cssClass = ($weekday == 0 || $weekday==6) ? 's20'.$toc.'0' : 's20'.$toc;
                 $calendar .= '<td class="'.$cssClass.'"><div class="daynum'.$toc.'">'.$day.'</div></td>';
             }
         }
@@ -203,21 +202,21 @@ class calendargenerator extends object
         }// END - Rest of days from next month
 
         return $calendar."</tr>\n</table>\n";
-        
-       
+
+
     }
-    
+
     /**
      * Method to show the simple calendar
      * @return string
      * @author Wesley Nitsckie
-     * @param 
-     * @param 
+     * @param
+     * @param
      * @access public
      */
     public function showSimple($day_names , $weekday)
     {
-        
+
         $str = '<table class="mainTable" cellspacing="1" cellpadding="0">';
         $str .= ' <tr>
           <td class="monthYearText monthYearRow" colspan="7" title="EasyPHPCalendar 6">';
@@ -226,9 +225,9 @@ class calendargenerator extends object
          </tr>
          <tr class="dayNamesText">';
         foreach ($day_names as $d) {
-        	$str .= '<td class="dayNamesRow" width="14%">W</td>';
+            $str .= '<td class="dayNamesRow" width="14%">W</td>';
         }
-          
+
           $str .= '</tr>
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">';
           if($weekday > 0) {
@@ -240,7 +239,7 @@ class calendargenerator extends object
           $str .='
           <td class="s2">1</td>
           <td class="s2">2</td>
-        
+
           <td class="s2">3</td>
           <td class="s2">4</td>
           <td class="s200">5</td>
@@ -248,7 +247,7 @@ class calendargenerator extends object
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
           <td class="s22">6</td>
           <td class="s22">7</td>
-        
+
           <td class="s22">8</td>
           <td class="s2">9</td>
           <td class="s24">10</td>
@@ -256,14 +255,14 @@ class calendargenerator extends object
           <td class="s23">12</td>
         </tr>
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
-        
+
           <td class="s23">13</td>
           <td class="s23">14</td>
           <td class="s23">15</td>
           <td class="s23">16</td>
           <td class="s23">17</td>
           <td class="s2">18</td>
-        
+
           <td class="s200">19</td>
         </tr>
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
@@ -271,7 +270,7 @@ class calendargenerator extends object
           <td class="s2">21</td>
           <td class="s2">22</td>
           <td class="s22 today">23</td>
-        
+
           <td class="s2">24</td>
           <td class="s2">25</td>
           <td class="s200">26</td>
@@ -279,7 +278,7 @@ class calendargenerator extends object
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
           <td class="s200">27</td>
           <td class="s2">28</td>
-        
+
           <td class="s2">29</td>
           <td class="s2">30</td>
           <td class="s22">31</td>
@@ -287,20 +286,20 @@ class calendargenerator extends object
           <td class="sOther">2</td>
         </tr>
          <tr class="rows" onclick="location.href=\'http://www.easyphpcalendar.com/demo.php\';" style="cursor: pointer;">
-        
+
           <td class="sOther">3</td>
           <td class="sOther">4</td>
           <td class="sOther">5</td>
           <td class="sOther">6</td>
           <td class="sOther">7</td>
           <td class="sOther">8</td>
-        
+
           <td class="sOther">9</td>
         </tr>
         </table>';
-        
+
         return $str;
-            
+
     }
 
 }

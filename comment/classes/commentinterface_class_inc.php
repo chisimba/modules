@@ -62,14 +62,14 @@ class commentinterface extends object
     * Constructor method to define the table
     */
    public function init() {
-        $this->objUser = & $this->getObject('user', 'security');
-        $this->objLanguage = & $this->getObject('language', 'language');
-        $this->objDb = & $this->getObject('dbcomment');
-        $this->objDateFunctions =& $this->getObject('datefunctions', 'calendarbase');
+        $this->objUser =  $this->getObject('user', 'security');
+        $this->objLanguage =  $this->getObject('language', 'language');
+        $this->objDb =  $this->getObject('dbcomment');
+        $this->objDateFunctions = $this->getObject('dateandtime','utilities');
         $this->useApproval = FALSE;
 
         // Get an instance of the decisiontable object.
-        $this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
+        $this->objDT = $this->getObject( 'decisiontable','decisiontable' );
         // Create the decision table for the current module
         $this->objDT->create('comment');
         // Collect information from the database.
@@ -450,7 +450,7 @@ class commentinterface extends object
                           'moduleCode' => $moduleCode,
                           'sourceid'=>$line['sourceid']),'comment');
                         $outstr .= "&nbsp;" . $this->addCommentDeleteLink($deleteArray);
-						//$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
+                        //$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
                     }
 
                     $outstr .= "</p>";
@@ -698,7 +698,7 @@ class commentinterface extends object
                           'moduleCode' => $moduleCode,
                           'sourceId'=>$sourceId);
                         $outstr .= "&nbsp;" . $this->addCommentDeleteLink($deleteArray);
-						//$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
+                        //$objDeleteIcon->getDeleteIconWithConfirm('', $deleteArray, 'comment');
                     }
 
                     $outstr .= "</p>";
