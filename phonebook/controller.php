@@ -5,6 +5,12 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+/**
+* Model controller for the table tbl_phonebook
+* @author Jacques Cilliers <2618315@uwc.ac.za>  
+* @copyright 2007 University of the Western Cape
+*/
+
 class phonebook extends controller
 {
 	public $objLanguage;
@@ -19,7 +25,7 @@ class phonebook extends controller
     {
         try {
             $this->objUser = $this->getObject('user', 'security');
-            $this->objDbContacts = $this->getObject('dbcontacts', 'phonebook');
+            $this->objDbContacts = $this->getObject('dbContacts', 'phonebook');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
         }
@@ -37,8 +43,9 @@ class phonebook extends controller
     {
         switch ($action) {
             default:
-            	$method=$this->_getMethod();
- 		break;
+           case 'default':
+                return 'addentry_tpl.php';
+                break;
 
            case 'addentry':
                 $firstname = $this->getParam('firstname');
