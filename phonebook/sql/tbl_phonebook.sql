@@ -1,4 +1,11 @@
 <?php
+/**
+* Database Table Phonebook
+* @author Ewan Burns
+* @author Godwin Du Plessis 
+* @copyright 2007 University of the Western Cape
+*/
+
 //Chisimba definition
 $tablename = 'tbl_phonebook';
 
