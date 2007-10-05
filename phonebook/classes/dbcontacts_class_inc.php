@@ -11,7 +11,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author 
 * @copyright 2007 University of the Western Cape
 */
-class dbPhonebook extends dbTable
+class dbContacts extends dbTable
 {
     /**
     * Constructor method to define the table

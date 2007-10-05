@@ -37,7 +37,7 @@ class phonebook extends controller
     {
         switch ($action) {
             default:
-            	$method=$this->getMethod();
+            	$method=$this->_getMethod();
  		break;
 
            case 'addentry':
