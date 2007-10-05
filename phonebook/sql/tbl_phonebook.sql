@@ -38,28 +38,32 @@ $fields = array(
 		'type' => 'timestamp',
 	),
   
-    'modified_by' => array(
+        'modified_by' => array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
 
 	),
    
-    'checked_out' => array(
+       'checked_out' => array(
 		'type' => 'integer',
         'length' => 11,
         'unsigned' => TRUE,
-  	), 
+
+        ), 
+
      
-     'created' => array(
+       'created' => array(
 		'type' => 'timestamp',
 
 	),
 
-    'created_by' => array(
+       'created_by' => array(
 		'type' => 'text',
-        'length' => 32,
+
+     
 	),
+
 	
 );
 ?>
