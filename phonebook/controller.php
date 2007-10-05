@@ -37,19 +37,27 @@ class phonebook extends controller
     {
         switch ($action) {
             default:
-            	
+            	$method=$this->_getMethod();
+ 		break;
+
            case 'addentry':
                 $firstname = $this->getParam('firstname');
-                
-
-
+                $lastname = $this->getParam('lastname');
+		$emailaddress = $this->getParam('emailaddress');
+		$cellnumber = $this->getParam('cellnumber');
+		$landlinenumber = $this->getParam('landlinenumber'); 
+		$this->objDbContacts->insertRec($fields);          
                 return 'addentry_tpl.php';
             	break;
             	
             case 'editentry':
+     	     $id = $this->getParam('id');
+             $this->objDbContacts->updateRec($id);
                 break;
             	
              case 'deleteentry':
+	     $id = $this->getParam('id');
+             $this->objDbContacts->deleteRec($id);
                 break;
         }
     }
