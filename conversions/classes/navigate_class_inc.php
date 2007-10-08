@@ -85,7 +85,7 @@ class navigate extends object
          }
 			else
 			{
-	 			return $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');;
+	 			return $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
 			}
 		}
 	public function show($value = NULL, $from = NULL, $to = NULL, $type = NULL){
