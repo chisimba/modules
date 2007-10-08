@@ -1,9 +1,6 @@
 <?php
-
 $tablename = 'tbl_cms_content';
-
 $options = array('comment' => 'cms_contents', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
-
 $fields = array(
 	'id' => array(
 		'type' => 'text',
