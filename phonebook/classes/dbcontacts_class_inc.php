@@ -29,16 +29,16 @@ class dbContacts extends dbTable
 
 	public function listAll($userId)
 	{
-        $this->_changeTable('tbl_users');
+        //$this->_changeTable('tbl_users');
         $userrec = $this->getAll("WHERE userid = '$userid'");
         return $userrec;
 	}
-
+/*
         private function _changeTable($tablename)
         {
         parent::init($tablename);
         }
-
+*/
 	/**
 	* Insert a record
 	*Where do the variables come from? 
