@@ -14,7 +14,7 @@ $options = array('comment' => 'Used to store your contact list', 'collate' => 'u
 
 $fields = array(
 	'id' => array(
-		'type' => 'integer',
+		'type' => 'text',
 		'length' => 32
 	),
 	'userid' => array(
@@ -31,7 +31,7 @@ $fields = array(
 	),
 	'emailaddress' => array(
 		'type' => 'text',
-		'length' => 13
+		'length' => 32
 	),
 
 	'landlinenumber' => array(
