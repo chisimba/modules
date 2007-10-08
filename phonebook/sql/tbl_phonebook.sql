@@ -14,11 +14,11 @@ $options = array('comment' => 'Used to store your contact list', 'collate' => 'u
 
 $fields = array(
 	'id' => array(
-		'type' => 'text',
+		'type' => 'integer',
 		'length' => 32
 	),
 	'userid' => array(
-		'type' => 'text',
+		'type' => 'integer',
 		'length' => 32
 	),
 	'firstname' => array(
@@ -30,7 +30,7 @@ $fields = array(
 		'length' => 32
 	),
 	'emailaddress' => array(
-		'type' => 'integer',
+		'type' => 'text',
 		'length' => 13
 	),
 
@@ -39,7 +39,7 @@ $fields = array(
 		'length' => 13
 	),
 	'cellnumber' => array(
-		'type' => 'text',
+		'type' => 'integer',
 		'length' => 32
 	),
 	'address' => array(
