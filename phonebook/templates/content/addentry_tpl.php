@@ -1,4 +1,11 @@
 <?php
+
+/**
+* Database Table Phonebook
+* @author Jacques Cilliers<2618315@uwc.ac.za>
+* @copyright 2007 University of the Western Cape
+*/
+
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
@@ -29,7 +36,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_firstname', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('firstname');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -38,7 +45,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_lastname', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('lastname');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -47,7 +54,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_emailaddress', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('emailaddress');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -56,7 +63,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_landlinenumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('landlinenumber');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -65,7 +72,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('cellnumber');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());

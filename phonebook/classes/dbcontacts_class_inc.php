@@ -41,11 +41,15 @@ class dbContacts extends dbTable
 
 	/**
 	* Insert a record
-	*/
-	public function insertRec($fields)
-	{
-	return $this->insert($fields, 'tbl_phonebook');
-	}
+	*Where do the variables come from? 
+  */
+   public function insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber)
+   {
+
+      $arrayOfRecords = array('userid' =>$userid, 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber);
+      return $this->insert($arrayOfRecords, 'tbl_phonebook');
+    }
+
 
 	/**
 	* Deletes records

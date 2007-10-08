@@ -21,11 +21,15 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 	),
-	'contactid' => array(
+	'firstname' => array(
 		'type' => 'text',
 		'length' => 32
 	),
-	'emailAddressTwo' => array(
+	'lastname' => array(
+		'type' => 'text',
+		'length' => 32
+	),
+	'emailaddress' => array(
 		'type' => 'integer',
 		'length' => 13
 	),
@@ -33,6 +37,10 @@ $fields = array(
 	'landlinenumber' => array(
 		'type' => 'integer',
 		'length' => 13
+	),
+	'cellnumber' => array(
+		'type' => 'text',
+		'length' => 32
 	),
 	'address' => array(
 		'type' => 'text',
