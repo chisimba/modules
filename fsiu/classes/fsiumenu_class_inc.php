@@ -24,7 +24,7 @@ class fsiumenu extends object
             array('title'=>'The team', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
             array('title'=>'FAQ', 'module'=>'faq'),
             array('title'=>'News', 'module'=>'prelogin'),
-            array('title'=>'UberBlog', 'module'=>'blog'),
+            array('title'=>'Developer Blogs', 'module'=>'blog'),
             array('title'=>'Contact us', 'module'=>'cms', 'action' => 'showfulltext','id' => 'gen9Srv59Nme5_2845_1188820504', 'sectionid' => 'init_1'),
         );
         
@@ -48,7 +48,7 @@ class fsiumenu extends object
             $objIcon->alt = 'Login';
             $objIcon->title = 'Login';
             $objIcon->align = 'top';
-            
+            $this->loadClass('link','htmlelements');
             $link = new link ($this->uri(array('action'=>'error', 'message'=>'needlogin'), 'security'));
             $link->link = $objIcon->show();
             $str .=  '<div style="float:right;">'.$link->show().'</div>';
