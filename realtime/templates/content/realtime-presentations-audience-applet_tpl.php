@@ -1,9 +1,9 @@
 <?php
-
-	echo '<applet code="avoir.realtime.presentations.client.ClientViewer" width="100%" height="600">';
-	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar,'.$this->presentationsURL.'/forms-1.1.0.jar"/>';
+        echo '<center>';
+	echo '<applet code="avoir.realtime.presentations.client.ClientViewer" width="720" height="418">';
+	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/>';
 	echo '	<param name="host" value="localhost"/>';
         echo '  <param name="port" value="1962"/>';
 	echo "</applet> ";
-
+       echo '</center>';
 ?>
