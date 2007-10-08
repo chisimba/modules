@@ -44,7 +44,8 @@ class phonebook extends controller
         switch ($action) {
             default:
            case 'default':
-                return 'addentry_tpl.php';
+                $this->objDbContacts->listAll($userId);
+                return 'view_tpl.php';
                 break;
 
            case 'addentry':
