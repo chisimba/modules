@@ -101,7 +101,7 @@ class vol extends object
 			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicMeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions").".";
 		}
 		elseif($from == "2" && $to == "1"){
-			$tempVal = $this->convMillimetersToCubicMeters($value);
+			$tempVal = $this->convMillilitresToCubicMeters($value);
 			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
 		}
 		elseif($from == "2" && $to == "3"){

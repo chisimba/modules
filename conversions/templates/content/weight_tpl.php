@@ -79,7 +79,7 @@ $value = $this->getParam('value');
 $from = $this->getParam('from');
 $to = $this->getParam('to');
 $type = "weight";
-$rightSideColumn = $this->objNavigate->show($value, $from, $to, $type);
+$rightSideColumn = $this->objNavigate->show($gret);
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
@@ -87,7 +87,7 @@ $cssLayout->setLeftColumnContent($leftSideColumn);
 //add right column
 $cssLayout->setRightColumnContent($rightSideColumn);
 
-\//add middle column
+//add middle column
 $cssLayout->setMiddleColumnContent($middleColumn);
 echo $cssLayout->show();
 ?>

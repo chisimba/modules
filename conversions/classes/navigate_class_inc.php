@@ -3,7 +3,7 @@
 	* Returns a drop down list and the convertion answer for the left drop-down menu, in the module conversions  
 	*
 	* @author Ebrahim Vasta <2623441@uwc.ac.za> 
-	* @package convertions
+	* @package conversions
 	* @copyright UWC 2007
 	* @filesource
 	*/ 
@@ -28,7 +28,6 @@ class navigate extends object
 		)));
 		//start a fieldset
 		$gfieldset = $this->getObject('fieldset', 'htmlelements');
-		// $cfieldset->setLegend($this->objLanguage->languageText('mod_conversions_head', 'conversions'));
 		$gt = $this->newObject('htmltable', 'htmlelements');
 		$gt->cellpadding = 5;
 		//to dropdown
@@ -38,7 +37,7 @@ class navigate extends object
 		$gtodrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
 		$gtodrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
 		$gt->startRow();
-		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_goTo', 'conversions') . ':', 'input_convertto');
+		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_goTo', 'conversions') . ':', 'input_goTo');
 		$gt->addCell($gtlabel->show());
 		$gt->addCell($gtodrop->show());
 		$gt->endRow();
@@ -74,7 +73,7 @@ class navigate extends object
 					break;
 
 		  		case 'vol':	
-					$answer = $this->objTemp->doConversion($value, $from, $to);
+					$answer = $this->objVol->doConversion($value, $from, $to);
 					return $answer;
 					break;
 
