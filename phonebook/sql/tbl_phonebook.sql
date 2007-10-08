@@ -67,11 +67,6 @@ $fields = array(
 
         ), 
 
-     
-       'created' => array(
-		'type' => 'timestamp',
-
-	),
 
        'created_by' => array(
 		'type' => 'text',
