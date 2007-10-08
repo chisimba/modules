@@ -69,6 +69,7 @@ class realtime extends controller
 	 */
 	public $contextCode;
 
+
 	public $realtimeControllerURL;
         
         public $presentationsURL;
@@ -78,6 +79,8 @@ class realtime extends controller
         public $objAltConfig;
 
         public $objLink;
+        
+        public $objSlides;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -127,7 +130,13 @@ class realtime extends controller
                 $this->moduleRootPath=$this->objAltConfig->getModulePath();
                 $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
-	}
+	
+                $this->objFiles = $this->getObject('dbrealtimepresentationfiles');
+                $this->objTags = $this->getObject('dbrealtimepresentationtags');
+                $this->objSlides = $this->getObject('dbrealtimepresentationslides');
+
+
+        }
 
 	/**
 	* Method to process actions to be taken
@@ -149,13 +158,25 @@ class realtime extends controller
 				return $this->showVoiceApplet($this->contextCode);
 
 	                case 'audience_applet' :
-				return "realtime-presentations-audience-applet_tpl.php";
-			 case 'presenter_applet' :
-				return "realtime-presentations-presenter-applet_tpl.php";
+                           return "realtime-presentations-audience-applet_tpl.php";
+                        case 'show_upload_form':
+
+                              return "upload_presentation.php";
+
+                        case 'show_presenter_applet':
+                              return $this->showPresenterApplet();
+                        
+                        case 'upload_presentation':
+
+                              return $this->uploadPresentation();
+         
+                        case 'presenter_applet' :
+
+				return "presenter_home.php";
+
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
 			case 'presentations' :
-                                 $this->generateJnlp();
 				return "realtime-presentations_tpl.php";
 			case 'requesttoken' :
 				return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
@@ -183,86 +204,88 @@ class realtime extends controller
 
 	}
 
-/**
- * Function to generate jnlp file for webstart 
- */
 
-function generateJnlp(){
+    /**
+     * Function to invoke the presenter applet 
+     *
+     */ 
+    function showPresenterApplet()
+    {
+          $id=$this->getParam('id');
+          $this->setVarByRef('id', $id);
+          return "realtime-presentations-presenter-applet_tpl.php";
+     }
+    
+   /**
+    * This creates, if not existing, a folder where the presentations are to be stored.
+    * In addition, an uploaded presentation is converted into .html and jpg formats
+    *
+    */
+    
+    function uploadPresentation()
+    {
+ 
+        $generatedid = $this->getParam('id');
+        $filename = $this->getParam('filename');
 
-//first, the one for presenter
-$fp = fopen($this->moduleRootPath."realtime/resources/presentations/Presenter.jnlp", "w") or die("Couldn't create new file");
-fwrite($fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-fwrite($fp, "\n<jnlp spec=\"1.0+\"      codebase=\"". $this->presentationsURL."\"      href=\"Presenter.jnlp\">");
-fwrite($fp, "\n<information>");
-fwrite($fp, "\n<title>Chisimba Presentations [Presenter]</title>");
-fwrite($fp, "\n <vendor>AVOIR</vendor>");
-fwrite($fp, "\n <description>Chisimba OO realtime presentations</description>");
-fwrite($fp, "\n <homepage href=\"http://avoir.uwc.ac.za\"/>");
-fwrite($fp, "\n<description kind=\"short\">Chisimba OO Presentations</description>");
-fwrite($fp, "\n </information>");
-fwrite($fp, "\n <application-desc main-class=\"avoir.realtime.presentations.client.presenter.MainClass\">");
-fwrite($fp, "\n	<argument>".$_SERVER['REMOTE_ADDR']."</argument>");
-fwrite($fp, "\n	<argument>1962</argument>");
-fwrite($fp, "\n	<argument>".$this->objAltConfig->getcontentBasePath()."</argument>");
-fwrite($fp, "\n	<argument>".$this->userId."</argument>");
-fwrite($fp, "\n</application>");
-fwrite($fp, "\n <resources>");
-fwrite($fp, "\n <jar href=\"presentations-client.jar\"/>");
-fwrite($fp, "\n <j2se version=\"1.5+\"");
-fwrite($fp, "\nhref=\"http://java.sun.com/products/autodl/j2se\" initial-heap-size=\"128m\" max-heap-size=\"512m\"/>");
-fwrite($fp, "\n <extension name=\"jgoodies\" href=\"jgoodies.jnlp\"/>");
-fwrite($fp, "\n <security>");
-fwrite($fp, "\n<all-permissions/>");
-fwrite($fp, "\n </security>");
-fwrite($fp, "\n<application-desc main-class=\"avoir.realtime.presentations.client.presenter.MainClass\"/>");
-fwrite($fp, "\n</jnlp>");
-fclose($fp); 
+        $id = $this->objFiles->autoCreateTitle();
 
-//audience
-$fp = fopen($this->moduleRootPath."realtime/resources/presentations/Audience.jnlp", "w") or die("Couldn't create new file");
-fwrite($fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-fwrite($fp, "\n<jnlp spec=\"1.0+\"      codebase=\"". $this->presentationsURL."\"      href=\"Audience.jnlp\">");
-fwrite($fp, "\n<information>");
-fwrite($fp, "\n<title>Chisimba Presentations</title>");
-fwrite($fp, "\n <vendor>AVOIR</vendor>");
-fwrite($fp, "\n <description>Chisimba OO realtime presentations</description>");
-fwrite($fp, "\n <homepage href=\"http://avoir.uwc.ac.za\"/>");
-fwrite($fp, "\n<description kind=\"short\">Chisimba OO Presentations</description>");
-fwrite($fp, "\n </information>");
-fwrite($fp, "\n <application-desc main-class=\"avoir.realtime.presentations.client.ClientViewer\">");
-fwrite($fp, "\n	<argument>".$_SERVER['REMOTE_ADDR']."</argument>");
-fwrite($fp, "\n	<argument>1962</argument>");
-fwrite($fp, "\n	<argument>".$this->objAltConfig-> getcontentBasePath()."</argument>");
-fwrite($fp, "\n	<argument>".$this->userId."</argument>");
-fwrite($fp, "\n</application>");
-fwrite($fp, "\n <resources>");
-fwrite($fp, "\n <jar href=\"presentations-client.jar\"/>");
-fwrite($fp, "\n <j2se version=\"1.5+\"");
-fwrite($fp, "\nhref=\"http://java.sun.com/products/autodl/j2se\" initial-heap-size=\"128m\" max-heap-size=\"512m\"/>");
-fwrite($fp, "\n <extension name=\"jgoodies\" href=\"jgoodies.jnlp\"/>");
-fwrite($fp, "\n <security>");
-fwrite($fp, "\n<all-permissions/>");
-fwrite($fp, "\n </security>");
-fwrite($fp, "\n<application-desc main-class=\"avoir.realtime.presentations.client.ClientViewer\"/>");
-fwrite($fp, "\n</jnlp>");
-fclose($fp); 
+        $objMkDir = $this->getObject('mkdir', 'files');
 
-//for jgoodies
-$fp = fopen($this->moduleRootPath."realtime/resources/presentations/jgoodies.jnlp", "w") or die("Couldn't create new file");
-fwrite($fp, "\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-fwrite($fp, "\n<jnlp spec=\"1.0+\" codebase=\"". $this->presentationsURL."\" href=\"jgoodies.jnlp\">");
-fwrite($fp, "\n  <information>");
-fwrite($fp, "\n      <title>JGoodies</title>");
-fwrite($fp, "\n      <vendor>JGoodies</vendor>");
-fwrite($fp, "\n   </information>");
-fwrite($fp, "\n   <resources>");
-fwrite($fp, "\n        <jar href=\"forms-1.1.0.jar\"/> ");  
-fwrite($fp, "\n   </resources>");
-fwrite($fp, "\n   <component-desc/>");
-fwrite($fp, "\n</jnlp>");
+        $destinationDir = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id;
 
-fclose($fp); 
-}
+       $objMkDir->mkdirs($destinationDir);
+
+        @chmod($destinationDir, 0777);
+
+        $objUpload = $this->newObject('upload', 'files');
+        $objUpload->permittedTypes = array('ppt', 'odp', 'pps'); //'pps',
+        $objUpload->overWrite = TRUE;
+        $objUpload->uploadFolder = $destinationDir.'/';
+
+        $result = $objUpload->doUpload(TRUE, $id);
+
+        //echo $generatedid;
+
+        if ($result['success'] == FALSE) {
+            $this->objFiles->removeAutoCreatedTitle($id);
+            rmdir($this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id);
+
+            $filename = isset($_FILES['fileupload']['name']) ? $_FILES['fileupload']['name'] : '';
+
+            return $this->nextAction('erroriframe', array('message'=>$result['message'], 'file'=>$filename, 'id'=>$generatedid));
+        } else {
+
+            $filename = $_FILES['fileupload']['name'];
+            $mimetype = $_FILES['fileupload']['type'];
+
+            $path_parts = pathinfo($_FILES['fileupload']['name']);
+
+            $ext = $path_parts['extension'];
+
+
+            $file = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
+
+            if ($ext == 'pps')
+            {
+                $rename = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.ppt';
+
+                rename($file, $rename);
+
+                $filename = $path_parts['filename'].'.ppt';
+            }
+
+
+            if (is_file($file)) {
+                @chmod($file, 0777);
+            }
+
+            $this->objFiles->updateReadyForConversion($id, $filename, $mimetype);
+            $this->objFiles->convertFileFromFormat($id,$ext,"html");
+          
+            return "presenter_home.php";
+        }
+    }
     /**
      * Informs the server that a user is requesting a voice token, assigns token to User if the token is
      * available.
