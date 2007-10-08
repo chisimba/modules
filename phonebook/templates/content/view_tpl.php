@@ -59,6 +59,7 @@ $ret = $objFeatureBox->showContent($this->objLanguage->languageText('mod_phonebo
 
 //}
 */
+
 $middleColumn = $ret;
 
 //add left column
