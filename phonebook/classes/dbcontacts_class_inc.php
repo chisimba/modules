@@ -46,7 +46,9 @@ class dbContacts extends dbTable
    public function insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber)
    {
 
-      $arrayOfRecords = array('userid' =>$userid, 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber);
+      $this->objUser = $this -> getObject('user', 'security');	
+
+      $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber, 'created' =>$this ->now());
       return $this->insert($arrayOfRecords, 'tbl_phonebook');
     }
 
