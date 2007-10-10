@@ -44,9 +44,11 @@ class phonebook extends controller
         switch ($action) {
             default:
            case 'default':
+//var_dump($this->objDbContacts->listAll($this->objUser->userId()));
                 $userId = $this->objUser->userId();
-                $this->objDbContacts->listAll($userId);
-                return 'view_tpl.php';
+                $records=$this->objDbContacts->listAll($userId);
+								$this->setVarByRef('records', $records);                
+								return 'view_tpl.php';
                 break;
 
            case 'addentry':
