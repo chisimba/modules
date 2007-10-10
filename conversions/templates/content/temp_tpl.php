@@ -69,14 +69,14 @@ $cform = $cform->show();
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
 $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_temperatureconverter", "conversions") , $cform);
   
-$middleColumn = $ret; 
+ 
 
 $value = $this->getParam('value');
 $from = $this->getParam('from');
 $to = $this->getParam('to');
 $type = "temp";
-$rightSideColumn = $this->objNavigate->conversionsFormNav(); //show($value, $from, $to, $type);
-
+$rightSideColumn = $this->objNavigate->conversionsFormNav();
+$middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $type);
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 

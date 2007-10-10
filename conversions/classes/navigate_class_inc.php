@@ -1,6 +1,6 @@
 <?php
 	/**
-	* Returns a drop down list and the convertion answer for the left drop-down menu, in the module conversions  
+	* Returns a drop down list and the conversion answer for the left drop-down menu, in the module conversions  
 	*
 	* @author Ebrahim Vasta <2623441@uwc.ac.za> 
 	* @package conversions
@@ -28,7 +28,7 @@ class navigate extends object
 		)));
 		//start a fieldset
 		$this->loadClass('fieldset', 'htmlelements');
-                $gfieldset = new fieldset;
+        $gfieldset = new fieldset;
 		$gt = $this->newObject('htmltable', 'htmlelements');
 		$gt->cellpadding = 5;
 		//to dropdown
@@ -38,14 +38,14 @@ class navigate extends object
 		$gtodrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
 		$gtodrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
 		$gt->startRow();
-		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_goTo', 'conversions') . ':', 'input_goTo');
+		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_select', 'conversions') . ':', 'input_goTo');
 		$gt->addCell($gtlabel->show());
 		$gt->addCell($gtodrop->show());
 		$gt->endRow();
 
 		//end off the form and add the buttons
-		$this->objconvButton2 = new button($this->objLanguage->languageText('mod_conversions_goTo', 'conversions'));
-		$this->objconvButton2->setValue($this->objLanguage->languageText('mod_conversions_goTo', 'conversions'));
+		$this->objconvButton2 = new button($this->objLanguage->languageText('mod_conversions_go>', 'conversions'));
+		$this->objconvButton2->setValue($this->objLanguage->languageText('mod_conversions_go>', 'conversions'));
 		$this->objconvButton2->setToSubmit();
 		$gfieldset->addContent($gt->show());
 		$gform->addToForm($gfieldset->show());
@@ -89,14 +89,6 @@ class navigate extends object
 	 			return $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
 			}
 		}
-	public function show($value = NULL, $from = NULL, $to = NULL, $type = NULL){
-		//$ret = $this->conversionsForm();
-$ret = NULL;
-		$check = $this->answer($value, $from, $to, $type);
-		if($check != NULL){
-			$ret.= $check;
-		}
-		return $ret;		
-	}
+
 }
 ?>

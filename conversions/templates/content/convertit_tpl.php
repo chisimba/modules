@@ -14,7 +14,7 @@ $middleColumn = NULL;
 $this->objUser = $this->getObject('user', 'security');
 $objMiddleMenu = $this->getObject('navigate');    
 
-$middleColumn = $objMiddleMenu->conversionsForm(); 
+$middleColumn = $objMiddleMenu->conversionsFormNav(); 
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);

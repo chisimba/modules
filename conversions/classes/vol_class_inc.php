@@ -119,7 +119,7 @@ class vol extends object
 			return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicDecimetersToCubicMeters($value),2).$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "4" && $to == "1"){
-			return $value.$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubiMetersToLitres($value),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($value),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
 		}
 		elseif($from == "4" && $to == "2"){
 			return $value.$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToMillilitres($value),2).$this->objLanguage->languageText("mod_conversions_symML", "conversions").".";
