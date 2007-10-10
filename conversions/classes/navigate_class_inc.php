@@ -22,12 +22,13 @@ class navigate extends object
 			$this->objWeight = $this->getObject('weight');
 			$this->objLanguage = $this->getObject('language', 'language');
 	}
-	public function conversionsForm(){ 
+	public function conversionsFormNav(){ 
 		$gform = new form('goTo', $this->uri(array(
 			'action' => 'goto'
 		)));
 		//start a fieldset
-		$gfieldset = $this->getObject('fieldset', 'htmlelements');
+		$this->loadClass('fieldset', 'htmlelements');
+                $gfieldset = new fieldset;
 		$gt = $this->newObject('htmltable', 'htmlelements');
 		$gt->cellpadding = 5;
 		//to dropdown
@@ -89,7 +90,8 @@ class navigate extends object
 			}
 		}
 	public function show($value = NULL, $from = NULL, $to = NULL, $type = NULL){
-		$ret = $this->conversionsForm();
+		//$ret = $this->conversionsForm();
+$ret = NULL;
 		$check = $this->answer($value, $from, $to, $type);
 		if($check != NULL){
 			$ret.= $check;

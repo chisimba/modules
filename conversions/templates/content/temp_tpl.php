@@ -75,7 +75,7 @@ $value = $this->getParam('value');
 $from = $this->getParam('from');
 $to = $this->getParam('to');
 $type = "temp";
-$rightSideColumn = $this->objNavigate->show($value, $from, $to, $type);
+$rightSideColumn = $this->objNavigate->conversionsFormNav(); //show($value, $from, $to, $type);
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
