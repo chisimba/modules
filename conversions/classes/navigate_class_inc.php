@@ -39,8 +39,7 @@ class navigate extends object
 		$gtodrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
 		$gt->startRow();
 		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_select', 'conversions') . ':', 'input_goTo');
-		$gt->addCell($gtlabel->show());
-		$gt->addCell($gtodrop->show());
+		$gt->addCell($gtlabel->show().$gtodrop->show());
 		$gt->endRow();
 
 		//end off the form and add the buttons
