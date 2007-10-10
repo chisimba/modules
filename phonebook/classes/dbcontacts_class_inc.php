@@ -48,7 +48,7 @@ class dbContacts extends dbTable
 
       $this->objUser = $this -> getObject('user', 'security');	
 
-      $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber, 'created' =>$this ->now());
+      $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber, 'created_by' =>$this ->now());
       return $this->insert($arrayOfRecords, 'tbl_phonebook');
     }
 
