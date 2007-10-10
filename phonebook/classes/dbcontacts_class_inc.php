@@ -24,7 +24,7 @@ class dbContacts extends dbTable
 
 
       /**
-        * Return all records
+        * Return all records in the tbl_phonebook.
       */ 
 
 	public function listAll($userId)

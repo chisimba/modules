@@ -33,7 +33,8 @@ print_r($records);
 
 $ret = $objTableClass->show();
 
-/*       
+/* 
+maybe script this out later?      
 $cform = new form('phonebook', $this->uri(array('action' => 'view')));
 
 $this->objDbContacts->listAll($this->objUser->userId());

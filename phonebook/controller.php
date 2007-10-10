@@ -47,8 +47,8 @@ class phonebook extends controller
 //var_dump($this->objDbContacts->listAll($this->objUser->userId()));
                 $userId = $this->objUser->userId();
                 $records=$this->objDbContacts->listAll($userId);
-								$this->setVarByRef('records', $records);                
-								return 'view_tpl.php';
+		$this->setVarByRef('records', $records);                
+		return 'view_tpl.php';
                 break;
 
            case 'addentry':
