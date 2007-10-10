@@ -51,14 +51,18 @@ class phonebook extends controller
 		return 'view_tpl.php';
                 break;
 
-           case 'addentry':
+           case 'link':
+		return 'addentry_tpl.php';
+	        break;
+
+           case 'addentry';	
                 $firstname = $this->getParam('firstname');
                 $lastname = $this->getParam('lastname');
 		$emailaddress = $this->getParam('emailaddress');
 		$cellnumber = $this->getParam('cellnumber');
 		$landlinenumber = $this->getParam('landlinenumber'); 
-		$this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber);          
-                return 'addentry_tpl.php';
+		$this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber); 
+		return 'view_tpl.php';         
             	  break;
             	
            case 'editentry':

@@ -12,11 +12,15 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 
-$objTableClass = $this->newObject('htmltable', 'htmlelements');
-$objTableClass->cellspacing = "2";
-$objTableClass->cellpadding = "2";
-$objTableClass->width = "90%";
-$objTableClass->attributes = "border='0'";
+ 
+// Create link to add template
+$objAddLink = &$this->newObject('link', 'htmlelements');
+$objAddLink->link($this->uri(array('action' => 'link')));
+$objAddLink->link = $objLanguage->languageText('mod_phonebook_icon', 'phonebook'); 
+// Show the add link
+$objLink = &$this->getObject('link', 'htmlelements'); 
+
+
 // Create the array for the table header
 $tableRow = array();
 $tableHd[] = $objLanguage->languageText('mod_phonebook_contact', 'phonebook');
@@ -26,6 +30,7 @@ $tableHd[] = $objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook')
 $tableHd[] = $objLanguage->languageText('mod_phonebook_address', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_update', 'phonebook');
 // Create the table header for display
+$objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
@@ -62,7 +67,7 @@ $ret = $objFeatureBox->showContent($this->objLanguage->languageText('mod_phonebo
 //}
 */
 
-$middleColumn = $ret;
+$middleColumn =$objAddLink->show().$ret;
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
