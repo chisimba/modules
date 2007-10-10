@@ -69,7 +69,7 @@ $cform->addToForm($this->objconvButton->show());
 $cform = $cform->show();
         
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
-$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_convertvalue", "conversions") , $cform);
+$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_volumeconverter", "conversions") , $cform);
   
 $middleColumn = $ret;
 //Putting a navigation form and the answer in the right column 

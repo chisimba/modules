@@ -27,6 +27,7 @@ $ct->cellpadding = 5;
         
 //value textfield
 $ct->startRow();
+
 $ctvlabel = new label($this->objLanguage->languageText('mod_conversions_value', 'conversions') . ':', 'input_cvalue');
 $ctv = new textinput('value');
         
@@ -66,7 +67,7 @@ $cform->addToForm($this->objconvButton->show());
 $cform = $cform->show();
 
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
-$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_convertvalue", "conversions") , $cform);
+$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_temperatureconverter", "conversions") , $cform);
   
 $middleColumn = $ret; 
 

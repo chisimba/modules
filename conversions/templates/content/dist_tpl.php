@@ -75,7 +75,7 @@ $cform->addToForm($this->objconvButton->show());
 $cform = $cform->show();
 
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
-$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_convertvalue", "conversions") , $cform);
+$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_distanceconverter", "conversions") , $cform);
 
  
 $middleColumn = $ret; 
