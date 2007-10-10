@@ -33,11 +33,11 @@ class dbContacts extends dbTable
         $userrec = $this->getAll("WHERE userid = '$userId'");
         return $userrec;
 	}
-/*
-        private function _changeTable($tablename)
-        {
-        parent::init($tablename);
-        }
+
+/*       private function _changeTable($tablename)
+*        {
+*        parent::init($tablename);
+*        }
 */
 	/**
 	* Insert a record

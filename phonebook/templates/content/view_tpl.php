@@ -29,6 +29,7 @@ $tableHd[] = $objLanguage->languageText('mod_phonebook_update', 'phonebook');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
+print_r($records);
 
 $ret = $objTableClass->show();
 
