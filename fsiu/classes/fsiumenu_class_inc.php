@@ -133,7 +133,8 @@ class fsiumenu extends object
         $str = '<li';
         
         if ($isCurrent) {
-             $str .= ' id="'.$title.'"';
+        	$cssid = str_replace(' ', '_', $title);
+             $str .= ' id="'.$cssid.'"';
         }
         
         $str .= '><a href="'.$link.'" title="'.$title.'">'.$title.'</a></li>';
