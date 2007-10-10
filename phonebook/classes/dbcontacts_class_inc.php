@@ -30,7 +30,7 @@ class dbContacts extends dbTable
 	public function listAll($userId)
 	{
         //$this->_changeTable('tbl_users');
-        $userrec = $this->getAll("WHERE userid = '$userid'");
+        $userrec = $this->getAll("WHERE userid = '$userId'");
         return $userrec;
 	}
 /*
