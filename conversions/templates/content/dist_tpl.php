@@ -6,7 +6,7 @@ $cssLayout->setNumColumns(3);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
-
+$this->objNavigate = $this->getObject('navigate');
 // Initialize left column
 $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
@@ -33,24 +33,22 @@ $ct->endRow();
         
 //conversions dropdown
 $fromdrop = new dropdown('from');
-$fromdrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Inches", "conversions"));
-$fromdrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Feet", "conversions"));
-$fromdrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Yards", "conversions"));
-$fromdrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Centimeters", "conversions"));
-$fromdrop->addOption(5, $this->objLanguage->languageText("mod_conversions_Miles", "conversions"));
-$fromdrop->addOption(6, $this->objLanguage->languageText("mod_conversions_Meters", "conversions"));
-$fromdrop->addOption(7, $this->objLanguage->languageText("mod_conversions_Kilometers", "conversions"));
-$fromdrop->addOption(8, $this->objLanguage->languageText("mod_conversions_Millimeters", "conversions"));
+$fromdrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Centimeters", "conversions"));
+$fromdrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Millimeters", "conversions"));
+$fromdrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Feet", "conversions"));
+$fromdrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Yards", "conversions"));
+$fromdrop->addOption(5, $this->objLanguage->languageText("mod_conversions_Meters", "conversions"));
+$fromdrop->addOption(6, $this->objLanguage->languageText("mod_conversions_Kilometers", "conversions"));
+$fromdrop->addOption(7, $this->objLanguage->languageText("mod_conversions_Miles", "conversions"));
 
 $todrop = new dropdown('to');
-$todrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Inches", "conversions"));
-$todrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Feet", "conversions"));
-$todrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Yards", "conversions"));
-$todrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Centimeters", "conversions"));
-$todrop->addOption(5, $this->objLanguage->languageText("mod_conversions_Miles", "conversions"));
-$todrop->addOption(6, $this->objLanguage->languageText("mod_conversions_Meters", "conversions"));
-$todrop->addOption(7, $this->objLanguage->languageText("mod_conversions_Kilometers", "conversions"));
-$todrop->addOption(8, $this->objLanguage->languageText("mod_conversions_Millimeters", "conversions"));
+$todrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Centimeters", "conversions"));
+$todrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Millimeters", "conversions"));
+$todrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Feet", "conversions"));
+$todrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Yards", "conversions"));
+$todrop->addOption(5, $this->objLanguage->languageText("mod_conversions_Meters", "conversions"));
+$todrop->addOption(6, $this->objLanguage->languageText("mod_conversions_Kilometers", "conversions"));
+$todrop->addOption(7, $this->objLanguage->languageText("mod_conversions_Miles", "conversions"));
 
 $ct->startRow();
 $flabel = new label($this->objLanguage->languageText('mod_conversions_convertfrom', 'conversions') . ':', 'input_convertfrom');

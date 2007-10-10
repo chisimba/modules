@@ -9,14 +9,14 @@
 	*/ 
 class navigate extends object
 {
-//	public $objDist;
+	public $objDist;
 	public $objTemp;
 	public $objVol;
 	public $objWeight;
 
 	public function init()
 	{
-//			$this->objDist = $this->getObject('dist');
+			$this->objDist = $this->getObject('dist');
 			$this->objTemp = $this->getObject('temp');
 			$this->objVol = $this->getObject('vol');
 			$this->objWeight = $this->getObject('weight');

@@ -30,13 +30,7 @@ class dist extends object
 		$answer = ($value * 1609000);
 		return $answer;
 	}
-
-	public function convMilesToInches($value)
-	{
-		$answer = ($value * 63360);
-		return $answer;
-	}
-
+	
 	public function convMilesToFeet($value)
 	{
 		$answer = ($value * 5280);
@@ -70,12 +64,6 @@ class dist extends object
 	public function convMillimetersToMiles($value)
 	{
 		$answer = ($value * 6.214e-7);
-		return $answer;
-	}
-
-	public function convInchesToMiles($value)
-	{
-		$answer = ($value * 0.00001);
 		return $answer;
 	}
 
@@ -115,7 +103,7 @@ class dist extends object
 		* 6 = Kilometers
 		* 7 = Miles
 		* 
-		* The variable $tempVal is used in cases where there is no direct convertion from one value to another
+		* The variable $tempVal is used in cases where there is no direct conversion from one value to another
 		* 
 		*/
 		if(empty($value)){
@@ -128,7 +116,7 @@ class dist extends object
 		elseif($from == "1" && $to == "2")
 		{
 			$tempVal = $this->convCentimetersToMiles($value);
-			return $value.$this->objLanguage->languageText("mod_conversions_symCM", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convMilesToMillimeters($tempVal)),2).$this->objLanguage->languageText("mod_conversions_symFT", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symCM", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convMilesToMillimeters($tempVal)),2).$this->objLanguage->languageText("mod_conversions_symMM", "conversions").".";
 		}
 		elseif($from == "1" && $to == "3")
 		{
@@ -191,7 +179,7 @@ class dist extends object
 		elseif($from == "3" && $to == "2")
 		{
 			$tempVal = $this->convFeetToMiles($value);
-			return $value.$this->objLanguage->languageText("mod_conversions_symFT", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convMilesToMillmeters($tempVal)),2).$this->objLanguage->languageText("mod_conversions_symMM", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symFT", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convMilesToMillimeters($tempVal)),2).$this->objLanguage->languageText("mod_conversions_symMM", "conversions").".";
 		}
 		elseif($from == "3" && $to == "4")
 		{

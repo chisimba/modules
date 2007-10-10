@@ -1,6 +1,6 @@
 <?php
 	/**
-	* converts volume measurements: litres, millilitres, and Cubic Decimeter, Cubic Meter & Cubic Centimeter 
+	* converts volume measurements: Litres, Millilitres, Cubic Decimeters, Cubic Meters & Cubic Centimeters 
 	*
 	* @author Nonhlanhla Gangeni <2539399@uwc.ac.za>
 	* @package convertions
@@ -70,12 +70,12 @@ class vol extends object
 	{
 		/**
 		* 1 = Litres
-		* 2 = Millitres
+		* 2 = Millilitres
 		* 3 = Cubic Decimeter
 		* 4 = Cubic Meter
 		* 5 = Cubic Centimeter
 		*
-		* The variable $tempVal is used in cases where there is no direct convertion from one value to another
+		* The variable $tempVal is used in cases where there is no direct conversion from one value to another
 		* 
 		*/
 		if(empty($value)){
@@ -91,28 +91,28 @@ class vol extends object
 		}
 		elseif($from == "1" && $to == "3"){
 			$tempVal = $this->convLitresToCubicMeters($value);
-			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicDecimeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symDM", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicDecimeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "1" && $to == "4"){
-			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convLitresToCubicMeters($value),2).$this->objLanguage->languageText("mod_conversions_symM", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convLitresToCubicMeters($value),2).$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "1" && $to == "5"){
 			$tempVal = $this->convLitresToCubicMeters($value);
-			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicMeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symL", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicCentimeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "2" && $to == "1"){
 			$tempVal = $this->convMillilitresToCubicMeters($value);
 			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
 		}
 		elseif($from == "2" && $to == "3"){
-			$tempVal = $this->convMillimetersToCubicMeters($value);
+			$tempVal = $this->convMillilitresToCubicMeters($value);
 			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicDecimeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "2" && $to == "4"){
-			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convMillimetersToCubicMeters($value),2).$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>".".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convMillilitresToCubicMeters($value),2).$this->objLanguage->languageText("mod_conversions_symM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "2" && $to == "5"){
-			$tempVal = $this->convMillimetersToCubicMeters($value);
+			$tempVal = $this->convMillilitersToCubicMeters($value);
 			return $value.$this->objLanguage->languageText("mod_conversions_symML", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToCubicCentimeters($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>".".";
 		}
 		elseif($from == "3" && $to == "4"){
@@ -143,19 +143,19 @@ class vol extends object
 		}
 		elseif($from == "3" && $to == "1"){
 			$tempVal = $this->convCubicDecimetersToCubicMeters($value);
-		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>".".";
+		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
 		}
 		elseif($from == "3" && $to == "2"){
 			$tempVal = $this->convCubicDecimetersToCubicMeters($value);
-		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToMillilitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>".".";
+		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToMillilitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symMM", "conversions").".";
 		}
 		elseif($from == "5" && $to == "1"){
 			$tempVal = $this->convCubicCentimetersToCubicMeters($value);
-		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
+		    return $value.$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToLitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symL", "conversions").".";
 		}
 		elseif($from == "5" && $to == "2"){
 			$tempVal = $this->convCubicCentimetersToCubicMeters($value);
-		    return $value.$this->objLanguage->languageText("mod_conversions_symDM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToMillilitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symML", "conversions").".";
+		    return $value.$this->objLanguage->languageText("mod_conversions_symCM", "conversions")."<sup>3</sup>"." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->convCubicMetersToMillilitres($tempVal),2).$this->objLanguage->languageText("mod_conversions_symML", "conversions").".";
 		}
 		else{
 			return  $this->objLanguage->languageText('mod_conversions_unknownError', 'conversions');
