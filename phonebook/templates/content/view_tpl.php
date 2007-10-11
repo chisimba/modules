@@ -12,13 +12,38 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 
+
  
+// Create add icon and link to add template
+$objAddIcon = $this->newObject('geticon', 'htmlelements');
+$objLink = $this->uri(array('action' => 'link'));
+$objAddIcon->setIcon("add", "gif");
+$objAddIcon->alt = $objLanguage->languageText('mod_phonebook_icon', 'phonebook');
+$add = $objAddIcon->getAddIcon($objLink); 
+
+// Create header with add icon
+$pgTitle = &$this->getObject('htmlheading', 'htmlelements');
+$pgTitle->type = 1;
+$pgTitle->str = $objLanguage->languageText('mod_phonebook_head', 'phonebook')."&nbsp;" . $add;
+
 // Create link to add template
-$objAddLink = &$this->newObject('link', 'htmlelements');
-$objAddLink->link($this->uri(array('action' => 'link')));
-$objAddLink->link = $objLanguage->languageText('mod_phonebook_icon', 'phonebook'); 
+//$objAddLink = &$this->newObject('link', 'htmlelements');
+//$objAddLink->link($this->uri(array('action' => 'link')));
+//$objAddLink->link = $objLanguage->languageText('mod_phonebook_icon', 'phonebook'); 
 // Show the add link
-$objLink = &$this->getObject('link', 'htmlelements'); 
+//$objLink = &$this->getObject('link', 'htmlelements'); 
+
+
+    // Create delete icon
+    $objDelIcon = $this->newObject('geticon', 'htmlelements'); 
+    // Create delete action
+    $delLink = array('action' => 'deleteentry',
+        'id' => $id,
+        'module' => 'phonebook',
+        'confirm' => 'yes',
+        );
+    $deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
+    $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
 
 
 // Create the array for the table header
@@ -67,7 +92,7 @@ $ret = $objFeatureBox->showContent($this->objLanguage->languageText('mod_phonebo
 //}
 */
 
-$middleColumn =$objAddLink->show().$ret;
+$middleColumn =$pgTitle->show().$ret.$conf;
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
