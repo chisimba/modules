@@ -10,6 +10,8 @@ class gis extends controller
     public $objLanguage;
     public $objGisOps;
     public $objPostGis;
+    public $objGisUtils;
+    public $objMapserverOps;
 
     /**
      * Constructor method to instantiate objects and get variables
@@ -19,6 +21,8 @@ class gis extends controller
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objGisOps = $this->getObject('gisops');
+            $this->objGisUtils = $this->getObject('gisutils');
+            $this->objMapserverOps = $this->getObject('mapserverops');
             //Get the activity logger class
             $this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
@@ -40,7 +44,10 @@ class gis extends controller
         switch ($action) {
             default:
             	//return the upload form
-                return 'upload_tpl.php';
+                  $this->objMapserverOps->initMapserver('zambezia2.map');
+                  $themap = $this->objMapserverOps->saveMapImage();
+                  $this->setVarByRef('themap', $themap);
+                  return 'upload_tpl.php';
             	break;
             case 'addgeom':
             	$this->objPostGis = $this->getObject('dbpostgis');
@@ -60,13 +67,18 @@ class gis extends controller
 					$fpath = $objFile->getFullFilePath($this->getParam('shpzip'));
 					$fname = $objFile->getFileName($this->getParam('shpzip'));
 					$fpath = str_replace($fname, '', $fpath);
-					chdir($fpath);
-					exec('unzip -o '.$fname);
-            		$this->objPostGis->shp2pgsql($fpath);
-            		chdir($fpath);
+					$destpath = $fpath.'/shapes/';
+					if(!file_exists($fpath))
+					{
+						mkdir($destpath, 0777);
+					}
+					$this->objGisUtils->unPackFilesFromZip($fpath.$fname, $destpath);    		
+					$this->objPostGis->shp2pgsql($destpath);
+            		chdir($destpath);
             		foreach(glob("*.{shp,dbf,shx}", GLOB_BRACE) as $delfiles)
             		{
             			unlink($delfiles);
+            			//echo $delfiles;
             		}
             	}
             	else {

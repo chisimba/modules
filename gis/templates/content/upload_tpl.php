@@ -16,6 +16,8 @@ $leftCol .= $objSideBar->show();
 $rightSideColumn .= "Please upload a zip file containing the .shp, .dbf and .shx files for the geometry";
 
 $middleColumn .= $this->objGisOps->uploadDataFile();
+$middleColumn .= "<br />"; // html break to make it look pretty...
+$middleColumn .= "<img src='$themap'>";
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
