@@ -44,17 +44,21 @@ class gis extends controller
         switch ($action) {
             default:
             	//return the upload form
-                  $this->objMapserverOps->initMapserver('zambezia2.map');
-                  $themap = $this->objMapserverOps->saveMapImage();
-                  $this->setVarByRef('themap', $themap);
                   return 'upload_tpl.php';
             	break;
+				
+			case 'showmap':
+			     $this->objMapserverOps->initMapserver('zambezia2.map');
+                 $themap = $this->objMapserverOps->saveMapImage();
+                 $this->setVarByRef('themap', $themap);
+				 return 'showmap_tpl.php';
+				 break;
+				 
             case 'addgeom':
             	$this->objPostGis = $this->getObject('dbpostgis');
             	$this->objGisOps = $this->getObject('gisops');
             	$this->objPostGis->addGeomToGeonames(27700);
             	//$this->objPostGis->createGeomFromPoints();
-            	
             	break;
                
             case 'uploaddatafile':
