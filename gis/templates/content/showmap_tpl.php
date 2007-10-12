@@ -15,7 +15,7 @@ $middleColumn = NULL;
 
 $script = '<div id="map_tag" style="position:absolute; 
     top:10px; left:10px; width: 800px; height: 600px; border-width:1px;
-    border-color:#000088;"><img src="'.$themap.'" /></div>';
+    border-color:#000088;"></div>';
 
 $script .= '<script type="text/javascript">'; 
 $script .= "//<![CDATA[ 
