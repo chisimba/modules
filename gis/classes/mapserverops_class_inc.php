@@ -71,5 +71,45 @@ class mapserverops extends object
        }
        return TRuE;
    }
+   
+   public function drawMapMsCross()
+   {
+	dl('php_mapscript.dll');
+	//header("Content-type: image/png");
+	$map = ms_newMapObj('zambezia2.map');
+	// We create the map object based on the mapfile received as parameter
+	$size = explode(" ",$_GET['mapsize']);
+	$map->setSize($size[0], $size[1]);
+	// and set the image size (resolution) based on mapsize parameter
+	// Update: The map size must be setted before the extent, otherwise the extent 
+	// will be adjusted to the aspect ratio of the map defined on SIZE parameter
+	// of MAP object in your mapfile
+
+	$extent = explode(" ",$_GET['mapext']);
+	$map->setExtent($extent[0], $extent[1], $extent[2], $extent[3]);
+	// We get the mapext parameter... split it on its 4 parts using 
+	// the space character as splitter
+
+	$layerslist=$_GET['layers'];
+	for ($layer = 0; $layer < $map->numlayers; $layer++) {
+		$lay = $map->getLayer($layer);
+		if ((strpos($layerslist,($map->getLayer($layer)->name)) !== false) || (($map->getLayer($layer)->group != "") && (strpos($layerslist,($map->getLayer($layer)->group)) !== false)))
+		{
+			// if the name property of actual $lay object is in $layerslist
+			// or the group property is in $layerslist then the layer was requested
+			//so we set the status ON... otherwise we set the stat to OFF
+			@$lay->set(status,MS_ON);
+		} 
+		else {
+			@$lay->set(status,MS_OFF);
+		}
+	}
+
+	// The next lines are the same as previous mapscript
+	$image = $map->draw();
+	$imagename = $image->saveWebImage();
+	//$retimage = ImageCreateFromPng('/ms4w/tmp'.$imagename);
+	return $imagename; 
+	}   
 }
 ?>

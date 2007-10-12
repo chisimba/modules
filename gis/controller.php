@@ -48,8 +48,9 @@ class gis extends controller
             	break;
 				
 			case 'showmap':
-			     $this->objMapserverOps->initMapserver('zambezia2.map');
-                 $themap = $this->objMapserverOps->saveMapImage();
+			     //$this->objMapserverOps->initMapserver('zambezia2.map');
+                 //$themap = $this->objMapserverOps->saveMapImage();
+				 $themap = $this->objMapserverOps->drawMapMsCross();
                  $this->setVarByRef('themap', $themap);
 				 return 'showmap_tpl.php';
 				 break;
