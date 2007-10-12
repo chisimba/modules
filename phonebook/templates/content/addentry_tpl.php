@@ -77,7 +77,15 @@ $middleColumn = NULL;
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
-
+	
+	//value textfield
+        $ct->startRow();
+        $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
+        $ctv = new textinput('address');
+        
+        $ct->addCell($ctvlabel->show());
+        $ct->addCell($ctv->show());
+        $ct->endRow();
 	//end off the form and add the buttons
         $this->objconvButton = new button($this->objLanguage->languageText('mod_phonebook_add', 'phonebook'));
         $this->objconvButton->setValue($this->objLanguage->languageText('mod_phonebook_add', 'phonebook'));
@@ -93,6 +101,10 @@ $middleColumn = NULL;
 
 
 $middleColumn = $ret;
+// Create link back to my view template
+$objBackLink = &$this->getObject('link', 'htmlelements');
+$objBackLink->link($this->uri(array('module' => 'phonebook')));
+$objBackLink->link = $objLanguage->languageText('mod_phonebook_return', 'phonebook'); 
 
 
 
