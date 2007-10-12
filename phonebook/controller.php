@@ -65,7 +65,10 @@ class phonebook extends controller
 		$this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address); 
 		return 'addentry_tpl.php';         
             	  break;
-            	
+            
+		case 'link1':
+		return 'editentry_tpl.php';
+	        break;	
            case 'editentry':
      	          $id = $this->getParam('id');
                 $this->objDbContacts->updateRec($id);
