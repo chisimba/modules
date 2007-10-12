@@ -17,7 +17,7 @@ $middleColumn = NULL;
 // Create add icon and link to add template
 $objAddIcon = $this->newObject('geticon', 'htmlelements');
 $objLink = $this->uri(array('action' => 'link'));
-$objAddIcon->setIcon("add_icon", "gif");
+$objAddIcon->setIcon("add", "gif");
 $objAddIcon->alt = $objLanguage->languageText('mod_phonebook_addicon', 'phonebook');
 $add = $objAddIcon->getAddIcon($objLink); 
 
@@ -53,7 +53,8 @@ $tableHd[] = $objLanguage->languageText('mod_phonebook_email', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_landline', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_address', 'phonebook');
-$tableHd[] = $objLanguage->languageText('mod_phonebook_update', 'phonebook');
+$tableHd[] = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
+$tableHd[] = $objLanguage->languageText('mod_phonebook_edit', 'phonebook');
 // Create the table header for display
 $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
@@ -97,14 +98,10 @@ $rowcount = 0;
 		$records == $objUser->userId();
 		$objTableClass->addCell($address, '', 'center', 'center', $class);
 
-		//add update
-	   
+		//add delete	   
 		 $objDelIcon = $this->newObject('geticon', 'htmlelements'); 
-    // Create delete action
-		 $delLink = array('action' => 'deleteentry',
-	        'id' => $id,
-	        'module' => 'phonebook',
-	        'confirm' => 'yes',
+    		// Create delete action
+		 $delLink = array('action' => 'deleteentry','confirm' => 'yes',
 	        );
     		
 		$deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
@@ -114,7 +111,7 @@ $rowcount = 0;
 		$objTableClass->addCell($update, '', '', '', $class);
 
 				
-    // Create edit icon and action
+   		 // Create edit icon and action
 		 $objEditIcon = $this->newObject('geticon', 'htmlelements'); 
 		 $delLink = array('action' => 'editentry',
 	        'id' => $id,
@@ -127,6 +124,8 @@ $rowcount = 0;
 		$update = $conf;
 		$records == $objUser->userId();
 		$objTableClass->addCell($update, '', '', '', $class);
+
+		
 
 
 
