@@ -19,6 +19,17 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 
+// Create link icon and link to view template
+$objAddIcon = $this->newObject('geticon', 'htmlelements');
+$objLink = $this->uri(array('action' => 'default'));
+$objAddIcon->setIcon("comment_view", "gif");
+$objAddIcon->alt = $objLanguage->languageText('mod_phonebook_return', 'phonebook');
+$add = $objAddIcon->getAddIcon($objLink); 
+
+// Create header with add icon
+$pgTitle = &$this->getObject('htmlheading', 'htmlelements');
+$pgTitle->type = 1;
+$pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook')."&nbsp;" . $add;
 
 
  
@@ -100,7 +111,7 @@ $middleColumn = NULL;
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_phonebook_add", "phonebook") , $cform);
 
 
-$middleColumn = $ret;
+$middleColumn = $pgTitle->show().$ret;
 // Create link back to my view template
 $objBackLink = &$this->getObject('link', 'htmlelements');
 $objBackLink->link($this->uri(array('module' => 'phonebook')));

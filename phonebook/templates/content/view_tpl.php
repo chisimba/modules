@@ -17,7 +17,7 @@ $middleColumn = NULL;
 // Create add icon and link to add template
 $objAddIcon = $this->newObject('geticon', 'htmlelements');
 $objLink = $this->uri(array('action' => 'link'));
-$objAddIcon->setIcon("add", "gif");
+$objAddIcon->setIcon("add_icon", "gif");
 $objAddIcon->alt = $objLanguage->languageText('mod_phonebook_addicon', 'phonebook');
 $add = $objAddIcon->getAddIcon($objLink); 
 

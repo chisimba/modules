@@ -43,13 +43,17 @@ class dbContacts extends dbTable
 	* Insert a record
 	*Where do the variables come from? 
   */
-   public function insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber)
+   public function insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address)
    {
-
       $this->objUser = $this -> getObject('user', 'security');	
 
-      $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber, 'created_by' =>$this ->now());
+      $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber,'address' => $address, 'created_by' =>$this ->now());
+
+if(empty($firstname) &&  empty($lastname) && empty($emailaddress) && empty($cellnumber) && empty($landlinenumber) && empty($address)){
+	die;
+}else{
       return $this->insert($arrayOfRecords, 'tbl_phonebook');
+}
     }
 
 
