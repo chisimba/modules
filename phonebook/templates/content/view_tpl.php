@@ -105,66 +105,36 @@ $rowcount = 0;
 	        );
     		
 		$deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
-    		$conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
+    $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
 		$update = $conf;
 		$records == $objUser->userId();
 		$objTableClass->addCell($update, '', '', '', $class);
 
-				
-   		 // Create edit icon and action
-		 $objEditIcon = $this->newObject('geticon', 'htmlelements'); 
-		 $delLink = array('action' => 'editentry',
-	        'id' => $id,
-	        'module' => 'phonebook',
-	        'confirm' => 'yes',
-	        );
-    		
-		$editphrase = $objLanguage->languageText('mod_phonebook_edit', 'phonebook');
-    		$conf = $objEditIcon->getEditIcon('editenty');
-		$update = $conf;
-		$records == $objUser->userId();
-		$objTableClass->addCell($update, '', '', '', $class);
 
+    // Create edit icon and action
+	//	$objEditIcon = $this->newObject('geticon', 'htmlelements'); 
+    
+		$this->loadClass('link', 'htmlelements');
+		$objIcon = $this->newObject('geticon', 'htmlelements');
+		$link = new link ($this->uri(array('action'=>'link1',
+			'id'=>'editentry')));
+		$objIcon->setIcon('edit');
+		$link->link = $objIcon->show();
+		$update = $link->show();
 		
-
-
-
+		$objTableClass->addCell($update, '', '', '', $class);
     $objTableClass->endRow();
 
 	}//end of loop
 
+
+
 $ret = $objTableClass->show();
 
-/* 
-maybe script this out later?      
-$cform = new form('phonebook', $this->uri(array('action' => 'view')));
 
-$this->objDbContacts->listAll($this->objUser->userId());
 
-	$this->objconvButton = new button($this->objLanguage->languageText('mod_phonebook_linktoadd', 'phonebook'));
-	$this->objconvButton->setValue($this->objLanguage->languageText('mod_phonebook_linktoadd', 'phonebook'));
-	$this->objconvButton->setToSubmit();
 
-//I have no idea where the problem is.
-	$cform->addToForm($this->objdbContacts->show());
-	$cform->addToForm($this->objconvButton->show());
-	$cform = $cform->show();
-
-       
-$objFeatureBox = $this->getObject('featurebox', 'navigation');
-$ret = $objFeatureBox->showContent($this->objLanguage->languageText('mod_phonebook_linktoadd', 'phonebook'), $cform);
-//foreach($contacts as $contact)
-//{
-    // check that the dude is online...
- //   if($this->objUser->isActive($contact['userid']))
-  //  { 
-
- //   }
-
-//}
-*/
-
-$middleColumn =$pgTitle->show().$ret.$conf;
+$middleColumn =$pgTitle->show().$ret;
 
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
