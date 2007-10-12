@@ -95,7 +95,10 @@ $middleColumn = NULL;
 
 
 $middleColumn = $ret;
-
+// Create link back to my view template
+$objBackLink = &$this->getObject('link', 'htmlelements');
+$objBackLink->link($this->uri(array('module' => 'phonebook')));
+$objBackLink->link = $objLanguage->languageText('mod_phonebook_return', 'phonebook'); 
 
 
 //add left column

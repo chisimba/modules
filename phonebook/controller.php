@@ -13,8 +13,8 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 
 class phonebook extends controller
 {
-				public $objLanguage;
-				public $objConfig;
+	public $objLanguage;
+	public $objConfig;
         public $objDbContacts;
         public $objUser;
 
@@ -68,12 +68,14 @@ class phonebook extends controller
            case 'editentry':
      	          $id = $this->getParam('id');
                 $this->objDbContacts->updateRec($id);
+		return `view_tpl.php`;
                 break;
             	
            case 'deleteentry':
 	   			     $id = $this->getParam('id');
                $this->objDbContacts->deleteRec($id);
-               break;
+		return `view_tpl.php`;               
+		break;
         }
     }
 }
