@@ -21,6 +21,18 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 
+// Create link icon and link to view template
+$objAddIcon = $this->newObject('geticon', 'htmlelements');
+$objLink = $this->uri(array('action' => 'default'));
+$objAddIcon->setIcon('comment_view', "gif");
+$objAddIcon->alt = $objLanguage->languageText('mod_phonebook_return', 'phonebook');
+$add = $objAddIcon->getAddIcon($objLink); 
+
+// Create header with add icon
+$pgTitle = &$this->getObject('htmlheading', 'htmlelements');
+$pgTitle->type = 1;
+$pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook')."&nbsp;" . $add;
+
 
 
  
@@ -38,7 +50,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_firstname', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('firstname');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -47,7 +59,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_lastname', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('lastname');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -56,7 +68,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_emailaddress', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('emailaddress');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -65,7 +77,7 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_landlinenumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('landlinenumber');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -74,7 +86,16 @@ $middleColumn = NULL;
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('value');
+        $ctv = new textinput('cellnumber');
+        
+        $ct->addCell($ctvlabel->show());
+        $ct->addCell($ctv->show());
+        $ct->endRow();
+        
+	//value textfield
+        $ct->startRow();
+        $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
+        $ctv = new textinput('address');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
@@ -94,7 +115,7 @@ $middleColumn = NULL;
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_phonebook_update", "phonebook") , $cform);
 
 
-$middleColumn = $ret;
+$middleColumn = $pgTitle->show().$ret;
 // Create link back to my view template
 $objBackLink = &$this->getObject('link', 'htmlelements');
 $objBackLink->link($this->uri(array('module' => 'phonebook')));

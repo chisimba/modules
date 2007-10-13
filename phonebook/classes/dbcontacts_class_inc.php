@@ -63,6 +63,7 @@ if(empty($firstname) &&  empty($lastname) && empty($emailaddress) && empty($cell
 	public function deleteRec($id)
 	{
         return $this->delete('id', $id, 'tbl_phonebook');
+        
 	}
 
         /**
@@ -70,7 +71,9 @@ if(empty($firstname) &&  empty($lastname) && empty($emailaddress) && empty($cell
         */
         public function updateRec($id)
         {
-        return $this->update('id', $id, $fields, 'tbl_phonebook');
+        $this->objUser = $this -> getObject('user', 'security');
+		$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber,'address' => $address, 'created_by' =>$this ->now());
+        return $this->update('id', $id, $arrayOfRecords, 'tbl_phonebook');
         }
 }
 ?>

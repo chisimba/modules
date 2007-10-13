@@ -26,35 +26,22 @@ $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
 $pgTitle->type = 1;
 $pgTitle->str = $objLanguage->languageText('mod_phonebook_head', 'phonebook')."&nbsp;" . $add;
 
-// Create link to add template
-//$objAddLink = &$this->newObject('link', 'htmlelements');
-//$objAddLink->link($this->uri(array('action' => 'link')));
-//$objAddLink->link = $objLanguage->languageText('mod_phonebook_icon', 'phonebook'); 
-// Show the add link
-//$objLink = &$this->getObject('link', 'htmlelements'); 
 
-
-    /* Create delete icon
-    $objDelIcon = $this->newObject('geticon', 'htmlelements'); 
-    // Create delete action
-    $delLink = array('action' => 'deleteentry',
-        'id' => $id,
-        'module' => 'phonebook',
-        'confirm' => 'yes',
-        );
-    $deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
-    $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
-*/
-
-// Create the array for the table header
 $tableRow = array();
+//$tableHd[] = $objLanguage->languageText('mod_phonebook_id', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_contact', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_email', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_landline', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_address', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
-$tableHd[] = $objLanguage->languageText('mod_phonebook_edit', 'phonebook');
+$tableHd[] = $objLanguage->languageText('mod_phonebook_update', 'phonebook');
+
+
+
+
+
+
 // Create the table header for display
 $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
@@ -70,7 +57,10 @@ $rowcount = 0;
     $class = ($rowcount % 2 == 0)?'odd':'even';
     $objTableClass->startRow(); 
 		
-		    
+       //add id
+		$id = $record['id'];
+		$records == $objUser->userId();
+		//$objTableClass->addCell($id, '', 'center', 'center', $class);	    
 		
 		
 		//add first name
@@ -98,10 +88,12 @@ $rowcount = 0;
 		$records == $objUser->userId();
 		$objTableClass->addCell($address, '', 'center', 'center', $class);
 
-		//add delete	   
+		// Create delete icon and delete action	   
 		 $objDelIcon = $this->newObject('geticon', 'htmlelements'); 
-    		// Create delete action
-		 $delLink = array('action' => 'deleteentry','confirm' => 'yes',
+   		 $delLink = array('action' => 'deleteentry',
+	        'id' => $id,
+	        'module' => 'phonebook',
+	        'confirm' => 'yes',
 	        );
     		
 		$deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
@@ -110,14 +102,14 @@ $rowcount = 0;
 		$records == $objUser->userId();
 		$objTableClass->addCell($update, '', '', '', $class);
 
-
     // Create edit icon and action
 	//	$objEditIcon = $this->newObject('geticon', 'htmlelements'); 
     
 		$this->loadClass('link', 'htmlelements');
 		$objIcon = $this->newObject('geticon', 'htmlelements');
-		$link = new link ($this->uri(array('action'=>'link1',
-			'id'=>'editentry')));
+		$link = new link ($this->uri(array('action'=>'editentry',
+			'id'=>$id,
+			'module' => 'phonebook',)));
 		$objIcon->setIcon('edit');
 		$link->link = $objIcon->show();
 		$update = $link->show();
@@ -130,8 +122,6 @@ $rowcount = 0;
 
 
 $ret = $objTableClass->show();
-
-
 
 
 $middleColumn =$pgTitle->show().$ret;

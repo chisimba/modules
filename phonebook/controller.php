@@ -47,39 +47,34 @@ class phonebook extends controller
 //var_dump($this->objDbContacts->listAll($this->objUser->userId()));
                 $userId = $this->objUser->userId();
                 $records=$this->objDbContacts->listAll($userId);
-		$this->setVarByRef('records', $records);                
-		return 'view_tpl.php';
+		        $this->setVarByRef('records', $records);                
+				return 'view_tpl.php';
                 break;
-
-           case 'link':
-		return 'addentry_tpl.php';
-	        break;
 
            case 'addentry';	
                 $firstname = $this->getParam('firstname');
                 $lastname = $this->getParam('lastname');
-		$emailaddress = $this->getParam('emailaddress');
-		$cellnumber = $this->getParam('cellnumber');
-		$landlinenumber = $this->getParam('landlinenumber');
-		$address = $this->getParam('address');
-		$this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address); 
+		        $emailaddress = $this->getParam('emailaddress');
+		        $cellnumber = $this->getParam('cellnumber');
+		        $landlinenumber = $this->getParam('landlinenumber');
+		        $address = $this->getParam('address');
+		        $this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address); 
 		return 'addentry_tpl.php';         
             	  break;
             
-		case 'link1':
-		return 'editentry_tpl.php';
+		case 'link':
+		return 'addentry_tpl.php';
 	        break;	
            case 'editentry':
-     	          $id = $this->getParam('id');
-                $this->objDbContacts->updateRec($id);
-		return `view_tpl.php`;
+                return 'editentry_tpl.php';
+                $this->objDbContacts->updateRec($this->getParam('id'));
                 break;
             	
            case 'deleteentry':
-	   			     $id = $this->getParam('id');
-               $this->objDbContacts->deleteRec($id);
-		return `view_tpl.php`;               
-		break;
+          // var_dump($this->objDbContacts->listAll($this->getParam('id')));
+	   		   $this->objDbContacts->deleteRec($this->getParam('id'));
+	   		   return $this->nextAction('view_tpl.php'); 
+	           break;
         }
     }
 }
