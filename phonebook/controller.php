@@ -52,23 +52,63 @@ class phonebook extends controller
                 break;
 
            case 'addentry';	
-                $firstname = $this->getParam('firstname');
-                $lastname = $this->getParam('lastname');
+
+						// Get Details from Form
+            $firstname = $this->getParam('firstname');
+            $lastname = $this->getParam('lastname');
 		        $emailaddress = $this->getParam('emailaddress');
 		        $cellnumber = $this->getParam('cellnumber');
 		        $landlinenumber = $this->getParam('landlinenumber');
 		        $address = $this->getParam('address');
 		        $this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address); 
-		return 'addentry_tpl.php';         
+            $this->nextAction('');
             	  break;
             
 		case 'link':
 		return 'addentry_tpl.php';
 	        break;	
-           case 'editentry':
-                return 'editentry_tpl.php';
-                $this->objDbContacts->updateRec($this->getParam('id'));
-                break;
+           
+        case 'editentry':
+            $id = $this->getParam('id');
+						$oldrec = $this->objDbContacts->listSingle($id);
+            $this->setVarByRef('oldrec', $oldrec);
+            return 'editentry_tpl.php';
+						
+           case 'updateentry':
+						// Get Details from Form
+            $id = $this->getParam('id');
+						$firstname = $this->getParam('firstname');
+            $lastname = $this->getParam('lastname');
+		        $emailaddress = $this->getParam('emailaddress');
+		        $cellnumber = $this->getParam('cellnumber');
+		        $landlinenumber = $this->getParam('landlinenumber');
+		        $address = $this->getParam('address');
+            
+            $this->objUser = $this -> getObject('user', 'security');
+						$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 
+                                    'firstname' => $firstname, 
+                                    'lastname' => $lastname, 
+                                    'emailaddress' => $emailaddress, 
+                                    'cellnumber' => $cellnumber, 
+                                    'landlinenumber' => $landlinenumber,
+                                    'address' => $address, 
+                                    'created_by' =>$this ->objDbContacts->now());
+
+            $this->objDbContacts->updateRec($id, $arrayOfRecords);
+						//$records=$this->objDbContacts->listAll($userId);
+		        //$this->setVarByRef('records', $records);                
+						//print_r($arrayOfRecords); die();
+            return $this->nextAction('view_tpl.php'); 
+					  break;
+						
+					
+						
+           
+
+     //return 'editentry_tpl.php';
+                //$this->objDbContacts->updateRec($this->getParam('id'));
+						//return $this->nextAction('view_tpl.php');
+                //break;
             	
            case 'deleteentry':
           // var_dump($this->objDbContacts->listAll($this->getParam('id')));
