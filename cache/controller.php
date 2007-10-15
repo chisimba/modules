@@ -43,30 +43,57 @@ class cache extends controller
 		switch ($action) {
 			default:
 				// get the cache config file
-				$servarr = file('cache.config');
-				foreach($servarr as $servers)
+				$filename = 'cache.config';
+				if(!file_exists($filename))
 				{
-					$serv = explode(', ', $servers);
-					$cache[] = array('ip' => $serv[0], 'port' => $serv[1]);
+					touch($filename);
+					chmod($filename, 0777);
+				}
+				$handle = fopen($filename, "r");
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+					$num = count($data);
+					for ($c=0; $c < $num; $c++) {
+						$cache[] = array('ip' => $data[0], 'port' => $data[1]);
+					}
+				}
+				fclose($handle);
+				if(empty($cache))
+				{
+					$cache = array('ip' => 'localhost', 'port' => 11211);
+					$cacherec = array($cache);
+					$handle = fopen($filename, 'wb');
+					foreach($cacherec as $rec)
+					{
+						fputcsv($handle, $rec);
+					}
+					fclose($handle);
 				}
 				$this->setVarByRef('cache', $cache);
 				return 'edit_tpl.php';
 				break;
-				
+
 			case 'addserver':
 				$ip = $this->getParam('ip');
 				$port = $this->getParam('port');
-				$servarr = file('cache.config');
-				$new = "$ip|$port";
-				$adder = array($new);
-				$all = array_merge($adder, $servarr); 
-				// re-write the cache config file
 				$filename = 'cache.config';
-			    $handle = fopen($filename, 'a');
-			    fputcsv($handle, $all);
-    			fclose($handle);
+				$handle = fopen($filename, "r");
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+					$cache[] = array('ip' => $data[0], 'port' => $data[1]);
+				}
+				fclose($handle);
+				$adder = array(array('ip' => $ip, 'port' => $port));
+				$all = array_merge($adder, $cache);
+				// re-write the cache config file
+				unlink($filename);
+				$filename2 = 'cache.config';
+				$handle = fopen($filename2, 'wb');
+				foreach($all as $servers)
+				{
+					fputcsv($handle, $servers);
+				}
+				fclose($handle);
 
-				die();
+				return 'edit_tpl.php';
 		}
 	}
 }

@@ -69,7 +69,7 @@ $cform = $cform->show();
 
 // now the table of existing servers...
 
-
+//print_r($cache);
 
 $middleColumn .= $cform;
 
