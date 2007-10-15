@@ -57,17 +57,13 @@ class cache extends controller
 				$ip = $this->getParam('ip');
 				$port = $this->getParam('port');
 				$servarr = file('cache.config');
-				$new = "$ip, $port \r\n";
+				$new = "$ip|$port";
 				$adder = array($new);
 				$all = array_merge($adder, $servarr); 
 				// re-write the cache config file
 				$filename = 'cache.config';
-				
 			    $handle = fopen($filename, 'a');
-			    if(fwrite($handle, $new) == FALSE)
-			    {
-			    	echo "fokop";
-			    }
+			    fputcsv($handle, $all);
     			fclose($handle);
 
 				die();
