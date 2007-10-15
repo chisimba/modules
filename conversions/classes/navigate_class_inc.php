@@ -32,11 +32,11 @@ class navigate extends object
 		$gt = $this->newObject('htmltable', 'htmlelements');
 		$gt->cellpadding = 5;
 		//to dropdown
-		$gtodrop = new dropdown('to');
-		$gtodrop->addOption(1, $this->objLanguage->languageText("mod_conversions_Distance", "conversions"));
-		$gtodrop->addOption(2, $this->objLanguage->languageText("mod_conversions_Temperature", "conversions"));
-		$gtodrop->addOption(3, $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
-		$gtodrop->addOption(4, $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
+		$gtodrop = new dropdown('goTo');
+		$gtodrop->addOption("dist", $this->objLanguage->languageText("mod_conversions_Distance", "conversions"));
+		$gtodrop->addOption("temp", $this->objLanguage->languageText("mod_conversions_Temperature", "conversions"));
+		$gtodrop->addOption("vol", $this->objLanguage->languageText("mod_conversions_Volume", "conversions"));
+		$gtodrop->addOption("weight", $this->objLanguage->languageText("mod_conversions_Weight", "conversions"));
 		$gt->startRow();
 		$gtlabel = new label($this->objLanguage->languageText('mod_conversions_select', 'conversions') . ':', 'input_goTo');
 		$gt->addCell($gtlabel->show().$gtodrop->show());

@@ -8,7 +8,7 @@ class conversions extends controller
 {
 	public $objLanguage;
 	public $objConfig;
-//	public $objDist;
+	public $objDist;
 	public $objTemp;
 	public $objVol;
 	public $objWeight;
@@ -21,7 +21,7 @@ class conversions extends controller
 		{
 			$this->objUser = $this->getObject('user', 'security');
 			$this->objConvertIt = $this->getObject('convertIt');
-//			$this->objDist = $this->getObject('dist');
+			$this->objDist = $this->getObject('dist');
 			$this->objTemp = $this->getObject('temp');
 			$this->objVol = $this->getObject('vol');
 			$this->objWeight = $this->getObject('weight');
@@ -48,8 +48,8 @@ class conversions extends controller
 					return 'convertit_tpl.php';
 					break;
 
-				case 'convert':
-					return $this->objConvertIt->doChange($this->getParam('to'));
+				case 'goto':
+					return $this->objConvertIt->doChange($this->getParam('goTo'));
 					break;
 
 				case 'dist':
@@ -68,9 +68,6 @@ class conversions extends controller
 					return "weight_tpl.php";
 					break;  
 
-				case 'goto':
-					return $this->objConvertIt->doChange($this->getParam('to'));
-					break;
 		}
 	}
 }
