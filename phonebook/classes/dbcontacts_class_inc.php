@@ -39,6 +39,17 @@ class dbContacts extends dbTable
 *        parent::init($tablename);
 *        }
 */
+      /**
+        * Return a single records in the tbl_phonebook.
+      */ 
+
+	public function listSingle($id)
+	{
+       
+        $onerec = $this->getRow('id', $id);
+        return $onerec;
+	}
+
 	/**
 	* Insert a record
 	*Where do the variables come from? 
@@ -69,11 +80,10 @@ if(empty($firstname) &&  empty($lastname) && empty($emailaddress) && empty($cell
         /**
         * Update record
         */
-        public function updateRec($id)
+        public function updateRec($id, $arrayOfRecords)
         {
-        $this->objUser = $this -> getObject('user', 'security');
-		$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber,'address' => $address, 'created_by' =>$this ->now());
-        return $this->update('id', $id, $arrayOfRecords, 'tbl_phonebook');
+
+            return $this->update('id', $id, $arrayOfRecords, 'tbl_phonebook');
         }
 }
 ?>
