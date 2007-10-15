@@ -11,7 +11,7 @@
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
-$cssLayout->setNumColumns(3);
+$cssLayout->setNumColumns(2);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -20,6 +20,8 @@ $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
+//<<<<<<< editentry_tpl.php
+//=======
 
 // Create link icon and link to view template
 $objAddIcon = $this->newObject('geticon', 'htmlelements');
@@ -35,11 +37,12 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 
 
 
- 
+//>>>>>>> 1.3
+
 	$this->objUser = $this->getObject('user', 'security');
         
 	$cform = new form('phonebook', $this->uri(array(
-            'action' => 'editentry'
+            'action' => 'updateentry'
         )));
 
         //start a fieldset
@@ -50,56 +53,104 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_firstname', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('firstname');
-        
+       // $ctv = new textinput($this->getParam('firstname'));
+   			$ctv = new textinput('firstname');
+        if(isset($oldrec['firstname']))
+				{
+       	    $ctv->value = $oldrec['firstname'];     
+        }
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
+				
+				$ct->startRow();
+				$ct->addCell('&nbsp;');
+				$ct->endRow();	
 
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_lastname', 'phonebook') . ':', 'input_cvalue');
         $ctv = new textinput('lastname');
+				if(isset($oldrec['lastname']))
+				{
+       	    $ctv->value = $oldrec['lastname'];     
+        }
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
+
+				$ct->startRow();
+		    $ct->addCell('&nbsp;');
+				$ct->endRow();
 
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_emailaddress', 'phonebook') . ':', 'input_cvalue');
         $ctv = new textinput('emailaddress');
+				if(isset($oldrec['emailaddress']))
+				{
+       	    $ctv->value = $oldrec['emailaddress'];     
+        }
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
+
+			$ct->startRow();
+		    $ct->addCell('&nbsp;');
+				$ct->endRow();
 
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_landlinenumber', 'phonebook') . ':', 'input_cvalue');
         $ctv = new textinput('landlinenumber');
+				if(isset($oldrec['landlinenumber']))
+				{
+       	    $ctv->value = $oldrec['landlinenumber'];     
+        }
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
 
+			$ct->startRow();
+		    $ct->addCell('&nbsp;');
+				$ct->endRow();
+
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('cellnumber');
+        $ctv = new textinput($this->getParam('cellnumber'));
+				if(isset($oldrec['cellnumber']))
+				{
+       	    $ctv->value = $oldrec['cellnumber'];     
+        }
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
         
+			$ct->startRow();
+		    $ct->addCell('&nbsp;');
+				$ct->endRow();
+
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('address');
+        $ctv = new textinput($this->getParam('address'));
+				if(isset($oldrec['address']))
+				{
+       	    $ctv->value = $oldrec['address'];     
+        }
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
+
+			$ct->startRow();
+		    $ct->addCell('&nbsp;');
+				$ct->endRow();
 
 	//end off the form and add the buttons
         $this->objconvButton = new button($this->objLanguage->languageText('mod_phonebook_update', 'phonebook'));

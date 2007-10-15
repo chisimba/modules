@@ -100,7 +100,7 @@ $rowcount = 0;
     $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
 		$update = $conf;
 		$records == $objUser->userId();
-		$objTableClass->addCell($update, '', '', '', $class);
+		$objTableClass->addCell($update, '', 'center', 'center', $class);
 
     // Create edit icon and action
 	//	$objEditIcon = $this->newObject('geticon', 'htmlelements'); 
@@ -108,14 +108,14 @@ $rowcount = 0;
 		$this->loadClass('link', 'htmlelements');
 		$objIcon = $this->newObject('geticon', 'htmlelements');
 		$link = new link ($this->uri(array('action'=>'editentry',
-			'id'=>$id,
-			'module' => 'phonebook',)));
+			'id'=>$id), 'phonebook'));
 		$objIcon->setIcon('edit');
 		$link->link = $objIcon->show();
-		$update = $link->show();
+		$update = $link->show("Are you sure you want to delete this contact");
 		
-		$objTableClass->addCell($update, '', '', '', $class);
+		$objTableClass->addCell($update, '', 'center', 'center', $class);
     $objTableClass->endRow();
+
 
 	}//end of loop
 
