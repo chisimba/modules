@@ -53,6 +53,13 @@ class conversions extends controller
 					break;
 
 				case 'dist':
+$value = $this->getParam('value');
+$from = $this->getParam('from');
+$to = $this->getParam('to');
+
+$this->setVarByRef('value', $value);
+$this->setVarByRef('from', $from);
+$this->setVarByRef('to', $to);
 					return "dist_tpl.php";
             		break;
 

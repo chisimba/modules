@@ -79,9 +79,6 @@ $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_convers
  
 
 //Putting a navigation form and the answer in the right column
-$value = $this->getParam('value');
-$from = $this->getParam('from');
-$to = $this->getParam('to');
 $type = "dist";
 $rightSideColumn = $this->objNavigate->conversionsFormNav();
 $middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $type);
