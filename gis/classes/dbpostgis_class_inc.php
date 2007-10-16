@@ -220,14 +220,14 @@ class dbpostgis extends dbTable
 			return FALSE;
 		}
 	}
-	
+
 	public function vac($table)
 	{
 		$query = "VACUUM ANALYZE $table";
 		$res = $this->_execute($query);
 		return $res;
 	}
-	
+
 	public function pointFromLatLon($lat, $lon, $table, $srid = 27700)
 	{
 		$sql = 'INSERT INTO '.$table.' ("id",coords)
@@ -235,20 +235,20 @@ class dbpostgis extends dbTable
     from flat_tbl );';
 
 	}
-	
+
 	public function addGeomToGeonames($srid, $tablename = 'tbl_geonames', $column = 'the_geom', $type = 'POINT', $dim = 3)
-    {
-    	
-    	$query = "SELECT addGeometryColumn('$this->database', '$tablename', '$column', $srid, '$type', $dim)";
-    	return $this->_execute($query);
-    }
-    
-    public function createGeomFromPoints($tablename = 'tbl_geonames', $column = 'the_geom', $lon = 27.8666667, $lat = -26.1666667, $srid = 27700)
-    {
-    	$query = "update $tablename set $column = setsrid(makepoint($lon, $lat), $srid)";
-    	return $this->_execute($query);
-    }
-	
+	{
+
+		$query = "SELECT addGeometryColumn('$this->database', '$tablename', '$column', $srid, '$type', $dim)";
+		return $this->_execute($query);
+	}
+
+	public function createGeomFromPoints($tablename = 'tbl_geonames', $column = 'the_geom', $lon = 27.8666667, $lat = -26.1666667, $srid = 27700)
+	{
+		$query = "update $tablename set $column = setsrid(makepoint($lon, $lat), $srid)";
+		return $this->_execute($query);
+	}
+
 
 }
 ?>

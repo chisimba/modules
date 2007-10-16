@@ -609,7 +609,7 @@ function msMap(DivTag, ControlType, p_protocol)
     _tagLoading.style.top  = (_map_h - 122) / 2 + 'px';
 
     var myLink              = document.createElement('a');
-    var ref                 = 'http://datacrossing.crs4.it/en_Documentation_mscross.html';
+    var ref                 = 'http://avoir.uwc.ac.za/';
     if (myLink.setAttribute)
     { myLink.setAttribute('href', ref); } else
     { myLink.href = ref }
@@ -622,7 +622,7 @@ function msMap(DivTag, ControlType, p_protocol)
     myLink.style.top        = i.height()-13+'px';
     myLink.style.fontWeight = 'normal';
     myLink.style.textDecoration = 'overline';
-    myLink.appendChild(document.createTextNode("msCross"));
+   // myLink.appendChild(document.createTextNode("AVOIR"));
 
     // Double buffer
     _tagEvents.appendChild(_tagMap);

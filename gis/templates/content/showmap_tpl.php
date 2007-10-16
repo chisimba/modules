@@ -13,25 +13,58 @@ $leftMenu = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$script = '<div id="map_tag" style="position:absolute; 
-    top:10px; left:10px; width: 800px; height: 600px; border-width:1px;
-    border-color:#000088;"></div>';
+$minx = floatval(-47.1234);
+$maxx = floatval(73.1755);
+$ymin = floatval(-38.4304);
 
-$script .= '<script type="text/javascript">; 
-	//<![CDATA[ 
-     myMap1 = new msMap( document.getElementById(\'map_tag\') ); 
-	 myMap1.setCgi( \'http://localhost/cgi-bin/mapserv.exe\' ); 
-	 // alert("you gotta do MINX, MAXX, MinY as the args here...);
-	 myMap1.setFullExtent( 34.930152, 39.353933, -18.876982 );
-     myMap1.setMapFile( \'zambezia2.map\' ); 
-     myMap1.setLayers( \'MOZ_ZA_District_2007_polygon\' ); 
-	 myMap1.redraw();
-     //]]> 
-</script>';
-$middleColumn .= $script;
-$leftCol .= $objSideBar->show();
+$middleColumn .= <<<EOT
+<div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>
+   <div style="width: 190px; height: 400px;" id="ref_tag"></div>
 
-$middleColumn .= '<div id="map_tag" style="position:absolute; 
+   <script type="text/javascript">
+     //<![CDATA[
+     myMap1 = new msMap( document.getElementById('map_tag'), 'standardRight');
+     myMap1.setCgi( '/cgi-bin/mapserv' );
+     myMap1.setFullExtent( -47.1234, 73.1755, -38.4304 );
+     myMap1.setMapFile( '/var/www/chisimba_framework/app/zambezia2.map' );
+     myMap1.setLayers( 'country2_' );
+	 myMap1.setMode('map');
+	 
+	 myMap2 = new msMap( document.getElementById("ref_tag") );
+	 myMap2.setActionNone();
+	 myMap2.setFullExtent(-47.1234, 73.1755, -38.4304);
+	 myMap2.setMapFile('/var/www/chisimba_framework/app/zambezia2.map');
+	 myMap2.setLayers('country2_');
+	 
+	 myMap1.setReferenceMap(myMap2);
+
+	 myMap1.redraw(); myMap2.redraw();
+	 
+	chgLayers();
+
+
+	function chgLayers()
+	{
+  		var list = "country2_ ";
+  		var objForm = document.forms[0];
+  		for(i=0; i<document.forms[0].length; i++)
+  		{
+    		if( objForm.elements["layer[" + i + "]"].checked )
+    		{
+      			list = list + objForm.elements["layer[" + i + "]"].value + " ";
+    		}
+  		}
+  		myMap1.setLayers( list );
+  		myMap1.redraw();
+	}
+     myMap1.redraw();
+     //]]>
+   </script>
+EOT;
+
+   $leftCol .= $objSideBar->show();
+
+$middleColumn .= '<div id="map_tag2" style="position:absolute; 
     top:10px; left:10px; width: 800px; height: 600px; border-width:1px;
     border-color:#000088;">'.$themap.'</div>';
 
