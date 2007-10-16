@@ -52,10 +52,19 @@ class gis extends controller
 				$size = $this->getParam('mapsize');
 				$extent = $this->getParam('mapext');
 
+				$mapfile = '/var/www/chisimba_framework/app/zambezia2.map';
+				$layers = 'country2_';
+				$mapservcgi = '/cgi-bin/mapserv';
+				$bounds = '-47.1234, 73.1755, -38.4304';
+				
 				$this->objMapserverOps->initMapserver('zambezia2.map');
 				//$themap = $this->objMapserverOps->saveMapImage();
-				$themap = $this->objMapserverOps->drawMapMsCross($size, $extent, $layers);
-				$this->setVarByRef('themap', $themap);
+				$themap = $this->objMapserverOps->drawMapMsCross();
+				$this->setVarByRef('mapfile', $mapfile);
+				$this->setVarByRef('layers', $layers);
+				$this->setVarByRef('mapservcgi', $mapservcgi);
+				$this->setVarByRef('bounds', $bounds);
+				//$this->setVarByRef('themap', $themap);
 				return 'showmap_tpl.php';
 				break;
 

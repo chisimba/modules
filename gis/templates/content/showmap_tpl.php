@@ -13,32 +13,29 @@ $leftMenu = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
 
-$minx = floatval(-47.1234);
-$maxx = floatval(73.1755);
-$ymin = floatval(-38.4304);
+$mainmap = ''; //<div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>';
 
 $middleColumn .= <<<EOT
-<div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>
+   <div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>
    <div style="width: 190px; height: 400px;" id="ref_tag"></div>
-
    <script type="text/javascript">
      //<![CDATA[
      myMap1 = new msMap( document.getElementById('map_tag'), 'standardRight');
-     myMap1.setCgi( '/cgi-bin/mapserv' );
-     myMap1.setFullExtent( -47.1234, 73.1755, -38.4304 );
-     myMap1.setMapFile( '/var/www/chisimba_framework/app/zambezia2.map' );
-     myMap1.setLayers( 'country2_' );
+     myMap1.setCgi( "$mapservcgi" );
+     myMap1.setFullExtent( $bounds );
+     myMap1.setMapFile( "$mapfile" );
+     myMap1.setLayers( "$layers" );
 	 myMap1.setMode('map');
 	 
 	 myMap2 = new msMap( document.getElementById("ref_tag") );
 	 myMap2.setActionNone();
-	 myMap2.setFullExtent(-47.1234, 73.1755, -38.4304);
-	 myMap2.setMapFile('/var/www/chisimba_framework/app/zambezia2.map');
-	 myMap2.setLayers('country2_');
+	 myMap2.setFullExtent($bounds);
+	 myMap2.setMapFile("$mapfile");
+	 myMap2.setLayers("$layers");
 	 
 	 myMap1.setReferenceMap(myMap2);
 
-	 myMap1.redraw(); myMap2.redraw();
+	 myMap1.redraw();  myMap2.redraw();
 	 
 	chgLayers();
 
@@ -62,16 +59,21 @@ $middleColumn .= <<<EOT
    </script>
 EOT;
 
-   $leftCol .= $objSideBar->show();
+$leftCol .= $objSideBar->show();
 
-$middleColumn .= '<div id="map_tag2" style="position:absolute; 
-    top:10px; left:10px; width: 800px; height: 600px; border-width:1px;
-    border-color:#000088;">'.$themap.'</div>';
+//$maptab = $this->newObject('htmltable', 'htmlelements');
+//$maptab->cellpadding = 3;
+//$maptab->startRow();
+//$maptab->addCell($mainmap);
+//$maptab->addCell($refmap);
+//$maptab->endRow();
 
-$middleColumn .= header("Content-type: image/png");
+//echo $mainmap, $refmap;
+$middleColumn .= $mainmap; //$maptab->show();
+//$middleColumn .= header("Content-type: image/png");
 //$middleColumn .= "<img src=".$themap.">";
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
-echo $cssLayout->show(); 
+echo $cssLayout->show();
 ?>

@@ -72,20 +72,17 @@ class mapserverops extends object
 		return TRuE;
 	}
 
-	public function drawMapMsCross($size=array(), $extent=array(), $layers=array())
+	public function drawMapMsCross($size=array(800,800), $extent=array(-180,-90,180,90), $layers='')
 	{
-		//dl('php_mapscript.dll');
-		//header("Content-type: image/png");
-		//$map = ms_newMapObj('zambezia2.map');
 		// We create the map object based on the mapfile received as parameter
-		$size = explode(" ",$size);
+		//$size = explode(" ",$size);
 		$this->objMapserver->setSize($size[0], $size[1]);
 		// and set the image size (resolution) based on mapsize parameter
 		// Update: The map size must be setted before the extent, otherwise the extent
 		// will be adjusted to the aspect ratio of the map defined on SIZE parameter
 		// of MAP object in your mapfile
 
-		$extent = explode(" ",$extent);
+		//$extent = explode(" ",$extent);
 		$this->objMapserver->setExtent($extent[0], $extent[1], $extent[2], $extent[3]);
 		// We get the mapext parameter... split it on its 4 parts using
 		// the space character as splitter
