@@ -61,7 +61,7 @@ class dbContacts extends dbTable
       $arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 'firstname' => $firstname, 'lastname' => $lastname, 'emailaddress' => $emailaddress, 'cellnumber' => $cellnumber, 'landlinenumber' => $landlinenumber,'address' => $address, 'created_by' =>$this ->now());
 
 if(empty($firstname) &&  empty($lastname) && empty($emailaddress) && empty($cellnumber) && empty($landlinenumber) && empty($address)){
-	die;
+	return "addentry_tpl.php";
 }else{
       return $this->insert($arrayOfRecords, 'tbl_phonebook');
 }
