@@ -60,23 +60,25 @@ class phonebook extends controller
 		        $cellnumber = $this->getParam('cellnumber');
 		        $landlinenumber = $this->getParam('landlinenumber');
 		        $address = $this->getParam('address');
-		        $this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, $landlinenumber, $address); 
+		        $this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, 				 $landlinenumber, $address); 
             $this->nextAction('');
             	  break;
             
-		case 'link':
-		return 'addentry_tpl.php';
+				case 'link':
+					return 'addentry_tpl.php';
 	        break;	
            
         case 'editentry':
             $id = $this->getParam('id');
+		//print_r($id); die();
 						$oldrec = $this->objDbContacts->listSingle($id);
             $this->setVarByRef('oldrec', $oldrec);
             return 'editentry_tpl.php';
 						
-           case 'updateentry':
+         case 'updateentry':
 						// Get Details from Form
             $id = $this->getParam('id');
+					//	print_r($id); die();
 						$firstname = $this->getParam('firstname');
             $lastname = $this->getParam('lastname');
 		        $emailaddress = $this->getParam('emailaddress');
@@ -95,8 +97,8 @@ class phonebook extends controller
                                     'created_by' =>$this ->objDbContacts->now());
 
             $this->objDbContacts->updateRec($id, $arrayOfRecords);
-						//$records=$this->objDbContacts->listAll($userId);
-		        //$this->setVarByRef('records', $records);                
+						$records=$this->objDbContacts->listAll($userId);
+		        $this->setVarByRef('records', $records);                
 						//print_r($arrayOfRecords); die();
             return $this->nextAction('view_tpl.php'); 
 					  break;

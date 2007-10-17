@@ -51,7 +51,19 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
         $ct->cellpadding = 5;
 
 	//value textfield
-        $ct->startRow();
+				$ct->startRow();
+        $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_id', 'phonebook') . ':', 'input_cvalue');
+        $ctv = new textinput('id');
+				if(isset($oldrec['id']))
+				{
+       	    $ctv->value = $oldrec['id'];     
+        }
+        
+        $ct->addCell($ctvlabel->show());
+        $ct->addCell($ctv->show());
+        $ct->endRow();
+        
+				$ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_firstname', 'phonebook') . ':', 'input_cvalue');
        // $ctv = new textinput($this->getParam('firstname'));
    			$ctv = new textinput('firstname');
@@ -121,7 +133,7 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_cellnumber', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput($this->getParam('cellnumber'));
+        $ctv = new textinput('cellnumber');
 				if(isset($oldrec['cellnumber']))
 				{
        	    $ctv->value = $oldrec['cellnumber'];     
@@ -138,7 +150,7 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput($this->getParam('address'));
+        $ctv = new textinput('address');
 				if(isset($oldrec['address']))
 				{
        	    $ctv->value = $oldrec['address'];     
