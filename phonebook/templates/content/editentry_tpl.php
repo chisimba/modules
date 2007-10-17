@@ -53,14 +53,14 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
 				$ct->startRow();
 				$this->loadClass('hiddeninput', 'htmlelements');
-        $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_id', 'phonebook') . ':', 'input_cvalue');
+        //$ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_id', 'phonebook') . ':', 'input_cvalue');
         $ctv = new hiddeninput('id');
 				if(isset($oldrec['id']))
 				{
        	    $ctv->value = $oldrec['id'];     
         }
         
-        $ct->addCell($ctvlabel->show());
+        //$ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
         $ct->endRow();
         
