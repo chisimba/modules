@@ -78,10 +78,10 @@ $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_convers
  
  
 
-//Putting a navigation form and the answer in the right column
-$type = "dist";
+//Putting a navigation form and the answer in the middle column
 $rightSideColumn = $this->objNavigate->conversionsFormNav();
-$middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $type);
+$middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $action);
+
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 

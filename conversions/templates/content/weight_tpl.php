@@ -73,15 +73,10 @@ $cform = $cform->show();
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
 $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_weightconverter", "conversions") , $cform);
   
-
-
-//Putting a navigation form and the answer in the right column
-$value = $this->getParam('value');
-$from = $this->getParam('from');
-$to = $this->getParam('to');
-$type = "weight";
+//Putting a navigation form and the answer in the middle column
 $rightSideColumn = $this->objNavigate->conversionsFormNav();
-$middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $type); 
+$middleColumn = $ret.$this->objNavigate->answer($value, $from, $to, $action);
+
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 

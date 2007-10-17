@@ -53,25 +53,46 @@ class conversions extends controller
 					break;
 
 				case 'dist':
-$value = $this->getParam('value');
-$from = $this->getParam('from');
-$to = $this->getParam('to');
-
-$this->setVarByRef('value', $value);
-$this->setVarByRef('from', $from);
-$this->setVarByRef('to', $to);
+					$value = $this->getParam('value');
+					$from = $this->getParam('from');
+					$to = $this->getParam('to');
+					$this->setVarByRef('action', $action);
+					$this->setVarByRef('value', $value);
+					$this->setVarByRef('from', $from);
+					$this->setVarByRef('to', $to);
 					return "dist_tpl.php";
             		break;
 
 				case 'temp':
+					$value = $this->getParam('value');
+					$from = $this->getParam('from');
+					$to = $this->getParam('to');
+					$this->setVarByRef('action', $action);
+					$this->setVarByRef('value', $value);
+					$this->setVarByRef('from', $from);
+					$this->setVarByRef('to', $to);
 					return "temp_tpl.php";
 					break;
 
 				case 'vol':
+					$value = $this->getParam('value');
+					$from = $this->getParam('from');
+					$to = $this->getParam('to');
+					$this->setVarByRef('action', $action);
+					$this->setVarByRef('value', $value);
+					$this->setVarByRef('from', $from);
+					$this->setVarByRef('to', $to);
 					return "vol_tpl.php";
 					break;
 
 				case 'weight':
+					$value = $this->getParam('value');
+					$from = $this->getParam('from');
+					$to = $this->getParam('to');
+					$this->setVarByRef('action', $action);
+					$this->setVarByRef('value', $value);
+					$this->setVarByRef('from', $from);
+					$this->setVarByRef('to', $to);
 					return "weight_tpl.php";
 					break;  
 

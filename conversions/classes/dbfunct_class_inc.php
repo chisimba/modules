@@ -1,5 +1,5 @@
 <?php
-/**
+	/**
     * provides methods for accessing database table tbl_conversions.
     *
     * @author Nonhlanhla Gangeni <2539399@uwc.ac.za>
@@ -18,7 +18,7 @@ class dbconv extends dbTable
         parent::init('tbl_conversions');
     }
 
-    
+        
 	public function getConversion($id)
 	{
 		$sql = "WHERE id = '$id'";
