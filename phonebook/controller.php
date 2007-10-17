@@ -44,7 +44,11 @@ class phonebook extends controller
         switch ($action) {
             default:
            case 'default':
+
+//var_dump($this->objDbContacts->listAll($this->objUser->userId())); die();
+
 //var_dump($this->objDbContacts->listAll($this->objUser->userId()));
+
                 $userId = $this->objUser->userId();
                 $records=$this->objDbContacts->listAll($userId);
 		        $this->setVarByRef('records', $records);                
@@ -60,7 +64,7 @@ class phonebook extends controller
 		        $cellnumber = $this->getParam('cellnumber');
 		        $landlinenumber = $this->getParam('landlinenumber');
 		        $address = $this->getParam('address');
-		        $this->objDbContacts->insertRecord($userid, $firstname, $lastname, $emailaddress, $cellnumber, 				 $landlinenumber, $address); 
+		        $this->objDbContacts->insertRecord($userId, $firstname, $lastname, $emailaddress, $cellnumber, 				 $landlinenumber, $address); 
             $this->nextAction('');
             	  break;
             
@@ -97,8 +101,7 @@ class phonebook extends controller
                                     'created_by' =>$this ->objDbContacts->now());
 
             $this->objDbContacts->updateRec($id, $arrayOfRecords);
-						$records=$this->objDbContacts->listAll($userId);
-		        $this->setVarByRef('records', $records);                
+						               
 						//print_r($arrayOfRecords); die();
             return $this->nextAction('view_tpl.php'); 
 					  break;
