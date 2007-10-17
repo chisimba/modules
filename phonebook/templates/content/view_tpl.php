@@ -64,7 +64,7 @@ $rowcount = 0;
 		
 		
 		//add first name
-		$username = $record['firstname'] . '&nbsp;' . $record['lastname'];
+		$username = $record['firstname'] . '&nbsp;'.'&nbsp;'.'&nbsp;'.'&nbsp;' . $record['lastname'];
 		$records == $objUser->userId();
 		$objTableClass->addCell($username, '', 'center', 'center', $class);
 
@@ -117,6 +117,8 @@ $rowcount = 0;
     $objTableClass->endRow();
 
 
+        
+          
 	}//end of loop
 
 
