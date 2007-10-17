@@ -20,16 +20,17 @@ $rightSideColumn = NULL;
 $middleColumn = NULL;
 
 // Create link icon and link to view template
-$objAddIcon = $this->newObject('geticon', 'htmlelements');
-$objLink = $this->uri(array('action' => 'default'));
-$objAddIcon->setIcon("comment_view", "gif");
-$objAddIcon->alt = $objLanguage->languageText('mod_phonebook_return', 'phonebook');
-$add = $objAddIcon->getAddIcon($objLink); 
+$this->loadClass('link', 'htmlelements');
+		$objIcon = $this->newObject('geticon', 'htmlelements');
+		$link = new link ($this->uri(array('action'=>'default')));
+		$objIcon->setIcon('comment');
+		$link->link = $objIcon->show();
+		$update = $link->show(); 
 
 // Create header with add icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
 $pgTitle->type = 1;
-$pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook')."&nbsp;" . $add;
+$pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook')."&nbsp;" . $update;
 
 
  
