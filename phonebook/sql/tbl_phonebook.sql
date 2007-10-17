@@ -35,11 +35,11 @@ $fields = array(
 	),
 
 	'landlinenumber' => array(
-		'type' => 'integer',
+		'type' => 'text',
 		'length' => 13
 	),
 	'cellnumber' => array(
-		'type' => 'integer',
+		'type' => 'text',
 		'length' => 32
 	),
 	'address' => array(
