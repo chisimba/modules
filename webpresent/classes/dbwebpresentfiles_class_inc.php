@@ -409,6 +409,31 @@ class dbwebpresentfiles extends dbtable
 
     }
 
+    public function getLatestByBuddies($userId)
+    {
+        $objBuddies = $this->getObject('dbbuddies', 'buddies');
+        $buddies = $objBuddies->getBuddies($userId);
+
+        if (count($buddies) == 0) {
+            return array();
+        } else {
+            $where = 'WHERE (';
+            $or = '';
+
+            foreach ($buddies as $buddy)
+            {
+                $where .= $or.' creatorid=\''.$buddy['buddyid'].'\'';
+                $or = ' OR ';
+            }
+
+            $where .= ')';
+        }
+
+        $where .= ' ORDER BY dateuploaded DESC LIMIT 10';
+
+        return $this->getAll($where);
+    }
+
     private function regenerateSWF($id)
     {
         $swfFile =  $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/'.$id.'.swf';

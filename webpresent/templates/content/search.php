@@ -15,6 +15,8 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+$objDateTime = $this->getObject('dateandtime', 'utilities');
+
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
 $form->method = 'GET';
 
@@ -44,7 +46,11 @@ if (trim($query) != '')
     //clean the query
     $query = $this->getParam('q');
 
-    $hits = $this->search->find(strtolower($query));
+    //$pattern = new Zend_Search_Lucene_Index_Term($query.'*', 'field1');
+    //$newQuery = new Zend_Search_Lucene_Search_Query_Wildcard($pattern);
+
+    //$hits = $this->search->find(strtolower($newQuery));
+    $hits = $this->search->find(strtolower($query).'*');
     //print_r($hits);
     $numHits = count($hits);
 
@@ -105,7 +111,10 @@ if (trim($query) != '')
                 $description = nl2br(htmlentities($objTrim->strTrim($hit->teaser, 200)));
             }
 
-            $rightContent .= $description.'<br /><strong>Score:</strong> '.$hit->score;
+            $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$hit->userid)));
+            $userLink->link = $hit->createdBy;
+
+            $rightContent .= $description.'<br /><strong>Score:</strong> '.$hit->score.'<br /><strong>Uploaded By:</strong> '.$userLink->show().'<br /><strong>Date Uploaded:</strong> '.$objDateTime->formatDate($hit->date);
 
             $table->addCell($rightContent);
 

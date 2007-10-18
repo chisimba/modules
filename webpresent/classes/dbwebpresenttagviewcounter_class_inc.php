@@ -14,7 +14,7 @@ $GLOBALS['kewl_entry_point_run']){
 }
 
 
-class dbwebpresentviewcounter extends dbtable
+class dbwebpresenttagviewcounter extends dbtable
 {
 
     /**
@@ -22,19 +22,19 @@ class dbwebpresentviewcounter extends dbtable
     */
     public function init()
     {
-        parent::init('tbl_webpresent_views');
+        parent::init('tbl_webpresent_tagviews');
         $this->loadClass('link', 'htmlelements');
     }
 
     /**
-     * Method to Add counter that a presentation has been viewed
-     * @param string $id Record Id of the Presentation
+     * Method to Add counter that a tag has been clicked on
+     * @param string $tag Tag
      * @return string Record Insert Id
      */
-    public function addView($id)
+    public function addView($tag)
     {
         return $this->insert(array(
-                'fileid' => $id,
+                'tag' => $tag,
                 'dateviewed' => date('Y-m-d'),
                 'datetimeviewed' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             ));
@@ -46,7 +46,7 @@ class dbwebpresentviewcounter extends dbtable
      */
     public function getMostViewedToday()
     {
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid AND dateviewed=\''.date('Y-m-d').'\' ) GROUP BY tbl_webpresent_views.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews WHERE (dateviewed = \''.date('Y-m-d').'\') GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
@@ -70,7 +70,7 @@ class dbwebpresentviewcounter extends dbtable
         }
 
         // SQL
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid AND dateviewed > \''.$startOfWeek .'\' ) GROUP BY tbl_webpresent_views.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews WHERE (dateviewed > \''.$startOfWeek .'\') GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
@@ -81,7 +81,7 @@ class dbwebpresentviewcounter extends dbtable
      */
     public function getMostViewedAllTime()
     {
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid ) GROUP BY tbl_webpresent_views.fileid Order by viewcount DESC LIMIT 5';
+        $sql = 'SELECT count( tbl_webpresent_tagviews.id ) AS viewcount, tbl_webpresent_tagviews . * FROM tbl_webpresent_tagviews GROUP BY tbl_webpresent_tagviews.tag ORDER BY viewcount DESC LIMIT 5';
         return $this->getArray($sql);
     }
 
@@ -108,16 +108,16 @@ class dbwebpresentviewcounter extends dbtable
     }
 
     /**
-     * Method to get the Most Viewed Presentations as a table
+     * Method to get the Most Viewed Tag as a table
      *
      * It is designed to present showing "No records today"
      *
      * This is displayed on the home page. It first checks if there was
-     * any views for today, if not try week, if not show all time stats
+     * any tag views for today, if not try week, if not show all time stats
      *
      * @return string
      */
-    public function getMostViewedTable()
+    public function getMostViewedTagTable()
     {
         // Check Today
         $files = $this->getMostViewedToday();
@@ -181,9 +181,9 @@ class dbwebpresentviewcounter extends dbtable
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('loading_circles');
 
-        $content = '<div id="loading_views" style="display:none;">'.$objIcon->show().'</div><div id="data_views">'.$this->prepContent($data, $period).'</div>';
+        $content = '<div id="loading_tags" style="display:none;">'.$objIcon->show().'</div><div id="data_tags">'.$this->prepContent($data, $period).'</div>';
 
-        return $objFeatureBox->show('Most Viewed', $content);
+        return $objFeatureBox->show('Most Popular Tags', $content);
     }
 
     /**
@@ -240,8 +240,8 @@ class dbwebpresentviewcounter extends dbtable
                 $table->startRow();
                 $table->addCell($counter.'.', 20, 'top', 'center');
 
-                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $fileLink->link = $file['title'];
+                $fileLink = new link ($this->uri(array('action'=>'tag', 'tag'=>$file['tag'])));
+                $fileLink->link = $file['tag'];
 
                 $table->addCell($fileLink->show());
                 $table->addCell($file['viewcount'], 20, 'top', 'center');
@@ -261,7 +261,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'today') {
             $allLinks[] = 'Today';
         } else {
-            $link = new link('javascript:getData(\'views\', \'today\');');
+            $link = new link('javascript:getData(\'tags\', \'today\');');
             $link->link = 'Today';
 
             $allLinks[] = $link->show();
@@ -271,7 +271,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'week') {
             $allLinks[] = 'This Week';
         } else {
-            $link = new link('javascript:getData(\'views\', \'week\');');
+            $link = new link('javascript:getData(\'tags\', \'week\');');
             $link->link = 'This Week';
 
             $allLinks[] = $link->show();
@@ -281,7 +281,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'alltime') {
             $allLinks[] = 'All Time';
         } else {
-            $link = new link('javascript:getData(\'views\', \'alltime\');');
+            $link = new link('javascript:getData(\'tags\', \'alltime\');');
             $link->link = 'All Time';
 
             $allLinks[] = $link->show();

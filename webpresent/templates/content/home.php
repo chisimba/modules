@@ -1,3 +1,27 @@
+<script type="text/javascript">
+//<![CDATA[
+
+function getData(type, period) {
+    var url = 'index.php';
+    var pars = 'module=webpresent&action=ajaxgetstats&type='+type+'&period='+period;
+    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onLoading: showLoading(type), onComplete: function(ajaxResponse)
+{showResponse(type, ajaxResponse);}} );
+}
+
+function showLoading (type) {
+    $('loading_'+type).style.display='block';
+}
+
+function showResponse (type, ajaxResponse) {
+    var newData = ajaxResponse.responseText;
+    $('loading_'+type).style.display='none';
+    //$('data_'+type).style.display='none';
+    //Effect.Fade('data_'+type);
+    $('data_'+type).innerHTML = newData;
+    //Effect.Appear('data_'+type);
+}
+//]]>
+</script>
 <br />
 <?php
 $this->loadClass('form', 'htmlelements');
@@ -41,8 +65,14 @@ $leftContents = $form->show();
 // Make a tabbed box
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->width = '95%';
+
+$tagCloudLink = new link ($this->uri(array('action'=>'tagcloud')));
+$tagCloudLink->link = 'View All Tags';
+
+$tagCloudContent = '<span style="text-align:center">' . $tagCloud . '</span><br />'.$tagCloudLink->show();
+
 // Add the tag cloud to the tabbed box
-$objTabs->addTab("Tag Cloud", "<span style=\"text-align:center\">" . $tagCloud . "</span>");
+$objTabs->addTab('Latest Tags', $tagCloudContent);
 
 if ($this->objUser->isLoggedIn()) {
 
@@ -84,20 +114,27 @@ if ($this->objUser->isLoggedIn()) {
     }
 //----------- END ADDED BY DEREK FOR EMAIL & Buddies
 } else {
-    $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
+    $leftContents .= $tagCloudContent.'<br />';
+    $buddiesRegistered = FALSE;
 }
 
 $objDownloadCounter = $this->getObject('dbwebpresentdownloadcounter');
-$downloadTable = $objDownloadCounter->getMostDownloadedTodayTable();
+$downloadTable = $objDownloadCounter->getMostDownloadedTable();
 
 $objViewCounter = $this->getObject('dbwebpresentviewcounter');
-$viewTable = $objViewCounter->getMostViewedTodayTable();
+$viewTable = $objViewCounter->getMostViewedTable();
+
+$objTagViewCounter = $this->getObject('dbwebpresenttagviewcounter');
+$tagViewTable = $objTagViewCounter->getMostViewedTagTable();
+
+$objUploadsCounter = $this->getObject('dbwebpresentuploadscounter');
+$uploadsTable = $objUploadsCounter->getMostUploadedTable();
 
 $statsTable = $this->newObject('htmltable', 'htmlelements');
 $statsTable->startRow();
-$statsTable->addCell($viewTable, '49%');
+$statsTable->addCell($viewTable.$tagViewTable, '49%');
 $statsTable->addCell('&nbsp;', '2%');
-$statsTable->addCell($downloadTable, '49%');
+$statsTable->addCell($downloadTable.$uploadsTable, '49%');
 $statsTable->endRow();
 
 $leftContents .= '<br />'.$statsTable->show();
@@ -146,7 +183,73 @@ if (count($latestFiles) == 0) {
     $latestFilesContent .= '<br clear="left" />'.$rssLink->show();
 
 }
-$table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '37%');
+
+$objTabs = $this->newObject('tabcontent', 'htmlelements');
+$objTabs->addTab('Latest Uploads', '<h3>10 Newest Uploads:</h3>'.$latestFilesContent);
+
+$tabCounter = 0;
+
+if ($objUser->isLoggedIn() && $buddiesRegistered) {
+    $buddiesFiles = $this->objFiles->getLatestByBuddies($objUser->userId());
+
+    //print_r($buddiesFiles);
+
+    if (count($buddiesFiles) == 0) {
+        $buddiesFilesContent = '';
+    } else {
+        $buddiesFilesContent = '';
+
+        $objTrim = $this->getObject('trimstr', 'strings');
+
+        $counter = 0;
+
+        foreach ($buddiesFiles as $file)
+        {
+            $counter++;
+
+            if (trim($file['title']) == '') {
+                $filename = $file['filename'];
+            } else {
+                $filename = htmlentities($file['title']);
+            }
+
+            $linkname = $objTrim->strTrim($filename, 45);
+
+            $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+            $fileLink->link = $this->objFiles->getPresentationThumbnail($file['id']).'<br />'.$linkname;
+            $fileLink->title = $filename;
+
+            $extra = ($counter % 2 == 1) ? ' clear:both;' : '';
+
+            $buddiesFilesContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
+        }
+        $objTabs->addTab('Latest by Buddies', '<h3>Latest by Buddies:</h3>'.$buddiesFilesContent);
+        $tabCounter++;
+    }
+}
+
+
+$objModules = $this->getObject('modules', 'modulecatalogue');
+if ($objModules->checkIfRegistered('blog')) {
+
+
+    $objBlocks = $this->getObject('blocks', 'blocks');
+    $blogBlock = $objBlocks->showBlock('lastten', 'blog', NULL, 20, TRUE, FALSE);
+
+
+    $objTabs->addTab('Latest Blog Posts', $blogBlock);
+    $tabCounter++;
+
+
+}
+
+if ($tabCounter > 0) {
+    $table->addCell($objTabs->show(), '37%');
+} else {
+    $table->addCell('<h3>10 Newest Uploads:</h3>'.$latestFilesContent, '37%');
+}
+
+
 
 $table->endRow();
 
@@ -161,6 +264,5 @@ $uploadbutton->setOnClick('document.location=\''.$this->uri(array('action'=>'upl
 $uploadLink = new link ($this->uri(array('action'=>'upload')));
 $uploadLink->link = 'Upload Presentation';
 
-//echo '<p>'.$uploadLink->show().'</p>';
+echo '<p>'.$uploadLink->show().'</p>';
 ?>
-

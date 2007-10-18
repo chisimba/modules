@@ -116,6 +116,17 @@ class webpresent extends controller
     }
 
 
+    /**
+     * Method to display the search results
+     */
+    public function __search()
+    {
+        $query = $this->getParam('q');
+
+        $this->setVarByRef('query', $query);
+
+        return 'search.php';
+    }
 
 
 
@@ -175,6 +186,18 @@ class webpresent extends controller
         $this->objFiles->updateFileDetails($id, $title, $description, $license);
         $this->objTags->addTags($id, $tags);
 
+        $file = $this->objFiles->getFile($id);
+        $tags = $this->objTags->getTagsAsArray($id);
+        $slides = $this->objSlides->getSlides($id);
+
+        $file['tags'] = $tags;
+        $file['slides'] = $slides;
+
+        $this->_luceneclearFileIndex($id);
+        $this->_prepareDataForSearch($file);
+
+        //_luceneReIndex($file)
+
         return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
     }
 
@@ -228,6 +251,9 @@ class webpresent extends controller
         return 'view.php';
     }
 
+    /**
+     * Method to download a presentation
+     */
     function __download()
     {
         $id = $this->getParam('id');
@@ -260,6 +286,11 @@ class webpresent extends controller
         // Check that sort options provided is valid
         if (!preg_match('/(dateuploaded|title|creatorname)_(asc|desc)/', strtolower($sort))) {
             $sort = 'dateuploaded_desc';
+        }
+
+        if (trim($tag) != '') {
+            $tagCounter = $this->getObject('dbwebpresenttagviewcounter');
+            $tagCounter->addView($tag);
         }
 
         $files = $this->objTags->getFilesWithTag($tag, str_replace('_', ' ',$sort));
@@ -295,6 +326,44 @@ class webpresent extends controller
     }
 
     /**
+     * Method to show a tag cloud for all tags
+     */
+    function __tagcloud()
+    {
+        $tagCloud = $this->objTags->getCompleteTagCloud();
+        $this->setVarByRef('tagCloud', $tagCloud);
+
+        return 'tagcloud.php';
+    }
+
+    /**
+     * Ajax method to return statistics from another period/source
+     */
+    function __ajaxgetstats()
+    {
+        $period = $this->getParam('period');
+        $type = $this->getParam('type');
+
+        switch ($type)
+        {
+            case 'downloads':
+                $objSource = $this->getObject('dbwebpresentdownloadcounter');
+                break;
+            case 'tags':
+                $objSource = $this->getObject('dbwebpresenttagviewcounter');
+                break;
+            case 'uploads':
+                $objSource = $this->getObject('dbwebpresentuploadscounter');
+                break;
+            default:
+                $objSource = $this->getObject('dbwebpresentviewcounter');
+                break;
+        }
+
+        echo $objSource->getAjaxData($period);
+    }
+
+    /**
      * Method to show interface to upload a presentation
      *
      */
@@ -314,6 +383,10 @@ class webpresent extends controller
         print_r($_GET);
     }
 
+    /**
+     * Method to show upload errors
+     *
+     */
     function __erroriframe()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -329,6 +402,10 @@ class webpresent extends controller
         return 'erroriframe.php';
     }
 
+    /**
+     * Method to show upload results if the upload was successful
+     *
+     */
     function __uploadiframe()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -341,6 +418,10 @@ class webpresent extends controller
         return 'uploadiframe.php';
     }
 
+    /**
+     * Ajax Process to display form for user to add presentation info
+     *
+     */
     function __ajaxprocess()
     {
         $this->setPageTemplate(NULL);
@@ -365,6 +446,10 @@ class webpresent extends controller
         return 'process.php';
     }
 
+    /**
+     * Method to do the actual upload
+     *
+     */
     function __doajaxupload()
     {
         $generatedid = $this->getParam('id');
@@ -431,6 +516,9 @@ class webpresent extends controller
         }
     }
 
+    /**
+     * Method to push through upload results for AJAX
+     */
     function __ajaxuploadresults()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -475,7 +563,10 @@ class webpresent extends controller
     }
 
 
-
+    /**
+     * Method to delete a presentation
+     * Check: Users can only upload their own presentations
+     */
     function __delete()
     {
         $id = $this->getParam('id');
@@ -493,6 +584,9 @@ class webpresent extends controller
         return $this->_deleteslide($file);
     }
 
+    /**
+     * Method when an administrator deletes the file of another person
+     */
     function __admindelete()
     {
         $id = $this->getParam('id');
@@ -506,6 +600,12 @@ class webpresent extends controller
         return $this->_deleteslide($file);
     }
 
+    /**
+     * Method to display the delete form interface
+     * This method is called once it is verified the user can delete the presentation
+     *
+     * @access private
+     */
     private function _deleteslide($file)
     {
         $this->setVarByRef('file', $file);
@@ -527,6 +627,10 @@ class webpresent extends controller
         return 'delete.php';
     }
 
+    /**
+     * Method to delete a presentation if user confirms delete
+     *
+     */
     private function __deleteconfirm()
     {
         // Get Id
@@ -548,6 +652,7 @@ class webpresent extends controller
             if ($deletevalue == $this->getSession('delete_'.$id) && $this->getParam('confirm') == 'yes')
             {
                 $this->objFiles->deleteFile($id);
+                $this->_luceneclearFileIndex($id);
                 return $this->nextAction(NULL);
             } else {
                 return $this->nextAction('view', array('id'=>$id, 'message'=>'deletecancelled'));
@@ -561,12 +666,20 @@ class webpresent extends controller
 
     }
 
+    /**
+     * Method to display the latest presentations RSS Feed
+     *
+     */
     function __latestrssfeed()
     {
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getLatestFeed();
     }
 
+    /**
+     * Method to show a RSS Feed of presentations matching a tag
+     *
+     */
     function __tagrss()
     {
         $tag = $this->getParam('tag');
@@ -574,6 +687,10 @@ class webpresent extends controller
         echo $objViewer->getTagFeed($tag);
     }
 
+    /**
+     * Method to display the latest presentations of a user RSS Feed
+     *
+     */
     function __userrss()
     {
         $userid = $this->getParam('userid');
@@ -581,6 +698,9 @@ class webpresent extends controller
         echo $objViewer->getUserFeed($userid);
     }
 
+    /**
+     * Method to rebuild the search index
+     */
     function __rebuildsearch()
     {
         $files = $this->objFiles->getAll();
@@ -604,10 +724,16 @@ class webpresent extends controller
             }
         }
 
-        return $this->nextAction(NULL);
+        //return $this->nextAction(NULL);
 
     }
 
+    /**
+     * Method to take file information and make as much of that information available
+     * for search purposes
+     *
+     * @param array $file File Information
+     */
     private function _prepareDataForSearch($file)
     {
         $content = $file['filename'];
@@ -651,6 +777,11 @@ class webpresent extends controller
         $this->_luceneIndex($file);
     }
 
+    /**
+     * Method to add a file to the search index
+     *
+     * @param array $file File Information
+     */
     private function _luceneIndex($file)
     {
         //print_r($data); die();
@@ -689,6 +820,9 @@ class webpresent extends controller
         ))));
         //createdBy
         $document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($file['creatorid'])));
+
+        $document->addField(Zend_Search_Lucene_Field::UnIndexed('userid', $file['creatorid']));
+
         //document teaser
         $document->addField(Zend_Search_Lucene_Field::Text('teaser', $file['description']));
 
@@ -707,7 +841,7 @@ class webpresent extends controller
         //document body
         //NOTE: this is not actually put into the index, so as to keep the index nice and small
         //      only a reference is inserted to the index.
-        $document->addField(Zend_Search_Lucene_Field::Text('contents', strtolower($file['content'])));
+        $document->addField(Zend_Search_Lucene_Field::UnStored('contents', strtolower($file['content'])));
         //what else do we need here???
         //add the document to the index
         $index->addDocument($document);
@@ -718,16 +852,62 @@ class webpresent extends controller
 
     }
 
-
-    public function __search()
+    function __testdelete()
     {
-        $query = $this->getParam('q');
-
-        $this->setVarByRef('query', $query);
-
-        return 'search.php';
+        $fileId = $this->getParam('id');
+        $this->_luceneclearFileIndex($fileId);
     }
 
+    /**
+     * Method to remove a file from the search index
+     * @param string $fileId
+     */
+    private function _luceneclearFileIndex($fileId)
+    {
+        //print_r($data); die();
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject('user', 'security');
+        $indexPath = $this->objConfig->getcontentBasePath();
+        if (file_exists($indexPath . 'webpresentsearch/segments')) {
+            @chmod($indexPath . 'webpresentsearch', 0777);
+            //we build onto the previous index
+            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', false);
+
+
+            //echo 'Add to Index';
+        } else {
+            //instantiate the lucene engine and create a new index
+            @mkdir($indexPath . 'webpresentsearch');
+            @chmod($indexPath . 'webpresentsearch', 0777);
+            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', true);
+
+            //echo 'Create New Index';
+        }
+
+        $removePath = 'webpresent_'.$fileId;
+
+        $hits = $index->find('docid:'.$removePath);
+
+        if (count($hits) > 0) {
+            foreach($hits as $hit) {
+                if ($hit->docid == $removePath) {
+                    //echo '<br />'.$hit->docid.' - '.$hit->title.' / '.$hit->id.'<br />';
+                    $index->delete($hit->id);
+                }
+            }
+        }
+
+        //commit the index to disc
+        $index->commit();
+        //optimize the thing
+        //$index->optimize();
+
+    }
+
+
+    /**
+     * Method to regenerate the Flash or PDF version of a file
+     */
     public function __regenerate()
     {
         $id = $this->getParam('id');
@@ -738,7 +918,12 @@ class webpresent extends controller
         return $this->nextAction('view', array('id'=>$id, 'message'=>'regeneration', 'type'=>$type, 'result'=>$result));
     }
 
-    function __listall()
+    /**
+     * Method to listall Presentations
+     * Used for testing purposes
+     * @access private
+     */
+    private function __listall()
     {
         $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');
 
@@ -756,6 +941,8 @@ class webpresent extends controller
         }
 
     }
+
+
 
 }
 ?>

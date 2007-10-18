@@ -14,7 +14,7 @@ $GLOBALS['kewl_entry_point_run']){
 }
 
 
-class dbwebpresentviewcounter extends dbtable
+class dbwebpresentuploadscounter extends dbTable
 {
 
     /**
@@ -22,31 +22,18 @@ class dbwebpresentviewcounter extends dbtable
     */
     public function init()
     {
-        parent::init('tbl_webpresent_views');
+        parent::init('tbl_webpresent_files');
         $this->loadClass('link', 'htmlelements');
-    }
-
-    /**
-     * Method to Add counter that a presentation has been viewed
-     * @param string $id Record Id of the Presentation
-     * @return string Record Insert Id
-     */
-    public function addView($id)
-    {
-        return $this->insert(array(
-                'fileid' => $id,
-                'dateviewed' => date('Y-m-d'),
-                'datetimeviewed' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-            ));
     }
 
     /**
      * Method to the the most viewed presentations for today
      * @return array List of Most Viewed Presentations for Today
      */
-    public function getMostViewedToday()
+    public function getMostUploadedToday()
     {
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid AND dateviewed=\''.date('Y-m-d').'\' ) GROUP BY tbl_webpresent_views.fileid Order by viewcount desc limit 5';
+
+        $sql = 'SELECT count( tbl_webpresent_files.id ) AS viewcount, tbl_webpresent_files . *, firstname, surname FROM tbl_webpresent_files, tbl_users WHERE (tbl_webpresent_files.creatorid = tbl_users.userid AND dateuploaded LIKE \''.date('Y-m-d').'%\') GROUP BY tbl_webpresent_files.creatorid ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
@@ -55,7 +42,7 @@ class dbwebpresentviewcounter extends dbtable
      * Method to the the most viewed presentations this week
      * @return array List of Most Viewed Presentations this week
      */
-    public function getMostViewedThisWeek()
+    public function getMostUploadedThisWeek()
     {
         // Get Start Of Week
         $startOfWeek = date('Y-m-d');
@@ -70,7 +57,7 @@ class dbwebpresentviewcounter extends dbtable
         }
 
         // SQL
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid AND dateviewed > \''.$startOfWeek .'\' ) GROUP BY tbl_webpresent_views.fileid Order by viewcount desc limit 5';
+        $sql = 'SELECT count( tbl_webpresent_files.id ) AS viewcount, tbl_webpresent_files . *, firstname, surname FROM tbl_webpresent_files, tbl_users WHERE (tbl_webpresent_files.creatorid = tbl_users.userid AND dateuploaded > \''.$startOfWeek .'\') GROUP BY tbl_webpresent_files.creatorid ORDER BY viewcount DESC LIMIT 5';
 
         return $this->getArray($sql);
     }
@@ -79,9 +66,9 @@ class dbwebpresentviewcounter extends dbtable
      * Method to the the most viewed presentations of all time
      * @return array List of Most Viewed Presentations of all time
      */
-    public function getMostViewedAllTime()
+    public function getMostUploadedAllTime()
     {
-        $sql = 'SELECT count(tbl_webpresent_views.id) as viewcount, tbl_webpresent_files.* FROM tbl_webpresent_views, tbl_webpresent_files WHERE (tbl_webpresent_files.id = tbl_webpresent_views.fileid ) GROUP BY tbl_webpresent_views.fileid Order by viewcount DESC LIMIT 5';
+        $sql = 'SELECT count( tbl_webpresent_files.id ) AS viewcount, tbl_webpresent_files . *, firstname, surname FROM tbl_webpresent_files, tbl_users WHERE (tbl_webpresent_files.creatorid = tbl_users.userid) GROUP BY tbl_webpresent_files.creatorid ORDER BY viewcount DESC LIMIT 5';
         return $this->getArray($sql);
     }
 
@@ -95,53 +82,53 @@ class dbwebpresentviewcounter extends dbtable
         switch ($period)
         {
             case 'alltime':
-                $files = $this->getMostViewedAllTime();
+                $files = $this->getMostUploadedAllTime();
                 break;
             case 'week':
-                $files = $this->getMostViewedThisWeek();
+                $files = $this->getMostUploadedThisWeek();
                 break;
             default:
-                $files = $this->getMostViewedToday();
+                $files = $this->getMostUploadedToday();
                 break;
         }
         return $this->prepContent($files, $period);
     }
 
     /**
-     * Method to get the Most Viewed Presentations as a table
+     * Method to get the Most Uploaded as a table
      *
      * It is designed to present showing "No records today"
      *
      * This is displayed on the home page. It first checks if there was
-     * any views for today, if not try week, if not show all time stats
+     * any uploads for today, if not try week, if not show all time stats
      *
      * @return string
      */
-    public function getMostViewedTable()
+    public function getMostUploadedTable()
     {
         // Check Today
-        $files = $this->getMostViewedToday();
+        $files = $this->getMostUploadedToday();
 
         if (count($files) > 0) {
             return $this->getDataFormatted($files, 'today');
         }
 
-        $files = $this->getMostViewedThisWeek();
+        $files = $this->getMostUploadedThisWeek();
 
         if (count($files) > 0) {
             return $this->getDataFormatted($files, 'week');
         }
 
-        return $this->getMostViewedAllTimeTable();
+        return $this->getMostUploadedAllTimeTable();
     }
 
     /**
      * Method to get the Most Viewed Today Presentations as a table
      * @return string
      */
-    public function getMostViewedTodayTable()
+    public function getMostUploadedTodayTable()
     {
-        $files = $this->getMostViewedToday();
+        $files = $this->getMostUploadedToday();
 
         return $this->getDataFormatted($files, 'today');
     }
@@ -150,22 +137,22 @@ class dbwebpresentviewcounter extends dbtable
      * Method to get the Most Viewed This Week Presentations as a table
      * @return string
      */
-    public function getMostViewedThisWeekTable()
+    public function getMostUploadedThisWeekTable()
     {
-        $files = $this->getMostViewedThisWeek();
+        $files = $this->getMostUploadedThisWeek();
 
-        return $this->getDataFormatted($files, 'today');
+        return $this->getDataFormatted($files, 'week');
     }
 
     /**
      * Method to get the Most Viewed All Time Presentations as a table
      * @return string
      */
-    public function getMostViewedAllTimeTable()
+    public function getMostUploadedAllTimeTable()
     {
-        $files = $this->getMostViewedAllTime();
+        $files = $this->getMostUploadedAllTime();
 
-        return $this->getDataFormatted($files, 'today');
+        return $this->getDataFormatted($files, 'alltime');
     }
 
     /**
@@ -181,9 +168,9 @@ class dbwebpresentviewcounter extends dbtable
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('loading_circles');
 
-        $content = '<div id="loading_views" style="display:none;">'.$objIcon->show().'</div><div id="data_views">'.$this->prepContent($data, $period).'</div>';
+        $content = '<div id="loading_uploads" style="display:none;">'.$objIcon->show().'</div><div id="data_uploads">'.$this->prepContent($data, $period).'</div>';
 
-        return $objFeatureBox->show('Most Viewed', $content);
+        return $objFeatureBox->show('Most Uploads', $content);
     }
 
     /**
@@ -214,13 +201,13 @@ class dbwebpresentviewcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                    $str = 'No presentations have been viewed on this site';
+                    $str = 'No presentations have been uploaded on this site';
                     break;
                 case 'week':
-                    $str = 'No presentations have been viewed this week';
+                    $str = 'No presentations have been uploaded this week';
                     break;
                 default:
-                    $str = 'No presentations have been viewed today';
+                    $str = 'No presentations have been uploaded today';
                     break;
             }
 
@@ -240,8 +227,8 @@ class dbwebpresentviewcounter extends dbtable
                 $table->startRow();
                 $table->addCell($counter.'.', 20, 'top', 'center');
 
-                $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $fileLink->link = $file['title'];
+                $fileLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
+                $fileLink->link = $file['firstname'].' '.$file['surname'];
 
                 $table->addCell($fileLink->show());
                 $table->addCell($file['viewcount'], 20, 'top', 'center');
@@ -261,7 +248,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'today') {
             $allLinks[] = 'Today';
         } else {
-            $link = new link('javascript:getData(\'views\', \'today\');');
+            $link = new link('javascript:getData(\'uploads\', \'today\');');
             $link->link = 'Today';
 
             $allLinks[] = $link->show();
@@ -271,7 +258,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'week') {
             $allLinks[] = 'This Week';
         } else {
-            $link = new link('javascript:getData(\'views\', \'week\');');
+            $link = new link('javascript:getData(\'uploads\', \'week\');');
             $link->link = 'This Week';
 
             $allLinks[] = $link->show();
@@ -281,7 +268,7 @@ class dbwebpresentviewcounter extends dbtable
         if ($period == 'alltime') {
             $allLinks[] = 'All Time';
         } else {
-            $link = new link('javascript:getData(\'views\', \'alltime\');');
+            $link = new link('javascript:getData(\'uploads\', \'alltime\');');
             $link->link = 'All Time';
 
             $allLinks[] = $link->show();

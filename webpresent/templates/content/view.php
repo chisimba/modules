@@ -1,5 +1,4 @@
 <?php
-
 // Add SlideShow if content is available
 if (count($slideContent['slideshow']) > 0) {
     $this->appendArrayVar('headerParams', $this->getJavaScriptFile('slide.js'));
@@ -27,9 +26,30 @@ if (count($slideContent['slideshow']) > 0) {
     $this->appendArrayVar('headerParams', $jsContent);
 }
 
+/*
+// Add SlideShow if content is available
+if (count($slideContent['slideshow']) > 0) {
+    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('smoothgalleryslightbox/mootools.js'));
+    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('smoothgalleryslightbox/jd.gallery.js'));
+    $this->appendArrayVar('headerParams', $this->getJavaScriptFile('smoothgalleryslightbox/slightbox.js'));
+
+
+    $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="'.$this->getResourceUri('smoothgalleryslightbox/jd.gallery.css').'" type="text/css" media="screen" charset="utf-8" />');
+    $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="'.$this->getResourceUri('smoothgalleryslightbox/slightbox.css').'" type="text/css" media="screen" charset="utf-8" />');
+
+    $jsContent = '';
+
+    $this->appendArrayVar('headerParams', $jsContent);
+    $this->appendArrayVar('bodyOnLoad', 'var mylightbox = new Lightbox();');
+}
+
+*/
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
+
+$objBookMarks = $this->getObject('socialbookmarking', 'utilities');
+$objBookMarks->includeTextLink = FALSE;
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('edit');
@@ -47,15 +67,15 @@ $showDeleteLink = FALSE;
 if ($file['creatorid'] == $objUser->userId()) {
     $objSubModalWindow = $this->getObject('submodalwindow', 'htmlelements');
 
-    $editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    //$editLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'edit', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    $heading->str .= ' '.$editLink;
+    //$heading->str .= ' '.$editLink;
 
     $objIcon->setIcon('delete');
 
-    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    //$deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    $heading->str .= ' '.$deleteLink;
+    //$heading->str .= ' '.$deleteLink;
 
     $showDeleteLink = TRUE;
 }
@@ -71,36 +91,28 @@ if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
 
 $heading->type = 1;
 
+$objIcon->setModuleIcon('blog');
+$objIcon->title = 'Blog This';
+$objIcon->alrt = 'Blog This';
+
+// http://localhost/webpresent/index.php?module=blog&action=blogadmin&mode=writepost
+$blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
+$blogThisLink->link = $objIcon->show();
+
+$heading->str .= ' '.$blogThisLink->show();
+
 echo $heading->show();
 
 // Show the flash file using the viewer class
 $objView = $this->getObject("viewer", "webpresent");
 $flashContent = $objView->showFlash($file['id']);
 
-/*
- *
- *
- *REPLACE WITH VEIWER
- *$flashFile = $this->objConfig->getcontentBasePath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
- *if (file_exists($flashFile)) {
-
-    $flashFile = $this->objConfig->getcontentPath().'webpresent/'.$file['id'].'/'.$file['id'].'.swf';
-    $flashContent = '
-    <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
-
-  <param name="movie" value="'.$flashFile.'">
-  <param name="quality" value="high">
-  <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
-</object></div>';
-} else {
-    $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
-}
-*/
 
 
 
+$rightCell = '<div style="float:right">'.$objBookMarks->diggThis().'</div>';
 
-$rightCell = '';
+
 
 //$rightCell = '<p><strong>Title of Presentation:</strong> '.$file['title'].'</p>';
 
@@ -181,12 +193,30 @@ $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_
   . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent")
   . "</p>";
 
+
  // End of output the filter code.
 
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 
-$table->addCell($flashContent, 550);
+
+$leftContents = $flashContent;
+
+
+
+$leftContents .= '<br /><p>'.$objBookMarks->addThis();
+$divider = ' &nbsp;';
+
+foreach ($objBookMarks->options as $option)
+{
+    if ($option != 'diggThis' && $option != 'addThis') {
+        $leftContents .= $divider.$objBookMarks->$option();
+    }
+}
+
+$leftContents .= '</p>';
+
+$table->addCell($leftContents, 550);
 $table->addCell($rightCell);
 
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
@@ -222,6 +252,10 @@ if ($this->isValid('regenerate'))
 
 }
 
+$blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
+$blogThisLink->link = 'BlogThis Presentation';
+
+$bottomLinks[] = $blogThisLink->show();
 
 
 echo '<p>';

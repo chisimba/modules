@@ -7,9 +7,10 @@ $heading = new htmlheading();
 
 if ($userid == $objUser->userId())
 {
-    $heading->str = 'My Slides';
+    $heading->str = $this->objLanguage->languageText('mod_webpresent_myslides', 'webpresent', 'My Slides');;
 } else {
-    $heading->str = $objUser->fullname($userid).'\'s Slides';
+    $text = $this->objLanguage->languageText('mod_webpresent_personsslides', 'webpresent', '[PERSON]\'s Slides');
+    $heading->str = stripslashes(str_replace('[PERSON]', $objUser->fullname($userid), $text));
 }
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -26,16 +27,16 @@ $heading->type = 1;
 echo $heading->show();
 
 if (count($files) == 0) {
-    echo '<div class="noRecordsMessage">User has not uploaded any files.</div>';
+    echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_webpresent_userhasnotuploadedfiles', 'webpresent', 'User has not uploaded any files').'.</div>';
 } else {
     $sortOptions = array(
-        'dateuploaded_desc' => 'Newest First',
-        'dateuploaded_asc' => 'Oldest First',
-        'title_asc' => 'Alphabetical',
+        'dateuploaded_desc' => $this->objLanguage->languageText('phrase_newestfirst', 'webpresent', 'Newest First'),
+        'dateuploaded_asc' =>  $this->objLanguage->languageText('phrase_oldestfirst', 'webpresent', 'Oldest First'),
+        'title_asc' =>  $this->objLanguage->languageText('word_alphabetical', 'webpresent', 'Alphabetical'),
         //'title_desc' => 'Alphabetical Reversed',
     );
 
-    echo '<p><strong>Sort By:</strong> ';
+    echo '<p><strong>'.$this->objLanguage->languageText('sort_by', 'forum', 'Sort by').':</strong> ';
 
     $divider = '';
     foreach ($sortOptions as $sortOption=>$optionText)
@@ -63,8 +64,8 @@ if (count($files) == 0) {
 }
 
 $homeLink = new link ($this->uri(NULL));
-$homeLink->link = 'Back to Home';
+$homeLink->link = $this->objLanguage->languageText('phrase_backhome', 'system', 'Back to home');
 
 echo '<p>'.$homeLink->show().'</p>';
-?>
 
+?>

@@ -104,11 +104,68 @@ class dbwebpresenttags extends dbtable
         return $this->getArray($sql);
     }
 
+    public function getLastLimitTags($limit=50)
+    {
+        $sql = 'SELECT tbl_webpresent_tags.* , (SELECT count(tag) FROM tbl_webpresent_tags AS tags2 WHERE tbl_webpresent_tags.tag = tags2.tag) AS tagcount
+FROM tbl_webpresent_tags GROUP BY tbl_webpresent_tags.tag ORDER BY tbl_webpresent_tags.puid DESC ';
+
+        if (isset($limit) && $limit > 0) {
+            $sql .= ' LIMIT '.$limit;
+        }
+
+        return $this->prepArrayForTagCloud($this->getArray($sql));
+    }
+
+    public function prepArrayForTagCloud($array)
+    {
+        $finalArray = array();
+
+        if (count($array) > 0) {
+            foreach ($array as $item)
+            {
+                $finalArray[$item['tag']] = $item;
+            }
+        }
+
+        return $finalArray;
+    }
+
     /**
      * Method to take all the existing tags, and build them into a Tag Cloud
      * @return string Tag Cloud
      */
     public function getTagCloud()
+    {
+        // Get All Tags
+        $tags = $this->getLastLimitTags();
+
+        // Check that there are tags
+        if (count($tags) == 0) {
+            return '<div class="noRecordsMessage">Tag Cloud Goes Here</div>';
+        } else {
+            // Load Object
+            $objTagCloud = $this->newObject('tagcloud', 'utilities');
+
+            // Loop through tags
+            foreach ($tags as $tag)
+            {
+                // Link to File
+                $uri = $this->uri(array('action'=>'tag', 'tag'=>$tag['tag']));
+
+                // Add Tag
+                $objTagCloud->addElement($tag['tag'], $uri, $tag['tagcount']*6, strtotime('-1 day'));
+            }
+
+            // Return Tag Cloud
+            return $objTagCloud->biuldAll();
+        }
+    }
+
+    /**
+     * Method to take all the existing tags, and build them into a Tag Cloud
+     * @return string Tag Cloud
+     */
+    public function getCompleteTagCloud()
     {
         // Get All Tags
         $tags = $this->getAllTags();
