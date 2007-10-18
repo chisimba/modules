@@ -58,38 +58,23 @@ $objAppletTable->startRow();
 $objAppletTable->addCell($str4);
 $objAppletTable->endRow();
 
-//set contents of the table on the java web start version tab
-$objWebStartTable->startRow();
-$objWebStartTable->addCell($webstartstr3);
-$objWebStartTable->endRow();
 
-$objWebStartTable->startRow();
-$objWebStartTable->addCell($webstartstr4);
-$objWebStartTable->endRow();
 
-$tables = array($objAppletTable, $objWebStartTable);
 
-$modules = array('applet','webstart');
-foreach($modules as $category){      
-        	
-	$tab->tabbedbox();
-        $tab->addTabLabel($this->objLanguage->languageText('mod_realtime_'.$category,'realtime'));
-	if($category == 'applet'){
-		$tb = $objAppletTable;
-	}
-	else{
-		$tb = $objWebStartTable;
-	}
-        $tab->addBoxContent($tb->show());
-        $tabcontent->addTab($this->objLanguage->languageText('mod_realtime_'.$category,'realtime'),$tab->show());
- }    
+$tab->tabbedbox();
+$tab->addTabLabel($this->objLanguage->languageText('mod_realtime_applet','realtime'));
+$tb = $objAppletTable;
+
+$tab->addBoxContent($tb->show());
+$tabcontent->addTab($this->objLanguage->languageText('mod_realtime_applet','realtime'),$tab->show());
+        
 $tabcontent->width = '90%';
+
 	
+$table->startRow();
+$table->addCell($tabcontent->show());
 	
-	$table->startRow();
-	$table->addCell($tabcontent->show());
-	
-	$table->endRow();
+$table->endRow();
 
 //Add the table to the centered layer
 $rightSideColumn .= $table->show();
