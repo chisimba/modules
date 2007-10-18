@@ -15,8 +15,6 @@ $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
 
-//--------- ADDED BY DEREK FOR EMAIL
-// Add the tag cloud to the left contents.
 
 $form = new form ('searchform', $this->uri(array('action'=>'search')));
 $form->method = 'GET';
@@ -32,9 +30,6 @@ $textinput->size = 60;
 $button = new button ('search', 'Search');
 $button->setToSubmit();
 
-//$form->addToForm('<div align="center">'.$textinput->show().' '.$button->show().'</div>');
-
-// Turn off so long
 
 
 $leftContents = $form->show();
@@ -44,48 +39,8 @@ $objTabs->width = '95%';
 // Add the tag cloud to the tabbed box
 $objTabs->addTab("Tag Cloud", "<span style=\"text-align:center\">" . $tagCloud . "</span>");
 
-if ($this->objUser->isLoggedIn()) {
+$leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
 
-    // Counter for additional modules that may be registered
-    $moduleCounter = 0;
-
-    $objModule = $this->getObject('modules','modulecatalogue');
-    //See if the youtube API module is registered and set a param
-    $emailRegistered = $objModule->checkIfRegistered('email', 'email');
-    if ($emailRegistered) {
-        $moduleCounter++;
-        //Add the email messages to the tabbed box
-        $msgs = $this->getObject("messagestpl", "realtimepresentation");
-        $msgList = $msgs->show();
-        $msgTitle = $this->objLanguage->languageText("mod_realtimepresentation_msgs", "realtimepresentation")
-          .  $msgs->msgCount;
-        $objTabs->addTab($msgTitle, $msgList);
-    }
-
-    $objModule = $this->getObject('modules','modulecatalogue');
-    //See if the youtube API module is registered and set a param
-    $buddiesRegistered = $objModule->checkIfRegistered('buddies', 'buddies');
-    if ($buddiesRegistered) {
-        $moduleCounter++;
-        //Add the email messages to the tabbed box
-        $buds = $this->getObject("buddiestpl", "realtimepresentation");
-        $budList = $buds->show();
-        // Add buddies to the tabbed box
-        $objTabs->addTab($this->objLanguage->languageText("mod_realtimepresentation_buddieson", "realtimepresentation")  .  $buds->budCount, $budList);
-    }
-
-    // If no additional modules are registered, only show tag cloud
-    if ($moduleCounter == 0)
-    {
-        $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
-
-    } else { // Else show items in multi tab box
-        $leftContents .= $objTabs->show();
-    }
-//----------- END ADDED BY DEREK FOR EMAIL & Buddies
-} else {
-    $leftContents .= "<span style=\"text-align:center\">" . $tagCloud . "</span>";
-}
 
 $objUploadedFiles = $this->getObject('dbrealtimepresentationview');
 $viewTable = $objUploadedFiles->getUploadedFilesTable();
@@ -99,7 +54,6 @@ $statsTable->endRow();
 
 $leftContents .= '<br />'.$statsTable->show();
 
-//$objLatestBlogs = $this->getObject('block_lastten'
 
 $table->addCell($leftContents, '60%', 'top', 'left');
 $table->addCell('&nbsp;&nbsp;&nbsp;', '3%');
