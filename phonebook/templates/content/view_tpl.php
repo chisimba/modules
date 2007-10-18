@@ -1,4 +1,12 @@
 <?php
+
+/**
+* @Model extension of controller that displays entries
+* @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko. 
+* @copyright 2007 University of the Western Cape
+*/
+
+
 // Create an instance of the css layout class
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
@@ -28,7 +36,6 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_head', 'phonebook')."&
 
 
 $tableRow = array();
-//$tableHd[] = $objLanguage->languageText('mod_phonebook_id', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_contact', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_email', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_landline', 'phonebook');
@@ -47,8 +54,8 @@ $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
-//print_r($records);
 
+//Create an array for each value in the table.
 	foreach($records as $record){
 	$rowcount ++;
 	
@@ -103,8 +110,7 @@ $rowcount = 0;
 		$objTableClass->addCell($update, '', 'center', 'center', $class);
 
     // Create edit icon and action
-	//	$objEditIcon = $this->newObject('geticon', 'htmlelements'); 
-    
+   
 		$this->loadClass('link', 'htmlelements');
 		$objIcon = $this->newObject('geticon', 'htmlelements');
 		$link = new link ($this->uri(array('action'=>'editentry',
@@ -120,8 +126,10 @@ $rowcount = 0;
         
           
 	}//end of loop
-
-
+//A statement not to display the records if it is empty.
+if (empty($records)) {
+    $objTableClass->addCell("<span class='noRecordsMessage'>" . $objLanguage->languageText('mod_phonebook_nodata', 'phonebook') . "</span>", NULL, 'top', 'center', null, 'colspan=10');
+} 
 
 $ret = $objTableClass->show();
 
