@@ -77,12 +77,12 @@ class phonebook extends controller
 // Get Details from Form						
           case 'updateentry':
 		$id = $this->getParam('id');
-		$firstname = htmlentities($this->getParam('firstname'));
-		$lastname = htmlentities($this->getParam('lastname'));
-	        $emailaddress = htmlentities($this->getParam('emailaddress'));
-	        $cellnumber = htmlentities($this->getParam('cellnumber'));
-	        $landlinenumber = htmlentities($this->getParam('landlinenumber'));
-	        $address = htmlentities($this->getParam('address'));
+		$firstname = html_entity_decode($this->getParam('firstname'));
+		$lastname = html_entity_decode($this->getParam('lastname'));
+	        $emailaddress = html_entity_decode($this->getParam('emailaddress'));
+	        $cellnumber = html_entity_decode($this->getParam('cellnumber'));
+	        $landlinenumber = html_entity_decode($this->getParam('landlinenumber'));
+	        $address = html_entity_decode($this->getParam('address'));
             
 		$this->objUser = $this -> getObject('user', 'security');
 		$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 
