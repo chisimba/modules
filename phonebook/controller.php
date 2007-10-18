@@ -55,12 +55,12 @@ class phonebook extends controller
            case 'addentry';	
 // Get Details from Form
 		$userId = $this->objUser->userId();
-		$firstname = $this->getParam('firstname');
-		$lastname = $this->getParam('lastname');
-	        $emailaddress = $this->getParam('emailaddress');
-		$cellnumber = $this->getParam('cellnumber');
-	        $landlinenumber = $this->getParam('landlinenumber');
-	        $address = $this->getParam('address');
+		$firstname = htmlentities($this->getParam('firstname'));
+		$lastname = htmlentities($this->getParam('lastname'));
+	        $emailaddress = htmlentities($this->getParam('emailaddress'));
+		$cellnumber = htmlentities($this->getParam('cellnumber'));
+	        $landlinenumber = htmlentities($this->getParam('landlinenumber'));
+	        $address = htmlentities($this->getParam('address'));
 		$this->objDbContacts->insertRecord($userId, $firstname, $lastname, $emailaddress, $cellnumber,	 			$landlinenumber, $address); 
 		$this->nextAction('');
 	   break;
@@ -77,12 +77,12 @@ class phonebook extends controller
 // Get Details from Form						
           case 'updateentry':
 		$id = $this->getParam('id');
-		$firstname = $this->getParam('firstname');
-		$lastname = $this->getParam('lastname');
-	        $emailaddress = $this->getParam('emailaddress');
-	        $cellnumber = $this->getParam('cellnumber');
-	        $landlinenumber = $this->getParam('landlinenumber');
-	        $address = $this->getParam('address');
+		$firstname = htmlentities($this->getParam('firstname'));
+		$lastname = htmlentities($this->getParam('lastname'));
+	        $emailaddress = htmlentities($this->getParam('emailaddress'));
+	        $cellnumber = htmlentities($this->getParam('cellnumber'));
+	        $landlinenumber = htmlentities($this->getParam('landlinenumber'));
+	        $address = htmlentities($this->getParam('address'));
             
 		$this->objUser = $this -> getObject('user', 'security');
 		$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 

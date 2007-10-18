@@ -9,7 +9,7 @@
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
-$cssLayout->setNumColumns(3);
+$cssLayout->setNumColumns(2);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -23,7 +23,7 @@ $middleColumn = NULL;
 $this->loadClass('link', 'htmlelements');
 		$objIcon = $this->newObject('geticon', 'htmlelements');
 		$link = new link ($this->uri(array('action'=>'default')));
-		$objIcon->setIcon('comment');
+		$objIcon->setIcon('prev');
 		$link->link = $objIcon->show();
 		$update = $link->show(); 
 
