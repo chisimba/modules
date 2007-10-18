@@ -54,6 +54,12 @@ $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
+//language item for no records
+$norecords = $objLanguage->languageText('mod_phonebook_nodata', 'phonebook');
+//A statement not to display the records if it is empty.
+if (empty($records)) {
+    $objTableClass->addCell($norecords, 'top', 'center');
+} 
 
 //Create an array for each value in the table.
 	foreach($records as $record){
@@ -117,8 +123,7 @@ $rowcount = 0;
 			'id'=>$id), 'phonebook'));
 		$objIcon->setIcon('edit');
 		$link->link = $objIcon->show();
-		$update = $link->show("Are you sure you want to delete this contact");
-		
+		$update = $link->show();
 		$objTableClass->addCell($update, '', 'center', 'center', $class);
     $objTableClass->endRow();
 
@@ -126,11 +131,7 @@ $rowcount = 0;
         
           
 	}//end of loop
-//A statement not to display the records if it is empty.
-if (empty($records)) {
-    $objTableClass->addCell("<span class='noRecordsMessage'>" . $objLanguage->languageText('mod_phonebook_nodata', 'phonebook') . "</span>", NULL, 'top', 'center', null, 'colspan=10');
-} 
-
+//
 $ret = $objTableClass->show();
 
 
