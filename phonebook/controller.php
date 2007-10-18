@@ -55,12 +55,12 @@ class phonebook extends controller
            case 'addentry';	
 // Get Details from Form
 		$userId = $this->objUser->userId();
-		$firstname = htmlentities($this->getParam('firstname'));
-		$lastname = htmlentities($this->getParam('lastname'));
-	        $emailaddress = htmlentities($this->getParam('emailaddress'));
-		$cellnumber = htmlentities($this->getParam('cellnumber'));
-	        $landlinenumber = htmlentities($this->getParam('landlinenumber'));
-	        $address = htmlentities($this->getParam('address'));
+		$firstname = htmlentities($this->getParam('firstname'), ENT_QUOTES);
+		$lastname = htmlentities($this->getParam('lastname'), ENT_QUOTES);
+	        $emailaddress = htmlentities($this->getParam('emailaddress'), ENT_QUOTES);
+		$cellnumber = htmlentities($this->getParam('cellnumber'), ENT_QUOTES);
+	        $landlinenumber = htmlentities($this->getParam('landlinenumber'), ENT_QUOTES);
+	        $address = htmlentities($this->getParam('address'), ENT_QUOTES);
 		$this->objDbContacts->insertRecord($userId, $firstname, $lastname, $emailaddress, $cellnumber,	 			$landlinenumber, $address); 
 		$this->nextAction('');
 	   break;
