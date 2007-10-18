@@ -44,11 +44,6 @@ $tableHd[] = $objLanguage->languageText('mod_phonebook_address', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
 $tableHd[] = $objLanguage->languageText('mod_phonebook_update', 'phonebook');
 
-
-
-
-
-
 // Create the table header for display
 $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
@@ -58,8 +53,8 @@ $rowcount = 0;
 $norecords = $objLanguage->languageText('mod_phonebook_nodata', 'phonebook');
 //A statement not to display the records if it is empty.
 if (empty($records)) {
-    $objTableClass->addCell($norecords, 'top', 'center');
-} 
+    $objTableClass->addCell($norecords, NULL, NULL, 'center', NULL, 'colspan="7"');
+} else{
 
 //Create an array for each value in the table.
 	foreach($records as $record){
@@ -131,12 +126,11 @@ if (empty($records)) {
         
           
 	}//end of loop
-//
+}
+
 $ret = $objTableClass->show();
 
-
 $middleColumn =$pgTitle->show().$ret;
-
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setRightColumnContent($rightSideColumn);
