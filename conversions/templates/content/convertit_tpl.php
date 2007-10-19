@@ -16,9 +16,10 @@ $this->objNav = $this->getObject('navigate');
 
 				
 				if($goTo == NULL){
-					$middleColumn = "CONVERSIONS MAIN PAGE.  This module provides simplified converters in the fields
-                          of temperature, volume, distance and weight.
-                      Please procced to the 'Go to' drop down list to select the converter that you require.";
+ 				$description = wordwrap($this->objLanguage->languageText("mod_conversions_description", "conversions"), 100, "<br />\n");
+				$objFeatureBox = $this->getObject('featurebox', 'navigation');
+				$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_mainPage", "conversions") , 	$description);
+					$middleColumn = $ret;
 				}
 				elseif($goTo == "dist"){
 					$middleColumn = $this->objNav->dist();

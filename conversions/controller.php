@@ -20,7 +20,6 @@ class conversions extends controller
 		try
 		{
 			$this->objUser = $this->getObject('user', 'security');
-			$this->objConvertIt = $this->getObject('convertIt');
 			$this->objDist = $this->getObject('dist');
 			$this->objTemp = $this->getObject('temp');
 			$this->objVol = $this->getObject('vol');
