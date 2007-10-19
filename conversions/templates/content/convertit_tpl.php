@@ -11,6 +11,33 @@ $rightSideColumn = NULL;
 $middleColumn = NULL;
 $this->objUser = $this->getObject('user', 'security');
 $this->objNav = $this->getObject('navigate');
+
+if(isset($value)){
+    $value = $value;
+}
+else{
+    $value = NULL;
+}
+if(isset($from)){
+    $from = $from;
+}
+else{
+    $from = NULL;
+}
+if(isset($to)){
+    $to = $to;
+}
+else{
+    $to = NULL;
+}
+if(isset($action)){
+    $action = $action;
+}
+else{
+    $action = NULL;
+}
+
+
 if ($goTo == NULL) {
     $description = wordwrap($this->objLanguage->languageText("mod_conversions_description", "conversions") , 100, "<br />\n");
     $objFeatureBox = $this->getObject('featurebox', 'navigation');
