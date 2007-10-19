@@ -92,7 +92,7 @@ class phonebook extends controller
                                         'cellnumber' => $cellnumber, 
                                         'landlinenumber' => $landlinenumber,
                                         'address' => $address, 
-                                        'created_by' =>$this ->objDbContacts->now());
+                                        'modified' =>$this ->objDbContacts->now());
 
 		$this->objDbContacts->updateRec($id, $arrayOfRecords);
 		return $this->nextAction('view_tpl.php'); 
