@@ -104,7 +104,7 @@ if (empty($records)) {
 	        'confirm' => 'yes',
 	        );
     		
-		$deletephrase = $objLanguage->languageText('mod_phonebook_delete', 'phonebook');
+		$deletephrase = $objLanguage->languageText('mod_phonebook_deleteicon', 'phonebook');
     $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
 		$update = $conf;
 		$records == $objUser->userId();
