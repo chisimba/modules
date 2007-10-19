@@ -10,13 +10,12 @@
 	*/ 
 class temp extends object
 {
-	public $value;
+	
 
 	public function init()
 	{
 		$this->objLanguage = $this->getObject('language', 'language');
 	}
-
 	//The following functions return a value that has been converted to Celsius or from Celsius
 	public function convCelsToFahren($value = NULL)
 	{
@@ -53,8 +52,8 @@ class temp extends object
 		* The variable $tempVal is used in cases where there is no direct convertion from one value to another
 		* 
 		*/
-		if(empty($value)){
-				return $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
+		if(!is_numeric($value)){
+				return $this->objLanguage->languageText('mod_conversions_insertNumError', 'conversions');
 		}
 		elseif($from == $to && !empty($value))
 		{
@@ -86,7 +85,7 @@ class temp extends object
 			return  $value." ".$this->objLanguage->languageText("mod_conversions_Kelvin", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round(($this->convKelToCels($value)),2)." ".$this->objLanguage->languageText("mod_conversions_Celsius", "conversions").".";
 		}
 		else{
-			return  $this->objLanguage->languageText('mod_conversions_unknownError', 'conversions');
+			return  $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
 		}
 	}
 }

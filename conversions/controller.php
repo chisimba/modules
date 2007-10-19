@@ -45,13 +45,10 @@ class conversions extends controller
 		{
 			default:
 				case 'default':
+					$goTo = $this->getParam('goTo');
+					$this->setVarByRef('goTo', $goTo);
 					return 'convertit_tpl.php';
 					break;
-
-				case 'goto':
-					return $this->objConvertIt->doChange($this->getParam('goTo'));
-					break;
-
 				case 'dist':
 					$value = $this->getParam('value');
 					$from = $this->getParam('from');
@@ -60,9 +57,10 @@ class conversions extends controller
 					$this->setVarByRef('value', $value);
 					$this->setVarByRef('from', $from);
 					$this->setVarByRef('to', $to);
-					return "dist_tpl.php";
-            		break;
-
+					$goTo = 'dist';
+					$this->setVarByRef('goTo', $goTo);
+					return 'convertit_tpl.php';
+					break;
 				case 'temp':
 					$value = $this->getParam('value');
 					$from = $this->getParam('from');
@@ -71,9 +69,10 @@ class conversions extends controller
 					$this->setVarByRef('value', $value);
 					$this->setVarByRef('from', $from);
 					$this->setVarByRef('to', $to);
-					return "temp_tpl.php";
-					break;
-
+					$goTo = 'temp';
+					$this->setVarByRef('goTo', $goTo);
+					return 'convertit_tpl.php';
+					break;   
 				case 'vol':
 					$value = $this->getParam('value');
 					$from = $this->getParam('from');
@@ -82,9 +81,10 @@ class conversions extends controller
 					$this->setVarByRef('value', $value);
 					$this->setVarByRef('from', $from);
 					$this->setVarByRef('to', $to);
-					return "vol_tpl.php";
-					break;
-
+					$goTo = 'vol';
+					$this->setVarByRef('goTo', $goTo);
+					return 'convertit_tpl.php';
+					break;  
 				case 'weight':
 					$value = $this->getParam('value');
 					$from = $this->getParam('from');
@@ -93,9 +93,11 @@ class conversions extends controller
 					$this->setVarByRef('value', $value);
 					$this->setVarByRef('from', $from);
 					$this->setVarByRef('to', $to);
-					return "weight_tpl.php";
-					break;  
-
+					$goTo = 'weight';
+					$this->setVarByRef('goTo', $goTo);
+					return 'convertit_tpl.php';
+					break;        
+               
 		}
 	}
 }

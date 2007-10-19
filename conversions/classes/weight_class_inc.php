@@ -10,161 +10,155 @@
     */ 
 class weight extends object
 {
-    public $val;
+    public $value ;
 
     public function init()
     {
             $this->objLanguage = $this->getObject('language', 'language');
     }
-
-    public function setup($val = NULL)
-    {
-      $this->val = $val;
-    }
-
-	public function kilogramsToMetricton($val)
+   	public function kilogramsToMetricton($value = NULL)
 	{
-		$answer = ($val * 0.001);
+		$answer = ($value * 0.001);
 		return $answer;
 	}
-	public function metrictonToKilograms($val)
+	public function metrictonToKilograms($value = NULL)
 	{
-		$answer = ($val * 1000);
+		$answer = ($value * 1000);
 		return $answer;
 	}
-	public function gramsToMetricton($val)
+	public function gramsToMetricton($value = NULL)
 	{
-		$answer = ($val * 0.00001);
+		$answer = ($value * 0.00001);
 		return $answer;
 	}
-	public function metrictonToGrams($val)
+	public function metrictonToGrams($value = NULL)
 	{
-		$answer = ($val * 1000000);
+		$answer = ($value * 1000000);
 		return $answer;
 	}
-	public function poundsToMetricton($val)
+	public function poundsToMetricton($value = NULL)
 	{
-		$answer = ($val * 0.000454);
+		$answer = ($value * 0.000454);
 		return $answer;
 	}
-	public function metrictonToPounds($val)
+	public function metrictonToPounds($value = NULL)
 	{
-		$answer = ($val * 2204.6);
+		$answer = ($value * 2204.6);
 		return $answer;
 	}
-	public function ouncesToMetricton($val)
+	public function ouncesToMetricton($value = NULL)
 	{
-		$answer = ($val * 0.00045);
+		$answer = ($value * 0.00045);
 		return $answer;
 	}
-	public function metrictonToOunces($val)
+	public function metrictonToOunces($value  = NULL)
 	{
-		$answer = ($val * 2222.2222);
+		$answer = ($value * 2222.2222);
 		return $answer;
 	}
-	public function doConversion($val, $from, $to)
+	public function doConversion($value = NULL, $from = NULL, $to = NULL)
 	{
-		if(empty($val)){
-   	    	return $this->objLanguage->languageText('mod_conversions_InsertError', 'conversions');
-    	}
-		elseif($from == $to && !empty($val))
+		if(!is_numeric($value)){
+				return $this->objLanguage->languageText('mod_conversions_insertNumError', 'conversions');
+		}
+		elseif($from == $to && !empty($value))
 		{
     	    return $this->objLanguage->languageText('mod_conversions_itselfError', 'conversions');
 		}
 		elseif($from == "1" && $to == "2")
 		{
-			$tempVal = $this->kilogramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempVal),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
+			$tempvalue = $this->kilogramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
 		}
 		elseif($from == "1" && $to == "3")
 		{
-			return $val.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->kilogramsToMetricton($val),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->kilogramsToMetricton($value),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
 		}
 		elseif($from == "1" && $to == "4")
 		{
-			$tempVal = $this->kilogramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($tempVal),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
+			$tempvalue = $this->kilogramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
 		}
 		elseif($from == "1" && $to == "5")
 		{
-			$tempVal = $this->kilogramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempVal),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
+			$tempvalue = $this->kilogramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symKG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
 		}
 		elseif($from == "2" && $to == "1")
 		{
-			$tempVal = $this->gramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempVal),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
+			$tempvalue = $this->gramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
 		}
 		elseif($from == "2" && $to == "3")
 		{
-			return $val.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->gramsToMetricton($val),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->gramsToMetricton($value),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
 		}
 		elseif($from == "2" && $to == "4")
 		{
-			$tempVal = $this->gramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($tempVal),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
+			$tempvalue = $this->gramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
 		}
 		elseif($from == "2" && $to == "5")
 		{
-			$tempVal = $this->gramsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempVal),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
+			$tempvalue = $this->gramsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symG", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
 		}
 		elseif($from == "3" && $to == "1")
 		{
-			return $val." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($val),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
+			return $value." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($value),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
 		}
 		elseif($from == "3" && $to == "2")
 		{
-			return $val." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($val),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
+			return $value." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($value),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
 		}
 		elseif($from == "3" && $to == "4")
 		{
-			return $val." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($val),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
+			return $value." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToPounds($value),2).$this->objLanguage->languageText("mod_conversions_symLBS", "conversions").".";
 		}
 		elseif($from == "3" && $to == "5")
 		{
-			return $val." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($val),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
+			return $value." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($value),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
 		}
 		elseif($from == "4" && $to == "1")
 		{
-			$tempVal = $this->poundsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempVal),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
+			$tempvalue = $this->poundsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
 		}
 		elseif($from == "4" && $to == "2")
 		{
-			$tempVal = $this->poundsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempVal),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
+			$tempvalue = $this->poundsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
 		}
 		elseif($from == "4" && $to == "3")
 		{
-			return $val.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->poundsToMetricton($val),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->poundsToMetricton($value),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
 		}
 		elseif($from == "4" && $to == "5")
 		{
-			$tempVal = $this->poundsToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempVal),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
+			$tempvalue = $this->poundsToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symLBS", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
 		}
 		elseif($from == "5" && $to == "1")
 		{
-			$tempVal = $this->ouncesToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempVal),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
+			$tempvalue = $this->ouncesToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToKilograms($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symKG", "conversions").".";
 		}
 		elseif($from == "5" && $to == "2")
 		{
-			$tempVal = $this->ouncesToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempVal),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
+			$tempvalue = $this->ouncesToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToGrams($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symG", "conversions").".";
 		}
 		elseif($from == "5" && $to == "3")
 		{
-			return $val.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->ouncesToMetricton($val),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
+			return $value.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->ouncesToMetricton($value),2)." ".$this->objLanguage->languageText("mod_conversions_symTONS", "conversions").".";
 		}
 		elseif($from == "5" && $to == "4")
 		{
-			$tempVal = $this->ouncesToMetricton($val);
-			return $val.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempVal),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
+			$tempvalue = $this->ouncesToMetricton($value);
+			return $value.$this->objLanguage->languageText("mod_conversions_symOZ", "conversions")." ".$this->objLanguage->languageText("mod_conversions_convertedTo", "conversions")." ".round($this->metrictonToOunces($tempvalue),2).$this->objLanguage->languageText("mod_conversions_symOZ", "conversions").".";
 		}
    		else{
-           		return  $this->objLanguage->languageText('mod_conversions_unknownError', 'conversions');
+           		return  $this->objLanguage->languageText('mod_conversions_insertError', 'conversions');
         	}
 	}
 }

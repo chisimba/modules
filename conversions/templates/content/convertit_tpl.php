@@ -12,10 +12,31 @@ $leftSideColumn = $this->leftMenu->show();
 $rightSideColumn = NULL;
 $middleColumn = NULL;
 $this->objUser = $this->getObject('user', 'security');
-$objMiddleMenu = $this->getObject('navigate');    
+$this->objNav = $this->getObject('navigate');
 
-$middleColumn = $objMiddleMenu->conversionsFormNav(); 
-
+				
+				if($goTo == NULL){
+					$middleColumn = "CONVERSIONS MAIN PAGE.  This module provides simplified converters in the fields
+                          of temperature, volume, distance and weight.
+                      Please procced to the 'Go to' drop down list to select the converter that you require.";
+				}
+				elseif($goTo == "dist"){
+					$middleColumn = $this->objNav->dist();
+					$middleColumn .= $this->objNav->answer($value, $from, $to, $action);
+				}
+				elseif($goTo == "temp"){
+					$middleColumn = $this->objNav->temp();
+					$middleColumn .= $this->objNav->answer($value, $from, $to, $action);
+				}
+				elseif($goTo == "vol"){
+					$middleColumn = $this->objNav->vol();
+					$middleColumn .= $this->objNav->answer($value, $from, $to, $action);
+				}
+				elseif($goTo == "weight"){
+					$middleColumn = $this->objNav->weight();
+					$middleColumn .= $this->objNav->answer($value, $from, $to, $action);	
+				}
+$rightSideColumn = $this->objNav->conversionsFormNav();
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setRightColumnContent($rightSideColumn);
