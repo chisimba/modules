@@ -53,7 +53,7 @@ $rowcount = 0;
 $norecords = $objLanguage->languageText('mod_phonebook_nodata', 'phonebook');
 //A statement not to display the records if it is empty.
 if (empty($records)) {
-    $objTableClass->addCell($norecords, NULL, NULL, 'center', NULL, 'colspan="7"');
+    $objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');
 } else{
 
 //Create an array for each value in the table.
