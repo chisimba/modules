@@ -54,14 +54,14 @@ class phonebook extends controller
 
            case 'addentry';	
 // Get Details from Form
-		$userId = $this->objUser->userId();
-		$firstname = htmlentities($this->getParam('firstname'), ENT_QUOTES);
-		$lastname = htmlentities($this->getParam('lastname'), ENT_QUOTES);
-	        $emailaddress = htmlentities($this->getParam('emailaddress'), ENT_QUOTES);
-		$cellnumber = htmlentities($this->getParam('cellnumber'), ENT_QUOTES);
-	        $landlinenumber = htmlentities($this->getParam('landlinenumber'), ENT_QUOTES);
-	        $address = htmlentities($this->getParam('address'), ENT_QUOTES);
-		$this->objDbContacts->insertRecord($userId, $firstname, $lastname, $emailaddress, $cellnumber,	 			$landlinenumber, $address); 
+				$userId = $this->objUser->userId();
+				$firstname = htmlentities($this->getParam('firstname'), ENT_QUOTES);
+				$lastname = htmlentities($this->getParam('lastname'), ENT_QUOTES);
+	       	    $emailaddress = htmlentities($this->getParam('emailaddress'), ENT_QUOTES);
+				$cellnumber = htmlentities($this->getParam('cellnumber'), ENT_QUOTES);
+	       	    $landlinenumber = htmlentities($this->getParam('landlinenumber'), ENT_QUOTES);
+	        	$address = htmlentities($this->getParam('address'), ENT_QUOTES);
+				$this->objDbContacts->insertRecord($userId, $firstname, $lastname, $emailaddress, $cellnumber,	 			$landlinenumber, $address); 
 		$this->nextAction('');
 	   break;
             
@@ -70,19 +70,19 @@ class phonebook extends controller
 	   break;	
            
            case 'editentry':
-		$id = $this->getParam('id');
+		$id = html_entity_decode($this->getParam('id'));
 		$oldrec = $this->objDbContacts->listSingle($id);
 		$this->setVarByRef('oldrec', $oldrec);
           return 'editentry_tpl.php';
 // Get Details from Form						
           case 'updateentry':
 		$id = $this->getParam('id');
-		$firstname = html_entity_decode($this->getParam('firstname'));
-		$lastname = html_entity_decode($this->getParam('lastname'));
-	        $emailaddress = html_entity_decode($this->getParam('emailaddress'));
-	        $cellnumber = html_entity_decode($this->getParam('cellnumber'));
-	        $landlinenumber = html_entity_decode($this->getParam('landlinenumber'));
-	        $address = html_entity_decode($this->getParam('address'));
+		$firstname = htmlentities($this->getParam('firstname'));
+		$lastname = htmlentities($this->getParam('lastname'));
+	        $emailaddress = htmlentities($this->getParam('emailaddress'));
+	        $cellnumber = htmlentities($this->getParam('cellnumber'));
+	        $landlinenumber = htmlentities($this->getParam('landlinenumber'));
+	        $address = htmlentities($this->getParam('address'));
             
 		$this->objUser = $this -> getObject('user', 'security');
 		$arrayOfRecords = array('userid' =>$this ->objUser ->userId(), 
