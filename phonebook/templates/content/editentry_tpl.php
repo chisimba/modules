@@ -1,16 +1,15 @@
 <?php
 
 /**
-* Database Table Phonebook
-* @author Jacques Cilliers<2618315@uwc.ac.za>
-* @author Charl Daniels <2550241@uwc.ac.za>
+* Model extension of controller that displays the interface for editing entries
+* @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko.
 * @copyright 2007 University of the Western Cape
 */
 
 
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-// Set columns to 3
+// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 // get the sidebar object
@@ -61,8 +60,13 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
        	    $ctv->value = $oldrec['id'];     
         }
         
+//<<<<<<< editentry_tpl.php
+        //$ct->addCell($ctvlabel->show());
+        $ct->addCell($ctv->show()==false);
+//=======
         //$ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
+//>>>>>>> 1.7
         $ct->endRow();
         
 				$ct->startRow();
@@ -152,7 +156,7 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('address');
+        $ctv = new textarea('address');
 				if(isset($oldrec['address']))
 				{
        	    $ctv->value = $oldrec['address'];     

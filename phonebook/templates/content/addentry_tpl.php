@@ -1,14 +1,15 @@
 <?php
 
 /**
-* Database Table Phonebook
-* @author Jacques Cilliers<2618315@uwc.ac.za>
+* Model extension of controller that displays the interface for adding entries
+* @authors: Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko
 * @copyright 2007 University of the Western Cape
+* @modified to work with the phonebook module by: .
 */
 
 // Create an instance of the css layout class
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-// Set columns to 3
+// Set columns to 2
 $cssLayout->setNumColumns(2);
 
 // get the sidebar object
@@ -93,7 +94,7 @@ $pgTitle->str = $objLanguage->languageText('mod_phonebook_return', 'phonebook').
 	//value textfield
         $ct->startRow();
         $ctvlabel = new label($this->objLanguage->languageText('mod_phonebook_address', 'phonebook') . ':', 'input_cvalue');
-        $ctv = new textinput('address');
+        $ctv = new textarea('address');
         
         $ct->addCell($ctvlabel->show());
         $ct->addCell($ctv->show());
