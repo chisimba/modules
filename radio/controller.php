@@ -1,6 +1,12 @@
 <?php
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
@@ -8,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 *
 * Controller class for Chisimba for the radio module
 *
-* @author Prince Mbekwa
+* @author  Prince Mbekwa
 * @package radio
 *
 */
@@ -17,24 +23,64 @@ class radio extends controller
 
     /**
     * @var $objLog String object property for holding the
-    * logger object for logging user activity
+    *              logger object for logging user activity
     */
     public $objLog;
 
+    /**
+     * Object playlist
+     * @var    object
+     * @access public
+     */
     public $playlist;
 
+    /**
+     * Obj auth for admin authentication
+     * @var    boolean
+     * @access public
+     */
     public $auth;
 
+    /**
+     * Stream object
+     * @var    unknown
+     * @access public
+     */
 	public $stream;
 
+    /**
+     * Settings object for radio stations
+     * @var    object
+     * @access public
+     */
 	public $settings;
 
+    /**
+     * Various stations obj
+     * @var    object
+     * @access public
+     */
 	public $stations;
 
+    /**
+     * Console object
+     * @var    object
+     * @access public
+     */
 	public $console;
 
+    /**
+     * Statistic object
+     * @var    object
+     * @access public
+     */
 	public $stats;
 
+    /**
+     * Language Object
+     * @var    object
+     * @access public
+     */
 	public $objLanguage;
 
 
@@ -169,6 +215,15 @@ class radio extends controller
 
     }
 
+    /**
+     * Method to initialize station objects
+     *
+     * Long description (if any) ...
+     *
+     * @param  string $station Parameter description Station currently being played
+     * @return array Return description information about the playlist of the station
+     * @access private
+     */
     private function _loadlist($station){
     	$station = $this->stations->default_s($station);
     	$playlist_name = $this->playlist->get_playlist_list($station);
@@ -196,6 +251,15 @@ class radio extends controller
 
     }
 
+    /**
+     * Login Method
+     *
+     * Long description Administer the admin panel
+     *
+     * @param  string  $action Parameter description evaluate activity in admin panel
+     * @return boolean Return description true /false
+     * @access private
+     */
     private function _login($action){
 
 
@@ -221,6 +285,16 @@ class radio extends controller
     	}
     }
 
+    /**
+     * Debug method
+     *
+     * Long description debug for testing
+     *
+     * @param  string  $key  Parameter description (if any) ...
+     * @param  string  $key2 Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
     public function debug($key, $key2)
 	{
 			if($key != "" && $key2 != "" && $key == $key2)
@@ -233,6 +307,14 @@ class radio extends controller
 			}else {$debug = false;}
 	}
 
+    /**
+     * Short description for private
+     *
+     * Long description (if any) ...
+     *
+     * @return unknown Return description (if any) ...
+     * @access private
+     */
     private function _controlOps(){
 
     	if ($_SESSION['id'] != ""){
@@ -245,6 +327,15 @@ class radio extends controller
 
 
     }
+
+    /**
+     * Overides the framework login
+     *
+     * Long description (if any) ...
+     *
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
        public function requiresLogin()
         {
             return FALSE;
