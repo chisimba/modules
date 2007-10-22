@@ -108,7 +108,7 @@ $station_n = $data[$teller];
 if($station_n != "")
 {
 
-	$dropdown .= "<option  value='?station=$station_n'";
+	$dropdown .= "<option  value='?module=radio&station=$station_n'";
 	if($station_n == $station)
 	{
 		$dropdown .= "SELECTED";
@@ -120,8 +120,9 @@ if($station_n != "")
 $teller++;
 }
 $dropdown .= "</select>";
+$form_uri = $this->uri(array('action'=>'home'),'radio');
 //add this to the form
-$table_mid->addCell("<center><table><form  method='POST'><tr><td>".$dropdown."</td></tr></form></table></center>",null,null);
+$table_mid->addCell("<center><table><form action='$form_uri' method='POST'><tr><td>".$dropdown."</td></tr></form></table></center>",null,null);
 $table_mid->endRow();
 $table->addCell($table_mid->show(),null,null,'center',null,'');
 $table->endRow();
