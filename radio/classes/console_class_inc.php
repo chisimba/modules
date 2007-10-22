@@ -1,12 +1,84 @@
 <?php
+
+/**
+ * Logs to file current activities of users
+ * on the current radio station.
+ * Writes this info to file for later use by administrator
+ *
+ *
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       radio module
+ */
+
+/**
+ * Console class used for executing commands
+ *
+ * Long description (if any) ...
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class console extends object
 {
+
+    /**
+     * Description for public
+     * log object
+     * @var    string
+     * @access public
+     */
 	public $log;
 
+    /**
+     * Description for public
+     * Users object
+     * @var    string
+     * @access public
+     */
 	public $users;
 
+    /**
+     * Description for public
+     * Banned list object
+     * @var    string
+     * @access public
+     */
 	public $ban;
 
+    /**
+     * Description for public
+     * Executable commands object
+     * @var    object
+     * @access public
+     */
 	public $console_commands;
 
 	/**
@@ -21,6 +93,15 @@ class console extends object
 
     }
 
+    /**
+     * Short description for public
+     * Startup method
+     * Long description (if any) ...
+     *
+     * @param  string $station Parameter description current station
+     * @return array Return description
+     * @access public
+     */
 	public function start_up($station = "0")
 	{
 		$data = "0";
@@ -35,6 +116,17 @@ class console extends object
 		return $data;
 	}
 
+    /**
+     * Short description for public
+     * Method to log inputs and activities on the sation
+     *
+     * Long description (if any) ...
+     *
+     * @param  string $station Parameter description (if any) ...
+     * @param  string $data_q  Parameter description (if any) ...
+     * @return void
+     * @access public
+     */
 	public function add_log($station = "0",$data_q = "0")
 	{
 		$time_stamp = time();
@@ -59,6 +151,17 @@ class console extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     * Method to add online users
+     *
+     * Long description (if any) ...
+     * Method logs currently listerning users, their ip addresses
+     *
+     * @param  string $station Parameter description currently playing station
+     * @return void
+     * @access public
+     */
 	public function add_online_user($station = "0")
 	{
 
@@ -93,6 +196,16 @@ class console extends object
 	}
 
 
+    /**
+     * Short description for public
+     * Method to pdate current users of the radio
+     *
+     * Long description (if any) ...
+     * Logs whomever is currently streaming the sund of the station
+     *
+     * @return void
+     * @access public
+     */
 	public function update_online_users()
 	{
 		$time_end = time() + 300;
@@ -118,6 +231,15 @@ class console extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     * Method to check for banned Ip / users
+     *
+     * Long description (if any) ...
+     *
+     * @return void
+     * @access public
+     */
 	public function ban_check()
 	{
 			if ($handle = opendir($this->ban)) {
@@ -134,6 +256,16 @@ class console extends object
 
 	}
 
+    /**
+     * Short description for public
+     * Method to check for banned Ip /user (specific)
+     *
+     * Long description (if any) ...
+     *
+     * @param  string  $ip Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
 	public function ban_check2($ip = "0")
 	{
 			if ($handle = opendir($this->ban)) {
@@ -150,6 +282,17 @@ class console extends object
 	    	return false;
 
 	}
+
+    /**
+     * Short description for public
+     * Method to add Ip / user to banned list
+     *
+     * Long description (if any) ...
+     *
+     * @param  string $ip Parameter description Ip to be banned
+     * @return void
+     * @access public
+     */
 	public function add_to_ban($ip = "0")
 	{
 		if($ip != "0" && $ip != "")
@@ -159,6 +302,16 @@ class console extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     * Method to revoke banned IP / user
+     *
+     * Long description (if any) ...
+     *
+     * @param  string $ip Parameter description user / IP
+     * @return void
+     * @access public
+     */
 	public function remove_ban($ip)
 	{
 		if(file_exists($this->ban.$ip.".data"))
@@ -167,6 +320,17 @@ class console extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Method to execute commands
+     *
+     * Long description (if any) ...
+     *
+     * @param  unknown $command Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public
+     */
 	public function commands($command)
 	{
 		$data =	$command;
