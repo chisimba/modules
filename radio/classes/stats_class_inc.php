@@ -1,11 +1,76 @@
 <?php
+
+/**
+ * Short description for file
+ *
+ * Statistics for all the stations. This inlcude user stats,
+ * playlists, and stations and gives all breakdowns for display
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 error_reporting(0);
+
+/**
+ * Short description for class
+ *
+ * Class handles data agregation for various playlist songs, users and stations
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class stats extends object
 {
+
+    /**
+     * Description for public
+     * Users source
+     * @var    string
+     * @access public
+     */
 	public $users_src;
 
+    /**
+     * Description for public
+     * playlist source
+     * @var    string
+     * @access public
+     */
 	public $playlist_src;
 
+    /**
+     * Description for public
+     * live feeds source
+     * @var    unknown
+     * @access public
+     */
 	public $live_src;
 
 	/**
@@ -20,6 +85,15 @@ class stats extends object
     }
 
 
+    /**
+     * Short description for public
+     *
+     * Get a list of users currently online
+     *
+     * @param  string $staion Parameter description current station
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
 	public function get_users_online($staion)
 	{
 		$teller = "0";
@@ -47,6 +121,15 @@ class stats extends object
 		return $teller;
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get users currently online (usernames / ip address)
+     *
+     * @param  unknown $staion Parameter description station name
+     * @return string  Return description (if any) ...
+     * @access public
+     */
 	public function get_users_online_names($staion)
 	{
 		$teller = "0";
@@ -75,6 +158,16 @@ class stats extends object
 		return $data;
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get information about a station
+     *
+     * @param  string  $station  Parameter description (if any) ...
+     * @param  string  $playlist Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
 	public function station_status($station = "0", $playlist = "0")
 	{
 		if($station  != "0" && $playlist != "0"){
@@ -114,6 +207,16 @@ class stats extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get information about a song surrently playing
+     *
+     * @param  string $station  Parameter description (if any) ...
+     * @param  string $playlist Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function now_playing($station = "0", $playlist = "0")
 	{
 		$song = "0";
@@ -158,6 +261,16 @@ class stats extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get dynamic bitrate of the song
+     *
+     * @param  string  $station  Parameter description (if any) ...
+     * @param  string  $playlist Parameter description (if any) ...
+     * @return integer Return description (if any) ...
+     * @access public
+     */
 	public function bitrate($station = "0", $playlist = "0")
 	{
 		$song = "0";
@@ -197,6 +310,16 @@ class stats extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get information about last played song
+     *
+     * @param  string $station  Parameter description (if any) ...
+     * @param  string $playlist Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function laast_song($station = "0", $playlist = "0")
 	{
 		$song = "0";
@@ -243,6 +366,16 @@ class stats extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get information about the next song in the list
+     *
+     * @param  string $station  Parameter description (if any) ...
+     * @param  string $playlist Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function next_song($station = "0", $playlist = "0")
 	{
 		$song = "0";
