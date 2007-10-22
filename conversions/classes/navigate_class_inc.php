@@ -2,17 +2,50 @@
 /**
  * Returns a drop down list and the conversion answer for the left drop-down menu, in the module conversions
  *
- * @author Ebrahim Vasta <2623441@uwc.ac.za>
- * @package conversions
- * @copyright UWC 2007
+ * @author     Ebrahim Vasta <2623441@uwc.ac.za>
+ * @package    conversions
+ * @copyright  UWC 2007
  * @filesource
  */
 class navigate extends object
 {
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objDist;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objTemp;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objVol;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objWeight;
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         $this->objDist = $this->getObject('dist');
@@ -21,6 +54,15 @@ class navigate extends object
         $this->objWeight = $this->getObject('weight');
         $this->objLanguage = $this->getObject('language', 'language');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function conversionsFormNav() 
     {
         $gform = new form('goTo', $this->uri(array(
@@ -53,6 +95,15 @@ class navigate extends object
         $gret = $gobjFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_goTo", "conversions") , $gform);
         return $gret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function dist() 
     {
         //creating a form
@@ -110,6 +161,15 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_distanceconverter", "conversions") , $cform);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function temp() 
     {
         //creating a form
@@ -159,6 +219,15 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_temperatureconverter", "conversions") , $cform);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function vol() 
     {
         //creating a form
@@ -212,6 +281,15 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_volumeconverter", "conversions") , $cform);
         return $ret;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function weight() 
     {
         //creating a form
@@ -265,10 +343,23 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_weightconverter", "conversions") , $cform);
         return $ret;
     }
-    public function answer($value = NULL, $from = NULL, $to = NULL, $type = NULL) 
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $value Parameter description (if any) ...
+     * @param  unknown $from  Parameter description (if any) ...
+     * @param  unknown $to    Parameter description (if any) ...
+     * @param  unknown $action  Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
+    public function answer($value = NULL, $from = NULL, $to = NULL, $action = NULL) 
     {
         if (isset($value)) {
-            switch ($type) {
+            switch ($action) {
                 case 'dist':
                     $answer = $this->objDist->doConversion($value, $from, $to);
                     $objFeatureBox = $this->getObject('featurebox', 'navigation');

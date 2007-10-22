@@ -3,92 +3,220 @@
  * converts distance/length measurements: centimeters, millimeters, feet,
  * yards, meters, kilometres and miles
  *
- * @author Hendry Thobela <2649282@uwc.ac.za>
- * @author Raymond Williams <2541826@uwc.ac.za>
- * @package convertions
- * @copyright UWC 2007
+ * @author     Hendry Thobela <2649282@uwc.ac.za>
+ * @author     Raymond Williams <2541826@uwc.ac.za>
+ * @package    convertions
+ * @copyright  UWC 2007
  * @filesource
  */
 class dist extends object
 {
+
+    /**
+     * Declaration of variable
+     * @var    $value
+     * @access public 
+     */
     public $value;
+
+    /**
+     * Function initiates class
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
     }
-    //The following functions return a value that has been converted to miles or from miles
+    /**
+     * The following function converts miles to centimeters .
+     * 
+     * @param  numerical value ($value)
+     * @return centimeter equivalent
+     * @access public 
+     */
     public function convMilesToCentimeters($value = NULL) 
     {
         $answer = ($value*160934);
         return $answer;
     }
-    //The Following function returns a value that has been converted from Miles To Millimeters
+   
+
+
+    /**
+     * The Following function converts miles to millilitres
+     * 
+     * @param  numerical value ($value)
+     * @return input value millilitre equivalent
+     * @access public 
+     */
     public function convMilesToMillimeters($value = NULL) 
     {
         $answer = ($value*1609000);
         return $answer;
     }
-    //The Following function returns a value that has been converted from Miles To Feet
+    
+
+
+    /**
+     * The Following function converts miles to feet
+     * 
+     * @param  numerical value ($value)
+     * @return input value feet equivalent
+     * @access public 
+     */
     public function convMilesToFeet($value = NULL) 
     {
         $answer = ($value*5280);
         return $answer;
     }
-    // The Following function returns a value that has been converted from  Miles To Yards
+   
+
+    /**
+     * Short description for public
+     * 
+     * The Following function converts miles to yards
+     * 
+     * @param  numerical value ($value)
+     * @return input value yards equivalent
+     * @access public 
+     */
     public function convMilesToYards($value = NULL) 
     {
         $answer = ($value*1760);
         return $answer;
     }
-    // the following function returns a value that has been converted from  Miles To Meters
+    // 
+
+
+    /**
+     *the following function converts miles to meters
+     * 
+     * @param  numerical value ($value)
+     * @return input value meters equivalent
+     * @access public 
+     */
     public function convMilesToMeters($value = NULL) 
     {
         $answer = ($value*1609);
         return $answer;
     }
-    // The following function returns a value that has been converted from Miles To Kilometers
+     
+
+
+    /**
+     * The following function converts miles to kilometers 
+     * 
+     * @param  numerical value ($value)
+     * @return input value kilometers equivalent
+     * @access public 
+     */
     public function convMilesToKilometers($value = NULL) 
     {
         $answer = ($value*1.60900);
         return $answer;
     }
-    // The following function returns a value that has been converted from Centimeters To Miles
+    
+
+    /**
+     * Short description for public
+     * 
+     * The following function converts centimeters to miles .
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convCentimetersToMiles($value = NULL) 
     {
         $answer = ($value*0.000006214);
         return $answer;
     }
-    // The Following function returns  a value that has been converted from Millimeters To Miles
+    // 
+
+
+    /**
+     * The Following function converts millimeters to miles
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convMillimetersToMiles($value = NULL) 
     {
         $answer = ($value*6.214e-7);
         return $answer;
     }
-    // The following function return a value that has been converted from Yards To Miles
+   
+    /**
+     * The following function converts yards to miles
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convYardsToMiles($value = NULL) 
     {
         $answer = ($value*0.00056);
         return $answer;
     }
-    //The following function returns a value that has been converted from Feet To Miles
+    
+
+    /**
+     * The following function converts feet to miles
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convFeetToMiles($value = NULL) 
     {
         $answer = ($value*0.00019);
         return $answer;
     }
-    //the Following function returns a value that has been converted from Meters To Miles
+
+
+    /**
+     * the Following function returns a value that has been converted from Meters To Miles
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convMetersToMiles($value = NULL) 
     {
         $answer = ($value*0.00062);
         return $answer;
     }
-    //The Following function returns a value that has been converted from  Kilometers To Miles
+    //
+
+
+    /**
+     * The Following function converts kilometers to miles
+     * 
+     * @param  numerical value ($value)
+     * @return input value miles equivalent
+     * @access public 
+     */
     public function convKilometersToMiles($value = NULL) 
     {
         $answer = ($value*0.62140);
         return $answer;
     }
-    //the function below does the actual conversion
+    //
+
+
+    /**
+     * Short description for public
+     * 
+     * The function below does the actual conversion
+     * 
+     * @param  numerical value $value 
+     * @param  string $from  Unit to be converted from
+     * @param  string $to    Unit to be converted from
+     * @return converted value
+     * @access public
+     */
     public function doConversion($value = NULL, $from = NULL, $to = NULL) 
     {
         /**

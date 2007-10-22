@@ -2,59 +2,166 @@
 /**
  * converts weight measurements: Kilograms, grams, metric tons, pounds and ounces
  *
- * @author  Faizel Lodewyk<2528194@uwc.ac.za>
- * @author  Keanon Wagner<2456923@uwc.ac.za>
- * @package convertions
- * @copyright UWC 2007
+ * @author     Faizel Lodewyk<2528194@uwc.ac.za>
+ * @author     Keanon Wagner<2456923@uwc.ac.za>
+ * @package    convertions
+ * @copyright  UWC 2007
  * @filesource
  */
 class weight extends object
 {
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $value;
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function kilogramsToMetricton($value = NULL) 
     {
         $answer = ($value*0.001);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function metrictonToKilograms($value = NULL) 
     {
         $answer = ($value*1000);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function gramsToMetricton($value = NULL) 
     {
         $answer = ($value*0.00001);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function metrictonToGrams($value = NULL) 
     {
         $answer = ($value*1000000);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function poundsToMetricton($value = NULL) 
     {
         $answer = ($value*0.000454);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function metrictonToPounds($value = NULL) 
     {
         $answer = ($value*2204.6);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function ouncesToMetricton($value = NULL) 
     {
         $answer = ($value*0.00045);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function metrictonToOunces($value = NULL) 
     {
         $answer = ($value*2222.2222);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  string $value Parameter description (if any) ...
+     * @param  string $from  Parameter description (if any) ...
+     * @param  string $to    Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function doConversion($value = NULL, $from = NULL, $to = NULL) 
     {
         if (!is_numeric($value)) {

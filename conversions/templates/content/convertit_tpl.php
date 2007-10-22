@@ -12,28 +12,17 @@ $middleColumn = NULL;
 $this->objUser = $this->getObject('user', 'security');
 $this->objNav = $this->getObject('navigate');
 
-if(isset($value)){
-    $value = $value;
-}
-else{
+if(!isset($value)){
+
     $value = NULL;
 }
-if(isset($from)){
-    $from = $from;
-}
-else{
+if(!isset($from)){
     $from = NULL;
 }
-if(isset($to)){
-    $to = $to;
-}
-else{
+if(!isset($to)){
     $to = NULL;
 }
-if(isset($action)){
-    $action = $action;
-}
-else{
+if(!isset($action)){
     $action = NULL;
 }
 

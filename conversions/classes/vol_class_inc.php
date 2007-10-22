@@ -2,67 +2,183 @@
 /**
  * converts volume measurements: Litres, Millilitres, Cubic Decimeters, Cubic Meters & Cubic Centimeters
  *
- * @author Nonhlanhla Gangeni <2539399@uwc.ac.za>
- * @package convertions
- * @copyright UWC 2007
+ * @author     Nonhlanhla Gangeni <2539399@uwc.ac.za>
+ * @package    convertions
+ * @copyright  UWC 2007
  * @filesource
  */
 class vol extends object
 {
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $value;
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
     }
     //The following functions return a value that has been converted to Cubic Meters or from Cubic Meters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convLitresToCubicMeters($value = NULL) 
     {
         $answer = $value/10000;
         return $answer;
     }
     //Following function converts MillilitresToCubicMeters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convMillilitresToCubicMeters($value = NULL) 
     {
         $answer = $value/10000000;
         return $answer;
     }
     //Following function converts CubicMetersToLitres
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicMetersToLitres($value = NULL) 
     {
         $answer = $value*10000;
         return $answer;
     }
     //Following function converts CubicMetersToMillilitres
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicMetersToMillilitres($value = NULL) 
     {
         $answer = $value*10000000;
         return $answer;
     }
     //Following function converts CubicDecimetersToCubicMeters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicDecimetersToCubicMeters($value = NULL) 
     {
         $answer = $value/1000;
         return $answer;
     }
     // Following function converts CubicMetersToCubicDecimeters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicMetersToCubicDecimeters($value = NULL) 
     {
         $answer = $value*1000;
         return $answer;
     }
     // Following function converts CubicCentimetersToCubicMeters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicCentimetersToCubicMeters($value = NULL) 
     {
         $answer = $value/1000000;
         return $answer;
     }
     // Following function converts CubicMetersToCubicCentimeters
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCubicMetersToCubicCentimeters($value = NULL) 
     {
         $answer = $value*1000000;
         return $answer;
     }
     //the function below does the actual conversion
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  string $value Parameter description (if any) ...
+     * @param  string $from  Parameter description (if any) ...
+     * @param  string $to    Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function doConversion($value = NULL, $from = NULL, $to = NULL) 
     {
         /**

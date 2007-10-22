@@ -2,40 +2,103 @@
 /**
  * converts temperature measurements: Kelvin, celcius, and fahrenheit
  *
- * @author Nazheera Khan <2524939@uwc.ac.za>
- * @author Ebrahim Vasta <2623441@uwc.ac.za>
- * @package convertions
- * @copyright UWC 2007
+ * @author     Nazheera Khan <2524939@uwc.ac.za>
+ * @author     Ebrahim Vasta <2623441@uwc.ac.za>
+ * @package    convertions
+ * @copyright  UWC 2007
  * @filesource
  */
 class temp extends object
 {
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @return void  
+     * @access public
+     */
     public function init() 
     {
         $this->objLanguage = $this->getObject('language', 'language');
     }
     //The following functions return a value that has been converted to Celsius or from Celsius
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCelsToFahren($value = NULL) 
     {
         $answer = ((9/5) *($value) +32);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  unknown $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convCelToKel($value = NULL) 
     {
         $answer = $value+273.15;
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convFahrenToCels($value = NULL) 
     {
         $answer = (5/9) *($value-32);
         return $answer;
     }
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  number  $value Parameter description (if any) ...
+     * @return unknown Return description (if any) ...
+     * @access public 
+     */
     public function convKelToCels($value = NULL) 
     {
         $answer = $value-273.15;
         return $answer;
     }
     //the function below does the actual conversion
+
+
+    /**
+     * Short description for public
+     * 
+     * Long description (if any) ...
+     * 
+     * @param  string $value Parameter description (if any) ...
+     * @param  string $from  Parameter description (if any) ...
+     * @param  string $to    Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
     public function doConversion($value = NULL, $from = NULL, $to = NULL) 
     {
         /**
