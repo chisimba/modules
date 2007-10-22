@@ -1,17 +1,87 @@
 <?php
+
+/**
+ * Short description for file
+ *
+ * This file handles everything to do with the playlists.
+ * This inclused compiling the playlist,delete,update and queries
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
+
+/**
+ * Short description for class
+ *
+ * Class handles playlist manipulation
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class playlist extends object
 {
 
 
+    /**
+     * Description for public
+     * File where the playlist is located
+     * @var    string
+     * @access public
+     */
 	public $playlist_src;
 
 
+    /**
+     * Short description for public
+     *
+     * Loading of the source
+     *
+     * @return void
+     * @access public
+     */
     public function init()
     {
     	$this->playlist_src = $this->getResourcePath('includes/playlist/','radio');
 
     }
 
+    /**
+     * Short description for public
+     *
+     * Method to create a playlist
+     *
+     * @param  string $station_name  Parameter current station
+     * @param  string $playlist_name Parameter playlist
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function creat_playlist($station_name = "0", $playlist_name = "0")
 	{
 
@@ -31,6 +101,15 @@ class playlist extends object
 
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get info about all playlists compiled for a station
+     *
+     * @param  string $station Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function get($station = "0")
 	{
 		if ($station != "0")
@@ -58,6 +137,15 @@ class playlist extends object
 	}
 
 
+    /**
+     * Short description for public
+     *
+     * Get all songs for a particular playlist
+     *
+     * @param  string $station Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
 	public function get_playlist_list($station = "0")
 	{
 		if ($station != "0")
@@ -91,6 +179,16 @@ class playlist extends object
 	}
 
 
+    /**
+     * Short description for public
+     *
+     * Calculate the timing for songs
+     *
+     * @param  number  $sec      Parameter description (if any) ...
+     * @param  boolean $padHours Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public
+     */
 	public function sec2hms ($sec, $padHours = false)
 	{
 
@@ -128,6 +226,17 @@ class playlist extends object
 
 	}
 
+    /**
+     * Short description for public
+     *
+     * Build a playlist
+     *
+     * @param  string $replace_what Parameter description (if any) ...
+     * @param  string $replace_with Parameter description (if any) ...
+     * @param  string $max          Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function build_list($replace_what = "0", $replace_with= "0", $max = "0")
 	{
 		if ($max == ""){$max = "0";}
@@ -146,6 +255,19 @@ class playlist extends object
 		return $data;
 	}
 
+    /**
+     * Short description for public
+     *
+     * Add songs to a playlist
+     *
+     * @param  string $file          Parameter description (if any) ...
+     * @param  mixed  $time          Parameter description (if any) ...
+     * @param  string $bitrate       Parameter description (if any) ...
+     * @param  string $playlist_name Parameter description (if any) ...
+     * @param  string $station_name  Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function add_songs($file = "0", $time = "0", $bitrate = "0", $playlist_name = "0", $station_name = "0")
 	{
 		if ($file != "0" && $time != "0" && $bitrate != "0" && $playlist_name != "0" && $station_name != "0")
@@ -190,6 +312,17 @@ class playlist extends object
 
 	}
 
+    /**
+     * Short description for public
+     *
+     * Delete songs in a playlist
+     *
+     * @param  string $number        Parameter description (if any) ...
+     * @param  string $playlist_name Parameter description (if any) ...
+     * @param  string $station_name  Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function del_songs($number = "nothing", $playlist_name = "0", $station_name = "0")
 	{
 		if ($number != "nothing" && $playlist_name != "0" && $station_name != "0")
@@ -237,6 +370,17 @@ class playlist extends object
 		}else {return "0";}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Sync and sort songs in a playlist
+     *
+     * @param  string $station  Parameter description (if any) ...
+     * @param  string $playlist Parameter description (if any) ...
+     * @param  string $volgorde Parameter description (if any) ...
+     * @return void
+     * @access public
+     */
 	public function move_songs($station = "0", $playlist = "0", $volgorde = "0")
 	{
 
@@ -299,6 +443,16 @@ class playlist extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * delete a playlist
+     *
+     * @param  string  $station_name  Parameter description (if any) ...
+     * @param  string  $playlist_name Parameter description (if any) ...
+     * @return integer Return description (if any) ...
+     * @access public
+     */
 	public function del_playlist($station_name = "0", $playlist_name = "0")
 	{
 		if ($station_name != "0" && $playlist_name != "0")
@@ -312,6 +466,17 @@ class playlist extends object
 	}
 
 
+    /**
+     * Short description for public
+     *
+     * Force-reload a list
+     *
+     * @param  string  $station  Parameter description (if any) ...
+     * @param  string  $playlist Parameter description (if any) ...
+     * @param  boolean $debug    Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public
+     */
 	public function reload($station = "0", $playlist = "0",$debug=false)
 	{
 		if($debug){echo "Start reloading!<br>";}
@@ -360,6 +525,17 @@ class playlist extends object
 		}else {return "0";}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Get information about a list for a radio station
+     * executed usually at startup of the module
+     *
+     * @param  string $station  Parameter description (if any) ...
+     * @param  string $playlist Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function get_playlist_info($station = "0", $playlist = "0")
 	{
 		if ($station != "0" && $playlist != "0")
