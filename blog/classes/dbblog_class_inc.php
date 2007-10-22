@@ -382,13 +382,13 @@ class dbblog extends dbTable
         //delete the post
         $this->delete('id', $id, 'tbl_blog_posts');
         //change tables to the postmeta table to delete the tags
-        $this->_changeTable('tbl_blog_postmeta');
+        $this->_changeTable('tbl_tags');
         //get all the entries where the post_id matches the deleted post id
-        $tagstodelete = $this->getAll("WHERE post_id = '$id'");
+        $tagstodelete = $this->getAll("WHERE item_id = '$id'");
         if (!empty($tagstodelete)) {
             foreach($tagstodelete as $deltags) {
                 //print_r($deltags);
-                $this->delete('id', $deltags['id'], 'tbl_blog_postmeta');
+                $this->delete('id', $deltags['id'], 'tbl_tags');
             }
         }
         //change table and sort out the comments now
