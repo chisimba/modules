@@ -60,6 +60,78 @@ class dbusers extends dbtable
     }
     
     /**
+    * Method to get the list of registered users
+    *
+    * @access public
+    * @return int the number of staff
+    */
+    public function getUserList($by = 'all')
+    {
+        $sql = "SELECT u.userid, u.username FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    
+    /**
+    * Method to get the list of groups - male, female, english, etc
+    *
+    * @access public
+    * @return int the number of staff
+    */
+    public function getGroupList($by = 'all', $group = 'gender')
+    {
+        $data = array();
+        $select = '*';
+        $orderby = '';
+        switch($group){
+            case 'language':
+                $select = 'hu.language as groupid, hu.language as name';
+                $groupby = 'GROUP BY hu.language ORDER BY hu.language';
+                break;
+            
+            case 'course':
+                $select = 'hu.course as groupid, hu.course as name';
+                $groupby = 'GROUP BY hu.course ORDER BY hu.course';
+                break;
+                
+            case 'study_year':
+                $select = 'hu.study_year as groupid, hu.study_year as name';
+                $groupby = 'GROUP BY hu.study_year ORDER BY hu.study_year';
+                break;
+                
+            case 'sex':
+            default:
+                $objLanguage = $this->getObject('language', 'language');
+                $lbFemale = $objLanguage->languageText('word_female');
+                $lbMale = $objLanguage->languageText('word_male');
+                $data[] = array('groupid' => 'M', 'name' => $lbMale);
+                $data[] = array('groupid' => 'F', 'name' => $lbFemale);
+                return $data;
+        }
+        
+        
+        $sql = "SELECT {$select} FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id ";
+            
+        if($by != 'all'){
+            $sql .= "AND hu.staff_student = '{$by}' ";
+        }
+        
+        $sql .= $groupby;
+
+//        echo $sql; die();
+
+        $data = $this->getArray($sql);
+        return $data;
+    }
+
+    /**
     * Method to get the number of staff at the institution
     *
     * @access public
@@ -124,6 +196,120 @@ class dbusers extends dbtable
           GROUP BY tbl_userloginhistory.userid
           ORDER BY " . $order;
         return $this->getArray($sql);
+    }
+    
+    /**
+    * Method to get the total logged in users / students
+    *
+    * @access public
+    * @param string $by Get gender for all or students only
+    * @return array $data
+    */
+    public function getTotalUsers($by = 'all')
+    {
+        $sql = "SELECT count(u.userid) AS cnt FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+            
+        $data = $this->getArray($sql);
+        
+        if(!empty($data)){
+            return $data[0]['cnt'];
+        }
+        return 0;
+    }
+
+    /**
+    * Method to get the gender split - no of males vs females
+    *
+    * @access public
+    * @param string $by Get gender for all or students only
+    * @return array $data
+    */
+    public function getGenderSplit($by = 'all')
+    {
+        $sql = "SELECT count(sex) AS cnt, sex FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+        $sql .= " GROUP BY sex";
+            
+        $data = $this->getArray($sql);
+        return $data;
+    }
+        
+    /**
+    * Method to get the total logged in users / students
+    *
+    * @access public
+    * @param string $by Get gender for all or students only
+    * @return array $data
+    */
+    public function getHomeLanguages($by = 'all')
+    {
+        $sql = "SELECT count(language) as cnt, language FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+        
+        $sql .= " GROUP BY language ORDER BY language";
+            
+        $data = $this->getArray($sql);
+        
+        return $data;
+    }
+    
+    /**
+    * Method to get the year of study
+    *
+    * @access public
+    * @param string $by Get gender for all or students only
+    * @return array $data
+    */
+    public function getYearStudy($by = 'all')
+    {
+        $sql = "SELECT count(study_year) as cnt, study_year FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+        
+        $sql .= " GROUP BY study_year ORDER BY study_year";
+            
+        $data = $this->getArray($sql);
+        
+        return $data;
+    }
+    
+    /**
+    * Method to get the courses
+    *
+    * @access public
+    * @param string $by Get gender for all or students only
+    * @return array $data
+    */
+    public function getCourses($by = 'all')
+    {
+        $sql = "SELECT count(course) as cnt, course FROM tbl_users u, tbl_hivaids_users hu
+            WHERE u.userid = hu.user_id";
+            
+        if($by != 'all'){
+            $sql .= " AND hu.staff_student = '{$by}'";
+        }
+        
+        $sql .= " GROUP BY course ORDER BY course";
+            
+        $data = $this->getArray($sql);
+        
+        return $data;
     }
 }
 ?>

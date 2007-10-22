@@ -26,6 +26,7 @@ class hivaids extends controller
     {
         try{
             $this->hivTools = $this->getObject('hivaidstools', 'hivaids');
+            $this->hivTracking = $this->getObject('hivtracking', 'hivaids');
             $this->repository = $this->getObject('repository', 'hivaids');
             $this->dbVideos = $this->getObject('dbvideos', 'hivaids');
             $this->dbUsers = $this->getObject('dbusers', 'hivaids');
@@ -37,8 +38,11 @@ class hivaids extends controller
             $this->objUserAdmin = $this->getObject('useradmin_model2','security');
             
             //Get the activity logger class and log this module call
-            $objLog = $this->getObject('logactivity', 'logger');
-            $objLog->log();
+            $action = $this->getParam('action');
+            if(!($action == 'tracking' || $action == 'settracking')){
+                $objLog = $this->getObject('logactivity', 'logger');
+                $objLog->log();
+            }
         }catch(Exception $e){
             throw customException($e->message());
             exit();
@@ -110,11 +114,26 @@ class hivaids extends controller
                 $id = $this->saveRegister();
                 return $this->nextAction('confirm', array('newId' => $id), 'userregistration');
                 
+            /* ** Tracking and monitoring actions ** */
             case 'userstats':
-                $display = $this->hivTools->showUserStats();
+                $display = $this->hivTracking->showUserStats();
                 $this->setVarByRef('display', $display);
                 $this->setVar('suppressLeft', TRUE);
                 return 'home_tpl.php';
+                
+            case 'tracking':
+                $mode = $this->getParam('mode');
+                $display = $this->hivTracking->show($mode);
+                $left = $this->hivTracking->showLeftMenu();
+                $this->hivTools->setLeftCol($left);
+                $this->setVarByRef('display', $display);
+                return 'home_tpl.php';
+                
+            case 'settracking':
+                $mode = $this->getParam('mode');
+                $nextMode = $this->getParam('nextmode');
+                $this->hivTracking->show($mode);
+                return $this->nextAction('tracking', array('mode' => $nextMode));
                 
             /* ** Suggestion box ** */
             case 'viewsuggestions':

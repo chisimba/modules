@@ -1,7 +1,7 @@
 <?php
 /**
 * hivaidstools class extends object
-* @package hivaidsforum
+* @package hivaids
 * @filesource
 */
 
@@ -33,7 +33,6 @@ class hivaidstools extends object
         $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCountries = $this->getObject('languagecode','language');
-        $this->objLoginHist = $this->getObject('dbloginhistory','userstats');
         
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -140,97 +139,6 @@ class hivaidstools extends object
         $objLayer->id = 'cpanel';
         
         return $objLayer->show();
-    }
-    
-    /**
-    * Method to display the user statistics for the site
-    *
-    * @access public
-    * @return string html
-    */
-    public function showUserStats()
-    {
-        $data = $this->dbUsers->getLoginHistory();
-        $numStaff = $this->dbUsers->getStaffInfo();
-        $numStudent = $this->dbUsers->getStudentInfo();
-        $total = $this->objLoginHist->getTotalLogins();
-        $unique = $this->objLoginHist->getUniqueLogins();
-        
-        $headerParams = $this->getJavascriptFile('new_sorttable.js','htmlelements');
-        $this->appendArrayVar('headerParams',$headerParams);
-        
-        $institution = $this->objConfig->getinstitutionShortName();
-        $array = array('institution' => $institution);
-        
-        $head = $this->objLanguage->languageText('mod_hivaids_userstats', 'hivaids');
-        $hdTitle = $this->objLanguage->languageText('word_title');
-        $hdName = $this->objLanguage->languageText('word_name');
-        $hdCountry = $this->objLanguage->languageText('word_country');
-        $hdLastOn = $this->objLanguage->languageText('phrase_laston');
-        $hdLogins = $this->objLanguage->languageText('word_logins');
-        $hdStaffStud = $this->objLanguage->code2Txt('mod_hivaids_atinstitution', 'hivaids', $array);
-        $hdCourse = $this->objLanguage->languageText('word_course');
-        $hdYear = $this->objLanguage->languageText('phrase_yearofstudy');
-        $staff = $this->objLanguage->languageText('word_staff');
-        $student = $this->objLanguage->languageText('word_student');
-        $no = $this->objLanguage->languageText('word_no');
-        $lbTotal = $this->objLanguage->languageText('mod_hivaids_totallogins', 'hivaids');
-        $lbUnique = $this->objLanguage->languageText('mod_hivaids_uniqueusers', 'hivaids');
-        $lbStaff = $this->objLanguage->code2Txt('mod_hivaids_staffatinstitution', 'hivaids', $array);
-        $lbStudents = $this->objLanguage->code2Txt('mod_hivaids_studentsatinstitution', 'hivaids', $array);
-        
-        $objHead = new htmlheading();
-        $objHead->type = 1;
-        $objHead->str = $head;
-        $str = $objHead->show();
-        
-        $str .= '<p style="padding-top:10px;"><b>'.$lbTotal.':</b>&nbsp;&nbsp;'.$total;
-        $str .= '<br /><b>'.$lbUnique.':</b>&nbsp;&nbsp;'.$unique;
-        $str .= '<br /><b>'.$lbStaff.':</b>&nbsp;&nbsp;'.$numStaff;
-        $str .= '<br /><b>'.$lbStudents.':</b>&nbsp;&nbsp;'.$numStudent.'</p>';
-        
-        if(!empty($data)){
-    
-            $objTable = new htmltable();
-            $objTable->cellpadding = '5';
-            $objTable->id = 'statstable';
-            $objTable->css_class = 'sorttable';
-            
-            $hdArr = array();
-            $hdArr[] = $hdTitle;
-            $hdArr[] = $hdName;
-            $hdArr[] = $hdCountry;
-            $hdArr[] = $hdStaffStud;
-            $hdArr[] = $hdCourse;
-            $hdArr[] = $hdYear;
-            $hdArr[] = $hdLastOn;
-            $hdArr[] = $hdLogins;
-            
-            $objTable->row_attributes = 'name = "row_'.$objTable->id.'"';
-            $objTable->addRow($hdArr, 'heading');
-            
-            foreach($data as $item){
-                if(empty($item['userid'])){
-                    continue;
-                }
-                $objTable->row_attributes = 'name = "row_'.$objTable->id.'" onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'\';"';
-                
-                $row = array();
-                $row[] = $item['title'];
-                $row[] = $item['surname'].', '.$item['firstname'];
-                $row[] = $this->objCountries->getName($item['country']);
-                $row[] = isset($item['staff_student']) ? $$item['staff_student'] : '';
-                $row[] = isset($item['course']) ? $item['course'] : '';
-                $row[] = isset($item['study_year']) ? $item['study_year'] : '';
-                $row[] = $this->objDate->formatDate($item['laston']);
-                $row[] = $item['logins'];
-                
-                $objTable->addRow($row);
-            }
-            $str .= $objTable->show();
-        }       
-        
-        return $str;
     }
     
     /**
@@ -523,7 +431,7 @@ class hivaidstools extends object
     public function manageLinks()
     {
         $head = $this->objLanguage->languageText('phrase_managelinkspage');
-        $lnAdd = $this->objLanguage->languageText('phrase_addlinkspage');
+        $lnAdd = $this->objLanguage->languageText('phrase_updatelinkspage');
         
         $objHead = new htmlheading();
         $objHead->str = $head;
@@ -548,7 +456,7 @@ class hivaidstools extends object
     {
         $data = $this->dbLinks->getPage();
         
-        $head = $this->objLanguage->languageText('phrase_addlinkspage');
+        $head = $this->objLanguage->languageText('phrase_updatelinkspage');
         $btnSave = $this->objLanguage->languageText('word_save');
         
         $objHead = new htmlheading();
@@ -594,6 +502,34 @@ class hivaidstools extends object
         }
         
         return $this->objFeatureBox->showContent($hdLinks, $str);
+    }
+    
+    /**
+    * Method to display the left column / menu
+    *
+    * @access public
+    * @return string html
+    */
+    public function showLeftColumn()
+    {
+        if(isset($this->leftContent) && !empty($this->leftContent)){
+            return $this->leftContent;
+        }
+        $objBlocks = $this->getObject('blocks', 'blocks');
+        $login = $objBlocks->showBlock('login', 'security');
+        return $login;
+    }
+    
+    /**
+    * Method to set the left column to the given string
+    *
+    * @access public
+    * @param string $columnContent
+    * @return void
+    */
+    public function setLeftCol($columnContent)
+    {
+        $this->leftContent = $columnContent;
     }
 }
 ?>
