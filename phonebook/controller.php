@@ -1,21 +1,116 @@
 <?php
+
+/**
+ * Short description for file
+ * 
+ * Long description (if any) ...
+ * 
+ * PHP version unknow
+ * 
+ * This program is free software; you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation; either version 2 of the License, or 
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the 
+ * Free Software Foundation, Inc., 
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @category  Chisimba
+ * @package   phonebook
+ * @author    Administrative User <admin@localhost.local>
+ * @copyright 2007 Administrative User
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
- * Model controller for the table tbl_phonebook
- * @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko.
- * @copyright 2007 University of the Western Cape
- */
+
+* Model controller for the table tbl_phonebook
+* @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko.  
+* @copyright      2007 University of the Western Cape
+*/
+
+
+
 class phonebook extends controller
 {
+
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
+	public $objLanguage;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
+	public $objConfig;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
+        public $objDbContacts;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
+        public $objUser;
+
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $objLanguage;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
     public $objConfig;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objDbContacts;
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
     public $objUser;
+
     /**
      * Constructor method to instantiate objects and get variables
      */
