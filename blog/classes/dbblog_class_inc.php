@@ -788,6 +788,7 @@ class dbblog extends dbTable
      */
     public function removeAllTags($postid) 
     {
+    	// I have changed all aspects of tbl_post_mtadata to tbl_tags to cater for the new API
         $this->_changeTable("tbl_tags");
         return $this->delete('item_id', $postid, 'tbl_tags');
     }
