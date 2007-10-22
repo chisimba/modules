@@ -1,8 +1,61 @@
 <?php
+
+/**
+ * Short description for file
+ *
+ * This file writes setup data for the various stations
+ * available. This includes default settings as well as anything
+ * pertaining to a station
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
+
+/**
+ * Short description for class
+ *
+ * Class used for storing or reading settings for a station
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class stations extends object
 {
 
-	public $parth;
+    /**
+     * Description for public
+     * The source for settings
+     * @var    string
+     * @access public
+     */
+	public $path;
 
 
 	 /**
@@ -10,17 +63,25 @@ class stations extends object
     */
     public function init()
     {
-        $this->parth = $this->getResourcePath('includes/station','radio');
+        $this->path = $this->getResourcePath('includes/station','radio');
         $this->objLanguage = $this->getObject('language','language');
 
     }
 
 
+    /**
+     * Short description for public
+     *
+     * Get all settings
+     *
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function get()
 	{
 		$a = null;
 		$data = null;
-		if ($handle = opendir($this->parth)) {
+		if ($handle = opendir($this->path)) {
 
 		    while (false !== ($file = readdir($handle))) {
 		        if ($file != "." && $file != "..") {
@@ -36,6 +97,15 @@ class stations extends object
 
 
 
+    /**
+     * Short description for public
+     *
+     * Get all defaults for a station
+     *
+     * @param  string $station Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function default_s($station = "0")
 	{
 		$data = null;
@@ -43,7 +113,7 @@ class stations extends object
 		{
 
 			$once = "0";
-			if ($handle = opendir($this->parth)) {
+			if ($handle = opendir($this->path)) {
 				while (false !== ($file = readdir($handle))) {
 					if ($file != "." && $file != "..") {
 						if($once == "0")
@@ -61,31 +131,51 @@ class stations extends object
 		return $station;
 	}
 
+    /**
+     * Short description for public
+     *
+     * Remove a station
+     *
+     * @param  string $station Parameter description (if any) ...
+     * @return void
+     * @access public
+     */
 	public function del($station = "0")
 	{
 		if($station != "0"){
-			if (is_dir($this->parth."/".$station)) {
-				if ($handle = opendir($this->parth."/".$station)) {
+			if (is_dir($this->path."/".$station)) {
+				if ($handle = opendir($this->path."/".$station)) {
 					while (false !== ($file = readdir($handle))) {
 						if ($file != "." && $file != "..") {
-							unlink($this->parth."/".$station."/".$file);
+							unlink($this->path."/".$station."/".$file);
 						}
 					}
 				}
 				closedir($handle);
-				rmdir($this->parth."/".$station);
+				rmdir($this->path."/".$station);
 			}
 		}
 	}
 
 
+    /**
+     * Short description for public
+     *
+     * Admin panel login method
+     *
+     * @param  string  $station  Parameter description (if any) ...
+     * @param  string  $uname    Parameter description (if any) ...
+     * @param  string  $password Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
 	public function login($station = "0", $uname = "0", $password = "0")
 	{
 
-		if (is_dir($this->parth."/".$station)) {
-			if (file_exists($this->parth."/".$station."/".$uname.".data")) {
-				$fp = fopen($this->parth."/".$station."/".$uname.".data", "rb");
-				$passwd = fread($fp,filesize($this->parth."/".$station."/".$uname.".data"));
+		if (is_dir($this->path."/".$station)) {
+			if (file_exists($this->path."/".$station."/".$uname.".data")) {
+				$fp = fopen($this->path."/".$station."/".$uname.".data", "rb");
+				$passwd = fread($fp,filesize($this->path."/".$station."/".$uname.".data"));
 				fclose($fp);
 				$password = md5("$password");
 				if($passwd  == $password){return true;}
@@ -95,11 +185,22 @@ class stations extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Add admin users
+     *
+     * @param  string  $station  Parameter description (if any) ...
+     * @param  string  $uname    Parameter description (if any) ...
+     * @param  string  $password Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
 	public function add_admin($station = "0", $uname = "0", $password = "")
 	{
-		if (is_dir($this->parth."/".$station)) {
-			if (!file_exists($this->parth."/".$station."/".$uname.".data")) {
-				$fp = fopen($this->parth."/".$station."/".$uname.".data", "w+b");
+		if (is_dir($this->path."/".$station)) {
+			if (!file_exists($this->path."/".$station."/".$uname.".data")) {
+				$fp = fopen($this->path."/".$station."/".$uname.".data", "w+b");
 				$password = md5("$password");
 				fwrite($fp, $password);
 				fclose($fp);
@@ -109,20 +210,38 @@ class stations extends object
 		}
 	}
 
+    /**
+     * Short description for public
+     *
+     * Remove admin users
+     *
+     * @param  string  $station Parameter description (if any) ...
+     * @param  string  $uname   Parameter description (if any) ...
+     * @return boolean Return description (if any) ...
+     * @access public
+     */
 	public function del_admin($station = "0", $uname = "0")
 	{
-		if (file_exists($this->parth."/".$station."/".$uname.".data")) {
-			unlink($this->parth."/".$station."/".$uname.".data");
+		if (file_exists($this->path."/".$station."/".$uname.".data")) {
+			unlink($this->path."/".$station."/".$uname.".data");
 			return true;
 		}
 		return false;
 	}
 
 
+    /**
+     * Short description for public
+     *
+     * Get all administrators
+     *
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function get_admins()
 	{
 
-		if ($handle = opendir($this->parth)) {
+		if ($handle = opendir($this->path)) {
 			while (false !== ($file = readdir($handle))) {
 				if ($file != "." && $file != "..") {
 					if($once == "")
@@ -132,7 +251,7 @@ class stations extends object
 					}else{
 						$data .= ";".$file;
 					}
-					if ($handle2 = opendir($this->parth.'/'.$file)) {
+					if ($handle2 = opendir($this->path.'/'.$file)) {
 						while (false !== ($file2 = readdir($handle2))) {
 							if ($file2 != "." && $file2 != "..") {
 								$data .= "&".$file2;
