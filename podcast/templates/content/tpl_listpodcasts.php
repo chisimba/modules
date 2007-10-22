@@ -100,7 +100,7 @@ if (count($podcasts) == 0) {
 			$content .="</ul>";
 		}
 	         
-        if ($podcast['creatorid'] == $this->objUser->userId()) {
+        if ($podcast['creatorid'] == $this->objUser->userId() || $this->objUser->isAdmin()) {
             $objIcon->setIcon('edit');
             
             $editLink = new link ($this->uri(array('action'=>'editpodcast', 'id'=>$podcast['id'])));
