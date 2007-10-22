@@ -136,7 +136,7 @@ class radio extends controller
 		$this->setPageTemplate("main_tpl.php");
     	switch ($action) {
     		case 'songlist':
-    			$result = $this->uri(array('action'=>'loadlist'),'radio');
+    			$result = $this->uri(array('action'=>'loadlist','station'=>$station),'radio');
     			$this->setVar('songlist',$result);
 				return 'main_tpl.php';
     			break;
@@ -163,7 +163,7 @@ class radio extends controller
     			}
     			break;
     		case 'loadlist':
-    			$data = $this->_loadlist($station);
+    			$data = $this->_loadlist();
     			$this->setVar('data',$data);
     			$result = $this->uri(array('action'=>'loadlist'),'radio');
     			$this->setVar('songlist',$result);
@@ -224,8 +224,9 @@ class radio extends controller
      * @return array Return description information about the playlist of the station
      * @access private
      */
-    private function _loadlist($station){
-    	$station = $this->stations->default_s($station);
+    private function _loadlist(){
+    	$station = $this->getParam('station');
+    	//$station = $this->stations->default_s($station);
     	$playlist_name = $this->playlist->get_playlist_list($station);
     	$settings_data = $this->settings->get($station);
     	$settings_data_temp = explode("&", $settings_data);
@@ -243,6 +244,7 @@ class radio extends controller
     	$between = str_replace($site_temp[$laast_one], "", $_SERVER["PHP_SELF"]);
     	$station_site = "http://".$_SERVER["HTTP_HOST"].$between;
     	$data = explode(";", $this->playlist->get_playlist_info($station,$playlist_name));
+
     	if (!empty($data)) {
     		return $data;
     	}else{
