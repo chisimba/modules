@@ -163,17 +163,13 @@ class realtime extends controller
 
                               return "upload_presentation.php";
 
-                        case 'show_presenter_applet':
+                        case 'presenter_applet':
                               return $this->showPresenterApplet();
                         
                         case 'upload_presentation':
 
                               return $this->uploadPresentation();
          
-                        case 'presenter_applet' :
-
-				return "presenter_home.php";
-
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
 			case 'presentations' :
@@ -211,8 +207,24 @@ class realtime extends controller
      */ 
     function showPresenterApplet()
     {
-          $id=$this->getParam('id');
+          $id="";
+          $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
+          $files=$filesObj->getLatestPresentations();
+          $fileList="";
+          $counter = 0;
+          if (count($files) > 0)
+          {
+           foreach ($files as $file)
+            {
+                if($counter == 0){
+                $id=$file['id'];
+                }
+                $fileList .=",".$file['id']."#".$file['title'];
+                $counter++;   
+            }
+          }     
           $this->setVarByRef('id', $id);
+          $this->setVarByRef('files', $fileList);
           return "realtime-presentations-presenter-applet_tpl.php";
      }
     
