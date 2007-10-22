@@ -1,12 +1,83 @@
 <?php
+
+/**
+ * Short description for file
+ *
+ * This file administers the playlist and the songs/video streamed.
+ * Its able to create necessary headers for streams
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author    Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
+
+/**
+ * Short description for class
+ *
+ * Class used for streaming video /playlist
+ *
+ * @category  Chisimba
+ * @package   radio
+ * @author   Prince Mbekwa <pmbekwa@uwc.ac.za>
+ * @copyright 2007
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class stream extends object
 {
+
+    /**
+     * Description for public
+     * Users file source
+     * @var    string
+     * @access public
+     */
 	public $users_src;
 
+    /**
+     * Description for public
+     * Playlist source files
+     * @var    string
+     * @access public
+     */
 	public $playlist_src;
 
+    /**
+     * Description for public
+     * Live stream source files
+     * @var    string
+     * @access public
+     */
 	public $live_src;
 
+    /**
+     * Description for public
+     * Header source files
+     * @var    string
+     * @access public
+     */
 	public $header_src;
 
 	/**
@@ -22,6 +93,19 @@ class stream extends object
     }
 
 
+    /**
+     * Short description for public
+     *
+     * Get playlist to be streamed
+     *
+     * @param  string  $station       Parameter description (if any) ...
+     * @param  string  $playlist      Parameter description (if any) ...
+     * @param  mixed   $more          Parameter description (if any) ...
+     * @param  string  $laast_pl_file Parameter description (if any) ...
+     * @param  unknown $debug         Parameter description (if any) ...
+     * @return string  Return description (if any) ...
+     * @access public
+     */
 	public function get_start($station = "0", $playlist = "0", $more = "0", $laast_pl_file = "0", $debug)
 	{
 		if($debug){ echo "Starting getting start!<br>"; }
@@ -113,6 +197,23 @@ class stream extends object
 		return "2";
 	}
 
+    /**
+     * Short description for public
+     *
+     * Start streaming playlist
+     *
+     * @param  string $station         Parameter description (if any) ...
+     * @param  string $file            Parameter description (if any) ...
+     * @param  mixed  $kbs             Parameter description (if any) ...
+     * @param  mixed  $over            Parameter description (if any) ...
+     * @param  string $enable_metadata Parameter description (if any) ...
+     * @param  mixed  $time_playing    Parameter description (if any) ...
+     * @param  mixed  $burst_rate      Parameter description (if any) ...
+     * @param  string $debug           Parameter description (if any) ...
+     * @param  mixed  $next            Parameter description (if any) ...
+     * @return mixed  Return description (if any) ...
+     * @access public
+     */
 	public function play_playlist($station = "0", $file = "0", $kbs = "0", $over = "0", $enable_metadata = "0", $time_playing = "0", $burst_rate = "1", $debug = "false", $next = "0")
 	{
 
@@ -358,6 +459,21 @@ class stream extends object
 		return $over."&".$file;
 	}
 
+    /**
+     * Short description for public
+     *
+     * Create headers necesarry for the stream
+     *
+     * @param  string $station         Parameter description (if any) ...
+     * @param  string $station_genre   Parameter description (if any) ...
+     * @param  string $station_bitrate Parameter description (if any) ...
+     * @param  string $station_site    Parameter description (if any) ...
+     * @param  string $file            Parameter description (if any) ...
+     * @param  string $metadata        Parameter description (if any) ...
+     * @param  string $player          Parameter description (if any) ...
+     * @return string Return description (if any) ...
+     * @access public
+     */
 	public function make_header($station = "N/A", $station_genre = "N/A", $station_bitrate = "N/A", $station_site = "N/A", $file = "0", $metadata = "0", $player = "0")
 	{
 
