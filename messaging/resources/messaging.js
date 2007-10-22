@@ -237,7 +237,7 @@ function jsHideLoading()
     var el_Message = parent.$("input_message");
     el_Message.disabled = false;
     el_Message.value = "";
-    el_Message.focus();    
+    //el_Message.focus();    
 }
 
 /*
