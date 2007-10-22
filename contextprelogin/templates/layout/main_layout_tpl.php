@@ -13,14 +13,22 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
     $cssLayout->setLeftColumnContent($this->_objUtils->getLeftContent());
 
 
-$cssLayout->setRightColumnContent($this->_objUtils->getRightContent());
+$rightContent = $this->_objUtils->getRightContent();
+
+if ($rightContent == '') {
+    $cssLayout->setNumColumns(2);
+} else {
+    $cssLayout->setRightColumnContent($rightContent);
+}
+
+
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 
 
 // Display the Layout
 
-echo $cssLayout->show(); 
+echo $cssLayout->show();
 
 
 
