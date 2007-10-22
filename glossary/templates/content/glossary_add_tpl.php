@@ -89,6 +89,7 @@ $addTable->endRow();
 
 $addForm->addRule('term',$this->objLanguage->languageText('mod_glossary_termRequired', 'glossary'),'required');
 $addForm->addRule('definition',$this->objLanguage->languageText('mod_glossary_defnRequired', 'glossary'),'required');
+$addForm->addRule('url',$this->objLanguage->languageText('mod_glossary_badurl', 'glossary'),'url');
 
 $addForm->addToForm($addTable);
 
