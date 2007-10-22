@@ -705,6 +705,10 @@ class hivtracking extends object
         $hdClear = $this->objLanguage->languageText('mod_hivaids_clearallloggedinfo', 'hivaids');
         $lbClearInfo = $this->objLanguage->languageText('mod_hivaids_explainclearall', 'hivaids');
         $lbConfirm = $this->objLanguage->languageText('mod_hivaids_confirmclearall', 'hivaids');
+        $lbRegNum = $this->objLanguage->languageText('mod_hivaids_requirestudentnumber', 'hivaids');
+        $lbOff = $this->objLanguage->languageText('phrase_switchoff');
+        $lbOn = $this->objLanguage->languageText('phrase_switchon');
+        $hdConfig = $this->objLanguage->languageText('word_configure');
         
         $view_mode = $this->getSession('view_mode', 'all');
         $track_mode = $this->getSession('track_mode', '');
@@ -769,6 +773,20 @@ class hivtracking extends object
         
         $menuStr .= $this->objFeatureBox->show($hdClear, $clearStr);
         
+        // Remove the student number from the registration
+        $regStr = '<p class="dim">'.$lbRegNum.'</p>';
+        $lbSet = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids') ? $lbOff : $lbOn;
+        $objButton = new button('config', $lbSet);
+        $objButton->setToSubmit();
+        
+        $link = $this->uri(array('action' => 'settracking', 'mode' => 'setconfig', 'nextmode' => $nextMode));
+        $objForm = new form('setconfig', $link);
+        $objForm->addToForm($objButton->show());
+        
+        $regStr .= '<p>'.$objForm->show().'</p>';
+        
+        $menuStr .= $this->objFeatureBox->show($hdConfig, $regStr);
+
         return $menuStr;
     }
     
@@ -782,6 +800,11 @@ class hivtracking extends object
     public function show($mode)
     {
         switch($mode){
+            case 'setconfig':
+                $toggle = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids') ? false : true;
+                $this->objSysConfig->changeParam('USE_STUDENT_NUMBER', 'hivaids', $toggle);
+                break;
+            
             case 'clearall':
                 $this->dbLogCalc->clearLogger();
                 break;

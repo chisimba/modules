@@ -229,32 +229,7 @@ class hivaidstools extends object
         
         // User details - first name, surname, title, gender, country
         $objTable->addRow(array('<b>'.$lbUser.'</b>'));
-        /*
-        $objLabel = new label($lbTitle.': ', 'input_title');
-        $objDrop = new dropdown('title');
-        $objDrop->setId('input_title');
         
-        $titles = array('title_mr', 'title_miss', 'title_mrs', 'title_ms', 'title_dr', 'title_prof', 'title_rev', 'title_assocprof');
-        foreach ($titles as $title)
-        {
-            $_title = trim($this->objLanguage->languageText($title));
-            $objDrop->addOption($_title,$_title);
-        }
-
-        $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
-
-        $objLabel = new label($lbFirstname.': ', 'input_firstname');
-        $objInput = new textinput('firstname');
-        $objInput->setId('input_firstname');
-        
-        $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
-
-        $objLabel = new label($lbSurname.': ', 'input_surname');
-        $objInput = new textinput('surname');
-        $objInput->setId('input_surname');
-        
-        $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
-        */
         $objLabel = new label($lbGender.': ', 'input_gender');
         $objRadio = new radio('gender');
         $objRadio->setId('input_gender');
@@ -284,8 +259,6 @@ class hivaidstools extends object
         $objTable->addRow(array('<b>'.$lbAdditional.'</b>'));
        
         $objLabel = new label($lbStaffStud.': ', 'input_staff_student');
-        //$objInput = new textinput('staff_student');
-        //$objInput->setId('input_staff_student');
         
         $objRadio = new radio('staff_student');
         $objRadio->addOption('staff', '&nbsp;'.$lbStaff);
@@ -296,7 +269,7 @@ class hivaidstools extends object
         
         $objTable->addRow(array('', $objLabel->show(), $objRadio->show()));
         
-        if($useNum == 'TRUE'){
+        if(($useNum) || $useNum == 'TRUE'){
             $objLabel = new label($lbStudNum.': ', 'input_number');
             $objInput = new textinput('number');
             $objInput->setId('input_number');
@@ -311,8 +284,6 @@ class hivaidstools extends object
         $objTable->addRow(array('', $objLabel->show(), $objInput->show()));
 
         $objLabel = new label($lbYearStudy.': ', 'input_yearstudy');
-        //$objInput = new textinput('yearstudy');
-        //$objInput->setId('input_yearstudy');
         
         $objDrop = new dropdown('yearstudy');
         $objDrop->addOption('NULL', ' ---- ');
@@ -336,11 +307,11 @@ class hivaidstools extends object
         $objForm->addRule('username', $errUsername, 'required');
         $objForm->addRule('password', $errPassword, 'required');
         $objForm->addRule('confirmpassword', $errConfirm, 'required');
-        $objForm->addRule(array('password', 'confirmpassword'), $errNoMatch, 'compare');
-        if($useNum == 'TRUE'){
+        if(($useNum) || $useNum == 'TRUE'){
             $objForm->addRule('number', $errStud, 'required');
         }
         $objForm->addRule('course', $errCourse, 'required');
+        $objForm->addRule(array('password', 'confirmpassword'), $errNoMatch, 'compare');
         $str .= $objForm->show();
         
         return $this->objFeatureBox->showContent($hdRegister, $str);
