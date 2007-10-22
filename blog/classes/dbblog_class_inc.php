@@ -789,7 +789,7 @@ class dbblog extends dbTable
     public function removeAllTags($postid) 
     {
         $this->_changeTable("tbl_tags");
-        return $this->delete('id', $postid, 'tbl_tags');
+        return $this->delete('item_id', $postid, 'tbl_tags');
     }
     /**
      * Method to retrieve the tags associated with a userid
