@@ -27,7 +27,7 @@ class dbLoggerCalc extends dbtable
         parent::init('tbl_logger');
         $this->table = 'tbl_logger';
     }
-    
+
     /**
     * Method to get the total number of hits on the site
     *
@@ -37,23 +37,23 @@ class dbLoggerCalc extends dbtable
     public function getTotalHits($track, $by = 'all')
     {
         $sql = "SELECT count(*) as cnt FROM {$this->table} l";
-        
+
         if($track != 'everyone'){
             $sql .= ", tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-         
-            if($by != 'all'){   
+
+            if($by != 'all'){
                 $sql .= "AND staff_student = '{$by}' ";
             }
         }
-        
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0]['cnt'];
         }
         return 0;
     }
-    
+
     /**
     * Method to get the total number of hits on the site by a given user
     *
@@ -65,18 +65,18 @@ class dbLoggerCalc extends dbtable
     {
         $sql = "SELECT count(*) as cnt FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-            
+
         if(!empty($userid)){
             $sql .= "AND hu.user_id = '{$userid}'";
         }
-        
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0]['cnt'];
         }
         return 0;
     }
-    
+
     /**
     * Method to get the total number of hits on the site by a given group of users
     *
@@ -89,7 +89,7 @@ class dbLoggerCalc extends dbtable
     {
         $sql = "SELECT count(*) as cnt FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-            
+
         if(!empty($group) && !empty($subgroup)){
             $sql .= "AND {$group} = '{$subgroup}' ";
         }
@@ -114,19 +114,19 @@ class dbLoggerCalc extends dbtable
     public function getTotalUniqueVisitors($track, $by)
     {
         $sql = "SELECT DISTINCT(ipaddress), count(*) as cnt FROM {$this->table} l";
-        
+
         if($track != 'everyone'){
             $sql .= ", tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-            
-            if($by != 'all'){   
+
+            if($by != 'all'){
                 $sql .= "AND staff_student = '{$by}' ";
             }
             $sql .= "GROUP BY hu.user_id";
         }else{
             $sql .= " GROUP BY ipaddress";
         }
-        
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             $cnt = count($data);
@@ -145,7 +145,7 @@ class dbLoggerCalc extends dbtable
     {
         $sql = "SELECT DISTINCT(ipaddress), count(*) as cnt FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-             
+
         if(!empty($group) && !empty($subgroup)){
             $sql .= "AND {$group} = '{$subgroup}' ";
         }
@@ -161,7 +161,7 @@ class dbLoggerCalc extends dbtable
         }
         return 0;
     }
-    
+
     /**
     * Method to get the number of hits and visitors per module and action
     *
@@ -170,19 +170,19 @@ class dbLoggerCalc extends dbtable
     */
     public function getModuleHitsByUser($userid)
     {
-        $sql = "SELECT module, ipaddress, eventparamvalue, 
-            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt 
-            FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u 
+        $sql = "SELECT module, ipaddress, eventparamvalue,
+            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt
+            FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-            
+
         if(!empty($userid)){
             $sql .= "AND hu.user_id = '{$userid}' ";
         }
-        
+
         $sql .= "GROUP BY module, eventparamvalue, ipaddress";
-        
+
         $data = $this->getArray($sql);
-        
+
         if(!empty($data)){
             // Split data by module
             // Find unique actions - remove additional parameters
@@ -192,7 +192,7 @@ class dbLoggerCalc extends dbtable
         }
         return array();
     }
-    
+
     /**
     * Method to get the number of hits and visitors per module and action
     *
@@ -201,11 +201,11 @@ class dbLoggerCalc extends dbtable
     */
     public function getModuleHitsByGroup($by = 'all', $group = '', $subgroup = '')
     {
-        $sql = "SELECT module, hu.user_id, eventparamvalue, 
-            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt 
-            FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u 
+        $sql = "SELECT module, hu.user_id, eventparamvalue,
+            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt
+            FROM {$this->table} l, tbl_hivaids_users hu, tbl_users u
             WHERE l.userid = hu.user_id AND hu.user_id = u.userid ";
-           
+
         if(!empty($group) && !empty($subgroup)){
             $sql .= "AND {$group} = '{$subgroup}' ";
         }
@@ -213,9 +213,9 @@ class dbLoggerCalc extends dbtable
             $sql .= "AND staff_student = '{$by}' ";
         }
         $sql .= "GROUP BY module, eventparamvalue, hu.user_id";
-        
+
         $data = $this->getArray($sql);
-        
+
         if(!empty($data)){
             // Split data by module
             // Find unique actions - remove additional parameters
@@ -234,12 +234,12 @@ class dbLoggerCalc extends dbtable
     */
     public function getModuleHits()
     {
-        $sql = "SELECT module, ipaddress, eventparamvalue, 
-            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt 
+        $sql = "SELECT module, ipaddress, eventparamvalue,
+            count(module) as cnt, count(ipaddress) as ip_cnt, count(eventparamvalue) as act_cnt
             FROM {$this->table} t GROUP BY module, eventparamvalue, ipaddress";
-        
+
         $data = $this->getArray($sql);
-        
+
         if(!empty($data)){
             // Split data by module
             // Find unique actions - remove additional parameters
@@ -249,7 +249,7 @@ class dbLoggerCalc extends dbtable
         }
         return array();
     }
-    
+
     /**
     * Method to organise the module hits and visitors in a usable array for display.
     *
@@ -257,36 +257,36 @@ class dbLoggerCalc extends dbtable
     * @return array
     */
     public function organiseModuleData($data, $userType = 'ipaddress')
-    {   
+    {
         if(!empty($data)){
             // Split data by module
             // Find unique actions - remove additional parameters
             // Count IPs for each action / group of actions
             $arrModules = array();
             foreach($data as $item){
-                
+
                 $action = '';
                 if(!is_null($item['eventparamvalue']) && !empty($item['eventparamvalue'])){
                     $arrAction = explode('&', $item['eventparamvalue']);
-                    
+
                     if(!empty($arrAction)){
                         foreach($arrAction as $val){
                             $pos = strpos($val, 'action=');
                             $action = ($pos == 0 && $pos !== FALSE) ? substr($val, 7) : '';
                         }
-                    }       
+                    }
                 }
-                
+
                 $arrModules[$item['module']][$action]['params'][] = $item['eventparamvalue'];
                 $arrModules[$item['module']][$action]['hits'] = isset($arrModules[$item['module']][$action]['hits']) ? $arrModules[$item['module']][$action]['hits'] + $item['cnt'] : $item['cnt'];
-                
+
                 $arrModules[$item['module']][$action]['users'][$item[$userType]] = isset($arrModules[$item['module']][$action]['users'][$item[$userType]]) ? $arrModules[$item['module']][$action]['users'][$item[$userType]] + $item['cnt'] : $item['cnt'];
             }
             return $arrModules;
         }
         return array();
     }
-    
+
     /**
     * Method to get all the forum categories and associated statistics
     *
@@ -295,17 +295,17 @@ class dbLoggerCalc extends dbtable
     */
     public function getForumCategories($by = 'all')
     {
-        $sql = "SELECT forum_id, forum_name, t.views, t.replies 
+        $sql = "SELECT forum_id, forum_name, t.views, t.replies
             FROM tbl_forum_topic t, tbl_forum f
             WHERE f.id = t.forum_id
             ORDER BY forum_name";
-        
+
         $data = $this->getArray($sql);
         $arrCats = $this->organiseForumData($data);
-        
+
         return $arrCats;
     }
-    
+
     /**
     * Method to organise the module hits and visitors in a usable array for display.
     *
@@ -325,7 +325,7 @@ class dbLoggerCalc extends dbtable
         }
         return $arrCats;
     }
-    
+
     /**
     * Method to get all the forum categories and associated statistics
     *
@@ -334,16 +334,16 @@ class dbLoggerCalc extends dbtable
     */
     public function getForumTopics($catId, $by = 'all')
     {
-        $sql = "SELECT f.forum_name, t.id as topicid, t.views, t.replies, pt.post_title 
+        $sql = "SELECT f.forum_name, t.id as topicid, t.views, t.replies, pt.post_title
             FROM tbl_forum f, tbl_forum_topic t, tbl_forum_post p, tbl_forum_post_text pt
-            WHERE t.forum_id = '{$catId}' AND f.id = t.forum_id 
-            AND t.first_post = p.id AND p.post_parent = '0' AND pt.post_id = p.id 
+            WHERE t.forum_id = '{$catId}' AND f.id = t.forum_id
+            AND t.first_post = p.id AND p.post_parent = '0' AND pt.post_id = p.id
             ORDER BY pt.post_title";
-        
+
         $data = $this->getArray($sql);
         return $data;
     }
-    
+
     /**
     * Method to get all the views of each category
     *
@@ -353,15 +353,15 @@ class dbLoggerCalc extends dbtable
     public function getForumCatViews($by = 'all', $type = 'cat', $num = 21)
     {
         $sql = "SELECT l.eventparamvalue, hu.user_id, hu.course, hu.study_year, hu.language, u.sex FROM tbl_logger l, tbl_users u, tbl_hivaids_users hu
-                WHERE u.userid = hu.user_id AND u.userid = l.userid 
+                WHERE u.userid = hu.user_id AND u.userid = l.userid
                 AND module = 'hivaidsforum' AND eventparamvalue LIKE 'action=show{$type}&%' ";
-        
+
         if($by != 'all'){
             $sql .= "AND hu.staff_student = '{$by}'";
         }
-        
+
         $data = $this->getArray($sql);
-        
+
         $arrViews = $this->organiseViewData($data, $num);
         return $arrViews;
     }
@@ -383,15 +383,77 @@ class dbLoggerCalc extends dbtable
                 $arrViews[$catId]['rows'] = isset($arrViews[$catId]['course'][$item['course']]) ? $arrViews[$catId]['rows'] : $arrViews[$catId]['rows']+1;
                 $arrViews[$catId]['rows'] = isset($arrViews[$catId]['sex'][$item['sex']]) ? $arrViews[$catId]['rows'] : $arrViews[$catId]['rows']+1;
                 $arrViews[$catId]['rows'] = isset($arrViews[$catId]['study_year'][$item['study_year']]) ? $arrViews[$catId]['rows'] : $arrViews[$catId]['rows']+1;
-                
+
                 $arrViews[$catId]['language'][$item['language']] = isset($arrViews[$catId]['language'][$item['language']]) ? $arrViews[$catId]['language'][$item['language']] + 1 : 1;
                 $arrViews[$catId]['course'][$item['course']] = isset($arrViews[$catId]['course'][$item['course']]) ? $arrViews[$catId]['course'][$item['course']] + 1 : 1;
                 $arrViews[$catId]['sex'][$item['sex']] = isset($arrViews[$catId]['sex'][$item['sex']]) ? $arrViews[$catId]['sex'][$item['sex']] + 1 : 1;
                 $arrViews[$catId]['study_year'][$item['study_year']] = isset($arrViews[$catId]['study_year'][$item['study_year']]) ? $arrViews[$catId]['study_year'][$item['study_year']] + 1 : 1;
-                
+
             }
         }
         return $arrViews;
+    }
+
+    /**
+     * Method to get the participation of students in the forums
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getStudentParticipation()
+    {
+        // Fetch the categories and topics
+        $sql = "SELECT t.forum_id, f.forum_name, p.topic_id, pt.post_title
+            FROM tbl_forum f, tbl_forum_topic t, tbl_forum_post p, tbl_forum_post_text pt
+            WHERE f.id=t.forum_id AND p.id=pt.post_id AND p.topic_id = t.id
+            AND t.first_post = p.id AND p.post_parent = '0'";
+
+        $catData = $this->getArray($sql);
+
+        $arrCat = array();
+        if(!empty($catData)){
+            foreach($catData as $item){
+                $arrCat[$item['topic_id']]['cat'] = $item['forum_name'];
+                $arrCat[$item['topic_id']]['topic'] = $item['post_title'];
+            }
+        }
+
+        // Fetch the views by topic
+        $sql = "SELECT count(*) as cnt, userid, eventparamvalue FROM tbl_logger l
+            WHERE module='hivaidsforum' AND eventparamvalue LIKE 'action=showtopic&%'
+            GROUP BY userid, eventparamvalue";
+
+        $viewData = $this->getArray($sql);
+
+        $arrView = array();
+        if(!empty($viewData)){
+            foreach($viewData as $item){
+                $topicId = substr($item['eventparamvalue'], 25);
+                $arrView[$item['userid']][$topicId] = isset($arrView[$item['userid']][$topicId]) ? $arrView[$item['userid']][$topicId] + $item['cnt'] : $item['cnt'];
+            }
+        }
+
+        // Fetch the user information and posted replies
+        $sql = "SELECT p.topic_id, t.post_title, t.wordcount, t.userid, t.datelastupdated, u.username, u.staffnumber
+            FROM tbl_forum_post p, tbl_forum_post_text t, tbl_users u, tbl_hivaids_users hu
+            WHERE p.id=t.post_id AND u.userid=t.userid
+            AND u.userid=hu.user_id AND hu.staff_student = 'student'";
+
+        $userData = $this->getArray($sql);
+
+        $data = array();
+        if(!empty($userData)){
+            foreach($userData as $item){
+                $data[$item['userid']]['username'] = $item['username'];
+                $data[$item['userid']]['staffnumber'] = $item['staffnumber'];
+                $data[$item['userid']]['topics'][$item['topic_id']]['category'] = $arrCat[$item['topic_id']]['cat'];
+                $data[$item['userid']]['topics'][$item['topic_id']]['topic'] = $arrCat[$item['topic_id']]['topic'];
+                $data[$item['userid']]['topics'][$item['topic_id']]['replies'] = isset($data[$item['userid']]['topics'][$item['topic_id']]['replies']) ? $data[$item['userid']]['topics'][$item['topic_id']]['replies'] + 1 : 1;
+                $data[$item['userid']]['topics'][$item['topic_id']]['views'] = $arrView[$item['userid']][$item['topic_id']];
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -403,7 +465,7 @@ class dbLoggerCalc extends dbtable
     public function clearLogger()
     {
         $sql = "DELETE FROM tbl_logger";
-        
+
         $this->getArray($sql);
     }
 }

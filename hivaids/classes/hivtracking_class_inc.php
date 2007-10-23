@@ -34,7 +34,7 @@ class hivtracking extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objCountries = $this->getObject('languagecode','language');
         $this->objLoginHist = $this->getObject('dbloginhistory','userstats');
-        
+
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
@@ -48,7 +48,7 @@ class hivtracking extends object
         $this->loadClass('layer', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
     }
-    
+
     /**
     * Method to display the user statistics for the site
     *
@@ -62,15 +62,15 @@ class hivtracking extends object
         $numStudent = $this->dbUsers->getStudentInfo();
         $total = $this->objLoginHist->getTotalLogins();
         $unique = $this->objLoginHist->getUniqueLogins();
-        
+
         $headerParams = $this->getJavascriptFile('new_sorttable.js','htmlelements');
         $this->appendArrayVar('headerParams',$headerParams);
-        
+
         $institution = $this->objConfig->getinstitutionShortName();
         $array = array('institution' => $institution);
-        
+
         $useStudNum = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids');
-        
+
         $head = $this->objLanguage->languageText('mod_hivaids_userstats', 'hivaids');
         $hdTitle = $this->objLanguage->languageText('word_title');
         $hdName = $this->objLanguage->languageText('word_name');
@@ -90,29 +90,29 @@ class hivtracking extends object
         $lbStaff = $this->objLanguage->code2Txt('mod_hivaids_staffatinstitution', 'hivaids', $array);
         $lbStudents = $this->objLanguage->code2Txt('mod_hivaids_studentsatinstitution', 'hivaids', $array);
         $lnMonitor = $this->objLanguage->languageText('phrase_monitoringtools');
-        
+
         $objHead = new htmlheading();
         $objHead->type = 1;
         $objHead->str = $head;
         $str = $objHead->show();
-        
+
         // link to the monitoring tools data
         $objLink = new link($this->uri(array('action' => 'tracking')));
         $objLink->link = $lnMonitor;
         $str .= '<p>'.$objLink->show().'</p>';
-        
+
         $str .= '<p style="padding-top:10px;"><b>'.$lbTotal.':</b>&nbsp;&nbsp;'.$total;
         $str .= '<br /><b>'.$lbUnique.':</b>&nbsp;&nbsp;'.$unique;
         $str .= '<br /><b>'.$lbStaff.':</b>&nbsp;&nbsp;'.$numStaff;
         $str .= '<br /><b>'.$lbStudents.':</b>&nbsp;&nbsp;'.$numStudent.'</p>';
-        
+
         if(!empty($data)){
-    
+
             $objTable = new htmltable();
             $objTable->cellpadding = '5';
             $objTable->id = 'statstable';
             $objTable->css_class = 'sorttable';
-            
+
             $hdArr = array();
             $hdArr[] = $hdTitle;
             $hdArr[] = $hdName;
@@ -124,16 +124,16 @@ class hivtracking extends object
             $hdArr[] = $hdYear;
             $hdArr[] = $hdLastOn;
             $hdArr[] = $hdLogins;
-            
+
             $objTable->row_attributes = 'name = "row_'.$objTable->id.'"';
             $objTable->addRow($hdArr, 'heading');
-            
+
             foreach($data as $item){
                 if(empty($item['userid'])){
                     continue;
                 }
                 $objTable->row_attributes = 'name = "row_'.$objTable->id.'" onmouseover="this.className=\'tbl_ruler\';" onmouseout="this.className=\'\';"';
-                
+
                 $row = array();
                 $row[] = $item['title'];
                 $row[] = $item['surname'].', '.$item['firstname'];
@@ -145,15 +145,15 @@ class hivtracking extends object
                 $row[] = isset($item['study_year']) ? $item['study_year'] : '';
                 $row[] = $this->objDate->formatDate($item['laston']);
                 $row[] = $item['logins'];
-                
+
                 $objTable->addRow($row);
             }
             $str .= $objTable->show();
-        }       
-        
+        }
+
         return $str;
     }
-    
+
     /**
     * Method to display the calculations performed using the monitoring tools
     *
@@ -164,11 +164,11 @@ class hivtracking extends object
     {
         $view = $this->getSession('view_mode', 'all');
         $track = $this->getSession('track_mode', 'everyone');
-        
+
         // Get data
         $allHits = $this->dbLogCalc->getTotalHits($track, $view);
         $allUsers = $this->dbLogCalc->getTotalUniqueVisitors($track, $view);
-        
+
         switch($track){
             case 'group':
                 $group = $this->getSession('group');
@@ -178,22 +178,22 @@ class hivtracking extends object
                 $data = empty($group) ? $this->dbLogCalc->getModuleHitsByGroup($view) : array();
                 $data = !empty($subgroup) ? $this->dbLogCalc->getModuleHitsByGroup($view, $group, $subgroup) : $data;
                 break;
-                
+
             case 'person':
                 $userid = $this->getSession('user');
                 $totalHits = $this->dbLogCalc->getTotalHitsByUser($userid);
                 $data = $this->dbLogCalc->getModuleHitsByUser($userid);
                 $totalUsers = 1;
                 break;
-                
+
             default:
                 $data = $this->dbLogCalc->getModuleHits();
                 $totalHits = $allHits;
                 $totalUsers = $allUsers;
         }
-        
+
         $arrInfo = array('bold' => '<b>', 'closebold' => '</b>', 'totalhits' => $allHits, 'totalusers' => $allUsers);
-        
+
         $head = $this->objLanguage->languageText('phrase_monitoringtools');
         $personInfo = ($view == 'student') ? $this->objLanguage->code2Txt('mod_hivaids_personstudentstatsinfo', 'hivaids', $arrInfo) : $this->objLanguage->code2Txt('mod_hivaids_personstatsinfo', 'hivaids', $arrInfo);
         $groupInfo = ($view == 'student') ? $this->objLanguage->code2Txt('mod_hivaids_groupstudentstatsinfo', 'hivaids', $arrInfo) : $this->objLanguage->code2Txt('mod_hivaids_groupstatsinfo', 'hivaids', $arrInfo);
@@ -204,15 +204,15 @@ class hivtracking extends object
         $hdHits = $this->objLanguage->languageText('word_hits');
         $hdUsers = $this->objLanguage->languageText('phrase_uniqueusers');
         $lbDefault = $this->objLanguage->languageText('phrase_defaultpage');
-        
+
         $objHead = new htmlheading();
         $objHead->type = 1;
         $objHead->str = $head;
         $str = $objHead->show();
-        
+
         $show = $track.'Info';
         $str .= '<p class="dim">'.$$show.'</p>';
-        
+
         switch($track){
             // Create the dropdown of groups
             case 'group':
@@ -222,19 +222,19 @@ class hivtracking extends object
                 $hdLang = $this->objLanguage->languageText('phrase_homelanguage');
                 $hdCourse = $this->objLanguage->languageText('word_course');
                 $hdYear = $this->objLanguage->languageText('phrase_yearofstudy');
-            
+
                 $selected = $this->getSession('subgroup');
                 $selName = '';
-                
+
                 $formStr = $lbSelectG.': ';
-                
+
                 $onChange = "onChange=\"javascript: ";
                 $onChange .= (!empty($group)) ? "document.getElementById('input_subgroup').value=''; " : '';
                 $onChange .= "document.groupselect.submit();\"";
-                
+
                 $objDrop = new dropdown('group');
                 $objDrop->extra = $onChange;
-                
+
                 $objDrop->addOption('', ' -- '.$allReg.' -- ');
                 $objDrop->addOption('sex', $hdGender);
                 $objDrop->addOption('language', $hdLang);
@@ -242,14 +242,14 @@ class hivtracking extends object
                 $objDrop->addOption('study_year', $hdYear);
                 $objDrop->setSelected($group);
                 $formStr .= $objDrop->show();
-                
+
                 if(!empty($group)){
                     $groups = $this->dbUsers->getGroupList($view, $group);
-                    
+
                     if(!empty($groups)){
                         $objDrop = new dropdown('subgroup');
                         $objDrop->extra = "onChange=\"javascript: document.groupselect.submit();\"";
-                        
+
                         $objDrop->addOption('', ' -- -- ');
                         foreach($groups as $item){
                             $objDrop->addOption($item['groupid'], $item['name']);
@@ -259,32 +259,32 @@ class hivtracking extends object
                         $formStr .= '&nbsp;&nbsp;'.$objDrop->show();
                     }
                 }
-                        
-                
+
+
                 $objForm = new form('groupselect', $this->uri(array('action' => 'tracking', 'mode' => 'changegroup')));
                 $objForm->addToForm($formStr);
                 $str .= '<p>'.$objForm->show().'</p>';
-                
+
                 if(!empty($selected)){
                     $arrGroup = array('bold' => '<b>', 'closebold' => '</b>', 'name' => $selName, 'hits' => $totalHits, 'users' => $totalUsers);
                     $lbNameHits = $this->objLanguage->code2Txt('mod_hivaids_grouphittimes', 'hivaids', $arrGroup);
                     $str .= '<p class="dim">'.$lbNameHits.'</p>';
                 }
             break;
-        
+
             // Create the dropdown list of users
             case 'person':
                 $allReg = ($view == 'student') ? $this->objLanguage->languageText('phrase_allregisteredstudents') : $this->objLanguage->languageText('phrase_allregisteredusers');
                 $lbSelectU = $this->objLanguage->languageText('mod_hivaids_selectusermonitor', 'hivaids');
-            
+
                 $selected = $this->getSession('user');
                 $users = $this->dbUsers->getUserList($view);
-                
+
                 $formStr = $lbSelectU.': ';
-                
+
                 $objDrop = new dropdown('username');
                 $objDrop->extra = "onChange=\"javascript: document.userselect.submit();\"";
-                
+
                 $objDrop->addOption('', ' -- '.$allReg.' -- ');
                 if(!empty($users)){
                     foreach($users as $item){
@@ -293,11 +293,11 @@ class hivtracking extends object
                 }
                 $objDrop->setSelected($selected);
                 $formStr .= $objDrop->show();
-                
+
                 $objForm = new form('userselect', $this->uri(array('action' => 'tracking', 'mode' => 'changeuser')));
                 $objForm->addToForm($formStr);
                 $str .= '<p>'.$objForm->show().'</p>';
-                
+
                 if(!empty($selected)){
                     $name = $this->objUser->userName($selected);
                     $arrUser = array('bold' => '<b>', 'closebold' => '</b>', 'name' => $name, 'hits' => $totalHits);
@@ -306,54 +306,54 @@ class hivtracking extends object
                 }
             break;
         }
-        
+
         if(!empty($data)){
-            
+
             $objTable = new htmltable();
             $objTable->cellpadding = '5';
-            
+
             $hdArr = array();
             $hdArr[] = $hdPage;
             $hdArr[] = $hdHits;
             if($track != 'person') $hdArr[] = $hdUsers;
-            
+
             $objTable->addHeader($hdArr);
-                  
+
             foreach($data as $key => $item){
                 // Display the module
                 $row = array();
                 $row[] = '<b>'.$key.'</b>';;
                 $row[] = '';
                 $row[] = '';
-                
+
                 $objTable->addRow($row, 'heading');
-                
+
                 // Display the actions + stats
                 $class = 'even';
                 foreach($item as $action => $val){
                     $class = ($class == 'odd') ? 'even' : 'odd';
-                    
+
                     $hits = $val['hits'];
                     $percentHits = round($hits / $totalHits, 3) * 100;
-                    
+
                     $users = count($val['users']);
                     $percentUsers = round($users / $totalUsers, 3) * 100;
-                    
+
                     $row = array();
                     $row[] = (!empty($action)) ? $action : $lbDefault;
                     $row[] = "{$percentHits} % ({$hits})";
                     if($track != 'person') $row[] = "{$percentUsers} % ({$users})";
-                    
+
                     $objTable->addRow($row, $class);
                 }
             }
-            
+
             $str .= $objTable->show();
         }
-        
+
         return $str;
     }
-    
+
     /**
     * Method to show the general statistics
     *
@@ -368,9 +368,9 @@ class hivtracking extends object
         $lang = $this->dbUsers->getHomeLanguages($view);
         $year = $this->dbUsers->getYearStudy($view);
         $courses = $this->dbUsers->getCourses($view);
-        
+
         $arrInfo = array('bold' => '<b>', 'closebold' => '</b>', 'number' => $total);
-        
+
         $head = $this->objLanguage->languageText('phrase_generalstatistics');
         $allInfo = $this->objLanguage->code2Txt('mod_hivaids_allstatsinfo', 'hivaids', $arrInfo);
         $studentInfo = $this->objLanguage->code2Txt('mod_hivaids_studentstatsinfo', 'hivaids', $arrInfo);
@@ -383,46 +383,46 @@ class hivtracking extends object
         $hdPercentage = $this->objLanguage->languageText('word_percentage');
         $lbFemale = $this->objLanguage->languageText('word_female');
         $lbMale = $this->objLanguage->languageText('word_male');
-        
+
         $objHead = new htmlheading();
         $objHead->type = 1;
         $objHead->str = $head;
         $str = $objHead->show();
-        
+
         $show = $view.'Info';
         $str .= '<p class="dim">'.$$show.'</p>';
-        
+
         $objTable = new htmltable();
         $objTable->cellspacing = '2';
         $objTable->cellpadding = '5';
-        
+
         $hdArr = array();
         $hdArr[] = $hdName;
         $hdArr[] = $hdNumber;
         $hdArr[] = $hdPercentage;
-        
+
         $objTable->addHeader($hdArr);
-        
+
         // gender
         $objTable->startRow();
         $objTable->addCell($hdGender, '','','','heading', 'colspan="3"');
         $objTable->endRow();
-        
+
         if(!empty($gender)){
             $class = 'even';
             foreach($gender as $item){
                 $class = ($class == 'odd') ? 'even' : 'odd';
-                
+
                 $percent = ($item['cnt'] > 0 && $total > 0) ? $item['cnt'] / $total * 100 : 0;
                 $row = array();
                 $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
                 $row[] = $item['cnt'];
                 $row[] = round($percent, 2).' %';
-                
+
                 $objTable->addRow($row, $class);
             }
         }
-        
+
         // home language
         $objTable->startRow();
         $objTable->addCell($hdLang, '','','','heading', 'colspan="3"');
@@ -432,17 +432,17 @@ class hivtracking extends object
             $class = 'even';
             foreach($lang as $item){
                 $class = ($class == 'odd') ? 'even' : 'odd';
-                
+
                 $percent = ($item['cnt'] > 0 && $total > 0) ? $item['cnt'] / $total * 100 : 0;
                 $row = array();
                 $row[] = $item['language'];
                 $row[] = $item['cnt'];
                 $row[] = round($percent, 2).' %';
-                
+
                 $objTable->addRow($row, $class);
             }
         }
-        
+
         // year of study
         $objTable->startRow();
         $objTable->addCell($hdYear, '','','','heading', 'colspan="3"');
@@ -452,13 +452,13 @@ class hivtracking extends object
             $class = 'even';
             foreach($year as $item){
                 $class = ($class == 'odd') ? 'even' : 'odd';
-                
+
                 $percent = ($item['cnt'] > 0 && $total > 0) ? $item['cnt'] / $total * 100 : 0;
                 $row = array();
                 $row[] = $item['study_year'];
                 $row[] = $item['cnt'];
                 $row[] = round($percent, 2).' %';
-                
+
                 $objTable->addRow($row, $class);
             }
         }
@@ -472,23 +472,23 @@ class hivtracking extends object
             $class = 'even';
             foreach($courses as $item){
                 $class = ($class == 'odd') ? 'even' : 'odd';
-                
+
                 $percent = ($item['cnt'] > 0 && $total > 0) ? $item['cnt'] / $total * 100 : 0;
                 $row = array();
                 $row[] = $item['course'];
                 $row[] = $item['cnt'];
                 $row[] = round($percent, 2).' %';
-                
+
                 $objTable->addRow($row, $class);
             }
         }
-        
-        
+
+
         $str .= $objTable->show();
-        
+
         return $str;
     }
-    
+
     /**
     * Method to display the statistics for the hivaids discussion forum
     *
@@ -498,10 +498,10 @@ class hivtracking extends object
     private function showForum()
     {
         $view = $this->getSession('view_mode', 'all');
-        
+
         $data = $this->dbLogCalc->getForumCategories($view);
         $viewData = $this->dbLogCalc->getForumCatViews($view);
-        
+
         $arrInfo = array('bold' => '<b>', 'closebold' => '</b>');
         $head = $this->objLanguage->languageText('mod_hivaids_forummonitoring', 'hivaids');
         $info = $this->objLanguage->code2Txt('mod_hivaids_forummonitoringinfo', 'hivaids', $arrInfo);
@@ -518,19 +518,19 @@ class hivtracking extends object
         $course = $this->objLanguage->languageText('word_course');
         $M = $this->objLanguage->languageText('word_male');
         $F = $this->objLanguage->languageText('word_female');
-        
+
         $objHead = new htmlheading();
         $objHead->str = $head;
         $objHead->type = 1;
         $str = $objHead->show();
-        
+
         $str .= ($view == 'student') ? '<p class="dim">'.$studentinfo.'</p>' : '<p class="dim">'.$info.'</p>';
-        
+
         if(!empty($data)){
             $objTable = new htmltable();
             $objTable->cellspacing = '2';
             $objTable->cellpadding = '5';
-            
+
             $hdArr = array();
             $hdArr[] = $hdCategory;
             $hdArr[] = $hdTopics;
@@ -538,19 +538,19 @@ class hivtracking extends object
             $hdArr[] = $hdViews;
             $hdArr[] = $hdViewGroup;
             $hdArr[] = '';
-            
+
             $objTable->addHeader($hdArr);
-            
+
             $class = 'even';
             foreach($data as $key => $item){
                 $class = ($class == 'even') ? 'odd' : 'even';
-                
+
                 $rows = (isset($viewData[$key])) ? $viewData[$key]['rows']+1 : 1;
                 $total = (isset($viewData[$key])) ? $viewData[$key]['total'] : 0;
                 $objLink = new link($this->uri(array('action' => 'tracking', 'mode' => 'forum_topics', 'category' => $key)));
                 $objLink->link = $lnViewTopics;
                 $link = $objLink->show();
-                
+
                 $objTable->startRow();
                 $objTable->addCell($item['name'], '','','', $class, "rowspan='{$rows}'");
                 $objTable->addCell($item['topics'].' ('.$link.')', '','','', $class, "rowspan='{$rows}'");
@@ -558,24 +558,24 @@ class hivtracking extends object
                 $objTable->addCell($item['views'], '','','', $class, "rowspan='{$rows}'");
                 if($rows == 1) $objTable->addCell('', '','','', $class, "colspan = '2'");
                 $objTable->endRow();
-                
+
                 if(isset($viewData[$key]) && !empty($viewData[$key])){
                     $subclass = ($class == 'even') ? 'odd' : 'even';
                     foreach($viewData[$key] as $group => $val){
-                        
+
                         foreach($val as $k=>$v){
                             $subclass  = ($subclass == 'even') ? 'odd' : 'even';
-                            
+
                             if($group == 'sex'){
                                 $k = $$k;
                             }
                             $percent = ((int) $v / (int) $total) * 100;
                             $round = round($percent, 2);
-                            
+
                             $row = array();
                             $row[] = $$group.': '.$k;
                             $row[] = $v.' / '.$total.' ('.$round.' %)';
-                            
+
                             $objTable->addRow($row, $subclass);
                         }
                     }
@@ -583,10 +583,10 @@ class hivtracking extends object
             }
             $str .= $objTable->show();
         }
-                
+
         return $str;
     }
-    
+
     /**
     * Method to display the statistics for the hivaids discussion forum topics within a category
     *
@@ -596,12 +596,12 @@ class hivtracking extends object
     private function showForumTopics($category)
     {
         $view = $this->getSession('view_mode', 'all');
-        
+
         $data = $this->dbLogCalc->getForumTopics($category, $view);
         $viewData = $this->dbLogCalc->getForumCatViews($view, 'topic', 25);
         $category = $data[0]['forum_name'];
         $num = count($data);
-        
+
         $arrInfo = array('bold' => '<b>', 'closebold' => '</b>', 'category' => $category, 'number' => $num);
         $head = $this->objLanguage->languageText('mod_hivaids_forummonitoring', 'hivaids');
         $info = $this->objLanguage->code2Txt('mod_hivaids_forumtopicmonitoringinfo', 'hivaids', $arrInfo);
@@ -617,59 +617,59 @@ class hivtracking extends object
         $course = $this->objLanguage->languageText('word_course');
         $M = $this->objLanguage->languageText('word_male');
         $F = $this->objLanguage->languageText('word_female');
-        
+
         $objHead = new htmlheading();
         $objHead->str = $head;
         $objHead->type = 1;
         $str = $objHead->show();
-        
+
         $str .= ($view == 'student') ? '<p class="dim">'.$studentinfo.'</p>' : '<p class="dim">'.$info.'</p>';
-        
+
         if(!empty($data)){
             $objTable = new htmltable();
             $objTable->cellspacing = '2';
             $objTable->cellpadding = '5';
-            
+
             $hdArr = array();
             $hdArr[] = $hdTopic;
             $hdArr[] = $hdReplies;
             $hdArr[] = $hdViews;
             $hdArr[] = $hdViewGroup;
             $hdArr[] = '';
-            
+
             $objTable->addHeader($hdArr);
-            
+
             $class = 'even';
             foreach($data as $key => $item){
                 $class = ($class == 'even') ? 'odd' : 'even';
-                
+
                 $rows = (isset($viewData[$item['topicid']])) ? $viewData[$item['topicid']]['rows']+1 : 1;
                 $total = (isset($viewData[$item['topicid']])) ? $viewData[$item['topicid']]['total'] : 0;
-                
+
                 $objTable->startRow();
                 $objTable->addCell($item['post_title'], '','','', $class, "rowspan='{$rows}'");
                 $objTable->addCell($item['replies'], '','','', $class, "rowspan='{$rows}'");
                 $objTable->addCell($item['views'], '','','', $class, "rowspan='{$rows}'");
                 if($rows == 1) $objTable->addCell('', '','','', $class, "colspan = '2'");
                 $objTable->endRow();
-                
+
                 if(isset($viewData[$item['topicid']]) && !empty($viewData[$item['topicid']])){
                     $subclass = ($class == 'even') ? 'odd' : 'even';
                     foreach($viewData[$item['topicid']] as $group => $val){
-                        
+
                         foreach($val as $k=>$v){
                             $subclass  = ($subclass == 'even') ? 'odd' : 'even';
-                            
+
                             if($group == 'sex'){
                                 $k = $$k;
                             }
                             $percent = ((int) $v / (int) $total) * 100;
                             $round = round($percent, 2);
-                            
+
                             $row = array();
                             $row[] = $$group.': '.$k;
                             $row[] = $v.' / '.$total.' ('.$round.' %)';
-                            
+
                             $objTable->addRow($row, $subclass);
                         }
                     }
@@ -677,7 +677,80 @@ class hivtracking extends object
             }
             $str .= $objTable->show();
         }
-                
+
+        return $str;
+    }
+
+    /**
+    * Method to display the list of students and their participation in the discussions
+    *
+    * @access private
+    * @return string html
+    */
+    private function showParticipation()
+    {
+        $data = $this->dbLogCalc->getStudentParticipation();
+
+        $head = $this->objLanguage->languageText('phrase_studentparticipation');
+        $info = $this->objLanguage->languageText('mod_hivaids_infostudentparticipation', 'hivaids');
+        $hdStudNum = $this->objLanguage->languageText('phrase_studentnumber');
+        $hdUsername = $this->objLanguage->languageText('word_username');
+        $hdCategory = $this->objLanguage->languageText('word_category');
+        $hdTopic = $this->objLanguage->languageText('word_topic');
+        $hdViews = $this->objLanguage->languageText('word_views');
+        $hdReplies = $this->objLanguage->languageText('word_replies');
+
+        $objHead = new htmlHeading();
+        $objHead->str = $head;
+        $objHead->type = 1;
+        $str = $objHead->show();
+
+        $str .= '<p class="dim">'.$info.'</p>';
+
+        if(!empty($data)){
+            $objTable = new htmlTable();
+            $objTable->cellpadding = '5';
+            $objTable->cellspacing = '2';
+
+            $hdArr = array();
+            $hdArr[] = $hdStudNum;
+            $hdArr[] = $hdUsername;
+            $hdArr[] = $hdCategory;
+            $hdArr[] = $hdTopic;
+            $hdArr[] = $hdViews;
+            $hdArr[] = $hdReplies;
+
+            $objTable->addHeader($hdArr);
+
+            $class = 'even';
+            foreach($data as $item){
+                $class = ($class == 'even') ? 'odd' : 'even';
+
+                $arrTopics = $item['topics'];
+                $cnt = count($arrTopics)+1;
+
+                $objTable->startRow($class);
+                $objTable->addCell($item['staffnumber'], '','','',$class, "rowspan='{$cnt}'");
+                $objTable->addCell($item['username'], '','','',$class, "rowspan='{$cnt}'");
+                $objTable->endRow();
+
+
+                if(!empty($arrTopics)){
+                    foreach($arrTopics as $item){
+
+                        $row = array();
+                        $row[] = $item['category'];
+                        $row[] = $item['topic'];
+                        $row[] = $item['views'];
+                        $row[] = $item['replies'];
+
+                        $objTable->addRow($row, $class);
+                    }
+                }
+            }
+            $str .= $objTable->show();
+        }
+
         return $str;
     }
 
@@ -709,41 +782,45 @@ class hivtracking extends object
         $lbOff = $this->objLanguage->languageText('phrase_switchoff');
         $lbOn = $this->objLanguage->languageText('phrase_switchon');
         $hdConfig = $this->objLanguage->languageText('word_configure');
-        
+        $lbParticipation = $this->objLanguage->languageText('phrase_studentparticipation');
+        $lbPrint = $this->objLanguage->languageText('phrase_printfriendly');
+        $hdPrint = $this->objLanguage->languageText('word_print');
+        $printInfo = $this->objLanguage->languageText('mod_hivaids_printinfo', 'hivaids');
+
         $view_mode = $this->getSession('view_mode', 'all');
         $track_mode = $this->getSession('track_mode', '');
         $nextMode = $this->getParam('mode');
-        
+
         // View monitoring by
         $person = $group = $everyone = '';
         $$track_mode = '<b>*</b> ';
         $objLink = new link($this->uri(array('action' => 'settracking', 'mode' => 'track_person', 'nextmode' => '')));
         $objLink->link = $lbPerson;
         $str = '<ul><li>'.$person.$objLink->show().'</li>';
-        
+
         $objLink = new link($this->uri(array('action' => 'settracking', 'mode' => 'track_group', 'nextmode' => '')));
         $objLink->link = $lbGroup;
         $str .= '<li>'.$group.$objLink->show().'</li>';
-        
+
         $objLink = new link($this->uri(array('action' => 'settracking', 'mode' => 'track_everyone', 'nextmode' => '')));
         $objLink->link = $lbEveryone;
         $str .= '<li>'.$everyone.$objLink->show().'</li></ul>';
-        
+
         $menuStr = $this->objFeatureBox->show($hdTrackBy, $str);
-        
+
         // Change the mode of view
         $all = $student = '';
         $$view_mode = '<b>*</b> ';
         $objLink = new link($this->uri(array('action' => 'settracking', 'mode' => 'mode_all', 'nextmode' => $nextMode)));
         $objLink->link = $lbAll;
         $modeStr = '<ul><li>'.$all.$objLink->show().'</li>';
-        
+
         $objLink = new link($this->uri(array('action' => 'settracking', 'mode' => 'mode_students', 'nextmode' => $nextMode)));
         $objLink->link = $lbStudents;
         $modeStr .= '<li>'.$student.$objLink->show().'</li></ul>';
-        
+
         $menuStr .= $this->objFeatureBox->show($hdMode, $modeStr);
-        
+
         // General links
         $objLink = new link($this->uri(array('action' => 'userstats')));
         $objLink->link = $lbUser;
@@ -752,44 +829,60 @@ class hivtracking extends object
         $objLink = new link($this->uri(array('action' => 'tracking', 'mode' => 'general')));
         $objLink->link = $lbGeneral;
         $genStr .= '<li>'.$objLink->show().'</li>';
-        
+
         $objLink = new link($this->uri(array('action' => 'tracking', 'mode' => 'forum')));
         $objLink->link = $lbForum;
         $genStr .= '<li>'.$objLink->show().'</li>';
 
-        $objLink = new link($this->uri('', 'logger')); //array('action' => 'tracking', 'mode' => 'logger')));
+        $objLink = new link($this->uri(array('action' => 'tracking', 'mode' => 'participation')));
+        $objLink->link = $lbParticipation;
+        $genStr .= '<li>'.$objLink->show().'</li>';
+
+        $objLink = new link($this->uri('', 'logger'));
         $objLink->link = $lbLogger;
         $genStr .= '<li>'.$objLink->show().'</li></ul>';
-        
+
         $menuStr .= $this->objFeatureBox->show($hdView, $genStr);
-        
-        // Clear the logger
-        $clearStr = '<p class="dim">'.$lbClearInfo.'</p>';
-        $objButton = new button('clear', $lbClear);
-        $link = $this->uri(array('action' => 'settracking', 'mode' => 'clearall', 'nextmode' => $nextMode));
-        $this->objConfirm->setConfirm($objButton->show(), $link, $lbConfirm);
-        
-        $clearStr .= '<p>'.$this->objConfirm->show().'</p>';
-        
-        $menuStr .= $this->objFeatureBox->show($hdClear, $clearStr);
-        
+
+        // print friendly button
+        $objButton = new button('print', $lbPrint);
+        $objButton->setToSubmit();
+
+        $link = $this->uri(array('action' => 'printtracking', 'printmode' => $nextMode));
+        $objForm = new form('print', $link);
+        $objForm->addToForm($objButton->show());
+
+        $printStr = '<p class="dim">'.$printInfo.'</p>';
+        $printStr .= '<p>'.$objForm->show().'</p>';
+        $menuStr .= $this->objFeatureBox->show($hdPrint, $printStr);
+
         // Remove the student number from the registration
         $regStr = '<p class="dim">'.$lbRegNum.'</p>';
         $lbSet = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids') ? $lbOff : $lbOn;
         $objButton = new button('config', $lbSet);
         $objButton->setToSubmit();
-        
+
         $link = $this->uri(array('action' => 'settracking', 'mode' => 'setconfig', 'nextmode' => $nextMode));
         $objForm = new form('setconfig', $link);
         $objForm->addToForm($objButton->show());
-        
+
         $regStr .= '<p>'.$objForm->show().'</p>';
-        
+
         $menuStr .= $this->objFeatureBox->show($hdConfig, $regStr);
+
+        // Clear the logger
+        $clearStr = '<p class="dim">'.$lbClearInfo.'</p>';
+        $objButton = new button('clear', $lbClear);
+        $link = $this->uri(array('action' => 'settracking', 'mode' => 'clearall', 'nextmode' => $nextMode));
+        $this->objConfirm->setConfirm($objButton->show(), $link, $lbConfirm);
+
+        $clearStr .= '<p>'.$this->objConfirm->show().'</p>';
+
+        $menuStr .= $this->objFeatureBox->show($hdClear, $clearStr);
 
         return $menuStr;
     }
-    
+
     /**
     * Method to display the requested set of tracking calculations
     *
@@ -804,37 +897,41 @@ class hivtracking extends object
                 $toggle = $this->objSysConfig->getValue('USE_STUDENT_NUMBER', 'hivaids') ? false : true;
                 $this->objSysConfig->changeParam('USE_STUDENT_NUMBER', 'hivaids', $toggle);
                 break;
-            
+
             case 'clearall':
                 $this->dbLogCalc->clearLogger();
                 break;
-            
+
+            case 'participation':
+                return $this->showParticipation();
+                break;
+
             case 'general':
                 $this->unsetSession('track_mode');
                 return $this->showGeneral();
                 break;
-                
+
             case 'forum':
                 $this->unsetSession('track_mode');
                 return $this->showForum();
-                
+
             case 'forum_topics':
                 $this->unsetSession('track_mode');
                 $category = $this->getParam('category');
                 return $this->showForumTopics($category);
-                
+
             case 'mode_students':
                 $this->setSession('view_mode', 'student');
                 break;
-                
+
             case 'mode_all':
                 $this->setSession('view_mode', 'all');
                 break;
-                
+
             case 'track_everyone':
                 $this->setSession('track_mode', 'everyone');
                 break;
-                
+
             case 'track_group':
                 $this->setSession('track_mode', 'group');
                 break;
@@ -842,7 +939,7 @@ class hivtracking extends object
             case 'track_person':
                 $this->setSession('track_mode', 'person');
                 break;
-                
+
             case 'changeuser':
                 $user = $this->getParam('username');
                 $this->setSession('user', $user);
