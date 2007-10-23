@@ -11,40 +11,50 @@ $rightSideColumn = NULL;
 $middleColumn = NULL;
 $this->objUser = $this->getObject('user', 'security');
 $this->objNav = $this->getObject('navigate');
-
-if(!isset($value)){
-
+//define $value
+if (!isset($value)) {
     $value = NULL;
 }
-if(!isset($from)){
+//define $from
+if (!isset($from)) {
     $from = NULL;
 }
-if(!isset($to)){
+//define $to
+if (!isset($to)) {
     $to = NULL;
 }
-if(!isset($action)){
+//define $action
+if (!isset($action)) {
     $action = NULL;
 }
-
-
+//the main page
 if ($goTo == NULL) {
     $description = wordwrap($this->objLanguage->languageText("mod_conversions_description", "conversions") , 100, "<br />\n");
     $objFeatureBox = $this->getObject('featurebox', 'navigation');
     $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_mainPage", "conversions") , $description);
     $middleColumn = $ret;
-} elseif ($goTo == "dist") {
+}
+//the distance page
+elseif ($goTo == "dist") {
     $middleColumn = $this->objNav->dist();
     $middleColumn.= $this->objNav->answer($value, $from, $to, $action);
-} elseif ($goTo == "temp") {
+}
+//the temperature page
+elseif ($goTo == "temp") {
     $middleColumn = $this->objNav->temp();
     $middleColumn.= $this->objNav->answer($value, $from, $to, $action);
-} elseif ($goTo == "vol") {
+}
+//the volume page
+elseif ($goTo == "vol") {
     $middleColumn = $this->objNav->vol();
     $middleColumn.= $this->objNav->answer($value, $from, $to, $action);
-} elseif ($goTo == "weight") {
+}
+//the weight page
+elseif ($goTo == "weight") {
     $middleColumn = $this->objNav->weight();
     $middleColumn.= $this->objNav->answer($value, $from, $to, $action);
 }
+//adding the navigation menu
 $rightSideColumn = $this->objNav->conversionsFormNav();
 //add left column
 $cssLayout->setLeftColumnContent($leftSideColumn);

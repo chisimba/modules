@@ -1,7 +1,7 @@
 <?php
 /**
  * Returns a drop down list and the conversion answer for the left drop-down menu, in the module conversions
- *
+ * It also returns the different forms dealt with within the module
  * @author     Ebrahim Vasta <2623441@uwc.ac.za>
  * @package    conversions
  * @copyright  UWC 2007
@@ -9,41 +9,10 @@
  */
 class navigate extends object
 {
-
     /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objDist;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objTemp;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objVol;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objWeight;
-
-    /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return void  
+     * Constructor method to instantiate objects and get variables
+     *
+     * @return void
      * @access public
      */
     public function init() 
@@ -54,17 +23,15 @@ class navigate extends object
         $this->objWeight = $this->getObject('weight');
         $this->objLanguage = $this->getObject('language', 'language');
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * the navigation menu used in the module
+     *
+     * @return the navigation form
+     * @access public
      */
     public function conversionsFormNav() 
     {
+        //creating a form
         $gform = new form('goTo', $this->uri(array(
             'action' => 'goto'
         )));
@@ -95,14 +62,11 @@ class navigate extends object
         $gret = $gobjFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_goTo", "conversions") , $gform);
         return $gret;
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * the distance form used in this module to do the distance conversion
+     *
+     * @return the distance form
+     * @access public
      */
     public function dist() 
     {
@@ -161,14 +125,11 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_distanceconverter", "conversions") , $cform);
         return $ret;
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * the temperature form used in this module to do the temperature conversion
+     *
+     * @return the temperature form
+     * @access public
      */
     public function temp() 
     {
@@ -219,14 +180,11 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_temperatureconverter", "conversions") , $cform);
         return $ret;
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * the volume form used in this module to do the volume conversion
+     *
+     * @return the volume form
+     * @access public
      */
     public function vol() 
     {
@@ -281,14 +239,11 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_volumeconverter", "conversions") , $cform);
         return $ret;
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * the weight form used in this module to do the weight conversion
+     *
+     * @return the weight form
+     * @access public
      */
     public function weight() 
     {
@@ -343,48 +298,61 @@ class navigate extends object
         $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_weightconverter", "conversions") , $cform);
         return $ret;
     }
-
     /**
-     * Short description for public
-     * 
-     * Long description (if any) ...
-     * 
-     * @param  unknown $value Parameter description (if any) ...
-     * @param  unknown $from  Parameter description (if any) ...
-     * @param  unknown $to    Parameter description (if any) ...
-     * @param  unknown $action  Parameter description (if any) ...
-     * @return unknown Return description (if any) ...
-     * @access public 
+     * Gets the answer for the conversion and returns it in a featurebox
+     *
+     * @param  numerical value $value
+     * @param  string $from  Unit to be converted from
+     * @param  string $to    Unit to be converted to
+     * @param  unknown $action  this is the action of the form used
+     * @return the answer to a conversion in a featurebox
+     * @access public
      */
     public function answer($value = NULL, $from = NULL, $to = NULL, $action = NULL) 
     {
         if (isset($value)) {
             switch ($action) {
                 case 'dist':
+                    //gets an answer for the conversion
                     $answer = $this->objDist->doConversion($value, $from, $to);
+                    //gets the object featurebox
                     $objFeatureBox = $this->getObject('featurebox', 'navigation');
+                    //places the anser in the featurebox
                     $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_answer", "conversions") , $answer);
+                    //returns the featurebox
                     return $ret;
                     break;
 
                 case 'temp':
+                    //gets an answer for the conversion
                     $answer = $this->objTemp->doConversion($value, $from, $to);
+                    //gets the object featurebox
                     $objFeatureBox = $this->getObject('featurebox', 'navigation');
+                    //places the anser in the featurebox
                     $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_answer", "conversions") , $answer);
+                    //returns the featurebox
                     return $ret;
                     break;
 
                 case 'vol':
+                    //gets an answer for the conversion
                     $answer = $this->objVol->doConversion($value, $from, $to);
+                    //gets the object featurebox
                     $objFeatureBox = $this->getObject('featurebox', 'navigation');
+                    //places the anser in the featurebox
                     $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_answer", "conversions") , $answer);
+                    //returns the featurebox
                     return $ret;
                     break;
 
                 case 'weight':
+                    //gets an answer for the conversion
                     $answer = $this->objWeight->doConversion($value, $from, $to);
+                    //gets the object featurebox
                     $objFeatureBox = $this->getObject('featurebox', 'navigation');
+                    //places the anser in the featurebox
                     $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_conversions_answer", "conversions") , $answer);
+                    //returns the featurebox
                     return $ret;
                     break;
             }
