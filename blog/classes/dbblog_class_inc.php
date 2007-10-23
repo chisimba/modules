@@ -746,6 +746,18 @@ class dbblog extends dbTable
         $filter = "WHERE postid = '$pid'";
         return $this->getAll($filter);
     }
+    
+    /**
+     * Method to delete a trackback by its ID (in case of TB SPAM)
+     * 
+     * @param string $id
+     * @return bool
+     */
+    public function deleteTrackBack($id)
+    {
+    	$this->_changeTable('tbl_blog_trackbacks');
+    	return $this->delete('id', $id, 'tbl_blog_trackbacks');
+    }
     /**
      * Method to get all of the tags associated with a particular post
      *

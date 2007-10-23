@@ -2790,7 +2790,16 @@ class blogops extends object
             $tbtable->addCell($this->objLanguage->languageText("mod_blog_tbblogexcerpt", "blog"));
             $tbtable->addCell($excerpt);
             $tbtable->endRow();
-            $tbtext.= $tbtable->show();
+            
+            // add in a delete option...
+            $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+			$tbdelIcon = $this->objIcon->getDeleteIconWithConfirm($tracks['id'], array(
+                    'module' => 'blog',
+                    'action' => 'deletetb',
+                    'id' => $tracks['id'],
+                    'pid' => $pid
+                ) , 'blog');
+            $tbtext.= $tbtable->show().$tbdelIcon;
             $tbtable = NULL;
         }
         $tbtext = $this->bbcode->parse4bbcode($tbtext);

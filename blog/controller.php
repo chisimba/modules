@@ -1981,6 +1981,13 @@ class blog extends controller
 				$objApi->serve();
 
 				break;
+				
+			case 'deletetb':
+				$id = $this->getParam('id', NULL);
+				$pid = $this->getParam('pid');
+				$this->objDbBlog->deleteTrackBack($id);
+				$this->nextAction('viewsingle', array('postid' => $pid, 'userid' => $this->objUser->userId()));
+				//echo $id; die();
 
 		} //action
 
