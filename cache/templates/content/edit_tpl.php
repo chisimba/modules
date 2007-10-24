@@ -149,7 +149,8 @@ if(isset($stats))
 	
 	$stbl->startRow();
 	$stbl->addCell($this->objLanguage->languageText("mod_cache_uptime", "cache"));
-	$stbl->addCell($stats['uptime']." s");
+	$timeconv = $this->getObject('duration', 'utilities');
+	$stbl->addCell($timeconv->toString($stats['uptime']));
 	$stbl->endRow();
 	
 	$stbl->startRow();
