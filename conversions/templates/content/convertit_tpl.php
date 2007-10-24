@@ -1,4 +1,16 @@
 <?php
+/**
+ * @category  Chisimba
+ * @package   conversions
+ * @author    Nonhlanhla Gangeni <2539399@uwc.ac.za>
+ * @author    Nazheera Khan <2524939@uwc.ac.za>
+ * @author    Faizel Lodewyk <2528194@uwc.ac.za>
+ * @author    Hendry Thobela <2649282@uwc.ac.za>
+ * @author    Ebrahim Vasta <2623441@uwc.ac.za>
+ * @author    Keanon Wagner <2456923@uwc.ac.za>
+ * @author    Raymond Williams <2541826@uwc.ac.za>
+ * @copyright 2007 UWC
+ */
 // Create an instance of the css layout class
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 3
