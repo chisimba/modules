@@ -84,6 +84,10 @@ $tbl->addHeaderCell($this->objLanguage->languageText("mod_cache_stats", "cache")
 $tbl->addHeaderCell('');
 $tbl->endHeaderRow();
 
+if(!isset($cache))
+{
+	$cache = array();
+}
 foreach($cache as $servers)
 {
 	// grab an edit and delete icon
