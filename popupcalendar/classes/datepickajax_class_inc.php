@@ -55,11 +55,9 @@ class datepickajax extends object
     */
     public function init()
     {
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->objIcon = &$this->getObject('geticon', 'htmlelements');
-        $this->objDate = &$this->newObject('dateandtime', 'utilities');
-//        $this->loadClass('xajax', 'ajaxwrapper');
-//        $this->loadClass('xajaxresponse', 'ajaxwrapper');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objDate = $this->newObject('dateandtime', 'utilities');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
@@ -91,18 +89,16 @@ class datepickajax extends object
         $this->objIcon->setIcon('next');
         $this->objIcon->title = $nextMonth;
         $this->objIcon->extra = ' height="20" width="20"';
-        $objLink = &new link('#');
+        $objLink = new link('#');
         $objLink->link = $this->objIcon->show();
-//        $objLink->extra = "onclick=\"xajax_buildCal($day, $nxMonth, $year); xajax_insertDate($day, $nxMonth, $year);\"";
         $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$nxMonth.', '.$year.'); jsInsertDate('.$day.', '.$nxMonth.', '.$year.')"';
         $icon = $objLink->show();
 
         $this->objIcon->setIcon('last');
         $this->objIcon->title = $nextYear;
         $this->objIcon->extra = ' height="20" width="20"';
-        $objLink = &new link('#');
+        $objLink = new link('#');
         $objLink->link = $this->objIcon->show();
-//        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $nxYear); xajax_insertDate($day, $month, $nxYear);\"";
         $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$month.', '.$nxYear.'); jsInsertDate('.$day.', '.$month.', '.$nxYear.')"';
         $icon.= $objLink->show();
 
@@ -132,18 +128,16 @@ class datepickajax extends object
         $this->objIcon->setIcon('first');
         $this->objIcon->title = $prevYear;
         $this->objIcon->extra = ' height="20" width="20"';
-        $objLink = &new link('#');
+        $objLink = new link('#');
         $objLink->link = $this->objIcon->show();
-//        $objLink->extra = "onclick=\"xajax_buildCal($day, $month, $prYear); xajax_insertDate($day, $month, $prYear);\"";
         $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$month.', '.$prYear.'); jsInsertDate('.$day.', '.$month.', '.$prYear.')"';
         $icon = $objLink->show();
 
         $this->objIcon->setIcon('prev');
         $this->objIcon->title = $prevMonth;
         $this->objIcon->extra = ' height="20" width="20"';
-        $objLink = &new link('#');
+        $objLink = new link('#');
         $objLink->link = $this->objIcon->show();
-//        $objLink->extra = "onclick=\"xajax_buildCal($day, $prMonth, $year); xajax_insertDate($day, $prMonth, $year);\"";
         $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$prMonth.', '.$year.'); jsInsertDate('.$day.', '.$prMonth.', '.$year.')"';
         $icon.= $objLink->show();
 
@@ -168,10 +162,9 @@ class datepickajax extends object
                 $str.= '&#160;&#160;';
             }
             $newmonth = $key+1;
-            $objLink = &new link('#');
+            $objLink = new link('#');
             $objLink->link = $item;
-//            $objLink->extra = "onclick=\"xajax_buildCal($day, $newmonth, $year); xajax_insertDate($day, $newmonth, $year);\"";
-        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$newmonth.', '.$year.'); jsInsertDate('.$day.', '.$newmonth.', '.$year.')"';
+	        $objLink->extra = ' onclick="javascript:jsBuildCal('.$day.', '.$newmonth.', '.$year.'); jsInsertDate('.$day.', '.$newmonth.', '.$year.')"';
             $str.= $objLink->show();
         }
 
@@ -193,69 +186,32 @@ class datepickajax extends object
         $field = $this->session('field');
         $arrDate = explode(' ', $date);
 
-        $objForm = &new form('select', $this->uri(array(
+        $objForm = new form('select', $this->uri(array(
             'action' => ''
         )));
 
-        $objInput = &new textinput('field', $field);
+        $objInput = new textinput('field', $field);
         $objInput->fldType = 'hidden';
         $objForm->addToForm($objInput->show());
 
-        $objInput = &new textinput('date', $arrDate[0]);
+        $objInput = new textinput('date', $arrDate[0]);
         $objInput->fldType = 'hidden';
         $objForm->addToForm($objInput->show());
 
         $timeValue = '';
         $showTime = $this->session($field.'_showTime');
         if ($showTime) {
-            $objInput = &new textinput('time', $arrDate[1]);
+            $objInput = new textinput('time', $arrDate[1]);
             $objInput->fldType = 'hidden';
             $objForm->addToForm($objInput->show());
-            $timeValue = "+' '+document.getElementById('input_time').value";
+            $timeValue = '+\' \'+$F(\'input_time\')';
         }
-        $onclick = "javascript:window.opener.document.getElementById('input_".$field."').value = document.getElementById('input_date').value".$timeValue."; document.getElementById('form_select').submit(); window.close();";
-
-        $objButton = &new button('save', $save);
-        $objButton->extra = " onclick=\"$onclick\"";
+        $objButton = new button('save', $save);
+        $objButton->extra = ' onclick="javascript:window.opener.document.getElementById(\'input_'.$field.'\').value = $F(\'input_date\')'.$timeValue.'; $(\'form_select\').submit();window.close();"';
         $saveButton = $objButton->show();
         $objForm->addToForm($saveButton);
 
         return $objForm->show();
-    }
-
-    /**
-    * Method to insert the selected date into the form field.
-    *
-    * @access public
-    * @param string $mnDay The selected day
-    * @param string $mnth The selected month
-    * @param string $year The selected year
-    * @return The XML for the function
-    *
-    public function insertDate($mnDay, $mnth, $year)
-    {
-        $objResponse = &new xajaxResponse();
-        $date = $year.'-'.$mnth.'-'.$mnDay;
-        $objResponse->addAssign('input_date', 'value', $date);
-
-        return $objResponse->getXML();
-    }
-
-    /**
-    * Method to insert the selected time into the form field.
-    *
-    * @access public
-    * @param string $hour The selected hour
-    * @param string $min The selected minutes
-    * @return The XML for the function
-    *
-    public function insertTime($hour, $min)
-    {
-        $objResponse = &new xajaxResponse();
-        $time = $hour.':'.$min;
-        $objResponse->addAssign('input_time', 'value', $time);
-
-        return $objResponse->getXML();
     }
 
     /**
@@ -301,7 +257,7 @@ class datepickajax extends object
 
         // get the number of weeks to display
         $numWks = ceil(($numDays+$offset) /7);
-        $objTable = &new htmltable();
+        $objTable = new htmltable();
         $objTable->init();
         $objTable->cellpadding = 1;
         $objTable->row_attributes = ' height="15"';
@@ -325,7 +281,7 @@ class datepickajax extends object
         $objTable->endRow();
         $str = $objTable->show();
 
-        $objTable = &new htmltable();
+        $objTable = new htmltable();
         $objTable->init();
         $objTable->cellpadding = 1;
         $objTable->border = 1;
@@ -356,9 +312,8 @@ class datepickajax extends object
                     $link = '';
                 } else {
                     // Make the day a link
-                    $objLink = &new link('#');
-//                    $objLink->extra = "onclick=\"xajax_buildCal($mnDay, $mnth, $year); xajax_insertDate($mnDay, $mnth, $year);\"";
-        $objLink->extra = ' onclick="javascript:jsBuildCal('.$mnDay.', '.$mnth.', '.$year.'); jsInsertDate('.$mnDay.', '.$mnth.', '.$year.')"';
+                    $objLink = new link('#');
+			        $objLink->extra = ' onclick="javascript:jsBuildCal('.$mnDay.', '.$mnth.', '.$year.'); jsInsertDate('.$mnDay.', '.$mnth.', '.$year.')"';
                     $objLink->link = $mnDay;
                     $link = $objLink->show();
                 }
@@ -383,9 +338,6 @@ class datepickajax extends object
         }else{
             echo $str;
         }
-//        $objResponse->addAssign('calDiv', 'innerHTML', $str);
-
-//        return $objResponse->getXML();
     }
 
     /**
@@ -408,10 +360,8 @@ class datepickajax extends object
         }
         $time = $this->objLanguage->languageText('mod_popupcalendar_time', 'popupcalendar');
         $timeStr = '<b>'.$time.':</b>&#160;&#160;';
-        $hrSelect = "document.getElementById('input_hour').options[document.getElementById('input_hour').selectedIndex].value";
-        $mnSelect = "document.getElementById('input_min').options[document.getElementById('input_min').selectedIndex].value";
 
-        $objDrop = &new dropdown('hour');
+        $objDrop = new dropdown('hour');
         for ($i = 0 ; $i <= 23 ; $i++) {
             if (strlen($i) == 1) {
                 $i = '0'.$i;
@@ -419,11 +369,10 @@ class datepickajax extends object
             $objDrop->addOption($i, $i.'&#160;');
         }
         $objDrop->setSelected($hour);
-//        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
-        $objDrop->extra = 'onchange="javascript:jsInsertTime('.$hrSelect.', '.$mnSelect.');"';
+        $objDrop->extra = 'onchange="javascript:var hrSelect = $F(\'input_hour\');var mnSelect = $F(\'input_min\'); jsInsertTime(hrSelect, mnSelect);"';
         $timeStr.= $objDrop->show();
 
-        $objDrop = &new dropdown('min');
+        $objDrop = new dropdown('min');
         for ($i = 0 ; $i <= 59 ; $i++) {
             if (strlen($i) == 1) {
                 $i = '0'.$i;
@@ -431,16 +380,12 @@ class datepickajax extends object
             $objDrop->addOption($i, $i.'&#160;');
         }
         $objDrop->setSelected($min);
-//        $objDrop->extra = "onchange = \"xajax_insertTime($hrSelect, $mnSelect);\"";
-        $objDrop->extra = 'onchange="javascript:jsInsertDate('.$hrSelect.', '.$mnSelect.');"';
+        $objDrop->extra = 'onchange="javascript:var hrSelect = $F(\'input_hour\');var mnSelect = $F(\'input_min\'); jsInsertTime(hrSelect, mnSelect);"';
         $timeStr.= '<b>:</b>&#160;&#160;'.$objDrop->show();
 
-        $objForm = &new form('seltime', $this->uri(NULL));
+        $objForm = new form('seltime', $this->uri(NULL));
         $objForm->addToForm($timeStr);
         $this->timeStr = $objForm->show();
-        //$objResponse->addAssign('timeDiv', 'innerHTML', $objForm->show());
-
-        //return $objResponse->getXML();
     }
 
     /**
@@ -496,35 +441,9 @@ class datepickajax extends object
     */
     public function showCal()
     {
-        //$xajax = &new xajax($this->uri(array()));
-//		$xajax = &$this->getObject('xajax', 'ajaxwrapper');
-//		$xajax->setRequestUri($this->uri(array()));
-        // Register functions
-//        $xajax->registerFunction(array(
-//            $this,
-//            "buildCal"
-//        ));
-//        $xajax->registerFunction(array(
-//            $this,
-//            "insertDate"
-//        ));
         $field = $this->session('field');
         $showTime = $this->session($field.'_showTime');
-        if ($showTime) {
-//            $xajax->registerFunction(array(
-//                $this,
-//                "buildTime"
-//            ));
-//            $xajax->registerFunction(array(
-//                $this,
-//                "insertTime"
-//            ));
-        }
-        // XAJAX method to be called
-//        $xajax->processRequests();
-        // Send JS to header
-//        $this->appendArrayVar('headerParams', $xajax->getJavascript());
-        // Set up initial page
+
         $initDate = $this->setUpInfo();
         $arrDateTime = explode(' ', $initDate);
         $arrDate = explode('-', $arrDateTime[0]);
@@ -585,7 +504,7 @@ class datepickajax extends object
                 $height = 'height=426';
             }
         }
-        $objInput = &new textinput($field, $defaultDate, '', $length);
+        $objInput = new textinput($field, $defaultDate, '', $length);
         $objInput->extra = ' readonly="readonly"';
         $dateText = $objInput->show();
         $url = $this->uri(array(
@@ -597,7 +516,7 @@ class datepickajax extends object
         $onclick = "javascript:window.open('".$url."','popupcal','width=300,".$height.",scrollbars=1,resize=yes')";
         $this->objIcon->title = $selectLabel;
         $this->objIcon->setIcon('select_date');
-        $objLink = &new link('#');
+        $objLink = new link('#');
         $objLink->extra = "onclick=\"$onclick\"";
         $objLink->link = $this->objIcon->show();
         $dateLink = $objLink->show();
