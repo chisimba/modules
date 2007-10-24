@@ -2,9 +2,16 @@
 /**
  * Returns a drop down list and the conversion answer for the left drop-down menu, in the module conversions
  * It also returns the different forms dealt with within the module
- * @author     Ebrahim Vasta <2623441@uwc.ac.za>
- * @package    conversions
- * @copyright  UWC 2007
+ * @category  Chisimba
+ * @package   conversions
+ * @author    Nonhlanhla Gangeni <2539399@uwc.ac.za>
+ * @author    Nazheera Khan <2524939@uwc.ac.za>
+ * @author    Faizel Lodewyk <2528194@uwc.ac.za>
+ * @author    Hendry Thobela <2649282@uwc.ac.za>
+ * @author    Ebrahim Vasta <2623441@uwc.ac.za>
+ * @author    Keanon Wagner <2456923@uwc.ac.za>
+ * @author    Raymond Williams <2541826@uwc.ac.za>
+ * @copyright 2007 UWC
  * @filesource
  */
 class navigate extends object
