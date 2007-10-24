@@ -221,9 +221,27 @@ $table->addCell($rightCell);
 
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 
+/**
+ * Following added by david wafula
+ */
+
+$presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'])));
+$presenterLink->link = 'Start Live Presentation';
+
+$audienceLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'])));
+$audienceLink->link = 'Join Live Presentation';
+
+
 $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
 $objTabs->addTab('Transcript', $slideContent['transcript']);
+
+if ($this->objUser->isLoggedIn()) {
+$objTabs->addTab('Live', '<li>'.$presenterLink->show().'</li>');
+}else{
+$objTabs->addTab('Live', '<li>'.$audienceLink->show().'</li>');
+}
+
 $objTabs->width = '95%';
 
 echo $objTabs->show();
