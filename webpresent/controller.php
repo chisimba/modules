@@ -8,6 +8,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 class webpresent extends controller
 {
 
+      public $presentationsURL;
 
     /**
      * Constructor
@@ -21,7 +22,11 @@ class webpresent extends controller
         $this->objFiles = $this->getObject('dbwebpresentfiles');
         $this->objTags = $this->getObject('dbwebpresenttags');
         $this->objSlides = $this->getObject('dbwebpresentslides');
-    }
+  
+        $location = "http://" . $_SERVER['HTTP_HOST'];
+	$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+                
+  }
 
     /**
      * Method to override login for certain actions
@@ -30,7 +35,7 @@ class webpresent extends controller
      */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','showpresenterapplet');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -39,6 +44,8 @@ class webpresent extends controller
         }
     }
 
+
+    
     /**
     * Standard Dispatch Function for Controller
     *
@@ -116,6 +123,47 @@ class webpresent extends controller
     }
 
 
+
+
+    /**
+     * ADDED by David Wafula  
+     * Function to invoke the presenter applet 
+     *
+     */ 
+   public function __showpresenterapplet()
+    {
+          $id="";
+          $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
+          $files=$filesObj->getLatestPresentations();
+          $fileList="";
+          $counter = 0;
+          if (count($files) > 0)
+          {
+           foreach ($files as $file)
+            {
+                if($counter == 0){
+                $id=$file['id'];
+                }
+                $fileList .=",".$file['id']."#".$file['title'];
+                $counter++;   
+            }
+          }     
+          $this->setVarByRef('id', $id);
+          $this->setVarByRef('files', $fileList);
+
+          return "presenter-applet.php";
+     }
+
+ /**
+     * ADDED by David Wafula  
+     * Function to invoke the audience applet 
+     *
+     */ 
+    function __showaudienceapplet()
+    {
+          
+          return "audience-applet.php";
+     }
     /**
      * Method to display the search results
      */
