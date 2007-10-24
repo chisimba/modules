@@ -30,59 +30,25 @@
  * @see       References to other sections (if any)...
  */
 // security check - must be included in all scripts
-if (!
 /**
  * Description for $GLOBALS
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
+if{
 $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
 
 /**
-
-* Model controller for the table tbl_phonebook
-* @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa, George Amabeoku, Charl Daniels, and Qoane Seitlheko.  
-* @copyright      2007 University of the Western Cape
-*/
-
-
-
+ *
+ * Model controller for the table tbl_phonebook
+ * @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa and Qoane Seitlheko.
+ * @copyright 2007 University of the Western Cape
+ */
 class phonebook extends controller
 {
-
-
-    /**
-     * Description for public
-     * @var    unknown
-     * @access public 
-     */
-	public $objLanguage;
-
-    /**
-     * Description for public
-     * @var    unknown
-     * @access public 
-     */
-	public $objConfig;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-        public $objDbContacts;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-        public $objUser;
-
-
     /**
      * Description for public
      * @var    unknown
@@ -196,7 +162,4 @@ class phonebook extends controller
     } //end of switch
     
 } //end of dispatch function
-
-} //end of class
-
 ?>
