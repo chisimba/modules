@@ -46,85 +46,8 @@ $norecords = $objLanguage->languageText('mod_phonebook_nodata', 'phonebook');
 if (empty($records)) {
     $objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="7"');
 
-} else{
-
-//Create an array for each value in the table.
-	foreach($records as $record){
-	$rowcount ++;
-	
-
-// Set odd even colour scheme
-    $class = ($rowcount % 2 == 0)?'odd':'even';
-    $objTableClass->startRow(); 
-		
-       //add id
-		$id = $record['id'];
-		$records == $objUser->userId();
-		//$objTableClass->addCell($id, '', 'center', 'center', $class);	    
-		
-		
-		//add first name
-		$username = $record['firstname'] . '&nbsp;'.'&nbsp;'.'&nbsp;'.'&nbsp;' . $record['lastname'];
-		$records == $objUser->userId();
-		$objTableClass->addCell($username, '', 'center', 'center', $class);
-
-		//add e-mail
-		$email = $record['emailaddress'];
-		$records == $objUser->userId();
-		$objTableClass->addCell($email, '', 'center', 'center', $class);
-
-		//add landline
-		$landline = $record['landlinenumber'];
-		$records == $objUser->userId();
-		$objTableClass->addCell($landline, '', '', 'center', $class);
-
-		//add cell number
-		$cell = $record['cellnumber'];
-		$records == $objUser->userId();
-		$objTableClass->addCell($cell, '', 'center', 'center', $class);
-
-		//add address
-		$address = $record['address'];
-		$records == $objUser->userId();
-		$objTableClass->addCell($address, '', 'center', 'center', $class);
-
-		// Create delete icon and delete action	   
-		 $objDelIcon = $this->newObject('geticon', 'htmlelements'); 
-   		 $delLink = array('action' => 'deleteentry',
-	        'id' => $id,
-	        'module' => 'phonebook',
-	        'confirm' => 'yes',
-	        );
-    		
-		$deletephrase = $objLanguage->languageText('mod_phonebook_deleteicon', 'phonebook');
-    $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'phonebook', $deletephrase);
-		$update = $conf;
-		$records == $objUser->userId();
-		$objTableClass->addCell($update, '', 'center', 'center', $class);
-
-    // Create edit icon and action
-   
-		$this->loadClass('link', 'htmlelements');
-		$objIcon = $this->newObject('geticon', 'htmlelements');
-		$link = new link ($this->uri(array('action'=>'editentry',
-			'id'=>$id), 'phonebook'));
-		$objIcon->setIcon('edit');
-		$link->link = $objIcon->show();
-
-		$update = $link->show();
-		
-
-		$update = $link->show();
-
-		$objTableClass->addCell($update, '', 'center', 'center', $class);
-    $objTableClass->endRow();
-
-
-        
-          
-	}//end of loop
-
-} else {
+}
+ else {
     //Create an array for each value in the table.
     foreach($records as $record) {
         $rowcount++;

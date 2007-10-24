@@ -39,7 +39,7 @@
  * @global integer $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-$GLOBALS['kewl_entry_point_run']) {
+if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 
