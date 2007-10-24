@@ -19,12 +19,17 @@
  *
  * @category  Chisimba
  * @package   conversions
- * @author    Administrative User <admin@localhost.local.za>
- * @copyright 2007 Administrative User
+ * @author    Nonhlanhla Gangeni <2539399@uwc.ac.za>
+ * @author    Nazheera Khan <2524939@uwc.ac.za>
+ * @author    Faizel Lodewyk <2528194@uwc.ac.za>
+ * @author    Hendry Thobela <2649282@uwc.ac.za>
+ * @author    Ebrahim Vasta <2623441@uwc.ac.za>
+ * @author    Keanon Wagner <2456923@uwc.ac.za>
+ * @author    Raymond Williams <2541826@uwc.ac.za>
+ * @copyright 2007 UWC
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   CVS: $Id$
  * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
  */
 // security check - must be included in all scripts
 if (!
@@ -47,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   CVS: $Id$
  * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+ * 
  */
 class conversions extends controller
 {

@@ -4,7 +4,7 @@
  *
  * @author     Nazheera Khan <2524939@uwc.ac.za>
  * @author     Ebrahim Vasta <2623441@uwc.ac.za>
- * @package    convertions
+ * @package    conversions
  * @copyright  UWC 2007
  * @filesource
  */
@@ -84,7 +84,7 @@ class temp extends object
          * 2 = Fahrenheit
          * 3 = Kelvin
          *
-         * The variable $tempVal is used in cases where there is no direct convertion from one value to another
+         * The variable $tempVal is used in cases where there is no direct conversion from one value to another
          *
          */
         // Check to see if $value is a numerical vaulue
@@ -95,29 +95,29 @@ class temp extends object
         elseif ($from == $to && !empty($value)) {
             return $this->objLanguage->languageText('mod_conversions_itselfError', 'conversions');
         }
-        //Does the convertion from Celsius to Fahrenheit and returns the answer
+        //Does the conversion from Celsius to Fahrenheit and returns the answer
         elseif ($from == "1" && $to == "2") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Celsius", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convCelsToFahren($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions");
         }
-        //Does the convertion from Fahrenheit to Celsius and returns the answer
+        //Does the conversion from Fahrenheit to Celsius and returns the answer
         elseif ($from == "2" && $to == "1") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convFahrenToCels($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Celsius", "conversions") . ".";
         }
-        //Does the convertion from Fahrenheit to Kelvin and returns the answer
+        //Does the conversion from Fahrenheit to Kelvin and returns the answer
         elseif ($from == "2" && $to == "3") {
             $tempVal = $this->convFahrenToCels($value);
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convCelToKel($tempVal)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Kelvin", "conversions") . ".";
         }
-        //Does the convertion from Kelvin to Fahrenheit and returns the answer
+        //Does the conversion from Kelvin to Fahrenheit and returns the answer
         elseif ($from == "3" && $to == "2") {
             $tempVal = $this->convKelToCels($value);
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Kelvin", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convCelsToFahren($tempVal)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Fahrenheit", "conversions") . ".";
         }
-        //Does the convertion from Celsius to Kelvin and returns the answer
+        //Does the conversion from Celsius to Kelvin and returns the answer
         elseif ($from == "1" && $to == "3") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Celsius", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convCelsToKel($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Kelvin", "conversions") . ".";
         }
-        //Does the convertion from Kelvin to Celsius and returns the answer
+        //Does the conversion from Kelvin to Celsius and returns the answer
         elseif ($from == "3" && $to == "1") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Kelvin", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convKelToCels($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Celsius", "conversions") . ".";
         }

@@ -5,7 +5,7 @@
  *
  * @author     Hendry Thobela <2649282@uwc.ac.za>
  * @author     Raymond Williams <2541826@uwc.ac.za>
- * @package    convertions
+ * @package    conversions
  * @copyright  UWC 2007
  * @filesource
  */
@@ -196,201 +196,201 @@ class dist extends object
         elseif ($from == $to && !empty($value)) {
             return $this->objLanguage->languageText('mod_conversions_itselfError', 'conversions');
         }
-        //Does the convertion from Centimeters to Millimeters and returns the answer
+        //Does the conversion from Centimeters to Millimeters and returns the answer
         elseif ($from == "1" && $to == "2") {
             $tempVal = $this->convCentimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Centimeters to Feet and returns the answer
+        //Does the conversion from Centimeters to Feet and returns the answer
         elseif ($from == "1" && $to == "3") {
             $tempVal = $this->convCentimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Centimeters to Yards and returns the answer
+        //Does the conversion from Centimeters to Yards and returns the answer
         elseif ($from == "1" && $to == "4") {
             $tempVal = $this->convCentimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Centimeters to Meters and returns the answer
+        //Does the conversion from Centimeters to Meters and returns the answer
         elseif ($from == "1" && $to == "5") {
             $tempVal = $this->convCentimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Centimeters to Kilometers and returns the answer
+        //Does the conversion from Centimeters to Kilometers and returns the answer
         elseif ($from == "1" && $to == "6") {
             $tempVal = $this->convCentimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }
-        //Does the convertion from Centimeters to Miles and returns the answer
+        //Does the conversion from Centimeters to Miles and returns the answer
         elseif ($from == "1" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convCentimetersToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Centimeters and returns the answer
+        //Does the conversion from Millimeters to Centimeters and returns the answer
         elseif ($from == "2" && $to == "1") {
             $tempVal = $this->convMillimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Feet and returns the answer
+        //Does the conversion from Millimeters to Feet and returns the answer
         elseif ($from == "2" && $to == "3") {
             $tempVal = $this->convMillimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Yards and returns the answer
+        //Does the conversion from Millimeters to Yards and returns the answer
         elseif ($from == "2" && $to == "4") {
             $tempVal = $this->convMillimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Meters and returns the answer
+        //Does the conversion from Millimeters to Meters and returns the answer
         elseif ($from == "2" && $to == "5") {
             $tempVal = $this->convMillimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Kilometers and returns the answer
+        //Does the conversion from Millimeters to Kilometers and returns the answer
         elseif ($from == "2" && $to == "6") {
             $tempVal = $this->convMillimetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }
-        //Does the convertion from Millimeters to Miles and returns the answer
+        //Does the conversion from Millimeters to Miles and returns the answer
         elseif ($from == "2" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMillimetersToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Feet to Centimeters and returns the answer
+        //Does the conversion from Feet to Centimeters and returns the answer
         elseif ($from == "3" && $to == "1") {
             $tempVal = $this->convFeetToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Feet to Millimeters and returns the answer
+        //Does the conversion from Feet to Millimeters and returns the answer
         elseif ($from == "3" && $to == "2") {
             $tempVal = $this->convFeetToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Feet to Yards and returns the answer
+        //Does the conversion from Feet to Yards and returns the answer
         elseif ($from == "3" && $to == "4") {
             $tempVal = $this->convFeetToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Feet to Meters and returns the answer
+        //Does the conversion from Feet to Meters and returns the answer
         elseif ($from == "3" && $to == "5") {
             $tempVal = $this->convFeetToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Feet to Kilometers and returns the answer
+        //Does the conversion from Feet to Kilometers and returns the answer
         elseif ($from == "3" && $to == "6") {
             $tempVal = $this->convFeetToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }
-        //Does the convertion from Feet to Miles and returns the answer
+        //Does the conversion from Feet to Miles and returns the answer
         elseif ($from == "3" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convFeetToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Yards to Centimeters and returns the answer
+        //Does the conversion from Yards to Centimeters and returns the answer
         elseif ($from == "4" && $to == "1") {
             $tempVal = $this->convYardsToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Yards to Millimeters and returns the answer
+        //Does the conversion from Yards to Millimeters and returns the answer
         elseif ($from == "4" && $to == "2") {
             $tempVal = $this->convYardsToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Yards to Feet and returns the answer
+        //Does the conversion from Yards to Feet and returns the answer
         elseif ($from == "4" && $to == "3") {
             $tempVal = $this->convYardsToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Yards to Meters and returns the answer
+        //Does the conversion from Yards to Meters and returns the answer
         elseif ($from == "4" && $to == "5") {
             $tempVal = $this->convYardsToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Yards to Kilometers and returns the answer
+        //Does the conversion from Yards to Kilometers and returns the answer
         elseif ($from == "4" && $to == "6") {
             $tempVal = $this->convYardsToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }
-        //Does the convertion from Yards to Miles and returns the answer
+        //Does the conversion from Yards to Miles and returns the answer
         elseif ($from == "4" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convYardsToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Meters to Centimeters and returns the answer
+        //Does the conversion from Meters to Centimeters and returns the answer
         elseif ($from == "5" && $to == "1") {
             $tempVal = $this->convMetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Meters to Millimeters and returns the answer
+        //Does the conversion from Meters to Millimeters and returns the answer
         elseif ($from == "5" && $to == "2") {
             $tempVal = $this->convMetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Meters to Feet and returns the answer
+        //Does the conversion from Meters to Feet and returns the answer
         elseif ($from == "5" && $to == "3") {
             $tempVal = $this->convMetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Meters to Yards and returns the answer
+        //Does the conversion from Meters to Yards and returns the answer
         elseif ($from == "5" && $to == "4") {
             $tempVal = $this->convMetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Meters to Kilometers and returns the answer
+        //Does the conversion from Meters to Kilometers and returns the answer
         elseif ($from == "5" && $to == "6") {
             $tempVal = $this->convMetersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }
-        //Does the convertion from Meters to Miles and returns the answer
+        //Does the conversion from Meters to Miles and returns the answer
         elseif ($from == "5" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMetersToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Centimeters and returns the answer
+        //Does the conversion from Kilometers to Centimeters and returns the answer
         elseif ($from == "6" && $to == "1") {
             $tempVal = $this->convKilometersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Millimeters and returns the answer
+        //Does the conversion from Kilometers to Millimeters and returns the answer
         elseif ($from == "6" && $to == "2") {
             $tempVal = $this->convKilometersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Feet and returns the answer
+        //Does the conversion from Kilometers to Feet and returns the answer
         elseif ($from == "6" && $to == "3") {
             $tempVal = $this->convKilometersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Yards and returns the answer
+        //Does the conversion from Kilometers to Yards and returns the answer
         elseif ($from == "6" && $to == "4") {
             $tempVal = $this->convKilometersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Meters and returns the answer
+        //Does the conversion from Kilometers to Meters and returns the answer
         elseif ($from == "6" && $to == "5") {
             $tempVal = $this->convKilometersToMiles($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($tempVal)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Kilometers to Miles and returns the answer
+        //Does the conversion from Kilometers to Miles and returns the answer
         elseif ($from == "6" && $to == "7") {
             return $value . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convKilometersToMiles($value)) , 2) . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . ".";
         }
-        //Does the convertion from Miles to Centimeters and returns the answer
+        //Does the conversion from Miles to Centimeters and returns the answer
         elseif ($from == "7" && $to == "1") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToCentimeters($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . ".";
         }
-        //Does the convertion from Miles to Millimeters and returns the answer
+        //Does the conversion from Miles to Millimeters and returns the answer
         elseif ($from == "7" && $to == "2") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMillimeters($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symMM", "conversions") . ".";
         }
-        //Does the convertion from Miles to Feet and returns the answer
+        //Does the conversion from Miles to Feet and returns the answer
         elseif ($from == "7" && $to == "3") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToFeet($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symFT", "conversions") . ".";
         }
-        //Does the convertion from Miles to Yards and returns the answer
+        //Does the conversion from Miles to Yards and returns the answer
         elseif ($from == "7" && $to == "4") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToYards($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symYD", "conversions") . ".";
         }
-        //Does the convertion from Miles to Meters and returns the answer
+        //Does the conversion from Miles to Meters and returns the answer
         elseif ($from == "7" && $to == "5") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToMeters($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symM", "conversions") . ".";
         }
-        //Does the convertion from Miles to Kilometers and returns the answer
+        //Does the conversion from Miles to Kilometers and returns the answer
         elseif ($from == "7" && $to == "6") {
             return $value . " " . $this->objLanguage->languageText("mod_conversions_Miles", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round(($this->convMilesToKilometers($value)) , 2) . $this->objLanguage->languageText("mod_conversions_symKM", "conversions") . ".";
         }

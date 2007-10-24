@@ -4,7 +4,7 @@
  *
  * @author     Faizel Lodewyk <2528194@uwc.ac.za>
  * @author     Keanon Wagner <2456923@uwc.ac.za>
- * @package    convertions
+ * @package    conversions
  * @copyright  UWC 2007
  * @filesource
  */
@@ -21,97 +21,97 @@ class weight extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
     /**
-     * The following function converts Kilograms to Metric Ton
+     * The following function converts Kilograms to Metric Tons
      *
      * @param  numerical value ($value)
-     * @return metric ton equivalent
+     * @return metric tons equivalent
      * @access public
      */
-    public function convKilogramsToMetricton($value = NULL) 
+    public function convKilogramsToMetrictons($value = NULL) 
     {
         $answer = ($value*0.001);
         return $answer;
     }
     /**
-     * The following function converts Metric Ton to Kilograms
+     * The following function converts Metric Tons to Kilograms
      *
      * @param  numerical value ($value)
      * @return kilogams equivalent
      * @access public
      */
-    public function convMetrictonToKilograms($value = NULL) 
+    public function convMetrictonsToKilograms($value = NULL) 
     {
         $answer = ($value*1000);
         return $answer;
     }
     /**
-     * The following function converts Grams to Metric Ton
+     * The following function converts Grams to Metric Tons
      *
      * @param  numerical value ($value)
-     * @return cubic metric ton equivalent
+     * @return cubic metric tons equivalent
      * @access public
      */
-    public function convGramsToMetricton($value = NULL) 
+    public function convGramsToMetrictons($value = NULL) 
     {
         $answer = ($value*0.00001);
         return $answer;
     }
     /**
-     * The following function converts Metric Ton to Grams
+     * The following function converts Metric Tons to Grams
      *
      * @param  numerical value ($value)
      * @return cubic grams equivalent
      * @access public
      */
-    public function convMetrictonToGrams($value = NULL) 
+    public function convMetrictonsToGrams($value = NULL) 
     {
         $answer = ($value*1000000);
         return $answer;
     }
     /**
-     * The following function converts Pounds to Metric Ton
+     * The following function converts Pounds to Metric Tons
      *
      * @param  numerical value ($value)
-     * @return metric ton equivalent
+     * @return metric tons equivalent
      * @access public
      */
-    public function convPoundsToMetricton($value = NULL) 
+    public function convPoundsToMetrictons($value = NULL) 
     {
         $answer = ($value*0.000454);
         return $answer;
     }
     /**
-     * The following function converts Metric Ton to Pounds
+     * The following function converts Metric Tons to Pounds
      *
      * @param  numerical value ($value)
      * @return pounds equivalent
      * @access public
      */
-    public function convMetrictonToPounds($value = NULL) 
+    public function convMetrictonsToPounds($value = NULL) 
     {
         $answer = ($value*2204.6);
         return $answer;
     }
     /**
-     * The following function converts Ounces to Metric Ton
+     * The following function converts Ounces to Metric Tons
      *
      * @param  numerical value ($value)
-     * @return metric ton equivalent
+     * @return metric tons equivalent
      * @access public
      */
-    public function convOuncesToMetricton($value = NULL) 
+    public function convOuncesToMetrictons($value = NULL) 
     {
         $answer = ($value*0.00045);
         return $answer;
     }
     /**
-     * The following function converts Metric Ton to Ounces
+     * The following function converts Metric Tons to Ounces
      *
      * @param  numerical value ($value)
      * @return ounces equivalent
      * @access public
      */
-    public function convMetrictonToOunces($value = NULL) 
+    public function convMetrictonsToOunces($value = NULL) 
     {
         $answer = ($value*2222.2222);
         return $answer;
@@ -145,97 +145,97 @@ class weight extends object
         elseif ($from == $to && !empty($value)) {
             return $this->objLanguage->languageText('mod_conversions_itselfError', 'conversions');
         }
-        //Does the convertion from Kilograms to Grams and returns the answer
+        //Does the conversion from Kilograms to Grams and returns the answer
         elseif ($from == "1" && $to == "2") {
-            $tempVal = $this->convKilogramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
+            $tempVal = $this->convKilogramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
         }
-        //Does the convertion from Kilograms to Metric Ton and returns the answer
+        //Does the conversion from Kilograms to Metric Tons and returns the answer
         elseif ($from == "1" && $to == "3") {
-            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convKilogramsToMetricton($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
+            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convKilogramsToMetrictons($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
         }
-        //Does the convertion from Kilograms to Pounds and returns the answer
+        //Does the conversion from Kilograms to Pounds and returns the answer
         elseif ($from == "1" && $to == "4") {
-            $tempVal = $this->convKilogramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToPounds($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
+            $tempVal = $this->convKilogramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToPounds($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
         }
-        //Does the convertion from Kilograms to Ounces and returns the answer
+        //Does the conversion from Kilograms to Ounces and returns the answer
         elseif ($from == "1" && $to == "5") {
-            $tempVal = $this->convKilogramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            $tempVal = $this->convKilogramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
         }
-        //Does the convertion from Grams to Kilograms and returns the answer
+        //Does the conversion from Grams to Kilograms and returns the answer
         elseif ($from == "2" && $to == "1") {
-            $tempVal = $this->convGramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
+            $tempVal = $this->convGramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
         }
-        //Does the convertion from Grams to Metric Ton and returns the answer
+        //Does the conversion from Grams to Metric Tons and returns the answer
         elseif ($from == "2" && $to == "3") {
-            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convGramsToMetricton($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
+            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convGramsToMetrictons($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
         }
-        //Does the convertion from Grams to Pounds and returns the answer
+        //Does the conversion from Grams to Pounds and returns the answer
         elseif ($from == "2" && $to == "4") {
-            $tempVal = $this->convGramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToPounds($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
+            $tempVal = $this->convGramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToPounds($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
         }
-        //Does the convertion from Grams to Ounces and returns the answer
+        //Does the conversion from Grams to Ounces and returns the answer
         elseif ($from == "2" && $to == "5") {
-            $tempVal = $this->convGramsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            $tempVal = $this->convGramsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
         }
-        //Does the convertion from Metric Ton to Kilograms and returns the answer
+        //Does the conversion from Metric Tons to Kilograms and returns the answer
         elseif ($from == "3" && $to == "1") {
-            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToKilograms($value) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
+            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToKilograms($value) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
         }
-        //Does the convertion from Metric Ton to Grams and returns the answer
+        //Does the conversion from Metric Tons to Grams and returns the answer
         elseif ($from == "3" && $to == "2") {
-            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToGrams($value) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
+            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToGrams($value) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
         }
-        //Does the convertion from Metric Ton to Pounds and returns the answer
+        //Does the conversion from Metric Tons to Pounds and returns the answer
         elseif ($from == "3" && $to == "4") {
-            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToPounds($value) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
+            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToPounds($value) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
         }
-        //Does the convertion from Metric Ton to Ounces and returns the answer
+        //Does the conversion from Metric Tons to Ounces and returns the answer
         elseif ($from == "3" && $to == "5") {
-            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToOunces($value) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            return $value . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($value) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
         }
-        //Does the convertion from Pounds to Kilograms and returns the answer
+        //Does the conversion from Pounds to Kilograms and returns the answer
         elseif ($from == "4" && $to == "1") {
-            $tempVal = $this->convPoundsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
+            $tempVal = $this->convPoundsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
         }
-        //Does the convertion from Pounds to Grams and returns the answer
+        //Does the conversion from Pounds to Grams and returns the answer
         elseif ($from == "4" && $to == "2") {
-            $tempVal = $this->convPoundsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
+            $tempVal = $this->convPoundsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
         }
-        //Does the convertion from Pounds to Metric Ton and returns the answer
+        //Does the conversion from Pounds to Metric Tons and returns the answer
         elseif ($from == "4" && $to == "3") {
-            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convPoundsToMetricton($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
+            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convPoundsToMetrictons($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
         }
-        //Does the convertion from Pounds to Ounces and returns the answer
+        //Does the conversion from Pounds to Ounces and returns the answer
         elseif ($from == "4" && $to == "5") {
-            $tempVal = $this->convPoundsToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            $tempVal = $this->convPoundsToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
         }
-        //Does the convertion from Ounces to Kilograms and returns the answer
+        //Does the conversion from Ounces to Kilograms and returns the answer
         elseif ($from == "5" && $to == "1") {
-            $tempVal = $this->convOuncesToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
+            $tempVal = $this->convOuncesToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToKilograms($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symKG", "conversions") . ".";
         }
-        //Does the convertion from Ounces to Grams and returns the answer
+        //Does the conversion from Ounces to Grams and returns the answer
         elseif ($from == "5" && $to == "2") {
-            $tempVal = $this->convOuncesToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
+            $tempVal = $this->convOuncesToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToGrams($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symG", "conversions") . ".";
         }
-        //Does the convertion from Ounces to Metric Ton and returns the answer
+        //Does the conversion from Ounces to Metric Tons and returns the answer
         elseif ($from == "5" && $to == "3") {
-            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convOuncesToMetricton($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
+            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convOuncesToMetrictons($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
         }
-        //Does the convertion from Ounces to Ounces and returns the answer
+        //Does the conversion from Ounces to Ounces and returns the answer
         elseif ($from == "5" && $to == "4") {
-            $tempVal = $this->convOuncesToMetricton($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            $tempVal = $this->convOuncesToMetrictons($value);
+            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
         }
         //Checks to see if $value is NULL
         else {
