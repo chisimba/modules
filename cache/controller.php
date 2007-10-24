@@ -52,6 +52,7 @@ class cache extends controller
 				$handle = fopen($filename, "r");
 				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 					$num = count($data);
+					//echo $num;
 					for ($c=0; $c < $num; $c++) {
 						$cache[] = array('ip' => $data[0], 'port' => $data[1]);
 					}
@@ -59,8 +60,8 @@ class cache extends controller
 				fclose($handle);
 				if(empty($cache))
 				{
-					$cache = array('ip' => 'localhost', 'port' => 11211);
-					$cacherec = array($cache);
+					$cachenew = array('ip' => 'localhost', 'port' => 11211);
+					$cacherec = array($cachenew);
 					$handle = fopen($filename, 'wb');
 					foreach($cacherec as $rec)
 					{
@@ -68,7 +69,9 @@ class cache extends controller
 					}
 					fclose($handle);
 				}
+				
 				$this->setVarByRef('cache', $cache);
+				
 				return 'edit_tpl.php';
 				break;
 
@@ -92,8 +95,26 @@ class cache extends controller
 					fputcsv($handle, $servers);
 				}
 				fclose($handle);
-
+				$this->setVarByRef('cache', $all);
 				return 'edit_tpl.php';
+				
+			case 'displaystats':
+				$filename = 'cache.config';
+				$handle = fopen($filename, "r");
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+					$cache[] = array('ip' => $data[0], 'port' => $data[1]);
+				}
+				fclose($handle);
+				$id = $this->getParam('id');
+				$machine = explode(":", $id);
+				$memcache = new Memcache;
+				$memcache->addServer($machine[0], $machine[1]);
+				$stats = $memcache->getStats();
+				$this->setVarByRef('stats', $stats);
+				$this->setVarByRef('cache', $cache);
+				$this->setVarByRef('machine', $machine);
+				return 'edit_tpl.php';
+				break;
 		}
 	}
 }
