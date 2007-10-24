@@ -158,6 +158,6 @@ class phonebook extends controller
             return $this->nextAction('view_tpl.php');
             break;
     } //end of switch
-    
+  }  
 } //end of dispatch function
 ?>
