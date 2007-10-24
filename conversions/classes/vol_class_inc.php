@@ -179,7 +179,7 @@ class vol extends object
         }
         //Does the conversion from Millilitres to Cubic Centimeters and returns the answer
         elseif ($from == "2" && $to == "5") {
-            $tempVal = $this->convMillilitersToCubicMeters($value);
+            $tempVal = $this->convMillilitresToCubicMeters($value);
             return $value . $this->objLanguage->languageText("mod_conversions_symML", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convCubicMetersToCubicCentimeters($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symCM", "conversions") . "<sup>3</sup>" . ".";
         }
         //Does the conversion from Cubic Decimeters to Cubic Meters and returns the answer

@@ -232,10 +232,10 @@ class weight extends object
         elseif ($from == "5" && $to == "3") {
             return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convOuncesToMetrictons($value) , 2) . " " . $this->objLanguage->languageText("mod_conversions_symTONS", "conversions") . ".";
         }
-        //Does the conversion from Ounces to Ounces and returns the answer
+        //Does the conversion from Ounces to Pounds and returns the answer
         elseif ($from == "5" && $to == "4") {
             $tempVal = $this->convOuncesToMetrictons($value);
-            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . ".";
+            return $value . $this->objLanguage->languageText("mod_conversions_symOZ", "conversions") . " " . $this->objLanguage->languageText("mod_conversions_convertedTo", "conversions") . " " . round($this->convMetrictonsToOunces($tempVal) , 2) . $this->objLanguage->languageText("mod_conversions_symLBS", "conversions") . ".";
         }
         //Checks to see if $value is NULL
         else {
