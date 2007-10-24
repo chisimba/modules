@@ -121,7 +121,7 @@ foreach($cache as $servers)
 	// get a stats icon
 	$tbl->addCell($extStatsLink->show());
 	// edit/delete option...
-	$tbl->addCell($edIcon.$delIcon);
+	$tbl->addCell(''); //$edIcon.$delIcon);
 	$tbl->endRow();
 }
 
