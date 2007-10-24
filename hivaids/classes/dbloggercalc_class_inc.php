@@ -444,12 +444,14 @@ class dbLoggerCalc extends dbtable
         $data = array();
         if(!empty($userData)){
             foreach($userData as $item){
+                $views = 0;
                 $data[$item['userid']]['username'] = $item['username'];
                 $data[$item['userid']]['staffnumber'] = $item['staffnumber'];
                 $data[$item['userid']]['topics'][$item['topic_id']]['category'] = $arrCat[$item['topic_id']]['cat'];
                 $data[$item['userid']]['topics'][$item['topic_id']]['topic'] = $arrCat[$item['topic_id']]['topic'];
                 $data[$item['userid']]['topics'][$item['topic_id']]['replies'] = isset($data[$item['userid']]['topics'][$item['topic_id']]['replies']) ? $data[$item['userid']]['topics'][$item['topic_id']]['replies'] + 1 : 1;
-                $data[$item['userid']]['topics'][$item['topic_id']]['views'] = $arrView[$item['userid']][$item['topic_id']];
+                if($data[$item['userid']]['topics'][$item['topic_id']]['replies'] > 0) $views = 1;
+                $data[$item['userid']]['topics'][$item['topic_id']]['views'] = isset($arrView[$item['userid']][$item['topic_id']]) ? $arrView[$item['userid']][$item['topic_id']] : $views;
             }
         }
 

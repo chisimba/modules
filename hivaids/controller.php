@@ -201,6 +201,9 @@ class hivaids extends controller
             case 'podcast':
                 return $this->nextAction('', '', 'podcast');
 
+            case 'photogallery':
+                return $this->nextAction('', '', 'photogallery');
+
             default:
                 $display = $this->hivTools->showManagement();
                 $this->setVarByRef('display', $display);
