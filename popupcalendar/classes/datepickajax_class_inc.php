@@ -207,7 +207,7 @@ class datepickajax extends object
             $timeValue = '+\' \'+$F(\'input_time\')';
         }
         $objButton = new button('save', $save);
-        $objButton->extra = ' onclick="javascript:window.opener.document.getElementById(\'input_'.$field.'\').value = $F(\'input_date\')'.$timeValue.'; $(\'form_select\').submit();window.close();"';
+        $objButton->extra = ' onclick="javascript:var hrSelect = $F(\'input_hour\');var mnSelect = $F(\'input_min\'); jsInsertTime(hrSelect, mnSelect); window.opener.document.getElementById(\'input_'.$field.'\').value = $F(\'input_date\')'.$timeValue.'; $(\'form_select\').submit();window.close();"';
         $saveButton = $objButton->show();
         $objForm->addToForm($saveButton);
 
