@@ -146,7 +146,7 @@ class webpresent extends controller
                 $counter++;   
             }
           }   
-echo $id;
+
           $this->setVarByRef('id', $id);
           $this->setVarByRef('files', $fileList);
 
