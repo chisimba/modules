@@ -141,9 +141,6 @@ class webpresent extends controller
           {
            foreach ($files as $file)
             {
-                if($counter == 0){
-                $id=$file['id'];
-                }
                 $fileList .=",".$file['id']."#".$file['title'];
                 $counter++;   
             }
@@ -161,7 +158,7 @@ class webpresent extends controller
      */ 
     function __showaudienceapplet()
     {
-          
+          echo $this->presentationsURL;
           return "audience-applet.php";
      }
     /**
