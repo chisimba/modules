@@ -658,6 +658,7 @@ class submit extends object
         $typeExcel = $this->objLanguage->languageText('word_excel');
         $typeText = $this->objLanguage->languageText('phrase_plaintext');
 
+        $str='';
         if(!empty($data)){
             $objTable = new htmltable();
             $objTable->cellpadding = '5';
