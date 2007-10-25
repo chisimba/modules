@@ -132,7 +132,8 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
-          $id="";
+          $id= $this->getParam('id');
+
           $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
           $files=$filesObj->getLatestPresentations();
           $fileList="";
@@ -144,7 +145,8 @@ class webpresent extends controller
                 $fileList .=",".$file['id']."#".$file['title'];
                 $counter++;   
             }
-          }     
+          }   
+echo $id;
           $this->setVarByRef('id', $id);
           $this->setVarByRef('files', $fileList);
 
