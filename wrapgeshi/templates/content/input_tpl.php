@@ -10,7 +10,7 @@ $objButtons = & $this->getObject('navbuttons', 'navigation');
 $saveButton = $objButtons->putSaveButton();
 
 //Set the title
-$formTitle=$this->objLanguage->code2Txt("mod_wrapgeshi_title");
+$formTitle=$this->objLanguage->code2Txt("mod_wrapgeshi_title", "wrapgeshi");
 
 
 //Load the form elements that I need
@@ -41,7 +41,7 @@ $objFmTable->endRow();
 
 //Add a row for the line number
 $objFmTable->startRow();
-$objFmTable->addCell($objLanguage->languageText("mod_wrapgeshi_stlineno").":&nbsp;", NULL, "top", "right");
+$objFmTable->addCell($objLanguage->languageText("mod_wrapgeshi_stlineno", "wrapgeshi").":&nbsp;", NULL, "top", "right");
 $objLineInput = new textinput('line', 1);
 $objFmTable->addCell($objLineInput->show(), NULL, "top", "left");
 $objFmTable->endRow();
@@ -72,10 +72,10 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 // Set columns to 2
 $cssLayout->setNumColumns(2);
 //Set the leftsidecolumn
-$leftSideColumn = $objLanguage->languageText("mod_wrapgeshi_info");
+$leftSideColumn = $objLanguage->languageText("mod_wrapgeshi_info", "wrapgeshi");
 $cssLayout->setLeftColumnContent($leftSideColumn);
 // Add Right Column
-$cssLayout->setMiddleColumnContent($objForm->show()); //
+$cssLayout->setMiddleColumnContent($objForm->show()); 
 //Render output
 echo $cssLayout->show(); 
 

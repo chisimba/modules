@@ -1,3 +1,9 @@
+<style>
+div.syntax {
+    margin: 10px 10px 10px 50px;
+}
+</style>
+
 <?php
 
 $objGeshi = & $this->getObject('geshiwrapper');
@@ -11,7 +17,7 @@ $objGeshi->enableLineNumbers();
 $line=$this->getParam('line', 1);
 $objGeshi->startLineNumbersAt($line);
 //Render the output
-echo $objGeshi->show();
+echo "<div class='syntax'>" . $objGeshi->show() . "</div>";
 
 
 ?>
