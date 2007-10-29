@@ -188,7 +188,7 @@ class admops extends object
 
 				//delete the message as we don't need it anymore
 				//echo "sorting " . $this->msgCount . "messages";
-				//$this->objImap->delMsg($i);
+				@$this->objImap->delMsg($i);
 				$i++;
 			}
 			//print_r($data); die();
