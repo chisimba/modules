@@ -188,7 +188,7 @@ class admops extends object
 
 				//delete the message as we don't need it anymore
 				//echo "sorting " . $this->msgCount . "messages";
-				@$this->objImap->delMsg($i);
+				//$this->objImap->delMsg($i);
 				$i++;
 			}
 			//print_r($data); die();
@@ -214,7 +214,7 @@ class admops extends object
 							$ext = pathinfo($fname);
 							$filename = $filenamearr[0] . "_" . time() . "." . $ext['extension'];
 							//decode the attachment data
-							$filedata = $files['filedata']; //base64_decode($files['filedata']);
+							$filedata = base64_decode($files['filedata']);
 							//echo $files['filedata'];
 							//set the path to write down the file to
 							$path = $this->objConfig->getContentBasePath() . 'adm/';
