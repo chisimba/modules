@@ -292,7 +292,7 @@ class admops extends object
 			$objMailer->attach($path, $this->objLanguage->languageText("mod_adm_sqldata", "adm"));
 			if ($objMailer->send()) {
 				log_debug($this->objLanguage->languageText("mod_adm_sqldatasent", "adm"));
-				//unlink($path);
+				unlink($path);
 				//touch($path);
 				return $this->objLanguage->languageText("mod_adm_sqldatasent", "adm");
 			} else {

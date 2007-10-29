@@ -96,10 +96,12 @@ class adm extends controller
             default:
             	
             case 'maillog':
+            	$this->requiresLogin(FALSE);
             	echo $this->objAdmOps->sendLog();
             	break;
             	
             case 'parsemail':
+            	$this->requiresLogin(FALSE);
             	// grab the mail off the mail server and parse the heck out of it
             	$status = $this->objAdmOps->parsemail();
             	//var_dump($status); die();
@@ -136,5 +138,18 @@ class adm extends controller
             	
         }
     }
+    
+    	/**
+    * Overide the login object in the parent class
+    *
+    * @param  void  
+    * @return bool  
+    * @access public
+    */
+	public function requiresLogin($action)
+	{
+       return FALSE;
+	}
+
 }
 ?>
