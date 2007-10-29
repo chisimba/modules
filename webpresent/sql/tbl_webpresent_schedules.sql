@@ -18,7 +18,7 @@ $fields = array(
         'notnull' => TRUE,
         ),
     'schedule_date' => array(
-        'type' => 'timestampS',
+        'type' => 'timestamp',
         'notnull' => TRUE,
         ),
     'status' => array(
