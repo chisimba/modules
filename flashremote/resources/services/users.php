@@ -1,4 +1,15 @@
 <?php
+/**
+* Manipulate the methodTable by writing javadoc comments on top of your methods. 
+* The following tags are supported:
+* @desc
+* @access (set to remote to export a class)
+* @roles (comma-separated)
+* @instance
+* @returns
+* @pagesize
+*
+*/
 define("AMFPHP_BASE", realpath(dirname(dirname(dirname(__FILE__)))) . "/");
 $GLOBALS['kewl_entry_point_run'] = TRUE;
 $GLOBALS['savedir'] = getcwd();
@@ -16,48 +27,46 @@ require_once 'classes/core/dbtable_class_inc.php';
 * 
 * Created on 27 Oct 2007
 * 
-* AMFPHP service class return user information
-* 
+* AMFPHP service class return user information from Chisimba.
 * @author Derek keats
 * @package package_name
 * 
 */
-class test
+class users
 {
-
-    public function test()
+    public function users()
     {
-        $this->methodTable = array(
-            "userdata" => array(
-                "description" => "Gets the full name of the user accessing the Chisimba site.",
-                "access" => "remote"
-            )
-        );
+        die();
     }
-    
+
+    /**
+    * 
+    * Userdata method retrieves data for a particular user as stored in the 
+    * tbl_users table.
+    * @param string $username The username to look up.
+    * @access remote
+    * @returns A recordset containing a single record for the username given as a parameter.
+    * 
+    */
     public function userdata($username)
     {
         $eng = new engine;
         chdir($GLOBALS['savedir']);
         $objDt = new chisimbaConnector($eng, NULL);
         $ar = $objDt->getUser($username);
-        /*$ar=array();
-        $ar[0]['firstname'] = "Some";
-        $ar[0]['surname'] = "User";A*/
         return new RecordSet($ar);
 
     }
-    
-    public function currentUser()
-    {
-        $eng = new engine;
-        chdir($GLOBALS['savedir']);
-        $objDt = new chisimbaConnector($eng, NULL);
-        return $objDt->currentUser();
-    }
+
 }
 
-
+/**
+*
+* Chisimba based helper class that extends tbTable to provide
+* the user data being looked up.It also makes use of the user 
+* class from the security module. 
+* 
+*/
 class chisimbaConnector extends dbTable
 {
     function init()
@@ -85,12 +94,6 @@ class chisimbaConnector extends dbTable
             (username = '".addslashes($username)."')";
         $array=$this->getArray($sql);
         return $array;
-    }
-    
-    public function currentUser()
-    {
-        $objUser=$this->getObject("user", "security");
-        return $objUser->userName();
     }
     
 }

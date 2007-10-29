@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains the settings for Chisimba flashremote module -->
+<flashremote_settings>
+
+<setting name="chisimba_core_path">
+<value>
+/home/dkeats/Desktop/eclipse-workspace/chisimba_framework/app/
+</value>
+</setting>
+
+</flashremote_settings>
