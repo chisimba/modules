@@ -78,6 +78,7 @@ class adm extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objAdmOps = $this->getObject('admops');
+            $this->objDbAdm = $this->getObject('dbadm');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -117,8 +118,13 @@ class adm extends controller
             					$stmt = $item;
             					$counter++;
             				    //echo $stmt."<br />";
+            				    // insert into the db
+            				    $this->objDbAdm->insertSqldata($stmt);
+            				                				    
         					}
             			}
+            			// unlink the file as we are now done with it
+            			unlink($filedata);
             		}
             	}
             	die();
