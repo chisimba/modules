@@ -147,7 +147,7 @@ class radio extends controller
 				return "admin_page.php";
     			break;
     		case 'login':
-    			if ($this->auth==true) {
+    			if (isset($_SESSION['id'])) {
     				return 'home.php';
     			}else{
     				return 'login.php';
