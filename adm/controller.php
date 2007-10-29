@@ -1,14 +1,73 @@
 <?php
+
+/**
+ * Short description for file
+ * 
+ * Long description (if any) ...
+ * 
+ * PHP version 5
+ * 
+ * The license text...
+ * 
+ * @category  Chisimba
+ * @package   adm
+ * @author    Administrative User <pscott@uwc.ac.za>
+ * @copyright 2007 Administrative User
+ * @license   gpl
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']) {
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 ini_set("max_execution_time", -1);
 // end security check
+
+
+/**
+ * Short description for class
+ * 
+ * Long description (if any) ...
+ * 
+ * @category  Chisimba
+ * @package   adm
+ * @author    Administrative User <pscott@uwc.ac.za>
+ * @copyright 2007 Administrative User
+ * @license   gpl
+ * @version   Release: @package_version@
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class adm extends controller
 {
+
+    /**
+     * Description for public
+     * @var    object
+     * @access public
+     */
 	public $objAdmOps;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
 	public $objLanguage;
+
+    /**
+     * Description for public
+     * @var    unknown
+     * @access public 
+     */
 	public $objConfig;
 	/**
      * Constructor method to instantiate objects and get variables
@@ -42,24 +101,32 @@ class adm extends controller
             case 'parsemail':
             	// grab the mail off the mail server and parse the heck out of it
             	$status = $this->objAdmOps->parsemail();
-            	if(file_exists($status))
+            	//var_dump($status); die();
+            	foreach($status as $filedata)
             	{
-            		$file = file($status);
-            		// loop through the file array and do the inserts
-            		foreach($file as $str)
+            		if(file_exists($filedata))
             		{
-            			preg_match_all('/\[SQLDATA\](.*)\[\/SQLDATA\]/U', $str, $results, PREG_PATTERN_ORDER);
-        				$counter = 0;
-        				foreach ($results[1] as $item)
-        				{
-            				$stmt = $item;
-            				$counter++;
-            				
-            				echo $stmt."<br />";
-        				}
+            			$file = file($filedata);
+            			// loop through the file array and do the inserts
+            			foreach($file as $str)
+            			{
+            				preg_match_all('/\[SQLDATA\](.*)\[\/SQLDATA\]/U', $str, $results, PREG_PATTERN_ORDER);
+        					$counter = 0;
+        					foreach ($results[1] as $item)
+        					{
+            					$stmt = $item;
+            					$counter++;
+            				    //echo $stmt."<br />";
+        					}
+            			}
             		}
             	}
             	die();
+            	
+            case 'rcpsend':
+            	
+            	
+            	break;
             	
         }
     }
