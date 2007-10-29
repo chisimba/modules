@@ -22,6 +22,7 @@ class webpresent extends controller
         $this->objFiles = $this->getObject('dbwebpresentfiles');
         $this->objTags = $this->getObject('dbwebpresenttags');
         $this->objSlides = $this->getObject('dbwebpresentslides');
+        $this->objSchedules = $this->getObject('dbwebpresentschedules');
   
         $location = "http://" . $_SERVER['HTTP_HOST'];
 	$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
@@ -35,7 +36,7 @@ class webpresent extends controller
      */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','showpresenterapplet');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','showpresenterapplet','schedule');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -123,7 +124,36 @@ class webpresent extends controller
     }
 
 
+ public function __saveschedule()
+    {
+          $fileId= $this->getParam('id');
+          $date= $this->getParam('presentationDate');
+          
+          $file=$this->objSchedules->getFile($fileId);
+         if(count($file) > 0){
+          $this->objSchedules->updateSchedule($file['id'], $date, 'pre');
+         
+          }else{
+          $this->objSchedules->schedulePresentation($fileId, $date, 'pre');
+          }
+          return $this->nextAction('home');
+}
+ /**
+     * ADDED by David Wafula  
+     * Function to allow scheduling a presentation
+     *
+     */ 
+   public function __schedule()
+    {
+          $id= $this->getParam('id');
+          $title= $this->getParam('title');
+          $filename= $this->getParam('filename');
 
+          $this->setVarByRef('id', $id);
+          $this->setVarByRef('title', $title);
+          $this->setVarByRef('filename', $filename);
+          return "schedule_presentation.php";
+     }
 
     /**
      * ADDED by David Wafula  
@@ -133,7 +163,9 @@ class webpresent extends controller
    public function __showpresenterapplet()
     {
           $id= $this->getParam('id');
-
+          $title= $this->getParam('title');
+          $filename= $this->getParam('filename');
+          
           $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
           $files=$filesObj->getLatestPresentations();
           $fileList="";
@@ -148,7 +180,8 @@ class webpresent extends controller
           }   
 
           $this->setVarByRef('id', $id);
-          $this->setVarByRef('files', $fileList);
+          $this->setVarByRef('title', $title);
+          $this->setVarByRef('filename', $filename);
 
           return "presenter-applet.php";
      }
@@ -160,8 +193,9 @@ class webpresent extends controller
      */ 
     function __showaudienceapplet()
     {
-          echo $this->presentationsURL;
-          return "audience-applet.php";
+       $id= $this->getParam('id');
+       $this->setVarByRef('id', $id);              
+       return "audience-applet.php";
      }
     /**
      * Method to display the search results
