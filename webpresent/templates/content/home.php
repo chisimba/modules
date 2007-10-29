@@ -263,8 +263,14 @@ if ($objModules->checkIfRegistered('blog')) {
             }
 
             $linkname = $objTrim->strTrim($filename, 45);
-
             $fileLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['fileid'])));
+
+            if ($objUser->isLoggedIn()){
+              if ($file['creatorid'] == $objUser->userId()) {
+                $fileLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['fileid'])));
+            
+            }
+            }
             $fileLink->link = $this->objFiles->getPresentationThumbnail($file['fileid']).'<br />'.$linkname.'<br/>'.$file['schedule_date'];
             $fileLink->title = $filename;
 
