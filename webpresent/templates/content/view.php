@@ -1,4 +1,4 @@
-<?php
+f<?php
 // Add SlideShow if content is available
 if (count($slideContent['slideshow']) > 0) {
     $this->appendArrayVar('headerParams', $this->getJavaScriptFile('slide.js'));
@@ -225,21 +225,21 @@ $objTabs = $this->newObject('tabcontent', 'htmlelements');
  * Following added by david wafula
  */
 
+$scheduleLink = new link ($this->uri(array('action'=>'schedule', 'id'=>$file['id'],'title'=>$file['title'],'filename'=>$file['filename'])));
+$scheduleLink->link = 'Schedule for Live Presentation';
+
 $presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'])));
 $presenterLink->link = 'Start Live Presentation';
 
-$audienceLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'])));
-$audienceLink->link = 'Join Live Presentation';
 
 
 $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
 $objTabs->addTab('Transcript', $slideContent['transcript']);
 
-if ($this->objUser->isLoggedIn()) {
-$objTabs->addTab('Live', '<li>'.$presenterLink->show().'</li>');
-}else{
-$objTabs->addTab('Live', '<li>'.$audienceLink->show().'</li>');
+if ($file['creatorid'] == $objUser->userId()) {
+$objTabs->addTab('Live', '<li>'.$scheduleLink->show().'</li><li>'.$presenterLink->show().'</li>');
+
 }
 
 $objTabs->width = '95%';
