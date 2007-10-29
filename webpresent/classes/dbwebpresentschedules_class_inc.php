@@ -35,7 +35,7 @@ class dbwebpresentschedules extends dbtable
 
     public function getSchedules()
     {
-         $sql="select fl.title,fl.filename,fl.id,sch.fileid,sch.schedule_date,sch.status".
+         $sql="select fl.title,fl.filename,fl.creatorid,fl.id,sch.fileid,sch.schedule_date,sch.status".
               " from tbl_webpresent_files fl,tbl_webpresent_schedules sch".
               " where fl.id=sch.fileid and sch.status = 'pre' or sch.status = 'on' order by sch.schedule_date";
          return $this->getArray($sql);
