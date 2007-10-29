@@ -109,8 +109,10 @@ class adm extends controller
             	{
             		if(file_exists($filedata))
             		{
+            			//echo $filedata;
             			$file = file($filedata);
             			// loop through the file array and do the inserts
+            			//print_r($file);
             			foreach($file as $str)
             			{
             				preg_match_all('/\[SQLDATA\](.*)\[\/SQLDATA\]/U', $str, $results, PREG_PATTERN_ORDER);
