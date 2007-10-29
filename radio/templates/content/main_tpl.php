@@ -4,8 +4,8 @@
  * @package radio
  * This is the main template for radio station
  */
-
 //initiate objects
+
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -14,9 +14,9 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlarea', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $h3 =$this->newObject('htmlheading', 'htmlelements');
-$player_src = $this->getResourcePath('includes/','radio');
-$live_src = $this->getResourcePath('includes/live/','radio');
 
+$player_src = $this->getResourcePath('musicplayer.swf','radio');
+$live_src = $this->getResourcePath('includes/live/','radio');
 $playlist_name = $this->playlist->get_playlist_list($station);
 $settings_data = $this->settings->get($station);
 $settings_data_temp = explode("&", $settings_data);
@@ -33,6 +33,7 @@ $site_temp = explode("/", $_SERVER["PHP_SELF"]);
 $laast_one = count($site_temp) -1;
 $between = str_replace($site_temp[$laast_one], "", $_SERVER["PHP_SELF"]);
 $station_site = "http://".$_SERVER["HTTP_HOST"].$between;
+$station_site = ($station_site.$this->getResourceUri());
 
 //Check to see if the station is online
 
@@ -155,13 +156,13 @@ $image8 ="<img src='{$imagesrc8}'width='751' height='18' />" ;
 $table->addCell($image8);
 $table->endRow();
 $table->startRow();
-$url_mediaplayer = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.asx";//$this->uri(array('action'=>'play','type'=>$station.'.asx'),'radio');
-$url_winamp = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.pls";//$this->uri(array('action'=>'play','type'=>$station.'.asx'),'radio');
-$url_quicktime = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.qtl";//$this->uri(array('action'=>'play','type'=>$station.'.qtl'),'radio');
-$url_realplayer = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.ram";//$this->uri(array('action'=>'play','type'=>$station.'.ram'),'radio');
-$url_itunes = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.pls";//$this->uri(array('action'=>'play','type'=>$station.'.pls'),'radio');
-$url_obj1 = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.xml&repeat_playlist=true";//$this->uri(array('action'=>'play','type'=>$station.'.xml','repeat_playlist'=>'true'),'radio');
-$url_obj2 = "http://localhost/chisimba_framework/app/packages/radio/resources/playlist.php?type=$station.xml&repeat_playlist=true";//$this->uri(array('action'=>'play','type'=>$station.'.xml','repeat_playlist'=>'true'),'radio');
+$url_mediaplayer = $station_site."playlist.php?type=$station.asx";//$this->uri(array('action'=>'play','type'=>$station.'.asx'),'radio');
+$url_winamp = $station_site."playlist.php?type=$station.pls";//$this->uri(array('action'=>'play','type'=>$station.'.asx'),'radio');
+$url_quicktime = $station_site."playlist.php?type=$station.qtl";//$this->uri(array('action'=>'play','type'=>$station.'.qtl'),'radio');
+$url_realplayer = $station_site."playlist.php?type=$station.ram";//$this->uri(array('action'=>'play','type'=>$station.'.ram'),'radio');
+$url_itunes = $station_site."playlist.php?type=$station.pls";//$this->uri(array('action'=>'play','type'=>$station.'.pls'),'radio');
+$url_obj1 = $station_site."playlist.php?type=$station.xml&repeat_playlist=true";//$this->uri(array('action'=>'play','type'=>$station.'.xml','repeat_playlist'=>'true'),'radio');
+$url_obj2 = $station_site."playlist.php?type=$station.xml&repeat_playlist=true";//$this->uri(array('action'=>'play','type'=>$station.'.xml','repeat_playlist'=>'true'),'radio');
 
 if ($page == "home" or $page == null) {
 
@@ -178,8 +179,8 @@ if ($page == "home" or $page == null) {
 			<a href="'.$url_quicktime.'"><img src="'.$extras.'quicktime_icon.gif"  border="0" alt="quicktime Player"></a>
 			<a href="'.$url_realplayer.'"><img src="'.$extras.'realplayer_icon.gif"  border="0" alt="RealPlayer"></a>
 			<a href="'.$url_itunes.'"><img src="'.$extras.'itunes_icon.gif"  border="0" alt="Itunes"></a>
-			<object type="application/x-shockwave-flash" data="http://localhost/chisimba_framework/app/packages/radio/resources/musicplayer.swf?playlist_url='.$url_obj1.'" width="32" height="20">
-			<param name="movie"value="http://localhost/chisimba_framework/app/packages/radio/resources/musicplayer.swf?playlist_url="'.$url_obj2.'" />
+			<object type="application/x-shockwave-flash" data="'.$station_site.'musicplayer.swf?playlist_url='.$url_obj1.'" width="32" height="20">
+			<param name="movie"value="'.$station_site.'musicplayer.swf?playlist_url="'.$url_obj2.'" />
 			</object>';
 			$line .= "</center>";
 

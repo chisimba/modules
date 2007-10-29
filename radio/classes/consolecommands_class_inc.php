@@ -76,6 +76,7 @@ class consolecommands extends object
 			$out = settings::get($station);
 			return $out;
 		}
+		return false;
 	}
 }
 ?>

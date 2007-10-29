@@ -45,6 +45,7 @@
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
+
 class playlist extends object
 {
 
@@ -439,6 +440,7 @@ class playlist extends object
 				$fp = fopen($this->playlist_src.$station."/".$playlist.".data", "w+");
 				fwrite($fp, $data);
 				fclose($fp);
+				return true;
 			}
 		}
 	}

@@ -157,6 +157,7 @@ class settings extends object
 				$fp = fopen($this->station_src.$station."/settings.data", "w+b");
 				fwrite($fp, $data);
 				fclose($fp);
+				return true;
 
 			}
 			else{
@@ -164,8 +165,10 @@ class settings extends object
 				$fp = fopen($this->station_src.$station."/settings.data", "w+b");
 				fwrite($fp, $data);
 				fclose($fp);
+				return true;
 			}
-		}else{return "0";}
+		}else{
+			return "0";}
 	}
 }
 

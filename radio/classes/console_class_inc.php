@@ -147,8 +147,10 @@ class console extends object
 		 	$fp = fopen($this->log.$station.".data", "w+b");
 		 	fwrite($fp,$data);
 		 	fclose($fp);
+		 	return true;
 			}
 		}
+		return false;
 	}
 
     /**
@@ -167,6 +169,7 @@ class console extends object
 
 		$ip = $_SERVER["REMOTE_ADDR"];
 		$time = time() + 300;
+		$result = false;
 		if($station != "0" && $ip != "0")
 		{
 			if ($handle = opendir($this->users)) {
@@ -176,6 +179,7 @@ class console extends object
 	    					while (false !== ($file2 = readdir($handle2))) {
 	        					if ($file2 != "." && $file2 != "..") {
 	        						unlink($this->users.'/'.$file."/".$file2);
+	        						$result = true;
 	        	  				}
 	    					}
 	    					closedir($handle2);
@@ -193,6 +197,7 @@ class console extends object
 				fclose($fp);
 			}
 		}
+		return $result;
 	}
 
 
@@ -209,6 +214,7 @@ class console extends object
 	public function update_online_users()
 	{
 		$time_end = time() + 300;
+		$result = false;
 		if ($handle = opendir($this->users)) {
 	    	while (false !== ($file = readdir($handle))) {
 	        	if ($file != "." && $file != "..") {
@@ -217,9 +223,11 @@ class console extends object
 	        				if ($file2 != "." && $file2 != "..") {
 	          					$fp = fopen($this->users.'/'.$file."/".$file2, "rb");
 			  					$time_start = fread($fp,filesize($this->users.'/'.$file."/".$file2));
+			  					$result = true;
 			  					fclose($fp);
 			  						if($time_end <= $time_start){
 			  							unlink($this->users.'/'.$file."/".$file2);
+			  							$result = true;
 			  						}
 	        				}
 	    				}
@@ -228,6 +236,7 @@ class console extends object
 	        	}
 	    	}
 	    	closedir($handle);
+	    	return $result;
 		}
 	}
 
@@ -253,7 +262,7 @@ class console extends object
 	        }
 	    }
 	    closedir($handle);
-
+		return false;
 	}
 
     /**
@@ -299,7 +308,9 @@ class console extends object
 		{
 		$fp = fopen($this->ban.$ip.".data", "w+b");
 		fclose($fp);
+		return true;
 		}
+		return false;
 	}
 
     /**
@@ -317,7 +328,9 @@ class console extends object
 		if(file_exists($this->ban.$ip.".data"))
 		{
 			unlink($this->ban.$ip.".data");
+			return true;
 		}
+		return false;
 	}
 
     /**
@@ -341,6 +354,7 @@ class console extends object
 			$result =  $this->console_commands->commands($command);
 			return $result;
 		}
+		return false;
 	}
 
 }

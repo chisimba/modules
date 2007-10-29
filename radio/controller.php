@@ -91,12 +91,12 @@ class radio extends controller
      */
     public function init()
     {
-    	$this->stream = $this->getObject('stream');
-    	$this->playlist = $this->getObject('playlist');
-		$this->stations = $this->getObject('stations');
-		$this->settings = $this->getObject('settings');
-		$this->console = $this->getObject('console');
-		$this->stats = $this->getObject('stats');
+    	$this->stream = $this->newObject('stream');
+    	$this->playlist = $this->newObject('playlist');
+		$this->stations = $this->newObject('stations');
+		$this->settings = $this->newObject('settings');
+		$this->console = $this->newObject('console');
+		$this->stats = $this->newObject('stats');
 		$this->objLanguage =  $this->newObject('language', 'language');
 	    //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -112,6 +112,7 @@ class radio extends controller
      */
     public function dispatch()
     {
+    	clearstatcache();
     	  $this->setVar('pageSuppressXML', TRUE);
     	$action = $this->getParam('action',NULL);
     	$adminAction = $this->getParam('admin',NULL);
@@ -199,11 +200,13 @@ class radio extends controller
     			return 'users.php';
     			break;
     		case 'play':
+    			$this->setPageTemplate('page_tpl.php');
     			return 'playlist.php';
     			break;
     		case 'stream':
+    			$this->setPageTemplate('page_tpl.php');
     			return 'stream.php';
-    			break;
+				break;
     		case'home':
     			return "main_tpl.php";
     			break;
@@ -226,7 +229,7 @@ class radio extends controller
      */
     private function _loadlist(){
     	$station = $this->getParam('station');
-    	//$station = $this->stations->default_s($station);
+    	$station = $this->stations->default_s($station);
     	$playlist_name = $this->playlist->get_playlist_list($station);
     	$settings_data = $this->settings->get($station);
     	$settings_data_temp = explode("&", $settings_data);
@@ -330,7 +333,7 @@ class radio extends controller
 
     }
 
-    /**
+     /**
      * Overides the framework login
      *
      * Long description (if any) ...

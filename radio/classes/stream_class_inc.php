@@ -111,7 +111,7 @@ class stream extends object
 		if($debug){ echo "Starting getting start!<br>"; }
 		if($laast_pl_file == ""){$laast_pl_file = "0";}
 		if ($station != "0" && $playlist != "0"){
-			$file2 = "$this->playlist_src.$station/$playlist.data";
+			$file2 = "$this->playlist_src$station/$playlist.data";
 
 			if (file_exists($file2)) {
 				if($debug){ echo "Getting start file ok!<br>"; }
@@ -219,7 +219,7 @@ class stream extends object
 
 		$over = round($over);
 		$kbs = round($kbs);
-		if (file_exists("$this->live_src.$station/live.data")){
+		if (file_exists("$this->live_src$station/live.data")){
 			if ($burst_rate >= 3)
 			{
 				$time_playing = $time_playing - 15;
@@ -496,6 +496,7 @@ class stream extends object
 		$fp4 = fopen($this->header_src."header.data", 'rb');
 		print(fread($fp4, 1024));
 		fclose($fp4);
+		flush();
 		return "7168";
 	}
 

@@ -421,7 +421,5 @@ class stats extends object
 		}
 	}
 
-
-
 }
 ?>

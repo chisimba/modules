@@ -153,6 +153,7 @@ class stations extends object
 				}
 				closedir($handle);
 				rmdir($this->path."/".$station);
+				return true;
 			}
 		}
 	}
