@@ -32,9 +32,6 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
-
-
 $table = $this->newObject('htmltable', 'htmlelements');
 
 $table->startRow();
@@ -242,6 +239,44 @@ if ($objModules->checkIfRegistered('blog')) {
 
 
 }
+
+ $livePresentationApplet='<center><br>';
+ $livePresentationApplet.= '<applet code="avoir.realtime.presentations.client.ClientViewer" width="720" height="418"><br>';
+ $livePresentationApplet.= '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/><br>';
+ $livePresentationApplet.= '	<param name="host" value="localhost"/><br>';
+ $livePresentationApplet.= '  <param name="port" value="1962"/><br>';
+ $livePresentationApplet.= "</applet> <br>";
+ $livePresentationApplet.= '</center><br>';
+
+
+
+  $livePresentations=$this->objSchedules->getSchedules();
+  $livePresentationsContent='';
+        foreach ($livePresentations as $file)
+        {
+            $counter++;
+
+            if (trim($file['title']) == '') {
+                $filename = $file['filename'];
+            } else {
+                $filename = htmlentities($file['title']);
+            }
+
+            $linkname = $objTrim->strTrim($filename, 45);
+
+            $fileLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['fileid'])));
+            $fileLink->link = $this->objFiles->getPresentationThumbnail($file['fileid']).'<br />'.$linkname.'<br/>'.$file['schedule_date'];
+            $fileLink->title = $filename;
+
+            $extra = ($counter % 2 == 1) ? ' clear:both;' : '';
+
+            $livePresentationsContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
+        }
+ $livePresentationBlock = $objBlocks->showBlock('live', 'table', NULL, 20, TRUE, FALSE);
+
+
+ $objTabs->addTab('Live Presentations', $livePresentationsContent);
+ $tabCounter++;
 
 if ($tabCounter > 0) {
     $table->addCell($objTabs->show(), '37%');
