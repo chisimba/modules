@@ -1,4 +1,4 @@
-f<?php
+<?php
 // Add SlideShow if content is available
 if (count($slideContent['slideshow']) > 0) {
     $this->appendArrayVar('headerParams', $this->getJavaScriptFile('slide.js'));
