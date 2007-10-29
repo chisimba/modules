@@ -51,7 +51,7 @@ class mapserverops extends object
          */
 	public function initMapserver($mapfile, $fullextent)
 	{
-		//dl('php_mapscript.dll');
+		dl('php_mapscript.dll');
 
 		$this->objMapserver = ms_newMapObj($mapfile);
 		$this->objMapserver->setExtent($fullextent[0], $fullextent[1], $fullextent[2], $fullextent[3]);
@@ -105,8 +105,8 @@ class mapserverops extends object
 		//echo $this->getResourcePath('maps/', 'gis'); die();
 		if(!file_exists($this->getResourcePath('maps/map.png', 'gis')))
 		{
-			mkdir($this->getResourcePath('maps', 'gis'));
-			chmod($this->getResourcePath('maps', 'gis'), 0777);
+			@mkdir($this->getResourcePath('maps', 'gis'));
+			@chmod($this->getResourcePath('maps', 'gis'), 0777);
 		}
 		$imgfile = 'map.png';
 		$imagename = $image->saveWebImage($imgfile);

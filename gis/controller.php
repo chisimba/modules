@@ -53,11 +53,13 @@ class gis extends controller
 				$size = $this->getParam('mapsize');
 				$extent = $this->getParam('mapext');
 
-				$mapfile = '/var/www/chisimba_framework/app/zambezia2.map';
-				$layers = 'country2_ custom_points';
-				$mapservcgi = '/cgi-bin/mapserv'; //"http://localhost/maps/map.php";//'http://127.0.0.1/chisimba_framework/app/index.php?module=gis'; //'/cgi-bin/mapserv';
+				$mapfile = 'c:/ms4w/Apache/htdocs/chisimba_framework/app/zambezia2.map';
+				$layers = 'MOZ_ZA_District_2007_polygon';
+				$mapservcgi = '/cgi-bin/mapserv.exe'; //"http://localhost/maps/map.php";//'http://127.0.0.1/chisimba_framework/app/index.php?module=gis'; //'/cgi-bin/mapserv';
+				// minX maxX minY
 				$bounds = '-47.1234, 73.1755, -38.4304';
 				$size = array(800, 800);
+				//copy and paste out of mapfile-fullextent				
 				$fullextent = array(-47.1234, -38.4304, 73.1755, 40.9487);
 				$this->objMapserverOps->initMapserver("", $fullextent);
 				//$themap = $this->objMapserverOps->saveMapImage();
