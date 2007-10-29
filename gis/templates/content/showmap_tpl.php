@@ -12,9 +12,7 @@ $cssLayout->setNumColumns(2);
 $leftMenu = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
-
 $mainmap = ''; //<div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>';
-
 $middleColumn .= <<<EOT
    <div style="width: 800px; height: 600px; border: 50px;" id="map_tag" ></div>
    <div style="width: 190px; height: 400px;" id="ref_tag"></div>
@@ -37,12 +35,12 @@ $middleColumn .= <<<EOT
 
 	 myMap1.redraw();  myMap2.redraw();
 	 
-	chgLayers();
+	//chgLayers();
 
 
-	function chgLayers()
+	/* function chgLayers()
 	{
-  		var list = "country2_ ";
+  		var list = "$layers";
   		var objForm = document.forms[0];
   		for(i=0; i<document.forms[0].length; i++)
   		{
@@ -54,7 +52,7 @@ $middleColumn .= <<<EOT
   		myMap1.setLayers( list );
   		myMap1.redraw();
 	}
-     myMap1.redraw();
+     myMap1.redraw(); */
      //]]>
    </script>
 EOT;

@@ -44,22 +44,24 @@ class gis extends controller
 		switch ($action) {
 			default:
 				//return the upload form
-				return 'upload_tpl.php';
-				break;
+				//return 'upload_tpl.php';
+				//break;
 
 			case 'showmap':
+				$this->requiresLogin();
 				$layers = $this->getParam('layers');
 				$size = $this->getParam('mapsize');
 				$extent = $this->getParam('mapext');
 
 				$mapfile = '/var/www/chisimba_framework/app/zambezia2.map';
-				$layers = 'country2_';
-				$mapservcgi = '/cgi-bin/mapserv';
+				$layers = 'country2_ custom_points';
+				$mapservcgi = '/cgi-bin/mapserv'; //"http://localhost/maps/map.php";//'http://127.0.0.1/chisimba_framework/app/index.php?module=gis'; //'/cgi-bin/mapserv';
 				$bounds = '-47.1234, 73.1755, -38.4304';
-				
-				$this->objMapserverOps->initMapserver('zambezia2.map');
+				$size = array(800, 800);
+				$fullextent = array(-47.1234, -38.4304, 73.1755, 40.9487);
+				$this->objMapserverOps->initMapserver("", $fullextent);
 				//$themap = $this->objMapserverOps->saveMapImage();
-				$themap = $this->objMapserverOps->drawMapMsCross();
+				$themap = $this->objMapserverOps->drawMapMsCross($size, $bounds, $layers);
 				$this->setVarByRef('mapfile', $mapfile);
 				$this->setVarByRef('layers', $layers);
 				$this->setVarByRef('mapservcgi', $mapservcgi);
@@ -67,7 +69,7 @@ class gis extends controller
 				//$this->setVarByRef('themap', $themap);
 				return 'showmap_tpl.php';
 				break;
-
+				
 			case 'addgeom':
 				$this->objPostGis = $this->getObject('dbpostgis');
 				$this->objGisOps = $this->getObject('gisops');
@@ -106,6 +108,18 @@ class gis extends controller
 				$this->nextAction('');
 				break;
 		}
+	}
+	
+		/**
+    * Overide the login object in the parent class
+    *
+    * @param  void  
+    * @return bool  
+    * @access public
+    */
+	public function requiresLogin()
+	{
+        return FALSE;
 	}
 }
 ?>
