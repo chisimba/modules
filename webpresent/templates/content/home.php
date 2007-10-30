@@ -264,13 +264,12 @@ if ($objModules->checkIfRegistered('blog')) {
 
             $linkname = $objTrim->strTrim($filename, 45);
             $fileLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['fileid'])));
-
+            /*
             if ($objUser->isLoggedIn()){
               if ($file['creatorid'] == $objUser->userId()) {
                 $fileLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['fileid'])));
-            
-            }
-            }
+              }
+            }*/
             $fileLink->link = $this->objFiles->getPresentationThumbnail($file['fileid']).'<br />'.$linkname.'<br/>'.$file['schedule_date'];
             $fileLink->title = $filename;
 
@@ -281,7 +280,7 @@ if ($objModules->checkIfRegistered('blog')) {
  $livePresentationBlock = $objBlocks->showBlock('live', 'table', NULL, 20, TRUE, FALSE);
 
 
- $objTabs->addTab('Live Presentations', $livePresentationsContent);
+ $objTabs->addTab('View Live Presentations', $livePresentationsContent);
  $tabCounter++;
 
 if ($tabCounter > 0) {

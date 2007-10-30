@@ -237,7 +237,8 @@ $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
 $objTabs->addTab('Transcript', $slideContent['transcript']);
 
-if ($file['creatorid'] == $objUser->userId()) {
+//if ($file['creatorid'] == $objUser->userId()) {
+ if ($objUser->isLoggedIn()){
 $objTabs->addTab('Live', '<li>'.$scheduleLink->show().'</li><li>'.$presenterLink->show().'</li>');
 
 }
