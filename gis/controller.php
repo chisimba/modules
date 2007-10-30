@@ -54,13 +54,15 @@ class gis extends controller
 				$extent = $this->getParam('mapext');
 
 				$mapfile = 'c:/ms4w/Apache/htdocs/chisimba_framework/app/zambezia2.map';
-				$layers = 'MOZ_ZA_District_2007_polygon';
+				$layers = 'mrctest2+mrctest1';//type in layers name here o display in mapserever
 				$mapservcgi = '/cgi-bin/mapserv.exe'; //"http://localhost/maps/map.php";//'http://127.0.0.1/chisimba_framework/app/index.php?module=gis'; //'/cgi-bin/mapserv';
-				// minX maxX minY
-				$bounds = '-47.1234, 73.1755, -38.4304';
+				// bounds  maxX    minX   minY
+				$bounds = '34.6577, 40.0152, -18.9786';
+				//$bounds = '-47.1234, 73.1755, -38.4304';
 				$size = array(800, 800);
-				//copy and paste out of mapfile-fullextent				
-				$fullextent = array(-47.1234, -38.4304, 73.1755, 40.9487);
+				//copy and paste out of mapfile-fullextent	or get extent from gis app    MaxX   MinY  MinX   Max Y
+				$fullextent = array (34.6577, -18.9786, 40.0152, -13.7738 );
+				//$fullextent = array(-47.1234, -38.4304, 73.1755, 40.9487);
 				$this->objMapserverOps->initMapserver("", $fullextent);
 				//$themap = $this->objMapserverOps->saveMapImage();
 				$themap = $this->objMapserverOps->drawMapMsCross($size, $bounds, $layers);
