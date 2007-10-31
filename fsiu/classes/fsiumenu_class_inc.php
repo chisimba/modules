@@ -39,7 +39,7 @@ class fsiumenu extends object
     {
     	
           // Start Tags
-        $str = '<div id="sanordmenu">';
+        $str = '<div id="sanordmenu"><ul>';
         
         // SHow link to login
         if (!$this->objUser->isLoggedIn()) {
