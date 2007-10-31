@@ -12,6 +12,7 @@ class gis extends controller
 	public $objPostGis;
 	public $objGisUtils;
 	public $objMapserverOps;
+	public $objSysConfig;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -23,6 +24,7 @@ class gis extends controller
 			$this->objGisOps = $this->getObject('gisops');
 			$this->objGisUtils = $this->getObject('gisutils');
 			$this->objMapserverOps = $this->getObject('mapserverops');
+			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 			//Get the activity logger class
 			$this->objLog = $this->newObject('logactivity', 'logger');
 			//Log this module call
@@ -53,17 +55,22 @@ class gis extends controller
 				$size = $this->getParam('mapsize');
 				$extent = $this->getParam('mapext');
 
-				$mapfile = 'c:/ms4w/Apache/htdocs/chisimba_framework/app/zambezia2.map';
-				$layers = 'mrctest2+mrctest1';//type in layers name here o display in mapserever
-				$mapservcgi = '/cgi-bin/mapserv.exe'; //"http://localhost/maps/map.php";//'http://127.0.0.1/chisimba_framework/app/index.php?module=gis'; //'/cgi-bin/mapserv';
-				// bounds  maxX    minX   minY
-				$bounds = '34.6577, 40.0152, -18.9786';
-				//$bounds = '-47.1234, 73.1755, -38.4304';
-				$size = array(800, 800);
+				
+				$mapfile = $this->objSysConfig->getValue('mapfile', 'gis'); //'c:/ms4w/Apache/htdocs/chisimba_framework/app/zambezia2.map';
+				$layers = $this->objSysConfig->getValue('default_layers', 'gis'); //'mrctest2+mrctest1';//type in layers name here o display in mapserever
+				$mapservcgi = $this->objSysConfig->getValue('mapserv_binary', 'gis'); //'/cgi-bin/mapserv.exe';  //'/cgi-bin/mapserv';
 				//copy and paste out of mapfile-fullextent	or get extent from gis app    MaxX   MinY  MinX   Max Y
-				$fullextent = array (34.6577, -18.9786, 40.0152, -13.7738 );
+				$fullextent = $this->objSysConfig->getValue('extents', 'gis');
+				$fullextent = explode(", ", $fullextent);
 				//$fullextent = array(-47.1234, -38.4304, 73.1755, 40.9487);
-				$this->objMapserverOps->initMapserver("", $fullextent);
+				$fullextent = array (floatval($fullextent[0]), floatval($fullextent[1]), floatval($fullextent[2]), floatval($fullextent[3]));
+				//var_dump($fullextent); die();
+				// bounds  maxX    minX   minY
+				//$bounds = "'".$fullextent[0].",". $fullextent[2].",".$fullextent[1]."'";
+				$bounds = '-47.1234, 73.1755, -38.4304';
+				$size = array(800, 800);
+				
+				$this->objMapserverOps->initMapserver($mapfile, $fullextent);
 				//$themap = $this->objMapserverOps->saveMapImage();
 				$themap = $this->objMapserverOps->drawMapMsCross($size, $bounds, $layers);
 				$this->setVarByRef('mapfile', $mapfile);
