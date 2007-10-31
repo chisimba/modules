@@ -147,7 +147,7 @@ class radio extends controller
 				return "admin_page.php";
     			break;
     		case 'login':
-    			if (isset($_SESSION['id'])) {
+    			if ($_SESSION['id']=='1') {
     				return 'home.php';
     			}else{
     				return 'login.php';
@@ -162,6 +162,9 @@ class radio extends controller
     				$this->setVar('message',$message);
     				return 'login.php';
     			}
+    			break;
+    		case 'logout':
+    			return 'logout.php';
     			break;
     		case 'loadlist':
     			$data = $this->_loadlist();
@@ -209,6 +212,14 @@ class radio extends controller
 				break;
     		case'home':
     			return "main_tpl.php";
+    			break;
+    		case 'admins':
+    			$url = $this->uri(array('action'=>'addAdmin'),'radio');
+    			$this->setVar('url',$url);
+				return "admin_page.php";
+    			break;
+    		case 'addAdmin':
+    			return 'admins.php';
     			break;
     		default:
     			return "main_tpl.php";
