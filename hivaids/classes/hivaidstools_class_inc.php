@@ -67,6 +67,7 @@ class hivaidstools extends object
         $lnRepository = $this->objLanguage->languageText('mod_hivaids_videorepository', 'hivaids');
         $lnLinks = $this->objLanguage->languageText('mod_hivaids_linkspage', 'hivaids');
         $lnSuggestions = $this->objLanguage->languageText('phrase_suggestionbox');
+        $lnTracking = $this->objLanguage->languageText('phrase_monitoringtools');
         
         // Forum
         $url = $this->uri('', 'forum');
@@ -79,10 +80,15 @@ class hivaidstools extends object
         $blCms = $this->objIcon->getBlockIcon($url, $name, $lnCMS, 'gif', $iconfolder='icons/modules/');
         
         // User stats
-        $url = $this->uri(array('action' => 'userstats'));
-        $name = 'userstats';
-        $blUsSt = $this->objIcon->getBlockIcon($url, $name, $lnUsStats, 'gif', $iconfolder='icons/modules/');
+//        $url = $this->uri(array('action' => 'userstats'));
+//        $name = 'userstats';
+//        $blUsSt = $this->objIcon->getBlockIcon($url, $name, $lnUsStats, 'gif', $iconfolder='icons/modules/');
         
+        // User stats
+        $url = $this->uri(array('action' => 'tracking'));
+        $name = 'viewresults';
+        $blUsSt = $this->objIcon->getBlockIcon($url, $name, $lnTracking, 'gif', $iconfolder='icons/');
+
         // Site stats
         $url = $this->uri('', 'sitestats');
         $name = 'sitestats';
@@ -185,6 +191,7 @@ class hivaidstools extends object
         $errCourse = $this->objLanguage->languageText('mod_hivaids_errornocourse', 'hivaids');
         $errStud = $this->objLanguage->languageText('mod_hivaids_errornostudnum', 'hivaids');
         
+        $lbOther = $this->objLanguage->languageText('word_other');
         $lbFirst = $this->objLanguage->languageText('phrase_firstyear');
         $lbSecond = $this->objLanguage->languageText('phrase_secondyear');
         $lbThird = $this->objLanguage->languageText('phrase_thirdyear');
@@ -286,7 +293,6 @@ class hivaidstools extends object
         $objLabel = new label($lbYearStudy.': ', 'input_yearstudy');
         
         $objDrop = new dropdown('yearstudy');
-        $objDrop->addOption('NULL', ' ---- ');
         $objDrop->addOption($lbFirst, $lbFirst);
         $objDrop->addOption($lbSecond, $lbSecond);
         $objDrop->addOption($lbThird, $lbThird);
@@ -294,6 +300,7 @@ class hivaidstools extends object
         $objDrop->addOption($lbHonours, $lbHonours);
         $objDrop->addOption($lbMasters, $lbMasters);
         $objDrop->addOption($lbPhd, $lbPhd);
+        $objDrop->addOption('NULL', $lbOther);
         
         $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
 
