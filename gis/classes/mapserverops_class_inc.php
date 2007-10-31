@@ -51,7 +51,12 @@ class mapserverops extends object
          */
 	public function initMapserver($mapfile, $fullextent)
 	{
-		dl('php_mapscript.dll');
+		$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+		$dll = $this->objSysConfig->getValue('mapscript_dll', 'gis');
+		if($dll === 'TRUE')
+		{
+			dl('php_mapscript.dll');
+		}
 
 		$this->objMapserver = ms_newMapObj($mapfile);
 		$this->objMapserver->setExtent($fullextent[0], $fullextent[1], $fullextent[2], $fullextent[3]);
