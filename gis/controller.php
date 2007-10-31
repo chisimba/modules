@@ -66,8 +66,11 @@ class gis extends controller
 				$fullextent = array (floatval($fullextent[0]), floatval($fullextent[1]), floatval($fullextent[2]), floatval($fullextent[3]));
 				//var_dump($fullextent); die();
 				// bounds  maxX    minX   minY
-				//$bounds = "'".$fullextent[0].",". $fullextent[2].",".$fullextent[1]."'";
-				$bounds = '-47.1234, 73.1755, -38.4304';
+				$bounds = floatval($fullextent[0]).", ". floatval($fullextent[2]).", ".floatval($fullextent[1]);
+				//$bounds = '-47.1234, 73.1755, -38.4304';
+				//var_dump($bounds); die();
+				
+				
 				$size = array(800, 800);
 				
 				$this->objMapserverOps->initMapserver($mapfile, $fullextent);
