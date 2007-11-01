@@ -8,7 +8,7 @@
          
         echo '<center>';
         //echo '<p>'.$homeLink->show().'</p>';
-	echo '<applet code="avoir.realtime.presentations.client.presenter.ui.MainFrame" width="720" height="418" align="middle">';
+	echo '<applet code="avoir.realtime.presentations.client.presenter.ui.MainFrame" width="780" height="438" align="middle">';
 	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/> ';
 	echo '	<param name="host" value="localhost"/>';
         echo '  <param name="port" value="1962"/>';
