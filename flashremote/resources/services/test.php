@@ -8,19 +8,18 @@ $xml = simplexml_load_file("settings.xml");
 //$homeBase = $xml->chisimba_core_path->value;
 $homeBase = '/home/dkeats/Desktop/eclipse-workspace/chisimba_framework/app/';
 chdir($homeBase);
-require_once 'classes/core/engine_class_inc.php';
-//require_once 'classes/core/object_class_inc.php';
-require_once 'classes/core/dbtable_class_inc.php';
+require_once 'classes/core/bridge_class_inc.php';
+
 
 /**
-* 
+*
 * Created on 27 Oct 2007
-* 
+*
 * AMFPHP service class return user information
-* 
+*
 * @author Derek keats
 * @package package_name
-* 
+*
 */
 class test
 {
@@ -34,23 +33,22 @@ class test
             )
         );
     }
-    
+
     public function userdata($username)
     {
-        $eng = new engine;
+        $objBridge = new bridge;
+        $eng = $objBridge->startBridge();
         chdir($GLOBALS['savedir']);
         $objDt = new chisimbaConnector($eng, NULL);
         $ar = $objDt->getUser($username);
-        /*$ar=array();
-        $ar[0]['firstname'] = "Some";
-        $ar[0]['surname'] = "User";A*/
         return new RecordSet($ar);
 
     }
-    
+
     public function currentUser()
     {
-        $eng = new engine;
+        $objBridge = new bridge;
+        $eng = $objBridge->startBridge();
         chdir($GLOBALS['savedir']);
         $objDt = new chisimbaConnector($eng, NULL);
         return $objDt->currentUser();
@@ -62,9 +60,9 @@ class chisimbaConnector extends dbTable
 {
     function init()
     {
-        parent::init('tbl_users');      
+        parent::init('tbl_users');
     }
-    
+
     function getUser($username)
     {
         $objUser = $this->getObject("user", "security");
@@ -86,12 +84,12 @@ class chisimbaConnector extends dbTable
         $array=$this->getArray($sql);
         return $array;
     }
-    
+
     public function currentUser()
     {
         $objUser=$this->getObject("user", "security");
         return $objUser->userName();
     }
-    
+
 }
 ?>
