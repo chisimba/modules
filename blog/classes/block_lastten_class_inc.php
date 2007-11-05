@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Short description for file
+ * Short description for file.
  * 
  * Long description (if any) ...
  * 
@@ -20,15 +19,16 @@
  * Free Software Foundation, Inc., 
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @category  Chisimba
- * @package   blog
- * @author    Administrative User <pscott@uwc.ac.za>
- * @copyright 2007 Administrative User
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
- * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+ * @version    CVS: $Id$
+ * @package    blog
+ * @subpackage blocks
+ * @author     Paul Scott <pscott@uwc.ac.za>
+ * @copyright  2006-2007 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://avoir.uwc.ac.za
+ * @see        References to other sections (if any)...
  */
+
 // security check - must be included in all scripts
 if (!
 /**
@@ -44,38 +44,49 @@ $GLOBALS['kewl_entry_point_run']) {
 /**
  * A block to return the last 10 blog posts
  *
+ * @category  Chisimba
  * @author    Megan Watson
  * @version   0.1
- * @copyright (c) UWC 2007
+ * @copyright 2006-2007 AVOIR
  *            
  */
 class block_lastten extends object
 {
     /**
-     * @var string $title The title of the block
+     * The title of the block
+     * 
+     * @var    object
+     * @access public
      */
     public $title;
     /**
-     * @var display
-     *              Object to display the last ten posts box
+     * last ten posts box
+     * 
+     * @var    object
+     * @access public
      */
     public $display;
     /**
      * Blog operations class
      *
-     * @var object
+     * @var    object
+     * @access public
      */
     public $blogOps;
 
     /**
      * Description for public
+     * 
      * @var    object
      * @access public
      */
     public $objLanguage;
     /**
-     * Standard init function to instantiate language and user objects
-     * and create title
+     * Standard init function
+     * 
+     * Instantiate language and user objects and create title
+     * 
+     * @return NULL
      */
     public function init() 
     {
@@ -86,6 +97,8 @@ class block_lastten extends object
     }
     /**
      * Standard block show method.
+     * 
+     * @return string $this->display block rendered
      */
     public function show() 
     {

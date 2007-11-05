@@ -23,7 +23,7 @@
  * @package    blog
  * @subpackage blogui
  * @author     Paul Scott <pscott@uwc.ac.za>
- * @copyright  2007 Paul Scott
+ * @copyright  2006-2007 AVOIR
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://avoir.uwc.ac.za
  * @see        References to other sections (if any)...
@@ -43,7 +43,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
  * @category  Chisimba
  * @package   blog
  * @author    Paul Scott <pscott@uwc.ac.za>
- * @copyright 2007 Paul Scott
+ * @copyright 2006-2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   CVS: $Id$
  * @link      http://avoir.uwc.ac.za
