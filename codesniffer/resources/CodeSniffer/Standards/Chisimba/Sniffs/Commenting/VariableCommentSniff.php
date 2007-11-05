@@ -221,7 +221,7 @@ class Chisimba_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_St
             }
 
             $spacing = substr_count($var->getWhitespaceBeforeContent(), ' ');
-            if ($spacing !== 3) {
+            if ($spacing !== 4) {
                 $error  = '@var tag indented incorrectly. ';
                 $error .= "Expected 3 spaces but found $spacing.";
                 $this->currentFile->addError($error, $errorPos);
@@ -281,8 +281,8 @@ class Chisimba_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_St
                 $this->currentFile->addError($error, $errorPos);
             }
         } else {
-            $error = 'Missing @since tag in variable comment';
-            $this->currentFile->addError($error, $commentEnd);
+            //$error = 'Missing @since tag in variable comment';
+            //$this->currentFile->addError($error, $commentEnd);
         }//end if
 
     }//end _processSince()

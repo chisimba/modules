@@ -335,10 +335,10 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
                 $tagName .= 's';
             }
 
-            if ($indentInfo['space'] !== 0 && $indentInfo['space'] !== ($longestTag + 1)) {
+            if ($indentInfo['space'] !== 0 && $indentInfo['space'] !== ($longestTag +1)) {
                 $expected = ($longestTag - strlen($indentInfo['tag']) + 1);
                 $space    = ($indentInfo['space'] - strlen($indentInfo['tag']));
-                $error    = "@$indentInfo[tag] tag comment indented incorrectly. ";
+                $error    = "@$indentInfo[tag] tag comment indented incorrectly. Please ensure that your comments all start on the same column! ";
                 $error   .= "Expected $expected spaces but found $space.";
                 $this->currentFile->addError($error, $indentInfo['errorPos']);
             }

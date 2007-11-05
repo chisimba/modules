@@ -114,7 +114,7 @@ class Chisimba_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sn
                 // Exactly one blank line before the class comment
                 $prevTokenEnd = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
                 if ($prevTokenEnd !== false) {
-                    $blankLineBefore = 0;
+                    $blankLineBefore = 1;
                     for ($i = ($prevTokenEnd + 1); $i < $commentStart; $i++) {
                         if ($tokens[$i]['code'] === T_WHITESPACE && $tokens[$i]['content'] === "\n") {
                             $blankLineBefore++;
@@ -236,18 +236,18 @@ class Chisimba_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sn
         // Other tags found.
         foreach ($foundTags as $tagName) {
             if ($tagName !== 'comment' && $tagName !== 'since') {
-                $error = 'Only @since tag is allowed in class comment';
-                $this->currentFile->addWarning($error, $commentEnd);
+                // $error = 'Only @since tag is allowed in class comment';
+                // $this->currentFile->addWarning($error, $commentEnd);
                 break;
             }
         }
 
         // Since tag missing.
-        if (in_array('since', $foundTags) === false) {
+        /*if (in_array('since', $foundTags) === false) {
             $error = 'Missing @since tag in class comment';
             $this->currentFile->addError($error, $commentEnd);
             return;
-        }
+        }*/
 
         // Get the line number for current tag.
         $since = $this->commentParser->getSince();
@@ -291,7 +291,7 @@ class Chisimba_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sn
      */
     private function _processSince($errorPos)
     {
-        $since = $this->commentParser->getSince();
+        /*$since = $this->commentParser->getSince();
         if ($since !== null) {
             $content = $since->getContent();
             if (empty($content) === true) {
@@ -304,7 +304,7 @@ class Chisimba_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sn
                     $this->currentFile->addError($error, $errorPos);
                 }
             }
-        }
+        } */
 
     }//end _processSince()
 

@@ -1,9 +1,8 @@
 <?php
-
 /**
- * Blog UI elements file
+ * Blog UI elements file.
  * 
- * This file controls the blog UI elements. It wil allow users to configure the look of their blog
+ * This file controls the blog UI elements. It wil allow users to configure the look of their blog.
  * 
  * PHP version 5
  * 
@@ -20,14 +19,14 @@
  * Free Software Foundation, Inc., 
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @category  Chisimba
- * @package   blog
- * @author    Paul Scott <pscott@uwc.ac.za>
- * @copyright 2007 Paul Scott
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
- * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+ * @version    CVS: $Id$
+ * @package    blog
+ * @subpackage blogui
+ * @author     Paul Scott <pscott@uwc.ac.za>
+ * @copyright  2007 Paul Scott
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://avoir.uwc.ac.za
+ * @see        References to other sections (if any)...
  */
 
 // security check - must be included in all scripts
@@ -35,7 +34,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-
 
 /**
  * class to control blog ui elements
@@ -56,6 +54,7 @@ class blogui extends object
 
     /**
      * Blog operations object
+     * 
      * @var    object
      * @access public
      */
@@ -63,6 +62,7 @@ class blogui extends object
 
     /**
      * left Column layout
+     * 
      * @var    object
      * @access public 
      */
@@ -70,6 +70,7 @@ class blogui extends object
 
     /**
      * Right column layout
+     * 
      * @var    object
      * @access public 
      */
@@ -77,6 +78,7 @@ class blogui extends object
 
     /**
      * middle column layout
+     * 
      * @var    object
      * @access public 
      */
@@ -84,6 +86,7 @@ class blogui extends object
 
     /**
      * Template header
+     * 
      * @var    object
      * @access public 
      */
@@ -91,6 +94,7 @@ class blogui extends object
 
     /**
      * CSS Layout
+     * 
      * @var    object
      * @access public
      */
@@ -98,6 +102,7 @@ class blogui extends object
 
     /**
      * Left user menu
+     * 
      * @var    object
      * @access public 
      */
@@ -105,6 +110,7 @@ class blogui extends object
 
     /**
      * user object
+     * 
      * @var    object
      * @access public
      */
@@ -112,7 +118,8 @@ class blogui extends object
     
     /**
      * YAML object
-     * @var object YAML
+     * 
+     * @var    object YAML
      */
     public $objYaml;
 
@@ -143,7 +150,7 @@ class blogui extends object
         $this->rightCol = NULL;
         // middle column
         $this->middleCol = NULL;
-        //YAML configs
+        // YAML configs
         $this->objYaml = $this->getObject('yaml', 'utilities');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objUser = $this->getObject('user', 'security');
@@ -183,7 +190,9 @@ class blogui extends object
      * 
      * Blocks that will show up in the left hand column
      * 
-     * @param  integer $userid The User id
+     * @param integer $userid The User id
+     * @param string  $cats   The categories menu
+     * 
      * @return string  Return string
      * @access public 
      */
@@ -204,7 +213,7 @@ class blogui extends object
     	}
     	foreach($config as $plugins)
     	{
-    		//echo $plugins."<br />";
+    		// echo $plugins."<br />";
     		switch ($plugins) {
     			case 'usermenu':
     				if ($this->objUser->isLoggedIn()) {
@@ -278,8 +287,9 @@ class blogui extends object
      * 
      * CSS layout for the right hand side blocks
      * 
-     * @param  unknown $userid The user id
-     * @param  unknown $cats   categories
+     * @param integer $userid The user id
+     * @param string  $cats   categories
+     * 
      * @return string  string of blocks
      * @access public 
      */
@@ -302,7 +312,7 @@ class blogui extends object
         
         foreach($config as $plugins)
     	{
-    		//echo $plugins."<br />";
+    		// echo $plugins."<br />";
     		switch ($plugins) {
     			case 'usermenu':
     				if ($this->objUser->isLoggedIn()) {
@@ -371,6 +381,13 @@ class blogui extends object
     	return $rightCol;
     }
     
+    /**
+     * Configuration editor
+     *
+     * @param integer $userid The user ID
+     * 
+     * @return array
+     */
     public function doConfig($userid)
     {
     	$conf = NULL;
@@ -384,26 +401,27 @@ class blogui extends object
     	if(empty($conf))
     	{
     		// load defaults
-    		$defaults[] = array('leftblocks' => array(
-    							'usermenu', 
-    							'profiles', 
-    							'adminsection', 
-    							'loginbox', 
-    							'feeds', 
-    							'bloglinks', 
-    							'blogroll', 
-    							'blogpages'
-    							), 
-    						  'rightblocks' => array(
-    							'blogslink',
-    							'archivebox',
-    							'blogtagcloud',
-    							'catsmenu',
-    							'searchbox',
-    							'quickcats',
-    							'quickpost',
-    							),
-    						);
+    		$defaults[] = array(
+                     'leftblocks'  => array(
+                                       'usermenu', 
+                                       'profiles', 
+                                       'adminsection', 
+                                       'loginbox', 
+                                       'feeds', 
+                                       'bloglinks', 
+                                       'blogroll', 
+                                       'blogpages',
+                                      ), 
+                     'rightblocks' => array(
+                                       'blogslink',
+                                       'archivebox',
+                                       'blogtagcloud',
+                                       'catsmenu',
+                                       'searchbox',
+                                       'quickcats',
+                                       'quickpost',
+                                      ),
+    						          );
     		
     		// write the defaults to the file
     		$yaml = $this->objYaml->saveYaml($defaults);
