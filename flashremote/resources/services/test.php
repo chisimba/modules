@@ -1,13 +1,13 @@
 <?php
+//DO not change this line as it sets the directory where AMFPHP is located
 define("AMFPHP_BASE", realpath(dirname(dirname(dirname(__FILE__)))) . "/");
-$GLOBALS['kewl_entry_point_run'] = TRUE;
-$GLOBALS['savedir'] = getcwd();
-
-//Load the XML settings file
-$xml = simplexml_load_file("settings.xml");
-//$homeBase = $xml->chisimba_core_path->value;
-$homeBase = '/home/dkeats/Desktop/eclipse-workspace/chisimba_framework/app/';
+//Include the required configuration information
+require_once '../flashremote_config_inc.php';
+//Set the home directory so we can change to it to load the singleton
+$homeBase = CHISIMBA_BASEPATH;
+//Change to the app directory to load the singleton bridge to Chisimba
 chdir($homeBase);
+//Include the Chisimba bridge class from the framework
 require_once 'classes/core/bridge_class_inc.php';
 
 
