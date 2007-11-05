@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Short description for file
+ * Short description for file.
  * 
  * Long description (if any) ...
  * 
@@ -20,15 +19,16 @@
  * Free Software Foundation, Inc., 
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @category  Chisimba
- * @package   blog
- * @author    Administrative User <pscott@uwc.ac.za>
- * @copyright 2007 Administrative User
- * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
- * @link      http://avoir.uwc.ac.za
- * @see       References to other sections (if any)...
+ * @version    CVS: $Id$
+ * @package    blog
+ * @subpackage blocks
+ * @author     Paul Scott <pscott@uwc.ac.za>
+ * @copyright  2006-2007 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://avoir.uwc.ac.za
+ * @see        References to other sections (if any)...
  */
+
 // security check - must be included in all scripts
 if (!
 /**
@@ -52,34 +52,47 @@ $GLOBALS['kewl_entry_point_run']) {
 class block_latest extends object
 {
     /**
-     * @var string $title The title of the block
+     * The title of the block
+     * 
+     * @var    string
+     * @access public
      */
     public $title;
     /**
-     * @var object $objLastBlog String to hold the lastblog object
+     * String to hold the lastblog object
+     * 
+     * @var    object 
+     * @access public
      */
     public $objLastBlog;
     /**
-     * @var quickBlog
-     *                Object to display the quick blog box
+     * Object to display the quick blog box
+     * 
+     * @var    object
+     * @access public               
      */
     public $quickBlog;
     /**
      * Blog operations class
      *
-     * @var object
+     * @var    object
+     * @access public
      */
     public $blogOps;
 
     /**
-     * Description for public
+     * Language object
+     * 
      * @var    object
      * @access public
      */
     public $objLanguage;
     /**
-     * Standard init function to instantiate language and user objects
-     * and create title
+     * Standard init function 
+     * 
+     * Instantiates language and user objects and creates title
+     * 
+     * @return NULL
      */
     public function init() 
     {
@@ -88,12 +101,15 @@ class block_latest extends object
         $userid = $this->objUser->userid();
         $this->blogOps = &$this->getObject('blogops', 'blog');
         $this->quickBlog = $this->blogOps->quickPost($userid, FALSE);
-        $this->objLastBlog = NULL; //& $this->getObject('getlastentry', 'blog');
+        $this->objLastBlog = NULL;
         $this->title = $this->objLanguage->languageText("mod_blog_block_quickpost", "blog");
     }
     /**
-     * Standard block show method. It builds the output based
-     * on data obtained via the getlast class
+     * Standard block show method. 
+     * 
+     * It builds the output based on data obtained via the getlast class
+     * 
+     * @return string the box rendered
      */
     public function show() 
     {
