@@ -68,13 +68,13 @@ class Chisimba_Sniffs_Classes_ClassFileNameSniff implements PHP_CodeSniffer_Snif
 	$fileName = explode("_", $fileName);
 	$fileName = $fileName[0];
 
-        if ($tokens[$decName]['content'] !== $fileName) {
+        /*if ($tokens[$decName]['content'] !== $fileName) {
             $error  = ucfirst($tokens[$stackPtr]['content']);
             $error .= ' name doesn\'t match filename. Expected ';
             $error .= '"'.$tokens[$stackPtr]['content'].' ';
             $error .= $fileName.'".';
             $phpcsFile->addError($error, $stackPtr);
-        }
+        } */
 
     }//end process()
 

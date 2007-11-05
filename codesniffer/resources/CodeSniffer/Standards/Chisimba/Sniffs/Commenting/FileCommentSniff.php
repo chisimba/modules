@@ -466,6 +466,7 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
      */
     private function _processAuthors($errorPos)
     {
+        $commentStart = NULL;
         $authors = $this->commentParser->getAuthors();
         // Report missing return.
         if (empty($authors) === false) {
@@ -521,7 +522,7 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
                 $error = 'Content missing for @copyright tag in file comment';
                 $this->currentFile->addError($error, $errorPos);
 
-            } else if (preg_match('/^([0-9]{4})-([0-9]{4})? (AVOIR \)$/', $content) === 0) {
+            } else if (preg_match('/^([0-9]{4})-([0-9]{4})? (AVOIR)$/', $content) === 0) {
                 $error = 'Expected "2006-2007 AVOIR" for copyright declaration';
                 $this->currentFile->addError($error, $errorPos);
             }
