@@ -155,7 +155,7 @@ class Chisimba_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_S
        // }
 
         // Finally, the line below the last comment cannot be empty.
-        $totalTokens = count($tokens);
+        /*$totalTokens = count($tokens);
         $start       = false;
 
         for ($i = ($stackPtr + 1); $i < $totalTokens; $i++) {
@@ -169,7 +169,7 @@ class Chisimba_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_S
         }
 
         $error = 'There must be no blank line following an inline comment';
-        $phpcsFile->addError($error, $stackPtr);
+        $phpcsFile->addError($error, $stackPtr); */
 
     }//end process()
 

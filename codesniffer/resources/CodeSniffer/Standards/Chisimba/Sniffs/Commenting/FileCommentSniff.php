@@ -379,7 +379,7 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
      *
      * @return void
      */
-    private function _processVersion($errorPos)
+    /*private function _processVersion($errorPos)
     {
         $version = $this->commentParser->getVersion();
         if ($version !== null) {
@@ -397,10 +397,10 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
         }
 
     }//end _processVersion()
-
+    */
 
     /**
-     * The package name must be 'Chisimba'.
+     * The package name must be non-empty.
      *
      * @param int $errorPos The line number where the error occurs.
      *
@@ -414,17 +414,17 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
             if (empty($content) === true) {
                 $error = 'Content missing for @package tag in file comment';
                 $this->currentFile->addError($error, $errorPos);
-            } else if ($content !== 'Chisimba') {
+            } /*else if ($content !== 'Chisimba') {
                 $error = 'Expected "Chisimba" for package name';
                 $this->currentFile->addError($error, $errorPos);
-            }
+            } */
         }
 
     }//end _processPackage()
 
 
     /**
-     * The subpackage name must be camel-cased.
+     * The subpackage name must be lower-cased.
      *
      * @param int $errorPos The line number where the error occurs.
      *
@@ -438,7 +438,7 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
             if (empty($content) === true) {
                 $error = 'Content missing for @subpackage tag in file comment';
                 $this->currentFile->addError($error, $errorPos);
-            } else if (PHP_CodeSniffer::isUnderscoreName($content) !== true) {
+            } /*else if (PHP_CodeSniffer::isUnderscoreName($content) !== true) {
                 // Subpackage name must be properly camel-cased.
                 $nameBits = explode('_', $content);
                 $firstBit = array_shift($nameBits);
@@ -451,7 +451,7 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
                 $error     = "Subpackage name \"$content\" is not valid; ";
                 $error    .= "consider \"$validName\" instead";
                 $this->currentFile->addError($error, $errorPos);
-            }
+            } */
         }
 
     }//end _processSubpackage()
@@ -551,19 +551,19 @@ class Chisimba_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sni
                 if (empty($url) === true) {
                     $error = 'License URL missing for @license tag in file comment';
                     $this->currentFile->addError($error, $errorPos);
-                } else if ($url !== 'http://www.gnu.org/licenses/gpl.html') {
-                    $error = 'Expected "http://www.gnu.org/licenses/gpl.html" for license URL';
+                } else if ($url !== 'http://www.gnu.org/licenses/gpl-2.0.txt') {
+                    $error = 'Expected "http://www.gnu.org/licenses/gpl-2.0.txt" for license URL';
                     $this->currentFile->addError($error, $errorPos);
                 }
 
                 // Check for license name.
-                if (empty($content) === true) {
+                /*if (empty($content) === true) {
                     $error = 'License name missing for @license tag in file comment';
                     $this->currentFile->addError($error, $errorPos);
                 } else if ($content !== 'GPL') {
                     $error = 'Expected "GPL" for license name';
                     $this->currentFile->addError($error, $errorPos);
-                }
+                } */
             }//end if
         }//end if
 
