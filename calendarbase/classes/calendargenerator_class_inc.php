@@ -101,11 +101,12 @@ class calendargenerator extends object
     */
     public function show()
     {
-        $this->appendArrayVar('headerParams','<link href="modules/calendarbase/resources/calendarstyle.css" rel="stylesheet" type="text/css"/>');
+		$this->appendArrayVar('headerParams','<link href="'.$this->getResourceUri('calendarstyle.css').'" rel="stylesheet" type="text/css"/>');
         $first_of_month = gmmktime(0,0,0,$this->month,1,$this->year);
         #remember that mktime will automatically correct if invalid dates are entered
         # for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
         # this provides a built in "rounding" feature to generate_calendar()
+		
 
         $day_names = array(); #generate all the day names according to the current locale
 
