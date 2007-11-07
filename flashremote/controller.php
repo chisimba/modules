@@ -1,25 +1,25 @@
 <?php
 /**
- * 
+ *
  * A module to provide a flash remoting interface to Chisimba based on amfphp Flash remoting library.
- * 
+ *
  * This module provides for the use of ampphp for Flash remoting in Chisimba. Amfphp is an RPC toolkit for PHP. Amfphp allows seamless communication between Php and Flash and Flex with Remoting, JavaScript and Ajax with JSON, and XML clients with XML-RPC.
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   helloforms
  * @author    Derek Keats dkeats@uwc.ac.za
@@ -28,17 +28,17 @@
  * @version   CVS: $Id$
  * @link      http://avoir.uwc.ac.za
  */
- 
+
 // security check - must be included in all scripts
 if (!
 /**
  * The $GLOBALS is an array used to control access to certain constants.
  * Here it is used to check if the file is opening in engine, if not it
  * stops the file from running.
- * 
+ *
  * @global entry point $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
- *         
+ *
  */
 $GLOBALS['kewl_entry_point_run'])
 {
@@ -47,7 +47,7 @@ $GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* 
+*
 * Controller class for Chisimba for the module flashremote
 *
 * @author Derek Keats
@@ -56,38 +56,38 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class flashremote extends controller
 {
-    
+
     /**
-    * 
-    * @var string $objConfig String object property for holding the 
+    *
+    * @var string $objConfig String object property for holding the
     * configuration object
     * @access public;
-    * 
+    *
     */
     public $objConfig;
-    
+
     /**
-    * 
-    * @var string $objLanguage String object property for holding the 
+    *
+    * @var string $objLanguage String object property for holding the
     * language object
     * @access public
-    * 
+    *
     */
     public $objLanguage;
     /**
     *
-    * @var string $objLog String object property for holding the 
+    * @var string $objLog String object property for holding the
     * logger object for logging user activity
     * @access public
-    * 
+    *
     */
     public $objLog;
 
     /**
-    * 
+    *
     * Intialiser for the flashremote controller
     * @access public
-    * 
+    *
     */
     public function init()
     {
@@ -100,16 +100,16 @@ class flashremote extends controller
         //Log this module call
         $this->objLog->log();
     }
-    
-    
+
+
     /**
-     * 
+     *
      * The standard dispatch method for the flashremote module.
-     * The dispatch method uses methods determined from the action 
-     * parameter of the  querystring and executes the appropriate method, 
-     * returning its appropriate template. This template contains the code 
+     * The dispatch method uses methods determined from the action
+     * parameter of the  querystring and executes the appropriate method,
+     * returning its appropriate template. This template contains the code
      * which renders the module output.
-     * 
+     *
      */
     public function dispatch()
     {
@@ -120,27 +120,27 @@ class flashremote extends controller
         // retrieve the sort order from the querystring
         $order = $this->getParam("order", null);
         /*
-        * Convert the action into a method (alternative to 
+        * Convert the action into a method (alternative to
         * using case selections)
         */
         $method = $this->__getMethod($this->action);
         /*
-        * Return the template determined by the method resulting 
+        * Return the template determined by the method resulting
         * from action
         */
         return $this->$method();
     }
-    
-    
+
+
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
 
     /**
-    * 
+    *
     * Method corresponding to the browser action. It allows you
     * to browse services on this computer.
-    * 
+    *
     * @access private
-    * 
+    *
     */
     private function __browser()
     {
@@ -150,14 +150,20 @@ class flashremote extends controller
         if ($browseAllowed == "TRUE") {
             return "browser_tpl.php";
         } else {
-            $str = "<div class=\"error\">" 
+            $str = "<div class=\"error\">"
               . $this->objLanguage->languageText("mod_flashremote_browsenotallowed", "flashremote")
               . "</div>";
             $this->setVarByRef('str', $str);
             return "dump_tpl.php";
         }
     }
-    
+
+    private function __default()
+    {
+        $this->setVar("str", "Working here");
+        return "default_tpl.php";
+    }
+
     private function __gateway()
     {
         define("PRODUCTION_SERVER", false);
@@ -173,7 +179,7 @@ class flashremote extends controller
         $voPath = $this->getResourcePath('services/vo/', 'flashremote');
         $gateway->setClassPath($servicesPath);
         //Read above large note for explanation of charset handling
-        //The main contributor (Patrick Mineault) is French, 
+        //The main contributor (Patrick Mineault) is French,
         //so don't be afraid if he forgot to turn off iconv by default!
         $gateway->setCharsetHandler("utf8_decode", "ISO-8859-1", "ISO-8859-1");
         //Error types that will be rooted to the NetConnection debugger
@@ -183,21 +189,21 @@ class flashremote extends controller
             //Disable profiling, remote tracing, and service browser
             $gateway->disableDebug();
         }
-        //Enable gzip compression of output if zlib is available, 
+        //Enable gzip compression of output if zlib is available,
         //beyond a certain byte size threshold
         $gateway->enableGzipCompression(25*1024);
-        
+
         //Service now
         $gateway->service();
     }
-    
-    
+
+
     /**
-    * 
+    *
     * Method corresponding to the view action. It fetches the stories
     * into an array and passes it to a main_tpl content template.
     * @access private
-    * 
+    *
     */
     private function __test()
     {
@@ -216,7 +222,7 @@ class flashremote extends controller
         $gateway->setErrorHandling(E_ALL ^ E_NOTICE);
         //Disable profiling, remote tracing, and service browser
         $gateway->disableDebug();
-        //Enable gzip compression of output if zlib is available, 
+        //Enable gzip compression of output if zlib is available,
         //beyond a certain byte size threshold
         $gateway->enableGzipCompression(25*1024);
         //Service now
@@ -224,15 +230,15 @@ class flashremote extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-    
+
     /**
-    * 
-    * Method to return an error when the action is not a valid 
+    *
+    * Method to return an error when the action is not a valid
     * action method
-    * 
+    *
     * @access private
     * @return string The dump template populated with the error message
-    * 
+    *
     */
     private function __actionError()
     {
@@ -241,18 +247,18 @@ class flashremote extends controller
           .": " . $this->action . "</h3>");
         return 'dump_tpl.php';
     }
-    
+
     /**
-    * 
+    *
     * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action 
+    * of this class preceded by double underscore (__). If it __action
     * is not a valid method it returns FALSE, if it is a valid method
     * of this class it returns TRUE.
-    * 
+    *
     * @access private
     * @param string $action The action parameter passed byref
     * @return boolean TRUE|FALSE
-    * 
+    *
     */
     function __validAction(& $action)
     {
@@ -262,16 +268,16 @@ class flashremote extends controller
             return FALSE;
         }
     }
-    
+
     /**
-    * 
-    * Method to convert the action parameter into the name of 
+    *
+    * Method to convert the action parameter into the name of
     * a method of this class.
-    * 
+    *
     * @access private
     * @param string $action The action parameter passed byref
     * @return stromg the name of the method
-    * 
+    *
     */
     function __getMethod(& $action)
     {
@@ -281,16 +287,16 @@ class flashremote extends controller
             return "__actionError";
         }
     }
-    
+
     /*------------- END: Set of methods to replace case selection ------------*/
-    
+
 
 
     /**
     *
-    * This is a method to determine if the user has to 
-    * be logged in or not. Note that this is an example, 
-    * and if you use it view will be visible to non-logged in 
+    * This is a method to determine if the user has to
+    * be logged in or not. Note that this is an example,
+    * and if you use it view will be visible to non-logged in
     * users. Delete it if you do not want to allow annonymous access.
     * It overides that in the parent class
     *

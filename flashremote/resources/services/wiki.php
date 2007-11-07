@@ -15,10 +15,11 @@ require_once 'classes/core/bridge_class_inc.php';
 *
 * Created on 27 Oct 2007
 *
-* AMFPHP service class return user information
+* AMFPHP service class to return a wiki page from
+* the chisimba wiki
 *
 * @author Derek keats
-* @package package_name
+* @package flashremote
 *
 */
 class wiki
@@ -44,7 +45,16 @@ class wiki
     }
 }
 
-
+/**
+*
+* Chisimba class to actually go get the wiki page.
+*
+* @access public
+* @return string the wiki page being requested
+* @author Derek keats
+* @package flashremote
+*
+*/
 class chisimbaConnector extends object
 {
     function init()
@@ -58,7 +68,7 @@ class chisimbaConnector extends object
         //Get the page
         return $objWiki->showPage($wiki, $page);
     }
-
-
 }
+
+
 ?>

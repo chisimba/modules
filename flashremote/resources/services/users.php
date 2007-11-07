@@ -63,8 +63,7 @@ class users
 /**
 *
 * Chisimba based helper class that extends tbTable to provide
-* the user data being looked up.It also makes use of the user
-* class from the security module.
+* the user data being looked up.
 *
 */
 class chisimbaConnector extends dbTable
