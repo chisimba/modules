@@ -49,7 +49,7 @@ class dbwebpresentfiles extends dbtable
    fwrite($fileHandle,"<jar href=\"".$presentationsURL."/presentations-client.jar\"/>\n");   
   // fwrite($fileHandle,"<jar href=\"".$presentationsURL."/video.jar\"/>\n");   
         
-   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"256M\" max-heap-size=\"1000M\"\n");
+   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"128M\" max-heap-size=\"512M\"\n");
    fwrite($fileHandle," href=\"http://java.sun.com/products/autodl/j2se\"/>\n");
        
    fwrite($fileHandle," </resources>\n");
@@ -96,7 +96,7 @@ class dbwebpresentfiles extends dbtable
    fwrite($fileHandle,"<jar href=\"".$presentationsURL."/presentations-client.jar\"/>\n");   
   // fwrite($fileHandle,"<jar href=\"".$presentationsURL."/video.jar\"/>\n");   
         
-   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"256M\" max-heap-size=\"1000M\"\n");
+   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"128M\" max-heap-size=\"512M\"\n");
    fwrite($fileHandle," href=\"http://java.sun.com/products/autodl/j2se\"/>\n");
        
    fwrite($fileHandle," </resources>\n");
