@@ -243,7 +243,7 @@ $this->objFiles->generateClientJNLP($file['id']);
  if ($objUser->isLoggedIn()){
 $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/presenter_studio.jnlp';
 $codebase2=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
-$objTabs->addTab('Live', '<li><a href="'. $codebase.'">Start Live Presentation</a></li><li><a href="'. $codebas2e.'">View Live Presentation</a></li>');
+$objTabs->addTab('Live', '<li><a href="'. $codebase.'">Start Live Presentation</a></li><li><a href="'. $codebase2.'">View Live Presentation</a></li>');
 
 }else{
 $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
