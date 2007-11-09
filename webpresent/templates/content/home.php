@@ -240,17 +240,8 @@ if ($objModules->checkIfRegistered('blog')) {
 
 }
 
- $livePresentationApplet='<center><br>';
- $livePresentationApplet.= '<applet code="avoir.realtime.presentations.client.ClientViewer" width="720" height="418"><br>';
- $livePresentationApplet.= '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/><br>';
- $livePresentationApplet.= '	<param name="host" value="localhost"/><br>';
- $livePresentationApplet.= '  <param name="port" value="1962"/><br>';
- $livePresentationApplet.= "</applet> <br>";
- $livePresentationApplet.= '</center><br>';
 
-
-
-  $livePresentations=$this->objSchedules->getSchedules();
+  /*$livePresentations=$this->objSchedules->getSchedules();
   $livePresentationsContent='';
         foreach ($livePresentations as $file)
         {
@@ -264,12 +255,12 @@ if ($objModules->checkIfRegistered('blog')) {
 
             $linkname = $objTrim->strTrim($filename, 45);
             $fileLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['fileid'])));
-            /*
+            
             if ($objUser->isLoggedIn()){
               if ($file['creatorid'] == $objUser->userId()) {
                 $fileLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['fileid'])));
               }
-            }*/
+            }
             $fileLink->link = $this->objFiles->getPresentationThumbnail($file['fileid']).'<br />'.$linkname.'<br/>'.$file['schedule_date'];
             $fileLink->title = $filename;
 
@@ -277,10 +268,11 @@ if ($objModules->checkIfRegistered('blog')) {
 
             $livePresentationsContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
         }
+
  $livePresentationBlock = $objBlocks->showBlock('live', 'table', NULL, 20, TRUE, FALSE);
 
 
- $objTabs->addTab('View Live Presentations', $livePresentationsContent);
+ $objTabs->addTab('View Live Presentations', $livePresentationsContent);*/
  $tabCounter++;
 
 if ($tabCounter > 0) {

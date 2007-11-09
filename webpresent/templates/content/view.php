@@ -237,9 +237,17 @@ $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
 $objTabs->addTab('Transcript', $slideContent['transcript']);
 
+$this->objFiles->generatePresenterJNLP($file['id']);
+$this->objFiles->generateClientJNLP($file['id']);
 //if ($file['creatorid'] == $objUser->userId()) {
  if ($objUser->isLoggedIn()){
-$objTabs->addTab('Live', '<li>'.$scheduleLink->show().'</li><li>'.$presenterLink->show().'</li>');
+$codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/presenter_studio.jnlp';
+$codebase2=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
+$objTabs->addTab('Live', '<li><a href="'. $codebase.'">Start Live Presentation</a></li><li><a href="'. $codebas2e.'">View Live Presentation</a></li>');
+
+}else{
+$codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
+$objTabs->addTab('Live', '<li><a href="'. $codebase.'">View Live Presentation</a></li>');
 
 }
 

@@ -24,6 +24,99 @@ class dbwebpresentfiles extends dbtable
         $this->objConfig = $this->getObject('altconfig', 'config');
     }
 
+   /**
+   * Function to generate jnlp file
+   */
+
+  public function generatePresenterJNLP($id){
+   $location = "http://" . $_SERVER['HTTP_HOST'];
+   $presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+   $filename =  $this->objConfig->getcontentBasePath().'webpresent/presenter_studio.jnlp';
+   $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent';
+   $fileHandle = fopen($filename, 'w') or die("can't open file");
+   fwrite($fileHandle,"<?xml version=<\"1.0\" encoding=\"utf-8\"?>\n");
+   fwrite($fileHandle,"<jnlp spec=\"1.0+\"\n");
+   fwrite($fileHandle,"codebase=\"".$codebase."\"\n");
+   fwrite($fileHandle,"href=\"presenter_studio.jnlp\">\n");
+   fwrite($fileHandle,"<information>\n");
+   fwrite($fileHandle,"<title>Presenter Studio</title>\n");
+   fwrite($fileHandle,"<vendor>FSIU</vendor>\n");
+   fwrite($fileHandle,"<description>Allows user to show live presentations</description>\n");
+   fwrite($fileHandle,"<homepage href=\"http://fsiu.uwc.ac.za\"/>\n");
+   fwrite($fileHandle,"<description kind=\"short\">Allows user to show live presentations</description>\n");
+   fwrite($fileHandle,"</information>\n");
+   fwrite($fileHandle,"<resources>\n");    
+   fwrite($fileHandle,"<jar href=\"".$presentationsURL."/presentations-client.jar\"/>\n");   
+  // fwrite($fileHandle,"<jar href=\"".$presentationsURL."/video.jar\"/>\n");   
+        
+   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"256M\" max-heap-size=\"1000M\"\n");
+   fwrite($fileHandle," href=\"http://java.sun.com/products/autodl/j2se\"/>\n");
+       
+   fwrite($fileHandle," </resources>\n");
+   fwrite($fileHandle,"<security>\n");
+   fwrite($fileHandle,"<all-permissions/>\n");
+   fwrite($fileHandle,"</security> \n");
+
+
+   fwrite($fileHandle,"<application-desc\n");
+   fwrite($fileHandle,"main-class=\"avoir.realtime.presentations.client.presenter.ui.MainFrame\" name=\"Presenter Studio\" >\n");
+   fwrite($fileHandle,"<argument>".$_SERVER['HTTP_HOST']."</argument>\n");
+   fwrite($fileHandle,"<argument>3128</argument>\n");
+   fwrite($fileHandle,"<argument>".$this->objConfig->getcontentBasePath()."webpresent/".$id."</argument>\n");
+
+   fwrite($fileHandle,"<argument>".$this->objUser->userName()."</argument>\n");
+
+   fwrite($fileHandle,"</application-desc>\n"); 
+   fwrite($fileHandle,"</jnlp>\n");
+   fclose($fileHandle);
+  }
+
+  /**
+   * Function to generate jnlp file
+   */
+
+  public function generateClientJNLP($id){
+   $location = "http://" . $_SERVER['HTTP_HOST'];
+   $presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+   $filename =  $this->objConfig->getcontentBasePath().'webpresent/client.jnlp';
+   $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent';
+   $fileHandle = fopen($filename, 'w') or die("can't open file");
+   fwrite($fileHandle,"<?xml version=<\"1.0\" encoding=\"utf-8\"?>\n");
+   fwrite($fileHandle,"<jnlp spec=\"1.0+\"\n");
+   fwrite($fileHandle,"codebase=\"".$codebase."\"\n");
+   fwrite($fileHandle,"href=\"client.jnlp\">\n");
+   fwrite($fileHandle,"<information>\n");
+   fwrite($fileHandle,"<title>Live Presentations</title>\n");
+   fwrite($fileHandle,"<vendor>FSIU</vendor>\n");
+   fwrite($fileHandle,"<description>Allows user to view live presentations</description>\n");
+   fwrite($fileHandle,"<homepage href=\"http://fsiu.uwc.ac.za\"/>\n");
+   fwrite($fileHandle,"<description kind=\"short\">Allows user to view live presentations</description>\n");
+   fwrite($fileHandle,"</information>\n");
+   fwrite($fileHandle,"<resources>\n");    
+   fwrite($fileHandle,"<jar href=\"".$presentationsURL."/presentations-client.jar\"/>\n");   
+  // fwrite($fileHandle,"<jar href=\"".$presentationsURL."/video.jar\"/>\n");   
+        
+   fwrite($fileHandle," <j2se version=\"1.5+\"  initial-heap-size=\"256M\" max-heap-size=\"1000M\"\n");
+   fwrite($fileHandle," href=\"http://java.sun.com/products/autodl/j2se\"/>\n");
+       
+   fwrite($fileHandle," </resources>\n");
+   fwrite($fileHandle,"<security>\n");
+   fwrite($fileHandle,"<all-permissions/>\n");
+   fwrite($fileHandle,"</security> \n");
+
+
+   fwrite($fileHandle,"<application-desc\n");
+   fwrite($fileHandle,"main-class=\"avoir.realtime.presentations.client.ClientViewer\" name=\"Presenter Studio\" >\n");
+
+   fwrite($fileHandle,"<argument>".$_SERVER['HTTP_HOST']."</argument>\n");
+   fwrite($fileHandle,"<argument>3128</argument>\n");
+   fwrite($fileHandle,"<argument>".$this->objConfig->getcontentBasePath()."webpresent_thumbnails/".$id."</argument>\n");
+   fwrite($fileHandle,"<argument>".$id."</argument>\n");
+   fwrite($fileHandle,"</application-desc>\n"); 
+
+   fwrite($fileHandle,"</jnlp>\n");
+   fclose($fileHandle);
+  }
     /**
     * Method to get the details of a file
     * @param string $id Record ID of the file
