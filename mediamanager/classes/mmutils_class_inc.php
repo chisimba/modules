@@ -64,9 +64,9 @@ class mmutils extends object
 			//print $this->_rootMediaPath;
 			//check if the media folder exist
 
-			if(!is_dir($this->_rootMediaPath))
+			if(!file_exists($this->_rootMediaPath))
 			{
-				mkdir($this->_rootMediaPath);
+				@mkdir($this->_rootMediaPath);
 			}
 
 			//var_dump($this->_rootMediaPath);die;
