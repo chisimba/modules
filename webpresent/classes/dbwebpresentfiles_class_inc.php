@@ -79,7 +79,7 @@ class dbwebpresentfiles extends dbtable
    $location = "http://" . $_SERVER['HTTP_HOST'];
    $presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
    $filename =  $this->objConfig->getcontentBasePath().'webpresent/client.jnlp';
-   $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent';
+   $codebase=$this->objConfig->getSiteRoot().'/usrfiles/webpresent';
    $fileHandle = fopen($filename, 'w') or die("can't open file");
    fwrite($fileHandle,"<?xml version=<\"1.0\" encoding=\"utf-8\"?>\n");
    fwrite($fileHandle,"<jnlp spec=\"1.0+\"\n");
