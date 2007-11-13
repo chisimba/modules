@@ -23,21 +23,12 @@ include 'SCA/SCA.php';
           return 'hello '.$name;
       }
       
-      /**
-       * Method to grab all blog posts by userid
-       * 
-       * @param string $userid http://server
-       * @return array $posts http://server
-       */
-      public function getBlogPosts($userid)
-      {
-      	//$posts = SCA::createDataObject('http://server','posts');
-      	//$pair = $posts->createDataObject('entry');
-        //$pair->id = 'gensrvname123';
-        //$pair->content = 'whatever dude!';
-        
-      	$posts = array('blogs', 'posts', 'whatever');
-      	return $posts;
-      }
+      // any PHP scalar will work here, boolean, string, integer, float, NULL etc
+      // arrays and complextypes need an XSL doc.
+      
+      // maybe we need to curl params into the framework to use methods?
+      // maybe a native class? 
+      
+      // ugh!
 }
 ?>
