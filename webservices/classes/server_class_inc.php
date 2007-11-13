@@ -39,7 +39,7 @@ include 'SCA/SCA.php';
        */
       public function getBlogPosts($userid)
       {
-      	return array('blogs', 'posts', 'whatever');
+      	return 'blogs'. 'posts'. 'whatever';
       }
 }
 ?>
