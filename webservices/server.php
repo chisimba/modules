@@ -24,7 +24,7 @@ include 'SCA/SCA.php';
       }
       
       // any PHP scalar will work here, boolean, string, integer, float, NULL etc
-      // arrays and complextypes need an XSL doc.
+      // arrays and complextypes need an XSD doc.
       
       // maybe we need to curl params into the framework to use methods?
       // maybe a native class? 
