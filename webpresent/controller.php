@@ -183,8 +183,7 @@ class webpresent extends controller
           $this->setVarByRef('title', $title);
           $this->setVarByRef('filename', $filename);
 
-          //return "presenter-applet.php";
-return "presenter.jnlp";    
+          return "presenter-applet.php";
  }
 
  /**
