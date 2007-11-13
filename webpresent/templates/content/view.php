@@ -232,6 +232,9 @@ $presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id
 $presenterLink->link = 'Start Live Presentation';
 
 
+$clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'])));
+$clientLink->link = 'View Live Presentation';
+
 
 $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
@@ -244,11 +247,12 @@ $this->objFiles->generateClientJNLP($file['id']);
 	 
 $codebase=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/presenter_studio.jnlp';
 $codebase2=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/client.jnlp';
-$objTabs->addTab('Live', '<li><a href="'. $codebase.'">Start Live Presentation</a></li><li><a href="'. $codebase2.'">View Live Presentation</a></li>');
+
+$objTabs->addTab('Live', '<li>'.$presenterLink->show().'</li><li>'.$clientLink->show().'</a></li>');
 
 }else{
 $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
-$objTabs->addTab('Live', '<li><a href="'. $codebase.'">View Live Presentation</a></li>');
+$objTabs->addTab('Live', '<li>'.$clientLink->show().'</a></li>');
 
 }
 
