@@ -162,6 +162,8 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
+		  $this->startServer();
+  
           $id= $this->getParam('id');
           $title= $this->getParam('title');
           $filename= $this->getParam('filename');
@@ -193,10 +195,20 @@ class webpresent extends controller
      */ 
     function __showaudienceapplet()
     {
-       $id= $this->getParam('id');
+		$this->startServer();
+  
+	   $id= $this->getParam('id');
        $this->setVarByRef('id', $id);              
        return "audience-applet.php";
      }
+	
+	private function startServer()
+    {
+       
+    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
+    system($cmd,$return_value);
+    
+    }
     /**
      * Method to display the search results
      */
