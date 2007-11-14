@@ -205,8 +205,8 @@ class webpresent extends controller
 	private function startServer()
     {
        
-    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
-	echo $cmd;
+    $cmd = "/usr/lib/jvm/java-1.5.0-sun/bin/java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
+	//echo $cmd;
     system($cmd,$return_value);
     
     }
