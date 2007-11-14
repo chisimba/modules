@@ -206,6 +206,7 @@ class webpresent extends controller
     {
        
     $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
+	echo $cmd;
     system($cmd,$return_value);
     
     }
