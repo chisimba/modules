@@ -605,7 +605,11 @@ class dbblog extends dbTable
                 'showpdf' => $postarr['showpdf']
             );
             $this->update('id', $postarr['id'], $edarr, 'tbl_blog_posts');
-            $this->luceneReIndex($postarr);
+            if($this->lindex == 'TRUE')
+            {
+            	$this->luceneReIndex($postarr);
+            }
+            
             return TRUE;
         }
         if ($mode == 'import') {
@@ -683,7 +687,10 @@ class dbblog extends dbTable
                 'showpdf' => $postarr['showpdf']
             );
             $this->update('id', $postarr['id'], $inseditarr, 'tbl_blog_posts');
-            $this->luceneReIndex($postarr);
+            if($this->lindex == 'TRUE')
+            {
+            	$this->luceneReIndex($postarr);
+            }
             return TRUE;
         }
     }
