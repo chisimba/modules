@@ -252,7 +252,7 @@ $objTabs->addTab('Live', '<li>'.$presenterLink->show().'</li><li>'.$clientLink->
 
 }else{
 $codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
-$objTabs->addTab('Live', '<li>'.$clientLink->show().'</a></li>');
+$objTabs->addTab('Live', '<li>'.$clientLink->show().'</a></li><br>If you are logged in, you can start your own Live Presentation.');
 
 }
 
