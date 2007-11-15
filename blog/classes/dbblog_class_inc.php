@@ -26,6 +26,11 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class dbblog extends dbTable
 {
+	
+	public $objLanguage;
+	public $sysConfig;
+	public $lindex;
+	
     /**
      * Standard init function - Class Constructor
      *
@@ -36,6 +41,9 @@ class dbblog extends dbTable
     public function init() 
     {
         $this->objLanguage = $this->getObject("language", "language");
+        $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->lindex = $this->sysConfig->getValue('lucene_index', 'blog');
+        
     }
     //methods to manipulate the categories table.
     
@@ -568,7 +576,10 @@ class dbblog extends dbTable
                 'showpdf' => isset($postarr['showpdf']) ? $postarr['showpdf'] : 'N'
             );
             $insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
-            $this->luceneIndex($insarr);
+            if($this->lindex == 'TRUE')
+            {
+            	$this->luceneIndex($insarr);
+            }
             return TRUE;
         }
         if ($mode == 'editpost') {
@@ -617,7 +628,11 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
-            $this->luceneIndex($imparr);
+            if($this->lindex == 'TRUE')
+            {
+            	$this->luceneIndex($imparr);
+            }
+     
             return TRUE;
         }
         if ($mode == 'mail') {
@@ -641,7 +656,11 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
-            $this->luceneIndex($mparr);
+            if($this->lindex == 'TRUE')
+            {
+            	$this->luceneIndex($mparr);
+            }
+           
             return TRUE;
         } else {
             //$this->epcleaner = $this->newObject('htmlcleaner', 'utilities');
