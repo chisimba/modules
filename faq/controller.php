@@ -299,7 +299,7 @@ class faq extends controller
      * @param string $name The name of the element
      * @return The element object
      */
-     public function &getHTMLElement($name)
+     public function getHTMLElement($name)
      {
          return $this->getObject($name, 'htmlelements');
      }
