@@ -6,6 +6,7 @@
     echo '  <param name="port" value="3128"/>';
     echo '  <param name="contentBasePath" value="'.$this->objConfig->getcontentBasePath().'webpresent/'.$id.'"/>';
     echo '  <param name="user" value="'.$this->objUser->userName().'"/>';
+	echo '  <param name="slideId" value="'.$id.'"/>';
     echo "</applet> ";
     echo '</center>';
 ?>
