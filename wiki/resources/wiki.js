@@ -5,6 +5,7 @@
 */
 
 var lockTimer;
+var VAL = false;
 
 /**
 * Method to validate the create form fields
@@ -16,7 +17,6 @@ var lockTimer;
 */
 function validateCreatePage(err_page, err_summary, err_content)
 {
-    var val;
     var name_input = $("input_name");
     var summary_input = $("input_summary");
     var choice_input = $("input_choice");
@@ -28,8 +28,8 @@ function validateCreatePage(err_page, err_summary, err_content)
         return false;
     }
     
-    val = validateName(name_input);
-    if(!val){
+    validateName(name_input);
+    if(!VAL){
         return false;
     }
     
@@ -107,7 +107,6 @@ function validateName(name_input)
 */
 function validationEffects()
 {
-    var val;
     var name_input = $("input_name"); 
     var summary_input = $("input_summary");   
     var div_errorDiv = $("errorDiv");
@@ -115,14 +114,13 @@ function validationEffects()
         name_input.style.backgroundColor = "yellow";
         name_input.focus();
         name_input.select();
-        val = false;        
+        VAL = false;        
     }else{
         name_input.style.backgroundColor = "";
         summary_input.focus();
-        val = true;
+        VAL = true;
     }
     adjustLayout();
-    return val;
 }
 
 /**
