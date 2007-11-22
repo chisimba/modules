@@ -24,13 +24,13 @@ $table->cellpadding = 5;
 $cssLayout = & $this->newObject('csslayout', 'htmlelements');// Set columns to 2
 $cssLayout->setNumColumns(2);
 
-/**************** set up display page ********************/
+
 $str1= $this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
 $oo="<a href='".$this->objLanguage->languageText('mod_realtime_openoffice', 'realtime')."'>".$this->objLanguage->languageText('mod_realtime_openofficetext', 'realtime')."</a>";
 $str2= $this->objLanguage->languageText('mod_realtime_str2a', 'realtime').$oo.$this->objLanguage->languageText('mod_realtime_str2b', 'realtime');
 
 //create links to the Applet presentations
-$this->objLink->link($this->uri(array('action'=>'presenter_applet')));
+$this->objLink->link($this->uri(array('action'=>'show_upload_form')));
 $this->objLink->link=$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime');
 $str3=$this->objLink->show()." ".$this->objLanguage->languageText('mod_realtime_startpresentation', 'realtime');
 
@@ -60,14 +60,13 @@ $objAppletTable->endRow();
 
 
 
-
 $tab->tabbedbox();
-$tab->addTabLabel($this->objLanguage->languageText('mod_realtime_applet','realtime'));
+//$tab->addTabLabel('Beta Version');//$this->objLanguage->languageText('mod_realtime_applet','realtime'));
 $tb = $objAppletTable;
 
 $tab->addBoxContent($tb->show());
-$tabcontent->addTab($this->objLanguage->languageText('mod_realtime_applet','realtime'),$tab->show());
-        
+//$tabcontent->addTab($this->objLanguage->languageText('mod_realtime_applet','realtime'),$tab->show());
+$tabcontent->addTab('Live',$tab->show());     
 $tabcontent->width = '90%';
 
 	
