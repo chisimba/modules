@@ -1,18 +1,14 @@
 <?php
 
-        $homeLink = new link ($this->uri(array('action'=>'presenter_applet')));
-        $homeLink->link = 'Presentations Home';
-        $webPresentLink = new link ($this->uri(array('action'=>'presenter_applet')));
-        $webPresetLink->link = 'Web Present';
-      
-        echo '<center>';
-        echo '<p>'.$homeLink->show().'</p>';
-	echo '<applet code="avoir.realtime.presentations.client.presenter.ui.MainFrame" width="720" height="418" align="middle">';
+    echo '<center>';
+    echo '<applet code="avoir.realtime.presentations.client.presenter.ui.PresenterFrame" width="75%" height="600" align="middle">';
 	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/> ';
 	echo '	<param name="host" value="localhost"/>';
-        echo '  <param name="port" value="1962"/>';
-        echo '  <param name="contentBasePath" value="'.$this->objAltConfig->getcontentBasePath().'webpresent/'.$id.'"/>';
-        echo '  <param name="files" value="'.$files.'"/>';
+    echo '  <param name="port" value="3128"/>';
+    echo '  <param name="contentBasePath" value="'.$this->objConfig->getcontentBasePath().'realtime_presentations/'.$id.'"/>';
+    echo '  <param name="user" value="'.$this->objUser->userName().'"/>';
+	echo '  <param name="slideId" value="'.$id.'"/>';
+	echo '  <param name="jodconverterPath" value="'.$jodconverterPath.'"/>';
 	echo "</applet> ";
-        echo '</center>';
+    echo '</center>';
 ?>

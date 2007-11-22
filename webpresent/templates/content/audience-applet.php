@@ -6,6 +6,9 @@
     echo '  <param name="port" value="3128"/>';
     echo '  <param name="thumbnail" value="'.$this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'"/>';
     echo '  <param name="id" value="'.$id.'"/>';
+	echo '  <param name="invokedThroughWebpresent" value="true"/>';
+	echo '  <param name="user" value="'.$this->objUser->userName().'"/>';
+	echo '  <param name="isLoggedIn" value="'.$this->objUser->isLoggedIn().'"/>';
 	echo "</applet> ";
 	echo '</center>';
 ?>

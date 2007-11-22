@@ -72,15 +72,19 @@ class realtime extends controller
 
 	public $realtimeControllerURL;
         
-        public $presentationsURL;
+	public $presentationsURL;
 
-        public $moduleRootPath;
+	public $moduleRootPath;
 
-        public $objAltConfig;
+	public $objAltConfig;
 
-        public $objLink;
-        
-        public $objSlides;
+	public $objLink;
+	
+	public $jodconverterPath;
+    
+    public $objFiles;   
+	
+	public $converter;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -90,7 +94,7 @@ class realtime extends controller
 		//Get configuration class
 		$this->objConfig =& $this->getObject('config','config');
 		
-	        $this->objAltConfig =& $this->getObject('altconfig','config');
+	    $this->objAltConfig =& $this->getObject('altconfig','config');
 		
 	        //Get language class
 		$this->objLanguage =& $this->getObject('language', 'language');
@@ -127,15 +131,13 @@ class realtime extends controller
 		$location = "http://" . $_SERVER['HTTP_HOST'];
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
 		$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
-                $this->moduleRootPath=$this->objAltConfig->getModulePath();
-                $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
+        $this->moduleRootPath=$this->objAltConfig->getModulePath();
+        $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
-	
-                $this->objFiles = $this->getObject('dbrealtimepresentationfiles');
-                $this->objTags = $this->getObject('dbrealtimepresentationtags');
-                $this->objSlides = $this->getObject('dbrealtimepresentationslides');
-
-
+	    $this->jodconverterPath = $location . $this->getResourceUri('whiteboard', 'realtime');
+        
+         $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
+		$this->converter = $this->getObject('convertdoc','documentconverter'); 
         }
 
 	/**
@@ -157,23 +159,23 @@ class realtime extends controller
 			case 'voice' :
 				return $this->showVoiceApplet($this->contextCode);
 
-	                case 'audience_applet' :
-                           return "realtime-presentations-audience-applet_tpl.php";
-                        case 'show_upload_form':
-
-                              return "upload_presentation.php";
-
-                        case 'presenter_applet':
-                              return $this->showPresenterApplet();
-                        
-                        case 'upload_presentation':
-
-                              return $this->uploadPresentation();
-         
+	        case 'audience_applet' :
+                 return $this->showAudienceApplet();
+ 
+            case 'presenter_applet':
+            return $this->showPresenterApplet();
+			      case 'upload_presentation':
+            return $this->uploadPresentation();
+			
+			case 'show_upload_form':
+            return "upload_presentation.php";
+			
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
+				
 			case 'presentations' :
 				return "realtime-presentations_tpl.php";
+			
 			case 'requesttoken' :
 				return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'releasetoken' :
@@ -205,27 +207,10 @@ class realtime extends controller
      * Function to invoke the presenter applet 
      *
      */ 
-    function showPresenterApplet()
+    function showAudienceApplet()
     {
-          $id="";
-          $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
-          $files=$filesObj->getLatestPresentations();
-          $fileList="";
-          $counter = 0;
-          if (count($files) > 0)
-          {
-           foreach ($files as $file)
-            {
-                if($counter == 0){
-                $id=$file['id'];
-                }
-                $fileList .=",".$file['id']."#".$file['title'];
-                $counter++;   
-            }
-          }     
-          $this->setVarByRef('id', $id);
-          $this->setVarByRef('files', $fileList);
-          return "realtime-presentations-presenter-applet_tpl.php";
+		$this->setVarByRef('id', $id);  
+        return "realtime-presentations-audience-applet_tpl.php";
      }
     
    /**
@@ -239,6 +224,7 @@ class realtime extends controller
  
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
+		
 
         $id = $this->objFiles->autoCreateTitle();
 
@@ -248,7 +234,7 @@ class realtime extends controller
 
        $objMkDir->mkdirs($destinationDir);
 
-        @chmod($destinationDir, 0777);
+	   @chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
         $objUpload->permittedTypes = array('ppt', 'odp', 'pps'); //'pps',
@@ -291,11 +277,11 @@ class realtime extends controller
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
-
-            $this->objFiles->updateReadyForConversion($id, $filename, $mimetype);
-            $this->objFiles->convertFileFromFormat($id,$ext,"html");
-          
-            return "presenter_home.php";
+			$inputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
+			$outputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.html';
+            $this->converter->convert($inputFile,$outputFile);
+            $this->setVarByRef('id', $id);       
+		  return "realtime-presentations-presenter-applet_tpl.php";
         }
     }
     /**

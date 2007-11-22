@@ -7,6 +7,7 @@
     echo '  <param name="contentBasePath" value="'.$this->objConfig->getcontentBasePath().'webpresent/'.$id.'"/>';
     echo '  <param name="user" value="'.$this->objUser->userName().'"/>';
 	echo '  <param name="slideId" value="'.$id.'"/>';
+	echo '  <param name="jodconverterPath" value="'.$jodconverterPath.'"/>';
     echo "</applet> ";
     echo '</center>';
 ?>
