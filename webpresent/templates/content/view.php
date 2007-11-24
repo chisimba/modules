@@ -183,7 +183,7 @@ $uploaderLink->link = $objUser->fullname($file['creatorid']);
 
 $rightCell .= '<p><strong>Uploaded by:</strong> '.$uploaderLink->show().'</p>';
 
-// Output the filter code.
+// Output the filter code for local filter
 $this->loadClass('textinput','htmlelements');
 $filterBox=new textinput('filter');
 $filterBox->size=60;
@@ -191,6 +191,20 @@ $filterBox->setValue("[WPRESENT: id=" . $file['id'] . "]");
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filter", "webpresent")
   . "</strong>: " . $filterBox->show() . "<br />"
   . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent")
+  . "</p>";
+
+//Output filter code for remote filter
+$filterBox=new textinput('filter2');
+$filterBox->size=60;
+$flashUrl = $_SERVER['SERVER_NAME'] . "/"
+  . $this->objConfig->getcontentPath()
+  .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
+
+$filterText = "[WPRESENT: type=byurl, url=http://" . $flashUrl . "]";
+$filterBox->setValue($filterText);
+$rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
+  . "</strong>: " . $filterBox->show() . "<br />"
+  . $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
   . "</p>";
 
 
@@ -244,7 +258,7 @@ $this->objFiles->generatePresenterJNLP($file['id']);
 $this->objFiles->generateClientJNLP($file['id']);
 //if ($file['creatorid'] == $objUser->userId()) {
  if ($objUser->isLoggedIn()){
-	 
+
 $codebase=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/presenter_studio.jnlp';
 $codebase2=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/client.jnlp';
 
