@@ -755,6 +755,542 @@ class hivtracking extends object
     }
 
     /**
+     * Display all the information logged in the system
+     *
+     * @access private
+     * @return string html
+     */
+    private function showAllInfo()
+    {
+        // Get objects
+        $objCMSSections = $this->getObject('dbsections', 'cmsadmin');
+        $objCMSContent = $this->getObject('dbcontent', 'cmsadmin');
+        $objDbForum = $this->getObject('dbhivforum', 'hivaidsforum');
+        $objDbPodcast = $this->getObject('dbpodcast', 'podcast');
+
+        // Get data
+        $cmsData = $this->dbLogCalc->getCmsLog();
+        $dfData = $this->dbLogCalc->getDFLog();
+        $podData = $this->dbLogCalc->getPodcastLog();
+        $hivData = $this->dbLogCalc->getHIVLog();
+        //$photoData = $this->dbLogCalc->getPhotoLog();
+
+        $hdAllInfo = $this->objLanguage->languageText('phrase_allloggedinformation');
+        $hdPage = $this->objLanguage->languageText('word_page');
+        $hdHit = $this->objLanguage->languageText('word_hit');
+        $hdDate = $this->objLanguage->languageText('phrase_dateofvisit');
+        $hdTime = $this->objLanguage->languageText('phrase_timeofvisit');
+        $hdReg = $this->objLanguage->languageText('phrase_registereduser');
+        $hdUsername = $this->objLanguage->languageText('word_username');
+        $hdGender = $this->objLanguage->languageText('word_gender');
+        $hdLang = $this->objLanguage->languageText('phrase_homelanguage');
+        $hdCountry = $this->objLanguage->languageText('word_country');
+        $hdStaff = $this->objLanguage->languageText('mod_hivaids_stafforstudent', 'hivaids');
+        $hdFaculty = $this->objLanguage->languageText('word_faculty');
+        $hdYear = $this->objLanguage->languageText('phrase_yearofstudy');
+        $hdPosts = $this->objLanguage->languageText('word_posts');
+        $hdIp = $this->objLanguage->languageText('phrase_ipaddress');
+        $lnExport = $this->objLanguage->languageText('phrase_exportascsv');
+        $lbExcel = $this->objLanguage->languageText('mod_hivaids_importexcel', 'hivaids');
+        $lbHome = $this->objLanguage->languageText('word_home');
+        $lbDefault = $this->objLanguage->languageText('word_default');
+        $lbMale = $this->objLanguage->languageText('word_male');
+        $lbFemale = $this->objLanguage->languageText('word_female');
+        $lbLists = $this->objLanguage->languageText('phrase_topiclist');
+        $byuser = $this->objLanguage->languageText('phrase_mypodcasts');
+        $playpodcast = $this->objLanguage->languageText('phrase_playpodcast');
+        $addpodcast = $this->objLanguage->languageText('phrase_addpodcast');
+        $home = $this->objLanguage->languageText('phrase_podcasthome');
+
+        $viewlinks = $this->objLanguage->languageText('phrase_linkspage');
+        $playyourmoves = $this->objLanguage->languageText('phrase_playyourmovesgame');
+        $showregister = $this->objLanguage->languageText('phrase_newregistration');
+        $videolist = $this->objLanguage->languageText('phrase_videolist');
+
+        $objHead = new htmlHeading();
+        $objHead->str = $hdAllInfo;
+        $objHead->type = 1;
+        $str = $objHead->show();
+
+        $objLink = new link($this->uri(array('action' => 'exportlog', 'mode' => 'export')));
+        $objLink->link = $lnExport;
+        $str .= $objLink->show().' ('.$lbExcel.')';
+
+        $objTable = new htmlTable();
+        $objTable->cellpadding = '5';
+        $objTable->cellspacing = '2';
+
+        $hdArr = array();
+        $hdArr[] = $hdPage;
+        $hdArr[] = $hdHit;
+        $hdArr[] = $hdDate;
+        $hdArr[] = $hdTime;
+        $hdArr[] = $hdIp;
+        $hdArr[] = $hdReg;
+        $hdArr[] = $hdUsername;
+        $hdArr[] = $hdGender;
+        $hdArr[] = $hdLang;
+        $hdArr[] = $hdCountry;
+        $hdArr[] = $hdStaff;
+        $hdArr[] = $hdFaculty;
+        $hdArr[] = $hdYear;
+        $hdArr[] = $hdPosts;
+
+        $objTable->addHeader($hdArr, 'heading');
+
+        /* ** CMS Log Data ** */
+        $class = 'even';
+        if(!empty($cmsData)){
+            foreach($cmsData as $sectionid => $arrPages){
+                // Get section name
+                $section = ($sectionid == 'home') ? $lbHome : $objCMSSections->getMenuText($sectionid);
+                foreach ($arrPages as $pageid => $arrHits){
+                    // Get page name
+                    if($pageid == 'home') {
+                        $page = $lbDefault;
+                    }else{
+                        $arrContent = $objCMSContent->getContentPage($pageid);
+                        $page = $arrContent['title'];
+                    }
+                    $class = ($class == 'even') ? 'odd' : 'even';
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : '<b>'.$section.': '.$page.'</b>';
+                        $row[] = '<b>'.$hitNum.'</b>';
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+
+                        $objTable->addRow($row, $class);
+                    }
+                }
+            }
+        }
+
+        /* ** Discussion forum log ** */
+        if(!empty($dfData)){
+            foreach ($dfData as $catId => $arrTopics){
+                // Get category title
+                $category = $objDbForum->getCatTitle($catId);
+
+                foreach ($arrTopics as $topicid => $arrHits){
+                    // Get topic name
+                    if($topicid == 'home') {
+                        $topic = $lbDefault.' ('.$lbLists.')';
+                    }else{
+                        $topic = $objDbForum->getTopicTitle($topicid, $catId);
+                    }
+
+                    $class = ($class == 'even') ? 'odd' : 'even';
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : '<b>'.$category.': '.$topic.'</b>';
+                        $row[] = '<b>'.$hitNum.'</b>';
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+
+                        $objTable->addRow($row, $class);
+                    }
+                }
+            }
+        }
+
+
+        /* ** Podcast log ** */
+        if(!empty($podData)){
+            foreach ($podData as $action => $arrActions){
+                // Get category title
+                $view = $$action;
+
+                foreach ($arrActions as $podId => $arrHits){
+                    // Get topic name
+                    if($podId == 'none') {
+                        $podcast = '';
+                    }else{
+                        // Get podcast title
+                        $arrPod = $objDbPodcast->getPodcast($podId);
+                        $podcast = (isset($arrPod['title'])) ? ': '.$arrPod['title'] : '';
+                    }
+
+                    $class = ($class == 'even') ? 'odd' : 'even';
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : '<b>'.$view.$podcast.'</b>';
+                        $row[] = '<b>'.$hitNum.'</b>';
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+
+                        $objTable->addRow($row, $class);
+                    }
+                }
+            }
+        }
+
+        /* ** Hivaids log ** */
+        if(!empty($hivData)){
+            foreach ($hivData as $action => $arrActions){
+                // Get category title
+                $view = $$action;
+
+                $class = ($class == 'even') ? 'odd' : 'even';
+                foreach ($arrActions as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : '<b>'.$view.'</b>';
+                        $row[] = '<b>'.$hitNum.'</b>';
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+
+                        $objTable->addRow($row, $class);
+                }
+            }
+        }
+
+        $str .= $objTable->show();
+
+        return $str;
+    }
+
+    /**
+     * Export all logged info to CSV format
+     *
+     * @access private
+     */
+    private function exportAllInfo()
+    {
+        // Get objects
+        $objCMSSections = $this->getObject('dbsections', 'cmsadmin');
+        $objCMSContent = $this->getObject('dbcontent', 'cmsadmin');
+        $objDbForum = $this->getObject('dbhivforum', 'hivaidsforum');
+        $objDbPodcast = $this->getObject('dbpodcast', 'podcast');
+
+        // Get data
+        $cmsData = $this->dbLogCalc->getCmsLog();
+        $dfData = $this->dbLogCalc->getDFLog();
+        $podData = $this->dbLogCalc->getPodcastLog();
+        $hivData = $this->dbLogCalc->getHIVLog();
+
+        $lbHome = $this->objLanguage->languageText('word_home');
+        $lbDefault = $this->objLanguage->languageText('word_default');
+        $lbMale = $this->objLanguage->languageText('word_male');
+        $lbFemale = $this->objLanguage->languageText('word_female');
+        $lbLists = $this->objLanguage->languageText('phrase_topiclist');
+        $byuser = $this->objLanguage->languageText('phrase_mypodcasts');
+        $playpodcast = $this->objLanguage->languageText('phrase_playpodcast');
+        $addpodcast = $this->objLanguage->languageText('phrase_addpodcast');
+        $home = $this->objLanguage->languageText('phrase_podcasthome');
+        $viewlinks = $this->objLanguage->languageText('phrase_linkspage');
+        $playyourmoves = $this->objLanguage->languageText('phrase_playyourmovesgame');
+        $showregister = $this->objLanguage->languageText('phrase_newregistration');
+        $videolist = $this->objLanguage->languageText('phrase_videolist');
+
+        $hdArr = array();
+        $hdArr[] = $this->objLanguage->languageText('word_page');
+        $hdArr[] = $this->objLanguage->languageText('word_hit');
+        $hdArr[] = $this->objLanguage->languageText('phrase_dateofvisit');
+        $hdArr[] = $this->objLanguage->languageText('phrase_timeofvisit');
+        $hdArr[] = $this->objLanguage->languageText('phrase_ipaddress');
+        $hdArr[] = $this->objLanguage->languageText('phrase_registereduser');
+        $hdArr[] = $this->objLanguage->languageText('word_username');
+        $hdArr[] = $this->objLanguage->languageText('word_gender');
+        $hdArr[] = $this->objLanguage->languageText('phrase_homelanguage');
+        $hdArr[] = $this->objLanguage->languageText('word_country');
+        $hdArr[] = $this->objLanguage->languageText('mod_hivaids_stafforstudent', 'hivaids');
+        $hdArr[] = $this->objLanguage->languageText('word_faculty');
+        $hdArr[] = $this->objLanguage->languageText('phrase_yearofstudy');
+        $hdArr[] = $this->objLanguage->languageText('word_posts');
+
+        // Create csv headings
+        $csv = '"'.implode('","', $hdArr).'"';
+        $csv .= "\n";
+
+        /* ** CMS Log Data ** */
+        if(!empty($cmsData)){
+            foreach($cmsData as $sectionid => $arrPages){
+                // Get section name
+                $section = ($sectionid == 'home') ? $lbHome : $objCMSSections->getMenuText($sectionid);
+                foreach ($arrPages as $pageid => $arrHits){
+                    // Get page name
+                    if($pageid == 'home') {
+                        $page = $lbDefault;
+                    }else{
+                        $arrContent = $objCMSContent->getContentPage($pageid);
+                        $page = $arrContent['title'];
+                    }
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : $section.': '.$page;
+                        $row[] = $hitNum;
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+                        $csv .= '"'.implode('","', $row).'"';
+                        $csv .= "\n";
+                    }
+                }
+            }
+        }
+
+        /* ** Discussion forum log ** */
+        if(!empty($dfData)){
+            foreach ($dfData as $catId => $arrTopics){
+                // Get category title
+                $category = $objDbForum->getCatTitle($catId);
+
+                foreach ($arrTopics as $topicid => $arrHits){
+                    // Get topic name
+                    if($topicid == 'home') {
+                        $topic = $lbDefault.' ('.$lbLists.')';
+                    }else{
+                        $topic = $objDbForum->getTopicTitle($topicid, $catId);
+                    }
+
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : $category.': '.$topic;
+                        $row[] = $hitNum;
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+
+                        $csv .= '"'.implode('","', $row).'"';
+                        $csv .= "\n";
+                    }
+                }
+            }
+        }
+
+        /* ** Podcast log ** */
+        if(!empty($podData)){
+            foreach ($podData as $action => $arrActions){
+                // Get category title
+                $view = $$action;
+
+                foreach ($arrActions as $podId => $arrHits){
+                    // Get topic name
+                    if($podId == 'none') {
+                        $podcast = '';
+                    }else{
+                        // Get podcast title
+                        $arrPod = $objDbPodcast->getPodcast($podId);
+                        $podcast = (isset($arrPod['title'])) ? ': '.$arrPod['title'] : '';
+                    }
+
+                    foreach ($arrHits as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : $view.$podcast;
+                        $row[] = $hitNum;
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+                        $csv .= '"'.implode('","', $row).'"';
+                        $csv .= "\n";
+                    }
+                }
+            }
+        }
+
+        /* ** Hivaids log ** */
+        if(!empty($hivData)){
+            foreach ($hivData as $action => $arrActions){
+                // Get category title
+                $view = $$action;
+
+                foreach ($arrActions as $i => $item){
+                        $dateArr = explode(' ', $item['log_date']);
+                        $hitNum = $i+1;
+
+
+                        $row = array();
+                        $row[] = ($i > 0) ? '' : $view;
+                        $row[] = $hitNum;
+                        $row[] = $dateArr[0];
+                        $row[] = $dateArr[1];
+                        $row[] = $item['ipaddress'];
+
+                        // registered user information
+                        if(!empty($item['user_id'])){
+                            $row[] = 'Y';
+                            $row[] = $item['username'];
+                            $row[] = ($item['sex'] == 'F') ? $lbFemale : $lbMale;
+                            $row[] = $item['language'];
+                            $row[] = $this->objCountries->getName($item['country']);
+                            $row[] = $item['staff_student'];
+                            $row[] = $item['course'];
+                            $row[] = $item['study_year'];
+                            $row[] = '';
+                        }else{
+                            $row[] = 'N';
+                            for($x = 0; $x < 8; $x++){
+                                $row[] = '';
+                            }
+                        }
+                        $csv .= '"'.implode('","', $row).'"';
+                        $csv .= "\n";
+                }
+            }
+        }
+
+        return $csv;
+    }
+
+    /**
     * Method to create a left menu for the tracking
     *
     * @access public
@@ -786,6 +1322,7 @@ class hivtracking extends object
         $lbPrint = $this->objLanguage->languageText('phrase_printfriendly');
         $hdPrint = $this->objLanguage->languageText('word_print');
         $printInfo = $this->objLanguage->languageText('mod_hivaids_printinfo', 'hivaids');
+        $lbAllInfo = $this->objLanguage->languageText('phrase_allloggedinfo');
 
         $view_mode = $this->getSession('view_mode', 'all');
         $track_mode = $this->getSession('track_mode', '');
@@ -840,6 +1377,10 @@ class hivtracking extends object
 
         $objLink = new link($this->uri('', 'logger'));
         $objLink->link = $lbLogger;
+        $genStr .= '<li>'.$objLink->show().'</li>';
+
+        $objLink = new link($this->uri(array('action' => 'tracking', 'mode' => 'allinfo')));
+        $objLink->link = $lbAllInfo;
         $genStr .= '<li>'.$objLink->show().'</li></ul>';
 
         $menuStr .= $this->objFeatureBox->show($hdView, $genStr);
@@ -914,6 +1455,12 @@ class hivtracking extends object
             case 'forum':
                 $this->unsetSession('track_mode');
                 return $this->showForum();
+
+            case 'allinfo':
+                return $this->showAllInfo();
+
+            case 'export':
+                return $this->exportAllInfo();
 
             case 'forum_topics':
                 $this->unsetSession('track_mode');

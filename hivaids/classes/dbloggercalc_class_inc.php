@@ -470,5 +470,279 @@ class dbLoggerCalc extends dbtable
 
         $this->getArray($sql);
     }
+
+    /**
+     * Method to get the logged data for the cms
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getCmsLog()
+    {
+        $data = $this->getLoggedData('cms');
+        $log = array();
+
+        if(!empty($data)){
+            foreach ($data as $item){
+                // Get the eventparamvalue, if it's null then its the cms home page, else extract the section id
+                $event = $item['eventparamvalue'];
+                $sectionId = 'home';
+                $pageId = 'home';
+                $sectionType = 'home';
+                if(is_null($event) || empty($event)){
+                    $sectionType = 'home';
+                }else{
+                    // get the action - show section or show content
+                    $pos = strpos($event, 'sectionid');
+                    $len = strpos($event, '&id=');
+                    $action = substr($event, 7, $len-7);
+                    $sectionId = substr($event, $pos+10);
+
+                    switch($action){
+                        case 'showsection':
+                            $sectionType = 'section';
+                            break;
+                        case 'showfulltext':
+                        case 'showcontent':
+                            $sectionType = 'page';
+                            $pageId = substr($event, $len+4, $pos-$len-5);
+                            break;
+                        default:
+                            // not sure about the action here
+                            // so find the section id and the page id the long way round
+                            if($len > $pos){
+                                $sectionId = substr($event, $pos+10, $len-$pos-10);
+                                $pageId = substr($event, $len+4);
+                            }else{
+                                $pageId = substr($event, $len+4, $pos-$len-5);
+                            }
+                            if($pageId == $sectionId){
+                                $sectionType = 'section';
+                            }else{
+                                $sectionType = 'page';
+                            }
+                    }
+                }
+                $log[$sectionId][$pageId][] = $item;
+            }
+        }
+
+        return $log;
+    }
+
+    /**
+     * Method to get the discussion forum logged data
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getDFLog()
+    {
+        $objDbForum = $this->getObject('dbhivforum', 'hivaidsforum');
+
+        $data = $this->getLoggedData('hivaidsforum');
+
+        $log = array();
+
+        if(!empty($data)){
+            // Get the default category
+            $defaultId = $objDbForum->getDefaultCatID();
+            foreach ($data as $item){
+                // Get the eventparamvalue, if it's null then its the default forum / category
+                $event = $item['eventparamvalue'];
+                $referrer = $item['referrer'];
+                $catId = '';
+                $topicId = '';
+                $action = '';
+
+                if(is_null($event) || empty($event)){
+                    $catId = $defaultId;
+                    $topicId = 'home';
+                }else{
+                    // get the action - show topic or show category or show reply
+                    $pos = strpos($event, '&');
+                    if($pos == false){
+                        $action = substr($event, 7);
+                    }else{
+                        $action = substr($event, 7, $pos-7);
+                    }
+
+                    switch($action){
+                        case 'showcat':
+                            $catId = substr($event, $pos+7);
+                            $topicId = 'home';
+                            break;
+
+                        case 'showtopic':
+                            $topicId = substr($event, $pos+9);
+                            // check referrer for category id
+                            $ref = strpos($referrer, 'catId=');
+                            if($ref === false){
+                                // get from DB
+                                $catId = $objDbForum->getCategoryForTopic($topicId);
+                            }else{
+                                $catId = substr($referrer, $ref+6);
+                            }
+                            break;
+
+                        case 'showreply':
+                            // Check referrer for topic id
+                            $ref = strpos($referrer, 'topicId=');
+                            $topicId = substr($referrer, $ref+8);
+                            // get category id from DB
+                            $catId = $objDbForum->getCategoryForTopic($topicId);
+                            break;
+                    }
+                }
+                $log[$catId][$topicId][] = $item;
+            }
+        }
+        return $log;
+    }
+
+    /**
+     * Method to get the podcast logged data
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getPodcastLog()
+    {
+        $data = $this->getLoggedData('podcast');
+
+        $log = array();
+
+        if(!empty($data)){
+            foreach ($data as $item){
+                // Get the eventparamvalue, if it's null then its the default forum / category
+                $event = $item['eventparamvalue'];
+                $action = '';
+                $podId = 'none';
+
+                if(is_null($event) || empty($event) || $event == 'action='){
+                    $action = 'home';
+                }else{
+                    // get the action - show topic or show category or show reply
+                    $pos = strpos($event, '&');
+                    if($pos == false){
+                        $action = substr($event, 7);
+                    }else{
+                        $action = substr($event, 7, $pos-7);
+                    }
+
+                    switch($action){
+                        case 'playpodcast':
+                            $len = strpos($event, '&id=');
+                            $podId = substr($event, $len+4);
+                            break;
+                    }
+                }
+                $log[$action][$podId][] = $item;
+            }
+        }
+        return $log;
+    }
+
+    /**
+     * Method to get the hivaids logged data - video list, links page, registration
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getHIVLog()
+    {
+        $data = $this->getLoggedData('hivaids');
+
+        $log = array();
+
+        if(!empty($data)){
+            foreach ($data as $item){
+                // Get the eventparamvalue, if it's null then its the default forum / category
+                $event = $item['eventparamvalue'];
+                $action = '';
+
+                if(is_null($event) || empty($event) || $event == 'action='){
+                }else{
+                    // get the action - show topic or show category or show reply
+                    $pos = strpos($event, '&');
+                    if($pos == false){
+                        $action = substr($event, 7);
+                    }else{
+                        $action = substr($event, 7, $pos-7);
+                    }
+
+                    switch($action){
+                        case 'viewlinks':
+                        case 'playyourmoves':
+                        case 'showregister':
+                        case 'videolist':
+                            $log[$action][] = $item;
+                    }
+                }
+            }
+        }
+        return $log;
+    }
+
+    /**
+     * Method to get the photogallery logged data
+     *
+     * @access public
+     * @return array $data
+     */
+    public function getPhotoLog()
+    {
+        $data = $this->getLoggedData('photogallery');
+
+        $log = array();
+
+        if(!empty($data)){
+            foreach ($data as $item){
+                // Get the eventparamvalue, if it's null then its the default forum / category
+                $event = $item['eventparamvalue'];
+                $action = '';
+
+                if(is_null($event) || empty($event) || $event == 'action='){
+                }else{
+                    // get the action - show topic or show category or show reply
+                    $pos = strpos($event, '&');
+                    if($pos == false){
+                        $action = substr($event, 7);
+                    }else{
+                        $action = substr($event, 7, $pos-7);
+                    }
+
+                    switch($action){
+                        case 'viewlinks':
+                        case 'playyourmoves':
+                        case 'showregister':
+                        case 'videolist':
+                            $log[$action][] = $item;
+                    }
+                }
+            }
+        }
+        return $log;
+    }
+
+
+    /**
+     * Method to get the logged data for a given module
+     *
+     * @access private
+     * @param string $module
+     * @return array $data
+     */
+    private function getLoggedData($module = 'hiviads')
+    {
+        $sql = "SELECT *, l.datecreated as log_date FROM tbl_logger l
+            LEFT JOIN tbl_hivaids_users hu ON l.userid = hu.user_id
+            LEFT JOIN tbl_users u ON hu.user_id = u.userid
+            WHERE l.module = '{$module}'
+            ORDER BY l.puid";
+
+        $data = $this->getArray($sql);
+        return $data;
+    }
 }
 ?>

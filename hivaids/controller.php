@@ -141,6 +141,14 @@ class hivaids extends controller
                 $this->setVarByRef('display', $display);
                 return 'print_tpl.php';
 
+            case 'exportlog':
+                $display = $this->hivTracking->show('export');
+                $filename = 'hivaids_log.csv';
+                $this->setVarByRef('display', $display);
+                $this->setVarByRef('name', $filename);
+                $this->setPageTemplate('export_page_tpl.php');
+                return 'blank_tpl.php';
+
             /* ** Suggestion box ** */
             case 'viewsuggestions':
                 $display = $this->hivTools->viewSuggestions();
