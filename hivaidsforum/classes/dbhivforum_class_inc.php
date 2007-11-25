@@ -24,7 +24,7 @@ class dbhivforum extends dbtable
     * @access private
     */
     private $context = 'root';
-    
+
     /**
     * Constructor method
     */
@@ -33,19 +33,19 @@ class dbhivforum extends dbtable
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDate = $this->getObject('dateandtime', 'utilities');
-        
+
         $this->dbForum = $this->getObject('dbforum', 'forum');
         $this->dbTopic = $this->getObject('dbtopic', 'forum');
         $this->dbForumPost = $this->getObject('dbpost', 'forum');
         $this->dbForumPostText = $this->getObject('dbposttext', 'forum');
-        
+
         $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
         $this->objRound = $this->newObject('roundcorners', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('htmlheading', 'htmlelements');
         $this->loadClass('htmltable', 'htmlelements');
     }
-    
+
     /**
 	* Method to dynamically switch tables
 	*
@@ -63,7 +63,7 @@ class dbhivforum extends dbtable
 			exit();
 		}
 	}
-	
+
 	/**
 	* Method to display the topic post and the posted responses in round divs
 	*
@@ -79,19 +79,19 @@ class dbhivforum extends dbtable
 	    $lbReply = $this->objLanguage->languageText('phrase_replytotopic');
 	    $lbThread = $this->objLanguage->languageText('phrase_replytopost');
 	    $lbReplyThread = $this->objLanguage->languageText('phrase_replytothread');
-	    
+
 	    $topStr = '';
 	    $replyStr = '';
-	    
+
 	    // Create reply links
 	    $objLink = new link($this->uri(array('action' => 'showreply')));
 	    $objLink->link = $lbReply;
 	    $lnReply = '<br />'.$objLink->show();
-	    
+
 	    //echo '<pre>'; print_r($data);
-	    
+
 	    if(!empty($data)){
-            
+
             $parent = array();
             $threads = array();
             $parentId = '';
@@ -102,21 +102,21 @@ class dbhivforum extends dbtable
                     $parentId = $item['post_id'];
                 }else{
                     $threads[$item['post_parent']][] = $item;
-                }   
+                }
             }
-            
+
             // Display topic parent
             if(!empty($parent)){
                 $objHead = new htmlheading();
     	        $objHead->str = $parent['post_title'];
     	        $objHead->type = 4;
-    	        
+
     	        $inStr = $objHead->show();
     	        $inStr .= $parent['post_text'];
-	           
+
 	            $topStr = $this->objRound->show($inStr.$lnReply);
             }
-            
+
             // Display posts by thread
             if(!empty($threads)){
                 foreach($threads[$parentId] as $item){
@@ -127,7 +127,7 @@ class dbhivforum extends dbtable
 	                    $date = $this->objDate->formatDateOnly($item['datelastupdated']);
 	                    $posted = ' '.$lbOn.' '.$date;
 	                }
-	                
+
 	                $objTable = new htmltable();
 	                $objTable->startRow();
 	                $objTable->addCell('<b>'.$item['post_title'].'</b>');
@@ -135,16 +135,16 @@ class dbhivforum extends dbtable
 	                $objTable->endRow();
     	            $inStr = $objTable->show();
     	            $inStr .= $item['post_text'];
-    	            
+
             	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
             	    $objLink->link = $lbThread;
             	    $lnThread = '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
 
 	                $replyStr .= $this->objRound->show($inStr.$lnReply.$lnThread);
-	                
+
 	                // Check for a thread on the post
 	                if(isset($threads[$item['post_id']]) && !empty($threads[$item['post_id']])){
-	                   
+
 	                   $objTableThread = new htmltable();
 	                   foreach($threads[$item['post_id']] as $val){
 	                       if(!empty($val['userid'])){
@@ -154,7 +154,7 @@ class dbhivforum extends dbtable
          	                    $date = $this->objDate->formatDateOnly($val['datelastupdated']);
          	                    $posted = ' '.$lbOn.' '.$date;
          	                }
-         	                
+
          	                $objTable = new htmltable();
          	                $objTable->startRow();
          	                $objTable->addCell('<b>'.$val['post_title'].'</b>');
@@ -162,11 +162,11 @@ class dbhivforum extends dbtable
          	                $objTable->endRow();
              	            $inStr = $objTable->show();
              	            $inStr .= $val['post_text'];
-             	            
+
                      	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
                      	    $objLink->link = $lbReplyThread;
                      	    $lnThread = $objLink->show();
-         
+
          	                $div = $this->objRound->show($inStr.$lnThread);
          	                $objTableThread->startRow();
          	                $objTableThread->addCell('', '8%');
@@ -177,14 +177,14 @@ class dbhivforum extends dbtable
 	                }
                 }
             }
-            
+
             /*
 	        foreach($data as $item){
 	            $name = ''; $posted = '';
-	            
+
 	            // check if post is the topic parent
 	            if($item['post_parent'] == '0'){
-    	            
+
 	            }else{
 	                if(!empty($item['userid'])){
 	                    $name = $lbPosted.': '.$this->objUser->username($item['userid']);
@@ -193,7 +193,7 @@ class dbhivforum extends dbtable
 	                    $date = $this->objDate->formatDateOnly($item['datelastupdated']);
 	                    $posted = ' '.$lbOn.' '.$date;
 	                }
-	                
+
 	                $objTable = new htmltable();
 	                $objTable->startRow();
 	                $objTable->addCell('<b>'.$item['post_title'].'</b>');
@@ -201,7 +201,7 @@ class dbhivforum extends dbtable
 	                $objTable->endRow();
     	            $inStr = $objTable->show();
     	            $inStr .= $item['post_text'];
-    	            
+
             	    $objLink = new link($this->uri(array('action' => 'showreply', 'parent_id' => $item['post_id'])));
             	    $objLink->link = $lbThread;
             	    $lnThread = '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
@@ -213,7 +213,7 @@ class dbhivforum extends dbtable
 	    }
 	    return $topStr.$replyStr;
 	}
-	
+
 	/**
 	* Method to get a topic post and responses
 	*
@@ -223,17 +223,17 @@ class dbhivforum extends dbtable
 	private function getPosts()
 	{
 	    $topicId = $this->getSession('topicId');
-	    
+
         // Get the posts from the DB
         $this->_changeTable('tbl_forum_post');
-        $sql = "SELECT * FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext 
-            WHERE post.topic_id = '{$topicId}' AND posttext.post_id = post.id 
+        $sql = "SELECT * FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext
+            WHERE post.topic_id = '{$topicId}' AND posttext.post_id = post.id
             ORDER BY post.datelastupdated ASC ";
-            
+
         $data = $this->getArray($sql);
         return $data;
 	}
-	
+
 	/**
 	* Method to display the top post
 	*
@@ -242,16 +242,16 @@ class dbhivforum extends dbtable
 	* @return string html
 	*/
 	public function displayTopPost($data)
-	{	    
+	{
 	    $objHead = new htmlheading();
     	$objHead->str = $data['post_title'];
     	$objHead->type = 4;
         $inStr = $objHead->show();
         $inStr .= $data['post_text'];
-	           
+
         return $this->objRound->show($inStr);
 	}
-	
+
 	/**
 	* Method to display the forum details
 	*
@@ -260,16 +260,16 @@ class dbhivforum extends dbtable
 	* @return string html
 	*/
 	public function displayForum($data)
-	{	    
+	{
 	    $objHead = new htmlheading();
     	$objHead->str = $data['forum_name'];
     	$objHead->type = 4;
         $inStr = $objHead->show();
         $inStr .= $data['forum_description'];
-	           
+
         return $this->objRound->show($inStr);
 	}
-	
+
 	/**
 	* Method to show a post
 	*
@@ -283,7 +283,7 @@ class dbhivforum extends dbtable
 	    $lbPosted = $this->objLanguage->languageText('phrase_postedby');
 	    $lbOn = strtolower($this->objLanguage->languageText('word_on'));
 	    $lbReply = $this->objLanguage->languageText('phrase_replytotopic');
-	    
+
 	    // Create reply link
 	    $objLink = new link($this->uri(array('action' => 'showreply')));
 	    $objLink->link = $lbReply;
@@ -292,7 +292,7 @@ class dbhivforum extends dbtable
         $name = ''; $posted = '';
 	    if(!empty($data)){
 	       $this->setSession('topicId', $data['topic_id']);
-	    
+
 	        if(!empty($data['userid'])){
 	            $name = $lbPosted.': '.$this->objUser->username($data['userid']);
 	        }
@@ -300,7 +300,7 @@ class dbhivforum extends dbtable
 	            $date = $this->objDate->formatDateOnly($data['datelastupdated']);
 	            $posted = ' '.$lbOn.' '.$date;
 	        }
-	        
+
 	        $objTable = new htmltable();
 	        $objTable->startRow();
 	        $objTable->addCell('<b>'.$data['post_title'].'</b>');
@@ -308,11 +308,11 @@ class dbhivforum extends dbtable
 	        $objTable->endRow();
     	    $inStr = $objTable->show();
             $inStr .= $data['post_text'];
-    	            
+
 	        return $this->objRound->show($inStr.$lnReply);
 	    }
 	}
-	
+
 	/**
 	* Method to get the parent post for replying to a thread
 	*
@@ -324,7 +324,7 @@ class dbhivforum extends dbtable
 	{
 	   return $this->getPost($parentId);
 	}
-	
+
 	/**
 	* Method to get a topic post and responses
 	*
@@ -333,19 +333,19 @@ class dbhivforum extends dbtable
 	* @return array $data The posts
 	*/
 	private function getPost($postId)
-	{   
+	{
         // Get the posts from the DB
         $this->_changeTable('tbl_forum_post');
-        $sql = "SELECT * FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext 
+        $sql = "SELECT * FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext
             WHERE post.id = '{$postId}' AND posttext.post_id = post.id ";
-            
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0];
         }
         return array();
 	}
-	
+
 	/**
 	* Method to list the topics for display in a box / block
 	*
@@ -358,7 +358,7 @@ class dbhivforum extends dbtable
         $topicId = $this->getSession('topicId');
         $lbTopics = $this->objLanguage->languageText('phrase_topicsincategory');
         $list = $this->getTopicList();
-        
+
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
@@ -387,7 +387,7 @@ class dbhivforum extends dbtable
         }
         return $this->objFeatureBox->show($lbTopics, $str, NULL, 'default', TRUE, TRUE);
     }
-    
+
     /**
     * Method to get the list of topics
     *
@@ -398,29 +398,29 @@ class dbhivforum extends dbtable
     {
         // Get the current forum
         $forumId = $this->getSession('forumId');
-        
+
         // Get the list from the DB
         $this->_changeTable('tbl_forum_topic');
         $sql = "SELECT *, topic.id as topicid FROM tbl_forum_topic AS topic, tbl_forum_post AS post, tbl_forum_post_text AS posttext ";
-        
+
         // Use the current forum, if not set then find the default
         if(isset($forumId) && !empty($forumId)){
             $sql .= "WHERE topic.forum_id = '{$forumId}' ";
         }else{
-            $sql .= " WHERE topic.forum_id = 
+            $sql .= " WHERE topic.forum_id =
             (SELECT id FROM tbl_forum AS forum WHERE forum.defaultforum = 'Y' AND forum.forum_context = '$this->context') ";
         }
-        
+
         // Get the topic text
-        $sql .= "AND topic.first_post = post.id AND post.post_parent = '0' 
-            AND posttext.post_id = post.id 
+        $sql .= "AND topic.first_post = post.id AND post.post_parent = '0'
+            AND posttext.post_id = post.id
             ORDER BY topic.datelastupdated";
-        
+
         $data = $this->getArray($sql);
-        
+
         return $data;
     }
-    
+
     /**
     * Method to get the topic post
     *
@@ -431,19 +431,19 @@ class dbhivforum extends dbtable
     {
         // Get the current forum
         $topicId = $this->getSession('topicId');
-        
+
         // Get the list from the DB
         $this->_changeTable('tbl_forum_post');
-        $sql = "SELECT *, post.id as postid FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext 
+        $sql = "SELECT *, post.id as postid FROM tbl_forum_post AS post, tbl_forum_post_text AS posttext
             WHERE post.topic_id = '{$topicId}' AND post.post_parent = '0' AND posttext.post_id = post.id ";
-        
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0];
         }
         return array();
     }
-    
+
 	/**
 	* Method to list the categories for display in a box / block
 	*
@@ -454,10 +454,10 @@ class dbhivforum extends dbtable
     {
         // Get the current forum
         $forumId = $this->getSession('forumId');
-        
+
         $lbCats = $this->objLanguage->languageText('word_categories');
         $list = $this->getCategoryList();
-        
+
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
@@ -475,7 +475,7 @@ class dbhivforum extends dbtable
                 $str .= '<p style="margin: 0px;">'.$lnForum.'</p>';
             }
         }
-        
+
         if($dispType == 'nobox'){
             return $str;
         }
@@ -489,16 +489,16 @@ class dbhivforum extends dbtable
     * @return array $data The categories
     */
     private function getCategoryList()
-    {   
+    {
         // Get the list from the DB
         $this->_changeTable('tbl_forum');
         $sql = "SELECT * FROM tbl_forum AS forum
             WHERE forum.forum_context = '{$this->context}' AND forum.forum_visible = 'Y' ";
-            
+
         $data = $this->getArray($sql);
         return $data;
     }
-    
+
 	/**
 	* Method to display the recent posts in a box / block
 	*
@@ -509,9 +509,9 @@ class dbhivforum extends dbtable
     {
         $forumId = $this->getSession('forumId');
         $list = $this->getRecentPosts($forumId);
-        
+
         $lbPosts = $this->objLanguage->languageText('phrase_recentposts');
-        
+
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
@@ -531,18 +531,18 @@ class dbhivforum extends dbtable
     * @return array $data The categories
     */
     private function getRecentPosts($forumId = '')
-    {   
+    {
         // Get the list from the DB
         $this->_changeTable('tbl_forum_post');
-        $sql = "SELECT *, post.id as postid FROM tbl_forum_post AS post, tbl_forum AS forum, tbl_forum_topic AS topic, tbl_forum_post_text AS posttext 
-            WHERE forum.forum_context = '{$this->context}' AND topic.forum_id = forum.id 
-            AND post.topic_id = topic.id AND posttext.post_id = post.id AND forum.id = '{$forumId}' 
+        $sql = "SELECT *, post.id as postid FROM tbl_forum_post AS post, tbl_forum AS forum, tbl_forum_topic AS topic, tbl_forum_post_text AS posttext
+            WHERE forum.forum_context = '{$this->context}' AND topic.forum_id = forum.id
+            AND post.topic_id = topic.id AND posttext.post_id = post.id AND forum.id = '{$forumId}'
             ORDER BY post.datelastupdated DESC LIMIT 5";
-            
+
         $data = $this->getArray($sql);
         return $data;
     }
-    
+
     /**
     * Method to get the forum details - if the forum is not set, then use the default
     *
@@ -552,17 +552,17 @@ class dbhivforum extends dbtable
     public function getForumDetails()
     {
         $forumId = $this->getSession('forumId');
-        
+
         $this->_changeTable('tbl_forum');
         $sql = "SELECT id, forum_name, forum_description FROM tbl_forum  ";
-        
+
         // Use the current forum, if not set then find the default
         if(isset($forumId) && !empty($forumId)){
             $sql .= "WHERE id = '{$forumId}' ";
         }else{
             $sql .= " WHERE defaultforum = 'Y' AND forum_context = '$this->context' ";
         }
-        
+
         $data = $this->getArray($sql);
         if(!empty($data)){
             $this->setSession('forumId', $data[0]['id']);
@@ -570,7 +570,7 @@ class dbhivforum extends dbtable
         }
         return array();
     }
-    
+
     /**
     * Method to save a new topic
     *
@@ -582,14 +582,14 @@ class dbhivforum extends dbtable
         $forumId = $this->getSession('forumId');
         $userId = $this->objUser->userId();
         $typeId = 'init_1';
-        
+
         $topicId = $this->dbTopic->insertSingle($forumId, $typeId, '0', $userId);
         $this->setSession('topicId', $topicId);
         $postId = $this->saveTopicPost();
         $this->dbTopic->updateFirstPost($topicId, $postId);
         return $topicId;
     }
-    
+
     /**
     * Method to save a reply to a topic
     *
@@ -604,13 +604,13 @@ class dbhivforum extends dbtable
         $postParent = $this->getParam('postid', '0');
         $subject = $this->getParam('subject');
         $message = $this->getParam('message');
-        
+
         $postId = $this->dbForumPost->insertSingle($postParent, '0', $forumId, $topicId,  $userId);
         $this->dbForumPostText->insertSingle($postId, $subject, $message,  'en', '1', $userId);
         $this->dbTopic->updateLastPost($topicId, $postId);
         return $postId;
     }
-    
+
     /**
     * Method to save a category or forum
     *
@@ -622,8 +622,85 @@ class dbhivforum extends dbtable
         $forum = $this->getParam('forum');
         $description = $this->getParam('description');
         $visible = $this->getParam('visible');
-        
+
         return $this->dbForum->insertSingle($this->context, '', $forum, $description, 'N',  $visible);
+    }
+
+    /**
+     * Get the id for the default forum / category
+     *
+     * @access public
+     * @return string $id
+     */
+    public function getDefaultCatID()
+    {
+        $this->_changeTable('tbl_forum');
+        $sql = "SELECT * FROM tbl_forum";
+        $data = $this->getArray($sql);
+
+        if(!empty($data)){
+            return $data[0]['id'];
+        }
+        return '';
+    }
+
+    /**
+     * Get the category title
+     *
+     * @access public
+     * @return string $id
+     */
+    public function getCatTitle($id)
+    {
+        $this->_changeTable('tbl_forum');
+        $sql = "SELECT * FROM tbl_forum WHERE id='{$id}'";
+        $data = $this->getArray($sql);
+
+        if(!empty($data)){
+            return $data[0]['forum_name'];
+        }
+        return '';
+    }
+
+    /**
+     * Get the category id for a given topic
+     *
+     * @param unknown_type $topicId
+     * @return unknown
+     */
+    public function getCategoryForTopic($topicId)
+    {
+        $this->_changeTable('tbl_forum_topic');
+        $sql = "SELECT * FROM tbl_forum_topic WHERE id = '{$topicId}'";
+        $data = $this->getArray($sql);
+
+        if(!empty($data)){
+            return $data[0]['forum_id'];
+        }
+        return '';
+    }
+
+    /**
+     * Get the topic title
+     *
+     * @access public
+     * @return string $id
+     */
+    public function getTopicTitle($id, $forumId)
+    {
+        // Get the list from the DB
+        $this->_changeTable('tbl_forum_topic');
+        $sql = "SELECT *, topic.id as topicid FROM tbl_forum_topic AS topic, tbl_forum_post AS post, tbl_forum_post_text AS posttext
+            WHERE topic.forum_id = '{$forumId}' AND topic.id = '{$id}'
+            AND topic.first_post = post.id AND post.post_parent = '0'
+            AND posttext.post_id = post.id";
+
+        $data = $this->getArray($sql);
+
+        if(!empty($data)){
+            return $data[0]['post_title'];
+        }
+        return '';
     }
 }
 ?>
