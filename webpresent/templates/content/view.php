@@ -73,11 +73,12 @@ if ($file['creatorid'] == $objUser->userId()) {
 
     $objIcon->setIcon('delete');
 
-    //$deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
+    $deleteLink = $objSubModalWindow->show($objIcon->show(), $this->uri(array('action'=>'delete', 'id'=>$file['id'], 'mode'=>'submodal')), 'link');
 
-    //$heading->str .= ' '.$deleteLink;
+    $heading->str .= ' '.$deleteLink;
 
     $showDeleteLink = TRUE;
+	
 }
 
 if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
