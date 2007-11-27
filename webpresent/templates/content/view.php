@@ -78,7 +78,7 @@ if ($file['creatorid'] == $objUser->userId()) {
     $heading->str .= ' '.$deleteLink;
 
     $showDeleteLink = TRUE;
-	
+
 }
 
 if ($showDeleteLink == FALSE && $this->isValid('admindelete')) {
@@ -197,11 +197,11 @@ $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_
 //Output filter code for remote filter
 $filterBox=new textinput('filter2');
 $filterBox->size=60;
-$flashUrl = $_SERVER['SERVER_NAME'] . "/"
+$flashUrl =  $this->objConfig->getsiteRoot()
   . $this->objConfig->getcontentPath()
   .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
 
-$filterText = "[WPRESENT: type=byurl, url=http://" . $flashUrl . "]";
+$filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
 $filterBox->setValue($filterText);
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
   . "</strong>: " . $filterBox->show() . "<br />"
