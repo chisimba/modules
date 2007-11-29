@@ -4,13 +4,13 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 if (!$this->objUser->isLoggedIn()) {
     if (isset($vprofile)) {
-        $middleColumn.= $this->objblogOps->displayProfile($userid, $vprofile);
+        $middleColumn.= $this->objblogProfiles->displayProfile($userid, $vprofile);
     } else {
         $middleColumn.= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
     }
 } else {
     if (isset($vprofile)) {
-        $middleColumn.= $this->objblogOps->displayProfile($userid, $vprofile);
+        $middleColumn.= $this->objblogProfiles->displayProfile($userid, $vprofile);
     } else {
         $middleColumn.= $this->objLanguage->languageText("mod_blog_noprofile", "blog");
     }

@@ -16,7 +16,7 @@ else {
 }
 
 //get the posts editor
-$middleColumn = $this->objblogOps->postEditor($userid, $editid);
+$middleColumn = $this->objblogPosts->postEditor($userid, $editid);
 
 if($leftCol == NULL)
 {

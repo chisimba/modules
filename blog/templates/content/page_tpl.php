@@ -18,9 +18,9 @@ else {
 if ($this->objUser->isLoggedIn()) {
     if (isset($pagetoedit) && isset($check)) {
         //echo "editing a page";
-        $middleColumn.= $this->objblogOps->pageEditor($userid, $check, $pagetoedit);
+        $middleColumn.= $this->objblogLinksandRoll->pageEditor($userid, $check, $pagetoedit);
     } else {
-        $middleColumn.= $this->objblogOps->pageEditor($userid, $check);
+        $middleColumn.= $this->objblogLinksandRoll->pageEditor($userid, $check);
     }
 }
 //dump the cssLayout to screen

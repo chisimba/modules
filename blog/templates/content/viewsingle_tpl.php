@@ -31,13 +31,13 @@ if (isset($comment) && isset($useremail)) {
 }
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 //show all the posts
-$middleColumn.= ($this->objblogOps->showPosts($posts, TRUE));
+$middleColumn.= ($this->objblogPosts->showPosts($posts, TRUE));
 $middleColumn.= $this->objComments->showComments($postid);
-$middleColumn.= $tracks = $this->objblogOps->showTrackbacks($postid);
+$middleColumn.= $tracks = $this->objblogTrackbacks->showTrackbacks($postid);
 if ($this->objUser->isLoggedIn() == TRUE) {
-    $middleColumn.= $this->objblogOps->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
+    $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = FALSE, $comment, $useremail);
 } else {
-    $middleColumn.= $this->objblogOps->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
+    $middleColumn.= $this->objblogPosts->addCommentForm($postid, $userid, $captcha = TRUE, $comment, $useremail);
 }
 $objUi = $this->getObject('blogui');
 // left hand blocks

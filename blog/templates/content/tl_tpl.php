@@ -16,7 +16,7 @@ else {
 }
 
 $washer = $this->getObject('washout', 'utilities');
-$middleColumn = $this->objblogOps->parseTimeline("MONTH", $startdate, $tlurl); //$washer->parseText('[TIMELINE]<a href="'.$tlurl.'">blogtimeline</a>[/TIMELINE]');
+$middleColumn = $this->objblogExtras->parseTimeline("WEEK", $startdate, $tlurl); //$washer->parseText('[TIMELINE]<a href="'.$tlurl.'">blogtimeline</a>[/TIMELINE]');
 
 if($leftCol == NULL)
 {

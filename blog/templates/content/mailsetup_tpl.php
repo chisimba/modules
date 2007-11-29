@@ -16,11 +16,11 @@ else {
 
 $middleColumn = NULL;
 //check if there are previous values
-$dsnparse = $this->objblogOps->getMailDSN();
+$dsnparse = $this->objblogMail->getMailDSN();
 if ($dsnparse == FALSE) {
-    $middleColumn.= $this->objblogOps->showMailSetup(TRUE);
+    $middleColumn.= $this->objblogMail->showMailSetup(TRUE);
 } else {
-    $middleColumn.= $this->objblogOps->showMailSetup(TRUE, $dsnparse);
+    $middleColumn.= $this->objblogMail->showMailSetup(TRUE, $dsnparse);
 }
 
 if($leftCol == NULL)

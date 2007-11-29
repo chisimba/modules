@@ -17,7 +17,7 @@ else {
 
 $middleColumn = NULL;
 if ($this->objUser->isLoggedIn()) {
-    $form = $this->objblogOps->sendTrackbackForm($tbarr);
+    $form = $this->objblogTrackbacks->sendTrackbackForm($tbarr);
     $middleColumn.= $form;
 } else {
     $objFeatureBox = $this->getObject('featurebox', 'navigation');

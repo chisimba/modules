@@ -18,9 +18,9 @@ else {
 
 if ($this->objUser->isLoggedIn()) {
     if (isset($profile)) {
-        $middleColumn.= $this->objblogOps->profileEditor($userid, $profile);
+        $middleColumn.= $this->objblogProfiles->profileEditor($userid, $profile);
     } else {
-        $middleColumn.= $this->objblogOps->profileEditor($userid);
+        $middleColumn.= $this->objblogProfiles->profileEditor($userid);
     }
 }
 //dump the cssLayout to screen

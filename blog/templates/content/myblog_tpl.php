@@ -7,7 +7,11 @@ $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
-$rightSideColumn = $objUi->rightBlocks($userid, NULL);
+if(!isset($cats))
+{
+	$cats = NULL;
+}
+$rightSideColumn = $objUi->rightBlocks($userid, $cats);
 if($leftCol == NULL || $rightSideColumn == NULL)
 {
 	$cssLayout->setNumColumns(2);
@@ -32,9 +36,9 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
 } elseif (isset($catid) && !empty($posts)) {
     //check for sticky posts
     if (!is_null($stickypost)) {
-        $middleColumn.= $this->objblogOps->showPosts($stickypost, TRUE);
+        $middleColumn.= $this->objblogPosts->showPosts($stickypost, TRUE);
     }
-    $middleColumn.= ($this->objblogOps->showPosts($posts));
+    $middleColumn.= ($this->objblogPosts->showPosts($posts));
 } elseif (isset($catid) && empty($posts) && empty($latestpost)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
     if ($this->objUser->userId() == $userid) {
@@ -49,7 +53,7 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
     if (!empty($latestpost) && !empty($posts)) {
         //check for sticky posts
         if (!is_null($stickypost)) {
-            $middleColumn.= $this->objblogOps->showPosts($stickypost, TRUE);
+            $middleColumn.= $this->objblogPosts->showPosts($stickypost, TRUE);
         }
         $this->loadClass('htmlheading', 'htmlelements');
         $header = new htmlheading();
@@ -59,13 +63,13 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
         if ($posts[0]['id'] == $latestpost[0]['id']) {
             unset($posts[0]);
         }
-        $middleColumn.= $this->objblogOps->showPosts($latestpost);
+        $middleColumn.= $this->objblogPosts->showPosts($latestpost);
         $middleColumn.= "<hr />";
         $headerprev = new htmlheading();
         $headerprev->type = 3;
         $headerprev->str = $this->objLanguage->languageText("mod_blog_previousposts", "blog");
         $middleColumn.= $headerprev->show();
-        $middleColumn.= ($this->objblogOps->showPosts($posts));
+        $middleColumn.= ($this->objblogPosts->showPosts($posts));
     } else {
         $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
         if ($this->objUser->userId() == $userid) {
@@ -84,10 +88,10 @@ if (!empty($rss)) {
         if ($timenow-$feeds['rsstime'] > 43200) {
             $url = urldecode($feeds['url']);
             $id = $feeds['id'];
-            $leftCol.= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
+            $leftCol.= $this->objblogRss->rssRefresh($url, $feeds['name'], $id);
         } else {
             $url = $feeds['rsscache'];
-            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']);
+            $leftCol.= $this->objblogRss->rssBox($url, $feeds['name']);
         }
     }
 }

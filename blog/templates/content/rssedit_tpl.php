@@ -16,9 +16,9 @@ else {
 }
 if ($this->objUser->isLoggedIn()) {
     if (!empty($rdata)) {
-        $middleColumn.= $this->objblogOps->rssEditor(FALSE, $rdata);
+        $middleColumn.= $this->objblogRss->rssEditor(FALSE, $rdata);
     } else {
-        $middleColumn.= $this->objblogOps->rssEditor(FALSE);
+        $middleColumn.= $this->objblogRss->rssEditor(FALSE);
     }
 }
 if (!empty($rss)) {
@@ -29,7 +29,7 @@ if (!empty($rss)) {
         } else {
             $url = htmlentities($feeds['rsscache']);
         }
-        $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']);
+        $leftCol.= $this->objblogRss->rssBox($url, $feeds['name']);
     }
 }
 //dump the cssLayout to screen

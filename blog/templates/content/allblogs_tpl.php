@@ -45,12 +45,12 @@ $leftCol = NULL;
 if ($this->objUser->isLoggedIn()) {
     $leftCol.= $objSideBar->show();
     $rightSideColumn.= $this->objblogOps->showAdminSection(TRUE);
-    $leftCol.= $this->objblogOps->showDiaporama();
+    $leftCol.= $this->objblogExtras->showDiaporama();
     //$rightSideColumn .=$this->objblogOps->quickPost($this->objUser->userId(), TRUE);
     
 } else {
     $leftCol = $this->objblogOps->loginBox(TRUE);
-    $leftCol.= $this->objblogOps->showDiaporama();
+    $leftCol.= $this->objblogExtras->showDiaporama();
     //$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
     
 }

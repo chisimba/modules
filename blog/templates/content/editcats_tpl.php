@@ -15,7 +15,7 @@ else {
 	$cssLayout->setNumColumns(3);
 }
 //get the posts manager
-$middleColumn = $this->objblogOps->categoryEditor($userid);
+$middleColumn = $this->objblogCategories->categoryEditor($userid);
 if($leftCol == NULL)
 {
 	$leftCol = $rightSideColumn;

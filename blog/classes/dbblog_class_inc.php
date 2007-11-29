@@ -32,6 +32,15 @@ class dbblog extends dbTable
 	public $lindex;
 	
     /**
+     * Blog posts object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogPost;
+
+    
+    /**
      * Standard init function - Class Constructor
      *
      * @access public
@@ -44,6 +53,7 @@ class dbblog extends dbTable
         $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->lindex = $this->sysConfig->getValue('lucene_index', 'blog');
         
+        // $this->objblogPost = $this->getObject('blogposts');
     }
     //methods to manipulate the categories table.
     
@@ -325,7 +335,7 @@ class dbblog extends dbTable
     public function getPostsMonthly($startdate, $userid) 
     {
         $this->_changeTable('tbl_blog_posts');
-        $this->objblogOps = &$this->getObject('blogops');
+        $this->objblogOps = $this->getObject('blogops');
         $times = $this->objblogOps->retDates($startdate);
         //print_r($times);
         $now = date('r', mktime(0, 0, 0, date("m", time()) , date("d", time()) , date("y", time())));

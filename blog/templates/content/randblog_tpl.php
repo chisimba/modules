@@ -6,7 +6,7 @@ $objUi = $this->getObject('blogui');
 $middleColumn = NULL;
 //check for sticky posts
 if (!is_null($stickypost)) {
-    $middleColumn.= $this->objblogOps->showPosts($stickypost, TRUE);
+    $middleColumn.= $this->objblogPosts->showPosts($stickypost, TRUE);
 }
 if (!empty($latestpost) && !empty($posts)) {
     $this->loadClass('htmlheading', 'htmlelements');
@@ -17,13 +17,13 @@ if (!empty($latestpost) && !empty($posts)) {
     if ($posts[0]['id'] == $latestpost[0]['id']) {
         unset($posts[0]);
     }
-    $middleColumn.= $this->objblogOps->showPosts($latestpost);
+    $middleColumn.= $this->objblogPosts->showPosts($latestpost);
     $middleColumn.= "<hr />";
     $headerprev = new htmlheading();
     $headerprev->type = 3;
     $headerprev->str = $this->objLanguage->languageText("mod_blog_previousposts", "blog");
     $middleColumn.= $headerprev->show();
-    $middleColumn.= ($this->objblogOps->showPosts($posts));
+    $middleColumn.= ($this->objblogPosts->showPosts($posts));
 } else {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
     if ($this->objUser->userId() == $userid) {

@@ -3,9 +3,9 @@
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;
 //get the posts editor
-$middleColumn = $this->objblogOps->postEditor($userid, NULL);
+$middleColumn = $this->objblogPosts->postEditor($userid, NULL);
 //geotag part
-//$middleColumn .= $this->objblogOps->geoTagForm();
+//$middleColumn .= $this->objblogExtras->geoTagForm();
 $objUi = $this->getObject('blogui');
 // left hand blocks
 $leftCol = $objUi->leftBlocks($userid);

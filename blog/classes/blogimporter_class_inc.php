@@ -94,6 +94,69 @@ class blogimporter extends object
         // language object
         $this->objLanguage = $this->getObject('language', 'language');
     }
+    	
+    /**
+     * Method to create a form to import the blog data from a remote
+     *
+     * @param  bool   $featurebox
+     * @return string
+     */
+	public function showImportForm($featurebox = TRUE)
+	{
+		$this->objUser = $this->getObject('user', 'security');
+		$imform = new form('importblog', $this->uri(array(
+		'action' => 'importblog'
+		)));
+		// start a fieldset
+		$imfieldset = $this->getObject('fieldset', 'htmlelements');
+		// $imfieldset->setLegend($this->objLanguage->languageText('mod_blog_importblog', 'blog'));
+		$imadd = $this->newObject('htmltable', 'htmlelements');
+		$imadd->cellpadding = 5;
+		// server dropdown
+		$servdrop = new dropdown('server');
+		$servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
+		$servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
+		$servdrop->addOption("santec", $this->objLanguage->languageText("mod_blog_santec", "blog"));
+		// $servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
+		// $servdrop->addOption("5ive", $this->objLanguage->languageText("mod_blog_5ive", "blog"));
+		// $servdrop->addOption("pear", $this->objLanguage->languageText("mod_blog_peardemo", "blog"));
+		// $servdrop->addOption("dfx", $this->objLanguage->languageText("mod_blog_dfx", "blog"));
+		$imadd->startRow();
+		$servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') . ':', 'input_importfrom');
+		$imadd->addCell($servlabel->show());
+		$imadd->addCell($servdrop->show());
+		$imadd->endRow();
+		// username textfield
+		$imadd->startRow();
+		$imulabel = new label($this->objLanguage->languageText('mod_blog_impuser', 'blog') . ':', 'input_impuser');
+		$imuser = new textinput('username');
+		$usernameval = $this->objUser->username();
+		if (isset($usernameval)) {
+			$imuser->setValue($this->objUser->username());
+		}
+		$imadd->addCell($imulabel->show());
+		$imadd->addCell($imuser->show());
+		$imadd->endRow();
+		// add rules
+		// $imform->addRule('server', $this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog") , 'required');
+		// $imform->addRule('username', $this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog") , 'required');
+		// end off the form and add the buttons
+		$this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
+		$this->objIMButton->setValue($this->objLanguage->languageText('word_import', 'system'));
+		$this->objIMButton->setToSubmit();
+		$imfieldset->addContent($imadd->show());
+		$imform->addToForm($imfieldset->show());
+		$imform->addToForm($this->objIMButton->show());
+		$imform = $imform->show();
+		if ($featurebox == TRUE) {
+			$objFeatureBox = $this->getObject('featurebox', 'navigation');
+			$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+			return $ret;
+		} else {
+			return $imform;
+		}
+	}
+
     /**
      * Pseudo constructor method. 
      * 

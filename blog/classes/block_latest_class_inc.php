@@ -96,10 +96,10 @@ class block_latest extends object
      */
     public function init() 
     {
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->objUser = &$this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
         $userid = $this->objUser->userid();
-        $this->blogOps = &$this->getObject('blogops', 'blog');
+        $this->blogOps = $this->getObject('blogposts', 'blog');
         $this->quickBlog = $this->blogOps->quickPost($userid, FALSE);
         $this->objLastBlog = NULL;
         $this->title = $this->objLanguage->languageText("mod_blog_block_quickpost", "blog");

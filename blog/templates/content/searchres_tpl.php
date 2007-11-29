@@ -15,7 +15,7 @@ else {
 	$cssLayout->setNumColumns(3);
 }
 $middleColumn = NULL;
-$middleColumn.= $this->objblogOps->displaySearchResults($searchres);
+$middleColumn.= $this->objblogSearching->displaySearchResults($searchres);
 //dump the cssLayout to screen
 if($leftCol == NULL)
 {

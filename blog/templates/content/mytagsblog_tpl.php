@@ -17,7 +17,7 @@ else {
 }
 //check for sticky posts
 if (isset($stickyposts)) {
-    $middlecolumn.= $this->objblogOps->showPosts($stickyposts, TRUE);
+    $middlecolumn.= $this->objblogPosts->showPosts($stickyposts, TRUE);
 }
 //show all the posts
 if (isset($catid) && empty($posts) && empty($latestpost)) {
@@ -34,7 +34,7 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 } elseif (isset($catid) && !empty($posts)) {
     foreach($posts as $p) {
-        $middleColumn.= ($this->objblogOps->showPosts($p));
+        $middleColumn.= ($this->objblogPosts->showPosts($p));
     }
 } elseif (isset($catid) && empty($posts) && empty($latestpost)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
@@ -49,7 +49,7 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
 } else {
     if (!empty($latestpost) && !empty($posts)) {
         foreach($posts as $p) {
-            $middleColumn.= ($this->objblogOps->showPosts($p));
+            $middleColumn.= ($this->objblogPosts->showPosts($p));
         }
     } else {
         $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
@@ -69,11 +69,11 @@ if (!empty($rss)) {
         if ($timenow-$feeds['rsstime'] > 43200) {
             $url = $feeds['url'];
             $id = $feeds['id'];
-            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']); //Refresh($url, $feeds['name'], $id);
+            $leftCol.= $this->objblogRss->rssBox($url, $feeds['name']); //Refresh($url, $feeds['name'], $id);
             
         } else {
             $url = $feeds['rsscache'];
-            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']);
+            $leftCol.= $this->objblogRss->rssBox($url, $feeds['name']);
         }
     }
 }

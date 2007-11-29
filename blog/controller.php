@@ -184,23 +184,97 @@ class blog extends controller
      * @var object
      */
 	public $objYaml;
+	
+	
+    /**
+     * Blog Profiles object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogProfiles;
+    
+    /**
+     * Blog RSS object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogRss;
+
+    /**
+     * Blog links, pages and rolls object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogLinksandRoll;
+
+    /**
+     * Blog posts object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogPosts;
+
+    /**
+     * Blog categories object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogCategories;
+
+    /**
+     * Blog searching object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogSearching;
+    
+    /**
+     * Blog extras object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogExtras;
+    
+    /**
+     * Blog mail ops object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogMail;
+    
+    /**
+     * Blog trackbacks object
+     * 
+     * @var    object
+     * @access public
+     */
+    public $objblogTrackbacks;
+
 
 	public function init()
 	{
 		try {
 			//grab the blogimporter class, just in case we need it.
 			//I think that the import stuff should all be done in a seperate module...
-			$this->objBlogImport = &$this->getObject('blogimporter');
+			$this->objBlogImport = $this->getObject('blogimporter');
 			//the bbcode parser object
 			$this->getObject('bbcodeparser', 'utilities');
 			//get the imap class to grab email to blog...
 			//maybe a config here to check if we wanna use this?
 			//feeds classes
-			$this->objFeed = &$this->getObject('feeds', 'feed');
+			$this->objFeed = $this->getObject('feeds', 'feed');
 			//user object
 			$this->objUser = $this->getObject('user', 'security');
 			//feed creator subsystem
-			$this->objFeedCreator = &$this->getObject('feeder', 'feed');
+			$this->objFeedCreator = $this->getObject('feeder', 'feed');
 			//httpclient to grab remote data
 			$this->objClient = $this->getObject('client', 'httpclient');
 			//language object
@@ -208,18 +282,18 @@ class blog extends controller
 			//database abstraction object
 			$this->objDbBlog = $this->getObject('dbblog');
 			//blog operations object
-			$this->objblogOps = &$this->getObject('blogops');
+			$this->objblogOps = $this->getObject('blogops');
 			//HTML cleaner
-			$this->cleaner = &$this->getObject('htmlcleaner', 'utilities');
+			$this->cleaner = $this->getObject('htmlcleaner', 'utilities');
 			//icon object
-			$this->objIcon = &$this->getObject('geticon', 'htmlelements');
+			$this->objIcon = $this->getObject('geticon', 'htmlelements');
 			//comment interface class
 			$this->objComments = &$this->getObject('commentapi', 'blogcomments');
 			//Lucene indexing and search system
 			//$this->lucenedoc = &$this->getObject('doc','lucene');
 			//$this->luceneindexer = &$this->getObject('indexfactory', 'lucene');
 			//timeoutmsg object
-			$this->objMsg = &$this->getObject('timeoutmessage', 'htmlelements');
+			$this->objMsg = $this->getObject('timeoutmessage', 'htmlelements');
 			//config object
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			//proxy object
@@ -234,6 +308,15 @@ class blog extends controller
 			$this->showfullname = $this->objSysConfig->getValue('show_fullname', 'blog');
 			//load up the YAML config object
 			$this->objYaml = $this->getObject('yaml', 'utilities');
+			$this->objblogProfiles = $this->getObject('blogprofiles');
+        	$this->objblogRss = $this->getObject('blogrss');
+        	$this->objblogLinksandRoll = $this->getObject('bloglinksandroll');
+        	$this->objblogPosts = $this->getObject('blogposts');
+        	$this->objblogCategories = $this->getObject('blogcategories');
+        	$this->objblogSearching = $this->getObject('blogsearching');
+        	$this->objblogExtras = $this->getObject('blogopsextras');
+        	$this->objblogMail = $this->getObject('blogmail');
+        	$this->objblogTrackbacks = $this->getObject('blogtrackbacks');
 		}
 		catch(customException $e) {
 			//oops, something not there - bail out
@@ -438,19 +521,19 @@ class blog extends controller
 					$newsettings = array(
 					"BLOG_MAIL_DSN" => $sprot . '://' . $muser . ':' . $mpass . '@' . $mserver . ':' . $mport . '/' . $mbox
 					);
-					$this->objblogOps->setupConfig($newsettings);
-					$this->nextAction('blogadmin');
+					$this->objblogExtras->setupConfig($newsettings);
+					$this->nextAction('');
 					break;
 				}
 				//break to make dead sure we break...
 				break;
 
 			case 'mail2blog':
-				echo $this->objblogOps->mail2blog();
+				echo $this->objblogMail->mail2blog();
 				break;
 
 			case 'listmail2blog':
-				echo $this->objblogOps->listmail2blog();
+				echo $this->objblogMail->listmail2blog();
 				break;
 
 			case 'importblog':
@@ -490,7 +573,7 @@ class blog extends controller
 							'postdate' => $blogs['dateadded']
 							);
 							//use the insertPost methods to populate...
-							$this->objblogOps->quickPostAdd($userid, $postarr, 'import');
+							$this->objblogPosts->quickPostAdd($userid, $postarr, 'import');
 							//clear $postarr
 							$postarr = NULL;
 						}
@@ -547,7 +630,7 @@ class blog extends controller
 								'postdate' => $blogs['dateadded']
 								);
 								//use the insertPost methods to populate...
-								$this->objblogOps->quickPostAdd($userid, $postarr, 'import');
+								$this->objblogPosts->quickPostAdd($userid, $postarr, 'import');
 							}
 							//clear $postarr
 							$postarr = NULL;
@@ -986,7 +1069,7 @@ class blog extends controller
 						$this->nextAction('blogadmin');
 						break;
 					}
-					$this->objblogOps->quickCatAdd($list, $userid);
+					$this->objblogCategories->quickCatAdd($list, $userid);
 					$this->nextAction('blogadmin', array('mode' => 'writepost'));
 					break;
 				}
@@ -1089,7 +1172,7 @@ class blog extends controller
 				}
 				//post quick add
 				if ($mode == 'quickadd') {
-					$this->objblogOps->quickPostAdd($userid, array(
+					$this->objblogPosts->quickPostAdd($userid, array(
 					'posttitle' => $posttitle,
 					'postcontent' => nl2br(htmlentities($postcontent)),
 					'postcat' => $cat,
@@ -1120,7 +1203,7 @@ class blog extends controller
 					'stickypost' => $stickypost,
 					'showpdf' => $showpdf
 					);
-					$this->objblogOps->quickPostAdd($userid, $insarredit, $mode);
+					$this->objblogPosts->quickPostAdd($userid, $insarredit, $mode);
 					if (!empty($tagarray) && $tagarray[0] != "") {
 						$etags = $this->objDbBlog->getPostTags($id);
 						if (count($tagarray) < count($etags)) {
@@ -1146,7 +1229,7 @@ class blog extends controller
 					$this->nextAction('viewblog');
 					break;
 				} else {
-					$this->objblogOps->quickPostAdd($userid, array(
+					$this->objblogPosts->quickPostAdd($userid, array(
 					'id' => $id,
 					'posttitle' => $posttitle,
 					'postcontent' => $postcontent,
@@ -1242,7 +1325,7 @@ class blog extends controller
 					'commentcount' => $post['comment_count'],
 					'postdate' => $post['post_date']
 					);
-					$this->objblogOps->quickPostAdd($userid, $insarredit, 'editcommit');
+					$this->objblogPosts->quickPostAdd($userid, $insarredit, 'editcommit');
 				}
 				//delete the cat from the table
 				$this->objDbBlog->deleteCat($id);
@@ -1357,7 +1440,7 @@ class blog extends controller
 				$excerpt = $this->getParam('excerpt');
 				$bloggerprofile = $this->objDbBlog->checkProfile($this->objUser->userId());
 				if (isset($bloggerprofile['blog_name'])) {
-					$blog_name = $bloggerprofile['blog_name']; //$this->getParam('blog_name');
+					$blog_name = $bloggerprofile['blog_name'];
 
 				} else {
 					$blog_name = $this->getParam('blog_name');
@@ -1376,7 +1459,7 @@ class blog extends controller
 				);
 				$this->setVarByRef('tbarr', $tbarr);
 				//check that all necessary params arre there, otherwise return the template again...
-				if (!isset($postid) || !isset($title) || !isset($excerpt) || !isset($blog_name) || !isset($url) || !isset($trackback_url)) {
+				if (!isset($postid) || !isset($title) || !isset($excerpt) || !isset($blog_name) || !isset($url) || !isset($trackback_url) || empty($trackback_url)) {
 					return 'tbsend_tpl.php';
 					break;
 				}
@@ -1774,7 +1857,7 @@ class blog extends controller
 			case 'timeline':
 				$userid = $this->getParam('userid');
 				$info = $this->objDbBlog->getAbsAllPosts($userid);
-				$tl = $this->objblogOps->myBlogTimeline($info, $userid);
+				$tl = $this->objblogExtras->myBlogTimeline($info, $userid);
 				//save the timeline as a file. (Not sure if this is necessary or not...
 				$filename = $this->objConfig->getcontentBasePath() . "users/" . $userid . '/' . $userid . '_temptimeline.xml';
 				$filepath = $this->objConfig->getcontentBasePath() . "users/" . $userid;
@@ -1917,9 +2000,7 @@ class blog extends controller
 					$pageid = $this->getParam('id');
 					$pagename = addslashes($this->getParam('page_name'));
 					$pagecontent = addslashes($this->getParam('page_content'));
-					//echo $pagename, $pagecontent, $pageid;
 					if (!empty($pagename) && !empty($pagecontent)) {
-						//echo "updating page";
 						// save the page to the table
 						$this->objDbBlog->updatePage($pageid, array(
 						'userid' => $userid,
@@ -1965,16 +2046,15 @@ class blog extends controller
 				$seekterm = $this->getParam('searchterm');
 				$seekterm = trim($seekterm);
 				$seekterm = strip_tags($seekterm);
-				$res = $this->objblogOps->quickSearch($seekterm);
+				$res = $this->objblogSearching->quickSearch($seekterm);
 				$this->setVarByRef('searchres', $res);
 				$this->setVarByRef('userid', $userid);
 				$this->setVar('pageSuppressXML', TRUE);
 				return 'searchres_tpl.php';
+			
 			case 'googlegadget':
-				echo $this->objblogOps->showLastTenPosts();
-				//$this->setVar('pageSuppressHeader', TRUE);
-				//return 'gadget_tpl.php';
-
+				echo $this->objblogPosts->showLastTenPosts();
+				
 			case 'api':
 				$this->requiresLogin(FALSE);
 				$objApi = $this->getObject('blogxmlrpc');

@@ -16,7 +16,7 @@ else {
 $objSideBar = $this->newObject('sidebar', 'navigation');
 
 //get the posts manager
-$middleColumn = $this->objblogOps->managePosts($userid);
+$middleColumn = $this->objblogPosts->managePosts($userid);
 
 if($leftCol == NULL)
 {

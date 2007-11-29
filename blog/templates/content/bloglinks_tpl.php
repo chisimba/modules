@@ -17,9 +17,9 @@ else {
 }
 if ($this->objUser->isLoggedIn()) {
     if (!empty($editvars)) {
-        $middleColumn.= $this->objblogOps->editBlinks(TRUE, $editvars);
+        $middleColumn.= $this->objblogLinksandRoll->editBlinks(TRUE, $editvars);
     } else {
-        $middleColumn.= $this->objblogOps->editBlinks(TRUE);
+        $middleColumn.= $this->objblogLinksandRoll->editBlinks(TRUE);
     }
 }
 if($leftCol == NULL)

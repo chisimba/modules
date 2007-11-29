@@ -14,7 +14,7 @@ else {
 	$cssLayout->setNumColumns(3);
 }
 $middleColumn = NULL;
-$middleColumn.= $this->objblogOps->showImportForm(TRUE);
+$middleColumn.= $this->objBlogImport->showImportForm(TRUE);
 
 if($leftCol == NULL)
 {
