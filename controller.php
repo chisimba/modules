@@ -86,7 +86,7 @@ class realtime extends controller
 	
 	public $converter;
 	
-	public $realtimeObj;
+	
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -140,7 +140,6 @@ class realtime extends controller
         
         $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
 		$this->converter = $this->getObject('convertdoc','documentconverter'); 
-		$this->realtimeObj = $this->getObject('realtimepresentations'); 
 		
         }
 
