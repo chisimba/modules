@@ -91,8 +91,8 @@ class block_lastten extends object
     public function init() 
     {
         $this->objLanguage = &$this->getObject('language', 'language');
-        $this->blogOps = &$this->getObject('blogops', 'blog');
-        $this->display = $this->blogOps->showLastTenPosts();
+        $this->blogOps = &$this->getObject('blogposts', 'blog');
+        $this->display = $this->blogPosts->showLastTenPosts();
         $this->title = $this->objLanguage->languageText("mod_blog_block_latestblogs", "blog");
     }
     /**
