@@ -85,6 +85,8 @@ class realtime extends controller
     public $objFiles;   
 	
 	public $converter;
+	
+	public $realtimeObj;
 	/**
 	 * Constructor method to instantiate objects and get variables
 	 */
@@ -136,8 +138,10 @@ class realtime extends controller
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
 	    $this->jodconverterPath = $location . $this->getResourceUri('whiteboard', 'realtime');
         
-         $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
+        $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
 		$this->converter = $this->getObject('convertdoc','documentconverter'); 
+		$this->realtimeObj = $this->getObject('realtimepresentations'); 
+		
         }
 
 	/**
@@ -164,11 +168,12 @@ class realtime extends controller
  
             case 'presenter_applet':
             return $this->showPresenterApplet();
-			      case 'upload_presentation':
-            return $this->uploadPresentation();
 			
-			case 'show_upload_form':
-            return "upload_presentation.php";
+			  case 'upload_presentation':
+              return $this->uploadPresentation();
+			 
+			 case 'show_upload_form':
+             return "upload_presentation.php";
 			
 			case 'whiteboard' :
 				return "realtime-whiteboard_tpl.php";
@@ -225,7 +230,6 @@ class realtime extends controller
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
 		
-
         $id = $this->objFiles->autoCreateTitle();
 
         $objMkDir = $this->getObject('mkdir', 'files');
@@ -243,7 +247,7 @@ class realtime extends controller
 
         $result = $objUpload->doUpload(TRUE, $id);
 
-        //echo $generatedid;
+        echo $generatedid;
 
         if ($result['success'] == FALSE) {
             $this->objFiles->removeAutoCreatedTitle($id);
@@ -258,8 +262,7 @@ class realtime extends controller
             $mimetype = $_FILES['fileupload']['type'];
 
             $path_parts = pathinfo($_FILES['fileupload']['name']);
-
-            $ext = $path_parts['extension'];
+           $ext = $path_parts['extension'];
 
 
             $file = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
