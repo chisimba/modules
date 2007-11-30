@@ -15,8 +15,10 @@ class modulelinks_faq extends object
     public function init()
     {
         //$this->loadClass('treenode','tree');
-       $this->_objDBEventsCalendar = & $this->newObject('dbeventscalendar','eventscalendar');
-       $this->_objDBCategories = & $this->newObject('dbeventscalendarcategories','eventscalendar');
+      // $this->_objDBFaqEntries =$this->loadClass('dbfaqentries');
+       // $this->_objDBCategories =$this->loadClass('dbfaqcategories');      
+ $this->_objDBFaqEntries = & $this->newObject('dbfaqentries','faq');
+$this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
     }
     
     public function show()
@@ -31,28 +33,26 @@ class modulelinks_faq extends object
      * @return array
      */
     public function getContextLinks($contextCode)
-    { 
-       /*
-          $catId = $this->_objDBCategories->getCatId('context', $contextCode);
-         
-          $events =  $this->_objDBEventsCalendar->getAll('WHERE catid="'.$catId.'" ORDER BY event_date' );
-          
+    {
+          $cats = $this->_objDBCategories->getCatId($contextCode);
+          $faqs=$this->_objDBFaqEntries->getEntries($contextCode,$cats['id']);
+   
           $bigArr = array();
-         
-          foreach ($events as $event)
+        
+          foreach ($cats as $cat)
           {
-                $newArr = array();    
-              $newArr['menutext'] = $event['title'];
-              $newArr['description'] = $event['description'];
-              $newArr['itemid'] = $event['id'];
+                $newArr = array();   
+              $newArr['menutext'] = $cat['categoryid'];
+              $newArr['description'] = $cat['categoryid'];
+              $newArr['itemid'] = $cat['id'];
               $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('month' => date('m',$event['event_date']),'action' => 'events');
+              $newArr['params'] = array('id' => $cats['id'],'action' => 'events');
               $bigArr[] = $newArr;
           }
-          
+         
           return $bigArr;
-          *///
-    }
+        
+         }
     
 }
 

@@ -21,6 +21,36 @@ class dbFaqEntries extends dbTable
         parent::init('tbl_faq_entries');
         //$this->USE_PREPARED_STATEMENTS=True;
     }
+ 
+    /**
+	* Insert a record
+	* @param string $contextId The context ID
+	* @param string $categoryId The category ID
+	* @param string $question The question
+	* @param string $answer The answer
+	* @param string $userId The user ID
+	* @param string $dateLastUpdated Date last updated
+	*/
+	function insertSingle($contextId, $categoryId, $index, $question, $answer, $userId, $dateLastUpdated)
+	{
+		//$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
+	  $ins = $this->insert(array(
+			'contextId'=>$contextId, 
+			'categoryId'=>$categoryId, 
+			'_index' => $index,
+        	        'question' => $question,
+        	        'answer' => $answer,
+			'userId' => $userId,
+			'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+		));
+		return $ins;	
+	}
+    
+    function getEntries($contextId, $categoryId)
+    {
+        $sql = "SELECT id, question, answer FROM tbl_faq_entries WHERE contextId='" . $contextId . "'";
+        return $this->getArray($sql);
+    }
 
     /**
     * Return all records
@@ -64,29 +94,7 @@ class dbFaqEntries extends dbTable
 		$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName} WHERE contextId='$contextId' AND categoryId='$categoryId'");
 		return $array[0]['_max'] + 1;
 	}
-	/**
-	* Insert a record
-	* @param string $contextId The context ID
-	* @param string $categoryId The category ID
-	* @param string $question The question
-	* @param string $answer The answer
-	* @param string $userId The user ID
-	* @param string $dateLastUpdated Date last updated
-	*/
-	function insertSingle($contextId, $categoryId, $index, $question, $answer, $userId, $dateLastUpdated)
-	{
-		//$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
-		$this->insert(array(
-			'contextId'=>$contextId, 
-			'categoryId'=>$categoryId, 
-			'_index' => $index,
-        	'question' => $question,
-        	'answer' => $answer,
-			'userId' => $userId,
-			'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
-		));
-		return;	
-	}
+	
 
 	/**
 	* Update a record

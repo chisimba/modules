@@ -17,18 +17,24 @@ class dbFaqCategories extends dbTable
     /**
     * Constructor method to define the table
     */
-    function init() 
+  public function init() 
     {
         parent::init('tbl_faq_categories');
         //$this->USE_PREPARED_STATEMENTS=True;
-    }
+    } 
+
+
+  public function getCatId($contextId){
+        return $this->getRow("contextid", $contextId);
+}
 
     /**
     * Return all records
 	* @param string $contextId The context ID
+
 	* @return array The categories
     */
-	function listAll($contextId)
+   public function listAll($contextId)
 	{
 		//$sql = "SELECT id, question, answer FROM tbl_faq";
 		//return $this->getArray($sql);
@@ -43,7 +49,7 @@ class dbFaqCategories extends dbTable
 	* @param string $categoryId The category ID
 	* @return array The category
 	*/	
-	function listSingle($contextId, $categoryId)
+   public function listSingle($contextId, $categoryId)
 	{
 		$sql = "SELECT * FROM tbl_faq_categories 
 		WHERE contextId = '" . $contextId . "' 
@@ -57,7 +63,7 @@ class dbFaqCategories extends dbTable
 	* @param string $id The ID
 	* @return array The category
 	*/	
-	function listSingleId($id)
+   public function listSingleId($id)
 	{
 		$sql = "SELECT * FROM tbl_faq_categories 
 		WHERE id = '" . $id . "'";
@@ -72,7 +78,7 @@ class dbFaqCategories extends dbTable
 	* @param string $userId The user ID
 	* @param string $dateLastUpdated Date last updated
 	*/
-	function insertSingle($contextId, $categoryId, $userId, $dateLastUpdated)
+ public	function insertSingle($contextId, $categoryId, $userId, $dateLastUpdated)
 	{
 		$this->insert(array(
 			'contextid' => $contextId, 
@@ -89,7 +95,7 @@ class dbFaqCategories extends dbTable
 	* @param string $userId The user ID
 	* @param string $dateLastUpdated Date last updated
 	*/
-	function updateSingle($id, $categoryId, $userId, $dateLastUpdated)
+  public function updateSingle($id, $categoryId, $userId, $dateLastUpdated)
 	{
 		$this->update("id", $id, 
 			array(
@@ -104,7 +110,7 @@ class dbFaqCategories extends dbTable
 	* Delete a record
 	* @param string $id ID
 	*/
-	function deleteSingle($id)
+ public	function deleteSingle($id)
 	{
 		$this->delete("id", $id);
 	}
@@ -119,7 +125,7 @@ class dbFaqCategories extends dbTable
 	* @param string $categoryId The category ID
 	* @return array The category
 	*/	
-	function getNotCategorisedId($contextId)
+ public	function getNotCategorisedId($contextId)
 	{
 		$sql = 'SELECT * FROM tbl_faq_categories WHERE categoryId = "Not Categorised" AND userId = "admin" AND contextId = "'. $contextId.'"';
         $results = $this->getArray($sql);
