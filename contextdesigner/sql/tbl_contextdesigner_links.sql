@@ -2,7 +2,7 @@
 
 $tablename = 'tbl_contextdesigner_links';
 
-$options = array('comment' => 'Context Designer Links holder context links that biulds that context content', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Context Designer Links holder context links that builds that context content', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
 	'id' => array(

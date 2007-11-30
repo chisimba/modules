@@ -66,7 +66,8 @@ class dbcontextdesigner extends dbTable
                     'params' => $params
                 );
                 
-				 $this->insert($fields);             
+				 $this->insert($fields); 
+                 
             
             }
             

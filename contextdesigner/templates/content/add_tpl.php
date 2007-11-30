@@ -28,7 +28,8 @@ $objButton2->setOnClick('javascript:document.location = \''.$this->uri(null).'\'
 
 $objDropDown->name = 'moduleid';
 foreach ($modules as $module)
-{//var_dump($this->_objUtils->getModuleLinks($module['moduleid']));
+{
+        var_dump($this->_objUtils->getModuleLinks($module['moduleid']));
  	if($this->_objUtils->getModuleLinks($module['moduleid']))
  	{
 		$modInfo = $this->_objModule->getModuleInfo($module['moduleid']);
