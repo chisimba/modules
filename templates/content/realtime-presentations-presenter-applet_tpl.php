@@ -7,6 +7,7 @@
     echo '  <param name="port" value="3128"/>';
     echo '  <param name="contentBasePath" value="'.$this->objConfig->getcontentBasePath().'realtime_presentations/'.$id.'"/>';
     echo '  <param name="user" value="'.$this->objUser->userName().'"/>';
+	 echo '  <param name="fullname" value="'.$this->objUser->fullname().'"/>';
 	echo '  <param name="slideId" value="'.$id.'"/>';
 	echo '  <param name="jodconverterPath" value="'.$jodconverterPath.'"/>';
 	echo "</applet> ";
