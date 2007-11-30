@@ -50,6 +50,22 @@ class dbpodcast extends dbTable
         $objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
         $objFileRegister->registerUse($fileId, 'podcast', 'tbl_podcast', $podcastId, 'fileid');
         
+        // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'lucene');
+        
+        // Prep Data
+        $docId = 'podcast_entry_'.$podcastId;
+        $docDate = $podcastInfo['datecreated'];
+        $url = $this->uri(array('action'=>'byuser', 'id'=>$podcastInfo['creatorid']), 'podcast');
+        $title = $podcastInfo['title'];
+        $contents = $podcastInfo['title'].' '.$podcastInfo['description'];
+        $teaser = $podcastInfo['description'];
+        $module = 'podcast';
+        $userId = $podcastInfo['creatorid'];
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
+        
         return $podcastId;
     }
     
@@ -63,13 +79,33 @@ class dbpodcast extends dbTable
      */
     public function updatePodcast ($id, $title, $description)
     {
-        return $this->update('id', $id, 
+        $result = $this->update('id', $id, 
             array(
                 'title' => $title, 
                 'description' => $description,
                 'modifierid' => $this->objUser->userId(),
                 'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
             ));
+        
+        $podcast = $this->getRow('id', $id);
+        
+        // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'lucene');
+        
+        // Prep Data
+        $docId = 'podcast_entry_'.$id;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        $url = $this->uri(array('action'=>'byuser', 'id'=>$podcast['creatorid']), 'podcast');
+        $title = $title;
+        $contents = $title.' '.$description;
+        $teaser = $description;
+        $module = 'podcast';
+        $userId = $podcast['creatorid'];
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
+        
+        return $result;
     }
     
     /**
@@ -144,6 +180,9 @@ class dbpodcast extends dbTable
         } else {
             $this->delete('id', $id);
 			$this->delete('podcastId',$id, "tbl_podcast_context");
+            
+            $objIndexData = $this->getObject('indexdata', 'lucene');
+            $objIndexData->removeIndex('podcast_entry_'.$id);
             return 'podcastdeleted';
         }
     }
