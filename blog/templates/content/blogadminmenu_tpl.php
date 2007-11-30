@@ -8,7 +8,6 @@ $this->loadClass('href', 'htmlelements');
 $this->loadClass('htmlarea', 'htmlelements');
 $userid = $this->objUser->userId();
 $profile = $this->objDbBlog->checkProfile($userid);
-
 $pane = $this->newObject('tabpane', 'htmlelements');
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('sidebar', 'navigation');

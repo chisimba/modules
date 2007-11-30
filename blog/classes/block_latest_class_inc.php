@@ -1,24 +1,24 @@
 <?php
 /**
  * Short description for file.
- * 
+ *
  * Long description (if any) ...
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @version    CVS: $Id$
  * @package    blog
  * @subpackage blocks
@@ -28,7 +28,6 @@
  * @link       http://avoir.uwc.ac.za
  * @see        References to other sections (if any)...
  */
-
 // security check - must be included in all scripts
 if (!
 /**
@@ -45,31 +44,31 @@ $GLOBALS['kewl_entry_point_run']) {
  * A block to return the last blog entry
  *
  * @author Paul Scott based on a block by Derek Keats
- *         
+ *
  *         $Id$
- *         
+ *
  */
 class block_latest extends object
 {
     /**
      * The title of the block
-     * 
+     *
      * @var    string
      * @access public
      */
     public $title;
     /**
      * String to hold the lastblog object
-     * 
-     * @var    object 
+     *
+     * @var    object
      * @access public
      */
     public $objLastBlog;
     /**
      * Object to display the quick blog box
-     * 
+     *
      * @var    object
-     * @access public               
+     * @access public
      */
     public $quickBlog;
     /**
@@ -79,19 +78,18 @@ class block_latest extends object
      * @access public
      */
     public $blogOps;
-
     /**
      * Language object
-     * 
+     *
      * @var    object
      * @access public
      */
     public $objLanguage;
     /**
-     * Standard init function 
-     * 
+     * Standard init function
+     *
      * Instantiates language and user objects and creates title
-     * 
+     *
      * @return NULL
      */
     public function init() 
@@ -105,10 +103,10 @@ class block_latest extends object
         $this->title = $this->objLanguage->languageText("mod_blog_block_quickpost", "blog");
     }
     /**
-     * Standard block show method. 
-     * 
+     * Standard block show method.
+     *
      * It builds the output based on data obtained via the getlast class
-     * 
+     *
      * @return string the box rendered
      */
     public function show() 

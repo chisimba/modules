@@ -39,14 +39,11 @@ if (!empty($latestpost) && !empty($posts)) {
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, $cats);
-if($leftCol == NULL || $rightSideColumn == NULL)
-{
-	$cssLayout->setNumColumns(2);
+if ($leftCol == NULL || $rightSideColumn == NULL) {
+    $cssLayout->setNumColumns(2);
+} else {
+    $cssLayout->setNumColumns(3);
 }
-else {
-	$cssLayout->setNumColumns(3);
-}
-
 if (!empty($rss)) {
     foreach($rss as $feeds) {
         $timenow = time();
@@ -60,24 +57,20 @@ if (!empty($rss)) {
         }
     }
 }
-if($leftCol == NULL)
-{
-	$leftCol = $rightSideColumn;
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	//$cssLayout->setRightColumnContent($rightSideColumn);
-	echo $cssLayout->show();
-}
-elseif($rightSideColumn == NULL)
-{
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	echo $cssLayout->show();
-}
-else {
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	$cssLayout->setRightColumnContent($rightSideColumn);
-	echo $cssLayout->show();
+if ($leftCol == NULL) {
+    $leftCol = $rightSideColumn;
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    //$cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
+} elseif ($rightSideColumn == NULL) {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    echo $cssLayout->show();
+} else {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    $cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
 }
 ?>

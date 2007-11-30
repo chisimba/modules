@@ -5,36 +5,26 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objUi = $this->getObject('blogui');
 $middleColumn = NULL;
 // left hand blocks
-$leftCol = ' ';//$objUi->leftBlocks($userid);
+$leftCol = ' '; //$objUi->leftBlocks($userid);
 $bconf = $objUi->doConfig($userid);
-if(is_array($bconf[0]))
-{
-	if(isset($bconf[0]['leftblocks']))
-	{
-		$leftblocks = $bconf[0]['leftblocks'];
-	}
-	else {
-		$leftblocks = NULL;
-	}
-	if(isset($bconf[0]['rightblocks']))
-	{
-		$rightblocks = $bconf[0]['rightblocks'];
-	}
-	else {
-		$rightblocks = NULL;
-	}
+if (is_array($bconf[0])) {
+    if (isset($bconf[0]['leftblocks'])) {
+        $leftblocks = $bconf[0]['leftblocks'];
+    } else {
+        $leftblocks = NULL;
+    }
+    if (isset($bconf[0]['rightblocks'])) {
+        $rightblocks = $bconf[0]['rightblocks'];
+    } else {
+        $rightblocks = NULL;
+    }
 }
-if(is_array($leftblocks) && is_array($rightblocks))
-{
-	$blocks = array_merge($leftblocks, $rightblocks);
-}
-elseif(isset($leftblocks))
-{
-	$blocks = $leftblocks;
-}
-elseif(isset($rightblocks))
-{
-	$blocks = $rightblocks;
+if (is_array($leftblocks) && is_array($rightblocks)) {
+    $blocks = array_merge($leftblocks, $rightblocks);
+} elseif (isset($leftblocks)) {
+    $blocks = $leftblocks;
+} elseif (isset($rightblocks)) {
+    $blocks = $rightblocks;
 }
 $blocks = array_unique($blocks);
 // right side blocks
@@ -146,8 +136,8 @@ YAHOO.util.Event.addListener(window, "load", YAHOO.example.DDApp.init);
 YAHOO.util.Event.addListener("removeButton", "click", YAHOO.example.DDApp.remove);
 
 </script>';
-$this->appendArrayVar('headerParams',$scripts);
-$middleColumn .= '
+$this->appendArrayVar('headerParams', $scripts);
+$middleColumn.= '
 <style type="text/css">
     .slot { border:2px solid #aaaaaa; background-color:#dddddd; color:#666666; text-align:center; position: absolute; width:60px; height:60px; }
     .player { border:2px solid #bbbbbb; color:#eeeeee; text-align:center; position: absolute; width:60px; height:60px; }
@@ -205,40 +195,30 @@ $middleColumn .= '
 <div class="player" id="pb1" >3</div>
 <div class="player" id="pb2" >4</div>
 <div class="player" id="pboth1" >5</div>
-<div class="player" id="pboth2" >6</div> -->'; 
-
+<div class="player" id="pboth2" >6</div> -->';
 // 11 blocks on each side, in case user wants em all in one column...
-
-
-foreach($blocks as $block)
-{
-	$middleColumn .= '<div id="'.$block.'" class="featurebox">'.
-		$block.'
+foreach($blocks as $block) {
+    $middleColumn.= '<div id="' . $block . '" class="featurebox">' . $block . '
 	</div>';
 }
 $l = 1;
-for($l = 1; $l< 15; $l++)
-{
-	$leftCol .= '<div class="slot" id="l'.$l.'" >'.$l.'</div><br />';
+for ($l = 1; $l < 15; $l++) {
+    $leftCol.= '<div class="slot" id="l' . $l . '" >' . $l . '</div><br />';
 }
 $r = 1;
-for($r = 1; $r< 15; $r++)
-{
-	$rightSideColumn .= '<div class="slot" id="r'.$r.'" >'.$r.'</div><br />';
+for ($r = 1; $r < 15; $r++) {
+    $rightSideColumn.= '<div class="slot" id="r' . $r . '" >' . $r . '</div><br />';
 }
 $objBlogUi = $this->getObject('blogui');
 $bconf = $objBlogUi->doConfig($userid);
 $leftblocks = $bconf[0]['leftblocks'];
 $rightblocks = $bconf[0]['rightblocks'];
 $rb = count($rightblocks);
-
 ?>
 
 <?php
-
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	$cssLayout->setRightColumnContent($rightSideColumn);
-	echo $cssLayout->show();
-
+$cssLayout->setMiddleColumnContent($middleColumn);
+$cssLayout->setLeftColumnContent($leftCol);
+$cssLayout->setRightColumnContent($rightSideColumn);
+echo $cssLayout->show();
 ?>

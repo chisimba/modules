@@ -71,7 +71,7 @@ class servicestrackback extends object
     /**
      * The necessary trackback data.
      *
-     * @var    array    
+     * @var    array
      * @since  0.1.0
      * @access protected
      */
@@ -93,7 +93,7 @@ class servicestrackback extends object
      *
      * @see    Services_Trackback::create()
      * @since  0.4.0
-     * @var    array    
+     * @var    array
      * @access protected
      */
     public $_options = array(
@@ -111,15 +111,13 @@ class servicestrackback extends object
     );
     // }}}
     // {{{ var $_spamChecks
-
-
+    
     /**
      * Description for public
-     * @var    array 
+     * @var    array
      * @access public
      */
     public $_spamChecks = array();
-
     /**
      * Description for public
      * @var    object
@@ -135,7 +133,7 @@ class servicestrackback extends object
      *
      * @since  0.1.0
      * @access protected
-     * @return void     
+     * @return void
      */
     public function init() 
     {
@@ -154,7 +152,7 @@ class servicestrackback extends object
      *
      * @since  0.2.0
      * @static
-     * @access public                    
+     * @access public
      * @param  array                      $data    Data for the trackback, which is obligatory:
      *                                             'id'                The ID of the trackback target.
      *                                             Data which is optional (for construction, not for specific methods):
@@ -178,7 +176,7 @@ class servicestrackback extends object
      *         'allowRedirects':   bool    Wether to follow HTTP redirects or not.
      *         'maxRedirects':     int     Maximum number of redirects.
      *         'useragent':        string  The user agent to use for HTTP requests.
-     *         
+     *
      * @return object(Services_Trackback) The newly created Trackback.
      */
     function &create($data, $options = null) 
@@ -546,7 +544,7 @@ EOD;
      * @access public
      * @param  int    $code    The error code
      * @param  string $message The error message
-     * @return void  
+     * @return void
      */
     function getResponseError($message, $code) 
     {
@@ -574,7 +572,7 @@ EOD;
      * Add a spam check module to the trackback.
      *
      * @since  0.5.0
-     * @access public                              
+     * @access public
      * @see    Services_Trackback::removeSpamCheck()
      * @see    Services_Trackback::checkSpam()
      * @param  object(Services_Trackback_SpamCheck) $spamCheck The spam check module to add.
@@ -639,7 +637,7 @@ EOD;
      * Remove a spam check module from the trackback.
      *
      * @since  0.5.0
-     * @access public                              
+     * @access public
      * @see    Services_Trackback::addSpamCheck()
      * @see    Services_Trackback::checkSpam()
      * @param  object(Services_Trackback_SpamCheck) The spam check module to remove.
@@ -785,7 +783,7 @@ EOD;
      * @access protected
      * @param  array     $keys Data keys to receive
      * @param  array     $data Optionally the data to check (default is the object data).
-     * @return void     
+     * @return void
      */
     function _getEncodedData($keys, $data = null) 
     {
@@ -808,7 +806,7 @@ EOD;
      * @access protected
      * @param  array     $keys Data keys to receive
      * @param  array     $data Optionally the data to check (default is the object data).
-     * @return void     
+     * @return void
      */
     function _getDecodedData($keys, $data = null) 
     {
@@ -831,7 +829,7 @@ EOD;
      * @access protected
      * @param  array     $keys Data keys to check.
      * @param  array     $data Optionally the data to check (default is the object data).
-     * @return void     
+     * @return void
      */
     function _checkData($keys, $data = null) 
     {

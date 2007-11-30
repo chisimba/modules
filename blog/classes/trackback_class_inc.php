@@ -1,25 +1,24 @@
 <?php
-
 /**
  * Short description for file
- * 
+ *
  * Long description (if any) ...
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   blog
  * @author    Administrative User <pscott@uwc.ac.za>
@@ -61,8 +60,8 @@ class trackback extends object
      * Standard init function
      *
      * @access public
-     * @param  void  
-     * @return void  
+     * @param  void
+     * @return void
      */
     public function init() 
     {
@@ -72,7 +71,7 @@ class trackback extends object
     /**
      * Setup function encapsulating the factory method (create)
      *
-     * @param  array  $data   
+     * @param  array  $data
      * @param  array  $options
      * @return object instance
      */
@@ -86,7 +85,7 @@ class trackback extends object
      * Method to create RDF Autodiscovery code for trackback agents
      *
      * @access public
-     * @param  void  
+     * @param  void
      * @return string
      */
     public function autodiscCode() 
@@ -97,9 +96,9 @@ class trackback extends object
      * Method to set values in the object context
      *
      * @access public
-     * @param  string $key  
+     * @param  string $key
      * @param  string $value
-     * @return void  
+     * @return void
      */
     public function setVal($key, $value) 
     {
@@ -125,7 +124,7 @@ class trackback extends object
     /**
      * Public method to send a trackback to a URL
      *
-     * @access public 
+     * @access public
      * @param  array   $sendData
      * @return message on failure|returned bool on success
      */

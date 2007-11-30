@@ -1,24 +1,24 @@
 <?php
 /**
  * Class to handle blog imports.
- * 
+ *
  * Import legacy blog code from KINKY
  *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @version    CVS: $Id$
  * @package    blog
  * @subpackage blogimporter
@@ -28,7 +28,6 @@
  * @link       http://avoir.uwc.ac.za
  * @see        References to other sections (if any)...
  */
-
 // security check - must be included in all scripts
 if (!
 /**
@@ -43,7 +42,7 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * Class to facilitate import of existing blog content from a remote server
- * 
+ *
  * This class should allow a connection to a remote database on a remote server to get all content items within
  * that database table in order to process and import the content back into a Chisimba installation.
  * Please note that due to the way that this class acts, it is only necessary to supply a username/userid to
@@ -87,86 +86,84 @@ class blogimporter extends object
      * Standard init function for the object and controller class
      *
      * @access public
-     * @return NULL  
+     * @return NULL
      */
     public function init() 
     {
         // language object
         $this->objLanguage = $this->getObject('language', 'language');
     }
-    	
     /**
      * Method to create a form to import the blog data from a remote
      *
      * @param  bool   $featurebox
      * @return string
      */
-	public function showImportForm($featurebox = TRUE)
-	{
-		$this->objUser = $this->getObject('user', 'security');
-		$imform = new form('importblog', $this->uri(array(
-		'action' => 'importblog'
-		)));
-		// start a fieldset
-		$imfieldset = $this->getObject('fieldset', 'htmlelements');
-		// $imfieldset->setLegend($this->objLanguage->languageText('mod_blog_importblog', 'blog'));
-		$imadd = $this->newObject('htmltable', 'htmlelements');
-		$imadd->cellpadding = 5;
-		// server dropdown
-		$servdrop = new dropdown('server');
-		$servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
-		$servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
-		$servdrop->addOption("santec", $this->objLanguage->languageText("mod_blog_santec", "blog"));
-		// $servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
-		// $servdrop->addOption("5ive", $this->objLanguage->languageText("mod_blog_5ive", "blog"));
-		// $servdrop->addOption("pear", $this->objLanguage->languageText("mod_blog_peardemo", "blog"));
-		// $servdrop->addOption("dfx", $this->objLanguage->languageText("mod_blog_dfx", "blog"));
-		$imadd->startRow();
-		$servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') . ':', 'input_importfrom');
-		$imadd->addCell($servlabel->show());
-		$imadd->addCell($servdrop->show());
-		$imadd->endRow();
-		// username textfield
-		$imadd->startRow();
-		$imulabel = new label($this->objLanguage->languageText('mod_blog_impuser', 'blog') . ':', 'input_impuser');
-		$imuser = new textinput('username');
-		$usernameval = $this->objUser->username();
-		if (isset($usernameval)) {
-			$imuser->setValue($this->objUser->username());
-		}
-		$imadd->addCell($imulabel->show());
-		$imadd->addCell($imuser->show());
-		$imadd->endRow();
-		// add rules
-		// $imform->addRule('server', $this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog") , 'required');
-		// $imform->addRule('username', $this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog") , 'required');
-		// end off the form and add the buttons
-		$this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
-		$this->objIMButton->setValue($this->objLanguage->languageText('word_import', 'system'));
-		$this->objIMButton->setToSubmit();
-		$imfieldset->addContent($imadd->show());
-		$imform->addToForm($imfieldset->show());
-		$imform->addToForm($this->objIMButton->show());
-		$imform = $imform->show();
-		if ($featurebox == TRUE) {
-			$objFeatureBox = $this->getObject('featurebox', 'navigation');
-			$ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
-			return $ret;
-		} else {
-			return $imform;
-		}
-	}
-
+    public function showImportForm($featurebox = TRUE) 
+    {
+        $this->objUser = $this->getObject('user', 'security');
+        $imform = new form('importblog', $this->uri(array(
+            'action' => 'importblog'
+        )));
+        // start a fieldset
+        $imfieldset = $this->getObject('fieldset', 'htmlelements');
+        // $imfieldset->setLegend($this->objLanguage->languageText('mod_blog_importblog', 'blog'));
+        $imadd = $this->newObject('htmltable', 'htmlelements');
+        $imadd->cellpadding = 5;
+        // server dropdown
+        $servdrop = new dropdown('server');
+        $servdrop->addOption("fsiu", $this->objLanguage->languageText("mod_blog_fsiu", "blog"));
+        $servdrop->addOption("elearn", $this->objLanguage->languageText("mod_blog_elearn", "blog"));
+        $servdrop->addOption("santec", $this->objLanguage->languageText("mod_blog_santec", "blog"));
+        // $servdrop->addOption("freecourseware", $this->objLanguage->languageText("mod_blog_freecourseware", "blog"));
+        // $servdrop->addOption("5ive", $this->objLanguage->languageText("mod_blog_5ive", "blog"));
+        // $servdrop->addOption("pear", $this->objLanguage->languageText("mod_blog_peardemo", "blog"));
+        // $servdrop->addOption("dfx", $this->objLanguage->languageText("mod_blog_dfx", "blog"));
+        $imadd->startRow();
+        $servlabel = new label($this->objLanguage->languageText('mod_blog_impserv', 'blog') . ':', 'input_importfrom');
+        $imadd->addCell($servlabel->show());
+        $imadd->addCell($servdrop->show());
+        $imadd->endRow();
+        // username textfield
+        $imadd->startRow();
+        $imulabel = new label($this->objLanguage->languageText('mod_blog_impuser', 'blog') . ':', 'input_impuser');
+        $imuser = new textinput('username');
+        $usernameval = $this->objUser->username();
+        if (isset($usernameval)) {
+            $imuser->setValue($this->objUser->username());
+        }
+        $imadd->addCell($imulabel->show());
+        $imadd->addCell($imuser->show());
+        $imadd->endRow();
+        // add rules
+        // $imform->addRule('server', $this->objLanguage->languageText("mod_blog_phrase_imserverreq", "blog") , 'required');
+        // $imform->addRule('username', $this->objLanguage->languageText("mod_blog_phrase_imuserreq", "blog") , 'required');
+        // end off the form and add the buttons
+        $this->objIMButton = &new button($this->objLanguage->languageText('word_import', 'system'));
+        $this->objIMButton->setValue($this->objLanguage->languageText('word_import', 'system'));
+        $this->objIMButton->setToSubmit();
+        $imfieldset->addContent($imadd->show());
+        $imform->addToForm($imfieldset->show());
+        $imform->addToForm($this->objIMButton->show());
+        $imform = $imform->show();
+        if ($featurebox == TRUE) {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->showContent($this->objLanguage->languageText("mod_blog_importblog", "blog") , $imform);
+            return $ret;
+        } else {
+            return $imform;
+        }
+    }
     /**
-     * Pseudo constructor method. 
-     * 
+     * Pseudo constructor method.
+     *
      * We have not yet used the standard init() function here, or extended dbTable, as we are not really
      * interested in connecting to the local db with this object.
      *
-     * @param string $server The name of the server to connect to (predefined) 
-     * 
+     * @param string $server The name of the server to connect to (predefined)
+     *
      * @return string, set DSN
-     * @access public 
+     * @access public
      */
     public function setup($server) 
     {
@@ -214,8 +211,8 @@ class blogimporter extends object
     }
     /**
      * Build and instantiate the database object for the remote
-     *   
-     * @return object 
+     *
+     * @return object
      * @access private
      */
     public function _dbObject() 
@@ -243,9 +240,9 @@ class blogimporter extends object
      *
      * @param string $table  The table name
      * @param string $filter can be full SQL Query
-     * 
+     *
      * @return resultset
-     * @access public   
+     * @access public
      */
     public function queryTable($table, $filter) 
     {
@@ -258,8 +255,8 @@ class blogimporter extends object
      * Method to get the blog contents per user (username) into an array
      *
      * @param string $username the users username
-     * 
-     * @return array 
+     *
+     * @return array
      * @access public
      */
     public function importBlog($username) 
@@ -296,7 +293,6 @@ class blogimporter extends object
             $bres = $res2->fetchAll(MDB2_FETCHMODE_ASSOC);
             if (empty($bres)) {
                 throw new customException($this->objLanguage->languageText("mod_blog_import_unoblog", "blog"));
-                
             } else {
                 return $bres;
             }
@@ -307,7 +303,7 @@ class blogimporter extends object
     /**
      * Method to get the blog contents from a site
      *
-     * @return array 
+     * @return array
      * @access public
      */
     public function importAllBlogs() 
@@ -324,7 +320,6 @@ class blogimporter extends object
         $bres = $result->fetchAll(MDB2_FETCHMODE_ASSOC);
         if (empty($bres)) {
             throw new customException($this->objLanguage->languageText("mod_blog_import_unoblog", "blog"));
-            
         } else {
             return $bres;
         }

@@ -7,14 +7,11 @@ $objUi = $this->getObject('blogui');
 $leftCol = $objUi->leftBlocks($userid);
 // right side blocks
 $rightSideColumn = $objUi->rightBlocks($userid, NULL);
-if($leftCol == NULL || $rightSideColumn == NULL)
-{
-	$cssLayout->setNumColumns(2);
+if ($leftCol == NULL || $rightSideColumn == NULL) {
+    $cssLayout->setNumColumns(2);
+} else {
+    $cssLayout->setNumColumns(3);
 }
-else {
-	$cssLayout->setNumColumns(3);
-}
-
 $middleColumn = NULL;
 if ($this->objUser->isLoggedIn()) {
     $form = $this->objblogTrackbacks->sendTrackbackForm($tbarr);
@@ -23,24 +20,20 @@ if ($this->objUser->isLoggedIn()) {
     $objFeatureBox = $this->getObject('featurebox', 'navigation');
     $middleColumn.= $objFeatureBox->show($this->objLanguage->languageText("mod_blog_plslogin", "blog") , $this->objLanguage->languageText("mod_blog_tblogin", "blog"));
 }
-if($leftCol == NULL)
-{
-	$leftCol = $rightSideColumn;
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	//$cssLayout->setRightColumnContent($rightSideColumn);
-	echo $cssLayout->show();
-}
-elseif($rightSideColumn == NULL)
-{
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	echo $cssLayout->show();
-}
-else {
-	$cssLayout->setMiddleColumnContent($middleColumn);
-	$cssLayout->setLeftColumnContent($leftCol);
-	$cssLayout->setRightColumnContent($rightSideColumn);
-	echo $cssLayout->show();
+if ($leftCol == NULL) {
+    $leftCol = $rightSideColumn;
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    //$cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
+} elseif ($rightSideColumn == NULL) {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    echo $cssLayout->show();
+} else {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    $cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
 }
 ?>
