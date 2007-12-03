@@ -34,19 +34,20 @@ $this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
      */
     public function getContextLinks($contextCode)
     {
+
           $cats = $this->_objDBCategories->getCatId($contextCode);
           $faqs=$this->_objDBFaqEntries->getEntries($contextCode,$cats['id']);
    
           $bigArr = array();
         
-          foreach ($cats as $cat)
+          foreach ($faqs as $faq)
           {
                 $newArr = array();   
-              $newArr['menutext'] = $cat['categoryid'];
-              $newArr['description'] = $cat['categoryid'];
-              $newArr['itemid'] = $cat['id'];
-              $newArr['moduleid'] = 'eventscalendar';
-              $newArr['params'] = array('id' => $cats['id'],'action' => 'events');
+              $newArr['menutext'] = $faq['qn'];
+              $newArr['description'] = $faq['categoryid'];
+              $newArr['itemid'] = $faq['id'];
+              $newArr['moduleid'] = 'faq';
+              $newArr['params'] = array('id' => $faq['id'],'action' => 'events');
               $bigArr[] = $newArr;
           }
          

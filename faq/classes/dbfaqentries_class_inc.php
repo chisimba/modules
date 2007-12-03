@@ -48,7 +48,8 @@ class dbFaqEntries extends dbTable
     
     function getEntries($contextId, $categoryId)
     {
-        $sql = "SELECT id, question, answer FROM tbl_faq_entries WHERE contextId='" . $contextId . "'";
+        $sql = "SELECT fc.categoryid as categoryid, fe.question as qn, fe.answer FROM tbl_faq_entries fe,tbl_faq_categories fc WHERE fe.contextId='" . $contextId . "' and fc.id= fe.categoryid";
+
         return $this->getArray($sql);
     }
 
