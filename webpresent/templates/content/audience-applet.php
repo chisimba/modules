@@ -1,5 +1,5 @@
 <?php
-	public $userLevel;
+	$userLevel;
 		if ($this->objUser->isAdmin())
 		{
 			$this->userLevel = 'admin';
