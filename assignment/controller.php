@@ -336,8 +336,8 @@ class assignment extends controller
             $fields['fileid'] = $fileId;
         }else{
             $text = $this->getParam('text', '');
-            $text = $this->objCleaner->cleanHtml($text);
-            $fields['online'] = $text;
+            //$text = $this->objhtmlcleaner->cleanHtml($text);
+            $fields['online'] = $cleanText;
         }
 
         $postSubmitId = $this->getParam('submitid', NULL);
