@@ -233,8 +233,9 @@ class assignmentadmin extends controller
         $fields['mark'] = $this->getParam('mark', '');
         $fields['percentage'] = $this->getParam('percentage', '');
         $fields['closing_date'] = $this->getParam('date', '');
-        $fields['description'] = $description;
-
+        $clean_text = str_replace('<p>','',$description);
+        $clean_text = str_replace('</p>','', $clean_text);
+        $fields['description'] = $clean_text;
         $fields['userId'] = $this->userId;
         $fields['context'] = $this->contextCode;
         $fields['last_modified'] = date('Y-m-d H:i',time());

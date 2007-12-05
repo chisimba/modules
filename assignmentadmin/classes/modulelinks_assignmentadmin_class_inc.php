@@ -48,7 +48,7 @@ class modulelinks_assignmentadmin extends object
           {
                 $newArr = array();    
               $newArr['menutext'] = $assignmentadmin['userid'];
-              $newArr['description'] = '';
+              $newArr['description'] = 'popo';
               $newArr['itemid'] = $assignmentadmin['id'];
               $newArr['moduleid'] = 'assignmentadmin';
               $newArr['params'] = array('id'=>$assignmentadmin['id'],'action' => 'view');
