@@ -206,6 +206,7 @@ class realtime extends controller
 
 	}
 
+ 
 
     /**
      * Function to invoke the presenter applet 
