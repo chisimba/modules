@@ -80,30 +80,49 @@ class utils extends object
        * @access public
        */
       public function getContextList()
-      {
-           try
-           {
-              $objGroups =  $this->getObject('managegroups', 'contextgroups');
-              $contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
-              $objMM =  $this->getObject('mmutils', 'mediamanager');
+	  {
+		
 
-              $arr = array();
-              foreach ($contextCodes as $code)
-              {
-                  $arr[] = $this->_objDBContext->getRow('contextcode',$code);
-
-              }
-
-
-
-              //print_r($arr);
-              return $arr;
-           }
-          catch (Exception $e) {
-            echo customException::cleanUp('Caught exception: '.$e->getMessage());
-            exit();
+		//if the user is an administrator of the site then show him all the courses
+		
+	  	if ($this->_objUser->isAdmin())
+ 		{
+			$newContexts = array();
+            $contexts = $this->_objDBContext->getAll();
+            
+            if (count($contexts) > 0) {
+                foreach ($contexts as $context)
+                {
+                    if ($context['archive'] != '1') {
+                        if ($context['archive'] == 0) {
+                            $newContexts[] = $context;
+                        }
+                    }
+                };
+            }
+            return  $newContexts;
+        
+		} else {
+            $arr = array();
+            
+            $objGroups =  $this->newObject('managegroups', 'contextgroups');
+            $contextCodes = $objGroups->usercontextcodes($this->_objUser->userId());
+            
+            foreach ($contextCodes as $code)
+            {
+                
+                $context = $this->_objDBContext->getRow('contextcode',$code);
+                
+                if ($context != FALSE) {
+                    if ($context['archive'] == 0) {
+                        $arr[] = $context;
+                    }
+                }
+            };
+          
+            return $arr;
         }
-      }
+	  }
 
       /**
        * Method to get the users context that he
@@ -136,7 +155,9 @@ class utils extends object
               {
                   if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
                   {
-                      $arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']);
+                      if ($pCourse['archive'] == 0) {
+                        $arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']);
+                      }
                   }
 
               }
