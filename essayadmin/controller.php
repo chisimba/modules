@@ -58,19 +58,24 @@ class essayadmin extends controller
         // Get instances of the html elements:
         // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
         
-        $this->loadclass('htmltable','htmlelements');    
+
+        $this->loadclass('htmltable','htmlelements');
+        $this->loadClass('checkbox', 'htmlelements');    
         
-        $this->objForm=& $this->getObject('form','htmlelements');
+        $this->loadclass('form','htmlelements');
        // $this->objTable=& $this->getObject('htmltable','htmlelements');
        $this->loadClass('htmltable','htmlelements');
-        $this->objLayer=& $this->getObject('layer','htmlelements');
-        $this->objLink=& $this->getObject('link','htmlelements');
-        $this->objInput=& $this->getObject('textinput','htmlelements');
-        $this->objButton=& $this->getObject('button','htmlelements');
-        $this->objCheck=& $this->getObject('checkbox','htmlelements');
-        $this->objText=& $this->getObject('textarea','htmlelements');
+        $this->loadclass('layer','htmlelements');
+        $this->loadclass('link','htmlelements');
+        $this->loadclass('textinput','htmlelements');
+        $this->loadclass('button','htmlelements');
+        //$checkBox = new checkbox('checkbox','htmlelements');
+        $this->loadclass('textarea','htmlelements');
         $this->objIcon=& $this->getObject('geticon','htmlelements');
-        $this->objIframe=& $this->getObject('iframe','htmlelements');
+        $this->loadclass('iframe','htmlelements');
+
+
+
 		$this->objFile =& $this->newObject('upload','filemanager');
 		       
     //    $this->objpopcal =& $this->getObject('datepickajax','popupcalendar');
@@ -499,9 +504,9 @@ class essayadmin extends controller
     function getTopics($topics)
     {
         // set up html elements
-        $objTable= new htmltable();
-        $objLayer=$this->objLayer;
-        $objLink=$this->objLink;
+        $objTable= $this->newObject('htmltable','htmlelements');
+        $objLayer= new layer;
+
         $objIcon=$this->objIcon;
         $objHead=$this->newObject('htmlheading','htmlelements');
 
@@ -529,7 +534,7 @@ class essayadmin extends controller
         $this->objIcon->title=$title3;
         $addicon=$this->objIcon->getAddIcon($this->uri(array('action'=>'addtopic')));
         $heading.= '&nbsp;&nbsp;'.$addicon;
-        $objLink->link($this->uri(array('action'=>'addtopic')));
+        $objLink = new link($this->uri(array('action'=>'addtopic')));
         $objLink->link=$title3;
         $linkbtn=$objLink->show();
 

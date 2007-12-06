@@ -15,8 +15,12 @@ $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 // set up html elements
 //$objTable=$this->objTable;
 $this->loadClass('htmltable','htmlelements');
-$objLayer=$this->objLayer;
-$objDrop =& $this->newObject('dropdown', 'htmlelements');
+$this->loadClass('dropdown','htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('layer','htmlelements');
+
+//$objLayer = $this->objLayer;
+
 
 // Set up language items
 $topicArea=$this->objLanguage->languageText('mod_essayadmin_topicarea', 'essayadmin');
@@ -100,7 +104,7 @@ $objTable->addCell('');
 $objTable->endRow();
 
 // topic description
-$this->objText->textarea('description',$dDescription,3,85);
+$this->objText = new textarea('description',$dDescription,3,85);
 $this->objText->extra=' wrap="soft"';
 
 $objTable->startRow();
@@ -122,8 +126,15 @@ $objTable->addCell('');
 $objTable->endRow();
 
 // learner instructions
-$this->objText->textarea('instructions',$dInstructions,3,85);
+
+//$this->objText = $this->getObject('textarea', 'htmlelements');
+$this->objText = new textarea('instructions',$dInstructions,3,85);
+//$this->objText->textarea('instructions',$dInstructions,3,85);
 $this->objText->extra=' wrap="soft"';
+
+
+
+
 
 $objTable->startRow();
 $objTable->addCell('<b>'.$instructions.':</b>','','center','center','',' colspan="5"');
@@ -246,10 +257,11 @@ $this->objForm->addRule('topicarea', $errTopic, 'required');
 /************** Display page ********************/
 
 // add form to layer
-$objLayer->cssClass='odd';
-$objLayer->str=$this->objForm->show();
+$objLayer->cssClass = 'odd';
+$objLayer->str = $this->objForm->show();
 
 // Display layer
+$objLayer = new layer;
 echo $objLayer->show();
 
 

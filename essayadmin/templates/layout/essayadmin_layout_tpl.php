@@ -7,9 +7,11 @@
 /**
 * @param string $leftNav The left panel on the page containing user information
 */
- 
+
+$this->loadClass('layer', 'htmlelements');
+
 $leftMenu=& $this->newObject('sidemenu','toolbar');
-$objLayer=$this->objLayer;
+$objLayer= new layer;
 
 $objHead=$this->newObject('htmlheading','htmlelements');
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
