@@ -46,11 +46,12 @@ class modulelinks_worksheet extends object
        {
               $newArr = array();    
               $newArr['menutext'] = $worksheet['name'];
-              $newArr['description'] = '';
+              $newArr['description'] = $worksheet['description'];
               $newArr['itemid'] = $worksheet['id'];
               $newArr['moduleid'] = 'worksheet';
               $newArr['params'] = array('action' => 'selectforanswer','id'=>$worksheet['id']);
               $bigArr[] = $newArr;
+              //echo $bigArr;
         }
           
         return $bigArr;

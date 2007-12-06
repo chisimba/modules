@@ -39,10 +39,14 @@ class dbworksheetquestions extends dbTable
     */
     public function saveRecord($mode, $userId, $imageFile=NULL)
     {
+        $question = string_replace('<p>','','question');
+        $question .= string_replace('</p>','','question');
         $id=addslashes(TRIM($this->getParam('id', '')));
-        $worksheet_id = addslashes(TRIM($this->getParam('worksheet_id', '')));
-        $question = addslashes(TRIM($this->getParam('question', '')));
+        $worksheet_id = addslashes(TRIM($this->getParam('worksheet_id', '')));        
+        $question = addslashes(TRIM($this->getParam('question', '')));        
         $answer = $this->getParam('answer', '');
+        $answer = string_replace('<p>','','answer');
+        $answer = string_replace('</p>','',$answer);
         $question_worth = addslashes(TRIM($this->getParam('worth', '')));
         $question_order = addslashes(TRIM($this->getParam('order', '')));
         $dateLastUpdated = date('Y-m-d H:i:s');
