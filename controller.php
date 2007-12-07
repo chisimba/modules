@@ -132,7 +132,7 @@ class realtime extends controller
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$location = "http://" . $_SERVER['HTTP_HOST'];
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
-		$this->presentationsURL = $location . $this->getResourceUri('presentations', 'realtime');
+		$this->presentationsURL = $location .'/'. $this->getResourceUri('presentations', 'realtime');
         $this->moduleRootPath=$this->objAltConfig->getModulePath();
         $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
@@ -201,7 +201,20 @@ class realtime extends controller
 			case 'assigntoken' :
 				return $this->assignToken($this->getParam('id'), $this->contextCode);	
 			default :
-				return "realtime_tpl.php";
+                                $title='Reatime Tools';
+                                $realTimeDocURL='http://avoir.uwc.ac.za/avoir/index.php?module=wiki&action=wikilink&pagename=RealtimeTools#';
+                                $desc='The realtime tools are a set of Java applets which are capable of running as a module under Chisimba.';
+                                $content='<br/>';
+                                $content.='<p>Welcome to the realtime tools. Select a link below to load and run a specific tool:</p><ul>';
+                                $content.='<li><a href="index.php?module=realtime&amp;action=presentations">Presentations</a> - the realtime presentations.</li>';	
+                                $content.='<li><a href="index.php?module=realtime&amp;action=whiteboard">Whiteboard</a> - the realtime whiteboard applet(requires a running whiteboard server).</li>';
+
+                                $content.='<li><a href="index.php?module=realtime&amp;action=classroom">Classroom</a> - the realtime classroom consisting of a mashup of 	the voice and classroom applets as well as the messaging module. You must be in a context for the messaging to work. The whiteboard server must also be running and JMF must be installed.</li>';
+                                $content.='</ul>';
+                                $this->setVarByRef('title', $title);
+                                $this->setVarByRef('desc', $desc);
+                                $this->setVarByRef('content', $content);
+				return "dump_tpl.php";
 		}
 
 	}
@@ -214,10 +227,53 @@ class realtime extends controller
      */ 
     function showAudienceApplet()
     {
-		$this->setVarByRef('id', $id);  
+        $this->startServer();
+	$this->setVarByRef('id', $id);  
         return "realtime-presentations-audience-applet_tpl.php";
      }
     
+
+ /**
+*
+*  this checks if open office is running or not, then warns the user
+*/
+
+//soffice.bin -headless -accept=socket,port=8100;urp;
+ 
+private function checkOpenOfficeStatus(){
+
+$result = array();
+$cmd='ps aux | grep soffice';
+$find='-headless';
+$needle='soffice.bin -headless -accept=socket';
+exec( $cmd, &$result);
+$pos=0;
+foreach ( $result as $v )
+{
+if($this->in_str($needle,$v)){
+return true;
+}else{
+return false;
+}
+}
+
+}
+
+function in_str($needle, $haystack){
+        return (false !== strpos($haystack, $needle))  ? true : false;
+    
+} 
+
+
+   /**
+    *automaticaly try to start server
+    */ 
+private function startServer()
+    {
+    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
+   system($cmd,$return_value);
+    
+    }
    /**
     * This creates, if not existing, a folder where the presentations are to be stored.
     * In addition, an uploaded presentation is converted into .html and jpg formats
@@ -226,7 +282,10 @@ class realtime extends controller
     
     function uploadPresentation()
     {
- 
+        if($this->checkOpenOfficeStatus()){
+
+      
+        $this->startServer();
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
 		
@@ -286,6 +345,15 @@ class realtime extends controller
             $this->setVarByRef('id', $id);       
 		  return "realtime-presentations-presenter-applet_tpl.php";
         }
+}else{
+$title="Realtime Presentations";
+$content='Realtime presentations could not detect open office running in headless mode on the server.<p>Please make sure you start open office <b>ON THE SERVER</b> by typing the following command: </p><p><b>soffice -headless -accept="socket,port=8100;urp;"</b></p>';
+$desc='Open Office Not running on the server in headless mode';
+                                $this->setVarByRef('title', $title);
+                                $this->setVarByRef('desc', $desc);
+                                $this->setVarByRef('content', $content);
+return "dump_tpl.php";
+}
     }
     /**
      * Informs the server that a user is requesting a voice token, assigns token to User if the token is
