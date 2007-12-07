@@ -1,5 +1,5 @@
-<?php
 
+<?php
     echo '<center>';
     echo '<applet code="avoir.realtime.presentations.client.presenter.PresenterFrame" width="75%" height="600" align="middle">';
 	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/> ';
