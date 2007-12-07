@@ -19,12 +19,15 @@ $topic=$topicdata[0]['name'];
 $duedate=0;
 $duedate=$topicdata[0]['closing_date'];
 
-$this->loadclass('htmltable','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+$this->loadClass('link','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 // set up html elements
 $objTable= new htmltable();
-$objTable2= new htmltable();;
-$objLayer=$this->objLayer;
+$objTable2= new htmltable();
+$objLink = new link();
+$objLayer = new layer();
 $objPop =& $this->newObject('windowpop','htmlelements');
 
 // Set up language items
@@ -100,8 +103,8 @@ if(!empty($data)){
         	$this->objIcon->setIcon('submit2');
         	$this->objIcon->title=$titleupload;
         	$uriUp = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
-        	$this->objLink = new link($uriUp);
-        	$this->objLink->link=$this->objIcon->show();
+        	$objLink = new link($uriUp);
+        	$objLink->link=$this->objIcon->show();
         	$loadicons.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
         }else $loadicons='';
 
@@ -116,9 +119,9 @@ if(!empty($data)){
         }
 
         $uriUp = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
-        $this->objLink = new link($uriUp);
-        $this->objLink->link = $item['student'];
-        $this->objLink->title = $titleupload;
+        $objLink = new link($uriUp);
+        $objLink->link = $item['student'];
+        $objLink->title = $titleupload;
         $studentLink = $this->objLink->show();
 
         $objTable->startRow();
@@ -181,10 +184,10 @@ $objTable->addCell('');
 $objTable->endRow();
 
 // back to topic
-$this->objLink->title='';
-$this->objLink->link($this->uri(array('action'=>'view','id'=>$topicdata[0]['id'])));
-$this->objLink->link=$topiclist;
-$link1=$this->objLink->show();
+$objLink->title = '';
+$objLink->link($this->uri(array('action'=>'view','id'=>$topicdata[0]['id'])));
+$objLink->link = $topiclist;
+$link1 = $objLink->show();
 
 /******************* Display table *******************/
 
@@ -202,9 +205,9 @@ if($this->rubric){
 echo $objTable->show();
 
 // essay home
-$this->objLink->link($this->uri(array('')));
-$this->objLink->link=$topichome;
-$link2=$this->objLink->show();
+$objLink->link($this->uri(array('')));
+$objLink->link=$topichome;
+$link2 = $objLink->show();
 
 //download submitted essays
 $filename = 0;
@@ -237,11 +240,11 @@ $results = $fileUploader->uploadFile('fileupload1'); // This corresponds with th
 //$this->objDbZip->insertData($zippedTopic.date("Y-m-d-Hms").".zip",$essayadminpath.$zippedTopic."/".$zippedTopic.date("Y-m-d-Hms").".zip",$essayadminDownloadLink.$zippedTopic."/".$zippedTopic.date("Y-m-d-Hms").".zip");
 
 //$this->objLink->link("$essayadminDownloadLink$zippedTopic".date("Y-m-d-Hms").".zip");
-$this->objLink->link=$downloadEssays;
-$link3=0;
-$link3=$this->objLink->show();
+$objLink->link =  $downloadEssays;
+$link3 = 0;
+$link3 = $objLink->show();
 
-$objLayer->align='center';
-$objLayer->str=$link3.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link2.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link1;
+$objLayer->align = 'center';
+$objLayer->str = $link3.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link2.'&nbsp;&nbsp;&nbsp;&nbsp;'.$link1;
 echo $objLayer->show();
 ?>

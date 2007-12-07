@@ -18,6 +18,7 @@ $this->loadClass('htmltable','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('textarea', 'htmlelements');
 $this->loadClass('layer','htmlelements');
+$this->loadClass('form','htmlelements');
 
 //$objLayer = $this->objLayer;
 
@@ -245,23 +246,23 @@ $objTable->row_attributes=' height="10"';
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();
-
+//var_dump($objTable);
 /************** Build form **********************/
 
-$this->objForm = new form('topic',$this->uri(array('action'=>'savetopic')));
-$this->objForm->addToForm($objTable->show());
-$this->objForm->addRule('percentage', $errPercent, 'numeric');
-$this->objForm->addRule('topicarea', $errTopic, 'required');
-
+$objForm = new form('topic',$this->uri(array('action'=>'savetopic')));
+$objForm->addToForm($objTable->show());
+$objForm->addRule('percentage', $errPercent, 'numeric');
+$objForm->addRule('topicarea', $errTopic, 'required');
+//var_dump($objForm);
 
 /************** Display page ********************/
 
 // add form to layer
+$objLayer = new layer;
 $objLayer->cssClass = 'odd';
-$objLayer->str = $this->objForm->show();
+$objLayer->str = $objForm->show();
 
 // Display layer
-$objLayer = new layer;
 echo $objLayer->show();
 
 

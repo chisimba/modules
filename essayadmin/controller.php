@@ -65,15 +65,15 @@ class essayadmin extends controller
         $this->loadclass('form','htmlelements');
        // $this->objTable=& $this->getObject('htmltable','htmlelements');
        $this->loadClass('htmltable','htmlelements');
-        $this->loadclass('layer','htmlelements');
-        $this->loadclass('link','htmlelements');
-        $this->loadclass('textinput','htmlelements');
-        $this->loadclass('button','htmlelements');
+        $this->loadClass('layer','htmlelements');
+        $this->loadClass('link','htmlelements');
+        $this->loadClass('textinput','htmlelements');
+        $this->loadClass('button','htmlelements');
         //$checkBox = new checkbox('checkbox','htmlelements');
-        $this->loadclass('textarea','htmlelements');
+        $this->loadClass('textarea','htmlelements');
         $this->objIcon=& $this->getObject('geticon','htmlelements');
-        $this->loadclass('iframe','htmlelements');
-
+        $this->loadClass('iframe','htmlelements');
+        $this->loadClass('htmlHeading','htmlelements');
 
 
 		$this->objFile =& $this->newObject('upload','filemanager');
@@ -577,16 +577,16 @@ class essayadmin extends controller
                 }
 
                 // set up view essays in topic link
-                $this->objLink->link($this->uri(array('action'=>'view','id'=>$val['id'])));
-                $this->objLink->link=$val['name'];
-                $this->objLink->title=$title;
-                $view=$this->objLink->show();
+                $objLink->link($this->uri(array('action'=>'view','id'=>$val['id'])));
+                $objLink->link=$val['name'];
+                $objLink->title=$title;
+                $view = $objLink->show();
 
                 $this->objIcon->setIcon('paper');
                 $this->objIcon->title=$title;
                 $this->objIcon->alt=$title;
-                $this->objLink->link=$this->objIcon->show();
-                $show=$this->objLink->show();
+                $objLink->link=$this->objIcon->show();
+                $show = $objLink->show();
 
                 if($val['submitted']==0){
                     $mark='';
@@ -594,9 +594,9 @@ class essayadmin extends controller
                     $this->objIcon->setIcon('comment');
                     $this->objIcon->title=$title4;
                     $this->objIcon->alt=$title4;
-                    $this->objLink->link($this->uri(array('action'=>'marktopic','id'=>$val['id'])));
-                $this->objLink->link=$this->objIcon->show();
-                $mark=$this->objLink->show();
+                    $objLink->link($this->uri(array('action'=>'marktopic','id'=>$val['id'])));
+                $objLink->link = $this->objIcon->show();
+                $mark = $objLink->show();
                 }
 
                 // set up edit & delete icons
@@ -667,10 +667,10 @@ class essayadmin extends controller
         $objTable2 = new htmltable();
         //$objTable=$this->objTable;
         //$objTable2=$this->objTable;
-        $objLayer=$this->objLayer;
-        $objLink=$this->objLink;
-        $objHead=& $this->newObject('htmlheading','htmlelements');
-        $objMsg =& $this->newObject('timeoutmessage', 'htmlelements');
+        $objLayer = new layer;
+        //$objLink = $this->objLink;
+        $objHead =  new htmlHeading;
+        $objMsg  =& $this->newObject('timeoutmessage', 'htmlelements');
 
         // set up language elements
         $head=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin').' ';
@@ -746,6 +746,7 @@ class essayadmin extends controller
         $objHead->type=4;
         $objHead->str=$subhead;
 
+        $objLayer = new layer;
         $objLayer->border='';
         $objLayer->str=$objTable2->show();
         $str .= $objLayer->show().$objHead->show();
@@ -757,16 +758,17 @@ class essayadmin extends controller
         $objTable->width='99%';
         $objTable->cellpadding=5;
         $objTable->cellspacing=2;
-
+  
         if(!empty($essays)){
             foreach($essays as $val){
                 $class = ($i++%2)? 'even':'odd';
 
                 // edit essay
-                $this->objLink->link($this->uri(array('action'=>'editessay','essay'=>$val['id'],'id'=>$topic[0]['id'])));
-                $this->objLink->link=$val['topic'];
-                $this->objLink->title=$title1;
-                $view=$this->objLink->show();
+                $objLink = new link;
+                $objLink->link($this->uri(array('action'=>'editessay','essay'=>$val['id'],'id'=>$topic[0]['id'])));
+                $objLink->link = $val['topic'];
+                $objLink->title = $title1;
+                $view = $objLink->show();
 
                 $this->objIcon->title=$title1;
                 $this->objIcon->extra='';

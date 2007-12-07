@@ -10,7 +10,10 @@ $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 // set up html elements
 //$objTable=$this->objTable;
 $this->loadClass('htmltable','htmlelements');
-$objLayer=$this->objLayer;
+$this->loadClass('layer','htmlelements');
+$this->loadClass('textarea','htmlelements');
+$objText = new textarea;
+$objLayer = new layer;
 
 // javascript
 $javascript = "<script language=\"javascript\" type=\"text/javascript\">
@@ -83,8 +86,8 @@ $objTable->addCell('');
 $objTable->endRow();
 
 // topic description
-$this->objText->textarea('notes',$dnotes,3,85);
-$this->objText->extra=' wrap="soft"';
+$objText->textarea('notes',$dnotes,3,85);
+$objText->extra=' wrap="soft"';
 
 $objTable->startRow();
 $objTable->addCell('<b>'.$notes.':</b>','','center','center','',' colspan="3"');
@@ -96,7 +99,7 @@ $objTable->addCell('');
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objText->show(),'','center','center','',' colspan="3"');
+$objTable->addCell($objText->show(),'','center','center','',' colspan="3"');
 $objTable->endRow();
 
 $objTable->row_attributes=' height="10"';
@@ -145,7 +148,7 @@ $this->objForm->addRule('essaytopic',$errEssay, 'required');
 
 // add form to layer
 $objLayer->cssClass='odd';
-$objLayer->str=$this->objForm->show();
+$objLayer->str = $this->objForm->show();
 
 // Display layer
 echo $objLayer->show();
