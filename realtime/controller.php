@@ -234,28 +234,26 @@ class realtime extends controller
     
 
  /**
-*
-*  this checks if open office is running or not, then warns the user
-*/
+  *
+  *  this checks if open office is running or not, then warns the user
+  */
 
-//soffice.bin -headless -accept=socket,port=8100;urp;
  
-private function checkOpenOfficeStatus(){
+    private function checkOpenOfficeStatus(){
 
-$result = array();
-$cmd='ps aux | grep soffice';
-$find='-headless';
-$needle='soffice.bin -headless -accept=socket';
-exec( $cmd, &$result);
-$pos=0;
-foreach ( $result as $v )
-{
-if($this->in_str($needle,$v)){
-return true;
-}else{
-return false;
-}
-}
+    $result = array();
+    $cmd='ps aux | grep soffice';
+    $needle='headless';// -accept=socket';
+    exec( $cmd, &$result);
+     foreach ($result as $v ){
+       
+       if($this->in_str($needle,$v)){
+        
+        return true;
+       }else{
+        return false;
+     }
+   }
 
 }
 
@@ -321,7 +319,7 @@ private function startServer()
             $mimetype = $_FILES['fileupload']['type'];
 
             $path_parts = pathinfo($_FILES['fileupload']['name']);
-           $ext = $path_parts['extension'];
+            $ext = $path_parts['extension'];
 
 
             $file = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
