@@ -332,7 +332,7 @@ class dbhivforum extends dbtable
 	* @param string $postId
 	* @return array $data The posts
 	*/
-	private function getPost($postId)
+	public function getPost($postId)
 	{
         // Get the posts from the DB
         $this->_changeTable('tbl_forum_post');
