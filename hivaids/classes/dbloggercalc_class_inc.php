@@ -543,6 +543,7 @@ class dbLoggerCalc extends dbtable
         $data = $this->getLoggedData('hivaidsforum');
 
         $log = array();
+        $arrReply = array();
 
         if(!empty($data)){
             // Get the default category
@@ -554,6 +555,7 @@ class dbLoggerCalc extends dbtable
                 $catId = '';
                 $topicId = '';
                 $action = '';
+                $ignore = FALSE;
 
                 if(is_null($event) || empty($event)){
                     $catId = $defaultId;
@@ -561,7 +563,7 @@ class dbLoggerCalc extends dbtable
                 }else{
                     // get the action - show topic or show category or show reply
                     $pos = strpos($event, '&');
-                    if($pos == false){
+                    if($pos === false){
                         $action = substr($event, 7);
                     }else{
                         $action = substr($event, 7, $pos-7);
@@ -586,15 +588,64 @@ class dbLoggerCalc extends dbtable
                             break;
 
                         case 'showreply':
+                            if($pos !== false){
+                                $ref = strpos($event, 'parent_id=');
+                                $parentId = substr($event, $ref+10);
+                                $parent = $objDbForum->getPostParent($parentId);
+                                $topicId = $parent['topic_id'];
+                            }else{
                             // Check referrer for topic id
-                            $ref = strpos($referrer, 'topicId=');
-                            $topicId = substr($referrer, $ref+8);
+                                $ref = strpos($referrer, 'topicId=');
+                                if($ref === false){
+                                    if(isset($arrReply[$item['userid']]['topic']) && !empty($arrReply[$item['userid']]['topic'])){
+                                        $topicId = $arrReply[$item['userid']]['topic'];
+                                    }else{
+                                        $topicId = $prevTopId;
+                                    }
+                                }else{
+                                    $topicId = substr($referrer, $ref+8);
+                                }
+                            }
+                            // get category id from DB
+                            $catId = $objDbForum->getCategoryForTopic($topicId);
+                            $arrReply[$item['userid']]['topic'] = $topicId;
+                            $arrReply[$item['userid']]['cat'] = $catId;
+                            $ignore = TRUE; // Only show hit if post is saved.
+                            break;
+
+                        case 'showpost':
+                            if($pos !== false){
+                                $ref = strpos($event, 'postId=');
+                                $postId = substr($event, $ref+7);
+                                $post = $objDbForum->getPost($postId);
+                                $topicId = $post['topic_id'];
+                            }else{
+                                $ref = strpos($referrer, 'topicId=');
+                                if($ref === false){
+                                    $ignore = TRUE;
+                                }
+                                $topicId = substr($referrer, $ref+8);
+                            }
                             // get category id from DB
                             $catId = $objDbForum->getCategoryForTopic($topicId);
                             break;
+
+                        case 'savepost':
+                            $topicId = $arrReply[$item['userid']]['topic'];
+                            $catId = $arrReply[$item['userid']]['cat'];
+                            $item['posts'] = 1;
+                            break;
+
+                        case '':
+                        default:
+                            $ignore = TRUE;
                     }
                 }
-                $log[$catId][$topicId][] = $item;
+                if(!$ignore){
+                    $log[$catId][$topicId][] = $item;
+                    $prevCatId = $catId;
+                    $prevTopId = $topicId;
+                }
             }
         }
         return $log;

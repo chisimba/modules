@@ -801,6 +801,7 @@ class hivtracking extends object
         $playpodcast = $this->objLanguage->languageText('phrase_playpodcast');
         $addpodcast = $this->objLanguage->languageText('phrase_addpodcast');
         $home = $this->objLanguage->languageText('phrase_podcasthome');
+        $lbOther = $this->objLanguage->languageText('word_other');
 
         $viewlinks = $this->objLanguage->languageText('phrase_linkspage');
         $playyourmoves = $this->objLanguage->languageText('phrase_playyourmovesgame');
@@ -874,7 +875,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
@@ -925,8 +926,8 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
-                            $row[] = '';
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
+                            $row[] = (isset($item['posts'])) ? $item['posts'] : '';
                         }else{
                             $row[] = 'N';
                             for($x = 0; $x < 8; $x++){
@@ -979,7 +980,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
@@ -1022,7 +1023,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
@@ -1073,6 +1074,7 @@ class hivtracking extends object
         $playyourmoves = $this->objLanguage->languageText('phrase_playyourmovesgame');
         $showregister = $this->objLanguage->languageText('phrase_newregistration');
         $videolist = $this->objLanguage->languageText('phrase_videolist');
+        $lbOther = $this->objLanguage->languageText('word_other');
 
         $hdArr = array();
         $hdArr[] = $this->objLanguage->languageText('word_page');
@@ -1128,7 +1130,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
@@ -1178,8 +1180,8 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
-                            $row[] = '';
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
+                            $row[] = (isset($item['posts'])) ? $item['posts'] : '';
                         }else{
                             $row[] = 'N';
                             for($x = 0; $x < 8; $x++){
@@ -1231,7 +1233,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
@@ -1273,7 +1275,7 @@ class hivtracking extends object
                             $row[] = $this->objCountries->getName($item['country']);
                             $row[] = $item['staff_student'];
                             $row[] = $item['course'];
-                            $row[] = $item['study_year'];
+                            $row[] = ($item['study_year'] == 'NULL') ? $lbOther : $item['study_year'];
                             $row[] = '';
                         }else{
                             $row[] = 'N';
