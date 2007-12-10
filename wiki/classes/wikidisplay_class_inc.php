@@ -1081,7 +1081,7 @@ class wikidisplay extends object
         
         // create button
         $objButton = new button('cancel', $cancelLabel);
-        $objButton->extra = 'onclick="javascript:history.back();"';
+        $objButton->extra = 'onclick="$(\'form_hidden\').submit();"';
         $cancelButton = $objButton->show();
         
         // button layer
@@ -1100,9 +1100,12 @@ class wikidisplay extends object
         $objForm->addToForm($buttonLayer);
         $createForm = $objForm->show();
         
+        $objForm = new form('hidden', $this->uri(array(), 'wiki'));
+        $hiddenForm = $objForm->show();
+
         $objLayer = new layer();
         $objLayer->cssClass = 'featurebox';
-        $objLayer->addToStr($createForm);
+        $objLayer->addToStr($createForm.$hiddenForm);
         $createLayer = $objLayer->show();
             
         // add page tab
