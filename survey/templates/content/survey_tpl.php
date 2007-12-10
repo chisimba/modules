@@ -23,17 +23,17 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }
 
 // set up html elements
-    $objHeader=&$this->loadClass('htmlheading','htmlelements');
-    $objTable=&$this->loadClass('htmltable','htmlelements');
-    $objButton=&$this->loadClass('button','htmlelements');
-    $objText=&$this->loadClass('textarea','htmlelements');
-    $objInput=&$this->loadClass('textinput','htmlelements');
-    $objDrop=&$this->loadClass('dropdown','htmlelements');
-    $objRadio=&$this->loadClass('radio','htmlelements');
-    $objCheck=&$this->loadClass('checkbox','htmlelements');
-    $objIcon=&$this->newObject('geticon','htmlelements');
-    $objTabbedbox=&$this->loadClass('tabbedbox','htmlelements');
-    $objLayer=&$this->loadClass('layer','htmlelements');
+    $objHeader=$this->loadClass('htmlheading','htmlelements');
+    $objTable=$this->loadClass('htmltable','htmlelements');
+    $objButton=$this->loadClass('button','htmlelements');
+    $objText=$this->loadClass('textarea','htmlelements');
+    $objInput=$this->loadClass('textinput','htmlelements');
+    $objDrop=$this->loadClass('dropdown','htmlelements');
+    $objRadio=$this->loadClass('radio','htmlelements');
+    $objCheck=$this->loadClass('checkbox','htmlelements');
+    $objIcon=$this->newObject('geticon','htmlelements');
+    $objTabbedbox=$this->loadClass('tabbedbox','htmlelements');
+    $objLayer=$this->loadClass('layer','htmlelements');
     $objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
 
 // set up language items
@@ -76,6 +76,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     }
 
 // set up heading
+	$objLayer = new layer();
     if($mode=='view'){
         $objHeader = new htmlheading();
         $objHeader->str=$heading;
