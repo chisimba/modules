@@ -13,7 +13,7 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 }
 $middleColumn = NULL;
 //get the posts manager
-$middleColumn = $this->objblogOps->catedit($catarr, $userid, $catid);
+$middleColumn = $this->objblogCategories->catedit($catarr, $userid, $catid);
 if ($leftCol == NULL) {
     $leftCol = $rightSideColumn;
     $cssLayout->setMiddleColumnContent($middleColumn);
