@@ -3,7 +3,7 @@
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
-//$this->loadClass('heading', 'htmlelements');
+$this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('href', 'htmlelements');
 $this->loadClass('htmlarea', 'htmlelements');
 $userid = $this->objUser->userId();
@@ -17,11 +17,17 @@ $leftMenu = $this->newObject('usermenu', 'toolbar');
 $rightSideColumn = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
+
+$heading = new htmlheading();
+$heading->type = 1;
+$heading->str = $this->objLanguage->languageText('mod_blog_blogadmin', 'blog');
+$middleColumn = $heading->show();
+
 //left menu section
 $leftCol = $leftMenu->show();
 //$leftCol .= $this->objblogOps->rssBox('http://slashdot.org/slashdot.rdf', 'Slashdot');
-$tabpane = $this->getObject('tabcontent', 'htmlelements');
-$tabpane->width = '100%';
+$tabpane = $this->newObject('tabcontent', 'htmlelements');
+$tabpane->width = '97%';
 //write new post
 $nplabel = $this->objLanguage->languageText("mod_blog_writepost", "blog");
 $npcontent = $this->objblogPosts->postEditor($userid, NULL);

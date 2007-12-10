@@ -150,13 +150,13 @@ class blogprofiles extends object
         $ptable->endRow();
         // blogger profile field
         $ptable->startRow();
-        $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') . ':', 'input_blogprofile');
+        $bprflabel = new label($this->objLanguage->languageText('mod_blog_bloggerprofile', 'blog') . ':<br />'.$this->objLanguage->languageText('mod_blog_bloggerprofileinstruction', 'blog'), 'input_blogprofile');
         $bprf = $this->newObject('htmlarea', 'htmlelements');
         $bprf->setName('blogprofile');
         if (isset($profile['blogger_profile'])) {
             $bprf->setcontent($profile['blogger_profile']);
         }
-        $ptable->addCell($bprflabel->show());
+        $ptable->addCell($bprflabel->show(), 200);
         $ptable->addCell($bprf->showFCKEditor());
         $ptable->endRow();
         // put it all together and set up a submit button
