@@ -46,6 +46,10 @@ class dbFaqEntries extends dbTable
 		return $ins;	
 	}
     
+    /**
+    * Get FAQ entries
+    * @author Nonhlanhla Gangeni <noegang@gmail.com>
+    */
     function getEntries($contextId, $categoryId)
     {
         $sql = "SELECT fc.categoryid as categoryid, fe.question as qn, fe.answer FROM tbl_faq_entries fe,tbl_faq_categories fc WHERE fe.contextId='" . $contextId . "' and fc.id= fe.categoryid";

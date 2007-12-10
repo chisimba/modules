@@ -23,10 +23,14 @@ class dbFaqCategories extends dbTable
         //$this->USE_PREPARED_STATEMENTS=True;
     } 
 
-
-  public function getCatId($contextId){
+    /**
+    * Get category id. (called in getContextLinks() function in modulelinks class)
+    * @author Nonhlanhla Gangeni <noegang@gmail.com>
+    */
+  public function getCatId($contextId)
+    {
         return $this->getRow("contextid", $contextId);
-}
+    }
 
     /**
     * Return all records
