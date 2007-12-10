@@ -3258,10 +3258,10 @@ You can create tables using pairs of vertical bars:
         $objLayer->addToStr($loadingLabel.'<br />'.$loadingIcon);
         $loadingLayer = $objLayer->show();
         
-        $objInput = new textinput('preview_name');
+        $objInput = new textinput('preview_name', $name);
         $nameInput = $objInput->show();
         
-        $objText = new textarea('preview_content');
+        $objText = new textarea('preview_content', $content);
         $contentText = $objText->show();
         
         $objForm = new form('iframe_form', $this->uri(array(
