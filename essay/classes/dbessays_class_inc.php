@@ -27,6 +27,7 @@ class dbessays extends dbTable
     public function init()
     {
         parent::init('tbl_essays');
+        parent::init('tbl_essay_topics');
         $this->table='tbl_essays';
     }
 
@@ -64,6 +65,26 @@ class dbessays extends dbTable
         return $rows;
     }
 
+   /**
+    * Method added to retrieve all essay topics.
+    * If a topic id is specified, retrieve the essays in the specified topic.
+    * @author Nonhlanhla Gangeni <noegang@gmail.com>
+    * @param string $id The essay topic id. Default=NULL
+    * @return array $rows The list of essays
+    */
+    public function getEssayTopics($id=NULL)
+    {
+
+        $sql='select e.id as id,et.name as name,e.topic as topic from tbl_essay_topics et,tbl_essays e ';
+        if($id){
+            $sql.=" where et.context='$id' and e.topicid=et.id";
+        }else{
+         $sql.=" where e.topicid=et.id";
+        }
+        $rows=$this->getArray($sql);
+        return $rows;
+    }
+
     /**
     * Method to retrieve all essays.
     * If a topic id is specified, retrieve the essays in the specified topic.
@@ -72,10 +93,12 @@ class dbessays extends dbTable
     */
     public function getEssays($id=NULL)
     {
+
         $sql='select id,topic,notes from ' .$this->table;
         if($id){
             $sql.=" where topicid='$id'";
         }
+
         $rows=$this->getArray($sql);
         return $rows;
     }
