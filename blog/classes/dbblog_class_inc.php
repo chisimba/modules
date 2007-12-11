@@ -485,11 +485,11 @@ class dbblog extends dbTable
     {
         if ($userid == FALSE) {
             $this->_changeTable('tbl_blog_posts');
-            $filter = "ORDER BY post_ts DESC LIMIT {$num}";
+            $filter = "WHERE post_status = '0' ORDER BY post_ts DESC LIMIT {$num}";
             $posts = $this->getAll($filter);
         } else {
             $this->_changeTable('tbl_blog_posts');
-            $filter = "WHERE userid = '$userid' ORDER BY post_ts DESC LIMIT {$num}";
+            $filter = "WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC LIMIT {$num}";
             $posts = $this->getAll($filter);
         }
         return $posts;
