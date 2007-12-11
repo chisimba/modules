@@ -556,8 +556,12 @@ class blogposts extends object
         $pslabel = new label($this->objLanguage->languageText('mod_blog_poststatus', 'blog') . ':', 'input_status');
         $psDrop = new dropdown('status');
         $psDrop->addOption(0, $this->objLanguage->languageText("mod_blog_published", "blog"));
-        $psDrop->addOption(1, $this->objLanguage->languageText("mod_blog_draft", "blog"));
-        // $psDrop->addOption(2, $this->objLanguage->languageText("mod_blog_hidden","blog"));
+       	$psDrop->addOption(1, $this->objLanguage->languageText("mod_blog_draft", "blog"));
+        if (isset($editparams['post_status']) && $editparams['post_status'] == 1) {
+        	$psDrop->setSelected(1);
+        } else {
+       		$psDrop->setSelected(0);
+        }        
         $ptable->addCell($pslabel->show());
         $ptable->addCell($psDrop->show());
         $ptable->endRow();
