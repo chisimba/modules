@@ -46,7 +46,7 @@ class webmail extends controller
 		switch ($action) {
 			default:
 				//Mailbox DSN
-				$this->dsn = "imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX";
+				$this->dsn = NULL; //"imap://fsiu:fsiu@itsnw.uwc.ac.za:143/INBOX";
 				try {
 					//connect to the server
 					$this->conn = $this->objImap->factory($this->dsn);
