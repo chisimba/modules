@@ -13,7 +13,7 @@
 	echo '  <param name="isLoggedIn" value="'.$this->objUser->isLoggedIn().'"/>';
     echo '  <param name="fullname" value="'.$this->objUser->fullname().'"/>';
 	echo '  <param name="jmfResourcePath" value="'.$this->objAltConfig->getModulePath().'/realtime/resources/jmf/"/>';
-		   echo '  <param name="userLevel" value="'.$this->userLevel.'"/>';
+	echo '  <param name="userLevel" value="'.$this->userLevel.'"/>';
 	echo "</applet> ";
 	echo '</center>';
 ?>

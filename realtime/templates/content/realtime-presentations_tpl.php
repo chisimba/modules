@@ -1,10 +1,5 @@
 
 <?php
-/*
-echo '<applet id="presentationsapplet" width="800" height="600" code="com.sun.star.lib.loader.Loader.class">';
-echo '    <param name="archive" value="'.$this->presentationsURL.'/presentations.jar,'.$this->presentationsURL.'/officebean.jar"/> ';
-echo "</applet> ";
-*/
 
 // set up html elements
 $this->objLanguage =& $this->getObject('language','language');
@@ -29,6 +24,7 @@ $str1= $this->objLanguage->languageText('mod_realtime_presentationtitle', 'realt
 $oo="<a href='".$this->objLanguage->languageText('mod_realtime_openoffice', 'realtime')."'>".$this->objLanguage->languageText('mod_realtime_openofficetext', 'realtime')."</a>";
 $str2= $this->objLanguage->languageText('mod_realtime_str2a', 'realtime').$oo.$this->objLanguage->languageText('mod_realtime_str2b', 'realtime');
 
+$tip='<b>TIP</b>: Realtime presentations uses open office running in headless mode on the server.<p>Please contact your system administrator on this.</p><p>Open Office can be started in headless mode by running the following command: </p><p><b>soffice -headless -accept="socket,port=8100;urp;"</b></p>';
 //create links to the Applet presentations
 $this->objLink->link($this->uri(array('action'=>'show_upload_form')));
 $this->objLink->link=$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime');
@@ -37,8 +33,7 @@ $str3=$this->objLink->show()." ".$this->objLanguage->languageText('mod_realtime_
 $this->objLink->link($this->uri(array('action'=>'audience_applet')));
 $this->objLink->link=$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
 $str4=$this->objLink->show()." ".$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
-$webstartstr3='<a href="'.$this->presentationsURL.'/Presenter.jnlp">'.$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_startpresentation', 'realtime'); 
-$webstartstr4='<a href="'.$this->presentationsURL.'/Audience.jnlp">'.$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_joinpresentation', 'realtime');
+
 
 $objHead->type=2;
 $objHead->str=$str1;
@@ -48,8 +43,10 @@ $leftSideColumn = $str2;
 // Add Left column
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $rightSideColumn = "<div align=\"left\">" . $objHead->show() . "</div>";
+$rightSideColumn.=$tip;
 
-//set contents of the table in the Applet version tab
+
+
 $objAppletTable->startRow();
 $objAppletTable->addCell($str3);
 $objAppletTable->endRow();
