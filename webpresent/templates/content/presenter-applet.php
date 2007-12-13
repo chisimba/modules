@@ -25,7 +25,7 @@
 	echo '  <param name="slideId" value="'.$id.'"/>';
 	echo '  <param name="jodconverterPath" value="'.$jodconverterPath.'"/>';
 	echo '  <param name="fullname" value="'.$this->objUser->fullname().'"/>'; 
-	echo '  <param name="jmfResourcePath" value="'.$this->objAltConfig->getModulePath().'/realtime/resources/jmf/"/>';
+	echo '  <param name="jmfResourcePath" value="'.$this->objConfig->getModulePath().'/realtime/resources/jmf/"/>';
 	echo '  <param name="userLevel" value="'.$this->userLevel.'"/>';
     echo "</applet> ";
     echo '</center>';

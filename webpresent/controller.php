@@ -9,6 +9,7 @@ class webpresent extends controller
 {
 
       public $presentationsURL;
+	  public  $objConfig;  
 
     /**
      * Constructor
