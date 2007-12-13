@@ -69,7 +69,7 @@ class personalspace extends controller
 
 			// Get # of unread emails
 	        $objModules =& $this->newObject('modules','modulecatalogue');
-			$email = $objModules->checkIfRegistered('email');
+			$email = $objModules->checkIfRegistered('internalmail');
 			$this->setVarByRef("email", $email);
 			$this->setLayoutTemplate("user_layout_tpl.php");
 	        // Added by Tohir - Test User Page
@@ -94,7 +94,7 @@ class personalspace extends controller
 	    		$emails = array_reverse($emails);
 
 */
-                $this -> objDbEmail = & $this->getObject('dbrouting','email');
+                $this -> objDbEmail = & $this->getObject('dbrouting','internalmail');
                 $emails=$this -> objDbEmail->getAllMail('init_1',array(1=>3,2=>'DESC'),NULL);
                 $this->setVarByRef('emails', $emails);
 	        }

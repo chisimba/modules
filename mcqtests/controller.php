@@ -55,35 +55,35 @@ class mcqtests extends controller
     public function init()
     {
         // Check if the assignment module is registered and can be linked to.
-        $this->objModules = &$this->newObject('modules', 'modulecatalogue');
+        $this->objModules = $this->newObject('modules', 'modulecatalogue');
         $this->assignment = FALSE;
         if ($this->objModules->checkIfRegistered('Assignment Management', 'assignment')) {
             $this->assignment = TRUE;
         }
 
         // get the user object
-        $this->dbTestadmin = &$this->newObject('dbtestadmin');
-        $this->dbQuestions = &$this->newObject('dbquestions');
-        $this->dbAnswers = &$this->newObject('dbanswers');
-        $this->dbMarked = &$this->newObject('dbmarked');
-        $this->dbResults = &$this->newObject('dbresults');
-        $this->objUser = &$this->newObject('user', 'security');
-        $this->objLanguage = &$this->newObject('language', 'language');
-        $this->objDate = &$this->newObject('dateandtime', 'utilities');
-        $this->objConfig = &$this->newObject('altconfig', 'config');
-        $this->objMkdir = &$this->newObject('mkdir', 'files');
+        $this->dbTestadmin = $this->newObject('dbtestadmin');
+        $this->dbQuestions = $this->newObject('dbquestions');
+        $this->dbAnswers = $this->newObject('dbanswers');
+        $this->dbMarked = $this->newObject('dbmarked');
+        $this->dbResults = $this->newObject('dbresults');
+        $this->objUser = $this->newObject('user', 'security');
+        $this->objLanguage = $this->newObject('language', 'language');
+        $this->objDate = $this->newObject('dateandtime', 'utilities');
+        $this->objConfig = $this->newObject('altconfig', 'config');
+        $this->objMkdir = $this->newObject('mkdir', 'files');
         $this->user = $this->objUser->fullname();
         $this->userId = $this->objUser->userId();
         $this->email = $this->objUser->email($this->userId);
-        $this->objMail = &$this->newObject('dbemail', 'email');
-        $this->objEmailFiles = &$this->newObject('emailfiles', 'email');
+        $this->objMail = $this->newObject('dbemail', 'internalmail');
+        $this->objEmailFiles = $this->newObject('emailfiles', 'internalmail');
 
         // context
-        $this->objContext = &$this->newObject('dbcontext', 'context');
-        $this->objContentNodes = &$this->newObject('dbcontentnodes', 'context');
+        $this->objContext = $this->newObject('dbcontext', 'context');
+        $this->objContentNodes = $this->newObject('dbcontentnodes', 'context');
         $this->contextCode = $this->objContext->getContextCode();
-        $this->contextUsers = &$this->newObject('managegroups', 'contextgroups');
-        $this->objCond = &$this->newObject('contextCondition', 'contextpermissions');
+        $this->contextUsers = $this->newObject('managegroups', 'contextgroups');
+        $this->objCond = $this->newObject('contextCondition', 'contextpermissions');
 
         // Log this call if registered
         if (!$this->objModules->checkIfRegistered('logger', 'logger')) {
