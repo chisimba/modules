@@ -65,6 +65,16 @@ class dbgeonames extends dbTable
     {
         return $this->getAll('WHERE name LIKE \''.$location.'\' ');
     }
+	
+	/**
+    * Method to get a list of cities starting with a name
+    * @param string $location Name of Location
+    * @return array
+    */
+    public function getLocationsStartingWith($location)
+    {
+        return $this->getAll('WHERE name LIKE \''.$location.'%\' AND name NOT LIKE \''.$location.'\' GROUP BY name');
+    }
     
     /**
     * Method to add a record from an XML Node derived from the Geonames Webservice
@@ -94,6 +104,7 @@ class dbgeonames extends dbTable
         return $this->insertRecord($insarr);
         
     }
+	
 
 }
 ?>
