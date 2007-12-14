@@ -8,6 +8,7 @@ class dbnewskeywords extends dbtable
         parent::init('tbl_news_keywords');
 		$this->objUser = $this->getObject('user', 'security');
         $this->loadClass('link', 'htmlelements');
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     
     public function addStoryKeywords($storyId, $keywords)
