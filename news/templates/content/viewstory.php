@@ -1,71 +1,12 @@
-<style type="text/css">
-
-/*Credits: Dynamic Drive CSS Library */
-/*URL: http://www.dynamicdrive.com/style/ */
-
-#ddblueblockmenu{
-border: 1px solid black;
-border-bottom-width: 0;
-width: 165px;
-}
-
-#ddblueblockmenu ul{
-margin: 0;
-padding: 0;
-list-style-type: none;
-font: normal 90% 'Trebuchet MS', 'Lucida Grande', Arial, sans-serif;
-}
-
-#ddblueblockmenu li {
-	margin: 0;
-	background-image: none;
-	padding-left: 0;
-}
-#ddblueblockmenu li a{
-display: block;
-padding: 3px 0;
-padding-left: 9px;
-width: 149px; /*165px minus all left/right paddings and margins*/
-text-decoration: none;
-color: white;
-background-color: #2175bc;
-border-bottom: 1px solid #90bade;
-border-left: 7px solid #1958b7;
-}
-
-* html #ddblueblockmenu li a{ /*IE only */
-width: 167px; /*IE 5*/
-w\idth: 149px; /*185px minus all left/right paddings and margins*/
-}
-
-#ddblueblockmenu li a:hover {
-background-color: #2586d7;
-border-left-color: #1c64d1;
-}
-
-#ddblueblockmenu div.menutitle{
-color: white;
-border-bottom: 1px solid black;
-padding: 1px 0;
-padding-left: 5px;
-background-color: black;
-font: bold 90% 'Trebuchet MS', 'Lucida Grande', Arial, sans-serif;
-}
-
-.storyimage {
-	float: left;
-	margin: 5px;
-}
-
-.newsstory {
-	display: block;
-}
-
-</style>
 <?php
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
 
 $objIcon = $this->getObject('geticon', 'htmlelements');
 
@@ -86,30 +27,13 @@ if ($this->isValid('editstory')) {
 }
 
 
-$middleContent = $header->show();
+$middleContent = $content;
 
-$middleContent .= '<p>'.$objDateTime->formatDate($story['storydate']).'</p>';
 
-if ($story['storyimage'] != '') {
-    $middleContent .= '<img class="storyimage" src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
-}
 
-$objWashOut = $this->getObject('washout', 'utilities');
 
-$middleContent .= $objWashOut->parseText($story['storytext']);
-
-if ($story['storysource'] != '') {
-	$source = $story['storysource'];
-	
-	$source = $objUrl->makeClickableLinks($source);
-	
-	$middleContent .= '<p><strong>Source:</strong><br />'.$source.'</p>';
-}
-
-$cssLayout = $this->getObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
-
-$leftContent = $this->objNewsCategories->getCategoriesMenu();
+$leftContent = $this->objNewsMenu->generateMenu();
+$leftContent .= $this->objNewsStories->getFeedLinks();
 
 $rightContent = '';
 
@@ -117,9 +41,63 @@ $rightContent = '';
 $rightContent .= $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
 $rightContent .= $this->objKeywords->getStoryKeywordsBlock($story['id']);
 
+
+
+
+
+
+$editOptions = array();
+
+if ($this->isValid('editstory')) {
+    $editStoryLink = new link ($this->uri(array('action'=>'editstory', 'id'=>$story['storyid'])));
+    $editStoryLink->link = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
+    $editOptions[] = $editStoryLink->show();
+}
+
+if ($this->isValid('deletestory')) {
+    $deleteStoryLink = new link ($this->uri(array('action'=>'deletestory', 'id'=>$story['storyid'])));
+    $deleteStoryLink->link = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
+    $editOptions[] = $deleteStoryLink->show();
+}
+
+if ($this->isValid('addstory')) {
+    $addStoryLink = new link ($this->uri(array('action'=>'addstory', 'id'=>$category['id'])));
+    $addStoryLink->link = $this->objLanguage->languageText('mod_news_addstoryincategory', 'news', 'Add Story in this Category');
+    $editOptions[] = $addStoryLink->show();
+}
+
+if ($this->isValid('liststories')) {
+    $listStoriesLink = new link ($this->uri(array('action'=>'liststories', 'id'=>$category['id'])));
+    $listStoriesLink->link = $this->objLanguage->languageText('mod_news_liststoriesincategory', 'news', 'List Stories in this Category');
+    $editOptions[] = $listStoriesLink->show();
+}
+
+if ($this->isValid('editmenuitem') && $menuId != FALSE) {
+    $editCategoryLink = new link ($this->uri(array('action'=>'editmenuitem', 'id'=>$menuId)));
+    $editCategoryLink->link = $this->objLanguage->languageText('mod_news_editcategory', 'news', 'Edit Category');
+    $editOptions[] = $editCategoryLink->show();
+}
+
+if (count($editOptions) > 0) {
+    $divider = '';
+    $middleContent .= '<p>';
+    foreach ($editOptions as $editOption)
+    {
+        $middleContent .= $divider.$editOption;
+        $divider = ' : ';
+    }
+    $middleContent .= '</p>';
+}
+
+$cssLayout = $this->getObject('csslayout', 'htmlelements');
+
 $cssLayout->setLeftColumnContent($leftContent);
 $cssLayout->setMiddleColumnContent($middleContent);
-$cssLayout->setRightColumnContent($rightContent);
+
+if ($rightContent != '') {
+    $cssLayout->setNumColumns(3);
+    $cssLayout->setRightColumnContent($rightContent);
+}
 
 echo $cssLayout->show();
 

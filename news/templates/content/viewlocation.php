@@ -5,7 +5,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = 'View Location: '.$location['location'];
+$header->str = $this->objLanguage->languageText('mod_news_viewlocation', 'news', 'View Location').': '.$location['location'];
 echo $header->show();
 
 $latLong = str_replace('(', '', $location['latlongcenter']);

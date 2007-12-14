@@ -40,6 +40,23 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
+	'dateavailable' => array (
+		'type' => 'timestamp',
+		'notnull' => 1
+	),
+	'datetopstoryexpire' => array (
+		'type' => 'timestamp',
+		'notnull' => 1
+	),
+	'allowcomments' => array (
+		'type' => 'text',
+		'length' => 1,
+		'default' => 'Y',
+	),
+	'storyorder' => array (
+		'type' => 'integer',
+		'length' => 11,
+	),
     'datecreated' => array (
 		'type' => 'timestamp',
 		'notnull' => 1
@@ -65,10 +82,15 @@ $name = 'tbl_news_stories_idx';
 
 $indexes = array(
                 'fields' => array(
+                	'storytitle' => array(),
                 	'storydate' => array(),
                 	'storylocation' => array(),
                 	'storyimage' => array(),
                 	'storycategory' => array(),
+                	'dateavailable' => array(),
+                	'datetopstoryexpire' => array(),
+                	'allowcomments' => array(),
+                	'storyorder' => array(),
                 	'datecreated' => array(),
                 	'datemodified' => array(),
                 )

@@ -5,7 +5,7 @@ $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = 'Keyword: '.$keyword;
+$header->str = $this->objLanguage->languageText('word_keyword', 'word', 'Keyword').': '.$keyword;
 echo $header->show();
 
 $objTrimString = $this->getObject('trimstr', 'strings');
@@ -15,12 +15,12 @@ $objDateTime = $this->getObject('dateandtime', 'utilities');
 $output = '';
 
 $int = 'WEEK';
-$fdate = "Jan 1 2007 00:00:00 GMT";
+$fdate = $this->objKeywords->getLastNewsStoryDate($keyword);
 $timeline = $this->uri(array('action'=>'generatekeywordtimeline', 'id'=>$keyword));
 $timeline = str_replace('&amp;', '&', $timeline);
 $objIframe = $this->getObject('iframe', 'htmlelements');
 $objIframe->width = "100%";
-$objIframe->height="300";
+$objIframe->height="310";
 $ret = $this->uri(array("mode" => "plain",
       "action" => "viewtimeline", 
       "timeLine" => ($timeline),
@@ -29,6 +29,9 @@ $ret = $this->uri(array("mode" => "plain",
       "focusDate" => $fdate,
       "tlHeight" => '300'), "timeline");
 $objIframe->src=$ret;
+$objIframe->frameborder=0;
+$objIframe->id='timelineiframe';
+$objIframe->scrolling='no';
 echo $objIframe->show();
 
 foreach ($stories as $story)
@@ -57,7 +60,7 @@ foreach ($stories as $story)
     
     $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE);
     
-    $storyLink->link = 'Read Story';
+    $storyLink->link = $this->objLanguage->languageText('mod_news_readstory', 'news', 'Read Story');
     $output .= ' ('.$storyLink->show().')';
     
     $output .= '</div><br clear="both" />';

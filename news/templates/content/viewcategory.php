@@ -1,50 +1,39 @@
 <?php
 
-$this->loadClass('link', 'htmlelements');
-$this->loadClass('htmlheading', 'htmlelements');
+echo $content;
 
-$header = new htmlheading();
-$header->type = 1;
-$header->str = 'Category: '.$categoryName;
-echo $header->show();
+$editOptions = array();
 
-$objTrimString = $this->getObject('trimstr', 'strings');
-$objThumbnails = $this->getObject('thumbnails', 'filemanager');
-$objDateTime = $this->getObject('dateandtime', 'utilities');
-
-$output = '';
-
-foreach ($categoryStories as $story)
-{
-    
-    $output .= '<div class="newsstory">';
-    
-    $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$story['id'])));
-    $storyLink->link = $story['storytitle'];
-    
-    if ($story['storyimage'] != '') {
-        $storyLink->link = '<img class="storyimage" src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
-        
-        $output .= $storyLink->show();
-    }
-    
-    $storyLink->link = $story['storytitle'];
-    
-    $output .= '<h3>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</h3>';
-    
-    if ($story['location'] != '') {
-        $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));
-        $locationLink->link = $story['location'];
-        $output .= '[ '.$locationLink->show().'] ';
-    }
-    
-    $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE);
-    
-    $storyLink->link = 'Read Story';
-    $output .= ' ('.$storyLink->show().')';
-    
-    $output .= '</div><br clear="both" />';
+if ($this->isValid('addstory')) {
+    $addStoryLink = new link ($this->uri(array('action'=>'addstory', 'id'=>$category['id'])));
+    $addStoryLink->link = $this->objLanguage->languageText('mod_news_addstoryincategory', 'news', 'Add Story in this Category');
+    $editOptions[] = $addStoryLink->show();
 }
 
-echo $output;
+if ($this->isValid('liststories')) {
+    $listStoriesLink = new link ($this->uri(array('action'=>'liststories', 'id'=>$category['id'])));
+    $listStoriesLink->link = $this->objLanguage->languageText('mod_news_liststoriesincategory', 'news', 'List Stories in this Category');
+    $editOptions[] = $listStoriesLink->show();
+}
+
+if ($this->isValid('editmenuitem') && $menuId != FALSE) {
+    $editCategoryLink = new link ($this->uri(array('action'=>'editmenuitem', 'id'=>$menuId)));
+    $editCategoryLink->link = $this->objLanguage->languageText('mod_news_editcategory', 'news', 'Edit Category');
+    $editOptions[] = $editCategoryLink->show();
+}
+
+
+
+if (count($editOptions) > 0) {
+    $divider = '';
+    echo '<p>';
+    foreach ($editOptions as $editOption)
+    {
+        echo $divider.$editOption;
+        $divider = ' : ';
+    }
+    echo '</p>';
+}
+
+
 ?>

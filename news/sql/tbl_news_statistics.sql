@@ -22,17 +22,21 @@ $fields = array(
 	),
 	'timesemailed' => array (
 		'type' => 'integer',
+	),
+	'timesprinted' => array (
+		'type' => 'integer',
 	)
 );
 //create other indexes here...
 //create other indexes here...
-$name = 'tbl_news_keywords_idx';
+$name = 'tbl_news_statistics_idx';
 
 $indexes = array(
                 'fields' => array(
                 	'storyid' => array(),
                 	'timesviewed' => array(),
                 	'timesemailed' => array(),
+                	'timesprinted' => array(),
                 )
         );
 		

@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -11,14 +14,19 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('loader');
+
+$loadingIcon = $objIcon->show();
+
 if ($mode == 'edit') {
     $formAction = 'updatestory';
-    $title = 'Edit Story';
-    $buttonText = 'Update Story';
+    $title = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story').': '.$story['storytitle'];
+    $buttonText = $this->objLanguage->languageText('mod_news_updatestory', 'news', 'Update Story');
 } else {
     $formAction = 'savestory';
-    $title = 'Add New Story';
-    $buttonText = 'Save Story';
+    $title = $this->objLanguage->languageText('mod_news_addnewstory', 'news', 'Add New Story');
+    $buttonText = $this->objLanguage->languageText('mod_news_savestory', 'news', 'Save Story');
 }
 
 // Header
@@ -39,11 +47,16 @@ if ($mode == 'edit') {
     $storyTitle->value = htmlentities($story['storytitle']);
 }
 
-$label = new label ('Story Title', 'input_storytitle');
+$label = new label ($this->objLanguage->languageText('mod_news_storytitle', 'news', 'Story Title'), 'input_storytitle');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($storyTitle->show());
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
 $formTable->endRow();
 
 $datePicker = $this->newObject('datepicker', 'htmlelements');
@@ -54,11 +67,71 @@ if ($mode == 'edit') {
 }
 
 $formTable->startRow();
-$formTable->addCell('Story Date');
+$formTable->addCell($this->objLanguage->languageText('mod_news_storydate', 'news', 'Story Date'));
 $formTable->addCell($datePicker->show());
 $formTable->endRow();
 
-$label = new label ('Story Category', ' input_storycategory');
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
+$formTable->endRow();
+
+$datePicker = $this->newObject('datepicker', 'htmlelements');
+$datePicker->name = 'storydatepublish';
+
+$radio = new radio ('publishon');
+$radio->addOption('now', $this->objLanguage->languageText('word_immediately', 'word', 'Immediately'));
+
+$objTimePicker = $this->newObject('timepicker', 'htmlelements');
+
+if ($mode == 'add') {
+	$radio->setSelected('now');
+	$objTimePicker->setSelectedNow();
+}
+
+$radio1 = new radio ('publishon');
+$radio1->addOption('wait', $this->objLanguage->languageText('word_on', 'system', 'on').' ');
+
+
+
+
+if ($mode == 'edit') {
+	$publishDate = explode(' ', $story['dateavailable']);
+    $datePicker->defaultDate = $publishDate[0];
+	
+    $objTimePicker->setSelected($publishDate[1]);
+	
+	if ($story['dateavailable'] <= strftime('%Y-%m-%d %H:%M:%S', mktime())) {
+		$radio->setSelected('now');
+	} else {
+		$radio1->setSelected('wait');
+	}
+}
+
+
+
+$publishTable = $this->newObject('htmltable', 'htmlelements');
+$publishTable->width = NULL;
+$publishTable->startRow();
+$publishTable->addCell($radio1->show(), 40);
+$publishTable->addCell($datePicker->show());
+$publishTable->addCell(' at ', 20);
+$publishTable->addCell($objTimePicker->show());
+$publishTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell($this->objLanguage->languageText('mod_news_publishdate', 'news', 'Publish Date').'<br /><em>'.$this->objLanguage->languageText('mod_news_storyavailableinfo', 'news', 'When should this story be available on the site.').'</em>', 150);
+$formTable->addCell($radio->show().'<br /><br />'.$publishTable->show());
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
+$formTable->endRow();
+
+// Category
+
+$label = new label ($this->objLanguage->languageText('mod_news_storycategory', 'news', 'Story Category'), ' input_storycategory');
 $storyCategory = new dropdown('storycategory');
 
 if (count($categories) > 0) {
@@ -69,6 +142,8 @@ if (count($categories) > 0) {
     
     if ($mode == 'edit') {
         $storyCategory->setSelected($story['storycategory']);
+    } else {
+        $storyCategory->setSelected($this->getParam('id'));
     }
 }
 
@@ -78,11 +153,44 @@ $formTable->addCell($label->show());
 $formTable->addCell($storyCategory->show());
 $formTable->endRow();
 
-$label = new label ('Story Location', ' input_parentlocation');
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
+$formTable->endRow();
+
+$label = new label ($this->objLanguage->languageText('mod_news_storylocation', 'news', 'Story Location'), ' input_parentlocation');
+
+$locationInput = new textinput('storylocation');
+$locationInput->size = 50;
+$locationInput->cssId = 'storylocation';
+
+$locationInput->extra = ' onkeypress="return submitenter(this,event);"';
+
+if ($mode == 'edit' && $story['storylocation'] != NULL) {
+    $locationInput->value = $story['location'];
+}
+
+$checkLocation = new button ('checklocation', 'Check');
+$checkLocation->setOnClick('checkLocation();');
+
+if ($mode == 'edit' && $story['storylocation'] != NULL) {
+    $location = new radio ('location');
+    $location->addOption($story['geonameid'], $story['location'].' <em>- '.$this->objLanguage->languageText('word_original', 'word', 'original').'</em>');
+    $location->setSelected($story['geonameid']);
+    $locationExtra = '<br />'.$location->show().'<br />';
+} else {
+    $locationExtra = '';
+}
+
 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($tree);
+$formTable->addCell($locationInput->show().' '.$checkLocation->show().$locationExtra.'<div id="locationloading">'.$loadingIcon.'</div><div id="locationdiv" ></div>');
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
 $formTable->endRow();
 
 
@@ -110,7 +218,7 @@ if ($mode == 'edit' && isset($keywords[2])) {
     $keyTag3->value = $keywords[2];
 }
 
-$label = new label ('Key Tags', 'input_keytag1');
+$label = new label ($this->objLanguage->languageText('mod_news_keytags', 'news', 'Key Tags'), 'input_keytag1');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -129,7 +237,7 @@ if ($mode == 'edit' && count($tags) > 0 && is_array($tags)) {
     }
 }
 
-$label = new label ('Story Tags<br /><em>Separate with commas</em>', 'input_storytags');
+$label = new label ($this->objLanguage->languageText('mod_news_storytags', 'news', 'Story Tags').'<br /><em>'.$this->objLanguage->languageText('mod_filemanager_separatewithcommas', 'filemanager', 'Separate with commas').'</em>', 'input_storytags');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -149,7 +257,7 @@ $topTable = $this->newObject('htmltable', 'htmlelements');
 
 $topTable->startRow();
 $topTable->addCell($formTable->show());
-$topTable->addCell($objImageSelect->show());
+$topTable->addCell($this->objLanguage->languageText('mod_news_storyimage', 'news', 'Story Image').':<br /><br />'.$objImageSelect->show());
 $topTable->endRow();
 
 
@@ -165,7 +273,7 @@ if ($mode == 'edit') {
 }
 
 $storyTable->startRow();
-$storyTable->addCell('Story Text');
+$storyTable->addCell($this->objLanguage->languageText('mod_news_storytext', 'news', 'Story Text'), 150);
 $storyTable->addCell($htmlarea->show());
 $storyTable->endRow();
 
@@ -175,7 +283,7 @@ if ($mode == 'edit') {
     $storySource->value = $story['storysource'];
 }
 
-$label = new label ('Story Source', 'input_storysource');
+$label = new label ($this->objLanguage->languageText('mod_news_storysource', 'news', 'Story Source'), 'input_storysource');
 
 $storyTable->startRow();
 $storyTable->addCell($label->show());
@@ -185,7 +293,7 @@ $storyTable->endRow();
 $form->addToForm($storyTable->show());
 
 $button = new button ('savestory', $buttonText);
-$button->setToSubmit();
+$button->setOnClick("document.forms['addedit'].submit();");
 
 $form->addToForm($button->show());
 
@@ -197,10 +305,11 @@ if ($mode == 'edit') {
 echo $form->show();
 
 $homeLink = new link ($this->uri(NULL));
-$homeLink->link = 'Return to News Home';
+$homeLink->link = $this->objLanguage->languageText('mod_news_returntonewshome', 'news', 'Return to News Home');
 echo $homeLink->show();
 ?>
 <script type="text/javascript">
+
 //<![CDATA[
     var pars   = 'module=news&action=ajaxkeywords&tag=keytag1';
 	new Ajax.Autocompleter("keytag1", "autocomplete_choices1", "index.php", {parameters: pars});
@@ -215,6 +324,11 @@ echo $homeLink->show();
 </script>
 
 <style type="text/css">
+
+div#locationloading {
+    display: none;
+}
+
 div.autocomplete {
 	position:absolute;
 	width:250px;
@@ -238,4 +352,60 @@ div.autocomplete ul li {
 	height:32px;
 	cursor:pointer;
 }
+
+
+
 </style>
+<script type="text/javascript">
+//<![CDATA[
+
+
+
+function checkLocation () {
+	
+    if ($('storylocation').value == '') {
+        alert('Please enter the location');
+        $('storylocation').focus();
+    } else {
+    
+    var url = 'index.php';
+	var pars = 'module=news&action=checklocation&location='+$('storylocation').value;
+    
+    $('locationloading').style.display='block';
+	
+    var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showLocationResponse} );
+    }
+}
+
+function ck(location)
+{
+    $('storylocation').value = location;
+    checkLocation();
+}
+
+function showLocationResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+    $('locationloading').style.display='none';
+    if (newData != '') {
+        $('locationdiv').innerHTML = newData;
+        adjustLayout();
+    }
+}
+
+function submitenter(myfield,e)
+{
+    var keycode;
+    if (window.event) keycode = window.event.keyCode;
+    else if (e) keycode = e.which;
+    else return true;
+
+    if (keycode == 13)
+       {
+       checkLocation();
+       return false;
+       }
+    else
+       return true;
+    }
+//]]>
+</script>

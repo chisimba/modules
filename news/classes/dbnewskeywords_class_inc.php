@@ -60,7 +60,7 @@ class dbnewskeywords extends dbtable
 			$tagArray = array();
 			foreach ($results as $result)
 			{
-				$tagArray[] = array('name'=>$result['keyword'], 'url'=>$this->uri(array('action'=>'keywordtag', 'tag'=>$result['keyword'])), 'weight'=>$result['keywordcount'], 'time'=>'');
+				$tagArray[] = array('name'=>$result['keyword'], 'url'=>$this->uri(array('action'=>'viewbykeyword', 'id'=>$result['keyword'])), 'weight'=>$result['keywordcount']*2, 'time'=>'');
 			}
 			
 			$tagCloud = $this->newObject('tagcloud', 'utilities');
@@ -104,7 +104,7 @@ class dbnewskeywords extends dbtable
             return '';
         } else {
             
-            $str = '<h4>Timelines</h4><ul>';
+            $str = '<h4>'.$this->objLanguage->languageText('word_timelines', 'word', 'Timelines').'</h4><ul>';
             
             foreach ($results as $result)
             {
@@ -119,6 +119,22 @@ class dbnewskeywords extends dbtable
             return $str;
         }
         
+    }
+    
+    public function getLastNewsStoryDate($keyword)
+    {
+        $sql = 'SELECT storydate FROM tbl_news_stories INNER JOIN tbl_news_keywords ON (tbl_news_keywords.storyid = tbl_news_stories.id AND tbl_news_keywords.keyword=\''.$keyword.'\')ORDER BY storydate DESC LIMIT 1';
+        
+        $results = $this->getArray($sql);
+        
+        
+        if (count($results) == 0) {
+            return date('F j Y');
+        } else {
+            $date = explode('-', $results[0]['storydate']);
+            $objDateTime = $this->getObject('dateandtime', 'utilities');
+            return $objDateTime->monthFull($date[1]).' '.$date[2].' '.$date[0];
+        }
     }
 
 }
