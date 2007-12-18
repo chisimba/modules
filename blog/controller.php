@@ -1050,13 +1050,12 @@ class blog extends controller
                 //category quick add
                 if ($mode == 'quickadd') {
                     if (empty($list)) {
-                        $this->nextAction('blogadmin');
+                        $this->nextAction('');
                         break;
                     }
                     $this->objblogCategories->quickCatAdd($list, $userid);
-                    $this->nextAction('blogadmin', array(
-                        'mode' => 'writepost'
-                    ));
+                    $this->nextAction(''); 
+                    
                     break;
                 }
                 if ($mode == 'edit') {
@@ -1102,7 +1101,9 @@ class blog extends controller
                     );
                     //insert the category into the db
                     $this->objDbBlog->setCats($userid, $catarr);
-                    $this->nextAction('blogadmin');
+                    $this->nextAction('blogadmin', array(
+                        'mode' => 'editcats'
+                    ));
                     break;
                 }
                 break;
