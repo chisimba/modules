@@ -350,10 +350,11 @@ class blogmail extends object
                                 if ($tparts[0] == "video") {
                                     log_debug("Found a 3gp Video file! Processing...");
                                     // send to the mediaconverter to convert to flv
-                                    $mediacon = $this->getObject('media', 'utilities');
+                                    //$mediacon = $this->getObject('media', 'utilities');
                                     $file = $path . $filename;
                                     // echo $file;
-                                    $flv = $mediacon->convert3gp2flv($file, $fullpath);
+                                    // $flv = $mediacon->convert3gp2flv($file, $fullpath);
+                                    $flv = $this->rpc3gp2flv($file, $path);
                                     // echo "file saved to: $flv";
                                     $newbod.= "[FLV]" . $flv . "[/FLV]" . " <br />";
                                     // echo $newbod;
@@ -848,6 +849,41 @@ class blogmail extends object
         $parsed['mailbox'] = $pm[1];
         $dsn = NULL;
         return $parsed;
+    }
+    
+    public function rpc3gp2flv($media, $path)
+    {
+    	require_once($this->getPearResource('XML/RPC.php'));
+    	$gpfile = base64_encode(file_get_contents($media));
+    	@$params = array(new XML_RPC_Value("a huge honking hashed up api key", "string"), new XML_RPC_Value($gpfile, "string"));
+    	// Construct the method call (message). 
+		$msg = new XML_RPC_Message('media.3gp2flv', $params);
+		// The server is the 2nd arg, the path to the API module is the 1st.
+		$cli = new XML_RPC_Client('/index.php?module=api', 'fsiu.uwc.ac.za');
+		// set the debug level to 0 for no debug, 1 for debug mode...
+		$cli->setDebug(0);
+		// bomb off the message to the server
+		$resp = $cli->send($msg);
+		if (!$resp) {
+ 		    log_debug('Communication error: ' . $cli->errstr);
+    	    return FALSE;
+		}
+		if (!$resp->faultCode()) {
+    		$val = $resp->value();
+    		$val = XML_RPC_decode($val);
+    		// write the returned flv data to a file with a path
+    		$retfile = $path.time().Rand(1,999);
+			file_put_contents($retfile.'.flv', base64_decode($val));
+			return $retfile;
+		} else {
+    		/*
+     		 * Display problems that have been gracefully caught and
+     		 * reported by the Chisimba api.
+     		 */
+    		log_debug('Fault Code: ' . $resp->faultCode() . "\n");
+    		log_debug('Fault Reason: ' . $resp->faultString() . "\n");
+    		return FALSE;
+		}
     }
 }
 ?>
