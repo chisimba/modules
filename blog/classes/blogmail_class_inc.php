@@ -860,7 +860,11 @@ class blogmail extends object
     	// Construct the method call (message). 
 		$msg = new XML_RPC_Message('media.3gp2flv', $params);
 		// The server is the 2nd arg, the path to the API module is the 1st.
-		$cli = new XML_RPC_Client('/index.php?module=api', 'fsiu.uwc.ac.za');
+		// get the config vars for the api endpoint...
+		$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $server = $this->sysConfig->getValue('blog_ffmpegserv', 'blog');
+        $uri = $this->sysConfig->getValue('blog_ffmpeguri', 'blog');
+		$cli = new XML_RPC_Client($uri, $server);
 		// set the debug level to 0 for no debug, 1 for debug mode...
 		$cli->setDebug(0);
 		// bomb off the message to the server
