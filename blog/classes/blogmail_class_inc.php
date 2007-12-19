@@ -78,6 +78,7 @@ class blogmail extends object
             $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
             $this->objUser = $this->getObject('user', 'security');
+            $this->objBlogPosts = $this->getObject('blogposts');
         }
         catch(customException $e) {
             echo customException::cleanUp();
