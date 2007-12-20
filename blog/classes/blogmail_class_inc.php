@@ -356,6 +356,8 @@ class blogmail extends object
                                     // echo $file;
                                     // $flv = $mediacon->convert3gp2flv($file, $fullpath);
                                     $flv = $this->rpc3gp2flv($file, $path);
+                                    $flv = basename($flv);
+                                    $flv = $fullpath.$flv;
                                     // echo "file saved to: $flv";
                                     $newbod.= "[FLV]" . $flv.'.flv' . "[/FLV]" . " <br />";
                                     // echo $newbod;
