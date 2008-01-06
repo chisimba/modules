@@ -227,7 +227,7 @@ class buildad extends object
             $this->adWidth = $width;
         } else {
             //Get the width from the ad type
-            $this->adWidth = 0;//////////TOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            $this->adWidth = $this->defaultWidth;
         }
         return TRUE;
     }
@@ -248,7 +248,7 @@ class buildad extends object
             $this->adHeight = $height;
         } else {
             //Get the width from the ad type
-            $this->adHeight = 0;//////////TOOOOOOOOOOOOOOOOOOOOOOOODDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            $this->adHeight = $this->defaultHeight;
         }
         return TRUE;
     }
@@ -275,8 +275,8 @@ class buildad extends object
             $this->adWidth = $this->adWidths[$type];
             $this->adHeight = $this->adHeights[$type];
         } else {
-            $this->adWidth = 728;
-            $this->adHeight = 90;
+            $this->adWidth = $this->defaultWidth;
+            $this->adHeight = $this->defaultHeight;
         }
         $this->adFormat = $this->adWidth . "x" . $this->adHeight . "_as";
     }
@@ -303,7 +303,7 @@ class buildad extends object
             google_ad_client = "' . $this->adSenseKey . '";
             google_ad_width = ' . $this->adWidth . ';
             google_ad_height = ' . $this->adHeight . ';
-            google_ad_format = "468x60_as";
+            google_ad_format = "' . $this->adFormat . '";
             google_ad_channel ="";
             //--></script>
             <script type="text/javascript"
@@ -313,7 +313,9 @@ class buildad extends object
             ';
             return $this->showHtml($adSenseCode);
         } else {
-            return $this->objLanguage->languageText('mod_googleadsense_disabled', 'googleadsense');
+            return "<span class='error'>"
+              . $this->objLanguage->languageText('mod_googleadsense_disabled', 'googleadsense')
+              . "</span>";
         }
 
     }
