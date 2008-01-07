@@ -2044,6 +2044,10 @@ class blog extends controller
                 $objApi = $this->getObject('blogxmlrpc');
                 $objApi->serve();
                 break;
+            
+            case 'updatesearch':
+                $this->objDbBlog->updateSearch();
+                return $this->nextAction('allblogs');
 
             case 'deletetb':
                 $id = $this->getParam('id', NULL);

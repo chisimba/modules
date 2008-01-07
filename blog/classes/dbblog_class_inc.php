@@ -47,7 +47,7 @@ class dbblog extends dbTable
     {
         $this->objLanguage = $this->getObject("language", "language");
         $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->lindex = $this->sysConfig->getValue('lucene_index', 'blog');
+        $this->lindex = TRUE;//$this->sysConfig->getValue('lucene_index', 'blog');
         // $this->objblogPost = $this->getObject('blogposts');
         
     }
@@ -419,6 +419,10 @@ class dbblog extends dbTable
                 $this->delete('id', $tbs['id'], 'tbl_blog_trackbacks');
             }
         }
+        
+        // Remove Lucene Entry
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex('blog_post_'.$id);
     }
     /**
      * Method to get a post by its ID
@@ -529,7 +533,7 @@ class dbblog extends dbTable
         $this->_changeTable("tbl_blog_posts");
         $insarr['post_content'] = str_ireplace("<br />", " <br /> ", $insarr['post_content']);
         $insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
-        //$this->luceneIndex($insarr);
+        $this->luceneIndex($insarr);
         return $insarr['id'];
     }
     public function updatePostAPI($blogid, $postarr) 
@@ -559,7 +563,7 @@ class dbblog extends dbTable
             $postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
             $insarr = array(
                 'userid' => $userid,
-                'post_date' => date('r') ,
+                'post_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()) ,
                 'post_content' => addslashes($postarr['postcontent']) , //$pc), //$this->pcleaner->cleanHtml($this->objblogOps->html2txt($postarr['postcontent'])),
                 'post_title' => htmlentities($postarr['posttitle']) ,
                 'post_category' => $postarr['postcat'],
@@ -587,7 +591,7 @@ class dbblog extends dbTable
             $pc = $postarr['postcontent'];
             $edarr = array(
                 'userid' => $userid,
-                'post_date' => date('r') ,
+                'post_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()) ,
                 'post_content' => addslashes($pc) ,
                 'post_title' => htmlentities($postarr['posttitle']) ,
                 'post_category' => $postarr['postcat'],
@@ -603,7 +607,8 @@ class dbblog extends dbTable
             );
             $this->update('id', $postarr['id'], $edarr, 'tbl_blog_posts');
             if ($this->lindex == 'TRUE') {
-                $this->luceneReIndex($postarr);
+                $edarr['id'] = $postarr['id'];
+                $this->luceneReIndex($edarr);
             }
             return TRUE;
         }
@@ -1003,55 +1008,35 @@ class dbblog extends dbTable
      */
     public function luceneIndex($data) 
     {
-        //print_r($data); die();
-        $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objUser = $this->getObject('user', 'security');
-        $indexPath = $this->objConfig->getcontentBasePath();
-        if (file_exists($indexPath . 'chisimbaIndex/segments')) {
-            @chmod($indexPath . 'chisimbaIndex', 0777);
-            //we build onto the previous index
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex');
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        $docId = 'blog_post_'.$data['id'];
+        $docDate = $data['post_date'];
+        $url = $this->uri(array('action'=>'viewsingle', 'postid'=>$data['id'], 'userid'=>$data['userid']));
+        $title = $data['post_title'];
+        $contents = $data['post_title'].' '.$data['post_content'];
+        
+        if (trim($data['post_excerpt']) == '') {
+            $objTrimStr = $this->getObject('trimstr', 'strings');
+            $teaser = $objTrimStr->strTrim(strip_tags($data['post_content']));
         } else {
-            //instantiate the lucene engine and create a new index
-            @mkdir($indexPath . 'chisimbaIndex');
-            @chmod($indexPath . 'chisimbaIndex', 0777);
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', true);
+            $teaser = $data['post_excerpt'];
         }
-        //hook up the document parser
-        $document = new Zend_Search_Lucene_Document();
-        //change directory to the index path
-        chdir($indexPath);
-        //set the properties that we want to use in our index
-        //id for the index and optimization
-        $document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
-        //date
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['post_date']));
-        //url
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array(
-            'module' => 'blog',
-            'action' => 'viewsingle',
-            'postid' => $data['id'],
-            'userid' => $data['userid']
-        ))));
-        //createdBy
-        $document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['userid'])));
-        //document teaser
-        $document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['post_excerpt']));
-        //doc title
-        $document->addField(Zend_Search_Lucene_Field::Text('title', $data['post_title']));
-        //doc author
-        $document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($data['userid'])));
-        //document body
-        //NOTE: this is not actually put into the index, so as to keep the index nice and small
-        //      only a reference is inserted to the index.
-        $document->addField(Zend_Search_Lucene_Field::Text('contents', $data['post_content']));
-        //what else do we need here???
-        //add the document to the index
-        $index->addDocument($document);
-        //commit the index to disc
-        $index->commit();
-        //optimize the thing
-        //$index->optimize();
+        
+        $module = 'blog';
+        $userId = $data['userid'];
+        $license = $data['post_lic'];
+        $context = NULL;
+        $workgroup = NULL;
+        $tags = NULL;  
+        
+        if ($data['post_status'] == 1) {
+            $permissions = 'useronly';
+        } else {
+            $permissions = NULL;
+        }
+        
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, $tags, $license, $context, $workgroup, $permissions);
         
     }
     /**
@@ -1065,62 +1050,7 @@ class dbblog extends dbTable
      */
     public function luceneReIndex($data) 
     {
-        //var_dump($data);
-        $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objUser = $this->getObject('user', 'security');
-        $indexPath = $this->objConfig->getcontentBasePath();
-        if (file_exists($indexPath . 'chisimbaIndex/segments')) {
-            @chmod($indexPath . 'chisimbaIndex', 0777);
-            //we build onto the previous index
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex');
-        } else {
-            //instantiate the lucene engine and create a new index
-            mkdir($indexPath . 'chisimbaIndex');
-            @chmod($indexPath . 'chisimbaIndex', 0777);
-            $index = new Zend_Search_Lucene($indexPath . 'chisimbaIndex', true);
-        }
-        $docid = $data['id'];
-        $removePath = $docid;
-        $hits = $index->find('docid:' . $removePath);
-        foreach($hits as $hit) {
-            $index->delete($hit->id);
-        }
-        //ok now re-add the doc to the index
-        //hook up the document parser
-        $document = new Zend_Search_Lucene_Document();
-        //change directory to the index path
-        chdir($indexPath);
-        //set the properties that we want to use in our index
-        //id for the index and optimization
-        $document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
-        //date
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['postdate']));
-        //url
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array(
-            'module' => 'blog',
-            'action' => 'viewsingle',
-            'postid' => $data['id'],
-            'userid' => $this->objUser->userId()
-        ))));
-        //createdBy
-        $document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
-        //document teaser
-        $document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['postexcerpt']));
-        //doc title
-        $document->addField(Zend_Search_Lucene_Field::Text('title', $data['posttitle']));
-        //doc author
-        $document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($this->objUser->userId())));
-        //document body
-        //NOTE: this is not actually put into the index, so as to keep the index nice and small
-        //      only a reference is inserted to the index.
-        $document->addField(Zend_Search_Lucene_Field::Text('contents', $data['postcontent']));
-        //what else do we need here???
-        //add the document to the index
-        $index->addDocument($document);
-        //commit the index to disc
-        $index->commit();
-        //optimize the thing
-        //$index->optimize();
+        $this->luceneIndex($data);
         
     }
     /**
@@ -1352,6 +1282,22 @@ class dbblog extends dbTable
         catch(customException $e) {
             customException::cleanUp();
             return FALSE;
+        }
+    }
+    
+    /**
+     * Method to migrate from the old search to the new search
+     * @access public
+     */
+    public function updateSearch()
+    {
+        $this->_changeTable('tbl_blog_posts');
+        
+        $posts = $this->getAll();
+        
+        foreach ($posts as $post)
+        {
+            $this->luceneIndex($post);
         }
     }
 }
