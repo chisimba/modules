@@ -148,6 +148,10 @@ class dbalbum extends dbTable
 	*/
 	public function reOrderAlbums()
 	{
+		$albumOrder=$this->getParam('albumOrder',NULL);
+                if ($albumOrder==NULL){
+                    return;
+                }
 		$order = str_replace('albumList[]=','',$this->getParam('albumOrder'));
 		$newOrder = split('&',$order);
 		$albums = $this->getUserAlbums();
