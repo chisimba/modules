@@ -20,12 +20,24 @@ $this->appendArrayVar('headerParams',$scripts);
 $str = '<div id="image">';
 //$link->href = $this->uri(array('action' => 'viewimage', 'imageid' => $image['id']));
 
+
+// Get image display size - no need to resize it its small anyway
+$info=getimagesize($this->_objFileMan->getFullFilePath($image['file_id']));
+if (isset($info[0])){
+    $width=$info[0];
+} else {
+    $width=500;
+}
+if ($width>500){
+    $width=500;
+}
+
 $filename = $this->_objFileMan->getFileName($image['file_id']); 
 $path = $objThumbnail->getThumbnail($image['file_id'],$filename);
 $bigPath = $this->_objFileMan->getFilePath($image['file_id']);
  	
 $link->href = $bigPath;
-$link->link = '<img title="'.$image['title'].'" src="'.$bigPath.'" alt="'.$image['title'].'" width="595" height="446" />';
+$link->link = '<img title="'.$image['title'].'" src="'.$bigPath.'" alt="'.$image['title'].'" width="'.$width.'" />';
 $link->extra = ' rel="lightbox" ';
 $str.=$link->show().'</div>';
 	
