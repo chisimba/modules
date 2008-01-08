@@ -674,7 +674,7 @@ class blogmail extends object
                     $newbod = $datum['body'];
                 }
                 // Write the new post to the database as a "Quick Post"
-                $this->quickPostAdd($datum['userid'], array(
+                $this->objBlogPosts->quickPostAdd($datum['userid'], array(
                     'posttitle' => $datum['subject'],
                     'postcontent' => $newbod,
                     'postcat' => 0,
