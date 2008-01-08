@@ -344,10 +344,16 @@ class blogops extends object
     public function buildBloggertable($rec) 
     {
         $lastentry = $this->objDbBlog->getLatestPost($rec['id']);
-        $link = new href($this->uri(array(
-            'action' => 'randblog',
-            'userid' => $rec['id']
-        )) , stripslashes($lastentry['post_title']));
+        if(!empty($lastentry))
+        {
+        	$link = new href($this->uri(array(
+            	'action' => 'randblog',
+            	'userid' => $rec['id']
+        	)) , stripslashes($lastentry['post_title']));
+        }
+        else {
+        	$link = $this->objLanguage->languageText("mod_blog_onlydrafts", "blog");
+        }
         $this->cleaner = $this->newObject('htmlcleaner', 'utilities');
         $txt = stripslashes($lastentry['post_excerpt']);
         $txt = stripslashes($txt);
@@ -360,7 +366,14 @@ class blogops extends object
             $txt.= $txt . "...";
             $txt = $this->cleaner->cleanHtml($txt);
         }
-        $lastpost = $link->show() . "<br />" . $txt;
+        
+        if(!empty($lastentry))
+        {
+        	$lastpost = $link->show() . "<br />" . $txt;
+        }
+        else {
+        	$lastpost = $link;
+        }
         $stable = $this->newObject('htmltable', 'htmlelements');
         $stable->cellpadding = 2;
         // set up the header row
