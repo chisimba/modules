@@ -87,7 +87,9 @@ class phpFlickr {
         $this->php_version = explode(".", $this->php_version[0]);
 
         //All calls to the API are done via the POST method using the PEAR::HTTP_Request package.
-        require_once 'HTTP/Request.php';
+        if (!@include_once 'HTTP/Request.php'){
+            require_once('PEAR/Request.php');
+        }
         $this->req =& new HTTP_Request();
         $this->req->setMethod(HTTP_REQUEST_METHOD_POST);
     }
