@@ -12,6 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Jeremy O'Connor, Juliet Mulindwa
 * @copyright 2004 University of the Western Cape
 * $Id$
+* Modified by David Wafula on 2008-01-09
 */
 class workgroup extends controller
 {
@@ -79,8 +80,8 @@ class workgroup extends controller
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
 		// Get context code.
-		//$objDbContext = &$this->getObject('dbcontext','context');
-		$contextCode = '0'; //$objDbContext->getContextCode();
+		$objDbContext = &$this->getObject('dbcontext','context');
+		$contextCode = $objDbContext->getContextCode();
 		$workgroupId = '0';
 		$userId = '0';
 		$this->setVarByRef('contextCode', $contextCode);
