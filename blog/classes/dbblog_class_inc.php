@@ -463,7 +463,16 @@ class dbblog extends dbTable
         } else {
             $lastpost = NULL;
         }
-        return $lastpost;
+        $filter2 = "WHERE userid = '$userid' AND post_status = '1' ORDER BY post_ts DESC";
+        $drafts = $this->getAll($filter2);
+        if(!empty($drafts))
+        {
+        	$lastpost['drafts'] = $drafts;
+        	return $lastpost;
+        }
+        else {
+        	return $lastpost;
+        }
     }
     /**
      * Method to get the sticky posts of a user

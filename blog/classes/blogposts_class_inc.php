@@ -135,18 +135,39 @@ class blogposts extends object
                 if ($post['stickypost'] == 1) {
                     $objStickyIcon = $this->newObject('geticon', 'htmlelements');
                     $objStickyIcon->setIcon('sticky_yes');
-                    $headLink = new href($this->uri(array(
+                    if($post['post_status'] == 1)
+                    {
+                    	$headLink = new href($this->uri(array(
                         'action' => 'viewsingle',
                         'postid' => $post['id'],
                         'userid' => $post['userid']
-                    )) , stripslashes($post['post_title']) , NULL);
+                    )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")." ".$post['post_title']) , NULL);
+                    }
+                    else {
+                    	$headLink = new href($this->uri(array(
+                        	'action' => 'viewsingle',
+                        	'postid' => $post['id'],
+                        	'userid' => $post['userid']
+                    	)) , stripslashes($post['post_title']) , NULL);
+                    }
                     $head = $objStickyIcon->show() . $headLink->show() . "<br />" . $dt;
                 } else {
-                    $headLink = new href($this->uri(array(
+                	if($post['post_status'] == 1)
+                    {
+                    	$headLink = new href($this->uri(array(
                         'action' => 'viewsingle',
                         'postid' => $post['id'],
                         'userid' => $post['userid']
-                    )) , stripslashes($post['post_title']) , NULL);
+                    )) , stripslashes($this->objLanguage->languageText("mod_blog_draft","blog")." ".$this->objLanguage->languageText("mod_blog_word_post","blog").": ".$post['post_title']) , NULL);
+                    }
+                    else {
+                    	$headLink = new href($this->uri(array(
+                        	'action' => 'viewsingle',
+                        	'postid' => $post['id'],
+                        	'userid' => $post['userid']
+                    	)) , stripslashes($post['post_title']) , NULL);
+                    }
+                    
                     $head = $headLink->show() . "<br />" . $dt . "<br />";
                     // .'<script src="http:// digg.com/tools/diggthis.js" type="text/javascript"></script>';
                     

@@ -15,8 +15,9 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 } else {
     $cssLayout->setNumColumns(3);
 }
+$drafts = $latestpost[0]['drafts'];
 //show all the posts
-if (isset($catid) && empty($posts) && empty($latestpost)) {
+if (isset($catid) && empty($posts) && empty($latestpost) && empty($drafts)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
     if ($this->objUser->userId() == $userid) {
         $linker = new href($this->uri(array(
@@ -26,7 +27,7 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
         )) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
         $middleColumn.= "<center>" . $linker->show() . "</center>";
     }
-} elseif (!isset($catid) && empty($posts) && empty($latestpost)) {
+} elseif (!isset($catid) && empty($posts) && empty($latestpost) && empty($drafts)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 } elseif (isset($catid) && !empty($posts)) {
     //check for sticky posts
@@ -68,12 +69,20 @@ if (isset($catid) && empty($posts) && empty($latestpost)) {
     } else {
         $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
         if ($this->objUser->userId() == $userid) {
-            $linker = new href($this->uri(array(
-                'module' => 'blog',
-                'action' => 'blogadmin',
-                'mode' => 'writepost'
-            )) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
-            $middleColumn.= "<center>" . $linker->show() . "</center>";
+        	if(empty($drafts))
+        	{
+            	$linker = new href($this->uri(array(
+                	'module' => 'blog',
+                	'action' => 'blogadmin',
+                	'mode' => 'writepost'
+            	)) , $this->objLanguage->languageText("mod_blog_writepost", "blog") , NULL); //$this->objblogOps->showAdminSection(TRUE);
+            	$middleColumn.= "<center>" . $linker->show() . "</center>";
+        	}
+        	else {
+        		$middleColumn.= $this->objblogPosts->showPosts($drafts);
+        	}
+        	
+            
         }
     }
 }
