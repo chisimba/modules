@@ -224,10 +224,13 @@ class genregister extends abgenerator implements ifgenerator
     */
     public function languageelems()
     {
-        $str = "TEXT: mod_" . $this->getItem('modulecode') . "__about_title|Title of the module|" 
+        $str = "TEXT: mod_" . $this->getItem('modulecode') . "_about_title|Title of the module|" 
           . $this->getItem('modulename') . "\n";
-        $str .= "TEXT: mod_" . $this->getItem('modulecode') . "__about|Description of the module|" 
+        $str .= "TEXT: mod_" . $this->getItem('modulecode') . "_about|Description of the module|" 
           . $this->getItem('moduledescription') . "\n";
+        $str .= "TEXT: mod_" . $this->getItem('modulecode') . "_about|Description of the module|" 
+          . $this->getItem('moduledescription') . "\n";
+          
         $this->classCode = str_replace("{LANGUAGEELEMS}", $str, $this->classCode);
 
     }

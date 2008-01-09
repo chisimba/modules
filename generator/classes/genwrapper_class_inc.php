@@ -305,6 +305,7 @@ class genwrapper extends abgenerator implements ifgenerator
     */
     private function prepareWrapper()
     {
+        $tmp="";
         $xml = simplexml_load_file($this->getResourcePath("") . "/wrapper-items.xml");
         //Initialize the class
         $ret = $xml->xpath("//item[@name = 'buildClass']");
