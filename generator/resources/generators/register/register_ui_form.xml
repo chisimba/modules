@@ -43,6 +43,24 @@ the Generate button.</overview>
 <description>Provide description of the module that you are generating as you wish it to appear in the module catalogue. Please do not use place holder text, rather provide a full description that users can understand.</description>
 </item>
 
+<item elementname="helpmoduleabout">
+<name>helpmoduleabout</name>
+<type>textinput</type>
+<width>65</width>
+<label>The about help text for this module</label>
+<validation/>
+<description>Provide text for use in the Help | About for this module.</description>
+</item>
+
+<item elementname="helpmoduleabouttitle">
+<name>helpmoduleabouttitle</name>
+<type>textinput</type>
+<width>65</width>
+<label>The title for the help for this module</label>
+<validation/>
+<description>Provide text for use as the title for in the Help | About for this module.</description>
+</item>
+
 <item elementname="copyright">
 <name>copyright</name>
 <type>textinput</type>
