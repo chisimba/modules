@@ -262,7 +262,7 @@ class blog extends controller
             //feed creator subsystem
             $this->objFeedCreator = $this->getObject('feeder', 'feed');
             //httpclient to grab remote data
-            $this->objClient = $this->getObject('client', 'httpclient');
+            //$this->objClient = $this->getObject('client', 'httpclient');
             //language object
             $this->objLanguage = $this->getObject('language', 'language');
             //database abstraction object
