@@ -15,7 +15,7 @@ class dbpodcast extends dbTable
         parent::init('tbl_podcast');
         $this->objFile =& $this->getObject('dbfile', 'filemanager');
         $this->objUser =& $this->getObject('user', 'security');
-		$this->dbContext =& $this->getObject('dbcontext','context');
+        $this->dbContext =& $this->getObject('dbcontext','context');
     }
     
     /**
@@ -31,6 +31,7 @@ class dbpodcast extends dbTable
         if ($file == FALSE) {
             return 'nofile';
         }
+        
         
         if ($this->podcastUsedAlready($this->objUser->userId(), $fileId) > 0) {
             return 'fileusedalready';
@@ -56,7 +57,7 @@ class dbpodcast extends dbTable
         // Prep Data
         $docId = 'podcast_entry_'.$podcastId;
         $docDate = $podcastInfo['datecreated'];
-        $url = $this->uri(array('action'=>'byuser', 'id'=>$podcastInfo['creatorid']), 'podcast');
+        $url = $this->uri(array('action'=>'viewpodcast', 'id'=>$id), 'podcast');
         $title = $podcastInfo['title'];
         $contents = $podcastInfo['title'].' '.$podcastInfo['description'];
         $teaser = $podcastInfo['description'];
@@ -65,6 +66,14 @@ class dbpodcast extends dbTable
         
         // Add to Index
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
+        
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        
+        $objLanguage= $this->getObject('language','language');
+        $title = $objLanguage->languageText('mod_podcast_latestpodcastsby', 'podcast', 'Latest Podcasts By').' '.$this->objUser->fullName();
+        
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $this->objUser->userId(), $title, 'site', NULL, 'small');
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $this->objUser->userId(), $title, 'user', NULL, 'small');
         
         return $podcastId;
     }
@@ -95,7 +104,7 @@ class dbpodcast extends dbTable
         // Prep Data
         $docId = 'podcast_entry_'.$id;
         $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
-        $url = $this->uri(array('action'=>'byuser', 'id'=>$podcast['creatorid']), 'podcast');
+        $url = $this->uri(array('action'=>'viewpodcast', 'id'=>$id), 'podcast');
         $title = $title;
         $contents = $title.' '.$description;
         $teaser = $description;
@@ -179,10 +188,19 @@ class dbpodcast extends dbTable
             return 'deleteothers';
         } else {
             $this->delete('id', $id);
-			$this->delete('podcastId',$id, "tbl_podcast_context");
+            $this->delete('podcastId',$id, "tbl_podcast_context");
             
             $objIndexData = $this->getObject('indexdata', 'lucene');
             $objIndexData->removeIndex('podcast_entry_'.$id);
+            
+            $numPodcasts = $this->getNumFeeds($podcast['creatorid']);
+            
+            if ($numPodcasts == 0) {
+                $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+                
+                $objDynamicBlocks->removeBlock('podcast', 'podcastdynamicblock', 'showBlock', $podcast['creatorid'], 'site');
+                $objDynamicBlocks->removeBlock('podcast', 'podcastdynamicblock', 'showBlock', $podcast['creatorid'], 'user');
+            }
             return 'podcastdeleted';
         }
     }
@@ -195,7 +213,7 @@ class dbpodcast extends dbTable
      */
     public function getPodcast($id)
     {
-         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license FROM tbl_podcast 
+         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
         LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
         LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.id = \''.$id.'\' LIMIT 1';
@@ -272,87 +290,87 @@ class dbpodcast extends dbTable
      
     
             
-	/**
-	 *	Method to add podcast to course
-	 *	@param array $courses
-	 *	@param string $id
-	 *	@author Mohamed Yusuf 
-	 *	@date	2007-02-13
-	 */
-	public function addPodcastContext($courses, $id){
-		$contextDetail = array();
-		$contextDetail['podcastId'] = $id;
-		if(!empty($courses)){
-			foreach($courses as $course)
-			{
-				$contextDetail['contextcode'] = $course;
-				$this->insert($contextDetail, 'tbl_podcast_context');
-			}
-		}
-	}
+    /**
+     *	Method to add podcast to course
+     *	@param array $courses
+     *	@param string $id
+     *	@author Mohamed Yusuf 
+     *	@date	2007-02-13
+     */
+    public function addPodcastContext($courses, $id){
+        $contextDetail = array();
+        $contextDetail['podcastId'] = $id;
+        if(!empty($courses)){
+            foreach($courses as $course)
+            {
+                $contextDetail['contextcode'] = $course;
+                $this->insert($contextDetail, 'tbl_podcast_context');
+            }
+        }
+    }
      
-	/**
-	 *	Method to get course id
-	 *	@param string $podcastid
-	 *	@author Mohamed Yusuf 
-	 *	@return array
-	 *	@date	2007-02-13
-	 */
-	public function getContextCode($podcastId)
-	{
-		$sql = "SELECT contextcode from tbl_podcast_context where podcastid=\"$podcastId\"";
-		return $this->getArray($sql);
-	}
+    /**
+     *	Method to get course id
+     *	@param string $podcastid
+     *	@author Mohamed Yusuf 
+     *	@return array
+     *	@date	2007-02-13
+     */
+    public function getContextCode($podcastId)
+    {
+        $sql = "SELECT contextcode from tbl_podcast_context where podcastid=\"$podcastId\"";
+        return $this->getArray($sql);
+    }
      
-	/**
-	 *	Method to get list of course of particular podcast
-	 *	@param string $contextcode
-	 *	@author Mohamed Yusuf 
-	 *	@return array
-	 *	@date	2007-02-13
-	 */
-	public function getPodcastContext($contextcode){
-		$sql = "SELECT * from tbl_context where contextcode=\"$contextcode\"";
-		return $this->getArray($sql);
-	}
+    /**
+     *	Method to get list of course of particular podcast
+     *	@param string $contextcode
+     *	@author Mohamed Yusuf 
+     *	@return array
+     *	@date	2007-02-13
+     */
+    public function getPodcastContext($contextcode){
+        $sql = "SELECT * from tbl_context where contextcode=\"$contextcode\"";
+        return $this->getArray($sql);
+    }
      
-	/**
-	 *	Method to delete podcast courses
-	 *	@author Mohamed Yusuf 
-	 *	void
-	 *	@date	2007-02-13
-	 */
-	public function deletePodcastContext($id)
-	{
-		$this->delete('podcastId',$id, "tbl_podcast_context");
-	}
+    /**
+     *	Method to delete podcast courses
+     *	@author Mohamed Yusuf 
+     *	void
+     *	@date	2007-02-13
+     */
+    public function deletePodcastContext($id)
+    {
+        $this->delete('podcastId',$id, "tbl_podcast_context");
+    }
 
     /**
      * Method to list all the podcasts of a context
-	 * @author Mohamed Yusuf
+     * @author Mohamed Yusuf
      * @return array
      */
-	public function listPodcastCourses()
-	{
-		$sql = "SELECT id FROM tbl_podcast";
-		$tempListCourses = array();
-		$listCourses = array();
-		$listContext = array();
-		$tempListCourses = $this->getArray($sql);
-		
-		foreach ($tempListCourses as $key => $courses)
-		{
-			$podcastId = $courses['id'];
-			$sql = "SELECT contextcode FROM tbl_podcast_context where podcastId=\"$podcastId\"";
-			$listContext = $this->getArray($sql);
-			
-			foreach ($listContext as $context => $listC)
-			{
-				$listCourses[] = $this->dbContext->getContextDetails($listC['contextcode']);
-			}
-		}
-		return $listCourses;
-	}
+    public function listPodcastCourses()
+    {
+        $sql = "SELECT id FROM tbl_podcast";
+        $tempListCourses = array();
+        $listCourses = array();
+        $listContext = array();
+        $tempListCourses = $this->getArray($sql);
+        
+        foreach ($tempListCourses as $key => $courses)
+        {
+            $podcastId = $courses['id'];
+            $sql = "SELECT contextcode FROM tbl_podcast_context where podcastId=\"$podcastId\"";
+            $listContext = $this->getArray($sql);
+            
+            foreach ($listContext as $context => $listC)
+            {
+                $listCourses[] = $this->dbContext->getContextDetails($listC['contextcode']);
+            }
+        }
+        return $listCourses;
+    }
 
     /**
      * Method to get the podcasts by a particular course
@@ -360,25 +378,25 @@ class dbpodcast extends dbTable
      * @param string $contextCode contextcode of the podcast
      * @return array
      */
-	public function getCoursePodcasts($contextCode)
-	{
-		$sql = "SELECT podcastid from tbl_podcast_context where contextcode=\"$contextCode\"";
-		$contextId = array();
-		$contextId = $this->query($sql);
-		$podcasts = array();
-		foreach ($contextId as $id)
-		{
+    public function getCoursePodcasts($contextCode)
+    {
+        $sql = "SELECT podcastid from tbl_podcast_context where contextcode=\"$contextCode\"";
+        $contextId = array();
+        $contextId = $this->query($sql);
+        $podcasts = array();
+        foreach ($contextId as $id)
+        {
 
-        	$sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
-        	LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        	LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
-        	WHERE tbl_podcast.id = \''.$id['podcastid'].'\'
-        	ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
-			$podcasts[] = $this->getArray($sql);
-		}
-		
-		return $podcasts;
-	}
+            $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
+            LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+            LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+            WHERE tbl_podcast.id = \''.$id['podcastid'].'\'
+            ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
+            $podcasts[] = $this->getArray($sql);
+        }
+        
+        return $podcasts;
+    }
 
     /**
      * Method to get number of feeds by course
@@ -386,12 +404,12 @@ class dbpodcast extends dbTable
      * @param string $contextCode contextcode
      * @return string id
      */
-	public function getNumFeedsByCourse($contextCode)
-	{
-		$sql = "SELECT count(contextcode) as count from tbl_podcast_context where contextcode=\"$contextCode\"";
-		$value = $this->getArray($sql);
-		return $value[0]['count'];
-	}
+    public function getNumFeedsByCourse($contextCode)
+    {
+        $sql = "SELECT count(contextcode) as count from tbl_podcast_context where contextcode=\"$contextCode\"";
+        $value = $this->getArray($sql);
+        return $value[0]['count'];
+    }
 
     /**
      * Method to get name of the context
@@ -399,23 +417,23 @@ class dbpodcast extends dbTable
      * @param string $contextCode contextcode
      * @return string name
      */
-	public function getCourseName($contextCode)
-	{
-		return $this->dbContext->getTitle($contextCode);
-	}
-	
-	/**
+    public function getCourseName($contextCode)
+    {
+        return $this->dbContext->getTitle($contextCode);
+    }
+    
+    /**
      * Method to get name of the context
      * @author Mohamed Yusuf
      * @param string $podcastId podcastid
      * @return string rray 
-	 */
-	public function listOfContextCode($podcastId)
-	{
-		$sql = "SELECT contextcode FROM tbl_podcast_context where podcastId=\"$podcastId\"";
-		return $this->getArray($sql);	
-	
-	}
+     */
+    public function listOfContextCode($podcastId)
+    {
+        $sql = "SELECT contextcode FROM tbl_podcast_context where podcastId=\"$podcastId\"";
+        return $this->getArray($sql);	
+    
+    }
 
 }
 

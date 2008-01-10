@@ -35,17 +35,17 @@ if (count($podcasts) == 0) {
         $content = '<p>'.htmlentities($podcast['description']).'</p>';
          
          
-		$context = array();
-		$context = $this->objPodcast->getContextCode($podcast['id']);
-		$courses = array();
-		if(!empty($context)){
-			foreach ($context as $key => $value)
-			{
-				$courses[] = $this->objPodcast->getPodcastContext($value['contextcode']);
-			}
-		}else{
+        $context = array();
+        $context = $this->objPodcast->getContextCode($podcast['id']);
+        $courses = array();
+        if(!empty($context)){
+            foreach ($context as $key => $value)
+            {
+                $courses[] = $this->objPodcast->getPodcastContext($value['contextcode']);
+            }
+        }else{
 
-		}
+        }
          
          
         $table = $this->newObject('htmltable', 'htmlelements');
@@ -87,19 +87,19 @@ if (count($podcasts) == 0) {
         $content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
          
          
-		if(!empty($courses)){
-			$content .= "<strong>".$this->objLanguage->languageText('mod_podcast_listcourse','podcast')."</strong>";
-        	$content .="<ul>";
-			foreach ($courses as $key => $value)
-			{
-				foreach ($value as $course)
-				{
-					$content .="<li>".$course['title']."</li>";
-				}
-			}
-			$content .="</ul>";
-		}
-	         
+        if(!empty($courses)){
+            $content .= "<strong>".$this->objLanguage->languageText('mod_podcast_listcourse','podcast')."</strong>";
+            $content .="<ul>";
+            foreach ($courses as $key => $value)
+            {
+                foreach ($value as $course)
+                {
+                    $content .="<li>".$course['title']."</li>";
+                }
+            }
+            $content .="</ul>";
+        }
+             
         if ($podcast['creatorid'] == $this->objUser->userId() || $this->objUser->isAdmin()) {
             $objIcon->setIcon('edit');
             
@@ -113,7 +113,11 @@ if (count($podcasts) == 0) {
             $icons = '';
         }
         
-        echo $objFeatureBox->show(htmlentities($podcast['title']).$icons, $content);
+        
+        $title = new link ($this->uri(array('action'=>'viewpodcast', 'id'=>$podcast['id'])));
+        $title->link = htmlentities($podcast['title']);
+        
+        echo $objFeatureBox->show($title->show().' '.$icons, $content);
     }
     
 }

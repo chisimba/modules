@@ -26,8 +26,8 @@ class podcast extends controller
             $this->objUtils = & $this->getObject('utils','contextadmin');
             $this->objLanguage =& $this->getObject('language', 'language');
             $this->objConfig =& $this->getObject('altconfig', 'config');
-    		$this->dbContext =& $this->getObject('dbcontext','context');
-		
+            $this->dbContext =& $this->getObject('dbcontext','context');
+        
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
             $objLog->log();
@@ -61,6 +61,8 @@ class podcast extends controller
                 return $this->editPodcast($this->getParam('id'));
             case 'playpodcast':
                 return $this->playPodcast($this->getParam('id'));
+            case 'viewpodcast':
+                return $this->viewPodcast($this->getParam('id'));
             case 'deletepodcast':
                 return $this->deletePodcast($this->getParam('id'));
             case 'downloadfile':
@@ -69,10 +71,10 @@ class podcast extends controller
                 return $this->showUserPodcasts($this->getParam('id'));
             case 'rssfeed':
                 return $this->showRssFeed($this->getParam('id'));
-			case 'bycourse':
-				return $this->showCoursePoadcasts($this->getParam('contextcode'));
-			case 'rssfeedbycourse':
-				return $this->showRssFeedByCourse($this->getParam('contextcode'));
+            case 'bycourse':
+                return $this->showCoursePoadcasts($this->getParam('contextcode'));
+            case 'rssfeedbycourse':
+                return $this->showRssFeedByCourse($this->getParam('contextcode'));
             default:
                 return $this->podcastHome();
         }
@@ -90,7 +92,7 @@ class podcast extends controller
             $action = 'home';
         }
         
-        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'downloadfile', 'byuser', 'bycourse', 'rssfeedbycourse');
+        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'viewpodcast', 'downloadfile', 'byuser', 'bycourse', 'rssfeedbycourse');
         
         if (in_array($action, $allowedPreloginActions)) {
             return FALSE;
@@ -202,7 +204,7 @@ class podcast extends controller
         $description = $this->getParam('description');
         $process = $this->getParam('process');
         $courses = $this->getParam('courses');
-		$isUpdate = $this->getparam('isUpdate');
+        $isUpdate = $this->getparam('isUpdate');
 
         if ($id == '') {
             return $this->nextAction(NULL);
@@ -219,12 +221,12 @@ class podcast extends controller
             
             $this->objPodcast->updatePodcast ($id, $title, $description);
              
-			if($isUpdate == "yes"){
-				$this->objPodcast->deletePodcastContext($id);
-				$this->objPodcast->addPodcastContext($courses, $id);
-			}else{
-				$this->objPodcast->addPodcastContext($courses, $id);
-			}
+            if($isUpdate == "yes"){
+                $this->objPodcast->deletePodcastContext($id);
+                $this->objPodcast->addPodcastContext($courses, $id);
+            }else{
+                $this->objPodcast->addPodcastContext($courses, $id);
+            }
              
             return $this->nextAction('byuser', array('message'=>$process, 'podcast'=>$id));
         }
@@ -251,7 +253,7 @@ class podcast extends controller
             }
             
             $this->setVarByRef('podcast', $podcast);
-			$this->setVar('isUpdate','yes');
+            $this->setVar('isUpdate','yes');
             $this->setVar('mode', 'editpodcast');
             return 'tpl_confirmadd.php';  
         }
@@ -364,6 +366,31 @@ class podcast extends controller
         $this->setLayoutTemplate(NULL);
         
         return 'tpl_listenonline.php';
+    }
+    
+    /**
+     * Method to list to a podcast online
+     *
+     * @param string $id Record Id of the podcast
+     */
+    private function viewPodcast($id)
+    {
+        $podcast = $this->objPodcast->getPodcast($id);
+        
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        
+        if ($podcast == FALSE) {
+            $this->setVar('content', '&nbsp;');
+            $this->appendArrayVar('bodyOnLoad', 'window.close();');
+        } else {
+            $objSoundPlayer = $this->getObject('buildsoundplayer', 'files');
+            $objSoundPlayer->setSoundFile(str_replace('&', '&amp;', $this->objConfig->getsiteRoot().$objFile->getFilePath($podcast['fileid'])));
+            $this->setVarByRef('content', $objSoundPlayer->show());
+        }
+        
+        $this->setVarByRef('podcast', $podcast);
+        
+        return 'tpl_viewpodcast.php';
     }
     
     /**
