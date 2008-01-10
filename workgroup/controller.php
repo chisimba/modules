@@ -75,7 +75,7 @@ class workgroup extends controller
         //    controller.
         // 3. Pass variables to the template
         $this->setVarByRef('objUser', $this->objUser);
-		$this->setVarByRef('objLanguage', $this->objLanguage);
+	$this->setVarByRef('objLanguage', $this->objLanguage);
         //$this->setVarByRef('objHelp', $this->objHelp);
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
@@ -95,7 +95,7 @@ class workgroup extends controller
             //}
 		} else {
             // ... else 
-			$contextTitle = 'context0'; //$objDbContext->getTitle();
+			$contextTitle = $objDbContext->getTitle();
 			$this->setVarByRef('contextTitle', $contextTitle);
 		}
 		switch($action){
