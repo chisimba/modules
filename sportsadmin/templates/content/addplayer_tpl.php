@@ -8,11 +8,11 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 // end security check
 /**
-* 
+*
 * @copyright 2006 KEWL.NextGen
 * @author Nsabagwa Mary
 *
-* 
+*
 */
 
 $tournamentid = $this->getParam('tournamentid',NULL);
@@ -55,12 +55,12 @@ if(!$useEdit) {
 	}
 	else {
 	$heading->str = $this->objLanguage->languageText('mod_sportsadmin_modify','sportsadmin').'&nbsp; '.$this->objDbsports->getSportsById($this->getParam('sportid',NULL)).'&nbsp; '.$this->objLanguage->languageText('mod_sportsadmin_player','sportsadmin');
-	
+
 $playerdata = $this->objDbplayer->getPlayerDetails($this->getParam('playerid',NULL));
 
 if(!empty($playerdata)){
 		foreach($playerdata as $p){
-		$pname = $p['name']; 
+		$pname = $p['name'];
 		$pposition = $p['position'];
 		$pteam = $p['team'];
 		$pfilename = $p['playerimage'];
@@ -85,7 +85,7 @@ $form->extra ="enctype='multipart/form-data'";
 //label for the name of the team
 $name = new label($this->objLanguage->languageText('word_name','system'),'');
 $playerfield = new textinput('playerfield');
-$playerfield->size = 47;	
+$playerfield->size = 47;
 $playerfield->value=($useEdit?$pname:'');
 
 $table->startRow('odd');
@@ -108,8 +108,8 @@ $value = ($useEdit?$pteam:'');
 if(!empty($teams)){
 
   foreach($teams as $teamnames){
-  
- $teamdropbox->addOption($teamnames['id'],$teamnames['name']);  
+
+ $teamdropbox->addOption($teamnames['id'],$teamnames['name']);
   }
   $teamdropbox->setSelected($value);
 
@@ -122,9 +122,9 @@ $teamname = new textinput('team',$teamid,'hidden');
 $country = new label($this->objLanguage->languageText('word_country','system'),'');
 
  $objCountries=&$this->getObject('languagecode','language');
-    $table->startRow();   
+    $table->startRow();
     $table->addCell($this->objLanguage->languageText('word_country', 'system'),'40%','','right');
-    $table->addCell("&nbsp;&nbsp;".$objCountries->country($pcountry));
+    $table->addCell("&nbsp;&nbsp;".$objCountries->countryAlpha($pcountry));
     $table->endRow();
 
 if($useEdit){
@@ -162,7 +162,7 @@ $table->addCell($position,'40%','','right');
 $table->addCell("&nbsp;&nbsp;".$positionfield->show(),'','','');
 $table->endRow();
 
-//the path in which the folder is stored 
+//the path in which the folder is stored
 $this->playerfolder = $this->objConfig->getModulePath().'sportsadmin/players/';
 $logofilepath =  $this->playerfolder.$pfilename;
 
@@ -181,38 +181,38 @@ $this->loadClass('hiddeninput','htmlelements');
 
 //Save button
 	$objButton = $this->newObject('button', 'htmlelements');
-	$objHidden = new hiddeninput('action',($useEdit?'modifyplayer':'saveplayer'));	
+	$objHidden = new hiddeninput('action',($useEdit?'modifyplayer':'saveplayer'));
 	$itemHidden = new hiddeninput('item','players');
 		$sportHidden = new hiddeninput('sportid',$sportid);
 	$teamHidden = new hiddeninput('teamid',$teamid);
 	$fixtureHidden = new hiddeninput('fixtureid',$fixtureid);
 	$fixtureHidden = new hiddeninput('tournamentid',$tournamentid);
-	
+
 	$table->startRow();
 	$table->addCell($fixtureHidden->show());
 	$table->addCell($fixtureHidden->show(),'','','');
 	$table->endRow();
-	
+
 	$table->startRow();
 	$table->addCell($teamHidden->show());
 	$table->addCell($sportHidden->show(),'','','');
 	$table->endRow();
-	
+
 	$table->startRow();
 	$table->addCell('');
 	$table->addCell($itemHidden->show(),'','','');
 	$table->endRow();
-	
+
 	if($useEdit) {
-	  $objHiddenId = new hiddeninput('playerid',$this->getParam('playerid',NULL));  
-	     
+	  $objHiddenId = new hiddeninput('playerid',$this->getParam('playerid',NULL));
+
 	}
-	
-	$objButton = new button("save",$objLanguage->languageText("word_save"));   
+
+	$objButton = new button("save",$objLanguage->languageText("word_save"));
 	$objButton->setToSubmit();
 	$table->addCell('');
 	$table->addCell($objButton->show().''.$objHidden->show().''.($useEdit?$objHiddenId->show():''));
-	
+
 
 //back link
 $back = & $this->getObject('link','htmlelements');

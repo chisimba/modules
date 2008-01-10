@@ -266,7 +266,7 @@ class hivaidstools extends object
         $objTable->addRow(array('', $objLabel->show(), $objDrop->show()));
 
         $objLabel = new label($lbCountry.': ', 'input_country');
-        $list = $this->objCountries->country();
+        $list = $this->objCountries->countryAlpha();
 
         $objTable->addRow(array('', $objLabel->show(), $list));
 

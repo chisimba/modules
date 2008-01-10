@@ -24,27 +24,27 @@ class etdtools extends object
     * @var string $rightContent String containing the content for the right side menu.
     */
     private $rightContent = '';
-    
+
     /**
     * @var string $leftContent String containing the content for the left side menu.
     */
     private $leftContent = '';
-    
+
     /**
     * @var bool $hideMenu Boolean value determining whether to hide the menu block on the right side
     */
     private $hideMenu = FALSE;
-    
+
     /**
     * @var bool $hideLinks Boolean value determining whether to hide the links block on the right side
     */
     private $hideLinks = FALSE;
-        
+
     /**
     * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
     */
     private $hideHelp = FALSE;
-        
+
     /**
     * @var bool $hideHelp Boolean value determining whether to hide the help block on the right side
     */
@@ -66,7 +66,7 @@ class etdtools extends object
         $this->loadClass('link', 'htmlelements');
 
         $this->objBlocks = $this->newObject('blocks', 'blocks');
-        
+
         $this->access = $this->getSession('accessLevel', array());
     }
 
@@ -81,12 +81,12 @@ class etdtools extends object
         if(isset($this->leftContent) && !empty($this->leftContent)){
             return $this->leftContent;
         }
-        
+
         $str = $this->getBrowseMenu();
         $str .= $this->getLogin();
         return $str;
     }
-    
+
     /**
     * Method to get the contents for the right column
     *
@@ -98,10 +98,10 @@ class etdtools extends object
         if(isset($this->rightContent) && !empty($this->rightContent)){
             return $this->rightContent;
         }
-        
+
         return $str;
     }
-    
+
     /**
     * Method to display the menu for browsing and searching the repository.
     *
@@ -125,7 +125,7 @@ class etdtools extends object
         }
         return $str;
     }
-    
+
     /**
     * Method to get the login block for display on the home page
     *
@@ -137,7 +137,7 @@ class etdtools extends object
         $str = $this->objBlocks->showBlock('login', 'security', '','','', TRUE, 'none');
         return $str;
     }
-    
+
     /**
     * Method to set the content for the right side menu
     *
@@ -169,7 +169,7 @@ class etdtools extends object
         }
         $this->leftContent .= $str;
     }
-    
+
     /**
     * Method to set the blocks on the left menu to hide or display
     *
@@ -185,7 +185,7 @@ class etdtools extends object
         $this->hideSearch = $links;
         $this->hideHelp = $help;
     }
-    
+
     /**
     * Method to create the dropdown of countries with additional entries for areas covering several countries
     *
@@ -194,8 +194,8 @@ class etdtools extends object
     * @return string html
     */
     public function getCountriesDropdown($selected = 'South Africa')
-    {   
-        return $this->objCountry->country();
+    {
+        return $this->objCountry->countryAlpha();
     }
 
     /**
@@ -208,12 +208,12 @@ class etdtools extends object
     {
         $lbMasters = $this->objLanguage->languageText('word_masters');
         $lbPhd = $this->objLanguage->languageText('word_phd');
-        
+
         $objDrop = new dropdown('level');
         $objDrop->addOption($lbMasters, $lbMasters);
         $objDrop->addOption($lbPhd, $lbPhd);
         $objDrop->setSelected($select);
-        
+
         return $objDrop->show();
     }
 

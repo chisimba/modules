@@ -6,17 +6,17 @@
 	$this->loadclass("dropdown","htmlelements");
 	//$objLabel =& $this->newObject('label', 'htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
-	
+
 	$objHeading->type=1;
 	$objHeading->str =$objLanguage->languageText("mod_readinglist_edit",'readinglist');
 	echo $objHeading->show();
-	$form = new form("edit", 
+	$form = new form("edit",
 		$this->uri(array(
 	    		'module'=>'readinglist',
 	   		'action'=>'editConfirm',
 			'id'=>$id
 	)));
-	
+
 	$objTable =& $this->newObject('htmltable','htmlelements');
         $objTable->width='20';
         $objTable->attributes=" align='center' border='0'";
@@ -49,8 +49,8 @@
         $textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_publisher",'readinglist').":</b>",
         $textinput->show());
-						     
-	
+
+
     	//Publishing year select box
 	$objTable->addRow($row, 'even');
  	$table = $this->newObject('htmltable', 'htmlelements');
@@ -70,30 +70,30 @@
 
 
          //Link text box
-        $objTable->addRow($row, 'even');		
+        $objTable->addRow($row, 'even');
 		$iconWindow = $this->getObject('geticon','htmlelements');
 		$iconWindow->setIcon('addsibling');
-        $iconWindow->alt = $objLanguage->languageText("mod_readinglist_additionallinks",'readinglist'); 
+        $iconWindow->alt = $objLanguage->languageText("mod_readinglist_additionallinks",'readinglist');
 	    $addUrl = $this->newObject('windowpop','htmlelements');
 	    $windowPop = $this->uri(array(
                   'action' => 'urls',
                   'id' => $id));
-                 
-		$addUrl->set('location', $windowPop); 
-		$addUrl->set('linktext',$iconWindow->show());   
-        $addUrl->set('width','450'); 
+
+		$addUrl->set('location', $windowPop);
+		$addUrl->set('linktext',$iconWindow->show());
+        $addUrl->set('width','450');
         $addUrl->set('height','200');
         $addUrl->set('left','100');
         $addUrl->set('top','100');
         $addUrl->set('scrollbars','yes');
-        //$addUrl->putJs();      
-	$linkWindow = $addUrl->show();    
+        //$addUrl->putJs();
+	$linkWindow = $addUrl->show();
 	$textinput = new textinput("link",$link);
         //$textinput-> set('linktext',$iconWindow->show());
         $textinput->size = 50;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_link",'readinglist').":</b>",
         $textinput->show(),$linkWindow);
-        
+
 	//Publication text box
 	$objTable->addRow($row, 'even');
         $textinput = new textinput("publication",$publication);
@@ -101,21 +101,21 @@
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_publication",'readinglist').":</b>",
         $textinput->show());
 	$objTable->addRow($row, 'even');
-	
+
 	//Country select box
 	$objTable->startRow();
    	$countries=&$this->getObject('languagecode','language');
     	$objTable->addCell($this->objLanguage->languageText("mod_readinglist_country", 'readinglist'));
-        $objTable->addCell($countries->country());
+        $objTable->addCell($countries->countryAlpha());
 	$objTable->endRow();
-        
+
 	//Language text box
 	$textinput = new textinput("language",$language);
         $textinput->size = 70;
         $row = array("<b>".$label=$objLanguage->languageText("mod_readinglist_language",'readinglist').":</b>",
         $textinput->show());
 	$objTable->addRow($row, 'even');
-	
+
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save

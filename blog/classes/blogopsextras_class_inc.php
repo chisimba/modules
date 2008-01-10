@@ -69,7 +69,7 @@ class blogopsextras extends object
      * @access public
      * @return NULL
      */
-    public function init() 
+    public function init()
     {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
@@ -95,7 +95,7 @@ class blogopsextras extends object
      * @return string $doc kml document
      * @access public
      */
-    public function showKML() 
+    public function showKML()
     {
         $kml = $this->getObject('kmlgen', 'simplemap');
         $doc = $kml->overlay('my map', 'a test map');
@@ -111,7 +111,7 @@ class blogopsextras extends object
      * @param  integer $limit
      * @return string
      */
-    public function findGeoTag($params = array() , $limit = '10') 
+    public function findGeoTag($params = array() , $limit = '10')
     {
         // do a sanity check on the array of params...
         if (!isset($params['place']) || !isset($params['countrycode'])) {
@@ -145,7 +145,7 @@ class blogopsextras extends object
      * @param  integer $userid
      * @return array
      */
-    public function myBlogTimeline($posts, $userid) 
+    public function myBlogTimeline($posts, $userid)
     {
         $this->objUser = $this->getObject('user', 'security');
         // parse the hell outta the posts and build up the timeline XML
@@ -181,7 +181,7 @@ class blogopsextras extends object
      * @param  string  $timeline
      * @return mixed
      */
-    public function parseTimeline($int, $fdate, $timeline) 
+    public function parseTimeline($int, $fdate, $timeline)
     {
         $objIframe = $this->getObject('iframe', 'htmlelements');
         $objIframe->width = "100%";
@@ -201,10 +201,10 @@ class blogopsextras extends object
      * Method not yet implemented due to processor usage and db hit rate
      *
      */
-    public function siteBlogTimeline() 
+    public function siteBlogTimeline()
     {
         // grab all of the posts
-        
+
     }
     /**
      * Method to create the form used in the geoTag block
@@ -212,7 +212,7 @@ class blogopsextras extends object
      * @param  void
      * @return string
      */
-    public function geoTagForm() 
+    public function geoTagForm()
     {
         $this->loadClass('href', 'htmlelements');
         $this->loadClass('label', 'htmlelements');
@@ -241,7 +241,7 @@ class blogopsextras extends object
         $geoadd->startRow();
         // get the codes and countries from the languagecode class
         $langcode = $this->getObject('languagecode', 'language');
-        $list = $langcode->country();
+        $list = $langcode->countryAlpha();
         $geocountrycodelabel = new label($this->objLanguage->languageText('mod_blog_geocountrycode', 'blog') . ':', 'input_geocountrycode');
         $geocountrycode = $list;
         // new textinput('geocountrycode');
@@ -266,7 +266,7 @@ class blogopsextras extends object
      *
      * @return string
      */
-    public function showDiaporama() 
+    public function showDiaporama()
     {
         $this->objConfig = $this->getObject('altconfig', 'config');
         // build up the array of images...
@@ -323,7 +323,7 @@ class blogopsextras extends object
      * @return string   Return description (if any) .
      * @access public
      */
-    public function makeThumbnail($o_file, $t_ht = 150) 
+    public function makeThumbnail($o_file, $t_ht = 150)
     {
         $image_info = getImageSize($o_file);
         // see EXIF for faster way
@@ -394,7 +394,7 @@ class blogopsextras extends object
      * @param  string $dsn
      * @return void
      */
-    public function parseDSN($dsn) 
+    public function parseDSN($dsn)
     {
         $parsed = NULL;
         // $this->imapdsn;
@@ -454,7 +454,7 @@ class blogopsextras extends object
      *
      * @param array $newsettings
      */
-    public function setupConfig($newsettings) 
+    public function setupConfig($newsettings)
     {
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objConfig->appendToConfig($newsettings);
@@ -468,7 +468,7 @@ class blogopsextras extends object
      * @return void
      * @access public
      */
-    public function pingGoogle($userid) 
+    public function pingGoogle($userid)
     {
         $objBk = $this->getObject('background', 'utilities');
         $status = $objBk->isUserConn();
