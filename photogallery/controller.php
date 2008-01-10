@@ -400,13 +400,13 @@ class photogallery extends controller
 		//$this->_objUtils->UploadImage($this->getParam('galleryname'));
         if($this->getParam('albumselected') == '' && $this->getParam('albumtitle') == '')
         {
-			$errmsg = 'Please supply a name for your new ablum';
+			$errmsg = $this->objLanguage->languageText('mod_photogallery_needname','photogallery');
 			return $this->nextAction('uploadsection', array('errmsg' => $errmsg));
 		}
 
 		if(count($_FILES)<1)
         {
-			$errmsg= 'Please select at least one file to upload';
+			$errmsg= $this->objLanguage->languageText('mod_photogallery_needfiles','photogallery');
 			return $this->nextAction('uploadsection', array('errmsg' => $errmsg));
 		}
         
