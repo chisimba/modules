@@ -266,7 +266,7 @@ class blogposts extends object
                 ));
                 $bmurl = urlencode($bmurl);
                 $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=" . $bmurl . "&amp;title=" . urlencode(addslashes(htmlentities($post['post_title'])));
-                $bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="' . $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog") . '"/>';
+                $bmtext = '<img src="'.$this->getResourceUri('button1-bm.gif', 'blog').'" width="125" height="16" border="0" alt="' . $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog") . '"/>';
                 // $this->objLanguage->languageText("mod_blog_bookmarkpost", "blog");
                 $bookmark = new href($bmlink, $bmtext, NULL);
                 // grab the number of trackbacks per post
