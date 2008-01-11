@@ -25,7 +25,7 @@ if (isset($catid) && empty($posts)) {
 } elseif (!isset($catid) && empty($posts)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
 } else {
-    $middleColumn.= ($this->objblogOps->showPosts($posts));
+    $middleColumn.= ($this->objblogPosts->showPosts($posts));
 }
 //dump the cssLayout to screen
 if ($leftCol == NULL) {
