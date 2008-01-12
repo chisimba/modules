@@ -652,7 +652,7 @@ class blogposts extends object
         $ptable->startRow();
         $tlabel = new label($this->objLanguage->languageText('mod_blog_tags', 'blog') . ':', 'input_tags');
         $tags = new textinput('tags');
-        $tags->size = 65;
+        $tags->size = '65%';
         if (isset($editparams['tags'])) {
             // this thing should be an array, so we need to loop thru and create the comma sep list again
             $tagstr = NULL;
