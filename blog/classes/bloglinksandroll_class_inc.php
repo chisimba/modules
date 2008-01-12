@@ -499,5 +499,42 @@ class bloglinksandroll extends object
             return $str;
         }
     }
+    
+    /**
+     * Method to display a link to all the blogs on the system
+     * Setting $featurebox = TRUE will display the link in a block style featurebox
+     *
+     * @param  bool   $featurebox
+     * @return string
+     */
+    public function showBlogsLink($featurebox = FALSE) 
+    {
+        // set up a link to the other users blogs...
+        $oblogs = new href($this->uri(array(
+            'action' => 'allblogs'
+        )) , $this->objLanguage->languageText("mod_blog_viewallblogs", "blog") , NULL);
+        // Link for siteblogs Added by Irshaad Hoodain
+        $ositeblogs = new href($this->uri(array(
+            'action' => 'siteblog'
+        )) , $this->objLanguage->languageText("mod_blog_viewsiteblogs", "blog") , NULL);
+        $defmodLink = new href($this->uri(array() , '_default') , $this->objLanguage->languageText("mod_blog_returntosite", "blog") , NULL);
+        if ($featurebox == FALSE) {
+            $ret = $oblogs->show() . "<br />" . $defmodLink->show();
+        } else {
+            $boxContent = $oblogs->show() . "<br />";
+            $boxContent.= $defmodLink->show() . "<br />";
+            //
+            // database abstraction object
+            $this->objDbBlog = $this->getObject('dbblog');
+            $postresults = $this->objDbBlog->getAllPosts($userid = 1, null);
+            if (!$postresults == null) {
+                $boxContent.= $ositeblogs->show() . "<br />";
+            }
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_otherblogs", "blog") , $boxContent);
+        }
+        return $ret;
+    }
+    
 }
 ?>
