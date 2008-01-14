@@ -2,13 +2,13 @@
 /**
  * Template file for the keepsessionalive popup window
  */
-$config = &$this->getObject('altconfig', 'config');
+$config = $this->getObject('altconfig', 'config');
 $skinroot = $config->getskinRoot();
 $defaultskin = $config->getdefaultSkin();
 $siteRoot = $config->getsiteRoot();
 $siteRootPath = $config->getsiteRootPath();
 
-$objSkin =& $this->getObject('skin', 'skin');
+$objSkin = $this->getObject('skin', 'skin');
 
 /*
  Get the background Image for Keep Session Alive
@@ -47,7 +47,7 @@ echo '<p align="center">' . $this->objLanguage->languageText('mod_keepsessionali
 echo '<p align="center"><a href="javascript:;" onclick="window.close();">' . $this->objLanguage->languageText('mod_keepsessionalive_closewindow','keepsessionalive').'</a></p>';
 
 
-$objUser = &$this->getObject('user', 'security');
+$objUser = $this->getObject('user', 'security');
 if (!($objUser->isLoggedIn())) {
 
     ?>

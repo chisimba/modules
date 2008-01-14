@@ -20,10 +20,10 @@ class keepsessionalive extends controller
 
     public function init()
     {
-        $this->objConfig=& $this->getObject('altconfig', 'config');
-        $this->objUser=& $this->getObject('user', 'security');
+        $this->objConfig= $this->getObject('altconfig', 'config');
+        $this->objUser= $this->getObject('user', 'security');
         $this->userId=$this->objUser->userId();
-        $this->objLanguage= & $this->getObject('language','language');
+        $this->objLanguage=  $this->getObject('language','language');
     }
     /**
     * This is the main method in the class
