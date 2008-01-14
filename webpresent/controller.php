@@ -1028,10 +1028,17 @@ class webpresent extends controller
 
             foreach ($results as $file)
             {
-                $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'slides', 'id'=>$file['id'])));
-                $link->link = $file['title'];
+                echo $file['title'];
+                
+                $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
+                $link->link = 'Flash';
 
-                echo $link->show().'<br />';
+                echo ' - '.$link->show();
+                
+                $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
+                $link->link = 'Slides';
+                
+                echo ' / '.$link->show().'<br />';
             }
         }
 
