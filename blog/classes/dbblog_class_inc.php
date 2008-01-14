@@ -29,6 +29,7 @@ class dbblog extends dbTable
     public $objLanguage;
     public $sysConfig;
     public $lindex;
+    public $objConfig;
     /**
      * Blog posts object
      *
@@ -49,6 +50,7 @@ class dbblog extends dbTable
         $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->lindex = TRUE;//$this->sysConfig->getValue('lucene_index', 'blog');
         // $this->objblogPost = $this->getObject('blogposts');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         
     }
     //methods to manipulate the categories table.
@@ -590,6 +592,27 @@ class dbblog extends dbTable
             if ($this->lindex == 'TRUE') {
                 $this->luceneIndex($insarr);
             }
+            // add to the blog sitemap
+            $this->objConfig = $this->getObject('altconfig', 'config');
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
+            	                                           'postid' => $insarr['id'], 
+            	                                           'userid' => $userid)
+            	                                        ), 
+            	              'lastmod' => date('Y-m-d', $insarr['post_ts']), 
+            	              'changefreq' => 'weekly', 
+            	              'priority' => 0.5
+            	             );
+            $smarr = array($maparray);
+            $sitemap = $this->getObject('sitemap', 'utilities');
+            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            {
+            	
+            	$smxml = $sitemap->createSiteMap($smarr);
+            	$sitemap->writeSitemap($smxml, 'blogsitemap');
+            }
+            else {
+            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            }
             return TRUE;
         }
         if ($mode == 'editpost') {
@@ -615,6 +638,27 @@ class dbblog extends dbTable
                 'showpdf' => $postarr['showpdf']
             );
             $this->update('id', $postarr['id'], $edarr, 'tbl_blog_posts');
+            
+            // add to the blog sitemap
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
+            	                                           'postid' => $postarr['id'], 
+            	                                           'userid' => $userid)
+            	                                        ), 
+            	              'lastmod' => date('Y-m-d', $edarr['post_ts']), 
+            	              'changefreq' => 'weekly', 
+            	              'priority' => 0.5
+            	             );
+            $smarr = array($maparray);
+            $sitemap = $this->getObject('sitemap', 'utilities');
+            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            {
+            	
+            	$smxml = $sitemap->createSiteMap($smarr);
+            	$sitemap->writeSitemap($smxml, 'blogsitemap');
+            }
+            else {
+            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            }
             if ($this->lindex == 'TRUE') {
                 $edarr['id'] = $postarr['id'];
                 $this->luceneReIndex($edarr);
@@ -641,6 +685,26 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
+            
+            // add to the blog sitemap
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
+            	                                           'postid' => $postarr['id'], 
+            	                                           'userid' => $userid)
+            	                                        ), 
+            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'changefreq' => 'weekly', 
+            	              'priority' => 0.5
+            	             );
+            $smarr = array($maparray);
+            $sitemap = $this->getObject('sitemap', 'utilities');
+            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            {
+            	$smxml = $sitemap->createSiteMap($smarr);
+            	$sitemap->writeSitemap($smxml, 'blogsitemap');
+            }
+            else {
+            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            }
             if ($this->lindex == 'TRUE') {
                 $this->luceneIndex($imparr);
             }
@@ -667,6 +731,26 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
+            
+            // add to the blog sitemap
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
+            	                                           'postid' => $postarr['id'], 
+            	                                           'userid' => $userid)
+            	                                        ), 
+            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'changefreq' => 'weekly', 
+            	              'priority' => 0.5
+            	             );
+            $smarr = array($maparray);
+            $sitemap = $this->getObject('sitemap', 'utilities');
+            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            {
+            	$smxml = $sitemap->createSiteMap($smarr);
+            	$sitemap->writeSitemap($smxml, 'blogsitemap');
+            }
+            else {
+            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            }
             if ($this->lindex == 'TRUE') {
                 $this->luceneIndex($mparr);
             }
@@ -692,9 +776,29 @@ class dbblog extends dbTable
                 'showpdf' => $postarr['showpdf']
             );
             $this->update('id', $postarr['id'], $inseditarr, 'tbl_blog_posts');
+            // add to the blog sitemap
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
+            	                                           'postid' => $postarr['id'], 
+            	                                           'userid' => $userid)
+            	                                        ), 
+            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'changefreq' => 'weekly', 
+            	              'priority' => 0.5
+            	             );
+            $smarr = array($maparray);
+            $sitemap = $this->getObject('sitemap', 'utilities');
+            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            {
+            	$smxml = $sitemap->createSiteMap($smarr);
+            	$sitemap->writeSitemap($smxml, 'blogsitemap');
+            }
+            else {
+            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            }
             if ($this->lindex == 'TRUE') {
                 $this->luceneReIndex($postarr);
             }
+            
             return TRUE;
         }
     }
