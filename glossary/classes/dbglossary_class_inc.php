@@ -46,13 +46,14 @@ class dbGlossary extends dbTable
     */
     public function fetchAllRecords($context=null)
     {   
-    	 $sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
-        $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
-        $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
-        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
-        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
-        $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
-        $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
+    	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition '; 
+        //$sql.= ', tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
+        $sql.= 'FROM tbl_glossary ';
+        //$sql.= ' LEFT JOIN bridge_glossary_seealso ON ';
+        //$sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        //$sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        //$sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
+        //$sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
         
         if ($context != '') {
             $sql.= "WHERE tbl_glossary.context = '".$context."' ";
@@ -85,22 +86,23 @@ class dbGlossary extends dbTable
     public function searchGlossaryDB($term, $context=null)
     {
     
-     	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition, '; 
-        $sql.= 'tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
-        $sql.= 'FROM tbl_glossary LEFT JOIN bridge_glossary_seealso ON ';
-        $sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
-        $sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
-        $sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
-        $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
-        $sql.= "WHERE tbl_glossary.term LIKE '".$term."' ";
+     	$sql = 'SELECT distinct tbl_glossary.id AS item_id, tbl_glossary.term, tbl_glossary.definition '; 
+        //$sql.= ', tbl_glossary_urls.item_id AS urls, bridge_glossary_seealso.item_id AS seealsos, tbl_glossary_images.item_id AS images ';
+        $sql.= 'FROM tbl_glossary ';
+        //$sql.= 'LEFT JOIN bridge_glossary_seealso ON ';
+        //$sql.= '(tbl_glossary.id = bridge_glossary_seealso.item_id OR ';
+        //$sql.= 'tbl_glossary.id = bridge_glossary_seealso.item_id2) ';
+        //$sql.= 'LEFT JOIN tbl_glossary_urls ON (tbl_glossary.id = tbl_glossary_urls.item_id) ';
+        //$sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
+        $sql.= "WHERE tbl_glossary.term LIKE '$term' OR tbl_glossary.term LIKE '".strtolower($term)."' 
+                        OR tbl_glossary.term LIKE '".strtoupper($term)."' ";
         
         if ($context != '') {
             $sql.= "AND tbl_glossary.context='".$context."' ";
         }
         
-        //$sql.= 'GROUP BY tbl_glossary.id ';
+        //$sql.= 'GROUP BY item_id ';
         $sql.= 'ORDER BY tbl_glossary.term';
-        
         return $this->getArray($sql);
     }
 
@@ -135,7 +137,7 @@ class dbGlossary extends dbTable
         $sql.= 'LEFT  JOIN tbl_glossary_images ON ( tbl_glossary.id = tbl_glossary_images.item_id ) ';
         $sql.= "WHERE tbl_glossary.id = '".$id."' ";
         $sql.= "AND tbl_glossary.context='".$context."' ";
-       // $sql.= 'GROUP BY tbl_glossary.id ';
+        //$sql.= 'GROUP BY tbl_glossary.id ';
         $sql.= 'ORDER BY tbl_glossary.term';
       
         return $this->getArray($sql);
@@ -152,13 +154,21 @@ class dbGlossary extends dbTable
     */
     public function insertSingle($term, $definition, $context, $userID, $dateLastUpdated)
     {
-        $this->insert(array(
+        $date = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
+        $glossId = $this->insert(array(
                 'term'            => $term,
                 'definition'      => $definition,
                 'context'         => $context,
                 'userid'          => $userID,
-                'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+                'datelastupdated' => $date
             ));
+         $indexData = $this->getObject('indexdata','search');
+         $docId = "glossary_entry_$glossId";
+         $url = $this->uri(array('action'=>'search','term'=>$term),'glossary');
+         $title = $this->objLanguage->languageText('mod_glossary_teaser','glossary')." $term";
+         $contents = "$term $definition";
+         $teaser = $definition;
+         $indexData->luceneIndex($docId, $date, $url, $title, $contents, $teaser, "glossary", $userID, null, $context);
         
         return;
     }
@@ -171,6 +181,9 @@ class dbGlossary extends dbTable
     public function deleteSingle($id)
     {
         $this->delete('id', $id);
+        $indexData = $this->getObject('indexdata','search');
+        $docId = "glossary_entry_$id";
+        $indexData->removeIndex($docId);
         return;	
     }
 
@@ -186,13 +199,21 @@ class dbGlossary extends dbTable
     */
     public function updateSingle($id, $term, $definition, $context, $userID, $dateLastUpdated)
     {
+        $date = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
         $this->update('id', $id, array(
                 'term'            => $term,
                 'definition'      => $definition,
                 'context'         => $context,
                 'userid'          => $userID,
-                'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+                'datelastupdated' => $date
             ));
+         $indexData = $this->getObject('indexdata','search');
+         $docId = "glossary_entry_$id";
+         $url = $this->uri(array('action'=>'search','term'=>$term),'glossary');
+         $title = $term;
+         $contents = "$term $definition";
+         $teaser = $this->objLanguage->languageText('mod_glossary_teaser','glossary')." $term";
+         $indexData->luceneIndex($docId, $date, $url, $title, $contents, $teaser, "glossary", $userID, null, $context);
         
         return;
     }
