@@ -69,6 +69,8 @@ class adm extends controller
      * @access public 
      */
 	public $objConfig;
+	
+	public $objrpc;
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -79,6 +81,7 @@ class adm extends controller
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objAdmOps = $this->getObject('admops');
             $this->objDbAdm = $this->getObject('dbadm');
+            $this->objrpc = $this->getObject('admrpcclient');
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -135,6 +138,11 @@ class adm extends controller
             	
             case 'rpcsend':
             	
+            	
+            	break;
+            	
+            case 'register':
+            	echo $this->objrpc->regServer();
             	
             	break;
             	

@@ -59,7 +59,7 @@ class admrpcclient extends object
 	 */
 	public function init()
 	{
-		//require_once($this->getPearResource('XML/RPC.php'));
+		require_once($this->getPearResource('XML/RPC.php'));
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objLanguage = $this->getObject('language', 'language');
 		$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -195,7 +195,11 @@ class admrpcclient extends object
 	 */
 	public function regServer() {
 		$srvname = $this->objConfig->servername();
-	    $msg = new XML_RPC_Message('adm.registerServer',array(new XML_RPC_Value($srvname,'string')));
+		$serverurl = $this->objConfig->getsiteRoot().'index.php?module=api';
+	    $msg = new XML_RPC_Message('adm.registerServer',array(new XML_RPC_Value($srvname,'string'), 
+	    													  new XML_RPC_Value($serverurl,'string'),
+	    													 )
+	    						  );
 	    $mirrorserv = $this->sysConfig->getValue('package_server', 'packages');
 		$mirrorurl = $this->sysConfig->getValue('package_url', 'packages');
 		$cli = new XML_RPC_Client($mirrorurl, $mirrorserv, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
