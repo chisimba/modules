@@ -370,6 +370,8 @@ class managecalendar extends object
 	{
 		$sql = $this->objCalendar->getCalendarSQL($user, $context, $month, $year);
 		
+echo $sql;
+
 		return $this->objCalendar->generateCalendar('user', $user, $month, $year, $sql);
 	}
     
