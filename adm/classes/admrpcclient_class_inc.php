@@ -196,8 +196,10 @@ class admrpcclient extends object
 	public function regServer() {
 		$srvname = $this->objConfig->servername();
 		$serverurl = $this->objConfig->getsiteRoot().'index.php?module=api';
+		$adminemail = $this->objConfig->getsiteEmail();
 	    $msg = new XML_RPC_Message('adm.registerServer',array(new XML_RPC_Value($srvname,'string'), 
 	    													  new XML_RPC_Value($serverurl,'string'),
+	    													  new XML_RPC_Value($adminemail,'string'),
 	    													 )
 	    						  );
 	    $mirrorserv = $this->sysConfig->getValue('package_server', 'packages');
