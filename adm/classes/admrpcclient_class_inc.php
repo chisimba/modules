@@ -210,7 +210,8 @@ class admrpcclient extends object
 		}
 		if (!$resp->faultCode())
 		{
-			return TRUE;
+			$val = $resp->value();
+			return $val->serialize($val);
 		}
 		else
 		{
