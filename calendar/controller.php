@@ -23,7 +23,7 @@ class calendar extends controller
     function init()
     {
         $this->objCalendar = $this->getObject('managecalendar');
-        //$this->oabjCalendar =& $this->getObject('dbcalendar', 'calendarbase');
+        //$this->objCalendar =& $this->getObject('dbcalendar', 'calendarbase');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->dateFunctions = $this->getObject('dateandtime', 'utilities');
 
@@ -31,6 +31,7 @@ class calendar extends controller
         $this->objUser =& $this->getObject('user', 'security');
         $this->setVarByRef('fullname', $this->objUser->fullname());
         $this->userId = $this->objUser->userId();
+	
 
         // Determine if user is in a context
         $this->contextCode = $this->objContext->getContextCode();
@@ -46,7 +47,7 @@ class calendar extends controller
         $this->setVarByRef('courseTitle', $this->contextTitle);
         $this->setVarByRef('isInContext', $this->isInContext);
 
-
+	$this->_objCalendarBiulder =  $this->getObject('calendarbiulder', 'eventscalendar');
         $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
         $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');
 
@@ -166,6 +167,8 @@ class calendar extends controller
         $this->setVarByRef('currentList', $eventsList);
         $this->objCalendar->setEventsTag($eventsList);
 
+echo $eventsList;
+
         switch ($eventsList)
         {
             case 'user':
@@ -188,6 +191,7 @@ class calendar extends controller
 
         $events = $this->objCalendar->getEventsCalendar($user, $context, $month, $year);
         $this->setVarByRef('eventsCalendar', $events);
+	
 
         if ($this->getParam('error') == 'attachment') {
             $this->setErrorMessage('Calendar attachment could not be found');
@@ -267,8 +271,8 @@ class calendar extends controller
             {
                 case 0: // Save Single User Event
 
-                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,null,0, $this->userId, $timeFrom, $timeTo);
-                    break;
+                    $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,$this->userId, 0, NULL, $timeFrom, $timeTo);
+                    //break;
                 case 1: // Save Single Course Event
                     $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId);
                     break;
@@ -370,8 +374,8 @@ class calendar extends controller
 
         // To keep proper track, get the user who made the first entry
         $originalEvent = $this->objCalendar->getSingle($id);
-        $userFirstEntry = $originalEvent['userFirstEntry'];
-        $dateFirstEntry = $originalEvent['dateFirstEntry'];
+        //$userFirstEntry = $originalEvent['userFirstEntry'];
+        //$dateFirstEntry = $originalEvent['dateFirstEntry'];
 
                 // Check if user is able to edit event
         $this->checkEventEditPermission($originalEvent);
@@ -390,7 +394,7 @@ class calendar extends controller
                     $this->objCalendar->updateUserEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $this->userId);
                     $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
 
-                    $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $userFirstEntry, $this->userId,  $dateFirstEntry, NULL, $eventStartId=$id);
+                    $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl,  $this->userId,   NULL, $eventStartId=$id);
 
 
                 } else { // switch to single day
@@ -435,7 +439,7 @@ class calendar extends controller
                     $this->objCalendar->updateContextEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
                     $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
 
-                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext, $userFirstEntry,  $this->userId,  $dateFirstEntry, NULL, $eventStartId=$id);
+                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext,   $this->userId,   NULL, $eventStartId=$id);
 
 
                 } else { // switch to single day
@@ -453,7 +457,7 @@ class calendar extends controller
                     * 3) Insert Multi Event
                     */
                     $this->objCalendar->updateContextEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
-                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext, $userFirstEntry,  $this->userId,  $dateFirstEntry, NULL, $eventStartId=$id);
+                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext,  $this->userId,  NULL, $eventStartId=$id);
                 }
             }
 
