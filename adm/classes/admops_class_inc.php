@@ -57,7 +57,7 @@ class admops extends object
 		}
 		if(!extension_loaded("imap"))
 		{
-			throw new customException($this->objLanguage->languageText("mod_adm_imaprequired", "adm"));
+			// throw new customException($this->objLanguage->languageText("mod_adm_imaprequired", "adm"));
 			$this->admmail = FALSE;
 		}
 		else {

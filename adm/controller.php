@@ -133,7 +133,7 @@ class adm extends controller
             	}
             	die();
             	
-            case 'rcpsend':
+            case 'rpcsend':
             	
             	
             	break;
@@ -141,7 +141,7 @@ class adm extends controller
         }
     }
     
-    	/**
+   /**
     * Overide the login object in the parent class
     *
     * @param  void  
