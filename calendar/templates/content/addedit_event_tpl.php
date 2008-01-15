@@ -25,6 +25,8 @@ document.getElementById = function(id){ return document.all[id]}
         var style = document.getElementById(id).style
         style.visibility = visible;
     }
+
+
 </script>
 <?php
 
