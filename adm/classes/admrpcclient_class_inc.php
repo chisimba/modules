@@ -254,10 +254,10 @@ class admrpcclient extends object
 		}
 	}
 	
-	public function getLastOn($servname, $servep, $servid)
+	public function getLastOn($endpoint, $apiurl, $servername)
 	{
-		$msg = new XML_RPC_Message('adm.getLastMirrorTime', array(new XML_RPC_Value($servid,'string')));
-		$cli = new XML_RPC_Client($servep, $servname, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
+		$msg = new XML_RPC_Message('adm.getLastMirrorTime', array(new XML_RPC_Value($servername,'string')));
+		$cli = new XML_RPC_Client($endpoint, $apiurl, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
 		$cli->setDebug(0);
 
 		// send the request message
