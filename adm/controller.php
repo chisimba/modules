@@ -91,6 +91,16 @@ class adm extends controller
             	// set the config to true
             	$this->objSysConfig->changeParam('adm_servregistered', 'adm', 'TRUE');
             }
+            // grab an updated server list from the package server
+            $data = $this->objrpc->updateServerList();
+            $data = simplexml_load_string($data);
+            $data = base64_decode($data->string);
+            $list = $this->objConfig->getcontentBasePath().'adm/adm.xml';
+            if(file_exists($list))
+            {
+            	unlink($list);
+            }
+            file_put_contents($list, $data);
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -106,6 +116,8 @@ class adm extends controller
     {
         switch ($action) {
             default:
+            	echo "hello"; 
+            	break;
             	
             case 'maillog':
             	$this->requiresLogin(FALSE);
