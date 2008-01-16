@@ -149,12 +149,6 @@ class adm extends controller
             	
             	
             	break;
-            	
-            case 'register':
-            	echo $this->objrpc->regServer();
-            	
-            	break;
-            	
         }
     }
     
