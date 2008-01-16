@@ -98,8 +98,11 @@ class adm extends controller
             $list = $this->objConfig->getcontentBasePath().'adm/adm.xml';
             if(file_exists($list))
             {
-            	unlink($list);
+            	unlink($this->objConfig->getcontentBasePath().'adm/');
+            	mkdir($this->objConfig->getcontentBasePath().'adm/');
+            	chmod($this->objConfig->getcontentBasePath().'adm/',0777);
             }
+            if(!file_exists($list))
             file_put_contents($list, $data);
         }
         catch(customException $e) {
