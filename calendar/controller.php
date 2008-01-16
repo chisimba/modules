@@ -256,7 +256,7 @@ echo $eventsList;
             switch ($eventFor)
             {
                 case 0: // Save User Event
-                    $event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
+                    //$event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
                    
  		break;
                 case 1: // Save Course Event
