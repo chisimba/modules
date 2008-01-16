@@ -256,14 +256,17 @@ echo $eventsList;
             {
                 case 0: // Save User Event
                     $event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
-                    break;
+                   
+ 		break;
                 case 1: // Save Course Event
                     $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
                     break;
+
                 case 3: // Save Site Event
                     $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId);
                     $eventsList = 'site';
                     break;
+//print_r($eventtitle."**************");
             }
         } else {
             // Insert Single Day event
@@ -272,7 +275,8 @@ echo $eventsList;
                 case 0: // Save Single User Event
 
                     $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,$this->userId, 0, NULL, $timeFrom, $timeTo);
-                    //break;
+			$eventsList = 'user';
+                    break;
                 case 1: // Save Single Course Event
                     $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId);
                     break;
