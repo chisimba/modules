@@ -17,7 +17,17 @@ $link->link = $objIcon->show();
 $pageTitle = $this->newObject('htmlheading','htmlelements');
 $pageTitle->type=1;
 $pageTitle->align='left';
-$pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup')).' '.$link->show();
+$pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup'));
+
+	if ($this->objUser->isAdmin())
+	{
+   	$pageTitle.=	' '.$link->show();		
+	
+	}
+	elseif ($this->objUser->isLecturer()){
+	$pageTitle.=	' '.$link->show();		
+	}
+
 echo $pageTitle->show();
 
 $tblclass=$this->newObject('htmltable','htmlelements');
@@ -57,6 +67,7 @@ $isContextLecturer = $objContextCondition->isContextMember('Lecturers');
 
 if (empty($workgroups)) {
     if ($isContextLecturer) {
+		
         $href = $this->uri(array('action'=>'create'),'workgroupadmin');
         $url = "<a href=\"$href\">".$objLanguage->languageText('word_here')."</a>";
         echo($objLanguage->code2Txt('mod_workgroup_noworkgroups','workgroup',array('URL'=>$url)));
