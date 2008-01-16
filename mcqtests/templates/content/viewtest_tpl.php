@@ -32,12 +32,17 @@ $questionLabel = $objLanguage->languageText('mod_mcqtests_question', 'mcqtests')
 $markLabel = $objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $numansLabel = $objLanguage->languageText('mod_mcqtests_numanswers', 'mcqtests');
 $actionLabel = $objLanguage->languageText('mod_mcqtests_actions', 'mcqtests');
+
 $lbConfirm = $objLanguage->languageText('mod_mcqtests_deletequestion', 'mcqtests');
+
+$wordquestion = $objLanguage->languageText('mod_mcqtests_deletequestionword', 'mcqtests');
+
+
 $listLabel = ucwords($objLanguage->code2Txt('mod_mcqtests_liststudents', 'mcqtests', array(
     'readonlys' => 'students'
 )));
 $editIconLabel = $editLabel.' '.$head;
-$deleteLabel = $this->objLanguage->languageText('word_delete') .' '.$head;
+$deleteLabel = $this->objLanguage->languageText('word_delete') .' '.$wordquestion;
 $addLabel = $this->objLanguage->languageText('word_add') .' '.$questionLabel;
 $upLabel = $this->objLanguage->languageText('word_up');
 $downLabel = $this->objLanguage->languageText('word_down');

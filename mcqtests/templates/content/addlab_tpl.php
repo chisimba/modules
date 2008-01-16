@@ -20,6 +20,18 @@ $addHeading = $this->objLanguage->languageText('mod_mcqtests_addlab', 'mcqtests'
 $submitLabel = $this->objLanguage->languageText('word_submit');
 $requiredLabel = $this->objLanguage->languageText('mod_mcqtests_labrequired', 'mcqtests');
 $helpLabel = $this->objLanguage->languageText('mod_mcqtests_labfile', 'mcqtests');
+
+//separated blocks of text
+$helpLabel1 = '<p>'.$this->objLanguage->languageText('mod_mcqtests_labfilewords1', 'mcqtests').'</p>';
+$helpLabel2 = '<p>'.$this->objLanguage->languageText('mod_mcqtests_labfilewords2', 'mcqtests').'</p>';
+$helpLabel3 =  $this->objLanguage->languageText('mod_mcqtests_labfilewords3', 'mcqtests');
+$helpLabel4 = '&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_mcqtests_labfilewords4', 'mcqtests');
+$helpLabel5 = '&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_mcqtests_labfilewords5', 'mcqtests');
+$helpLabel6 = '&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_mcqtests_labfilewords6', 'mcqtests');
+$helpLabel7 = '&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLanguage->languageText('mod_mcqtests_labfilewords7', 'mcqtests');
+
+$helpLabel .= $helpLabel1.$helpLabel2.$helpLabel3.':'.'<p>'.$helpLabel4.'<br />'.$helpLabel5.'<br />'.$helpLabel6.'<br />'.$helpLabel7.'<br />'.'</p>';
+
 $errorLabel = $this->objLanguage->languageText('mod_mcqtests_laberror', 'mcqtests');
 $backLabel = $this->objLanguage->languageText('word_back');
 
@@ -32,6 +44,7 @@ $objTable->cellspacing = 2;
 $objTable->cellpadding = 2;
 $objTable->startRow();
 $objTable->addCell($helpLabel, '', '', '', '', '');
+
 $objTable->endRow();
 if ($error) {
     $objTable->startRow();

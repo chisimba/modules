@@ -335,17 +335,22 @@ $objInput = new textinput('resultId', $resultId);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 // Submit buttons
-if ($data[0]['count'] > $qnum) {
-    $objButton = new button('savebutton', $continueLabel);
-    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
-    //    $objButton->setToSubmit();
-    $action = 'continuetest';
-} else {
-    $objButton = new button('savebutton', $submitLabel);
-    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'input_savebutton\').disabled=true;document.getElementById(\'form_submittest\').submit();"';
-    //    $objButton->setToSubmit();
-    $action = 'marktest';
-}
+	if ($data[0]['count'] > $qnum) {
+	    $objButton = new button('savebutton', $continueLabel);
+// after the onclick
+//document.getElementById(\'input_savebutton\').disabled=true;
+
+	    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'form_submittest\').submit();"';
+	    //   $objButton->setToSubmit();
+	    $action = 'continuetest';
+
+	} else{
+	    $objButton = new button('savebutton', $submitLabel);
+	    $objButton->extra = ' ondblclick="javascript:return false" onclick= document.getElementById(\'form_submittest\').submit(); "';
+	//	$objButton->setToSubmit();
+	    $action = 'marktest';
+	}
+
 $objInput = new textinput('action', $action);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
