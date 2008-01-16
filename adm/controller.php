@@ -192,7 +192,7 @@ class adm extends controller
 					$url = str_replace('index.php?module=api', '', $url);
 					$endpoint = 'index.php?module=api';
 					// bang off a message asking for the sql log file for each server
-					$lastup = $this->objrpc->getLastOn();
+					$lastup = $this->objrpc->getLastOn($url, $endpoint, $server->servername);
 				}
             	
             	break;
