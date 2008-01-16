@@ -190,7 +190,8 @@ echo $eventsList;
         }
 
         $events = $this->objCalendar->getEventsCalendar($user, $context, $month, $year);
-        $this->setVarByRef('eventsCalendar', $events);
+	       
+	$this->setVarByRef('eventsCalendar', $events);
 	
 
         if ($this->getParam('error') == 'attachment') {
