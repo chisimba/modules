@@ -82,6 +82,15 @@ class adm extends controller
             $this->objAdmOps = $this->getObject('admops');
             $this->objDbAdm = $this->getObject('dbadm');
             $this->objrpc = $this->getObject('admrpcclient');
+            $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $reg = $this->objSysConfig->getValue('adm_servregistered', 'adm');
+            if($reg == 'FALSE')
+            {
+            	// register the server
+            	$this->objrpc->regServer();
+            	// set the config to true
+            	$this->objSysConfig->changeParam('adm_servregistered', 'adm', 'TRUE');
+            }
         }
         catch(customException $e) {
             echo customException::cleanUp();
