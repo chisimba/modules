@@ -193,7 +193,8 @@ class admrpcclient extends object
 	 *
 	 * @return unknown
 	 */
-	public function regServer() {
+	public function regServer() 
+	{
 		$srvname = $this->objConfig->servername();
 		$serverurl = $this->objConfig->getsiteRoot().'index.php?module=api';
 		$adminemail = $this->objConfig->getsiteEmail();
@@ -202,6 +203,33 @@ class admrpcclient extends object
 	    													  new XML_RPC_Value($adminemail,'string'),
 	    													 )
 	    						  );
+	    $mirrorserv = $this->sysConfig->getValue('package_server', 'packages');
+		$mirrorurl = $this->sysConfig->getValue('package_url', 'packages');
+		$cli = new XML_RPC_Client($mirrorurl, $mirrorserv, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
+		$cli->setDebug(0);
+
+		// send the request message
+		$resp = $cli->send($msg);
+		if (!$resp)
+		{
+		    log_debug($this->objLanguage->languageText("mod_packages_commserr", "packages").": ".$cli->errstr);
+			return FALSE;
+		}
+		if (!$resp->faultCode())
+		{
+			$val = $resp->value();
+			return $val->serialize($val);
+		}
+		else
+		{
+		    log_debug($this->objLanguage->languageText("mod_packages_faultcode", "packages").": ".$resp->faultCode() . $this->objLanguage->languageText("mod_packages_faultreason", "packages").": ".$resp->faultString());
+		    return FALSE;
+		}
+	}
+	
+	public function updateServerList()
+	{
+		$msg = new XML_RPC_Message('adm.getServerList');
 	    $mirrorserv = $this->sysConfig->getValue('package_server', 'packages');
 		$mirrorurl = $this->sysConfig->getValue('package_url', 'packages');
 		$cli = new XML_RPC_Client($mirrorurl, $mirrorserv, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
