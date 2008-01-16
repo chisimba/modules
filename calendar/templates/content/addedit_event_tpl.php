@@ -244,6 +244,7 @@ $detailsLabel = new label($this->objLanguage->languageText('mod_calendarbase_eve
 $table->addCell($detailsLabel->show());
 
 $detailsTextArea =  & $this->newObject('htmlarea', 'htmlelements');//new textarea('details');
+$detailsTextArea -> name='details';
 
 if ($mode == 'edit') {
     $detailsTextArea->value = $event['eventdetails'];
