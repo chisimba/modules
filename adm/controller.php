@@ -184,10 +184,19 @@ class adm extends controller
             case 'rpcupdate':
             	// echo "RPC method selected!";
             	$list = $this->objConfig->getcontentBasePath().'adm/adm.xml';
+            	if(!file_exists($list))
+            	{
+            		$ldata = $this->objrpc->updateServerList();
+            		$ldata = simplexml_load_string($ldata);
+            		$ldata = base64_decode($ldata->string);
+            		file_put_contents($list, $ldata);
+            	}
             	$xmlstr = file_get_contents($list);
 				$xml = new SimpleXMLElement($xmlstr);
 				foreach($xml->server as $server)
 				{
+					echo "Updating from $server->servername...<br />";
+					//echo "<br />";
 					$url = $server->serverapiurl;
 					$url = str_replace('index.php?module=api', '', $url);
 					$endpoint = 'index.php?module=api';
