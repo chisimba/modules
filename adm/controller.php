@@ -71,6 +71,8 @@ class adm extends controller
 	public $objConfig;
 	
 	public $objrpc;
+	public $method;
+	public $objRpcClient;
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -83,6 +85,8 @@ class adm extends controller
             $this->objDbAdm = $this->getObject('dbadm');
             $this->objrpc = $this->getObject('admrpcclient');
             $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->objRpcClient = $this->getObject('admrpcclient');
+            
             $reg = $this->objSysConfig->getValue('adm_servregistered', 'adm');
             if($reg == 'FALSE')
             {
@@ -124,6 +128,18 @@ class adm extends controller
     {
         switch ($action) {
             default:
+            	$this->method = $this->objSysConfig->getValue('adm_transport', 'adm');
+            	if($this->method == 'rpc')
+            	{
+            		$this->nextAction('rpcupdate');
+            	}
+            	elseif($this->method == 'email')
+            	{
+            		$this->nextAction('emailupdate');
+            	}
+            	else {
+            		die($this->objLanguage->languageText("mod_adm_unknowntrans", "adm"));
+            	}
             	echo "hello"; 
             	break;
             	
@@ -165,9 +181,24 @@ class adm extends controller
             	}
             	die();
             	
-            case 'rpcsend':
+            case 'rpcupdate':
+            	// echo "RPC method selected!";
+            	$list = $this->objConfig->getcontentBasePath().'adm/adm.xml';
+            	$xmlstr = file_get_contents($list);
+				$xml = new SimpleXMLElement($xmlstr);
+				foreach($xml->server as $server)
+				{
+					$url = $server->serverapiurl;
+					$url = str_replace('index.php?module=api', '', $url);
+					$endpoint = 'index.php?module=api';
+					// bang off a message asking for the sql log file for each server
+					$lastup = $this->objrpc->getLastOn();
+				}
             	
+            	break;
             	
+            case 'emailupdate':
+            	echo 'email method in progress!';
             	break;
         }
     }

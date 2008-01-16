@@ -253,5 +253,32 @@ class admrpcclient extends object
 		    return FALSE;
 		}
 	}
+	
+	public function getLastOn($servname, $servep, $servid)
+	{
+		$msg = new XML_RPC_Message('adm.getLastMirrorTime', array(new XML_RPC_Value($servid,'string')));
+		$cli = new XML_RPC_Client($servep, $servname, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
+		$cli->setDebug(0);
+
+		// send the request message
+		$resp = $cli->send($msg);
+		if (!$resp)
+		{
+		    log_debug($this->objLanguage->languageText("mod_packages_commserr", "packages").": ".$cli->errstr);
+			return FALSE;
+		}
+		if (!$resp->faultCode())
+		{
+			$val = $resp->value();
+			return $val->serialize($val);
+		}
+		else
+		{
+		    log_debug($this->objLanguage->languageText("mod_packages_faultcode", "packages").": ".$resp->faultCode() . $this->objLanguage->languageText("mod_packages_faultreason", "packages").": ".$resp->faultString());
+		    return FALSE;
+		}
+	}
+	
+	
 }
 ?>
