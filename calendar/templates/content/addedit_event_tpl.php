@@ -252,7 +252,7 @@ $table->addCell($detailsTextArea->show(), NULL, NULL, NULL, NULL, 'colspan="3"')
 $table->endRow();
 
 $table->startRow();
-$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite', 'calendarbase').':', 'input_url');
+$urlLabel = new label($this->objLanguage->languageText('mod_calendarbase_relatedwebsite', 'calendar').':', 'input_url');
 $table->addCell($urlLabel->show());
 
 $urlInput = new textinput('url');
