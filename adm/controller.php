@@ -191,8 +191,31 @@ class adm extends controller
 					$url = $server->serverapiurl;
 					$url = str_replace('index.php?module=api', '', $url);
 					$endpoint = 'index.php?module=api';
+					$comps = explode('/',$url);
+					$comps = array_filter($comps);
+					$apiurl = $comps[2];
+					unset($comps[0]);
+					unset($comps[2]);
+					$endpoint = '/';
+					foreach($comps as $com)
+					{
+						$endpoint .= $com."/";
+					}
 					// bang off a message asking for the sql log file for each server
-					$lastup = $this->objrpc->getLastOn($url, $endpoint, $server->servername);
+					$endpoint = $endpoint."index.php?module=api";
+					$lastup = $this->objrpc->getLastOn($endpoint, $apiurl, $server->servername);
+					// ok so we have the last time we updated from this server.
+					$lastup = strip_tags($lastup);
+					$lastup = trim($lastup);
+					if($lastup == 'never')
+					{
+						// go get a full update - this server has never been updated here!
+						$data = $this->objRpcClient->getLog($endpoint, $apiurl, $server->servername);
+						$data = strip_tags($data);
+						$data = base64_decode($data);
+						file_put_contents($this->objConfig->getcontentBasePath().'adm/'.$server->servername.'.log', $data);
+					}
+					
 				}
             	
             	break;

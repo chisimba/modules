@@ -91,12 +91,10 @@ class admrpcclient extends object
 	 * @param void
 	 * @return string
 	 */
-	public function getLog()
+	public function getLog($endpoint, $apiurl, $servername)
 	{
 		$msg = new XML_RPC_Message('adm.getFullLog');
-		$mirrorserv = $this->sysConfig->getValue('package_server', 'packages');
-		$mirrorurl = $this->sysConfig->getValue('package_url', 'packages');
-		$cli = new XML_RPC_Client($mirrorurl, $mirrorserv, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
+		$cli = new XML_RPC_Client($endpoint, $apiurl, $this->port, $this->proxy['proxy_host'], $this->proxy['proxy_port'], $this->proxy['proxy_user'], $this->proxy['proxy_pass']);
 		$cli->setDebug(0);
 
 		// send the request message
