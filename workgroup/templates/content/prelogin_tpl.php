@@ -17,17 +17,18 @@ $link->link = $objIcon->show();
 $pageTitle = $this->newObject('htmlheading','htmlelements');
 $pageTitle->type=1;
 $pageTitle->align='left';
-$pageTitle->str=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup'));
+
+$titleContent=ucwords($objLanguage->code2Txt("mod_workgroup_heading",'workgroup'));
 
 	if ($this->objUser->isAdmin())
 	{
-   	$pageTitle.=	' '.$link->show();		
+   	$titleContent.=	' '.$link->show();		
 	
 	}
 	elseif ($this->objUser->isLecturer()){
-	$pageTitle.=	' '.$link->show();		
+	$titleContent=	' '.$link->show();		
 	}
-
+$pageTitle->str=$titleContent;
 echo $pageTitle->show();
 
 $tblclass=$this->newObject('htmltable','htmlelements');
