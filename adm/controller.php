@@ -131,7 +131,7 @@ class adm extends controller
             	$this->method = $this->objSysConfig->getValue('adm_transport', 'adm');
             	if($this->method == 'rpc')
             	{
-            		$this->nextAction('rpcupdate');
+            		$this->nextAction('rpcupdatemaster');
             	}
             	elseif($this->method == 'email')
             	{
@@ -181,7 +181,7 @@ class adm extends controller
             	}
             	die();
             	
-            case 'rpcupdate':
+            case 'rpcupdatemaster':
             	// echo "RPC method selected!";
             	$list = $this->objConfig->getcontentBasePath().'adm/adm.xml';
             	if(!file_exists($list))
@@ -224,6 +224,17 @@ class adm extends controller
 						$data = base64_decode($data);
 						file_put_contents($this->objConfig->getcontentBasePath().'adm/'.$server->servername.'.log', $data);
 					}
+					
+				}
+				if(!file_exists($this->objConfig->getcontentBasePath().'adm/data/'))
+				{
+					mkdir($this->objConfig->getcontentBasePath().'adm/data/', 0777);
+				}
+				chdir($this->objConfig->getcontentBasePath().'adm');
+				foreach(glob('*.log') as $cpfiles)
+				{
+					echo "Copying $cpfiles to data/$cpfiles <br />";
+					copy($cpfiles, $this->objConfig->getcontentBasePath().'adm/data/'.time().$cpfiles);
 					
 				}
             	
