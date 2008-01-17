@@ -2165,7 +2165,7 @@ class chatdisplay extends object
             $objLayer = new layer();
             $objLayer->id = 'imDisplayDiv';
             $objLayer->addToStr($string);
-            $objLayer->display = 'inline';
+            //$objLayer->display = 'inline';
             $imDiv = $objLayer->show();
             $str = $imDiv;  
         }else{
@@ -2728,7 +2728,7 @@ class chatdisplay extends object
     */
     function imParams()
     {
-        $bodyOnLoad = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\')';
+        $bodyOnLoad = 'jsGetImSettings(\''.$this->uri(array(), 'messaging').'\');';
         $headerParams = $this->getJavascriptFile('messaging.js', 'messaging');
         $array = array('headerParams' => $headerParams, 'bodyOnLoad' => $bodyOnLoad);
         return $array;
