@@ -56,7 +56,7 @@ $hiddenMode->value = $mode;
 
 //$table->addCell();
 
-$submitButton = new button('submit', $this->objLanguage->languageText('phrase_upload_file', 'Upload File'));
+$submitButton = new button('submit', $this->objLanguage->languageText('mod_calendar_fileupload', 'calendar'));
 $submitButton->setToSubmit();
 $form->addToForm(' '.$submitButton->show().$hiddenId->show().$hiddenMode->show());
 

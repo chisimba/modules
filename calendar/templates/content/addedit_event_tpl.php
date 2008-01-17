@@ -201,7 +201,7 @@ If the user only has permission to add to their own calendar, these options are 
 It will default to the users personal calendar
 */
 	
-	
+
 $eventfor = new radio('eventfor');
 $eventfor->setBreakSpace('<br />');
 $eventfor->addOption('0', $this->objLanguage->languageText('mod_calendarbase_mypersonalcalendar', 'calendarbase', 'My Personal Calendar'));
@@ -234,7 +234,7 @@ if ($mode == 'edit') {
     $titleInput->value = $event['eventtitle'];
 }
 
-$titleInput->size = '50';
+$titleInput->size = '65';
 
 $table->addCell($titleInput->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
