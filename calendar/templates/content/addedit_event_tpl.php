@@ -139,7 +139,7 @@ $table->endRow();
 
 
 $table->startRow();
-$timeLabel = new label($this->objLanguage->languageText('mod_calendarbase_time', 'calendarbase').':', 'input_time');
+$timeLabel = new label($this->objLanguage->languageText('mod_calendarbase_time', 'calendar').':', 'input_time');
 
 $timeInput = new textinput('input_time');
 if ($mode == 'edit') {
