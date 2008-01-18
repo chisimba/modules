@@ -9,7 +9,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 /**
 * Calendar Controller
 * This class controls all functionality to run the calendar module. It now integrates user calendar and contextcalendar
-* @author Tohir Solomons
+* @author Tohir Solomons & yasser buchana
 * @copyright (c) 2004 University of the Western Cape
 * @package calendar
 * @version 2
@@ -167,7 +167,7 @@ class calendar extends controller
         $this->setVarByRef('currentList', $eventsList);
         $this->objCalendar->setEventsTag($eventsList);
 
-echo $eventsList;
+//echo $eventsList;
 
         switch ($eventsList)
         {
