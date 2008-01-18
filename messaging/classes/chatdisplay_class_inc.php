@@ -2150,7 +2150,7 @@ class chatdisplay extends object
             //$objPopup->title = $imTitleLabel;
             $objPopup->set('location',$this->uri(array(
                 'action' => 'im',
-            ), 'messaging'));
+            ), 'messaging', '', FALSE, TRUE));
             $objPopup->set('linktext', $imIcon);
             $objPopup->set('width', '500');
             $objPopup->set('height', '400');
