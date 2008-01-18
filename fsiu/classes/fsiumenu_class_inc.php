@@ -39,7 +39,7 @@ class fsiumenu extends object
     {
     	
           // Start Tags
-        $str = '<div id="sanordmenu"><ul>';
+        $str = '<div id="sanordmenu">';
         
         // SHow link to login
         if (!$this->objUser->isLoggedIn()) {
@@ -51,8 +51,10 @@ class fsiumenu extends object
             $this->loadClass('link','htmlelements');
             $link = new link ($this->uri(array('action'=>'error', 'message'=>'needlogin'), 'security'));
             $link->link = $objIcon->show();
-            $str .=  '<div style="float:right;">'.$link->show().'</div><ul>';
+            $str .=  '<div style="float:right;">'.$link->show().'</div>';
         }
+        
+        $str .= '<ul>';
         
         // Add Home Link
         $str .= $this->prepareModuleItem(array('title'=>'Home', 'module'=>'_default'));
