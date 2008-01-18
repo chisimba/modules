@@ -89,8 +89,8 @@ class cmslayouts extends object
         
         // Additional items for the left side menu
         $leftSide .= '<p/>';
-        $leftSide .= $this->additionalMenuItems($rss);
-        $leftSide .=  '<br />';
+       // $leftSide .= $this->additionalMenuItems($rss);
+        //$leftSide .=  '<br />';
         
         return $leftSide;
     }
