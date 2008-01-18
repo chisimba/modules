@@ -356,7 +356,7 @@ class blog extends controller
                     $this->setVarByRef('linkcats', $linkcats);
                     $this->setVarByRef('cats', $catarr);
                     //return the template!
-                    $this->setVar('pageSuppressXML', TRUE);
+                    // $this->setVar('pageSuppressXML', TRUE);
                     return 'randblog_tpl.php';
                     break;
                 }
@@ -367,7 +367,7 @@ class blog extends controller
                     //is the user asking for a random blog?
                     if ($act != 'randblog') {
                         //no, so lets go to the viewblog page
-                        $this->setVar('pageSuppressXML', TRUE);
+                        // $this->setVar('pageSuppressXML', TRUE);
                         $this->nextAction('viewblog');
                         exit;
                     }
@@ -420,7 +420,7 @@ class blog extends controller
                 $this->setVarByRef('linkcats', $linkcats);
                 $this->setVarByRef('cats', $catarr);
                 //return the template!
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'randblog_tpl.php';
                 break;
                 // The siteblog function added by Irshaad Hoosain
@@ -453,7 +453,7 @@ class blog extends controller
                 $this->setVarByRef('cats', $catarr);
                 $this->setVarByRef('userid', $userid);
                 //return the template
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'siteblog_tpl.php';
                 break;
 
@@ -481,7 +481,7 @@ class blog extends controller
                 $this->setVarByRef('postid', $postid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'viewsingle_tpl.php';
                 break;
 
@@ -641,7 +641,7 @@ class blog extends controller
                     'userid' => $userid
                 ));
                 $this->setVarByRef('feed', $url);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'showfeed_tpl.php';
                 break;
 
@@ -744,7 +744,7 @@ class blog extends controller
                         break;
                 }
                 //output the feed
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 echo htmlentities($feed);
                 break;
 
@@ -847,7 +847,7 @@ class blog extends controller
                         break;
                 }
                 //output the feed
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 echo htmlentities($feed);
                 break;
 
@@ -889,7 +889,7 @@ class blog extends controller
                 $this->setVarByRef('cats', $catarr);
                 $this->setVarByRef('userid', $userid);
                 //return the template
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'myblog_tpl.php';
                 break;
 
@@ -937,7 +937,7 @@ class blog extends controller
                 $this->setVarByRef('cats', $catarr);
                 $this->setVarByRef('userid', $userid);
                 //return the template
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'myblog_tpl.php';
                 break;
 
@@ -979,7 +979,7 @@ class blog extends controller
                 $this->setVarByRef('cats', $catarr);
                 $this->setVarByRef('userid', $userid);
                 //return the template
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'mytagsblog_tpl.php';
                 break;
 
@@ -1012,7 +1012,7 @@ class blog extends controller
                         break;
                 }
                 //return the default template for no mode set
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'blogadminmenu_tpl.php';
                 break;
 
@@ -1027,7 +1027,7 @@ class blog extends controller
                 $this->setVarByRef('userid', $userid);
                 $this->setVarByRef('posts', $posts);
                 //return a specific template and break the action
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'archive_tpl.php';
                 break;
 
@@ -1275,14 +1275,14 @@ class blog extends controller
                 //print_r($delarr); die();
                 $this->setVarByRef('editid', $id);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'postedit_tpl.php';
                 break;
 
             case 'allblogs':
                 $ret = $this->objDbBlog->getUBlogs('userid', 'tbl_blog_posts');
                 $this->setVarByRef('ret', $ret);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'allblogs_tpl.php';
                 break;
 
@@ -1516,7 +1516,7 @@ class blog extends controller
                 $this->setVar('pageSuppressIM', TRUE);
                 //Suppress footer in the page (keep it simple)
                 $this->setVar('suppressFooter', TRUE);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return "commentinput_tpl.php";
                 break;
 
@@ -1656,7 +1656,7 @@ class blog extends controller
                 //send all that to the template
                 $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'rssedit_tpl.php';
                 break;
 
@@ -1695,7 +1695,7 @@ class blog extends controller
                 }
                 //set up the template
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'profile_tpl.php';
                 break;
 
@@ -1728,7 +1728,7 @@ class blog extends controller
                 $vprofile = $this->objDbBlog->checkProfile($userid);
                 $this->setVarByRef('vprofile', $vprofile);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'viewprofile_tpl.php';
                 break;
 
@@ -2001,14 +2001,14 @@ class blog extends controller
                     $this->setVarByRef('pagetoedit', $page);
                     $this->setVarByRef('userid', $userid);
                     $this->setVarByRef('check', $check);
-                    $this->setVar('pageSuppressXML', TRUE);
+                    // $this->setVar('pageSuppressXML', TRUE);
                     return 'page_tpl.php';
                     break;
                 }
                 //set up the template
                 $this->setVarByRef('check', $check);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'page_tpl.php';
                 break;
 
@@ -2017,7 +2017,7 @@ class blog extends controller
                 // grab the page out of the db and display it
                 $page = $this->objDbBlog->getPageById($pageid);
                 $this->setVarByRef('page', $page);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'pageview_tpl.php';
                 break;
 
@@ -2035,7 +2035,7 @@ class blog extends controller
                 $res = $this->objblogSearching->quickSearch($seekterm);
                 $this->setVarByRef('searchres', $res);
                 $this->setVarByRef('userid', $userid);
-                $this->setVar('pageSuppressXML', TRUE);
+                // $this->setVar('pageSuppressXML', TRUE);
                 return 'searchres_tpl.php';
             case 'googlegadget':
                 echo $this->objblogPosts->showLastTenPosts();
