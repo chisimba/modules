@@ -275,7 +275,12 @@ class dbsections extends dbTable
                 'contextcode' =>$contextcode
                 );
                 $result = $this->insert($index);
-                $this->luceneIndex($index);
+                
+                if ($result != FALSE) {
+                    $index['id'] = $result;
+                    $this->luceneIndex($index);
+                }
+                
                 return $result;
                
              
@@ -325,7 +330,12 @@ class dbsections extends dbTable
                 );
                 
                 $result = $this->insert($index);
-                $this->luceneIndex($index);
+                
+                if ($result != FALSE) {
+                    $index['id'] = $result;
+                    $this->luceneIndex($index);
+                }
+                
                 return $result;
               
                 
@@ -390,7 +400,12 @@ class dbsections extends dbTable
                                      'contextcode' => $contextCode
                                  );
             $result = $this->insert($newIndex);
-            $this->luceneIndex($newIndex);
+            
+            if ($result != FALSE) {
+                $newIndex['id'] = $result;
+                $this->luceneIndex($newIndex);
+            }
+            
             return $result;
         }
 
@@ -442,7 +457,14 @@ class dbsections extends dbTable
                              'updated' => $this->now(),
                              'link' => $this->getParam('imagesrc'),
                              'published' => $published);
-            return $this->update('id', $id, $arrFields);
+            $result = $this->update('id', $id, $arrFields);
+        
+            if ($result != FALSE) {
+                $arrFields['id'] = $result;
+                $this->luceneIndex($arrFields);
+            }
+            
+            return $result;
         }
 
         /**
@@ -713,6 +735,8 @@ class dbsections extends dbTable
             }
             $fields = array('trash' => $trash, 'ordering' => $order);
             $result =  $this->update('id', $id, $fields);
+            
+            $this->removeLuceneIndex($id);
         }
 
         /**
@@ -725,6 +749,8 @@ class dbsections extends dbTable
         public function unarchiveSection($id)
         {
             $sectionData = $this->getSection($id);
+            
+            $this->luceneIndex($sectionData);
             
             if($sectionData['nodelevel'] == 1){
                 $nodes = $this->getAll("WHERE rootid = '{$id}'");
@@ -773,7 +799,13 @@ class dbsections extends dbTable
         */
         public function permanentlyDelete($id)
         {
-            return $this->delete('id', $id);
+            $result = $this->delete('id', $id);
+            
+            if ($result) {
+                $this->removeLuceneIndex($id);
+            }
+            
+            return $result;
         }
 
         /**
@@ -991,116 +1023,27 @@ class dbsections extends dbTable
             return $order;
         }
 
+
+        /**
+         * Method to add a section to the search database
+         * @param array $data
+         */
         public function luceneIndex($data)
         {
-        	//print_r($data); die();
-        	$this->objConfig = $this->getObject('altconfig', 'config');
-        	$this->objUser = $this->getObject('user', 'security');
-        	$indexPath = $this->objConfig->getcontentBasePath();
-        	if(file_exists($indexPath.'chisimbaIndex/segments'))
-        	{
-        		chmod($indexPath.'chisimbaIndex', 0777);
-        		//we build onto the previous index
-        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
-        	}
-        	else {
-        		//instantiate the lucene engine and create a new index
-        		mkdir($indexPath.'chisimbaIndex');
-        		chmod($indexPath.'chisimbaIndex', 0777);
-        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
-        	}
-        	//hook up the document parser
-        	$document = new Zend_Search_Lucene_Document();
-        	//change directory to the index path
-        	chdir($indexPath);
-
-        	//set the properties that we want to use in our index
-        	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
-        	//date
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['creation']));
-        	//url
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showsection', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
-        	//createdBy
-        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($data['userid'])));
-        	//document teaser
-        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['description']));
-        	//doc title
-        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
-        	//doc author
-        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($data['userid'])));
-        	//document body
-        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
-        	//      only a reference is inserted to the index.
-        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
-        	//what else do we need here???
-        	//add the document to the index
-        	$index->addDocument($document);
-        	//commit the index to disc
-        	$index->commit();
-        	//optimize the thing
-        	//$index->optimize();
+            $objLucene = $this->getObject('indexdata', 'search');
+            
+            $docId = 'cms_section_'.$data['id'];
+            $url = $this->uri(array('module' => 'cms', 'action' => 'showsection', 'id' => $data['id']));
+            
+            $objLucene->luceneIndex($docId, $data['creation'], $url, $data['title'], $data['title'].$data['body'], $data['description'], 'cms', $data['userid']);
         }
-
-        public function luceneReIndex($data)
+        
+        public function removeLuceneIndex($id)
         {
-        	//var_dump($data);
-        	$this->objConfig = $this->getObject('altconfig', 'config');
-        	$this->objUser = $this->getObject('user', 'security');
-        	$indexPath = $this->objConfig->getcontentBasePath();
-        	if(file_exists($indexPath.'chisimbaIndex/segments'))
-        	{
-        		chmod($indexPath.'chisimbaIndex', 0777);
-        		//we build onto the previous index
-        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex');
-        	}
-        	else {
-        		//instantiate the lucene engine and create a new index
-        		mkdir($indexPath.'chisimbaIndex');
-        		chmod($indexPath.'chisimbaIndex', 0777);
-        		$index = new Zend_Search_Lucene($indexPath.'chisimbaIndex', true);
-        	}
-        	$docid = $data['id'];
-        	$removePath = $docid;
-        	$hits = $index->find('docid:' . $removePath);
-        	foreach ($hits as $hit) {
-        		$index->delete($hit->id);
-        	}
-
-        	//ok now re-add the doc to the index
-        	//hook up the document parser
-        	$document = new Zend_Search_Lucene_Document();
-        	//change directory to the index path
-        	chdir($indexPath);
-
-        	//set the properties that we want to use in our index
-        	//id for the index and optimization
-        	$document->addField(Zend_Search_Lucene_Field::Text('docid', $data['id']));
-        	//date
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $data['created']));
-        	//url
-        	$document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array('module' => 'cms', 'action' => 'showsection', 'id' => $data['id'], 'sectionid'=> $data['sectionid']))));
-        	//createdBy
-        	$document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($this->objUser->userId())));
-        	//document teaser
-        	$document->addField(Zend_Search_Lucene_Field::Text('teaser', $data['description']));
-        	//doc title
-        	$document->addField(Zend_Search_Lucene_Field::Text('title', $data['title']));
-        	//doc author
-        	$document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($this->objUser->userId())));
-        	//document body
-        	//NOTE: this is not actually put into the index, so as to keep the index nice and small
-        	//      only a reference is inserted to the index.
-        	$document->addField(Zend_Search_Lucene_Field::Text('contents', $data['body']));
-        	//what else do we need here???
-        	//add the document to the index
-        	$index->addDocument($document);
-        	//commit the index to disc
-        	$index->commit();
-        	//optimize the thing
-        	//$index->optimize();
-
+            $objLucene = $this->getObject('indexdata', 'search');
+            $objLucene->removeIndex('cms_section_'.$id);
         }
+        
         
         /**
          * Method to get the section id from the 
