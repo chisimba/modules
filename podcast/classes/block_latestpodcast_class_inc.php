@@ -28,7 +28,7 @@ class block_latestpodcast extends object
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('windowpop', 'htmlelements');
         //Set the title
-        $this->title='Latest Podcast';
+        $this->title=$this->objLanguage->languageText('mod_podcast_latespodcast', 'podcast');
     }
     
     /**
