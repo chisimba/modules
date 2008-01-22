@@ -77,14 +77,14 @@ foreach ($categories as $item) {
     // Create link to category
     $categoryLink =& $this->getObject('link', 'htmlelements');
     $categoryLink->link($this->uri(array('action'=>'view','category'=>$item['id']), 'faq'));
-    $categoryLink->link = $item['categoryid'];
+    $categoryLink->link = $item['categoryname'];
     $categoryLink->title = $this->objLanguage->languageText('mod_faq_viewcategory','faq');
 	// Create the actions
     $ncaction = /*$objAddLink->show();*/"";
     $action = /*$objAddLink->show()."&nbsp;".*/$objEditLink->show()."&nbsp;".$objConfirm->show();
     //echo $objEditLink->show();
     // This does a check so that the not categorised item can never be deleted.
-    if ($item['categoryid'] == 'Not Categorised' && $item['userid'] == 'admin') {
+    if ($item['categoryname'] == 'Not Categorised' && $item['userid'] == 'admin') {
      	$row = array($categoryLink->show().'&nbsp;'.'<b>'.'*'.'</b>', $count, $ncaction);
     } 
 	else { 

@@ -13,7 +13,7 @@ $fields = array(
 		'notnull' => TRUE,
 		'default' => '',
 		 ),
-	'categoryid' => array(
+	'categoryname' => array(
 		'type' => 'text',
 		'length' => 255,
 		'notnull' => TRUE,

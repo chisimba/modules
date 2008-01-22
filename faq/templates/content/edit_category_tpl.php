@@ -2,7 +2,7 @@
 // Show the heading.
 $objHeading =& $this->getObject('htmlheading','htmlelements');
 $objHeading->type=1;
-$objHeading->str =$objLanguage->languageText("mod_faq_editcategory","faq").' : <em>'.$list[0]['categoryId'].'</em>';
+$objHeading->str =$objLanguage->languageText("mod_faq_editcategory","faq").' : <em>'.$list[0]['categoryname'].'</em>';
 echo $objHeading->show();
 // Load the classes.
 $this->loadClass("form","htmlelements");
@@ -18,7 +18,7 @@ $this->uri(array(
 );
 $form->setDisplayType(1);
 
-$textInput = new textinput("category",$list[0]['categoryId']);
+$textInput = new textinput("category",$list[0]['categoryname']);
 $textInput->size = 40;
 
 $form->addToForm($textInput->show());

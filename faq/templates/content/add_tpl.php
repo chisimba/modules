@@ -39,7 +39,7 @@
 
     $dropdown = new dropdown('category');
 	foreach ($categories as $item) {
-		$dropdown->addOption($item["id"],$item["categoryid"]);
+		$dropdown->addOption($item["id"],$item["categoryname"]);
 	}
 
 	$dropdown->setSelected($categoryId);

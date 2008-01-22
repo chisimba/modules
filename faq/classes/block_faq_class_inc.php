@@ -72,7 +72,7 @@ class block_faq extends object
         $dropdown = new dropdown('category');
         $dropdown->addOption('All Categories', $lbAllCats);
         foreach ($categories as $item) {
-            $dropdown->addOption($item['id'], $item['categoryId']);
+            $dropdown->addOption($item['id'], $item['categoryname']);
         }
         $form->addToForm($dropdown);
 

@@ -35,14 +35,33 @@ class dbFaqEntries extends dbTable
 	{
 		//$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
 	  $ins = $this->insert(array(
-			'contextId'=>$contextId, 
-			'categoryId'=>$categoryId, 
+			'contextid'=>$contextId, 
+			'categoryid'=>$categoryId, 
 			'_index' => $index,
         	        'question' => $question,
         	        'answer' => $answer,
-			'userId' => $userId,
+			'userid' => $userId,
 			'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 		));
+		
+		$this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
+		$categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
+		
+		// Add to Search
+        $objIndexData = $this->getObject('indexdata', 'lucene');
+        
+        // Prep Data
+        $docId = 'faq_entry_'.$ins;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
+        $url = $this->uri(array('action'=>'view', 'category'=>$categoryId), 'faq');
+        $title = $categoryRow['categoryname'];
+        $contents = $question.': '.$answer;
+        $teaser = $question;
+        $module = 'faq';
+        $userId = $userId;
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
 		return $ins;	
 	}
     
@@ -52,7 +71,7 @@ class dbFaqEntries extends dbTable
     */
     function getEntries($contextId, $categoryId)
     {
-        $sql = "SELECT fc.categoryid as categoryid, fe.question as qn, fe.answer FROM tbl_faq_entries fe,tbl_faq_categories fc WHERE fe.contextId='" . $contextId . "' and fc.id= fe.categoryid";
+        $sql = "SELECT fc.categoryname as categoryname, fe.question as qn, fe.answer FROM tbl_faq_entries fe,tbl_faq_categories fc WHERE fe.contextid='" . $contextId . "' and fc.id= fe.categoryid";
 
         return $this->getArray($sql);
     }
@@ -68,10 +87,10 @@ class dbFaqEntries extends dbTable
 		//$sql = "SELECT id, question, answer FROM tbl_faq";
 		//return $this->getArray($sql);
 		if ($categoryId == "All Categories") {
-			return $this->getAll("WHERE contextId='" . $contextId . "' ORDER BY _index");
+			return $this->getAll("WHERE contextid='" . $contextId . "' ORDER BY _index");
 		}
 		else {
-			return $this->getAll("WHERE contextId='" . $contextId . "' AND categoryId='" . $categoryId ."' ORDER BY _index");
+			return $this->getAll("WHERE contextid='" . $contextId . "' AND categoryid='" . $categoryId ."' ORDER BY _index");
 		}
 	}
 
@@ -96,7 +115,7 @@ class dbFaqEntries extends dbTable
 	*/
 	function getNextIndex($contextId, $categoryId)
 	{
-		$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName} WHERE contextId='$contextId' AND categoryId='$categoryId'");
+		$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName} WHERE contextid='$contextId' AND categoryid='$categoryId'");
 		return $array[0]['_max'] + 1;
 	}
 	
@@ -116,9 +135,9 @@ class dbFaqEntries extends dbTable
 				'_index' => $index,
         		'question' => $question,
         		'answer' => $answer,
-                'categoryId' => $category,
-				'userId' => $userId,
-				'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
+                'categoryid' => $category,
+				'userid' => $userId,
+				'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 			)
 		);
 	}
@@ -130,6 +149,8 @@ class dbFaqEntries extends dbTable
 	function deleteSingle($id)
 	{
 		$this->delete("id", $id);
+		$objIndexData = $this->getObject('indexdata', 'lucene');
+        $objIndexData->removeIndex('faq_entry_'.$id);
 	}//
 }
 ?>

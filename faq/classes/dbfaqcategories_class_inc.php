@@ -44,7 +44,7 @@ class dbFaqCategories extends dbTable
 		//return $this->getArray($sql);
 		return $this->getAll(
             "WHERE contextid='" . $contextId . "'
-            ORDER BY categoryid");
+            ORDER BY categoryname");
 	}
 
 	/**
@@ -56,8 +56,8 @@ class dbFaqCategories extends dbTable
    public function listSingle($contextId, $categoryId)
 	{
 		$sql = "SELECT * FROM tbl_faq_categories 
-		WHERE contextId = '" . $contextId . "' 
-		AND categoryId='" . $categoryId . "'";
+		WHERE contextid = '" . $contextId . "' 
+		AND categoryname='" . $categoryId . "'";
 		return $this->getArray($sql);
 		//return $this->getRow("id", $id);
 	}
@@ -84,13 +84,13 @@ class dbFaqCategories extends dbTable
 	*/
  public	function insertSingle($contextId, $categoryId, $userId, $dateLastUpdated)
 	{
-		$this->insert(array(
+		$id = $this->insert(array(
 			'contextid' => $contextId, 
-			'categoryid' => $categoryId,
+			'categoryname' => $categoryId,
 			'userid' => $userId,
 			'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 			));
-		return;	
+		return;     
 	}
 	/**
 	* Update a record
@@ -103,7 +103,7 @@ class dbFaqCategories extends dbTable
 	{
 		$this->update("id", $id, 
 			array(
-        		'categoryid' => $categoryId,
+        		'categoryname' => $categoryId,
 				'userid' => $userId,
 				'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 			)
@@ -131,7 +131,7 @@ class dbFaqCategories extends dbTable
 	*/	
  public	function getNotCategorisedId($contextId)
 	{
-		$sql = 'SELECT * FROM tbl_faq_categories WHERE categoryId = "Not Categorised" AND userId = "admin" AND contextId = "'. $contextId.'"';
+		$sql = 'SELECT * FROM tbl_faq_categories WHERE categoryname = "Not Categorised" AND userid = "admin" AND contextid = "'. $contextId.'"';
         $results = $this->getArray($sql);
         
         if (count($results) == 0) {
@@ -140,6 +140,19 @@ class dbFaqCategories extends dbTable
             return $results[0]['id'];
         }
 	}
+	
+  /**
+	* Return the latest Category created or updated
+	* @param string $contextId The context ID
+	* @return array The category id
+	*/		
+ public function getLastestCategory($contextId)
+ {
+ 	$sql = 'SELECT id FROM tbl_faq_categories WHERE contextid = "'. $contextId.'" AND datelastupdated = (SELECT MAX(datelastupdated) FROM tbl_faq_categories)';
+ 	$results = $this->getArray($sql);
+ 	$latest = current($results);
+ 	return $latest['id'];
+ }
 
 
 }
