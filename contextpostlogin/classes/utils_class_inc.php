@@ -412,12 +412,13 @@ class utils extends object
               foreach($arr as $plugin)
               {
 
-                  $modInfo =$objModule->getModuleInfo($plugin['moduleid']);
+                  $modInfo =$objModule->getModuleInfo($plugin);
 
-                  $objIcon->setModuleIcon($plugin['moduleid']);
+                  $objIcon->setModuleIcon($plugin);
                   $objIcon->alt = $this->_objDBContext->getTitle($contextCode). ' : '.$modInfo['name'];
+                  $objIcon->title = $this->_objDBContext->getTitle($contextCode). ' : '.$modInfo['name'];
 
-                  $objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin['moduleid'], 'contextcode' => $contextCode), 'context');
+                  $objLink->href = $this->uri(array ('action' => 'gotomodule', 'moduleid' => $plugin, 'contextcode' => $contextCode), 'context');
                   $objLink->link = $objIcon->show();
                   $str .= $objLink->show().'   ';
               }
@@ -489,18 +490,18 @@ class utils extends object
 
                 if($this->_objDBContext->getContextCode() == $context['contextcode'])
                 {
-                    $objLink->href = $this->uri(array('action' => 'leavecontext','contextCode'=>$contextCode), 'context');
+                    $objLink->href = $this->uri(array('action' => 'leavecontext','contextcode'=>$contextCode), 'context');
                     $icon->setIcon('leavecourse');
                     $icon->alt = $this->_objLanguage->code2Txt('phrase_leavecourse'); //'Leave Course';
                     $objLink->link = $icon->show();
                 } else {
-                    $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+                    $objLink->href = $this->uri(array('action' => 'joincontext','contextcode'=>$contextCode), 'context');
                     $icon->setIcon('entercourse');
                     $icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse'); //'Enter Course';
                     $objLink->link =$icon->show();
                 }
                 $title = $objLink->show();
-                $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$contextCode), 'context');
+                $objLink->href = $this->uri(array('action' => 'joincontext','contextcode'=>$contextCode), 'context');
                 $objLink->link = $context['contextcode'] .' - '.$context['title'].'   ';
                 $title = $objLink->show().$title;
                 $str .= $featureBox->show($title, $content ).'<hr />';
@@ -562,7 +563,7 @@ class utils extends object
 
 
                 //link to join the context
-                $objLink->href = $this->uri(array('action' => 'joincontext','contextCode'=>$context['contextcode']), 'context');
+                $objLink->href = $this->uri(array('action' => 'joincontext','contextcode'=>$context['contextcode']), 'context');
                 $icon->setIcon('leavecourse');
                 $icon->alt = $this->_objLanguage->code2Txt('phrase_entercourse').' '.$context['title'];
                 $objLink->link = $icon->show();
