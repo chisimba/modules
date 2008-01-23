@@ -562,14 +562,14 @@ class blogposts extends object
         	// var_dump($editparams);
         	// category voodoo
             if ($editparams['post_category'] == '0') {
-                $editparams['post_category'] = $this->objLanguage->languageText("mod_blog_word_default", "blog");
+                $epdisp = $this->objLanguage->languageText("mod_blog_word_default", "blog");
             } else {
                 $mapcats = $this->objDbBlog->mapKid2Parent($editparams['post_category']);
                 if (isset($mapcats[0])) {
-                    $editparams['post_category'] = $mapcats[0]['cat_name'];
+                    $epdisp = $mapcats[0]['cat_name'];
                 }
             }
-            $pDrop->addOption($editparams['post_category'], $editparams['post_category']);
+            $pDrop->addOption($editparams['post_category'], $epdisp);
             $pDrop->setSelected($editparams['post_category']);
             $pDrop->addOption(1, $this->objLanguage->languageText("mod_blog_defcat", "blog"));
         } else {
