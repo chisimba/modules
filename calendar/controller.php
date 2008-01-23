@@ -167,7 +167,7 @@ class calendar extends controller
         $this->setVarByRef('currentList', $eventsList);
         $this->objCalendar->setEventsTag($eventsList);
 
-//echo $eventsList;
+
 
         switch ($eventsList)
         {
@@ -267,7 +267,7 @@ class calendar extends controller
                     $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, $this->userId);
                     $eventsList = 'site';
                     break;
-//print_r($eventtitle."**************");
+
             }
         } else {
             // Insert Single Day event
