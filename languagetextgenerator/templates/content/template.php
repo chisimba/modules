@@ -55,8 +55,11 @@ if (isset($results)) {
     
     echo '<p>'.htmlentities('TEXT: mod_'.$this->getParam('urmodule').'_'.$this->getParam('langcode').'|'.$description.'|'.$this->getParam('search')).'</p>';
     
-    echo '<p>'.htmlentities('$this->objLanguage->languageText(\'mod_'.$this->getParam('urmodule').'_'.$this->getParam('langcode').'\', \''.$this->getParam('urmodule').'\', \''.$this->getParam('search').'\');').'</p>';
-    
+    if (preg_match('/\[-.*?-\]/', $this->getParam('search'))) {
+        echo '<p>'.htmlentities('$this->objLanguage->code2Txt(\'mod_'.$this->getParam('urmodule').'_'.$this->getParam('langcode').'\', \''.$this->getParam('urmodule').'\', NULL, \''.$this->getParam('search').'\');').'</p>';
+    } else {
+        echo '<p>'.htmlentities('$this->objLanguage->languageText(\'mod_'.$this->getParam('urmodule').'_'.$this->getParam('langcode').'\', \''.$this->getParam('urmodule').'\', \''.$this->getParam('search').'\');').'</p>';
+    }
     echo '<h3>'.$this->objLanguage->languageText('mod_useradmin_searchresultsfor', 'useradmin', 'Search Results for').': <em>'.$this->getParam('search').'</em></h3><br />';
     
     if (count($results) == 0) {
