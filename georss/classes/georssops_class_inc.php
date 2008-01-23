@@ -59,9 +59,9 @@ class georssops extends object
             map.addControl( new OpenLayers.Control.PanZoomBar() );
             
             
-            var newl = new OpenLayers.Layer.GeoRSS( 'GeoRSS', 'georss.xml');
+            var newl = new OpenLayers.Layer.GeoRSS( 'GeoRSS', '".$this->getResourceUri('georss.xml', 'georss')."' );
             map.addLayer(newl);
-            var newl2 = new OpenLayers.Layer.GeoRSS( 'My Flickr GeoRSS', 'flickr.xml');
+            var newl2 = new OpenLayers.Layer.GeoRSS( 'My Flickr GeoRSS', '".$this->getResourceUri('flickr.xml', 'georss')."' );
             map.addLayer(newl2);
             
             map.setCenter(new OpenLayers.LonLat(0,0), 2);
