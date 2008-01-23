@@ -1,3 +1,22 @@
+<script language="JavaScript" type="text/javascript" >
+
+ jQuery(document).ready(function(){
+		setupCalendarCheckbox('userbox', 'event_user');
+		setupCalendarCheckbox('contextbox', 'class');
+		setupCalendarCheckbox('otherbox', 'othercourse');
+		setupCalendarCheckbox('sitebox', 'site');
+	});
+	
+	
+function setupCalendarCheckbox(checkId, itemClass)
+{
+	jQuery("#"+checkId).livequery('click', function() {
+			jQuery("."+itemClass).toggle();
+		});
+}
+</script>
+
+
 <?php
 
 $this->loadClass('link', 'htmlelements');
@@ -7,6 +26,10 @@ $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
+$this->loadclass('checkbox','htmlelements');
+
+$this->appendArrayVar('headerParams', $this->getJavaScriptFile('jquery/jquery.livequery.js', 'htmlelements'));
+
 
 $message = $this->getParam('message');
 if (isset($message)) {
@@ -42,6 +65,19 @@ $heading->str = str_replace('[someone]', $fullname, $title).' '.$addEventLink->s
 $heading->type = 1;
 
 echo $heading->show();
+
+echo '  <input name="userbox" type="checkbox" id="userbox" value="checkbox" checked="checked" />
+  <label for="userbox">User Events</label> 
+/ 
+  <input name="contextbox" type="checkbox" id="contextbox" value="checkbox" checked="checked" />
+  <label for="contextbox">Current Course Events</label> 
+/ 
+  <input name="otherbox" type="checkbox" id="otherbox" value="checkbox" checked="checked" />
+  <label for="otherbox">Other Courses Events</label> 
+/ 
+  <input name="sitebox" type="checkbox" id="sitebox" value="checkbox" checked="checked" />
+
+  <label for="sitebox">Site Events</label> ';
 
 $form = new form('index.php');
 $form->method = 'GET';
@@ -80,7 +116,23 @@ $form->addToForm($year->show());
 $month = new hiddeninput ('month', $month);
 $form->addToForm($month->show());
 
-echo $form->show();
+//echo $form->show();
+
+//checkbox array (EXPERIMENTAL/DO NOT UNCOMMENT)
+
+
+
+/*$list= array( 1,2,3,4 );
+
+
+for($i=1;$i<=4;$i++){
+$check[$i] = new checkbox('checkname'.$i,'checkvalue'.$i,true);
+}
+
+for($i=1;$i<=4;$i++){
+
+echo $check[$i]->show();
+}*/
 
 echo $eventsCalendar;
 
