@@ -53,7 +53,7 @@ if (!empty($rss)) {
             $leftCol.= $this->objblogOps->rssRefresh($url, $feeds['name'], $id);
         } else {
             $url = $feeds['rsscache'];
-            $leftCol.= $this->objblogOps->rssBox($url, $feeds['name']);
+            $leftCol.= $this->objblogRss->rssBox($url, $feeds['name']);
         }
     }
 }
