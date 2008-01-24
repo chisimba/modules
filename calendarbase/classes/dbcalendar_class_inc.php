@@ -609,9 +609,9 @@ class dbcalendar extends dbTable
                 $prevRowClass = $tdrowclass;
 
                 if ($event['eventdate'] == date('Y-m-d')) {
-                    $tdrowclass = 'todaycal';
+                    $tdrowclass = 'todaycal event_context';
                 } else {
-                    $tdrowclass = 'even';
+                    $tdrowclass = 'even event_context';
                 }
 
                 if ($event['userorcontext'] == 1 && $event['context'] == 'root') {
