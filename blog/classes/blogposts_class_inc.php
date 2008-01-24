@@ -751,8 +751,8 @@ class blogposts extends object
         	$gtlabel = new label($this->objLanguage->languageText('mod_blog_geotag', 'blog') . ':', 'input_geotags');
         	$gtags = '<div id="map"></div>';
         	$geotags = new textinput('geotag', NULL, NULL, '100%');
-        	if (isset($editparams['geotags'])) {
-            	$ts->setValue($editparams['geotags']);
+        	if (isset($editparams['geolat']) && isset($editparams['geolon'])) {
+            	$ts->setValue($editparams['geolat'].$editparams['geolon']);
         	}
         	$ptable->addCell($gtlabel->show());
         	$ptable->addCell($gtags.$geotags->show());
