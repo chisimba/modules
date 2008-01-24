@@ -912,12 +912,12 @@ class blog extends controller
                 //get the links categories
                 $linkcats = $this->objDbBlog->getAllLinkCats($userid);
                 //make sure the category id is there
-                if (isset($catid)) {
+                if (isset($catid) && $catid != '') {
                     //grab all the posts in that category
                     $posts = $this->objDbBlog->getAllPosts($userid, $catid);
                 } else {
                     //otherwise grab all the Published posts
-                    $posts = $this->objDbBlog->getAllPosts($userid, $catid); // getPostsMonthly(time() , $userid);
+                    $posts = $this->objDbBlog->getLastPosts(10, $userid); // getAllPosts($userid, $catid); // getPostsMonthly(time() , $userid);
                     if (count($posts) < 2) {
                         $posts = $this->objDbBlog->getLastPosts(10, $userid);
                     }
@@ -1147,6 +1147,16 @@ class blog extends controller
                 $postts = $this->getParam('post_ts');
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
+                $geotags = $this->getParam('geotag');
+                if(isset($geotags))
+                {
+                	$geotags = explode(', ', $geotags);
+                	$lat = $geotags[0];
+                	$lon = $geotags[1];
+                }
+                else {
+                	$geotags = NULL;
+                }
                 if ($stickypost == "on") {
                     $stickypost = 1;
                 } else {
