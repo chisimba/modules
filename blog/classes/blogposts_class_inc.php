@@ -715,11 +715,11 @@ class blogposts extends object
         function init(){
             g = new OpenLayers.Format.GeoRSS();
             map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
-            //var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
             var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\", 
                 \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'}); 
             
-            map.addLayers([wmsLayer]);
+            map.addLayers([wmsLayer, hybrid]);
       
             map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl( new OpenLayers.Control.MouseDefaults() );
