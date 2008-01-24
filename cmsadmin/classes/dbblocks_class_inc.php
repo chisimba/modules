@@ -206,7 +206,7 @@ class dbblocks extends dbTable
          */
         public function getBlocksForPage($pageId, $sectionId = NULL, $left = '0')
         {
-            $left = (isset($left) && !empty($left)) ? $left : 0;
+            //$left = (isset($left) && !empty($left)) ? $left : 0;
             
             $sql = "SELECT cb.*, cb.id as cb_id, mb.moduleid, mb.blockname 
                 FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
@@ -217,7 +217,7 @@ class dbblocks extends dbTable
                 $sql .= " OR sectionid = '{$sectionId}' ";
             }
                 
-            $sql .= ') GROUP BY cb.blockid ORDER BY cb.ordering';
+            $sql .= ')' /*GROUP BY cb.blockid*/.' ORDER BY cb.ordering';
             
             return $this->getArray($sql);
         }
@@ -249,14 +249,21 @@ class dbblocks extends dbTable
          */
         public function getBlocksForFrontPage($left = '0')
         {
-            $left = (isset($left) && !empty($left)) ? $left : 0;
+            //$left = (isset($left) && !empty($left)) ? $left : 0;
             
-            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
-                WHERE (blockid = tbl_module_blocks.id) AND frontpage_block = '1' AND leftside_blocks = '{$left}' 
-                GROUP BY blockid ORDER BY ordering";
+            $sql = "SELECT tbl_cms_blocks.id, tbl_cms_blocks.pageid, tbl_cms_blocks.blockid, tbl_cms_blocks.sectionid,
+                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering,
+                        tbl_module_blocks.moduleid, tbl_module_blocks.blockname 
+                    FROM tbl_cms_blocks, tbl_module_blocks 
+                    WHERE (tbl_cms_blocks.blockid = tbl_module_blocks.id) 
+                        AND tbl_cms_blocks.frontpage_block = '1' 
+                        AND tbl_cms_blocks.leftside_blocks = '{$left}' 
+                    "/*GROUP BY tbl_cms_blocks.blockid*/." ORDER BY tbl_cms_blocks.ordering";
             
             return $this->getArray($sql);
         }
+        
+        	
  
         /**
          * Method to return the ordering value of new blocks (gets added last)

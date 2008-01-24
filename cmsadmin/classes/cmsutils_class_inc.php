@@ -480,34 +480,8 @@ class cmsutils extends object
         	
         	//Declare objects
         	$tbl = $this->newObject('htmltable', 'htmlelements');
-        	$link =$this->newObject('link', 'htmlelements');
-        	$link2 =$this->newObject('link', 'htmlelements');
-        	$cancel=$this->newObject('link','htmlelements');
-        	$objIcon = $this->newObject('geticon', 'htmlelements');
-        	$objIconSave = $this->newObject('geticon', 'htmlelements');
-        	$objIconCancel = $this->newObject('geticon', 'htmlelements');
         	$icon_publish = $this->newObject('geticon', 'htmlelements');
-        	$lnk_publish =$this->newObject('link', 'htmlelements');
-        	$icon_unpublish = $this->newObject('geticon', 'htmlelements');
-        	$lnk_unpublish =$this->newObject('link', 'htmlelements');
-        	$icon_copy = $this->newObject('geticon', 'htmlelements');
-        	$lnk_copy =$this->newObject('link', 'htmlelements');
-        	$icon_delete = $this->newObject('geticon', 'htmlelements');
-        	$lnk_delete =$this->newObject('link', 'htmlelements');
-        	$icon_edit = $this->newObject('geticon', 'htmlelements');
-        	$lnk_edit =$this->newObject('link', 'htmlelements');
-        	$icon_new = $this->newObject('geticon', 'htmlelements');
-        	$lnk_new =$this->newObject('link', 'htmlelements');
-        	$icon_copy = $this->newObject('geticon', 'htmlelements');
-        	$lnk_copy =$this->newObject('link', 'htmlelements');
-        	$icon_upload = $this->newObject('geticon', 'htmlelements');
-        	$lnk_upload = $this->newObject('link', 'htmlelements');
-        	$icon_apply = $this->newObject('geticon', 'htmlelements');
-        	$lnk_apply = $this->newObject('link', 'htmlelements');
-        	$icon_sections = $this->newObject('geticon', 'htmlelements');
-        	$lnk_sections = $this->newObject('link', 'htmlelements');
-        	$icon_frontpage = $this->newObject('geticon', 'htmlelements');
-        	$lnk_frontpage = $this->newObject('link', 'htmlelements');
+
 		    $iconList = '';
 						 
 			 switch ($action) {

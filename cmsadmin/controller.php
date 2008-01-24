@@ -176,14 +176,9 @@ class cmsadmin extends controller
                 $action = $this->getParam('action');
                 $this->setLayoutTemplate('cms_layout_tpl.php');
 				$this->setVar('pageSuppressXML',TRUE);
-				 $myid = $this->_objUser->userId();
-				try {
-					if ($this->_objUser->inAdminGroup($myid,'CMSAuthors') != TRUE) {
-	                        throw new customException($this->objLanguage->languageText('mod_cmsadmin_nopermissionmsg', 'cmsadmin'));
-	                    }
-				}catch (customException $ex){
-					echo customException::diePage($ex);
-    				exit();
+				$myid = $this->_objUser->userId();
+				if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
+				    
 				}
 	            switch ($action) {
 
