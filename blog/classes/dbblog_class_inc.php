@@ -509,6 +509,34 @@ class dbblog extends dbTable
         }
         return $posts;
     }
+    
+    /**
+     * Method to get the geotagged posts
+     *
+     * @param  integer $userid
+     * @return array
+     */
+    public function getGeoPosts($userid = FALSE) 
+    {
+        if ($userid == FALSE) {
+            $this->_changeTable('tbl_blog_posts');
+            $filter = "WHERE post_status = '0' AND geolat != '' AND geolon != '' ORDER BY post_ts DESC";
+            $posts = $this->getAll($filter);
+        } else {
+            $this->_changeTable('tbl_blog_posts');
+            $filter = "WHERE userid = '$userid' AND post_status = '0' AND geolat != '' AND geolon != '' ORDER BY post_ts DESC";
+            $posts = $this->getAll($filter);
+        }
+        return $posts;
+    }
+    
+    public function countGeoPosts($userid)
+    {
+        $this->_changeTable('tbl_blog_posts');
+        $filter = "WHERE userid = '$userid' AND geolat != '' AND geolon != ''";
+        return $this->getRecordCount($filter);
+    }
+    
     /**
      * Method to return a random blog
      *

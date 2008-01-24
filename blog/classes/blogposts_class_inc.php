@@ -1257,5 +1257,71 @@ class blogposts extends object
                 break;
         }
     }
+    
+    public function showGeoTagMap($userid)
+    {
+    	$this->objConfig = $this->getObject('altconfig', 'config');
+    	$tfile = $this->objConfig->getcontentBasePath() . 'users/' . $userid . '/geotags.txt';
+    	$jstfile = $this->objConfig->getSiteRoot().'usrfiles/users/' . $userid . '/geotags.txt';
+    	$geoposts = $this->objDbBlog->getGeoPosts($userid);
+    	$data = "point\ttitle\tdescription\n";
+    	foreach($geoposts as $posts)
+    	{
+    		$lat = $posts['geolat'];
+    		$lon = $posts['geolon'];
+    		$title = '<a href="'.$this->uri(array('action' => 'viewsingle', 'postid' => $posts['id'], 'userid' => $userid), 'blog').'">'.$posts['post_title'].'</a>';
+    		$desc = $posts['post_excerpt'];
+    		$data .= "$lat,$lon\t$title\t$desc\n";
+    	}
+    	file_put_contents($tfile, $data);
+    	
+    	//ok now parse the text file and display the map.
+    	$css = "<style type=\"text/css\">
+        #map {
+            width: 80%;
+            height: 350px;
+            border: 1px solid black;
+        }
+    </style>";
+    	
+        	$olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
+        	$js = "<script type=\"text/javascript\">
+        	var map, layer;
+
+        function init(){
+            
+            map = new OpenLayers.Map('map', { controls: [] });
+            layer = new OpenLayers.Layer.WMS( \"Public WMS\", 
+                \"http://labs.metacarta.com/wms/vmap0\", {layers: 'basic'} );
+               
+            map.addControl(new OpenLayers.Control.MousePosition()); 
+            map.addControl( new OpenLayers.Control.MouseDefaults() );
+            map.addControl( new OpenLayers.Control.LayerSwitcher() );
+            map.addControl( new OpenLayers.Control.PanZoomBar() );
+            
+            map.addLayer(layer);
+            map.setCenter(new OpenLayers.LonLat(0, 0), 0);
+
+            var newl = new OpenLayers.Layer.Text( \"text\", { location:\"".$jstfile."\"} );
+            map.addLayer(newl);
+
+            
+
+            var size = new OpenLayers.Size(10,17);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
+       
+            marker = new OpenLayers.Marker(new OpenLayers.LonLat(90,10),icon.clone());
+            marker.events.register('mousedown', marker, function(evt) { alert(this.icon.url); OpenLayers.Event.stop(evt); });
+          
+            
+            map.zoomToMaxExtent();
+
+        }
+    </script>";
+        	// add the lot to the headerparams...
+        	$this->appendArrayVar('headerParams', $css.$google.$olsrc.$js);
+        	$this->appendArrayVar('bodyOnLoad', "init();");
+    }
 }
 ?>

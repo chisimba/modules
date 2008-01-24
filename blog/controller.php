@@ -2040,6 +2040,12 @@ class blog extends controller
                 $this->objDbBlog->deletePage($pageid);
                 $this->nextAction('setpage');
                 break;
+                
+            case 'viewgeoblog':
+            	$userid = $this->getParam('userid');
+            	$this->setVarByRef('userid', $userid);
+                return 'geotagged_tpl.php';
+            	break;
 
             case 'blogsearch':
                 $userid = $this->objUser->userId();
