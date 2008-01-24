@@ -117,40 +117,40 @@ class cms extends controller
         */
         public function init()
         {
-        	try {
-            	// instantiate the database object for sections
-            	$this->_objSections = $this->getObject('dbsections', 'cmsadmin');
-            
-            	$this->objLayout = $this->getObject('cmslayouts', 'cms');
-            	$this->rss = $this->getObject('dblayouts','cmsadmin');
-            //feed creator subsystem
-            $this->objFeedCreator = &$this->getObject('feeder', 'feed');
-            // instantiate the database object for content
-            $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
-            // instantiate the object for CMS utilities
-            $this->_objUtils = $this->getObject('cmsutils', 'cmsadmin');
-            // instantiate the context object so we can get where the contex the user is in
-            $this->_objContext = $this->getObject('dbcontext', 'context');
-            // instantiate the user object so we can retrieve user information
-            $this->_objUser = $this->getObject('user', 'security');
-            //config object
-            $this->objConfig = $this->getObject('altconfig', 'config');
-            //Create an instance of the language object for text rendering
-            $this->objLanguage = $this->getObject('language', 'language');
-			//Create an instance of the modules object from modulecatalogue
-            $objModule = $this->getObject('modules', 'modulecatalogue');
-			//Use the modules object instantiated above to see if context is registered
-            if($objModule->checkIfRegistered('context')) {
-            	//If context is registered, assign the current context value to
-            	//   both the contextCode property and the inContextMode property
-            	//   of this object because.........
-                $this->inContextMode = $this->_objContext->getContextCode();
-                $this->contextCode = $this->inContextMode;
-            } else {
-            	//If conmtext is not registered then assign boolean FALSE to
-            	//   the inContextMode property of this object
-                $this->inContextMode = FALSE;
-            }
+            try {
+                // instantiate the database object for sections
+                $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+
+                $this->objLayout = $this->getObject('cmslayouts', 'cms');
+                $this->rss = $this->getObject('dblayouts','cmsadmin');
+                //feed creator subsystem
+                $this->objFeedCreator = &$this->getObject('feeder', 'feed');
+                // instantiate the database object for content
+                $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
+                // instantiate the object for CMS utilities
+                $this->_objUtils = $this->getObject('cmsutils', 'cmsadmin');
+                // instantiate the context object so we can get where the contex the user is in
+                $this->_objContext = $this->getObject('dbcontext', 'context');
+                // instantiate the user object so we can retrieve user information
+                $this->_objUser = $this->getObject('user', 'security');
+                //config object
+                $this->objConfig = $this->getObject('altconfig', 'config');
+                //Create an instance of the language object for text rendering
+                $this->objLanguage = $this->getObject('language', 'language');
+                //Create an instance of the modules object from modulecatalogue
+                $objModule = $this->getObject('modules', 'modulecatalogue');
+                //Use the modules object instantiated above to see if context is registered
+                if($objModule->checkIfRegistered('context')) {
+                    //If context is registered, assign the current context value to
+                    //   both the contextCode property and the inContextMode property
+                    //   of this object because.........
+                    $this->inContextMode = $this->_objContext->getContextCode();
+                    $this->contextCode = $this->inContextMode;
+                } else {
+                    //If conmtext is not registered then assign boolean FALSE to
+                    //   the inContextMode property of this object
+                    $this->inContextMode = FALSE;
+                }
             
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
