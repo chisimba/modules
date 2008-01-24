@@ -18,10 +18,10 @@ class db_contextcontent_order extends dbtable
         $this->objConfig =& $this->getObject('altconfig', 'config');
         
         $this->loadClass('treemenu','tree');
-		$this->loadClass('treenode','tree');
-		$this->loadClass('htmllist','tree');
-		$this->loadClass('htmldropdown','tree');
-		$this->loadClass('dhtml','tree');
+        $this->loadClass('treenode','tree');
+        $this->loadClass('htmllist','tree');
+        $this->loadClass('htmldropdown','tree');
+        $this->loadClass('dhtml','tree');
         
         $this->loadClass('link', 'htmlelements');
     }
@@ -57,8 +57,8 @@ class db_contextcontent_order extends dbtable
             return $results[0];
         }
     }
-	
-	/**
+    
+    /**
     * Method to get the first content page in a context.
     * @param string $contextCode Context Code
     * @access public
@@ -105,7 +105,7 @@ class db_contextcontent_order extends dbtable
             return $results[0];
         }
     }
-	
+    
     public function checkPagesNotInChapter($context)
     {
         $pagesNotInChapter = $this->getPagesNotInChapters($context);
@@ -167,24 +167,24 @@ class db_contextcontent_order extends dbtable
         return $this->update('id', $id, array('isbookmarked'=>'N'));
     }
     
-	public function getBookmarkedPages($context, $chapter='', $defaultSelected='', $module='contextcontent')
-	{
-		$results = $this->getContextPages($context, $chapter);
-		
-		$str = '<ul class="bookmarkedpages">';
-		foreach($results as $page)
-		{
-			if($page['isbookmarked'] == 'Y')
-			{
-				$link = new link($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
-				$link->link = $page['menutitle'];
-				$str .= '<li>'.$link->show().'</li>';
-			}
-		}
-		$str .= '</ul>';
+    public function getBookmarkedPages($context, $chapter='', $defaultSelected='', $module='contextcontent')
+    {
+        $results = $this->getContextPages($context, $chapter);
+        
+        $str = '<ul class="bookmarkedpages">';
+        foreach($results as $page)
+        {
+            if($page['isbookmarked'] == 'Y')
+            {
+                $link = new link($this->uri(array('action'=>'viewpage', 'id'=>$page['id'])));
+                $link->link = $page['menutitle'];
+                $str .= '<li>'.$link->show().'</li>';
+            }
+        }
+        $str .= '</ul>';
 
-		return $str;
-	}
+        return $str;
+    }
 
     /**
     * Method to get a content page
@@ -263,14 +263,14 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		//if($treeItem['isbookmarked'] == 'Y'){
+        //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
                 }
-	}
+    }
             }
         //}
         
@@ -293,7 +293,7 @@ class db_contextcontent_order extends dbtable
         $nodeArray = array();
         
         $icon         = 'folder.gif';
-		$expandedIcon = 'folder-expanded.gif';
+        $expandedIcon = 'folder-expanded.gif';
         
         foreach ($results as $treeItem)
         {
@@ -306,7 +306,7 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             
-		//if($treeItem['isbookmarked'] == 'Y'){
+        //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
                 $treeMenu->addItem($node);
             } else {
@@ -351,9 +351,9 @@ class db_contextcontent_order extends dbtable
             $node =& new treenode ($nodeDetails);
             $nodeArray[$treeItem['id']] =& $node;
             //var_dump($treeItem);die;
-		//if($treeItem['isbookmarked'] == 'Y'){
+        //if($treeItem['isbookmarked'] == 'Y'){
             if ($treeItem['parentid'] == 'root') {
-                	$rootnode->addItem($node);
+                    $rootnode->addItem($node);
             } else {
                 if (array_key_exists($treeItem['parentid'], $nodeArray)) {
                     $nodeArray[$treeItem['parentid']]->addItem($node);
@@ -414,8 +414,8 @@ class db_contextcontent_order extends dbtable
                 'visibility' => $visibility,
                 'creatorid' => $this->objUser->userId(),
                 'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-		'bookmark' => $bookmark,
-		'isbookmarked' => $isBookmark
+        'bookmark' => $bookmark,
+        'isbookmarked' => $isBookmark
             ));
         
         // Extra Step to Prevent Null Values
@@ -836,10 +836,10 @@ class db_contextcontent_order extends dbtable
         return;
     }
     
-	/**
-	*
-	*
-	*/
+    /**
+    *
+    *
+    */
     function changeParent($context, $chapter, $node, $newParent)
     {
         if ($newParent =='') {
@@ -848,158 +848,185 @@ class db_contextcontent_order extends dbtable
         $this->update('id', $node, array('parentid'=>$newParent));
         $this->rebuildContext($context, $chapter);
     }
-	
-	/**
-	*
-	*
-	*/
-	function getTwoLevelNav($context, $chapter, $id)
-	{
-		$record = $this->getRow('id', $id);
-		// Fix up if record dows not exist
-		if ($record == FALSE) {
-			return 'RECORD DOES NOT EXIST';
-		}
-		// Create Menu for Nodes
-		$treeMenu = new treemenu();
-		// Create Array for Nodes
-        	$nodeArray = array();
-		// Option 1 - Node is Root Node on First Level
-		if ($record['parentid'] == 'root') {
-			// Get Siblings
-			$firstLevelNodes = $this->getPages($chapter, $context, ' AND parentid=\'root\'');
-			// Loop through siblings
-			foreach ($firstLevelNodes as $treeItem)
-			{
-				//var_dump($treeItem);die;
-				// Create Array with Node Details
-				$nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
-				//var_dump($nodeDetails);die;
-				// Add style if current node
-				if ($treeItem['id'] == $id) {
-					unset($nodeDetails['link']); // Disable Link
-					$nodeDetails['cssClass'] = 'confirm';
-				}
-				
-				// Create Node
-				$node =& new treenode ($nodeDetails);
-				
-				// Check If current Item and has childen
-				if ($treeItem['id'] == $id && ($record['rght']-$record['lft']-1 > 0)) {
-					
-					// Get immediate Children
-					$childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
-					
-					// Add Childen
-					foreach ($childrenNodes as $childNode)
-					{
-						// Create Array with Child Node Details
-						$childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
-						
-						// Create Child Node
-						$childNode =& new treenode ($childNodeDetails);
-						
-						// Add to Current Node
-						$node->addItem($childNode);
-						
-					}
-				}
-				
-				// Add to Menu
-				//if($treeItem['isbookmarked'] == 'Y')
-					$treeMenu->addItem($node);
-			}
-			
-			// Create Menu Display
-			$tree = &new htmllist($treeMenu, array('topMostListClass'=>'twolevelstyle'));
-			
-			// Return Menu Display
-			return $tree->getMenu();
-			
-		// OPTION 2: Not Root node, but doesn't have children
-		} else if ($record['rght']-$record['lft']-1 == 0) {
-			
-			// Get Siblings
-			$siblings = $this->getPages($chapter, $context, ' AND parentid=\''.$record['parentid'].'\'');
-			
-			// Loop through siblings
-			foreach ($siblings as $treeItem)
-			{
-				// Create Array with Node Details
-				$nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
-				
-				// Add style if current node
-				if ($treeItem['id'] == $id) {
-					unset($nodeDetails['link']); // Disable Link
-					$nodeDetails['cssClass'] = 'confirm';
-				}
-				
-				// Create Node
-				$node =& new treenode ($nodeDetails);
-				// Add to Menu
-				$treeMenu->addItem($node);
-				
-			}
-			
-			// Create Menu Display
-			$tree = &new htmllist($treeMenu);
-			
-			// Return Menu Display
-			return $tree->getMenu();
-			
-		// Option 3 - Not Root Node, has Children
-		} else {
-			
-			$recordInfo = $this->getPages($chapter, $context, ' AND tbl_contextcontent_order.id=\''.$id.'\'');
-			
-			$nodeDetails = array('text'=>htmlentities($recordInfo[0]['menutitle']), 'cssClass'=>'confirm', 'link'=>'afasf');
-			
-			$node = new treenode ($nodeDetails);
-			$node->text = htmlentities($recordInfo[0]['menutitle']);
-			
-			// Get immediate Children
-			$childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
-			
-			// Add Childen
-			foreach ($childrenNodes as $childNode)
-			{
-				// Create Array with Child Node Details
-				$childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
-				
-				// Create Child Node
-				$childNode =& new treenode ($childNodeDetails);
-				
-				// Add to Current Node
-				$node->addItem($childNode);
-				
-			}
-			
-			// Add to Menu
-			$treeMenu->addItem($node);
-			
-			// Create Menu Display
-			$tree = &new htmllist($treeMenu);
-			
-			// Return Menu Display
-			return $tree->getMenu();
-			
-			
-		}
-		
-		return 'asfasf';
-	}
-	
-	function getPages($chapter, $contextCode, $where='', $order='lft')
-	{
-	$sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked
+    
+    /**
+    *
+    *
+    */
+    function getTwoLevelNav($context, $chapter, $id)
+    {
+        $record = $this->getRow('id', $id);
+        // Fix up if record dows not exist
+        if ($record == FALSE) {
+            return 'RECORD DOES NOT EXIST';
+        }
+        // Create Menu for Nodes
+        $treeMenu = new treemenu();
+        // Create Array for Nodes
+        $nodeArray = array();
+        
+        
+        // Option 1 - Node is Root Node on First Level
+        if ($record['parentid'] == 'root') {
+            // Get Siblings
+            $firstLevelNodes = $this->getPages($chapter, $context, ' AND parentid=\'root\'');
+            // Loop through siblings
+            foreach ($firstLevelNodes as $treeItem)
+            {
+                //var_dump($treeItem);die;
+                // Create Array with Node Details
+                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                //var_dump($nodeDetails);die;
+                // Add style if current node
+                if ($treeItem['id'] == $id) {
+                    unset($nodeDetails['link']); // Disable Link
+                    $nodeDetails['cssClass'] = 'confirm';
+                }
+                
+                // Create Node
+                $node =& new treenode ($nodeDetails);
+                
+                // Check If current Item and has childen
+                if ($treeItem['id'] == $id && ($record['rght']-$record['lft']-1 > 0)) {
+                    
+                    // Get immediate Children
+                    $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
+                    
+                    // Add Childen
+                    foreach ($childrenNodes as $childNode)
+                    {
+                        // Create Array with Child Node Details
+                        $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
+                        
+                        // Create Child Node
+                        $childTreeNode =& new treenode ($childNodeDetails);
+                        
+                        // Add to Current Node
+                        $node->addItem($childTreeNode);
+                    }
+                }
+                
+                // Add to Menu
+                //if($treeItem['isbookmarked'] == 'Y')
+                    $treeMenu->addItem($node);
+            }
+            
+            // Create Menu Display
+            $tree = &new htmllist($treeMenu, array('topMostListClass'=>'twolevelstyle'));
+            
+            // Return Menu Display
+            return $tree->getMenu();
+            
+        // OPTION 2: Not Root node, but doesn't have children
+        } else if ($record['rght']-$record['lft']-1 == 0) {
+            
+            // Get Siblings
+            $siblings = $this->getPages($chapter, $context, ' AND parentid=\''.$record['parentid'].'\'');
+            
+            // Loop through siblings
+            foreach ($siblings as $treeItem)
+            {
+                // Create Array with Node Details
+                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                
+                // Add style if current node
+                if ($treeItem['id'] == $id) {
+                    unset($nodeDetails['link']); // Disable Link
+                    $nodeDetails['cssClass'] = 'confirm';
+                }
+                
+                // Create Node
+                $node =& new treenode ($nodeDetails);
+                // Add to Menu
+                $treeMenu->addItem($node);
+                
+            }
+            
+            // Create Menu Display
+            $tree = &new htmllist($treeMenu);
+            
+            // Return Menu Display
+            return $tree->getMenu();
+            
+        // Option 3 - Not Root Node, has Children
+        } else {
+            
+            $recordInfo = $this->getPages($chapter, $context, ' AND tbl_contextcontent_order.id=\''.$id.'\'');
+            
+            $nodeDetails = array('text'=>htmlentities($recordInfo[0]['menutitle']), 'cssClass'=>'confirm', 'link'=>'afasf');
+            
+            //$node = new treenode ($nodeDetails);
+            //$node->text = htmlentities($recordInfo[0]['menutitle']);
+            
+            
+            
+            // Get Siblings
+            $siblings = $this->getPages($chapter, $context, ' AND parentid=\''.$record['parentid'].'\'');
+            
+            // Loop through siblings
+            foreach ($siblings as $treeItem)
+            {
+                // Create Array with Node Details
+                $nodeDetails = array('text'=>htmlentities($treeItem['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$treeItem['id'])));
+                
+                // Add style if current node
+                if ($treeItem['id'] == $id) {
+                    unset($nodeDetails['link']); // Disable Link
+                    $nodeDetails['cssClass'] = 'confirm';
+                }
+                
+                // Create Node
+                $node =& new treenode ($nodeDetails);
+                // Add to Menu
+                $treeMenu->addItem($node);
+                
+                $nodeArray[$treeItem['id']] =& $node;
+                
+            }
+            
+            // Get immediate Children
+            $childrenNodes = $this->getPages($chapter, $context, ' AND parentid=\''.$id.'\'');
+            
+            // Add Childen
+            foreach ($childrenNodes as $childNode)
+            {
+                // Create Array with Child Node Details
+                $childNodeDetails = array('text'=>htmlentities($childNode['menutitle']), 'link'=>$this->uri(array('action'=>'viewpage', 'id'=>$childNode['id'])));
+                
+                // Create Child Node
+                $childTreeNode =& new treenode ($childNodeDetails);
+                
+                // Add to Current Node
+                $nodeArray[$id]->addItem($childTreeNode);
+                
+            }
+            
+            // Add to Menu
+            //$treeMenu->addItem($node);
+            
+            // Create Menu Display
+            $tree = &new htmllist($treeMenu);
+            
+            // Return Menu Display
+            return $tree->getMenu();
+            
+            
+        }
+        
+        return 'asfasf';
+    }
+    
+    function getPages($chapter, $contextCode, $where='', $order='lft')
+    {
+    $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_order.chapterid, tbl_contextcontent_order.parentid, tbl_contextcontent_pages.menutitle, lft, rght, tbl_contextcontent_pages.id as pageid, tbl_contextcontent_order.titleid, tbl_contextcontent_order.bookmark, tbl_contextcontent_order.isbookmarked
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
         WHERE contextcode=\''.$contextCode.'\' AND tbl_contextcontent_order.chapterid=\''.$chapter.'\' '.$where.'
         ORDER BY '.$order;
-		
-		return $this->getArray($sql);
-	}
+        
+        return $this->getArray($sql);
+    }
     
     function movePageToChapter($pageId, $chapter, $context)
     {
