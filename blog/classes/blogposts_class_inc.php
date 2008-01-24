@@ -1271,6 +1271,11 @@ class blogposts extends object
     		$lon = $posts['geolon'];
     		$title = '<a href="'.$this->uri(array('action' => 'viewsingle', 'postid' => $posts['id'], 'userid' => $userid), 'blog').'">'.$posts['post_title'].'</a>';
     		$desc = $posts['post_excerpt'];
+    		if($desc = '')
+    		{
+    			$this->objUser = $this->getObject('user', 'security');
+    			$desc = $this->objLanguage->languageText("mod_blog_viewfullprofile", "blog")." ".$this->objUser->userName($userid);
+    		}
     		$data .= "$lat,$lon\t$title\t$desc\n";
     	}
     	file_put_contents($tfile, $data);
