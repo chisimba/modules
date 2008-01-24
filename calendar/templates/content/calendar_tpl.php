@@ -2,9 +2,9 @@
 
  jQuery(document).ready(function(){
 		setupCalendarCheckbox('userbox', 'event_user');
-		setupCalendarCheckbox('contextbox', 'class');
-		setupCalendarCheckbox('otherbox', 'othercourse');
-		setupCalendarCheckbox('sitebox', 'site');
+		setupCalendarCheckbox('contextbox', 'event_context');
+		setupCalendarCheckbox('otherbox', 'event_othercourse');
+		setupCalendarCheckbox('sitebox', 'event_site');
 	});
 	
 	
