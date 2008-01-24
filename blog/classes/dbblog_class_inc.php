@@ -623,6 +623,7 @@ class dbblog extends dbTable
             //$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
             $postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
             $pc = $postarr['postcontent'];
+        
             $edarr = array(
                 'userid' => $userid,
                 'post_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()) ,
