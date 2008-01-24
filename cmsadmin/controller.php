@@ -178,7 +178,7 @@ class cmsadmin extends controller
 				$this->setVar('pageSuppressXML',TRUE);
 				$myid = $this->_objUser->userId();
 				if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
-				    
+				    return 'cms_nopermissions_tpl.php';
 				}
 	            switch ($action) {
 
