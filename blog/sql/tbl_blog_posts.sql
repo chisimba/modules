@@ -103,6 +103,14 @@ $fields = array(
 		'length' => 20,
 		'default' => 0,
 		),
+	'geolat' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
+	'geolon' => array(
+	    'type' => 'text',
+	    'length' => 255,
+	    ),
 	);
 
 //create other indexes here...

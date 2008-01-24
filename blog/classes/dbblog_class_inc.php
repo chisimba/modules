@@ -586,7 +586,9 @@ class dbblog extends dbTable
                 'post_ts' => time() ,
                 'post_lic' => $postarr['cclic'],
                 'stickypost' => isset($postarr['stickypost']) ? $postarr['stickypost'] : 'N',
-                'showpdf' => isset($postarr['showpdf']) ? $postarr['showpdf'] : 'N'
+                'showpdf' => isset($postarr['showpdf']) ? $postarr['showpdf'] : 'N',
+                'geolat' => $postarr['geolat'],
+                'geolon' => $postarr['geolon'],
             );
             $insarr['id'] = $this->insert($insarr, 'tbl_blog_posts');
             if ($this->lindex == 'TRUE') {
@@ -635,7 +637,9 @@ class dbblog extends dbTable
                 'post_ts' => $postarr['postts'], //time(),
                 'post_lic' => $postarr['cclic'],
                 'stickypost' => $postarr['stickypost'],
-                'showpdf' => $postarr['showpdf']
+                'showpdf' => $postarr['showpdf'],
+                'geolat' => $postarr['geolat'],
+                'geolon' => $postarr['geolon'],
             );
             $this->update('id', $postarr['id'], $edarr, 'tbl_blog_posts');
             
@@ -773,7 +777,9 @@ class dbblog extends dbTable
                 'post_ts' => strtotime($postarr['postdate']) ,
                 'post_lic' => $postarr['cclic'],
                 'stickypost' => $postarr['stickypost'],
-                'showpdf' => $postarr['showpdf']
+                'showpdf' => $postarr['showpdf'],
+                'geolat' => $postarr['geolat'],
+                'geolon' => $postarr['geolon'],
             );
             $this->update('id', $postarr['id'], $inseditarr, 'tbl_blog_posts');
             // add to the blog sitemap

@@ -113,4 +113,21 @@
 			</change>
 		</data>
 	</update>
+	<update>
+        <table>tbl_blog_posts</table>
+        <version>1.65</version>
+        <description>added geotagging fields</description>
+        <data>
+        	<add>
+    			<name>geolat</name>
+		    	<type>text</type>
+    			<length>255</length>
+			</add>
+			<add>
+    			<name>geolon</name>
+		    	<type>text</type>
+    			<length>255</length>
+			</add>
+		</data>
+	</update>
 </updates>

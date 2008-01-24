@@ -1198,7 +1198,9 @@ class blog extends controller
                         'postts' => $postts,
                         'cclic' => $cclic,
                         'stickypost' => $stickypost,
-                        'showpdf' => $showpdf
+                        'showpdf' => $showpdf,
+                        'geolat' => $lat,
+                        'geolon' => $lon,
                     );
                     $this->objblogPosts->quickPostAdd($userid, $insarredit, $mode);
                     if (!empty($tagarray) && $tagarray[0] != "") {
@@ -1239,7 +1241,9 @@ class blog extends controller
                         'postdate' => $postdate,
                         'cclic' => $cclic,
                         'stickypost' => $stickypost,
-                        'showpdf' => $showpdf
+                        'showpdf' => $showpdf,
+                        'geolat' => $lat,
+                        'geolon' => $lon,
                     ));
                     //dump in the tags
                     if (!empty($tagarray) && $tagarray[0] != "") {
