@@ -1,20 +1,19 @@
-<DATA>
-<UPDATE>
-<MODULE>faq</MODULE>
-<TABLE>tbl_faq_entries</TABLE>
-<VERSION>1.1</VERSION>
-<SQL>
-ALTER TABLE `tbl_faq_entries` ADD `_index` INT DEFAULT 0 ;
-</SQL>
-</UPDATE>
-</DATA>
-<DATA>
-<UPDATE>
-<MODULE>faq</MODULE>
-<TABLE>tbl_faq_categories</TABLE>
-<VERSION>2.1</VERSION>
-<SQL>
-ALTER TABLE `tbl_faq_entries` CHANGE `categoryid` `categoryname`;
-</SQL>
-</UPDATE>
-</DATA>
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+	<update>
+		<table>tbl_faq_categories</table>
+		<version>2.561</version>
+		<description>change the categoryid column name to categoryname</description>
+		<data>
+			<rename>
+			<categoryid>
+				<name>categoryname</name>
+				<definition>
+					<type>text</type>
+					<length>255</length>
+				</definition>
+				</categoryid>
+			</rename>
+		</data>
+	</update>
+</updates>

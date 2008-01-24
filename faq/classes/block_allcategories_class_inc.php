@@ -12,7 +12,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 * The faq block class displays a block with a list of categories.
-* @author Megan Watson
+* @author Brent van Rensburg
 */
 
 class block_faq extends object
@@ -45,7 +45,7 @@ class block_faq extends object
     function showForm()
     {
         $contextId = $this->contextCode;
-        $lbAllCats = $this->objLanguage->languageText('mod_faq_allcategories');
+       // $lbAllCats = $this->objLanguage->languageText('mod_faq_allcategories');
 
         $categories = $this->objDbFaqCategories->getAll("WHERE contextid='" . $contextId . "' ORDER BY categoryname");
 		
@@ -53,13 +53,13 @@ class block_faq extends object
 		$objAllCatsTable->cellspacing = 2;
 		$objAllCatsTable->width = '40%';
 		
-		$objAllCatsTable->startRow();
+		/*$objAllCatsTable->startRow();
 		$objAllCatsTable->addCell("<i>".$lbAllCats."</i>");
 		$objAllCatsTable->endRow();
 		
 		$objAllCatsTable->startRow();
 		$objAllCatsTable->addCell("<br />");
-		$objAllCatsTable->endRow();
+		$objAllCatsTable->endRow();*/
 		
 		$count = 1;
 		
