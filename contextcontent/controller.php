@@ -1,24 +1,73 @@
 <?php
 
 /**
-* Controller Class for Context Content Module
-* @author Tohir Solomons
-*/
+ * Context Content controller
+ * 
+ * Controller class for the Context Content Module in Chisimba
+ * 
+ * PHP version 5
+ * 
+ * This program is free software; you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation; either version 2 of the License, or 
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the 
+ * Free Software Foundation, Inc., 
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @category  Chisimba
+ * @package   contextcontent
+ * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright 2008 Tohir Solomons
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ */
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global entry point $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
 
+
+/**
+ * Context Content controller
+ * 
+ * Controller class for the Context Content Module in Chisimba
+ * 
+ * @category  Chisimba
+ * @package   contextcontent
+ * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright 2008 Tohir Solomons
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   Release: @package_version@
+ * @link      http://avoir.uwc.ac.za
+ */
 class contextcontent extends controller
 {
     
 
     /**
-	* @var string $contextCode Context Code of Current Context
-	*/
+    * @var string $contextCode Context Code of Current Context
+    */
 
-	protected $contextCode;
+    protected $contextCode;
     
 
-	/**
-	* Constructor
-	*/
+    /**
+    * Constructor
+    */
     public function init()
     {
         try {
@@ -45,7 +94,7 @@ class contextcontent extends controller
             
             $this->objMenuTools =& $this->getObject('tools', 'toolbar');
             $this->objConfig =& $this->getObject('altconfig', 'config');
-		$this->setVar('pageSuppressXML',TRUE);
+            $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
             //oops, something not there - bail out
@@ -57,11 +106,11 @@ class contextcontent extends controller
 
     
 
-	/**
-	* Method to override login requirement for certain actions
-	* @param string $action Action user is taking
-	* @return boolean
-	*/
+    /**
+    * Method to override login requirement for certain actions
+    * @param string $action Action user is taking
+    * @return boolean
+    */
     function requiresLogin($action)
     {
         if ($action=='' || $action == 'viewpage') {
@@ -73,10 +122,10 @@ class contextcontent extends controller
 
     
 
-	/**
-	* Dispatch Method to run required action
-	* @param string $action
-	*/
+    /**
+    * Dispatch Method to run required action
+    * @param string $action
+    */
     public function dispatch($action)
     {
         if ($this->contextCode == '' && $action != 'notincontext') {
@@ -116,8 +165,8 @@ class contextcontent extends controller
                 return $this->saveChapter();
             case 'addchapter':
                 return $this->addChapter();
-			case 'editchapter':
-				return $this->editChapter($this->getParam('id'));
+            case 'editchapter':
+                return $this->editChapter($this->getParam('id'));
             case 'updatechapter':
                 return $this->updateChapter();
             case 'deletechapter':
@@ -128,18 +177,18 @@ class contextcontent extends controller
                 return $this->moveChapterUp($this->getParam('id'));
             case 'movechapterdown':
                 return $this->moveChapterDown($this->getParam('id'));
-			case 'viewchapter':
-				return $this->viewChapter($this->getParam('id'));
+            case 'viewchapter':
+                return $this->viewChapter($this->getParam('id'));
             case 'viewprintchapter':
                 return $this->viewPrintChapter($this->getParam('id'));
             case 'changenavigation':
                 return $this->changeNavigation($this->getParam('type'), $this->getParam('id'));
             case 'movetochapter':
                 return $this->moveToChapter($this->getParam('id'), $this->getParam('chapter'));
-            case 'sessions':
-                return $this->sessions();
             case 'changebookmark':
                 return $this->changeBookMark();
+            case 'search':
+                return $this->search($this->getParam('contentsearch'));
             default:
                 //return $this->home_debug();
                 return $this->showContextChapters();
@@ -149,9 +198,9 @@ class contextcontent extends controller
     
 
     /**
+    * Method to display the list of chapters in a context
     *
-    *
-    *
+    * This is also the home page of the module
     */
     protected function showContextChapters()
     {
@@ -166,27 +215,26 @@ class contextcontent extends controller
             
             $this->setLayoutTemplate(NULL);
             
+            // If user can create chapter, show create chapter form
             if ($this->isValid('savechapter')) {
                 return 'tpl_nochapters.php';
-            } else {
+            } else { // Else notify user there is no content
                 return 'tpl_nocontent.php';
             }
         } else {
             $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
             $this->setVarByRef('chapters', $chapters);
-			
-			$this->setLayoutTemplate('layout_firstpage_tpl.php');
+            
+            $this->setLayoutTemplate('layout_firstpage_tpl.php');
             return 'tpl_listchapters.php';
         }
     }
     
 
     /**
-    *
-    *
-    *
+    * Method to add a new chapter
     */
-    function addChapter()
+    protected function addChapter()
     {
         $this->setVar('mode', 'add');
         
@@ -195,11 +243,9 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to save a newly create chapter
     */
-    function saveChapter()
+    protected function saveChapter()
     {
         $title = $this->getParam('chapter');
         $intro = $this->getParam('intro');
@@ -209,22 +255,21 @@ class contextcontent extends controller
         
         $result = $this->objContextChapters->addChapterToContext($chapterId, $this->contextCode, $visibility);
         
-//echo $title.' '.$intro.' '.$visibility.' '.$chapterId.' '.$result;
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
             return $this->nextAction(NULL, array('message'=>'chaptercreated', 'id'=>$result));
         }
     }
-	
+    
 
     /**
+    * Method to edit a chapter
     *
-    *
-    *
+    * @param string $id Record Id of the Chapter
     */
-	function editChapter($id)
-	{
+    protected function editChapter($id)
+    {
         $chapter = $this->objContextChapters->getChapter($id);
         
         if ($chapter == FALSE) {
@@ -237,15 +282,13 @@ class contextcontent extends controller
             
             return 'tpl_addeditchapter.php';
         }
-	}
+    }
     
 
     /**
-    *
-    *
-    *
+    * Method to update a chapter
     */
-    function updateChapter()
+    protected function updateChapter()
     {
         
         $id = $this->getParam('id');
@@ -276,7 +319,14 @@ class contextcontent extends controller
         
     }
     
-    function deleteChapter($id)
+    /**
+     * Method to delete a chapter
+     *
+     * This function generates a confirmation form
+     * 
+     * @param string $id Record Id of the Chapter
+     */
+    protected function deleteChapter($id)
     {
         $chapter = $this->objContextChapters->getChapter($id);
         
@@ -301,7 +351,12 @@ class contextcontent extends controller
         }
     }
     
-    function deleteChapterConfirm()
+    /**
+     * Method to delete the chapter after confirmation
+     *
+     * If confirmation is not received, chapter is not deleted.
+     */
+    protected function deleteChapterConfirm()
     {
         
         
@@ -337,7 +392,7 @@ class contextcontent extends controller
                         foreach ($pages as $page)
                         {
                             $this->objContentTitles->deleteTitle($page['titleid']);
-                            $this->objContentOrder->deletePage($page['id']);
+                            //$this->objContentOrder->deletePage($page['id']);
                         }
                     }
                 } else { // Else simply remove the chapter from this context.
@@ -355,49 +410,14 @@ class contextcontent extends controller
         }
     }
     
-
-    /**
-    *
-    *
-    *
-    */
-    public function home_debug()
-    {
-        $numPages = $this->objContentOrder->getNumContextPages($this->contextCode);
-        echo $numPages.'<br /><br />';
-        
-        $firstPage = $this->objContentOrder->getFirstPage($this->contextCode);
-        print_r($firstPage);
-    }
     
-
     /**
-    *
-    *
-    *
+    * Method to add a page
+    * @param string $chapter Record Id of Chapter under which page will be placed
+    * @param string $parent Record Id of the Parent
+    * @param string $contextCode Context Code
     */
-    public function showContextTOC()
-    {
-        $numPages = $this->objContentOrder->getNumContextPages($this->contextCode);
-        
-        if ($numPages > 0) {
-            $firstPage = $this->objContentOrder->getFirstPage($this->contextCode);
-            //return $this->viewPage($firstPage['id']);
-            return $this->nextAction('viewpage', array('id'=>$firstPage['id']));
-        } else {
-            
-            return 'tpl_contenthome.php';
-        }
-    }
-
-    
-
-    /**
-    *
-    *
-    *
-    */
-    public function addPage($chapter, $parent='', $contextCode='')
+    protected  function addPage($chapter, $parent='', $contextCode='')
     {
         if ($contextCode != '' && $contextCode != $this->contextCode) {
             return $this->nextAction('switchcontext');
@@ -410,7 +430,7 @@ class contextcontent extends controller
         $this->setVarByRef('chapter', $chapter);
         $this->setVarByRef('currentChapter', $chapter);
         
-        $tree = $this->objContentOrder->getTree($this->contextCode, $chapter, 'dropdown', $parent);
+        $tree = $this->objContentOrder->getTree($this->contextCode, $chapter, 'dropdown');
         $this->setVarByRef('tree', $tree);
         
         return 'tpl_addeditpage.php';
@@ -418,11 +438,9 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to save a newly added page
     */
-    public function savePage()
+    protected  function savePage()
     {
         
         $menutitle = stripslashes($this->getParam('menutitle'));
@@ -446,11 +464,10 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to view a page
+    * @param string $pageId Record Id of the Page
     */
-    public function viewPage($pageId='')
+    protected  function viewPage($pageId='')
     {
         if ($pageId == '') {
             return $this->nextAction(NULL);
@@ -479,9 +496,9 @@ class contextcontent extends controller
         $this->setVarByRef('currentChapterTitle', $chapterTitle);
         
         if ($chapterTitle != FALSE) {
-			$chapterLink = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$page['chapterid'])));
-			$chapterLink->link = 'Chapter: '.$chapterTitle;
-			
+            $chapterLink = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$page['chapterid'])));
+            $chapterLink->link = $this->objLanguage->languageText('word_chapter', 'word', 'Chapter').': '.$chapterTitle;
+            
             array_unshift($breadcrumbs, $chapterLink->show());
             //array_unshift($breadcrumbs, 'Chapter: '.$chapterTitle);
         }
@@ -497,11 +514,10 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to edit a page
+    * @param string $pageId Record Id of the Page
     */
-    function editPage($pageId)
+    protected function editPage($pageId)
     {
         if ($pageId == '') {
             return $this->nextAction(NULL);
@@ -527,8 +543,10 @@ class contextcontent extends controller
         return 'tpl_addeditpage.php'; 
     }
     
-
-    function updatePage()
+    /**
+     * Method to Update a Page
+     */
+    protected function updatePage()
     {
         $pageId = $this->getParam('id');
         $contextCode = $this->getParam('context');
@@ -561,8 +579,14 @@ class contextcontent extends controller
     }
 
     
-
-    function deletePage($pageId)
+    /**
+     * Method to delete a page
+     *
+     * This method presents a confirmation form for users wanting to delete a page
+     * 
+     * @param string $pageId Record Id of the Page
+     */
+    protected function deletePage($pageId)
     {
         if ($pageId == '') {
             return $this->nextAction(NULL);
@@ -587,14 +611,10 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to delete a page once confirmation has been received.
     */
-    function deletePageConfirm()
+    protected function deletePageConfirm()
     {
-        
-        
         $confirmation = $this->getParam('confirmation', 'N');
         $pageId = $this->getParam('id');
         $context = $this->getParam('context');
@@ -611,55 +631,47 @@ class contextcontent extends controller
             $children = $page['rght'] - $page['lft'] - 1;
             if ($children == 0) {
                 if ($confirmation == 'Y') {
+                    
+                    $nextPage = $this->objContentOrder->getNextPageSQL($this->contextCode, $page['chapterid'], $page['lft']);
+                    
                     $this->objContentTitles->deleteTitle($page['titleid']);
-                    $this->objContentOrder->deletePage($page['id']);
                     
-                    $this->objContentOrder->rebuildContext($this->contextCode, $page['chapterid']);
+                    $this->objContentOrder->rebuildChapter($this->contextCode, $page['chapterid']);
                     
-                    return $this->nextAction(NULL);
+                    if (is_array($nextPage)) {
+                        return $this->nextAction('viewpage', array('id'=>$nextPage['id'], 'message'=>'pagedeleted', 'title'=>urlencode($page['menutitle'])));
+                    } else {
+                        return $this->nextAction('viewchapter', array('id'=>$page['chapterid'], 'message'=>'pagedeleted', 'title'=>urlencode($page['menutitle'])));
+                    }
+                    
                 } else {
                     return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'deletecancelled'));
                 }
             } else {
-            
                 return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>'pagehassubpages'));
             }
         }
     }
     
-
-    /**
-    *
-    *
-    *
-    */
-    function fixLeftRightValues()
-    {
-        $this->objContentOrder->rebuildContext($this->contextCode);
-        
-        
-    }
     
-
+    
     /**
-    *
-    *
-    *
+    * Method to move a page up
+    * @param string $id Record Id of the Page
     */
-    function movePageUp($id)
+    protected function movePageUp($id)
     {
         $result = $this->objContentOrder->movePageUp($id);
         
         return $this->nextAction('viewpage', array('id'=>$id, 'message'=>'movepageup', 'result'=>$result));
     }
     
-
+    
     /**
-    *
-    *
-    *
+    * Method to move a page down
+    * @param string $id Record Id of the Page
     */
-    function movePageDown($id)
+    protected function movePageDown($id)
     {
         //$result = $this->objContextChapters->moveChapterDown($id);
         $result = $this->objContentOrder->movePageDown($id);
@@ -669,11 +681,10 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to move a chapter up
+    * @param string $id Record Id of the Chapter
     */
-    function moveChapterUp($id)
+    protected function moveChapterUp($id)
     {
         $result = $this->objContextChapters->moveChapterUp($id);
         
@@ -682,40 +693,38 @@ class contextcontent extends controller
     
 
     /**
-    *
-    *
-    *
+    * Method to move a chapter down
+    * @param string $id Record Id of the Chapter
     */
-    function moveChapterDown($id)
+    protected function moveChapterDown($id)
     {
         $result = $this->objContextChapters->moveChapterDown($id);
         
         return $this->nextAction(NULL, array('id'=>$id, 'message'=>'movechapterdown', 'result'=>$result));
     }
-	
-
+    
+    
     /**
+    * Method to view a chapter
     *
-    *
-    *
+    * This method redirects to the first page in a chapter
+    * 
+    * @param string $id Record Id of the Chapter
     */
-	function viewChapter($id)
-	{
-		$firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
-		
-		if ($firstPage == FALSE) {
-			$this->setVar('errorTitle', 'Chapter has no content');
-            $this->setVar('errorMessage', 'HTML Doc - expand me');
+    protected function viewChapter($id)
+    {
+        $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
+        
+        if ($firstPage == FALSE) {
+            $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
+            $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
             return 'tpl_errormessage.php';
-		} else {
-			return $this->nextAction('viewpage', array('id'=>$firstPage['id']));
-		}
-	}
-
+        } else {
+            return $this->nextAction('viewpage', array('id'=>$firstPage['id'], 'message'=>$this->getParam('message')));
+        }
+    }
     
-
     
-
     /**
     * Method to Render a Chapter in PDF
     * @param string $id Record Id of Chapter
@@ -749,8 +758,9 @@ class contextcontent extends controller
         // If Chapter has no pages
         if (count($pages) == 0) {
             // Send Error Message. Chapter has no Pages / Content
-            $this->setVar('errorTitle', 'Chapter has no content');
-            $this->setVar('errorMessage', 'HTML Doc');
+            $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
+            $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
+            
             return 'tpl_errormessage.php';
         } else {
             // Create Absolute Path to where PDF is stored
@@ -865,23 +875,20 @@ class contextcontent extends controller
                     header('location: '.$redirect);
                 } else {
                     // Else Show Error Message
-                    $this->setVar('errorTitle', 'Could not create PDF Document');
-                    $this->setVar('errorMessage', 'HTML Doc');
+                    $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_couldnotcreatepdf', 'contextcontent', 'Could not create PDF Document'));
+                    $this->setVar('errorMessage', ' ');
                     return 'tpl_errormessage.php';
                 }
             }
-            
         }
-        
-        
-        
     }
     
-
+    
     /**
-    *
-    *
-    *
+    * Method to change the navigation approach for context
+    * This method is a response to an ajax call
+    * @param string $type Type of navigation to switch to
+    * @param string $pageId Record Id of the Page
     */
     private function changeNavigation($type, $pageId='')
     {
@@ -894,14 +901,14 @@ class contextcontent extends controller
             if ($type == 'twolevel') {
                 $this->setSession('navigationType', 'twolevel');
                 echo $this->objContentOrder->getTwoLevelNav($this->contextCode, $page['chapterid'], $pageId);
-                echo '<p><a href="javascript:changeNav(\'tree\');">View as Tree...</a>';
-                echo '<br /><a href="javascript:changeNav(\'bookmarks\');">View Bookmarked Pages</a></p>';
+                echo '<p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
+                echo '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
                 
                 
             } else if ($type == 'tree') {
                 $this->setSession('navigationType', 'tree');
                 echo $this->objContentOrder->getTree($this->contextCode, $page['chapterid'], 'htmllist', $pageId, 'contextcontent');
-                echo '<p><a href="javascript:changeNav(\'twolevel\');">View as Index ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">View Bookmarked Pages</a></p>';
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
                 
                 
             } else if ($type == 'bookmarks') {
@@ -909,7 +916,7 @@ class contextcontent extends controller
                 
                 echo $this->objContentOrder->getBookmarkedPages($this->contextCode, $page['chapterid'], $pageId, 'contextcontent');
                 
-                echo '<p><a href="javascript:changeNav(\'twolevel\');">View as Index ...</a><br /><a href="javascript:changeNav(\'tree\');">View as Tree...</a></p>';
+                echo '<p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
                 
                 
             } else {
@@ -919,7 +926,11 @@ class contextcontent extends controller
     }
 
     
-
+    /**
+     * Method to move a page to another a chapter
+     * @param string $pageId Record Id of the Page
+     * @param string $chapter Record Id of the Chapter
+     */
     private function moveToChapter($pageId, $chapter)
     {
         $result = $this->objContentOrder->movePageToChapter($pageId, $chapter, $this->contextCode);
@@ -927,10 +938,58 @@ class contextcontent extends controller
         return $this->nextAction('viewpage', array('id'=>$pageId, 'message'=>$result));
     }
     
-    private function sessions()
+    /**
+     * Method to toggle the status of a bookmarked page
+     */
+    protected function changeBookMark()
+    {
+        $id = $this->getParam('id');
+        $type = $this->getParam('type', 'on');
+        
+        if ($type == 'on') {
+            $this->objContentOrder->bookmarkPage($id);
+            echo '<a href="javascript:changeBookmark(\'off\');">'.$this->objLanguage->languageText('mod_contextcontent_removebookmark', 'contextcontent', 'Remove Bookmark').'</a>';
+        } else {
+            $this->objContentOrder->removeBookmark($id);
+            echo '<a href="javascript:changeBookmark(\'on\');">'.$this->objLanguage->languageText('mod_contextcontent_bookmarkpage', 'contextcontent', 'Bookmark Page').'</a>';
+        }
+        
+    }
+    
+    /**
+     * Method to search for text within a context content
+     * @param string $searchText Text to search for
+     */
+    protected function search($searchText)
+    {
+        $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
+        $this->setVarByRef('chapters', $chapters);
+        
+        $this->setLayoutTemplate('layout_firstpage_tpl.php');
+        
+        $objSearchResults = $this->getObject('searchresults', 'search');
+        $searchResults = $objSearchResults->displaySearchResults($searchText, 'contextcontent', $this->contextCode);
+        
+        $this->setVarByRef('searchText', $searchText);
+        $this->setVarByRef('searchResults', $searchResults);
+        
+        return 'tpl_searchresults.php';
+    }
+    
+    /**
+     * Method to get current session settings, as weill as list of chapters for a context
+     * This is used for debugging purposes
+     */
+    public function home_debug()
     {
         echo '<pre>';
         //print_r($_SESSION);
+        
+        $numPages = $this->objContentOrder->getNumContextPages($this->contextCode);
+        echo $numPages.'<br /><br />';
+        
+        $firstPage = $this->objContentOrder->getFirstPage($this->contextCode);
+        print_r($firstPage);
         
         echo $this->contextCode;
         
@@ -947,23 +1006,14 @@ class contextcontent extends controller
         print_r($results);
     }
     
-    function changeBookMark()
+    /**
+    * Method to fix left right value - debugging purpose
+    */
+    protected function fixLeftRightValues()
     {
-        //echo '<pre>';
-        //print_r($_GET);
-        
-        $id = $this->getParam('id');
-        $type = $this->getParam('type', 'on');
-        
-        if ($type == 'on') {
-            $this->objContentOrder->bookmarkPage($id);
-            echo '<a href="javascript:changeBookmark(\'off\');">Remove Bookmark</a>';
-        } else {
-            $this->objContentOrder->removeBookmark($id);
-            echo '<a href="javascript:changeBookmark(\'on\');">Bookmark Page</a>';
-        }
-        
+        $this->objContentOrder->rebuildContext($this->contextCode);
     }
+    
 
 
 

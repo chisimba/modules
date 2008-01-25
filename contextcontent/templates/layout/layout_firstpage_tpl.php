@@ -3,22 +3,37 @@
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('form', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$this->loadClass('button', 'htmlelements');
+$this->loadClass('label', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 
-$content = '<fieldset>
-<legend>Search for: </legend>
-<form id="form1" name="form1" method="post" action="">
-  <label>
-  <input type="text" name="textfield" />
-  </label>
-  <input name="Button" type="button" value="Go" onclick="alert(\'I dont work!\');" />
-</form>
-</fieldset>
+$form = new form ('searchform', $this->uri(array('action'=>'search')));
+$form->method = 'GET';
+
+$hiddenInput = new hiddeninput('module', 'contextcontent');
+$form->addToForm($hiddenInput->show());
+
+$hiddenInput = new hiddeninput('action', 'search');
+$form->addToForm($hiddenInput->show());
+
+$textinput = new textinput ('contentsearch', $this->getParam('contentsearch'));
+$button = new button ('searchgo', 'Go');
+$button->setToSubmit();
+
+$form->addToForm($textinput->show().' '.$button->show());
+
+$objFieldset = $this->newObject('fieldset', 'htmlelements');
+$label = new label ('Search for:', 'input_contentsearch');
+
+$objFieldset->setLegend($label->show());
+$objFieldset->contents = $form->show();
 
 
-
-';
+$content = $objFieldset->show();
 
 $content .= '<h3>Chapters:</h3><ol>';
 
@@ -47,28 +62,8 @@ foreach ($chapters as $chapter)
 
 $content .= '</ol>';
 
-$objDBContext = $this->getObject('dbcontext', 'context');
 
-if($objDBContext->isInContext())
-{
-    
-    $objModules = $this->getObject('modules', 'modulecatalogue');
-    
-    if ($objModules->checkIfRegistered('contextdesigner')) {
-        $objContextUtils = & $this->getObject('utilities','context');
-        $cm = $objContextUtils->getHiddenContextMenu('eventscalendar','show');
-    } else {
-        $cm = '';
-    }
-} else {
-    $cm = '';
-}
-
-//add the blog block
-$objBlocks =  $this->getObject('blocks', 'blocks');
-$blog = $objBlocks->showBlock('latest', 'blog');
-
-$cssLayout->setLeftColumnContent($content.$cm.$blog);
+$cssLayout->setLeftColumnContent($content);
 
 $cssLayout->setMiddleColumnContent($this->getContent());
 

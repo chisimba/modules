@@ -1,3 +1,6 @@
-<h1>You are not logged into a Course</h1>
-<p>Please log into a course to access that course's content</p>
-Todo, add side bar with course drop down.
+<?php
+
+echo '<h1>'.$this->objLanguage->code2Txt('mod_contextcontent_notloggedintoacontext', 'contextcontent', NULL, 'You are not logged into a [-context-]').'</h1>';
+echo '<p>'.$this->objLanguage->code2Txt('mod_contextcontent_pleaselogintocontext', 'contextcontent', NULL, 'Please log into a [-context-] to access that [-context-] content').'</p>';
+
+?>

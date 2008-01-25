@@ -107,7 +107,7 @@ echo $topTable->show();
 
 if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid('changebookmark')) {
     echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
-    echo '<h5><a href="javascript:togglePageOptions();">Page Options...</a></h5>';
+    echo '<h5><a href="javascript:togglePageOptions();">'.$this->objLanguage->languageText('mod_contextcontent_pageoptions', 'contextcontent', 'Page Options').'...</a></h5>';
     echo '<div id="pageoptions" style="display:none">';
 
     $options = array();
@@ -122,9 +122,9 @@ if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid
     
     if ($this->isValid('changebookmark')) {
         if ($page['isbookmarked'] == 'Y') {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'off\');">Remove Bookmark</a></div>';
+            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'off\');">'.$this->objLanguage->languageText('mod_contextcontent_removebookmark', 'contextcontent', 'Remove Bookmark').'</a></div>';
         } else {
-            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">Bookmark Page</a></div>';
+            $options[] = '<div id="bookmarkOptions"><a href="javascript:changeBookmark(\'on\');">'.$this->objLanguage->languageText('mod_contextcontent_bookmarkpage', 'contextcontent', 'Bookmark Page').'</a></div>';
         }
     }
     

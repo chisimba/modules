@@ -392,16 +392,26 @@ class db_contextcontent_order extends dbtable
             $this->updateLeftRightPointers($chapter, $lastRight-1);
         }
         
-        $pageOrder = $this->getLastOrder($context, $parentId)+1;
+        $pageOrder = $this->getLastOrder($chapter, $parentId)+1;
         
         $this->clearChapterPDF($chapter, $context);
         
-        return $this->insertTitle($context, $chapter, $titleId, $parentId, $leftPointer, $rightPointer, $pageOrder, 'Y', $bookmark, $isBookmark);
+        $result = $this->insertTitle($context, $chapter, $titleId, $parentId, $leftPointer, $rightPointer, $pageOrder, 'Y', $bookmark, $isBookmark);
+        
+        if ($result != FALSE) {
+            $page = $this->getPage($result, $context);
+            
+            if ($page != FALSE) {
+                $this->indexData($context, $page);
+            }
+        }
+        
+        return $result;
     }
     
     
     
-    private function insertTitle($context, $chapter='', $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y', $bookmark='', $isBookmark='N')
+    private function insertTitle($context, $chapter, $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y', $bookmark='', $isBookmark='N')
     {
         $lastId = $this->insert(array(
                 'contextcode' => $context,
@@ -427,6 +437,31 @@ class db_contextcontent_order extends dbtable
         $this->clearChapterPDF($chapter, $context);
         
         return $lastId;
+    }
+    
+    public function indexData($context, $page)
+    {
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        $docId = 'contextcontent_page_'.$context.'_'.$page['id'];
+        
+        $docDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action'=>'viewpage', 'id'=>$page['id']), 'contextcontent');
+        $title = $page['menutitle'];
+        $contents = $page['menutitle'].' '.$page['pagecontent'];
+        
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($page['pagecontent']), 500);
+        
+        $userId = $this->objUser->userId();
+        $module = 'contextcontent';
+        
+        // Todo - Set permissions on entering course, e.g. iscontextmember.
+        $permissions = NULL;
+        
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+        
     }
     
     /**
@@ -472,9 +507,14 @@ class db_contextcontent_order extends dbtable
         }
     }
     
-    private function getLastOrder($context, $parent='')
+    private function getLastOrder($chapter, $parent='root')
     {
-        $sql = 'WHERE parentid =\''.$parent.'\' AND contextcode =\''.$context.'\' ORDER BY pageorder DESC LIMIT 1';
+        if ($parent == '') {
+            $parent = 'root';
+        }
+        
+        $sql = 'WHERE parentid =\''.$parent.'\' AND chapterid =\''.$chapter.'\' ORDER BY pageorder DESC LIMIT 1';
+        
         $result = $this->getAll($sql);
         
         if (count($result) == 0) {
@@ -576,13 +616,13 @@ class db_contextcontent_order extends dbtable
     *
     *
     */
-    public function getNextPage($context, $chapter, $leftValue='', $module='contextcontent')
+    public function getNextPageSQL($context, $chapter, $leftValue)
     {
         $sql = 'SELECT tbl_contextcontent_order.id, tbl_contextcontent_pages.menutitle
         FROM tbl_contextcontent_order 
         INNER JOIN tbl_contextcontent_titles ON (tbl_contextcontent_order.titleid = tbl_contextcontent_titles.id) 
         INNER JOIN tbl_contextcontent_pages ON (tbl_contextcontent_pages.titleid = tbl_contextcontent_titles.id AND original=\'Y\') 
-        WHERE contextcode =\''.$context.'\' AND lft > '.$leftValue.' AND chapterid=\''.$chapter.'\'
+        WHERE contextcode =\''.$context.'\' AND lft > '.$leftValue.' AND tbl_contextcontent_order.chapterid=\''.$chapter.'\'
         ORDER BY lft LIMIT 1';
         
         $results = $this->getArray($sql);
@@ -590,8 +630,22 @@ class db_contextcontent_order extends dbtable
         if (count($results) == 0) {
             return '';
         } else {
-            $page = $results[0];
-            
+            return $results[0];
+        }
+    }
+    
+    /**
+    *
+    *
+    *
+    */
+    public function getNextPage($context, $chapter, $leftValue='', $module='contextcontent')
+    {
+        $page = $this->getNextPageSQL($context, $chapter, $leftValue);
+        
+        if ($page == '') {
+            return '';
+        } else {
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
             $link->link = 'Next Page: '.htmlentities($page['menutitle']).' &#187;';
             return $link->show();
@@ -652,7 +706,24 @@ class db_contextcontent_order extends dbtable
      *
      * @param string $context Context Code of Context to Fix
      */
-    public function rebuildContext($context, $chapter)
+    public function rebuildContext($context)
+    {
+        $objContextChapter = $this->getObject('db_contextcontent_contextchapter');
+        $contextChapters = $objContextChapter->getContextChapters($context);
+        
+        if (count($contextChapters) > 0) {
+            foreach ($contextChapters as $chapter)
+            {
+                $this->orderArray = array();
+                $this->_rebuild_tree($context, $chapter['chapterid'], 'root', 0, 1);
+                
+                // Delete existing PDF version
+                $this->clearChapterPDF($chapter['id'], $context);
+            }
+        }
+    }
+    
+    public function rebuildChapter($context, $chapter)
     {
         $this->orderArray = array();
         $this->_rebuild_tree($context, $chapter, 'root', 0, 1);
@@ -684,7 +755,8 @@ class db_contextcontent_order extends dbtable
         //}
         
         $thisRow = $this->getRow('id', $parent);
-        //echo $parent.'<br />';
+        
+        
         if (!array_key_exists($thisRow['parentid'], $this->orderArray)) {
             $this->orderArray[$thisRow['parentid']] = 1;
         } else {
@@ -707,9 +779,6 @@ class db_contextcontent_order extends dbtable
         }
         
         
-        //echo 'Id - '.$parent.', left - '.$left.', right - '.$right.', order - '.$this->orderArray[$name].'<br />';
-        
-        
         
        // return the right value of this node + 1
        return $right+1;
@@ -723,7 +792,20 @@ class db_contextcontent_order extends dbtable
      */
     function deletePage($id)
     {
-        return $this->delete('id', $id);
+        $page = $this->getRow('id', $id);
+        
+        if ($page == FALSE) {
+            return FALSE;
+        } else {
+            $result = $this->delete('id', $id);
+            
+            if ($result) {
+                $objIndexData = $this->getObject('indexdata', 'search');
+                $objIndexData->removeIndex('contextcontent_page_'.$page['contextcode'].'_'.$page['id']);
+            }
+            
+            return $result;
+        }
     }
     
     /**
@@ -1068,6 +1150,11 @@ class db_contextcontent_order extends dbtable
         $this->rebuildContext($context, $chapter);
         
         return 'pagemovedtonewchapter';
+    }
+    
+    function getContextWithPages($titleId)
+    {
+        return $this->getAll(' WHERE titleid=\''.$titleId.'\'');
     }
 
 

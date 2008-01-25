@@ -6,7 +6,7 @@ $this->setVarByRef('chapters', $chapters);
 $this->setLayoutTemplate('layout_firstpage_tpl.php');
 
 if (isset($errorTitle)) {
-    echo '<h1 class="error">Error: '.$errorTitle.'</h1>';
+    echo '<h1 class="error">'.$this->objLanguage->languageText('word_error', 'system', 'Error').': '.$errorTitle.'</h1>';
 }
 
 if (isset($errorMessage)) {

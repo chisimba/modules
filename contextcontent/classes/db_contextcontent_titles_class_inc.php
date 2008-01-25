@@ -34,6 +34,16 @@ class db_contextcontent_titles extends dbtable
         $this->delete('id', $id);
         $this->objContentPages->delete('titleid', $id);
         
+        
+        $objContextOrder = $this->getObject('db_contextcontent_order');
+        $contexts = $objContextOrder->getContextWithPages($id);
+        
+        if (is_array($contexts) && count($contexts) > 0) {
+            foreach ($contexts as $context)
+            {
+                $objContextOrder->deletePage($context['id']);
+            }
+        }
         return;
     }
 

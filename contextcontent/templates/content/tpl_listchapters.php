@@ -43,7 +43,7 @@ if ($this->isValid('addchapter')) {
     
     $addChapter = $link->show();
 } else {
-	$addChapter = '';
+    $addChapter = '';
 }
 
 echo '<h1>'.$this->objLanguage->languageText("mod_contextcontent_contextpagesfor",'contextcontent')." ".$this->objContext->getTitle().' '.$addChapter.'</h1>';
@@ -89,35 +89,35 @@ foreach ($chapters as $chapter)
         
         $addedCounter++;
         
-		// Get List of Pages in the Chapter
+        // Get List of Pages in the Chapter
         $chapterPages = $this->objContentOrder->getTree($this->contextCode, $chapter['chapterid'], 'htmllist');
-		
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-			$hasPages = FALSE;
-			$dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
+        
+        if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+            $hasPages = FALSE;
+            $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle'], ' disabled="disabled" title="'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnopages','contextcontent').'"');
             $notVisibleCounter++;
-		} else {
-			$hasPages = TRUE;
-			$dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
-		}
-		
+        } else {
+            $hasPages = TRUE;
+            $dropdown->addOption($chapter['chapterid'], $chapter['chaptertitle']);
+        }
+        
         $editLink = new link($this->uri(array('action'=>'editchapter', 'id'=>$chapter['chapterid'])));
         $editLink->link = $editIcon;
         
         $deleteLink = new link($this->uri(array('action'=>'deletechapter', 'id'=>$chapter['chapterid'])));
         $deleteLink->link = $deleteIcon;
-		
-		$addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
+        
+        $addPageLink = new link($this->uri(array('action'=>'addpage', 'chapter'=>$chapter['chapterid'])));
         $addPageLink->link = $addPageIcon;
         
-		$chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-		$chapterLink->link = $chapter['chaptertitle'];
+        $chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
+        $chapterLink->link = $chapter['chaptertitle'];
         
-		if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-			$content = '<h1>'.$chapter['chaptertitle'];
-		} else {
-			$content = '<h1>'.$chapterLink->show();
-		}
+        if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+            $content = '<h1>'.$chapter['chaptertitle'];
+        } else {
+            $content = '<h1>'.$chapterLink->show();
+        }
         
         if ($this->isValid('editchapter')) {
             $content .= ' '.$editLink->show();
@@ -126,11 +126,11 @@ foreach ($chapters as $chapter)
         if ($this->isValid('deletechapter')) {
             $content .= ' '.$deleteLink->show();
         }
-		
-		if ($this->isValid('addpage')) {
+        
+        if ($this->isValid('addpage')) {
             $content .= ' '.$addPageLink->show();
         }
-		
+        
         
         if ($pdfHtmlDoc && trim($chapterPages) != '<ul class="htmlliststyle"></ul>') {
             
@@ -161,28 +161,28 @@ foreach ($chapters as $chapter)
         
         if ($chapter['visibility'] == 'I' && !$this->isValid('viewhiddencontent')) {
             $content .= '<p class="warning">'.ucfirst($this->objLanguage->code2Txt('mod_contextcontent_studentscannotaccesscontent','contextcontent')).'.</p>';
-				
-				// Empty variable for use later on
-				$chapterPages = '';
+                
+                // Empty variable for use later on
+                $chapterPages = '';
         } else {
-			
+            
             if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>' && $this->isValid('viewhiddencontent')) {
                 $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
-				
-				// Empty variable for use later on
-				$chapterPages = '';
-				
+                
+                // Empty variable for use later on
+                $chapterPages = '';
+                
             } else if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
                 $content .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentpages','contextcontent').'</div>';
-				
-				// Empty variable for use later on
-				$chapterPages = '';
+                
+                // Empty variable for use later on
+                $chapterPages = '';
             } else {
                 $chapterPages = '<div style="display:none" id="toc_'.$chapter['chapterid'].'"><p><strong>Content:</strong></p>'.$chapterPages.'</div>';
 
                 $chapterOptions[] = '<a href="javascript:showHideChapter(\'toc_'.$chapter['chapterid'].'\');"><strong>'.$this->objLanguage->languageText('mod_contextcontent_showhidecontents','contextcontent').' ...</strong></a>';
-				
-				$content .= $chapterPages;
+                
+                $content .= $chapterPages;
             }
         }
         
@@ -194,8 +194,8 @@ foreach ($chapters as $chapter)
         
         $moveDownLink = new link ($this->uri(array('action'=>'movechapterdown', 'id'=>$chapter['contextchapterid'])));
         $moveDownLink->link = $this->objLanguage->languageText('mod_contextcontent_movechapterdown','contextcontent');
-		
-		//$content .= '<br />';
+        
+        //$content .= '<br />';
         
         if ($this->isValid('addpage')) {
             //$content .= $addPageLink->show();
@@ -230,18 +230,18 @@ $chapterList .= '</div>';
 
 
 if (count($chapters) > 1) {
-	$form->addToForm($dropdown->show());
+    $form->addToForm($dropdown->show());
 
-	$button = new button ('', 'Go');
-	$button->setToSubmit();
+    $button = new button ('', 'Go');
+    $button->setToSubmit();
     
     if ($notVisibleCounter == $addedCounter) {
         $button->extra = ' disabled="disabled" ';
     }
     
-	$form->addToForm(' '.$button->show());
-	
-	echo $form->show();
+    $form->addToForm(' '.$button->show());
+    
+    echo $form->show();
 }
 
 echo $chapterList;
@@ -257,13 +257,13 @@ if ($this->isValid('addchapter')) {
 ?>
 <script type="text/javascript">
 //<![CDATA[
-	
-	function showHideChapter(chapterId)
-	{
-		Effect.toggle(chapterId, 'appear', {oncomplete: function() {
+    
+    function showHideChapter(chapterId)
+    {
+        Effect.toggle(chapterId, 'appear', {oncomplete: function() {
                 adjustLayout();
-			}});
-		var oTime = window.setTimeout('adjustLayout()',1000); 
-	}
+            }});
+        var oTime = window.setTimeout('adjustLayout()',1000); 
+    }
 //]]>
 </script>

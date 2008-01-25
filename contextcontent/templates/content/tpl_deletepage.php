@@ -8,17 +8,6 @@ $this->loadClass('button', 'htmlelements');
 
 $this->setVar('pageTitle', $this->objContext->getTitle().$this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent').htmlentities($page['menutitle']));
 
-if (trim($page['headerscripts']) != '') {
-
-    $header = '
-<![CDATA[
-'.$page['headerscripts'].'
-]]>
-';
-    $this->appendArrayVar('headerParams', $header);
-
-
-}
 
 $title = $this->objLanguage->languageText('mod_contextcontent_delcontextpages','contextcontent')." ".htmlentities($page['menutitle']);
 
@@ -50,4 +39,5 @@ echo $objHighlightLabels->show();
 
 $featurebox = $this->newObject('featurebox', 'navigation');
 echo $featurebox->show($title, $form->show());
+
 ?>

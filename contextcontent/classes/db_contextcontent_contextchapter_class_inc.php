@@ -101,9 +101,23 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     */
     public function addChapterToContext($chapterId, $context, $visibility)
     {
-        $order = $this->getLastOrder($context)+1;
+        $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
+        $chapterContent = $objChapterContent->getChapterContent($chapterId);
         
-        return $this->insertTitle($context, $chapterId, $order, $visibility);
+        if ($chapterContent == FALSE) {
+            return FALSE;
+        } else {
+            $order = $this->getLastOrder($context)+1;
+            
+            $result = $this->insertTitle($context, $chapterId, $order, $visibility);
+            
+            // If Successfully Added, Index Chapter
+            if ($result != FALSE) {
+                $this->indexChapter($context, $chapterContent);
+            }
+            
+            return $result;
+        }
     }
     
     
@@ -161,6 +175,9 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
                 $this->delete('id', $item['id']);
             }
         }
+        
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex('contextcontent_chapter_'.$context.'_'.$chapterId);
     }
     
     /**
@@ -248,13 +265,69 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     }
 
     /**
-    * Method to check how many chapters are using a particular chapter
+    * Method to check how many contexts are using a particular chapter
     * @param string $chapterId Chapter Id
     * @return boolean
     */
     public function getNumContextWithChapter($chapterId)
     {
         return $this->getRecordCount('WHERE chapterid=\''.$chapterId.'\' ');
+    }
+    
+    /**
+    * Method to get the number of contexts that are using a particular chapter
+    * @param string $chapterId Chapter Id
+    * @return boolean
+    */
+    public function getContextsWithChapter($chapterId)
+    {
+        $results = $this->getAll('WHERE chapterid=\''.$chapterId.'\' ');
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            $contexts = array();
+            
+            foreach ($results as $result)
+            {
+                $contexts[] = $result['contextcode'];
+            }
+            
+            return $contexts;
+        }
+    }
+    
+    
+    /**
+     * Method to add a chapter to the context search index
+     * @param string $context Context Code
+     * @param array $chapter Details of the Chapter
+     */
+    public function indexChapter($context, $chapter)
+    {
+        // Prepare to add context to search index
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        $docId = 'contextcontent_chapter_'.$context.'_'.$chapter['chapterid'];
+        
+        $docDate = date('Y-m-d H:M:S');
+        $url = $this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid']), 'contextcontent');
+        $title = $chapter['chaptertitle'];
+        $contents = $chapter['chaptertitle'].' '.$chapter['introduction'];
+        
+        $objTrimStr = $this->getObject('trimstr', 'strings');
+        $teaser = $objTrimStr->strTrim(strip_tags($chapter['introduction']), 500);
+        
+        $userId = $this->objUser->userId();
+        $module = 'contextcontent';
+        
+        // Todo - Set permissions on entering course, e.g. iscontextmember.
+        $permissions = NULL;
+        
+        
+        
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context, NULL, $permissions);
+        
     }
     
 

@@ -56,8 +56,23 @@ class db_contextcontent_chapters extends dbtable
     */
     function deleteChapter($id)
     {
-        $this->objChapterContent->deleteChapterTitle($id);
+        // Delete the Chapter
         $this->delete('id', $id);
+        
+        // Delete Chapter Content
+        $this->objChapterContent->deleteChapterTitle($id);
+        
+        // Also delete from context
+        $objChapterContext = $this->getObject('db_contextcontent_contextchapter');
+        $contexts = $objChapterContext->getContextsWithChapter($id);
+        
+        if (count($contexts) > 0 && is_array($contexts)) {
+            
+            foreach ($contexts as $context)
+            {
+                $objChapterContext->objContextChapters->removeChapterFromContext($id, $context);
+            }
+        }
     }
     
 

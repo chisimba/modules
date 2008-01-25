@@ -10,23 +10,43 @@ class db_contextcontent_chaptercontent extends dbtable
 {
 
     /**
-	* Constructor
-	*/
-	public function init()
+    * Constructor
+    */
+    public function init()
     {
         parent::init('tbl_contextcontent_chaptercontent');
         $this->objUser =& $this->getObject('user', 'security');
     }
     
     /**
-	* Method to add a Chapter
-	*
-	* @param string $chapterId Chapter Id of the Chapter
-	* @param string $title Title of the Chapter
-	* @param string $intro Intro to Chapter
-	* @param string $language Language of the Chapter
-	* @return boolean Result of Insert
-	*/
+     * Method to get the context of a chapter
+     *
+     * @param string $chapterId Record Id of the Chapter
+     * @return array
+     */
+    public function getChapterContent($chapterId)
+    {
+        $sql = 'WHERE chapterid=\''.$chapterId.'\' AND original=\'Y\' LIMIT 1';
+        
+        $results = $this->getAll($sql);
+        
+        if (count($results) == 0) {
+            return FALSE;
+        } else {
+            return $results[0];
+        }
+    }
+    
+    
+    /**
+    * Method to add a Chapter
+    *
+    * @param string $chapterId Chapter Id of the Chapter
+    * @param string $title Title of the Chapter
+    * @param string $intro Intro to Chapter
+    * @param string $language Language of the Chapter
+    * @return boolean Result of Insert
+    */
     public function addChapter($chapterId, $title, $intro, $language)
     {
         if (!$this->checkChapterExists($chapterId, $language)) {
@@ -45,12 +65,12 @@ class db_contextcontent_chaptercontent extends dbtable
     }
     
     /**
-	* Method to Check whether a Chapter exists for a title
-	*
-	* @param string $chapterId Record Id of the Chapter
-	* @param string $language Requested language
-	* @return boolean
-	*/
+    * Method to Check whether a Chapter exists for a title
+    *
+    * @param string $chapterId Record Id of the Chapter
+    * @param string $language Requested language
+    * @return boolean
+    */
     public function checkChapterExists($chapterId, $language)
     {
         $recordCount = $this->getRecordCount('WHERE chapterid=\''.$chapterId.'\' AND language=\''.$language.'\'');
@@ -75,12 +95,29 @@ class db_contextcontent_chaptercontent extends dbtable
     {
         //echo $id;
         
-        return $this->update('id', $id, array(
-        		'chaptertitle'=>(stripslashes($title)), 
-        		'introduction'=>(stripslashes($intro)), 
+        $result = $this->update('id', $id, array(
+                'chaptertitle'=>(stripslashes($title)), 
+                'introduction'=>(stripslashes($intro)), 
                 'modifierid' => $this->objUser->userId(),
                 'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
-    		));
+            ));
+        
+        if ($result) {
+            
+            $chapter = $this->getRow('id', $id);
+            
+            $objChapterContext = $this->getObject('db_contextcontent_contextchapter');
+            $contexts = $objChapterContext->getContextsWithChapter($chapter['chapterid']);
+            
+            if (count($contexts) > 0) {
+                foreach ($contexts as $context)
+                {
+                    $objChapterContext->indexChapter($context, $chapter);
+                }
+            }
+        }
+        
+        return $result;
     }
     
     /**
