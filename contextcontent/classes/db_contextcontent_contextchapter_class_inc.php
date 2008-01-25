@@ -114,10 +114,60 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
             // If Successfully Added, Index Chapter
             if ($result != FALSE) {
                 $this->indexChapter($context, $chapterContent);
+                
+                $this->addDynamicBlocksToDB($result, $context, $chapterContent['chaptertitle']);
             }
+            
+            
             
             return $result;
         }
+    }
+    
+    
+    /**
+     * Method to add a dynamic block
+     * @param string $recordId Record Id of the Item
+     * @param string $context Context Code
+     * @param string $chapterTitle Chapter Title
+     */
+    private function addDynamicBlocksToDB($recordId, $context, $chapterTitle)
+    {
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        
+        // Add Chapter Block
+        $objDynamicBlocks->addBlock(
+                'contextcontent',
+                'dynamicblocks_contextcontent',
+                'renderChapter',
+                $recordId,
+                'Chapter: '.$chapterTitle,
+                'context',
+                $context,
+                'wide');
+            
+        // Add List of Chapters - Wide
+        $objDynamicBlocks->addBlock(
+                'contextcontent',
+                'dynamicblocks_contextcontent',
+                'listChaptersWide',
+                $context,
+                'List of Content Chapters',
+                'context',
+                $context,
+                'wide');
+        
+        // Add List of Chapters
+        $objDynamicBlocks->addBlock(
+                'contextcontent',
+                'dynamicblocks_contextcontent',
+                'listChapters',
+                $context,
+                'List of Content Chapters',
+                'context',
+                $context,
+                'small');
+        
     }
     
     
@@ -170,10 +220,15 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     {
         $results = $this->getAll('WHERE contextcode =\''.$context.'\' AND chapterid=\''.$chapterId.'\' ');
         if (count($results) > 0) {
+            
+            $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+            
             foreach ($results as $item)
             {
                 $this->delete('id', $item['id']);
+                $objDynamicBlocks->removeBlock('contextcontent', 'dynamicblocks_contextcontent', 'renderChapter', $item['id'], 'context');
             }
+            
         }
         
         $objIndexData = $this->getObject('indexdata', 'search');

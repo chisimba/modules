@@ -72,28 +72,28 @@ class contextcontent extends controller
     {
         try {
             // Load Chapter Classes
-            $this->objChapters =& $this->getObject('db_contextcontent_chapters');
-            $this->objContextChapters =& $this->getObject('db_contextcontent_contextchapter');
-            $this->objContentOrder =& $this->getObject('db_contextcontent_order');
-            // $this->objContentTitles =& $this->getObject('db_contextcontent_titles');
+            $this->objChapters = $this->getObject('db_contextcontent_chapters');
+            $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter');
+            $this->objContentOrder = $this->getObject('db_contextcontent_order');
+            // $this->objContentTitles = $this->getObject('db_contextcontent_titles');
             
             // Load Content Classes
-            $this->objContentPages =& $this->getObject('db_contextcontent_pages');
-            $this->objContentOrder =& $this->getObject('db_contextcontent_order');
-            $this->objContentTitles =& $this->getObject('db_contextcontent_titles');
-            $this->objContentInvolvement =& $this->getObject('db_contextcontent_involvement');
+            $this->objContentPages = $this->getObject('db_contextcontent_pages');
+            $this->objContentOrder = $this->getObject('db_contextcontent_order');
+            $this->objContentTitles = $this->getObject('db_contextcontent_titles');
+            $this->objContentInvolvement = $this->getObject('db_contextcontent_involvement');
             
             // Load Context Object
-            $this->objContext =& $this->getObject('dbcontext', 'context');
+            $this->objContext = $this->getObject('dbcontext', 'context');
             
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
             
-            $this->objLanguage =& $this->getObject('language', 'language');
-            $this->objUser =& $this->getObject('user', 'security');
+            $this->objLanguage = $this->getObject('language', 'language');
+            $this->objUser = $this->getObject('user', 'security');
             
-            $this->objMenuTools =& $this->getObject('tools', 'toolbar');
-            $this->objConfig =& $this->getObject('altconfig', 'config');
+            $this->objMenuTools = $this->getObject('tools', 'toolbar');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             $this->setVar('pageSuppressXML',TRUE);
         }
         catch(customException $e) {
@@ -238,6 +238,8 @@ class contextcontent extends controller
     {
         $this->setVar('mode', 'add');
         
+        $this->setLayoutTemplate('layout_firstpage_tpl.php');
+        
         return 'tpl_addeditchapter.php';
     }
     
@@ -279,6 +281,8 @@ class contextcontent extends controller
             
             $this->setVarByRef('chapter', $chapter);
             $this->setVarByRef('id', $id);
+            
+            $this->setLayoutTemplate('layout_firstpage_tpl.php');
             
             return 'tpl_addeditchapter.php';
         }
@@ -342,6 +346,8 @@ class contextcontent extends controller
                 
                 $numPages = $this->objContentOrder->getContextPages($this->contextCode, $id);
                 $this->setVar('numPages', count($numPages));
+                
+                $this->setLayoutTemplate('layout_firstpage_tpl.php');
                 
                 return 'tpl_deletechapter.php';
             } else {

@@ -35,32 +35,38 @@ $objFieldset->contents = $form->show();
 
 $content = $objFieldset->show();
 
-$content .= '<h3>Chapters:</h3><ol>';
+$content .= '<h3>Chapters:</h3>';
+$chapters = $this->objContextChapters->getContextChapters($this->contextCode);
 
-foreach ($chapters as $chapter)
-{
-    $showChapter = TRUE;
+if (count($chapters) > 0) {
     
-    if ($chapter['visibility'] == 'N') {
-        $showChapter = FALSE;
-    }
+    $content .= '<ol>';
     
-    if ($this->isValid('viewhiddencontent')) {
+    foreach ($chapters as $chapter)
+    {
         $showChapter = TRUE;
-    }
-    
-    if ($showChapter) {
-        if ($chapter['pagecount'] == 0) {
-            $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'].'</li>';
-        } else {
-            $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
-            $link->link = $chapter['chaptertitle'];
-            $content .= '<li>'.$link->show().'</li>';
+        
+        if ($chapter['visibility'] == 'N') {
+            $showChapter = FALSE;
+        }
+        
+        if ($this->isValid('viewhiddencontent')) {
+            $showChapter = TRUE;
+        }
+        
+        if ($showChapter) {
+            if ($chapter['pagecount'] == 0) {
+                $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'].'</li>';
+            } else {
+                $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
+                $link->link = $chapter['chaptertitle'];
+                $content .= '<li>'.$link->show().'</li>';
+            }
         }
     }
+    
+    $content .= '</ol>';
 }
-
-$content .= '</ol>';
 
 
 $cssLayout->setLeftColumnContent($content);
