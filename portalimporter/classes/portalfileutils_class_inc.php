@@ -63,24 +63,48 @@ class portalfileutils extends object
 
     public $dirs=array();
     public $files=array();
+    public $sCOnfig;
+    public $startDir;
+    public $xmlPath;
+    public $xmlFile;
+    public $xmlOut;
 
     /**
     *
-    * Intialiser for the  
+    * Intialiser for the portalimporter module
     * @access public
     *
     */
     public function init()
     {
-
+        $this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->startDir = $this->sConfig->getValue('mod_portalimporter_sitepath', 'portalimporter');
+        $this->contentStart = $this->sConfig->getValue('mod_portalimporter_contentstart', 'portalimporter');
+        $this->contentEnd = $this->sConfig->getValue('mod_portalimporter_contentend', 'portalimporter');
+        $this->xmlPath = $this->sConfig->getValue('mod_portalimporter_xmlpath', 'portalimporter');
+        $this->xmlFile = $this->sConfig->getValue('mod_portalimporter_xmlfile', 'portalimporter');
+        $this->xmlOut = $this->xmlPath . "/" . $this->xmlFile;
     }
 
-    public function printDir($path=START_DIR)
-    {
-
-    }
-
-    public function readPath($path=START_DIR,$level,$last,&$dirs,&$files){
+    /**
+    * 
+    * Method to read a path, and create an array of all the directories and all
+    * the files in it.
+    * 
+    * @param String $path The path. Use "start" to start from the configured path
+    * @param Integer $level The level to work from (normally 1)
+    * @param Integer $last The last level to work from (normally 4 to go 4 directories deep)
+    * @param String array $dirs The array of directories
+    * @param String array $files
+    * 
+    * @return boolean TRUE|FALSE depending on whether there are any files or not
+    * @access public
+    *  
+    */
+    public function readPath($path, $level,$last,&$dirs,&$files) {
+        if ($path == "start") {
+            $path=$this->startDir;
+        }
         $dp=opendir($path);
         while (false!=($file=readdir($dp)) && $level <= $last){
             if ($file!="." && $file!="..")
@@ -103,6 +127,7 @@ class portalfileutils extends object
         }
     }
 
+
     /**
     *
     * A method to simply list all the directories found using the readPath method
@@ -119,7 +144,7 @@ class portalfileutils extends object
                 $ret .= $directory . "<br />";
             }
             return $ret;
-        } else { 
+        } else {
            return NULL;
         }
     }
@@ -144,16 +169,146 @@ class portalfileutils extends object
            return NULL;
         }
     }
+    
+    public function listFilesWithDelimiters()
+    {
+        $ret= "";
+    	if (!empty($this->files)) {
+            $count=0;
+            $strCount;
+            $legacyCount=0;
+            foreach ($this->files as $filename) {
+                $count++;
+                $extension = $this->fileExtension($filename);
+                $lcExt = strtolower($extension);
+                if ($lcExt == "htm" || $lcExt == "html") {
+                    $contents = file_get_contents($filename);
+                    $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+                    if (preg_match($pattern, $contents, $elems)) { 
+                        $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font><br />";
+                        $strCount++;
+                    } else {
+                    	$ret .= $count. ". " . $filename . " <font color='red'>LEGACY PAGE</font><br />";
+                        $legacyCount++;
+                    }
+                }
+            }
+            $ret = "<h1>Listing files per structured or legacy content</h1>"
+              . "<hr /><h2><font color='green'>Structured pages: $strCount</font>"
+              . " || <font color='red'>Legacy pages: $legacyCount</font></h2>" . $ret;
+        }
+        return $ret;
+    }
+    
+    function xmlToFile()
+    {
+        $fh = fopen($this->xmlOut, 'w')  or die("Cannot open file for writing");
+        fwrite($fh, $this->xmlHeader());
+        fclose($fh);
+        $this->showFilesAsXML("file");
+        return "Finished";        
+    }
+    
+    public function xmlHeader()
+    {
+    	return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<document>\n\n";
+    }
+    
+    public function closeXml()
+    {
+    	return "\n\n</document>\n\n";
+    }
+    
+    public function storeData()
+    {
+        $db = $this->getObject("dbcontent","portalimporter");
+        foreach ($this->files as $filename) {
+            $count++;
+            $extension = $this->fileExtension($filename);
+            $lcExt = strtolower($extension);
+            if ($lcExt == "htm" || $lcExt == "html") {
+                $filepath = $filename;
+                $filetype=$extension;
+                $portalPath = $this->getPortalPath($filename);
+                $portal = $this->getLevel($portalPath, "portal");
+                $section =$this->getLevel($portalPath, "section");
+                $subportal = $this->getLevel($portalPath, "subportal");
+                $page = $this->getLevel($portalPath, "page");
+                $this->getContent($filename, $outStyle="database");
+                $ar = array(
+                  'filepath' => $filepath,
+                  'filetype' => $filetype,
+                  'portalpath' => $portalPath,
+                  'portal' => $portal,
+                  'section' => $section,
+                  'subportal' => $subportal,
+                  'page' => $page,
+                  'structuredcontent' => $this->contentStructured,
+                  'rawcontent' => $this->contentRaw
+                );
+                $db->insert($ar);
+            }
+        }
+    	return "All done";
+    }
+    
+    public function getLevel($portalPath, $level)
+    {
+        $pStr = explode("/", $portalPath);
+        $items = count($pStr);
+        if ($items == 1 || empty($pStr)) {
+            $portal = "/";
+            $section = "";
+            $subportal ="";
+            $page = $pStr[0];
+        }
+        if ($items == 2 || empty($pStr)) {
+            $portal = $pStr[0];
+            $section = "";
+            $subportal ="";
+            $page = $pStr[1];
+        }
+        if ($items == 3 || empty($pStr)) {
+            $portal = $pStr[0];
+            $section = $pStr[1];
+            $subportal ="";
+            $page = $pStr[2];
+        }
+        if ($items == 4 || empty($pStr)) {
+            $portal = $pStr[0];
+            $section = $pStr[1];
+            $subportal =$pStr[2];
+            $page = $pStr[3];
+        }
+        switch($level) {
+        	case "portal":
+                return $portal;
+                break;
+            case "section":
+                return $section;
+                break;
+            case "subportal":
+                return $subportal;
+                break;
+            case "page":
+                return $page;
+            default:
+                return "";
+                break;
+        }
+    }
 
 
-    public function showFilesAsXML()
+    public function showFilesAsXML($outPutMethod="screen")
     {
         if (!empty($this->files)) {
             $ret="";
             $count=0;
+            if ($outPutMethod == "file") {
+                $fh = fopen($this->xmlOut, 'a')  or die("Cannot open file for writing");
+            }
             foreach ($this->files as $filename) {
                 $count++;
-if ($count<=425) {
                 $extension = $this->fileExtension($filename);
                 $portalPath = $this->getPortalPath($filename);
                 $lcExt = strtolower($extension);
@@ -169,7 +324,14 @@ if ($count<=425) {
                     $ret .= "<content />\n";
                 }
                 $ret .= "</file>\n\n\n";
-}
+                if ($outPutMethod == "file") {
+                	fwrite($fh, $ret);
+                    $ret="";
+                }
+            }
+            if ($outPutMethod == "file") {
+                fwrite($fh, $this->closeXml());
+                fclose($fh);
             }
             return $ret;
         } else { 
@@ -177,17 +339,75 @@ if ($count<=425) {
         }
     }
 
-    public function getContent($filename)
+    public function getContent($filename, $outStyle="xml")
     {
-        $cStart = "<!--CONTENT_BEGIN-->";
-        $cEnd = "<!--CONTENT_END-->";
-        $pattern = "/" . $cStart . "(.*?)" . $cEnd . "/";
-        $ret = file_get_contents($filename);
-        if (preg_match_all($pattern, $ret, $results, PREG_PATTERN_ORDER)) {
-            return "Contents found";
+        $contents = file_get_contents($filename);
+        $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+        if ($outStyle=="xml") {
+        	$strOpen = "<useraw>FALSE</useraw>\n<structuredcontent>";
+            $strClose = "</structuredcontent>\n<rawcontent />\n";
+            $rawOpen = "<useraw>TRUE</useraw>\n<structuredcontent />\n<rawcontent>";
+            $rawClose = "</rawcontent>\n";
         } else {
-            return "Pattern not found in file";
+            $strOpen = "";
+            $strClose = "";
+            $rawOpen = "";
+            $rawClose = "";
         }
+        
+        if (preg_match($pattern, $contents, $elems)) { 
+            $ret = $strOpen
+              . $this->getContentStructured($contents) 
+              . $strClose;
+            if ($outStyle=="xml") {
+                return $ret;
+            } else {
+                $this->contentStructured = $ret;
+                $this->contentRaw="";
+                return TRUE;
+            }
+        } else {
+            $ret = $rawOpen 
+              . $this->getBody($contents) 
+              . $rawClose;
+            if ($outStyle=="xml") {
+                return $ret;
+            } else {
+                $this->contentStructured = "";
+                $this->contentRaw=$ret;
+                return TRUE;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Method to extract the body of a page
+     * @param String $contents All the HTML from which to extract the body
+     * @return String The contents of what is between the &lt;body&gt; and &lt;/body&gt; tags
+     * 
+     */
+    public function getBody(& $contents)
+    {
+        if (preg_match("/<body.*>(.*)<\/body>/iseU", $contents, $elems)) { 
+            $page = $elems[1];
+            $page = $this->unCrapify($page);
+        } else {
+            $page = "No data in page";
+        }
+        return $page;
+    }
+    
+    public function getContentStructured(& $contents)
+    {
+        $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+    	if (preg_match($pattern, $contents, $elems)) { 
+            $page = $elems[1];
+            $page = $this->unCrapify($page);
+        } else {
+        	$page = "No data in page";
+        }
+        return $page;
     }
 
     public function getLevels($filename)
@@ -199,7 +419,7 @@ if ($count<=425) {
 
     public function getPortalPath($filename)
     {
-        return str_replace(START_DIR . "/", "", $filename);
+        return str_replace($this->startDir . "/", "", $filename);
     }
 
     public function getPortalStructure($portalPath)
@@ -237,8 +457,11 @@ if ($count<=425) {
     }
 
 
-    function getSize($path=START_DIR)
+    function getSize($path=NULL)
     {
+        if ($path==NULL) {
+        	$path = $this->startDir;
+        }
         if(!is_dir($path))return filesize($path);
         $dir = opendir($path);
         while($file = readdir($dir)) {
@@ -246,6 +469,17 @@ if ($count<=425) {
             if(is_dir($path."/".$file) && $file!="." && $file !="..")$size +=$this->getSize($path."/".$file);
        }
        return $size;
+   }
+   
+   public function unCrapify(&$content)
+   {
+        $options = array("clean" => true,
+           "drop-proprietary-attributes" => true,
+           "drop-empty-paras" => true,
+           "hide-comments" => true); 
+        $tidy = tidy_parse_string($content, $options);
+        tidy_clean_repair($tidy);
+        return $tidy;
    }
 
 }

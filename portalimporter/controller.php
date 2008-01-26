@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 /**
  *
  * Portal importer
@@ -119,19 +120,26 @@ class portalimporter extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'readportal');
+        $action=$this->getParam('action', 'default');
         // Convert the action into a method
         $method = $this->__getMethod($action);
         //Return the template determined by the method resulting from action
         return $this->$method();
     }
+    
+    private function __default()
+    {
+        $str = "Working here";
+        $this->setVarByRef('str', $str);
+    	return "default_tpl.php";
+    }
 
     private function __readportal()
     {
         $rP = $this->getObject('portalfileutils', 'portalimporter');
-        $start_dir = "/home/dkeats/websites/portal/www.uwc.ac.za";
+        $start_dir = "start";
         $level=1;  // level is the first level started at
-        $last=3; //this is set the same as level so the script does not read all directories, and only one at a time
+        $last=4; //this is set the same as level so the script does not read all directories, and only one at a time
         $dirs = array();  // SET dirs as an ARRAY so it can be read
         $files = array(); //SET files as an ARRAY so it can be read
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -143,89 +151,64 @@ class portalimporter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-
-
-    private function __tip()
+    
+    private function __genxml()
     {
-        $tt = $this->getObject('domtt', 'htmlelements');
-        $tt->putScripts();
-        $tt->url="http://www.uwc.ac.za";
-        $tt->linkText="The University of the Western Cape";
-        $tt->message = "Now is the time for all good men to come to the aid of the party. The quick brown fox jumped over the big brown lazy dog and fell on its head when it landed.";
-        $tt->title = NULL;
-        $str = $tt->show();
+        $rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+    	$str = $rP->xmlToFile();
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+    
+    private function __showstructured()
+    {
+    	$rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+        $str = $rP->listFilesWithDelimiters();
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
 
-    private function __modlist()
+    public function __showfiles()
     {
-        $objMods = $this->getObject('modulefile', 'modulecatalogue');
-        $ar = $objMods->getLocalModuleList();
-        $k=0;
-        $str="";
-        foreach ($ar as $key=>$moduleId) {
-            $tags = $objMods->moduleTags($moduleId);
-            $tCount = count($tags);
-            $k++;
-            $str .=  $k . ". " . $moduleId . " [<font color='red'>"
-              . $tCount . " = " . $tags . "</font>]<br />";
-            $tags=array();
-        }
+        $rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+    	$str = $rP->showFiles();
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
-
     }
-
-    private function __countries()
+    
+    public function __storedata()
     {
-        $objCountries=$this->getObject('languagecode','language');
-        echo $objCountries->countryAlpha();
-        die();
-        $ar = $objCountries->countryListArr();
-        asort($ar);
-        //var_dump($ar); die();
-
-        $this->loadClass('dropdown','htmlelements');
-        $objSelect = new dropdown('country');
-
-        foreach ($ar as $code=>$country) {
-            //if ($code == "ZA") {
-            //    echo "<font color='red'> $code</b>   is indeed ZA ($country)</font><br />";
-                $objSelect->addOption($code, $country);
-            //} else {
-            //    echo $code . " is not ZA ($country)<br />" ;
-                $objSelect->addOption($code, $country);
-            //}
-
-            //echo $code . " = " . $country ."<br />";
-        }
-        $objSelect->setSelected("ZA");
-        echo $objSelect->show();
-        die();
-        $this->setVarByRef('ar', $ar);
-        return 'dump_tpl.php';
+        $rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+        $str = $rP->storeData();
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
     }
-
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
-
-    /**
-    *
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
-    * @access private
-    *
-    */
-    private function __defaulttest()
-    {
-        $objExpar = $this->getObject("extractparams", "utilities");
-        $str=" a=b,c=d,e= f,";
-        $ar= $objExpar->getArrayParams($str, ",");
-        $this->setVarByRef('ar', $ar);
-        $this->setVar("str", "A: " . $objExpar->a . "<br />");
-        return "proplist_tpl.php";
-    }
 
     /**
     *
@@ -271,7 +254,23 @@ class portalimporter extends controller
     * a method of this class.
     *
     * @access private
-    * @param string $action The action parameter passed byref
+    * @param string $action The acti
+
+
+    * This is a method to determine if the user has to
+    public function requiresLogin()
+    {
+        $action=$this->getParam('action','NULL');
+        switch ($action)
+        {
+            case 'view':
+                return FALSE;
+                break;
+            default:
+                return TRUE;
+                break;
+        }
+     }on parameter passed byref
     * @return stromg the name of the method
     *
     */
