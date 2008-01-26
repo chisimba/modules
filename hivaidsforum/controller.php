@@ -28,7 +28,7 @@ class hivaidsforum extends controller
             $this->objUser = $this->getObject('user', 'security');
             $this->hivTools = $this->getObject('hivtools', 'hivaidsforum');
             $this->dbHivForum = $this->getObject('dbhivforum', 'hivaidsforum');
-            
+
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
             $objLog->log();
@@ -54,47 +54,52 @@ class hivaidsforum extends controller
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
                 break;
-                
+
             case 'showreply':
-                $display = $this->hivTools->showReplyPage();
+                // check if user is logged in
+                if(!$this->objUser->isLoggedIn()){
+                    $display = $this->hivTools->showLoginRequired();
+                }else{
+                    $display = $this->hivTools->showReplyPage();
+                }
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
                 break;
-                
+
             case 'savepost':
                 $this->dbHivForum->saveTopicPost();
                 return $this->nextAction('');
                 break;
-            
+
             case 'addcategory':
                 $display = $this->hivTools->showAddCategory();
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
                 break;
-                
+
             case 'savecat':
                 $forumId = $this->dbHivForum->saveCategory();
                 return $this->nextAction('showcat', array('catId' => $forumId));
                 break;
-                
+
             case 'addtopic':
                 $display = $this->hivTools->showAddTopic();
                 $this->setVarByRef('display', $display);
                 return 'home_tpl.php';
                 break;
-                
+
             case 'savetopic':
                 $topicId = $this->dbHivForum->saveTopic();
                 return $this->nextAction('showtopic', array('topicId' => $topicId));
                 break;
-                
+
             case 'moderate':
                 break;
-            
+
             case 'showcat':
                 $forumId = $this->getParam('catId');
                 $this->setSession('forumId', $forumId);
-                
+
             case 'showtopic':
                 $topicId = $this->getParam('topicId');
                 $this->setSession('topicId', $topicId);
@@ -105,7 +110,7 @@ class hivaidsforum extends controller
                 return 'home_tpl.php';
         }
     }
-    
+
     /**
     * Method to allow user to view the forum without being logged in
     *
@@ -114,8 +119,15 @@ class hivaidsforum extends controller
     public function requiresLogin($action)
     {
         switch($action){
-            case 'showreply':
+            //case 'showreply':
+            //    return TRUE;
+            case 'moderate':
+            case 'addtopic':
+            case 'savecat':
+            case 'addcategory':
+            case 'savepost':
                 return TRUE;
+
             default:
                 return FALSE;
         }
