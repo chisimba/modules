@@ -194,6 +194,20 @@ class portalimporter extends controller
         return "dump_tpl.php";
     }
     
+    public function __findwordcrud()
+    {
+    	$rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+        $str = $rP->detectWordCrap();
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+    
     public function __storedata()
     {
         $rP = $this->getObject('portalfileutils', 'portalimporter');

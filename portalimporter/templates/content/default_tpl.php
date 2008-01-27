@@ -60,6 +60,11 @@ $docmove = $this->uri(
     "action"=>"docmove"
   ), "portalimporter"
 );
+$findwordcrud = $this->uri(
+  array(
+    "action"=>"findwordcrud"
+  ), "portalimporter"
+);
 $dummy = $this->uri(
   array(
     "action"=>"dummy"
@@ -102,6 +107,7 @@ $dummy = $this->uri(
     <ul>
       <li><a href="<?php echo $xmlReadLink;?>">Read portal content and show XML</a></li>
       <li><a href="<?php echo $showStructured;?>">Read portal content and show which files are structured and which raw</a></li>
+      <li><a href="<?php echo $findwordcrud;?>">Read portal content and identify files with Word crud</a></li>
       <li><a href="<?php echo $showFiles;?>">Read portal content and show all files</a></li>
       <li><a href="<?php echo $xmlGenLink;?>">Read portal content and generate XML to file</a></li>
     </ul>

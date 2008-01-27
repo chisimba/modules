@@ -347,6 +347,38 @@ class portalfileutils extends object
         }
     }
 
+    public function detectWordCrap()
+    {
+    	$pattern = "/MSO(.*)>/iseU";
+        $count=0;
+        $ret = "";
+        $crapCount=0;
+        $noCrapCount=0;
+        
+        foreach ($this->files as $filename) {
+            $extension = $this->fileExtension($filename);
+            $lcExt = strtolower($extension);
+            if ($lcExt == "htm" || $lcExt == "html") {
+                $count++;
+                $contents = file_get_contents($filename);
+                if (preg_match($pattern, $contents, $elems)) {
+                    $crapCount++;
+                    $ret .= $this->getPortalPath($filename) . "<br />";
+                } else {
+                    $noCrapCount++;
+                }
+            }
+        }
+        $totalHtml = $crapCount + $noCrapCount;
+            $ret = "<h1>Listing files per structured or legacy content</h1>"
+              . "<br /><h2><font color='green'>Without word crud: $noCrapCount</font>"
+              . "<br /><font color='red'>With word crud: $crapCount</font>"
+              . "<br /><font color='blue'>Total HTML pages: $totalHtml</font>"
+              . "<br /><font color='purple'>Total files parsed: $count</font></h2>" 
+              . $ret;
+        return $ret;
+    }
+
     public function getContent($filename, $outStyle="xml")
     {
         $contents = file_get_contents($filename);
