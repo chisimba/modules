@@ -226,7 +226,7 @@ class portalimporter extends controller
     {
     	$contents='Now is the time for all good images <img src="img.gif"> to <IMG src="uppercasetest.gif"> come to the <img src=noquotes.gif> aid of the image <img src="dummy.gif" alt="Dummy">';
         $rP = $this->getObject('portalfileutils', 'portalimporter');
-        $str = htmlentities($rP->resetTags($contents));
+        $str = htmlentities($rP->resetImages($contents));
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
         
