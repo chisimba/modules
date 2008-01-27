@@ -181,14 +181,14 @@ class portalfileutils extends object
             $count=0;
             $strCount;
             $legacyCount=0;
+            $sPattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
             foreach ($this->files as $filename) {
                 $count++;
                 $extension = $this->fileExtension($filename);
                 $lcExt = strtolower($extension);
                 if ($lcExt == "htm" || $lcExt == "html") {
                     $contents = file_get_contents($filename);
-                    $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
-                    if (preg_match($pattern, $contents, $elems)) { 
+                    if (preg_match($sPattern, $contents, $elems)) { 
                         $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font><br />";
                         $strCount++;
                     } else {
@@ -197,9 +197,13 @@ class portalfileutils extends object
                     }
                 }
             }
+            $totalHtml = $legacyCount + $strCount;
             $ret = "<h1>Listing files per structured or legacy content</h1>"
-              . "<hr /><h2><font color='green'>Structured pages: $strCount</font>"
-              . " || <font color='red'>Legacy pages: $legacyCount</font></h2>" . $ret;
+              . "<br /><h2><font color='green'>Structured pages: $strCount</font>"
+              . "<br /><font color='red'>Legacy pages: $legacyCount</font>"
+              . "<br /><font color='blue'>Total HTML pages: $totalHtml</font>"
+              . "<br /><font color='purple'>Total files parsed: $count</font></h2>" 
+              . $ret;
         }
         return $ret;
     }
