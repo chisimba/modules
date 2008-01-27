@@ -73,6 +73,8 @@ $dummy = $this->uri(
 
 //module=&action=&pmodule_id=portalimporter
 ?>
+&nbsp;<br />
+&nbsp;<br />
 <h3>Options</h3>
 
 &nbsp;Please note that these are all actions that may take a long time to complete.<br /> 
