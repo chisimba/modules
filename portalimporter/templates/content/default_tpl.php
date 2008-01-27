@@ -76,7 +76,7 @@ $dummy = $this->uri(
 <table>
 <tr>
   <th valign="top">
-    <h2>Import portal co$docmoventent</h2>
+    <h2>Import portal content</h2>
   </th>
   <th valign="top">
     <h2>Utilities</h2>
