@@ -120,3 +120,16 @@ $dummy = $this->uri(
 </tr>
 </table>
 &nbsp;<br />
+One of the "features" of Firefox is a pop-up dialog that appears whenever a page takes too long to 
+load that reads, "<font color="brown">Warning: Unresponsive script. A script on this page may be busy, or it 
+may have stopped responding. You can stop the script now, or you can continue to see if 
+the script will complete.</font>" You will almost certainly get this popup when working with 
+this module because some of the actions take a long time to produce output. To fix this:<br />
+<br />
+<ol>
+<li>Type about:config in Firefox's address bar.
+<li>Filter down to the value for dom.max_script_run_time.
+<li>Change the value to something higher than the default (which is 20) I set mine to 200 wile running this module and then set it back again after.
+<li>Go ahead and use Portal importer!
+</ol>
+&nbsp;<br />
