@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 $xmlGenLink = $this->uri(
   array(
     "action"=>"genxml"
@@ -34,28 +35,82 @@ $configure = $this->uri(
     "pmodule_id" => "portalimporter"
   ), "sysconfig"
 );
+$imagemove = $this->uri(
+  array(
+    "action"=>"imagemove"
+  ), "portalimporter"
+);
+$flashmove = $this->uri(
+  array(
+    "action"=>"flashmove"
+  ), "portalimporter"
+);
+$pdfmove = $this->uri(
+  array(
+    "action"=>"pdfmove"
+  ), "portalimporter"
+);
+$mediamove = $this->uri(
+  array(
+    "action"=>"mediamove"
+  ), "portalimporter"
+);
+$docmove = $this->uri(
+  array(
+    "action"=>"docmove"
+  ), "portalimporter"
+);
+$dummy = $this->uri(
+  array(
+    "action"=>"dummy"
+  ), "portalimporter"
+);
 
 //module=&action=&pmodule_id=portalimporter
 ?>
 <h3>Options</h3>
 
-Please note that these are all actions that may take a long time to complete. 
-Half an hour for a large site would not be unusual.  
-
-<ul>
-<li><a href="<?php echo $xmlReadLink;?>">Read portal content and show XML</a></li>
-<li><a href="<?php echo $showStructured;?>">Read portal content and show which files are structured and which raw</a></li>
-<li><a href="<?php echo $showFiles;?>">Read portal content and show all files</a></li>
-<li><a href="<?php echo $xmlGenLink;?>">Read portal content and generate XML to file</a></li>
-<li><a href="<?php echo $dtaStoreLink;?>">Read portal content and store in database</a></li>
-<br />
-<li><a href="<?php echo $configure;?>">Configure import settings</a></li>
-</ul>
-
-<?php
-
-if (isset($str)) {
-   echo $str; 
-}
-
-?>
+&nbsp;Please note that these are all actions that may take a long time to complete.<br /> 
+&nbsp;Half an hour for a large site would not be unusual.  
+<br /><br />
+<table>
+<tr>
+  <th valign="top">
+    <h2>Import portal co$docmoventent</h2>
+  </th>
+  <th valign="top">
+    <h2>Utilities</h2>
+  </th>
+</tr>
+<tr>
+  <td valign="top">
+    <h4>Data migration</h4>
+    <ul>
+      <li><a href="<?php echo $dtaStoreLink;?>">Read portal content and store in database</a></li>
+    </ul>
+    <h4>Digital assets (images, documents, media)</h4>
+    <ul>
+      <li><a href="<?php echo $imagemove;?>">Move image assets to repository</a></li>
+      <li><a href="<?php echo $flashmove;?>">Move Adobe Flash assets to repository</a></li>
+      <li><a href="<?php echo $pdfmove;?>">Move PDF assets to repository</a></li>
+      <li><a href="<?php echo $docmove;?>">Move other document assets to repository</a></li>
+      <li><a href="<?php echo $mediamove;?>">Move media assets (sound, video) to repository</a></li>
+    </ul>
+  </td>
+  <td valign="top">
+    <h4>Content and raw data</h4>
+    <ul>
+      <li><a href="<?php echo $xmlReadLink;?>">Read portal content and show XML</a></li>
+      <li><a href="<?php echo $showStructured;?>">Read portal content and show which files are structured and which raw</a></li>
+      <li><a href="<?php echo $showFiles;?>">Read portal content and show all files</a></li>
+      <li><a href="<?php echo $xmlGenLink;?>">Read portal content and generate XML to file</a></li>
+    </ul>
+    <h4>Settings</h4>
+    <ul>
+      <li><a href="<?php echo $configure;?>">Configure import settings</a></li>
+      <li><a href="<?php echo $dummy;?>">Dummy link for testing whatever is being written now</a></li>
+    </ul>
+  </td>
+</tr>
+</table>
+&nbsp;<br />

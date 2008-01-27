@@ -139,7 +139,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1;  // level is the first level started at
-        $last=4; //this is set the same as level so the script does not read all directories, and only one at a time
+        $last=4; // Go deeper baby
         $dirs = array();  // SET dirs as an ARRAY so it can be read
         $files = array(); //SET files as an ARRAY so it can be read
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -206,6 +206,30 @@ class portalimporter extends controller
         $str = $rP->storeData();
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
+    }
+    
+    public function __imagemove()
+    {
+        $rP = $this->getObject('portalfileutils', 'portalimporter');
+        $start_dir = "start";
+        $level=1; 
+        $last=4;
+        $dirs = array(); 
+        $files = array();
+        $rP->readpath($start_dir,$level, $last, $dirs,$files);
+        $str = $rP->moveImagesToRepository();
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
+    
+    public function __dummy()
+    {
+    	$contents='Now is the time for all good images <img src="img.gif"> to <IMG src="uppercasetest.gif"> come to the <img src=noquotes.gif> aid of the image <img src="dummy.gif" alt="Dummy">';
+        $rP = $this->getObject('portalfileutils', 'portalimporter');
+        $str = htmlentities($rP->resetTags($contents));
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+        
     }
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/

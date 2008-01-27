@@ -1,10 +1,14 @@
 <?php
+set_time_limit(0);
 /**
  *
  * Class to recurse the UWC website and generate XML output
  *
  * This class will recurse the static website pages and generate XML that can be used
- * for the purpose of recreating the UWC portal content as XML or storing it in a database
+ * for the purpose of recreating the UWC portal content as XML or storing it in a 
+ * database.  This is a quick and dirty project for a single use so I may not add 
+ * comments or multilingual text. I have tried to write the code in a self-documenting
+ * kind of way.
  *
  * PHP version 5
  *
@@ -357,7 +361,7 @@ class portalfileutils extends object
         
         if (preg_match($pattern, $contents, $elems)) { 
             $ret = $strOpen
-              . $this->getContentStructured($contents) 
+              . $this->resetImages($this->getContentStructured($contents))
               . $strClose;
             if ($outStyle=="xml") {
                 return $ret;
@@ -368,7 +372,7 @@ class portalfileutils extends object
             }
         } else {
             $ret = $rawOpen 
-              . $this->getBody($contents) 
+              . $this->resetImages($this->getBody($contents))
               . $rawClose;
             if ($outStyle=="xml") {
                 return $ret;
@@ -448,7 +452,129 @@ class portalfileutils extends object
         }
         return $portal . $section . $subportal;
     }
+    
+//------------MOVE file methods ---- put in a different class
+    
+    /**
+    * 
+    * Method to move any image assets to a repository
+    * 
+    * @access Public
+    * 
+    */
+    public function moveImagesToRepository()
+    {
+        $successes = 0;
+        $failures = 0;
+        $count=0;
+        $str = "";
+        $failedFiles="";
+        foreach ($this->files as $filename) {
+            $extension = $this->fileExtension($filename);
+            $portalPath = $this->getPortalPath($filename);
+            $lcExt = strtolower($extension);
+            if ($this->isImage($lcExt)) {
+                $count++;
+                $source = $filename;
+                $destination = $this->getDestination("image", $portalPath);
+                //echo $source . "-------->" . $destination . "<br />";
+            	if (copy($source, $destination)) {
+            		$successes++;
+            	} else {
+            		$failures ++;
+                    $failedFiles .= "Failed to copy <em>$source</em> to the destination of <em>$destination";
+            	}
+                    
+            }
+        }
+        $str .= "<br /><br />Image files located: $count<br />"
+          . "Succeeded: $successes<br />"
+          . "Failed: $failures<br />";
+        if ($failures > 0) {
+        	$str .= "List of failed copies: "
+              . $failedFiles;
+        }
+        return $str;
+    }
+    
+    /**
+    * 
+    * Method to get the destination for a file by file type
+    * @access public
+    * @param String $ext The extension to test
+    * @return String The file destination full path
+    *   
+    */
+    private function getDestination($assetType, & $portalPath)
+    {
+        $assetBase = $this->sConfig->getValue('mod_portalimporter_repository', 'portalimporter');
+        $assetBase .= $assetType;
+        //Create the asset base for this asset type if it does not exist
+        if (!file_exists($assetBase)) {
+            mkdir($assetBase, 0777, TRUE);
+        }
+        $pStr = explode("/", $portalPath);
+        //Pop off the file name from the array
+        array_pop($pStr);
+        $curPath = $assetBase;
+        foreach ($pStr as $directory) {
+        	$curPath .= "/" . $directory;
+            //echo $curPath . "<br />";
+            if (!file_exists($curPath)) {
+               mkdir($curPath, 0777, TRUE);
+            }
+        }
+    	return $assetBase . "/" . $portalPath;
+    }
 
+    /**
+    * 
+    * Method to determine if a file extension is an image or not
+    * @access public
+    * @param String $ext The extension to test
+    *   
+    */
+    public function isImage($ext)
+    {
+    	$images=array("jpg", "jpeg", "png", "gif", "svg");
+        if (in_array($ext, $images)) {
+            return TRUE;
+        } else {
+        	return FALSE;
+        }
+    }
+    
+    /**
+    * 
+    * Method to reset the image tags in the database so that they
+    * point to the new image location wich is used to update 
+    * image tags in imported content so that they point to the 
+    * repository.
+    * 
+    * @access public
+    * @return String The URL path to images
+    * 
+    */
+    public function resetImages($contents)
+    {
+        if ($this->imageBaseUrl=="") {
+        	$this->imageBaseUrl = $this->sConfig->getValue('mod_portalimporter_imageurl', 'portalimporter');
+        }
+        $pattern="/<img.*src=['\"](.*)['\"].*>/iseU";
+    	if (preg_match_all($pattern, $contents, $matches)) {
+            $str = "";
+            foreach ($matches[1] as $matched) {
+                $newLink = $this->imageBaseUrl . "/" . $matched;
+              	$contents = str_ireplace($matched, $newLink, $contents);
+            }
+            return $contents;
+        } else {
+        	return NULL;
+        }
+        
+    }
+
+//----------------- END MOVE file ------------------------------
 
     public function fileExtension($filename)
     {
