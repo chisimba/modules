@@ -174,6 +174,14 @@ class portalfileutils extends object
         }
     }
     
+    /**
+    * A method to list files along with information as to whether they
+    * contain a content delimiter or are legacy plain HTML pages
+    * 
+    * @access public
+    * @return String A list of files
+    *  
+    */
     public function listFilesWithDelimiters()
     {
         $ret= "";
@@ -208,7 +216,13 @@ class portalfileutils extends object
         return $ret;
     }
     
-    function xmlToFile()
+    /**
+    * A method to write out the data to an XML file
+    * @access  Public
+    * @return String "Finished" on completion
+    * 
+    */
+    public function xmlToFile()
     {
         $fh = fopen($this->xmlOut, 'w')  or die("Cannot open file for writing");
         fwrite($fh, $this->xmlHeader());
@@ -217,16 +231,36 @@ class portalfileutils extends object
         return "Finished";        
     }
     
+    /**
+    * 
+    * Method to return an XML header
+    * @access public
+    * @return String A standard XML header together with a <document> root tag
+    * 
+    */
     public function xmlHeader()
     {
     	return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<document>\n\n";
     }
     
+    /**
+    * 
+    * Method to return a closing &lt;document&gt; tag
+    * @return String CLosing document tag
+    * 
+    */
     public function closeXml()
     {
     	return "\n\n</document>\n\n";
     }
     
+    /**
+    * 
+    * MEthod to store the page data in the database. This is the core piece. 
+    * @access public
+    * @return "All done" when finished
+    * 
+    */
     public function storeData()
     {
         $db = $this->getObject("dbcontent","portalimporter");
@@ -260,6 +294,17 @@ class portalfileutils extends object
     	return "All done";
     }
     
+    /**
+    * 
+    * Method to get the Portal|Section|Subportal|Page information from
+    * a file path.
+    * 
+    * @access public
+    * @param String $portalPath The path to the file on the original website
+    * @param $level THe level in the above hierarchy that we are working
+    * @return The names of each level to store in data
+    * 
+    */
     public function getLevel($portalPath, $level)
     {
         $pStr = explode("/", $portalPath);
@@ -307,6 +352,16 @@ class portalfileutils extends object
     }
 
 
+    /**
+    * 
+    * Method to show the files as pseudo XML in the web browser or formatted
+    * for writing to a file.
+    * 
+    * @access public
+    * @param String $outPutMethod WHere the data are being written screen | file
+    * @return String The formatted output or NULL
+    *  
+    */
     public function showFilesAsXML($outPutMethod="screen")
     {
         if (!empty($this->files)) {
@@ -347,19 +402,25 @@ class portalfileutils extends object
         }
     }
 
+    /**
+    * 
+    * A simple method to detect MS Word crap in a page
+    * @access public
+    * @return String A count and list of the files with word crud based on the MSO tag.
+    *  
+    */
     public function detectWordCrap()
     {
-    	$pattern = "/MSO(.*)>/iseU";
+    	$pattern = "/MSO-(.*)>/iseU";
         $count=0;
         $ret = "";
         $crapCount=0;
         $noCrapCount=0;
-        
         foreach ($this->files as $filename) {
             $extension = $this->fileExtension($filename);
             $lcExt = strtolower($extension);
+            $count++;
             if ($lcExt == "htm" || $lcExt == "html") {
-                $count++;
                 $contents = file_get_contents($filename);
                 if (preg_match($pattern, $contents, $elems)) {
                     $crapCount++;
@@ -379,6 +440,15 @@ class portalfileutils extends object
         return $ret;
     }
 
+    /**
+    * 
+    * A method to fetch the content of a page
+    * @access public
+    * @param String $filename The full path to the file
+    * @param String $outStyle A string to determine whether to output XML tags or not
+    * @return String The content extracted from the page by body or structure tag
+    * 
+    */
     public function getContent($filename, $outStyle="xml")
     {
         $contents = file_get_contents($filename);
@@ -438,6 +508,15 @@ class portalfileutils extends object
         return $page;
     }
     
+    /**
+    * Method to extract the content from the page by the content delimiter
+    * of structured content. The delimiter is a config parameter.
+    * 
+    * @access public
+    * @param String $contents The full contents of the page
+    * @return String The extracted content
+    *  
+    */
     public function getContentStructured(& $contents)
     {
         $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
@@ -637,8 +716,7 @@ class portalfileutils extends object
    {
         $options = array("clean" => true,
            "drop-proprietary-attributes" => true,
-           "drop-empty-paras" => true,
-           "hide-comments" => true); 
+           "drop-empty-paras" => true); 
         $tidy = tidy_parse_string($content, $options);
         tidy_clean_repair($tidy);
         return $tidy;
