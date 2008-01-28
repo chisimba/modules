@@ -38,8 +38,8 @@ class dbFaqEntries extends dbTable
 			'contextid'=>$contextId, 
 			'categoryid'=>$categoryId, 
 			'_index' => $index,
-        	        'question' => $question,
-        	        'answer' => $answer,
+	        'question' => $question,
+	        'answer' => $answer,
 			'userid' => $userId,
 			'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 		));
@@ -128,18 +128,37 @@ class dbFaqEntries extends dbTable
 	* @param string $userId The user ID
 	* @param string $dateLastUpdated Date last updated
 	*/
-	function updateSingle($id, $index, $question, $answer, $category, $userId, $dateLastUpdated)
+	function updateSingle($id, $index, $question, $answer, $categoryId, $userId, $dateLastUpdated)
 	{
 		$this->update("id", $id, 
 			array(
 				'_index' => $index,
         		'question' => $question,
         		'answer' => $answer,
-                'categoryid' => $category,
+                'categoryid' => $categoryId,
 				'userid' => $userId,
 				'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
 			)
 		);
+		
+		$this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
+		$categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
+		
+		// Add to Search
+        $objIndexData = $this->getObject('indexdata', 'lucene');
+        
+        // Prep Data
+        $docId = 'faq_entry_'.$id;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
+        $url = $this->uri(array('action'=>'view', 'category'=>$categoryId), 'faq');
+        $title = $categoryRow['categoryname'];
+        $contents = $question.': '.$answer;
+        $teaser = $question;
+        $module = 'faq';
+        $userId = $userId;
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
 	}
 	
 	/**
