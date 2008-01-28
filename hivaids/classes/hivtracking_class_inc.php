@@ -1413,15 +1413,19 @@ class hivtracking extends object
 
         $menuStr .= $this->objFeatureBox->show($hdConfig, $regStr);
 
-        // Clear the logger
-        $clearStr = '<p class="dim">'.$lbClearInfo.'</p>';
-        $objButton = new button('clear', $lbClear);
-        $link = $this->uri(array('action' => 'settracking', 'mode' => 'clearall', 'nextmode' => $nextMode));
-        $this->objConfirm->setConfirm($objButton->show(), $link, $lbConfirm);
+        // Only display when action = manageclear
+        $action = $this->getParam('action');
+        if($action == 'manageclear'){
+            // Clear the logger
+            $clearStr = '<p class="dim">'.$lbClearInfo.'</p>';
+            $objButton = new button('clear', $lbClear);
+            $link = $this->uri(array('action' => 'settracking', 'mode' => 'clearall', 'nextmode' => $nextMode));
+            $this->objConfirm->setConfirm($objButton->show(), $link, $lbConfirm);
 
-        $clearStr .= '<p>'.$this->objConfirm->show().'</p>';
+            $clearStr .= '<p>'.$this->objConfirm->show().'</p>';
 
-        $menuStr .= $this->objFeatureBox->show($hdClear, $clearStr);
+            $menuStr .= $this->objFeatureBox->show($hdClear, $clearStr);
+        }
 
         return $menuStr;
     }

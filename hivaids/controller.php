@@ -212,6 +212,11 @@ class hivaids extends controller
             case 'photogallery':
                 return $this->nextAction('', '', 'photogallery');
 
+            case 'manageclear':
+                $left = $this->hivTracking->showLeftMenu();
+                $this->hivTools->setLeftCol($left);
+                return 'home_tpl.php';
+
             default:
                 $display = $this->hivTools->showManagement();
                 $this->setVarByRef('display', $display);
@@ -299,6 +304,7 @@ class hivaids extends controller
             case 'register':
             case 'playyourmoves':
             case 'videolist':
+            case 'viewlinks':
             case 'podcast':
             case 'showbox':
             case 'savesuggestion':
