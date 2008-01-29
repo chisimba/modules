@@ -39,8 +39,9 @@ if (isset ($noContextCode))
 	echo $objSelectFile->show();
 ?>
 </div>
+
 <!-- END FILE MANAGER FILE CHOOSER CODE-->
-             <applet codebase="<?= $this->objAltConfig->getModuleUri() ?>/realtime/resources/"
+             <applet codebase="<?= "http://" . $_SERVER['HTTP_HOST'].'/'.$this->objAltConfig->getModuleUri() ?>/realtime/resources/"
               code="avoir.realtime.classroom.RealtimeClassroomApplet.class"
               archive="avoir-realtime-classroom-0.1.jar,avoir-realtime-common-0.1.jar,avoir-whiteboard-client-0.1.jar" width="700" height="500">
 	          <param name=userName value="<?echo $this->objUser->userName()?>">
