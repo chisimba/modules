@@ -1,6 +1,8 @@
 <?php
 	//die("DIE");
 ?>
+
+
 <script language="JavaScript">
 
 if(!document.getElementById && document.all)
@@ -42,6 +44,7 @@ if ($mode == 'edit') {
     $action = 'saveevent';
     $title = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase').$this->objHelp->show();
 }
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -61,7 +64,6 @@ $this->appendArrayVar('headerParams',$headerParams);
 
 
 echo ('<h1>'.$title.'</h1>');
-
 
 
 
