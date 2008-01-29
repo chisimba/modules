@@ -64,7 +64,6 @@ define(START_DIR, '/home/dkeats/websites/portal/www.uwc.ac.za');
 */
 class portalfileutils extends object
 {
-
     public $dirs=array();
     public $files=array();
     public $sCOnfig;
@@ -72,6 +71,8 @@ class portalfileutils extends object
     public $xmlPath;
     public $xmlFile;
     public $xmlOut;
+    public $fullTitle;
+    public $pageTitle;
 
     /**
     *
@@ -144,10 +145,24 @@ class portalfileutils extends object
     {
         if (!empty($this->dirs)) {
             $ret="";
+            $okCount=0;
+            $dudCount=0;
             foreach ($this->dirs as $directory) {
-                $ret .= $directory . "<br />";
+                $count++;
+                if (!$this->isExcludeFile($directory)) {
+                    $ret .= $this->getPortalPath($directory) . "<font color=\"green\"> OK</font><br />";
+                    $okCount++;
+                } else {
+                    $ret .= $this->getPortalPath($directory) . "<font color=\"red\"> DUD</font><br />";
+                    $dudCount++;
+                }
             }
-            return $ret;
+            $ret = "<h1>Listing directories</h1>"
+              . "<br /><h2><font color='green'>Content directories: $okCount</font>"
+              . "<br /><font color='red'>Dud directories: $dudCount</font>"
+              . "<br /><font color='purple'>Total directories parsed: $count</font></h2>"
+              . $ret;
+              return $ret;
         } else {
            return NULL;
         }
@@ -165,8 +180,10 @@ class portalfileutils extends object
     {
         if (!empty($this->files)) {
             $ret="";
+            $count=0;
             foreach ($this->files as $file) {
-                $ret .= $file . "<br />";
+                $count++;
+                $ret .= $file . "<font color=\"green\"> OK</font><br />";
             }
             return $ret;
         } else { 
@@ -189,6 +206,7 @@ class portalfileutils extends object
             $count=0;
             $strCount;
             $legacyCount=0;
+            $dudFiles=0;
             $sPattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
             foreach ($this->files as $filename) {
                 $count++;
@@ -196,19 +214,25 @@ class portalfileutils extends object
                 $lcExt = strtolower($extension);
                 if ($lcExt == "htm" || $lcExt == "html") {
                     $contents = file_get_contents($filename);
-                    if (preg_match($sPattern, $contents, $elems)) { 
-                        $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font><br />";
-                        $strCount++;
+                    if (!$this->isExcludeFile($filename)) {
+                        if (preg_match($sPattern, $contents, $elems)) { 
+                            $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font><br />";
+                            $strCount++;
+                        } else {
+                            $ret .= $count. ". " . $filename . " <font color='red'>LEGACY PAGE</font><br />";
+                            $legacyCount++;
+                        }
                     } else {
-                    	$ret .= $count. ". " . $filename . " <font color='red'>LEGACY PAGE</font><br />";
-                        $legacyCount++;
+                        $ret .= $count. ". " . $filename . " <font color='orange'>DUD PAGE</font><br />";
+                        $dudFiles++;
                     }
                 }
             }
-            $totalHtml = $legacyCount + $strCount;
+            $totalHtml = $legacyCount + $strCount + $dudFiles;
             $ret = "<h1>Listing files per structured or legacy content</h1>"
               . "<br /><h2><font color='green'>Structured pages: $strCount</font>"
               . "<br /><font color='red'>Legacy pages: $legacyCount</font>"
+              . "<br /><font color='orange'>Dud pages: $dudFiles</font>"
               . "<br /><font color='blue'>Total HTML pages: $totalHtml</font>"
               . "<br /><font color='purple'>Total files parsed: $count</font></h2>" 
               . $ret;
@@ -264,31 +288,37 @@ class portalfileutils extends object
     public function storeData()
     {
         $db = $this->getObject("dbcontent","portalimporter");
-        foreach ($this->files as $filename) {
-            $count++;
-            $extension = $this->fileExtension($filename);
-            $lcExt = strtolower($extension);
-            if ($lcExt == "htm" || $lcExt == "html") {
-                $filepath = $filename;
-                $filetype=$extension;
-                $portalPath = $this->getPortalPath($filename);
-                $portal = $this->getLevel($portalPath, "portal");
-                $section =$this->getLevel($portalPath, "section");
-                $subportal = $this->getLevel($portalPath, "subportal");
-                $page = $this->getLevel($portalPath, "page");
-                $this->getContent($filename, $outStyle="database");
-                $ar = array(
-                  'filepath' => $filepath,
-                  'filetype' => $filetype,
-                  'portalpath' => $portalPath,
-                  'portal' => $portal,
-                  'section' => $section,
-                  'subportal' => $subportal,
-                  'page' => $page,
-                  'structuredcontent' => $this->contentStructured,
-                  'rawcontent' => $this->contentRaw
-                );
-                $db->insert($ar);
+        // Check for exclusion strings in filename
+        if (!$this->isExcludeFile($filename)) {
+            foreach ($this->files as $filename) {
+                $count++;
+                $extension = $this->fileExtension($filename);
+                $lcExt = strtolower($extension);
+                if ($lcExt == "htm" || $lcExt == "html") {
+                    $filepath = $filename;
+                    if (!$this->isExcludeFile($filename)) {
+                        $filetype=$extension;
+                        $portalPath = $this->getPortalPath($filename);
+                        $portal = $this->getLevel($portalPath, "portal");
+                        $section =$this->getLevel($portalPath, "section");
+                        $subportal = $this->getLevel($portalPath, "subportal");
+                        $page = $this->getLevel($portalPath, "page");
+                        $this->getContent($filename, $outStyle="database");
+                        $ar = array(
+                        'filepath' => $filepath,
+                        'filetype' => $filetype,
+                        'portalpath' => $portalPath,
+                        'portal' => $portal,
+                        'section' => $section,
+                        'subportal' => $subportal,
+                        'page' => $page,
+                        'pagetitle' => $this->pageTitle,
+                        'structuredcontent' => $this->contentStructured,
+                        'rawcontent' => $this->contentRaw
+                        );
+                        $db->insert($ar);
+                    }
+                }
             }
         }
     	return "All done";
@@ -371,25 +401,28 @@ class portalfileutils extends object
                 $fh = fopen($this->xmlOut, 'a')  or die("Cannot open file for writing");
             }
             foreach ($this->files as $filename) {
-                $count++;
-                $extension = $this->fileExtension($filename);
-                $portalPath = $this->getPortalPath($filename);
-                $lcExt = strtolower($extension);
-                $ret .= "<file counter=\"" . $count . "\">\n";
-                $ret .= "<filepath>" . $filename . "</filepath>\n";
-                $ret .= "<filetype>" . $extension . "</filetype>\n";
-                $ret .= "<depth>" . $this->getLevels($filename) . "</depth>\n";
-                $ret .= "<portalpath>" . $portalPath . "</portalpath>\n";
-                $ret .= $this->getPortalStructure($portalPath);
-                if ($lcExt == "htm" || $lcExt == "html") {
-                    $ret .= "<content>\n\n" . $this->getContent($filename) . "\n</content>\n\n";
-                } else {
-                    $ret .= "<content />\n";
-                }
-                $ret .= "</file>\n\n\n";
-                if ($outPutMethod == "file") {
-                	fwrite($fh, $ret);
-                    $ret="";
+                // Check for exclusion strings in filename
+                if (!$this->isExcludeFile($filename)) {
+                    $count++;
+                    $extension = $this->fileExtension($filename);
+                    $portalPath = $this->getPortalPath($filename);
+                    $lcExt = strtolower($extension);
+                    $ret .= "<file counter=\"" . $count . "\">\n";
+                    $ret .= "<filepath>" . $filename . "</filepath>\n";
+                    $ret .= "<filetype>" . $extension . "</filetype>\n";
+                    $ret .= "<depth>" . $this->getLevels($filename) . "</depth>\n";
+                    $ret .= "<portalpath>" . $portalPath . "</portalpath>\n";
+                    $ret .= $this->getPortalStructure($portalPath);
+                    if ($lcExt == "htm" || $lcExt == "html") {
+                        $ret .= "<content>\n\n" . $this->getContent($filename) . "\n</content>\n\n";
+                    } else {
+                        $ret .= "<content />\n";
+                    }
+                    $ret .= "</file>\n\n\n";
+                    if ($outPutMethod == "file") {
+                    	fwrite($fh, $ret);
+                        $ret="";
+                    }
                 }
             }
             if ($outPutMethod == "file") {
@@ -417,17 +450,20 @@ class portalfileutils extends object
         $crapCount=0;
         $noCrapCount=0;
         foreach ($this->files as $filename) {
-            $extension = $this->fileExtension($filename);
-            $lcExt = strtolower($extension);
-            $count++;
-            if ($lcExt == "htm" || $lcExt == "html") {
-                $contents = file_get_contents($filename);
-                if (preg_match($pattern, $contents, $elems)) {
-                    $crapCount++;
-                    $ret .= $this->getPortalPath($filename) . "<br />";
-                } else {
-                    $noCrapCount++;
-                }
+            // Check for exclusion strings in filename
+            if (!$this->isExcludeFile($filename)) {
+                $extension = $this->fileExtension($filename);
+                $lcExt = strtolower($extension);
+                $count++;
+                if ($lcExt == "htm" || $lcExt == "html") {
+                    $contents = file_get_contents($filename);
+                    if (preg_match($pattern, $contents, $elems)) {
+                        $crapCount++;
+                        $ret .= $this->getPortalPath($filename) . "<br />";
+                    } else {
+                        $noCrapCount++;
+                    }
+                }	
             }
         }
         $totalHtml = $crapCount + $noCrapCount;
@@ -451,43 +487,52 @@ class portalfileutils extends object
     */
     public function getContent($filename, $outStyle="xml")
     {
+       
         $contents = file_get_contents($filename);
-        $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
-        if ($outStyle=="xml") {
-        	$strOpen = "<useraw>FALSE</useraw>\n<structuredcontent>";
-            $strClose = "</structuredcontent>\n<rawcontent />\n";
-            $rawOpen = "<useraw>TRUE</useraw>\n<structuredcontent />\n<rawcontent>";
-            $rawClose = "</rawcontent>\n";
+        //@todo
+        // Check for exclusion strings in contents
+        if ($this->isExcludeContents($contents)) {
+            $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+            if ($outStyle=="xml") {
+                $strOpen = "<useraw>FALSE</useraw>\n<structuredcontent>";
+                $strClose = "</structuredcontent>\n<rawcontent />\n";
+                $rawOpen = "<useraw>TRUE</useraw>\n<structuredcontent />\n<rawcontent>";
+                $rawClose = "</rawcontent>\n";
+            } else {
+                $strOpen = "";
+                $strClose = "";
+                $rawOpen = "";
+                $rawClose = "";
+            }
+            if (preg_match($pattern, $contents, $elems)) { 
+                $ret = $strOpen
+                  . $this->resetImages($this->getContentStructured($contents))
+                  . $strClose;
+                if ($outStyle=="xml") {
+                    return $ret;
+                } else {
+                    $this->contentStructured = $ret;
+                    $this->contentRaw="";
+                    return TRUE;
+                }
+            } else {
+                $ret = $rawOpen 
+                  . $this->resetImages($this->getBody($contents))
+                  . $rawClose;
+                if ($outStyle=="xml") {
+                    return $ret;
+                } else {
+                    $this->contentStructured = "";
+                    $this->contentRaw=$ret;
+                    return TRUE;
+                }
+            }
+            //Get the title for the menu
+            $this->pageTitle = $this->extractTitle($this->fullTitle, $filename);
         } else {
-            $strOpen = "";
-            $strClose = "";
-            $rawOpen = "";
-            $rawClose = "";
+        	return FALSE;
         }
         
-        if (preg_match($pattern, $contents, $elems)) { 
-            $ret = $strOpen
-              . $this->resetImages($this->getContentStructured($contents))
-              . $strClose;
-            if ($outStyle=="xml") {
-                return $ret;
-            } else {
-                $this->contentStructured = $ret;
-                $this->contentRaw="";
-                return TRUE;
-            }
-        } else {
-            $ret = $rawOpen 
-              . $this->resetImages($this->getBody($contents))
-              . $rawClose;
-            if ($outStyle=="xml") {
-                return $ret;
-            } else {
-                $this->contentStructured = "";
-                $this->contentRaw=$ret;
-                return TRUE;
-            }
-        }
     }
     
     /**
@@ -519,6 +564,12 @@ class portalfileutils extends object
     */
     public function getContentStructured(& $contents)
     {
+        //Get the title
+        $ptPattern = "/<title>(.*)</title>iseU/";
+        if (preg_match($ptPattern, $contents, $tits)) { 
+            $pageTitle = $tits[1];
+        }
+        $this->fullTitle = $pageTitle;
         $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
     	if (preg_match($pattern, $contents, $elems)) { 
             $page = $elems[1];
@@ -527,6 +578,24 @@ class portalfileutils extends object
         	$page = "No data in page";
         }
         return $page;
+    }
+
+
+    public function extractTitle($titleTxt)
+    {
+        $titleAr = explode(":", $titleTxt);
+        if (!empty($titleAr)) {
+            // Get the title from the bit after the :
+            $this->pageTitle = $titleAr[1];
+        } else {
+            // Get the title from the filename
+            $titleAr = explode("/", $titleTxt);
+            $x = count($titleAr)-1;
+            $filePart = $titleAr[$x];
+            $titAr = explode(".", filePart);
+            $x = count($filePart) - 1;
+            $ret = $x;
+        }
     }
 
     public function getLevels($filename)
@@ -599,7 +668,6 @@ class portalfileutils extends object
             		$failures ++;
                     $failedFiles .= "Failed to copy <em>$source</em> to the destination of <em>$destination";
             	}
-                    
             }
         }
         $str .= "<br /><br />Image files located: $count<br />"
@@ -699,7 +767,7 @@ class portalfileutils extends object
 
 
     function getSize($path=NULL)
-    {
+       {
         if ($path==NULL) {
         	$path = $this->startDir;
         }
@@ -710,17 +778,50 @@ class portalfileutils extends object
             if(is_dir($path."/".$file) && $file!="." && $file !="..")$size +=$this->getSize($path."/".$file);
        }
        return $size;
-   }
+    }
    
-   public function unCrapify(&$content)
-   {
+    public function unCrapify(&$content)
+    {
         $options = array("clean" => true,
            "drop-proprietary-attributes" => true,
            "drop-empty-paras" => true); 
         $tidy = tidy_parse_string($content, $options);
         tidy_clean_repair($tidy);
         return $tidy;
-   }
-
+    }
+   
+    private function isExcludeFile(& $filename)
+    {
+        $ret = FALSE;
+        $ar = array();
+        $exFiles = $this->sConfig->getValue('mod_portalimporter_excludenames', 'portalimporter');
+        $ar = explode(",", $exFiles);
+        if (!empty($ar)) {
+            foreach ($ar as $pattern) {
+                //If the pattern is in the file name return FALSE
+                if(stristr($filename, $pattern) !== FALSE) {
+                    $ret=TRUE;
+                    //echo $filename . " contains $pattern at " . stristr($filename, $pattern) . "<br >";
+                }
+            }
+   	    return $ret;
+        }
+    }
+   
+    private function isExcludeContents(& $contents)
+    {
+        $ret = FALSE;
+        $ar = array();
+        $exCt = $this->sConfig->getValue('mod_portalimporter_excludestrings', 'portalimporter');
+        $ar = explode(",", $exCt);
+        if (!empty($ar)) {
+            foreach ($ar as $pattern) {
+                //If the pattern is in the file name return FALSE
+                
+            }
+        }
+        return $ret;
+    }
+    
 }
 ?>
