@@ -10,6 +10,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * Realtime Controller
 * This class controls all functionality to run the realtime module.
 * @package realtime
+* @author David Wafula
 * @version $Id$
 */
 class realtime extends controller
@@ -73,6 +74,7 @@ class realtime extends controller
 	public $realtimeControllerURL;
         
 	public $presentationsURL;
+	public $classroomURL;
 
 	public $moduleRootPath;
 
@@ -82,7 +84,7 @@ class realtime extends controller
 	
 	public $jodconverterPath;
     
-    public $objFiles;   
+        public $objFiles;   
 	
 	public $converter;
 	
@@ -96,7 +98,7 @@ class realtime extends controller
 		//Get configuration class
 		$this->objConfig =& $this->getObject('config','config');
 		
-	    $this->objAltConfig =& $this->getObject('altconfig','config');
+	        $this->objAltConfig =& $this->getObject('altconfig','config');
 		
 	        //Get language class
 		$this->objLanguage =& $this->getObject('language', 'language');
@@ -132,13 +134,15 @@ class realtime extends controller
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$location = "http://" . $_SERVER['HTTP_HOST'];
 		$this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
-		$this->presentationsURL = $location .'/'. $this->getResourceUri('presentations', 'realtime');
-        $this->moduleRootPath=$this->objAltConfig->getModulePath();
-        $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
+		$this->presentationsURL = $location .'/'. $this->getResourceUri('classroom', 'realtime');
+               
+                $this->moduleRootPath=$this->objAltConfig->getModulePath();
+                $this->classroomURL =$this->moduleRootPath.'/realtime/resources/classroom';
+                $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
 		$this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
-	    $this->jodconverterPath = $location . $this->getResourceUri('whiteboard', 'realtime');
+	        $this->jodconverterPath = $location . $this->getResourceUri('whiteboard', 'realtime');
         
-        $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
+                $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
 		$this->converter = $this->getObject('convertdoc','documentconverter'); 
 		
         }
@@ -154,6 +158,7 @@ class realtime extends controller
 		switch ($action)
 		{
 			case 'classroom' :
+                                //return "realtime-classroom-applet_tpl.php";
 				return $this->showClassRoom($this->contextCode);
 
 			case 'jmfinstall' :
@@ -162,59 +167,61 @@ class realtime extends controller
 			case 'voice' :
 				return $this->showVoiceApplet($this->contextCode);
 
-	        case 'audience_applet' :
-                 return $this->showAudienceApplet();
+	                case 'audience_applet' :
+                              return $this->showAudienceApplet();
  
-            case 'presenter_applet':
-            return $this->showPresenterApplet();
+                        case 'presenter_applet':
+                              return $this->showPresenterApplet();
 			
-			  case 'upload_presentation':
-              return $this->uploadPresentation();
+			case 'upload_presentation':
+                              return $this->uploadPresentation();
 			 
-			 case 'show_upload_form':
-             return "upload_presentation.php";
+			case 'show_upload_form':
+                              return "upload_presentation.php";
 			
 			case 'whiteboard' :
-				return "realtime-whiteboard_tpl.php";
+			      return "realtime-whiteboard_tpl.php";
 				
 			case 'presentations' :
-				return "realtime-presentations_tpl.php";
+			      return "realtime-presentations_tpl.php";
 			
 			case 'requesttoken' :
-				return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->requestToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'releasetoken' :
-				return $this->releaseToken($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->releaseToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'startconversation' :
-				return $this->startConversation($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->startConversation($this->userId, $this->userLevel, $this->contextCode);
 			case 'stopconversation' :
-				return $this->stopConversation($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->stopConversation($this->userId, $this->userLevel, $this->contextCode);
 			case 'joinconversation' :
-				return $this->joinConversation($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->joinConversation($this->userId, $this->userLevel, $this->contextCode);
 			case 'leaveconversation' :
-				return $this->leaveConversation($this->userId, $this->contextCode);
+			      return $this->leaveConversation($this->userId, $this->contextCode);
 			case 'checktoken' :
-				return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'checkturn' :
-				return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->checkToken($this->userId, $this->userLevel, $this->contextCode);
 			case 'voicequeue' :
-				return $this->makeQueue($this->userId, $this->userLevel, $this->contextCode);
+			      return $this->makeQueue($this->userId, $this->userLevel, $this->contextCode);
 			case 'assigntoken' :
-				return $this->assignToken($this->getParam('id'), $this->contextCode);	
+			      return $this->assignToken($this->getParam('id'), $this->contextCode);	
 			default :
-                                $title='Reatime Tools';
-                                $realTimeDocURL='http://avoir.uwc.ac.za/avoir/index.php?module=wiki&action=wikilink&pagename=RealtimeTools#';
-                                $desc='The realtime tools are a set of Java applets which are capable of running as a module under Chisimba.';
-                                $content='<br/>';
-                                $content.='<p>Welcome to the realtime tools. Select a link below to load and run a specific tool:</p><ul>';
-                                $content.='<li><a href="index.php?module=realtime&amp;action=presentations">Presentations</a> - the realtime presentations.</li>';	
-                                $content.='<li><a href="index.php?module=realtime&amp;action=whiteboard">Whiteboard</a> - the realtime whiteboard applet(requires a running whiteboard server).</li>';
+                                /*$title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
 
-                                $content.='<li><a href="index.php?module=realtime&amp;action=classroom">Classroom</a> - the realtime classroom consisting of a mashup of 	the voice and classroom applets as well as the messaging module. You must be in a context for the messaging to work. The whiteboard server must also be running and JMF must be installed.</li>';
+                                $desc=$this->objLanguage->languageText('mod_realtime_intro1', 'realtime');
+                                $content='<br/>';
+                                $content.="<p>".$this->objLanguage->languageText('mod_realtime_intro2', 'realtime')."</p><ul>";
+                                $content.='<li><a href="index.php?module=realtime&amp;action=presentations">'.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_presentations_desc', 'realtime').'</li>';	
+                                $content.='<li><a href="index.php?module=realtime&amp;action=whiteboard">'.$this->objLanguage->languageText('mod_realtime_whiteboard', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_whiteboard_desc', 'realtime').'</li>';
+
+                                $content.='<li><a href="index.php?module=realtime&amp;action=classroom">'.$this->objLanguage->languageText('mod_realtime_classroom', 'realtime').'</a> - '.$this->objLanguage->languageText('mod_realtime_classroom_desc', 'realtime').'.</li>';
                                 $content.='</ul>';
                                 $this->setVarByRef('title', $title);
                                 $this->setVarByRef('desc', $desc);
                                 $this->setVarByRef('content', $content);
-				return "dump_tpl.php";
+				return "dump_tpl.php";*/
+                                $this->startWhiteboardServer();
+                                return $this->showClassRoom($this->contextCode);
 		}
 
 	}
@@ -262,13 +269,22 @@ function in_str($needle, $haystack){
     
 } 
 
+   /**
+    *automaticaly try to start server
+    */ 
+private function startWhiteboardServer()
+    {
+    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/avoir-whiteboard-server-0.1.jar:".$this->objConfig->getModulePath()."/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
+   system($cmd,$return_value);
+    
+    }
 
    /**
     *automaticaly try to start server
     */ 
 private function startServer()
     {
-    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
+    $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
    system($cmd,$return_value);
     
     }
@@ -344,9 +360,9 @@ private function startServer()
 		  return "realtime-presentations-presenter-applet_tpl.php";
         }
 }else{
-$title="Realtime Presentations";
-$content='Realtime presentations could not detect open office running in headless mode on the server.<p>Please make sure you start open office <b>ON THE SERVER</b> by typing the following command: </p><p><b>soffice -headless -accept="socket,port=8100;urp;"</b></p>';
-$desc='Open Office Not running on the server in headless mode';
+$title=$this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
+$content='<p>'.$this->objLanguage->languageText('mod_realtime_tip1a', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_tip1b', 'realtime').' </p><p><b>'.$this->objLanguage->languageText('mod_realtime_presentations_tip1', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip2', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip3', 'realtime');
+$desc=$this->objLanguage->languageText('mod_realtime_officenotrunning', 'realtime');
                                 $this->setVarByRef('title', $title);
                                 $this->setVarByRef('desc', $desc);
                                 $this->setVarByRef('content', $content);
@@ -503,9 +519,18 @@ return "dump_tpl.php";
 	function showClassRoom($contextcode)
 	{
 		if(empty($contextcode)){
-			$this->setVar("noContextCode", $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime'));
-		} 
-		return "realtime-classroom_tpl.php";
-	}
+			$desc= $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime');
+                        $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
+                        $this->setVarByRef('title', $title);
+                        $this->setVarByRef('desc', $desc);
+                        $this->setVarByRef('content', $desc);
+	              return "dump_tpl.php";		
+                } else{
+                   $this->setLayoutTemplate('layout_tpl.php');
+                   return "realtime-classroom_tpl.php";
+                ?>
+ <?
+}
+}
 }
 ?>

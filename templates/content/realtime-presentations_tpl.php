@@ -21,10 +21,10 @@ $cssLayout->setNumColumns(2);
 
 
 $str1= $this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
-$oo="<a href='".$this->objLanguage->languageText('mod_realtime_openoffice', 'realtime')."'>".$this->objLanguage->languageText('mod_realtime_openofficetext', 'realtime')."</a>";
+$oo="<a href='".$this->objLanguage->languageText('mod_realtime_openoffice', 'realtime')."'> ".$this->objLanguage->languageText('mod_realtime_openofficetext', 'realtime')."</a>";
 $str2= $this->objLanguage->languageText('mod_realtime_str2a', 'realtime').$oo.$this->objLanguage->languageText('mod_realtime_str2b', 'realtime');
 
-$tip='<b>TIP</b>: <p>Open Office can be started in headless mode by running the following command: </p><p><b>soffice -headless -accept="socket,port=8100;urp;"</b></p>';
+$tip='<b>'.$this->objLanguage->languageText('mod_realtime_wordtip', 'realtime').'</b><p>'.$this->objLanguage->languageText('mod_realtime_presentations_tip1', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip2', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip3', 'realtime').'</p>';
 //create links to the Applet presentations
 $this->objLink->link($this->uri(array('action'=>'show_upload_form')));
 $this->objLink->link=$this->objLanguage->languageText('mod_realtime_presenterstudio', 'realtime');
