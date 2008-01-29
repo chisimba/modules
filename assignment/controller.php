@@ -81,12 +81,14 @@ class assignment extends controller
         $this->objUser = $this->getObject('user','security');
         //$this->objGroups = $this->getObject('groupAdminModel','groupadmin');
         $this->objContext = $this->getObject('dbcontext','context');
-		$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
+	$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
         // Get an instance of the filestore object and change the tables to essay specific tables
-       $this->objFile= $this->getObject('upload','filemanager');
-       // $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
-		$this->objFileRegister = $this->getObject('registerfileusage', 'filemanager');
-		$this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
+        $this->objFile= $this->getObject('upload','filemanager');
+	$objSelectFile = $this->newObject('selectfile','filemanager');
+        
+	// $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
+	$this->objFileRegister = $this->getObject('registerfileusage', 'filemanager');
+	$this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
 
         $this->userId = $this->objUser->userId();
 
@@ -136,7 +138,7 @@ class assignment extends controller
             // download an assignment
             case 'download':
                 $this->setPageTemplate('download_page_tpl.php');
-                return 'download_tpl.php';
+		   return 'download_tpl.php';
 
             case 'showcomment':
                 return $this->showComment();
@@ -292,9 +294,11 @@ class assignment extends controller
         $id = $this->getParam('id');
         $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
 
+
+
         if($data[0]['resubmit'] || $var){
             $submit = $this->dbSubmit->getSubmit("assignmentid='$id' AND userid='"
-            .$this->objUser->userId()."'", 'id, online, fileId');
+            .$this->objUser->userId()."'", 'id, online, studentfileid');
             if(!empty($submit)){
                 $data[0]['online'] = $submit[0]['online'];
                 $data[0]['fileid'] = $submit[0]['fileid'];
