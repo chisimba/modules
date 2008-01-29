@@ -45,6 +45,10 @@ $fields = array(
 	'updated' => array(
 		'type' => 'timestamp',
 		'length' => 14
+		),
+	'fileid' => array(
+		'type' => 'timestamp',
+		'length' => 14
 		)
 	);
 ?>
