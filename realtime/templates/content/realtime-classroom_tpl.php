@@ -40,43 +40,14 @@ if (isset ($noContextCode))
 ?>
 </div>
 <!-- END FILE MANAGER FILE CHOOSER CODE-->
-
+             <applet codebase="<?= $this->objAltConfig->getModuleUri() ?>/realtime/resources/"
+              code="avoir.realtime.classroom.RealtimeClassroomApplet.class"
+              archive="avoir-realtime-classroom-0.1.jar,avoir-realtime-common-0.1.jar,avoir-whiteboard-client-0.1.jar" width="700" height="500">
+	          <param name=userName value="<?echo $this->objUser->userName()?>">
+	          <param name=fullname value="<?echo $this->objUser->fullname()?>">
+	          <param name=port value="1981">
+              </applet>
+         
 <?php
-
-	$this->objLanguage = $this->getObject('language', 'language');
-	$this->objFeaturebox = $this->newObject('featurebox', 'navigation');
-
-	$whiteboard = '<applet id="whiteboardapplet" width="660" height="600" code="avoir.realtime.whiteboard.client.WhiteboardApplet.class">';
-	$whiteboard .= '    <param name="archive" value="' . $this->whiteboardURL . '/whiteboard-client.jar"/> ';
-	$whiteboard .= '    <param name="userName" value="' . $this->userName . '"/>';
-	$whiteboard .= '    <param name="userLevel" value="' . $this->userLevel . '"/>';
-	$whiteboard .= '    <param name="port" value="1981"/>';
-	$whiteboard .= "</applet> ";
-
-	$voiceTitle = $this->objLanguage->languageText('mod_realtime_voice', 'realtime');
-	$voice = '<applet code="avoir.realtime.voice.VoiceApplet.class" width="300" height="120">';
-	$voice .= '	<param name="archive" value="' . $this->voiceURL . '/voice-client.jar"/>';
-	$voice .= ' <param name="userName" value="' . $this->userName . '"/>';
-	$voice .= ' <param name="userLevel" value="' . $this->userLevel . '"/>';
-	$voice .= ' <param name="voiceURL" value="' . $this->voiceURL . '"/>';
-	$voice .= ' <param name="realtimeControllerURL" value="' . $this->realtimeControllerURL . '"/>';
-	$voice .= "</applet> ";
-
-	$voiceBox = $this->objFeaturebox->show($voiceTitle, $voice);
-
-	$objBlocks = $this->newObject('blocks', 'blocks');
-	$chatBlock = $objBlocks->showBlock('contextchat', 'messaging');
-
-	$objLayer = $this->newObject('layer', 'htmlelements');
-	$objLayer->str = $voiceBox . $chatBlock;
-	$objLayer->border = '; width: 320px; float: left';
-	$layer1 = $objLayer->show();
-
-	$objLayer->str = $whiteboard;
-	$objLayer->border = '; width: 660px; float: right';
-	$objLayer->align = 'center';
-	$layer2 = $objLayer->show();
-
-	echo $layer1 . $layer2;
 }
 ?>
