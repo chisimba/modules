@@ -39,6 +39,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
+	'pagetitle' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	'structuredcontent' => array(
 		'type' => 'clob',
 		),
