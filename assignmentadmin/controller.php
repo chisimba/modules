@@ -80,10 +80,10 @@ class assignmentadmin extends controller
         //$this->objGroups = $this->getObject('groupAdminModel','groupadmin');
         $this->objContext = $this->getObject('dbcontext','context');
         $this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
-
+	$fileUploader = $this->getObject('fileuploader', 'files');
         // Get an instance of the filestore object and change the tables to assignment specific tables
-        /*$this->objFile= $this->getObject('fileupload','filestore');
-        $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
+        
+        /*$this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
 	*/
         $this->userId = $this->objUser->userId();
 
@@ -91,6 +91,8 @@ class assignmentadmin extends controller
             $this->contextCode=$this->objContext->getContextCode();
             $this->context=$this->objContext->getTitle();
         }
+
+
 
         // Log this call if registered
         /*if(!$this->objModules->checkIfRegistered('logger', 'logger')){
@@ -112,8 +114,10 @@ class assignmentadmin extends controller
         switch($action){
             // display template to add or edit an assignment
             case 'edit':
+		
             case 'add':
                 return $this->addAssign($action);
+
 
             // delete an assignment
             case 'delete':
@@ -152,7 +156,8 @@ class assignmentadmin extends controller
 
             // download an assignment
             case 'download':
-                $this->setPageTemplate('download_page_tpl.php');
+               // $this->setPageTemplate('download_page_tpl.php');
+
                 return 'download_tpl.php';
 
             // display template to mark an uploaded assignment
@@ -164,7 +169,7 @@ class assignmentadmin extends controller
                 return $this->markOnlineAssign();
 
             case 'uploadsubmit':
-                $postSave = $this->getParam('save');
+		$postSave = $this->getParam('save');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('mark',array('id'=>$this->getParam('id')));
                 }
@@ -175,9 +180,7 @@ class assignmentadmin extends controller
                 return $this->showResults();
 
             default:
-
-
-                return $this->assignHome();
+	        return $this->assignHome();
         }
     }
 
@@ -283,6 +286,7 @@ class assignmentadmin extends controller
         return 'assignment_list_tpl.php';
     }
 
+
     /**
     * Method to display the template for marking an assignment.
     * Lecturers can upload the marked assignment and enter a mark and comment for it.
@@ -290,9 +294,15 @@ class assignmentadmin extends controller
     */
     public function markAssign()
     {
+
+
+
         $data = $this->dbSubmit->getSubmit("id='".$this->getParam('submitId')."'");
+        //------
         //$file = $this->dbSubmit->getFileName($data[0]['userid'],$data[0]['studentfileid']);
-        //$data[0]['filename'] = $file;
+	//------
+	$data[0]['filepath'] = $filepath;
+	$data[0]['filename'] = $filename;
         $data[0]['assignmentid'] = $this->getParam('id');
         $data[0]['assignment'] = $this->getParam('assignment');
 
@@ -330,22 +340,29 @@ class assignmentadmin extends controller
         $id = $this->getParam('id', '');
         $fields = array();
 
+
         // save mark and comment
         $fields['mark'] = $this->getParam('mark', '');
         $fields['commentinfo'] = $this->getParam('comment', '');
-        
-        $this->dbSubmit->updateSubmit($this->getParam('submitId', ''), $fields);
+	$submitId = $this->getParam('submitId', '');
+	$fields['online'] = $this->getParam('online', '');
+	//update to the tbl_assignments_submit
+        $this->dbSubmit->updateSubmit($submitId, $fields);
+	//redirecting to the assignment view page.
         $action = 'mark';
         $params = array('id'=>$this->getParam('id'));
-
+	//condition if the save or exit was click on the page.
         $postSave = $this->getParam('save');
         if($postSave ==$this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin')){
             // upload marked assignment - overwrite students submission
             $fileId = $this->getParam('fileId', '');
-            $fileid = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
+	    
             $action = 'upload';
             $params['assignment'] = $this->getParam('assignment', '');
             $params['submitId'] = $this->getParam('submitId', '');
+	   
+ 
+
             if(!empty($fileid)){
                 $msg = $this->objLanguage->languageText('mod_assignmentadmin_confirmupload','assignmentadmin');
                 $params['confirm'] = $msg;

@@ -73,9 +73,28 @@ $str = $objLayer->show();
 
 //Download button 
 $objButton = new button('submit',$btndownload);
-$returnUrl = $this->uri(array('action' => 'download','fileid'=>$data[0]['studentfileid']));
+
+$objSelectFile = $this->newObject('selectfile','filemanager');
+$objFile = $this->getObject('dbfile', 'filemanager');
+
+$filepath .= $objFile->getFilePath($data[0]['studentfileid']);
+
+$returnUrl = $filepath;
+
+$fileId = $this->getParam('fileid');
+$id = $this->getParam('id');
+$submit_id = $this->getParam('submitId');
+
+
+$returnUrl = $this->uri(array('action' => 'download','fileid'=>$data[0]['studentfileid'],'userid'=>$this->userId));
 $objButton->setOnClick("window.location='$returnUrl'");
-$btn1=$objButton->show();
+//$btn1=$objButton->show();
+
+$objLink = new link();
+$objLink->link = 'Download';
+$objLink->href = $filepath;
+$btn1=  $objLink->show();
+
 
 
 $str .= $btn1.'<br /><br />';
@@ -148,7 +167,12 @@ $str .=  $btns.'</p>';
 
 /************************* set up form ******************************/
 
-$objForm = new form('upload',$this->uri(array('action' =>'uploadsubmit')));
+
+$fileId = $this->getParam('fileId');
+$id = $this->getParam('id');
+$submit_id = $this->getParam('submitId');
+
+$objForm = new form('upload',$this->uri(array('action' =>'uploadsubmit', 'fileId'=>$fileId,'id'=>$id,'submitId'=>$submit_id)));
 $objForm->extra = " enctype = 'multipart/form-data'";
 $objForm->addToForm($str);
 $objForm->addRule('mark', $errMark, 'required');

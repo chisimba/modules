@@ -59,6 +59,8 @@ $objTable->endRow();
 
 if(!empty($data)){
 $i = 0;
+
+
 foreach($data as $item){
     $class = ($i++%2 == 0)?'odd':'even';
 

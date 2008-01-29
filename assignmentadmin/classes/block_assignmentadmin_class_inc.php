@@ -26,7 +26,7 @@ class block_assignmentadmin extends object
         $this->title = $this->objLanguage->languageText('mod_assignmentadmin_name', 'assignmentadmin');
 
         $this->objSubmit = $this->getObject('dbassignmentsubmit', 'assignment');
-        $objDbContext = &$this->getObject('dbcontext', 'context');
+        $objDbContext = $this->getObject('dbcontext', 'context');
 
         $this->contextCode = $objDbContext->getContextCode();
 
