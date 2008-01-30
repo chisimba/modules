@@ -312,7 +312,9 @@ class portalfileutils extends object
                     $section =$this->getLevel($portalPath, "section");
                     $subportal = $this->getLevel($portalPath, "subportal");
                     $page = $this->getLevel($portalPath, "page");
+
                     $this->getContent($filename, "database");
+
                     $ar = array(
                         'filepath' => $filepath,
                         'filetype' => $filetype,
@@ -521,7 +523,7 @@ class portalfileutils extends object
                 } else {
                     $this->contentStructured = $ret;
                     $this->contentRaw="";
-//die("<h1>FOUND</h1>" . htmlentities($contents));
+//die("<h1>FOUND</h1>" . htmlentities($ret));
                     return TRUE;
                 }
             } else {
@@ -553,9 +555,10 @@ class portalfileutils extends object
      */
     public function getBody(& $contents)
     {
+        $contents = $this->unCrapify($contents);
         if (preg_match("/<body.*>(.*)<\/body>/iseU", $contents, $elems)) { 
             $page = $elems[1];
-            $page = $this->unCrapify($page);
+            //$page = $this->unCrapify($page);
         } else {
             $page = "No data in page";
         }
@@ -579,12 +582,12 @@ class portalfileutils extends object
             $pageTitle = $tits[1];
         }
         $this->fullTitle = $pageTitle;
-        $pattern = "/" . $this->contentStart . "(.*)" . $this->contentEnd . "/iseU";
-    	if (preg_match($pattern, $contents, $elems)) { 
+        $contents = $this->unCrapify($contents);
+        $sPattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+        if (preg_match($sPattern, $contents, $elems)) {
             $page = $elems[1];
-            $page = $this->unCrapify($page);
         } else {
-        	$page = "No data in page";
+            $page = "No data in page";
         }
         return $page;
     }
@@ -671,20 +674,22 @@ class portalfileutils extends object
         $str = "";
         $failedFiles="";
         foreach ($this->files as $filename) {
-            $extension = $this->fileExtension($filename);
-            $portalPath = $this->getPortalPath($filename);
-            $lcExt = strtolower($extension);
-            if ($this->isImage($lcExt)) {
-                $count++;
-                $source = $filename;
-                $destination = $this->getDestination("image", $portalPath);
-                //echo $source . "-------->" . $destination . "<br />";
-            	if (copy($source, $destination)) {
-            		$successes++;
-            	} else {
-            		$failures ++;
-                    $failedFiles .= "Failed to copy <em>$source</em> to the destination of <em>$destination";
-            	}
+            if (!$this->isExcludeFile($filename)) {
+                $extension = $this->fileExtension($filename);
+                $portalPath = $this->getPortalPath($filename);
+                $lcExt = strtolower($extension);
+                if ($this->isImage($lcExt)) {
+                    $count++;
+                    $source = $filename;
+                    $destination = $this->getDestination("image", $portalPath);
+                    //echo $source . "-------->" . $destination . "<br />";
+                    if (copy($source, $destination)) {
+                            $successes++;
+                    } else {
+                            $failures ++;
+                        $failedFiles .= "Failed to copy <em>$source</em> to the destination of <em>$destination";
+                    }
+                }
             }
         }
         $str .= "<br /><br />Image files located: $count<br />"
@@ -727,6 +732,7 @@ class portalfileutils extends object
     	$ret = $assetBase . "/" . $portalPath;
         //Cater for it being entered as directory/ and directory
         $ret = str_replace("//", "/", $ret);
+        return $ret;
     }
 
     /**
@@ -771,9 +777,8 @@ class portalfileutils extends object
             }
             return $contents;
         } else {
-        	return NULL;
+        	return $contents;
         }
-        
     }
 
 //----------------- END MOVE file ------------------------------
@@ -799,13 +804,28 @@ class portalfileutils extends object
        return $size;
     }
    
+    /**
+    *
+    * Method uses Tidy to clearn up word and other crap.
+    * It must be called before picking out the content of the page because
+    * otherwise, Tidy will make it back into a full page with headers and
+    * body tags.
+    *
+    * @access public
+    * @param string $content The string with the HTML to clean (before extracting content)
+    * @return string The cleaned content
+    *
+    */
     public function unCrapify(&$content)
     {
         $options = array(
            "clean" => true,
            "indent" => true,
+           "indent-spaces" => 4,
            "drop-proprietary-attributes" => true,
-           "drop-empty-paras" => true); 
+           "drop-empty-paras" => true,
+           "word-2000" => true
+        ); 
         if (function_exists(tidy_parse_string)) {
             $tidy = tidy_parse_string($content, $options);
             tidy_clean_repair($tidy);
@@ -815,6 +835,17 @@ class portalfileutils extends object
         }
     }
    
+    /**
+    *
+    * A method to determin from a comma delimited list of patterns stored in the
+    * config parameter mod_portalimporter_excludenames whether a file should be included
+    * or not.
+    *
+    * @access private
+    * @param string $filename The filename to check, normally including directory paths
+    * @return boolean TRUE|FALSE
+    *
+    */
     private function isExcludeFile(& $filename)
     {
         $ret = FALSE;
@@ -833,6 +864,7 @@ class portalfileutils extends object
         }
     }
    
+///---------needs finishing------------------------------------------------------not used but should be-----------------------
     private function isExcludeContents(& $contents)
     {
         $ret = FALSE;
