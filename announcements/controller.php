@@ -159,14 +159,24 @@ class announcements extends controller
             $createdby = htmlentities($this->getParam('createdby') , ENT_QUOTES);
             $courseid = $contextPuid;
        	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
-	    //send mail to course members
+	    //prepare $RecipientList to send mails
 	    $subject=$title;
 
-	    foreach($contextusers as $contextuser){
-	      $recipientList=$contextuser;	    
-		foreach($recipientList as $recipient)
-	    	  $this->objSendMail->sendMail($recipient, $subject, $message, $attachment);
-		}
+	    //count the number of context users
+	    $count=count($contextusers);
+	    //array to contain recipients
+	    $RecipientList=array();
+	   
+	    //loop thro array context users to get each users id
+	    for($i=0;$i<$count;$i++)
+	    {
+		array_push($RecipientList,$contextusers[$i]['userid']);
+	    }
+	    //now glue the array values into a string with | delimeters
+	    $RecipientList=implode("|",$RecipientList);
+	   
+	    //now send emails	  
+	    $this->objSendMail->sendMail($RecipientList, $subject, $message, $attachment);
 	    $this->nextAction('');
             break;
         // Link to the template
