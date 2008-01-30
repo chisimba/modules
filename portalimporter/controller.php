@@ -88,6 +88,8 @@ class portalimporter extends controller
     */
     public $objLog;
 
+    public $depth;
+
     /**
     *
     * Intialiser for the codetesting controller
@@ -99,12 +101,12 @@ class portalimporter extends controller
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
-        $this->objConfig = $this->getObject('config', 'config');
-        $this->config = $this->getObject('altconfig','config');
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Log this module call
-        $this->objLog->log();
+        //$this->objConfig = $this->getObject('config', 'config');
+        //$this->config = $this->getObject('altconfig','config');
+        $this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->depth = $this->sConfig->getValue('mod_portalimporter_parsedepth', 'portalimporter');
+
+
     }
 
 
@@ -139,7 +141,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1;  // level is the first level started at
-        $last=4; // Go deeper baby
+        $last=$this->depth; // Go deeper baby
         $dirs = array();  // SET dirs as an ARRAY so it can be read
         $files = array(); //SET files as an ARRAY so it can be read
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -157,7 +159,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -165,13 +167,25 @@ class portalimporter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
+
+    private function strTfToBool($str)
+    {
+        if (strtolower($str) == "true") {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
     
     private function __showstructured()
     {
     	$rP = $this->getObject('portalfileutils', 'portalimporter');
+        $rP->hideDuds = $this->strTfToBool($this->getParam('hideduds', 'false'));
+        $rP->hideLegacy = $this->strTfToBool($this->getParam('hidelegacy', 'false'));
+        $rP->hideStructured = $this->strTfToBool($this->getParam('hidestructured', 'false'));
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -185,7 +199,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -199,7 +213,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -213,7 +227,7 @@ class portalimporter extends controller
     	$rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -227,7 +241,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);
@@ -241,7 +255,7 @@ class portalimporter extends controller
         $rP = $this->getObject('portalfileutils', 'portalimporter');
         $start_dir = "start";
         $level=1; 
-        $last=4;
+        $last=$this->depth;
         $dirs = array(); 
         $files = array();
         $rP->readpath($start_dir,$level, $last, $dirs,$files);

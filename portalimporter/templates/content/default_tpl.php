@@ -29,6 +29,11 @@ $showFiles = $this->uri(
     "action"=>"showfiles"
   ), "portalimporter"
 );
+$showDirs = $this->uri(
+  array(
+    "action"=>"showdirs"
+  ), "portalimporter"
+);
 $configure = $this->uri(
   array(
     "action"=>"step2",
@@ -70,8 +75,32 @@ $dummy = $this->uri(
     "action"=>"dummy"
   ), "portalimporter"
 );
+$hideDudsLk = $this->uri(
+  array(
+    "action"=>"showstructured",
+    "hideduds"=>"TRUE"
+  ), "portalimporter"
+);
+$hideLegacyLk = $this->uri(
+  array(
+    "action"=>"showstructured",
+    "hidelegacy"=>"TRUE"
+  ), "portalimporter"
+);
+$hideStructLk = $this->uri(
+  array(
+    "action"=>"showstructured",
+    "hidestructured"=>"TRUE"
+  ), "portalimporter"
+);
+$showOnlyLegacy = $this->uri(
+  array(
+    "action"=>"showstructured",
+    "hidestructured"=>"TRUE",
+    "hideduds"=>"TRUE"
+  ), "portalimporter"
+);
 
-//module=&action=&pmodule_id=portalimporter
 ?>
 &nbsp;<br />
 &nbsp;<br />
@@ -107,10 +136,17 @@ $dummy = $this->uri(
   <td valign="top">
     <h4>Content and raw data</h4>
     <ul>
-      <li><a href="<?php echo $xmlReadLink;?>">Read portal content and show XML</a></li>
-      <li><a href="<?php echo $showStructured;?>">Read portal content and show which files are structured and which raw</a></li>
-      <li><a href="<?php echo $findwordcrud;?>">Read portal content and identify files with Word crud</a></li>
       <li><a href="<?php echo $showFiles;?>">Read portal content and show all files</a></li>
+      <li><a href="<?php echo $showDirs;?>">Read portal content and show all directories</a></li>
+      <li><a href="<?php echo $showStructured;?>">Read portal content and show which files are structured and which raw</a></li>
+        <ul>
+            <li><a href="<?php echo $showOnlyLegacy;?>">Show only Legacy</a></li>
+            <li><a href="<?php echo $hideDudsLk;?>">Hide duds</a></li>
+            <li><a href="<?php echo $hideStructLk;?>">Hide structured</a></li>
+            <li><a href="<?php echo $hideLegacyLk;?>">Hide legacy</a></li>
+        </ul>
+      <li><a href="<?php echo $findwordcrud;?>">Read portal content and identify files with Word crud</a></li>
+      <li><a href="<?php echo $xmlReadLink;?>">Read portal content and show XML</a></li>
       <li><a href="<?php echo $xmlGenLink;?>">Read portal content and generate XML to file</a></li>
     </ul>
     <h4>Settings</h4>

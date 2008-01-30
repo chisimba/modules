@@ -51,8 +51,6 @@ $GLOBALS['kewl_entry_point_run'])
 }
 // end security check
 
-// Set the base directory where the website is stored
-define(START_DIR, '/home/dkeats/websites/portal/www.uwc.ac.za');
 
 /**
 *
@@ -193,7 +191,9 @@ class portalfileutils extends object
     
     /**
     * A method to list files along with information as to whether they
-    * contain a content delimiter or are legacy plain HTML pages
+    * contain a content delimiter or are legacy plain HTML pages. It also checks
+    * for dud pages by comma delimited list of page name contents stored
+    * in the sysconfig for this module.
     * 
     * @access public
     * @return String A list of files
@@ -208,6 +208,7 @@ class portalfileutils extends object
             $legacyCount=0;
             $dudFiles=0;
             $sPattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+            $portalUrl = $this->sConfig->getValue('mod_portalimporter_staticUrl', 'portalimporter');
             foreach ($this->files as $filename) {
                 $count++;
                 $extension = $this->fileExtension($filename);
@@ -216,14 +217,23 @@ class portalfileutils extends object
                     $contents = file_get_contents($filename);
                     if (!$this->isExcludeFile($filename)) {
                         if (preg_match($sPattern, $contents, $elems)) { 
-                            $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font><br />";
-                            $strCount++;
+                            if (!$this->hideStructured==TRUE) {
+                                $ret .= $count. ". " . $filename . " <font color='green'>STRUCTURED PAGE</font>"
+                                  . "&nbsp;&nbsp;&nbsp;[<a href=\"" . $portalUrl . $this->getPortalPath($filename) . "\">View</a>]<br />";
+                            }
+                                $strCount++;
                         } else {
-                            $ret .= $count. ". " . $filename . " <font color='red'>LEGACY PAGE</font><br />";
+                            if (!$this->hideLegacy==TRUE) {
+                                $ret .= $count. ". " . $filename . " <font color='red'>LEGACY PAGE</font>"
+                                   . "&nbsp;&nbsp;&nbsp;[<a href=\"" . $portalUrl . $this->getPortalPath($filename) . "\">View</a>]<br />";
+                            }
                             $legacyCount++;
                         }
                     } else {
-                        $ret .= $count. ". " . $filename . " <font color='orange'>DUD PAGE</font><br />";
+                        if (!$this->hideDuds==TRUE) {
+                            $ret .= $count. ". " . $filename . " <font color='orange'>DUD PAGE</font><br />"
+                               . "&nbsp;&nbsp;&nbsp;[<a href=\"" . $portalUrl . $this->getPortalPath($filename) . "\">View</a>]<br />";
+                        }
                         $dudFiles++;
                     }
                 }
@@ -288,23 +298,22 @@ class portalfileutils extends object
     public function storeData()
     {
         $db = $this->getObject("dbcontent","portalimporter");
-        // Check for exclusion strings in filename
-        if (!$this->isExcludeFile($filename)) {
-            foreach ($this->files as $filename) {
+        foreach ($this->files as $filename) {
+            // Check for exclusion strings in filename
+            if (!$this->isExcludeFile($filename)) {
                 $count++;
                 $extension = $this->fileExtension($filename);
                 $lcExt = strtolower($extension);
                 if ($lcExt == "htm" || $lcExt == "html") {
                     $filepath = $filename;
-                    if (!$this->isExcludeFile($filename)) {
-                        $filetype=$extension;
-                        $portalPath = $this->getPortalPath($filename);
-                        $portal = $this->getLevel($portalPath, "portal");
-                        $section =$this->getLevel($portalPath, "section");
-                        $subportal = $this->getLevel($portalPath, "subportal");
-                        $page = $this->getLevel($portalPath, "page");
-                        $this->getContent($filename, $outStyle="database");
-                        $ar = array(
+                    $filetype=$extension;
+                    $portalPath = $this->getPortalPath($filename);
+                    $portal = $this->getLevel($portalPath, "portal");
+                    $section =$this->getLevel($portalPath, "section");
+                    $subportal = $this->getLevel($portalPath, "subportal");
+                    $page = $this->getLevel($portalPath, "page");
+                    $this->getContent($filename, "database");
+                    $ar = array(
                         'filepath' => $filepath,
                         'filetype' => $filetype,
                         'portalpath' => $portalPath,
@@ -315,13 +324,12 @@ class portalfileutils extends object
                         'pagetitle' => $this->pageTitle,
                         'structuredcontent' => $this->contentStructured,
                         'rawcontent' => $this->contentRaw
-                        );
-                        $db->insert($ar);
-                    }
+                    );
+                    $db->insert($ar);
                 }
             }
         }
-    	return "All done";
+    	return "<h1>All done: $count files processed</h1>";
     }
     
     /**
@@ -487,12 +495,12 @@ class portalfileutils extends object
     */
     public function getContent($filename, $outStyle="xml")
     {
-       
         $contents = file_get_contents($filename);
         //@todo
         // Check for exclusion strings in contents
-        if ($this->isExcludeContents($contents)) {
-            $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+        if (!$this->isExcludeContents($contents)) {
+            $sPattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+            // Set it up to generate XML if required
             if ($outStyle=="xml") {
                 $strOpen = "<useraw>FALSE</useraw>\n<structuredcontent>";
                 $strClose = "</structuredcontent>\n<rawcontent />\n";
@@ -504,7 +512,7 @@ class portalfileutils extends object
                 $rawOpen = "";
                 $rawClose = "";
             }
-            if (preg_match($pattern, $contents, $elems)) { 
+            if (preg_match($sPattern, $contents, $elems)) { 
                 $ret = $strOpen
                   . $this->resetImages($this->getContentStructured($contents))
                   . $strClose;
@@ -513,6 +521,7 @@ class portalfileutils extends object
                 } else {
                     $this->contentStructured = $ret;
                     $this->contentRaw="";
+//die("<h1>FOUND</h1>" . htmlentities($contents));
                     return TRUE;
                 }
             } else {
@@ -565,12 +574,12 @@ class portalfileutils extends object
     public function getContentStructured(& $contents)
     {
         //Get the title
-        $ptPattern = "/<title>(.*)</title>iseU/";
+        $ptPattern = "/<title>(.*)<\/title>iseU/";
         if (preg_match($ptPattern, $contents, $tits)) { 
             $pageTitle = $tits[1];
         }
         $this->fullTitle = $pageTitle;
-        $pattern = "/$this->contentStart(.*)$this->contentEnd/iseU";
+        $pattern = "/" . $this->contentStart . "(.*)" . $this->contentEnd . "/iseU";
     	if (preg_match($pattern, $contents, $elems)) { 
             $page = $elems[1];
             $page = $this->unCrapify($page);
@@ -580,7 +589,14 @@ class portalfileutils extends object
         return $page;
     }
 
-
+    /**
+    *
+    * Method to extract the title from the text already pulled out of the TITLE 
+    * tag or build it from the file name
+    *
+    * @param String $titleText The text of the page title
+    * @param String $
+    */
     public function extractTitle($titleTxt)
     {
         $titleAr = explode(":", $titleTxt);
@@ -641,7 +657,8 @@ class portalfileutils extends object
     
     /**
     * 
-    * Method to move any image assets to a repository
+    * Method to move any image assets to a repository. It doesn't move
+    * the image, just makes a copy of it.
     * 
     * @access Public
     * 
@@ -707,7 +724,9 @@ class portalfileutils extends object
                mkdir($curPath, 0777, TRUE);
             }
         }
-    	return $assetBase . "/" . $portalPath;
+    	$ret = $assetBase . "/" . $portalPath;
+        //Cater for it being entered as directory/ and directory
+        $ret = str_replace("//", "/", $ret);
     }
 
     /**
@@ -723,7 +742,7 @@ class portalfileutils extends object
         if (in_array($ext, $images)) {
             return TRUE;
         } else {
-        	return FALSE;
+            return FALSE;
         }
     }
     
@@ -782,12 +801,18 @@ class portalfileutils extends object
    
     public function unCrapify(&$content)
     {
-        $options = array("clean" => true,
+        $options = array(
+           "clean" => true,
+           "indent" => true,
            "drop-proprietary-attributes" => true,
            "drop-empty-paras" => true); 
-        $tidy = tidy_parse_string($content, $options);
-        tidy_clean_repair($tidy);
-        return $tidy;
+        if (function_exists(tidy_parse_string)) {
+            $tidy = tidy_parse_string($content, $options);
+            tidy_clean_repair($tidy);
+            return $tidy;
+        } else {
+            die ("TIDY is not available");
+        }
     }
    
     private function isExcludeFile(& $filename)
@@ -816,8 +841,11 @@ class portalfileutils extends object
         $ar = explode(",", $exCt);
         if (!empty($ar)) {
             foreach ($ar as $pattern) {
+echo $pattern . "<br />";
                 //If the pattern is in the file name return FALSE
-                
+                //if(stristr($contents, $pattern) !== FALSE) {
+                 //   $ret=TRUE;
+               // }
             }
         }
         return $ret;
