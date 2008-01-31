@@ -135,6 +135,12 @@ class cmsrpcapi extends object
                 		   						   					array('string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string'),
                 		   						   					),
                 		   						   'docstring' => 'add a section to the cms'),
+                		   						   
+                		  'cms.addPage' => array('function' => array($this->objCmsDb, 'addPg'),
+                		  						   'signature' => array(
+                		   						   					array('string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string'),
+                		   						   					),
+                		   						   'docstring' => 'add a page to a section'),
 
    					), 1, 0);
    					

@@ -605,54 +605,58 @@ class dbcmsadmin extends dbTable
 	/************************************** 'tbl_cms_content' **************************************/
 
 	/**
-         * Method to save a record to the database
-         *
-         * @access public
-         * @return bool
-         */
-	public function addContent($title = NULL, $sectionid = NULL, $published = 0, $override_date = NULL, $start_publish = NULL, $end_publish = NULL, $creatorid = NULL, $hide_title = 0, $access = NULL, $created_by = NULL, $introText = NULL, $fullText = NULL, $metakey = NULL, $metadesc = NULL, $ccLicence = NULL, $isFrontPage = 0)
+     * Method to save a record to the database
+     *
+     * @access public
+     * @return bool
+     */
+	public function addContent($pgarr)
 	{
 		$this->_changeTable('tbl_cms_content');
 		// Get details of the new entry
-		if($published == 1){
+		if($pgarr['published'] == '1'){
 			$start_publish = $this->now();
 		}
-		if ($override_date==null) {
+		else {
+			$start_publish =$pgArr['start_publish'];
+		}
+		if ($pgarr['override_date'] == NULL) {
 			$override_date =  $this->now();
 		}
-		if ($creatorid==NUll) {
-			$creatorid = $this->_objUser->userId();
+		else {
+			$override_date = $pgarr['override_date'];
 		}
+		
 		$newArr = array(
-		'title' => $title ,
-		'sectionid' => $sectionid,
-		'introtext' => addslashes($introText),
-		'body' => addslashes($fullText),
-		'access' => $access,
-		'ordering' => $this->getOrdering($sectionid),
-		'published' => $published,
-		'hide_title' => $hide_title,
+		'title' => $pgarr['title'] ,
+		'sectionid' => $pgarr['sectionid'],
+		'introtext' => addslashes($pgarr['introtext']),
+		'body' => addslashes($pgarr['body']),
+		'access' => $pgarr['access'],
+		'ordering' => $this->getContentOrdering($pgArr['sectionid']),
+		'published' => $pgarr['published'],
+		'hide_title' => $pgarr['hide_title'],
 		'created' => $this->now(),
 		'modified' => $this->now(),
-		'post_lic' => $ccLicence,
+		'post_lic' => $pgarr['post_lic'],
 		'created' =>$override_date,
-		'created_by' => $creatorid,
-		'created_by_alias'=>$created_by,
-		'checked_out'=> $creatorid,
+		'created_by' => $pgarr['created_by'],
+		'created_by_alias'=>$pgarr['creatorid'],
+		'checked_out'=> $pgarr['creatorid'],
 		'checked_out_time'=> $this->now(),
-		'metakey'=>$metakey,
-		'metadesc'=>$metadesc,
+		'metakey'=>$pgarr['metakey'],
+		'metadesc'=>$pgarr['metadesc'],
 		'start_publish'=>$start_publish,
-		'end_publish'=>$end_publish
-
+		'end_publish'=>$pgarr['end_publish']
 		);
 
 		$newId = $this->insert($newArr);
 		$newArr['id'] = $newId;
 		$this->lucenePageIndex($newArr);
 		// process the forntpage
-		if ($isFrontPage == 1) {
-			$this->_objFrontPage->add($newId);
+		//var_dump($pgarr['isfrontpage']);
+		if ($pgarr['isfrontpage'] == '1') {
+			$this->addFrontPageContent($newId);
 		}
 		return $newId;
 	}
@@ -1119,6 +1123,25 @@ class dbcmsadmin extends dbTable
 
 		return $ordering;
 	}
+	
+	/**
+         * Method to return the ordering value of new content (gets added last)
+         *
+         * @return int $ordering The value to insert into the ordering field
+         * @access public
+         * @author Warren Windvogel
+          */
+        public function doFPOrdering()
+        {
+            $ordering = 1;
+            //get last order value
+            $lastOrder = $this->getAll('ORDER BY ordering DESC LIMIT 1');
+            if(!empty($lastOrder)) {
+                //add after this value
+                $ordering = $lastOrder['0']['ordering'] + 1;
+            }
+            return $ordering;
+        }
 
 	/**
          * Method to return the links to be displayed in the order column on the table
@@ -1777,7 +1800,7 @@ class dbcmsadmin extends dbTable
 		// Check for duplicate
 		if(!$this->valueExists('content_id',$contentId)) {
 			$fields['content_id'] = $contentId;
-			$fields['ordering'] = $this->getOrdering();
+			$fields['ordering'] = $this->doFPOrdering();
 			// Insert entry
 			return $this->insert($fields);
 		} else {
@@ -2209,15 +2232,14 @@ class dbcmsadmin extends dbTable
 
 		//get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
 		$id = $sectionArr['parentselected'];
-		$parentid = $id;
+		
+		$node = $this->getLevel($parentid); 
+		$parentid = $node;
+		if ($node == 1 || $node == 0) {
 
-		if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
-
-			$rootid = $parentid;
+			$rootid = $node;
 			$rootnode = $this->checkindex($rootid);
 			//Get section details
-
-			$user = $this->objUser->userId();
 			if($sectionArr['pagenum'] == 'custom') {
 				$numpagedisplay = $customnumber;
 			} else {

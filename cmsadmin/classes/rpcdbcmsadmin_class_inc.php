@@ -399,6 +399,129 @@ class rpcdbcmsadmin extends object
 		return new XML_RPC_Response($sectarr);
 	}
 	
+	public function addPg($params)
+	{
+		$param = $params->getParam(0);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$title = $param->scalarval();
+		
+		$param = $params->getParam(1);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$sectionid = $param->scalarval();
+		
+		$param = $params->getParam(2);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$introtext = $param->scalarval();
+		
+		$param = $params->getParam(3);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$body = $param->scalarval();
+		
+		$param = $params->getParam(4);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$access = $param->scalarval();
+		
+		$param = $params->getParam(5);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$published = $param->scalarval();
+		
+		$param = $params->getParam(6);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$hide_title = $param->scalarval();
+		
+		$param = $params->getParam(7);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$post_lic = $param->scalarval();
+		
+		$param = $params->getParam(8);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$override_date = $param->scalarval();
+		
+		$param = $params->getParam(9);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$creatorid = $param->scalarval();
+		
+		$param = $params->getParam(10);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$created_by = $param->scalarval();
+		
+		$param = $params->getParam(11);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$meta_key = $param->scalarval();
+		
+		$param = $params->getParam(12);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$meta_desc = $param->scalarval();
+		
+		$param = $params->getParam(13);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$start_publish = $param->scalarval();
+		
+		$param = $params->getParam(14);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$end_publish = $param->scalarval();
+		
+		$param = $params->getParam(15);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$isfrontpage = $param->scalarval();
+		
+		$newArr = array(
+		'title' => $title ,
+		'sectionid' => $sectionid,
+		'introtext' => $introtext,
+		'body' => $body,
+		'access' => $access,
+		'published' => $published,
+		'hide_title' => $hide_title,
+		'post_lic' => $post_lic,
+		'created' =>$override_date,
+		'created_by' => $creatorid,
+		'creatorid' => $creatorid,
+		'created_by_alias'=>$created_by,
+		'checked_out'=> $creatorid,
+		'metakey'=>$meta_key,
+		'metadesc'=>$meta_desc,
+		'start_publish'=>$start_publish,
+		'end_publish'=>$end_publish,
+		'isfrontpage' => $isfrontpage,
+		);
+		
+		$ret = $this->objDbCmsAdmin->addContent($newArr);
+		$sectarr = new XML_RPC_Value($ret, 'string');
+		return new XML_RPC_Response($sectarr);
+	}
 	
 	/**
      * Method to dynamically switch tables
