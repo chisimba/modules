@@ -113,7 +113,7 @@ class dbcmsadmin extends dbTable
 			return $entry[0];
 		}
 	}
-
+ 
 	/************************************* CMS BLOCKS ********************************/
 
 	/**
@@ -132,7 +132,7 @@ class dbcmsadmin extends dbTable
 
 		if ($blockCat == 'frontpage') {
 			// Get ordering
-			$ordering = $this->getBlockOrdering(NULL, NULL, 'frontpage');
+			$ordering = $this->_getBlockOrdering(NULL, NULL, 'frontpage');
 			$newArr = array(
 			'pageid' => $pageId ,
 			'blockid' => $blockId,
@@ -143,7 +143,7 @@ class dbcmsadmin extends dbTable
 			);
 		} else if ($blockCat == 'content') {
 			// Get ordering
-			$ordering = $this->getBlockOrdering($pageId, NULL, 'content');
+			$ordering = $this->_getBlockOrdering($pageId, NULL, 'content');
 			$newArr = array(
 			'pageid' => $pageId ,
 			'blockid' => $blockId,
@@ -154,7 +154,7 @@ class dbcmsadmin extends dbTable
 			);
 		} else {
 			// Get ordering
-			$ordering = $this->getBlockOrdering(NULL, $sectionId, 'section');
+			$ordering = $this->_getBlockOrdering(NULL, $sectionId, 'section');
 			$newArr = array(
 			'pageid' => NULL,
 			'blockid' => $blockId,
@@ -169,36 +169,7 @@ class dbcmsadmin extends dbTable
 		return $newId;
 	}
 
-	/**
-     * Method to return the ordering value of new blocks (gets added last)
-     *
-     * @param string $pageid The id(pk) of the page the block is attached to
-     * @return int $ordering The value to insert into the ordering field
-     * @access public
-     * @author Warren Windvogel
-     */
-	public function getBlockOrdering($pageid, $sectionid, $blockCat)
-	{
-		$this->_changeTable('tbl_cms_blocks');
-		$ordering = 1;
-		if ($blockCat == 'frontpage') {
-			// Get last in order
-			$frontPage = 1;
-			$lastOrder = $this->getAll("WHERE frontpage_block = '$frontPage' ORDER BY ordering DESC LIMIT 1");
-		} else if ($blockCat == 'content') {
-			// Get last in order
-			$lastOrder = $this->getAll("WHERE pageid = '$pageid' ORDER BY ordering DESC LIMIT 1");
-		} else {
-			// Get last in order
-			$lastOrder = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering DESC LIMIT 1");
-		}
-		// add after this value
-		if (!empty($lastOrder)) {
-			$ordering = $lastOrder[0]['ordering'] + 1;
-		}
-		return $ordering;
-	}
-
+	
 	/**
      * Method to edit a record
      *
@@ -314,7 +285,7 @@ class dbcmsadmin extends dbTable
 		$sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks
                 WHERE (blockid = tbl_module_blocks.id) AND sectionid = '$sectionId' 
                 AND frontpage_block = 0  AND leftside_blocks = '$left' 
-                GROUP BY blockid ORDER BY ordering";
+                ORDER BY ordering";
 		return $this->getArray($sql);
 	}
 
@@ -686,61 +657,6 @@ class dbcmsadmin extends dbTable
 		return $newId;
 	}
 
-	/**
-         * Method to save a record to the database specifying all params
-         *
-         * @param string $title The title of the page
-         * @param string $sectionid The id of the section in which the content will appear
-         * @param bool $published Whether page will be visible or not
-         * @param bool $access True if "registered" page False if "public" page
-         * @param string $introText The introduction content
-         * @param string $fullText The main content of the page
-         * @param string $ccLicence The cc licence of the content
-         * @param bool $isFrontPage Whether page will appear on the front page or not
-         * @access public
-         * @return bool
-         */
-	public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage, $ccLicence, $override_date = NULL, $start_publish = NULL, $end_publish = NULL, $access = NULL, $created_by = NULL, $introText = NULL, $fullText = NULL, $metakey = NULL, $metadesc = NULL, $ccLicence = NULL, $hide_title = 0)
-	{
-		$this->_changeTable('tbl_cms_content');
-		$introText = str_ireplace("<br />", " <br /> ", $introText);
-		$fullText = str_ireplace("<br />", " <br /> ", $fullText);
-		if ($override_date!=null) {
-			$override_date =  $this->now();
-		}
-		$creatorid = $this->getParam('creator',null);
-		if ($creatorid==NUll) {
-			$creatorid = $this->_objUser->userId();
-		}
-		$newArr = array(
-		'title' => $title ,
-		'sectionid' => $sectionid,
-		'introtext' => addslashes($introText),
-		'body' => addslashes($fullText),
-		'access' => $access,
-		'ordering' => $this->getContentOrdering($sectionid),
-		'published' => $published,
-		'hide_title' => $hide_title,
-		'created' =>  $this->now(),
-		'modified' => $this->now(),
-		'post_lic' => $ccLicence,
-		'created_by' => $creatorid,
-		'created_by_alias'=>$created_by,
-		'checked_out'=> $creatorid,
-		'checked_out_time'=> $this->now(),
-		'metakey'=>$metakey,
-		'metadesc'=>$metadesc,
-		'start_publish'=>$start_publish,
-		'end_publish'=>$end_publish
-		);
-		$newId = $this->insert($newArr);
-		$newArr['id'] = $newId;
-		$this->lucenePageIndex($newArr);
-		if ($isFrontPage == 'on') {
-			$this->addFrontPageContent($newId);
-		}
-		return $newId;
-	}
 
 	/**
          * Method to edit a record
@@ -2148,38 +2064,37 @@ class dbcmsadmin extends dbTable
 	public function getSections($isPublished = NULL, $filter = null)
 	{
 		$this->_changeTable('tbl_cms_sections');
-		if ($isPublished||$filter==null) {
+		if ($isPublished == NULL && $filter == NULL) {
 			return $this->getAll("WHERE published = '1' AND trash = '0' ORDER BY ordering");
-		}elseif(!$isPublished||$filter!=null) {
+		}elseif($filter != NULL) {
 			return $this->getAll("WHERE title LIKE '%$filter%' AND trash = '0' ORDER BY ordering");
 		}
 	}
 
 	/**
-         * Method to get a filtered list of sections
-         *
-         * @author Megan Watson
-         * @access public
-         * @return array An array of associative arrays of the sections
-         */
-	public function getFilteredSections($text = '', $publish = FALSE, $table = 'tbl_cms_sections')
+     * Method to get a filtered list of sections
+     *
+     * @author Megan Watson
+     * @access public
+     * @return array An array of associative arrays of the sections
+     */
+	public function getFilteredSections($text = NULL, $publish = NULL)
 	{
 		$this->_changeTable('tbl_cms_sections');
-		$sql = "SELECT * FROM $table ";
+		$sql = "SELECT * FROM tbl_cms_sections ";
 		$filter = '';
-		if(!($publish === FALSE)){
+		if($publish != NULL){
 			$filter .= "published = '$publish' ";
 		}
-
-		if(!empty($text)){
+		if($text != NULL){
 			if(!empty($filter)){
 				$filter .= " AND ";
 			}
-			$filter .= "(LOWER(title) LIKE '%".strtolower($text)."%' OR LOWER(menutext) LIKE '%".strtolower($text)."%')";
+			$filter .= "title LIKE '%".strtolower($text)."%' OR menutext LIKE '%".strtolower($text)."%'";
 		}
 
 		if(!empty($filter)){
-			$sql .= "WHERE '$filter' AND trash = '0' ";
+			$sql .= "WHERE $filter AND trash = '0' ";
 		}else{
 			$sql .= "WHERE trash = '0' ";
 		}
@@ -2189,20 +2104,20 @@ class dbcmsadmin extends dbTable
 	}
 
 	/**
-         * Method to get the archived content
-         *
-         * @author Megan Watson
-         * @param string $filter The Filter
-         * @return  array An array of associative arrays of all content pages in relationto filter specified
-         * @access public
-         */
-	public function getArchiveSections($filter = '', $table = 'tbl_cms_sections')
+     * Method to get the archived content
+     *
+     * @author Megan Watson
+     * @param string $filter The Filter
+     * @return  array An array of associative arrays of all content pages in relationto filter specified
+     * @access public
+     */
+	public function getArchiveSections($filter = NULL)
 	{
 		$this->_changeTable('tbl_cms_sections');
-		$sql = "SELECT * FROM '$table' WHERE trash = '1' ";
+		$sql = "SELECT * FROM tbl_cms_sections WHERE trash = '1' ";
 
-		if(!empty($filter)){
-			$sql .= "AND LOWER(title) LIKE '%".strtolower($filter)."%' ";
+		if($filter != NULL){
+			$sql .= "AND title LIKE '%".strtolower($filter)."%' ";
 		}
 
 		$sql .= 'ORDER BY ordering';
@@ -2210,19 +2125,19 @@ class dbcmsadmin extends dbTable
 	}
 
 	/**
-         * Method to get the list of root nodes
-         *
-         * @access public
-         * @param bool $isPublished TRUE | FALSE To get published sections
-         * @param string contextcode The current context the user is in
-         * @return array An array of associative arrays of all root nodes
-         */
-	public function getRootNodes($isPublished = FALSE, $contextcode = NULL)
+     * Method to get the list of root nodes
+     *
+     * @access public
+     * @param bool $isPublished TRUE | FALSE To get published sections
+     * @param string contextcode The current context the user is in
+     * @return array An array of associative arrays of all root nodes
+     */
+	public function getRootNodes($isPublished = 'FALSE', $contextcode = NULL)
 	{
 		$this->_changeTable('tbl_cms_sections');
 		$sql = '';
 		// Check for published / visible
-		if($isPublished){
+		if($isPublished == 'TRUE'){
 			$sql = "published = '1' ";
 		}
 		// Check for the context code
@@ -2243,12 +2158,12 @@ class dbcmsadmin extends dbTable
 	}
 
 	/**
-         * Method to get a Section
-         *
-         * @param  string $id The section id
-         * @return array An array of the sections details
-         * @access public
-         */
+     * Method to get a Section
+     *
+     * @param  string $id The section id
+     * @return array An array of the sections details
+     * @access public
+     */
 	public function getSection($id)
 	{
 		$this->_changeTable('tbl_cms_sections');
@@ -2256,19 +2171,19 @@ class dbcmsadmin extends dbTable
 	}
 
 	/**
-         * Method to get the first sections id(pk)
-         *
-         * @param bool $isPublished TRUE | FALSE To get published sections
-         * @return string First sections id
-         * @access public
-         */
-	public function getFirstSectionId($isPublished = FALSE)
+     * Method to get the first sections id(pk)
+     *
+     * @param bool $isPublished TRUE | FALSE To get published sections
+     * @return string First sections id
+     * @access public
+     */
+	public function getFirstSectionId($isPublished = 'FALSE')
 	{
 		$this->_changeTable('tbl_cms_sections');
 		$firstSectionId = '';
 		$firstSection = $this->getAll("WHERE parentid='0' AND trash = '0' ORDER BY ordering");
 		if(!empty($firstSection)) {
-			if($isPublished) {
+			if($isPublished != 'FALSE') {
 				foreach($firstSection as $section) {
 					if($section['published'] == 1) {
 						$firstSectionId = $section['id'];
@@ -2283,17 +2198,17 @@ class dbcmsadmin extends dbTable
 	}
 
 	/**
-         * Method to add a section to the database
-         *
-         * @access public
-         * @return bool
-         */
-	public function addSection($contextcode=null, $parentSelected=NULL, $title = NULL, $menuText = NULL, $access = NULL, $description = NULL, $published = NULL, $layout = NULL, $showdate = NULL, $hidetitle = NULL, $showintroduction = NULL, $pageNum = NULL, $ordertype = NULL, $numpagedisplay = NULL, $pagenumber = NULL, $imagesrc = NULL, $pageOrder = NULL)
+     * Method to add a section to the database
+     *
+     * @access public
+     * @return bool
+     */
+	public function addSection($sectionArr)
 	{
 		$this->_changeTable('tbl_cms_sections');
 
 		//get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
-		$id = $parentSelected;
+		$id = $sectionArr['parentselected'];
 		$parentid = $id;
 
 		if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
@@ -2302,8 +2217,8 @@ class dbcmsadmin extends dbTable
 			$rootnode = $this->checkindex($rootid);
 			//Get section details
 
-			$user = $this->_objUser->userId();
-			if($pageNum == 'custom') {
+			$user = $this->objUser->userId();
+			if($sectionArr['pagenum'] == 'custom') {
 				$numpagedisplay = $customnumber;
 			} else {
 				$numpagedisplay = $pagenumber;
@@ -2315,23 +2230,23 @@ class dbcmsadmin extends dbTable
 			$index = array(
 			'rootid' => $rootid,
 			'parentid' => $parentid,
-			'title' => $title,
-			'menutext' => $menuText,
-			'access' => $access,
-			'layout' => $layout,
+			'title' => $sectionArr['title'],
+			'menutext' => $sectionArr['menutext'],
+			'access' => $sectionArr['access'],
+			'layout' => $sectionArr['layout'],
 			'ordering' => $ordering,
-			'description' => $description,
-			'published' => $published,
-			'hidetitle' => $hidetitle,
-			'showdate' => $showdate,
-			'showintroduction' => $showintroduction,
+			'description' => $sectionArr['description'],
+			'published' => $sectionArr['published'],
+			'hidetitle' => $sectionArr['hidetitle'],
+			'showdate' => $sectionArr['showdate'],
+			'showintroduction' => $sectionArr['showintroduction'],
 			'numpagedisplay' => $numpagedisplay,
-			'ordertype' => $ordertype,
+			'ordertype' => $sectionArr['ordertype'],
 			'nodelevel' => $this->getLevel($parentid) + '1',
 			'datecreated'=>$this->now(),
-			'userid' => $user,
-			'link' => $imagesrc,
-			'contextcode' =>$contextcode,
+			'userid' => $sectionArr['userid'],
+			'link' => $sectionArr['imagesrc'],
+			'contextcode' =>$sectionArr['contextcode'],
 			);
 			$result = $this->insert($index);
 
@@ -2347,35 +2262,35 @@ class dbcmsadmin extends dbTable
 			$rootid = $this->getRootNodeId($id);
 			$rootnode = $this->checkindex($rootid);
 			$user = $this->_objUser->userId();
-			if($this->getParam('pagenum') == 'custom') {
+			if($sectionArr['pagenum'] == 'custom') {
 				$numpagedisplay = $customnumber;
 			} else {
 				$numpagedisplay = $pagenumber;
 			}
-			$ordertype = $pageOrder;
+			$ordertype = $sectionArr['ordertype'];
 			$ordering = $this->getFPOrdering($parentid);
 
 			// Add section
 			$index = array(
 			'rootid' => $rootid,
 			'parentid' => $parentid,
-			'title' => $title,
-			'menutext' => $menuText,
-			'access' => $access,
-			'layout' => $layout,
+			'title' => $sectionArr['title'],
+			'menutext' => $sectionArr['menutext'],
+			'access' => $sectionArr['access'],
+			'layout' => $sectionArr['layout'],
 			'ordering' => $ordering,
-			'description' => $description,
-			'published' => $published,
-			'showdate' => $showdate,
-			'hidetitle' => $hidetitle,
-			'showintroduction' => $showintroduction,
+			'description' => $sectionArr['description'],
+			'published' => $sectionArr['published'],
+			'hidetitle' => $sectionArr['hidetitle'],
+			'showdate' => $sectionArr['showdate'],
+			'showintroduction' => $sectionArr['showintroduction'],
 			'numpagedisplay' => $numpagedisplay,
-			'ordertype' => $ordertype,
-			'nodelevel' => $this->getLevel($parentid) + 1,
+			'ordertype' => $sectionArr['ordertype'],
+			'nodelevel' => $this->getLevel($parentid) + '1',
 			'datecreated'=>$this->now(),
-			'userid' => $user,
-			'link' => $imagesrc,
-			'contextcode' =>$contextcode,
+			'userid' => $sectionArr['userid'],
+			'link' => $sectionArr['imagesrc'],
+			'contextcode' =>$sectionArr['contextcode'],
 			);
 
 			$result = $this->insert($index);
@@ -2398,67 +2313,6 @@ class dbcmsadmin extends dbTable
 		$this->_changeTable('tbl_cms_sections');
 		$rootid = $this->TreeNodes->getArtifact($rootid);
 		return $rootid;
-	}
-
-	/**
-         * Method to add a section to the database
-         *
-         * @param string $parent The id of the parent node. '0' for root nodes
-         * @param string $title The title of the new section
-         * @param string $menuText The text that will appear in the tree menu
-         * @param bool $published Whether page will be visible or not
-         * @param bool $access True if "registered" page False if "public" page
-         * @param string $description The introduction text 
-         * @param string $layout The layout type of the section
-         * @param bool $showdate Whether date will be visible or not
-         * @param bool $showintroduction Whether introduction will be visible or not
-         * @param int $numpagedisplay Number of pages to display 
-         * @param string $ordertype How the page should be ordered
-         * @param string $contextCode The context code if you are using the cms as the context content manager
-         * @access public
-         * @return bool
-         */
-	public function addNewSection($parent, $title, $menuText, $access, $description, $published, $layout, $showdate, $showintroduction, $numpagedisplay, $ordertype, $contextCode = null)
-	{
-		$this->_changeTable('tbl_cms_sections');
-		//get param from dropdown
-		$parentSelected = $parent;
-		//get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
-		$id = $parentSelected;
-		$parentid = $id;
-
-		if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
-			$rootid = $parentid;
-		} else {
-			$rootid = $this->getRootNodeId($id);
-		}
-		//Set ordering
-		$ordering = $this->getSectionOrdering($parentid);
-		//Add section
-		$newIndex =array(        'rootid' => $rootid,
-		'parentid' => $parentid,
-		'title' => $title,
-		'menutext' => $menuText,
-		'access' => $access,
-		'layout' => $layout,
-		'ordering' => $ordering,
-		'description' => str_ireplace("<br />", " <br /> ",$description),
-		'published' => $published,
-		'showdate' => $showdate,
-		'showintroduction' => $showintroduction,
-		'numpagedisplay' => $numpagedisplay,
-		'ordertype' => $ordertype,
-		'nodelevel' => $this->getLevel($parentid) + '1',
-		'contextcode' => $contextCode
-		);
-		$result = $this->insert($newIndex);
-
-		if ($result != FALSE) {
-			$newIndex['id'] = $result;
-			$this->luceneSectionIndex($newIndex);
-		}
-
-		return $result;
 	}
 
 	/**
@@ -3129,6 +2983,36 @@ class dbcmsadmin extends dbTable
 		} else {
 			return $ret;
 		}
+	}
+
+	/**
+     * Method to return the ordering value of new blocks (gets added last)
+     *
+     * @param string $pageid The id(pk) of the page the block is attached to
+     * @return int $ordering The value to insert into the ordering field
+     * @access public
+     * @author Warren Windvogel
+     */
+	private function _getBlockOrdering($pageid, $sectionid, $blockCat)
+	{
+		$this->_changeTable('tbl_cms_blocks');
+		$ordering = 1;
+		if ($blockCat == 'frontpage') {
+			// Get last in order
+			$frontPage = 1;
+			$lastOrder = $this->getAll("WHERE frontpage_block = '$frontPage' ORDER BY ordering DESC LIMIT 1");
+		} else if ($blockCat == 'content') {
+			// Get last in order
+			$lastOrder = $this->getAll("WHERE pageid = '$pageid' ORDER BY ordering DESC LIMIT 1");
+		} else {
+			// Get last in order
+			$lastOrder = $this->getAll("WHERE sectionid = '$sectionid' ORDER BY ordering DESC LIMIT 1");
+		}
+		// add after this value
+		if (!empty($lastOrder)) {
+			$ordering = $lastOrder[0]['ordering'] + 1;
+		}
+		return $ordering;
 	}
 
 	/**
