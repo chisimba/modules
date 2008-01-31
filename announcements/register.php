@@ -13,7 +13,11 @@ MODULE_LANGTERMS: announcements
 MENU_CATEGORY: communications
 CONTEXT_AWARE: 1
 ISCONTEXTPLUGIN:1
-DEPENDS_CONTEXT: 0 
+DEPENDS_CONTEXT: 1
+DEPENDS:mail
+DEPENDS:context
+DEPENDS:utilities
+
 TABLE: tbl_announcements
 
 //RULE: edit,delete|isAdmin
