@@ -106,6 +106,8 @@ class cms extends controller
      	* @var object
     	*/
     	public $objConfig;
+    	
+    	public $objRPC;
 
         /**
         * 
@@ -151,7 +153,8 @@ class cms extends controller
                     //   the inContextMode property of this object
                     $this->inContextMode = FALSE;
                 }
-            
+            // xmlrpc api class
+            $this->objRPC = $this->getObject('cmsrpcapi');
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
             $objLog->log();
@@ -487,6 +490,16 @@ class cms extends controller
 	    }
         
 
+	    private function _serverpc()
+	    {
+	    	// cannot require any login, as remote clients use this. Auth is done internally
+            $this->requiresLogin();
+            
+            // start the server.
+            $this->objRPC->serve();   
+            // break to be pedantic, although not strictly needed.    
+            // break;
+	    }
         /**
         * Method to check if the user is in the CMS Authors group
         *
