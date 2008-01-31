@@ -132,7 +132,7 @@ class cmsrpcapi extends object
                 		   						   
                 		  'cms.addSection' => array('function' => array($this->objCmsDb, 'addSec'),
                 		  						   'signature' => array(
-                		   						   					array('string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string'),
+                		   						   					array('string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string', 'string'),
                 		   						   					),
                 		   						   'docstring' => 'add a section to the cms'),
 

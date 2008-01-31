@@ -371,6 +371,12 @@ class rpcdbcmsadmin extends object
 		}
 		$userid = $param->scalarval();
 		
+		$param = $params->getParam(14);
+		if (!XML_RPC_Value::isValue($param)) {
+			log_debug($param);
+		}
+		$parentselected = $param->scalarval();
+		
 		$secArr = array(
 			'title' => $title,
 			'menutext' => $menutext,
@@ -384,7 +390,8 @@ class rpcdbcmsadmin extends object
 			'ordertype' => $ordertype,
 			'userid' => $userid,
 			'link' => $link,
-			'contextcode' =>$contextcode,
+			'contextcode' => $contextcode,
+			'parentselected' => $parentselected
 			);
 		$ret = $this->objDbCmsAdmin->addSection($secArr);
 
