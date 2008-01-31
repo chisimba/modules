@@ -252,7 +252,7 @@ class search extends object {
         $objSubm1 = new button('btnG');  
         $objSubm1->setToSubmit();    
         $objSubm1->setValue($this->objLanguage->languageText("mod_websearch_scsearch","websearch"));
-        $objForm->addToForm($objSubm1->show()."<br />This is experimental");
+        $objForm->addToForm($objSubm1->show()."<br />");
 
         //Return the form
         return $objForm->show() . "\n\n\n\n\n\n\n\n";
