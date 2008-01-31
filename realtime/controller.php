@@ -274,7 +274,7 @@ function in_str($needle, $haystack){
     */ 
 private function startWhiteboardServer()
     {
-    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/avoir-whiteboard-server-0.1.jar:".$this->objConfig->getModulePath()."/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
+    $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/avoir-whiteboard-server-0.1.jar:".$this->objConfig->getModulePath()."/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
    system($cmd,$return_value);
     
     }
