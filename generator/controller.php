@@ -213,9 +213,11 @@ class generator extends controller
     */
     private function getOutputStr($str, $areaName)
     {
-        return '<textarea name="' . $areaName 
-          . '" cols="90" rows="30">' 
-          . $str . '</textarea>';
+        $js = $this->getJavascriptFile('codepress.js', 'codewriter');
+        $this->appendArrayVar('headerParams', $js);
+        return '<br /><textarea cols=120 rows=40 id="' 
+          . $areaName . '" class="codepress php linenumbers-on">'. $str
+          . '</textarea>';
     }
     
     
