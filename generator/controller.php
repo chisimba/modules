@@ -215,9 +215,9 @@ class generator extends controller
     {
         $js = $this->getJavascriptFile('codepress.js', 'codewriter');
         $this->appendArrayVar('headerParams', $js);
-        return '<br /><textarea cols=120 rows=40 id="' 
-          . $areaName . '" class="codepress php linenumbers-on">'. $str
-          . '</textarea>';
+        $objRenderer = $this->getObject("cwrenderer", "codewriter");
+        $objRenderer->code = $str;
+        return $objRenderer->renderEditor("", $areaName);//still working here
     }
     
     
