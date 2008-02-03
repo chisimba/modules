@@ -1,15 +1,9 @@
 <?php
-if (isset($str)) {
-   echo $str; 
-}
-if (isset($ar)) {
-    //Create an instance of the table object
-    $objTable = $this->newObject('htmltable', 'htmlelements');
-    //Turn on active rows
-    $objTable->active_rows=TRUE;
-    //Turn the array into a table
-    $objTable->arrayToTable($ar);
-    //Show the table
-    echo $objTable->show();
-}
+//Create an instance of the css layout class
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(3);
+$cssLayout->setLeftColumnContent($leftPanel);
+$cssLayout->setMiddleColumnContent($codeEditor);
+$cssLayout->setRightColumnContent($rightPanel);
+echo $cssLayout->show();
 ?>

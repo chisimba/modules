@@ -93,8 +93,7 @@ class codewriter extends controller
     {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
-        // Create the configuration object
-        $this->objConfig = $this->getObject('config', 'config');
+        $this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -114,7 +113,7 @@ class codewriter extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action=$this->getParam('action', 'editcode');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -133,20 +132,6 @@ class codewriter extends controller
     
     
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
-
-    /**
-    * 
-    * Method corresponding to the view action. It fetches the stories
-    * into an array and passes it to a main_tpl content template.
-    * @access private
-    * 
-    */
-    private function __view()
-    {
-        $str="<h1>WORKING HERE</h1>";
-        $this->setVarByRef('str', $str);
-        return "dump_tpl.php";
-    }
     
     /**
     * 
@@ -159,15 +144,64 @@ class codewriter extends controller
     {
         $js = $this->getJavascriptFile('codepress.js', 'codewriter');
         $this->appendArrayVar('headerParams', $js);
-        //$this->addHeader($js);
-        $str = '<br /><textarea cols=120 rows=40 id="myCpWindow" class="codepress php linenumbers-on">
-   // your code here
-</textarea>';
-   
-        $this->setVarByRef('str', $str);
-        return 'dump_tpl.php';
+        $js2 = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
+        $objRenderer = $this->getObject("cwrenderer", "codewriter");
+        $this->appendArrayVar('headerParams', $js2);
+        
+        //$js3 = $this->getJavascriptFile('jquery/jquery.Codepress.js', 'htmlelements');
+        //$this->appendArrayVar('headerParams', $js3);
+        $js3 = $objRenderer->renderFormScript();
+        $this->appendArrayVar('headerParams', $js3);
+        
+        $objFiles = $this->getObject("cwfileutils", "codewriter");
+        $project = $this->getParam("project", NULL);
+        $fileEdit = $this->getParam("file", NULL);
+        
+        if ($fileEdit !== NULL) {
+            $projectPath = $this->sConfig->getValue('mod_codewriter_projectpath', 'codewriter');
+            $filename = $projectPath . "/" . $project . "/" . $fileEdit;
+        	$objRenderer->code = $objFiles->getFileContents($filename);
+            $ext = $objFiles->fileExtension($fileEdit);
+            $objRenderer->codeLanguage = $objFiles->getCodeLanguage($ext);
+        }
+        /*$saveTool = $objRenderer->getSave($filename);
+        $codeEditor = $saveTool;*/
+        
+        
+        $codeEditor .= $objRenderer->renderEditor($filename);
+        $this->setVarByRef('codeEditor', $codeEditor);
+        
+        $leftPanel .= $objRenderer->buildLeftPanel($project);
+        $rightPanel = $objRenderer->buildRightPanel();
+
+        
+        $this->setVarByRef('leftPanel', $leftPanel);
+        $this->setVarByRef('rightPanel', $rightPanel);
+
+
+        return 'editcode_tpl.php';
     }
 
+
+    /**
+    * 
+    * Method corresponding to the save action. It is used by an Ajax object
+    * so should not return anything other than a success indicator
+    * 
+    * @access private
+    * 
+    */
+    private function __save()
+    {
+        $filename = $this->getParam("file", NULL);
+        $contents = $this->getParam("codetext", "Very Odd: Nothing found");
+        //echo htmlentities($contents);
+        //die();
+        $fh = fopen($filename, 'w')  or die("Cannot open file for writing");
+        fwrite($fh, $contents);
+        fclose($fh);
+        return htmlentities($contents);
+    }
 
 
 
@@ -194,21 +228,7 @@ class codewriter extends controller
     }
     
    
-    /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
-    * @access private
-    * 
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbcodewriter->save($mode);
-        return $this->nextAction(NULL);
-    }
+
     
     /**
     * 
