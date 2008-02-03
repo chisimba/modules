@@ -116,7 +116,7 @@ class twitter extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'demo');
+        $action=$this->getParam('action', 'tweet');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -160,7 +160,7 @@ class twitter extends controller
                 $str .= "Tweety was muted.";
             }
         } else {
-        	$str .= "Username or password were null.";
+        	$str .= "Username or password were null. You need to store username and password as twitteruser and twitterpassword in Userparams. Yes, I know - I have to put this in language text. First I must sleep.";
         }
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
