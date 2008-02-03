@@ -1,0 +1,105 @@
+
+
+I have written a complete code library for twitter using PHP for an upcoming project I will be releasing soon.
+Get the code here twitterPHP.
+
+Methods
+update($status)
+publicTimeline($sinceid=false)
+friendsTimeline($id=false,$since=false)
+userTimeline($id=false,$count=20,$since=false)
+showStatus($id)
+friends($id=false)
+followers()
+featured()
+showUser($id)
+directMessages($since=false)
+sendDirectMessage($user,$text)
+
+Examples
+
+Get the Public Timeline
+
+$t= new twitter();
+$res = $t->publicTimeline();
+if($res===false){
+   echo "ERROR<hr/>";
+   echo "<pre>";
+   print_r($t->responseInfo);
+   echo "</pre>";
+}else{
+   echo "SUCCESS<hr/>";
+   echo "<pre>";
+   print_r($res);
+   echo "</pre>";
+}
+
+Update your status (change username and password of course)
+
+$t= new twitter();
+$t->username='username';
+$t->password='password';
+$res = $t->update('i am testing twitter.class.php');
+if($res===false){
+   echo "ERROR<hr/>";
+   echo "<pre>";
+   print_r($t->responseInfo);
+   echo "</pre>";
+}else{
+   echo "SUCCESS<hr/>Status Posted";
+}
+
+Let me know what you think or if you find this useful.
+
+This entry was posted on Thursday, April 26th, 2007 at 11:49 pm and is filed under twitter, code. You can follow any responses to this entry through the RSS 2.0 feed. You can leave a response, or trackback from your own site.
+9 Responses to “Full Twitter PHP Library (Ver 0.1)”
+
+   1. April 27th, 2007 at 2:36 am herbert Says:
+
+      awesome, I will test it for an upcoming project of mine.
+      cool stuff thanks
+   2. April 27th, 2007 at 8:46 am herbert Says:
+
+      nice but not usable for php4, perhaps its better not to provide an object in php5 and an xml file in php4.
+      create an array to use in both php versions.
+   3. April 27th, 2007 at 8:53 am Andy Bilodeau(andycaster) Says:
+
+      Wow…this is so cool…thank you for sharing this …I’m definately going to steal..err..use these ideas….I’m looking at something easier for my Blackberry…i don’t like the Java apps..they hang all the time!
+
+      Can’t wait to see what your project is.
+
+      thanks for sharing.
+
+      Andy Bilodeau
+      http://andy.andycast.net
+   4. April 28th, 2007 at 8:51 am Everyone should have at least one Gotchi! Says:
+
+      PHP XML Parser for Twitter…
+
+      Mich hat es mal wieder gereizt etwas PHP zu programmieren. Aus diesem Grund wollt ich mal versuchen ein Serendipity Plugin zu schreiben. Naheliegend für mich war und ist ein Twitter Sidebar Plugin und die ersten Erfolge sind schon zu verzeichnen David…
+   5. April 28th, 2007 at 8:54 am herbert Says:
+
+      so I addes a new feature to the class of david, its not completed yet but already works for some twitter features.
+      now you are able to get the xml response as a array - and now you can work with this class in an easy way using php4.
+
+      blogged it here and try to get in contact with david
+      http://blog.gotchi.at/archives/451-PHP-XML-Parser-for-Twitter.html
+
+      sorry is in german, I will definitly write a english version when the class is finished and is working as expected
+   6. May 1st, 2007 at 10:14 am herbert Says:
+
+      ne version, now blog entry in english and german
+
+      http://blog.gotchi.at/archives/460-PHP-XML-Parser-for-Twitter.html
+   7. May 8th, 2007 at 7:10 pm Stefano Forenza Says:
+
+      Why didn’t you documented it in PhpDoc (or similar) format ? Don’t be lazy, it’s easy!
+
+      Good luck for the project.
+   8. June 3rd, 2007 at 2:01 am Everyone Will Be Doing This Soon → The Jim Whimpey Weblog Says:
+
+      […] easy to use class wrappers for the APIs it was a piece of cake. I used easy scrobbler, phpFlickr, this Twitter library (with some cURL modifications so it’d run on Dreamhost) and SimplePie for the other RSS […]
+   9. November 11th, 2007 at 6:15 am Shadrik Easton Says:
+
+      this is excellent code mate, well done. Its above my level of php atm, but not for long :p thanks for proverbially flicking my brain into action again.
+
