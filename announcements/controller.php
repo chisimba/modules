@@ -98,7 +98,7 @@ class announcements extends controller
             $this->objUser = $this->getObject('user', 'security');
 	    $this->objContext = $this->getObject('dbcontext','context');
  	    $this->objContextUsers = $this->getObject('managegroups','contextgroups');
- 	    $this->objSendMail = $this->getObject('dbemail','internalmail');
+ 	    $this->objSendMail = $this->getObject('email','mail');
             $this->objDbAnnouncements = $this->getObject('dbAnnouncements', 'announcements');
 	    $this->objDate = $this->newObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
@@ -158,7 +158,7 @@ class announcements extends controller
             $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
             $createdby = htmlentities($this->getParam('createdby') , ENT_QUOTES);
             $courseid = $contextPuid;
-       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
+       	    //$this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
 	    //prepare $RecipientList to send mails
 	    $subject=$title;
 
@@ -170,13 +170,33 @@ class announcements extends controller
 	    //loop thro array context users to get each users id
 	    for($i=0;$i<$count;$i++)
 	    {
-		array_push($RecipientList,$contextusers[$i]['userid']);
+		$contextUserId=$contextusers[$i]['userid'];
+    
+                //get student email address, and add them to array
+                $contextUserEmail=$this->objUser->email($contextUserId);
+                array_push($RecipientList,$contextUserEmail);  
+               
 	    }
-	    //now glue the array values into a string with | delimeters
-	    $RecipientList=implode("|",$RecipientList);
-	   
-	    //now send emails	  
-	    $this->objSendMail->sendMail($RecipientList, $subject, $message, $attachment);
+            //set recipient list
+                $this->objSendMail->setValue('to', $RecipientList);
+             //get sender's email address
+                $SenderEmail=$this->objUser->email($userId);
+                 $this->objSendMail->setValue('from', $SenderEmail);
+                //get sender's fullnames
+                 $fromFullname= $this->objUser->fullname($userId);
+                //set sender'sfullname 
+               $this->objSendMail->setValue('fromName', $fromFullname);
+                //set email subject
+                $this->objSendMail->setValue('subject', $subject);
+                //set email body
+                $this->objSendMail->setValue('body', $message);
+                //emailAltBody
+                $this->objSendMail->setValue('altBody', '');
+                //email mailer
+                $this->objSendMail->setValue('mailer', 'mail');
+                //now send emails
+               //$this->objSendMail->send();
+	    exit;
 	    $this->nextAction('');
             break;
         // Link to the template
