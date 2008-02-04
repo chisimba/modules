@@ -3,7 +3,8 @@
  * 
  * Twitter interface elements
  * 
- * Twitter is a module that creates an integration between your Chisimba site using your Twitter account.
+ * Twitter is a module that creates an integration between your Chisimba 
+ * site using your Twitter account.
  * 
  * PHP version 5
  * 
