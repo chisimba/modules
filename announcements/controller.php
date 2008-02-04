@@ -158,7 +158,7 @@ class announcements extends controller
             $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
             $createdby = htmlentities($this->getParam('createdby') , ENT_QUOTES);
             $courseid = $contextPuid;
-       	    //$this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
+       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
 	    //prepare $RecipientList to send mails
 	    $subject=$title;
 
@@ -196,7 +196,7 @@ class announcements extends controller
                 $this->objSendMail->setValue('mailer', 'mail');
                 //now send emails
                //$this->objSendMail->send();
-	    exit;
+	   
 	    $this->nextAction('');
             break;
         // Link to the template
