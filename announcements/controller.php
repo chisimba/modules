@@ -35,7 +35,7 @@ if (!$GLOBALS['kewl_entry_point_run']){
 /**
  *
  * Model controller for the table tbl_phonebook
- * @authors:Godwin Du Plessis, Ewan Burns, Helio Rangeiro, Jacques Cilliers, Luyanda Mgwexa and Qoane Seitlheko.
+ * @authors:Joel Kimilu.
  * @copyright 2007 University of the Western Cape
  */
 class announcements extends controller

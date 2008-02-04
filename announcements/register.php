@@ -3,7 +3,7 @@ MODULE_NAME: Announcements
 MODULE_DESCRIPTION: This module facilitates announcements from lecturers to students
 MODULE_AUTHORS: Joel Kimilu
 MODULE_RELEASEDATE: 2008 01 25
-MODULE_VERSION: 0.11
+MODULE_VERSION: 0.13
 MODULE_PATH: announcements
 MODULE_ISADMIN: 0
 MODULE_ISLECTURER: 0
