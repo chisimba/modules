@@ -89,6 +89,7 @@ class portalimporter extends controller
     public $objLog;
 
     public $depth;
+    public $sitepath;
 
     /**
     *
@@ -105,6 +106,7 @@ class portalimporter extends controller
         //$this->config = $this->getObject('altconfig','config');
         $this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->depth = $this->sConfig->getValue('mod_portalimporter_parsedepth', 'portalimporter');
+        $this->sitepath = $this->sConfig->getValue('mod_portalimporter_sitepath', 'portalimporter');
 
 
     }
@@ -272,6 +274,72 @@ class portalimporter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
         
+    }
+    
+    public function __goPortal()
+    {
+    	$this->objStdlib = $this->getObject('splstdlib', 'files');
+    	$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
+    	// clean the file tree
+    	$this->objStdlib->frontPageDirCleaner($this->sitepath);
+    	// create the sections
+    	// create the sections and subsections
+		$sections = $this->objStdlib->dirFilterDots($this->sitepath);
+		foreach($sections as $subsections)
+		{
+			// create the section
+			$secname = end(explode('/', $subsections));
+			$secname = ucwords(str_replace("_", " ", $secname));
+			echo "<h1>Section name : $secname</h1><br />";
+			// this is a parent section, so no section id (0)
+			$psecarr = array(
+				'parentselected' => 0,
+				'title' => $secname,
+				'menutext' => $secname,
+				'access' => '',
+				'layout' => 'page',
+				'description' => '',
+				'published' => 1,
+				'hidetitle' => 0,
+				'showdate' => 1,
+				'showintroduction' => 1,
+				'ordertype' => 'pageorder',
+				'userid' => 1,
+				);
+			
+			$secid = $this->objCmsDb->addSection($psecarr);
+			$subsection[] = $this->objStdlib->dirFilterDots($subsections);
+			$subsection = array_filter($subsection);
+			// add each subsection to this section now
+			if(isset($subsection[0]))
+			{
+				$subsection = $subsection[0];
+				foreach($subsection as $subsect)
+				{
+					$ssecname = end(explode('/', $subsect));
+					$ssecname = ucwords(str_replace("_", " ", $ssecname));
+					echo "Adding $ssecname as a subsection to $secname with ID $secid<br />";
+					$csecarr = array(
+					'parentselected' => $secid,
+					'title' => $ssecname,
+					'menutext' => $ssecname,
+					'access' => '',
+					'layout' => 'page',
+					'description' => '',
+					'published' => 1,
+					'hidetitle' => 0,
+					'showdate' => 1,
+					'showintroduction' => 1,
+					'ordertype' => 'pageorder',
+					'userid' => 1,
+					);
+					$csecid = $this->objCmsDb->addSection($csecarr);
+				}
+			}
+			// var_dump($subsection);
+			unset($subsection);
+		}
+		die();
     }
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/

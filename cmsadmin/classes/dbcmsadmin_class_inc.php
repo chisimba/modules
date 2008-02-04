@@ -2231,10 +2231,10 @@ class dbcmsadmin extends dbTable
 		$this->_changeTable('tbl_cms_sections');
 
 		//get parent type "subsection", "root" or "param is null"(new section will be root level) and its id
-		$id = $sectionArr['parentselected'];
+		$parentid = $sectionArr['parentselected'];
 		
 		$node = $this->getLevel($parentid); 
-		$parentid = $node;
+		//$parentid = $node;
 		if ($node == 1 || $node == 0) {
 
 			$rootid = $node;
@@ -2250,7 +2250,7 @@ class dbcmsadmin extends dbTable
 
 			//Add section
 			$index = array(
-			'rootid' => $rootid,
+			'rootid' => $parentid, //rootid?????????
 			'parentid' => $parentid,
 			'title' => $sectionArr['title'],
 			'menutext' => $sectionArr['menutext'],
