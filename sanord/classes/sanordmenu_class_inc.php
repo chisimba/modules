@@ -59,7 +59,7 @@ class sanordmenu extends object
         
         // Add Logout link if user is logged in
         if ($this->objUser->isLoggedIn()) {
-            $link = $this->uri(array('action'=>'logoff'), 'security');
+            $link = $this->uri(array('action'=>'logoff'), 'security', '', FALSE, TRUE);
             $str .= $this->prepareItem('Logout', $link);
         }
         
