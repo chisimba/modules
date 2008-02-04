@@ -112,6 +112,42 @@ class twitterremote extends dbtable
         return $this->process($request, $postargs);
     }
     
+    public function getStatus()
+    {
+    	$request = 'http://' . $this->userName . ':' 
+           . $this->password . '@twitter.com/users/show/'
+           . $this->userName .'.xml';
+        $xmlStr = file_get_contents($request);
+        return simplexml_load_string($xmlStr);
+    }
+    
+    /**
+    * 
+    * Method to show the latest status update of the user (i.e. the
+    * last message posted)
+    * 
+    * @access public
+    * @param Boolean $showtime TRUE|FALSE If true it shows the time of the post
+    * @param Boolean $showimage TRUE|FALSE if true is shows the image avatar of the user
+    * @return String The formatted last posted message
+    * 
+    */
+    public function showStatus($showTime=FALSE, $showimage=FALSE)
+    {
+    	$xml = $this->getStatus();
+        $ret = $xml->status->text;
+        if ($showTime) {
+        	$ret.= "<br />" . $xml->status->created_at;
+        }
+        if ($showimage){
+        	$ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\"" 
+             . $xml->profile_image_url
+             . "\" /></td><td class=\"tweetcell\">" . $ret 
+             ."</td></tr></table>";
+        }
+        return $ret;
+    }
+    
 
     
     // internal function where all the juicy curl fun takes place

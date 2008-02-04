@@ -168,6 +168,8 @@ class twitter extends controller
     
     private function __tweet()
     {
+        $objBox = $this->getObject("tweetbox", "twitter");
+        $str = $objBox->show();
     	return "tweet_tpl.php";
     }
     
@@ -198,6 +200,11 @@ class twitter extends controller
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
         $password = $objUserParams->getValue("twitterpassword");
+        $this->objTwitterRemote->initializeConnection($userName, $password);
+        $str = $this->objTwitterRemote->showStatus();
+        //htmlentities($this->objTwitterRemote->getStatus());
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
     }
     
     
