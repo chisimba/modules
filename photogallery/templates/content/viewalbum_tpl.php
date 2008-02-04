@@ -20,14 +20,14 @@ if(count($images) > 0)
 	$str = '';
 	foreach($images as $image)
 	{
-		$str.='<div class="image"><div class="imagethumb">';
+		$str.='<div class="image"><div class="imagethumb" style="height:140px">';
 		$filename = $this->_objFileMan->getFileName($image['file_id']); 
  		$path = $objThumbnail->getThumbnail($image['file_id'],$filename);
  		$bigPath = $this->_objFileMan->getFilePath($image['file_id']);
 	 	$link->href = $this->uri(array('action' => 'viewimage', 'albumid' => $this->getParam('albumid'),'imageid' => $image['id']));
 	 	$link->link = '<img title="'.$image['title'].'" src="'.$path.'" alt="'.$image['title'].'"  />';
 	 	$link->extra = ' rel="lightbox" ';
-		$str.=$link->show().'</div></div>';
+		$str.=$link->show()."</div></div>\n";
 	}
 	
 	print $str.'
