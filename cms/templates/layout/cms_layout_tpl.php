@@ -2,7 +2,7 @@
 
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objBlocks =  $this->newObject('blocks', 'blocks');
-$objLucene =  $this->newObject('results', 'lucene');
+$objLucene =  $this->newObject('searchresults', 'search');
 $objModule =  $this->newObject('modules', 'modulecatalogue');
 $objLink =  $this->newObject('link', 'htmlelements');
 $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
@@ -60,7 +60,7 @@ if(!empty($leftPageBlocks)) {
 
 if(!$this->getParam('query') == ''){
 
-    $searchResults = $objLucene->show($this->getParam('query'));
+    $searchResults = $objLucene->displaySearchResults($this->getParam('query'), 'cms');
 } else {
     $searchResults = '';
 }

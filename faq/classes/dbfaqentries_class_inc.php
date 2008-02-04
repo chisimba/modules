@@ -48,7 +48,7 @@ class dbFaqEntries extends dbTable
 		$categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
 		
 		// Add to Search
-        $objIndexData = $this->getObject('indexdata', 'lucene');
+        $objIndexData = $this->getObject('indexdata', 'search');
         
         // Prep Data
         $docId = 'faq_entry_'.$ins;
@@ -145,7 +145,7 @@ class dbFaqEntries extends dbTable
 		$categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
 		
 		// Add to Search
-        $objIndexData = $this->getObject('indexdata', 'lucene');
+        $objIndexData = $this->getObject('indexdata', 'search');
         
         // Prep Data
         $docId = 'faq_entry_'.$id;
@@ -168,7 +168,7 @@ class dbFaqEntries extends dbTable
 	function deleteSingle($id)
 	{
 		$this->delete("id", $id);
-		$objIndexData = $this->getObject('indexdata', 'lucene');
+		$objIndexData = $this->getObject('indexdata', 'search');
         $objIndexData->removeIndex('faq_entry_'.$id);
 	}//
 }

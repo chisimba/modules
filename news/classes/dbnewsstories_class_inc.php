@@ -62,7 +62,7 @@ class dbnewsstories extends dbtable
             $objTags->addStoryTags($storyId, $tags);
             
             // Call Object
-            $objIndexData = $this->getObject('indexdata', 'lucene');
+            $objIndexData = $this->getObject('indexdata', 'search');
             
             // Prep Data
             $docId = 'news_stories_'.$storyId;
@@ -143,7 +143,7 @@ class dbnewsstories extends dbtable
             $objTags->addStoryTags($id, $tags);
             
             // Call Object
-            $objIndexData = $this->getObject('indexdata', 'lucene');
+            $objIndexData = $this->getObject('indexdata', 'search');
             
             // Prep Data
             $docId = 'news_stories_'.$id;

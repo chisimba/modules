@@ -52,7 +52,7 @@ class dbpodcast extends dbTable
         $objFileRegister->registerUse($fileId, 'podcast', 'tbl_podcast', $podcastId, 'fileid');
         
         // Add to Search
-        $objIndexData = $this->getObject('indexdata', 'lucene');
+        $objIndexData = $this->getObject('indexdata', 'search');
         
         // Prep Data
         $docId = 'podcast_entry_'.$podcastId;
@@ -99,7 +99,7 @@ class dbpodcast extends dbTable
         $podcast = $this->getRow('id', $id);
         
         // Add to Search
-        $objIndexData = $this->getObject('indexdata', 'lucene');
+        $objIndexData = $this->getObject('indexdata', 'search');
         
         // Prep Data
         $docId = 'podcast_entry_'.$id;
@@ -190,7 +190,7 @@ class dbpodcast extends dbTable
             $this->delete('id', $id);
             $this->delete('podcastId',$id, "tbl_podcast_context");
             
-            $objIndexData = $this->getObject('indexdata', 'lucene');
+            $objIndexData = $this->getObject('indexdata', 'search');
             $objIndexData->removeIndex('podcast_entry_'.$id);
             
             $numPodcasts = $this->getNumFeeds($podcast['creatorid']);
