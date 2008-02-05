@@ -94,22 +94,22 @@ class realtime extends controller
 	 */
 	function init()
 	{
-		$this->objLink=& $this->newObject('link', 'htmlelements');
+		$this->objLink= $this->getObject('link', 'htmlelements');
 		//Get configuration class
-		$this->objConfig =& $this->getObject('config','config');
+		$this->objConfig =$this->getObject('config','config');
 		
-	        $this->objAltConfig =& $this->getObject('altconfig','config');
+	        $this->objAltConfig = $this->getObject('altconfig','config');
 		
 	        //Get language class
-		$this->objLanguage =& $this->getObject('language', 'language');
+		$this->objLanguage = $this->getObject('language', 'language');
 		
 		//Get the activity logger class
-		$this->config =& $this->getObject('config','config');
-		$this->objLog = $this->newObject('logactivity', 'logger');
+		$this->config = $this->getObject('config','config');
+		$this->objLog = $this->getObject('logactivity', 'logger');
 		
 		//Log this module call
 		$this->objLog->log();
-		$this->objrealtime = & $this->getObject('dbrealtime');
+		$this->objrealtime =  $this->getObject('dbrealtime');
 		
 		// classes we need
 		$this->objUser = $this->newObject('user', 'security');
@@ -220,11 +220,16 @@ class realtime extends controller
                                 $this->setVarByRef('desc', $desc);
                                 $this->setVarByRef('content', $content);
 				return "dump_tpl.php";*/
-                                $this->startWhiteboardServer();
+				
+				
+				$this->startOpenOffice();
+			        $this->startWhiteboardServer();
+
                                 return $this->showClassRoom($this->contextCode);
 		}
-
 	}
+
+	
 
  
 
@@ -246,7 +251,7 @@ class realtime extends controller
   */
 
  
-    private function checkOpenOfficeStatus(){
+    function openOfficeRunning(){
 
     $result = array();
     $cmd='ps aux | grep soffice';
@@ -272,21 +277,57 @@ function in_str($needle, $haystack){
    /**
     *automaticaly try to start server
     */ 
-private function startWhiteboardServer()
+ function startWhiteboardServer()
     {
-    $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/avoir-whiteboard-server-0.1.jar:".$this->objConfig->getModulePath()."/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
-   system($cmd,$return_value);
+    $cmd = "java -Xms64m -Xmx128m -cp .:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-io-1.3.1.jar:".
+    $this->objConfig->getModulePath().
+        "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-cli-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+     "/documentconverter/resources/jodconverter-2.2.0/lib/juh-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/jurt-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/ridl-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-api-1.4.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-jdk14-1.4.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/unoil-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
+    $this->objConfig->getModulePath().
+    "/realtime/resources/avoir-whiteboard-server-0.1.jar:".
+    $this->objConfig->getModulePath().
+    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
+    system($cmd,$return_value);
     
     }
 
-   /**
+
+    /**
     *automaticaly try to start server
     */ 
-private function startServer()
+function startServer()
     {
     $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
    system($cmd,$return_value);
     
+    }
+
+ /**
+   *automaticaly try to open office in headless mode
+    */
+ function startOpenOffice()
+    {
+    $cmd = 'soffice -headless -accept="socket,port=8100;urp;" &';
+    system($cmd,$return_value);
     }
    /**
     * This creates, if not existing, a folder where the presentations are to be stored.
@@ -309,9 +350,9 @@ private function startServer()
 
         $destinationDir = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id;
 
-       $objMkDir->mkdirs($destinationDir);
+        $objMkDir->mkdirs($destinationDir);
 
-	   @chmod($destinationDir, 0777);
+	@chmod($destinationDir, 0777);
 
         $objUpload = $this->newObject('upload', 'files');
         $objUpload->permittedTypes = array('ppt', 'odp', 'pps'); //'pps',
@@ -353,26 +394,26 @@ private function startServer()
             if (is_file($file)) {
                 @chmod($file, 0777);
             }
-			$inputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
-			$outputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.html';
-            $this->converter->convert($inputFile,$outputFile);
-            $this->setVarByRef('id', $id);       
-		  return "realtime-presentations-presenter-applet_tpl.php";
+	        $inputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.'.$ext;
+	        $outputFile=$this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id.'/'.$id.'.html';
+                $this->converter->convert($inputFile,$outputFile);
+                $this->setVarByRef('id', $id);       
+		return "realtime-presentations-presenter-applet_tpl.php";
+         }
+        }else{
+                $title=$this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
+                $content='<p>'.$this->objLanguage->languageText('mod_realtime_tip1a', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_tip1b', 'realtime').' </p><p><b>'.$this->objLanguage->languageText('mod_realtime_presentations_tip1', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip2', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip3', 'realtime');
+                $desc=$this->objLanguage->languageText('mod_realtime_officenotrunning', 'realtime');
+                $this->setVarByRef('title', $title);
+                $this->setVarByRef('desc', $desc);
+                $this->setVarByRef('content', $content);
+                return "dump_tpl.php";
         }
-}else{
-$title=$this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
-$content='<p>'.$this->objLanguage->languageText('mod_realtime_tip1a', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_tip1b', 'realtime').' </p><p><b>'.$this->objLanguage->languageText('mod_realtime_presentations_tip1', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip2', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip3', 'realtime');
-$desc=$this->objLanguage->languageText('mod_realtime_officenotrunning', 'realtime');
-                                $this->setVarByRef('title', $title);
-                                $this->setVarByRef('desc', $desc);
-                                $this->setVarByRef('content', $content);
-return "dump_tpl.php";
-}
-    }
-    /**
-     * Informs the server that a user is requesting a voice token, assigns token to User if the token is
-     * available.
-     */	
+       }
+       /**
+        * Informs the server that a user is requesting a voice token, assigns token to User if the token is
+        * available.
+        */	
 	function requestToken($userid, $userlevel, $contextcode)
 	{
 		if (empty ($userid) || empty ($userlevel) || empty ($contextcode))
@@ -524,13 +565,16 @@ return "dump_tpl.php";
                         $this->setVarByRef('title', $title);
                         $this->setVarByRef('desc', $desc);
                         $this->setVarByRef('content', $desc);
+			//$this->setVar('pageSuppressToolbar', FALSE);
+			//$this->setVar('pageSuppressBanner', FALSE);
 	              return "dump_tpl.php";		
                 } else{
-                   $this->setLayoutTemplate('layout_tpl.php');
-                   return "realtime-classroom_tpl.php";
-                ?>
- <?
-}
-}
-}
+			$this->setVar('pageSuppressToolbar', TRUE);
+			$this->setVar('pageSuppressBanner', TRUE);
+                        $this->setLayoutTemplate('layout_tpl.php');
+                        return "realtime-classroom_tpl.php";
+                
+                }
+	}
+	}
 ?>
