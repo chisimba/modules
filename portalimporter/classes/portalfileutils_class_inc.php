@@ -824,7 +824,8 @@ class portalfileutils extends object
            "indent-spaces" => 4,
            "drop-proprietary-attributes" => true,
            "drop-empty-paras" => true,
-           "word-2000" => true
+           "word-2000" => true,
+           "xhtml-output" => true,
         ); 
         if (function_exists(tidy_parse_string)) {
             $tidy = tidy_parse_string($content, $options);
