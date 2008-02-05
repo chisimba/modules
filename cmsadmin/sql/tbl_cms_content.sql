@@ -9,7 +9,7 @@ $fields = array(
 		),
 	'title' => array(
 		'type' => 'text',
-		'length' => 100
+		'length' => 255
 		),
 	'introtext' => array(
 		'type' => 'clob',

@@ -301,4 +301,20 @@
 	</data>
 	
   </update>
+  <update>
+        <table>tbl_cms_content</table>
+        <version>1.583</version>
+        <description>Increased field length for titles</description>
+        <data>
+        	<change>
+        		<title>
+        		<type>text</type>
+        			<definition>
+		    			<type>text</type>
+    					<length>255</length>
+    				</definition>
+    			</title>
+			</change>
+		</data>
+	</update>
 </updates>
