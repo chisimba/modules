@@ -353,7 +353,7 @@ class cmsadmin extends controller
                     //Get top navigation
                     $topNav = $this->_objUtils->topNav('createcontent');
                     $this->setVarByRef('topNav',$topNav);
-                    $addEditForm = $this->_objUtils->getAddEditContentForm($this->getParam('id'), $parentid);
+                    $addEditForm = $this->_objUtils->getAddEditContentForm($this->getParam('id'), $parentid,$this->getParam('frommodule'),$this->getParam('fromaction'),$this->getParam('s_param'));
                     $this->setVarByRef('addEditForm', $addEditForm);
                     $this->setVarByRef('section', $parentid);
                     $this->setVarByRef('id', $this->getParam('id'));
@@ -373,11 +373,23 @@ class cmsadmin extends controller
                     $this->_objContent->edit();
                     $sectionId = $this->getParam('parent', NULL);
                     $is_front = $this->getParam('frontman', FALSE);
-
+                    $fromAction = $this->getParam('fromaction');
+                    $fromModule = $this->getParam('frommodule',FALSE);
+                    if ($fromModule && $fromModule != "") {
+                        if ($fromAction == "") {
+                            $fromAction = NULL;
+                        }
+                        $s_param = $this->getParam('s_param');
+                        $a_param = array();
+                        if ($s_param) {
+                            $a_param = unserialize($s_param);
+                        }
+                        return $this->nextAction($fromAction,$a_param,$fromModule);
+                    }
                     if (!empty($sectionId) && !$is_front) {
                         return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
                     } else {
-                        return $this->nextAction('frontpages', array('action' => 'frontpages'), 'cmsadmin');
+                        return $this->nextAction('frontpages', array(), 'cmsadmin');
                     }
                     break;
                     

@@ -2075,7 +2075,7 @@ class cmsutils extends object
          * @return string $middleColumnContent The form used to create and edit a page
          * @author Warren Windvogel
          */
-        public function getAddEditContentForm($contentId = NULL, $section = NULL)
+        public function getAddEditContentForm($contentId = NULL, $section = NULL, $fromModule = NULL, $fromAction = NULL, $s_param = NULL)
         {
             // Determine whether to show the toggle or not
             if ($section == NULL) {
@@ -2297,7 +2297,13 @@ class cmsutils extends object
 			$txt_action = new textinput('action',$action,'hidden');
 			$table->startRow();
             $table->addCell($h3->show(),null,'center','left');
-            $table->addCell($table2->show(),null,'top','left'); 
+            $table->addCell($table2->show(),null,'top','left');
+            if ($fromModule) { 
+                $mod = new textinput('frommodule',$fromModule,'hidden');
+                $act = new textinput('fromaction',$fromAction,'hidden');
+                $param = new textinput('s_param',$s_param,'hidden');
+                $table->addCell($mod->show().$act->show().$param->show()); 
+            }
             //$table->addCell(,null,'bottom','center');
 			$table->endRow();         		
 			//Lets do the CC Licence

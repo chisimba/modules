@@ -460,7 +460,7 @@ class dbsections extends dbTable
             $result = $this->update('id', $id, $arrFields);
         
             if ($result != FALSE) {
-                $arrFields['id'] = $result;
+                $arrFields['id'] = $id;
                 $this->luceneIndex($arrFields);
             }
             
@@ -1031,7 +1031,6 @@ class dbsections extends dbTable
         public function luceneIndex($data)
         {
             $objLucene = $this->getObject('indexdata', 'search');
-            
             $docId = 'cms_section_'.$data['id'];
             $url = $this->uri(array('action' => 'showsection', 'id' => $data['id']), 'cms');
             

@@ -285,7 +285,7 @@ class dbcmsadmin extends dbTable
 		$sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks
                 WHERE (blockid = tbl_module_blocks.id) AND sectionid = '$sectionId' 
                 AND frontpage_block = 0  AND leftside_blocks = '$left' 
-                ORDER BY ordering";
+                "/*GROUP BY blockid*/." ORDER BY ordering";
 		return $this->getArray($sql);
 	}
 

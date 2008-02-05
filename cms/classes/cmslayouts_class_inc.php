@@ -301,6 +301,30 @@ class cmslayouts extends object
         
         return $str;
     }
+    
+    /**
+     * This method generates a link to the admin edit template in the case that the 
+     * user is allowed to edit the post.
+     *
+     * @param string $id the id of the post we're dealing with
+     */
+    public function getEditLink($id,$a_param = null) {
+        $myid = $this->objUser->userId();
+        $ret ='';
+        if (($this->objUser->inAdminGroup($myid,'CMSAuthors')) || ($this->objUser->inAdminGroup($myid,'Site Admin'))) {
+            if ($a_param && !empty($a_param)) {
+                $s_param = serialize($a_param);
+            }
+            $icon = $this->getObject('geticon','htmlelements');
+            $icon->setIcon('edit');
+            $icon->alt = $this->objLanguage->languageText('word_edit');
+            $link = $this->getObject('link','htmlelements');
+            $link->link($this->uri(array('action'=>'addcontent','id'=>$id,'frommodule'=>$this->getParam('module'),'fromaction'=>$this->getParam('action'),'s_param'=>$s_param),'cmsadmin'));
+            $link->link = $icon->show();
+            $ret = " ".$link->show();
+        }
+        return $ret;
+    }
 
     /**
          * Method to get the Front Page Content
@@ -330,7 +354,7 @@ class cmslayouts extends object
     			$pageStr = '';
     		}else{
     			$this->objHead->type = '2';
-    			$this->objHead->str = $page['title'];
+    			$this->objHead->str = $page['title'].$this->getEditLink($arrFrontPages[0]['content_id']);
     			$pageStr = $this->objHead->show();
 
     			$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
@@ -377,10 +401,10 @@ class cmslayouts extends object
 
     				// Page heading - hide if set
     				if(isset($page['hide_title']) && $page['hide_title'] == 1){
-    					$pageStr = '';
+    					$pageStr = $this->getEditLink($page['id']);
     				}else{
     					$this->objHead->type = '2';
-    					$this->objHead->str = $page['title'];
+    					$this->objHead->str = $page['title'].$this->getEditLink($page['id']);
 
     					$pageStr = $this->objHead->show();
     					
@@ -960,7 +984,7 @@ class cmslayouts extends object
             $pdfimg = $pdficon->show();
 			$pdflink = null;
             $pdflink = new href($pdfurl, $pdfimg, NULL);
-			$this->objHead->str = $page['title'];
+			$this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
             $this->objHead->type = 2;
 			$tblh->startRow();
             $tblh->addCell($this->objHead->show());
@@ -978,8 +1002,7 @@ class cmslayouts extends object
             //parse for mathml as well
             $page['body'] = $objMath->parseAll($page['body']);
             $strBody .= stripslashes($page['body']);
-			
-             $strBody .= '<hr /><p />';
+			$strBody .= '<hr /><p />';
              $objLayer = new layer();
         	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center>";
         	$objLayer->id = 'cmscontent';
