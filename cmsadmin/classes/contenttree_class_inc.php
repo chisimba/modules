@@ -93,7 +93,13 @@ class contenttree extends object
             	$html = '<div id="productsandservices" class="yuimenu">
                 		 <div class="bd">
                 		 <ul class="first-of-type">';
-                //start the tree building
+                // build the home link
+                $nodeUri = $this->uri(array(),'cms');
+                $text = $this->objLanguage->languageText('word_home');
+                $link = '<a  class="yuimenuitemlabel" href="'.$nodeUri.'">'.$text.'</a>';
+                
+            	//start the tree building
+                $html .= "<li class='yuimenuitem first-of-type'>$link</li>";
                 $html .= $this->buildLevel(0, $currentNode, $admin, $module, $sectionAction, $contentAction);
                 $html .= '</ul></div></div><!-- end: tree div -->';
             } else {
