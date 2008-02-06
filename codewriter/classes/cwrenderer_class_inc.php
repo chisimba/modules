@@ -57,10 +57,40 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class cwrenderer extends object
 {
+    /**
+    *
+    *  @var string $codeLanguage The language which the editor should use to provide syntax highlighting.
+    *  @access public
+    * 
+    */
     public $codeLanguage;
+    /**
+    *
+    *  @var string $lineNumbers The code for turning on/off line numbers
+    *  @access public
+    * 
+    */
     public $lineNumbers;
+    /**
+    *
+    *  @var string $width The width of the editor.
+    *  @access public
+    * 
+    */
     public $width;
+    /**
+    *
+    *  @var string $height The width of the editor.
+    *  @access public
+    * 
+    */
     public $height;
+    /**
+    *
+    *  @var string $code The text contents of the code box.
+    *  @access public
+    * 
+    */
     public $code;
     /**
     *
@@ -102,6 +132,16 @@ class cwrenderer extends object
     	return "LANGUAGE SELECTION HERE";
     }
     
+    /**
+    * 
+    * Method to render the script that intercepts the submit call
+    * and passes if off to the jQuery forms plugin that handles
+    * ajax calls.
+    * 
+    * @access public
+    * @return String A string containing the script.
+    *    
+    */
     public function renderFormScript()
     {
     	return "<script type=\"text/javascript\"> 
@@ -112,38 +152,32 @@ class cwrenderer extends object
                 alert(\"Saved!\"); 
             }); 
         }); 
-    </script> ';";
+        </script> ';";
     }
     
-    public function working____renderEditor($filename, $areaName="codetext")
-    {
-        $formAction=$this->uri(array(
-            "action" => "save",
-            "file" => $filename), 
-          "codewriter");
-        $ret = '<form id="myEditorForm" action="' . $formAction .'" method="post">';
-        $ret .='<input type="submit" value="Save" />';
-    	$ret .= '<textarea name="codetext" '
-          . 'id="cwEditor" class="codepress '
-          . $this->codeLanguage 
-          . ' linenumbers-' . $this->lineNumbers . '" '
-          . ' style="width:' . $this->width . ';'
-              . 'height:' . $this->height . ';"'
-          . '">' . $this->code 
-          . '</textarea>';// . '<textarea name="testing" id="testing" class="codepress javascript linenumbers-on">Testing here</textarea>';
-        
-        $ret .="</form>";
-        return $ret;
-    }
+    /**
+    * 
+    * Method to render the form and inputs, including the code editor itself
+    * 
+    * @access public
+    * @param string $filename The full path to the file being edited
+    * @param string $areaName THe name of the textarea used for the code editor
+    * @return String A string containing the form of the edit area.
+    *    
+    */
     public function renderEditor($filename, $areaName="codetext")
     {
+        $wordSave = $this->objLanguage->languageText('word_save');
+        $togleEdit = $this->objLanguage->languageText('mod_codewriter_togleedit', 'codewriter');
+        $togleLno = $this->objLanguage->languageText('mod_codewriter_toglelno', 'codewriter');
+        $togleAc = $this->objLanguage->languageText('mod_codewriter_togleac', 'codewriter');
         $formAction=$this->uri(array(
             "action" => "save",
             "file" => $filename), 
           "codewriter");
-        $ret = '<form id="myEditorForm" action="' . $formAction .'" method="post">';
-        $ret .='<input type="submit" value="Save" onClick="cwEditor.toggleEditor(); myEditorForm.form.submit();"/>';
-        $ret .='<input type="button" value="Toggle edit mode" onClick="cwEditor.toggleEditor();"/>';
+        $ret = '<form name="myEditorForm" id="myEditorForm" action="' . $formAction .'" method="post">';
+        $ret .='<input type="submit" value="' . $wordSave . '" onClick="cwEditor.toggleEditor();"/>';
+        $ret .='<input type="button" value="' . $togleEdit . '" onClick="cwEditor.toggleEditor();"/>';
         $ret .= '<textarea name="codetext" '
           . 'id="cwEditor" class="codepress '
           . $this->codeLanguage 
@@ -152,12 +186,20 @@ class cwrenderer extends object
               . 'height:' . $this->height . ';"'
           . '">' . $this->code 
           . '</textarea>';
-        
+        $ret .='<input type="button" value="' . $togleLno . '" onClick="cwEditor.toggleLineNumbers();"/>';
+        $ret .='<input type="button" value="' . $togleAc . '" onClick="cwEditor.toggleAutoComplete();"/>';
         $ret .="</form>";
         return $ret;
     }
 
-    
+    /**
+    *
+    * Method to build the left panel of the 3 column editor layout
+    * @param string $workingDir The name of the working directory 
+    *   (usually refers to a Chisimba module code) 
+    * @return String A string containing the content of the left panel
+    * 
+    */
     public function buildLeftPanel($workingDir)
     {
         $ret ="";
@@ -167,8 +209,10 @@ class cwrenderer extends object
         $dirs = $fileUtils->getDirs($projectPath);
         
         $ret .= $this->objLanguage->languageText('mod_codewriter_workingdir', 'codewriter');
-        if ($workingDir !== NULL) {
+        if ($workingDir != NULL) {
             $ret .= "<br />" . $this->getFolderIconStaticExpanded() . "<em>" . $workingDir . "</em><br /><br />";
+        } else {
+        	$ret .= "<br />" . $this->getFolderIconStaticGreyed() . "<em>" . $workingDir . "</em><br /><br />";
         }
         $ico = $this->getFolderIconStatic();
         foreach ($dirs as $dir) {
@@ -178,7 +222,15 @@ class cwrenderer extends object
         return $ret;
     }
     
-    public function buildRightPanel()
+    /**
+    *
+    * Method to build the right panel of the 3 column editor layout
+    * @param string $workingDir The name of the working directory 
+    *   (usually refers to a Chisimba module code) 
+    * @return String A string containing the content of the right panel
+    * 
+    */
+    public function buildRightPanel($workingDir)
     {
         return "Right panel";
     }
@@ -209,6 +261,14 @@ class cwrenderer extends object
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('tree/folder-expanded', 'gif');
         $objIcon->title="Current";   
+        return $objIcon->show();
+    }
+    
+    public function getFolderIconStaticGreyed()
+    {
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setIcon('tree/folder_grey', 'gif');
+        $objIcon->title="None";   
         return $objIcon->show();
     }
     

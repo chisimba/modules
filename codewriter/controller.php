@@ -144,12 +144,11 @@ class codewriter extends controller
     {
         $js = $this->getJavascriptFile('codepress.js', 'codewriter');
         $this->appendArrayVar('headerParams', $js);
+        //$js1 = $this->getJavascriptFile('codewriter.js', 'codewriter');
+        //$this->appendArrayVar('headerParams', $js1);
         $js2 = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
         $objRenderer = $this->getObject("cwrenderer", "codewriter");
         $this->appendArrayVar('headerParams', $js2);
-        
-        //$js3 = $this->getJavascriptFile('jquery/jquery.Codepress.js', 'htmlelements');
-        //$this->appendArrayVar('headerParams', $js3);
         $js3 = $objRenderer->renderFormScript();
         $this->appendArrayVar('headerParams', $js3);
         
@@ -172,7 +171,7 @@ class codewriter extends controller
         $this->setVarByRef('codeEditor', $codeEditor);
         
         $leftPanel .= $objRenderer->buildLeftPanel($project);
-        $rightPanel = $objRenderer->buildRightPanel();
+        $rightPanel = $objRenderer->buildRightPanel($project);
 
         
         $this->setVarByRef('leftPanel', $leftPanel);
@@ -194,13 +193,12 @@ class codewriter extends controller
     private function __save()
     {
         $filename = $this->getParam("file", NULL);
-        $contents = $this->getParam("codetext", "Very Odd: Nothing found");
-        //echo htmlentities($contents);
-        //die();
-        $fh = fopen($filename, 'w')  or die("Cannot open file for writing");
-        fwrite($fh, $contents);
-        fclose($fh);
-        return htmlentities($contents);
+        $contents = $this->getParam("codetext", NULL);
+        if (!empty($contents)) {
+            $fh = fopen($filename, 'w')  or die("Cannot open file for writing");
+            fwrite($fh, $contents);
+            fclose($fh);
+        }
     }
 
 
