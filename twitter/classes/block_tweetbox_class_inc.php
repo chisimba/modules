@@ -14,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Derek Keats
 *
 */
-class block_tweet extends object
+class block_tweetbox extends object
 {
     var $title;
     
@@ -32,7 +32,7 @@ class block_tweet extends object
     */
     function show()
 	{
-        $objWidjet = $this->getObject("twitterwidgets","twitter");
-        return $objWidjet->sendWidget();
+        $objWidjet = $this->getObject("tweetbox","twitter");
+        return $objWidjet->show();
     }
 }

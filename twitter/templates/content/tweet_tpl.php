@@ -1,13 +1,9 @@
 <?php
-$objWidjet = $this->getObject("twitterwidgets","twitter");
-echo $objWidjet->sendWidget();
-
+//Create an instance of the css layout class
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(2);
+$cssLayout->setLeftColumnContent("This is a work in progress");
+$objWidjet = $this->getObject("tweetbox","twitter");
+$cssLayout->setMiddleColumnContent($objWidjet->show());
+echo $cssLayout->show();
 ?>
-
-<!--form action="?php echo $url; ?>" method="post">
-Enter your text here!<br />
-<textarea name="tweet" id="tweet" cols="80" rows="10">
-</textarea><br />
-<div id="charlimitinfo">140</div>
-<input type="submit" value="Tweet" />
-</form-->

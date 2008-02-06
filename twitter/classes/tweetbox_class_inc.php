@@ -69,7 +69,9 @@ class tweetbox extends object
     */
     public function init()
     {
-        
+        $this->url = $this->uri(array(
+          "action" => "sendtweet"), "twitter");
+        $this->objLanguage = $this->getObject('language', 'language');
     }
     
     public function show()
@@ -86,7 +88,7 @@ class tweetbox extends object
     {
         $this->addLimitHeaderScript();
         $this->addBindingLimitsHeaderScript($chars, $textboxid);
-        return TRUE;
+        return $this->sendWidget();
     	
     }
     
@@ -124,7 +126,35 @@ class tweetbox extends object
         return TRUE;
     }
     
-
+    public function sendWidget()
+    {
+        if ($this->hasTwitterLogon()) {
+           $ret = "<form action=\"" . $this->url . "\" method=\"post\">"
+              . "<table><tr><td>"
+              . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
+              . "</td><td><div id=\"charlimitinfo\">140</div></td></tr></table>"
+              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"8\">"
+              . "</textarea><br />"
+              . "<input type=\"submit\" value=\"Tweet\" />"
+              . "</form>";
+        } else {
+            $ret = $this->objLanguage->languageText("mod_twitter_nologon", "twitter");
+        }
+        return $ret;
+    }
+    
+    function hasTwitterLogon()
+    {
+        $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        $objUserParams->readConfig();
+        $userName = $objUserParams->getValue("twittername");
+        $password = $objUserParams->getValue("twitterpassword");
+        if ($userName == "" && $password=="") {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
     
 
 }
