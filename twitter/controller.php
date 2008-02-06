@@ -161,7 +161,7 @@ class twitter extends controller
                 $str .= "Tweety was muted.";
             }
         } else {
-        	$str .= "Username or password were null. You need to store username and password as twitteruser and twitterpassword in Userparams. Yes, I know - I have to put this in language text. First I must sleep.";
+        	$str .= $this->objLanguage->languageText("mod_twitter_unpwnull", "twitter");
         }
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";

@@ -102,7 +102,7 @@ class tweetbox extends object
                     jQuery('#'+textid).val(text.substr(0,limit));
                     return false;
                 } else {
-                    jQuery('#' + infodiv).html('You have '+ (limit - textlength) +' characters left.');
+                    jQuery('#' + infodiv).html((limit - textlength));
                     return true;
                 }
             }" . "</script>";
