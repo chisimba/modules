@@ -138,9 +138,11 @@ class twitterremote extends dbtable
         $ret = $xml->status->text;
         if ($showTime) {
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
-            $humanTime = $objHumanizeDate->getDifference($xml->status->created_at);
+            $fixedTime = strtotime($xml->status->created_at);
+            $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+            $humanTime = $objHumanizeDate->getDifference($fixedTime);
         	$ret.= "<br /><span class=\"minute\">" 
-              . $xml->status->created_at . "</span>";
+              . $humanTime . "</span>";
         }
         if ($showimage){
         	$ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\"" 
@@ -172,9 +174,13 @@ class twitterremote extends dbtable
         $xml = $this->getPublicTimeline($sinceid);
         $ret="<table>";
         // For each <status> node 
+        $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         foreach ($xml->status as $status) {
            $img="";
            $link="";
+           $fixedTime = strtotime($status->created_at);
+           $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+           $humanTime = $objHumanizeDate->getDifference($fixedTime);
            $link = "<a href=\"" . $status->user->url . "\">";
            $img = $link . "<img src=\"" 
              . $status->user->profile_image_url
@@ -183,7 +189,7 @@ class twitterremote extends dbtable
            $ret .="<tr><td>" . $img 
            . "</td><td valign=\"top\">" 
            . $text . "<span class=\"minute\">"
-           . $status->created_at . "</span>"
+           . $humanTime . "</span>"
            . "</td></tr>";
         }
         $ret .= "</table>";
