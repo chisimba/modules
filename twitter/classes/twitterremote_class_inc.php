@@ -200,6 +200,7 @@ class twitterremote extends dbtable
     // internal function where all the juicy curl fun takes place
     // this should not be called by anything external unless you are
     // doing something else completely then knock youself out.
+    // YES I AM PLANNING TO FIX THIS
     private function process($url,$postargs=false)
     {
         $ch = curl_init($url);
