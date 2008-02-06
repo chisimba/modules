@@ -126,13 +126,42 @@ class tweetbox extends object
         return TRUE;
     }
     
+    /**
+    * 
+    * Method to render the script that intercepts the submit call
+    * and passes if off to the jQuery forms plugin that handles
+    * ajax calls.
+    * 
+    * @access public
+    * @return String A string containing the script.
+    *    
+    */
+    public function renderFormScript()
+    {
+        return "<script type=\"text/javascript\"> 
+        // wait for the DOM to be loaded 
+        jQuery(document).ready(function() { 
+            // bind 'myEditorForm' and provide a simple callback function 
+            jQuery('#myEditorForm').ajaxForm(function() {  
+                alert(\"Saved!\"); 
+            }); 
+        }); 
+        </script>";
+    }
+    
     public function sendWidget()
     {
+        //Load the Ajax form processing
+        $js = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $js);
+        $js2 = $this->renderFormScript();
+        $this->appendArrayVar('headerParams', $js2);
         if ($this->hasTwitterLogon()) {
-           $ret = "<form action=\"" . $this->url . "\" method=\"post\">"
-              . "<table><tr><td>"
+           $ret = "<form name=\"myEditorForm\" id=\"myEditorForm\" action=\"" 
+              . $this->url . "\" method=\"post\">"
+              . "<table cellpadding=\"4\" width=180><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
-              . "</td><td><div id=\"charlimitinfo\">140</div></td></tr></table>"
+              . "</span></td><td><span class=\"error\"><div id=\"charlimitinfo\">140</div></span></td></tr></table>"
               . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"8\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"

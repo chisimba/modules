@@ -137,7 +137,10 @@ class twitterremote extends dbtable
     	$xml = $this->getStatus();
         $ret = $xml->status->text;
         if ($showTime) {
-        	$ret.= "<br />" . $xml->status->created_at;
+            $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            $humanTime = $objHumanizeDate->getDifference($xml->status->created_at);
+        	$ret.= "<br /><span class=\"minute\">" 
+              . $xml->status->created_at . "</span>";
         }
         if ($showimage){
         	$ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\"" 
@@ -148,7 +151,45 @@ class twitterremote extends dbtable
         return $ret;
     }
     
-
+    /**
+    * 
+    * Returns the 20 most recent updates from non-protected users who have
+    * a custom user icon.  This method does not require authentication.
+    */
+    function getPublicTimeline($sinceid=false)
+    {
+        $qs='';
+        if($sinceid!==false)
+            $qs='?since_id='.intval($sinceid);
+        $request = 'http://twitter.com/statuses/public_timeline.xml'.$qs;
+        $xml = file_get_contents($request);
+        return simplexml_load_string($xml);
+    }
+    
+    
+    public function showPublicTimeline($sinceid=false)
+    {
+        $xml = $this->getPublicTimeline($sinceid);
+        $ret="<table>";
+        // For each <status> node 
+        foreach ($xml->status as $status) {
+           $img="";
+           $link="";
+           $link = "<a href=\"" . $status->user->url . "\">";
+           $img = $link . "<img src=\"" 
+             . $status->user->profile_image_url
+             . "\" /></a>";
+           $text = $status->text ."<br />";
+           $ret .="<tr><td>" . $img 
+           . "</td><td valign=\"top\">" 
+           . $text . "<span class=\"minute\">"
+           . $status->created_at . "</span>"
+           . "</td></tr>";
+        }
+        $ret .= "</table>";
+    	return $ret;
+    }
+   
     
     // internal function where all the juicy curl fun takes place
     // this should not be called by anything external unless you are
