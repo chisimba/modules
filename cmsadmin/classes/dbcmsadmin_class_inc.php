@@ -2246,11 +2246,11 @@ class dbcmsadmin extends dbTable
 				$numpagedisplay = $pagenumber;
 			}
 
-			$ordering = $this->getFPOrdering($parentid);
+			$ordering = $this->getContentOrdering($parentid); // $this->getFPOrdering($parentid);
 
 			//Add section
 			$index = array(
-			'rootid' => $parentid, //rootid?????????
+			'rootid' => $parentid, //$rootid, //rootid?????????
 			'parentid' => $parentid,
 			'title' => $sectionArr['title'],
 			'menutext' => $sectionArr['menutext'],

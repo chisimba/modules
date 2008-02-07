@@ -283,130 +283,18 @@ class portalimporter extends controller
 		$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
 		// clean the file tree
 		$this->objStdlib->frontPageDirCleaner($this->sitepath);
-		// create the sections
 		// create the sections and subsections
 		$sections = $this->objStdlib->dirFilterDots($this->sitepath);
 		foreach($sections as $subsections)
 		{
 			// create the section
-			$secname = end(explode('/', $subsections));
-			$secname = ucwords(str_replace("_", " ", $secname));
-			echo "<h1>Section name : $secname</h1><br />";
-			// this is a parent section, so no section id (0)
-			$psecarr = array(
-			'parentselected' => 0,
-			'title' => $secname,
-			'menutext' => $secname,
-			'access' => '',
-			'layout' => 'page',
-			'description' => '',
-			'published' => 1,
-			'hidetitle' => 0,
-			'showdate' => 1,
-			'showintroduction' => 1,
-			'ordertype' => 'pageorder',
-			'userid' => $this->objUser->userId(),
-			);
-
-			$secid = $this->objCmsDb->addSection($psecarr);
-			$subsection[] = $this->objStdlib->dirFilterDots($subsections);
-			$subsection = array_filter($subsection);
-			// add each subsection to this section now
-			if(isset($subsection[0]))
-			{
-				$subsection = $subsection[0];
-				foreach($subsection as $subsect)
-				{
-					$ssecname = end(explode('/', $subsect));
-					$ssecname = ucwords(str_replace("_", " ", $ssecname));
-					echo "Adding $ssecname as a subsection to $secname with ID $secid<br />";
-					$csecarr = array(
-					'parentselected' => $secid,
-					'title' => $ssecname,
-					'menutext' => $ssecname,
-					'access' => '',
-					'layout' => 'page',
-					'description' => '',
-					'published' => 1,
-					'hidetitle' => 0,
-					'showdate' => 1,
-					'showintroduction' => 1,
-					'ordertype' => 'pageorder',
-					'userid' => $this->objUser->userId(),
-					);
-					$csecid = $this->objCmsDb->addSection($csecarr);
-
-					// ok subsection is created, now lets add the pages...
-					$subsect = $subsect."/";
-					$pages[] = $this->objStdlib->fileLister($subsect);
-					$pages = array_filter($pages);
-					if(!empty($pages))
-					{
-						foreach ($pages as $pageobj)
-						{
-							foreach($pageobj as $page)
-							{
-								// ok now we need to do some magic on the pages.
-								$contents = file_get_contents($subsect.$page);
-								// grok the title
-								preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
-								$title = $tresults[1][0];
-								// grab the content body
-								preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
-								$body = $bresults[1][0];
-								$options = array(
-									"clean" => true,
-									"indent" => true,
-									"indent-spaces" => 4,
-									"drop-proprietary-attributes" => true,
-									"drop-empty-paras" => true,
-									"word-2000" => true,
-									"quote-ampersand" => true,
-									"lower-literals" => true,
-									"show-body-only" => true,
-								);
-								
-								if (function_exists(tidy_parse_string)) {
-									//$tidy = tidy_parse_string($body, $options);
-									$tidy = new tidy;
-									$tidy->parseString($body, $options, 'utf8');
-									$tidy->cleanRepair();
-								} else {
-									die ("TIDY is not available");
-								}
-								$body = $tidy;
-								
-								$pagearr = array(
-									'title' => $title,
-									'sectionid' => $csecid,
-									'introtext' => '',
-									'body' => $body,
-									'access' => 0,
-									'published' => 1,
-									'hide_title' => 0,
-									'post_lic' => 'by-sa',
-									'created_by' => $this->objUser->userId(),
-									'creatorid' => $this->objUser->userId(),
-									'metakey' => 'tag',
-									'metavalue' => 'UWC',
-									'start_publish' => NULL,
-									'end_publish' => NULL,
-									'isfrontpage' => 0,
-								);
-
-								$pgid = $this->objCmsDb->addContent($pagearr);
-								//var_dump($contents);
-								unset($page);
-							}
-							unset($pageobj);
-							unset($pages);
-						}
-					}
-					else {
-						continue;
-					}
-				}
-			}
+			$secid = $this->objUtils->doSection($subsections, $secname);
+			$secid = $secid['secid'];
+			$secname = $secid['secname'];
+			// subsections
+			$this->objUtils->doSubSections($subsections, $secname);
+			// add the top level page to the cms section
+			
 			unset($subsection);
 		}
 		die();
