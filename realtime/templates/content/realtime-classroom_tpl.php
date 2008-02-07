@@ -70,6 +70,7 @@ if (isset ($noContextCode))
     echo 'archive="avoir-realtime-classroom-0.1.jar,avoir-realtime-common-0.1.jar,avoir-whiteboard-client-0.1.jar" width="100%" height="600">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
+    echo '<param name=userLevel value="'.$this->userLevel.'">';
 
     echo '<param name=port value="1981">';
     echo '</applet>';
