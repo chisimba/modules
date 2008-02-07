@@ -3,7 +3,7 @@
  *
  * Twitter interface elements
  *
- * Twitter is a module that creates an integration between your Chisimba 
+ * Twitter is a module that creates an integration between your Chisimba
  * site using your Twitter account.
  *
  * PHP version 5
@@ -55,17 +55,17 @@ $GLOBALS['kewl_entry_point_run'])
 * @package twitter
 *
 */
-class twitterremote extends dbtable
+class twitterremote extends object
 {
     public $userName='';
     public $password='';
     public $userAgent='';
     public $headers=array(
-      'X-Twitter-Client: ',
-      'X-Twitter-Client-Version: ', 
-      'X-Twitter-Client-URL: '
-    ); 
-    public $responseInfo=array(); 
+      'X-Twitter-Client: Chisimba',
+      'X-Twitter-Client-Version: 2.0',
+      'X-Twitter-Client-URL: http://avoir.uwc.ac.za/'
+    );
+    public $responseInfo=array();
 
     /**
     *
@@ -76,15 +76,15 @@ class twitterremote extends dbtable
     */
     public function init()
     {
-        
+
     }
-    
+
     public function initializeConnection($userName, $password)
     {
     	$this->userName = urlencode($userName);
         $this->password = urlencode($password);
     }
-    
+
     public function login()
     {
         $ch = curl_init($url);
@@ -93,17 +93,17 @@ class twitterremote extends dbtable
             curl_setopt ($ch, CURLOPT_POST, true);
             curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
         }
-        
+
     }
-    
+
     /**
-    * 
-    * Method to update the authenticating user's status.   
-    * 
-    * @param string $status The text of the status update for the 
-    * identified user.  Must not be more than 160 characters and 
+    *
+    * Method to update the authenticating user's status.
+    *
+    * @param string $status The text of the status update for the
+    * identified user.  Must not be more than 160 characters and
     * should not be more than 140 characters to ensure optimal display.
-    * 
+    *
     */
     public function updateStatus($status)
     {
@@ -111,50 +111,50 @@ class twitterremote extends dbtable
         $postargs = 'status='.urlencode($status);
         return $this->process($request, $postargs);
     }
-    
+
     public function getStatus()
     {
-    	$request = 'http://' . $this->userName . ':' 
+    	$request = 'http://' . $this->userName . ':'
            . $this->password . '@twitter.com/users/show/'
            . $this->userName .'.xml';
         $xmlStr = file_get_contents($request);
         return simplexml_load_string($xmlStr);
     }
-    
+
     /**
-    * 
+    *
     * Method to show the latest status update of the user (i.e. the
     * last message posted)
-    * 
+    *
     * @access public
     * @param Boolean $showtime TRUE|FALSE If true it shows the time of the post
     * @param Boolean $showimage TRUE|FALSE if true is shows the image avatar of the user
     * @return String The formatted last posted message
-    * 
+    *
     */
     public function showStatus($showTime=FALSE, $showimage=FALSE)
     {
     	$xml = $this->getStatus();
-        $ret = $xml->status->text;
+        $ret = "<div name=\"myLastTweet\">" . $xml->status->text;
         if ($showTime) {
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
             $fixedTime = strtotime($xml->status->created_at);
             $fixedTime = date('Y-m-d H:i:s', $fixedTime);
             $humanTime = $objHumanizeDate->getDifference($fixedTime);
-        	$ret.= "<br /><span class=\"minute\">" 
+        	$ret.= "<br /><span class=\"minute\">"
               . $humanTime . "</span>";
         }
         if ($showimage){
-        	$ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\"" 
+        	$ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\""
              . $xml->profile_image_url
-             . "\" /></td><td class=\"tweetcell\">" . $ret 
+             . "\" /></td><td class=\"tweetcell\">" . $ret
              ."</td></tr></table>";
         }
-        return $ret;
+        return $ret . "</div>";
     }
-    
+
     /**
-    * 
+    *
     * Returns the 20 most recent updates from non-protected users who have
     * a custom user icon.  This method does not require authentication.
     */
@@ -167,13 +167,13 @@ class twitterremote extends dbtable
         $xml = file_get_contents($request);
         return simplexml_load_string($xml);
     }
-    
-    
+
+
     public function showPublicTimeline($sinceid=false)
     {
         $xml = $this->getPublicTimeline($sinceid);
         $ret="<table>";
-        // For each <status> node 
+        // For each <status> node
         $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
         foreach ($xml->status as $status) {
            $img="";
@@ -182,12 +182,12 @@ class twitterremote extends dbtable
            $fixedTime = date('Y-m-d H:i:s', $fixedTime);
            $humanTime = $objHumanizeDate->getDifference($fixedTime);
            $link = "<a href=\"" . $status->user->url . "\">";
-           $img = $link . "<img src=\"" 
+           $img = $link . "<img src=\""
              . $status->user->profile_image_url
              . "\" /></a>";
            $text = $status->text ."<br />";
-           $ret .="<tr><td>" . $img 
-           . "</td><td valign=\"top\">" 
+           $ret .="<tr><td>" . $img
+           . "</td><td valign=\"top\">"
            . $text . "<span class=\"minute\">"
            . $humanTime . "</span>"
            . "</td></tr>";
@@ -195,8 +195,13 @@ class twitterremote extends dbtable
         $ret .= "</table>";
     	return $ret;
     }
-   
-    
+
+    public function doRequest($request, $postargs=false)
+    {
+        return file_get_contents($request);
+    }
+
+
     // internal function where all the juicy curl fun takes place
     // this should not be called by anything external unless you are
     // doing something else completely then knock youself out.
@@ -209,10 +214,10 @@ class twitterremote extends dbtable
             curl_setopt ($ch, CURLOPT_POST, true);
             curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
         }
-        
+
         if($this->username !== false && $this->password !== false)
             curl_setopt($ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
-        
+
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_NOBODY, 0);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -222,22 +227,22 @@ class twitterremote extends dbtable
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
 
         $response = curl_exec($ch);
-        
+
         $this->responseInfo=curl_getinfo($ch);
         curl_close($ch);
-        
-        
+
+
         if(intval($this->responseInfo['http_code'])==200){
             if(class_exists('SimpleXMLElement')){
                 $xml = new SimpleXMLElement($response);
                 return $xml;
             }else{
-                return $response;    
+                return $response;
             }
         }else{
             return false;
         }
-    } 
+    }
 
 }
 ?>

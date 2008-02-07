@@ -3,7 +3,7 @@
  *
  * Twitter interface elements
  *
- * Twitter is a module that creates an integration between your Chisimba 
+ * Twitter is a module that creates an integration between your Chisimba
  * site using your Twitter account.
  *
  * PHP version 5
@@ -73,31 +73,31 @@ class tweetbox extends object
           "action" => "sendtweet"), "twitter");
         $this->objLanguage = $this->getObject('language', 'language');
     }
-    
+
     public function show()
     {
     	return $this->getLimitBox(140, "tweet");
     }
-    
+
     /**
-     * 
+     *
      * limit information will shown in a div whose id is ‘charlimitinfo’.
-     * 
+     *
      */
     public function getLimitBox($chars, $textboxid)
     {
         $this->addLimitHeaderScript();
         $this->addBindingLimitsHeaderScript($chars, $textboxid);
         return $this->sendWidget();
-    	
+
     }
-    
+
     public function addLimitHeaderScript()
     {
     	$js = "<script language=\"javascript\">
             function limitChars(textid, limit, infodiv)
             {
-                var text = jQuery('#'+textid).val(); 
+                var text = jQuery('#'+textid).val();
                 var textlength = text.length;
                 if(textlength > limit) {
                     jQuery('#' + infodiv).html('You cannot write more then '+limit+' characters!');
@@ -112,9 +112,9 @@ class tweetbox extends object
         unset($js);
         return TRUE;
     }
-    
+
     public function addBindingLimitsHeaderScript($chars, $textboxid) {
-        $js = "<script type=\"text/javascript\"> 
+        $js = "<script type=\"text/javascript\">
         jQuery(function() {
             jQuery('#" . $textboxid . "').keyup(function(){
                 limitChars('" . $textboxid . "', " . $chars .", 'charlimitinfo');
@@ -125,30 +125,31 @@ class tweetbox extends object
         unset($js);
         return TRUE;
     }
-    
+
     /**
-    * 
+    *
     * Method to render the script that intercepts the submit call
     * and passes if off to the jQuery forms plugin that handles
     * ajax calls.
-    * 
+    *
     * @access public
     * @return String A string containing the script.
-    *    
+    *
     */
     public function renderFormScript()
     {
-        return "<script type=\"text/javascript\"> 
-        // wait for the DOM to be loaded 
-        jQuery(document).ready(function() { 
-            // bind 'myEditorForm' and provide a simple callback function 
-            jQuery('#myEditorForm').ajaxForm(function() {  
-                alert(\"Saved!\"); 
-            }); 
-        }); 
+        return "<script type=\"text/javascript\">
+        // wait for the DOM to be loaded
+        jQuery(document).ready(function() {
+            // bind 'myEditorForm' and provide a simple callback function
+            jQuery('#myEditorForm').ajaxForm(function() {
+                document.myEditorForm.tweet.value='';
+                document.
+            });
+        });
         </script>";
     }
-    
+
     public function sendWidget()
     {
         //Load the Ajax form processing
@@ -157,7 +158,7 @@ class tweetbox extends object
         $js2 = $this->renderFormScript();
         $this->appendArrayVar('headerParams', $js2);
         if ($this->hasTwitterLogon()) {
-           $ret = "<form name=\"myEditorForm\" id=\"myEditorForm\" action=\"" 
+           $ret = "<form name=\"myEditorForm\" id=\"myEditorForm\" action=\""
               . $this->url . "\" method=\"post\">"
               . "<table cellpadding=\"4\" width=180><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
@@ -171,7 +172,7 @@ class tweetbox extends object
         }
         return $ret;
     }
-    
+
     function hasTwitterLogon()
     {
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
@@ -184,7 +185,7 @@ class tweetbox extends object
             return TRUE;
         }
     }
-    
+
 
 }
 ?>
