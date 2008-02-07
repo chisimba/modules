@@ -222,7 +222,7 @@ class realtime extends controller
 				return "dump_tpl.php";*/
 				
 				
-				$this->startOpenOffice();
+				//$this->startOpenOffice();
 			        $this->startWhiteboardServer();
 
                                 return $this->showClassRoom($this->contextCode);
@@ -326,8 +326,11 @@ function startServer()
     */
  function startOpenOffice()
     {
-    $cmd = 'soffice -headless -accept="socket,port=8100;urp;" &';
-    system($cmd,$return_value);
+	
+//soffice -headless -display='0.0' -accept='socket,host=localhost,port=8100;urp;StarOffice.ServiceManager'
+    $cmd=($this->objConfig->getModulePath()."realtime/resources/startOpenOffice.sh  > /dev/null 2>&1");
+     exec($cmd); //"soffice -headless -accept='socket,port=8100;urp;' &";
+    
     }
    /**
     * This creates, if not existing, a folder where the presentations are to be stored.
