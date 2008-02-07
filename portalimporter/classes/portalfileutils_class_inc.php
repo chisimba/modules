@@ -1072,7 +1072,7 @@ class portalfileutils extends object
 					$title = $tresults[1][0];
 					$title = explode("--", $title);
 					$title = trim($title[1]);
-					log_debug("Adding page with $title to top level section $section");
+					log_debug("Adding page with $title to top level section $secid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
 					$body = $bresults[1][0];
