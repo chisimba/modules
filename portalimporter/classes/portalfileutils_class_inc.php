@@ -87,6 +87,9 @@ class portalfileutils extends object
 		$this->xmlPath = $this->sConfig->getValue('mod_portalimporter_xmlpath', 'portalimporter');
 		$this->xmlFile = $this->sConfig->getValue('mod_portalimporter_xmlfile', 'portalimporter');
 		$this->xmlOut = $this->xmlPath . "/" . $this->xmlFile;
+		$this->objUser = $this->getObject("user", "security");
+		$this->objStdlib = $this->getObject('splstdlib', 'files');
+		$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
 	}
 
 	/**
@@ -910,7 +913,7 @@ class portalfileutils extends object
 
 		$secid = $this->objCmsDb->addSection($psecarr);
 		// add the top level page (welcome page)
-		$this->addWelcomePage($sectionname, $secid);
+		$this->addWelcomePage($subsections, $secid);
 		// return some info
 		return array('secid' => $secid, 'secname' => $secname);
 	}
