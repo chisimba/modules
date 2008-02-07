@@ -34,14 +34,20 @@ $this->appendArrayVar('headerParams', $str);
 // set layout template
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
+//setting up of htmlelements helpers
+$this->loadclass('timeoutmessage','htmlelements');
+$this->loadClass('dropdown', 'htmlelements');    
+$this->loadclass('textinput','htmlelements');
+$this->loadClass('htmltable','htmlelements');
+
 // set up html elements
 $objTable = new htmltable();
 $objSubTable = new htmltable();
 $objSubTable->width="60%";
 $objLayer=$this->objLayer;
-$objConfirm =& $this->newObject('timeoutmessage','htmlelements');
-$objDrop =& $this->newObject('dropdown','htmlelements');
-$objTextinput =& $this->newObject('textinput','htmlelements');
+
+//set up htmlelements objects.
+$objConfirm 	= 		$this->getObject('timeoutmessage','htmlelements');
 
 // set up language items
 $essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
@@ -158,14 +164,6 @@ if(!empty($rubric)){
     $objTable->endRow();
 }
 
-/**
-//Insert mark
-$objDrop = new dropdown('mark');
-for($i=0; $i<=100; $i++){
-    $objDrop->addOption($i, $i);
-}
-$objDrop->setSelected($data[0]['mark']);
-*/
 
 //Insert mark
 $objTextinput = new textinput('mark','0');

@@ -13,7 +13,7 @@
 $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 $this->objDateformat =  $this->newObject('dateandtime', 'utilities');
-$this->objFile=& $this->newObject('upload','filemanager');
+$this->objFile= $this->newObject('upload','filemanager');
 
 $topic=$topicdata[0]['name'];
 $duedate=0;
@@ -28,7 +28,7 @@ $objTable= new htmltable();
 $objTable2= new htmltable();
 $objLink = new link();
 $objLayer = new layer();
-$objPop =& $this->newObject('windowpop','htmlelements');
+$objPop = $this->newObject('windowpop','htmlelements');
 
 // Set up language items
 $studenthead=ucwords($this->objLanguage->languageText('mod_context_readonly'));
@@ -100,12 +100,13 @@ if(!empty($data)){
         	$this->objLink = new link($this->uri(array('action'=>'download','fileid'=>$item['studentfileid'])));
         	$this->objLink->link=$this->objIcon->show();
             $loadicons=$this->objLink->show();
+
         	$this->objIcon->setIcon('submit2');
         	$this->objIcon->title=$titleupload;
         	$uriUp = $this->uri(array('action'=>'upload','book'=>$item['id'],'id'=>$item['topicid']));
         	$objLink = new link($uriUp);
         	$objLink->link=$this->objIcon->show();
-        	$loadicons.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
+        	//$loadicons.='&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objLink->show();
         }else $loadicons='';
 
         if($item['mark']){
@@ -122,11 +123,17 @@ if(!empty($data)){
         $objLink = new link($uriUp);
         $objLink->link = $item['student'];
         $objLink->title = $titleupload;
-        $studentLink = $this->objLink->show();
+        $studentLink = $objLink->show();
 
         $objTable->startRow();
-        $objTable->addCell($studentLink,'','','',$class);
-        $objTable->addCell($item['essay'],'','','',$class);
+/*      $objTable->addCell($studentLink,'','','',$class);
+		$objTable->addCell($item['essay'],'','','',$class);
+        $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
+        $objTable->addCell($mark,'','','center',$class);
+        $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
+*/
+		$objTable->addCell($item['studentid'],'','','',$class);
+        $objTable->addCell($topicdata[0]['name'],'','','',$class);
         $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
         $objTable->addCell($mark,'','','center',$class);
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');

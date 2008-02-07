@@ -37,66 +37,51 @@ class essayadmin extends controller
     {
         // Check if the module is registered and redirect if not.
         // Check if the assignment module is registered and can be linked to.
-        $this->objModules =& $this->newObject('modules','modulecatalogue');
-    //    if(!$this->objModules->checkIfRegistered('Essay Management','essayadmin')){
-      //      return $this->nextAction('notregistered', array(), 'redirect');
-      //  }
+        $this->objModules = $this->newObject('modules','modulecatalogue');
+	    //   if(!$this->objModules->checkIfRegistered('Essay Management','essayadmin')){
+        //      return $this->nextAction('notregistered', array(), 'redirect');
+        //  }
         $this->assignment = FALSE;
         if($this->objModules->checkIfRegistered('Assignment Management', 'assignmentadmin')){
             $this->assignment = TRUE;
         }
         $this->rubric = FALSE;
         if($this->objModules->checkIfRegistered(NULL, 'rubric')){
-            $this->objRubric =& $this->getObject('dbrubricassessments', 'rubric');
+            $this->objRubric = $this->getObject('dbrubricassessments', 'rubric');
             $this->rubric = TRUE;
         }
-
-        // Get instances of the module classes
-        $this->dbessays=& $this->getObject('dbessays', 'essay');
-        $this->dbtopic=& $this->getObject('dbessay_topics', 'essay');
-        $this->dbbook=& $this->getObject('dbessay_book', 'essay');
+  
+	    // Get instances of the module classes
+        $this->dbessays=  $this->getObject('dbessays', 'essay');
+        $this->dbtopic=  $this->getObject('dbessay_topics', 'essay');
+        $this->dbbook=  $this->getObject('dbessay_book', 'essay');
         // Get instances of the html elements:
         // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
-        
-
         $this->loadclass('htmltable','htmlelements');
         $this->loadClass('checkbox', 'htmlelements');    
-        
         $this->loadclass('form','htmlelements');
-       // $this->objTable=& $this->getObject('htmltable','htmlelements');
-       $this->loadClass('htmltable','htmlelements');
+        $this->loadClass('htmltable','htmlelements');
         $this->loadClass('layer','htmlelements');
         $this->loadClass('link','htmlelements');
         $this->loadClass('textinput','htmlelements');
         $this->loadClass('button','htmlelements');
         //$checkBox = new checkbox('checkbox','htmlelements');
         $this->loadClass('textarea','htmlelements');
-        $this->objIcon=& $this->getObject('geticon','htmlelements');
+        $this->objIcon= $this->getObject('geticon','htmlelements');
         $this->loadClass('iframe','htmlelements');
         $this->loadClass('htmlHeading','htmlelements');
-
-
-		$this->objFile =& $this->newObject('upload','filemanager');
-		       
-    //    $this->objpopcal =& $this->getObject('datepickajax','popupcalendar');
-    //    $this->objDatepicker=& &this->getObject('datepicker', 'htmlelements');
+		$this->objFile =  $this->newObject('upload','filemanager');
         // Get an instance of the confirmation object
-        $this->objConfirm=& $this->getObject('confirm','utilities');
+        $this->objConfirm= $this->getObject('confirm','utilities');
         // Get an instance of the language object
-        $this->objLanguage=& $this->getObject('language','language');
+        $this->objLanguage=  $this->getObject('language','language');
         // Get an instance of the user object
-        $this->objUser=& $this->getObject('user','security');
+        $this->objUser=  $this->getObject('user','security');
         // Get an instance of the context object
-        $this->objContext=& $this->getObject('dbcontext','context');
-
+        $this->objContext= $this->getObject('dbcontext','context');
         $this->objHelp = $this->newObject('helplink','help');
        	$this->objDateformat = $this->newObject('dateandtime','utilities');
-       
-       
-    
-       $this->objDate = $this->newObject('datepicker','htmlelements');    
-    
-
+        $this->objDate = $this->newObject('datepicker','htmlelements');    
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
@@ -194,6 +179,10 @@ class essayadmin extends controller
 
         // save topic
         case 'savetopic':
+//echo "<pre>";
+//print_r($_POST);
+//echo "</pre>";
+
             if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
                 $id=$this->getParam('id');
 
@@ -255,11 +244,9 @@ class essayadmin extends controller
             $topic=$this->dbtopic->getTopic($id);
             // get essays in topic
             $essays=$this->dbessays->getEssays($id);
-
             // get table display[0]['essayid']
             $list=$this->getEssays($essays,$topic);
             $this->setVarByRef('list',$list);
-
             $template='essay_tpl.php';
         break;
 
@@ -293,7 +280,9 @@ class essayadmin extends controller
 
         // list student essay submissions
         case 'mark':
-        case 'marktopic':
+       
+   
+        case 'viewmarktopic':
             // get topic id
             $id=$this->getParam('id');
             $topicdata=$this->dbtopic->getTopic($id,'id, name, closing_date');
@@ -302,6 +291,28 @@ class essayadmin extends controller
 
             // get essay titles and student names for each booked essay
             foreach($data as $key=>$item){
+                $essay=$this->dbessays->getEssay($item['essayid'],'topic');
+                $data[$key]['essay']=$essay[0]['topic'];
+                $student=$this->objUser->fullname($item['studentid']);
+                $data[$key]['student']=$student;//[0]['fullname'];
+            }
+            $this->setVarByRef('topicdata',$topicdata);
+            $this->setVarByRef('data',$data);
+            $template='mark_essays_tpl.php';
+        break;
+
+
+        case 'marktopic':
+            // get topic id
+            $id=$this->getParam('id');
+            $topicdata=$this->dbtopic->getTopic($id,'id, name, closing_date');
+            // get booked essays in topic
+            $data=$this->dbbook->getBooking("where topicid='$id'");
+            // get essay titles and student names for each booked essay
+          // echo "<pre>"; print_r($data);  print_r($topicdata); echo "</pre>";
+
+
+		    foreach($data as $key=>$item){
                 $essay=$this->dbessays->getEssay($item['essayid'],'topic');
                 $data[$key]['essay']=$essay[0]['topic'];
                 $student=$this->objUser->fullname($item['studentid']);
@@ -338,10 +349,9 @@ class essayadmin extends controller
                 $fields['topic']=$this->getParam('essaytopic', '');
                 $fields['notes']=$this->getParam('notes', '');
                 $this->dbessays->addEssay($fields,$id);
-                if(empty($id)){
-                    $id=$this->dbessays->getLastInsertId();
-                }
-
+                //if(empty($id)){
+                  //  $id=$this->dbessays->getLastInsertId();
+                //}
                 // set confirmation message
                 $message = $this->objLanguage->languageText('mod_essayadmin_confirmessay', 'essayadmin');
                 $this->setSession('confirm', $message);
@@ -670,7 +680,7 @@ class essayadmin extends controller
         $objLayer = new layer;
         //$objLink = $this->objLink;
         $objHead =  new htmlHeading;
-        $objMsg  =& $this->newObject('timeoutmessage', 'htmlelements');
+        $objMsg  = $this->newObject('timeoutmessage', 'htmlelements');
 
         // set up language elements
         $head=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin').' ';
@@ -814,8 +824,9 @@ class essayadmin extends controller
         $objLink->title = $title3;
         $objLink->link = $title3;
         $back = $objLink->show();
+	// removed this from the uri $formAction
 
-        $objLink = new link($this->uri(array('action'=>$formAction,'id'=>$topic[0]['id'])));
+        $objLink = new link($this->uri(array('action'=>'viewmarktopic','id'=>$topic[0]['id'])));
         $objLink->link=$viewSubmitted;
         $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
 
