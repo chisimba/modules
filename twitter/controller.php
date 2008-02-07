@@ -1,26 +1,26 @@
 <?php
 /**
- * 
+ *
  * Twitter interface elements
- * 
- * Twitter is a module that creates an integration between your Chisimba 
+ *
+ * Twitter is a module that creates an integration between your Chisimba
  * site using your Twitter account.
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   helloforms
  * @author    Derek Keats dkeats@uwc.ac.za
@@ -29,17 +29,17 @@
  * @version   CVS: $Id$
  * @link      http://avoir.uwc.ac.za
  */
- 
+
 // security check - must be included in all scripts
 if (!
 /**
  * The $GLOBALS is an array used to control access to certain constants.
  * Here it is used to check if the file is opening in engine, if not it
  * stops the file from running.
- * 
+ *
  * @global entry point $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
- *         
+ *
  */
 $GLOBALS['kewl_entry_point_run'])
 {
@@ -48,7 +48,7 @@ $GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* 
+*
 * Controller class for Chisimba for the module twitter
 *
 * @author Derek Keats
@@ -57,38 +57,38 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class twitter extends controller
 {
-    
+
     /**
-    * 
-    * @var string $objConfig String object property for holding the 
+    *
+    * @var string $objConfig String object property for holding the
     * configuration object
     * @access public;
-    * 
+    *
     */
     public $objConfig;
-    
+
     /**
-    * 
-    * @var string $objLanguage String object property for holding the 
+    *
+    * @var string $objLanguage String object property for holding the
     * language object
     * @access public
-    * 
+    *
     */
     public $objLanguage;
     /**
     *
-    * @var string $objLog String object property for holding the 
+    * @var string $objLog String object property for holding the
     * logger object for logging user activity
     * @access public
-    * 
+    *
     */
     public $objLog;
 
     /**
-    * 
+    *
     * Intialiser for the twitter controller
     * @access public
-    * 
+    *
     */
     public function init()
     {
@@ -103,16 +103,16 @@ class twitter extends controller
         //Log this module call
         $this->objLog->log();
     }
-    
-    
+
+
     /**
-     * 
+     *
      * The standard dispatch method for the twitter module.
-     * The dispatch method uses methods determined from the action 
-     * parameter of the  querystring and executes the appropriate method, 
-     * returning its appropriate template. This template contains the code 
+     * The dispatch method uses methods determined from the action
+     * parameter of the  querystring and executes the appropriate method,
+     * returning its appropriate template. This template contains the code
      * which renders the module output.
-     * 
+     *
      */
     public function dispatch()
     {
@@ -123,27 +123,27 @@ class twitter extends controller
         // retrieve the sort order from the querystring
         $order = $this->getParam("order", null);
         /*
-        * Convert the action into a method (alternative to 
+        * Convert the action into a method (alternative to
         * using case selections)
         */
         $method = $this->__getMethod($action);
         /*
-        * Return the template determined by the method resulting 
+        * Return the template determined by the method resulting
         * from action
         */
         return $this->$method();
     }
-    
-    
+
+
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
 
     /**
-    * 
+    *
     * Method corresponding to the demo action. It fetches the default user
-    * twitter status and displays it.  
-    * 
+    * twitter status and displays it.
+    *
     * @access private
-    * 
+    *
     */
     private function __demo()
     {
@@ -166,14 +166,14 @@ class twitter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-    
+
     private function __tweet()
     {
         $objBox = $this->getObject("tweetbox", "twitter");
         $str = $objBox->show();
     	return "tweet_tpl.php";
     }
-    
+
     private function __sendtweet()
     {
     	$objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
@@ -183,18 +183,10 @@ class twitter extends controller
         if (!$userName == NULL && !$password == NULL) {
             $this->objTwitterRemote->initializeConnection($userName, $password);
             $status = $this->getParam("tweet", NULL);
-            if ($this->objTwitterRemote->updateStatus($status)) {
-                $str .= "Tweeted: " . $status;
-            } else {
-                $str .= "Tweety was muted.";
-            }
-        } else {
-            $str .= "Username or password were null.";
+            $this->objTwitterRemote->updateStatus($status);
         }
-        $this->setVarByRef('str', $str);
-        return "dump_tpl.php";
     }
-    
+
     private function __demoget() {
     	$str="<h1>WORKING HERE</h1>";
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
@@ -207,24 +199,24 @@ class twitter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
     /**
-    * 
-    * Method corresponding to the edit action. It sets the mode to 
+    *
+    * Method corresponding to the edit action. It sets the mode to
     * edit and returns the edit template.
     * @access private
-    * 
+    *
     */
     private function __edit()
     {
@@ -233,27 +225,27 @@ class twitter extends controller
     }
 
     /**
-    * 
-    * Method corresponding to the add action. It sets the mode to 
+    *
+    * Method corresponding to the add action. It sets the mode to
     * add and returns the edit content template.
     * @access private
-    * 
+    *
     */
     private function __add()
     {
         $this->setvar('mode', 'add');
         return 'editform_tpl.php';
     }
-    
-   
+
+
     /**
-    * 
-    * Method corresponding to the save action. It gets the mode from 
-    * the querystring to and saves the data then sets nextAction to be 
-    * null, which returns the {yourmodulename} module in view mode. 
-    * 
+    *
+    * Method corresponding to the save action. It gets the mode from
+    * the querystring to and saves the data then sets nextAction to be
+    * null, which returns the {yourmodulename} module in view mode.
+    *
     * @access private
-    * 
+    *
     */
     private function __save()
     {
@@ -261,16 +253,16 @@ class twitter extends controller
         $this->objDbtwitter->save($mode);
         return $this->nextAction(NULL);
     }
-    
+
     /**
-    * 
-    * Method corresponding to the delete action. It requires a 
-    * confirmation, and then delets the item, and then sets 
-    * nextAction to be null, which returns the {yourmodulename} module 
-    * in view mode. 
-    * 
+    *
+    * Method corresponding to the delete action. It requires a
+    * confirmation, and then delets the item, and then sets
+    * nextAction to be null, which returns the {yourmodulename} module
+    * in view mode.
+    *
     * @access private
-    * 
+    *
     */
     private function __delete()
     {
@@ -281,16 +273,16 @@ class twitter extends controller
             return $this->nextAction(NULL);
         }
     }
-    
-    
+
+
     /**
-    * 
-    * Method to return an error when the action is not a valid 
+    *
+    * Method to return an error when the action is not a valid
     * action method
-    * 
+    *
     * @access private
     * @return string The dump template populated with the error message
-    * 
+    *
     */
     private function __actionError()
     {
@@ -299,18 +291,18 @@ class twitter extends controller
           .": " . $action . "</h3>");
         return 'dump_tpl.php';
     }
-    
+
     /**
-    * 
+    *
     * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action 
+    * of this class preceded by double underscore (__). If it __action
     * is not a valid method it returns FALSE, if it is a valid method
     * of this class it returns TRUE.
-    * 
+    *
     * @access private
     * @param string $action The action parameter passed byref
     * @return boolean TRUE|FALSE
-    * 
+    *
     */
     function __validAction(& $action)
     {
@@ -320,16 +312,16 @@ class twitter extends controller
             return FALSE;
         }
     }
-    
+
     /**
-    * 
-    * Method to convert the action parameter into the name of 
+    *
+    * Method to convert the action parameter into the name of
     * a method of this class.
-    * 
+    *
     * @access private
     * @param string $action The action parameter passed byref
     * @return stromg the name of the method
-    * 
+    *
     */
     function __getMethod(& $action)
     {
@@ -339,16 +331,16 @@ class twitter extends controller
             return "__actionError";
         }
     }
-    
+
     /*------------- END: Set of methods to replace case selection ------------*/
-    
+
 
 
     /**
     *
-    * This is a method to determine if the user has to 
-    * be logged in or not. Note that this is an example, 
-    * and if you use it view will be visible to non-logged in 
+    * This is a method to determine if the user has to
+    * be logged in or not. Note that this is an example,
+    * and if you use it view will be visible to non-logged in
     * users. Delete it if you do not want to allow annonymous access.
     * It overides that in the parent class
     *

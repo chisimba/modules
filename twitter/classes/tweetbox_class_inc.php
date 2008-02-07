@@ -139,12 +139,18 @@ class tweetbox extends object
     public function renderFormScript()
     {
         return "<script type=\"text/javascript\">
+        function resetTweets() {
+            document.getElementById('myLastTweet').innerHTML=document.myEditorForm.tweet.value
+               + '<br /><span class=\"minute\">Right now</span>';
+            document.myEditorForm.tweet.value='';
+            document.getElementById('charlimitinfo').innerHTML = '140';
+            return true;
+        }
         // wait for the DOM to be loaded
         jQuery(document).ready(function() {
             // bind 'myEditorForm' and provide a simple callback function
             jQuery('#myEditorForm').ajaxForm(function() {
-                document.myEditorForm.tweet.value='';
-                document.
+                resetTweets();
             });
         });
         </script>";
@@ -162,7 +168,7 @@ class tweetbox extends object
               . $this->url . "\" method=\"post\">"
               . "<table cellpadding=\"4\" width=180><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
-              . "</span></td><td><span class=\"error\"><div id=\"charlimitinfo\">140</div></span></td></tr></table>"
+              . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
               . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"8\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"

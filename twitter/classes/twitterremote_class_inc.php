@@ -49,7 +49,11 @@ $GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Database accesss class for Chisimba for the module twitter
+* Class to supply a bunch of remote data grabbing methods for the
+* module twitter.
+*
+* @Todo It needs to be re-factored to separate the data
+* grabbing from the rendering logic.
 *
 * @author Derek Keats
 * @package twitter
@@ -57,15 +61,47 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class twitterremote extends object
 {
+    /**
+    *
+    * @var string $userName The twitter username of the authenticating user
+    * @access public
+    *
+    */
     public $userName='';
+    /**
+    *
+    * @var string $password The twitter password of the authenticating user
+    * @access public
+    *
+    */
     public $password='';
-    public $userAgent='';
+    /**
+    *
+    * @var string $userAgent The user agent as presented to Twitter
+    * @access public
+    *
+    */
+    public $userAgent='Chisimba';
+    /**
+    *
+    * @var string array $headers The HTML headers to be presented to Twitter
+    * @access public
+    *
+    */
     public $headers=array(
       'X-Twitter-Client: Chisimba',
       'X-Twitter-Client-Version: 2.0',
       'X-Twitter-Client-URL: http://avoir.uwc.ac.za/'
     );
+
     public $responseInfo=array();
+    /**
+    *
+    * @var string object $oC String to hold the curl wrapper object
+    * @access public
+    *
+    */
+    public $oC;
 
     /**
     *
@@ -76,24 +112,27 @@ class twitterremote extends object
     */
     public function init()
     {
-		
+        $this->oC = $this->getObject("curlwrapper","utilities");
     }
 
+    /**
+    *
+    * Method to initialize the Twitter username and password for
+    * the authenticating user
+    * @param string $userName The username of the authenticating user
+    * @param string $password The password of the authenticating user
+    * @access public
+    * @return VOID
+    *
+    */
     public function initializeConnection($userName, $password)
     {
     	$this->userName = urlencode($userName);
         $this->password = urlencode($password);
-    }
-
-    public function login()
-    {
-        $ch = curl_init($url);
-
-        if($postargs !== false){
-            curl_setopt ($ch, CURLOPT_POST, true);
-            curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
-        }
-
+        $this->oC->userName = $this->userName;
+        $this->oC->password = $this->password;
+        $this->oC->user_agent = $this->user_agent;
+        $this->oC->headers = $this->headers;
     }
 
     /**
@@ -107,20 +146,68 @@ class twitterremote extends object
     */
     public function updateStatus($status)
     {
-        $request = 'http://twitter.com/statuses/update.xml';
+        $url = 'http://twitter.com/statuses/update.xml';
         $postargs = 'status='.urlencode($status);
-        return $this->process($request, $postargs);
+        return $this->process($url, $postargs);
     }
 
+    /**
+    *
+    * Returns and XML Object the authenticating user's followers,
+    * each with current status inline when available.
+    *
+    * @access public
+    * $return object An XML object with followers status info
+    */
+    public function getFollowers()
+    {
+        $url = 'http://' . $this->userName . ':'
+           . $this->password . '@twitter.com/statuses/followers.xml';
+        $this->oC->initializeCurl($url);
+        $xmlStr = $this->oC->getUrl();
+        return simplexml_load_string($xmlStr);
+    }
+
+    public function showFollowers()
+    {
+        $xml = $this->getFollowers();
+        if ($xml) {
+            $ret="<table>";
+            $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            foreach ($xml->user as $user) {
+               $img="";
+               $link="";
+               $fixedTime = strtotime($user->status->created_at);
+               $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+               $humanTime = $objHumanizeDate->getDifference($fixedTime);
+               $link = "<a href=\"" . $user->url . "\">"
+                 . $user->name ."</a>";
+               $text = $user->status->text ."<br />";
+               $ret .="<tr><td>" . $link . $text
+               . "<span class=\"minute\">"
+               . $humanTime . "</span><br />"
+               . "</td></tr>";
+            }
+            $ret .= "</table>";
+        }
+        return $ret;
+    }
+
+
+    /**
+    *
+    * Method to get the status info of the authenticating user
+    * @access public
+    * $return object An XML object wit$this->passwordh the user's status info
+    *
+    */
     public function getStatus()
     {
-    	$request = 'http://' . $this->userName . ':'
+    	$url = 'http://' . $this->userName . ':'
            . $this->password . '@twitter.com/users/show/'
            . $this->userName .'.xml';
-        //$xmlStr = file_get_contents($request);
-        $objCurl = $this->getObject("curl", "utilities");
-        $xmlStr = $objCurl->exec($request);
-        die($xmlStr);
+        $this->oC->initializeCurl($url);
+        $xmlStr = $this->oC->getUrl();
         return simplexml_load_string($xmlStr);
     }
 
@@ -138,7 +225,7 @@ class twitterremote extends object
     public function showStatus($showTime=FALSE, $showimage=FALSE)
     {
     	$xml = $this->getStatus();
-        $ret = "<div name=\"myLastTweet\">" . $xml->status->text;
+        $ret = "<div name=\"myLastTweet\" id=\"myLastTweet\">" . $xml->status->text;
         if ($showTime) {
             $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
             $fixedTime = strtotime($xml->status->created_at);
@@ -160,6 +247,9 @@ class twitterremote extends object
     *
     * Returns the 20 most recent updates from non-protected users who have
     * a custom user icon.  This method does not require authentication.
+    *
+    * @return object An XML object with the public timeline from Twitter
+    *
     */
     function getPublicTimeline($sinceid=false)
     {
@@ -167,13 +257,19 @@ class twitterremote extends object
         if($sinceid!==false)
             $qs='?since_id='.intval($sinceid);
         $request = 'http://twitter.com/statuses/public_timeline.xml'.$qs;
-        //$xml = file_get_contents($request);
-        $objCurl = $this->getObject("curl", "utilities");
-        $xmlStr = $objCurl->exec($request);
-        return simplexml_load_string($xml);
+        $this->oC->initializeCurl($request);
+        $xmlStr = $this->oC->getUrl();
+        return simplexml_load_string($xmlStr);
     }
 
-
+    /**
+    *
+    * Returns the 20 most recent updates from non-protected users who have
+    * a custom user icon and formats it into a table for display.
+    *
+    * @return string A table with the public timeline listed.
+    *
+    */
     public function showPublicTimeline($sinceid=false)
     {
         $xml = $this->getPublicTimeline($sinceid);
@@ -202,10 +298,6 @@ class twitterremote extends object
     	return $ret;
     }
 
-    public function doRequest($request, $postargs=false)
-    {
-        return file_get_contents($request);
-    }
 
 
     // internal function where all the juicy curl fun takes place
