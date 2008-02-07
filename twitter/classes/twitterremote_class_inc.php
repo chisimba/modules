@@ -76,7 +76,7 @@ class twitterremote extends object
     */
     public function init()
     {
-
+		
     }
 
     public function initializeConnection($userName, $password)
@@ -117,7 +117,10 @@ class twitterremote extends object
     	$request = 'http://' . $this->userName . ':'
            . $this->password . '@twitter.com/users/show/'
            . $this->userName .'.xml';
-        $xmlStr = file_get_contents($request);
+        //$xmlStr = file_get_contents($request);
+        $objCurl = $this->getObject("curl", "utilities");
+        $xmlStr = $objCurl->exec($request);
+        die($xmlStr);
         return simplexml_load_string($xmlStr);
     }
 
@@ -164,7 +167,9 @@ class twitterremote extends object
         if($sinceid!==false)
             $qs='?since_id='.intval($sinceid);
         $request = 'http://twitter.com/statuses/public_timeline.xml'.$qs;
-        $xml = file_get_contents($request);
+        //$xml = file_get_contents($request);
+        $objCurl = $this->getObject("curl", "utilities");
+        $xmlStr = $objCurl->exec($request);
         return simplexml_load_string($xml);
     }
 
@@ -172,27 +177,28 @@ class twitterremote extends object
     public function showPublicTimeline($sinceid=false)
     {
         $xml = $this->getPublicTimeline($sinceid);
-        $ret="<table>";
-        // For each <status> node
-        $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
-        foreach ($xml->status as $status) {
-           $img="";
-           $link="";
-           $fixedTime = strtotime($status->created_at);
-           $fixedTime = date('Y-m-d H:i:s', $fixedTime);
-           $humanTime = $objHumanizeDate->getDifference($fixedTime);
-           $link = "<a href=\"" . $status->user->url . "\">";
-           $img = $link . "<img src=\""
-             . $status->user->profile_image_url
-             . "\" /></a>";
-           $text = $status->text ."<br />";
-           $ret .="<tr><td>" . $img
-           . "</td><td valign=\"top\">"
-           . $text . "<span class=\"minute\">"
-           . $humanTime . "</span>"
-           . "</td></tr>";
+        if ($xml) {
+        	$ret="<table>";
+        	$objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+	        foreach ($xml->status as $status) {
+	           $img="";
+	           $link="";
+	           $fixedTime = strtotime($status->created_at);
+	           $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+	           $humanTime = $objHumanizeDate->getDifference($fixedTime);
+	           $link = "<a href=\"" . $status->user->url . "\">";
+	           $img = $link . "<img src=\""
+	             . $status->user->profile_image_url
+	             . "\" /></a>";
+	           $text = $status->text ."<br />";
+	           $ret .="<tr><td>" . $img
+	           . "</td><td valign=\"top\">"
+	           . $text . "<span class=\"minute\">"
+	           . $humanTime . "</span>"
+	           . "</td></tr>";
+	        }
+	        $ret .= "</table>";
         }
-        $ret .= "</table>";
     	return $ret;
     }
 
