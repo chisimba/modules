@@ -62,14 +62,13 @@ $objTable->addCell('');
 $objTable->endRow();
 
 /********************* display data *************************/
-
 $i=0;
 foreach($data as $item){
     $class = ($i++%2) ? 'even':'odd';
 
     $objTable->startRow();
     $objTable->addCell($item['name'],'','','',$class);
-    $objTable->addCell($item['essay'],'','','',$class);
+    $objTable->addCell($item['essayid'],'','','',$class);
     $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
 
     if(!empty($item['submitdate'])){
@@ -78,21 +77,20 @@ foreach($data as $item){
         $objTable->addCell('','','','',$class);
     }
 
-    if($item['mark']=='submit'){
+   if($item['mark']=='submit'){
         // if essay hasn't been submitted: display submit icon
         // check if closing date has passed
-        if($item['date'] < date('Y-m-d')){
-            $mark='';
-            $load = $lbClosed;
+        if($item['date'] > date('Y-m-d')){
+	            $mark='';
+	            $load = $lbClosed;
         }else{
-            $this->objLink->link($this->uri(array('action'=>'upload','book'=>$item['id'])));
+	            $this->objLink->link($this->uri(array('action'=>'uploadessay','book'=>$item['id'])));
                 $this->objIcon->setIcon('submit2');
-            $this->objIcon->extra='';
+	            $this->objIcon->extra='';
                 $this->objIcon->title=$submittitle;
                 $this->objLink->link=$this->objIcon->show();
-
-            $mark='';
-            $load = $this->objLink->show();
+	            $mark='';
+	            $load = $this->objLink->show();
         }
     }else if($item['mark']){
         // if mark exists: display mark and download icon and view comments icon
@@ -102,10 +100,8 @@ foreach($data as $item){
         $this->objIcon->title=$downloadhead;
         $this->objLink->link=$this->objIcon->show();
         $downlink=$this->objLink->show();
-
         //$this->objLink->link('#');
         //$this->objIcon->setIcon('comment_view');
-        
         $this->objIcon->title=$commenthead;
     	$this->objIcon->setIcon('comment_view');
    	 	$commentIcon = $this->objIcon->show();

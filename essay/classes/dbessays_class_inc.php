@@ -27,7 +27,7 @@ class dbessays extends dbTable
     public function init()
     {
         parent::init('tbl_essays');
-        parent::init('tbl_essay_topics');
+        //parent::init('tbl_essay_topics');
         $this->table='tbl_essays';
     }
 
@@ -39,6 +39,7 @@ class dbessays extends dbTable
     */
     public function addEssay($fields,$id=NULL)
     {
+
         if(!empty($id)){
             $this->update('id',$id,$fields);
         }else{

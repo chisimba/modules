@@ -10,5 +10,7 @@ $this->setLayoutTemplate('essay_layout_tpl.php');
 $this->loadclass('htmltable','htmlelements'); 
 
 /**************** Display Page data *****************************/
+
+
 echo $list;
 ?>
