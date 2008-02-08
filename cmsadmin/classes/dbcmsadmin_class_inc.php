@@ -652,7 +652,7 @@ class dbcmsadmin extends dbTable
 
 		$newId = $this->insert($newArr);
 		$newArr['id'] = $newId;
-		$this->lucenePageIndex($newArr);
+		// $this->lucenePageIndex($newArr);
 		// process the forntpage
 		//var_dump($pgarr['isfrontpage']);
 		if ($pgarr['isfrontpage'] == '1') {
@@ -2274,7 +2274,7 @@ class dbcmsadmin extends dbTable
 
 			if ($result != FALSE) {
 				$index['id'] = $result;
-				$this->luceneSectionIndex($index);
+				//$this->luceneSectionIndex($index);
 			}
 
 			return $result;
@@ -2319,7 +2319,7 @@ class dbcmsadmin extends dbTable
 
 			if ($result != FALSE) {
 				$index['id'] = $result;
-				$this->luceneSectionIndex($index);
+				//$this->luceneSectionIndex($index);
 			}
 
 			return $result;

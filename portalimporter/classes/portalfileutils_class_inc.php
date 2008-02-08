@@ -918,10 +918,12 @@ class portalfileutils extends object
 		return array('secid' => $secid, 'secname' => $secname);
 	}
 
-	public function doSubSections($subsections, $secname)
+	public function doSubSections($subsections, $secname, $secid)
 	{
+		//echo $secname; die();
 		$subsection[] = $this->objStdlib->dirFilterDots($subsections);
 		$subsection = array_filter($subsection);
+		//var_dump($subsection);
 		// add each subsection to this section now
 		if(isset($subsection[0]))
 		{
@@ -930,7 +932,7 @@ class portalfileutils extends object
 			{
 				$ssecname = end(explode('/', $subsect));
 				$ssecname = ucwords(str_replace("_", " ", $ssecname));
-				echo "Adding $ssecname as a subsection to $secname with ID $secid<br />";
+				log_debug("Adding $ssecname as a subsection to $secname with ID $secid");
 				$csecarr = array(
 				'parentselected' => $secid,
 				'title' => $ssecname,
@@ -950,15 +952,15 @@ class portalfileutils extends object
 				$subsect = $subsect."/";
 				// we should look through the dirs available for assets and move them to the repo as well now.
 				// now do the pages
-				$this->doPages($subsect);
+				$this->doPages($subsect, $csecid, $ssecname);
 			}
 		}
 		else {
-		    continue;
+		    return;
 		}
 	}
 
-	public function doPages($subsect)
+	public function doPages($subsect, $csecid, $secname)
 	{
 		$pages[] = $this->objStdlib->fileLister($subsect);
 		$pages = array_filter($pages);
@@ -975,6 +977,11 @@ class portalfileutils extends object
 					$title = $tresults[1][0];
 					$title = explode("--", $title);
 					$title = $title[1];
+					
+					//if($title = '')
+					//{
+					//	$title = 'Title Missing';
+					//}
 					log_debug("Adding page with title $title to $csecid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
@@ -1006,10 +1013,11 @@ class portalfileutils extends object
 					// case for the public folder - i.e frontpage
 					if($secname == 'Public')
 					{
+						log_debug("Adding page $title to frontapge");
 						$pagearr = array(
 						'title' => $title,
 						'sectionid' => $csecid,
-						'introtext' => '',
+						'introtext' => 'Welcome',
 						'body' => $body,
 						'access' => 0,
 						'published' => 1,
@@ -1021,7 +1029,7 @@ class portalfileutils extends object
 						'metavalue' => 'UWC',
 						'start_publish' => NULL,
 						'end_publish' => NULL,
-						'isfrontpage' => 1,
+						'isfrontpage' => '1',
 						);
 					}
 					else {
@@ -1066,13 +1074,14 @@ class portalfileutils extends object
 				foreach($pageobj as $page)
 				{
 					// ok now we need to do some magic on the pages.
-					$contents = file_get_contents($subsect.$page);
+					$contents = file_get_contents($section."/".$page);
 					// grok the title
 					preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
 					$title = $tresults[1][0];
 					$title = explode("--", $title);
-					$title = trim($title[1]);
-					log_debug("Adding page with $title to top level section $secid");
+					$title = ltrim($title[1]);
+					$title = trim($title);
+					log_debug("Adding page with title $title to top level section $secid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
 					$body = $bresults[1][0];
@@ -1115,7 +1124,7 @@ class portalfileutils extends object
 						'metavalue' => 'UWC',
 						'start_publish' => NULL,
 						'end_publish' => NULL,
-						'isfrontpage' => 0,
+						'isfrontpage' => '1',
 						);
 						
 					$pgid = $this->objCmsDb->addContent($pagearr);

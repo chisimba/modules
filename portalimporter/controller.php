@@ -279,24 +279,31 @@ class portalimporter extends controller
 
 	public function __goPortal()
 	{
+		$time_start = microtime(true);
 		$this->objStdlib = $this->getObject('splstdlib', 'files');
 		$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
 		// clean the file tree
 		$this->objStdlib->frontPageDirCleaner($this->sitepath);
+		//die();
 		// create the sections and subsections
 		$sections = $this->objStdlib->dirFilterDots($this->sitepath);
 		foreach($sections as $subsections)
 		{
 			// create the section
-			$secid = $this->objUtils->doSection($subsections, $secname);
-			$secid = $secid['secid'];
-			$secname = $secid['secname'];
+			$sec = $this->objUtils->doSection($subsections, $secname);
+			$secid = $sec['secid'];
+			$secname = $sec['secname'];
 			// subsections
-			$this->objUtils->doSubSections($subsections, $secname);
+			$this->objUtils->doSubSections($subsections, $secname, $secid);
 			// add the top level page to the cms section
 			
 			unset($subsection);
+			unset($secid);
 		}
+		$time_end = microtime(true);
+		$time = $time_end - $time_start;
+
+		echo "Portal import completed in $time seconds\n";
 		die();
 	}
 
