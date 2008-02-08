@@ -11,20 +11,28 @@ $this->objTwitterRemote->initializeConnection($userName, $password);
 
 
 //Right panel
-$rightBit = $this->objTwitterRemote->showFollowers();
+$objBlock = $this->getObject("blocks", "blocks");
+$rightBit =  $objBlock->showBlock("followers", "twitter");
 $cssLayout->setRightColumnContent($rightBit);
+
 
 //Left panel
 $statusUpdate = "<img src =\"" .
   $this->getResourceUri("images/twitter.png", "twitter")
-  . "\" alt=\"Twitter\" /><br />"
-  . $this->objTwitterRemote->showStatus(TRUE, FALSE);
+  . "\" alt=\"Twitter\" style=\"margin-bottom: 3px; \"/><br />"
+  . $objBlock->showBlock("tweetbox", "twitter")
+  . $objBlock->showBlock("lasttweet", "twitter")
+  . $objBlock->showBlock("followed", "twitter");
 $cssLayout->setLeftColumnContent($statusUpdate);
+
+
+
+
+
 
 //Add public timeline
 $publicTimeline = $this->objTwitterRemote->showPublicTimeline();
-$middleBit = "<table><tr><td valign=\"top\">"
-  . $objWidjet->show() . "</td><td>"
+$middleBit = "<table><tr><td>"
   . "<h3>" . $this->objLanguage->languageText("mod_twitter_pubtimeline", "twitter")
   . "</h3>" . $publicTimeline
   . "</td></tr></table>";

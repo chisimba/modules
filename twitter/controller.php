@@ -97,7 +97,7 @@ class twitter extends controller
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
         // Create an instance of the twitterremote class
-        $this->objTwitterRemote = & $this->getObject('twitterremote', 'twitter');
+        $this->objTwitterRemote = $this->getObject('twitterremote', 'twitter');
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Log this module call
@@ -188,7 +188,6 @@ class twitter extends controller
     }
 
     private function __demoget() {
-    	$str="<h1>WORKING HERE</h1>";
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
@@ -199,81 +198,6 @@ class twitter extends controller
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-    *
-    * Method corresponding to the edit action. It sets the mode to
-    * edit and returns the edit template.
-    * @access private
-    *
-    */
-    private function __edit()
-    {
-        $this->setvar('mode', "edit");
-        return 'editform_tpl.php';
-    }
-
-    /**
-    *
-    * Method corresponding to the add action. It sets the mode to
-    * add and returns the edit content template.
-    * @access private
-    *
-    */
-    private function __add()
-    {
-        $this->setvar('mode', 'add');
-        return 'editform_tpl.php';
-    }
-
-
-    /**
-    *
-    * Method corresponding to the save action. It gets the mode from
-    * the querystring to and saves the data then sets nextAction to be
-    * null, which returns the {yourmodulename} module in view mode.
-    *
-    * @access private
-    *
-    */
-    private function __save()
-    {
-        $mode = $this->getParam("mode", NULL);
-        $this->objDbtwitter->save($mode);
-        return $this->nextAction(NULL);
-    }
-
-    /**
-    *
-    * Method corresponding to the delete action. It requires a
-    * confirmation, and then delets the item, and then sets
-    * nextAction to be null, which returns the {yourmodulename} module
-    * in view mode.
-    *
-    * @access private
-    *
-    */
-    private function __delete()
-    {
-        // retrieve the confirmation code from the querystring
-        $confirm=$this->getParam("confirm", "no");
-        if ($confirm=="yes") {
-            $this->deleteItem();
-            return $this->nextAction(NULL);
-        }
-    }
-
 
     /**
     *

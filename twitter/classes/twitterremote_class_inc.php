@@ -168,6 +168,13 @@ class twitterremote extends object
         return simplexml_load_string($xmlStr);
     }
 
+    /**
+    *
+    * Returns your followers latest status, for example for use in a block
+    * @return string Formatted view of followers' status
+    * @access public
+    *
+    */
     public function showFollowers()
     {
         $xml = $this->getFollowers();
@@ -180,12 +187,63 @@ class twitterremote extends object
                $fixedTime = strtotime($user->status->created_at);
                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
                $humanTime = $objHumanizeDate->getDifference($fixedTime);
-               $link = "<a href=\"" . $user->url . "\">"
-                 . $user->name ."</a>";
+               $link = "<img src=\"" . $user->profile_image_url
+                 . "\" align=\"left\" style=\"margin-bottom: 3px; margin-right: 5px;\"/><a href=\"" . $user->url . "\">"
+                 . $user->name ."</a> ";
                $text = $user->status->text ."<br />";
                $ret .="<tr><td>" . $link . $text
                . "<span class=\"minute\">"
-               . $humanTime . "</span><br />"
+               . $humanTime . "<br /><br /></span>"
+               . "</td></tr>";
+            }
+            $ret .= "</table>";
+        }
+        return $ret;
+    }
+
+    /**
+    *
+    * Returns and XML Object the people being followed by the
+    * authenticating user each with current status inline when
+    * available.
+    *
+    * @access public
+    * $return object An XML object with followers status info
+    *
+    */
+    public function getFollowed($id=false)
+    {
+        $prefix = 'http://' . $this->userName . ':'
+           . $this->password . '@';
+        if ($id===false) {
+            $url = $prefix . 'twitter.com/statuses/friends.xml';
+        } else {
+            $url = $prefix . 'twitter.com/statuses/friends/'.urlencode($id).'.xml';
+        }
+        $this->oC->initializeCurl($url);
+        $xmlStr = $this->oC->getUrl();
+        return simplexml_load_string($xmlStr);
+    }
+
+    public function showFollowed()
+    {
+        $xml = $this->getFollowed();
+        if ($xml) {
+            $ret="<table>";
+            $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+            foreach ($xml->user as $user) {
+               $img="";
+               $link="";
+               $fixedTime = strtotime($user->status->created_at);
+               $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+               $humanTime = $objHumanizeDate->getDifference($fixedTime);
+               $link = "<img src=\"" . $user->profile_image_url
+                 . "\" align=\"left\" style=\"margin-bottom: 3px; margin-right: 5px;\"/><a href=\"" . $user->url . "\">"
+                 . $user->name ."</a> ";
+               $text = $user->status->text ."<br />";
+               $ret .="<tr><td>" . $link . $text
+               . "<span class=\"minute\">"
+               . $humanTime . "<br /><br /></span>"
                . "</td></tr>";
             }
             $ret .= "</table>";
