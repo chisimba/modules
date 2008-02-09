@@ -221,7 +221,7 @@ class simplebuildmap extends object
         $objRsConfig = $this->getObject('altconfig', 'config');
         //Set the file type and get the file into a string
 		$this->fileType = "smap";
-        $filename =  "http://" . $_SERVER['SERVER_NAME'] . "/" . $objRsConfig->getItem('MODULE_URI') . "simplemap/resources/jsmaps/madiba.smap";
+        $filename =  $objRsConfig->getModuleURI() . "simplemap/resources/jsmaps/madiba.smap";
         //Set the file type to large so that overlay control displays
         $this->mapControlType="large";
         return $filename;
