@@ -169,7 +169,7 @@ class tweetbox extends object
               . "<table cellpadding=\"4\" width=180><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
               . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
-              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"8\">"
+              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"4\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"
               . "</form>";
@@ -185,7 +185,7 @@ class tweetbox extends object
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
         $password = $objUserParams->getValue("twitterpassword");
-        if ($userName == "" && $password=="") {
+        if ($userName == NULL && $password==NULL) {
             return FALSE;
         } else {
             return TRUE;

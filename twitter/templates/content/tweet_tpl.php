@@ -3,11 +3,11 @@
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(3);
 $objWidjet = $this->getObject("tweetbox","twitter");
-$objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
-$objUserParams->readConfig();
-$userName = $objUserParams->getValue("twittername");
-$password = $objUserParams->getValue("twitterpassword");
-$this->objTwitterRemote->initializeConnection($userName, $password);
+//$objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+//$objUserParams->readConfig();
+//$userName = $objUserParams->getValue("twittername");
+//$password = $objUserParams->getValue("twitterpassword");
+
 
 
 //Right panel

@@ -24,6 +24,7 @@ class block_lasttweet extends object
     function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = $this->getObject('user', 'security');
         $this->title=$this->objLanguage->languageText("mod_twitter_lasttweet", "twitter");
     }
 
@@ -32,7 +33,24 @@ class block_lasttweet extends object
     */
     function show()
 	{
-        $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
-        return $objTwitterRemote->showStatus(TRUE, FALSE);
+        $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        //This enables the thing to work as a blog plugin
+        $uid = $this->getParam('userid', FALSE);
+        if ($uid) {
+            $un = $this->objUser->userName($uid);
+        } else {
+            $un = $this->objUser->userName();
+        }
+        $objUserParams->setUid($un);
+        $objUserParams->readConfig();
+        $userName = $objUserParams->getValue("twittername");
+        $password = $objUserParams->getValue("twitterpassword");
+        if ($userName!==NULL && $password !==NULL) {
+            $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
+            $objTwitterRemote->initializeConnection($userName, $password);
+            return $objTwitterRemote->showStatus(TRUE, FALSE);
+        } else {
+            return $this->objLanguage->languageText("mod_twitter_nologonshort", "twitter");
+        }
     }
 }
