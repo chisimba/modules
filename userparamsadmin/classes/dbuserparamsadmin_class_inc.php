@@ -8,14 +8,14 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 
 /**
-* 
+*
 * Model class for writing the user paramters as used by the userparamsadmin
-* module into an INI file. The class provides data access features for 
+* module into an INI file. The class provides data access features for
 * administering the list  of user parameters stored in this INI file. The
 * INI file is stored in  usrfiles/users/<userid>/userconfig_properties.ini
-* 
+*
 * English translation of internal documentation from Klingon by Lt Worf.
-* 
+*
 * @author Prince Mbekwa
 * @todo userconfig properties' set and get
 * @todo module config (especially from module admin)
@@ -124,20 +124,35 @@ class dbuserparamsadmin extends object
 		$this->file = $this->getObject('mkdir','files');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objLanguage = $this->getObject('language', 'language');
+        $this->objUser = & $this->getObject("user", "security");
 		$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->uid = $this->objUser->userId();
 		$this->objUser = $this->getObject('user', 'security');
 		$this->readConfig();
 	}
 
+    /**
+     *
+     * Change the userId based on the username passed in
+     * @param string $un THe username
+     * @return VOID
+     * @access public
+     *
+     */
+    public function setUid($un)
+    {
+        $this->uid = $this->objUser->getUserId($un);
+    }
+
 	/**
-     * Method to create initial IniFile config elements. This method will create 
+     * Method to create initial IniFile config elements. This method will create
      * blank ini params.
      * @example
-     * 	   $config_container ="MAIL"/"Settings"	 
+     * 	   $config_container ="MAIL"/"Settings"
      *     $settings = array("name"=>"Bruce Banner","email"=> "hulk@angry.green.guy")
      * 	   $iniPath = "/config/"
-     * 	   $iniName ="my.ini"	
-     * @param string $config_container. This describes the main header section of the iniFile 
+     * 	   $iniName ="my.ini"
+     * @param string $config_container. This describes the main header section of the iniFile
      * @param array $settings. The values that need initializing
      * @param string $iniPath. File path
      * @param string $iniName. File name
@@ -190,7 +205,7 @@ class dbuserparamsadmin extends object
 			// read configuration data and get reference to root
 			$path = $this->objConfig->getcontentBasePath();
 			$path .=  "users/";
-			$path .= $this->objUser->userId().'/';
+			$path .= $this->uid .'/';
 			if (!file_exists($path.'userconfig_properties.ini')) {
 				$values = array(
 				'Google API key'=>'',
@@ -199,20 +214,17 @@ class dbuserparamsadmin extends object
 				'Skype ID'=>'',
 				'MSN ID' =>''
 				);
-
 				$result = $this->file->mkdirs($path);
 				if ($result==true) {
 					$result = $this->createConfig('Settings',$values,$path,'userconfig_properties.ini');
 				}
 			}
-
 			$this->_root =& $this->objConf->parseConfig("{$path}".'userconfig_properties.ini','IniFile');
 			if (PEAR::isError($this->_root)) {
 				throw new customException($this->objLanguage->languageText("mod_userparamsadmin_cannotreadfile", "userparamsadmin"));
 			}
 			return $this->_root;
-		}catch (customException $e)
-		{
+		} catch (customException $e)  {
 			customException::cleanUp();
 		}
 	}
@@ -301,15 +313,16 @@ class dbuserparamsadmin extends object
 			exit();
 		}
 	}
-    
+
     /**
-     * 
+     *
      * A method to return the value of the parameter requested
      * @param string $pname The parameter code for the parameter to return
      * @return string the value of the parameter
      */
     public function getValue($pname)
     {
+
         try {
             $Settings =& $this->_root->getItem("section", "Settings");
             $this->SettingsDirective =& $Settings->getItem("directive", "{$pname}");
@@ -335,6 +348,7 @@ class dbuserparamsadmin extends object
     */
 	public function getItem($pname, $pvalue)
 	{
+        die($pname . $pvalue);
 		try {
 			//Read conf
 			$read = NULL;
@@ -342,7 +356,7 @@ class dbuserparamsadmin extends object
 				$read = $this->readConfig();
 			}
 			if ($read == FALSE) {
-                return $read;               
+                return $read;
 			}
 			//Lets get the parent node section first
 			$Settings =& $this->_root->getItem("section", "Settings");
@@ -392,11 +406,11 @@ class dbuserparamsadmin extends object
 			exit();
 		}
 	}
-	
+
     /**
-     * 
+     *
      * The module author feels he is too important to add comments
-     * 
+     *
      */
 	public function delete($pname)
 	{
@@ -423,14 +437,14 @@ class dbuserparamsadmin extends object
 
    /** Added by jameel for the websearch module
     * Method to check if a configuration parameter is set
-    * 
+    *
     * @var string $module The module code of the module owning the config item
     * @var string $name The name of the parameter being set
     */
-    
+
     public function checkIfSet($pname, $userId=NULL)
     {
-        
+
         if ($pname >= 1 && $userId >= 1 ) {
             return true;
         } else {
