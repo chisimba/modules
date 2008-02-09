@@ -162,7 +162,7 @@ class blogui extends object
      * @return void
      * @access public
      */
-    public function init() 
+    public function init()
     {
         // load up the blogops class
         $this->objblogOps = $this->getObject('blogops');
@@ -200,7 +200,7 @@ class blogui extends object
      * @return void
      * @access public
      */
-    public function myblog() 
+    public function myblog()
     {
     }
     /**
@@ -211,7 +211,7 @@ class blogui extends object
      * @return object CSS layout template header
      * @access public
      */
-    public function threeCols() 
+    public function threeCols()
     {
         // Set columns to 3
         $this->cssLayout->setNumColumns(3);
@@ -229,7 +229,7 @@ class blogui extends object
      * @return string  Return string
      * @access public
      */
-    public function leftBlocks($userid, $cats = NULL) 
+    public function leftBlocks($userid, $cats = NULL)
     {
         $this->config = $this->doConfig($userid);
         $leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -242,85 +242,92 @@ class blogui extends object
             $config = array();
             return NULL;
         }
+        $objFetchBlock = $this->getObject("fetchblock", "blog");
         foreach($config as $plugins) {
-            // echo $plugins."<br />";
-            switch ($plugins) {
-                case 'usermenu':
-                    if ($this->objUser->isLoggedIn()) {
-                        $leftCol.= $leftMenu->show();
-                    }
-                    break;
-
-                case 'profiles':
-                    if ($this->objUser->isLoggedIn()) {
-                        $guestid = $this->objUser->userId();
-                        if ($guestid == $userid) {
-                            $leftCol.= $this->objblogProfiles->showProfile($userid);
+            if (!is_array($plugins)) {
+                switch ($plugins) {
+                    case 'usermenu':
+                        if ($this->objUser->isLoggedIn()) {
+                            $leftCol.= $leftMenu->show();
                         }
-                    } else {
-                        $leftCol.= $this->objblogProfiles->showFullProfile($userid);
-                    }
-                    break;
+                        break;
 
-                case 'adminsection':
-                    if ($this->objUser->isLoggedIn()) {
-                        $leftCol.= $this->objblogOps->showAdminSection(TRUE);
-                    }
-                    break;
+                    case 'profiles':
+                        if ($this->objUser->isLoggedIn()) {
+                            $guestid = $this->objUser->userId();
+                            if ($guestid == $userid) {
+                                $leftCol.= $this->objblogProfiles->showProfile($userid);
+                            }
+                        } else {
+                            $leftCol.= $this->objblogProfiles->showFullProfile($userid);
+                        }
+                        break;
 
-                case 'quickcats':
-                    if ($this->objUser->isLoggedIn()) {
-                        $leftCol.= $this->objblogCategories->quickCats(TRUE);
-                    }
-                    break;
+                    case 'adminsection':
+                        if ($this->objUser->isLoggedIn()) {
+                            $leftCol.= $this->objblogOps->showAdminSection(TRUE);
+                        }
+                        break;
 
-                case 'quickpost':
-                    if ($this->objUser->isLoggedIn()) {
-                        $leftCol.= $this->objblogPosts->quickPost($userid, TRUE);
-                    }
-                    break;
+                    case 'quickcats':
+                        if ($this->objUser->isLoggedIn()) {
+                            $leftCol.= $this->objblogCategories->quickCats(TRUE);
+                        }
+                        break;
 
-                case 'loginbox':
-                    if (!$this->objUser->isLoggedIn()) {
-                        $leftCol.= $this->objblogOps->loginBox(TRUE);
-                    }
-                    break;
+                    case 'quickpost':
+                        if ($this->objUser->isLoggedIn()) {
+                            $leftCol.= $this->objblogPosts->quickPost($userid, TRUE);
+                        }
+                        break;
 
-                case 'feeds':
-                    $leftCol.= $this->objblogRss->showFeeds($userid, TRUE);
-                    break;
+                    case 'loginbox':
+                        if (!$this->objUser->isLoggedIn()) {
+                            $leftCol.= $this->objblogOps->loginBox(TRUE);
+                        }
+                        break;
 
-                case 'bloglinks':
-                    $leftCol.= $this->objblogLinksandRoll->showBlinks($userid, TRUE);
-                    break;
+                    case 'feeds':
+                        $leftCol.= $this->objblogRss->showFeeds($userid, TRUE);
+                        break;
 
-                case 'blogroll':
-                    $leftCol.= $this->objblogLinksandRoll->showBroll($userid, TRUE);
-                    break;
+                    case 'bloglinks':
+                        $leftCol.= $this->objblogLinksandRoll->showBlinks($userid, TRUE);
+                        break;
 
-                case 'blogpages':
-                    $leftCol.= $this->objblogLinksandRoll->showPages($userid, TRUE);
-                    break;
+                    case 'blogroll':
+                        $leftCol.= $this->objblogLinksandRoll->showBroll($userid, TRUE);
+                        break;
 
-                case 'blogslink':
-                    $leftCol.= $this->objblogLinksandRoll->showBlogsLink(TRUE);
-                    break;
+                    case 'blogpages':
+                        $leftCol.= $this->objblogLinksandRoll->showPages($userid, TRUE);
+                        break;
 
-                case 'archivebox':
-                    $leftCol.= $this->objblogPosts->archiveBox($userid, TRUE);
-                    break;
+                    case 'blogslink':
+                        $leftCol.= $this->objblogLinksandRoll->showBlogsLink(TRUE);
+                        break;
 
-                case 'blogtagcloud':
-                    $leftCol.= $this->objblogPosts->blogTagCloud($userid);
-                    break;
+                    case 'archivebox':
+                        $leftCol.= $this->objblogPosts->archiveBox($userid, TRUE);
+                        break;
 
-                case 'catsmenu':
-                    $leftCol.= $this->objblogCategories->showCatsMenu($cats, TRUE, $userid);
-                    break;
+                    case 'blogtagcloud':
+                        $leftCol.= $this->objblogPosts->blogTagCloud($userid);
+                        break;
 
-                case 'searchbox':
-                    $leftCol.= $this->objblogSearching->searchBox();
-                    break;
+                    case 'catsmenu':
+                        $leftCol.= $this->objblogCategories->showCatsMenu($cats, TRUE, $userid);
+                        break;
+
+                    case 'searchbox':
+                        $leftCol.= $this->objblogSearching->searchBox();
+                        break;
+                }
+            } else {
+                //For siteblocks - added 2008 02 09 by D. Keats
+                foreach($plugins as $plugin) {
+                    $leftCol.= $objFetchBlock->show($plugin["block"], $plugin["module"]);
+                }
             }
         }
         return $leftCol;
@@ -336,7 +343,7 @@ class blogui extends object
      * @return string  string of blocks
      * @access public
      */
-    public function rightBlocks($userid, $cats = NULL) 
+    public function rightBlocks($userid, $cats = NULL)
     {
         $config = NULL;
         $config = $this->config;
@@ -349,85 +356,92 @@ class blogui extends object
         $leftMenu = $this->newObject('usermenu', 'toolbar');
         // init the variable
         $rightCol = NULL;
+        $objFetchBlock = $this->getObject("fetchblock", "blog");
         foreach($config as $plugins) {
-            // echo $plugins."<br />";
-            switch ($plugins) {
-                case 'usermenu':
-                    if ($this->objUser->isLoggedIn()) {
-                        $rightCol.= $leftMenu->show();
-                    }
-                    break;
-
-                case 'profiles':
-                    if ($this->objUser->isLoggedIn()) {
-                        $guestid = $this->objUser->userId();
-                        if ($guestid == $userid) {
-                            $rightCol.= $this->objblogProfiles->showProfile($userid);
+            if (!is_array($plugins)) {
+                switch ($plugins) {
+                    case 'usermenu':
+                        if ($this->objUser->isLoggedIn()) {
+                            $rightCol.= $leftMenu->show();
                         }
-                    } else {
-                        $rightCol.= $this->objblogProfiles->showFullProfile($userid);
-                    }
-                    break;
+                        break;
 
-                case 'adminsection':
-                    if ($this->objUser->isLoggedIn()) {
-                        $rightCol.= $this->objblogOps->showAdminSection(TRUE);
-                    }
-                    break;
+                    case 'profiles':
+                        if ($this->objUser->isLoggedIn()) {
+                            $guestid = $this->objUser->userId();
+                            if ($guestid == $userid) {
+                                $rightCol.= $this->objblogProfiles->showProfile($userid);
+                            }
+                        } else {
+                            $rightCol.= $this->objblogProfiles->showFullProfile($userid);
+                        }
+                        break;
 
-                case 'quickcats':
-                    if ($this->objUser->isLoggedIn()) {
-                        $rightCol.= $this->objblogCategories->quickCats(TRUE);
-                    }
-                    break;
+                    case 'adminsection':
+                        if ($this->objUser->isLoggedIn()) {
+                            $rightCol.= $this->objblogOps->showAdminSection(TRUE);
+                        }
+                        break;
 
-                case 'quickpost':
-                    if ($this->objUser->isLoggedIn()) {
-                        $rightCol.= $this->objblogPosts->quickPost($userid, TRUE);
-                    }
-                    break;
+                    case 'quickcats':
+                        if ($this->objUser->isLoggedIn()) {
+                            $rightCol.= $this->objblogCategories->quickCats(TRUE);
+                        }
+                        break;
 
-                case 'loginbox':
-                    if (!$this->objUser->isLoggedIn()) {
-                        $rightCol.= $this->objblogOps->loginBox(TRUE);
-                    }
-                    break;
+                    case 'quickpost':
+                        if ($this->objUser->isLoggedIn()) {
+                            $rightCol.= $this->objblogPosts->quickPost($userid, TRUE);
+                        }
+                        break;
 
-                case 'feeds':
-                    $rightCol.= $this->objblogRss->showFeeds($userid, TRUE);
-                    break;
+                    case 'loginbox':
+                        if (!$this->objUser->isLoggedIn()) {
+                            $rightCol.= $this->objblogOps->loginBox(TRUE);
+                        }
+                        break;
 
-                case 'bloglinks':
-                    $rightCol.= $this->objblogLinksandRoll->showBlinks($userid, TRUE);
-                    break;
+                    case 'feeds':
+                        $rightCol.= $this->objblogRss->showFeeds($userid, TRUE);
+                        break;
 
-                case 'blogroll':
-                    $rightCol.= $this->objblogLinksandRoll->showBroll($userid, TRUE);
-                    break;
+                    case 'bloglinks':
+                        $rightCol.= $this->objblogLinksandRoll->showBlinks($userid, TRUE);
+                        break;
 
-                case 'blogpages':
-                    $rightCol.= $this->objblogLinksandRoll->showPages($userid, TRUE);
-                    break;
+                    case 'blogroll':
+                        $rightCol.= $this->objblogLinksandRoll->showBroll($userid, TRUE);
+                        break;
 
-                case 'blogslink':
-                    $rightCol.= $this->objblogOps->showBlogsLink(TRUE);
-                    break;
+                    case 'blogpages':
+                        $rightCol.= $this->objblogLinksandRoll->showPages($userid, TRUE);
+                        break;
 
-                case 'archivebox':
-                    $rightCol.= $this->objblogPosts->archiveBox($userid, TRUE);
-                    break;
+                    case 'blogslink':
+                        $rightCol.= $this->objblogOps->showBlogsLink(TRUE);
+                        break;
 
-                case 'blogtagcloud':
-                    $rightCol.= $this->objblogPosts->blogTagCloud($userid);
-                    break;
+                    case 'archivebox':
+                        $rightCol.= $this->objblogPosts->archiveBox($userid, TRUE);
+                        break;
 
-                case 'catsmenu':
-                    $rightCol.= $this->objblogCategories->showCatsMenu($cats, TRUE, $userid);
-                    break;
+                    case 'blogtagcloud':
+                        $rightCol.= $this->objblogPosts->blogTagCloud($userid);
+                        break;
 
-                case 'searchbox':
-                    $rightCol.= $this->objblogSearching->searchBox();
-                    break;
+                    case 'catsmenu':
+                        $rightCol.= $this->objblogCategories->showCatsMenu($cats, TRUE, $userid);
+                        break;
+
+                    case 'searchbox':
+                        $rightCol.= $this->objblogSearching->searchBox();
+                        break;
+                }
+            } else {
+                //For siteblocks - added 2008 02 09 by D. Keats
+                foreach($plugins as $plugin) {
+                    $rightCol.= $objFetchBlock->show($plugin["block"], $plugin["module"]);
+                }
             }
         }
         return $rightCol;
@@ -439,7 +453,7 @@ class blogui extends object
      *
      * @return array
      */
-    public function doConfig($userid) 
+    public function doConfig($userid)
     {
         $conf = NULL;
         if (!file_exists($this->objConfig->getcontentBasePath() . 'users/' . $userid)) {
