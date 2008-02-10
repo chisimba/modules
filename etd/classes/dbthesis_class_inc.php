@@ -67,7 +67,7 @@ class dbThesis extends dbtable
     * @var string Property to set the submission type - distinguish between etd's and other documents.
     */
     protected $subType = 'etd';
-    
+
     /**
     * @var string Property to show the number of records returned in a result set
     */
@@ -141,7 +141,7 @@ class dbThesis extends dbtable
     }
 
     /**
-    * Method to replace a set of elements where the item has changed 
+    * Method to replace a set of elements where the item has changed
     * eg The name of a degree has been changed and needs to be updated
     *
     * @access public
@@ -151,10 +151,10 @@ class dbThesis extends dbtable
     * @return void
     */
     public function replaceElement($search, $searchTerm, $fields)
-    {   
+    {
         $this->update($search, $searchTerm, $fields);
     }
-    
+
     /**
     * Method to get resource title
     *
@@ -167,7 +167,7 @@ class dbThesis extends dbtable
         $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.* ";
         $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcMetaId AND thesis.id = '$id'";
-        
+
         $data = $this->getArray($sql);
         return $data[0];
     }
@@ -182,18 +182,18 @@ class dbThesis extends dbtable
     public function getMetadata($id)
     {
         $this->embTable = 'tbl_etd_embargos';
-        
+
         $sql = "SELECT dc.id AS dcId, thesis.id AS thesisId, thesis.*, dc.*, ";
-        
-            $sql .= "(SELECT periodend FROM {$this->embTable} em, {$this->table} th 
+
+            $sql .= "(SELECT periodend FROM {$this->embTable} em, {$this->table} th
                     WHERE submissionid = th.submitid AND th.id = '$id') AS embargo ";
-            
-            
+
+
         $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcMetaId AND thesis.id = '$id'";
-        
+
         $data = $this->getArray($sql);
-        
+
         return $data[0];
     }
 
@@ -208,37 +208,37 @@ class dbThesis extends dbtable
     public function getData($limit = 10, $start = NULL, $joinId = NULL)
     {
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id, ";
-        
+
         // Remove "A " and "The " and "'n " and " for sorting
         $sqlNorm .= " REPLACE(REPLACE(REPLACE(REPLACE(LOWER({$this->col1Field}), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort ";
-        
-        
+
+
         $sqlFound = "SELECT COUNT(*) AS count ";
-        
+
         $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
-        
+
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
-        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";        
-        
+        $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
+
         $sqlLimit = "ORDER BY sort "; //{$this->col1Field}) ";
-        
+
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
-        
+
         /* End testing */
-        
+
         // Get result set
-        
+
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
-        
+
         //echo '<pre>'; print_r($data);
-        
+
         // Get number of results
         $data2 = $this->getArray($sqlFound.$sql);
         if(!empty($data2)){
             $this->recordsFound = $data2[0]['count'];
         }
-        
+
         return $data;
     }
 
@@ -255,45 +255,45 @@ class dbThesis extends dbtable
     {
         $letter = strtolower($letter);
         $sqlNorm = "SELECT dc.{$this->col1Field} as col1, dc.{$this->col2Field} as col2, dc.{$this->col3Field} as col3, thesis.id as id, ";
-        
+
         // Remove "A " and "The " and "'n " and " for sorting
         $sqlNorm .= " REPLACE(REPLACE(REPLACE(REPLACE(LOWER({$this->col1Field}), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort ";
-        
+
         $sqlFound = "SELECT COUNT(*) AS count ";
-        
+
         $sql = "FROM {$this->table} AS thesis, {$this->submitTable} AS submit, {$this->dcTable} AS dc ";
-        
+
         $sql .= "WHERE submit.id = thesis.submitid AND dc.id = thesis.dcmetaid ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND submit.status = 'archived' ";
         $sql .= "AND ( LOWER({$this->col1Field}) LIKE '$letter%' ";
-        
+
         if(strtolower($letter) == 'a'){
             $sql .= "AND NOT ( LOWER({$this->col1Field}) LIKE 'a %' OR LOWER({$this->col1Field}) LIKE 'an %') ";
         }
         if(strtolower($letter) == 't'){
             $sql .= "AND NOT ( LOWER({$this->col1Field}) LIKE 'the %') ";
         }
-        
+
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'the $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'a $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE 'an $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE '\'n $letter%' ";
         $sql .= " OR LOWER({$this->col1Field}) LIKE '\"$letter%' ) ";
-        
+
         $sqlLimit = "ORDER BY sort "; //LOWER({$this->col1Field}) ";
-        
+
         $sqlLimit .= $limit ? "LIMIT $limit " : NULL;
         $sqlLimit .= $start ? "OFFSET $start " : NULL;
-                
+
         // Get result set
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
-                
+
         // Get number of results
         $data2 = $this->getArray($sqlFound.$sql);
         if(!empty($data2)){
             $this->recordsFound = $data2[0]['count'];
         }
-        
+
         return $data;
     }
 
@@ -369,18 +369,18 @@ class dbThesis extends dbtable
     function search($filter, $limit = NULL, $start = 0)
     {
         $sqlNorm = 'SELECT thesis.id AS id, dc.dc_creator AS col2, dc.dc_title AS col1, dc.dc_date AS col3 ';
-        
+
         $sqlCount = 'SELECT COUNT(*) AS count ';
-        
+
         $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit ";
         $sql .= "WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id ";
         $sql .= "AND submit.submissiontype = '{$this->subType}' AND ({$filter}) ";
-        
+
         $sqlLimit = "ORDER BY dc_date DESC ";
         $sqlLimit .= $limit ? " LIMIT $limit OFFSET $start" : '';
-        
+
         $data = $this->getArray($sqlNorm.$sql.$sqlLimit);
-        
+
         $count = 0;
         $data2 = $this->getArray($sqlCount.$sql);
         if(!empty($data2)){
@@ -401,7 +401,7 @@ class dbThesis extends dbtable
         $sql = 'SELECT dc_title, dc_creator, dc_subject, dc_identifier, thesis.id AS metaid ';
         $sql .= "FROM {$this->table} AS thesis, {$this->dcTable} AS dc ";
         $sql .= "WHERE dc.id = thesis.dcmetaid ";
-        $sql .= "ORDER BY dc_date";
+        $sql .= "ORDER BY dc.enterdate DESC LIMIT 20";
         $data = $this->getArray($sql);
 
         if(!empty($data)){
@@ -409,7 +409,7 @@ class dbThesis extends dbtable
         }
         return FALSE;
     }
-    
+
     /**
     * Method to get the metadata for a given set of resources.
     *
@@ -419,11 +419,11 @@ class dbThesis extends dbtable
     */
     public function getFromList($list)
     {
-        $sql = "SELECT dc_title, dc_creator, dc_subject, dc_identifier, thesis.id AS metaid, 
-            REPLACE(REPLACE(REPLACE(REPLACE(LOWER(dc_title), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort  
-            FROM {$this->table} AS thesis, {$this->dcTable} AS dc 
+        $sql = "SELECT dc_title, dc_creator, dc_subject, dc_identifier, thesis.id AS metaid,
+            REPLACE(REPLACE(REPLACE(REPLACE(LOWER(dc_title), 'a ', ''), 'the ', ''), '\'n ', ''), '\"', '') as sort
+            FROM {$this->table} AS thesis, {$this->dcTable} AS dc
             WHERE dc.id = thesis.dcmetaid ";
-            
+
         // Add the list of id's to the sql
         if(!empty($list)){
             $listSql = '';
@@ -432,14 +432,14 @@ class dbThesis extends dbtable
                 $listSql .= "thesis.id = '{$id}' ";
             }
             $sql .= "AND ({$listSql}) ";
-        }   
-            
+        }
+
         $sql .= 'ORDER BY sort';
-            
+
         $data = $this->getArray($sql);
         return $data;
     }
-    
+
     /**
     * Method to execute a search using a given filter - used by external searches.
     *
@@ -452,25 +452,25 @@ class dbThesis extends dbtable
     {
         $sqlNorm = 'SELECT thesis.id AS id, dc.*, thesis.* ';
         $sqlCount = 'SELECT count(*) AS cnt ';
-        
+
         $term = strtolower($keyword);
-        
-        $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit 
-                WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id 
-                AND submit.submissiontype = '{$this->subType}' 
-                AND "; 
+
+        $sql = "FROM {$this->table} AS thesis, {$this->dcTable} AS dc, {$this->submitTable} AS submit
+                WHERE thesis.dcmetaid = dc.id AND thesis.submitid = submit.id
+                AND submit.submissiontype = '{$this->subType}'
+                AND ";
         $filter = "(LOWER(dc.dc_creator) LIKE '%$term%' OR LOWER(dc.dc_title) LIKE '%$term%'
                 OR LOWER(dc.dc_subject) LIKE '%$term%') ";
-                
+
         $sqlOrder = "ORDER BY dc.dc_date ";
-        
+
 //        echo $sqlNorm.$sql.$sqlOrder;
-        
+
         $data = $this->getArray($sqlNorm.$sql.$filter.$sqlOrder);
         $data2 = $this->getArray($sqlCount.$sql.$filter);
         $count = isset($data2[0]['cnt']) ? $data2[0]['cnt'] : 0;
-        
-        $this->setSession('sql', $filter); 
+
+        $this->setSession('sql', $filter);
         return array($data, $count);
     }
 }

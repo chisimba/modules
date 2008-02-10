@@ -39,7 +39,7 @@ class etd extends controller
             $this->userId = $this->objUser->userId();
             $this->userPkId = $this->objUser->PKId();
             $this->setGroupPermissions();
-            
+
             // Create objects of the classes
             $this->etdTools = $this->getObject('etdtools', 'etd');
             $this->etdResource = $this->getObject('etdresource', 'etd');
@@ -53,25 +53,25 @@ class etd extends controller
             $this->objFaculty = $this->getObject('dbfaculty', 'etd');
             $this->dbThesis = $this->getObject('dbthesis');
             $this->dbThesis->setSubmitType('etd');
-    
+
             $this->etdSearch = $this->getObject('search', 'etd');
             $this->etdSearch->setMetaType('thesis', 'etd');
 
             $this->emailResults = $this->getObject('emailresults');
             $this->emailResults->setModuleName('etd');
-    
+
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objUser = $this->getObject('user', 'security');
             $this->objLangCode = $this->getObject('languagecode', 'language');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->setVarByRef('objLanguage', $this->objLanguage);
-    
+
             $this->objBlocks = $this->newObject('blocks', 'blocks');
             $this->objFeeder = $this->newObject('feeder', 'feed');
-            
+
             $this->loadClass('link', 'htmlelements');
             $this->loadClass('htmlheading', 'htmlelements');
-           
+
         }catch(Exception $e){
             throw customException($e->message());
             exit();
@@ -90,7 +90,7 @@ class etd extends controller
         $this->unsetSession('resourceId');
         $pgTitle = $this->objLanguage->languageText('mod_etd_name', 'etd');
         $this->setVar('pageTitle', $pgTitle);
-        
+
         $footerStr = $this->dbIntro->showFooter();
         $this->setVarByRef('footerStr', $footerStr);
 
@@ -136,7 +136,7 @@ class etd extends controller
             case 'registerdownload':
                 $this->dbStats->recordDownload();
                 break;
-                
+
             case 'exportrefworks':
                 $resourceId = $this->getParam('resource_id');
                 if(empty($resourceId)){
@@ -149,7 +149,7 @@ class etd extends controller
                 $refStr = $this->etdResource->getRefWorksFormat($resource);
                 return $refStr;
                 break;
-                
+
             case 'showrecent':
                 $head = $this->objLanguage->languageText('mod_etd_name', 'etd');
                 $objHead = new htmlheading();
@@ -178,7 +178,7 @@ class etd extends controller
                     $this->setSession('faculty', $faculty);
                 }
                 $faculty = $this->getSession('faculty');
-            
+
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
                 $session = array();
@@ -194,7 +194,7 @@ class etd extends controller
                 $this->setVarByRef('browseType', $objTitle);
                 $this->setVarByRef('pageContentTitle', $faculty);
                 return 'browse_tpl.php';
-                
+
 
             case 'browsefaculty':
                 $this->unsetSession('resource');
@@ -202,7 +202,7 @@ class etd extends controller
                 $display = $this->objFaculty->listFaculties();
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
-            
+
             /*
                 $this->unsetSession('resource');
                 $this->unsetSession('faculty');
@@ -228,7 +228,7 @@ class etd extends controller
                     $this->setSession('department', $department);
                 }
                 $department = $this->getSession('department');
-            
+
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
                 $session = array();
@@ -244,7 +244,7 @@ class etd extends controller
                 $this->setVarByRef('browseType', $objTitle);
                 $this->setVarByRef('pageContentTitle', $department);
                 return 'browse_tpl.php';
-                
+
 
             case 'browsedepartment':
                 $this->unsetSession('resource');
@@ -261,7 +261,7 @@ class etd extends controller
                     $this->setSession('degree', $degree);
                 }
                 $degree = $this->getSession('degree');
-            
+
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
                 $session = array();
@@ -277,7 +277,7 @@ class etd extends controller
                 $this->setVarByRef('browseType', $objTitle);
                 $this->setVarByRef('pageContentTitle', $degree);
                 return 'browse_tpl.php';
-                
+
 
             case 'browsedegrees':
                 $this->unsetSession('resource');
@@ -346,7 +346,7 @@ class etd extends controller
                 //$objViewBrowse->useSortTable();
                 $objViewBrowse->setNumCols(3);
                 $objViewBrowse->setPageTitle($pageTitle);
-                
+
                 $this->objLink = new link($this->uri(array('action'=>'search')));
                 $this->objLink->link = $this->objLanguage->languageText('phrase_newsearch');
                 $criteria = $this->etdSearch->getSession('criteria');
@@ -388,35 +388,35 @@ class etd extends controller
                     $link = $this->objLanguage->languageText('mod_etd_returnbrowse', 'etd');
                 }
                 $email = $this->emailResults->sendEmail();
-                
+
                 $objLink = new link($this->uri($return));
                 $objLink->link = $link;
                 $search = '<p class="confirm">'.$confirm.'</p><p>'.$objLink->show().'</p>';
                 $this->setVarByRef('search', $search);
                 return 'search_tpl.php';
-                
+
             /* ** Functions for the e-shelf ** */
-            
+
             case 'addeshelf':
                 // The e-shelf is saved in session
                 // Create the array containing the search criteria and results
                 $fullCriteria = $this->getSession('criteria');
                 $sqlFilter = $this->getSession('sql');
                 $articles = $this->getParam('articles');
-                
+
                 // Implode articles into an array
                 $artArr = explode('|', $articles);
                 if(!empty($artArr)){
                     array_pop($artArr);
                 }
-                
+
                 $search['search'] = $sqlFilter;
                 $search['criteria'] = $fullCriteria;
                 $search['selected'] = $artArr;
-                
+
                 // Check current session
                 $eshelf = $this->getSession('eshelf');
-                
+
                 // Check if the search criteria have already been saved
                 $exists = FALSE;
                 if(!empty($eshelf)){
@@ -424,7 +424,7 @@ class etd extends controller
                         if($fullCriteria == $item['criteria']){
                             // search criteria already exists - append new selection
                             $current = $item['selected'];
-                            
+
                             if(!empty($current)){
                                 foreach($current as $art){
                                     if(!in_array($art, $artArr)){
@@ -432,34 +432,34 @@ class etd extends controller
                                     }
                                 }
                             }
-                            
+
                             $eshelf[$key]['selected'] = $artArr;
                             $exists = TRUE;
                             continue;
                         }
                     }
                 }
-                
+
                 if($exists === FALSE){
                     // append new search to eshelf array
                     $eshelf[] = $search;
                 }
-                
+
                 $this->setSession('eshelf', $eshelf);
                 break;
-                
+
             case 'removeeshelf':
                 // get articles and remove from session
                 $eshelf = $this->getSession('eshelf');
                 $articles = $this->getParam('articles');
                 $criteria = $this->getParam('criteria');
-                
+
                 if(!empty($eshelf) && !empty($articles)){
                     foreach($eshelf as $key => $item){
                         if(rtrim($criteria) == rtrim($item['criteria'])){
                             // find the search criteria containing the article to be removed
                             $current = $item['selected'];
-                            
+
                             if(!empty($current)){
                                 foreach($current as $k => $art){
                                     if(in_array($art, $articles)){
@@ -472,43 +472,43 @@ class etd extends controller
                         }
                     }
                 }
-                
+
                 $this->setSession('eshelf', $eshelf);
                 return $this->nextAction('vieweshelf');
-                
+
             case 'vieweshelf':
                 $session['action'] = 'vieweshelf';
                 $this->setSession('return', $session);
-                
+
                 $display = $this->etdResource->showEShelf();
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
-                
+
             case 'repeatsearch':
                 // get the search criteria and set them in session
                 $search = $this->getParam('search');
                 $eshelf = $this->getSession('eshelf');
-                
+
                 $arrKey = explode('_', $search);
                 $key = !empty($arrKey[1]) ? $arrKey[1] : 0;
                 $criteria = $eshelf[$key]['criteria'];
                 $sql = $eshelf[$key]['search'];
-                
+
                 // set the search session
                 $this->setSession('criteria', $criteria);
                 $this->setSession('sql', $sql);
                 return $this->nextAction('advsearch');
-                
+
             case 'clearsearch':
                 // get the search criteria and unset it in session
                 $search = $this->getParam('search');
                 $eshelf = $this->getSession('eshelf');
-                
+
                 $arrKey = explode('_', $search);
                 $key = !empty($arrKey[1]) ? $arrKey[1] : 0;
                 unset($eshelf[$key]);
-                
+
                 // set the search session
                 $this->setSession('eshelf', $eshelf);
                 return $this->nextAction('vieweshelf');
@@ -550,7 +550,7 @@ class etd extends controller
                 }
                 return $this->nextAction('showconfig', array('mode' => $nextmode));
                 break;
-                
+
             /* *** Functions for students submissions *** */
 
             case 'submit':
@@ -575,7 +575,7 @@ class etd extends controller
                 break;
 
             /* *** Site map actions *** */
-                            
+
             // Function to create a sitemap using resources currently stored on the system
             case 'createmap':
                 $objMap = $this->getObject('etdmap', 'etd');
@@ -588,26 +588,26 @@ class etd extends controller
             case 'viewstats':
                 $session['action'] = 'viewstats';
                 $this->setSession('return', $session);
-                
+
                 $view = $this->getParam('view');
                 $display = $this->dbStats->showAll($view);
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
-                
+
             case 'printstats':
                 $view = $this->getParam('view');
                 $display = $this->dbStats->showAll($view);
                 $this->setVarByRef('search', $display);
                 return 'print_tpl.php';
-                
+
             case 'emailstats':
                 $view = $this->getParam('view');
                 $display = $this->dbStats->showAll($view);
-                
+
                 $head = $this->objLanguage->languageText('mod_etd_emailstatistics', 'etd');
                 $subject = $this->objLanguage->languageText('mod_etd_etdstatistics', 'etd');
                 $message = $this->objLanguage->languageText('mod_etd_statisticsattached', 'etd');
-                
+
                 $this->emailResults->setHeading($head);
                 $this->emailResults->setSubject($subject, FALSE);
                 $this->emailResults->setMessage($message);
@@ -615,7 +615,7 @@ class etd extends controller
                 $email = $this->emailResults->showEmail();
                 $this->setVarByRef('search', $email);
                 return 'search_tpl.php';
-                
+
             case 'showrss':
                 $institution = $this->objConfig->getinstitutionName();
                 $title = $this->objLanguage->code2Txt('mod_etd_etdrss', 'etd', array('institution' => $institution));
@@ -647,15 +647,15 @@ class etd extends controller
                         $itemLink = $this->uri(array('action' => 'viewtitle', 'id' => $item['metaid']));// todo: build up item link $item['dc_identifier'];
                         $itemLink = html_entity_decode($itemLink);
                	        $this->objFeeder->addItem($itemTitle, $itemLink, $itemDescription, $link, $itemAuthor);
-               	        
-               	        echo "<p>{$itemTitle}<br />{$itemDescription}</p>";
+
+               	        //echo "<p>{$itemTitle}<br />{$itemDescription}</p>";
                     }
                 }
 
-                //$feed = $this->objFeeder->output();
-                //echo $feed;
+                $feed = $this->objFeeder->output();
+                echo $feed;
                 break;
-                
+
             case 'metalib':
                 $term = $this->getParam('keyword');
                 $count = 0;
@@ -668,7 +668,7 @@ class etd extends controller
                     $count = $return['count'];
                 }
                 $display = '<p class="error"><B>'.$count.'</B> records found</p>';
-                
+
                 $this->unsetSession('resource');
                 // set a session to use when returning from a resource or from emailing a resource.
                 $session['displayLimit'] = $this->getParam('displayLimit');
@@ -686,7 +686,7 @@ class etd extends controller
                 $objViewBrowse->setNumCols(3);
                 $objViewBrowse->setPageTitle($pageTitle);
                 $objViewBrowse->addExtra($display);
-                
+
                 $this->objLink = new link($this->uri(array('action'=>'search')));
                 $this->objLink->link = $this->objLanguage->languageText('phrase_newsearch');
                 $search = $objViewBrowse->show();
@@ -694,14 +694,14 @@ class etd extends controller
                 $this->etdTools->setLeftBlocks(FALSE, TRUE, FALSE);
                 return 'search_tpl.php';
                 break;
-                
+
             case 'viewfaq':
                 $display = $this->dbIntro->showFaq();
                 $this->setVarByRef('search', $display);
                 return 'search_tpl.php';
                 break;
-                
-            /*    
+
+            /*
             case 'patchstats':
                 $this->dbStats->patchStats();
                 echo 'Done.';
@@ -718,13 +718,13 @@ class etd extends controller
     * Method to display the etd front page, depending on the access level of the user.
     */
     private function home()
-    {   
+    {
         $txtIntro = $this->dbIntro->getParsedIntro();
         $this->setVarByRef('txtIntro', $txtIntro);
-        
+
         return 'home_tpl.php';
     }
-    
+
     /**
     * Temporary fix for context permissions.
     * The method builds an array of groups in which the user is a member. The group determines the users level of access in the site.
@@ -763,7 +763,7 @@ class etd extends controller
     function patchData()
     {
         $this->dbDublinCore = $this->getObject('dbdublincore', 'etd');
-        
+
         $this->dbDublinCore->patch();
     }
 
