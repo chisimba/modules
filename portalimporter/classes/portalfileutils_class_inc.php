@@ -71,6 +71,9 @@ class portalfileutils extends object
 	public $xmlOut;
 	public $fullTitle;
 	public $pageTitle;
+	public $objRegex;
+	public $objConfig;
+	public $objStdlib;
 
 	/**
     *
@@ -90,6 +93,8 @@ class portalfileutils extends object
 		$this->objUser = $this->getObject("user", "security");
 		$this->objStdlib = $this->getObject('splstdlib', 'files');
 		$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
+		$this->objRegex = $this->getObject('regexes','utilities');
+		$this->objConfig = $this->getObject('altconfig', 'config');
 	}
 
 	/**
@@ -962,6 +967,32 @@ class portalfileutils extends object
 
 	public function doPages($subsect, $csecid, $secname)
 	{
+		if(!file_exists($this->objConfig->getSiteRootPath()."usrfiles/importcms"))
+		{
+			mkdir($this->objConfig->getSiteRootPath()."usrfiles/importcms/", 0777);
+		}
+		if(!file_exists($this->objConfig->getSiteRootPath()."usrfiles/importcms/".$csecid))
+		{
+			mkdir($this->objConfig->getSiteRootPath()."usrfiles/importcms/".$csecid, 0777);
+		}
+		$dirs = $this->objStdlib->dirFilterDots($subsect);
+		if(!empty($dirs))
+		{
+			foreach($dirs as $dir)
+			{
+				$ndir = explode("/",$dir);
+				$ndir = end($ndir);
+				mkdir($this->objConfig->getSiteRootPath()."usrfiles/importcms/".$csecid."/".$ndir, 0777);
+				$filesindir = new DirectoryIterator($dir);
+				foreach($filesindir as $movables)
+				{
+					if(!is_dir($dir."/".$movables))
+					{
+						copy($dir."/".$movables, $this->objConfig->getSiteRootPath()."usrfiles/importcms/".$csecid."/".$movables);
+					}
+				}
+			}
+		}
 		$pages[] = $this->objStdlib->fileLister($subsect);
 		$pages = array_filter($pages);
 		if(!empty($pages))
@@ -970,11 +1001,13 @@ class portalfileutils extends object
 			{
 				foreach($pageobj as $page)
 				{
+					//echo "<h1>$subsect</h1>";
 					// ok now we need to do some magic on the pages.
 					$contents = file_get_contents($subsect.$page);
 					// grok the title
-					preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
-					$title = $tresults[1][0];
+					//preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
+					$title = $this->objRegex->get_doc_title($contents);
+					//$title = $tresults[1][0];
 					$title = explode("--", $title);
 					$title = $title[1];
 					
@@ -987,6 +1020,7 @@ class portalfileutils extends object
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
 					$body = $bresults[1][0];
 					// change the links in the pages to the assets to point to the correct ones.
+					
 					// change the anchors as well?
 					
 					// clean up the bad code
@@ -1010,6 +1044,21 @@ class portalfileutils extends object
 						die ("TIDY is not available");
 					}
 					$body = $tidy;
+					$imgs = $this->objRegex->get_images($body);
+					$images = $imgs[3];
+					//var_dump($imgs);
+					$counter = 0;
+					foreach($images as $img)
+					{
+						$ifile = explode("/", $img);
+						$ifile = end($ifile);
+						$ref = $this->objConfig->getSiteRoot()."usrfiles/importcms/".$csecid."/".$ifile;
+						$replacement = "<img src=\"$ref\" />";
+						// move the files to the repo
+						$body = str_replace($imgs[0][$counter], $replacement, $body);
+						//var_dump($replacement);
+						$counter++;
+					}
 					// case for the public folder - i.e frontpage
 					if($secname == 'Public')
 					{
@@ -1076,8 +1125,9 @@ class portalfileutils extends object
 					// ok now we need to do some magic on the pages.
 					$contents = file_get_contents($section."/".$page);
 					// grok the title
-					preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
-					$title = $tresults[1][0];
+					//preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
+					$title = $this->objRegex->get_doc_title($contents);
+					//$title = $tresults[1][0];
 					$title = explode("--", $title);
 					$title = ltrim($title[1]);
 					$title = trim($title);
@@ -1086,6 +1136,7 @@ class portalfileutils extends object
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
 					$body = $bresults[1][0];
 					// change the links in the pages to the assets to point to the correct ones.
+					
 					// change the anchors as well?
 					
 					// clean up the bad code
