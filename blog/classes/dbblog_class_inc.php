@@ -686,18 +686,22 @@ class dbblog extends dbTable
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
-            $sitemap = $this->getObject('sitemap', 'utilities');
-            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            $bs = $this->sysConfig->getValue('blog_sitemap', 'blog');
+            if($bs == 'TRUE')
             {
+            	$sitemap = $this->getObject('sitemap', 'utilities');
+            	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            	{
             	
-            	$smxml = $sitemap->createSiteMap($smarr);
-            	$sitemap->writeSitemap($smxml, 'blogsitemap');
-            }
-            else {
-            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            		$smxml = $sitemap->createSiteMap($smarr);
+            		$sitemap->writeSitemap($smxml, 'blogsitemap');
+            	}
+            	else {
+            		$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	}
             }
             if ($this->lindex == 'TRUE') {
-                $edarr['id'] = $postarr['id'];
+               	$edarr['id'] = $postarr['id'];
                 $this->luceneReIndex($edarr);
             }
             return TRUE;
@@ -733,14 +737,18 @@ class dbblog extends dbTable
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
-            $sitemap = $this->getObject('sitemap', 'utilities');
-            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            $bs = $this->sysConfig->getValue('blog_sitemap', 'blog');
+            if($bs == 'TRUE')
             {
-            	$smxml = $sitemap->createSiteMap($smarr);
-            	$sitemap->writeSitemap($smxml, 'blogsitemap');
-            }
-            else {
-            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	$sitemap = $this->getObject('sitemap', 'utilities');
+            	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            	{
+            		$smxml = $sitemap->createSiteMap($smarr);
+            		$sitemap->writeSitemap($smxml, 'blogsitemap');
+            	}
+            	else {
+            		$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	}
             }
             if ($this->lindex == 'TRUE') {
                 $this->luceneIndex($imparr);
@@ -779,14 +787,18 @@ class dbblog extends dbTable
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
-            $sitemap = $this->getObject('sitemap', 'utilities');
-            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            $bs = $this->sysConfig->getValue('blog_sitemap', 'blog');
+            if($bs == 'TRUE')
             {
-            	$smxml = $sitemap->createSiteMap($smarr);
-            	$sitemap->writeSitemap($smxml, 'blogsitemap');
-            }
-            else {
-            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	$sitemap = $this->getObject('sitemap', 'utilities');
+            	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            	{
+            		$smxml = $sitemap->createSiteMap($smarr);
+            		$sitemap->writeSitemap($smxml, 'blogsitemap');
+            	}
+            	else {
+            		$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	}
             }
             if ($this->lindex == 'TRUE') {
                 $this->luceneIndex($mparr);
@@ -825,14 +837,18 @@ class dbblog extends dbTable
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
-            $sitemap = $this->getObject('sitemap', 'utilities');
-            if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            $bs = $this->sysConfig->getValue('blog_sitemap', 'blog');
+            if($bs == 'TRUE')
             {
-            	$smxml = $sitemap->createSiteMap($smarr);
-            	$sitemap->writeSitemap($smxml, 'blogsitemap');
-            }
-            else {
-            	$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	$sitemap = $this->getObject('sitemap', 'utilities');
+            	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
+            	{
+            		$smxml = $sitemap->createSiteMap($smarr);
+            		$sitemap->writeSitemap($smxml, 'blogsitemap');
+            	}
+            	else {
+            		$smxml = $sitemap->updateSiteMap($maparray, 'blogsitemap');
+            	}
             }
             if ($this->lindex == 'TRUE') {
                 $this->luceneReIndex($postarr);
