@@ -195,7 +195,7 @@ class announcements extends controller
                 //email mailer
                 $this->objSendMail->setValue('mailer', 'mail');
                 //now send emails
-               //$this->objSendMail->send();
+               $this->objSendMail->send();
 	   
 	    $this->nextAction('');
             break;
