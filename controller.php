@@ -563,7 +563,7 @@ function startServer()
 	function showClassRoom($contextcode)
 	{
 		if(empty($contextcode)){
-			$desc= $this->objLanguage->languageText('mod_realtime_nocontextcode', 'realtime');
+			$desc= $this->objLanguage->code2Txt('mod_realtime_nocontextcode', 'realtime');
                         $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
                         $this->setVarByRef('title', $title);
                         $this->setVarByRef('desc', $desc);
