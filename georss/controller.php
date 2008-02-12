@@ -40,6 +40,17 @@ class georss extends controller
     
         switch ($action) {
             default:
+            	$file = $this->getResourcePath('georss.xml');
+            	chmod($file, 0777);
+            	if(filemtime($file) > 86500)
+            	{
+            		// go and update the feed...
+            		$objCurl = $this->getObject('curl', 'utilities');
+					$data = $objCurl->exec('http://ws.geonames.org/rssToGeoRSS?feedUrl=http://today.reuters.com/rss/worldNews');
+					
+					file_put_contents($this->getResourcePath('georss.xml'), $data);
+            	}
+            	
             	return 'main_tpl.php';
             	break; 
         }

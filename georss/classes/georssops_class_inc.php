@@ -44,13 +44,13 @@ class georssops extends object
         function init(){
             g = new OpenLayers.Format.GeoRSS();
             map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
-            var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
+            //var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
             var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\", 
                 \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'}); 
             var pointLayer = new OpenLayers.Layer.Vector(\"Point Layer\");
             pointLayer.onFeatureInsert = serialize;
             
-            map.addLayers([wmsLayer, pointLayer, hybrid]);
+            map.addLayers([wmsLayer, pointLayer]);
       
             map.addControl(new OpenLayers.Control.EditingToolbar(pointLayer));
             map.addControl(new OpenLayers.Control.MousePosition());
@@ -65,7 +65,13 @@ class georssops extends object
             map.addLayer(newl2);
             
             map.setCenter(new OpenLayers.LonLat(0,0), 2);
-
+            
+            map.events.register(\"click\", map, function(e) { 
+                var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                OpenLayers.Util.getElement(\"gml\").value = lonlat.lat + \",  \" +
+                                          + lonlat.lon
+            });
+            
         }
     </script>";
 		
