@@ -64,6 +64,9 @@ if (isset ($noContextCode))
     $docRoot=$_SERVER['DOCUMENT_ROOT'];
     $appletPath=str_replace($docRoot,$replacewith,$modPath);
     $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+   
     //echo $appletCodeBase;
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
@@ -72,7 +75,7 @@ if (isset ($noContextCode))
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
 
-    echo '<param name=port value="1981">';
+    echo '<param name=port value="'.$port.'">';
     echo '</applet>';
          
 
