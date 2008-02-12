@@ -222,7 +222,7 @@ class realtime extends controller
 				return "dump_tpl.php";*/
 				
 				
-				//$this->startOpenOffice();
+			        $this->startOpenOffice();
 			        $this->startWhiteboardServer();
 
                                 return $this->showClassRoom($this->contextCode);
@@ -316,8 +316,10 @@ function in_str($needle, $haystack){
     */ 
 function startServer()
     {
-    $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
-   system($cmd,$return_value);
+	$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+        $cmd = "java  -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server '.$port.' >/dev/null &";
+        system($cmd,$return_value);
     
     }
 
@@ -328,9 +330,9 @@ function startServer()
     {
 	
 //soffice -headless -display='0.0' -accept='socket,host=localhost,port=8100;urp;StarOffice.ServiceManager'
-    $cmd=($this->objConfig->getModulePath()."realtime/resources/startOpenOffice.sh  > /dev/null 2>&1");
-     exec($cmd); //"soffice -headless -accept='socket,port=8100;urp;' &";
-    
+//    $cmd=($this->objConfig->getModulePath()."realtime/resources/startOpenOffice.sh  > /dev/null 2>&1");
+  //   exec($cmd); //"soffice -headless -accept='socket,port=8100;urp;' &";
+    exec("soffice -headless -accept='socket,port=8100;urp;'&");
     }
    /**
     * This creates, if not existing, a folder where the presentations are to be stored.
