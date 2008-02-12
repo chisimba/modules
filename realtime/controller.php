@@ -309,7 +309,7 @@ function in_str($needle, $haystack){
     "/realtime/resources/avoir-whiteboard-server-0.1.jar:".
     $this->objConfig->getModulePath().
     "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
-    echo $cmd;
+    
     system($cmd,$return_value);
     
     }
