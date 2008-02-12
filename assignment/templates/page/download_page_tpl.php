@@ -11,6 +11,8 @@
 
 $fileId=$this->getParam('fileid');
 $data=$this->objFile->getArray("select * from tbl_assignment_filestore where fileId='$fileId'");
+print_r($data);
+die;
 if (count($data)==0){ // if the file has been deleted
     header("Status: 404 Not Found");
 } else {

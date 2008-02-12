@@ -15,7 +15,7 @@ $this->setLayoutTemplate('assignment_layout_tpl.php');
 $this->loadclass('htmltable','htmlelements');
 $this->loadclass('textinput','htmlelements');
 $objConfirm = $this->newObject('timeoutmessage','htmlelements');
-
+$objSelectFile = $this->newObject('selectfile','filemanager');
 // set up language items
 $essayhead=$this->objLanguage->languageText('mod_essay_essay', 'assignment');
 $btnupload=$this->objLanguage->languageText('mod_assignment_upload' ,'assignment');
@@ -74,15 +74,18 @@ $objTable->endRow();
 
 
 
-// file input
-$this->objInput = new textinput('file');
-$this->objInput->fldType='file';
-$this->objInput->size=''; 
+$objSelectFile->name ='user_fileId';
 
-$objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell($this->objInput->show(),'','','left','',' colspan="2"');
-$objTable->endRow();
+
+// file input
+//$this->objInput = new textinput('file');
+//$this->objInput->fldType='file';
+//$this->objInput->size=''; 
+
+//$objTable->startRow();
+//$objTable->addCell('');
+//$objTable->addCell($this->objInput->show(),'','','left','',' colspan="2"');
+//$objTable->endRow();
 
 // submit and exit buttons
 $this->objButton = new button('submit',$btnupload);
@@ -109,6 +112,7 @@ $objTable->endRow();
 
 $this->objForm = new form('upload',$this->uri(array('action'=>'uploadsubmit','id'=>$id)));
 $this->objForm->extra=" enctype='multipart/form-data'";
+$this->objForm->addToForm($objSelectFile->show());
 $this->objForm->addToForm($objTable->show());
 
 /************************* display page ******************************/

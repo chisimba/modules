@@ -134,7 +134,7 @@ class dbassignmentsubmit extends dbtable
     */
     public function getFileName($userId, $fileId)
     {
-        $sql = "SELECT filename FROM tbl_assignment_filestore ";
+        $sql = "SELECT filename FROM tbl_assignment_submit ";
         $sql .= "WHERE fileid='$fileid'";
 
         $data = $this->getArray($sql);

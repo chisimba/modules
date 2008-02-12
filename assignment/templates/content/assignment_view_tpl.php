@@ -96,15 +96,10 @@ if(!empty($data)){
    /* $this->objFileInput = new textinput('file');
 	$this->objFileInput->fldType='file';
 	$this->objFileInput->size=''; 
-    
-    $objLayer->str = $objTable->show();
-*/
+	*/
+
+	$objLayer->str = $objTable->show();
     $str = $objLayer->show();
-    
-   
-    
-    
-    
 
     // Section for submitting the assignment by upload or online if user is a student
     $objHead = new htmlheading();
@@ -116,8 +111,8 @@ if(!empty($data)){
 	$this->objButton = new button('submit',$btnupload);
 	$returnUrl = $this->uri(array('action' => 'upload','id'=>$data[0]['id']));
 	$this->objButton->setOnClick("window.location='$returnUrl'");
-	//$this->objButton->setToSubmit();
-	$btn1=$this->objButton->show();
+	$this->objButton->setToSubmit();
+	$btn1= $this->objButton->show();
 	
 	$str .= $btn1;
 	
@@ -145,23 +140,18 @@ if(!empty($data)){
         if($type == 'plaintext'){
             // Hidden element for the editor type
             $objInput = new textinput('editor', 'ww', 'hidden');
-
             $objText = new textarea('text', $dOnline, 15, 80);
             $inputStr .= $objText->show();
-
             $objLink = new link("javascript:submitform('changeeditor')");
             $objLink->link = $lnWysiwyg;
             $inputStr .= '<br/>'.$objLink->show().$objInput->show();
         }else{
             // Hidden element for the editor type
             $objInput = new textinput('editor', 'plaintext', 'hidden');
-
             $objEditor = $this->newObject('htmlarea', 'htmlelements');
             $objEditor->init('text', $dOnline, '500px', '500px');
             $objEditor->setDefaultToolBarSetWithoutSave();
-
             $inputStr .= $objEditor->show();
-
             $objLink = new link("javascript:submitForm('changeeditor')");
             $objLink->link = $lnPlain;
             $inputStr .= '<br />'.$objLink->show().$objInput->show();
@@ -175,7 +165,7 @@ if(!empty($data)){
     $objInput = new textinput('id', $data[0]['id'], 'hidden');
     $hidden .= $objInput->show();
 
-    $objInput = new textinput('action', 'submit', 'hidden');
+    $objInput = new textinput('jokes', 'submit', 'hidden');
     $hidden .= $objInput->show();
 
     if(!empty($data[0]['submitid'])){
@@ -190,20 +180,20 @@ if(!empty($data)){
     $objButton->setToSubmit();
     $btns = $objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-    $objButton = new button('save', $exitLabel);
+    $objButton = new button('exit', $exitLabel);
     $objButton->setToSubmit();
-    $btns .= $objButton->show();
+    //$btns .= $objButton->show();
 	
-    $objForm = new form('submit', $this->uri(array('action' => 'upload')));
-    $objForm->extra = " ENCTYPE='multipart/form-data'";
+	
 
+    $objForm = new form('submit', $this->uri(array('action' => 'onlinesubmit')));
+    $objForm->extra = " ENCTYPE='multipart/form-data'";
     $objForm->addToForm($inputStr);
- 
     $objForm->addToForm($hidden);
     $objForm->addToForm('<br />'.$btns);
+
     //$objForm->addToForm($this->objFileInput->show());
 	//$objForm->addToForm("helllo");     
-
     $layerStr = $objForm->show();
 
     $objLayer1 = new layer();
@@ -213,4 +203,4 @@ if(!empty($data)){
 }
 
 echo $str;
-?>
+php?>

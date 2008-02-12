@@ -119,7 +119,13 @@ class assignment extends controller
             case 'view':
                 $var = $this->getParam('var', FALSE);
                 return $this->viewAssign($var);
-
+           // online submit insert/submitted assignment in the database
+            case 'onlinesubmit':
+                $postSave = $this->getParam('save', '');
+                if($postSave == $this->objLanguage->languageText('word_exit')){
+                    return $this->nextAction('');
+                }
+                return $this->submitAssign();
             // insert the submitted assignment in the database
             case 'submit':
                 $postSave = $this->getParam('save', '');
@@ -143,21 +149,22 @@ class assignment extends controller
             case 'showcomment':
                 return $this->showComment();
                 
-         	case 'upload';
-         		$id = $this->getParam('id');
+        	case 'upload':
+				$id = $this->getParam('id');
          		$this->setVarByRef('id',$id);
          		return 'upload_tpl.php';
          	break;
          	
          	case 'uploadsubmit':
+print_r($_POST);
+print_r($_GET);
                 // get topic id
                 $id=$this->getParam('id');
                 // get booking id
                 //$book=$this->getParam('book');
                 $msg = '';
                 $postSubmit = $this->getParam('submit');
-				
-                // exit upload form
+			     // exit upload form
                 if($postSubmit==$this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('');
                 }
@@ -260,8 +267,6 @@ class assignment extends controller
             }
         }
         $assignData = $this->dbAssignment->getAssignment($this->contextCode);
-
- 
         if(!empty($assignData)){
             foreach($assignData as $key=>$val){
                 $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
@@ -293,8 +298,6 @@ class assignment extends controller
     {
         $id = $this->getParam('id');
         $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
-
-
 
         if($data[0]['resubmit'] || $var){
             $submit = $this->dbSubmit->getSubmit("assignmentid='$id' AND userid='"
@@ -372,4 +375,4 @@ class assignment extends controller
         return $ret;
 	}
 }// end class assignment
-?>
+php?>
