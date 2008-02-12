@@ -279,6 +279,9 @@ function in_str($needle, $haystack){
     */ 
  function startWhiteboardServer()
     {
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+   
     $cmd = "java -Xms64m -Xmx128m -cp .:".
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
@@ -305,7 +308,7 @@ function in_str($needle, $haystack){
     $this->objConfig->getModulePath().
     "/realtime/resources/avoir-whiteboard-server-0.1.jar:".
     $this->objConfig->getModulePath().
-    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server 1981 >/dev/null &";
+    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server '.$port.' >/dev/null &";
     system($cmd,$return_value);
     
     }
