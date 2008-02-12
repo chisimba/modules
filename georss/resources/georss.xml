@@ -1,380 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/css" href="/css/rss.css" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss" xmlns:gml="http://www.opengis.net/gml" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" xmlns:georss="http://www.georss.org/georss" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" version="2.0">
+  <channel>
+    <title>Reuters: International News</title>
+    <link>http://www.reuters.com</link>
+    <description>Reuters.com is your source for breaking news, business, financial and investing news, including personal finance and stocks.  Reuters is the leading global provider of news, financial information and technology solutions to the world's media, financial institutions, businesses and individuals.</description>
+    <language>en-us</language>
+    <copyright>All rights reserved. Users may download and print extracts of content from this website for their own personal and non-commercial use only. Republication or redistribution of Reuters content, including by framing or similar means, is expressly prohibited without the prior written consent of Reuters. Reuters and the Reuters sphere logo are registered trademarks or trademarks of the Reuters group of companies around the world. © Reuters 2008</copyright>
+    <dc:language>en-us</dc:language>
+    <dc:rights>All rights reserved. Users may download and print extracts of content from this website for their own personal and non-commercial use only. Republication or redistribution of Reuters content, including by framing or similar means, is expressly prohibited without the prior written consent of Reuters. Reuters and the Reuters sphere logo are registered trademarks or trademarks of the Reuters group of companies around the world. © Reuters 2008</dc:rights>
+    <image>
+      <title>Reuters News</title>
+      <url>http://www.reuters.com/resources/images/reuters120.gif</url>
+      <link>http://www.reuters.com</link>
+    </image>
+    <item>
+      <title>Australian troops land to boost East Timor security</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233482874/idUSJAK3270120080212</link>
+      <description>DILI (Reuters) - Australian troops began arriving in East Timor on Tuesday to help enforce a state of emergency after the tiny nation's president was critically wounded in a double assassination attempt and flown to Darwin for treatment.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=06cKrk"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=06cKrk" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=hgZFStE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=hgZFStE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=8jCQYAe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=8jCQYAe" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=fpbGTGe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=fpbGTGe" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233482874" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 12:22:05 GMT</pubDate>
+      <guid isPermaLink="false">USJAK3270120080212</guid>
+      <dc:date>2008-02-12T12:22:05Z</dc:date>
+      <geo:lat>37.9833333</geo:lat>
+      <geo:long>23.7333333</geo:long>
+    </item>
+    <item>
+      <title>Man arrested for destroying S.Korea's top treasure</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233548798/idUSSEO27238420080212</link>
+      <description>SEOUL (Reuters) - South Korean police said on Tuesday they arrested a pensioner who confessed to burning down a 600-year-old gate designated as the country's number one national treasure because he was angry about a compensation payment.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=U2ZV7C"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=U2ZV7C" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=rBl0jME"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=rBl0jME" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=i1vlBse"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=i1vlBse" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=MqjCrYe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=MqjCrYe" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233548798" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 12:27:05 GMT</pubDate>
+      <guid isPermaLink="false">USSEO27238420080212</guid>
+      <dc:date>2008-02-12T12:27:05Z</dc:date>
+      <geo:lat>37.5663889</geo:lat>
+      <geo:long>126.9997222</geo:long>
+    </item>
+    <item>
+      <title>Kosovo independence move would hit security: Russia</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233714003/idUSL1262709220080212</link>
+      <description>GENEVA (Reuters) - A unilateral declaration of independence by Kosovo would damage security in Europe, Russian Foreign Minister Sergei Lavrov said on Tuesday.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=yi5pCU"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=yi5pCU" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=3TqXCZE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=3TqXCZE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=HerUmde"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=HerUmde" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=d5TCOBe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=d5TCOBe" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233714003" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 12:09:56 GMT</pubDate>
+      <guid isPermaLink="false">USL1262709220080212</guid>
+      <dc:date>2008-02-12T12:09:56Z</dc:date>
+      <geo:lat>59.3</geo:lat>
+      <geo:long>40.7166667</geo:long>
+    </item>
+    <item>
+      <title>U.S. forces find 13 bodies in Iraq mass grave</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233678833/idUSANW22804120080212</link>
+      <description>BAGHDAD (Reuters) - U.S. forces have found the bodies of 13 men in a mass grave in Iraq's restive Diyala province northeast of Baghdad, police said on Tuesday, the latest such grisly find in recent months.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=iQfCiI"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=iQfCiI" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=qccO4FE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=qccO4FE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=AhhbkIe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=AhhbkIe" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=7mWP4ce"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=7mWP4ce" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233678833" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 12:22:55 GMT</pubDate>
+      <guid isPermaLink="false">USANW22804120080212</guid>
+      <dc:date>2008-02-12T12:22:55Z</dc:date>
+      <geo:lat>33.3386111</geo:lat>
+      <geo:long>44.3938889</geo:long>
+    </item>
+    <item>
+      <title>Darfur towns burned in government attacks: U.N.</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233716359/idUSL1210936920080212</link>
+      <description>KHARTOUM, Sudan (Reuters) - A major assault by the Sudanese army and allied militia has left two Darfur towns badly damaged by fire, sources close to a U.N. reconnaissance mission to the region said on Tuesday.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=6VJnC8"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=6VJnC8" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=Q259aJE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=Q259aJE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=HR7HcUe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=HR7HcUe" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=V9YwcGe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=V9YwcGe" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233716359" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 12:17:33 GMT</pubDate>
+      <guid isPermaLink="false">USL1210936920080212</guid>
+      <dc:date>2008-02-12T12:17:33Z</dc:date>
+      <geo:lat>15.589497</geo:lat>
+      <geo:long>32.553161</geo:long>
+    </item>
+    <item>
+      <title>Russia surprised by U.S. reaction to bomber flights</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233678834/idUSN1117508020080212</link>
+      <description>MOSCOW (Reuters) - Russia expressed surprise on Tuesday that the United States had scrambled fighter jets at the weekend to intercept strategic Russian bombers, one of which flew over a U.S. aircraft carrier in the Pacific.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=OwElEv"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=OwElEv" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=cnTGDKE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=cnTGDKE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=28ksNqe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=28ksNqe" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=X7HHMoe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=X7HHMoe" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233678834" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 11:28:34 GMT</pubDate>
+      <guid isPermaLink="false">USN1117508020080212</guid>
+      <dc:date>2008-02-12T11:28:34Z</dc:date>
+      <geo:lat>55.7522222</geo:lat>
+      <geo:long>37.6155556</geo:long>
+    </item>
+    <item>
+      <title>Annan seeks to seal Kenya crisis deal in days</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233681252/idUSL1264995120080212</link>
+      <description>NAIROBI (Reuters) - Kenya should have a political solution to its election dispute this week, but its divided parliament must swiftly endorse wider reforms, former U.N. chief Kofi Annan said on Tuesday.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=PjVE5q"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=PjVE5q" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=VNo4Z0E"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=VNo4Z0E" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=uy2X8Re"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=uy2X8Re" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=GKgjLke"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=GKgjLke" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233681252" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 11:19:38 GMT</pubDate>
+      <guid isPermaLink="false">USL1264995120080212</guid>
+      <dc:date>2008-02-12T11:19:38Z</dc:date>
+      <geo:lat>-1.2833333</geo:lat>
+      <geo:long>36.8166667</geo:long>
+    </item>
+    <item>
+      <title>Israel to build new homes in Jerusalem area</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233621235/idUSL11232323220080212</link>
+      <description>JERUSALEM (Reuters) - Israel's housing ministry said on Tuesday preparations were underway to build up to 1,100 new homes in and around Arab East Jerusalem, which Palestinians see as capital of a future state.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=v2Wv3S"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=v2Wv3S" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=7uSheVE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=7uSheVE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=sDbnFye"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=sDbnFye" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=bXHb2Ue"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=bXHb2Ue" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233621235" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 08:57:06 GMT</pubDate>
+      <guid isPermaLink="false">USL11232323220080212</guid>
+      <dc:date>2008-02-12T08:57:06Z</dc:date>
+      <geo:lat>31.7666667</geo:lat>
+      <geo:long>35.2333333</geo:long>
+    </item>
+    <item>
+      <title>Pakistani students gloomy about election</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233670798/idUSISL6118820080212</link>
+      <description>LAHORE, Pakistan (Reuters) - Students at Pakistan's Punjab University, the country's biggest and a traditional nursery for politicians, are disillusioned with politics and many say they will not be voting in next week's election.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=AYxoM2"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=AYxoM2" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=U367tME"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=U367tME" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=yTcgqTe"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=yTcgqTe" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=Xnk48Ke"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=Xnk48Ke" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233670798" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 11:56:08 GMT</pubDate>
+      <guid isPermaLink="false">USISL6118820080212</guid>
+      <dc:date>2008-02-12T11:56:08Z</dc:date>
+      <geo:lat>31.521564</geo:lat>
+      <geo:long>74.403594</geo:long>
+    </item>
+    <item>
+      <title>Myanmar says dissidents tearing country apart</title>
+      <link>http://feeds.reuters.com/~r/reuters/worldNews/~3/233560132/idUSBKK4722720080212</link>
+      <description>YANGON (Reuters) - Myanmar's military junta accused pro-democracy and dissident groups on Tuesday of trying to tear the country apart, and urged the public to back its "roadmap to democracy" in a referendum on a new constitution in May.
+&lt;p&gt;&lt;a href="http://feeds.reuters.com/~a/reuters/worldNews?a=k3nbIw"&gt;&lt;img src="http://feeds.reuters.com/~a/reuters/worldNews?i=k3nbIw" border="0"&gt;&lt;/img&gt;&lt;/a&gt;&lt;/p&gt;&lt;div class="feedflare"&gt;
+&lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=5abmnJE"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=5abmnJE" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=mqjV6ve"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=mqjV6ve" border="0"&gt;&lt;/img&gt;&lt;/a&gt; &lt;a href="http://feeds.reuters.com/~f/reuters/worldNews?a=9tjYsre"&gt;&lt;img src="http://feeds.reuters.com/~f/reuters/worldNews?i=9tjYsre" border="0"&gt;&lt;/img&gt;&lt;/a&gt;
+&lt;/div&gt;&lt;img src="http://feeds.reuters.com/~r/reuters/worldNews/~4/233560132" height="1" width="1"/&gt;</description>
+      <category>worldNews</category>
+      <pubDate>Tue, 12 Feb 2008 10:18:25 GMT</pubDate>
+      <guid isPermaLink="false">USBKK4722720080212</guid>
+      <dc:date>2008-02-12T10:18:25Z</dc:date>
+      <geo:lat>16.907305</geo:lat>
+      <geo:long>96.133222</geo:long>
+    </item>
+  </channel>
+</rss>
 
-<rdf:RDF  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-  xmlns="http://purl.org/rss/1.0/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:georss="http://www.georss.org/georss">
-<docs>This is an RSS file.  Copy the URL into your aggregator of choice.  If you don't know what this means and want to learn more, please see: <span>http://platial.typepad.com/news/2006/04/really_simple_t.html</span> for more info.</docs><channel rdf:about="http://platial.com">
-<link>http://platial.com</link>
-<title>Crschmidt's Places At Platial</title>
-<description></description>
-<items>
-<rdf:Seq>
-<rdf:li resource="http://platial.com/place/90306"/>
-<rdf:li resource="http://platial.com/place/67230"/>
-<rdf:li resource="http://platial.com/place/65645"/>
-<rdf:li resource="http://platial.com/place/62200"/>
-<rdf:li resource="http://platial.com/place/28232"/>
-<rdf:li resource="http://platial.com/place/43666"/>
-<rdf:li resource="http://platial.com/place/28394"/>
-<rdf:li resource="http://platial.com/place/28251"/>
-<rdf:li resource="http://platial.com/place/28392"/>
-<rdf:li resource="http://platial.com/place/28391"/>
-<rdf:li resource="http://platial.com/place/28231"/>
-<rdf:li resource="http://platial.com/place/28393"/>
-<rdf:li resource="http://platial.com/place/31685"/>
-<rdf:li resource="http://platial.com/place/28596"/>
-<rdf:li resource="http://platial.com/place/28595"/>
-<rdf:li resource="http://platial.com/place/28594"/>
-<rdf:li resource="http://platial.com/place/28593"/>
-<rdf:li resource="http://platial.com/place/28592"/>
-<rdf:li resource="http://platial.com/place/28591"/>
-<rdf:li resource="http://platial.com/place/28590"/>
-<rdf:li resource="http://platial.com/place/28589"/>
-<rdf:li resource="http://platial.com/place/28588"/>
-<rdf:li resource="http://platial.com/place/28587"/>
-<rdf:li resource="http://platial.com/place/28586"/>
-<rdf:li resource="http://platial.com/place/28585"/>
-<rdf:li resource="http://platial.com/place/28584"/>
-<rdf:li resource="http://platial.com/place/28583"/>
-<rdf:li resource="http://platial.com/place/28582"/>
-<rdf:li resource="http://platial.com/place/28581"/>
-<rdf:li resource="http://platial.com/place/28580"/>
-<rdf:li resource="http://platial.com/place/28579"/>
-<rdf:li resource="http://platial.com/place/28578"/>
-<rdf:li resource="http://platial.com/place/28577"/>
-<rdf:li resource="http://platial.com/place/28576"/>
-<rdf:li resource="http://platial.com/place/28575"/>
-<rdf:li resource="http://platial.com/place/28574"/>
-<rdf:li resource="http://platial.com/place/28573"/>
-<rdf:li resource="http://platial.com/place/28572"/>
-<rdf:li resource="http://platial.com/place/28571"/>
-<rdf:li resource="http://platial.com/place/28570"/>
-</rdf:Seq>
-</items>
-</channel>
-<item rdf:about="http://platial.com/place/90306">
-<link>http://platial.com/place/90306</link>
-<title>Knitting Room</title>
-<description><![CDATA[This little shop is jammed full. Yarn, yarn everywhere. They make the most of every possible nook and cranny. I like this place also because they have a lot of different kinds of knitting needles in all different sizes. Also, the people who work here are younger and hipper than in the other stores I go to. I reccomend buying supplies here and then knitting your way through a good documentary at the Capitol Theater across the street.<br/>Address: 2 lake St, Arlington, MA <br/>Tags: knitting, yarn, pins and needles, handspun, hand dyed, novelty yarn, fancy, simple, young, hip, friendly, needles, addy, cute hats<br /><br /><a href="http://platial.com/place/90306">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/90306">Grab this on Platial</a> ]]></description>
-<georss:point>42.405696 -71.142197</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-06-08T17:35:01.942452+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/67230">
-<link>http://platial.com/place/67230</link>
-<title>Knitting Room</title>
-<description><![CDATA[This little shop is jammed full. Yarn, yarn everywhere. They make the most of every possible nook and cranny. I like this place also because they have a lot of different kinds of knitting needles in all different sizes. Also, the people who work here are younger and hipper than in the other stores I go to. I reccomend buying supplies here and then knitting your way through a good documentary at the Capitol Theater across the street.<br/>Address: 2 lake St, Arlington, MA <br/>Tags: knitting, yarn, pins and needles, handspun, hand dyed, novelty yarn, fancy, simple, young, hip, friendly, needles, addy, cute hats<br /><br /><a href="http://platial.com/place/67230">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/67230">Grab this on Platial</a> ]]></description>
-<georss:point>42.405524 -71.142273</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-04-24T11:35:26.733857+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/65645">
-<link>http://platial.com/place/65645</link>
-<title>â Â¢Â¢â¢Â£ËÃ¸Å</title>
-<description><![CDATA[ijeÂªÂ£âÂµËËÃ®<br/>Address: 151 Erie St., Cambridge, MA<br/>Tags: platial graffiti<br /><br /><a href="http://platial.com/place/65645">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/65645">Grab this on Platial</a> ]]></description>
-<georss:point>42.352455 -71.110210</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-04-20T08:56:12.696224+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/62200">
-<link>http://platial.com/place/62200</link>
-<title>Allen Hall</title>
-<description><![CDATA[My dorm at UIUC.<br/>Address: 1301 W Gregory Dr, Urbana, IL<br/>Tags: dorm, uiuc, college<br/><a href="http://platial.com/place/62200"><img src="http://platial.comhttp://static.flickr.com/4/8576450_0d59cc2531_s.jpg"/></a><br/><br /><br /><a href="http://platial.com/place/62200">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/62200">Grab this on Platial</a> ]]></description>
-<georss:point>40.104172 -88.220623</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-04-14T08:01:01.872873+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28232">
-<link>http://platial.com/place/28232</link>
-<title>Bagby Hot Springs, OR</title>
-<description><![CDATA[Hot spring, temperature: 136  degress F, 58  degress C. However, the area around the springs are not exactly well looked upon by people who know the place.
-
-<br/>Tags: 20s, rosalie, romance, childhood, hike, camping, soak, relax, beautiful, hot springs, bathhouse, favorite, popular, crowded, organized, honeymoon tub, plumbing made from hollowed out trees, hot springs, mt hood, notorious car break in spot, rash, bacteria<br /><br /><a href="http://platial.com/place/28232">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28232">Grab this on Platial</a> ]]></description>
-<georss:point>44.936000 -122.173000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:10:18.553063+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/43666">
-<link>http://platial.com/place/43666</link>
-<title>Shooting Location for "The Field of Dreams" Film</title>
-<description><![CDATA[1989's Field of Dreams was a Best Picture Academy Award nominee, and the baseball field in the cornfield still stands today, and has become quite a tourist destination.  Games are occasionally played at the field, re-enacting professional baseball at the turn of the 20th Century.<br/>Address: Dyersville, Iowa<br/>Tags: iowa, baseball, movie locations, field of dreams, kevin costner, costner, dyersville, kinsella, james earl jones, chicago black sox, shoeless joe, joe jackson, famous farms, film, movie, cinema, shooting location<br /><br /><a href="http://platial.com/place/43666">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/43666">Grab this on Platial</a> ]]></description>
-<georss:point>42.481213 -91.111679</georss:point>
-<dc:creator>echinodermata</dc:creator>
-<dc:date>2006-03-23T11:40:17.654061+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28394">
-<link>http://platial.com/place/28394</link>
-<title>Moffetts (Bonneville) Hot Springs, WA</title>
-<description><![CDATA[Hot spring, temperature: 97  degress F, 36  degress C<br/>Tags: soak, hot springs, relax, nature<br /><br /><a href="http://platial.com/place/28394">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28394">Grab this on Platial</a> ]]></description>
-<georss:point>45.658000 -121.962000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:16:27.329816+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28251">
-<link>http://platial.com/place/28251</link>
-<title>Austin Hot Springs, OR</title>
-<description><![CDATA[Hot spring, temperature: 186  degress F, 86  degress C<br/>Tags: soak, hot springs, relax, nature, popular, crowded<br /><br /><a href="http://platial.com/place/28251">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28251">Grab this on Platial</a> ]]></description>
-<georss:point>45.021000 -122.009000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:11:04.489886+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28392">
-<link>http://platial.com/place/28392</link>
-<title>Rock Creek Hot Springs, WA</title>
-<description><![CDATA[Hot spring, temperature: Hot  degress F, Hot  degress C<br/>Tags: soak, hot springs, relax, nature<br /><br /><a href="http://platial.com/place/28392">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28392">Grab this on Platial</a> ]]></description>
-<georss:point>45.723000 -121.927000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:16:22.636855+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28391">
-<link>http://platial.com/place/28391</link>
-<title>St. Martins (Wind River) Hot Springs, WA</title>
-<description><![CDATA[Hot spring, temperature: 120  degress F, 49  degress C<br/>Tags: hot springs, soak, relax, nature, wonderful<br /><br /><a href="http://platial.com/place/28391">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28391">Grab this on Platial</a> ]]></description>
-<georss:point>45.728000 -121.800000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:16:20.383244+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28231">
-<link>http://platial.com/place/28231</link>
-<title>Breitenbush Hot Springs, OR</title>
-<description><![CDATA[Hot spring, temperature: 198  degress F, 92  degress C<br/>Tags: hot springs, resort, relax, nature, beautiful, http:www.breitenbush.com, soaking<br /><br /><a href="http://platial.com/place/28231">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28231">Grab this on Platial</a> ]]></description>
-<georss:point>44.782000 -121.975000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:10:16.529195+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28393">
-<link>http://platial.com/place/28393</link>
-<title>Collins Hot Springs, WA</title>
-<description><![CDATA[Hot spring, temperature: 122  degress F, 50  degress C<br/>Tags: portland, nice, hot springs, soak<br /><br /><a href="http://platial.com/place/28393">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28393">Grab this on Platial</a> ]]></description>
-<georss:point>45.701000 -121.728000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:16:24.648745+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/31685">
-<link>http://platial.com/place/31685</link>
-<title>Darwin's Ltd.</title>
-<description><![CDATA[Nice little coffee shop/cafe, free Wifi, close enough to walk from Harvard Square.<br/>Address: 148 Mount Auburn St, Cambridge, MA<br/>Tags: coffee, beer, sandwiches, freewifi<br/><a href="http://platial.com/place/31685"><img src="http://platial.comhttp://static.flickr.com/38/84885937_74fd3d1025_s.jpg"/></a><br/><br /><br /><a href="http://platial.com/place/31685">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/31685">Grab this on Platial</a> ]]></description>
-<georss:point>42.373974 -71.125053</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-10T09:24:08.152985+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28596">
-<link>http://platial.com/place/28596</link>
-<title>Huckleberry Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: Boiling  degress F, Boiling  degress C<br /><br /><a href="http://platial.com/place/28596">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28596">Grab this on Platial</a> ]]></description>
-<georss:point>44.115000 -110.684000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:32.283094+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28595">
-<link>http://platial.com/place/28595</link>
-<title>South Entrance Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 156  degress F, 69  degress C<br/><a href="http://platial.com/place/28595"><img src="http://platial.comhttp://static.flickr.com/52/130989872_f1457f68b5_s.jpg"/></a><br/><br /><br /><a href="http://platial.com/place/28595">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28595">Grab this on Platial</a> ]]></description>
-<georss:point>44.142000 -110.656000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:30.279497+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28594">
-<link>http://platial.com/place/28594</link>
-<title>Crawfish Creek Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 136  degress F, 58  degress C<br/><a href="http://platial.com/place/28594"><img src="http://platial.comhttp://static.flickr.com/52/128312256_d6a879924c_s.jpg"/></a><br/><br /><br /><a href="http://platial.com/place/28594">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28594">Grab this on Platial</a> ]]></description>
-<georss:point>44.157000 -110.699000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:28.280271+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28593">
-<link>http://platial.com/place/28593</link>
-<title>Crawfish Creek Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 138  degress F, 59  degress C<br /><br /><a href="http://platial.com/place/28593">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28593">Grab this on Platial</a> ]]></description>
-<georss:point>44.165000 -110.723000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:20.364077+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28592">
-<link>http://platial.com/place/28592</link>
-<title>Snake Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 136  degress F, 58  degress C<br /><br /><a href="http://platial.com/place/28592">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28592">Grab this on Platial</a> ]]></description>
-<georss:point>44.169000 -110.583000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:12.234974+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28591">
-<link>http://platial.com/place/28591</link>
-<title>Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 142  degress F, 61  degress C<br /><br /><a href="http://platial.com/place/28591">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28591">Grab this on Platial</a> ]]></description>
-<georss:point>44.187000 -110.726000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:10.027857+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28590">
-<link>http://platial.com/place/28590</link>
-<title>Hot Springs on Upper Snake River, WY</title>
-<description><![CDATA[Hot spring, temperature: 167  degress F, 75  degress C<br /><br /><a href="http://platial.com/place/28590">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28590">Grab this on Platial</a> ]]></description>
-<georss:point>44.204000 -110.486000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:07.79658+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28589">
-<link>http://platial.com/place/28589</link>
-<title>Hot Springs on lewis Lake, WY</title>
-<description><![CDATA[Hot spring, temperature: 154  degress F, 68  degress C<br /><br /><a href="http://platial.com/place/28589">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28589">Grab this on Platial</a> ]]></description>
-<georss:point>44.276000 -110.636000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:05.683418+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28588">
-<link>http://platial.com/place/28588</link>
-<title>Rustic Geyser, WY</title>
-<description><![CDATA[Hot spring, temperature: 199  degress F, 93  degress C<br /><br /><a href="http://platial.com/place/28588">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28588">Grab this on Platial</a> ]]></description>
-<georss:point>44.282000 -110.506000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:03.66329+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28587">
-<link>http://platial.com/place/28587</link>
-<title>Bechler River Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 194  degress F, 90  degress C<br /><br /><a href="http://platial.com/place/28587">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28587">Grab this on Platial</a> ]]></description>
-<georss:point>44.285000 -110.900000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:24:01.611442+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28586">
-<link>http://platial.com/place/28586</link>
-<title>Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: Boiling  degress F, 201  degress C<br /><br /><a href="http://platial.com/place/28586">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28586">Grab this on Platial</a> ]]></description>
-<georss:point>44.290000 -110.504000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:59.658699+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28585">
-<link>http://platial.com/place/28585</link>
-<title>Heart Lake Geyser Basin, WY</title>
-<description><![CDATA[Hot spring, temperature:  Middle Group  degress F, 174  degress C<br /><br /><a href="http://platial.com/place/28585">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28585">Grab this on Platial</a> ]]></description>
-<georss:point>44.299000 -110.517000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:57.181801+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28584">
-<link>http://platial.com/place/28584</link>
-<title>Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: Boiling  degress F, 201  degress C<br /><br /><a href="http://platial.com/place/28584">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28584">Grab this on Platial</a> ]]></description>
-<georss:point>44.307000 -110.526000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:55.240485+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28583">
-<link>http://platial.com/place/28583</link>
-<title>Hot Springs on lewis Lake, WY</title>
-<description><![CDATA[Hot spring, temperature: 199  degress F, 93  degress C<br /><br /><a href="http://platial.com/place/28583">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28583">Grab this on Platial</a> ]]></description>
-<georss:point>44.309000 -110.654000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:53.22295+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28582">
-<link>http://platial.com/place/28582</link>
-<title>Shoshone Geyser Basin, WY</title>
-<description><![CDATA[Hot spring, temperature: 203  degress F, 95  degress C<br /><br /><a href="http://platial.com/place/28582">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28582">Grab this on Platial</a> ]]></description>
-<georss:point>44.354000 -110.800000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:51.179049+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28581">
-<link>http://platial.com/place/28581</link>
-<title>Hot Springs on Continental Divide, WY</title>
-<description><![CDATA[Hot spring, temperature: 189  degress F, 87  degress C<br /><br /><a href="http://platial.com/place/28581">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28581">Grab this on Platial</a> ]]></description>
-<georss:point>44.401000 -110.936000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:49.077176+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28580">
-<link>http://platial.com/place/28580</link>
-<title>Hot Springs on Upper Firehole River, WY</title>
-<description><![CDATA[Hot spring, temperature: Hot  degress F, Hot  degress C<br /><br /><a href="http://platial.com/place/28580">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28580">Grab this on Platial</a> ]]></description>
-<georss:point>44.404000 -110.824000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:47.054664+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28579">
-<link>http://platial.com/place/28579</link>
-<title>Summit Lake Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 162  degress F, 72  degress C<br /><br /><a href="http://platial.com/place/28579">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28579">Grab this on Platial</a> ]]></description>
-<georss:point>44.410000 -110.953000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:45.039394+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28578">
-<link>http://platial.com/place/28578</link>
-<title>Lone Star Geyser Basin, WY</title>
-<description><![CDATA[Hot spring, temperature:  Footbridge  degress F, 183  degress C<br /><br /><a href="http://platial.com/place/28578">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28578">Grab this on Platial</a> ]]></description>
-<georss:point>44.414000 -110.817000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:42.938808+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28577">
-<link>http://platial.com/place/28577</link>
-<title>West. Thumb Geyser Basin, WY</title>
-<description><![CDATA[Hot spring, temperature: 203  degress F, 95  degress C<br /><br /><a href="http://platial.com/place/28577">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28577">Grab this on Platial</a> ]]></description>
-<georss:point>44.417000 -110.570000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:40.90238+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28576">
-<link>http://platial.com/place/28576</link>
-<title>Lone Star Geyser, WY</title>
-<description><![CDATA[Hot spring, temperature: 199  degress F, 93  degress C<br /><br /><a href="http://platial.com/place/28576">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28576">Grab this on Platial</a> ]]></description>
-<georss:point>44.418000 -110.805000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:38.844625+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28575">
-<link>http://platial.com/place/28575</link>
-<title>Smoke Jumper Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: 198  degress F, 92  degress C<br /><br /><a href="http://platial.com/place/28575">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28575">Grab this on Platial</a> ]]></description>
-<georss:point>44.421000 -110.952000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:36.818513+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28574">
-<link>http://platial.com/place/28574</link>
-<title>West. Thumb Geyser Basin, WY</title>
-<description><![CDATA[Hot spring, temperature: 196  degress F, 91  degress C<br /><br /><a href="http://platial.com/place/28574">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28574">Grab this on Platial</a> ]]></description>
-<georss:point>44.422000 -110.574000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:34.767729+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28573">
-<link>http://platial.com/place/28573</link>
-<title>Potts Hot Spring Basin, WY</title>
-<description><![CDATA[Hot spring, temperature: 203  degress F, 95  degress C<br /><br /><a href="http://platial.com/place/28573">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28573">Grab this on Platial</a> ]]></description>
-<georss:point>44.433000 -110.581000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:32.749915+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28572">
-<link>http://platial.com/place/28572</link>
-<title>Hot Springs, WY</title>
-<description><![CDATA[Hot spring, temperature: Hot  degress F, Hot  degress C<br /><br /><a href="http://platial.com/place/28572">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28572">Grab this on Platial</a> ]]></description>
-<georss:point>44.433000 -110.813000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:30.829745+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28571">
-<link>http://platial.com/place/28571</link>
-<title>Hot Springs on Continental Divide, WY</title>
-<description><![CDATA[Hot spring, temperature: Hot  degress F, Hot  degress C<br /><br /><a href="http://platial.com/place/28571">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28571">Grab this on Platial</a> ]]></description>
-<georss:point>44.438000 -110.977000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:28.730401+00:00</dc:date>
-</item>
-<item rdf:about="http://platial.com/place/28570">
-<link>http://platial.com/place/28570</link>
-<title>SouthEastern Group, WY</title>
-<description><![CDATA[Hot spring, temperature: 198  degress F, 92  degress C<br /><br /><a href="http://platial.com/place/28570">Map this on Platial</a><br /> <a href="http://platial.com/place_grab/28570">Grab this on Platial</a> ]]></description>
-<georss:point>44.459000 -110.817000</georss:point>
-<dc:creator>crschmidt</dc:creator>
-<dc:date>2006-01-03T23:23:26.706763+00:00</dc:date>
-</item>
-<item><title>pietersburg</title><description>had some beers here</description><georss:point xmlns:georss="http://www.georss.org/georss">-23.915970370510212 29.454345703125</georss:point></item>
-<item><title>here be dragons</title><description>lots of em</description><georss:polygon xmlns:georss="http://www.georss.org/georss">-14.0625 -10.72265625 -13.0078125 3.69140625 -40.078125 4.74609375 -36.9140625 -10.37109375 -14.0625 -10.72265625</georss:polygon></item>
-</rdf:RDF>

@@ -1,5 +1,5 @@
 <?php
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 
@@ -15,6 +15,10 @@ $middleColumn = NULL;
 $middleColumn .= $this->objGeoRssOps->setupMap();
 $middleColumn .= '<div id="map"></div>
     <textarea id="gml" style="width:100%" rows="30"></textarea>';
+
+echo '<script type="text/Javascript">alert(lonlat.lat);
+            </script>';
+
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
