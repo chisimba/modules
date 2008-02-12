@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Template for listing submitted assignments to be marked.
 * @package assignmentadmin
@@ -56,8 +57,8 @@ $objTable->addCell('');
 $objTable->endRow();
 
 /******************** set up table data ***********************/
-
 if(!empty($data)){
+
 $i = 0;
 
 
@@ -84,7 +85,7 @@ foreach($data as $item){
     }else{
         // if online
         $objIcon->setIcon('comment');
-        $objLink = new link($this->uri(array('action'=>'online', 'submitId'=>$item['id'],
+        $objLink = new link($this->uri(array('action'=>'mark_online', 'submitId'=>$item['id'],
         'id'=>$assign['id'], 'assignment'=>$assign['name'])));
         $objLink->link = $objIcon->show();
         $icons = $objLink->show();
@@ -94,6 +95,7 @@ foreach($data as $item){
 
     $objTable->addRow($row, $class);
 }
+
 }else{
     $objTable->startRow();
     $objTable->addCell($noassignments,'','','','odd',' colspan = "4"');
@@ -124,4 +126,4 @@ $objLayer->str = $link;
 /******************* Display table *******************/
 
 echo $str.'<br />'.$objTable->show().$objLayer->show();
-?>
+php?>

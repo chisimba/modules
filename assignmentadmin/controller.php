@@ -80,11 +80,9 @@ class assignmentadmin extends controller
         //$this->objGroups = $this->getObject('groupAdminModel','groupadmin');
         $this->objContext = $this->getObject('dbcontext','context');
         $this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
-	$fileUploader = $this->getObject('fileuploader', 'files');
+		$fileUploader = $this->getObject('fileuploader', 'files');
         // Get an instance of the filestore object and change the tables to assignment specific tables
-        
-        /*$this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
-	*/
+       
         $this->userId = $this->objUser->userId();
 
         if($this->objContext->isInContext()){
@@ -147,7 +145,7 @@ class assignmentadmin extends controller
             // mark the submitted assignments
             case 'mark':
                 $postSave = $this->getParam('save');
-                if($postSave){
+				 if($postSave){
                     if($postSave == $this->objLanguage->languageText('word_exit')){
                         return $this->nextAction('');
                     }
@@ -157,19 +155,23 @@ class assignmentadmin extends controller
             // download an assignment
             case 'download':
                // $this->setPageTemplate('download_page_tpl.php');
-
                 return 'download_tpl.php';
 
             // display template to mark an uploaded assignment
             case 'upload':
                 return $this->markAssign();
 
+			// display template to mark an online assignment
+            case 'mark_online':
+                return $this->markOnlineAssign();
+
             // display template to mark an online assignment
             case 'online':
                 return $this->markOnlineAssign();
 
+          
             case 'uploadsubmit':
-		$postSave = $this->getParam('save');
+				$postSave = $this->getParam('save');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('mark',array('id'=>$this->getParam('id')));
                 }
@@ -277,10 +279,9 @@ class assignmentadmin extends controller
     */
     public function listAssign()
     {
-        $id = $this->getParam('id');
+        $id = $this->getParam('id','');
         $assign = $this->dbAssignment->getAssignment($this->contextCode,"id='$id'");
-        $data = $this->dbSubmit->getSubmit("assignmentId = '$id'");
-
+        $data = $this->dbSubmit->getSubmit("assignmentid = '$id'");
         $this->setVarByRef('assign', $assign[0]);
         $this->setVarByRef('data', $data);
         return 'assignment_list_tpl.php';
@@ -294,18 +295,14 @@ class assignmentadmin extends controller
     */
     public function markAssign()
     {
-
-
-
         $data = $this->dbSubmit->getSubmit("id='".$this->getParam('submitId')."'");
         //------
         //$file = $this->dbSubmit->getFileName($data[0]['userid'],$data[0]['studentfileid']);
-	//------
-	$data[0]['filepath'] = $filepath;
-	$data[0]['filename'] = $filename;
+		//------
+		$data[0]['filepath'] = $filepath;
+		$data[0]['filename'] = $filename;
         $data[0]['assignmentid'] = $this->getParam('id');
         $data[0]['assignment'] = $this->getParam('assignment');
-
         $confirm = $this->getParam('confirm');
         if(!empty($confirm)){
             $this->setVarByRef('msg',$confirm);
@@ -524,4 +521,4 @@ class assignmentadmin extends controller
         return $ret;
     }
 }// end class assignment
-?>
+php?>
