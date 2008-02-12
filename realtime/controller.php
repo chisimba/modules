@@ -222,9 +222,9 @@ class realtime extends controller
 				return "dump_tpl.php";*/
 				
 				
-			        $this->startOpenOffice();
+			        
 			        $this->startWhiteboardServer();
-
+                                $this->startOpenOffice();
                                 return $this->showClassRoom($this->contextCode);
 		}
 	}
@@ -308,7 +308,8 @@ function in_str($needle, $haystack){
     $this->objConfig->getModulePath().
     "/realtime/resources/avoir-whiteboard-server-0.1.jar:".
     $this->objConfig->getModulePath().
-    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server '.$port.' >/dev/null &";
+    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
+    echo $cmd;
     system($cmd,$return_value);
     
     }
