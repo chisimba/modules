@@ -74,7 +74,7 @@ $objTable->endRow();
 
 
 
-$objSelectFile->name ='user_fileId';
+$objSelectFile->name ='file';
 
 
 // file input

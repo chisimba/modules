@@ -152,12 +152,10 @@ class assignment extends controller
         	case 'upload':
 				$id = $this->getParam('id');
          		$this->setVarByRef('id',$id);
-         		return 'upload_tpl.php';
+	     		return 'upload_tpl.php';
          	break;
          	
          	case 'uploadsubmit':
-print_r($_POST);
-print_r($_GET);
                 // get topic id
                 $id=$this->getParam('id');
                 // get booking id
@@ -175,31 +173,28 @@ print_r($_GET);
                     // change the file name to fullname_studentId
                     $studentid = $this->userId;
                     //$name = $this->user;
-    
+    				$fileId = $this->getParam('file');
                     // upload file to database
-					$arrayfiledetails = $this->objFile->uploadFile('file');
-		
-					if ($arrayfiledetails['success']){				
+					
                     	// save file id and submit date to database
                     	$fields=array(
                     		'userid'=>$studentid,
                     		'assignmentid'=>$id,
                     		'updated'=>date('Y-m-d H:i:s'),
-                    		'studentfileid'=>$arrayfiledetails['fileid'],
+                    		'studentfileid'=>$fileId,
                     		'datesubmitted'=>date('Y-m-d H:i:s')
                         );
                     	$this->dbassignmentsubmit->addSubmit($fields);
-						$this->objFileRegister->registerUse($arrayfiledetails['fileid'], 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
+						$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
                     	// display success message
                     	$msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
                     	$this->setVarByRef('msg',$msg);
-                    }
-                }
+}
                 return $this->studentHome();
             break;
 
             default:
-                return $this->studentHome();
+               return $this->studentHome();
         }
     }
 
@@ -375,4 +370,5 @@ print_r($_GET);
         return $ret;
 	}
 }// end class assignment
+
 php?>
