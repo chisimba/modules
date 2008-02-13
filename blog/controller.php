@@ -1148,7 +1148,7 @@ class blog extends controller
                 $tags = $this->getParam('tags');
                 $tagarray = explode(",", $tags);
                 $geotags = $this->getParam('geotag');
-                if(isset($geotags))
+                if(isset($geotags[0]) && isset($geotags[1]))
                 {
                 	$geotags = explode(', ', $geotags);
                 	$lat = $geotags[0];
@@ -1156,6 +1156,8 @@ class blog extends controller
                 }
                 else {
                 	$geotags = NULL;
+                	$lat = NULL;
+                	$lon = NULL;
                 }
                 if ($stickypost == "on") {
                     $stickypost = 1;
