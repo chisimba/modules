@@ -851,7 +851,7 @@ class dbblog extends dbTable
             	}
             }
             if ($this->lindex == 'TRUE') {
-                $this->luceneReIndex($postarr);
+                $this->luceneReIndex($inseditarr);
             }
             
             return TRUE;
@@ -1177,9 +1177,22 @@ class dbblog extends dbTable
     public function luceneIndex($data) 
     {
         $objIndexData = $this->getObject('indexdata', 'search');
+        if(!isset($data['id']))
+        {
+        	$data['id'] = $this->getlastInsertId();
+        }
         
         $docId = 'blog_post_'.$data['id'];
+        if(!isset($data['post_date']))
+        {
+        	$data['post_date'] = date('Y-m-d');
+        }
         $docDate = $data['post_date'];
+       if(!isset($data['userid']))
+       {
+       	$this->objUser = $this->getObject('user', 'security');
+       	$data['userid'] = $this->objUser->userId();
+       }
         $url = $this->uri(array('action'=>'viewsingle', 'postid'=>$data['id'], 'userid'=>$data['userid']));
         $title = $data['post_title'];
         $contents = $data['post_title'].' '.$data['post_content'];
