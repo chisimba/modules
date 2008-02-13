@@ -46,7 +46,6 @@ class dbEportfolio_Assertion extends dbTable
 		
 	}
 	
-	
 	function getByItem($userId)
 	{
         $sql = "SELECT * FROM tbl_eportfolio_assertion WHERE userid = '" .$userId . "'";	

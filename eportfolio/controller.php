@@ -111,7 +111,9 @@ class eportfolio extends controller
         $this->setLayoutTemplate('eportfolio_layout_tpl.php');
         
         $this->user = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
+        $this->userPid = $this->objUser->PKId($this->objUser->userId());
         $this->setVarByRef('user', $this->user);
+        $this->setVarByRef('userPid', $this->userPid);
 	
         //$this->userId = $this->objUser->PKId($this->objUser->userId()); //To pick user id
         //$this->userId = $this->objUser->userId(); //To pick user userid
@@ -497,6 +499,24 @@ class eportfolio extends controller
 		$this->setVarByRef('longdescription',$longdescription);
 		return "edit_assertion_tpl.php";
 		break;
+
+	    case "displayassertion":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$mylist = $this->objDbAssertionList->listSingle($id);
+		$instructor = $mylist[0]['userid'];
+		$rationale = $mylist[0]['rationale'];
+		$creation_date = $mylist[0]['creation_date'];
+		$shortdescription = $mylist[0]['shortdescription'];
+		$longdescription = $mylist[0]['longdescription'];
+		$this->setVarByRef('instructor',$instructor);
+		$this->setVarByRef('rationale',$rationale);
+		$this->setVarByref('creation_date',$creation_date);
+		$this->setVarByRef('shortdescription',$shortdescription);
+		$this->setVarByRef('longdescription',$longdescription);
+		return "display_assertion_tpl.php";
+		break;
+
 
 	case "editreflectionconfirm":
 		$myid = $this->getParam('id', null);
