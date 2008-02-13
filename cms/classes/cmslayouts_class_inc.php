@@ -315,6 +315,10 @@ class cmslayouts extends object
             if ($a_param && !empty($a_param)) {
                 $s_param = serialize($a_param);
             }
+            if(!isset($s_param))
+            {
+            	$s_param = NULL;
+            }
             $icon = $this->getObject('geticon','htmlelements');
             $icon->setIcon('edit');
             $icon->alt = $this->objLanguage->languageText('word_edit');

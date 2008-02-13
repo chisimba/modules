@@ -732,7 +732,7 @@ class dbblog extends dbTable
             	                                           'postid' => $postarr['id'], 
             	                                           'userid' => $userid)
             	                                        ), 
-            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'lastmod' => date('Y-m-d', $imparr['post_ts']), 
             	              'changefreq' => 'weekly', 
             	              'priority' => 0.5
             	             );
@@ -782,7 +782,7 @@ class dbblog extends dbTable
             	                                           'postid' => $postarr['id'], 
             	                                           'userid' => $userid)
             	                                        ), 
-            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'lastmod' => date('Y-m-d', $mparr['post_ts']), 
             	              'changefreq' => 'weekly', 
             	              'priority' => 0.5
             	             );
@@ -832,7 +832,7 @@ class dbblog extends dbTable
             	                                           'postid' => $postarr['id'], 
             	                                           'userid' => $userid)
             	                                        ), 
-            	              'lastmod' => date('Y-m-d', $postarr['post_ts']), 
+            	              'lastmod' => date('Y-m-d', $inseditarr['post_ts']), 
             	              'changefreq' => 'weekly', 
             	              'priority' => 0.5
             	             );
