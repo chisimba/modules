@@ -157,8 +157,13 @@ class assignmentadmin extends controller
                // $this->setPageTemplate('download_page_tpl.php');
                 return 'download_tpl.php';
 
+            //submit the assignment with admin logged in
+			case 'submitupload':
+                return $this->markAssign();
+
             // display template to mark an uploaded assignment
-            case 'upload':
+            
+			case 'upload':
                 return $this->markAssign();
 
 			// display template to mark an online assignment
@@ -284,7 +289,7 @@ class assignmentadmin extends controller
         $data = $this->dbSubmit->getSubmit("assignmentid = '$id'");
         $this->setVarByRef('assign', $assign[0]);
         $this->setVarByRef('data', $data);
-        return 'assignment_list_tpl.php';
+   	return 'assignment_list_tpl.php';
     }
 
 

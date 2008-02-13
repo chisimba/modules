@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Template for listing submitted assignments to be marked.
 * @package assignmentadmin
@@ -19,6 +18,11 @@ $this->loadClass('layer','htmlelements');
 $this->loadClass('link','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 $objPop = $this->newObject('windowpop','htmlelements');
+
+//catering for the download links
+$this->objFiles = $this->getObject('dbfile','filemanager');
+$this->objConfig = $this->getObject('altconfig', 'config');
+
 
 // Set up language items
 $assignment = $this->objLanguage->languageText('mod_assignmentadmin_name','assignmentadmin');
@@ -61,10 +65,12 @@ if(!empty($data)){
 
 $i = 0;
 
+$fileId = $data[1]['studentfileid'];
+
+
 
 foreach($data as $item){
     $class = ($i++%2 == 0)?'odd':'even';
-
     $row = array();
     $row[] = $this->objUser->fullname($item['userid']);
     $row[] = $item['mark'];
@@ -73,12 +79,18 @@ foreach($data as $item){
     if($assign['format']){
         // if upload
         $objIcon->setIcon('download');
-        $objLink = new link($this->uri(array('action'=>'download', 'fileid'=>$item['studentfileid'])));
-        $objLink->link = $objIcon->show();
-        $icons = $objLink->show();
-
+        //$objLink = new link($this->uri(array('action'=>'download', 'fileid'=>$item['studentfileid'])));
+     	$objLink = new link();
+		if(!$item['studentfileid']==null){
+			$file = $this->objFiles->getFileInfo($item['studentfileid']);
+			$objLink->href = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().$file['path'];
+			$objLink->link = $objIcon->show();
+			$icons = $objLink->show();
+		}else{		
+			$icons = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+		}
         $objIcon->setIcon('submit2');
-        $objLink = new link($this->uri(array('action'=>'upload',  'submitId'=>$item['id'],
+        $objLink = new link($this->uri(array('action'=>'submitupload',  'submitId'=>$item['id'],
         'id'=>$assign['id'], 'assignment'=>$assign['name'])));
         $objLink->link = $objIcon->show();
         $icons .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
