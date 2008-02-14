@@ -117,7 +117,7 @@ if(!$online){
     $objButton = new button('save',$btnupload);
     $objButton->setToSubmit();
     $btn = $objButton->show();
-    $str .=  $btn.'<p>&nbsp;</p>';
+   $str .=  $btn.'<p>&nbsp;</p>';
 }else{
     $objText = new textarea('online', $data[0]['online'],15,85);
     //$objText->extra = 'wrap = soft, readonly';
