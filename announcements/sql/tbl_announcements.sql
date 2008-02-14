@@ -1,6 +1,5 @@
 <?php
 /**
-*sql file
 * Database Table Announcements
 * @author Joel Kimilu
 * @copyright 2008 University of the Western Cape
