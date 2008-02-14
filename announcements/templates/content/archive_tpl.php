@@ -1,34 +1,11 @@
 <?php
+$this->setLayoutTemplate('announcements_archive_layout_tpl.php');
+// Show the heading.
+$objHeading =& $this->getObject('htmlheading','htmlelements');
+$objHeading->type=4;
+$objHeading->str="&nbsp;";
 
-
-
-//Use to check for admin user:
-    $isAdmin = $this->objUser->isAdmin();
-    $isLecturer = $this->objUser->isLecturer();	
-    $isInContext=$this->objContext->isInContext();
-
-// Create an instance of the css layout class
-$cssLayout = $this->newObject('csslayout', 'htmlelements');
-// Set columns to 2
-$cssLayout->setNumColumns(2);
-// get the sidebar object
-$this->leftMenu = $this->newObject('usermenu', 'toolbar');
-// Initialize left column
-$leftSideColumn = $this->leftMenu->show();
-$rightSideColumn = NULL;
-$middleColumn = NULL;
-
-// Create add icon and link to add template
-/*if(($isLecturer or $isAdmin) && $isInContext){
-	$objAddIcon = $this->newObject('geticon', 'htmlelements');
-	$objLink = $this->uri(array(
-    'action' => 'link'
-	));
-	$objAddIcon->setIcon("add", "gif");
-	$objAddIcon->alt = $objLanguage->languageText('mod_announcements_addicon', 'announcements');
-	$add = $objAddIcon->getAddIcon($objLink);
-	$add = $objAddIcon->getAddIcon($objLink);
-}*/
+//}*/
 //Create link icon and link to view template
 $this->loadClass('link', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -36,11 +13,12 @@ $link = new link($this->uri(array(
     'action' => 'default'
 )));
 $objIcon->setIcon('prev');
+$objIcon->alt=$objLanguage->languageText('mod_announcements_back', 'announcements');
 $link->link = $objIcon->show();
 $previous = $link->show();
 // Create header with add icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
-$pgTitle->type = 1;
+$pgTitle->type = 5;
 $pgTitle->str = $objLanguage->languageText('mod_announcements_head', 'announcements') . "&nbsp;" . $previous;
 //create array to hold data and set the language items
 $tableRow = array();
@@ -51,18 +29,12 @@ $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
-//language item for being out of context
 //language item for no records
-if($isInContext)
 $norecords = $objLanguage->languageText('mod_announcements_nodata', 'announcements');
-else
-{
-//set for going to announcements out of context
-$norecords = $objLanguage->languageText('mod_announcements_outofcontext', 'announcements');
-}
+
 //A statement not to display the records if it is empty.
 if (empty($records)) {
-    $objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="3"');
+    $objTableClass->addCell($norecords, NULL, NULL, 'left', 'noRecordsMessage', 'colspan="4"');
 
 }
  else {
@@ -162,15 +134,9 @@ if (empty($records)) {
 
 }
 //shows the array in a table
-echo "<legend border='style:border 1px solid #cccccc'>";
-$ret = $objTableClass->show();
+echo "<legend border='style:border 1px solid #ccc000'>";
+$ret = $this->objFeatureBox->show("Archive",$objTableClass->show());
 echo "</legend>";
+echo $pgTitle->show()."<br>".$ret;
 
-$middleColumn = $pgTitle->show() . $ret;
-//add left column
-$cssLayout->setLeftColumnContent($leftSideColumn);
-$cssLayout->setRightColumnContent($rightSideColumn);
-//add middle column
-$cssLayout->setMiddleColumnContent($middleColumn);
-echo $cssLayout->show();
 ?>

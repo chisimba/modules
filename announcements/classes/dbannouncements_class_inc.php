@@ -45,17 +45,127 @@ class dbAnnouncements extends dbTable
     public function init() 
     {
         parent::init('tbl_announcements');
+        
     }
     /**
      * Return all records in the tbl_announcements.
      * 
      * @param $userId is the id taken from the tbl_user
      */
-    public function listAll($contextPuid,$start) 
+    public function listAll($contextid,$start) 
     {       
+        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT $start,5 ");
         
-        $userrec = $this->getAll("WHERE courseid = '$contextPuid' ORDER BY createdon DESC LIMIT $start,5 ");
-        return $userrec;
+    return $userrec;
+    }
+    public function getLastRow($contextid) 
+    {       
+        $rec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,1 ");
+        
+    return $rec;
+    }
+    
+     public function showList($linkAll = FALSE)
+    {
+        
+        $this->objLanguage = $this->newObject('language', 'language');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
+        
+        //get context so that only messages for this context are displayed
+		$isInContext=$this->objContext->isInContext();
+		 if($isInContext)
+  		 {
+   		 $this->contextCode=$this->objContext->getContextCode();
+   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
+   		 }
+                 else
+                 $this->contextid="root";
+
+		
+		
+		$contextid=$this->contextid;
+		
+        
+        $list = $this->listAll($contextid,0);
+        $this->loadClass('link', 'htmlelements');
+
+        $str = '';
+        if(!empty($list)){
+            foreach($list as $item){
+
+                    $lncat = $item['title'];
+                    $objLink = new link($this->uri(array('action' => '', 'id' => $item['id'])));
+                    $objLink->link = $item['title'];
+                    $objLink->style = "color: #0000BB;";
+                    $lncat = $objLink->show();
+                
+                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
+            }
+        }
+
+        $link = new link($this->uri(array(
+            'action' => 'archive'
+        )));
+        $link->link = $this->objLanguage->languageText('mod_announcements_archive', 'announcements');
+        $archive = $link->show();
+        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
+        if($dispType == 'nobox'){
+            return $str;
+        }
+        
+        return $str; //$this->objFeatureBox->show($blocktitle, $str);
+    }
+     public function showQuickPost($contextPuid = '', $linkAll = FALSE)
+    {
+        $this->objLanguage = $this->newObject('language', 'language');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $cform = new form('announcements', $this->uri(array(
+    'action' => 'add'
+        )));
+        //start a fieldset
+        $cfieldset = $this->getObject('fieldset', 'htmlelements');
+        $ct = $this->newObject('htmltable', 'htmlelements');
+        $ct->cellpadding = 5;
+        //value textfield
+        $ct->startRow();
+        $ctvlabel = new label($this->objLanguage->languageText('mod_announcements_title', 'announcements') . ':', 'input_cvalue');
+        $ct->addCell($ctvlabel->show());
+        $ct->EndRow();
+        $ct->startRow();
+        $ctv = new textinput('title',NULL,35,29);
+        $ct->addCell($ctv->show());
+        $ct->endRow();
+        //value textfield
+        $ct->startRow();
+        $ctvlabel = new label($this->objLanguage->languageText('mod_announcements_message', 'announcements') . ':', 'input_cvalue');
+        $ct->addCell($ctvlabel->show());
+        $ct->endRow();
+        
+        $ct->startRow();
+        $ctv = new textarea('message',NULL,5,25);
+        $ct->addCell($ctv->show());
+        $ct->endRow();
+        
+        
+        
+        //end off the form and add the button
+        $this->objconvButton = new button($this->objLanguage->languageText('mod_announcements_add', 'announcements'));
+        $this->objconvButton->setValue($this->objLanguage->languageText('mod_announcements_add', 'announcements'));
+        $this->objconvButton->setToSubmit();
+        $cfieldset->addContent($ct->show());
+        $cform->addToForm($cfieldset->show());
+        $cform->addToForm($this->objconvButton->show());
+        $str = $cform->show();
+
+        if($dispType == 'nobox'){
+            return $str;
+        }
+        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
+        
+        return $str; // $this->objFeatureBox->show($blocktitle, $str);
     }
     /**
      * Return a single record in the tbl_announcements.
@@ -80,15 +190,16 @@ class dbAnnouncements extends dbTable
      *                           
      *                           Also checks if text inputs are empty and returns the add a record template
      */
-    public function insertRecord($title, $message, $createdon, $createdby,$courseid) 
+    public function insertRecord($title, $message, $createdon, $createdby,$contextid) 
     {
+        
         $this->objUser = $this->getObject('user', 'security');
         $arrayOfRecords = array(
             'createdBy' => $this->objUser->userId() ,
             'title' => $title,
             'message' => $message,
             'createdOn' => $this->now(),
-		'courseid' => $courseid,
+		'contextid' => $contextid,
             
         );
         if (empty($title) && empty($message)) {

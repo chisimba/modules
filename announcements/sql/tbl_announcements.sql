@@ -33,11 +33,12 @@ $fields = array(
 		'length' => 10,
 	),
 
-	'courseid' => array(
-		'type' => 'integer',
-		'length' => 10,
+	'contextid' => array(
+		'type' => 'text',
+		'length' => 32,
 	)
 	
 );
 
 ?>
+

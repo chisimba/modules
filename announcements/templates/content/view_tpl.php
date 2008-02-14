@@ -1,5 +1,10 @@
 <?php
 
+$this->setLayoutTemplate('announcements_layout_tpl.php');
+// Show the heading.
+$objHeading =& $this->getObject('htmlheading','htmlelements');
+$objHeading->type=4;
+$objHeading->str="&nbsp;";
 
 
 //Use to check for admin user:
@@ -7,16 +12,7 @@
     $isLecturer = $this->objUser->isLecturer();	
     $isInContext=$this->objContext->isInContext();
 
-// Create an instance of the css layout class
-$cssLayout = $this->newObject('csslayout', 'htmlelements');
-// Set columns to 2
-$cssLayout->setNumColumns(2);
-// get the sidebar object
-$this->leftMenu = $this->newObject('usermenu', 'toolbar');
-// Initialize left column
-$leftSideColumn = $this->leftMenu->show();
-$rightSideColumn = NULL;
-$middleColumn = NULL;
+
 
 // Create add icon and link to add template
 if(($isLecturer or $isAdmin) && $isInContext){
@@ -29,19 +25,15 @@ if(($isLecturer or $isAdmin) && $isInContext){
 	$add = $objAddIcon->getAddIcon($objLink);
 	$add = $objAddIcon->getAddIcon($objLink);
 }
-//create a link to announcements archive
-	
-	$this->loadClass('link', 'htmlelements');
-        $link = new link($this->uri(array(
-            'action' => 'archive'
-        )));
-        $link->link = $objLanguage->languageText('mod_announcements_archive', 'announcements');
-        $archive = $link->show();
 
 // Create header with add icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
-$pgTitle->type = 1;
-$pgTitle->str = $objLanguage->languageText('mod_announcements_head', 'announcements') . "&nbsp;" . $add."&nbsp;&nbsp ".$archive;
+$pgTitle->type = 4;
+if(empty($contextCode))
+$contextCode="";
+else
+$contextCode="$contextCode&nbsp;";
+$pgTitle->str =$contextCode.$objLanguage->languageText('mod_announcements_head', 'announcements')."&nbsp;" . $add;
 //create array to hold data and set the language items
 $tableRow = array();
 
@@ -51,37 +43,20 @@ $objTableClass = $this->newObject('htmltable', 'htmlelements');
 $objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
-//language item for being out of context
-//language item for no records
-if($isInContext)
-$norecords = $objLanguage->languageText('mod_announcements_nodata', 'announcements');
-else
-{
-//set for going to announcements out of context
-$norecords = $objLanguage->languageText('mod_announcements_outofcontext', 'announcements');
-}
-//A statement not to display the records if it is empty.
-if (empty($records)) {
-    $objTableClass->addCell($norecords, NULL, NULL, 'center', 'noRecordsMessage', 'colspan="3"');
 
-}
- else {
-    //Create an array for each value in the table.
-    foreach($records as $record) {
-        $rowcount++;
         // Set odd even colour scheme
         $class = ($rowcount%2 == 0) ? 'odd' : 'even';
         $objTableClass->startRow();
        //add title
         $title = $record['title'] ;
         $records == $objUser->userId();
-	$objTableClass->addCell('<b>'.$rowcount.': '.$title.'</b>', '', 'left', 'left', $class,'colspan=3');
+	$objTableClass->addCell('', '', 'left', 'left', $class,'colspan=3');
 	$objTableClass->endRow();
 
  	$objTableClass->startRow();
         //add message
         $message = $record['message'];
-        $objTableClass->addCell('&nbsp; &nbsp; '.$message, '', 'left', 'left', $class,'colspan=3');
+        $objTableClass->addCell($message, '', 'left', 'left', $class,'colspan=3');
 
 	$objTableClass->endRow();
 
@@ -112,7 +87,7 @@ if (empty($records)) {
 	//format date
 	$createdon=$this->objDate->formatDate($createdon);
 	
-        $objTableClass->addCell('&nbsp; &nbsp; <b>Created By:</b> '.$createdby.'&nbsp; &nbsp; <b>On:</b> '.$createdon, '', '', 'left', $class);
+        $objTableClass->addCell('<b>Created By:</b> '.$createdby.'&nbsp; &nbsp; <b>On:</b> '.$createdon, '', '', 'left', $class);
  	//add author
         
 	//get id
@@ -159,19 +134,14 @@ if (empty($records)) {
 	$objTableClass->endRow();
 
 
-    } //end of loop   
-
-}
+    
 //shows the array in a table
 echo "<legend border='style:border 1px solid #cccccc'>";
 $ret = $objTableClass->show();
+//$ret="<div class='wrapperLightBkg' border='style:border 1px solid #cccccc'>".$ret."</div>";
 echo "</legend>";
 
-$middleColumn = $pgTitle->show() . $ret;
-//add left column
-$cssLayout->setLeftColumnContent($leftSideColumn);
-$cssLayout->setRightColumnContent($rightSideColumn);
-//add middle column
-$cssLayout->setMiddleColumnContent($middleColumn);
-echo $cssLayout->show();
+
+echo $pgTitle->show()."<br>".$this->objFeatureBox->show("$title", $ret);
+
 ?>

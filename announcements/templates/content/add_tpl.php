@@ -6,7 +6,7 @@
  * @modified to work with the phonebook module by: .
  */
 
-echo $contextPuid;
+
 // Create an instance of the css layout class
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 // Set columns to 2
@@ -57,21 +57,8 @@ $ct->startRow();
 $ctv = new textarea('message');
 $ct->addCell($ctv->show());
 $ct->endRow();
-;
-//value textfield
-/*$ct->startRow();
-$ctvlabel = new label($this->objLanguage->languageText('mod_announcements_createdOn', 'announcements') . ':', 'input_cvalue');
-$ctv = new textinput('createdOn');
-$ct->addCell($ctvlabel->show());
-$ct->addCell($ctv->show());
-$ct->endRow();
-//value textfield
-$ct->startRow();
-$ctvlabel = new label($this->objLanguage->languageText('mod_announcements_createdBy', 'announcements') . ':', 'input_cvalue');
-$ctv = new textinput('createdBy');
-$ct->addCell($ctvlabel->show());
-$ct->addCell($ctv->show());
-$ct->endRow();*/
+
+
 
 //end off the form and add the button
 $this->objconvButton = new button($this->objLanguage->languageText('mod_announcements_add', 'announcements'));

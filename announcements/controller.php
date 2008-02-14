@@ -88,13 +88,16 @@ class announcements extends controller
      * @access public
      */
     public $objDate;
-
+    
+    public $objAnnouncementTools;
+    public $contextid;
     /**
      * Constructor method to instantiate objects and get variables
      */
     public function init() 
     {
         try {
+            $this->objAnnouncementsTools = $this->getObject('announcementsTools','announcements');
             $this->objUser = $this->getObject('user', 'security');
 	    $this->objContext = $this->getObject('dbcontext','context');
  	    $this->objContextUsers = $this->getObject('managegroups','contextgroups');
@@ -103,7 +106,7 @@ class announcements extends controller
 	    $this->objDate = $this->newObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
-
+            $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
 	  
         }
         catch(customException $e) {
@@ -125,12 +128,15 @@ class announcements extends controller
 		 if($isInContext)
   		 {
    		 $this->contextCode=$this->objContext->getContextCode();
-   		 $contextPuid=$this->objContext->getField('puid',$this->contextCode);
+   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
    		 }
+                 else
+                 $this->contextid="root";
 
 		$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
 		
-		
+		$contextid=$this->contextid;
+                $this->setVarByRef("contextCode",$this->contextCode);
 		
 	switch ($action) {
             default:
@@ -138,8 +144,15 @@ class announcements extends controller
 		//set start to 0
 		//@param integer $start to indicate start of Sql Limit
 		$start=0;
-                $records = $this->objDbAnnouncements->listAll($contextPuid,$start);
-                $this->setVarByRef('records', $records);
+                $id=$this->getParam('id',null);
+               
+                if(empty($id))
+                {
+                $lastentry=$this->objDbAnnouncements->getLastRow($contextid);
+                $id=$lastentry[0]['id'];
+                }
+                $record = $this->objDbAnnouncements->listSingle($id);
+                $this->setVarByRef('record', $record);
                 return 'view_tpl.php';
                 break;
             // Case to add an entry
@@ -147,7 +160,7 @@ class announcements extends controller
 	    //set start to 5
 	    //@param integer $start to indicate start of Sql Limit
 	    $start=5;
-	    $records = $this->objDbAnnouncements->listAll($contextPuid,$start);
+	    $records = $this->objDbAnnouncements->listAll($contextid,$start);
             $this->setVarByRef('records', $records);	
 	    return 'archive_tpl.php';	
 	    break;
@@ -156,29 +169,50 @@ class announcements extends controller
             $title = htmlentities($this->getParam('title') , ENT_QUOTES);
             $message = htmlentities($this->getParam('message') , ENT_QUOTES);
             $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
-            $createdby = htmlentities($this->getParam('createdby') , ENT_QUOTES);
-            $courseid = $contextPuid;
-       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $courseid);
+            $createdby = $this->objUser->userId();
+            $contextid=$contextid;
+            
+            
+       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
 	    //prepare $RecipientList to send mails
 	    $subject=$title;
-
-	    //count the number of context users
-	    $count=count($contextusers);
+ 
 	    //array to contain recipients
 	    $RecipientList=array();
+            
+	    //count the number of context users if in context
+	    if($isInContext)
+            {
+            $count=count($contextusers);
+            //loop thro array context users to get each users id
+                for($i=0;$i<$count;$i++)
+                {
+                    $contextUserId=$contextusers[$i]['userid'];
+        
+                    //get student email address, and add them to array
+                    $contextUserEmail=$this->objUser->email($contextUserId);
+                    array_push($RecipientList,$contextUserEmail);  
+                   
+                }
+            
+            
+            }
+            else
+            {
+            $sysUsers=$this->objUser->getAll();
+            foreach($sysUsers as $sysUser)
+            {
+             //get student email address, and add them to array
+            $UserEmail=$this->objUser->email($sysUser['userid']);
+            array_push($RecipientList,$UserEmail);         
+            }        
+         
+            
+            }
+           
 	   
-	    //loop thro array context users to get each users id
-	    for($i=0;$i<$count;$i++)
-	    {
-		$contextUserId=$contextusers[$i]['userid'];
-    
-                //get student email address, and add them to array
-                $contextUserEmail=$this->objUser->email($contextUserId);
-                array_push($RecipientList,$contextUserEmail);  
-               
-	    }
             //set recipient list
-                $this->objSendMail->setValue('to', $RecipientList);
+                $this->objSendMail->setValue('bc', $RecipientList);
              //get sender's email address
                 $SenderEmail=$this->objUser->email($userId);
                  $this->objSendMail->setValue('from', $SenderEmail);
