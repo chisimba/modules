@@ -136,6 +136,13 @@ class twitter extends controller
 
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
+    
+    private function __testupdate()
+    {
+    	$str="<h1>Version 2: update successful on Thursday Feb 14, 2008</h1>";
+    	$this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
 
     /**
     *
