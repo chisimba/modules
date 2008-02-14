@@ -1154,7 +1154,7 @@ class portalfileutils extends object
 						$title = ltrim($title[1]);
 					}
 					else {
-						$title = $this->objLanguage->languageText("mod_portalimporter_missingtitle", "portalimporter");
+						$title = $this->objLanguage->languageText("mod_portalimporter_missingpgtitle", "portalimporter");
 					}
 					$title = trim($title);
 					log_debug("Adding page with title $title to top level section $secid");
