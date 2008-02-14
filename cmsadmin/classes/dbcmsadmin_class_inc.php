@@ -2261,6 +2261,14 @@ class dbcmsadmin extends dbTable
 				$pagenumber = $sectionArr['pagenum'];
 				$numpagedisplay = $pagenumber;
 			}
+			
+			if($sectionArr['access'] == '' || $sectionArr['access'] === NULL)
+			{
+				$access = 0;
+			}
+			else {
+				$access = $sectionArr['access'];
+			}
 
 			$ordering = $this->getContentOrdering($parentid); // $this->getFPOrdering($parentid);
 
@@ -2270,7 +2278,7 @@ class dbcmsadmin extends dbTable
 			'parentid' => $parentid,
 			'title' => $sectionArr['title'],
 			'menutext' => $sectionArr['menutext'],
-			'access' => $sectionArr['access'],
+			'access' => $access,
 			'layout' => $sectionArr['layout'],
 			'ordering' => $ordering,
 			'description' => $sectionArr['description'],
