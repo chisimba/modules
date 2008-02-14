@@ -73,29 +73,23 @@ $str = $objLayer->show();
 
 //Download button 
 $objButton = new button('submit',$btndownload);
-
+//File selector class 
 $objSelectFile = $this->newObject('selectfile','filemanager');
 $objFile = $this->getObject('dbfile', 'filemanager');
-
 $filepath .= $objFile->getFilePath($data[0]['studentfileid']);
-
 $returnUrl = $filepath;
-
 $fileId = $this->getParam('fileid');
 $id = $this->getParam('id');
 $submit_id = $this->getParam('submitId');
-
-
 $returnUrl = $this->uri(array('action' => 'download','fileid'=>$data[0]['studentfileid'],'userid'=>$this->userId));
 $objButton->setOnClick("window.location='$returnUrl'");
-//$btn1=$objButton->show();
 
+if(!$online){
 $objLink = new link();
 $objLink->link = 'Download';
 $objLink->href = $filepath;
 $btn1=  $objLink->show();
-
-
+}
 
 $str .= $btn1.'<br /><br />';
 
@@ -105,22 +99,15 @@ if(!$online){
         $str .= '<p>'.$objTimeOut->show().'</p>';
     }
 
-    // Display file input
-    $objInput = new textinput('file');
-    $objInput->fldType = 'file';
-
-    $str .=  $objInput->show().'<p>';
-
     $objInput = new textinput('fileId',$data[0]['lecturerfileid']);
     $objInput->fldType = 'hidden';
     $str .=  $objInput->show();		
-    $objButton = new button('save',$btnupload);
-    $objButton->setToSubmit();
-    $btn = $objButton->show();
-   $str .=  $btn.'<p>&nbsp;</p>';
+    
 }else{
-    $objText = new textarea('online', $data[0]['online'],15,85);
-    //$objText->extra = 'wrap = soft, readonly';
+   
+	$objText = $this->newObject('htmlarea', 'htmlelements');
+    $objText->init('online', $data[0]['online'], '500px', '500px');
+    $objText->setDefaultToolBarSetWithoutSave();    
     $str .=  '<b>'.$onlinehead.':</b>'.'<br />';
     $str .=  $objText->show().'<p>';
 }
@@ -133,10 +120,7 @@ for($i=0; $i<=100; $i++){
 }
 $objDrop->setSelected($data[0]['mark']);
 $str .= $objDrop->show().'</p>';
-/*echo '<pre>';
-	print_r($data);
-echo '</pre>';
-die();*/
+
 $objText = new textarea('comment',$data[0]['commentinfo'],5,60);
 //$objText->extra = 'wrap = soft';
 $str .=  '<b>'.$commenthead.':</b>'.'<br />';

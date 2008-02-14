@@ -59,7 +59,7 @@ if(!empty($data)){
     }
     $objTable->startRow();
     $objTable->addCell('<b>'.$resubmitLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$resubmit);
-    $objTable->addCell('<b>'.$dateLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$this->formatDate($data[0]['closing_date']));
+    $objTable->addCell('<b>'.$dateLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objAssignmentAdmin->formatDate($data[0]['closing_date']));
     $objTable->endRow();
 
     $objTable->startRow();

@@ -65,7 +65,7 @@ if(!empty($data)){
 
 $i = 0;
 
-$fileId = $data[1]['studentfileid'];
+
 
 
 
@@ -74,12 +74,12 @@ foreach($data as $item){
     $row = array();
     $row[] = $this->objUser->fullname($item['userid']);
     $row[] = $item['mark'];
-    $row[] = $this->formatDate($item['datesubmitted']);
+    $row[] = $this->objAssignmentAdmin->formatDate($item['datesubmitted']);
 
     if($assign['format']){
         // if upload
         $objIcon->setIcon('download');
-        //$objLink = new link($this->uri(array('action'=>'download', 'fileid'=>$item['studentfileid'])));
+        
      	$objLink = new link();
 		if(!$item['studentfileid']==null){
 			$file = $this->objFiles->getFileInfo($item['studentfileid']);
@@ -90,6 +90,7 @@ foreach($data as $item){
 			$icons = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 		}
         $objIcon->setIcon('submit2');
+		//$objIcon->alt = "Mark";
         $objLink = new link($this->uri(array('action'=>'submitupload',  'submitId'=>$item['id'],
         'id'=>$assign['id'], 'assignment'=>$assign['name'])));
         $objLink->link = $objIcon->show();

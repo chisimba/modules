@@ -11,7 +11,7 @@
 */
 
 $this->setLayoutTemplate('assignmentadmin_layout_tpl.php');
-
+$this->objAssignmentAdmin = $this->getObject('functions_assignmentadmin','assignmentadmin');
 // Set up html elements
 $this->loadClass('htmltable','htmlelements');
 $this->loadClass('htmlheading','htmlelements');
@@ -129,8 +129,8 @@ if(!empty($data)){
             $objTable->addCell($description,'','','',$class);
             $objTable->addCell($typeLabel,'','','',$class);
             $objTable->addCell($this->objUser->fullname($line['userid']),'','','',$class);
-            $objTable->addCell($this->formatDate($line['closing_date']),'','','',$class);
-            $objTable->addCell($this->formatDate($line['last_modified']),'','','',$class);
+            $objTable->addCell($this->objAssignmentAdmin->formatDate($line['closing_date']),'','','',$class);
+            $objTable->addCell($this->objAssignmentAdmin->formatDate($line['last_modified']),'','','',$class);
             $objTable->addCell($icons,'14%','','',$class);
             $objTable->endRow();
         }
@@ -264,7 +264,7 @@ $objHead->str = $searchLabel;
 $objHead->type = 3;
 echo $objHead->show();
 
-echo $this->putSearch();
+echo $this->objAssignmentAdmin->putSearch();
 
 // Display confirmation message if set
 if(isset($message) && !empty($message)){
