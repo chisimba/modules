@@ -287,6 +287,7 @@ class portalimporter extends controller
 		//die();
 		// create the sections and subsections
 		$sections = $this->objStdlib->dirFilterDots($this->sitepath);
+		$secname = NULL;
 		foreach($sections as $subsections)
 		{
 			// create the section

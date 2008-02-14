@@ -74,6 +74,7 @@ class portalfileutils extends object
 	public $objRegex;
 	public $objConfig;
 	public $objStdlib;
+	public $objLanguage;
 
 	/**
     *
@@ -95,6 +96,7 @@ class portalfileutils extends object
 		$this->objCmsDb = $this->getObject('dbcmsadmin', 'cmsadmin');
 		$this->objRegex = $this->getObject('regexes','utilities');
 		$this->objConfig = $this->getObject('altconfig', 'config');
+		$this->objLanguage = $this->getObject("language", "language");
 	}
 
 	/**
@@ -893,7 +895,7 @@ class portalfileutils extends object
 	}
 
 
-	public function doSection($subsections, $secname)
+	public function doSection($subsections, $secname = NULL)
 	{
 		// create the section
 		$secname = end(explode('/', $subsections));
@@ -914,6 +916,9 @@ class portalfileutils extends object
 		'showintroduction' => 1,
 		'ordertype' => 'pageorder',
 		'userid' => $this->objUser->userId(),
+		'pagenum' => 0,
+		'imagesrc' => NULL,
+		'contextcode' => NULL,
 		);
 
 		$secid = $this->objCmsDb->addSection($psecarr);
@@ -942,7 +947,7 @@ class portalfileutils extends object
 				'parentselected' => $secid,
 				'title' => $ssecname,
 				'menutext' => $ssecname,
-				'access' => '',
+				'access' => 0,
 				'layout' => 'page',
 				'description' => '',
 				'published' => 1,
@@ -951,6 +956,9 @@ class portalfileutils extends object
 				'showintroduction' => 1,
 				'ordertype' => 'pageorder',
 				'userid' => $this->objUser->userId(),
+				'pagenum' => 0,
+				'imagesrc' => NULL,
+				'contextcode' => NULL,
 				);
 				$csecid = $this->objCmsDb->addSection($csecarr);
 				// ok subsection is created, now lets add the pages...
@@ -1009,7 +1017,13 @@ class portalfileutils extends object
 					$title = $this->objRegex->get_doc_title($contents);
 					//$title = $tresults[1][0];
 					$title = explode("--", $title);
-					$title = $title[1];
+					if(isset($title[1]))
+					{
+						$title = $title[1];
+					}
+					else {
+						$title = $this->objLanguage->languageText("mod_portalimporter_missingpgtitle", "portalimporter");
+					}
 					
 					//if($title = '')
 					//{
@@ -1018,7 +1032,13 @@ class portalfileutils extends object
 					log_debug("Adding page with title $title to $csecid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
-					$body = $bresults[1][0];
+					if(isset($bresults[1][0]))
+					{
+						$body = $bresults[1][0];
+					}
+					else {
+						$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
+					}
 					// change the links in the pages to the assets to point to the correct ones.
 					
 					// change the anchors as well?
@@ -1036,7 +1056,7 @@ class portalfileutils extends object
 					"show-body-only" => true,
 					);
 
-					if (function_exists(tidy_parse_string)) {
+					if (function_exists('tidy_parse_string')) {
 						$tidy = new tidy;
 						$tidy->parseString($body, $options, 'utf8');
 						$tidy->cleanRepair();
@@ -1075,7 +1095,7 @@ class portalfileutils extends object
 						'created_by' => $this->objUser->userId(),
 						'creatorid' => $this->objUser->userId(),
 						'metakey' => 'tag',
-						'metavalue' => 'UWC',
+						'metadesc' => 'UWC',
 						'start_publish' => NULL,
 						'end_publish' => NULL,
 						'isfrontpage' => '1',
@@ -1094,7 +1114,7 @@ class portalfileutils extends object
 						'created_by' => $this->objUser->userId(),
 						'creatorid' => $this->objUser->userId(),
 						'metakey' => 'tag',
-						'metavalue' => 'UWC',
+						'metadesc' => 'UWC',
 						'start_publish' => NULL,
 						'end_publish' => NULL,
 						'isfrontpage' => 0,
@@ -1129,12 +1149,24 @@ class portalfileutils extends object
 					$title = $this->objRegex->get_doc_title($contents);
 					//$title = $tresults[1][0];
 					$title = explode("--", $title);
-					$title = ltrim($title[1]);
+					if(isset($title[1]))
+					{
+						$title = ltrim($title[1]);
+					}
+					else {
+						$title = $this->objLanguage->languageText("mod_portalimporter_missingtitle", "portalimporter");
+					}
 					$title = trim($title);
 					log_debug("Adding page with title $title to top level section $secid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
-					$body = $bresults[1][0];
+					if(isset($bresults[1][0]))
+					{
+						$body = $bresults[1][0];
+					}
+					else {
+						$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
+					}
 					// change the links in the pages to the assets to point to the correct ones.
 					
 					// change the anchors as well?
@@ -1152,7 +1184,7 @@ class portalfileutils extends object
 					"show-body-only" => true,
 					);
 
-					if (function_exists(tidy_parse_string)) {
+					if (function_exists('tidy_parse_string')) {
 						$tidy = new tidy;
 						$tidy->parseString($body, $options, 'utf8');
 						$tidy->cleanRepair();
@@ -1172,10 +1204,11 @@ class portalfileutils extends object
 						'created_by' => $this->objUser->userId(),
 						'creatorid' => $this->objUser->userId(),
 						'metakey' => 'tag',
-						'metavalue' => 'UWC',
+						'metadesc' => 'UWC',
 						'start_publish' => NULL,
 						'end_publish' => NULL,
 						'isfrontpage' => '1',
+						'imagesrc' => NULL,
 						);
 						
 					$pgid = $this->objCmsDb->addContent($pagearr);

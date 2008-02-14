@@ -616,15 +616,29 @@ class dbcmsadmin extends dbTable
 		// Get details of the new entry
 		if($pgarr['published'] == '1'){
 			$start_publish = $this->now();
+			$end_publish = $this->now();
 		}
 		else {
-			$start_publish =$pgArr['start_publish'];
+			$start_publish = $pgArr['start_publish'];
+			if($start_publish === NULL)
+			{
+				$start_publish = $this->now();
+			}
+			$end_publish = $pgArr['end_publish'];
+			if($end_publish === NULL)
+			{
+				$end_publish = $this->now();
+			}
 		}
-		if ($pgarr['override_date'] == NULL) {
+		if (!isset($pgarr['override_date']) || $pgarr['override_date'] == NULL) {
 			$override_date =  $this->now();
 		}
 		else {
 			$override_date = $pgarr['override_date'];
+			if($override_date === NULL)
+			{
+				$override_date = $this->now();
+			}
 		}
 		
 		$newArr = array(
@@ -633,7 +647,7 @@ class dbcmsadmin extends dbTable
 		'introtext' => addslashes($pgarr['introtext']),
 		'body' => addslashes($pgarr['body']),
 		'access' => $pgarr['access'],
-		'ordering' => $this->getContentOrdering($pgArr['sectionid']),
+		'ordering' => $this->getContentOrdering($pgarr['sectionid']),
 		'published' => $pgarr['published'],
 		'hide_title' => $pgarr['hide_title'],
 		'created' => $this->now(),
@@ -647,7 +661,7 @@ class dbcmsadmin extends dbTable
 		'metakey'=>$pgarr['metakey'],
 		'metadesc'=>$pgarr['metadesc'],
 		'start_publish'=>$start_publish,
-		'end_publish'=>$pgarr['end_publish']
+		'end_publish'=>$end_publish,
 		);
 
 		$newId = $this->insert($newArr);
@@ -2241,8 +2255,10 @@ class dbcmsadmin extends dbTable
 			$rootnode = $this->checkindex($rootid);
 			//Get section details
 			if($sectionArr['pagenum'] == 'custom') {
+				$customnumber = $sectionArr['pagenum'];
 				$numpagedisplay = $customnumber;
 			} else {
+				$pagenumber = $sectionArr['pagenum'];
 				$numpagedisplay = $pagenumber;
 			}
 
