@@ -93,10 +93,6 @@ if(!empty($data)){
     $objLayer->cssClass = 'odd';
     
     
-   /* $this->objFileInput = new textinput('file');
-	$this->objFileInput->fldType='file';
-	$this->objFileInput->size=''; 
-	*/
 
 	$objLayer->str = $objTable->show();
     $str = $objLayer->show();
@@ -106,7 +102,7 @@ if(!empty($data)){
     $objHead->type = 4;
     $objHead->str = $submitLabel.' '.$assignmentLabel;
     $str .= $objHead->show();
-	//$str .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->objFileInput->show();
+	
 	
 	$this->objButton = new button('submit',$btnupload);
 	$returnUrl = $this->uri(array('action' => 'upload','id'=>$data[0]['id']));
@@ -118,9 +114,7 @@ if(!empty($data)){
 	
     // Determine format of submission: upload or online
     if($data[0]['format']){
-        // upload a file, add hidden fileId if multiple submissions
-        $inputStr = '<b>'.$uploadLabel.':</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	
+       
 
         if(!empty($data[0]['fileid'])){
             $objInput = new textinput('fileid', $data[0]['fileid']);
@@ -182,18 +176,20 @@ if(!empty($data)){
 
     $objButton = new button('exit', $exitLabel);
     $objButton->setToSubmit();
-    //$btns .= $objButton->show();
-	
+    $btns .= $objButton->show();
 	
 
     $objForm = new form('submit', $this->uri(array('action' => 'onlinesubmit')));
     $objForm->extra = " ENCTYPE='multipart/form-data'";
     $objForm->addToForm($inputStr);
     $objForm->addToForm($hidden);
-    $objForm->addToForm('<br />'.$btns);
+    
+		if(!$data[0]['format']){
+			$objForm->addToForm('<br />'.$btns);
+		}else{
 
-    //$objForm->addToForm($this->objFileInput->show());
-	//$objForm->addToForm("helllo");     
+		}
+    
     $layerStr = $objForm->show();
 
     $objLayer1 = new layer();

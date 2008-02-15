@@ -37,59 +37,36 @@ class assignment extends controller
         if(!$this->objModules->checkIfRegistered('Assignments', 'assignment')){
             return $this->nextAction('notregistered',array('modname'=>'assignment'), 'redirect');
         }*/
-	
+		
+		//check if the modules related are registered	
         $this->test = FALSE;
-	/*if($this->objModules->checkIfRegistered('Online Tests','test')){
-            $this->test = TRUE;
-        }
-	*/
         $this->essay = FALSE;
-        /*if($this->objModules->checkIfRegistered('Essay Management','essay')){
-            $this->essay = TRUE;
-        }
-	*/
         $this->ws = FALSE;
-        /*if($this->objModules->checkIfRegistered('Worksheets','worksheet')){
-            $this->ws = TRUE;
-        }
-	*/
         $this->rubric = FALSE;
-        /*if($this->objModules->checkIfRegistered('Rubrics','rubric')){
-            $this->rubric = TRUE;
-        }
-	*/
+
+		//database objects , provides access to the related tables.
         $this->dbAssignment = $this->getObject('dbassignment','assignment');
         $this->dbSubmit = $this->getObject('dbassignmentsubmit','assignment');
 
-        /*if($this->essay){
-            $this->dbEssayTopics = $this->getObject('dbessay_topics','essay');
-            $this->dbEssays = $this->getObject('dbessays','essay');
-            $this->dbEssayBook = $this->getObject('dbessay_book','essay');
-        }
-	*/
+		//functions for actions in the controller
+		$this->Assignment = $this->getObject('functions_assignment','assignment');
+
         if($this->ws){
             $this->dbWorksheet = $this->getObject('dbworksheet','worksheet');
             $this->dbWorksheetResults = $this->getObject('dbworksheetresults','worksheet');
         }
-        /*if($this->test){
-            $this->dbTestAdmin = $this->getObject('dbtestadmin','testadmin');
-            $this->dbTestResults = $this->getObject('dbresults','testadmin');
-        }
-	*/
+
         $this->objDate = $this->getObject('dateandtime','utilities');
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
-        //$this->objGroups = $this->getObject('groupAdminModel','groupadmin');
         $this->objContext = $this->getObject('dbcontext','context');
-	$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
-        // Get an instance of the filestore object and change the tables to essay specific tables
-        $this->objFile= $this->getObject('upload','filemanager');
-	$objSelectFile = $this->newObject('selectfile','filemanager');
+		$this->dbassignmentsubmit = $this->getObject('dbassignmentsubmit');
         
-	// $this->objFile->changeTables('tbl_assignment_filestore','tbl_assignment_blob');
-	$this->objFileRegister = $this->getObject('registerfileusage', 'filemanager');
-	$this->objCleaner = $this->getObject('htmlcleaner', 'utilities');
-
+		// Get an instance of the filestore object and change the tables to essay specific tables
+        $this->objFile= $this->getObject('upload','filemanager');
+		$objSelectFile = $this->newObject('selectfile','filemanager');
+        $this->objFileRegister = $this->getObject('registerfileusage', 'filemanager');
+		$this->objhtmlcleaner= $this->getObject('htmlcleaner', 'utilities');
         $this->userId = $this->objUser->userId();
 
         if($this->objContext->isInContext()){
@@ -118,27 +95,34 @@ class assignment extends controller
             // view the assignment
             case 'view':
                 $var = $this->getParam('var', FALSE);
-                return $this->viewAssign($var);
+                $data = $this->Assignment->viewAssign($var);
+				$this->setVarByRef('data', $data);
+       		 	return 'assignment_view_tpl.php';
+
+
            // online submit insert/submitted assignment in the database
             case 'onlinesubmit':
                 $postSave = $this->getParam('save', '');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
+
                     return $this->nextAction('');
                 }
-                return $this->submitAssign();
+
+                return $this->Assignment->submitAssign();
             // insert the submitted assignment in the database
             case 'submit':
                 $postSave = $this->getParam('save', '');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('');
                 }
-                return $this->submitAssign();
+                return $this->Assignment->submitAssign();
+
 
             // change the editor for the assignment
             case 'changeeditor':
                 $id = $this->getParam('id', '');
                 $editor = $this->getParam('editor');
-                $this->saveAssign();
+                $this->Assignment->saveAssign();
                 return $this->nextAction('view', array('id'=>$id, 'editor'=>$editor, 'var'=>TRUE));
 
             // download an assignment
@@ -147,7 +131,9 @@ class assignment extends controller
 		   return 'download_tpl.php';
 
             case 'showcomment':
-                return $this->showComment();
+                $comment = $this->Assignment->showComment();
+        		$this->setVarByRef('data',$comment);
+        		return 'assignment_comment_tpl.php';
                 
         	case 'upload':
 				$id = $this->getParam('id');
@@ -184,180 +170,33 @@ class assignment extends controller
                     		'studentfileid'=>$fileId,
                     		'datesubmitted'=>date('Y-m-d H:i:s')
                         );
-                    	$this->dbassignmentsubmit->addSubmit($fields);
-						$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
-                    	// display success message
-                    	$msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
-                    	$this->setVarByRef('msg',$msg);
+                $this->dbassignmentsubmit->addSubmit($fields);
+				$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
+                // display success message
+                $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+                $this->setVarByRef('msg',$msg);
 }
-                return $this->studentHome();
+                $mixed_arr = $this->Assignment->studentHome();
+		        $this->setVarByRef('essayData', $mixed_arr[0]);
+		        $this->setVarByRef('wsData', $mixed_arr[1]);
+		        $this->setVarByRef('testData', $mixed_arr[2]);
+		        $this->setVarByRef('assignData', $mixed_arr[3]);
+		        return 'assignment_student_tpl.php';
+
             break;
 
             default:
-               return $this->studentHome();
-        }
-    }
+               	$mixed_arr = $this->Assignment->studentHome();
 
-    /**
-    * Method to display the Students home page.
-    * @return The template for the students home page.
-    */
-    public function studentHome()
-    {
-        // Get students assignments: worksheets, booked essays
-        $wsData = array(); $essay = array(); $topic = array(); $essayData = array();
-        $assignData = array(); $testData = array();
+		        $this->setVarByRef('essayData', $mixed_arr[0]);
+		        $this->setVarByRef('wsData', $mixed_arr[1]);
+		        $this->setVarByRef('testData', $mixed_arr[2]);
+		        $this->setVarByRef('assignData', $mixed_arr[3]);
+		        return 'assignment_student_tpl.php';
 
-        if($this->ws){
-            $wsData = $this->dbWorksheet->getWorksheetsInContext($this->contextCode);
-            if(!empty($wsData)){
-                foreach($wsData as $key=>$line){
-                    $result = $this->dbWorksheetResults->getResults(NULL, "worksheet_id='"
-                            .$line['id']."' AND userid='".$this->userId."'");
-                    $wsData[$key]['mark'] = $result[0]['mark'];
-                    $wsData[$key]['completed'] = $result[0]['completed'];
-                }
-            }
-        }
-        if($this->essay){
-            // get topic list for the context
-            $topicFilter = "context='".$this->contextCode."'";
-            $topicFields = 'id, name, closing_date, userid';
-            $topics = $this->dbEssayTopics->getTopic(NULL, $topicFields, $topicFilter);
+        }//end of switch 
+    }//end of dispatch
 
-            // check booked topics and get booked essays
-            if(!empty($topics)){
-                $i = 0;
-                foreach($topics as $item){
-                    $bookFilter = "where studentid='".$this->userId."' and topicid='".$item['id']."'";
-                    $booking = $this->dbEssayBook->getBooking($bookFilter);
-                    if(!empty($booking)){
-                        $essay = $this->dbEssays->getEssay($booking[0]['essayid'], 'topic');
-                        $booking[0]['essayName'] = $essay[0]['topic'];
-                        $booking[0]['topicName'] = $item['name'];
-                        $booking[0]['closing_date'] = $item['closing_date'];
-                        $booking[0]['lecturer'] = $item['userid'];
-                        $essayData[] = $booking[0];
-                    }else{
-                        $i++;
-                    }
-                }
-                if($i > 0){
-                    $essayData[]['unassigned'] = $i;
-                }
-            }
-        }
-        if($this->test){
-            $filter =
-            $testData = $this->dbTestAdmin->getTests($this->contextCode);
-            if(!empty($testData)){
-                foreach($testData as $key=>$line){
-                    $result = $this->dbTestResults->getResult($this->userId, $line['id']);
-                    if(!empty($result)){
-                        $testData[$key]['mark'] = $result[0]['mark'];
-                    }else{
-                        $testData[$key]['mark'] = 'none';
-                    }
-                }
-            }
-        }
-        $assignData = $this->dbAssignment->getAssignment($this->contextCode);
-        if(!empty($assignData)){
-            foreach($assignData as $key=>$val){
-                $submitData = $this->dbSubmit->getSubmit("assignmentid='".$val['id']."' AND
-                userid='".$this->objUser->userId()."'", 'id AS submitid, mark AS studentmark, datesubmitted, studentfileid');
-
-		if(!($submitData === FALSE)){
-                	$assignData[$key] = array_merge($val, $submitData[0]);
-		}
-            }
-        }
-        $msg = $this->getParam('confirm');
-        if(!empty($msg)){
-            $this->setVarByRef('msg',$msg);
-        }
-
-        $this->setVarByRef('essayData', $essayData);
-        $this->setVarByRef('wsData', $wsData);
-        $this->setVarByRef('testData', $testData);
-        $this->setVarByRef('assignData', $assignData);
-        return 'assignment_student_tpl.php';
-    }
-
-    /**
-    * Method to display the assignment.
-    * @param bool $var Allows the assignment to be resubmitted.
-    * @return The template for displaying the assignment.
-    */
-    public function viewAssign($var = FALSE)
-    {
-        $id = $this->getParam('id');
-        $data = $this->dbAssignment->getAssignment($this->contextCode, "id='$id'");
-
-        if($data[0]['resubmit'] || $var){
-            $submit = $this->dbSubmit->getSubmit("assignmentid='$id' AND userid='"
-            .$this->objUser->userId()."'", 'id, online, studentfileid');
-            if(!empty($submit)){
-                $data[0]['online'] = $submit[0]['online'];
-                $data[0]['fileid'] = $submit[0]['fileid'];
-                $data[0]['submitid'] = $submit[0]['id'];
-            }
-        }
-
-        $this->setVarByRef('data', $data);
-        return 'assignment_view_tpl.php';
-    }
-
-    /**
-    * Method to display a lecturers comment in a pop-up window
-    */
-    public function showComment()
-    {
-        $id = $this->getParam('id');
-        $name = $this->getParam('name');
-        $comment = $this->dbSubmit->getSubmit("id='$id'",'comment');
-        $comment[0]['name'] = $name;
-        $this->setVarByRef('data',$comment);
-        return 'assignment_comment_tpl.php';
-    }
-
-    /**
-    * Method to save a students submitted assignment in the database
-    */
-    public function saveAssign()
-    {
-        $fields = array();
-        $fields['assignmentid'] = $this->getParam('id', '');
-        $fields['userid'] = $this->userId;
-        $fields['datesubmitted'] = date('Y-m-d H:i', time());
-
-        $postFormat = $this->getParam('format');
-        if($postFormat && isset($_FILES['file'])){
-            $fileId = $this->getParam('fileid', NULL);
-	    	$fileId = $this->objFile->uploadFile($_FILES['file'],'file',$fileId);
-            $fields['fileid'] = $fileId;
-        }else{
-            $text = $this->getParam('text', '');
-            //$text = $this->objhtmlcleaner->cleanHtml($text);
-            $fields['online'] = $cleanText;
-        }
-
-        $postSubmitId = $this->getParam('submitid', NULL);
-        $id = $this->dbSubmit->addSubmit($fields, $postSubmitId);
-        return $id;
-    }
-
-    /**
-    * Method to save a students submitted assignment in the database
-    */
-    public function submitAssign()
-    {
-        $id = $this->saveAssign();
-        if(!($id === FALSE)){
-            $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit','assignment');
-        }
-        return $this->nextAction('',array('confirm'=>$msg));
-    }
 
     /**
     * Method to take a datetime string and reformat it as text.
