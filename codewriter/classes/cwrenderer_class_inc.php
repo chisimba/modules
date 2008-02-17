@@ -110,7 +110,7 @@ class cwrenderer extends object
         $this->codeLanguage = "php";
         $this->lineNumbers ="on";
         $this->width = "100%";
-        $this->height = "500px";
+        $this->height = "600px";
         $this->code = "<php\n\n?>";
         $this->objLanguage = $this->getObject("language", "language");
         
