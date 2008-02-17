@@ -142,13 +142,19 @@ class codewriter extends controller
     */
     private function __editcode()
     {
+        // Load the codepress javascript that renders the editable interface
         $js = $this->getJavascriptFile('codepress.js', 'codewriter');
         $this->appendArrayVar('headerParams', $js);
+
         //$js1 = $this->getJavascriptFile('codewriter.js', 'codewriter');
         //$this->appendArrayVar('headerParams', $js1);
+        
+        // Load the jquery forms library for the ajax work
         $js2 = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
-        $objRenderer = $this->getObject("cwrenderer", "codewriter");
         $this->appendArrayVar('headerParams', $js2);
+        
+        // Load the form rendering javascript
+        $objRenderer = $this->getObject("cwrenderer", "codewriter");
         $js3 = $objRenderer->renderFormScript();
         $this->appendArrayVar('headerParams', $js3);
         
@@ -157,9 +163,7 @@ class codewriter extends controller
         $fileEdit = $this->getParam("file", NULL);
         
         if ($fileEdit !== NULL) {
-            $projectPath = $this->sConfig->getValue('mod_codewriter_projectpath', 'codewriter');
-            $filename = $projectPath . "/" . $project . "/" . $fileEdit;
-        	$objRenderer->code = $objFiles->getFileContents($filename);
+        	$objRenderer->code = $objFiles->getFileContents($fileEdit);
             $ext = $objFiles->fileExtension($fileEdit);
             $objRenderer->codeLanguage = $objFiles->getCodeLanguage($ext);
         }

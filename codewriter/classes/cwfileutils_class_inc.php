@@ -65,7 +65,35 @@ class cwfileutils extends object
     */
     public function init()
     {
+        $this->objStdlib = $this->getObject('splstdlib', 'files');
     }
+    
+    public function ReiteratieEmAllThere_________getDirs($path)
+    {
+    	foreach( new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $path
+            )
+        ) as $item ) {
+        echo $item, PHP_EOL;
+        }
+    }
+    
+    public function newgetDirs($path)
+    {
+        $ret=array();
+        foreach ( new DirectoryIterator($path) as $item ) {
+            if ($item->isDir()) {
+                $curDir = $item;
+                if (!$item->isDot() && $curDir !="CVS") {
+                    $ret[] = $item->key;
+                }
+            }
+        }
+        sort($ret);
+        return $ret;
+    }
+    
     
     public function getDirs($path)
     {
@@ -78,6 +106,7 @@ class cwfileutils extends object
                 }
         	}
         }
+        sort($ret);
         return $ret;
     }
     
@@ -112,6 +141,5 @@ class cwfileutils extends object
         	return "generic";
         }
     }
-
 }
 ?>

@@ -210,13 +210,14 @@ class cwrenderer extends object
         
         $ret .= $this->objLanguage->languageText('mod_codewriter_workingdir', 'codewriter');
         if ($workingDir != NULL) {
-            $ret .= "<br />" . $this->getFolderIconStaticExpanded() . "<em>" . $workingDir . "</em><br /><br />";
+            $ret .= "<br />" . $this->getFolderIconStaticExpanded() . "&nbsp;<em>" . $workingDir . "</em>";
+            $ret .= "<br />" . $this->getWorkingDirFiles($workingDir, $projectPath) . "<br /><br />";
         } else {
         	$ret .= "<br />" . $this->getFolderIconStaticGreyed() . "<em>" . $workingDir . "</em><br /><br />";
         }
         $ico = $this->getFolderIconStatic();
         foreach ($dirs as $dir) {
-        	$ret .= $ico . " " . $dir . "<br />";
+        	$ret .= $ico . " " . $this->getLinked($dir) . "<br />";
         }
         $ret .= count($dirs);
         return $ret;
@@ -253,6 +254,7 @@ class cwrenderer extends object
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('tree/folder', 'gif');
         $objIcon->title="Directory";   
+        $objIcon->align="absmiddle";
         return $objIcon->show();
     }
 
@@ -261,6 +263,7 @@ class cwrenderer extends object
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('tree/folder-expanded', 'gif');
         $objIcon->title="Current";   
+        $objIcon->align="absmiddle";
         return $objIcon->show();
     }
     
@@ -268,9 +271,59 @@ class cwrenderer extends object
     {
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('tree/folder_grey', 'gif');
-        $objIcon->title="None";   
+        $objIcon->title="None";
+        $objIcon->align="absmiddle";
         return $objIcon->show();
     }
+    
+    public function getLinked($folderName)
+    {
+    	$link = $this->uri(array(
+          "action"=>"editcode",
+          "project"=>$folderName), "codewriter");
+        return "<a href=\"" . $link . "\">" . $folderName . "</a>";
+    }
+    
+    public function getLinkedFile($filePath, $folderName, $linkText)
+    {
+        $link = $this->uri(array(
+          "action"=>"editcode",
+          "project"=>$folderName,
+          "file"=>$filePath), "codewriter");
+        return "<a href=\"" . $link . "\">" . $linkText . "</a>";
+    }
+    
+    public function getWorkingDirFiles($workingdir, $basePath)
+    {
+        $fileDir = $basePath . "/" . $workingdir;
+        try{
+            /*** class create new DirectoryIterator Object ***/
+            $ret = "";
+            foreach( new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($fileDir)
+                ) as $item ) {
+                if ( $item->isFile() && !$this->isCvs($item) ) {
+                    $linkText = str_replace($fileDir, "", $item);
+                    $linkItem = $this->getLinkedFile($item, $workingdir, $linkText);
+                    $ret .= $linkItem .' <br />';
+                }
+            }
+        } catch(customException $e) {
+            customException::cleanUp();
+            exit();
+        }
+     	return $ret;
+    }
+    
+    public function isCvs($item)
+    {
+    	if ( strpos($item,"CVS")==0 ) {
+    		return FALSE;
+    	} else {
+    		return TRUE;
+    	}
+    }
+    
     
     public function show()
     {
