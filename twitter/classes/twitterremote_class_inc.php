@@ -164,8 +164,11 @@ class twitterremote extends object
         $url = 'http://' . $this->userName . ':'
            . $this->password . '@twitter.com/statuses/followers.xml';
         $this->oC->initializeCurl($url);
+        $this->oC->setopt(CURLOPT_HEADER, FALSE);
+        $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
         $xmlStr = $this->oC->getUrl();
-        return simplexml_load_string($xmlStr);
+        $this->oC->closeCurl();
+        return @simplexml_load_string($xmlStr);
     }
 
     /**
@@ -221,8 +224,11 @@ class twitterremote extends object
             $url = $prefix . 'twitter.com/statuses/friends/'.urlencode($id).'.xml';
         }
         $this->oC->initializeCurl($url);
+        $this->oC->setopt(CURLOPT_HEADER, FALSE);
+        $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
         $xmlStr = $this->oC->getUrl();
-        return simplexml_load_string($xmlStr);
+        $this->oC->closeCurl();
+        return @simplexml_load_string($xmlStr);
     }
 
     public function showFollowed()
@@ -265,8 +271,11 @@ class twitterremote extends object
            . $this->password . '@twitter.com/users/show/'
            . $this->userName .'.xml';
         $this->oC->initializeCurl($url);
+        $this->oC->setopt(CURLOPT_HEADER, FALSE);
+        $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
         $xmlStr = $this->oC->getUrl();
-        return simplexml_load_string($xmlStr);
+        $this->oC->closeCurl();
+        return @simplexml_load_string($xmlStr);
     }
 
     /**
@@ -316,8 +325,11 @@ class twitterremote extends object
             $qs='?since_id='.intval($sinceid);
         $request = 'http://twitter.com/statuses/public_timeline.xml'.$qs;
         $this->oC->initializeCurl($request);
+        $this->oC->setopt(CURLOPT_HEADER, FALSE);
+        $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
         $xmlStr = $this->oC->getUrl();
-        return simplexml_load_string($xmlStr);
+        $this->oC->closeCurl();
+        return @simplexml_load_string($xmlStr);
     }
 
     /**
@@ -398,6 +410,14 @@ class twitterremote extends object
         }else{
             return false;
         }
+    }
+    
+    private function debugStr($str)
+    {
+    	$str = str_replace("<", "&lt;", $str);
+        $str = str_replace(">", "&gt;", $str);
+        $str = nl2br($str);
+        return $str;
     }
 
 }
