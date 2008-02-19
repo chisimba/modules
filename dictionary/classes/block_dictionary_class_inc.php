@@ -40,12 +40,8 @@ class block_dictionary extends object
     {
         //Create an instance of the language object
         $this->objLanguage = &$this->getObject("language", "language");
-        $font = "<font size=\"-2\">";
-        $cFont = "</font>";
         //add the title
-        $this->title = $font .
-          $this->objLanguage->languageText("mod_dictionary_title", "dictionary")
-          . $cFont;
+        $this->title = $this->objLanguage->languageText("mod_dictionary_title", "dictionary");
         //Create an instance of the database class for this module
         $this->objDicIntf = & $this->getObject('dicinterface');
     }
