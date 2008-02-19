@@ -1,7 +1,50 @@
 <?php
-?>
-<!--<div style="padding:10px;">-->
-<?php
+$this->setLayoutTemplate('faq2_layout_tpl.php');
+// Show the heading.
+$objHeading =& $this->getObject('htmlheading','htmlelements');
+$objHeading->type=4;
+$objHeading->str="&nbsp;";
+
+
+//check permissions
+$permissions=$this->faq2Tools->checkPermissions();
+
+//creat add faq entry link
+$objHeading->str.=$objLanguage->languageText("faq2_category","faq2");
+$objHeading->str.="&nbsp;&raquo;&nbsp;".$categoryname;
+if(!empty($addurl) and $permissions)
+{
+   $addLink = "&nbsp;&raquo;&nbsp;<a href=\"" .
+    	               $addurl
+    		. "\">";
+    		$icon = $this->getObject('geticon','htmlelements');
+    		$icon->setIcon('add');
+    		$icon->alt = "Add New Faq Entry";
+    		$icon->align=false;
+    		$addLink .= $icon->show();
+    		$addLink .= "</a>";
+$objHeading->str.=$addLink;
+}
+if(!empty($addCaturl) and $permissions)
+{
+ 
+   $addCatLink = "&nbsp;&raquo;&nbsp;<a href=\"" .
+    	               $addCaturl
+    		. "\">";
+    		$icon = $this->getObject('geticon','htmlelements');
+    		$icon->setIcon('add');
+    		$icon->alt = "Add New Category";
+    		$icon->align=false;
+    		$addCatLink .= $icon->show();
+    		$addCatLink .= "</a>";
+      
+$objHeading->str.=$objLanguage->languageText("mod_faq2_addcategory","faq2");
+$objHeading->str.=$addCatLink;   
+}
+//display heading
+echo $objHeading->show();
+//display page css layout
+echo $display;
     // Load classes.
 	$this->loadHTMLElement("form");
 	$this->loadHTMLElement("textinput");
@@ -35,64 +78,28 @@
 
     // Add an entry if not displaying "All Categories".
 //	if ($categoryId != "All Categories") {
-       if ($isAdmin || $isLecturer) {
+       if ($permissions) {
 
 		
             // Add an entry.
-    		$addLink = "<a href=\"" .
+    		$transLink = "<a href=\"" .
     	               $this->uri(array(
-    		    		'module'=>'faq',
-    		   			'action'=>'add',
-    					'category'=>$categoryId
+    		    		'module'=>'faq2',
+    		   			'action'=>'translate',
+    					'id'=>$element["id"],
+                                        'catd'=>$element['categoryid']
     		))
     		. "\">";
-    		$icon = $this->getObject('geticon','htmlelements');
-    		$icon->setIcon('add');
-    		$icon->alt = "Add";
-    		$icon->align=false;
-    		$addLink .= $icon->show();
-    		//echo "&nbsp;".$objLanguage->languageText("faq_addnewentry");
-    		$addLink .= "</a>";
+    		
+    		$transLink.=$objLanguage->languageText("mod_faq2_translatefaq",'faq2');
+    		$transLink .= "</a>";
 
         } else {
 			
-            $addLink = NULL;
+            $transLink = NULL;
         }
-/**
-	} else {
-        $addLink = NULL;
-    }
-**/
-	echo "<h1>" .
-		$objLanguage->languageText("phrase_faq") .
-		//" : " .
-		//$contextTitle .
-        ' '.$addLink.
-		"</h1>";
 
-	// Category Form.
-	$form = new form("category", $this->uri(array('module'=>'faq','action'=>'changeCategory')));
-    $form->method = 'GET';
-	$form->setDisplayType(3);
-    $moduleHiddenInput = new hiddeninput('module', 'faq');
-    $form->addToForm($moduleHiddenInput->show());
-    $actionHiddenInput = new hiddeninput('action', 'changeCategory');
-    $form->addToForm($actionHiddenInput->show());
-    $label = new label($objLanguage->languageText("faq_category","faq") . " : ", 'input_category');
-	$form->addToForm($label->show());
-	$dropdown = new dropdown('category');
-	$dropdown->addOption("All Categories","All Categories");
-	foreach ($categories as $item) {
-		$dropdown->addOption($item["id"],$item["categoryname"]);
-	}
-	$dropdown->setSelected($categoryId);
-	$form->addToForm($dropdown);
-	$form->addToForm("&nbsp;");
-	$button = new button("submit", $objLanguage->languageText("word_go"));
-	$button->setToSubmit();
-	$form->addToForm($button);
-	echo $form->show();
-	echo "<br/>";
+	
 
 	if (!empty($list)) {
 		// List the questions as href links to link to the main body of the FAQ.
@@ -113,6 +120,23 @@
 	$index = 1;
 	$found = false;
   	foreach ($list as $element) {
+         
+         
+         
+         
+         //create translate link
+    		$transLink = "[<a href=\"" .
+    	               $this->uri(array(
+    		    		'module'=>'faq2',
+    		   			'action'=>'translate',
+    					'id'=>$element["id"]
+                                    
+    		))
+    		. "\">";
+    		
+    		$transLink.=$objLanguage->languageText("mod_faq2_translatefaq",'faq2');
+    		$transLink .= "</a>]";
+
         // Anchor tag for link to top of page.
 		echo "<a id=\"".$index."\"></a>";
 		$found = true;
@@ -123,7 +147,8 @@
 <?php
 		echo "<b>" . $index . " : " . "</b>" . nl2br($element["question"]);
 ?>
-		<!--<div style="background-color: #FFFFFF; padding:5px;">-->
+        
+<!--<div style="background-color: #FFFFFF; padding:5px;">-->
         <div class="wrapperLightBkg">
 <?php
 	  	echo "<p>";
@@ -131,17 +156,67 @@
 	  	echo "</p>";
 		//echo $objLanguage->languageText("faq_postedby") . " : " . $objUser->fullname($element["userId"]) . "&nbsp;" . $element["dateLastUpdated"] . "<br/>";
 		echo "&nbsp;";
-        if ($isAdmin || $isLecturer) {
+?>
+		</div>
+		<!--<div style="background-color: #FFFFFF; padding:5px;">-->
+        <div class="wrapperLightBkg">
+<?php         
+	  	
+                $languageCodes = & $this->newObject('languagecode','language');
+                $language=$languageCodes->getLanguage($element['language']);
+                //get entrylicense
+               $entrylicense =  $this->objDbFaqEntries->getLicenseCode($element['entryid']);
+               
+               $entries=$this->objDbFaqEntries->getCatEntry($element['entryid'],$element['language']);
+               $count=count($entries);
+               
+               
+                //echo $entrylicense.$['entryid'].pop;
+                echo "<p>"; 
+		echo "<b>".$objLanguage->languageText("mod_faq2_createdby","faq2").":</b>&nbsp;" .$this->objUser->fullname($element["userid"]). "<b>&nbsp;".$objLanguage->languageText("mod_faq2_on","faq2").":</b>" .
+                nl2br($this->objDate->formatDate($element["datelastupdated"])). "<b>&nbsp;&nbsp</b>" .
+                $this->objLicense->show($entrylicense[0]['licenseid'])."<b>".$objLanguage->languageText("mod_faq2_madein","faq2").
+                ":</b>&nbsp;".$language
+                ."&nbsp;".$transLink;
+                
+                
+                if($count!=0)
+                echo "&nbsp;<b>".$objLanguage->languageText("mod_faq2_alsoavailablein","faq2")."</b>";
+                //create links for other languages
+                foreach($entries as $entry)
+               {
+                   $entrylanguage=$languageCodes->getLanguage($entry['language']);
+                  $langLink = "<a href=\"" .
+    	               $this->uri(array(
+    		    		'module'=>'faq2',
+    		   			'action'=>'translation',
+    					'id'=>$entry["id"]
+                                    
+    		))
+    		. "\">";
+                  
+                $langLink.=$entrylanguage."</a>";
+                echo "&nbsp;".$langLink."&nbsp;";
+               }
+         
+	  	echo "</p>";
+		//echo $objLanguage->languageText("faq_postedby") . " : " . $objUser->fullname($element["userId"]) . "&nbsp;" . $element["dateLastUpdated"] . "<br/>";
+		echo "&nbsp;";
+                
+        if ($permissions) {
             // Edit an entry.
     		$icon = $this->getObject('geticon','htmlelements');
     		$icon->setIcon('edit');
     		$icon->alt = "Edit";
     		$icon->align=false;
+                //since we are editing the original faq, set translation to false
+                $translation=0;
     		echo "<a href=\"" .
                     $this->uri(array(
-    		    		'module'=>'faq',
+    		    		'module'=>'faq2',
     		   			'action'=>'edit',
-    					'category'=>$categoryId,
+                                        'translation'=>$translation,
+    					'category'=>$categoryid,
     					'id' => $element["id"]
     		))
     		. "\">".$icon->show()."</a>";
@@ -155,12 +230,13 @@
             $objConfirm->setConfirm(
                 $icon->show(),
             	$this->uri(array(
-            	    'module'=>'faq',
-            		'action'=>'deleteConfirm',
-            		'category'=>$categoryId,
-            		'id'=>$element["id"]
+            	    'module'=>'faq2',
+                        'translation'=>0,
+            		'action'=>'deletefaqentryconfirm',
+            		'catid'=>$categoryid,
+            		'id'=>$element["entryid"]
             	)),
-                $objLanguage->languageText('faq_suredelete'));
+                $objLanguage->languageText('faq2_suredelete'));
             echo $objConfirm->show();
         }
 ?>
@@ -174,33 +250,9 @@
   	}
     // If no entries then display message.
 	if (!$found) {
-		echo "<div class=\"noRecordsMessage\">" . $objLanguage->languageText("faq_noentries","faq") . "</div>";
+		echo "<div align=\"left\"class=\"noRecordsMessages\">" . $norecords . "</div>";
 	}
 
-	if ($isAdmin || $isLecturer) {
-		// Add an entry.
-		echo "<a href=\"" .
-			$this->uri(array(
-				'module'=>'faq',
-				'action'=>'add',
-				'category'=>$categoryId
-			))
-		. "\">".$objLanguage->languageText("faq_addnewentry","faq")."</a>";
-	}
+	
+     
 
-    // Show link to manage categories and edit categories if user is admin or lecturer
-    if ($isAdmin || $isLecturer) {
-        // Create manage category link
-        $manageCategoriesLink = new link ($this->uri(array('action'=>'managecategories'),'faq'));
-        $manageCategoriesLink->link = $objLanguage->languageText("faq_managecategories","faq");
-        // Create edit category link
-        //$editCategoryLink = new link ($this->uri(array('action'=>'edit','id'=>$categoryId), 'faqadmin'));
-    	//$editCategoryLink->link = 'Edit Category';
-        if($categoryId != 'All Categories'){
-       		echo '<p>'.$manageCategoriesLink->show()./*"&nbsp;"."<b>".'/'."</b>"."&nbsp;".$editCategoryLink->show().*/'</p>';
-        }
-		else {
-        	echo '<p>'.$manageCategoriesLink->show().'</p>';
-        }
-    } 
-?>
