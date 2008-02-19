@@ -324,7 +324,7 @@ class dbFaqCategories extends dbTable
         //$forumId = $this->getSession('forumId');
         $this->objLanguage = $this->newObject('language', 'language');
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-       $lbCats = $this->objLanguage->languageText('mod_faq2_categories');
+       $lbCats = $this->objLanguage->languageText('mod_faq2_categories','faq2');
         $list = $this->getCategoryList();
         $this->loadClass('link', 'htmlelements');
 
