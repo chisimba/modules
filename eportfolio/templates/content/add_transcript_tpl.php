@@ -22,41 +22,47 @@
 	$objTable->width='30';
 	$objTable->attributes=" align='center' border='0'";
 	$objTable->cellspacing='12';
-	$objTable->cellpadding='12'; 
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$row = array($objUser->fullName());	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
  	//short description text field
 	$textinput = new textinput("shortdescription","");
 	$textinput->size = 60;
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 
  	
     	//Full description text field
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	//Add the WYSWYG editor
 	    $editor = $this->newObject('htmlarea', 'htmlelements');
 	    $editor->name = 'longdescription';
 	    $editor->height = '300px';
 	    $editor->width = '450px';
 	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
 	$button->setToSubmit();
-	$row = array($button->show());
-	$objTable->addRow($row, 'even');
-	$row = array( "<a href=\"". $this->uri(array(
-	'module'=>'eportfolio','action'=>'view_transcript',)). "\">".
-	$objLanguage->languageText("word_cancel") . "</a>");	//word_cancel
-	$objTable->addRow($row, 'even');
+
+        // Show the cancel link
+        $buttonCancel = new button("submit",
+        $objLanguage->languageText("word_cancel"));
+        $objCancel =& $this->getObject("link","htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module'=>'eportfolio',
+                'action'=>'view_transcript'
+            )));
+        $objCancel->link = $buttonCancel->show();
+        $linkCancel = $objCancel->show();  
+	$row = array($button->show().' / '.$linkCancel);
+	$objTable->addRow($row, NULL);		
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

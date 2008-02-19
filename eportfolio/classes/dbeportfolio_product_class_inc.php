@@ -7,18 +7,18 @@ if (!$GLOBALS['kewl_entry_point_run'])
 }
 
 /**
-* Model class for the table tbl_eportfolio_assertion
+* Model class for the table tbl_eportfolio_product
 * @author Paul Mungai
 * @copyright 2008 University of the Western Cape
 */
-class dbEportfolio_Assertion extends dbTable
+class dbEportfolio_Product extends dbTable
 {
     /**
     * Constructor method to define the table
     */
     function init() 
     {
-        parent::init('tbl_eportfolio_assertion');
+        parent::init('tbl_eportfolio_product');
         $this->objUser = & $this->getObject('user', 'security'); 
 	$this->objUserContext = &$this->newObject('utils', 'contextpostlogin');       
     }
@@ -48,7 +48,7 @@ class dbEportfolio_Assertion extends dbTable
 	
 	function getByItem($userId)
 	{
-        $sql = "SELECT * FROM tbl_eportfolio_assertion WHERE userid = '" .$userId . "'";	
+        $sql = "SELECT * FROM tbl_eportfolio_product WHERE userid = '" .$userId . "'";	
  	$data = $this->getArray($sql);
         if(!empty($data)){
             return $data;
@@ -59,18 +59,30 @@ class dbEportfolio_Assertion extends dbTable
 	
 	/**
 	* Insert a record
-	* @param string $rationale The rationale
+	* @param string $type The product type
+	* @param string $comment A comment
+	* @param string $referential_source The referential source
+	* @param string $referential_id The referential id
+	* @param string $assertion_id The assertion id
+	* @param string $assignment_id The assignment id
+	* @param string $essay_id The essay id
 	* @param string $creation_date The creation date
 	* @param string $shortdescription The short description
 	* @param string $longdescription The long description
 	* -- @param string $userId The user ID
 	*/
-	function insertSingle($rationale, $creation_date, $shortdescription, $longdescription)
+	function insertSingle($type, $comment, $referential_source, $referential_id, $assertion_id, $assignment_id, $essay_id, $creation_date, $shortdescription, $longdescription)
 	{
 		$userid = $this->objUser->userId();
 		$id = $this->insert(array(
 			'userid'=>$userid,
-        		'rationale' => $rationale,
+        		'type' => $type,
+			'comment' => $comment,
+			'referential_source'=>$referential_source,
+        		'referential_id' => $referential_id,
+			'assertion_id' => $assertion_id,
+			'assignment_id'=>$assignment_id,
+        		'essay_id' => $essay_id,
 			'creation_date' => $creation_date,
         		'shortdescription' => $shortdescription,
 			'longdescription' => $longdescription
@@ -80,20 +92,31 @@ class dbEportfolio_Assertion extends dbTable
 
 	/**
 	* Update a record
-	* @param string $id ID
-	* @param string $rationale The rationale
+	* @param string $type The product type
+	* @param string $comment A comment
+	* @param string $referential_source The referential source
+	* @param string $referential_id The referential id
+	* @param string $assertion_id The assertion id
+	* @param string $assignment_id The assignment id
+	* @param string $essay_id The essay id
 	* @param string $creation_date The creation date
 	* @param string $shortdescription The short description
 	* @param string $longdescription The long description
 	* -- @param string $userId The user ID
 	*/
-	function updateSingle($id, $rationale, $creation_date, $shortdescription, $longdescription)
+	function updateSingle($id, $type, $comment, $referential_source, $referential_id, $assertion_id, $assignment_id, $essay_id, $creation_date, $shortdescription, $longdescription)
 	{
 		$userid = $this->objUser->userId();
 		$this->update("id", $id, 
 			array(
 			'userid'=>$userid,
-        		'rationale' => $rationale,
+        		'type' => $type,
+			'comment' => $comment,
+			'referential_source'=>$referential_source,
+        		'referential_id' => $referential_id,
+			'assertion_id' => $assertion_id,
+			'assignment_id'=>$assignment_id,
+        		'essay_id' => $essay_id,
 			'creation_date' => $creation_date,
         		'shortdescription' => $shortdescription,
 			'longdescription' => $longdescription

@@ -53,6 +53,8 @@ class eportfolio extends controller
 	$this->objUrl = $this->getObject('url', 'strings');
 	$this->_objGroupAdmin = &$this->newObject('groupadminmodel','groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext','context');
+        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
+        $this->_objDBEssay = &$this->newObject('dbessay_book','essay');
 	$this->objFSContext=$this->newObject('fscontext','context');
 //        $this->lectGroupId = $this->_objGroupAdmin->getLeafId( array( $this->_objDBContext->getContextCode(), 'Lecturers' ) );
 
@@ -70,6 +72,7 @@ class eportfolio extends controller
 	$this->objDbInterestList =& $this->getObject('dbeportfolio_interest', 'eportfolio');
 	$this->objDbReflectionList =& $this->getObject('dbeportfolio_reflection', 'eportfolio');
 	$this->objDbAssertionList =& $this->getObject('dbeportfolio_assertion', 'eportfolio');
+	$this->objDbProductList =& $this->getObject('dbeportfolio_product', 'eportfolio');
 
 	$this->userId=$this->objUser->userId(); //To pick user userid
 	$this->setVarByRef('userId', $this->userId);
@@ -194,6 +197,12 @@ class eportfolio extends controller
 		break;
 	    case "view_assertion":		
 		return "view_assertion_tpl.php";
+		break;
+	    case "add_product":		
+		return "add_product_tpl.php";
+		break;
+	    case "view_product":		
+		return "view_product_tpl.php";
 		break;
 	    case "view_reflection":		
 		return "view_reflection_tpl.php";
@@ -325,6 +334,13 @@ class eportfolio extends controller
 		$this->objDbActivityList->deleteSingle($myid));		
 		// After processing return to view activity
 	        return $this->nextAction( 'view_activity', array() );
+		break;
+	    case "deleteproduct":
+		$this->nextAction(
+		$myid = $this->getParam('id', null),
+		$this->objDbProductList->deleteSingle($myid));		
+		// After processing return to view product
+	        return $this->nextAction( 'view_product', array() );
 		break;
 	   case "addaddressconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -503,12 +519,12 @@ class eportfolio extends controller
 	    case "displayassertion":
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
-		$mylist = $this->objDbAssertionList->listSingle($id);
-		$instructor = $mylist[0]['userid'];
-		$rationale = $mylist[0]['rationale'];
-		$creation_date = $mylist[0]['creation_date'];
-		$shortdescription = $mylist[0]['shortdescription'];
-		$longdescription = $mylist[0]['longdescription'];
+		$list = $this->objDbAssertionList->listSingle($id);
+		$instructor = $list[0]['userid'];
+		$rationale = $list[0]['rationale'];
+		$creation_date = $list[0]['creation_date'];
+		$shortdescription = $list[0]['shortdescription'];
+		$longdescription = $list[0]['longdescription'];
 		$this->setVarByRef('instructor',$instructor);
 		$this->setVarByRef('rationale',$rationale);
 		$this->setVarByref('creation_date',$creation_date);
@@ -561,6 +577,74 @@ class eportfolio extends controller
 		break;
 
 
+	case "editproductconfirm":
+		$myid = $this->getParam('id', null);
+		$this->setVarByRef('id',$myid);
+		$this->nextAction(
+		$this->objDbProductList->updateSingle(
+			$myid,
+		$this->getParam('producttype', NULL),
+		$this->getParam('comment', NULL),
+		$this->getParam('referential_source', NULL),
+		$this->getParam('referential_id', NULL),
+		$this->getParam('assertion_id', NULL),
+		$this->getParam('assignment_id', NULL),
+		$this->getParam('essay_id', NULL),
+		$this->getParam('creation_date', NULL),
+		$this->getParam('shortdescription', NULL),
+		$this->getParam('longdescription', NULL)
+		));
+		 // After processing return to view product
+	        return $this->nextAction( 'view_product', array() );
+		break;
+
+
+	   case "addproductconfirm":
+	        $id = $this->objDbProductList->insertSingle(
+		$this->getParam('producttype', NULL),
+		$this->getParam('comment', NULL),
+		$this->getParam('referential_source', NULL),
+		$this->getParam('referential_id', NULL),
+		$this->getParam('assertion_id', NULL),
+		$this->getParam('assignment_id', NULL),
+		$this->getParam('essay_id', NULL),
+		$this->getParam('creation_date', NULL),
+		$this->getParam('shortdescription', NULL),
+		$this->getParam('longdescription', NULL)
+
+		);
+		 // After processing return to view product
+	        return $this->nextAction( 'view_product', array() );
+		break;
+
+	    case "editproduct":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbProductList->listSingle($id);
+		$producttype = $list[0]['type'];
+		$comment = $list[0]['comment'];
+		$referential_source = $list[0]['referential_source'];
+		$referential_id = $list[0]['referential_id'];
+		$assertion_id = $list[0]['assertion_id'];
+		$assignment_id = $list[0]['assignment_id'];
+		$essay_id = $list[0]['essay_id'];
+		$creation_date = $list[0]['creation_date'];
+		$shortdescription = $list[0]['shortdescription'];
+		$longdescription = $list[0]['longdescription'];
+		$this->setVarByRef('producttype',$producttype);
+		$this->setVarByref('comment',$comment);
+		$this->setVarByRef('referential_source',$referential_source);
+		$this->setVarByRef('referential_id',$referential_id);
+		$this->setVarByref('assertion_id',$assertion_id);
+		$this->setVarByRef('assignment_id',$assignment_id);
+		$this->setVarByRef('essay_id',$essay_id);
+		$this->setVarByref('creation_date',$creation_date);
+		$this->setVarByRef('shortdescription',$shortdescription);
+		$this->setVarByRef('longdescription',$longdescription);
+
+		 // After processing return to view product
+		return "edit_product_tpl.php";
+		break;
 	case "editinterestconfirm":
 		$myid = $this->getParam('id', null);
 		$this->setVarByRef('id',$myid);
@@ -807,13 +891,15 @@ class eportfolio extends controller
 	        return $this->nextAction( 'view_contact', array() );
 		break;
 	   case "adddemographicsconfirm":
+		/*
 	        //Covert date to sql format
 		$this->getParam('birth', NULL);
 		$this->setVarByRef('birth', $this->birth);
 		$birth = $this->objDate->sqlDate($birth);
+		*/
 		$id = $this->objDbDemographicsList->insertSingle(
 		$this->getParam('demographics_type', NULL),
-		$birth,
+		$this->getParam('birth', NULL),
 		$this->getParam('nationality', NULL)
 		);
 		// After processing return to view contact
@@ -951,14 +1037,6 @@ class eportfolio extends controller
     
     private function showUserDetailsForm()
     {
-       // $this->setVar('mode', 'edit');
-        
-        
-        //$confirmation = $this->getSession('showconfirmation', FALSE);
-        //$this->setVar('showconfirmation', $confirmation);
-        
-        //$this->setSession('showconfirmation', FALSE);
-
         return 'main_tpl.php';
     }
     

@@ -14,7 +14,7 @@ $this->loadClass('mouseoverpopup', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $header = new htmlheading();
-$header->str = $this->objLanguage->languageText('mod_eportfolio_title', 'eportfolio').' '.$objUser->getSurname ();
+$header->str = $this->objLanguage->languageText('mod_eportfolio_title', 'eportfolio').' '.$this->objLanguage->languageText('word_for').' '.$objUser->getSurname ();
 $header->type = 2;
 echo $header->show();
 
@@ -131,8 +131,10 @@ echo '<div style="width:70%; float:left; padding:5px; boorder:1px solid red;">';
 
 
 
-$table = $this->newObject('htmltable', 'htmlelements');
-
+	$table = new htmltable();
+	$table->width='40';
+	$table->attributes=" align='center' border='0'";
+	$table->cellspacing='12';
 // Title
 $table->startRow();
     $label = new label ($this->objLanguage->languageText('word_title', 'system'), 'input_eportfolio_title');
@@ -192,7 +194,24 @@ $button = new button ('submitform', $this->objLanguage->languageText('mod_userad
 $button->setToSubmit();
 // $button->setOnClick('validateForm()');
 
-$form->addToForm('<p>'.$button->show().'</p>');
+    	//Save button
+	$button = new button("submit",
+	$objLanguage->languageText("mod_useradmin_updatedetails", "system"));    //word_save
+	$button->setToSubmit();
+
+        // Show the cancel link
+        $buttonCancel = new button("submit",
+        $objLanguage->languageText("word_cancel"));
+        $objCancel =& $this->getObject("link","htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module'=>'eportfolio',
+                'action'=>'view_contact'
+            )));
+        $objCancel->link = $buttonCancel->show();
+        $linkCancel = $objCancel->show();  
+
+
+$form->addToForm('<p>'.$button->show().' / '.$linkCancel.'</p>');
 
 $form->addRule('eportfolio_surname',$this->objLanguage->languageText('mod_eportfolio_entersurname', 'eportfolio'),'required');
 $form->addRule('eportfolio_othernames',$this->objLanguage->languageText('mod_eportfolio_enterothernames', 'eportfolio'),'required');
@@ -242,8 +261,5 @@ if ($objModule->checkIfRegistered('filemanager')) {
 echo '</div>';
 echo '</div>';
 
-$addresslink = new link($this->uri(array('module'=>'eportfolio','action'=>'view_contact')));
-$addresslink->link = 'Cancel';
-echo '<br clear="left" />'.$addresslink->show();
 
 ?>

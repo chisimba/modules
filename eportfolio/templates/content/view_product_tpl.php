@@ -10,7 +10,7 @@
 	    $objLink =& $this->getObject('link','htmlelements');
 	    $objLink->link($this->uri(array(
 	                'module'=>'eportfolio',
-	            'action'=>'add_activity'
+	            'action'=>'add_product'
 	        )));
 
          $objLink->link =  $iconAdd->show();
@@ -18,46 +18,33 @@
     // Show the heading
     $objHeading =& $this->getObject('htmlheading','htmlelements');
     $objHeading->type=1;
-    $objHeading->str =$objUser->getSurname ().$objLanguage->languageText("mod_eportfolio_activitylist", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$linkAdd;
+    $objHeading->str =$objUser->getSurname ().$objLanguage->languageText("mod_eportfolio_productlist", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$linkAdd;
     echo $objHeading->show();
 
-	$activitylist = $this->objDbActivityList->getByItem($userId);
+	$productlist = $this->objDbProductList->getByItem($userId);
     echo "<br/>";
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='3';
+    $table->cellspacing='12';
+    $table->cellpadding='12';
     $table->width = "100%";
     // Add the table heading.
     $table->startRow();
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_contexttitle",'eportfolio')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_activitytype",'eportfolio')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_activityfinish",'eportfolio')."</b>");
+    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_wordComment",'eportfolio')."</b>");
+    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio')."</b>");
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio')."</b>");
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = NULL;
-    if (!empty($activitylist)) {
+    if (!empty($productlist)) {
     	$i = 0;
-    foreach ($activitylist as $item) {
-	//Get context title
-	$objDbContext = &$this->getObject('dbcontext','context');	 
-	$mycontextRecord = $objDbContext->getContextDetails($item['contextid']);
-	if(!empty($mycontextRecord)){
-         	$mycontextTitle = $mycontextRecord['title'];
-	}else{
-		$mycontextTitle = $item['contextid'];
-	}
-
-    // Display each field for activities
+    foreach ($productlist as $item) {
+    // Display each field for products
         $table->startRow();
-	$table->addCell($mycontextTitle, "", NULL, NULL, $class, '');	
-        $table->addCell($item['type'], "", NULL, NULL, $class, '');
-        $table->addCell($this->objDate->formatDate($item['start']), "", NULL, NULL, $class, '');
-        $table->addCell($this->objDate->formatDate($item['finish']), "", NULL, NULL, $class, '');
-        $table->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
+        $table->addCell($item['comment'], "", NULL, NULL, NULL, '');
+        $table->addCell($this->objDate->formatDate($item['creation_date']), "", NULL, NULL, NULL, '');
+        $table->addCell($item['shortdescription'], "", NULL, NULL, NULL, '');
         
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
@@ -67,7 +54,7 @@
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
                     'module'=>'eportfolio',
-                'action'=>'editactivity',
+                'action'=>'editproduct',
                 'id' => $item["id"]
             )));
             //if( $this->isValid( 'edit' ))
@@ -88,31 +75,32 @@
                 $iconDelete->show(),
                 $this->uri(array(
                         'module'=>'eportfolio',
-                    'action'=>'deleteactivity',
+                    'action'=>'deleteproduct',
                     'id'=>$item["id"]
                 )),
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
             //echo $objConfirm->show();
-        $table->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
+        $table->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, NULL, '');
         $table->endRow();
+
+
 
     }
 	unset($item);
    
 } else {
     $table->startRow();
-    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
+    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
     $table->endRow();
 }
-
     	echo $table->show();
 
-	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_activity')));
-	$addlink->link = $objLanguage->languageText("mod_eportfolio_addactivity",'eportfolio');
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_product')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addProduct",'eportfolio');
 
 
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show();
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
 ?>

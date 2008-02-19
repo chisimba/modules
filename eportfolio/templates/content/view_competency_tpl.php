@@ -26,8 +26,7 @@
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='12';
-    $table->cellpadding='12';
+    $table->cellspacing='3';
     $table->width = "100%";
     // Add the table heading.
     $table->startRow();
@@ -37,11 +36,11 @@
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($list)) {
-    	$i = 0;
+
     foreach ($list as $item) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
+
     // Display each field for activities
         $table->startRow();
         $table->addCell($item['type'], "", NULL, NULL, $class, '');
@@ -51,7 +50,7 @@
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -93,11 +92,17 @@
    
 } else {
     $table->startRow();
-    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $table->endRow();
 }
     	echo $table->show();
+
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_competency')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addCompetency",'eportfolio');
+
+
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$mainlink->show();
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
+
 ?>

@@ -26,26 +26,21 @@
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='12';
-    $table->cellpadding='12';
-    $table->width = "100%";
+    $table->cellspacing='3';
+    $table->width = "60%";
     // Add the table heading.
     $table->startRow();
     $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_Goals",'eportfolio')."</b>");
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($goalsList)) {
     	$i = 0;
 	echo"<ol type='1'>";
     foreach ($goalsList as $item) {
-/*if (!empty(item['parent']) then */
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
-
     // Display each field for activities
         $table->startRow();
-	//echo"<li>";
         $table->addCell("<li>".$item['shortdescription']."</li>", "", NULL, NULL, $class, '');
         
         // Show the edit link
@@ -59,7 +54,6 @@
                 'action'=>'editgoals',
                 'id' => $item["id"]
             )));
-            //if( $this->isValid( 'edit' ))
               $objLink->link = $iconEdit->show();
         $linkEdit = $objLink->show();        
 
@@ -82,9 +76,7 @@
                 )),
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
-            //echo $objConfirm->show();
         $table->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
-//echo"<li>";
         $table->endRow();
 
 
@@ -95,11 +87,17 @@
    
 } else {
     $table->startRow();
-    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="2"');
     $table->endRow();
 }
     	echo $table->show();
+
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_goals')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addGoal",'eportfolio');
+
+
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$mainlink->show();
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
+
 ?>

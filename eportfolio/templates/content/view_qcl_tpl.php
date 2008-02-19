@@ -25,8 +25,7 @@
     // Create a table object
     $qclTable =& $this->newObject("htmltable","htmlelements");
     $qclTable->border = 0;
-    $qclTable->cellspacing='12';
-    $qclTable->cellpadding='12';
+    $qclTable->cellspacing='3';
     $qclTable->width = "100%";
     // Add the table heading.
     $qclTable->startRow();
@@ -39,11 +38,9 @@
     $qclTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($qclList)) {
-    	$i = 0;
     foreach ($qclList as $qclItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
     // Display each field for addresses
         $qclTable->startRow();
         $qclTable->addCell($qclItem['qcl_type'], "", NULL, NULL, $class, '');
@@ -55,7 +52,7 @@
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -96,11 +93,16 @@
 	unset($qclItem);
 	} else {
 	    $qclTable->startRow();
-	    $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
+	    $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
 	    $qclTable->endRow();
 	}
     	echo $qclTable->show();
-	$link = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
-	$link->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$link->show();
+
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_qcl')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addQualification",'eportfolio');
+
+
+	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
+	$mainlink->link = 'ePortfolio home';
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
 ?>

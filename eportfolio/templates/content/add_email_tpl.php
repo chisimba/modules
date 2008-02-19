@@ -10,24 +10,7 @@
 	$objHeading->type=1;
 	$objHeading->str =$objLanguage->languageText("mod_eportfolio_addemail",'eportfolio');
 	echo $objHeading->show();
-/*
-        if ($this->getParam('email') == '') {
-            $messages[] = $this->objLanguage->languageText('mod_eportfolio_enteremailaddress', 'eportfolio');
-        } else if (!$this->objUrl->isValidFormedEmailAddress($this->getParam('useradmin_email'))) {
-            $messages[] = $this->objLanguage->languageText('mod_eportfolio_entervalidemailaddress', 'eportfolio');
-        }
-    
-	if (count($messages) > 0) {
-	    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_eportfolio_infonotsavedduetoerrors', 'eportfolio').'</span>';
-	    
-	    echo '<ul>';
-	        foreach ($messages as $message)
-	        {
-	            echo '<li class="error">'.$message.'</li>';
-	        }
-	    echo '</ul></li></ul>';
-	}
-*/	
+	
 	$form = new form("add", 
 		$this->uri(array(
 	    		'module'=>'eportfolio',
@@ -37,17 +20,18 @@
 	$objTable->width='40';
 	$objTable->attributes=" align='center' border='0'";
 	$objTable->cellspacing='12';
-	$objTable->cellpadding='12'; 
-	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>",
-	$objUser->fullName());
-	$objTable->addRow($row, 'odd');
+	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
+	$objTable->addRow($row, NULL);
+	$row = array($objUser->fullName());
+	$objTable->addRow($row, NULL);
 	
     	//email_type text box		
 	$textinput = new textinput("email_type","");
-	$textinput->size = 70;
-	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_emailtype",'eportfolio').":</b>",
-	$textinput->show());
-	$objTable->addRow($row, 'even');	
+	$textinput->size = 40;
+	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_emailtype",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
  	
 	// Spacer
 	$objTable->startRow();
@@ -58,10 +42,11 @@
 
 	//email text field
 	$textinput = new textinput("email","");
-	$textinput->size = 70;
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_email",'eportfolio').":</b>",
-	$textinput->show());
-	$objTable->addRow($row, 'even');
+	$textinput->size = 40;
+	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_email",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
 
 	// Spacer
 	$objTable->startRow();
@@ -74,12 +59,19 @@
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
 	$button->setToSubmit();
-	$row = array($button->show());
-	$objTable->addRow($row, 'even');
-	$row = array( "<a href=\"". $this->uri(array(
-	'module'=>'eportfolio','action'=>'view_contact',)). "\">".
-	$objLanguage->languageText("word_cancel") . "</a>");	//word_cancel
-	$objTable->addRow($row, 'even');
+
+        // Show the cancel link
+        $buttonCancel = new button("submit",
+        $objLanguage->languageText("word_cancel"));
+        $objCancel =& $this->getObject("link","htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module'=>'eportfolio',
+                'action'=>'view_contact'
+            )));
+        $objCancel->link = $buttonCancel->show();
+        $linkCancel = $objCancel->show();  
+	$row = array($button->show().' / '.$linkCancel);
+	$objTable->addRow($row, NULL);
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

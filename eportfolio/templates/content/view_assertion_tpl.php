@@ -7,6 +7,20 @@ if( !$hasAccess ) {
 
 	//Language Items	
 	$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+	$linkAdd = '';
+	    // Show the add link
+	    $iconAdd = $this->getObject('geticon','htmlelements');
+	    $iconAdd->setIcon('add');
+	    $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');
+	    $iconAdd->align=false;
+	    $objLink =& $this->getObject('link','htmlelements');
+	    $objLink->link($this->uri(array(
+	                'module'=>'eportfolio',
+	            'action'=>'add_assertion'
+	        )));
+
+         $objLink->link =  $iconAdd->show();
+	 //    $linkAdd = $objLink->show();
     // Show the heading
     $objHeading =& $this->getObject('htmlheading','htmlelements');
     $objHeading->type=1;
@@ -19,8 +33,8 @@ if( !$hasAccess ) {
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='12';
-    $table->cellpadding='12';
+    $table->cellspacing='3';
+
     $table->width = "100%";
     // Add the table heading.
     $table->startRow();
@@ -31,14 +45,14 @@ if( !$hasAccess ) {
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
 
     if (!empty($Id)) {
-    	$i = 0;
+
 	
     foreach ($Id as $groupId) {
 	
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
+
 	//Get the group parent_id
 	$parentId = $this->_objGroupAdmin->getParent( $groupId );
 	foreach ($parentId as $myparentId) {
@@ -116,8 +130,7 @@ if( !$hasAccess ) {
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='12';
-    $table->cellpadding='12';
+    $table->cellspacing='3';
     $table->width = "100%";
     // Add the table heading.
     $table->startRow();
@@ -128,11 +141,11 @@ if( !$hasAccess ) {
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($list)) {
-    	$i = 0;
+
     foreach ($list as $item) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
+
     // Display each field for activities
         $table->startRow();
         $table->addCell($item['rationale'], "", NULL, NULL, $class, '');
@@ -142,7 +155,7 @@ if( !$hasAccess ) {
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -221,9 +234,13 @@ if( !$hasAccess ) {
     	echo $table->show();
 
 
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_assertion')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addAssertion",'eportfolio');
+
+
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$mainlink->show();
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
 }//end else hasAccess
 
 ?>

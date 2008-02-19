@@ -26,8 +26,7 @@
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
-    $table->cellspacing='12';
-    $table->cellpadding='12';
+    $table->cellspacing='3';
     $table->width = "50%";
     // Add the table heading.
     $table->startRow();
@@ -35,12 +34,9 @@
     $table->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($transcriptlist)) {
-    	$i = 0;
     foreach ($transcriptlist as $item) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
-
     // Display each field for activities
         $table->startRow();
         $table->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
@@ -48,7 +44,7 @@
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -94,7 +90,12 @@
     $table->endRow();
 }
     	echo $table->show();
+
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_transcript')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addtranscript",'eportfolio');
+
+
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$mainlink->show();
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show();
 ?>

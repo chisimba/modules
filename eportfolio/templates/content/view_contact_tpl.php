@@ -11,39 +11,10 @@
    	$objHeading->type=2;
 //view name
     // Show the heading
-    $objHeading->str =$objLanguage->languageText("mod_eportfolio_title", 'eportfolio');
-	echo "<br/>";    
-	echo $objHeading->show();
-	
-	
-    echo "<br/>";
-    // Create a table object
-    $userTable =& $this->newObject("htmltable","htmlelements");
-    $userTable->border = 0;
-    $userTable->cellspacing='12';
-    $userTable->cellpadding='12';
-    $userTable->width = "50%";
-    // Add the table heading.
-    $userTable->startRow();
-    $userTable->addHeaderCell("<b>".$objLanguage->languageText('word_title', 'system')."</b>");
-    $userTable->addHeaderCell("<b>".$objLanguage->languageText('word_surname', 'system')."</b>");
-    $userTable->addHeaderCell("<b>".$objLanguage->languageText('phrase_othernames', 'eportfolio')."</b>");
-    $userTable->endRow();	
-    
-    // Step through the list of addresses.
-    $class = 'even';
-    if (!empty($user)) {
-    	$i = 0;
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
-    // Display each field for addresses
-        $userTable->startRow();
-        $userTable->addCell($user['title'], "", NULL, NULL, $class, '');
-	$userTable->addCell($user['surname'], "", NULL, NULL, $class, '');
-        $userTable->addCell($user['firstname'], "", NULL, NULL, $class, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -52,20 +23,44 @@
             )));
 
               $objLink->link = $iconEdit->show();
-        $linkEdit = $objLink->show();        
-
-        $userTable->addCell($linkEdit, "", NULL, NULL, $class, '');
+        $linkEdit = $objLink->show();  
+    $objHeading->str =$objLanguage->languageText("mod_eportfolio_title", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$linkEdit;
+	echo "<br/>";    
+	echo $objHeading->show();
+	
+	
+    echo "<br/>";
+    // Create a table object
+    $userTable =& $this->newObject("htmltable","htmlelements");
+    $userTable->border = 0; 
+    $userTable->cellspacing='3';   
+    $userTable->width = "40%";
+    // Add the table heading.
+    $userTable->startRow();
+    $userTable->addHeaderCell("<b>".$objLanguage->languageText('word_title', 'system')."</b>");
+    $userTable->addHeaderCell("<b>".$objLanguage->languageText('word_surname', 'system')."</b>");
+    $userTable->addHeaderCell("<b>".$objLanguage->languageText('phrase_othernames', 'eportfolio')."</b>");
+    $userTable->endRow();	
+    
+    // Step through the list of addresses.
+    if (!empty($user)) {
+         // Display each field for addresses
+        $userTable->startRow();
+        $userTable->addCell($user['title'], "", NULL, NULL, NULL, '');
+	$userTable->addCell($user['surname'], "", NULL, NULL, NULL, '');
+        $userTable->addCell($user['firstname'], "", NULL, NULL, NULL, '');  
         $userTable->endRow();
 
   
 } else {
     $userTable->startRow();
-    $userTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
+    $userTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
     $userTable->endRow();
 }
 	echo $userTable->show();
-//end view name
 
+//end view name
+echo'<br></br><br></br>';
 //Start Address View
 	    // Show the add link
 	    $iconAdd = $this->getObject('geticon','htmlelements');
@@ -90,9 +85,8 @@
     // Create a table object
     $addressTable =& $this->newObject("htmltable","htmlelements");
     $addressTable->border = 0;
-    $addressTable->cellspacing='12';
-    $addressTable->cellpadding='12';
-    $addressTable->width = "100%";
+    $addressTable->cellspacing='3';
+     $addressTable->width = "100%";
     // Add the table heading.
     $addressTable->startRow();
     $addressTable->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_contypes",'eportfolio')."</b>");
@@ -105,20 +99,17 @@
     $addressTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
-    if (!empty($addressList)) {
-    	$i = 0;
+   if (!empty($addressList)) {
     foreach ($addressList as $addressItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
     // Display each field for addresses
         $addressTable->startRow();
-        $addressTable->addCell($addressItem['type'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['locality'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['city'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['postcode'], "", NULL, NULL, $class, '');
-        $addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, $class, '');    
+        $addressTable->addCell($addressItem['type'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['locality'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['city'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['postcode'], "", NULL, NULL, NULL, '');
+        $addressTable->addCell($addressItem['postal_address'], "", NULL, NULL, NULL, '');    
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
@@ -153,7 +144,7 @@
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
             //echo $objConfirm->show();
-        $addressTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
+        $addressTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, NULL, '');
         $addressTable->endRow();
 
 
@@ -167,7 +158,12 @@
 	}
     	echo $addressTable->show();
 
+	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_address')));
+	$mainlink->link = $objLanguage->languageText("mod_eportfolio_addAddress",'eportfolio');
+	echo '<br clear="left" />'.$mainlink->show();
+
 //End Address View
+echo "<br></br><br></br>";
 //Start Contacts View
 	    // Show the add link
 	    $iconAdd = $this->getObject('geticon','htmlelements');
@@ -193,8 +189,7 @@
     // Create a table object
     $contactTable =& $this->newObject("htmltable","htmlelements");
     $contactTable->border = 0;
-    $contactTable->cellspacing='12';
-    $contactTable->cellpadding='12';
+    $contactTable->cellspacing='3';
     $contactTable->width = "100%";
     // Add the table heading.
     $contactTable->startRow();
@@ -206,22 +201,19 @@
     $contactTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
     if (!empty($contactList)) {
-    	$i = 0;
-    foreach ($contactList as $contactItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
-    // Display each field for addresses
+     foreach ($contactList as $contactItem) {
+     // Display each field for addresses
         $contactTable->startRow();
-        $contactTable->addCell($contactItem['type'], "", NULL, NULL, $class, '');
-	$contactTable->addCell($contactItem['contact_type'], "", NULL, NULL, $class, '');
-        $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, $class, '');
-        $contactTable->addCell($contactItem['area_code'], "", NULL, NULL, $class, '');
-        $contactTable->addCell($contactItem['id_number'], "", NULL, NULL, $class, '');
+        $contactTable->addCell($contactItem['type'], "", NULL, NULL, NULL, '');
+	$contactTable->addCell($contactItem['contact_type'], "", NULL, NULL, NULL, '');
+        $contactTable->addCell($contactItem['country_code'], "", NULL, NULL, NULL, '');
+        $contactTable->addCell($contactItem['area_code'], "", NULL, NULL, NULL, '');
+        $contactTable->addCell($contactItem['id_number'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -253,7 +245,7 @@
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
 
-        $contactTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
+        $contactTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, NULL, '');
         $contactTable->endRow();
 
 
@@ -263,11 +255,17 @@
    
 } else {
     $contactTable->startRow();
-    $contactTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+    $contactTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
     $contactTable->endRow();
 }
 	echo $contactTable->show();
+
+	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_contact')));
+	$mainlink->link = $objLanguage->languageText("mod_eportfolio_addcontact",'eportfolio');
+	echo '<br clear="left" />'.$mainlink->show();
+
 //End Contact View
+echo "<br></br><br></br>";
 //Start Email View	
     echo "<br/>";
 	    $iconAdd = $this->getObject('geticon','htmlelements');
@@ -284,11 +282,11 @@
     // Create a heading for emails
 $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$emailLinkAdd;
     echo $objHeading->show();
+    echo "<br/>";
     // Create a table object for emails
     $emailTable =& $this->newObject("htmltable","htmlelements");
     $emailTable->border = 0;
-    $emailTable->cellspacing='12';
-    $emailTable->cellpadding='12';
+    $emailTable->cellspacing='3';
     $emailTable->width = "50%";
     // Add the table heading.
     $emailTable->startRow();
@@ -299,17 +297,15 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
     // Step through the list of addresses.
     $class = 'even';
     if (!empty($emailList)) {
-    	$i = 0;
     foreach ($emailList as $emailItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
     // Display each field for addresses
         $emailTable->startRow();
-        $emailTable->addCell($emailItem['type'], "", NULL, NULL, $class, '');
-	$emailTable->addCell($emailItem['email'], "", NULL, NULL, $class, '');
+        $emailTable->addCell($emailItem['type'], "", NULL, NULL, NULL, '');
+	$emailTable->addCell($emailItem['email'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -341,7 +337,7 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
 
-        $emailTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
+        $emailTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, NULL, '');
         $emailTable->endRow();
 
 
@@ -351,12 +347,17 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
    
 } else {
     $emailTable->startRow();
-    $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
+    $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
     $emailTable->endRow();
 }
 	
     	echo $emailTable->show();
+
+	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_email')));
+	$mainlink->link = $objLanguage->languageText("mod_eportfolio_addemail",'eportfolio');
+	echo '<br clear="left" />'.$mainlink->show();
 //End Email View
+echo "<br></br><br></br>";
 //Demographics view
 	$demographicsList = $this->objDbDemographicsList->getByItem($userId);
 	if (empty($demographicsList)) {
@@ -388,8 +389,7 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
     // Create a table object
     $demographicsTable =& $this->newObject("htmltable","htmlelements");
     $demographicsTable->border = 0;
-    $demographicsTable->cellspacing='12';
-    $demographicsTable->cellpadding='12';
+    $demographicsTable->cellspacing='3';
     $demographicsTable->width = "50%";
     // Add the table heading.
     $demographicsTable->startRow();
@@ -399,20 +399,17 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
     $demographicsTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
     if (!empty($demographicsList)) {
-    	$i = 0;
     foreach ($demographicsList as $demographicsItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
-    // Display each field for Demographics
+     // Display each field for Demographics
         $demographicsTable->startRow();
-        $demographicsTable->addCell($demographicsItem['type'], "", NULL, NULL, $class, '');
-        $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']), "", NULL, NULL, $class, '');
-        $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, $class, '');
+        $demographicsTable->addCell($demographicsItem['type'], "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($this->objDate->formatDate($demographicsItem['birth']), "", NULL, NULL, NULL, '');
+        $demographicsTable->addCell($demographicsItem['nationality'], "", NULL, NULL, NULL, '');
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -443,7 +440,7 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
 			
 
-        $demographicsTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, $class, '');
+        $demographicsTable->addCell($linkEdit. $objConfirm->show(), "", NULL, NULL, NULL, '');
         $demographicsTable->endRow();
 
 
@@ -453,7 +450,7 @@ $objHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'eportf
    
 } else {
     $demographicsTable->startRow();
-    $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="6"');
+    $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
     $demographicsTable->endRow();
 }
     	echo $demographicsTable->show();

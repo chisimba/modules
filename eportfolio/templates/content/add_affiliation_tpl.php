@@ -20,63 +20,74 @@
 	$objTable->width='60';
 	$objTable->attributes=" align='center' border='0'";
 	$objTable->cellspacing='12';
-	$objTable->cellpadding='12'; 
-	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>",
-	$objUser->fullName());
-	$objTable->addRow($row, 'odd');
+	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
+	$objTable->addRow($row, NULL);
+	$row = array($objUser->fullName());
+	$objTable->addRow($row, NULL);
 	
     	//type text box		
 	$textinput = new textinput("affiliation_type","");
 	$textinput->size = 40;
-	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_affiliationtype", 'eportfolio').":</b>",
-	$textinput->show());
-	$objTable->addRow($row, 'even');	
+	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_affiliationtype", 'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
+
     	//classification text box
 	$textinput = new textinput("classification","");
 	$textinput->size = 40;
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_classification",'eportfolio').":</b>",
-	$textinput->show());
+	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_classification",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
 	
  	//role text field
-	$objTable->addRow($row, 'even');
 	$textinput = new textinput("role","");
 	$textinput->size = 40;
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_role",'eportfolio').":</b>",
-	$textinput->show());
-	$objTable->addRow($row, 'even');
+	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_role",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
 
  	//organisation text box
 	$textinput = new textinput("organisation","");
 	$textinput->size = 40;
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_organisation",'eportfolio').":</b>",
-	$textinput->show());
-	$objTable->addRow($row, 'even');
+	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_organisation",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$row=array($textinput->show());
+	$objTable->addRow($row, NULL);
  	
     	//start text field
+	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$startField = $this->objPopupcal->show('start', 'yes', 'no', "");
+	$row = array($startField);
+	$objTable->addRow($row, NULL);
 
-	$textinput = new textinput("start","");
-	$textinput->size = 40;
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>",
-	$textinput->show());
-	
 	//finish text field
-	$objTable->addRow($row, 'even');
-	$textinput = new textinput("finish","");
-	$textinput->size = 40;
-	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_activityfinish",'eportfolio').":</b>",
-	$textinput->show());			
-	$objTable->addRow($row, 'even');
-		
+	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_activityfinish",'eportfolio').":</b>");
+	$objTable->addRow($row, NULL);		
+	$startField = $this->objPopupcal->show('finish', 'yes', 'no', "");
+	$row = array($startField);
+	$objTable->addRow($row, NULL);		
+
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
 	$button->setToSubmit();
-	$row = array($button->show());
-	$objTable->addRow($row, 'even');
-	$row = array( "<a href=\"". $this->uri(array(
-	'module'=>'eportfolio','action'=>'view_affiliation',)). "\">".
-	$objLanguage->languageText("word_cancel") . "</a>");	//word_cancel
-	$objTable->addRow($row, 'even');
+
+        // Show the cancel link
+        $buttonCancel = new button("submit",
+        $objLanguage->languageText("word_cancel"));
+        $objCancel =& $this->getObject("link","htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module'=>'eportfolio',
+                'action'=>'view_affiliation'
+            )));
+        $objCancel->link = $buttonCancel->show();
+        $linkCancel = $objCancel->show();  
+	$row = array($button->show().' / '.$linkCancel);
+	$objTable->addRow($row, NULL);		
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

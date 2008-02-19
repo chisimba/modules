@@ -27,8 +27,7 @@
     // Create a table object
     $affiliationTable =& $this->newObject("htmltable","htmlelements");
     $affiliationTable->border = 0;
-    $affiliationTable->cellspacing='12';
-    $affiliationTable->cellpadding='12';
+    $affiliationTable->cellspacing='3';
     $affiliationTable->width = "100%";
     // Add the table heading.
     $affiliationTable->startRow();
@@ -41,11 +40,10 @@
     $affiliationTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($affiliationList)) {
     	$i = 0;
     foreach ($affiliationList as $affiliationItem) {
-       $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
     // Display each field for addresses
         $affiliationTable->startRow();
         $affiliationTable->addCell($affiliationItem['type'], "", NULL, NULL, $class, '');
@@ -57,7 +55,7 @@
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
-        $iconEdit->alt = $objLanguage->languageText("mod_eportfolio_edit",'eportfolio');
+        $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
@@ -100,8 +98,15 @@
 	    $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="8"');
 	    $affiliationTable->endRow();
 	}
+
     	echo $affiliationTable->show();
-	$affiliationlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
-	$affiliationlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$affiliationlink->show();
+
+
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_affiliation')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addaffiliation",'eportfolio');
+
+
+	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
+	$mainlink->link = 'ePortfolio home';
+	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show();
 ?>

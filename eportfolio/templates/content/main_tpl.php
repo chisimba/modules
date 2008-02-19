@@ -18,6 +18,10 @@
 	$objHeading->str ='<font class="warning">'.$objLanguage->languageText("mod_eportfolio_maintitle",'eportfolio').'</font>';
 	echo $objHeading->show();
 
+	$objHeading->type=2;
+	$objHeading->str = '<font class="warning">'.$objUser->fullName().' '.$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio').'</font>';
+	echo $objHeading->show();
+
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_contact')));
 $link->link = 'View Identification Details';
@@ -29,7 +33,7 @@ $link->link = 'View Activities';
 echo '<br clear="left" />'.$link->show();
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_affiliation')));
-$link->link = 'View Affiliation';
+$link->link = 'View Affiliations';
 echo '<br clear="left" />'.$link->show();
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_transcript')));
@@ -46,7 +50,7 @@ echo '<br clear="left" />'.$link->show();
 
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_competency')));
-$link->link = 'View Competency';
+$link->link = 'View Competencies';
 echo '<br clear="left" />'.$link->show();
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_interest')));
@@ -59,6 +63,10 @@ echo '<br clear="left" />'.$link->show();
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_assertion')));
 $link->link = 'View Assertions';
+echo '<br clear="left" />'.$link->show();
+
+$link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_product')));
+$link->link = 'View Products';
 echo '<br clear="left" />'.$link->show();
 
 $returnlink = new link($this->uri(NULL, '_default'));

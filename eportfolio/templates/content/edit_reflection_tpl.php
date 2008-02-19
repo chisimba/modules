@@ -22,39 +22,38 @@
 	$objTable->width='30';
 	$objTable->attributes=" align='center' border='0'";
 	$objTable->cellspacing='12';
-	$objTable->cellpadding='12'; 
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$row = array($objUser->fullName());	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	
 	//type text box		
 	$textinput = new textinput("rationale",$rationale);
 	$textinput->size = 40;
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_rationale",'eportfolio').":</b>");	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 
 	//date calendar
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio').":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
 	$row = array($startField);
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 
  	//short description text box
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 40;
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_short",'eportfolio').":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 
  	
     	//Full description text field
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	//Add the WYSWYG editor
 	    $editor = $this->newObject('htmlarea', 'htmlelements');
 	    $editor->name = 'longdescription';
@@ -63,18 +62,25 @@
 	    $editor->setContent($longdescription);
 
 	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, 'even');
+	$objTable->addRow($row, NULL);
 	
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
 	$button->setToSubmit();
-	$row = array($button->show());
-	$objTable->addRow($row, 'even');
-	$row = array( "<a href=\"". $this->uri(array(
-	'module'=>'eportfolio','action'=>'view_reflection',)). "\">".
-	$objLanguage->languageText("word_cancel") . "</a>");	//word_cancel
-	$objTable->addRow($row, 'even');
+
+        // Show the cancel link
+        $buttonCancel = new button("submit",
+        $objLanguage->languageText("word_cancel"));
+        $objCancel =& $this->getObject("link","htmlelements");
+        $objCancel->link($this->uri(array(
+                    'module'=>'eportfolio',
+                'action'=>'view_reflection'
+            )));
+        $objCancel->link = $buttonCancel->show();
+        $linkCancel = $objCancel->show();  
+	$row = array($button->show().' / '.$linkCancel);
+	$objTable->addRow($row, NULL);
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>
