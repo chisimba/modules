@@ -42,7 +42,6 @@ class dbFaqEntries extends dbTable
 		return $id;  
 		
 		
-<<<<<<< dbfaqentries_class_inc.php
 		
 	}
 	
@@ -80,24 +79,6 @@ class dbFaqEntries extends dbTable
 		),"tbl_faq2_entries_lang");
 		
 		return $ins;
-=======
-		// Add to Search
-        $objIndexData = $this->getObject('indexdata', 'search');
-        
-        // Prep Data
-        $docId = 'faq_entry_'.$ins;
-        $docDate = strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated);
-        $url = $this->uri(array('action'=>'view', 'category'=>$categoryId), 'faq');
-        $title = $categoryRow['categoryname'];
-        $contents = $question.': '.$answer;
-        $teaser = $question;
-        $module = 'faq';
-        $userId = $userId;
-        
-        // Add to Index
-        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId);
-		return $ins;	
->>>>>>> 1.10
 	}
     
     /**
@@ -241,7 +222,7 @@ class dbFaqEntries extends dbTable
 		$categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
 		
 		// Add to Search
-        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData = $this->getObject('indexdata', 'lucene');
         
         // Prep Data
         $docId = 'faq_entry_'.$id;
@@ -263,15 +244,9 @@ class dbFaqEntries extends dbTable
 	*/
 	function deleteSingle($col,$value,$table)
 	{
-<<<<<<< dbfaqentries_class_inc.php
 		$this->delete($col,$value,$table);
 		//$objIndexData = $this->getObject('indexdata', 'lucene');
                 //$objIndexData->removeIndex('faq_entry_'.$id);
-=======
-		$this->delete("id", $id);
-		$objIndexData = $this->getObject('indexdata', 'search');
-        $objIndexData->removeIndex('faq_entry_'.$id);
->>>>>>> 1.10
 	}//
 }
 ?>
