@@ -30,18 +30,25 @@ $fields = array(
 		'notnull' => TRUE,
 		'default' => '',
 		),
+	'language' => array(
+	  	'type' => 'text',
+		'length' => 2,
+		'notnull' => TRUE,
+		'default' => '',
+		),
+	'isdefaultlang' => array(
+	  	'type' => 'text',
+		'length' => 1,
+		'notnull' => TRUE,
+		'default' => '',
+		),
 	'userid' => array(
 	  	'type' => 'text',
-		'length' => 25,
+		'length' => 32,
 		'notnull' => TRUE,
 		'default' => '',
 		),
 	'datelastupdated' => array(
-		'type' => 'timestamp',
-		'notnull' => TRUE,
-		'default' => '0000-00-00 00:00:00',
-		),  
-	'updated' => array(
 		'type' => 'timestamp',
 		'notnull' => TRUE,
 		'default' => '0000-00-00 00:00:00',
