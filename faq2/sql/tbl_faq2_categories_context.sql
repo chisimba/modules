@@ -13,7 +13,7 @@ $fields = array(
 		'notnull' => TRUE,
 		'default' => '',
 		 ),
-	'licenseid' => array(
+	'categoryid' => array(
 		'type' => 'text',
 		'length' => 32,
 		'notnull' => TRUE,
