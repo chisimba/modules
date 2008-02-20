@@ -2,7 +2,7 @@
 
 include('s3_class_inc.php');
 $s = new s3;
-$s->setup("1GSMXXZVM079YC8SA382", "P1ijEs5b7MN3V8QYzU523Q3UHEBmoyaIUOEX2B7U");
+$s->setup("a", "b");
 //var_dump($s->getBuckets());
 //echo "<br /><br />";
 //$s->createBucket('Chisimba_UWC');
