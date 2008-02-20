@@ -66,7 +66,8 @@ if (isset ($noContextCode))
     $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
-   
+    $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
+    $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
     //echo $appletCodeBase;
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
@@ -74,7 +75,8 @@ if (isset ($noContextCode))
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
-
+    echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
+    echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=port value="'.$port.'">';
     echo '</applet>';
          
