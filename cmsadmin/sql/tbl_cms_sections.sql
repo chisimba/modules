@@ -99,8 +99,8 @@ $fields = array(
         'length' => 32
 		),
     'link' => array(
-             'type' => 'text',
-             'length' => 255
+         'type' => 'text',
+         'length' => 255
 		),
 	'userid' => array(
 		'type' => 'text',

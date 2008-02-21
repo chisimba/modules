@@ -39,9 +39,10 @@
         <showintroduction>1</showintroduction>
         <description>&lt;p&gt;Chisimba is an advanced rapid application development platform and next generation framework with features similar to common proprietary systems. It is free software (open source) released under the GNU GPL, and available for download via cvs checkout from http://cvs2.uwc.ac.za/ .&lt;/p&gt;&lt;p&gt;Chisimba was developed based on several years of experience in software design and architecture at the University of the Western Cape and partner institutions using its predecessor KEWL.NextGen, and is under active development by a team of developers in 16 African higher education institutions.&lt;/p&gt;</description>
         <published>1</published>
-    	  <nodelevel>1</nodelevel>
+    	<nodelevel>1</nodelevel>
         <access>0</access>        
-        <ordering>1</ordering>        
+        <ordering>1</ordering>
+        <userid>1</userid>       
     </tbl_cms_sections>
    <tbl_cms_content>
         <id>init_1</id>  	
@@ -51,25 +52,25 @@
     	<published>1</published>
     	<trash>0</trash>
     	<sectionid>init_1</sectionid>
-    	<mask> </mask>
+    	<mask>0</mask>
     	<created>2006-11-14</created>
     	<created_by>1</created_by>
     	<created_by_alias> </created_by_alias>
     	<modified>2006-11-14</modified>
-    	<modified_by> </modified_by> 
-    	<checked_out> </checked_out> 
+    	<modified_by>0</modified_by> 
+    	<checked_out>0</checked_out> 
     	<checked_out_time></checked_out_time>
     	<publish_up></publish_up>
     	<publish_down> </publish_down> 
     	<images></images>
     	<urls></urls>
     	<attribs></attribs>
-    	<version></version>
+    	<version>0</version>
     	<parentid>init_1</parentid>
     	<ordering>1</ordering>
     	<metakey></metakey>
     	<metadesc></metadesc>
-    	<access></access>
+    	<access>0</access>
     	<hits>1</hits>
    </tbl_cms_content>
    <tbl_cms_content_frontpage>
