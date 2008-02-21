@@ -113,17 +113,20 @@ class utils extends object
 		} 
 		
 		//$albumId = $this->getParam('albumselect');
+                $imageCount = count($this->_objDBImages->getAll("WHERE album_id= '".$albuimId."'"));
 		foreach($results as $result)
 		{
 			if($result['fileid'] != '')
 			{
-				$fields = array();
-				$fields['file_id'] = $result['fileid'];
-				$fields['album_id'] = $albumId;
+                            $imageCount++;
+			    $fields = array();
+			    $fields['file_id'] = $result['fileid'];
+			    $fields['album_id'] = $albumId;
+                            $fields['position']=$imageCount;
 			
-				$this->_objDBImages->insertImageData($fields);
+			    $this->_objDBImages->insertImageData($fields);
 				
-				if(!$this->_objDBAlbum->hasThumb($albumId))
+			    if(!$this->_objDBAlbum->hasThumb($albumId))
 				{
 					$this->_objDBAlbum->update('id', $albumId, array('thumbnail' =>$result['fileid'] ));
 				}	
