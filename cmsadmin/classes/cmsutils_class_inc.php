@@ -950,7 +950,7 @@ class cmsutils extends object
         	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_basic','cmsadmin'),$tbl_basic->show(),'',False,'');
         	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_advanced','cmsadmin'),$tbl_advanced->show(),'',False,'');
         	$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_meta','cmsadmin'), $tbl_meta->show(),'',False,'');
-        	$tabs->width = '50%';
+        	$tabs->width = '70%';
         	return $tabs->show();
         }
 
