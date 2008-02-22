@@ -1905,7 +1905,7 @@ You can create tables using pairs of vertical bars:
         }
         
         // check alpha only
-        if(preg_match('/\P{L}/', $name) == 1){
+        if(!preg_match('/\A[a-z]*\z[a-z]*/i', $name)){
             $errors[] = $lettersonlyLabel;
         }
         
