@@ -88,6 +88,8 @@ class realtime extends controller
 	
 	public $converter;
 	
+	public $uploadPath;
+	
 	
 	/**
 	 * Constructor method to instantiate objects and get variables
@@ -110,6 +112,8 @@ class realtime extends controller
 		//Log this module call
 		$this->objLog->log();
 		$this->objrealtime =  $this->getObject('dbrealtime');
+		
+        
 		
 		// classes we need
 		$this->objUser = $this->newObject('user', 'security');
@@ -158,7 +162,6 @@ class realtime extends controller
 		switch ($action)
 		{
 			case 'classroom' :
-                                //return "realtime-classroom-applet_tpl.php";
 				return $this->showClassRoom($this->contextCode);
 
 			case 'jmfinstall' :
@@ -229,7 +232,6 @@ class realtime extends controller
 		}
 	}
 
-	
 
  
 
@@ -346,15 +348,15 @@ function startServer()
     
     function uploadPresentation()
     {
-        if($this->checkOpenOfficeStatus()){
+      //  if($this->checkOpenOfficeStatus()){
 
       
-        $this->startServer();
+        //$this->startServer();
         $generatedid = $this->getParam('id');
         $filename = $this->getParam('filename');
 		
         $id = $this->objFiles->autoCreateTitle();
-
+        $id="test1";
         $objMkDir = $this->getObject('mkdir', 'files');
 
         $destinationDir = $this->objConfig->getcontentBasePath().'/realtime_presentations/'.$id;
@@ -409,7 +411,7 @@ function startServer()
                 $this->setVarByRef('id', $id);       
 		return "realtime-presentations-presenter-applet_tpl.php";
          }
-        }else{
+       /* }else{
                 $title=$this->objLanguage->languageText('mod_realtime_presentationtitle', 'realtime');
                 $content='<p>'.$this->objLanguage->languageText('mod_realtime_tip1a', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').' '.$this->objLanguage->languageText('mod_realtime_tip1b', 'realtime').' </p><p><b>'.$this->objLanguage->languageText('mod_realtime_presentations_tip1', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip2', 'realtime').'<br>'.$this->objLanguage->languageText('mod_realtime_presentations_tip3', 'realtime');
                 $desc=$this->objLanguage->languageText('mod_realtime_officenotrunning', 'realtime');
@@ -417,7 +419,7 @@ function startServer()
                 $this->setVarByRef('desc', $desc);
                 $this->setVarByRef('content', $content);
                 return "dump_tpl.php";
-        }
+        }*/
        }
        /**
         * Informs the server that a user is requesting a voice token, assigns token to User if the token is
