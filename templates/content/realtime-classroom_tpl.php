@@ -68,7 +68,15 @@ if (isset ($noContextCode))
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
     $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
     $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
-    //echo $appletCodeBase;
+   // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
+    $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
+  
+    $objMkdir = $this->getObject('mkdir', 'files');
+    // Path for uploaded files
+    $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
+    $objMkdir->mkdirs($uploadPath, 0777);
+       
+//echo $uploadPath;
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar,avoir-realtime-common-0.1.jar,avoir-whiteboard-client-0.1.jar" width="100%" height="600">';
@@ -77,9 +85,11 @@ if (isset ($noContextCode))
     echo '<param name=userLevel value="'.$this->userLevel.'">';
     echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
+    echo '<param name=uploadURL value="'.$uploadURL.'">';
+    echo '<param name=uploadPath value="'.$uploadPath.'">';
     echo '<param name=port value="'.$port.'">';
     echo '</applet>';
-         
+    
 
 }
 ?>
