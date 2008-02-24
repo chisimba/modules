@@ -105,9 +105,9 @@ class mailmansignup extends object
 		
 		$this->objMailer->setValue('to', array($maillistAdress));
 		$this->objMailer->setValue('from', $email);
-		$this->objMailer->setValue('fromName', '');
-		$this->objMailer->setValue('subject', '');
-		$this->objMailer->setValue('body', '');
+		$this->objMailer->setValue('fromName', 'user');
+		$this->objMailer->setValue('subject', 'subscribe');
+		$this->objMailer->setValue('body', 'subscribe');
 		if ($this->objMailer->send()) {
 			return TRUE;
 		} else {
