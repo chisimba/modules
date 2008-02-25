@@ -87,10 +87,12 @@ class mailmannews extends controller
     {
         switch ($action) {
             default:
+            	$this->requiresLogin(FALSE);
             	return 'subscribe_tpl.php';
             	break;
             	
             case 'subscribe':
+            	$this->requiresLogin(FALSE);
             	$email = $this->getParam('email');
             	if($this->objMailmanSignup->subscribeToMailman($email) === TRUE)
             	{
@@ -102,5 +104,17 @@ class mailmannews extends controller
             	//echo $email; die();
         }
     }
+    
+    /**
+    * Overide the login object in the parent class
+    *
+    * @param  void  
+    * @return bool  
+    * @access public
+    */
+	public function requiresLogin($action)
+	{
+       return FALSE;
+	}
 }
 ?>
