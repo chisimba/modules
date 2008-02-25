@@ -1,4 +1,14 @@
 <?php
+
+$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$this->setVar('pageSuppressXML',true);
+if( !$hasAccess ) {
+		// Redirect
+		return $this->nextAction( 'main', array() );
+		break;
+} else {
+
     // Load classes.
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
@@ -6,17 +16,18 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
-	$usercontexts = $this->getUserContexts();
+	$objCheck = $this->loadClass('checkbox', 'htmlelements');
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
-	$objHeading->str =$objLanguage->languageText("mod_eportfolio_addtranscript",'eportfolio');
+	$objHeading->str =$objLanguage->languageText("mod_eportfolio_editCategory",'eportfolio');
 	echo $objHeading->show();
 	
 	$form = new form("add", 
 		$this->uri(array(
 	    		'module'=>'eportfolio',
-	   		'action'=>'addtranscriptconfirm'
+	   		'action'=>'editcategoryconfirm',
+			'id'=>$id
 	)));
 	$objTable = new htmltable();
 	$objTable->width='30';
@@ -26,27 +37,18 @@
 	$objTable->addRow($row, NULL);
 	$row = array($objUser->fullName());	
 	$objTable->addRow($row, NULL);
- 	//short description text field
-	$textinput = new textinput("shortdescription","");
-	$textinput->size = 60;
-	$form->addRule('shortdescription', 'Please enter the short description','required');
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
+
+
+	
+	//category text box		
+	$category = new textinput("category",$category);
+	$category->size = 60;
+	$form->addRule('category','Please enter the Category','required');
+	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_category",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
+	$row = array($category->show());	
 	$objTable->addRow($row, NULL);
 
- 	
-    	//Full description text field
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
-	//Add the WYSWYG editor
-	    $editor = $this->newObject('htmlarea', 'htmlelements');
-	    $editor->name = 'longdescription';
-	    $editor->height = '300px';
-	    $editor->width = '450px';
-	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, NULL);
-	
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
@@ -58,12 +60,13 @@
         $objCancel =& $this->getObject("link","htmlelements");
         $objCancel->link($this->uri(array(
                     'module'=>'eportfolio',
-                'action'=>'view_transcript'
+                'action'=>'view_category'
             )));
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);		
+	$objTable->addRow($row, NULL);
 	$form->addToForm($objTable->show());
 	echo $form->show();
+}
 ?>

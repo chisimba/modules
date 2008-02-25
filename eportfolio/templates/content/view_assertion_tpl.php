@@ -1,5 +1,5 @@
 <?php
-
+//View Assertions
 $hasAccess = $this->objEngine->_objUser->isContextLecturer();
 $hasAccess|= $this->objEngine->_objUser->isAdmin();
 $this->setVar('pageSuppressXML',true);
@@ -243,4 +243,5 @@ if( !$hasAccess ) {
 	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
 }//end else hasAccess
 
+//End View Assertions
 ?>

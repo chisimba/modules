@@ -30,6 +30,7 @@
 	//type text box		
 	$textinput = new textinput("rationale",$rationale);
 	$textinput->size = 40;
+	$form->addRule('rationale', 'Please enter the rationale','required');
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_rationale",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
@@ -39,12 +40,14 @@
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
+	$form->addRule('creation_date', 'Please enter the creation date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
 
  	//short description text box
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 40;
+	$form->addRule('shortdescription', 'Please enter a short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_short",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	

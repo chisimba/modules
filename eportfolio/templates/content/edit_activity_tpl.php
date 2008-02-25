@@ -6,6 +6,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Place';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	$usercontexts = $this->getUserContexts();
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
@@ -49,27 +51,43 @@
 	$objTable->addRow($row, NULL);
 	//end Context drop down list    	
 	
-	//type text box		
-	$textinput = new textinput("activityType",$activityType);
-	$textinput->size = 60;
+    	//type drop down list	
+	$mydropdown = new dropdown('activityType');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			$mydropdown->setSelected($activityType);
+			
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no Types-");	
+	}	
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitytype",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
+	$row = array($mydropdown->show());	
 	$objTable->addRow($row, NULL);
 	//activity start text box
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('activityStart', 'yes', 'no', $activityStart);
+	$form->addRule('activityStart', 'Please enter Activity Start Date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
     	//activity finish text box
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activityfinish",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('activityFinish', 'yes', 'no', $activityFinish);
+	$form->addRule('activityFinish', 'Please enter Activity Finish Date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
  	//short description text field
 	$textinput = new textarea("shortdescription",$shortdescription);
+	$form->addRule('shortdescription', 'Please enter a short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
@@ -87,6 +105,7 @@
 	    $editor->setContent($longdescription);
 
 	$row = array($editor->showFCKEditor());	   
+	//$form->addRule('longdescription', 'Please enter the long description','required');
 	$objTable->addRow($row, NULL);
 	
     	//Save button

@@ -5,6 +5,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Demographics';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	//	$objLabel =& $this->newObject('label', 'htmlelements');
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
@@ -26,24 +28,41 @@
 	$row = array($objUser->fullName());
 	$objTable->addRow($row, NULL);
 echo "<br />";	
-    	//demographics_type text box		
-	$textinput = new textinput("demographics_type","");
-	$textinput->size = 30;
+    	
+    	//type drop down list	
+	$dropdown = new dropdown('demographics_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$dropdown->addOption($categories['id'], $categories['type']);
+			
+		}
+		
+	}else{
+		$dropdown->addOption('None', "-There are no Types-");	
+	}
+
+
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_demographicstype",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($dropdown->show());
 	$objTable->addRow($row, NULL);
 		
     	//birth text box
 	$startField = $this->objPopupcal->show('birth', 'yes', 'no', '');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_birth",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->addRow($row, NULL);	
+	$form->addRule('birth', 'Please enter your birth date','required');	
 	$row=array($startField);
 	$objTable->addRow($row, NULL);
 	
  	//nationality text field
 	$textinput = new textinput("nationality","");
 	$textinput->size = 30;
+	$form->addRule('nationality', 'Please enter your nationality','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_nationality",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
 	$row=array($textinput->show());

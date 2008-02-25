@@ -6,6 +6,11 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Place';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
+	$mytype = 'Priority';
+	$mycategorytypeList = $this->objDbCategorytypeList->listCategorytype($mytype);
+
 	$objCheck = $this->loadClass('checkbox', 'htmlelements');
 	//$userid = $this->objUser->userId();
 	$mygoals = $this->objDbGoalsList->getUserGoals();
@@ -59,33 +64,63 @@
 	$objTable->addRow($row, NULL);
 	//end Goals drop down list    	
 	
-	//type text box		
-	$textinput = new textinput("goal_type",$goal_type);
-	$textinput->size = 60;
+	
+    	//type drop down list	
+	$mydropdown = new dropdown('goal_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			$mydropdown->setSelected($goal_type);
+			
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no Types-");	
+	}
+
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_goalsType",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
+	$row = array($mydropdown->show());	
 	$objTable->addRow($row, NULL);
 
 	//start calendar
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
+	$form->addRule('start', 'Please enter the start date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
 
- 	//priority text field
-	$textinput = new textinput("priority",$priority);
-	$textinput->size = 60;
+    	//priority drop down list	
+	$dropdown = new dropdown('priority');
+	
+	if (!empty($mycategorytypeList))
+	{
+		foreach ($mycategorytypeList as $categories)
+		{
+
+			$dropdown->addOption($categories['id'], $categories['type']);
+			$dropdown->setSelected($priority);
+			
+		}
+		
+	}else{
+		$dropdown->addOption('None', "-There are no Types-");	
+	}
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_priority",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
+	$row = array($dropdown->show());	
 	$objTable->addRow($row, NULL);
 
 
  	//status text field
 	$textinput = new textinput("status",$status);
 	$textinput->size = 60;
+	$form->addRule('status', 'Please enter the status','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_status",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
@@ -95,12 +130,14 @@
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_statusDate",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('status_date', 'yes', 'no', $status_date);
+	$form->addRule('status_date', 'Please enter the status date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
 
  	//short description text field
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 60;
+	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	

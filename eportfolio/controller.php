@@ -73,6 +73,8 @@ class eportfolio extends controller
 	$this->objDbReflectionList =& $this->getObject('dbeportfolio_reflection', 'eportfolio');
 	$this->objDbAssertionList =& $this->getObject('dbeportfolio_assertion', 'eportfolio');
 	$this->objDbProductList =& $this->getObject('dbeportfolio_product', 'eportfolio');
+	$this->objDbCategoryList =& $this->getObject('dbeportfolio_category', 'eportfolio');
+	$this->objDbCategorytypeList =& $this->getObject('dbeportfolio_categorytypes', 'eportfolio');
 
 	$this->userId=$this->objUser->userId(); //To pick user userid
 	$this->setVarByRef('userId', $this->userId);
@@ -150,32 +152,40 @@ class eportfolio extends controller
 	    case "add_address":
 		return "add_address_tpl.php";
 		break;
-            case "view_transcript":		
-		return "view_transcript_tpl.php"; 
+            case "view_transcript":	
+		return 'main_tpl.php';	
+		//return "view_transcript_tpl.php"; 
 		break;
 	    case "add_interest":
 		return "add_interest_tpl.php";
 		break;
             case "view_interest":		
-		return "view_interest_tpl.php"; 
+		//return "view_interest_tpl.php"; 
+		return 'main_tpl.php';
 		break;
            case "view_address":		
-		return "view_address_tpl.php";
+		//return "view_address_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_contact":
-		return "view_contact_tpl.php";
+		//return "view_contact_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_email":		
-		return "view_email_tpl.php";		
+		//return "view_email_tpl.php";		
+		return 'main_tpl.php';
 		break;
 	    case "view_activity":		
-		return "view_activity_tpl.php";
+		//return "view_activity_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_qcl":		
-		return "view_qcl_tpl.php";
+		//return "view_qcl_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_goals":		
-		return "view_goals_tpl.php";
+		//return "view_goals_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "add_goals":
 		return "add_goals_tpl.php";
@@ -196,25 +206,46 @@ class eportfolio extends controller
 		return "add_assertion_tpl.php";
 		break;
 	    case "view_assertion":		
-		return "view_assertion_tpl.php";
+		//return "view_assertion_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "add_product":		
 		return "add_product_tpl.php";
 		break;
 	    case "view_product":		
-		return "view_product_tpl.php";
+		//return "view_product_tpl.php";
+		return 'main_tpl.php';
 		break;
+	    case "add_category":		
+		return "add_category_tpl.php";
+		break;
+	    case "view_category":		
+		//return "view_category_tpl.php";
+		return 'main_tpl.php';
+		break;
+	    case "add_categorytype":		
+		return "add_categorytype_tpl.php";
+		break;
+	    case "view_categorytype":		
+		//return "view_categorytype_tpl.php";
+		return 'main_tpl.php';
+		break;
+
 	    case "view_reflection":		
-		return "view_reflection_tpl.php";
+		//return "view_reflection_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_demographics":		
-		return "view_demographics_tpl.php";
+		//return "view_demographics_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_affiliation":		
-		return "view_affiliation_tpl.php";
+		//return "view_affiliation_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "view_competency":		
-		return "view_competency_tpl.php";
+		//return "view_competency_tpl.php";
+		return 'main_tpl.php';
 		break;
 	    case "add_affiliation":
 		return "add_affiliation_tpl.php";
@@ -245,21 +276,24 @@ class eportfolio extends controller
 		$id = $this->getParam('id', null),
 		$this->objDbAddressList->deleteSingle($id));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	    case "deletecontact":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbContactList->deleteSingle($id));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	    case "deleteinterest":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbInterestList->deleteSingle($id));
 		 // After processing return to view interest
-	        return $this->nextAction( 'view_interest', array() );
+	        //return $this->nextAction( 'view_interest', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "deletedemographics":
@@ -267,35 +301,40 @@ class eportfolio extends controller
 		$id = $this->getParam('id', null),
 		$this->objDbDemographicsList->deleteSingle($id));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	    case "deleteemail":
 		$this->nextAction(
 		$myid = $this->getParam('myid', null),
 		$this->objDbEmailList->deleteSingle($myid));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	    case "deletetranscript":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbTranscriptList->deleteSingle($id));
 		// After processing return to view transcript
-	        return $this->nextAction( 'view_transcript', array() );
+	        //return $this->nextAction( 'view_transcript', array() );
+		return "main_tpl.php";
 		break;
 	    case "deleteqcl":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbQclList->deleteSingle($id));
 		// After processing return to view qcl
-	        return $this->nextAction( 'view_qcl', array() );
+	        //return $this->nextAction( 'view_qcl', array() );
+		return "main_tpl.php";
 		break;
 	    case "deletecompetency":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbCompetencyList->deleteSingle($id));
 		 // After processing return to view competency
-	        return $this->nextAction( 'view_competency', array() );
+	        //return $this->nextAction( 'view_competency', array() );
+		return "main_tpl.php";
 		break;
 
 
@@ -304,21 +343,24 @@ class eportfolio extends controller
 		$myid = $this->getParam('id', null),
 		$this->objDbAffiliationList->deleteSingle($myid));
 		// After processing return to view affiliation
-	        return $this->nextAction( 'view_affiliation', array() );
+	        //return $this->nextAction( 'view_affiliation', array() );
+		return "main_tpl.php";
 		break;
 	    case "deletegoals":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbGoalsList->deleteSingle($myid));
 		// After processing return to view goals
-	        return $this->nextAction( 'view_goals', array() );
+	        //return $this->nextAction( 'view_goals', array() );
+		return "main_tpl.php";
 		break;
 	    case "deletereflection":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbReflectionList->deleteSingle($myid));
 		 // After processing return to view reflection
-	        return $this->nextAction( 'view_reflection', array() );
+	        //return $this->nextAction( 'view_reflection', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "deleteassertion":
@@ -326,22 +368,42 @@ class eportfolio extends controller
 		$myid = $this->getParam('id', null),
 		$this->objDbAssertionList->deleteSingle($myid));
 		 // After processing return to view assertion
-	        return $this->nextAction( 'view_assertion', array() );
+	        //return $this->nextAction( 'view_assertion', array() );
+		return "main_tpl.php";
 		break;
 	    case "deleteactivity":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbActivityList->deleteSingle($myid));		
 		// After processing return to view activity
-	        return $this->nextAction( 'view_activity', array() );
+	        //return $this->nextAction( 'view_activity', array() );
+		return "main_tpl.php";
 		break;
 	    case "deleteproduct":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbProductList->deleteSingle($myid));		
 		// After processing return to view product
-	        return $this->nextAction( 'view_product', array() );
+	        //return $this->nextAction( 'view_product', array() );
+		return "main_tpl.php";
 		break;
+	    case "deletecategory":
+		$this->nextAction(
+		$myid = $this->getParam('id', null),
+		$this->objDbCategoryList->deleteSingle($myid));		
+		// After processing return to view product
+	        //return $this->nextAction( 'view_category', array() );
+		return "main_tpl.php";
+		break;
+	    case "deletecategorytype":
+		$this->nextAction(
+		$myid = $this->getParam('id', null),
+		$this->objDbCategorytypeList->deleteSingle($myid));		
+		// After processing return to view product
+	        //return $this->nextAction( 'view_categorytype', array() );
+		return "main_tpl.php";
+		break;
+
 	   case "addaddressconfirm":
 	        //$link = $this->getParam('link', NULL);
 	        $id = $this->objDbAddressList->insertSingle(
@@ -354,7 +416,8 @@ class eportfolio extends controller
 		$this->getParam('postal_address', NULL)
 		);
        		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	   case "addqclconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -368,7 +431,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		// After processing return to view qcl
-	        return $this->nextAction( 'view_qcl', array() );
+	        //return $this->nextAction( 'view_qcl', array() );
+		return "main_tpl.php";
 		break;
 	   case "addgoalsconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -383,7 +447,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		// After processing return to view goals
-	        return $this->nextAction( 'view_goals', array() );
+	        //return $this->nextAction( 'view_goals', array() );
+		return "main_tpl.php";
 		break;
 
 	case "editqclconfirm":
@@ -401,7 +466,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		// After processing return to view qcl
-	        return $this->nextAction( 'view_qcl', array() );
+	        //return $this->nextAction( 'view_qcl', array() );
+		return "main_tpl.php";
 		break;
 	case "editgoalsconfirm":
 		$myid = $this->getParam('id', null);
@@ -419,7 +485,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		// After processing return to view goals
-	        return $this->nextAction( 'view_goals', array() );
+	        //return $this->nextAction( 'view_goals', array() );
+		return "main_tpl.php";
 		break;
 
 
@@ -435,7 +502,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		 // After processing return to view competency
-	        return $this->nextAction( 'view_competency', array() );
+	        //return $this->nextAction( 'view_competency', array() );
+		return "main_tpl.php";
 		break;
 
 	   case "addcompetencyconfirm":
@@ -446,7 +514,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		 // After processing return to view competency
-	        return $this->nextAction( 'view_competency', array() );
+	        //return $this->nextAction( 'view_competency', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "editcompetency":
@@ -462,6 +531,7 @@ class eportfolio extends controller
 		$this->setVarByRef('shortdescription',$shortdescription);
 		$this->setVarByRef('longdescription',$longdescription);
 		return "edit_competency_tpl.php";
+		
 		break;
 
 	case "editassertionconfirm":
@@ -476,7 +546,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		 // After processing return to view assertion
-	        return $this->nextAction( 'view_assertion', array() );
+	        //return $this->nextAction( 'view_assertion', array() );
+
 		break;
 
 	   case "addassertionconfirm":
@@ -499,7 +570,8 @@ class eportfolio extends controller
                     return FALSE;
                 }
 		// After processing return to view assertion
-	        return $this->nextAction( 'view_assertion', array() );
+	        //return $this->nextAction( 'view_assertion', array() );
+		return "main_tpl.php";
 		break;			
 	    case "editassertion":
 		$id = $this->getParam('id', null);
@@ -517,19 +589,19 @@ class eportfolio extends controller
 		break;
 
 	    case "displayassertion":
-		$id = $this->getParam('id', null);
-		$this->setVarByRef('id',$id);
-		$list = $this->objDbAssertionList->listSingle($id);
-		$instructor = $list[0]['userid'];
-		$rationale = $list[0]['rationale'];
-		$creation_date = $list[0]['creation_date'];
-		$shortdescription = $list[0]['shortdescription'];
-		$longdescription = $list[0]['longdescription'];
-		$this->setVarByRef('instructor',$instructor);
-		$this->setVarByRef('rationale',$rationale);
-		$this->setVarByref('creation_date',$creation_date);
-		$this->setVarByRef('shortdescription',$shortdescription);
-		$this->setVarByRef('longdescription',$longdescription);
+		$thisid = $this->getParam('thisid', null);
+		$this->setVarByRef('thisid',$thisid);
+		$mylist = $this->objDbAssertionList->listSingle($thisid);
+		$myinstructor = $mylist[0]['userid'];
+		$myrationale = $mylist[0]['rationale'];
+		$mycreation_date = $mylist[0]['creation_date'];
+		$myshortdescription = $mylist[0]['shortdescription'];
+		$mylongdescription = $mylist[0]['longdescription'];
+		$this->setVarByRef('myinstructor',$myinstructor);
+		$this->setVarByRef('myrationale',$myrationale);
+		$this->setVarByref('mycreation_date',$mycreation_date);
+		$this->setVarByRef('myshortdescription',$myshortdescription);
+		$this->setVarByRef('mylongdescription',$mylongdescription);
 		return "display_assertion_tpl.php";
 		break;
 
@@ -546,7 +618,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		 // After processing return to view reflection
-	        return $this->nextAction( 'view_reflection', array() );
+	        //return $this->nextAction( 'view_reflection', array() );
+		return "main_tpl.php";
 		break;
 
 
@@ -558,7 +631,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		 // After processing return to view reflection
-	        return $this->nextAction( 'view_reflection', array() );
+	        //return $this->nextAction( 'view_reflection', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "editreflection":
@@ -595,7 +669,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		 // After processing return to view product
-	        return $this->nextAction( 'view_product', array() );
+	        //return $this->nextAction( 'view_product', array() );
+		return "main_tpl.php";
 		break;
 
 
@@ -614,7 +689,8 @@ class eportfolio extends controller
 
 		);
 		 // After processing return to view product
-	        return $this->nextAction( 'view_product', array() );
+	        //return $this->nextAction( 'view_product', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "editproduct":
@@ -657,7 +733,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		));
 		 // After processing return to view interest
-	        return $this->nextAction( 'view_interest', array() );
+	        //return $this->nextAction( 'view_interest', array() );
+		return "main_tpl.php";
 		break;
 
 	   case "addinterestconfirm":
@@ -668,7 +745,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		 // After processing return to view interest
-	        return $this->nextAction( 'view_interest', array() );
+	        //return $this->nextAction( 'view_interest', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "editinterest":
@@ -745,7 +823,8 @@ class eportfolio extends controller
 		$this->getParam('finish', NULL)
 		);
 		// After processing return to view affiliation
-	        return $this->nextAction( 'view_affiliation', array() );
+	        //return $this->nextAction( 'view_affiliation', array() );
+		return "main_tpl.php";
 		break;
 	    case "editaddress":
 		$id = $this->getParam('id', null);
@@ -785,16 +864,6 @@ class eportfolio extends controller
 		$this->setVarByref('finish',$finish);
 		return "edit_affiliation_tpl.php";
 		break;	
-	case "editemail":
-		$id = $this->getParam('id', null);
-		$this->setVarByRef('id',$id);
-		$list = $this->objDbEmailList->listSingle($id);
-		$email_type = $list[0]['type'];
-		$email = $list[0]['email'];
-		$this->setVarByRef('email_type',$email_type);
-		$this->setVarByRef('email',$email);
-		return "edit_email_tpl.php";
-		break;
 	case "editaddressconfirm":
 		$myid = $this->getParam('id', null);
 		$this->setVarByRef('id',$myid);
@@ -810,7 +879,8 @@ class eportfolio extends controller
 			$this->getParam('postal_address', NULL)
 		));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	case "editaffiliationconfirm":
 		$myid = $this->getParam('id', null);
@@ -826,7 +896,8 @@ class eportfolio extends controller
 			$this->getParam('finish', NULL)
 		));
 		// After processing return to view affiliation
-	        return $this->nextAction( 'view_affiliation', array() );
+	        //return $this->nextAction( 'view_affiliation', array() );
+		return "main_tpl.php";
 		break;
 	   case "addcontactconfirm":	        
 	        $id = $this->objDbContactList->insertSingle(
@@ -837,15 +908,29 @@ class eportfolio extends controller
 		$this->getParam('id_number', NULL)
 		);
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
+
+	case "editemail":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbEmailList->listSingle($id);
+		$email_type = $list[0]['type'];
+		$email = $list[0]['email'];
+		$this->setVarByRef('email_type',$email_type);
+		$this->setVarByRef('email',$email);
+		return "edit_email_tpl.php";
+		break;
+
 	   case "addemailconfirm":
 	        $id = $this->objDbEmailList->insertSingle(
 		$this->getParam('email_type', NULL),
 		$this->getParam('email', NULL)
 		);
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	   case "editemailconfirm":
 		$myid = $this->getParam('id', null);
@@ -857,8 +942,76 @@ class eportfolio extends controller
 			$this->getParam('email', NULL)
 		));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
+
+	   case "editcategory":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbCategoryList->listSingle($id);
+		$category = $list[0]['category'];
+		$this->setVarByRef('category',$category);
+		return "edit_category_tpl.php";
+		break;
+
+	   case "addcategoryconfirm":
+	        $id = $this->objDbCategoryList->insertSingle(
+		$this->getParam('category', NULL)
+		);
+		// After processing return to view category
+	        //return $this->nextAction( 'view_category', array() );
+		return "main_tpl.php";
+		break;
+	   case "editcategoryconfirm":
+		$myid = $this->getParam('id', null);
+		$this->setVarByRef('id',$myid);
+		$this->nextAction(
+		$this->objDbCategoryList->updateSingle(
+			$myid,
+			$this->getParam('category', NULL)
+		));
+		// After processing return to view category
+	        //return $this->nextAction( 'view_category', array() );
+		return "main_tpl.php";
+		break;
+
+	   case "editcategorytype":
+		$id = $this->getParam('id', null);
+		$this->setVarByRef('id',$id);
+		$list = $this->objDbCategorytypeList->listSingle($id);
+		$categoryid = $list[0]['categoryid'];
+		$categorytype = $list[0]['type'];
+		$this->setVarByRef('categoryid',$categoryid);
+		$this->setVarByRef('categorytype',$categorytype);
+		return "edit_categorytype_tpl.php";
+		break;
+
+	   case "addcategorytypeconfirm":
+	        $id = $this->objDbCategorytypeList->insertSingle(
+		$this->getParam('categoryid', NULL),
+		$this->getParam('categorytype', NULL)
+		);
+		// After processing return to view category types
+	        //return $this->nextAction( 'view_categorytype', array() );
+		return "main_tpl.php";
+		break;
+	   case "editcategorytypeconfirm":
+		$myid = $this->getParam('id', null);
+		$this->setVarByRef('id',$myid);
+		$this->nextAction(
+		$this->objDbCategorytypeList->updateSingle(
+			$myid,
+			$this->getParam('categoryid', NULL),
+			$this->getParam('categorytype', NULL)
+
+		));
+		// After processing return to view category types
+	        //return $this->nextAction( 'view_categorytype', array() );
+		return "main_tpl.php";
+		break;
+
+
 	    case "editcontact":
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
@@ -888,7 +1041,8 @@ class eportfolio extends controller
 			$this->getParam('id_number', NULL)
 		));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	   case "adddemographicsconfirm":
 		/*
@@ -903,7 +1057,8 @@ class eportfolio extends controller
 		$this->getParam('nationality', NULL)
 		);
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 	    case "editdemographics":
 		$id = $this->getParam('id', null);
@@ -932,7 +1087,8 @@ class eportfolio extends controller
 			$this->getParam('nationality', NULL)
 		));
 		// After processing return to view contact
-	        return $this->nextAction( 'view_contact', array() );
+	        //return $this->nextAction( 'view_contact', array() );
+		return "main_tpl.php";
 		break;
 
 	   case "addactivityconfirm":
@@ -952,7 +1108,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		// After processing return to view activity
-	        return $this->nextAction( 'view_activity', array() );
+	        //return $this->nextAction( 'view_activity', array() );
+		return "main_tpl.php";
 		break;
 	   case "addtranscriptconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -961,7 +1118,8 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 		);
 		// After processing return to view transcript
-	        return $this->nextAction( 'view_transcript', array() );
+	        //return $this->nextAction( 'view_transcript', array() );
+		return "main_tpl.php";
 		break;
 	    case "editactivity":
 		$id = $this->getParam('id', null);
@@ -1002,7 +1160,8 @@ class eportfolio extends controller
 			$this->getParam('longdescription', NULL)
 		));
 		// After processing return to view activity
-	        return $this->nextAction( 'view_activity', array() );
+	        //return $this->nextAction( 'view_activity', array() );
+		return "main_tpl.php";
 		break;
 
 	    case "edittranscript":
@@ -1025,7 +1184,8 @@ class eportfolio extends controller
 			$this->getParam('longdescription', NULL)
 		));
 		// After processing return to view transcript
-	        return $this->nextAction( 'view_transcript', array() );
+	        //return $this->nextAction( 'view_transcript', array() );
+		return "main_tpl.php";
 		break;
 
 

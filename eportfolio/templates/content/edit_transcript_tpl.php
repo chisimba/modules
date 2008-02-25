@@ -30,6 +30,7 @@
  	//short description text field
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 60;
+	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	

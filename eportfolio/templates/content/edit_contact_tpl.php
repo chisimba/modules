@@ -6,6 +6,10 @@
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
 	$objWindow =& $this->newObject('windowpop','htmlelements');
+	$type = 'Place';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
+	$modetype = 'Mode';
+	$modetypeList = $this->objDbCategorytypeList->listCategorytype($modetype);
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
 	$objHeading->str =$objLanguage->languageText("mod_eportfolio_editcontact",'eportfolio');
@@ -26,44 +30,73 @@
 	$row = array($objUser->fullName());
 	$objTable->addRow($row, NULL);
 	
-    	//type text box		
-	$textinput = new textinput("contact_type",$contact_type);
-	$textinput->size = 30;
+    	//type drop down list	
+	$dropdown = new dropdown('contact_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$dropdown->addOption($categories['id'], $categories['type']);
+			$dropdown->setSelected($contact_type);
+		}
+		
+	}else{
+		$dropdown->addOption('None', "-There are no types-");	
+	}
+	
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_contype",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($dropdown->show());
 	$objTable->addRow($row, NULL);
 
-	//Contact type text box		
-	$textinput = new textinput("contactType",$contactType);
-	$textinput->size = 30;
+	//Contact type dropdown	
+	$mydropdown = new dropdown('contactType');
+	
+	if (!empty($modetypeList))
+	{
+		foreach ($modetypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			$mydropdown->setSelected($contactType);
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no modes-");	
+	}
+	
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_contacttype",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($mydropdown->show());
 	$objTable->addRow($row, NULL);
 
     	//country_code text box
-	$textinput = new textinput("country_code",$country_code);
-	$textinput->size = 30;
+	$country_code = new textinput("country_code",$country_code);
+	$country_code->size = 30;
+	$form->addRule('country_code','Please enter the country code','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_countrycode",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($country_code->show());
 	$objTable->addRow($row, NULL);
 	
  	//area_code text field
-	$textinput = new textinput("area_code",$area_code);
-	$textinput->size = 30;
+	$area_code = new textinput("area_code",$area_code);
+	$area_code->size = 30;
+	$form->addRule('area_code','Please enter the area code','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_areacode",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($area_code->show());
 	$objTable->addRow($row, NULL);
  	
     	//contact number text field
-	$textinput = new textinput("id_number",$id_number);
-	$textinput->size = 30;
+	$id_number = new textinput("id_number",$id_number);
+	$id_number->size = 30;
+	$form->addRule('id_number','Please enter the Id number','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_contactnumber",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($id_number->show());
 	$objTable->addRow($row, NULL);
 
      	//Save button

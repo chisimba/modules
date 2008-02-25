@@ -1,4 +1,13 @@
 <?php
+
+$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$this->setVar('pageSuppressXML',true);
+if( !$hasAccess ) {
+		// Redirect
+	        return $this->nextAction( 'view_assertion', array() );
+		break;
+} else {
     // Load classes.
 	$this->loadClass("form","htmlelements");
 	$this->loadClass("textinput","htmlelements");
@@ -30,6 +39,7 @@
 	//type text box		
 	$textinput = new textinput("rationale",$rationale);
 	$textinput->size = 40;
+	$form->addRule('rationale', 'Please enter the rationale','required');
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_assertionRationale",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
@@ -39,12 +49,14 @@
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
+	$form->addRule('creation_date', 'Please enter the creation date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
 
  	//short description text box
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 40;
+	$form->addRule('shortdescription', 'Please enter a short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	
@@ -83,4 +95,5 @@
 	$objTable->addRow($row, NULL);
 	$form->addToForm($objTable->show());
 	echo $form->show();
+}
 ?>

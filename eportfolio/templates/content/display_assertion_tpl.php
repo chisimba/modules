@@ -20,7 +20,7 @@
 	echo $objWashout->parseText("<b>".$objLanguage->languageText("mod_eportfolio_lecturer", 'eportfolio').":</b>");
 	echo '<br></br>';
 	echo '<br></br>';
-	echo $objWashout->parseText($objUser->fullName($instructor));	
+	echo $objWashout->parseText($objUser->fullName($myinstructor));	
 	echo '<br></br>';
 	echo '<br></br>';
 
@@ -30,7 +30,7 @@
 	echo '<br></br>';
 	echo '<br></br>';
 
-	echo $objWashout->parseText($rationale);	
+	echo $objWashout->parseText($myrationale);	
 	echo '<br></br>';
 	echo '<br></br>';
 
@@ -40,7 +40,7 @@
 	echo '<br></br>';
 	echo '<br></br>';
 
-	echo $objWashout->parseText($this->objDate->formatDate($creation_date));
+	echo $objWashout->parseText($this->objDate->formatDate($mycreation_date));
 	echo '<br></br>';
 	echo '<br></br>';
 
@@ -49,7 +49,7 @@
 	echo $objWashout->parseText("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	echo '<br></br>';
 	echo '<br></br>';
-	echo $objWashout->parseText($shortdescription);	
+	echo $objWashout->parseText($myshortdescription);	
 	echo '<br></br>';
 	echo '<br></br>';
 
@@ -58,7 +58,7 @@
 	echo '<br></br>';
 	echo '<br></br>';
 
-	echo $objWashout->parseText($longdescription);
+	echo $objWashout->parseText($mylongdescription);
 	echo '<br></br>';
 	echo '<br></br>';
 	echo "<a href=\"". $this->uri(array(

@@ -6,6 +6,8 @@
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('textarea','htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Affiliation';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
@@ -26,16 +28,30 @@
 	$row = array($objUser->fullName());				
 	$objTable->addRow($row, NULL);
 	
-    	//type text box		
-	$textinput = new textinput("qcl_type","");
-	$textinput->size = 40;
+    	//type drop down list	
+	$mydropdown = new dropdown('qcl_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			
+			
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no Types-");	
+	}
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_qcltype",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());				
+	$row = array($mydropdown->show());				
 	$objTable->addRow($row, NULL);
     	//qcl title text box
 	$textinput = new textinput("title","");
 	$textinput->size = 40;
+	$form->addRule('title', 'Please enter the title','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_qcltitle",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());				
@@ -44,6 +60,7 @@
  	//organisation text field	
 	$textinput = new textinput("organisation","");
 	$textinput->size = 40;
+	$form->addRule('organisation', 'Please enter the organisation','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_organisation",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());				
@@ -52,6 +69,7 @@
     	//qcl level text field	
 	$textinput = new textinput("qcl_level","");
 	$textinput->size = 40;
+	$form->addRule('qcl_level', 'Please enter the qualification level','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_qcllevel",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());				
@@ -61,10 +79,13 @@
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_qclawarddate",'eportfolio').":</b>");			
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('award_date', 'yes', 'no', '');
+	$form->addRule('award_date', 'Please enter the award date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
  	//short description text field
-	$textinput = new textarea("shortdescription",'');
+	$textinput = new textinput("shortdescription","");
+	$textinput->size = 40;
+	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	

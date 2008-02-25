@@ -5,7 +5,7 @@ $hasAccess|= $this->objEngine->_objUser->isAdmin();
 $this->setVar('pageSuppressXML',true);
 if( !$hasAccess ) {
 		// Redirect
-	        return $this->nextAction( 'view_assertion', array() );
+		return $this->nextAction( 'main', array() );
 		break;
 } else {
     // Load classes.
@@ -15,16 +15,21 @@ if( !$hasAccess ) {
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$objCheck = $this->loadClass('checkbox', 'htmlelements');
+	$categoryList = $this->objDbCategoryList->getByItem();
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
-	$objHeading->str =$objLanguage->languageText("mod_eportfolio_addAssertion",'eportfolio');
+	$objHeading->str =$objLanguage->languageText("mod_eportfolio_addCategorytype",'eportfolio');
+	if (!empty($categoryList))
+	{
+
 	echo $objHeading->show();
 	
 	$form = new form("add", 
 		$this->uri(array(
 	    		'module'=>'eportfolio',
-	   		'action'=>'addassertionconfirm'
+	   		'action'=>'addcategorytypeconfirm'
 	)));
 	$objTable = new htmltable();
 	$objTable->width='30';
@@ -34,48 +39,40 @@ if( !$hasAccess ) {
 	$objTable->addRow($row, NULL);
 	$row = array($objUser->fullName());	
 	$objTable->addRow($row, NULL);
+
+
 	
-	//type text box		
-	$textinput = new textinput("rationale","");
-	$textinput->size = 40;
-	$form->addRule('rationale', 'Please enter the rationale','required');
-	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_assertionRationale",'eportfolio').":</b>");	
+	//category text box		
+	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_category",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
-	$objTable->addRow($row, NULL);
-
-	//date calendar
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
-	$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', "");
-	$form->addRule('creation_date', 'Please enter the creation date','required');
-	$row = array($startField);
-	$objTable->addRow($row, NULL);
-
- 	//short description text box
-	$textinput = new textinput("shortdescription","");
-	$textinput->size = 40;
-	$form->addRule('shortdescription', 'Please enter a short description','required');
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
-	$objTable->addRow($row, NULL);
-
- 	
-    	//Full description text field
-	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
-	//Add the WYSWYG editor
-	    $editor = $this->newObject('htmlarea', 'htmlelements');
-	    $editor->name = 'longdescription';
-	    $editor->height = '300px';
-	    $editor->width = '450px';
-	    $longdescription = '';
-	    $editor->setContent($longdescription);
-
-	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, NULL);
+	//Goals Drop down list
+	$dropdown = new dropdown('categoryid');
 	
+	if (!empty($categoryList))
+	{
+		foreach ($categoryList as $categories)
+		{
+
+			$dropdown->addOption($categories['id'], $categories['category']);
+			
+		}
+		
+	}else{
+		$dropdown->addOption('None', "-No Categories Present-");	
+	}
+	
+	$row = array($dropdown->show());
+	$objTable->addRow($row, NULL);
+
+	//category type text box		
+	$categorytype = new textinput("categorytype","");
+	$categorytype->size = 60;
+	$form->addRule('categorytype','Please enter the Category Type','required');
+	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_categoryType",'eportfolio').":</b>");	
+	$objTable->addRow($row, NULL);
+	$row = array($categorytype->show());	
+	$objTable->addRow($row, NULL);
+
     	//Save button
 	$button = new button("submit",
 	$objLanguage->languageText("word_save"));    //word_save
@@ -87,7 +84,7 @@ if( !$hasAccess ) {
         $objCancel =& $this->getObject("link","htmlelements");
         $objCancel->link($this->uri(array(
                     'module'=>'eportfolio',
-                'action'=>'view_assertion'
+                'action'=>'view_categorytype'
             )));
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
@@ -95,5 +92,9 @@ if( !$hasAccess ) {
 	$objTable->addRow($row, NULL);
 	$form->addToForm($objTable->show());
 	echo $form->show();
+	}else{
+		return $this->nextAction( 'view_category', array() );
+		break;		
+	}
 }
 ?>

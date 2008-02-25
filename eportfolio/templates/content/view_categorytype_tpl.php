@@ -1,7 +1,16 @@
 <?php
-//View Reflection
+//View categorytype
+$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$this->setVar('pageSuppressXML',true);
+if( !$hasAccess ) {
+		return $this->nextAction( 'main', array() );
+		break;
+} else {
 	//Language Items	
 	$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+	$categoryList = $this->objDbCategoryList->getByItem();
+	$mycategoryList = $this->objDbCategoryList->getByItem();	
 	$linkAdd = '';
 	    // Show the add link
 	    $iconAdd = $this->getObject('geticon','htmlelements');
@@ -11,7 +20,7 @@
 	    $objLink =& $this->getObject('link','htmlelements');
 	    $objLink->link($this->uri(array(
 	                'module'=>'eportfolio',
-	            'action'=>'add_reflection'
+	            'action'=>'add_categorytype'
 	        )));
 
          $objLink->link =  $iconAdd->show();
@@ -19,35 +28,40 @@
     // Show the heading
     $objHeading =& $this->getObject('htmlheading','htmlelements');
     $objHeading->type=1;
-    $objHeading->str =$objUser->getSurname ().$objLanguage->languageText("mod_eportfolio_reflectionList", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$linkAdd;
+	//Check for categories 	
+	if (!empty($categoryList))
+	{
+    		$objHeading->str =$objLanguage->languageText("mod_eportfolio_categorytypeList", 'eportfolio').'&nbsp;&nbsp;&nbsp;'.$linkAdd;
+	}else{
+    		$objHeading->str =$objLanguage->languageText("mod_eportfolio_categorytypeList", 'eportfolio');
+
+	}
     echo $objHeading->show();
 
-	$list = $this->objDbReflectionList->getByItem($userId);
+	$categoryList = $this->objDbCategorytypeList->getByItem();
     echo "<br/>";
     // Create a table object
     $table =& $this->newObject("htmltable","htmlelements");
     $table->border = 0;
     $table->cellspacing='3';
-    $table->width = "100%";
+    $table->width = "50%";
     // Add the table heading.
     $table->startRow();
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_rationaleTitle",'eportfolio')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio')."</b>");
-    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio')."</b>");
+    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_category",'eportfolio')."</b>");
+    $table->addHeaderCell("<b>".$objLanguage->languageText("mod_eportfolio_categoryType",'eportfolio')."</b>");
     $table->endRow();
     
     // Step through the list of addresses.
     $class = NULL;
-    if (!empty($list)) {
-
-    foreach ($list as $item) {
-
+    if (!empty($categoryList)) {
+    foreach ($categoryList as $item) {
     // Display each field for activities
         $table->startRow();
-        $table->addCell($item['rationale'], "", NULL, NULL, $class, '');
-        $table->addCell($this->objDate->formatDate($item['creation_date']), "", NULL, NULL, $class, '');
-        $table->addCell($item['shortdescription'], "", NULL, NULL, $class, '');
-        
+	$category = $this->objDbCategoryList->listSingle($item['categoryid']);
+	if (!empty($category)) {
+        	$table->addCell($category[0]['category'], "", NULL, NULL, $class, '');
+	}
+        $table->addCell($item['type'], "", NULL, NULL, $class, '');        
         // Show the edit link
         $iconEdit = $this->getObject('geticon','htmlelements');
         $iconEdit->setIcon('edit');
@@ -56,7 +70,7 @@
         $objLink =& $this->getObject("link","htmlelements");
         $objLink->link($this->uri(array(
                     'module'=>'eportfolio',
-                'action'=>'editreflection',
+                'action'=>'editcategorytype',
                 'id' => $item["id"]
             )));
             //if( $this->isValid( 'edit' ))
@@ -77,7 +91,7 @@
                 $iconDelete->show(),
                 $this->uri(array(
                         'module'=>'eportfolio',
-                    'action'=>'deletereflection',
+                    'action'=>'deletecategorytype',
                     'id'=>$item["id"]
                 )),
             $objLanguage->languageText('mod_eportfolio_suredelete','eportfolio'));
@@ -93,17 +107,27 @@
    
 } else {
     $table->startRow();
-    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="4"');
+    $table->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="3"');
     $table->endRow();
 }
     	echo $table->show();
 
-	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_reflection')));
-	$addlink->link = $objLanguage->languageText("mod_eportfolio_addReflection",'eportfolio');
+	$addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_categorytype')));
+	$addlink->link = $objLanguage->languageText("mod_eportfolio_addCategorytype", 'eportfolio');
 
 
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
-	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
-//End View Reflection
+
+	//Check for categories 	
+	if (!empty($mycategoryList))
+	{
+		echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show();
+	}else{
+
+		echo '<br clear="left" />'.$mainlink->show();
+	}
+
+}
+//End View categorytype
 ?>

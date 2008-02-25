@@ -1,4 +1,5 @@
 <?php
+//View Interest
 	//Language Items	
 	$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
 	$linkAdd = '';
@@ -105,5 +106,6 @@
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
 	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show(); 
+//End View Interest
 
 ?>

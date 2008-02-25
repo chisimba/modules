@@ -5,6 +5,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Place';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
@@ -26,12 +28,24 @@
 	$row = array($objUser->fullName());
 	$objTable->addRow($row, NULL);
 	
-    	//email_type text box		
-	$textinput = new textinput("email_type",$email_type);
-	$textinput->size = 40;
+    	//type drop down list	
+	$dropdown = new dropdown('email_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$dropdown->addOption($categories['id'], $categories['type']);
+			$dropdown->setSelected($email_type);
+		}
+		
+	}else{
+		$dropdown->addOption('None', "-There are no Types-");	
+	}
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_emailtype",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($dropdown->show());
 	$objTable->addRow($row, NULL);
 
  	
@@ -43,11 +57,12 @@
 	$objTable->endRow();
 
 	//email text field
-	$textinput = new textinput("email",$email);
-	$textinput->size = 40;
+	$email = new textinput("email",$email);
+	$email->size = 40;
+	$form->addRule('email', 'Not a valid Email', 'email');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_email",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($email->show());
 	$objTable->addRow($row, NULL);
 
 	// Spacer

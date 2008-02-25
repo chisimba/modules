@@ -47,14 +47,15 @@
     $addressTable->endRow();
     
     // Step through the list of addresses.
-    $class = 'even';
+    $class = NULL;
     if (!empty($addressList)) {
     	$i = 0;
     foreach ($addressList as $addressItem) {
        $class = ($class == (($i++%2) == 0)) ? 'even':'odd';
     // Display each field for addresses
+	$cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
         $addressTable->startRow();
-        $addressTable->addCell($addressItem['type'], "", NULL, NULL, $class, '');
+        $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, $class, '');
         $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, $class, '');
         $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, $class, '');
         $addressTable->addCell($addressItem['locality'], "", NULL, NULL, $class, '');

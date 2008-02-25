@@ -1,4 +1,5 @@
 <?php
+//View Affiliation
 	//Language Items	
 	$notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
 
@@ -109,4 +110,5 @@
 	$mainlink = new link($this->uri(array('module'=>'eportfolio','action'=>'main')));
 	$mainlink->link = 'ePortfolio home';
 	echo '<br clear="left" />'.$addlink->show().' / '.$mainlink->show();
+//View Affiliation
 ?>

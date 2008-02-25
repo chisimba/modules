@@ -5,6 +5,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Affiliation';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
@@ -26,25 +28,40 @@
 	$row = array($objUser->fullName());
 	$objTable->addRow($row, NULL);
 	
-    	//type text box		
-	$textinput = new textinput("affiliation_type",$affiliation_type);
-	$textinput->size = 40;
+    	//type drop down list	
+	$mydropdown = new dropdown('affiliation_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			$mydropdown->setSelected($affiliation_type);
+			
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no Types-");	
+	}
+
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_affiliationtype", 'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
-	$row=array($textinput->show());
+	$row=array($mydropdown->show());
 	$objTable->addRow($row, NULL);	
 
     	//classification text box
 	$textinput = new textinput("classification",$classification);
 	$textinput->size = 40;
+	$form->addRule('classification', 'Please enter the classification','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_classification",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
 	$row=array($textinput->show());
 	$objTable->addRow($row, NULL);		
  	//role text field
-	$objTable->addRow($row, 'even');
 	$textinput = new textinput("role",$role);
 	$textinput->size = 40;
+	$form->addRule('role', 'Please enter the role','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_role",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
 	$row=array($textinput->show());
@@ -53,6 +70,7 @@
  	//organisation text box
 	$textinput = new textinput("organisation",$organisation);
 	$textinput->size = 40;
+	$form->addRule('organisation', 'Please enter the organisation','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_organisation",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
 	$row=array($textinput->show());
@@ -62,6 +80,7 @@
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);		
 	$startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
+	$form->addRule('start', 'Please enter the start date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);	
 	
@@ -69,6 +88,7 @@
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_activityfinish",'eportfolio').":</b>");			
 	$objTable->addRow($row, NULL);		
 	$startField = $this->objPopupcal->show('finish', 'yes', 'no', $finish);
+	$form->addRule('finish', 'Please enter the finish date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);	
 		

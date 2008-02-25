@@ -6,6 +6,8 @@
 	$this->loadClass("button","htmlelements");
 	$this->loadClass("htmltable", 'htmlelements');
 	$this->loadClass('dropdown', 'htmlelements');
+	$type = 'Interest';
+	$categorytypeList = $this->objDbCategorytypeList->listCategorytype($type);
 	$objWindow =& $this->newObject('windowpop','htmlelements');
 	$objHeading =& $this->getObject('htmlheading','htmlelements');
 	$objHeading->type=1;
@@ -27,24 +29,40 @@
 	$row = array($objUser->fullName());	
 	$objTable->addRow($row, NULL);
 	
-	//type text box		
-	$textinput = new textinput("interest_type",$interest_type);
-	$textinput->size = 40;
+    	//type drop down list	
+	$mydropdown = new dropdown('interest_type');
+	
+	if (!empty($categorytypeList))
+	{
+		foreach ($categorytypeList as $categories)
+		{
+
+			$mydropdown->addOption($categories['id'], $categories['type']);
+			$mydropdown->setSelected($interest_type);
+			
+		}
+		
+	}else{
+		$mydropdown->addOption('None', "-There are no Types-");	
+	}
+
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_interestType",'eportfolio').":</b>");	
 	$objTable->addRow($row, NULL);
-	$row = array($textinput->show());	
+	$row = array($mydropdown->show());	
 	$objTable->addRow($row, NULL);
 
 	//award date calendar
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_creationDate",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$startField = $this->objPopupcal->show('creation_date', 'yes', 'no', $creation_date);
+	$form->addRule('creation_date', 'Please enter the creation date','required');
 	$row = array($startField);
 	$objTable->addRow($row, NULL);
 
  	//short description text box
 	$textinput = new textinput("shortdescription",$shortdescription);
 	$textinput->size = 40;
+	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);
 	$row = array($textinput->show());	

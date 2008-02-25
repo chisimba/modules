@@ -17,10 +17,7 @@
         $iconEdit->alt = $objLanguage->languageText("word_edit");
         $iconEdit->align=false;
         $objLink =& $this->getObject("link","htmlelements");
-        $objLink->link($this->uri(array(
-                    'module'=>'eportfolio',
-                'action'=>'userdetails'                
-            )));
+        $objLink->link($this->uri(NULL, 'userdetails'));
 
               $objLink->link = $iconEdit->show();
         $linkEdit = $objLink->show();  
