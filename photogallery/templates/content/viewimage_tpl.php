@@ -47,36 +47,42 @@ $str.=$link->show().'</div>';
 $form->action = $this->uri(array('action' => 'addcomment', 'imageid' => $this->getParam('imageid'), 'albumid' => $this->getParam('albumid')));
 
 $name = new textinput('name');
-$form->addRule('name','Please suppy a name!', 'required');
+if ($this->_objUser->isLoggedIn()){
+    $name->value=$this->_objUser->fullname();
+}
+$form->addRule('name',$this->objLanguage->languagetext('mod_photogallery_needname','photogallery'), 'required');
 
 $table = new htmltable();
 $table->width = '200';
 $table->startRow();
-$table->addCell('<label for="name">Name:</label>');
+$table->addCell('<label for="name">'.$this->objLanguage->languagetext('mod_photogallery_name','photogallery').':</label>');
 $table->addCell($name->show());
 $table->endRow();
 
 $email = new textinput('email');
+if ($this->_objUser->isLoggedIn()){
+    $email->value=$this->_objUser->email();
+}
 $table->startRow();
-$table->addCell('<label for="email">E-Mail:</label>');
+$table->addCell('<label for="email">'.$this->objLanguage->languagetext('mod_photogallery_email','photogallery').':</label>');
 $table->addCell($email->show());
 $table->endRow();
 
 $website = new textinput('website');
 $table->startRow();
-$table->addCell('<label for="website">Site:</label>');
+$table->addCell('<label for="website">'.$this->objLanguage->languagetext('mod_photogallery_site','photogallery').':</label>');
 $table->addCell($website->show());
 $table->endRow();
 
 $commentField = new textarea('comment');
 $button = new button();
-$button->value = 'Add Comment';
+$button->value = $this->objLanguage->languagetext('mod_photogallery_postcomment','photogallery');
 $button->setToSubmit();
 
 
 $this->setVar('pageTitle', 'Photo Gallery - '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')).' - '.$image['title']);
 
-$form->addToForm('<h3>Add a comment</h3>'.$table->show());
+$form->addToForm('<h3>'.$this->objLanguage->languagetext('mod_photogallery_postcomment','photogallery').'</h3>'.$table->show());
 $form->addToForm($commentField->show().'<br/>'.$button->show());
 
 if(count($comments) > 0)
