@@ -308,9 +308,7 @@ function in_str($needle, $haystack){
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
     $this->objConfig->getModulePath().
-    "/realtime/resources/avoir-whiteboard-server-0.1.jar:".
-    $this->objConfig->getModulePath().
-    "/realtime/resources/avoir-realtime-common-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
+    "/realtime/resources/avoir-realtime-server-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
     
     system($cmd,$return_value);
     
