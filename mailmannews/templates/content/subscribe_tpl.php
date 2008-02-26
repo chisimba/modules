@@ -9,9 +9,10 @@ $rightCol = NULL;
 if ($this->objUser->isLoggedIn()) {
 	$leftMenu = $this->newObject('usermenu', 'toolbar');
 	$leftCol .= $leftMenu->show();
+	$middleColumn .= $this->objMailmanSignup->createList();
 }
 //$leftCol .= "sign up here...";
-$middleColumn = 'While Mailman is best suited for a discussion "listserv", it is not difficult to configure it to operate as an announce-only newsletter-style mailing list.
+$middleColumn .= 'While Mailman is best suited for a discussion "listserv", it is not difficult to configure it to operate as an announce-only newsletter-style mailing list.
 
 First, go to:
 
@@ -44,7 +45,10 @@ You can customize these settings as you like, but to prevent unauthorized people
 
 $middleColumn .= $this->objMailmanSignup->subsBox();
 
-$rightCol = $this->objMailmanSignup->subsBox();
+$objBlocks = $this->getObject('blocks', 'blocks');
+
+
+$rightCol = $objBlocks->showBlock('subscribe', 'mailmannews');
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol);
 $cssLayout->setRightColumnContent($rightCol);

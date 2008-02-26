@@ -114,6 +114,12 @@ class mailmansignup extends object
 			return FALSE;
 		}
 	}
+	
+	public function createList()
+	{
+		$objCurl = $this->getObject('curl', 'utilities');
+		return $objCurl->exec('http://mailman.uwc.ac.za/mailman/create');
+	}
 
 }
 ?>
