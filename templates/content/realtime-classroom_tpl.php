@@ -75,8 +75,10 @@ if (isset ($noContextCode))
     // Path for uploaded files
     $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
     $objMkdir->mkdirs($uploadPath, 0777);
-       
+    $resourcesPath =$modPath.'/realtime/resources';
 //echo $uploadPath;
+//$domain = GetHostByName("http://" . $_SERVER['HTTP_HOST']);
+//echo $domain;
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="600">';
@@ -87,6 +89,7 @@ if (isset ($noContextCode))
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=uploadPath value="'.$uploadPath.'">';
+    echo '<param name=resourcesPath value="'.$resourcesPath.'">';
     echo '<param name=port value="'.$port.'">';
     echo '</applet>';
     
