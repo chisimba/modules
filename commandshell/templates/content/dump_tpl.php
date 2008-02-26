@@ -1,6 +1,15 @@
 <?php
+//Create an instance of the css layout class
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(1);
+
+
+
+
+
+
 if (isset($str)) {
-   echo $str; 
+   $cssLayout->setMiddleColumnContent($str);
 }
 if (isset($ar)) {
     //Create an instance of the table object
@@ -10,6 +19,8 @@ if (isset($ar)) {
     //Turn the array into a table
     $objTable->arrayToTable($ar);
     //Show the table
-    echo $objTable->show();
+    $cssLayout->setMiddleColumnContent($objTable->show());
 }
+//Render it out
+echo $cssLayout->show();
 ?>

@@ -152,13 +152,13 @@ class commandexec extends object
     private function __validateCmd($cmd)
     {
         if ( $cmd=="" || $cmd==NULL ){
-            $this->error = $this->objLanguage->languageText("mod_commandshell_errCommandWasEmpty");
+            $this->error = $this->objLanguage->languageText("mod_commandshell_errCommandWasEmpty", "commandshell");
             return FALSE;
         } else {
             if (file_exists($cmd)) {
                 return TRUE;
             } else {
-                $this->error = $this->objLanguage->languageText("mod_commandshell_errCommandNotFound") . "&nbsp;&nbsp;&nbsp;" . $cmd;
+                $this->error = $this->objLanguage->languageText("mod_commandshell_errCommandNotFound", "commandshell") . "&nbsp;&nbsp;&nbsp;" . $cmd;
                 return FALSE;
             }
         }
