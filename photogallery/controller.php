@@ -64,7 +64,6 @@ class photogallery extends controller
 		$css .= '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('style/default.css','photogallery').'" />';		
 		$this->appendArrayVar('headerParams',$css);
 		
-		//die('go to hellee'.$action);
         switch ($action)
         {          
           	//front view
@@ -95,7 +94,12 @@ class photogallery extends controller
 			
 			//comments
 			case 'addcomment':
-				$this->_objDBComments->addComment();
+                                if (!$this->_objUser->isLoggedIn() && (md5(strtoupper($this->getParam('request_captcha'))) != $this->getParam('captcha')) ){
+                                    $this->setErrorMessage($this->objLanguage->languageText('mod_photogallery_captcha','photogallery'));
+                                    return $this->viewImage();
+                                } else {
+                                    $this->_objDBComments->addComment();
+                                }
 				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
 			
 			case 'comments':

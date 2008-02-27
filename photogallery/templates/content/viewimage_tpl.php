@@ -20,7 +20,33 @@ $this->appendArrayVar('headerParams',$scripts);
 $str = '<div id="image">';
 //$link->href = $this->uri(array('action' => 'viewimage', 'imageid' => $image['id']));
 
+$loggedIn=$this->_objUser->isLoggedIn();
+if (!$loggedIn){
+?>
+<script type="text/javascript">
+//<![CDATA[
+function init () {
+            $('input_redraw').onclick = function () {
+                                redraw();
+                                        }
+}
+function redraw () {
+            var url = 'index.php';
+                    var pars = 'module=security&action=generatenewcaptcha';
+                            var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+            $('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+            var newData = originalRequest.responseText;
+                    $('captchaDiv').innerHTML = newData;
+}
+//]]>
+</script>
 
+<?
+}
 // Get image display size - no need to resize it its small anyway
 $info=getimagesize($this->_objFileMan->getFullFilePath($image['file_id']));
 if (isset($info[0])){
@@ -43,12 +69,14 @@ $str.=$link->show().'</div>';
 	
 
 
-
+// Add Comment Form
 $form->action = $this->uri(array('action' => 'addcomment', 'imageid' => $this->getParam('imageid'), 'albumid' => $this->getParam('albumid')));
 
 $name = new textinput('name');
-if ($this->_objUser->isLoggedIn()){
+if ($loggedIn){
     $name->value=$this->_objUser->fullname();
+} else {
+    $name->value=$this->getParam('name');
 }
 $form->addRule('name',$this->objLanguage->languagetext('mod_photogallery_needname','photogallery'), 'required');
 
@@ -60,21 +88,28 @@ $table->addCell($name->show());
 $table->endRow();
 
 $email = new textinput('email');
-if ($this->_objUser->isLoggedIn()){
+if ($loggedIn){
     $email->value=$this->_objUser->email();
+} else {
+        $email->value=$this->getParam('email');
 }
+
 $table->startRow();
 $table->addCell('<label for="email">'.$this->objLanguage->languagetext('mod_photogallery_email','photogallery').':</label>');
 $table->addCell($email->show());
 $table->endRow();
 
 $website = new textinput('website');
+ $website->value=$this->getParam('website');
+ 
+ 
 $table->startRow();
 $table->addCell('<label for="website">'.$this->objLanguage->languagetext('mod_photogallery_site','photogallery').':</label>');
 $table->addCell($website->show());
 $table->endRow();
 
 $commentField = new textarea('comment');
+$commentField->value=$this->getParam('comment');
 $button = new button();
 $button->value = $this->objLanguage->languagetext('mod_photogallery_postcomment','photogallery');
 $button->setToSubmit();
@@ -83,7 +118,20 @@ $button->setToSubmit();
 $this->setVar('pageTitle', 'Photo Gallery - '.$this->_objDBAlbum->getAlbumTitle($this->getParam('albumid')).' - '.$image['title']);
 
 $form->addToForm('<h3>'.$this->objLanguage->languagetext('mod_photogallery_postcomment','photogallery').'</h3>'.$table->show());
-$form->addToForm($commentField->show().'<br/>'.$button->show());
+$form->addToForm($commentField->show());
+
+
+if (!$loggedIn){
+    $objCaptcha = $this->getObject('captcha', 'utilities');
+    $captcha = new textinput('request_captcha');
+    //$captchaLabel = new label($this->objLanguage->languageText('phrase_verifyrequest', 'security', 'Verify Request'), 'input_request_captcha');
+    $fieldset = $this->newObject('fieldset', 'htmlelements');
+    $fieldset->legend = 'Verify Image';
+    $fieldset->contents = stripslashes($this->objLanguage->languageText('mod_security_explaincaptcha', 'security', 'To prevent abuse, please enter the code as shown below. If you are unable to view the code, click on "Redraw" for a new one.')).'<br /><div id="captchaDiv">'.$objCaptcha->show().'</div>'.$captcha->show().$required.'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>';
+    $form->addToForm($fieldset->show());
+}
+
+$form->addToForm('<br/>'.$button->show());
 
 if(count($comments) > 0)
 {
