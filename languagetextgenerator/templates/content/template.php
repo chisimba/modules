@@ -49,7 +49,7 @@ echo $form->show();
 
 if (isset($results)) {
     
-    echo '<h3>'.$this->objLanguage->languageText('phrase_self_add', '', 'Self Add').'</h3>';
+    echo '<h3>'.$this->objLanguage->languageText('phrase_self_add', 'languagetextgenerator', 'Self Add').'</h3>';
     
     $description = $this->getParam('description', $this->getParam('search'));
     
@@ -83,7 +83,13 @@ if (isset($results)) {
             echo '<p>USES: '.$result['id'].'|'.$result['description'].'|'.$result['en'].'</p>';
             
             echo '<p><strong>'.$this->objLanguage->languageText('mod_languagetextgenerator_languageobjectresuse', 'languagetextgenerator', 'Language Object Reuse').':</strong></p>';
-            echo '<p>$this->objLanguage->languageText(\''.$result['id'].'\', \''.$result['pageid'].'\', \''.$result['en'].'\');</p>';
+            
+            if (preg_match('/\[-.*?-\]/', $this->getParam('search'))) {
+                echo '<p>$this->objLanguage->code2Txt(\''.$result['id'].'\', \''.$result['pageid'].'\', NULL, \''.$result['en'].'\');</p>';
+            } else {
+                echo '<p>$this->objLanguage->languageText(\''.$result['id'].'\', \''.$result['pageid'].'\', \''.$result['en'].'\');</p>';
+            }
+            //echo '<p>$this->objLanguage->languageText(\''.$result['id'].'\', \''.$result['pageid'].'\', \''.$result['en'].'\');</p>';
             
             
             $divider = '<hr /><br />';
