@@ -13,7 +13,7 @@ if ($mode == 'showdoc') {
     $objSelectFile = $this->getObject('selectfile', 'filemanager');
     $objSelectFile->restrictFileList = array('pdf');
     
-    $button = new button ('doit', $this->objLanguage->languageText('mod_context_convertpdf', 'context', 'Convert to PDF'));
+    $button = new button ('doit', $this->objLanguage->languageText('mod_swftools_converttoflash', 'context', 'Convert to Flash'));
     $button->setToSubmit();
     
     $form->addToForm($objSelectFile->show().'<br />'.$button->show());
