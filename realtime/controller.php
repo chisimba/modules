@@ -228,6 +228,7 @@ class realtime extends controller
 			        
 			        $this->startWhiteboardServer();
                                 $this->startOpenOffice();
+                                //$this->validJavaVersion();
                                 return $this->showClassRoom($this->contextCode);
 		}
 	}
@@ -247,6 +248,28 @@ class realtime extends controller
      }
     
 
+/*
+*  check atleast of version of java running in server..min required is 1.5
+*/
+
+
+ 
+    function validJavaVersion(){
+
+    $result = array();
+    $cmd='java -version';
+    $needle='headless';
+echo exec("java '-version'");
+/*
+    system( $cmd, $result);
+    foreach ($result as $v ){
+   echo 'before: '.$v;
+      $vers=explode(" ", $v);
+     $ver = $vers[2];
+     echo $ver;
+   }
+*/
+}
  /**
   *
   *  this checks if open office is running or not, then warns the user
