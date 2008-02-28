@@ -163,28 +163,10 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
-		  $this->startServer();
-  
+          $this->startServer();
           $id= $this->getParam('id');
-          $title= $this->getParam('title');
-          $filename= $this->getParam('filename');
-          
-          $filesObj = $this->getObject("dbwebpresentfiles", "webpresent");
-          $files=$filesObj->getLatestPresentations();
-          $fileList="";
-          $counter = 0;
-          if (count($files) > 0)
-          {
-           foreach ($files as $file)
-            {
-                $fileList .=",".$file['id']."#".$file['title'];
-                $counter++;   
-            }
-          }   
-
-          $this->setVarByRef('id', $id);
-          $this->setVarByRef('title', $title);
-          $this->setVarByRef('filename', $filename);
+          $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
+          $this->setVarByRef('filePath', $filePath);
 
           return "presenter-applet.php";
  }
@@ -202,12 +184,40 @@ class webpresent extends controller
        $this->setVarByRef('id', $id);              
        return "audience-applet.php";
      }
-	
-	private function startServer()
+ /**
+    *automaticaly try to start server
+    */ 
+ function startServer()
     {
-       ///usr/lib/jvm/java-1.5.0-sun/bin/
-    $cmd = "java  -Xms128m -Xmx256m -cp .:". $this->objConfig->getModulePath()."/realtime/resources/presentations/presentations-server.jar avoir.realtime.presentations.server.Server 3128 >/dev/null &";
-	//echo $cmd;
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+   
+    $cmd = "java -Xms64m -Xmx128m -cp .:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-io-1.3.1.jar:".
+    $this->objConfig->getModulePath().
+        "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-cli-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+     "/documentconverter/resources/jodconverter-2.2.0/lib/juh-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/jurt-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/ridl-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-api-1.4.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-jdk14-1.4.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/unoil-2.2.0.jar:".
+    $this->objConfig->getModulePath().
+    "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
+    $this->objConfig->getModulePath().
+    "/realtime/resources/avoir-realtime-server-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
+    
     system($cmd,$return_value);
     
     }

@@ -15,18 +15,41 @@
 		{
 			$this->userLevel = 'guest';
 		}
+    $modPath=$this->objConfig->getModulePath();
+    $replacewith="";
+    $docRoot=$_SERVER['DOCUMENT_ROOT'];
+    $appletPath=str_replace($docRoot,$replacewith,$modPath);
+    $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+    $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
+    $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
+   // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
+    $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
+  
+    $objMkdir = $this->getObject('mkdir', 'files');
+    // Path for uploaded files
+    $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
+    $objMkdir->mkdirs($uploadPath, 0777);
+    $resourcesPath =$modPath.'/realtime/resources';
+//echo $uploadPath;
+//$domain = GetHostByName("http://" . $_SERVER['HTTP_HOST']);
+//echo $domain;
     echo '<center>';
-    echo '<applet code="avoir.realtime.presentations.client.presenter.PresenterFrame" width="75%" height="600" align="middle">';
-	echo '	<param name="archive" value="'.$this->presentationsURL.'/presentations-client.jar"/> ';
-	echo '	<param name="host" value="localhost"/>';
-    echo '  <param name="port" value="3128"/>';
-    echo '  <param name="contentBasePath" value="'.$this->objConfig->getcontentBasePath().'webpresent/'.$id.'"/>';
-    echo '  <param name="userName" value="'.$this->objUser->userName().'"/>';
-	echo '  <param name="slideId" value="'.$id.'"/>';
-	echo '  <param name="jodconverterPath" value="'.$jodconverterPath.'"/>';
-	echo '  <param name="fullname" value="'.$this->objUser->fullname().'"/>'; 
-	echo '  <param name="jmfResourcePath" value="'.$this->objConfig->getModulePath().'/realtime/resources/jmf/"/>';
-	echo '  <param name="userLevel" value="'.$this->userLevel.'"/>';
-    echo "</applet> ";
+    echo '<applet codebase="'.$appletCodeBase.'"';
+    echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
+    echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="600">';
+    echo '<param name=userName value="'.$this->objUser->userName().'">';
+    echo '<param name=fullname value="'.$this->objUser->fullname().'">';
+    echo '<param name=userLevel value="'.$this->userLevel.'">';
+    echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
+    echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
+    echo '<param name=uploadURL value="'.$uploadURL.'">';
+    echo '<param name=isWebPresent value="true">';
+    echo '<param name=slidesDir value="'.$filePath.'">';
+    echo '<param name=uploadPath value="'.$uploadPath.'">';
+    echo '<param name=resourcesPath value="'.$resourcesPath.'">';
+    echo '<param name=port value="'.$port.'">';
+    echo '</applet>';
     echo '</center>';
 ?>
