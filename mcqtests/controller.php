@@ -108,40 +108,8 @@ class mcqtests extends controller
         switch ($action) {
                 // display template to add a new test.
 
-            case 'addtest':
-                return $this->addTest();
-                // add a test to the database
 
-            case 'applyaddtest':
-                $postSave = $this->getParam('save');
-                if ($postSave == $this->objLanguage->languageText('word_cancel')) {
-                    return $this->nextAction('');
-                }
-                $id = $this->applyAddTest();
-                return $this->nextAction('view', array(
-                    'id' => $id
-                ));
-                // display template to edit a test
-
-            case 'edit':
-                return $this->editTest();
-                // delete a test
-
-            case 'delete':
-                $this->dbTestadmin->deleteTest($this->getParam('id'));
-                $back = $this->getParam('back');
-                if (!empty($back)) {
-                    Header("Location: ".$this->uri(array(
-                        'action' => 'viewbyletter'
-                    ) , $back));
-                    break;
-                }
-                return $this->nextAction('');
-                // display template showing the test and questions
-
-            case 'view':
-                return $this->viewTest();
-                // Display template to add a new question
+             // Display template to add a new question
 
             case 'addquestion':
                 $id = $this->getParam('id', NULL);
@@ -178,7 +146,119 @@ class mcqtests extends controller
                     'id' => $id,
                     'confirm' => 'yes'
                 ));
+
+
+
+
+
+
+		case 'addstep':
+		return 'addstep_tpl.php';
+
+		case 'savestep':
+		$currentstep = $this->getParam('currentstep');
+		if($currentstep=='1'){
+		return 'addstep_tpl.php';
+		}else if($currentstep=='2'){
+				$StepMenuArr = array();
+				$StepMenuArr['status'] = $this->getParam('status');
+				$StepMenuArr['name'] = $this->getParam('name');
+				$StepMenuArr['description'] = $this->getParam('description');
+				$StepMenuArr['testType'] = $this->getParam('testType');
+				$StepMenuArr['qSequence'] = $this->getParam('qSequence');
+				$StepMenuArr['aSequence'] = $this->getParam('aSequence');
+				$StepMenuArr['save'] = $this->getParam('save');
+				
+				$this->setSession('stepmenu1', null);
+				$this->setSession('stepmenu1', $StepMenuArr);
+				$StepMenuArr = null;
+				return 'addstep_tpl.php';
+
+		}else if($currentstep=='3'){
+
+
+				$StepMenuArr2 = array();
+				$StepMenuArr2['percent'] = $this->getParam('percent');
+				$StepMenuArr2['decimal'] = $this->getParam('decimal');
+				$StepMenuArr2['setequal'] = $this->getParam('setequal');
+				$StepMenuArr2['start'] = $this->getParam('start');
+				$StepMenuArr2['close'] = $this->getParam('close');
+				$StepMenuArr2['timed'] = $this->getParam('timed');
+				$StepMenuArr2['hour'] = $this->getParam('start');
+				$StepMenuArr2['min'] = $this->getParam('close');
+				$StepMenuArr2['save'] = $this->getParam('save');
+				$this->setSession('stepmenu2', null);
+				$this->setSession('stepmenu2', $StepMenuArr2);
+				$StepMenuArr = null;
+				return 'addstep_tpl.php';
+		}else{
+				$step_data1 = $this->getSession('stepmenu1');
+				$step_data2 = $this->getSession('stepmenu2');
+				//merge 2 arrays 	
+				$fields = array();
+				$fields['status'] = $step_data1['status'];
+				$fields['name'] = $step_data1['name'];
+				$fields['description'] = $step_data1['description'];
+				$fields['testType'] =$step_data2['testType'];
+				$fields['qSequence'] = $step_data1['qSequence'];
+				$fields['aSequence'] = $step_data1['aSequence'];
+				$fields['percent'] = $step_data2['percent'];
+				$fields['decimal'] = $step_data2['decimal'];
+				$fields['setequal'] = $step_data2['setequal'];
+				$fields['start'] = $step_data2['start'];
+				$fields['close'] = $step_data2['close'];
+				$fields['timed'] = $step_data2['timed'];
+				$fields['hour'] = $step_data2['hour'];
+				$fields['min'] = $step_data2['min'];
+				$fields['comLab'] = $this->getParam('comLab');
+				//saving the step data
+				
+                $id = $this->StepAddTest($fields);
+                return $this->nextAction('view', array(
+                    'id' => $id
+                ));
+		}
+
+
+            case 'addtest':
+                return $this->addTest();
+                // add a test to the database
+
+            case 'applyaddtest':
+                $postSave = $this->getParam('save');
+                if ($postSave == $this->objLanguage->languageText('word_cancel')) {
+                    return $this->nextAction('');
+                }
+                $id = $this->applyAddTest();
+                return $this->nextAction('view', array(
+                    'id' => $id
+                ));
+                // display template to edit a test
+
+            case 'edit':
+                return $this->editTest();
+                // delete a test
+
+            case 'delete':
+                $this->dbTestadmin->deleteTest($this->getParam('id'));
+                $back = $this->getParam('back');
+                if (!empty($back)) {
+                    Header("Location: ".$this->uri(array(
+                        'action' => 'viewbyletter'
+                    ) , $back));
+                    break;
+                }
+                return $this->nextAction('');
+                // display template showing the test and questions
+
+
+			case 'viewteststep':
+                return 'viewteststep_tpl.php';
+
+            case 'view':
+                return $this->viewTest();
                 // Display template to edit a question
+
 
             case 'editquestion':
                 $data = $this->dbQuestions->getQuestion($this->getParam('questionId'));
@@ -226,6 +306,10 @@ class mcqtests extends controller
                 // save answers to the database
 
             case 'applyaddanswer':
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+
                 $postSave = $this->getParam('save', '');
                 $postTestId = $this->getParam('testId', '');
                 $postQuestionId = $this->getParam('questionId', '');
@@ -484,6 +568,60 @@ class mcqtests extends controller
         $this->setVarByRef('allPercent', $allPercent);
         $this->setVar('mode', 'add');
         return 'addtest_tpl.php';
+    }
+
+
+    /**
+     * Method to add a new test
+     *
+     * @access private
+     * @return string $id The id of the new test
+     */
+    private function StepAddTest($data)
+    {
+
+ $id = $this->getParam('id', '');
+        $fields = array();
+        $fields['name'] = $data['name'];
+        $fields['context'] = $this->contextCode;
+        $fields['userid'] = $this->userId;
+        // $fields['chapter'] = $this->getParam('chapter', '');
+        $fields['status'] = $data['status'];
+        $percent =$data['percent'];
+        $decimal = $data['decimal'];
+        $fields['percentage'] = $percent.'.'.$decimal;
+        $postTimed = $data['timed'];
+        if (!empty($postTimed)) {
+            $fields['timed'] = 1;
+        } else {
+            $fields['timed'] = 0;
+        }
+        $fields['duration'] = ($data['hour'] *60) +$data['min'];
+        $startDate = $data['start'];
+        $closeDate = $data['close'];
+        $fields['startdate'] = $startDate;
+        $fields['closingdate'] = $closeDate;
+        $fields['testtype'] = $data['testType'];
+        $fields['qsequence'] = $data['qSequence'];
+        $fields['asequence'] = $data['aSequence'];
+        $fields['comlab'] = $data['comLab'];
+        $fields['description'] = $data['description'];
+        $fields['updated'] = date('Y-m-d H:i:s');
+        $id = $this->dbTestadmin->addTest($fields, $id);
+        // set all tests to equal percentages
+        $postEqual = $this->getParam('setequal', '');
+        if (isset($postEqual) && !empty($postEqual)) {
+            $tests = $this->dbTestadmin->getTests($this->contextCode, 'id, percentage');
+            $num = count($tests);
+            $percent = round((100/$num) , 2);
+            $arrField = array(
+                'percentage' => $percent
+            );
+            foreach($tests as $item) {
+                $this->dbTestadmin->addTest($arrField, $item['id']);
+            }
+        }
+        return $id;
     }
 
     /**

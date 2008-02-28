@@ -34,7 +34,7 @@ $viewLabel = $this->objLanguage->languageText('word_view') .' '.$testLabel;
 $addLabel = $this->objLanguage->languageText('mod_mcqtests_addtest', 'mcqtests');
 $exportLabel = $this->objLanguage->languageText('mod_mcqtests_export', 'mcqtests');
 $addUrl = $this->uri(array(
-    'action' => 'addtest'
+    'action' => 'addstep'
 ));
 $addIcon = $objIcon->getAddIcon($addUrl);
 $heading.= '&nbsp;&nbsp;&nbsp;'.$addIcon;

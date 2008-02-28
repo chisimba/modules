@@ -15,6 +15,8 @@ $objForm = &$this->loadClass('form', 'htmlelements');
 $objInput = &$this->loadClass('textinput', 'htmlelements');
 $objText = &$this->loadClass('textarea', 'htmlelements');
 $objButton = &$this->loadClass('button', 'htmlelements');
+$objInput = &$this->loadClass('dropdown', 'htmlelements');
+$objInput = &$this->loadClass('checkbox', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_mcqtests_addanswers', 'mcqtests');
@@ -40,35 +42,42 @@ if ($mode == 'edit' && !empty($answer)) {
     $dComment = '';
     $num = $data['count']+1;
 }
+
+print_r($data['count']);
+
+
 $aOrder = $num;
 // Display test info
 $str = '<br /><font size="4"><b>'.$questionLabel.':</b>&nbsp;&nbsp;'.$data['question'].'</font>';
 
-$objTable = new htmltable();
-$objTable->cellpadding = 5;
-$objTable->width = '99%';
-$objTable->startRow();
-$objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
-$objTable->endRow();
+	$objTable = new htmltable();
+	$objTable->cellpadding = 5;
+	$objTable->width = '99%';
+	$objTable->startRow();
+	$objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
+	$objTable->endRow();
 
-$objText = new textarea('answer1', $dAnswer, 2, 80);
-$objTable->startRow();
-$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
-$objTable->endRow();
-$objInput = new textinput('comment1', $dComment);
-$objInput->size = 70;
-$objTable->startRow();
-$objTable->addCell('<b>'.$commentLabel.':</b>', '7%', 'center', '', '');
-$objTable->addCell($objInput->show() , '', '', '', '');
-$objTable->endRow();
-$objTable->row_attributes = 'height="15"';
-$objTable->startRow();
-$objTable->addCell('', '', '', '', '', 'colspan="3"');
-$objTable->endRow();
+	$objText = new textarea('answer1', $dAnswer, 2, 80);
+	$objTable->startRow();
+	$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
+	$objTable->endRow();
+	$objInput = new textinput('comment1', $dComment);
+	$objInput->size = 70;
+	$objTable->startRow();
+	$objTable->addCell('<b>'.$commentLabel.':</b>', '7%', 'center', '', '');
+	$objTable->addCell($objInput->show() , '', '', '', '');
+	$objTable->endRow();
+	$objTable->row_attributes = 'height="15"';
+	$objTable->startRow();
+	$objTable->addCell('', '', '', '', '', 'colspan="3"');
+	$objTable->endRow();
+
 if ($mode == 'add') {
+
     $objTable->startRow();
     $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
     $objTable->endRow();
+
     $objText = new textarea('answer2', '', 2, 80);
     $objTable->startRow();
     $objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
@@ -83,6 +92,7 @@ if ($mode == 'add') {
     $objTable->startRow();
     $objTable->addCell('', '', '', '', '', 'colspan="2"');
     $objTable->endRow();
+
     $objTable->startRow();
     $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
     $objTable->endRow();
@@ -100,6 +110,7 @@ if ($mode == 'add') {
     $objTable->startRow();
     $objTable->addCell('', '', '', '', '', 'colspan="2"');
     $objTable->endRow();
+
     $objTable->startRow();
     $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
     $objTable->endRow();

@@ -11,19 +11,27 @@
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 // set up html elements
-$objHead = &$this->loadClass('htmlheading', 'htmlelements');
-$objTable = &$this->loadClass('htmltable', 'htmlelements');
-$objForm = &$this->loadClass('form', 'htmlelements');
-$objRadio = &$this->loadClass('radio', 'htmlelements');
-$objCheck = &$this->loadClass('checkbox', 'htmlelements');
-$objInput = &$this->loadClass('textinput', 'htmlelements');
-$objText = &$this->loadClass('textarea', 'htmlelements');
-$objButton = &$this->loadClass('button', 'htmlelements');
-$objLink = &$this->loadClass('link', 'htmlelements');
-$objIcon = &$this->newObject('geticon', 'htmlelements');
-$objImage = &$this->loadClass('image', 'htmlelements');
-$objMsg = &$this->newObject('timeoutmessage', 'htmlelements');
+$objHead = $this->loadClass('htmlheading', 'htmlelements');
+$objTable = $this->loadClass('htmltable', 'htmlelements');
+$objTableButtons = $this->loadClass('htmltable', 'htmlelements');
+$objForm = $this->loadClass('form', 'htmlelements');
+$objRadio = $this->loadClass('radio', 'htmlelements');
+$objCheck = $this->loadClass('checkbox', 'htmlelements');
+$objInput = $this->loadClass('textinput', 'htmlelements');
+$objText = $this->loadClass('textarea', 'htmlelements');
+$objButton = $this->loadClass('button', 'htmlelements');
+$objLink = $this->loadClass('link', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objImage = $this->loadClass('image', 'htmlelements');
+$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
 $objEditor = $this->newObject('htmlarea', 'htmlelements');
+$this->objStepMenu = $this->newObject('stepmenu', 'navigation');
+
+$answers_tab = $this->newObject('tabbedbox', 'htmlelements');
+$questions_tab = $this->newObject('tabbedbox', 'htmlelements');
+
+$tabcontent = $this->newObject('tabcontent', 'htmlelements');
+
 
 // set up language items
 $addHead = $this->objLanguage->languageText('mod_mcqtests_addaquestion', 'mcqtests');
@@ -59,6 +67,9 @@ $lbNo = $this->objLanguage->languageText('word_no');
 $lbEnable = $this->objLanguage->languageText('word_enable');
 $lbDisable = $this->objLanguage->languageText('word_disable');
 
+
+
+
 if ($mode == 'edit') {
     $this->setVarByRef('heading', $editHead);
 } else {
@@ -85,6 +96,11 @@ $objHead = new htmlheading();
 $objHead->str = $questionLabel.' '.$num.':';
 $objHead->type = 3;
 $topStr.= $objHead->show();
+
+
+
+
+
 /*
 $type = $this->getParam('editor', 'ww');
 if($type == 'plaintext'){
@@ -128,6 +144,7 @@ $topStr.= '<p>'.$objRadio->show() .'</p>';
 $objInput = new textinput('hint', $hint);
 $objInput->size = 83;
 $topStr.= $objInput->show() .'<p>&nbsp;</p>';
+
 /*
 // Image Section - upload image for question / remove image
 $topStr .= '<p><b>'.$addImageLabel.':</b></p>';
@@ -176,6 +193,22 @@ $topStr .= '<p>'.$objRadio->show().'</p>';
 $topStr .= '<p>'.$imageBtn.'</p>';
 $topStr .= $imageStr.'<br />';
 */
+
+
+
+
+// Create form and add the table
+$objFormEdit = new form('addquestion', $this->uri(''));
+$objFormEdit->addToForm($topStr);
+// $objForm->addRule('question', $errQuestion, 'required');
+$objFormEdit->addRule('mark', $errMark, 'numeric');
+$objFormEdit->addRule('mark', $errMarkReq, 'required');
+
+$topStr = null;
+
+
+//-----------------------------------------------------------------------SpLIT------------------------------------------------------ 
+
 // Answers Section
 $addIcon = $objIcon->getAddIcon("javascript:document.getElementById('form_addquestion').action.value = 'addanswer';document.getElementById('form_addquestion').submit();");
 $ansCount = 0;
@@ -298,6 +331,7 @@ $objTable->startRow();
 $objTable->addCell($hidden);
 $objTable->addCell($btn, '', '', '', '', 'colspan="2"');
 $objTable->endRow();
+
 // Create form and add the table
 $objForm = new form('addquestion', $this->uri(''));
 //$objForm->extra=" enctype='multipart/form-data'";
@@ -306,5 +340,36 @@ $objForm->addToForm($objTable->show());
 // $objForm->addRule('question', $errQuestion, 'required');
 $objForm->addRule('mark', $errMark, 'numeric');
 $objForm->addRule('mark', $errMarkReq, 'required');
-echo $objForm->show();
+
+$objTableButtons = new htmltable();
+$objTableButtons->cellpadding = 5;
+$objTableButtons->cellspacing = 2;
+$objTableButtons->width = '99%';
+$objTableButtons->startRow();
+$objTableButtons->addCell($hidden);
+$objTableButtons->addCell($btn, '', '', '', '', 'colspan="2"');
+$objTableButtons->endRow();
+	
+$objFormEdit->addToForm($objTableButtons->show());
+// $objForm->addRule('question', $errQuestion, 'required');
+$objFormEdit->addRule('mark', $errMark, 'numeric');
+$objFormEdit->addRule('mark', $errMarkReq, 'required');
+
+//==========Adding the new boxes here==================/
+
+	$answers_tab->addTabLabel("Add");
+	$answers_tab->addBoxContent($objForm->show());
+	$tabcontent->addTab("Add answers",$answers_tab->show());
+
+	$questions_tab->addBoxContent($objFormEdit->show());
+	$questions_tab->addTabLabel("Edit");
+	$tabcontent->addTab("Add questions",$questions_tab->show());
+
+	$tabcontent->width = '90%';
+	echo  $tabcontent->show();
+
+
+
+
+
 ?>
