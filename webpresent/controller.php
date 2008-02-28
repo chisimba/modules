@@ -178,11 +178,12 @@ class webpresent extends controller
      */ 
     function __showaudienceapplet()
     {
-		$this->startServer();
-  
-	   $id= $this->getParam('id');
-       $this->setVarByRef('id', $id);              
-       return "audience-applet.php";
+          $this->startServer();
+          $id= $this->getParam('id');
+          $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
+          $this->setVarByRef('filePath', $filePath);
+
+          return "presenter-applet.php";
      }
  /**
     *automaticaly try to start server
