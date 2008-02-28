@@ -73,12 +73,11 @@ if (isset ($noContextCode))
   
     $objMkdir = $this->getObject('mkdir', 'files');
     // Path for uploaded files
-    $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
+    $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");
     $objMkdir->mkdirs($uploadPath, 0777);
     $resourcesPath =$modPath.'/realtime/resources';
-//echo $uploadPath;
-//$domain = GetHostByName("http://" . $_SERVER['HTTP_HOST']);
-//echo $domain;
+    $isLoggedIn =$this->objUser->isLoggedIn();
+
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="600">';
@@ -88,6 +87,8 @@ if (isset ($noContextCode))
     echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
+    echo '<param name=isWebPresent value="false">';
+    echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=uploadPath value="'.$uploadPath.'">';
     echo '<param name=resourcesPath value="'.$resourcesPath.'">';
     echo '<param name=port value="'.$port.'">';
