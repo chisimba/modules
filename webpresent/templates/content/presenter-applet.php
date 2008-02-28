@@ -1,5 +1,7 @@
 <?php
 	 $userLevel;
+         $isLoggedIn='false';
+
 		if ($this->objUser->isAdmin())
 		{
 			$this->userLevel = 'admin';
@@ -15,6 +17,7 @@
 		{
 			$this->userLevel = 'guest';
 		}
+    $isLoggedIn =$this->objUser->isLoggedIn();
     $modPath=$this->objConfig->getModulePath();
     $replacewith="";
     $docRoot=$_SERVER['DOCUMENT_ROOT'];
@@ -32,9 +35,7 @@
     $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
     $objMkdir->mkdirs($uploadPath, 0777);
     $resourcesPath =$modPath.'/realtime/resources';
-//echo $uploadPath;
-//$domain = GetHostByName("http://" . $_SERVER['HTTP_HOST']);
-//echo $domain;
+
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
@@ -46,6 +47,7 @@
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=isWebPresent value="true">';
+    echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';
     echo '<param name=uploadPath value="'.$uploadPath.'">';
     echo '<param name=resourcesPath value="'.$resourcesPath.'">';
