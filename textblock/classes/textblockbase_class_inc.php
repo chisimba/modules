@@ -40,7 +40,8 @@ class textblockbase extends object
 		$ar = $this->objDb->getRow("blockid", $textItem);
 		if (count($ar) > 0 ) {
 		    $this->title = $ar['title'];
-		    $this->blockContents = $ar['blocktext'];
+            $objWashout = $this->getObject("washout", "utilities");
+		    $this->blockContents = $objWashout->parseText($ar['blocktext']);
 		} else {
 		    $this->title = $textItem;
 		    $this->blockContents = $this->objLanguage->languageText("mod_textblock_nocontent", "textblock");
