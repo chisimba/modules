@@ -19,6 +19,8 @@
 	$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
 
 // set up language items
+	$testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
+	$addqestionslabel = $this->objLanguage->languageText('mod_mcqtests_addquestions', 'mcqtests');
 	$head = $objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
 	$editLabel = $objLanguage->languageText('word_edit');
 	$chapterLabel = $objLanguage->languageText('mod_mcqtests_chapter', 'mcqtests');
@@ -350,9 +352,9 @@ $str.= $back;
 //echo $str;
 
 	$answers_tab->addBoxContent($str);
-	$answers_tab->addTabLabel("Adding questions");
-	$tabcontent->addTab("Adding new questions",$answers_tab->show());
-	$tabcontent->addTab("Test Details",$questions_tab->show());
+	$answers_tab->addTabLabel($addqestionslabel);
+	$tabcontent->addTab($addqestionslabel,$answers_tab->show());
+	$tabcontent->addTab($testdetailsLabel,$questions_tab->show());
 
 
 //==========Adding the new boxes here

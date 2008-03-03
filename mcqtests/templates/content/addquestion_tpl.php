@@ -32,14 +32,15 @@ $questions_tab = $this->newObject('tabbedbox', 'htmlelements');
 
 $tabcontent = $this->newObject('tabcontent', 'htmlelements');
 
-
 // set up language items
 $addHead = $this->objLanguage->languageText('mod_mcqtests_addaquestion', 'mcqtests');
 $editHead = $this->objLanguage->languageText('mod_mcqtests_editquestion', 'mcqtests');
 $testLabel = $this->objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
 $totalLabel = $this->objLanguage->languageText('mod_mcqtests_totalmarks', 'mcqtests');
+$addqestionslabel = $this->objLanguage->languageText('mod_mcqtests_addquestions', 'mcqtests');
 $questionLabel = $this->objLanguage->languageText('mod_mcqtests_question', 'mcqtests');
 $answersLabel = $this->objLanguage->languageText('mod_mcqtests_answers', 'mcqtests');
+$addanswersLabel = $this->objLanguage->languageText('mod_mcqtests_addanswers', 'mcqtests');
 $actionsLabel = $this->objLanguage->languageText('mod_mcqtests_actions', 'mcqtests');
 $answerLabel = $this->objLanguage->languageText('mod_mcqtests_answer', 'mcqtests');
 $commentLabel = $this->objLanguage->languageText('mod_mcqtests_comment', 'mcqtests');
@@ -359,12 +360,14 @@ $objFormEdit->addRule('mark', $errMarkReq, 'required');
 
 	$answers_tab->addTabLabel("Add");
 	$answers_tab->addBoxContent($objForm->show());
-	$tabcontent->addTab("Add answers",$answers_tab->show());
+
+
+
+	$tabcontent->addTab($addanswersLabel,$answers_tab->show());
 
 	$questions_tab->addBoxContent($objFormEdit->show());
 	$questions_tab->addTabLabel("Edit");
-	$tabcontent->addTab("Add questions",$questions_tab->show());
-
+	$tabcontent->addTab($addqestionslabel,$questions_tab->show());
 	$tabcontent->width = '90%';
 	echo  $tabcontent->show();
 
