@@ -513,7 +513,7 @@ class datepickajax extends object
             'showtime' => $showTime,
             'showmonths' => $showMonths,
         ) , 'popupcalendar');
-        $onclick = "javascript:window.open('".$url."','popupcal','width=300,".$height.",scrollbars=1,resize=yes')";
+        $onclick = "javascript:window.open('".$url."','popupcal','width=300,".$height.",scrollbars=1,resizable=1')";
         $this->objIcon->title = $selectLabel;
         $this->objIcon->setIcon('select_date');
         $objLink = new link('#');
