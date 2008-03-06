@@ -198,16 +198,27 @@ class datepickajax extends object
         $objInput->fldType = 'hidden';
         $objForm->addToForm($objInput->show());
 
+        $javaScriptTime = '';
         $timeValue = '';
         $showTime = $this->session($field.'_showTime');
         if ($showTime) {
             $objInput = new textinput('time', $arrDate[1]);
             $objInput->fldType = 'hidden';
             $objForm->addToForm($objInput->show());
+            $javaScriptTime = '
+                var hrSelect = $F(\'input_hour\');
+                var mnSelect = $F(\'input_min\');
+                jsInsertTime(hrSelect, mnSelect);
+            ';
             $timeValue = '+\' \'+$F(\'input_time\')';
         }
         $objButton = new button('save', $save);
-        $objButton->extra = ' onclick="javascript:var hrSelect = $F(\'input_hour\');var mnSelect = $F(\'input_min\'); jsInsertTime(hrSelect, mnSelect); window.opener.document.getElementById(\'input_'.$field.'\').value = $F(\'input_date\')'.$timeValue.'; $(\'form_select\').submit();window.close();"';
+        $objButton->extra = ' onclick="javascript:
+            '.$javaScriptTime.'
+            window.opener.document.getElementById(\'input_'.$field.'\').value = $F(\'input_date\')'.$timeValue.';
+            $(\'form_select\').submit();
+            window.close();
+        "';
         $saveButton = $objButton->show();
         $objForm->addToForm($saveButton);
 
