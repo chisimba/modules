@@ -75,9 +75,11 @@ if (isset ($noContextCode))
     // Path for uploaded files
     $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");
     $objMkdir->mkdirs($uploadPath, 0777);
+    $chatLogPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/chat/'.date("Y-m-d-H-i");
+    $objMkdir->mkdirs($chatLogPath, 0777);
     $resourcesPath =$modPath.'/realtime/resources';
     $isLoggedIn =$this->objUser->isLoggedIn();
-
+    
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="600">';
@@ -88,6 +90,7 @@ if (isset ($noContextCode))
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=isWebPresent value="false">';
+    echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=uploadPath value="'.$uploadPath.'">';
     echo '<param name=resourcesPath value="'.$resourcesPath.'">';
