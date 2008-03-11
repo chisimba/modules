@@ -35,7 +35,9 @@
     $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
     $objMkdir->mkdirs($uploadPath, 0777);
     $resourcesPath =$modPath.'/realtime/resources';
-
+    $chatLogPath = $filePath.'/chat/'.("Y-m-d-H-i");
+    $objMkdir->mkdirs($chatLogPath, 0777);
+    
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
@@ -46,6 +48,7 @@
     echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
+    echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=isWebPresent value="true">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';
