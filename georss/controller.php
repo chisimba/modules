@@ -42,7 +42,7 @@ class georss extends controller
             default:
             	$file = $this->getResourcePath('georss.xml');
             	chmod($file, 0777);
-            	if(filemtime($file) > 86500)
+            	if(filemtime($file) > 43200)
             	{
             		// go and update the feed...
             		$objCurl = $this->getObject('curl', 'utilities');

@@ -56,7 +56,7 @@ class dbpostgis extends dbTable
 		// default to something, or show an error...
 		if(!isset($this->database))
 		{
-			$this->database = 'mrc';
+			$this->database = 'wms';
 		}
 		// actually switch the dbTable class to the postGIS db, and reinit the darn thing
 		$this->setDatabaseTo($this->database);

@@ -4,7 +4,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-class swesos extends controller
+class subscriptions extends controller
 {
     public $objLog;
     public $objLanguage;
@@ -19,9 +19,9 @@ class swesos extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objSubsOps = $this->getObject('subsops');
             //Get the activity logger class
-            $this->objLog = $this->newObject('logactivity', 'logger');
+            //$this->objLog = $this->newObject('logactivity', 'logger');
             //Log this module call
-            $this->objLog->log();
+            //$this->objLog->log();
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -38,6 +38,8 @@ class swesos extends controller
     {
         switch ($action) {
             default:
+            	// start the module for 24 hours (86400 seconds) on cron.daily.
+            	$this->objSubsOps->startJabber();
             	break;
             
         }

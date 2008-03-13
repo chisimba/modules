@@ -46,8 +46,8 @@ class gis extends controller
 		switch ($action) {
 			default:
 				//return the upload form
-				//return 'upload_tpl.php';
-				//break;
+				return 'upload_tpl.php';
+				break;
 
 			case 'showmap':
 				$this->requiresLogin();
@@ -56,7 +56,7 @@ class gis extends controller
 				$extent = $this->getParam('mapext');
 
 				
-				$mapfile = $this->objSysConfig->getValue('mapfile', 'gis'); //'c:/ms4w/Apache/htdocs/chisimba_framework/app/zambezia2.map';
+				$mapfile = $this->objSysConfig->getValue('mapfile', 'gis'); 
 				$layers = $this->objSysConfig->getValue('default_layers', 'gis'); //'mrctest2+mrctest1';//type in layers name here o display in mapserever
 				$mapservcgi = $this->objSysConfig->getValue('mapserv_binary', 'gis'); //'/cgi-bin/mapserv.exe';  //'/cgi-bin/mapserv';
 				//copy and paste out of mapfile-fullextent	or get extent from gis app    MaxX   MinY  MinX   Max Y
