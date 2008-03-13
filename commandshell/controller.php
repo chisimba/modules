@@ -145,7 +145,7 @@ class commandshell extends controller
     {
         if( $this->objUser->isAdmin() ){
             $objRun = $this->getObject("commandexec", "commandshell");
-            if ($objRun->setCommand("test")) {
+            if ($objRun->setCommand("ping")) {
                 $str = "<pre>" . $objRun->doCommand() . "</pre>";
             } else {
                 $str = $objRun->error;
