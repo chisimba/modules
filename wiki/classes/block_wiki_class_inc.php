@@ -7,7 +7,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 // end security check
 
 /**
-* The class to display a block for smiley icons
+* The class to display a block for the wiki
 *
 * @author Kevin Cyster
 */

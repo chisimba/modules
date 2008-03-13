@@ -6,6 +6,7 @@
 
 var lockTimer;
 var VAL = false;
+var LOGGED_IN = "false";
 
 /**
 * Method to validate the create form fields
@@ -136,8 +137,9 @@ function resizeRefresh()
 * Method to link ajax functions to the tab onclick events
 * 
 * @param string edit_state
+* @param string logged_in
 */
-function tabClickEvents(edit_state)
+function tabClickEvents(edit_state, logged_in)
 {
     if(edit_state == "can_edit"){
         $("mainTabnav3").parentNode.style.display = "none";
@@ -148,10 +150,14 @@ function tabClickEvents(edit_state)
             checkLock();
         }
     }else if(edit_state == 'no_edit'){
-        $("mainTabnav2").parentNode.style.display = "none";
-        $("mainTabnav3").parentNode.style.display = "none";
-        $("mainTabnav4").parentNode.style.display = "none";
-        $("mainTabnav6").parentNode.style.display = "none";
+        if(logged_in == "true"){
+            $("mainTabnav2").parentNode.style.display = "none";
+            $("mainTabnav3").parentNode.style.display = "none";
+            $("mainTabnav4").parentNode.style.display = "none";
+            $("mainTabnav6").parentNode.style.display = "none";
+        }else{
+            $("mainTabnav3").parentNode.style.display = "none";
+        }
     }else{
         var previewLink = $("addTabnav2");
         previewLink.onclick = function(){
@@ -310,9 +316,13 @@ function manipulateRadios(el_radio)
 
 /**
 * Method to send a ajax call to get the diff
+*
+* @param string logged_in
+* @param string page_name
 */
-function getDiff()
+function getDiff(logged_in, page_name)
 {
+    LOGGED_IN = logged_in;
     var fromRadios = document.getElementsByName("from");
     var toRadios = document.getElementsByName("to");
     for(var i = 0; i <= fromRadios.length - 1; i++){
@@ -325,11 +335,9 @@ function getDiff()
             var to_value = toRadios[i].value;
         }
     }
-
-    var name_value = $F("input_name");
     var target = "diffDiv";
     var url = "index.php";
-    var pars = "module=wiki&action=show_diff&name="+name_value+"&from="+from_value+"&to="+to_value;
+    var pars = "module=wiki&action=show_diff&name="+page_name+"&from="+from_value+"&to="+to_value;
     var diffAjax = new Ajax.Updater(target, url, {method: "post", parameters: pars, onComplete: showDiff});      
 }
 
@@ -338,23 +346,44 @@ function getDiff()
 */
 function showDiff()
 {
-    var articleLink = $("mainTabnav1");
-    articleLink.onclick = function(){
-        $("mainTabnav6").parentNode.style.display = "none";
-        $("mainTab").tabber.tabShow(0);
+
+    if(LOGGED_IN == "true"){
+        var articleLink = $("mainTabnav1");
+        articleLink.onclick = function(){
+            $("mainTabnav6").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(0);
+        }
+        var historyLink = $("mainTabnav5");
+        historyLink.onclick = function(){
+            $("mainTabnav6").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(4);
+        }
+        var discussLink = $("mainTabnav7");
+        discussLink.onclick = function(){
+            $("mainTabnav6").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(6);
+        }
+        $("mainTabnav6").parentNode.style.display = "";
+        $("mainTab").tabber.tabShow(5);
+    }else{
+        var articleLink = $("mainTabnav1");
+        articleLink.onclick = function(){
+            $("mainTabnav3").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(0);
+        }
+        var historyLink = $("mainTabnav2");
+        historyLink.onclick = function(){
+            $("mainTabnav3").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(1);
+        }
+        var discussLink = $("mainTabnav4");
+        discussLink.onclick = function(){
+            $("mainTabnav3").parentNode.style.display = "none";
+            $("mainTab").tabber.tabShow(3);
+        }
+        $("mainTabnav3").parentNode.style.display = "";
+        $("mainTab").tabber.tabShow(2);
     }
-    var historyLink = $("mainTabnav5");
-    historyLink.onclick = function(){
-        $("mainTabnav6").parentNode.style.display = "none";
-        $("mainTab").tabber.tabShow(4);
-    }
-    var discussLink = $("mainTabnav7");
-    discussLink.onclick = function(){
-        $("mainTabnav6").parentNode.style.display = "none";
-        $("mainTab").tabber.tabShow(6);
-    }
-    $("mainTabnav6").parentNode.style.display = "";
-    $("mainTab").tabber.tabShow(5);
     adjustLayout();
 }
 

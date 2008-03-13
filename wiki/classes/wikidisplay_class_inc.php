@@ -607,9 +607,11 @@ class wikidisplay extends object
         $this->objTab->init();
         $this->objTab->tabId = 'mainTab'; 
         $this->objTab->addTab($mainTab);
-        $this->objTab->addTab($lockedTab);            
-        $this->objTab->addTab($editTab);            
-        $this->objTab->addTab($previewTab);            
+        if($this->isLoggedIn){
+            $this->objTab->addTab($lockedTab);            
+            $this->objTab->addTab($editTab);            
+            $this->objTab->addTab($previewTab);
+        }            
         $this->objTab->addTab($historyTab);
         $this->objTab->addTab($diffTab);
         $this->objTab->addTab($discussionTab);
@@ -618,7 +620,11 @@ class wikidisplay extends object
         if(empty($version) && $this->isLoggedIn){
             $body = 'tabClickEvents("can_edit");';
         }else{
-            $body = 'tabClickEvents("no_edit");';
+            if($this->isLoggedIn){
+                $body = 'tabClickEvents("no_edit", "true");';
+            }else{
+                $body = 'tabClickEvents("no_edit", "false");';
+            }
         }
         $this->appendArrayVar('bodyOnLoad', $body);            
         return $str.'<br />';
@@ -635,7 +641,8 @@ class wikidisplay extends object
     {
         // get data
         $data = $this->objDbwiki->getPagesByName($name);
-        $pageTitle = $this->objWiki->renderTitle($data[0]['page_name']);
+        $pageName = $data[0]['page_name'];
+        $pageTitle = $this->objWiki->renderTitle($pageName);
         
         // text elements
         $versionLabel = $this->objLanguage->languageText('word_version');
@@ -670,7 +677,11 @@ class wikidisplay extends object
         $objLink = new link('#');
         $objLink->link = $viewButton;
         $objLink->title = $viewTitleLabel;
-        $objLink->extra = 'onclick="javascript:getDiff();"';
+        if($this->isLoggedIn){
+            $objLink->extra = 'onclick="javascript:getDiff(\'true\', \''.$pageName.'\');"';
+        }else{
+            $objLink->extra = 'onclick="javascript:getDiff(\'false\', \''.$pageName.'\');"';
+        }
         $diffLink = $objLink->show();
         if(count($data) > 1){
             $str = $diffLink;           
