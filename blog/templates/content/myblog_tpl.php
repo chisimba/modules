@@ -15,7 +15,13 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 } else {
     $cssLayout->setNumColumns(3);
 }
-$drafts = $latestpost[0]['drafts'];
+if(!isset($latestpost[0]['drafts']))
+{
+	$drafts = NULL;
+}
+else {
+	$drafts = $latestpost[0]['drafts'];
+}
 //show all the posts
 if (isset($catid) && empty($posts) && empty($latestpost) && empty($drafts)) {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";

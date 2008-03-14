@@ -1793,7 +1793,10 @@ class blog extends controller
                     //print_r($matches);
                     $mcount = 0;
                     foreach($matches as $match) {
-                        $postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='" . $match[$mcount] . "'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+                    	if(isset($match[$mcount]))
+                    	{
+                        	$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='" . $match[$mcount] . "'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+                    	}
                         $mcount++;
                     }
                     //thump together an email string (this must be html email as the post is html
