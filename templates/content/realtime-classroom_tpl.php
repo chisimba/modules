@@ -82,7 +82,7 @@ if (isset ($noContextCode))
     
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
-    echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="600">';
+    echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="700">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
