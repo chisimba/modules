@@ -209,24 +209,7 @@ class realtime extends controller
 			case 'assigntoken' :
 			      return $this->assignToken($this->getParam('id'), $this->contextCode);	
 			default :
-                                /*$title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
-
-                                $desc=$this->objLanguage->languageText('mod_realtime_intro1', 'realtime');
-                                $content='<br/>';
-                                $content.="<p>".$this->objLanguage->languageText('mod_realtime_intro2', 'realtime')."</p><ul>";
-                                $content.='<li><a href="index.php?module=realtime&amp;action=presentations">'.$this->objLanguage->languageText('mod_realtime_presentations', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_presentations_desc', 'realtime').'</li>';	
-                                $content.='<li><a href="index.php?module=realtime&amp;action=whiteboard">'.$this->objLanguage->languageText('mod_realtime_whiteboard', 'realtime').'</a>  '.$this->objLanguage->languageText('mod_realtime_whiteboard_desc', 'realtime').'</li>';
-
-                                $content.='<li><a href="index.php?module=realtime&amp;action=classroom">'.$this->objLanguage->languageText('mod_realtime_classroom', 'realtime').'</a> - '.$this->objLanguage->languageText('mod_realtime_classroom_desc', 'realtime').'.</li>';
-                                $content.='</ul>';
-                                $this->setVarByRef('title', $title);
-                                $this->setVarByRef('desc', $desc);
-                                $this->setVarByRef('content', $content);
-				return "dump_tpl.php";*/
-				
-				
-			        
-			        $this->startWhiteboardServer();
+  			        $this->startWhiteboardServer();
                                 $this->startOpenOffice();
                                 //$this->validJavaVersion();
                                 return $this->showClassRoom($this->contextCode);
@@ -306,8 +289,10 @@ function in_str($needle, $haystack){
     {
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+    $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
+    $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
-    $cmd = "java -Xms64m -Xmx128m -cp .:".
+    $cmd = "java -Xms'.$minMemory.'m -Xmx'.$maxMemory.'m -cp .:".
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
     $this->objConfig->getModulePath().
