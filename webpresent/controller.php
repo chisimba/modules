@@ -195,7 +195,7 @@ class webpresent extends controller
     $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
-    $cmd = "java -Xms'.$minMemory.'m -Xmx'.$maxMemory.'m -cp .:".
+    $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
     $this->objConfig->getModulePath().
