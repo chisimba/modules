@@ -292,7 +292,7 @@ function in_str($needle, $haystack){
     $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
-    $cmd = "java -Xms'.$minMemory.'m -Xmx'.$maxMemory.'m -cp .:".
+    $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
     $this->objConfig->getModulePath().
@@ -317,6 +317,7 @@ function in_str($needle, $haystack){
     "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
     $this->objConfig->getModulePath().
     "/realtime/resources/avoir-realtime-server-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
+echo $cmd;
     
     system($cmd,$return_value);
     
