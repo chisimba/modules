@@ -192,8 +192,10 @@ class webpresent extends controller
     {
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+    $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
+    $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
-    $cmd = "java -Xms64m -Xmx128m -cp .:".
+    $cmd = "java -Xms'.$minMemory.'m -Xmx'.$maxMemory.'m -cp .:".
     $this->objConfig->getModulePath().
     "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
     $this->objConfig->getModulePath().
