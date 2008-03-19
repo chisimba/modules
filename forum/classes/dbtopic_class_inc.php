@@ -674,5 +674,36 @@ GROUP BY tbl_forum_topic.id                ';
         }
     }
     
+	/**
+    * Insert a topic into the database
+    *
+    * @param string $forum_id: Record ID of the Forum post is being made into
+    * @param string $type_id: Type of topic
+    * @param string $first_post: Record Id of the first post
+    * @param string $topic_tangent_parent: Record Id of tangent parent
+    * @param string $userId: User ID of person starting the topic
+    * @param string $dateLastUpdated: Date topic was started
+    */
+    function insertSingleAPI($forum_id, $type_id, $topic_tangent_parent, $userID)
+    {
+    	if ($topic_tangent_parent == 0) {
+            $level = 1;
+        }
+        // provide support for tangents
+        
+        return $this->insert(array(
+    		'forum_id'        => $forum_id,
+    		'type_id'         => $type_id,
+    		'views'           => 0,
+    		'replies'         => 0,
+    		'topic_tangent_parent'   => $topic_tangent_parent,
+            'lft'                => null,
+            'rght'                => null,
+    		'userId'          => $userID,
+    		'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+    	));
+
+    }
+    
  }
 ?>

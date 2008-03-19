@@ -285,7 +285,7 @@ class dbPost extends dbTable
         LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
         WHERE tbl_forum_post.topic_id = \''.$topic.'\' GROUP BY tbl_forum_post.id ORDER BY post_order';
-
+        
         return $this->getArray($sql);
     }
 
@@ -1549,6 +1549,58 @@ function loadTranslation(post, lang) {
     function getNumPostsInTopic($topicid)
     {
         return $this->getRecordCount(' WHERE topic_id = "'.$topicid.'"');
+    }
+    
+    
+    /**
+    * Insert a post into the database
+    *
+    * @param string $post_parent: Record ID of the Parent Post - that the user is replying to
+    * @param string $post_tangent_parent: Record ID of the Tangent Post - that the user is replying to
+    * @param string $post_title: Title of Post
+    * @param string $post_message: Text of the Post
+    * @param string $topic_id: Record ID of the Topic
+    * @param string $userId: User ID of person posting the post
+    * @param string $dateLastUpdated: Date Post was made
+    * @return string $this->getLastInsertId()
+    */
+    function insertSingleAPI($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $userId, $level=1)
+    {
+        // Interim measure. Alternative, use regexp and replace with space
+        //$post_title = strip_tags($post_title);
+
+        //echo $post_parent;
+
+        if ($post_parent == '0') {
+           // $lastRightPointer = $this->getLastRightPointer($forum_id);
+          //  $leftPointer = $lastRightPointer+1;
+          //  $rightPointer = $lastRightPointer+2;
+            $level = 1;
+        } else {
+          /*  $lastRightPointer = $this->getPostRightPointer($post_parent);
+            $updateRightSQL = 'UPDATE tbl_forum_post SET rght = rght + 2 WHERE rght > '.($lastRightPointer-1);
+            $this->getArray($updateRightSQL);
+            $updateLeftSQL = 'UPDATE tbl_forum_post SET lft = lft + 2 WHERE lft > '.($lastRightPointer-1);
+            $this->getArray($updateLeftSQL);
+
+            $leftPointer = $lastRightPointer;
+            $rightPointer = $lastRightPointer+1;*/
+            $level += 1;
+        }
+
+        $this->insert(array(
+            'post_parent'           => $post_parent,
+            'post_tangent_parent'   => $post_tangent_parent,
+            'topic_id'              => $topic_id,
+            'post_order'           => $this->getLastPostOrder($topic_id),
+            'userId'                => $userId,
+            'lft'                => null,
+            'rght'                => null,
+            'level'                => $level,
+            'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+        ));
+
+        return $this->getLastInsertId();
     }
 
 
