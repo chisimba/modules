@@ -193,7 +193,8 @@ class webpresent extends controller
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
     $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
-    $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
+    
+     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
     $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
     $this->objConfig->getModulePath().
