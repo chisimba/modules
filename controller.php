@@ -317,7 +317,7 @@ function in_str($needle, $haystack){
     "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
     $this->objConfig->getModulePath().
     "/realtime/resources/avoir-realtime-server-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
-echo $cmd;
+//echo $cmd;
     
     system($cmd,$return_value);
     
@@ -585,11 +585,12 @@ function startServer()
                         $this->setVarByRef('content', $desc);
 			//$this->setVar('pageSuppressToolbar', FALSE);
 			//$this->setVar('pageSuppressBanner', FALSE);
-	              return "dump_tpl.php";		
+	               return "dump_tpl.php";		
                 } else{
 			$this->setVar('pageSuppressToolbar', TRUE);
 			$this->setVar('pageSuppressBanner', TRUE);
                         $this->setLayoutTemplate('layout_tpl.php');
+                        $this->setVarByRef('sessionid', $contextcode);
                         return "realtime-classroom_tpl.php";
                 
                 }
