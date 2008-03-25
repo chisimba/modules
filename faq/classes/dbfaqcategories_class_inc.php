@@ -75,8 +75,8 @@ class dbfaqcategories extends dbTable
     {
         $sql = "SELECT * FROM tbl_faq_categories 
         WHERE id = '" . $id . "'";
-        return $this->getArray($sql);
-        //return $this->getRow("id", $id);
+        //return $this->getArray($sql);
+        return $this->getRow("id", $id);
     }
 
     /**

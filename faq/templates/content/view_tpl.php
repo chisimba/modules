@@ -61,8 +61,7 @@
     }
 **/
     echo "<h1>" .
-        $objLanguage->languageText("word_faq") ." : " ..
-        ' '.$addLink.
+        $objLanguage->languageText("word_faq") ." : " .' '.$addLink.
         "</h1>";
 
     // Category Form.

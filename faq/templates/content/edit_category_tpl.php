@@ -1,24 +1,24 @@
 <?php
-// Show the heading.
-$objHeading =& $this->getObject('htmlheading','htmlelements');
-$objHeading->type=1;
-$objHeading->str =$objLanguage->languageText("mod_faq_editcategory","faq").' : <em>'.$list[0]['categoryname'].'</em>';
-echo $objHeading->show();
+
 // Load the classes.
 $this->loadClass("form","htmlelements");
 $this->loadClass("textinput","htmlelements");
 $this->loadClass("button","htmlelements");
+$this->loadClass("htmlheading","htmlelements");
+
+
+// Show the heading.
+$objHeading = new htmlheading();
+$objHeading->type=1;
+$objHeading->str =$objLanguage->languageText("mod_faq_editcategory","faq").' : <em>'.$list['categoryname'].'</em>';
+echo $objHeading->show();
+
 // Create the form.
 $form = new form("createcategory", 
-$this->uri(array(
- 	'module'=>'faq',
-    'action'=>'editCategoryConfirm',
-    'id'=>$list[0]['id']
-))	
-);
+$this->uri(array('action'=>'editcategoryconfirm', 'id'=>$list['id'])));
 $form->setDisplayType(1);
 
-$textInput = new textinput("category",$list[0]['categoryname']);
+$textInput = new textinput("category",$list['categoryname']);
 $textInput->size = 40;
 
 $form->addToForm($textInput->show());
