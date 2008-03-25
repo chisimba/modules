@@ -53,7 +53,7 @@ class block_faq extends object
         $lbAllCats = $this->objLanguage->languageText('mod_faq_allcategories');
         $lbGo = $this->objLanguage->languageText('word_go');
 
-        $categories =  $this->objDbFaqCategories->listAll($this->contextCode);
+        $categories =  $this->objDbFaqCategories->getContextCategories($this->contextCode);
 
         // Category Form.
         $form = new form('category', $this->uri(''));

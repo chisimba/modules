@@ -14,11 +14,8 @@ class modulelinks_faq extends object
 
     public function init()
     {
-        //$this->loadClass('treenode','tree');
-      // $this->_objDBFaqEntries =$this->loadClass('dbfaqentries');
-       // $this->_objDBCategories =$this->loadClass('dbfaqcategories');      
- $this->_objDBFaqEntries = & $this->newObject('dbfaqentries','faq');
-$this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
+        $this->_objDBFaqEntries = & $this->newObject('dbfaqentries','faq');
+        $this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
     }
     
     public function show()
@@ -35,6 +32,7 @@ $this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
     public function getContextLinks($contextCode)
     {
 
+/*
           $cats = $this->_objDBCategories->getCatId($contextCode);
           $faqs=$this->_objDBFaqEntries->getEntries($contextCode,$cats['id']);
    
@@ -52,7 +50,7 @@ $this->_objDBCategories = & $this->newObject('dbfaqcategories','faq');
           }
          
           return $bigArr;
-        
+*/
          }
     
 }

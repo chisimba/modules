@@ -28,13 +28,11 @@ $fields = array(
 		 ),
 	'question' => array(
 	  	'type' => 'text',
-		'length' => 25,
 		'notnull' => TRUE,
 		'default' => '',
 		),
 	'answer' => array(
-	  	'type' => 'text',
-		'length' => 25,
+	  	'type' => 'clob',
 		'notnull' => TRUE,
 		'default' => '',
 		),

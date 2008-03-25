@@ -84,7 +84,7 @@ foreach ($categories as $item) {
     
     //get category license
     //print_r($item);
-    $catlicense =  $this->objDbFaqCategories->getLicenseCode($item['catid']);
+    $catlicense =  $this->objFaqCategories->getLicenseCode($item['catid']);
     //print_r($catlicense);//create the icons
      $action = $objEditLink->show()."&nbsp;".$objConfirm->show();
     

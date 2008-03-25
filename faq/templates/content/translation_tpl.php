@@ -158,9 +158,9 @@ echo $display;
                 $languageCodes = & $this->newObject('languagecode','language');
                 $language=$languageCodes->getLanguage($element['language']);
                 //get entrylicense
-               $entrylicense =  $this->objDbFaqEntries->getLicenseCode($element['entryid']);
+               $entrylicense =  $this->objFaqEntries->getLicenseCode($element['entryid']);
                
-               $entries=$this->objDbFaqEntries->getCatEntry($element['entryid'],$element['language']);
+               $entries=$this->objFaqEntries->getCatEntry($element['entryid'],$element['language']);
                $count=count($entries);
                
                

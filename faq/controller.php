@@ -15,19 +15,17 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class faq extends controller
 {
     public $objUser;
-	
-    public $objHelp;
-	
+    
     public $objLanguage;
-	
-    public $objDbFaqCategories;
-	
-    public $objDbFaqEntries;
-	
+    
+    public $objFaqCategories;
+    
+    public $objFaqEntries;
+    
     public $contextId;
-	
+    
     public $contextTitle;
-	
+    
     public $categoryId;
 
     /**
@@ -36,10 +34,10 @@ class faq extends controller
     public function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
-        $this->objHelp =& $this->getObject('helplink','help');
         $this->objLanguage =& $this->getObject('language','language');
-        $this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
-        $this->objDbFaqEntries =& $this->getObject('dbfaqentries');
+        $this->objFaqCategories =& $this->getObject('dbfaqcategories');
+        $this->objFaqEntries =& $this->getObject('dbfaqentries');
+        
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
         //Set it to log once per session
@@ -56,15 +54,15 @@ class faq extends controller
     {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
-        $this->setVarByRef('objUser', $this->objUser);
-        $this->setVarByRef('objHelp', $this->objHelp);
-        $this->setVarByRef('objLanguage', $this->objLanguage);
+        
         // Set the error string
         $error = "";
         $this->setVarByRef("error", $error);
+        
         // Get the context
         $this->objDbContext = &$this->getObject('dbcontext','context');
         $this->contextCode = $this->objDbContext->getContextCode();
+        
         // If we are not in a context...
         if ($this->contextCode == null) {
             $this->contextId = "root";
@@ -80,28 +78,13 @@ class faq extends controller
             $this->contextTitle = $contextRecord['title'];
             $this->setVarByRef('contextTitle', $this->contextTitle);
         }
-
-
-        //
-        //Create root category if neccessary.
-        $notCategorizeId= $this->objDbFaqCategories->getNotCategorisedId($this->contextId);
-        if (empty($notCategorizeId)) {
-            $this->objDbFaqCategories->insertSingle(
-                $this->contextId,
-                'Not Categorised',
-                'admin', //$this->objUser->userName(),
-                mktime()
-            );
-        }
+        
+        $numCategories = $this->objFaqCategories->getNumContextCategories($this->contextId);
+        
         // Get category from URL
-        $this->categoryId = $this->getParam('category', $notCategorizeId);
+        $this->categoryId = $this->getParam('category');
         $this->setVarByRef('categoryId', $this->categoryId);
-
-        // CategoryDetails
-        $categoryDetails = $this->objDbFaqCategories->listSingle($this->contextId, $this->categoryId);
-        $this->setVarByRef('categoryDetails', $categoryDetails);
-
-
+        
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
         switch($action){
@@ -126,9 +109,8 @@ class faq extends controller
             // Default : view entries
             
 
-   // Add an entry
+            // Add an entry
             case "addcategory": 
-                $this->addCategory();
                 return "add_category_tpl.php";
             // Add Confirm
             case "addcategoryconfirm":
@@ -147,44 +129,59 @@ class faq extends controller
                 $this->deleteCategoryConfirm();
                 break;
             case "managecategories":
-              		$categories =  $this->objDbFaqCategories->listAll($this->contextId);
-   								$this->setVarByRef('categories', $categories);
-   								return "main_tpl.php";
-   								break;
+                    $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
+                                $this->setVarByRef('categories', $categories);
+                                return "main_tpl.php";
+                                break;
  //************************************************************************************************/
             case "view":
-            default:
                 return $this->view();
+            default:
+                return $this->listCategories();
         } // switch
 
  
     }
      /**
-         * 
-        * This is a method that overrides the parent class to stipulate whether
-        * the current module requires login. Having it set to false gives public
-        * access to this module including all its actions.
-        *
-        * @access public
-        * @return bool FALSE
-        */
-        public function requiresLogin() 
-        {
+    * 
+    * This is a method that overrides the parent class to stipulate whether
+    * the current module requires login. Having it set to false gives public
+    * access to this module including all its actions.
+    *
+    * @access public
+    * @return bool FALSE
+    */
+    public function requiresLogin($action) 
+    {
+        $requiresLogin = array ('add', 'addcategory');
+        
+        if (in_array($action, $requiresLogin)) {
+            return TRUE;
+        } else {
             return FALSE;
-
         }
+    }
+    
+    public function listCategories()
+    {
+        $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
+        $this->setVarByRef('categories', $categories);
+        return "main_tpl.php";
+    }
 
     /**
     * View all FAQ entries.
     */
     public function view()
     {
+        
+        
         // Get all FAQ entries
-        $list = $this->objDbFaqEntries->listAll($this->contextId, $this->categoryId);
+        $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
         $this->setVarByRef('list', $list);
-
+        
         // Get all the categories
-        $categories =  $this->objDbFaqCategories->listAll($this->contextId);
+        $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
         return "view_tpl.php";
     }
@@ -195,9 +192,9 @@ class faq extends controller
     public function add()
     {
         // Get all the categories
-        $categories =  $this->objDbFaqCategories->listAll($this->contextId);
+        $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
-
+        
         return "add_tpl.php";
     }
 
@@ -206,15 +203,14 @@ class faq extends controller
     */
     public function addConfirm()
     {
-	     $index = $_POST['index'];
-        $question = $_POST["question"];
-        $answer = $_POST["answer"];
-        $category = $_POST["category"];
+        $question = $this->getParam("question");
+        $answer = $this->getParam("answer");
+        $category = $this->getParam("category");
+        
         // Insert a record into the database
-        $this->objDbFaqEntries->insertSingle(
+        $this->objFaqEntries->insertSingle(
             $this->contextId,
             $category,
-			$index,
             $question,
             $answer,
             $this->objUser->userId(),
@@ -230,11 +226,11 @@ class faq extends controller
     public function edit()
     {
         $id = $this->getParam('id', null);
-        $list = $this->objDbFaqEntries->listSingle($id);
-        $this->setVarByRef('list', $list);
+        $item = $this->objFaqEntries->listSingle($id);
+        $this->setVarByRef('item', $item);
 
         // Get all the categories
-        $categories =  $this->objDbFaqCategories->listAll($this->contextId);
+        $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
 
         return "edit_tpl.php";
@@ -245,21 +241,21 @@ class faq extends controller
     */
     public function editConfirm()
     {
-        $id = $this->getParam('id', null);
-		$index = $_POST['index'];
-        $question = $_POST["question"];
-        $answer = $_POST["answer"];
-        $category = $_POST["category"];
+        $id = $this->getParam('id');
+        $question = $this->getParam('question');
+        $answer = $this->getParam('answer');
+        $category = $this->getParam('category');
+        
         // Update the record in the database
-        $this->objDbFaqEntries->updateSingle(
+        $this->objFaqEntries->updateSingle(
             $id,
-			   $index,
             $question,
             $answer,
             $category,
             $this->objUser->userId(),
             mktime()
-        );//
+        );
+        
         return $this->nextAction('view', array('category'=>$category));
     }
 
@@ -270,11 +266,11 @@ class faq extends controller
     {
         $id = $this->getParam('id', null);
         // Delete the record from the database
-        $this->objDbFaqEntries->deleteSingle($id);
+        $this->objFaqEntries->deleteSingle($id);
         return $this->nextAction('view', array('category'=>$this->categoryId));
     }
 
-	 /**
+     /**
      * Method to load an HTML element's class.
      * @param string $name The name of the element
      * @return The element object
@@ -284,7 +280,7 @@ class faq extends controller
          return $this->loadClass($name, 'htmlelements');
      }
 
-	 /**
+     /**
      * Method to get a new HTML element.
      * @param string $name The name of the element
      * @return The element object
@@ -294,7 +290,7 @@ class faq extends controller
          return $this->newObject($name, 'htmlelements');
      }
 
-	 /**
+     /**
      * Method to get an HTML element.
      * @param string $name The name of the element
      * @return The element object
@@ -304,31 +300,26 @@ class faq extends controller
          return $this->getObject($name, 'htmlelements');
      }
      
-     
-   
-     	 
-     	 
-     	  /**
-    * Add a FAQ category.
-    */
-    public function addCategory()
-    {
-    }
+    
 
     /**
     * Confirm add.
     */
     public function addCategoryConfirm()
     {
-        $this->categoryId = $_POST["category"];
-        // Insert the category into the database
-        $this->objDbFaqCategories->insertSingle(
-            $this->contextId, 
-            $this->categoryId, 
-            $this->objUser->userName(),
-            mktime()
-        );
-        return $this->nextAction(NULL);
+        $categoryName = $this->getParam("category");
+        
+        if (trim($categoryName) == '') {
+            return $this->nextAction('addcategory', array('error'=>'nothingentered'));
+        } else {
+            // Insert the category into the database
+            $result = $this->objFaqCategories->insertSingle(
+                $this->contextId, 
+                $categoryName, 
+                $this->objUser->userId()
+            );
+            return $this->nextAction(NULL, array('message'=>'categoryadded', 'result'=>$result));
+        }
     }
     
     /**
@@ -337,7 +328,7 @@ class faq extends controller
     public function editCategory()
     {
         $id = $this->getParam('id', null);
-        $list = $this->objDbFaqCategories->listSingleId($id);
+        $list = $this->objFaqCategories->listSingleId($id);
         $this->setVarByRef('list', $list);
     }
 
@@ -349,7 +340,7 @@ class faq extends controller
         $id = $this->getParam('id', null);
         $categoryId = $_POST["category"];
         // Update the record in the database
-        $this->objDbFaqCategories->updateSingle(
+        $this->objFaqCategories->updateSingle(
             $id, 
             $categoryId, 
             $this->objUser->userId(),
@@ -365,8 +356,8 @@ class faq extends controller
     {
         $id = $this->getParam('id', null);
         // Delete the record from the database
-        $this->objDbFaqCategories->deleteSingle($id); 
-	 $this->objDbFaqEntries->delete("categoryid",$id);
+        $this->objFaqCategories->deleteSingle($id); 
+        $this->objFaqEntries->delete("categoryid",$id);
         return $this->nextAction(NULL);
     }
 
