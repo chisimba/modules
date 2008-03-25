@@ -167,7 +167,8 @@ class webpresent extends controller
           $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
-
+          $this->setVarByRef('sessionid', $id);
+          $this->setVarByRef('isPresenter', 'true');
           return "presenter-applet.php";
  }
 
@@ -182,6 +183,8 @@ class webpresent extends controller
           $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
+          $this->setVarByRef('sessionid', $id);
+          $this->setVarByRef('isPresenter', 'false');
 
           return "presenter-applet.php";
      }
