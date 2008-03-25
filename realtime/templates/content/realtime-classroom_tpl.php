@@ -65,7 +65,12 @@ if (isset ($noContextCode))
     $appletPath=str_replace($docRoot,$replacewith,$modPath);
     $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+    $rtpport=$objSysConfig->getValue('RTPPORT', 'realtime');
+    $rtcpport=$objSysConfig->getValue('RTCPPORT', 'realtime');
+    $sipport=$objSysConfig->getValue('SIP_PORT', 'realtime');
+
     $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
     $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
    // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
@@ -79,7 +84,8 @@ if (isset ($noContextCode))
     $objMkdir->mkdirs($chatLogPath, 0777);
     $resourcesPath =$modPath.'/realtime/resources';
     $isLoggedIn =$this->objUser->isLoggedIn();
-    
+
+    //echo 'session id '.$sessionid;
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="700">';
@@ -93,6 +99,10 @@ if (isset ($noContextCode))
     echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=uploadPath value="'.$uploadPath.'">';
+    echo '<param name=rtpport value="'.$rtpport.'">';
+    echo '<param name=rtcpport value="'.$rtcpport.'">';
+    echo '<param name=sipport value="'.$sipport.'">';
+    echo '<param name=session value="'.$sessionid.'">';
     echo '<param name=resourcesPath value="'.$resourcesPath.'">';
     echo '<param name=port value="'.$port.'">';
     echo '</applet>';
