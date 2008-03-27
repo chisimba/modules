@@ -6,11 +6,11 @@ $paramArray=array(
 'mode'=>$mode);
 $formAction=$this->uri($paramArray);
 
-//Load the form class 
+//Load the form class
 $this->loadClass('form','htmlelements');
-//Load the textinput class 
+//Load the textinput class
 $this->loadClass('textinput','htmlelements');
-//Load the textarea class 
+//Load the textarea class
 $this->loadClass('textarea','htmlelements');
 //Load the label class
 $this->loadClass('label','htmlelements');
@@ -83,6 +83,7 @@ $objForm->addToForm($wsiLabel->show()."<br />".$objElement->show()."<br /><br />
 
 //Create an element for the input of block text
 $objElement = new textarea ("blocktext");
+$objElement->rows=10;
 //Set the value of the element to $title
 if (isset($blocktext)) {
     $objElement->setContent(htmlspecialchars($blocktext));
@@ -95,9 +96,9 @@ $objForm->addToForm($quoteLabel->show()."<br />".$objElement->show()."<br /><br 
 // Create an instance of the button object
 $this->loadClass('button', 'htmlelements');
 // Create a submit button
-$objElement = new button('submit');	
+$objElement = new button('submit');
 // Set the button type to submit
-$objElement->setToSubmit();	
+$objElement->setToSubmit();
 // Use the language object to add the word save
 $objElement->setValue(' '.$this->objLanguage->languageText("word_save").' ');
 //Create cancel button
