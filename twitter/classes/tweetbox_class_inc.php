@@ -74,6 +74,14 @@ class tweetbox extends object
         $this->objLanguage = $this->getObject('language', 'language');
     }
 
+    /**
+    *
+    * Method to render the tweetbox
+    *
+    * @access public
+    * @return string The rendered tweetbox
+    *
+    */
     public function show()
     {
     	return $this->getLimitBox(140, "tweet");
@@ -92,6 +100,15 @@ class tweetbox extends object
 
     }
 
+    /**
+    *
+    * Method to add the jQuery binding limts (limit text chars in textbox)
+    * to the page header
+    *
+    * @access public
+    * @return boolean TRUE
+    *
+    */
     public function addLimitHeaderScript()
     {
     	$js = "<script language=\"javascript\">
@@ -113,6 +130,15 @@ class tweetbox extends object
         return TRUE;
     }
 
+    /**
+    *
+    * Method to add the jQuery binding limts (limit text chars in textbox)
+    * to the page header
+    *
+    * @access public
+    * @return boolean TRUE
+    *
+    */
     public function addBindingLimitsHeaderScript($chars, $textboxid) {
         $js = "<script type=\"text/javascript\">
         jQuery(function() {
@@ -156,6 +182,14 @@ class tweetbox extends object
         </script>";
     }
 
+    /**
+    * Method to send the Tweetbox widget. Used to render the tweetbox
+    * block for example
+    *
+    * @access public
+    * @return string Form and labels for the tweetbox or error if no twitter login found.
+    *
+    */
     public function sendWidget()
     {
         //Load the Ajax form processing
@@ -166,10 +200,10 @@ class tweetbox extends object
         if ($this->hasTwitterLogon()) {
            $ret = "<form name=\"myEditorForm\" id=\"myEditorForm\" action=\""
               . $this->url . "\" method=\"post\">"
-              . "<table cellpadding=\"4\" width=180><tr><td><span class=\"minute\">"
+              . "<table cellpadding=\"4\" width=\"100%\"><tr><td><span class=\"minute\">"
               . $this->objLanguage->languageText("mod_twitter_entertext", "twitter")
               . "</span></td><td><span class=\"error\"><div name=\"charlimitinfo\" id=\"charlimitinfo\">140</div></span></td></tr></table>"
-              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"22\" rows=\"4\">"
+              . "<textarea name=\"tweet\" id=\"tweet\" cols=\"20\" rows=\"4\">"
               . "</textarea><br />"
               . "<input type=\"submit\" value=\"Tweet\" />"
               . "</form>";
@@ -179,7 +213,16 @@ class tweetbox extends object
         return $ret;
     }
 
-    function hasTwitterLogon()
+    /**
+    *
+    * Method to determing if the user has a twitter login specified
+    * in userparams.
+    *
+    * @access public
+    * @return boolean TRUE|FALSE
+    *
+    */
+    public function hasTwitterLogon()
     {
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $objUserParams->readConfig();
