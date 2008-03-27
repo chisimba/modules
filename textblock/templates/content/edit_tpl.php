@@ -129,5 +129,4 @@ $cssLayout->setMiddleColumnContent($rightSideColumn);
 
 //Output the content to the page
 echo $cssLayout->show();
-
 ?>

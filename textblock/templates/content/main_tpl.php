@@ -17,7 +17,7 @@ $paramArray = array('action' => 'add');
 // Create header
 $this->objH =& $this->getObject('htmlheading', 'htmlelements');
 //Heading <h1>
-$this->objH->type=1; 
+$this->objH->type=1;
 
 //Create an instance of the User object
 $objUser =  $this->getObject("user", "security");
@@ -79,7 +79,7 @@ if (isset($ar)) {
                 $tableRow[]=$objDate->formatDate($line['datecreated']);
             }else{
                 $tableRow[]= '';
-            }                      
+            }
 		    if(!empty($line['creatorid'])){
             	$tableRow[]=$objUser->fullname($line['creatorid']);
 		    }else{
@@ -90,7 +90,7 @@ if (isset($ar)) {
             }else{
                 $tableRow[]= '';
             }
-            
+
             if(isset($line['modifierid'])){
             $tableRow[]=$objUser->fullname($line['modifierid']);
             } else{
