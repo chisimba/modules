@@ -1097,12 +1097,15 @@ $emailobjHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'e
     $goalsTable->addCell($goalsobjHeading->show(), '', '', '', '', 'colspan="2"');
     $goalsTable->endRow();
 
+    $goalsTable->startRow();
+    $goalsTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_Goals",'eportfolio')."</b>");
+    $goalsTable->endRow();
     
     // Step through the list of addresses.
     $class = NULL;
     if (!empty($goalsList)) {
     	$i = 0;
-	echo"<ul>";
+	echo"<ol type='1'>";
     foreach ($goalsList as $item) {
     // Display each field for activities
         $goalsTable->startRow();
@@ -1148,7 +1151,7 @@ $emailobjHeading->str =$objLanguage->languageText("mod_eportfolio_emailList", 'e
 
     }
 	unset($item);
-	echo"</ul>";
+	echo"</ol>";
    
 } else {
     $goalsTable->startRow();
@@ -2147,7 +2150,7 @@ $tabBox->addTab(array('name'=> $this->objLanguage->code2Txt("phrase_othersePortf
 
 $tabBox->addTab(array('name'=> $this->objLanguage->code2Txt("phrase_manage",'eportfolio'),'content' => $this->getEportfolioUsers()),'winclassic-tab-style-sheet');
 
-//$tabBox->addTab(array('name'=> $this->objLanguage->code2Txt("mod_eportfolio_wordManage", 'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio'),'content' => NULL),'winclassic-tab-style-sheet');
+$tabBox->addTab(array('name'=> $this->objLanguage->code2Txt("mod_eportfolio_wordManage", 'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio'),'content' => NULL),'winclassic-tab-style-sheet');
 
 /*
 //Activity Title

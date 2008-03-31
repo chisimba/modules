@@ -178,6 +178,7 @@ if( !$hasAccess ) {
 	$linkstudManage = $managestudlink->show();     
 
 	//Manage Lecturers
+	$lect = 'lect';
 	$manageleclink = new link($this->uri(array(
 		'module'=>'eportfolio',
 		'action'=>'manage_lect', 

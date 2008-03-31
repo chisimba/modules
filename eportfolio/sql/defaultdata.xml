@@ -25,22 +25,16 @@
         <puid>7</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
-        <id>Wedusoft_5422_1203921033</id>
+        <id>init_7147_1205515151</id>
         <userid>8893070328</userid>
-        <category>Priority</category>
+        <category>Interest</category>
         <puid>8</puid>
     </tbl_eportfolio_category>
     <tbl_eportfolio_category>
-        <id>Wedusoft_9177_1203921949</id>
+        <id>init_4581_1205515437</id>
         <userid>8893070328</userid>
         <category>Competency</category>
         <puid>9</puid>
-    </tbl_eportfolio_category>
-    <tbl_eportfolio_category>
-        <id>Wedusoft_8403_1203922834</id>
-        <userid>8893070328</userid>
-        <category>Interest</category>
-        <puid>10</puid>
     </tbl_eportfolio_category>
   <!-- Table tbl_eportfolio_categorytypes -->
     <tbl_eportfolio_categorytypes>
@@ -114,39 +108,46 @@
         <puid>12</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
-        <id>Wedusoft_5308_1203921054</id>
-        <categoryid>Wedusoft_5422_1203921033</categoryid>
+        <id>init_7589_1205515181</id>
+        <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
-        <type>High</type>
+        <type>Recreational</type>
         <puid>13</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
-        <id>Wedusoft_2062_1203921075</id>
-        <categoryid>Wedusoft_5422_1203921033</categoryid>
+        <id>init_6785_1205515206</id>
+        <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
-        <type>Normal</type>
+        <type>Academic</type>
         <puid>14</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
-        <id>Wedusoft_8069_1203921092</id>
-        <categoryid>Wedusoft_5422_1203921033</categoryid>
+        <id>init_5447_1205515229</id>
+        <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
-        <type>Low</type>
+        <type>Proffesional</type>
         <puid>15</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
-        <id>Wedusoft_6789_1203921975</id>
-        <categoryid>Wedusoft_9177_1203921949</categoryid>
+        <id>init_4287_1205515252</id>
+        <categoryid>init_7147_1205515151</categoryid>
         <userid>8893070328</userid>
-        <type>Award</type>
+        <type>Other</type>
         <puid>16</puid>
     </tbl_eportfolio_categorytypes>
     <tbl_eportfolio_categorytypes>
-        <id>Wedusoft_1762_1203922858</id>
-        <categoryid>Wedusoft_8403_1203922834</categoryid>
+        <id>init_5434_1205515465</id>
+        <categoryid>init_4581_1205515437</categoryid>
         <userid>8893070328</userid>
-        <type>Recreational</type>
+        <type>Award</type>
         <puid>17</puid>
+    </tbl_eportfolio_categorytypes>
+    <tbl_eportfolio_categorytypes>
+        <id>init_7575_1205515495</id>
+        <categoryid>init_4581_1205515437</categoryid>
+        <userid>8893070328</userid>
+        <type>Other</type>
+        <puid>18</puid>
     </tbl_eportfolio_categorytypes>
 </defaultdata>
 

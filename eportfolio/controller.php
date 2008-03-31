@@ -52,6 +52,7 @@ class eportfolio extends controller
 	$this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
 	$this->objUrl = $this->getObject('url', 'strings');
 	$this->_objGroupAdmin = &$this->newObject('groupadminmodel','groupadmin');
+	$this->_objManageGroups = &$this->newObject('managegroups','contextgroups');
         $this->_objDBContext = &$this->newObject('dbcontext','context');
         $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
         $this->_objDBEssay = &$this->newObject('dbessay_book','essay');
@@ -78,6 +79,9 @@ class eportfolio extends controller
 
 	$this->userId=$this->objUser->userId(); //To pick user userid
 	$this->setVarByRef('userId', $this->userId);
+        $userPid = $this->objUser->PKId($this->objUser->userId());//To pick user id
+        $this->setVarByRef('userPid', $this->userPid);
+
         
         $this->objUrl = $this->getObject('url', 'strings');
 
@@ -87,49 +91,53 @@ class eportfolio extends controller
                 'Lecturers'=>ucwords($this->objLanguage->code2Txt('word_lecturers')), 
                 'Students'=>ucwords($this->objLanguage->code2Txt('word_students'))
             );
+        $this->_arrSubGroups = array();
+        $this->_arrSubGroups['Owner']['id'] = NULL;
+        $this->_arrSubGroups['Owner']['members'] = array($userPid);
+
+        $this->_arrSubGroups['Guest']['id'] = NULL;
+        $this->_arrSubGroups['Guest']['members'] = array();
 
     }
 
 
     public function dispatch($action) 
     {
-	// Get the context
-        $objDbContext = &$this->getObject('dbcontext','context');
-        $contextCode = $objDbContext->getContextCode();
-        // If we are not in a context...
-
-	if ($contextCode == null) {
-	    $this->contextId = "root";
-	    $this->setVarByRef('contextId', $this->contextId);
-	    $this->contextTitle = "Lobby";
-	    $this->setVarByRef('contextTitle', $this->contextTitle);
-	 }
-	// ... we are in a context
-        else {
-            $this->contextId = $contextCode;
-            $this->setVarByRef('contextId', $this->contextId);
-            
-            $contextRecord = $objDbContext->getContextDetails($contextCode);
-            $this->contextTitle = $contextRecord['title'];
-            $this->setVarByRef('contextTitle', $this->contextTitle);
-        }
-        $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+        //$this->setLayoutTemplate('eportfolioview_layout_tpl.php');
         
         $this->user = $this->objUserAdmin->getUserDetails($this->objUser->PKId($this->objUser->userId()));
         $this->userPid = $this->objUser->PKId($this->objUser->userId());
         $this->setVarByRef('user', $this->user);
         $this->setVarByRef('userPid', $this->userPid);
 	
-        //$this->userId = $this->objUser->PKId($this->objUser->userId()); //To pick user id
-        //$this->userId = $this->objUser->userId(); //To pick user userid
-	//$this->setVarByRef('userId',$this->userId);
         switch ($action)
-        {
+        { //manage_group
+	    case "add_group":
+		return "add_group_tpl.php";
+		break;
+            case 'manage_eportfolio' :
+		//$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+		$groupId = $this->getParam('id', null);
+		$this->setVarByRef('groupId',$groupId);
+		return "allparts_tpl.php";		
+		break;
+            case 'manage_group' :
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+		$myid = $this->getParam('id', null);
+		return $this->showManagegroup($myid);
+		break;
+            case 'manage_form' :
+		$myid = $this->getParam('id', null);
+		$this->setVarByRef('myid',$myid);
+                return $this->processManagegroup( $myid );
+		break;
             case 'manage_stud' :
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$myid = $this->getParam('id', null);
 		return $this->showManage('Students',$myid);
 		break;
-            case 'manage_lect' :
+            case 'manage_lect':
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$myid = $this->getParam('id', null);
 		return $this->showManage('Lecturers',$myid);
 		break;
@@ -144,122 +152,123 @@ class eportfolio extends controller
                 return $this->processManage( 'Lecturers',$myid);
 		break;
            case "userdetails":
+		
 		return "userdetails_tpl.php";
 		break;
             case "main":
 		return "main_tpl.php";
 		break;
 	    case "add_address":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_address_tpl.php";
 		break;
             case "view_transcript":	
 		return 'main_tpl.php';	
-		//return "view_transcript_tpl.php"; 
 		break;
 	    case "add_interest":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_interest_tpl.php";
 		break;
             case "view_interest":		
-		//return "view_interest_tpl.php"; 
 		return 'main_tpl.php';
 		break;
            case "view_address":		
-		//return "view_address_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_contact":
-		//return "view_contact_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_email":		
-		//return "view_email_tpl.php";		
 		return 'main_tpl.php';
 		break;
 	    case "view_activity":		
-		//return "view_activity_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_qcl":		
-		//return "view_qcl_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_goals":		
-		//return "view_goals_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "add_goals":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_goals_tpl.php";
 		break;
 	    case "add_contact":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_contact_tpl.php";
 		break;
 	    case "add_email":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_email_tpl.php";
 		break;
 	    case "add_activity":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_activity_tpl.php";
 		break;
 	    case "add_reflection":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_reflection_tpl.php";
 		break;
 	    case "add_assertion":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_assertion_tpl.php";
 		break;
 	    case "view_assertion":		
-		//return "view_assertion_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "add_product":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_product_tpl.php";
 		break;
 	    case "view_product":		
-		//return "view_product_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "add_category":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_category_tpl.php";
 		break;
 	    case "view_category":		
-		//return "view_category_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "add_categorytype":		
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_categorytype_tpl.php";
 		break;
 	    case "view_categorytype":		
-		//return "view_categorytype_tpl.php";
 		return 'main_tpl.php';
 		break;
 
 	    case "view_reflection":		
-		//return "view_reflection_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_demographics":		
-		//return "view_demographics_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_affiliation":		
-		//return "view_affiliation_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "view_competency":		
-		//return "view_competency_tpl.php";
 		return 'main_tpl.php';
 		break;
 	    case "add_affiliation":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_affiliation_tpl.php";
 		break;
 	    case "add_demographics":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_demographics_tpl.php";
 		break;
 	    case "add_transcript":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_transcript_tpl.php";
 		break;
 	    case "add_qcl":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_qcl_tpl.php";
 		break;
 	    case "add_competency":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		return "add_competency_tpl.php";
 		break;
 	    case 'changeimage':
@@ -275,66 +284,62 @@ class eportfolio extends controller
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbAddressList->deleteSingle($id));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletecontact":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbContactList->deleteSingle($id));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deleteinterest":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbInterestList->deleteSingle($id));
-		 // After processing return to view interest
-	        //return $this->nextAction( 'view_interest', array() );
-		return "main_tpl.php";
+		 // After processing return to view main
+
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "deletedemographics":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbDemographicsList->deleteSingle($id));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deleteemail":
 		$this->nextAction(
 		$myid = $this->getParam('myid', null),
 		$this->objDbEmailList->deleteSingle($myid));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletetranscript":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbTranscriptList->deleteSingle($id));
-		// After processing return to view transcript
-	        //return $this->nextAction( 'view_transcript', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deleteqcl":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbQclList->deleteSingle($id));
-		// After processing return to view qcl
-	        //return $this->nextAction( 'view_qcl', array() );
-		return "main_tpl.php";
+		// After processing return to view main
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletecompetency":
 		$this->nextAction(
 		$id = $this->getParam('id', null),
 		$this->objDbCompetencyList->deleteSingle($id));
-		 // After processing return to view competency
-	        //return $this->nextAction( 'view_competency', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
@@ -342,66 +347,50 @@ class eportfolio extends controller
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbAffiliationList->deleteSingle($myid));
-		// After processing return to view affiliation
-	        //return $this->nextAction( 'view_affiliation', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletegoals":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbGoalsList->deleteSingle($myid));
-		// After processing return to view goals
-	        //return $this->nextAction( 'view_goals', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletereflection":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbReflectionList->deleteSingle($myid));
-		 // After processing return to view reflection
-	        //return $this->nextAction( 'view_reflection', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "deleteassertion":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbAssertionList->deleteSingle($myid));
-		 // After processing return to view assertion
-	        //return $this->nextAction( 'view_assertion', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deleteactivity":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbActivityList->deleteSingle($myid));		
-		// After processing return to view activity
-	        //return $this->nextAction( 'view_activity', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deleteproduct":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbProductList->deleteSingle($myid));		
-		// After processing return to view product
-	        //return $this->nextAction( 'view_product', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletecategory":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbCategoryList->deleteSingle($myid));		
-		// After processing return to view product
-	        //return $this->nextAction( 'view_category', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "deletecategorytype":
 		$this->nextAction(
 		$myid = $this->getParam('id', null),
 		$this->objDbCategorytypeList->deleteSingle($myid));		
-		// After processing return to view product
-	        //return $this->nextAction( 'view_categorytype', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "addaddressconfirm":
@@ -415,9 +404,8 @@ class eportfolio extends controller
 		$this->getParam('postcode', NULL),
 		$this->getParam('postal_address', NULL)
 		);
-       		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+       		// After processing return to view main
+		return $this->nextAction('main',NULL);
 		break;
 	   case "addqclconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -430,9 +418,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		// After processing return to view qcl
-	        //return $this->nextAction( 'view_qcl', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "addgoalsconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -446,9 +432,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		// After processing return to view goals
-	        //return $this->nextAction( 'view_goals', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	case "editqclconfirm":
@@ -465,9 +449,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		// After processing return to view qcl
-	        //return $this->nextAction( 'view_qcl', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	case "editgoalsconfirm":
 		$myid = $this->getParam('id', null);
@@ -484,9 +466,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		// After processing return to view goals
-	        //return $this->nextAction( 'view_goals', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
@@ -501,9 +481,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		 // After processing return to view competency
-	        //return $this->nextAction( 'view_competency', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "addcompetencyconfirm":
@@ -513,12 +491,11 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		 // After processing return to view competency
-	        //return $this->nextAction( 'view_competency', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "editcompetency":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbCompetencyList->listSingle($id);
@@ -545,10 +522,14 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		 // After processing return to view assertion
-	        //return $this->nextAction( 'view_assertion', array() );
-
+		return $this->nextAction('main',NULL);
 		break;
+
+	   case "addgroupconfirm":
+	        $id = $this->addGroups($this->getParam('group', NULL));
+		return $this->nextAction('main',NULL);
+		break;			
+
 
 	   case "addassertionconfirm":
 	        $id = $this->objDbAssertionList->insertSingle(
@@ -571,9 +552,10 @@ class eportfolio extends controller
                 }
 		// After processing return to view assertion
 	        //return $this->nextAction( 'view_assertion', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;			
 	    case "editassertion":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbAssertionList->listSingle($id);
@@ -589,6 +571,7 @@ class eportfolio extends controller
 		break;
 
 	    case "displayassertion":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$thisid = $this->getParam('thisid', null);
 		$this->setVarByRef('thisid',$thisid);
 		$mylist = $this->objDbAssertionList->listSingle($thisid);
@@ -617,9 +600,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		 // After processing return to view reflection
-	        //return $this->nextAction( 'view_reflection', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
@@ -630,12 +611,11 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		 // After processing return to view reflection
-	        //return $this->nextAction( 'view_reflection', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "editreflection":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbReflectionList->listSingle($id);
@@ -668,9 +648,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		 // After processing return to view product
-	        //return $this->nextAction( 'view_product', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
@@ -688,12 +666,11 @@ class eportfolio extends controller
 		$this->getParam('longdescription', NULL)
 
 		);
-		 // After processing return to view product
-	        //return $this->nextAction( 'view_product', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "editproduct":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbProductList->listSingle($id);
@@ -732,9 +709,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		));
-		 // After processing return to view interest
-	        //return $this->nextAction( 'view_interest', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "addinterestconfirm":
@@ -744,12 +719,11 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		 // After processing return to view interest
-	        //return $this->nextAction( 'view_interest', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "editinterest":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbInterestList->listSingle($id);
@@ -767,6 +741,7 @@ class eportfolio extends controller
 
 
 	    case "editgoals":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbGoalsList->listSingle($id);
@@ -792,6 +767,7 @@ class eportfolio extends controller
 
 
 	    case "editqcl":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbQclList->listSingle($id);
@@ -813,7 +789,6 @@ class eportfolio extends controller
 		break;
 
 	   case "addaffiliationconfirm":
-	        //$link = $this->getParam('link', NULL);
 	        $id = $this->objDbAffiliationList->insertSingle(
 		$this->getParam('affiliation_type', NULL),
 		$this->getParam('classification', NULL),
@@ -822,11 +797,10 @@ class eportfolio extends controller
 		$this->getParam('start', NULL),
 		$this->getParam('finish', NULL)
 		);
-		// After processing return to view affiliation
-	        //return $this->nextAction( 'view_affiliation', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "editaddress":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbAddressList->listSingle($id);
@@ -847,6 +821,7 @@ class eportfolio extends controller
 		return "edit_address_tpl.php";
 		break;
 	    case "editaffiliation":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbAffiliationList->listSingle($id);
@@ -878,9 +853,7 @@ class eportfolio extends controller
 			$this->getParam('postcode', NULL),
 			$this->getParam('postal_address', NULL)
 		));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	case "editaffiliationconfirm":
 		$myid = $this->getParam('id', null);
@@ -895,9 +868,7 @@ class eportfolio extends controller
 			$this->getParam('start', NULL),
 			$this->getParam('finish', NULL)
 		));
-		// After processing return to view affiliation
-	        //return $this->nextAction( 'view_affiliation', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "addcontactconfirm":	        
 	        $id = $this->objDbContactList->insertSingle(
@@ -907,12 +878,11 @@ class eportfolio extends controller
 		$this->getParam('area_code', NULL),
 		$this->getParam('id_number', NULL)
 		);
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	case "editemail":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbEmailList->listSingle($id);
@@ -928,9 +898,7 @@ class eportfolio extends controller
 		$this->getParam('email_type', NULL),
 		$this->getParam('email', NULL)
 		);
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "editemailconfirm":
 		$myid = $this->getParam('id', null);
@@ -941,12 +909,11 @@ class eportfolio extends controller
 			$this->getParam('email_type', NULL),
 			$this->getParam('email', NULL)
 		));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "editcategory":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbCategoryList->listSingle($id);
@@ -959,9 +926,7 @@ class eportfolio extends controller
 	        $id = $this->objDbCategoryList->insertSingle(
 		$this->getParam('category', NULL)
 		);
-		// After processing return to view category
-	        //return $this->nextAction( 'view_category', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "editcategoryconfirm":
 		$myid = $this->getParam('id', null);
@@ -971,12 +936,11 @@ class eportfolio extends controller
 			$myid,
 			$this->getParam('category', NULL)
 		));
-		// After processing return to view category
-	        //return $this->nextAction( 'view_category', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "editcategorytype":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbCategorytypeList->listSingle($id);
@@ -992,9 +956,7 @@ class eportfolio extends controller
 		$this->getParam('categoryid', NULL),
 		$this->getParam('categorytype', NULL)
 		);
-		// After processing return to view category types
-	        //return $this->nextAction( 'view_categorytype', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "editcategorytypeconfirm":
 		$myid = $this->getParam('id', null);
@@ -1006,13 +968,12 @@ class eportfolio extends controller
 			$this->getParam('categorytype', NULL)
 
 		));
-		// After processing return to view category types
-	        //return $this->nextAction( 'view_categorytype', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
 	    case "editcontact":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbContactList->listSingle($id);
@@ -1040,9 +1001,7 @@ class eportfolio extends controller
 			$this->getParam('area_code', NULL),
 			$this->getParam('id_number', NULL)
 		));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "adddemographicsconfirm":
 		/*
@@ -1056,11 +1015,10 @@ class eportfolio extends controller
 		$this->getParam('birth', NULL),
 		$this->getParam('nationality', NULL)
 		);
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "editdemographics":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbDemographicsList->listSingle($id);
@@ -1086,9 +1044,7 @@ class eportfolio extends controller
 			$birth,
 			$this->getParam('nationality', NULL)
 		));
-		// After processing return to view contact
-	        //return $this->nextAction( 'view_contact', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	   case "addactivityconfirm":
@@ -1107,9 +1063,7 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		// After processing return to view activity
-	        //return $this->nextAction( 'view_activity', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	   case "addtranscriptconfirm":
 	        //$link = $this->getParam('link', NULL);
@@ -1117,11 +1071,10 @@ class eportfolio extends controller
 		$this->getParam('shortdescription', NULL),
 		$this->getParam('longdescription', NULL)
 		);
-		// After processing return to view transcript
-	        //return $this->nextAction( 'view_transcript', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 	    case "editactivity":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbActivityList->listSingle($id);
@@ -1159,12 +1112,11 @@ class eportfolio extends controller
 			$this->getParam('shortdescription', NULL),
 			$this->getParam('longdescription', NULL)
 		));
-		// After processing return to view activity
-	        //return $this->nextAction( 'view_activity', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 	    case "edittranscript":
+		$this->setLayoutTemplate('eportfolio_layout_tpl.php');
 		$id = $this->getParam('id', null);
 		$this->setVarByRef('id',$id);
 		$list = $this->objDbTranscriptList->listSingle($id);
@@ -1183,9 +1135,7 @@ class eportfolio extends controller
 			$this->getParam('shortdescription', NULL),
 			$this->getParam('longdescription', NULL)
 		));
-		// After processing return to view transcript
-	        //return $this->nextAction( 'view_transcript', array() );
-		return "main_tpl.php";
+		return $this->nextAction('main',NULL);
 		break;
 
 
@@ -1336,6 +1286,49 @@ class eportfolio extends controller
     }
     /**
     * Method to process the request to manage a member group.
+    * @param string the group id to be managed.
+    */
+    function processManagegroup( $myId )
+    {
+	
+	$groupId = $myId;
+
+        if ( $this->getParam( 'button' ) == 'save' && $groupId <> '' ) {
+            // Get the revised member ids
+            if(is_array($this->getParam( 'list2' )))
+            {
+            	$list = $this->getParam( 'list2' );
+            } else {
+            	$list = array();
+            }
+           
+            // Get the original member ids
+            $fields = array ( 'tbl_users.id' );
+            $memberList = &$this->_objGroupAdmin->getGroupUsers( $groupId, $fields );
+            $oldList = $this->_objGroupAdmin->getField( $memberList, 'id' );
+            // Get the added member ids
+            $addList = array_diff( $list, $oldList );
+            // Get the deleted member ids
+            $delList = array_diff( $oldList, $list );
+            // Add these members
+            foreach( $addList as $userId ) {
+                $this->_objGroupAdmin->addGroupUser( $groupId, $userId );
+            }
+            // Delete these members
+            foreach( $delList as $userId ) {
+                $this->_objGroupAdmin->deleteGroupUser( $groupId, $userId );
+            }
+        }
+        if ( $this->getParam( 'button' ) == 'cancel' && $groupId <> '' ) {
+		
+        }
+        // After processing return to main
+        return $this->nextAction( 'view_assertion', array() );
+
+    }
+
+    /**
+    * Method to process the request to manage a member group.
     * @param string the group to be managed.
     */
     function processManage( $groupName, $myId )
@@ -1377,6 +1370,114 @@ class eportfolio extends controller
         return $this->nextAction( 'view_assertion', array() );
 
     }
+    /**
+    * Method to show the manage member group template.
+    * @param string the group id to be managed.
+    */
+    function showManagegroup( $myid )
+    {
+        // The member list of this group
+        $fields = array ( 'firstName', 'surname', 'tbl_users.id' );
+        $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
+        $memberIds  = $this->_objGroupAdmin->getField( $memberList, 'id' );
+        $filter = "'" . implode( "', '", $memberIds ) . "'";
+
+        // Users list need the firstname, surname, and userId fields.
+        $fields = array ( 'firstName', 'surname', 'id' );
+        $usersList = $this->_objGroupAdmin->getUsers( $fields, " WHERE id NOT IN($filter)" );
+        sort( $usersList );
+
+        // Members list dropdown
+        $lstMembers = $this->newObject( 'dropdown', 'htmlelements' );
+        $lstMembers->name = 'list2[]';
+        $lstMembers->extra = ' multiple="multiple" style="width:100pt" size="10" ondblclick="moveSelectedOptions(this.form[\'list2[]\'],this.form[\'list1[]\'],true); "';
+        foreach ( $memberList as $user ) {
+        	
+            $fullName = $user['firstname'] . " " . $user['surname'];
+            $userPKId = $user['id'];
+//echo "<h1>userPKId ".$userPKId."</h1>";
+            $lstMembers->addOption( $userPKId, $fullName );
+        }
+
+		$tblLayoutM= &$this->newObject( 'htmltable', 'htmlelements' );
+		$tblLayoutM->row_attributes = 'align="center" ';
+		$tblLayoutM->width = '100px';
+		$tblLayoutM->startRow();
+		$tblLayoutM->endRow();
+		$tblLayoutM->startRow();
+			$tblLayoutM->addCell( $lstMembers->show() );
+		$tblLayoutM->endRow();
+        $this->setVarByRef('lstMembers', $tblLayoutM);
+
+        // Users list dropdown
+        $lstUsers = $this->newObject( 'dropdown', 'htmlelements' );
+        $lstUsers->name = 'list1[]';
+        $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+        foreach ( $usersList as $user ) {
+            $fullName = $user['firstname'] . " " . $user['surname'];
+            $userPKId = $user['id'];
+            $lstUsers->addOption( $userPKId, $fullName );
+
+        }
+		$tblLayoutU= &$this->newObject( 'htmltable', 'htmlelements' );
+		$tblLayoutU->row_attributes = 'align="center"';
+		$tblLayoutU->width = '100px';
+		$tblLayoutU->startRow();
+			$tblLayoutU->addCell( $this->objLanguage->code2Txt('mod_contextgroups_ttlUsers','contextgroups'),'10%',null,null,'heading' );
+		$tblLayoutU->endRow();
+		$tblLayoutU->startRow();
+			$tblLayoutU->addCell( $lstUsers->show() );
+		$tblLayoutU->endRow();
+        $this->setVarByRef('lstUsers', $tblLayoutU );
+
+        // Link method
+        $lnkSave = $this->newObject('link','htmlelements');
+        $lnkSave->href  = '#';
+        $lnkSave->extra = 'onclick="javascript:';
+        $lnkSave->extra.= 'selectAllOptions( document.forms[\'frmManage\'][\'list2[]\'] ); ';
+        $lnkSave->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'save\'; ';
+        $lnkSave->extra.= 'document.forms[\'frmManage\'].submit(); "';
+        $lnkSave->link  = $this->objLanguage->languageText( 'word_save' );
+
+        $lnkCancel = $this->newObject('link','htmlelements');
+        $lnkCancel->href  = '#';
+        $lnkCancel->extra = 'onclick="javascript:';
+        $lnkCancel->extra.= 'document.forms[\'frmManage\'][\'button\'].value=\'cancel\'; ';
+        $lnkCancel->extra.= 'document.forms[\'frmManage\'].submit(); "';
+        $lnkCancel->link  = $this->objLanguage->languageText( 'word_cancel' );
+
+        $ctrlButtons = array();
+        $ctrlButtons['lnkSave'] = $lnkSave->show();
+        $ctrlButtons['lnkCancel'] = $lnkCancel->show();
+        $this->setVar('ctrlButtons',$ctrlButtons);
+
+        $navButtons = array();
+        $navButtons['lnkRight']    = $this->navLink('>>','Selected',"forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+        $navButtons['lnkRightAll'] = $this->navLink('All >>','All',"forms['frmManage']['list1[]']", "forms['frmManage']['list2[]']");
+        $navButtons['lnkLeft']     = $this->navLink('<<','Selected',"forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+        $navButtons['lnkLeftAll']  = $this->navLink('All <<','All',"forms['frmManage']['list2[]']", "forms['frmManage']['list1[]']");
+        $this->setVar('navButtons',$navButtons);
+
+        $frmManage = &$this->getObject( 'form', 'htmlelements' );
+        $frmManage->name = 'frmManage';
+        $frmManage->displayType = '3';
+        $frmManage->action = $this->uri ( array( 'action' => 'manage_form', 'id'=>$myid ) );
+	//$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
+        $frmManage->addToForm("<input type='hidden' name='button' value='' />");
+        
+        
+        
+        $this->setVarByRef('frmManage', $frmManage );
+
+        $title = $this->objLanguage->code2Txt(
+            'mod_contextgroups_ttlManageMembers','contextgroups', array(
+                'GROUPNAME'=>$groupName,
+                'TITLE'=>$this->_objDBContext->getTitle() )
+            );
+        $this->setVar('title', $title );
+
+        return 'manage_group_tpl.php';
+    }
 
     /**
     * Method to show the manage member group template.
@@ -1385,7 +1486,9 @@ class eportfolio extends controller
     function showManage( $groupName, $myid )
     {
 	$mygroupId = $this->_objGroupAdmin->getLeafId( array( $myid, $groupName) );
+//echo "<h1>mygroupId ".$mygroupId."</h1>";
 	$groupId = $this -> getchildId($mygroupId, $groupName);
+//echo "<h1>groupId ".$groupId."</h1>";
         // The member list of this group
         $fields = array ( 'firstName', 'surname', 'tbl_users.id' );
         $memberList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
@@ -1405,6 +1508,7 @@ class eportfolio extends controller
         	
             $fullName = $user['firstname'] . " " . $user['surname'];
             $userPKId = $user['id'];
+//echo "<h1>userPKId ".$userPKId."</h1>";
             $lstMembers->addOption( $userPKId, $fullName );
         }
 
@@ -1471,6 +1575,7 @@ class eportfolio extends controller
         $frmManage->name = 'frmManage';
         $frmManage->displayType = '3';
         $frmManage->action = $this->uri ( array( 'action' => $groupName.'_form', 'id'=>$myid ) );
+	//$frmManage->action = $this->uri ( array( 'module'=>'eportfolio', 'action' => 'main', 'id'=>$myid) );
         $frmManage->addToForm("<input type='hidden' name='button' value='' />");
         
         
@@ -1484,7 +1589,7 @@ class eportfolio extends controller
             );
         $this->setVar('title', $title );
 
-        return 'manage_assertion_tpl.php';
+        return 'manage_group_tpl.php';
     }
     /**
     * Method to create a navigation button link
@@ -1522,6 +1627,169 @@ class eportfolio extends controller
 	return $groupId;	
     }	
 
+    /**
+    * Method to create the groups for a new eportfolio user
+    * @param string The user id.
+    * @param string The Title of a new context.
+    */
+    function createGroups( $userid, $title )
+    {
+        // Context node
+        $eportfolioGroupId = $this->_objGroupAdmin->addGroup($userid,$title,NULL);
+        // For each subgroup
+        foreach( $this->_arrSubGroups as $groupName=>$groupId ) {
+
+            $newGroupId = $this->_objGroupAdmin->addGroup(
+                $groupName,
+                $this->objUser->PKId($this->objUser->userId()).' '.$groupName,
+                $eportfolioGroupId);
+            $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
+        } // End foreach subgroup
+
+        // Add groupMembers
+        $this->addGroupMembers();
+
+        // Now create the ACLS
+
+	$this->_objManageGroups->createAcls( $userid, $title );
+
+    } // End createGroups
+
+    /**
+    * Method to create more groups for an eportfolio user
+    * @param string The user id.
+    * @param string The Title of a new context.
+    */
+    function addGroups( $title )
+    {
+        // user Pk id
+	$userPid = $this->objUser->PKId($this->objUser->userId());
+        $usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
+        // Add subgroup
+        $newGroupId = $this->_objGroupAdmin->addGroup($title,$userPid.' '.$groupName,$usergroupId);
+
+        // Add groupMembers
+        $this->addGroupMembers();
+
+        // Now create the ACLS
+
+	$this->_objManageGroups->createAcls( $userPid, $title );
+
+    } // End createGroups
+
+    /**
+    * Method to add members to the groups for a new eportfolio user
+    */
+    function addGroupMembers( )
+    {
+        foreach( $this->_arrSubGroups as $groupName=>$row ) {
+            foreach( $row['members'] as $userPKId ){
+                $this->_objGroupAdmin->addGroupUser( $row['id'], $userPKId );
+            } // End foreach member
+        } // End foreach subgroup
+    } // End addGroupMembers
+        /**
+        * Method to get the eportfolio users
+        * @return string
+        */
+        public function getEportfolioUsers()
+        {
+
+            //manage eportfolio users
+            $objLink =  new link();
+	    $objLanguage = &$this->getObject('language', 'language');
+            $icon =  & $this->newObject('geticon', 'htmlelements');
+            $table = & $this->newObject('htmltable' , 'htmlelements');
+            $linkstable = & $this->newObject('htmltable' , 'htmlelements');
+            $objGroups = & $this->newObject('managegroups', 'contextgroups');
+            $mngfeatureBox =  & $this->newObject('featurebox', 'navigation');
+            $table->width = '40%';
+            $linkstable->width = '40%';
+	    $str = '';
+	    //Add Group Link
+            $iconAdd = $this->getObject('geticon','htmlelements');
+            $iconAdd->setIcon('add');	
+	    $iconAdd->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio');			
+	    $addlink = new link($this->uri(array('module'=>'eportfolio','action'=>'add_group')));
+	    $addlink->link = $objLanguage->languageText("mod_eportfolio_add",'eportfolio').' '.$objLanguage->languageText("mod_eportfolio_wordGroup",'eportfolio').' '.$iconAdd->show();
+	    //$addlink->link = 'Add Group'.' '.$iconAdd->show();
+	    $linkAdd = $addlink->show();     
+            $linkstableRow = array('<hr/>'.$linkAdd);
+	    $linkstable->addRow($linkstableRow);	 
+		$str .= $mngfeatureBox->show(NULL,$linkstable->show());	    
+
+	    //Get group members
+	    //Get group id
+	    $userPid = $this->objUser->PKId($this->objUser->userId());
+	    $this->setVarByRef('userPid', $this->userPid);
+	    $usergroupId = $this->_objGroupAdmin->getId( $userPid, $pkField = 'name' );  
+
+	    //get the descendents.
+
+
+	    $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+ 	    foreach ($usersubgroups as $subgroup)
+	    {
+
+		        // The member list of this group
+		        $fields = array ( 'firstName', 'surname', 'tbl_users.id' );
+		        $membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
+		        foreach ( $membersList as $users ) {
+				if ($users)
+				{
+			
+			            $fullName = $users['firstname'] . " " . $users['surname'];
+			            $userPKId = $users['id'];
+			
+		                    $tableRow = array($fullName);
+
+		                    $table->addRow($tableRow);
+
+				}else{
+		                   $tableRow = array('<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">'.$this->objLanguage->languageText('mod_eportfolio_wordManage','eportfolio').'</div>');
+	  	                    $table->addRow($tableRow);
+				}
+		       
+
+			}
+//manage_eportfolio
+			$managelink = new link($this->uri(array(
+				'module'=>'eportfolio',
+				'action'=>'manage_group', 
+				'id' => $subgroup["id"]
+			)));
+			
+			$managelink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'];	
+
+			$linkManage = $managelink->show();     
+			$mnglink = new link($this->uri(array(
+				'module'=>'eportfolio',
+				'action'=>'manage_eportfolio', 
+				'id' => $subgroup["id"]
+			)));
+			
+			$mnglink->link = $this->objLanguage->code2Txt("mod_eportfolio_wordManage", 'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio');	
+
+			$linkMng = $mnglink->show();     
+
+		        $tableRow = array('<hr/>'.$linkManage.' / '.$linkMng);
+		        $table->addRow($tableRow);	 
+
+
+			$textinput = new textinput("groupname",$subgroup['name']);
+		        $str .= $mngfeatureBox->show($subgroup['name'],$table->show());
+		        $table = & $this->newObject('htmltable' , 'htmlelements');
+			$managelink = new link();          
+			
+
+		}//end foreach
+	        $str .= $mngfeatureBox->show(NULL,$linkstable->show());
+
+		
+		return $str;
+		unset($users);
+
+	  }//end method
 
 }
 
