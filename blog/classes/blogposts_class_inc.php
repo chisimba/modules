@@ -917,7 +917,7 @@ class blogposts extends object
             }
             $posts = $this->objDbBlog->getAbsAllPosts($userid);
         }
-        $count = count($posts);
+        $count = count($posts);	
         // print_r($posts);
         // add in a table header...
         $edtable->startHeaderRow();
@@ -985,6 +985,8 @@ class blogposts extends object
         $editform->addToForm($edtable->show());
         $editform->addToForm($this->objdelButton->show());
         $editform = $editform->show();
+        
+        
         return $editform;
     }
     /**

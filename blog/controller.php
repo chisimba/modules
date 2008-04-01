@@ -1004,6 +1004,8 @@ class blog extends controller
                         break;
 
                     case 'editpost':
+                    	//$this->setPageTemplate(NULL);
+                    	//$this->setLayoutTemplate(NULL);
                         return 'editpost_tpl.php';
                         break;
 
@@ -1015,6 +1017,9 @@ class blog extends controller
                 // $this->setVar('pageSuppressXML', TRUE);
                 return 'blogadminmenu_tpl.php';
                 break;
+            
+            case 'adminpg':
+            	$this->objblogPosts->managePosts($this->objUser->userId());
 
             case 'showarchives':
                 ini_set('max_execution_time', -1);

@@ -14,6 +14,16 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 $objSideBar = $this->newObject('sidebar', 'navigation');
 //get the posts manager
 $middleColumn = $this->objblogPosts->managePosts($userid);
+//echo $poststoed;
+$objPagination = $this->getObject('pagination', 'navigation');
+/*$objPagination->id = 'blogposts';
+		$objPagination->module = 'blog';
+		$objPagination->action = 'adminpg';
+		$objPagination->numPageLinks = (2);
+		$objPagination->extra = array('userid'=> $this->objUser->userId());
+		$middleColumn = $objPagination->show();
+*/
+
 if ($leftCol == NULL) {
     $leftCol = $rightSideColumn;
     $cssLayout->setMiddleColumnContent($middleColumn);
