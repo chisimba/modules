@@ -466,6 +466,7 @@ class blogposts extends object
                     }
                     $ret.= $objFeatureBox->showContent($head, /*$this->cleaner->cleanHtml(*/
                     $post['post_content']) . "<center>" . $tblnl->show() . "</center>" /*)*/;
+                    
                 }
             }
         } else {
@@ -473,6 +474,7 @@ class blogposts extends object
             // "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
             
         }
+        
         return $ret;
     }
     /**
@@ -1204,7 +1206,7 @@ class blogposts extends object
         $objBk = $this->getObject('background', 'utilities');
         $status = $objBk->isUserConn();
         $callback = $objBk->keepAlive();
-        $this->objProxy = $this->getObject('proxy', 'utilities');
+        //$this->objProxy = $this->getObject('proxy', 'utilities');
         // set up for Google Blog API
         $changesURL = $this->uri(array(
             'module' => 'blog',
@@ -1218,14 +1220,15 @@ class blogposts extends object
             'userid' => $userid
         ));
         // OK lets put it together...
-        $gurl = "http:// blogsearch.google.com/ping";
+        $gurl = "http://blogsearch.google.com/ping";
         // do the http request
         // echo $gurl;
         $gurl = str_replace('%26amp%3B', "&", $gurl);
         $gurl = str_replace('&amp;', "&", $gurl);
         $gurl = $gurl . "?name=" . urlencode($name) . "&url=" . urlencode($blogURL) . "&changesUrl=" . urlencode($changesURL);
+        //log_debug($gurl);
         // get the proxy info if set
-        $proxyArr = $this->objProxy->getProxy(NULL);
+        /*$proxyArr = $this->objProxy->getProxy(NULL);
         // print_r($proxyArr); die();
         if (!empty($proxyArr)) {
             $parr = array(
@@ -1247,6 +1250,9 @@ class blogposts extends object
         }
         $code = curl_exec($ch);
         curl_close($ch);
+        */
+        $objCurl = $this->getObject('curl', 'utilities');
+        $code = $objCurl->exec($gurl);
         switch ($code) {
             case "Thanks for the ping.":
                 log_debug("Google blogs API Success! Google said: " . $code);
