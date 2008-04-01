@@ -179,5 +179,53 @@ class dbFaqEntries extends dbTable
         $objIndexData = $this->getObject('indexdata', 'search');
         $objIndexData->removeIndex('faq_entry_'.$id);
     }//
+    
+    /**
+    * Return all records previous and next record ids, these ids are used for navigation
+    * @param string $contextId The context ID
+    * @param string $categoryId The category ID
+    * @return array The FAQ entries
+    */
+    function listAllWithNav($contextId, $categoryId)
+    {
+        if ($categoryId == "All Categories") {
+            $list =  $this->getAll("WHERE contextid='" . $contextId . "' ORDER BY _index");
+        }
+        else {
+            $list =  $this->getAll("WHERE contextid='" . $contextId . "' AND categoryid='" . $categoryId ."' ORDER BY _index");
+        }
+        
+        $indexArray = array();
+        $count = 0;
+		foreach ($list as $num) {
+			$temp = array('_index'=>$num['_index']);
+			$indexArray[] = $temp;
+			$count++;
+		}
+
+        $listArray = array();
+		$index = 1;
+        foreach($list as $element) {
+        	if ($index > 1){
+        		$previndex = $index - 2;
+        		$prev = $indexArray[$previndex];
+        		$prevRow = $this->getRow('_index', $prev['_index']);
+        	} else {
+        		$prevRow = null;
+        	}
+			if ($index < $count) {
+	        	$next = $indexArray[$index];
+	        	$nextRow = $this->getRow('_index', $next['_index']);
+			} else {
+				$nextRow = null;
+			}
+
+			$newArray = array('id'=>$element['id'], 'contextid'=>$element['contextid'], 'categoryid'=>$element['categoryid'], 'question'=>$element['question'], 'answer'=>$element['answer'], 'userid'=>$element['userid'], 'datelastupdated'=>$element['datelastupdated'], 'updated'=>$element['updated'], '_index'=>$element['_index'], 'puid'=>$element['puid'], 'previd'=>$prevRow['id'], 'nextid'=>$nextRow['id']);
+
+        	$listArray[] = $newArray;
+        	$index++;
+        }
+        return $listArray;
+    }
 }
 ?>

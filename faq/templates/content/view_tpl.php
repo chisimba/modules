@@ -108,8 +108,9 @@
     $found = false;
     foreach ($list as $element) {
         // Anchor tag for link to top of page.
-        echo "<a id=\"".$element['id']."\"></a>";
+        echo "<a id=\"".$element["id"]."\"></a>";
         $found = true;
+       // var_dump($element["id"]);
 ?>
         <!--<div style="background-color: #008080; padding:5px;">-->
         <!--<div style="background-color: #000080; padding:5px;">-->
@@ -155,6 +156,30 @@
                 )),
                 $objLanguage->languageText('faq_suredelete'));
             echo $objConfirm->show();
+
+            // Scroll down one entry.
+            if($element["nextid"] != null) {
+	            $index = $index + 1;
+	            $icon = $this->getObject('geticon','htmlelements');
+	            $icon->setIcon('down');
+	            $icon->alt = "Down";
+	            $icon->align=false;
+	            echo "<a href=\"#" .$element["nextid"]. "\">".$icon->show()."</a>";
+	            echo "&nbsp;";
+	            $index--;
+            }
+            
+            if($index > 1) {
+            // Scroll up one entry.
+            $index = $index - 1;
+            $icon = $this->getObject('geticon','htmlelements');
+            $icon->setIcon('up');
+            $icon->alt = "Up";
+            $icon->align=false;
+            echo "<a href=\"#" .$element["previd"]. "\">".$icon->show()."</a>";
+            echo "&nbsp;";
+            $index++;
+            }
         }
 ?>
         </div>
@@ -169,7 +194,7 @@
     if (!$found) {
         echo "<div class=\"noRecordsMessage\">" . $objLanguage->languageText("faq_noentries","faq") . "</div>";
     }
-    
+
     $link = new link ($this->uri(NULL));
     $link->link = $objLanguage->languageText("mod_faq_faqhome","faq", 'FAQ Home');
     echo $link->show();

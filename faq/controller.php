@@ -177,7 +177,11 @@ class faq extends controller
         
         
         // Get all FAQ entries
-        $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
+       // $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
+       // $this->setVarByRef('list', $list);
+        
+        // Get all FAQ entries
+        $list = $this->objFaqEntries->listAllWithNav($this->contextId, $this->categoryId);
         $this->setVarByRef('list', $list);
         
         // Get all the categories
