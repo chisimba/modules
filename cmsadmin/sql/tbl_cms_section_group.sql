@@ -1,5 +1,5 @@
 <?php
-
+//
 // Table Name
 $tablename = 'tbl_cms_section_group';
 

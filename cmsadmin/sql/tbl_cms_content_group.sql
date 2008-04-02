@@ -1,5 +1,4 @@
 <?php
-//new comment cvs broken
 // Table Name
 $tablename = 'tbl_cms_content_group';
 
