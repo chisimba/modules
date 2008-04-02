@@ -249,6 +249,27 @@ class forumsearch extends dbtable
         
         return $where;
     }
+    
+        /**
+    * Method to search the forums with no HTML attached
+    * @param string $terms Terms to search for
+    * @param string $forum Record Id of the forum to search in, or 'all' for all forums in current context.
+    */
+    function searchForumNoHTML($terms, $forum='all')
+    {
+        $searchTerms = $this->prepareTerm($terms);
+        $forumClause = $this->prepareForumClause($forum);
+        
+        $SQL = 'SELECT tbl_forum_post_text.*, topic_id FROM tbl_forum_post_text
+        INNER JOIN tbl_forum_post ON (tbl_forum_post.id = tbl_forum_post_text.post_id ) 
+        INNER JOIN tbl_forum_topic ON (tbl_forum_topic.id = tbl_forum_post.topic_id) 
+        INNER JOIN tbl_forum ON (tbl_forum.id = tbl_forum_topic.forum_id) 
+        WHERE '.$searchTerms. ' AND '.$forumClause;
+        
+        $results = $this->getArray($SQL);
+        
+        return $results;
+    }
 
 }
 
