@@ -53,7 +53,9 @@ if (count($podcasters) > 0) {
     }
     
     if ($this->getParam('action') == 'byuser') {
-        $dropdown->setSelected($this->getParam('id', $this->objUser->userId()));
+	$username = $this->objUser->userName();
+ 	
+        $dropdown->setSelected($this->getParam($this->objUser->getUserId($username)));
     }
     
     $label = new label ($this->objLanguage->languageText('mod_podcast_viewbypodcaster', 'podcast'), 'input_id');

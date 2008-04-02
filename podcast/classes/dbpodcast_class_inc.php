@@ -57,7 +57,11 @@ class dbpodcast extends dbTable
         // Prep Data
         $docId = 'podcast_entry_'.$podcastId;
         $docDate = $podcastInfo['datecreated'];
-        $url = $this->uri(array('action'=>'viewpodcast', 'id'=>$id), 'podcast');
+        //$this->objUser->getUserId('id', $id);
+        //$this->objPodcast->getPodcast('podcast', $podcast);
+        //$this->setVar('id', $id);
+        //$this->setVar('podcast', $podcast);
+        $url = $this->uri(array('action'=>'viewpodcast'), 'podcast');
         $title = $podcastInfo['title'];
         $contents = $podcastInfo['title'].' '.$podcastInfo['description'];
         $teaser = $podcastInfo['description'];

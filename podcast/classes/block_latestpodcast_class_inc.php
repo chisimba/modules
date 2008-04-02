@@ -50,7 +50,7 @@ class block_latestpodcast extends object
            $link->link = 'Podcast Home';
            
            $this->objPop=&new windowpop;
-            $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
+            $this->objPop->set('location',$this->uri(array('action'=>'podcast', 'id'=>$podcast['id']), 'podcast'));
             $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
             $this->objPop->set('width','280');
             $this->objPop->set('height','120');

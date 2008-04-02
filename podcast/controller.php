@@ -36,6 +36,15 @@ class podcast extends controller
             exit();
         }
     }
+
+	/*public function uri($params = array(), $module = '', $mode = '', $omitServerName=FALSE, $javascriptCompatibility = FALSE)
+	{
+		if (file_exists(chisimabroot/.".htaccess")) {
+
+} else {
+	parent::uri($params, $module, $mod = '', $omitServerName=FALSE, $javascriptCompatibility = FALSE)
+}
+	}*/
     
     /**
      * Dispatch method to indicate action to be taken
@@ -45,6 +54,8 @@ class podcast extends controller
      */
     public function dispatch($action)
     {
+
+	
         $this->setLayoutTemplate('tpl_podcast_layout.php');
         
         switch ($action)
@@ -68,7 +79,9 @@ class podcast extends controller
             case 'downloadfile':
                 return $this->downloadFile($this->getParam('id'));
             case 'byuser':
-                return $this->showUserPodcasts($this->getParam('id'));
+                return $this->showUserPodcasts($this->objUser->userName('id'));
+	    //case 'admin':
+		//return $this->showAllPodcasts($this->getParam('id'));
             case 'rssfeed':
                 return $this->showRssFeed($this->getParam('id'));
             case 'bycourse':
@@ -92,7 +105,7 @@ class podcast extends controller
             $action = 'home';
         }
         
-        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'viewpodcast', 'downloadfile', 'byuser', 'bycourse', 'rssfeedbycourse');
+        $allowedPreloginActions = array ('home', 'podcast', 'rssfeed', 'playpodcast', 'viewpodcast', 'downloadfile', 'byuser', 'admin' , 'bycourse', 'rssfeedbycourse');
         
         if (in_array($action, $allowedPreloginActions)) {
             return FALSE;
@@ -120,16 +133,37 @@ class podcast extends controller
      * @param string $id user Id
      * @return string Template
      */
-    private function showUserPodcasts($id='')
+    private function showUserPodcasts($username= '')
     {
-        if ($id == '') {
-            $id = $this->objUser->userId();
+        if ($username == '') {
+            $username = $this->objUser->userName();
         }
+
+	$id = $this->objUser->getUserId($username);
         
         $this->setVar('id', $id);
         
         $podcasts = $this->objPodcast->getUserPodcasts($id);
         $this->setVar('podcasts', $podcasts);
+	
+        
+        return 'tpl_listpodcasts.php';
+    }
+    /*
+     * Method to show all podcasts
+     * @param string $id podcast Id
+     * @return string Template
+     * @author Nonhlanhla Gangeni
+     */
+
+private function showAllPodcasts($id='')
+    {
+               
+        $this->setVar('id', $id);
+        
+        $podcasts = $this->objPodcast->getPodcasts($id);
+        $this->setVar('podcasts', $podcasts);
+	
         
         return 'tpl_listpodcasts.php';
     }
@@ -369,7 +403,7 @@ class podcast extends controller
     }
     
     /**
-     * Method to list to a podcast online
+     * Method to listen to a podcast online
      *
      * @param string $id Record Id of the podcast
      */
