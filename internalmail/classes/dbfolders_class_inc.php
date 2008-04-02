@@ -131,5 +131,33 @@ class dbfolders extends dbTable
         }
         return FALSE;
     }
+    
+	/**
+     * Method for listing all rows for the current user
+     * This method is used for the API and will pass the userId as a parameter
+     *
+     * @access public
+     * @return array $data  All row information.
+     */
+    public function listFoldersForUser($userId)
+    {
+        $sql = "SELECT * FROM ".$this->table;
+        $sql.= " WHERE user_id='".$userId."' OR user_id='system'";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            foreach($data as $key => $line) {
+                $this->dbRules->applyRules($line['id']);
+                $emails = $this->dbRouting->getAllMail($line['id'], array(
+                    1 => 3,
+                    2 => 'DESC'
+                ) , NULL);
+                $data[$key]['allmail'] = !empty($emails) ? count($emails) : 0;
+                $unreadMail = $this->dbRouting->getUnreadMail($line['id']);
+                $data[$key]['unreadmail'] = !empty($unreadMail) ? count($unreadMail) : 0;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 }
 ?>
