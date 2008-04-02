@@ -1012,16 +1012,16 @@ class conferenceregister extends object
 
                 $userId = $this->getParam('userId');
                 $info = $this->getUserInfo($userId);
-		$id = $this->register($info, $invoice);
+		        $id = $this->register($info, $invoice);
                 if(!empty($id)){
                     $this->setSession('userId', $userId);
                 //$this->addToConference($id);
                 }
                 return '';
-		break;
+		        break;
 
             case 'confirm':
-		return $this->showConfirmation();
+		        return $this->showConfirmation();
 
 	    default:
                 $config = $this->dbReg->getConfig();

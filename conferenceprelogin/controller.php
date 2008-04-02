@@ -47,7 +47,7 @@ class conferenceprelogin extends controller
                 $mode = $this->getParam('mode');
                 $display = $this->confReg->show($mode);
                 return $this->nextAction('register', array('mode' => 'confirm'));
-		break;
+		        break;
 
             case 'register':
                 $mode = $this->getParam('mode');
