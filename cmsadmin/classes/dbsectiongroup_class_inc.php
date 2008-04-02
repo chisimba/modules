@@ -36,6 +36,8 @@ class dbsectiongroup extends dbTable
     {
         try {
             parent::init('tbl_cms_sectiongroup');
+			
+			$this->_objSecurity = & $this->newObject('dbsecurity', 'cmsadmin');
             $this->objUser = & $this->newObject('user', 'security');
 
        } catch (Exception $e){
@@ -68,7 +70,15 @@ class dbsectiongroup extends dbTable
             }
             
             $data = $this->getArray($sql);
-            return $data;
+
+			$secureData = array();
+            foreach ($data as $d) {
+                if ($this->_objSecurity->canUserReadSection($d['id'])){
+                    array_push($secureData, $d);
+                }
+            }
+
+            return $secureData;
             
         }catch(Exception $e){
             throw customException($e->getMessage());

@@ -131,11 +131,22 @@ if (isset($subSections)) {
 	    $visibleIcon = $objLink->show();
 	    
         //Create delete icon
-        $delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $subSecId);
-        $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
-        $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray, 'cmsadmin', $deletephrase);
+		if ($this->_objSecurity->canUserWriteSection($subsec['id'])){
+	        $delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $subSecId);
+	        $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+	        $delIcon = $objIcon->getDeleteIconWithConfirm($subSecId, $delArray, 'cmsadmin', $deletephrase);
+		} else {
+			$delIcon = '';
+		}
         //Create edit icon
-        $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
+		
+		if ($this->_objSecurity->canUserWriteSection($subsec['id'])){
+	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $subSecId)));
+		} else {
+			$editIcon = '';
+		}
+		
+        
         //Make title link to view section
         $objLink = new link($this->uri(array('action' => 'viewsection', 'id' => $subSecId)));
         $objLink->link = $subSecMenuText;
@@ -197,11 +208,21 @@ if (!empty($pages)) {
 	    $visibleIcon = $objLink->show();
 
         //Create delete icon
-        $delArray = array('action' => 'trashcontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);
-        $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelpage', 'cmsadmin');
-        $delIcon = $objIcon->getDeleteIconWithConfirm($pageId, $delArray, 'cmsadmin', $deletephrase);
-        //Create edit icon
-        $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId, 'parent' => $sectionId)));
+		if ($this->_objSecurity->canUserWriteContent($pageId)){
+			$delArray = array('action' => 'trashcontent', 'confirm' => 'yes', 'id' => $pageId, 'sectionid' => $sectionId);
+			$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelpage', 'cmsadmin');
+			$delIcon = $objIcon->getDeleteIconWithConfirm($pageId, $delArray, 'cmsadmin', $deletephrase);
+		} else {
+			$delIcon = '';
+		}		
+        
+		//Create edit icon
+		if ($this->_objSecurity->canUserWriteContent($pageId)){
+	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addcontent', 'id' => $pageId, 'parent' => $sectionId)));
+		} else {
+			$editIcon = '';
+		}		
+        
         //Make title link to view section
         $objLink = new link($this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms'));
         $objLink->link = $pageTitle;
@@ -221,18 +242,27 @@ if (!empty($pages)) {
         $frontPageLink->link = $objIcon->show();
 
         // set up link to view contact details in a popup window
-        $objBlocksLink = new link('#');
-        $objBlocksLink->link = $blockIcon;
-        $objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
-
+		$objBlocksLink = new link('#');
+		$objBlocksLink->link = $blockIcon;
+		$objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionId' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+ 
+		if ($this->_objSecurity->canUserWriteContent($pageId)){
+			$objBlocksLinkDisplay = $objBlocksLink->show();
+		} else {
+			$objBlocksLinkDisplay = '';
+		}
+		 
         //Add sub sec data to table
         $objPagesTable->startRow();
         $objPagesTable->addCell($pageTitle, '', '', '', $class);
         $objPagesTable->addCell($articleDate, '', '', '', $class);
         $objPagesTable->addCell($visibleIcon, '', '', '', $class);
         $objPagesTable->addCell($this->_objContent->getOrderingLink($sectionId, $pageId), '', '', '', $class);
+		
+	    
+		
         if ($isRegistered) {
-            $objPagesTable->addCell('<nobr>'.$objBlocksLink->show().$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         } else {
             $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         }
@@ -244,21 +274,36 @@ $tblPages = $objPagesTable->show();
 
 //Create add sub section icon
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addsubsection','cmsadmin');
-$addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
 
-
+if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$addSubSecIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)), 'create_folder');
+} else {
+	$addSubSecIcon = '';
+}
 
 //Create add page icon
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addpage','cmsadmin');
-$addPageIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)), 'create_page');
+if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$addPageIcon = $objIcon->getLinkedIcon($this->uri(array('action' => 'addcontent', 'parent' => $sectionId)), 'create_page');
+} else {
+	$addPageIcon = '';
+}
 
 //Create edit section icon
-$editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));
+if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$editSectionIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $sectionId)));
+} else {
+	$editSectionIcon = '';
+}
 
 //Create delete section icon
-$delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $sectionId);
-$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
-$delIcon = $objIcon->getDeleteIconWithConfirm($sectionId, $delArray, 'cmsadmin', $deletephrase);
+if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$delArray = array('action' => 'deletesection', 'confirm' => 'yes', 'id' => $sectionId);
+	$deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+	$delIcon = $objIcon->getDeleteIconWithConfirm($sectionId, $delArray, 'cmsadmin', $deletephrase);
+} else {
+	$delIcon = '';
+}
 
 //Create add section link
 $objNewSectionLink = new link($this->uri(array('action' => 'addsection', 'parentid' => $sectionId)));
@@ -273,6 +318,7 @@ $middleColumnContent = "";
 if($isRegistered){
     if($layoutData['name'] == 'summaries' || $layoutData['name'] == 'list'){
         //Create add block link
+		
         $objAddSectionBlockLink = new link('javascript:void(0)');
         $objAddSectionBlockLink->link = $blockIcon;
         $objAddSectionBlockLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'addblock', 'sectionid' => $sectionId, 'blockcat' => 'section')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
@@ -323,7 +369,11 @@ if (empty($pages)) {
     $middleColumnContent .= '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_nopagesfoundinthissection', 'cmsadmin').'</div>';
 }
 $middleColumnContent .= '&nbsp;'.'<br/>';
-$middleColumnContent .= $objNewSectionLink->show().'&nbsp;'.'/'.'&nbsp;'.$objNewPageLink->show();
+
+//Create delete section icon
+if ($this->_objSecurity->canUserWriteSection($sectionId)){
+	$middleColumnContent .= $objNewSectionLink->show().'&nbsp;'.'/'.'&nbsp;'.$objNewPageLink->show();
+}
 
 echo $middleColumnContent;
 

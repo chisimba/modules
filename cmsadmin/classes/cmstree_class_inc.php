@@ -51,6 +51,7 @@ class cmstree extends object
         public function init()
         {
         	try {
+                $this->_objSecurity = & $this->newObject('dbsecurity', 'cmsadmin');
                 $this->_objSections = & $this->newObject('dbsections', 'cmsadmin');
                 $this->_objContent = & $this->newObject('dbcontent', 'cmsadmin');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
@@ -287,7 +288,7 @@ class cmstree extends object
 		*/
         private function getTree($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
         {
-             $this->loadClass('treemenu', 'tree');
+		    $this->loadClass('treemenu', 'tree');
             $this->loadClass('treenode', 'tree');
             $this->loadClass('htmllist', 'tree');
 			
@@ -315,6 +316,18 @@ class cmstree extends object
             $where = 'ORDER BY nodelevel, ordering';
             
             $sections = $this->_objSections->getArray($sql);
+	
+			$secureSections = array();
+            //Filterring the list based on READ ACCESS
+            foreach ($sections as $section){
+                $section_id = $section['id'];
+                if ($this->_objSecurity->canUserWriteSection($section_id)){
+                        array_push($secureSections, $section);
+                }
+            }
+			
+			$sections = $secureSections;
+			
             //var_dump($sectionitems);
             $menu = new treemenu();
             
@@ -392,6 +405,105 @@ class cmstree extends object
             
             
         }
+		
+		/**
+		* Method to get tree count for use with Security module when adding content
+		* @param string $module Calling Module for which to set the link to
+		* @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
+		* @param boolean $useLinks Flag whether to generate a URI or pass the ID only
+		*/
+        public function getTreeCount($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
+        {
+			
+			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
+			
+			if ($module == 'cmsadmin') {
+			    
+				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+						AND tbl_cms_content.published = \'1\')
+						WHERE tbl_cms_sections.trash = \'0\' 
+						';
+				$useIcon = TRUE;
+			} else {
+				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
+						AND tbl_cms_sections.trash = \'0\'
+						';
+			}
+			
+            $where = 'ORDER BY nodelevel, ordering';
+            
+            $sections = $this->_objSections->getArray($sql);
+	
+			$secureSections = array();
+            //Filterring the list based on READ ACCESS
+            foreach ($sections as $section){
+                $section_id = $section['id'];
+                if ($this->_objSecurity->canUserWriteSection($section_id)){
+                        array_push($secureSections, $section);
+                }
+            }
+			
+			$sections = $secureSections;
+			
+			return count($sections);
+		}		
+		
+
+		/**
+		* Method to get tree count for use with Security module when adding content
+		* @param string $module Calling Module for which to set the link to
+		* @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
+		* @param boolean $useLinks Flag whether to generate a URI or pass the ID only
+		*/
+        public function getTreeRootCount($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
+        {
+			
+			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
+			
+			if ($module == 'cmsadmin') {
+			    
+				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+						AND tbl_cms_content.published = \'1\')
+						WHERE tbl_cms_sections.trash = \'0\' 
+						AND tbl_cms_sections.parentid = \'0\'
+						';
+				$useIcon = TRUE;
+			} else {
+				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
+						AND tbl_cms_sections.trash = \'0\'
+						AND tbl_cms_sections.parentid = \'0\'
+						';
+			}
+			
+            $where = 'ORDER BY nodelevel, ordering';
+            
+            $sections = $this->_objSections->getArray($sql);
+	
+			$secureSections = array();
+            //Filterring the list based on READ ACCESS
+            foreach ($sections as $section){
+                $section_id = $section['id'];
+                if ($this->_objSecurity->canUserWriteSection($section_id)){
+                        array_push($secureSections, $section);
+                }
+            }
+			
+			$sections = $secureSections;
+			
+			return count($sections);
+		}		
         
         /**
 		* Method to generate trees for the CMS

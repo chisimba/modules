@@ -59,6 +59,13 @@ $fields = array(
         'length' => 32,
 
 		),
+ 
+    'groupid' => array(
+		'type' => 'text',
+        'length' => 32,
+
+		),
+
     'created_by_alias' => array(
 		'type' => 'text',
         'length' => 100

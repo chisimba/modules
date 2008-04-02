@@ -102,11 +102,24 @@ $fields = array(
          'type' => 'text',
          'length' => 255
 		),
+		
 	'userid' => array(
 		'type' => 'text',
 		'length' => 255,
         'notnull' => TRUE
 		),
+	
+	'userids' => array(
+		'type' => 'text',
+		'length' => 255,
+        'notnull' => TRUE
+		),
+	
+	'groupid' => array(
+		'type' => 'text',
+		'length' => 255
+		),
+
 	'datecreated' => array(
 		'type' => 'timestamp'
 		),

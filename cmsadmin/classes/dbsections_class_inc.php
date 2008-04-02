@@ -67,6 +67,8 @@ class dbsections extends dbTable
                 $this->_objDBContent = $this->getObject('dbcontent', 'cmsadmin');
                 $this->_objLanguage = $this->getObject('language', 'language');
                 $this->_objUser =  $this->getObject('user', 'security');
+                $this->_objGroupAdmin =  $this->getObject('groupadminmodel', 'groupadmin');
+		$this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
                 $this->TreeNodes = & $this->newObject('treenodes', 'cmsadmin');
            } catch (Exception $e){
        		    throw customException($e->getMessage());
@@ -92,8 +94,8 @@ class dbsections extends dbTable
             ///	return $this->getAll('WHERE title LIKE '%".$filter."%' ORDER BY ordering');
            // }
         }
-
-        /**
+		
+	/**
          * Method to get a filtered list of sections
          *
          * @author Megan Watson
@@ -174,7 +176,17 @@ class dbsections extends dbTable
             
             $filter = "WHERE {$sql} nodelevel = 1 AND trash = 0 ORDER BY ordering";
             $results = $this->getAll($filter);
-            return $results;
+	   
+	    $secureSections = array();
+	    //Filterring the list based on READ ACCESS
+	    foreach ($results as $section){
+		$section_id = $section['id'];
+		if ($this->_objSecurity->canUserReadSection($section_id)){
+			array_push($secureSections, $section);
+		}
+	    }
+
+            return $secureSections;
         }
 
         /**
@@ -244,7 +256,8 @@ class dbsections extends dbTable
                 $hidetitle = $this->getParam('hidetitle');
                 $showintroduction = $this->getParam('showintro');
                 $user = $this->_objUser->userId();
-                if($this->getParam('pagenum') == 'custom') {
+
+		if($this->getParam('pagenum') == 'custom') {
                 	$numpagedisplay = $this->getParam('customnumber');
                 } else {
                 	$numpagedisplay = $this->getParam('pagenum');
@@ -607,6 +620,7 @@ class dbsections extends dbTable
             return $this->getAll("WHERE trash = '0'");
         }
 
+
         /**
          * Method to get all subsections in a specific section
          *
@@ -619,11 +633,29 @@ class dbsections extends dbTable
          */
         public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
         {
+	    $this->_tableName = 'tbl_cms_sections';
+			//echo "Section ID Get SubSections : ".$sectionId;
             if ($isPublished) {
                 //return all subsections
-                return $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+		$secureSections = array();
+		$sections = $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+	
+		foreach ($sections as $sec){
+			if ($this->_objSecurity->canUserReadSection($sec['id'])){
+				array_push($secureSections, $sec);
+			}
+		}
+
+		return $secureSections;
             } else {
-                return $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+		$secureSections = array();
+                $sections = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+                foreach ($sections as $sec){
+                        if ($this->_objSecurity->canUserReadSection($sec['id'])){
+                                array_push($secureSections, $sec);
+                        }
+                }
+		return $secureSections;
             }
         }
 
@@ -637,6 +669,8 @@ class dbsections extends dbTable
          */
         public function getSubSectionsInRoot($rootId, $order = 'ASC',$isPublished = FALSE)
         {
+	    
+	    $this->_tableName = 'tbl_cms_sections';
             if ($isPublished) {
                 //return all subsections
                 return $this->getAll("WHERE published = 1 AND rootid = '$rootId' AND trash = 0 ORDER BY ordering");
@@ -674,8 +708,9 @@ class dbsections extends dbTable
          */
         public function getNumSubSections($sectionId)
         {
+	    $this->_tableName = 'tbl_cms_sections';
             $subSecs = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0");
-            $noSubSecs = count($subSecs);
+	    $noSubSecs = count($subSecs);
             return $noSubSecs;
         }
 

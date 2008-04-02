@@ -65,6 +65,7 @@ class dbcontent extends dbTable
                 parent::init('tbl_cms_content');
                 $this->table = 'tbl_cms_content';
                 $this->_objUser = & $this->getObject('user', 'security');
+                $this->_objSecurity = & $this->getObject('dbsecurity', 'cmsadmin');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
                 $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
@@ -589,7 +590,14 @@ class dbcontent extends dbTable
                 $filter .= "AND published='1' ";
             }
             $pages = $this->getAll($filter.' ORDER BY ordering');
-            return $pages;
+
+	    $secureData = array();
+            foreach ($pages as $d){
+                if ($this->_objSecurity->canUserReadContent($d['id'])){
+                        array_push($secureData, $d);
+                }
+            }
+            return $secureData;            
         }
 
         /**
@@ -609,7 +617,15 @@ class dbcontent extends dbTable
                 ORDER BY co.ordering";
                 
             $data = $this->getArray($sql);
-            return $data;
+	    
+	    $secureData = array();
+	    foreach ($data as $d){
+		if ($this->_objSecurity->canUserReadContent($d['page_id'])){
+			array_push($secureData, $d);
+		}
+	    }
+
+            return $secureData;
         }
 
         /**

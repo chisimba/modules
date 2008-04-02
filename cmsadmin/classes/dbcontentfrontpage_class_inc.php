@@ -48,6 +48,7 @@ class dbcontentfrontpage extends dbTable
                 parent::init('tbl_cms_content_frontpage');
                 
                 $this->_objUser = $this->getObject('user', 'security');
+                $this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
                 $this->_objLanguage = $this->newObject('language', 'language');
                 
                 $this->objIcon = $this->newObject('geticon', 'htmlelements');
@@ -179,7 +180,16 @@ class dbcontentfrontpage extends dbTable
             $sql .= 'ORDER BY fr.ordering ASC';
                 
             $data = $this->getArray($sql);
-            return $data; 
+
+	    //Filtering the list with content the user has READ ACCESS to
+	    $secureData = array();
+	    foreach ($data as $row){
+		if ($this->_objSecurity->canUserReadContent($row['id'])){
+		    array_push($secureData, $row);
+		}
+	    }
+
+            return $secureData; 
         }
 
 

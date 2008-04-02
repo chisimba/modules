@@ -179,12 +179,22 @@ if (is_array($arrSections)) {
 	    $visibleLink = $objLink->show();
 	
 	    //Create delete icon
-	    $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'id'=>$section['id']);
-	    $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
-	    $delIcon = $objIcon->getDeleteIconWithConfirm($section['id'], $delArray,'cmsadmin',$deletephrase);
+		if ($this->_objSecurity->canUserWriteSection($section['id'])){
+		    $delArray = array('action' => 'deletesection', 'confirm'=>'yes', 'id'=>$section['id']);
+		    $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdelsection', 'cmsadmin');
+		    $delIcon = $objIcon->getDeleteIconWithConfirm($section['id'], $delArray,'cmsadmin',$deletephrase);
+		} else {
+			$delIcon = '';
+		}
+		
 	
 	    //edit icon
-	    $editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $section['id'])));
+		if ($this->_objSecurity->canUserWriteSection($section['id'])){
+	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addsection', 'id' => $section['id'])));
+		} else {
+			$editIcon = '';
+		}
+	    
 	
 	    $tableRow = array();
 	    $tableRow[] = $objCheck->show();
@@ -193,6 +203,13 @@ if (is_array($arrSections)) {
 	    $tableRow[] = $this->_objContent->getNumberOfPagesInSection($section['id']);
 	    $tableRow[] = $this->_objLayouts->getLayoutDescription($section['layout']);
 	    $tableRow[] = $this->_objSections->getOrderingLink($section['id']);//$this->_objSections->getPageOrderType($section['ordertype']);
+
+	    if (!$this->_objSecurity->canUserWriteSection($section['id'])){
+		$editIcon = '';
+		$deleteIcon = '';
+		$visibleLink = '';
+	    }
+
 	    $tableRow[] = $visibleLink;
 	    $tableRow[] = '<nobr>'.$editIcon.$delIcon.'</nobr>';
 
