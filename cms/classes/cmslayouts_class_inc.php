@@ -26,6 +26,7 @@ class cmslayouts extends object
     public function init()
     {
         try{
+            $this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
             $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
             $this->_objFrontPage =$this->newObject('dbcontentfrontpage', 'cmsadmin');
@@ -309,6 +310,12 @@ class cmslayouts extends object
      * @param string $id the id of the post we're dealing with
      */
     public function getEditLink($id,$a_param = null) {
+		
+		//Security Check for write access to this content item
+		if (!$this->_objSecurity->canUserWriteContent($id)){
+			return "";
+		}
+
         $myid = $this->objUser->userId();
         $ret ='';
         if (($this->objUser->inAdminGroup($myid,'CMSAuthors')) || ($this->objUser->inAdminGroup($myid,'Site Admin'))) {
@@ -327,6 +334,8 @@ class cmslayouts extends object
             $link->link = $icon->show();
             $ret = " ".$link->show();
         }
+
+
         return $ret;
     }
 
@@ -538,6 +547,14 @@ class cmslayouts extends object
             
             $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
 
+	   		$securePages = array();
+			foreach ($arrPages as $pg) {
+				if ($this->_objSecurity->canUserReadContent($pg['id'])){
+					array_push($securePages, $pg);
+				}
+			}
+			$arrPages = $securePages;			
+
             $cnt = 0;
             $returnStr = '';
             $strBody = '';
@@ -654,7 +671,16 @@ class cmslayouts extends object
                 break;
             }
             $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
-                        
+
+            $securePages = array();
+            foreach ($arrPages as $pg) {
+                if ($this->_objSecurity->canUserReadContent($pg['id'])){
+                    array_push($securePages, $pg);
+                }
+            }
+            $arrPages = $securePages;
+
+           
             if(!empty($arrPages)){
                 foreach ($arrPages as $page) {
                     $pageStr = '';
@@ -743,6 +769,15 @@ class cmslayouts extends object
             }
             
             $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+
+			$securePages = array();
+            foreach ($arrPages as $pg) {
+                if ($this->_objSecurity->canUserReadContent($pg['id'])){
+                    array_push($securePages, $pg);
+                }
+            }
+            $arrPages = $securePages;
+
 
             $cnt = 0;
             $topStr = '';
@@ -860,6 +895,15 @@ class cmslayouts extends object
                     break;
             }
             $arrPages = $this->_objContent->getAll('WHERE sectionid = \''.$arrSection['id'].'\' AND published=1 AND trash=0 '.$filter);
+
+			$securePages = array();
+            foreach ($arrPages as $pg) {
+                if ($this->_objSecurity->canUserReadContent($pg['id'])){
+                    array_push($securePages, $pg);
+                }
+            }
+            $arrPages = $securePages;
+
 
             if(!empty($arrPages)){
                 $str .= '<ul>';
