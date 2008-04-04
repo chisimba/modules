@@ -63,6 +63,7 @@ class dbsecurity extends dbTable
 						parent::init('tbl_cms_sections');
 						$this->table = 'tbl_cms_sections';
 						$this->_objLanguage = $this->getObject('language', 'language');
+						//$this->_objSections =  $this->getObject('dbsections', 'cmsadmin');
 						$this->_objUser =  $this->getObject('user', 'security');
 						$this->_objGroupAdmin =  $this->getObject('groupadminmodel', 'groupadmin');
 				} catch (Exception $e){
@@ -103,8 +104,6 @@ class dbsecurity extends dbTable
 		}
 
 
-
-
 		/**
 		 * Method to set the owner of the specified section
 		 *
@@ -118,6 +117,78 @@ class dbsecurity extends dbTable
 				$fields['userid'] = $userid;
 
 				$this->update('id', $sectionid, $fields);
+		}
+
+
+
+		/**
+		 * Method to set the owner of the specified sections child CONTENT
+		 *
+		 * @access public
+		 * @param sectionid, userid
+		 * @return boolean
+		 */
+		public function setContentOwnerPropagate($sectionid = NULL, $userid = null)
+		{
+
+			//Get A List of all child sections
+            $subSections = $this->getSubSectionsInSection($sectionid);
+            foreach($subSections as $section){
+            //Apply Permissions to child sections
+                $subSecId = $section['id'];
+
+			    //Get A List of all child contents
+        		$subContent = $this->getPagesInSection($subSecId);
+	            foreach($subContent as $content){
+		            //Apply Permissions to child contents
+	                $subContId = $content['id'];
+                	$this->setContentOwner($subContId, $userid);
+	            }
+
+                if ($this->hasNodes($section['id'])){
+                    //Recursion to set the children of the child in question
+                    $this->setPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+                }
+            }
+
+			//Get A List of all child contents
+            $subContent = $this->getPagesInSection($sectionid);
+            foreach($subContent as $content){
+                //Apply Permissions to child contents
+                $subContId = $content['id'];
+                $this->setContentOwner($subContId, $userid);
+            }
+
+
+		}
+
+
+
+		/**
+		 * Method to set the owner of the specified sections child SECTIONS
+		 *
+		 * @access public
+		 * @param sectionid, userid
+		 * @return boolean
+		 */
+		public function setOwnerPropagate($sectionid = NULL, $userid = null)
+		{
+
+			//Get A List of all child sections
+            $subSections = $this->getSubSectionsInSection($sectionid);
+            foreach($subSections as $section){
+            //Apply Permissions to child sections
+                $subSecId = $section['id'];
+
+                //Applying Permissions to child content
+                $this->setOwner($subSecId, $userid);
+
+                if ($this->hasNodes($section['id'])){
+                    //Recursion to set the children of the child in question
+                    $this->setPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+                }
+            }
+
 		}
 
 
@@ -547,6 +618,8 @@ class dbsecurity extends dbTable
 		}
 
 
+
+
 		/**
 		 * Method to SET the PERMISSIONS for a SECTIONS GROUP
 		 *
@@ -575,6 +648,423 @@ class dbsecurity extends dbTable
 
 				$this->_tableName = 'tbl_cms_sections';
 		}
+
+
+		/**
+         * Method to get all pages in a specific section
+         *
+         * @param string $sectionId The id of the section
+         * @return array $pages An array of all pages in the section
+         * @access public
+         * @author Warren Windvogel
+         */
+        public function getPagesInSection($sectionId, $isPublished=FALSE)
+        {
+			$this->_tableName = 'tbl_cms_content';
+
+            $filter = "WHERE sectionid = '$sectionId' AND trash='0' ";
+            if($isPublished){
+                $filter .= "AND published='1' ";
+            }
+            $pages = $this->getAll($filter.' ORDER BY ordering');
+
+        $secureData = array();
+            foreach ($pages as $d){
+                if ($this->canUserReadContent($d['id'])){
+                        array_push($secureData, $d);
+                }
+            }
+			$this->_tableName = 'tbl_cms_sections';
+            return $secureData;
+        }
+
+
+
+
+
+
+		/**
+		 * Method to SET the PERMISSIONS for all CONTENT USER for a given section and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function setContentPermissionsUserPropagate($sectionid = NULL, $userid, $read_access, $write_access)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+
+			    //Get A List of all child contents
+        		$subContent = $this->getPagesInSection($subSecId);
+	            foreach($subContent as $content){
+		            //Apply Permissions to child contents
+	                $subContId = $content['id'];
+	                $this->addContentPermissionsUser($subContId, $userid, $read_accesss, $write_access, TRUE);
+	            }
+
+	
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->setContentPermissionsUserPropagate($subSecId, $userid, $read_access, $write_access);
+				}
+			}
+			//Get A List of all child contents for the main section
+            $subContent = $this->getPagesInSection($sectionid);
+            foreach($subContent as $content){
+                //Apply Permissions to child contents
+                $subContId = $content['id'];
+                $this->addContentPermissionsUser($subContId, $userid, $read_access, $write_access, TRUE);
+            }
+
+
+			return true;
+		}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/**
+		 * Method to SET the PERMISSIONS for all CONTENT GROUP for a given section and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function setContentPermissionsGroupPropagate($sectionid = NULL, $groupid, $read_access, $write_access)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+
+			    //Get A List of all child contents
+        		$subContent = $this->getPagesInSection($subSecId);
+	            foreach($subContent as $content){
+		            //Apply Permissions to child contents
+	                $subContId = $content['id'];
+	                $this->addContentPermissionsGroup($subContId, $groupid, $read_access, $write_access, TRUE);
+	            }
+
+	
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->setContentPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+				}
+			}
+			//Get A List of all child contents for the main section
+            $subContent = $this->getPagesInSection($sectionid);
+            foreach($subContent as $content){
+                //Apply Permissions to child contents
+                $subContId = $content['id'];
+                $this->addContentPermissionsGroup($subContId, $groupid, $read_access, $write_access, TRUE);
+            }
+
+
+			return true;
+		}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/**
+		 * Method to SET the PERMISSIONS for a SECTIONS USER and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function setPermissionsUserPropagate($sectionid = NULL, $userid, $read_access, $write_access)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//Applying Permissions to child content
+				$this->addSectionPermissionsUser($subSecId, $userid, $read_access, $write_access, TRUE);
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->setPermissionsUserPropagate($subSecId, $userid, $read_access, $write_access);
+				}
+			}
+		}
+
+
+
+
+
+		/**
+		 * Method to DELETE the PERMISSIONS for a SECTIONS USER and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function deletePermissionsUserPropagate($sectionid = NULL)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//DELETING ALL Section Permissions for the given sectionid
+				$this->deleteAllSectionPermissionsUser($subSecId);
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->deletePermissionsUserPropagate($subSecId);
+				}
+			}
+		}	
+
+
+
+
+		/**
+		 * Method to DELETE the PERMISSIONS for a CONTENT USER and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function deleteContentPermissionsUserPropagate($sectionid = NULL)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//DELETING ALL Section Permissions for the given sectionid
+			    //Get A List of all child contents
+        		$subContent = $this->getPagesInSection($subSecId);
+	            foreach($subContent as $content){
+		            //Apply Permissions to child contents
+	                $subContId = $content['id'];
+					$this->deleteAllContentPermissionsUser($subContId);
+	            }
+
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->deleteContentPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+				}
+
+				//DELETING ALL Section Permissions for the given sectionid
+	            //Get A List of all child contents
+	            $subContent = $this->getPagesInSection($sectionid);
+	            foreach($subContent as $content){
+	                //Apply Permissions to child contents
+	                $subContId = $content['id'];
+					//echo "CONTENT ID $subContId <br/>";
+                	$this->deleteAllContentPermissionsUser($subContId);
+            	}
+
+
+			}
+		}	
+
+
+
+
+
+
+		/**
+		 * Method to DELETE the PERMISSIONS for a CONTENT GROUP and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function deleteContentPermissionsGroupPropagate($sectionid = NULL)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//DELETING ALL Section Permissions for the given sectionid
+			    //Get A List of all child contents
+        		$subContent = $this->getPagesInSection($subSecId);
+	            foreach($subContent as $content){
+		            //Apply Permissions to child contents
+	                $subContId = $content['id'];
+					$this->deleteAllContentPermissionsGroup($subContId);
+	            }
+
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->deleteContentPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+				}
+
+				//DELETING ALL Section Permissions for the given sectionid
+	            //Get A List of all child contents
+	            $subContent = $this->getPagesInSection($sectionid);
+	            foreach($subContent as $content){
+	                //Apply Permissions to child contents
+	                $subContId = $content['id'];
+					//echo "CONTENT ID $subContId <br/>";
+                	$this->deleteAllContentPermissionsGroup($subContId);
+            	}
+
+
+			}
+		}	
+
+
+
+
+
+
+
+
+
+		/**
+		 * Method to DELETE the PERMISSIONS for a SECTIONS GROUP and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function deletePermissionsGroupPropagate($sectionid = NULL)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//DELETING ALL Section Permissions for the given sectionid
+				$this->deleteAllSectionPermissionsGroup($subSecId);
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->deletePermissionsGroupPropagate($subSecId);
+				}
+			}
+		}	
+
+
+
+
+
+		/**
+		 * Method to SET the PERMISSIONS for a SECTIONS GROUP and all of it's child Content and subsections
+		 *
+		 * @access public
+		 * @param $sectionid, $userid, bool $read_access, bool $write_access
+		 * @return boolean
+		 */
+		public function setPermissionsGroupPropagate($sectionid = NULL, $groupid, $read_access, $write_access)
+		{
+			//Get A List of all child sections
+			$subSections = $this->getSubSectionsInSection($sectionid);
+			foreach($subSections as $section){
+			//Apply Permissions to child sections
+				$subSecId = $section['id'];
+	
+				//Applying Permissions to child content
+				$this->addSectionPermissionsGroup($subSecId, $groupid, $read_access, $write_access, true);
+
+				if ($this->hasNodes($section['id'])){
+					//Recursion to set the children of the child in question
+					$this->setPermissionsGroupPropagate($subSecId, $groupid, $read_access, $write_access);
+				}
+			}
+	
+
+
+		}
+
+		/**
+         * Method to check if a section has child/leaf node(s)
+         *
+         * @param string $id The id(pk) of the section
+         * @return bool True if has nodes else False
+         * @access public
+         */
+        public function hasNodes($id)
+        {
+            $nodes = $this->getAll("WHERE parentid = '$id' AND trash = 0");
+
+            if (count($nodes) > 0) {
+                $hasNodes = True;
+            } else {
+                $hasNodes = False;
+            }
+            return $hasNodes;
+        }
+	
+
+/**
+         * Method to get all subsections in a specific section
+         *
+         * @param string $sectionId The id(pk) of the section
+         * @param int $level The node level in question
+         * @param string $order Either DESC or ASC
+         * @param bool $isPublished TRUE | FALSE To get published sections
+         * @return array $subsections An array of associative arrays for all categories in the section
+         * @access public
+         */
+        public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
+        {
+        $this->_tableName = 'tbl_cms_sections';
+            //echo "Section ID Get SubSections : ".$sectionId;
+            if ($isPublished) {
+                //return all subsections
+        $secureSections = array();
+        $sections = $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+
+        foreach ($sections as $sec){
+            if ($this->canUserReadSection($sec['id'])){
+                array_push($secureSections, $sec);
+            }
+        }
+
+        return $secureSections;
+            } else {
+        $secureSections = array();
+                $sections = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+                foreach ($sections as $sec){
+                        if ($this->canUserReadSection($sec['id'])){
+                                array_push($secureSections, $sec);
+                        }
+                }
+        return $secureSections;
+            }
+        }
 
 
 		/**
@@ -1149,7 +1639,7 @@ class dbsecurity extends dbTable
 		 * @access public
 		 * @return last insert id OR false if anything failed
 		 */
-		public function addContentPermissionsUser($contentid=null, $userid = null)
+		public function addContentPermissionsUser($contentid=null, $userid = null, $read_access = true, $write_access = true, $do_update = false)
 		{
 				if ($contentid == ''){
 						return false;
@@ -1162,6 +1652,10 @@ class dbsecurity extends dbTable
 				$res = $this->getArray($sql);
 				if (count($res) > 0){
 						//The content to group mapping already exists so it's as if it's been added
+						if ($do_update) {
+							$this->setContentPermissionsUser($contentid, $userid, $read_access, $write_access);
+						}
+
 						return true;
 				}
 
@@ -1171,8 +1665,8 @@ class dbsecurity extends dbTable
 				$this->_tableName = 'tbl_cms_content_user';
 				$fields['content_id'] = $contentid;
 				$fields['user_id'] = $userid;
-				$fields['read_access'] = true;
-				$fields['write_access'] = true;
+				$fields['read_access'] = $read_access;
+				$fields['write_access'] = $write_access;
 				$this->insert($fields);
 
 				$insert_id = $this->getLastInsertId();
@@ -1221,18 +1715,24 @@ class dbsecurity extends dbTable
 		 * @access public
 		 * @return last insert id OR false if anything failed
 		 */
-		public function addContentPermissionsGroup($contentid=null, $groupid = null)
+		public function addContentPermissionsGroup($contentid=null, $groupid = null, $read_access = true, $write_access = true, $do_update = false)
 		{
+				//echo "Adding Content Permissions For Group :$groupid | ContentID : $contentid | Read Access : $read_access | Write Access : $write_access <br/>";
+
 				if ($contentid == ''){
 						return false;
 				}
 
 				//Checking weather the contentid / groupid key exists
-				//if exists return true
+				//if exists update it
 				$sql = "SELECT id from tbl_cms_content_group WHERE content_id = '$contentid' AND group_id = '$groupid'";
 				$res = $this->getArray($sql);
 				if (count($res) > 0){
-						//The content to group mapping already exists so it's as if it's been added
+						//The content to group mapping already exists so update it
+						if ($do_update){
+							$this->setContentPermissionsGroup($contentid, $groupid, $read_access, $write_access);
+						}
+
 						return true;	
 				}
 
@@ -1242,8 +1742,8 @@ class dbsecurity extends dbTable
 				$this->_tableName = 'tbl_cms_content_group';
 				$fields['content_id'] = $contentid;
 				$fields['group_id'] = $groupid;
-				$fields['read_access'] = true;
-				$fields['write_access'] = true;
+				$fields['read_access'] = $read_access;
+				$fields['write_access'] = $write_access;
 				$this->insert($fields);
 
 				$insert_id = $this->getLastInsertId();
@@ -1294,7 +1794,7 @@ class dbsecurity extends dbTable
 		 * @access public
 		 * @return last insert id OR false if anything failed
 		 */
-		public function addSectionPermissionsUser($sectionid=null, $userid = null)
+		public function addSectionPermissionsUser($sectionid=null, $userid = null, $read_access = true, $write_access = true, $do_update = false)
 		{
 				if ($sectionid == ''){
 						return false;
@@ -1306,6 +1806,10 @@ class dbsecurity extends dbTable
 				$res = $this->getArray($sql);
 				if (count($res) > 0){
 						//The section to group mapping already exists so it's as if it's been added
+						if ($do_update){
+							$this->setPermissionsUser($sectionid, $userid, $read_access, $write_access);
+						}	
+
 						return true;
 				}
 
@@ -1315,8 +1819,8 @@ class dbsecurity extends dbTable
 				$this->_tableName = 'tbl_cms_section_user';
 				$fields['section_id'] = $sectionid;
 				$fields['user_id'] = $userid;
-				$fields['read_access'] = true;
-				$fields['write_access'] = true;
+				$fields['read_access'] = $read_access;
+				$fields['write_access'] = $write_access;
 				$this->insert($fields);
 
 				$insert_id = $this->getLastInsertId();
@@ -1363,18 +1867,23 @@ class dbsecurity extends dbTable
 		 * @access public
 		 * @return last insert id OR false if anything failed
 		 */
-		public function addSectionPermissionsGroup($sectionid=null, $groupid = null)
+		public function addSectionPermissionsGroup($sectionid=null, $groupid = null, $read_access = true, $write_access = true, $do_update = false)
 		{
 				if ($sectionid == ''){
 						return false;
 				}
 
 				//Checking weather the sectionid / groupid key exists
-				//if exists return true
+				//if exists update it
 				$sql = "SELECT id from tbl_cms_section_group WHERE section_id = '$sectionid' AND group_id = '$groupid'";
 				$res = $this->getArray($sql);
+				
 				if (count($res) > 0){
-						//The section to group mapping already exists so it's as if it's been added
+						//The section to group mapping already exists so updating here
+						if ($do_update){
+							$this->setPermissionsGroup($sectionid, $groupid, $read_access, $write_access);
+						}
+
 						return true;	
 				}
 
@@ -1384,8 +1893,8 @@ class dbsecurity extends dbTable
 				$this->_tableName = 'tbl_cms_section_group';
 				$fields['section_id'] = $sectionid;
 				$fields['group_id'] = $groupid;
-				$fields['read_access'] = true;
-				$fields['write_access'] = true;
+				$fields['read_access'] = $read_access;
+				$fields['write_access'] = $write_access;
 				$this->insert($fields);
 
 				$insert_id = $this->getLastInsertId();
@@ -1427,6 +1936,119 @@ class dbsecurity extends dbTable
 				return $insert_id;			
 
 		}
+
+
+
+
+
+		/**
+		 * Method to DELETE ALL GROUPS from the Section Permissions List for the given section
+		 *
+		 * @access public
+		 * @return last insert id OR false if anything failed
+		 */
+		public function deleteAllSectionPermissionsUser($sectionid=null)
+		{
+				if ($sectionid == ''){
+						return false;
+				}
+
+				//Deleting ALL Section Group Permissions for the given section
+				$qry = "DELETE FROM tbl_cms_section_user
+						WHERE  section_id = '$sectionid'";
+
+				$data = $this->getArray($qry);
+
+				return true;			
+		}
+
+
+
+
+
+
+	
+		/**
+		 * Method to DELETE ALL GROUPS from the Section Permissions List for the given section
+		 *
+		 * @access public
+		 * @return last insert id OR false if anything failed
+		 */
+		public function deleteAllSectionPermissionsGroup($sectionid=null)
+		{
+				if ($sectionid == ''){
+						return false;
+				}
+
+				//Deleting ALL Section Group Permissions for the given section
+				$qry = "DELETE FROM tbl_cms_section_group
+						WHERE  section_id = '$sectionid'";
+
+				$data = $this->getArray($qry);
+
+				return true;			
+
+		}
+
+
+
+
+
+
+
+
+		/**
+		 * Method to DELETE ALL GROUPS from the Section Permissions List for the given section
+		 *
+		 * @access public
+		 * @return last insert id OR false if anything failed
+		 */
+		public function deleteAllContentPermissionsUser($contentid=null)
+		{
+				if ($contentid == ''){
+						//TODO: Log Error
+						return false;
+				}
+
+				//Deleting ALL Section Group Permissions for the given section
+				$qry = "DELETE FROM tbl_cms_content_user
+						WHERE content_id = '$contentid'";
+			
+				$data = $this->getArray($qry);
+
+				return true;			
+
+		}
+
+
+
+
+
+
+		/**
+		 * Method to DELETE ALL GROUPS from the Section Permissions List for the given section
+		 *
+		 * @access public
+		 * @return last insert id OR false if anything failed
+		 */
+		public function deleteAllContentPermissionsGroup($contentid=null)
+		{
+				if ($contentid == ''){
+						//TODO: Log Error
+						return false;
+				}
+
+				//Deleting ALL Section Group Permissions for the given section
+				$qry = "DELETE FROM tbl_cms_content_group
+						WHERE content_id = '$contentid'";
+			
+				$data = $this->getArray($qry);
+
+				return true;			
+
+		}
+
+
 
 
 }

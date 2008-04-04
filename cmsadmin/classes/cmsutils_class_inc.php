@@ -2489,8 +2489,11 @@ class cmsutils extends object
 				//must set the default owner
 				//$drpOwner->setSelected();
 
-				$chkInherit = new checkbox('chk_read', 'Read', false);
-				//$chkInherit->setLabel("Force owner on child objects");
+				$chkPropagate = new checkbox('chk_propagate', 'Propagate', false);
+				$chkPropagate->setLabel("Allow permissions to propagate to child items");
+
+				$chkPropagateOwner = new checkbox('chk_propagate_owner', 'Propagate Owner', false);
+				$chkPropagateOwner->setLabel("Make this the owner of all child items in this section");
 
 				//Owner Select Box
 				$tblOwner->startRow();
@@ -2511,6 +2514,8 @@ class cmsutils extends object
 				$objForm->addToForm($table->show());
 				$objForm->addToForm('<br/>');
 				$objForm->addToForm($lnkAddUserGroup->show());
+				$objForm->addToForm('<br/>');
+				$objForm->addToForm($chkPropagate->show()." Allow permissions to propagate to child items.");
 				$objForm->addToForm('<br/><input type="hidden" name="id" value="'.$this->getParam('parent').'"/>');
 				$objForm->addToForm('<br/><input type="hidden" name="cid" value="'.$sectionid.'"/>');
 				$objForm->addToForm( "<input type='hidden' name='subview' value='$returnSubView'>" );
@@ -2525,6 +2530,8 @@ class cmsutils extends object
 				$objForm->addToForm( "<input type='hidden' name='button' value='saved'>" ); 
 				$objForm->addToForm("<h4>Owner:</h4>");
 				$objForm->addToForm($tblOwner->show());
+				$objForm->addToForm('<br/>');
+				$objForm->addToForm($chkPropagateOwner->show()." Make this the owner of all child items in this section.");
 				$objForm->addToForm('<br/>');
 				$objForm->addToForm($btnSubmit->show());
 
