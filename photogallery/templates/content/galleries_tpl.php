@@ -61,7 +61,7 @@ bla bla</div>';
        $objTable = null;
     }
 } else {
-    print 'no galleries avalable ';
+    print $this->objLanguage->languageText('mod_photogallery_nogallery'); //'no galleries avalable ';
 }
 
 echo $tabBox->show()
