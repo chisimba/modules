@@ -216,6 +216,7 @@ class cms extends controller
             			$sectionid = $this->getParam('sectionid');
         				//go and fetch the page in question from the db
         				$data = $this->_objContent->getContentPage($this->getParam('id'));
+
         				//create the pdf and send it out
         				
         				$header = stripslashes($data['title']);
@@ -230,6 +231,9 @@ class cms extends controller
         				
         				$text = $header . "  " . $pagedate . "\r\n" . html_entity_decode(strip_tags($body));
         				$objPdf->simplePdf($text);
+						
+            			$method = $this->_getMethod();
+
         				break;
         		            	
             		default:
