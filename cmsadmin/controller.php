@@ -188,9 +188,14 @@ class cmsadmin extends controller
 				$this->setLayoutTemplate('cms_layout_tpl.php');
 				$this->setVar('pageSuppressXML',TRUE);
 				$myid = $this->_objUser->userId();
+
+				//The security class handles this now
+				/*
 				if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
 						return 'cms_nopermissions_tpl.php';
 				}
+				*/
+
 				switch ($action) {
 
 						default:
