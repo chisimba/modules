@@ -193,7 +193,7 @@ class dbsecurity extends dbTable
 
 
 		/**
-		 * Method to checck the users WRITE access to a specific content
+		 * Method to check the users WRITE access to a specific content
 		 *
 		 * @access public
 		 * @param contentid, userid
@@ -703,7 +703,8 @@ class dbsecurity extends dbTable
 	            foreach($subContent as $content){
 		            //Apply Permissions to child contents
 	                $subContId = $content['id'];
-	                $this->addContentPermissionsUser($subContId, $userid, $read_accesss, $write_access, TRUE);
+	
+	                $this->addContentPermissionsUser($subContId, $userid, $read_access, $write_access, TRUE);
 	            }
 
 	
