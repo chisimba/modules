@@ -41,9 +41,19 @@ class dbhotels extends dbtable {
         if (isset($countryCode)) {
             $sql .= "AND country = '$countryCode'";
         }
-        $sql .= "ORDER BY highrate DESC LIMIT $start , 15";
+        $sql .= "ORDER BY highrate DESC LIMIT $start , 25";
         $rs = $this->getArray($sql);
         return $rs;
+    }
+    
+    public function hotelCount($cityString,$countryCode = null) {
+        $sql = "SELECT COUNT(id) as total FROM tbl_travel_hotels WHERE city LIKE '%$cityString%'";
+        if (isset($countryCode)) {
+            $sql .= "AND country = '$countryCode'";
+        }
+        $rs = $this->getArray($sql);
+        $rs = current($rs);
+        return $rs['total'];
     }
     
     public function getCity($searchStr) {

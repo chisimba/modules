@@ -24,7 +24,7 @@ class travel extends controller {
         $this->objLanguage = $this->getObject('language','language');
         $this->objConfig = $this->getObject('altconfig','config');
         $this->objHotelImages = $this->getObject('dbhotelimages');
-        
+        $this->objHotelDescriptions = $this->getObject('dbhoteldescriptions');
     }
     
     /**
@@ -43,6 +43,12 @@ class travel extends controller {
             case "import_images":
                 $filename = $this->getParam('filename');
                 $this->objHotelImages->import($filename);
+                echo "Done.";
+                break;
+                
+            case "import_descriptions":
+                $filename = $this->getParam('filename');
+                $this->objHotelDescriptions->import($filename);
                 echo "Done.";
                 break;
                 
@@ -82,6 +88,10 @@ class travel extends controller {
                 return "hotelresults_tpl.php";
                 break;
                 
+            case "view hotel":
+                $this->setVar('id',$this->getParam('id'));
+                return "viewhotel_tpl.php";    
+            
             case "search hotels":
             default:
                 return "search_tpl.php";

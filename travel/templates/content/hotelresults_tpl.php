@@ -12,10 +12,12 @@ $objH->type=3;
 $objH->str = $this->objLanguage->languageText("mod_travel_hotelresults","travel")." ".ucwords(strtolower($cityString));
 
 if (isset($countryString)) {
+    $hotelCount =  $this->objHotels->hotelCount($cityString,$countryString);
     $results = $this->objHotels->citySearch($cityString,$page,$countryString);
     $country = $this->objCountryCodes->getRow('code',$countryString);
     $objH->str .= ", {$country['name']}";
 } else {
+    $hotelCount =  $this->objHotels->hotelCount($cityString);
     $results = $this->objHotels->citySearch($cityString,$page);
 }
 $cIn = $this->getParam('checkin');
@@ -63,28 +65,69 @@ $change->link = $this->objLanguage->languageText('word_change');
 $recapStr = "<span class='minute'>".$this->objLanguage->languageText('mod_travel_checkin','travel').': '.str_replace('-','/',$cIn).
             ", ".$this->objLanguage->languageText('mod_travel_checkout','travel').": ".str_replace('-','/',$cOut).
             ", $rooms, $nights, $adults$kids | ".$change->show()."</span>";
-            
-            
-$list = "<div id='hotel_results'>";
 
+$startNo = ($page-1)*25+1;
+if (($endNo = $startNo+24) > $hotelCount) {
+    $endNo = $hotelCount;
+}
+
+$summary = "<span class='minute'>".str_replace("[TOTAL]",$hotelCount,str_replace("[END]",$endNo,str_replace("[START]",$startNo,$this->objLanguage->languageText("mod_travel_displaying","travel"))))."</span>";
+
+$pages = "<span class='minute'>";
+
+for ($i=1; $i<=ceil($hotelCount/25);$i++) {
+    if ($page == $i) { 
+        $pages .= "$i|";
+    } else {
+        $change->link($this->uri(array('action'=>'hotel results','searchStr'=>$this->getParam('searchStr'),'page'=>$i,'checkin'=>$this->getParam('checkin'),'checkout'=>$this->getParam('checkout'),'searchRooms'=>$this->getParam('searchRooms'),'searchAdults'=>$this->getParam('searchAdults'),'searchChildren'=>$this->getParam('searchChildren'))));
+        $change->link = $i;
+        $pages .= $change->show()."|";
+    }
+}
+$pages = substr($pages,0,strlen($pages)-1)."</span>";
+
+$summaryTable = $this->getObject('htmltable','htmlelements');
+$summaryTable->width="51%";
+$summaryTable->startrow();
+$summaryTable->addCell($summary);
+$summaryTable->addCell($pages,null,null,'right');
+$summaryTable->endRow();
+
+$list = "<div id='hotel_results'>".$summaryTable->show();
+$count = 0;
 foreach ($results as $hotel) {
     $hotel_location = '';
     if ($hotel['address3']) {
         $hotel_location = "{$hotel['address3']}, ";
     }
     $hotel_location .= $hotel['city'];
+    $hotel_description = (strlen($hotel['propertydescription']) > 103)? substr($hotel['propertydescription'],0,100)."..." : $hotel['propertydescription']; 
     $name = htmlentities(ucwords(strtolower(strip_tags($hotel['name']))));
     $image = $this->objHotelImages->getImage($hotel['id']);
     $uri = $this->uri(array('action'=>'view hotel','id'=>$hotel['id']));
+    if ($count != 0) { 
+        $list .= "<br />";
+    }
     $list .= "<div class='hotel_match'>
                     <div class='star_rating'></div>
                     <div class='hotel_name'><a href='$uri'>{$name}</a></div>
+                    <hr />
                     <div class='hotel_picture'><a href='$uri'><img src='{$image['thumbnail']}' alt='{$hotel['name']} - {$image['caption']}' /></a></div>
-                    <div class='hotel_info'><strong>$hotel_location</strong></div>
-              </div><br />";
+                    <div class='hotel_info'>
+                        <strong>$hotel_location</strong><br />
+                        $hotel_description
+                    </div>
+              </div>";
+    $count++;
 }
+$pageTable = $this->newObject('htmltable','htmlelements');
+$pageTable->width = "51%";
+$pageTable->startRow();
+$pageTable->addCell($pages,null,null,'right');
+$pageTable->endRow();
 
-$list .= "</div>";
+$list .= $pageTable->show()."</div>";
+
 $link = new link($this->uri(array('action'=>'search hotels')));
 $link->link = $this->objLanguage->languageText('word_back');
 
