@@ -118,6 +118,7 @@ class blogmail extends object
         $mfieldset->setLegend($this->objLanguage->languageText('mod_blog_setupmail', 'blog'));
         $madd = $this->newObject('htmltable', 'htmlelements');
         $madd->cellpadding = 5;
+        $madd->width=450;
         // mail protocol field
         // dropdown for the POP/IMAP Chooser
         $protdrop = new dropdown('mprot');
