@@ -112,7 +112,7 @@ foreach ($results as $hotel) {
                     <div class='star_rating'></div>
                     <div class='hotel_name'><a href='$uri'>{$name}</a></div>
                     <hr />
-                    <div class='hotel_picture'><a href='$uri'><img src='{$image['thumbnail']}' alt='{$hotel['name']} - {$image['caption']}' /></a></div>
+                    <div class='hotel_thumb'><a href='$uri'><img src='{$image['thumbnail']}' alt='{$hotel['name']} - {$image['caption']}' /></a></div>
                     <div class='hotel_info'>
                         <strong>$hotel_location</strong><br />
                         $hotel_description
