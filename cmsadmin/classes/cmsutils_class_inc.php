@@ -1174,7 +1174,11 @@ class cmsutils extends object
 
 		public function getSectionGroupNames($sectionid){
 
-				$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
+			if(!isset($groupid))
+			{
+				$groupid = NULL;
+			}	
+			$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
 				$group = $objGroups->getNode($groupid);
 				$names = array();
 				foreach ($group as $grp){
@@ -1207,7 +1211,11 @@ class cmsutils extends object
 
 		public function getSectionUserNames($sectionid){
 
-				$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
+			if(!isset($groupid))
+			{
+				$groupid = NULL;
+			}
+			$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
 				$group = $objGroups->getNode($groupid);
 				$names = array();
 				foreach ($group as $grp){
