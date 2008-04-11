@@ -24,32 +24,38 @@ class dbpodcast extends dbTable
      * @param string $fileId Record Id of the File from File Manager
      * @return string Result, either being last insert id, or flag for error.
      */
-    public function addPodcast($fileId)
+    public function addPodcast($fileId, $userId = NULL, $title = NULL)
     {
+    	if($userId == NULL)
+    	{
+    		$userId = $this->objUser->userId();
+    	}
         $file = $this->objFile->getFileInfo($fileId);
-        
         if ($file == FALSE) {
             return 'nofile';
         }
         
         
-        if ($this->podcastUsedAlready($this->objUser->userId(), $fileId) > 0) {
+        if ($this->podcastUsedAlready($userId, $fileId) > 0) {
             return 'fileusedalready';
         }
         
         $podcastInfo = array();
-        
-        $podcastInfo['title'] = isset($file['title']) ? $file['title'] : '[- No Title -]';
+        if($title == NULL)
+        {
+        	$podcastInfo['title'] = '[- No Title -]';
+        }
+        $podcastInfo['title'] = $title; // isset($file['title']) ? $title : '[- No Title -]';
         $podcastInfo['description'] = isset($file['description']) ? $file['description'] : '[- No Description -]';
 
         $podcastInfo['fileid'] = $fileId;
-        $podcastInfo['creatorid'] = $this->objUser->userId();
+        $podcastInfo['creatorid'] = $userId;
         $podcastInfo['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
         
         $podcastId = $this->insert($podcastInfo);
         
         $objFileRegister =& $this->getObject('registerfileusage', 'filemanager');
-        $objFileRegister->registerUse($fileId, 'podcast', 'tbl_podcast', $podcastId, 'fileid');
+        $objFileRegister->registerUse($fileId, 'podcast', 'tbl_podcast', $podcastId, 'fileid', '', '', FALSE, $userId);
         
         // Add to Search
         $objIndexData = $this->getObject('indexdata', 'search');
@@ -74,10 +80,10 @@ class dbpodcast extends dbTable
         $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
         
         $objLanguage= $this->getObject('language','language');
-        $title = $objLanguage->languageText('mod_podcast_latestpodcastsby', 'podcast', 'Latest Podcasts By').' '.$this->objUser->fullName();
+        $title = $objLanguage->languageText('mod_podcast_latestpodcastsby', 'podcast', 'Latest Podcasts By').' '.$this->objUser->fullName($userId);
         
-        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $this->objUser->userId(), $title, 'site', NULL, 'small');
-        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $this->objUser->userId(), $title, 'user', NULL, 'small');
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'site', NULL, 'small');
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'user', NULL, 'small');
         
         return $podcastId;
     }
