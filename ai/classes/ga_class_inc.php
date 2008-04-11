@@ -87,7 +87,6 @@ class ga extends object
 		{
 			if ($cross_function)
 			{
-				print_r($cross_function[$property]);
 				$cross_functions[$property] = $cross_function;
 			}
 			if (function_exists($cross_functions[$property]))
