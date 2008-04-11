@@ -62,7 +62,7 @@ $objH->type = '1';
 	$drp_filter->setSelected('');
 	$dropStr = $drp_filter->show();
 	*/
-	
+	$dropStr = NULL;
 	
 	//Setup filter display
 	$tbl_filter = new htmltable();
