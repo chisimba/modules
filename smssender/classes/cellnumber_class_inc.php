@@ -37,14 +37,7 @@ class cellnumber extends object
             
             $number = $countryNumber.$number;
         }
-        
         return $number;
-
     }
-    
-    
-
 }
-
-
 ?>
