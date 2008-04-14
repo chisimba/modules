@@ -38,13 +38,13 @@
     // Path for uploaded files
     $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
     $objMkdir->mkdirs($uploadPath, 0777);
-    $resourcesPath =$modPath.'/realtime/resources';
+    a$resourcesPath =$modPath.'/realtime/resources';
     $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
     $objMkdir->mkdirs($chatLogPath, 0777);
     
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
-    echo 'code="avoir.realtime.classroom.RealtimeClassroomApplet.class" name ="RealtimeClassroomApplet"';
+    echo 'code="avoir.realtime.client.TCPTunnellingApplet" name ="AvoirRealtimeApplet"';
     echo 'archive="avoir-realtime-classroom-0.1.jar" width="100%" height="700">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
