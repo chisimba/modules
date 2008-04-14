@@ -38,7 +38,7 @@
     // Path for uploaded files
     $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
     $objMkdir->mkdirs($uploadPath, 0777);
-    a$resourcesPath =$modPath.'/realtime/resources';
+    $resourcesPath =$modPath.'/realtime/resources';
     $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
     $objMkdir->mkdirs($chatLogPath, 0777);
     
