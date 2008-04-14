@@ -163,14 +163,41 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
-          $this->startServer();
-          $id= $this->getParam('id');
+          if(!$this->slideServerRunning()){
+          $this->startSlidesServer();
+          } $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('isPresenter', 'true');
           return "presenter-applet.php";
  }
+
+/**
+*
+* ADDED by David Wafula
+* Function to test if slides server is running or not
+*/
+    function slideServerRunning(){
+
+    $result = array();
+    $cmd='ps aux | grep java';
+    $needle='avoir.realtime.client.SlidesServer';
+    exec( $cmd, &$result);
+     foreach ($result as $v ){
+       
+       if($this->in_str($needle,$v)){
+        
+        return true;
+       }
+   }
+return false;
+}
+
+function in_str($needle, $haystack){
+        return (false !== strpos($haystack, $needle))  ? true : false;
+    
+} 
 
  /**
      * ADDED by David Wafula  
@@ -179,8 +206,9 @@ class webpresent extends controller
      */ 
     function __showaudienceapplet()
     {
-          $this->startServer();
-          $id= $this->getParam('id');
+          if(!$this->slideServerRunning()){
+          $this->startSlidesServer();
+          }     $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
@@ -189,9 +217,9 @@ class webpresent extends controller
           return "presenter-applet.php";
      }
  /**
-    *automaticaly try to start server
+    *automaticaly try to start slides server
     */ 
- function startServer()
+ function startSlidesServer()
     {
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
@@ -199,32 +227,10 @@ class webpresent extends controller
     
      $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
    
-    $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
+  //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
+   $cmd = "java -Xms64m -Xmx128m -cp .:".    
     $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-cli-1.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/commons-io-1.3.1.jar:".
-    $this->objConfig->getModulePath().
-        "/documentconverter/resources/jodconverter-2.2.0/lib/jodconverter-cli-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-     "/documentconverter/resources/jodconverter-2.2.0/lib/juh-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/jurt-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/ridl-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-api-1.4.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/slf4j-jdk14-1.4.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/unoil-2.2.0.jar:".
-    $this->objConfig->getModulePath().
-    "/documentconverter/resources/jodconverter-2.2.0/lib/xstream-1.2.2.jar:".
-    $this->objConfig->getModulePath().
-    "/realtime/resources/avoir-realtime-server-0.1.jar avoir.realtime.whiteboard.server.Server ".$port." >/dev/null &";
-    
+    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.client.SlidesServer >/dev/null &";
     system($cmd,$return_value);
     
     }
