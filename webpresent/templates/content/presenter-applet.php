@@ -45,7 +45,7 @@
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.client.TCPTunnellingApplet" name ="AvoirRealtimeApplet"';
-    echo 'archive="avoir-realtime-tcpclient-0.1.jar" width="100%" height="700">';
+    echo 'archive="realtime-tcpclient-0.1.jar" width="100%" height="700">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
