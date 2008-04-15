@@ -62,7 +62,7 @@
     echo '<param name=rtpport value="'.$rtpport.'">';
     echo '<param name=rtcpport value="'.$rtcpport.'">';
     echo '<param name=sipport value="'.$sipport.'">';
-    echo '<param name=session value="'.$sessionid.'">';
+    echo '<param name=sessionId value="'.$sessionid.'">';
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
     echo '</applet>';
     echo '</center>';
