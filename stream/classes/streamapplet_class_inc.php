@@ -92,8 +92,10 @@ class streamapplet extends object
     }
     /**
     *
-    * Method to get the buffer size from the URL and default to
-    * 400
+    * Method to get the buffer size from the URL
+    * The size of the network buffer, in KB. A good value is max
+    * Kbps of the stream * 33. Defaults to 400 here, 200 in the applet
+    * if not specified.
     *
     * @return string the buffer size
     *
@@ -141,8 +143,8 @@ class streamapplet extends object
     }
     /**
     *
-    * Method to get whether we should try to show video or not
-    * for the video parameter &lt;param name="video" value="true"/&gt;
+    * Use video. When not using video, this property will not create
+    * resources to play a video stream. true or false. Defaults to true
     *
     * @return string true|false as lower case strings
     * @access Private
@@ -169,6 +171,8 @@ class streamapplet extends object
     /**
     *
     * Method to get whether we should play audio from the stream
+    * When not using audio, this property will not create resources
+    * to play an audio stream.
     *
     * @return string true|false as lower case strings
     * @access Private
@@ -193,6 +197,14 @@ class streamapplet extends object
     }
 
 
+    /**
+    *
+    * Method to get the embed applet code
+    *
+    * @access private
+    * @return string The rendered embed code
+    *
+    */
     private function getEmbed()
     {
         return '<comment><embed type="application/x-java-applet" '
