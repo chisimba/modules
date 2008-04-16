@@ -19,6 +19,7 @@
 		}
     $isLoggedIn =$this->objUser->isLoggedIn();
     $modPath=$this->objConfig->getModulePath();
+    $siteRoot=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/';
     $replacewith="";
     $docRoot=$_SERVER['DOCUMENT_ROOT'];
     $appletPath=str_replace($docRoot,$replacewith,$modPath);
@@ -53,6 +54,7 @@
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=chatLogPath value="'.$chatLogPath.'">';
+    echo '<param name=siteRoot value="'.$siteRoot.'">';
     echo '<param name=isWebPresent value="true">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';

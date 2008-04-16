@@ -163,9 +163,10 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
-          if(!$this->slideServerRunning()){
-          $this->startSlidesServer();
-          } $id= $this->getParam('id');
+        //  if(!$this->slideServerRunning()){
+        //  $this->startSlidesServer();
+        //  }
+          $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
@@ -206,9 +207,10 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-          if(!$this->slideServerRunning()){
-          $this->startSlidesServer();
-          }     $id= $this->getParam('id');
+        //  if(!$this->slideServerRunning()){
+      //    $this->startSlidesServer();
+    //      }
+         $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
