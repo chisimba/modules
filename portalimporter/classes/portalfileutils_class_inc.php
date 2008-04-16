@@ -84,6 +84,7 @@ class portalfileutils extends object
     */
 	public function init()
 	{
+		$this->dbLog = $this->getObject('dblog', 'portalimporter');
 		$this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
 		$this->startDir = $this->sConfig->getValue('mod_portalimporter_sitepath', 'portalimporter');
 		$this->contentStart = $this->sConfig->getValue('mod_portalimporter_contentstart', 'portalimporter');
@@ -98,6 +99,8 @@ class portalfileutils extends object
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objLanguage = $this->getObject("language", "language");
 	}
+
+
 
 	/**
     * 
@@ -826,17 +829,19 @@ class portalfileutils extends object
     * @return string The cleaned content
     *
     */
-	public function unCrapify(&$content)
+	public function unCrapify(&$content, $options = NULL)
 	{
-		$options = array(
-		"clean" => true,
-		"indent" => true,
-		"indent-spaces" => 4,
-		"drop-proprietary-attributes" => true,
-		"drop-empty-paras" => true,
-		"word-2000" => true,
-		"xhtml-output" => true,
-		);
+		if ($options == NULL){
+			$options = array(
+				"clean" => true,
+				"indent" => true,
+				"indent-spaces" => 4,
+				"drop-proprietary-attributes" => true,
+				"drop-empty-paras" => true,
+				"word-2000" => true,
+				"xhtml-output" => true,
+			);
+		}
 		if (function_exists(tidy_parse_string)) {
 			$tidy = tidy_parse_string($content, $options);
 			tidy_clean_repair($tidy);
@@ -893,6 +898,58 @@ class portalfileutils extends object
 		}
 		return $ret;
 	}
+
+
+	/**
+	*   This function will iterate through the static_content and
+	*   format the pages for use with the portal importer
+	*
+	*/
+	public function fixDataRecurse($subsections)
+	{
+		//echo $secname; die();
+		$subsection[] = $this->objStdlib->dirFilterDots($subsections);
+		$subsection = array_filter($subsection);
+		//var_dump($subsection);
+		// add each subsection to this section now
+		if(isset($subsection[0]))
+		{
+			$subsection = $subsection[0];
+			foreach($subsection as $subsect)
+			{
+				$ssecname = end(explode('/', $subsect));
+				$ssecname = ucwords(str_replace("_", " ", $ssecname));
+				log_debug("Adding $ssecname as a subsection to $secname with ID $secid");
+				$csecarr = array(
+				'parentselected' => $secid,
+				'title' => $ssecname,
+				'menutext' => $ssecname,
+				'access' => 0,
+				'layout' => 'page',
+				'description' => '',
+				'published' => 1,
+				'hidetitle' => 0,
+				'showdate' => 1,
+				'showintroduction' => 1,
+				'ordertype' => 'pageorder',
+				'userid' => $this->objUser->userId(),
+				'pagenum' => 0,
+				'imagesrc' => NULL,
+				'contextcode' => NULL,
+				);
+				$csecid = $this->objCmsDb->addSection($csecarr);
+				// ok subsection is created, now lets add the pages...
+				$subsect = $subsect."/";
+				// we should look through the dirs available for assets and move them to the repo as well now.
+				// now do the pages
+				$this->doPages($subsect, $csecid, $ssecname);
+			}
+		}
+		else {
+		    return;
+		}
+	}
+
 
 
 	public function doSection($subsections, $secname = NULL)
@@ -975,6 +1032,7 @@ class portalfileutils extends object
 
 	public function doPages($subsect, $csecid, $secname)
 	{
+
 		if(!file_exists($this->objConfig->getSiteRootPath()."usrfiles/importcms"))
 		{
 			mkdir($this->objConfig->getSiteRootPath()."usrfiles/importcms/", 0777);
@@ -1012,32 +1070,79 @@ class portalfileutils extends object
 					//echo "<h1>$subsect</h1>";
 					// ok now we need to do some magic on the pages.
 					$contents = file_get_contents($subsect.$page);
+					
+					$content_path = $subsect.$page;
 					// grok the title
 					//preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
 					$title = $this->objRegex->get_doc_title($contents);
+
 					//$title = $tresults[1][0];
 					$title = explode("--", $title);
+
+					$must_add_title = false;
+
 					if(isset($title[1]))
 					{
-						$title = $title[1];
+						//Title will consist of all other information delimited by --
+						/*
+						$total = count($title);
+						for ($i = 1;$i < $total; $i++){
+						    $title_str .= $this->str_first_upper($this->strip_ext(trim($title[$i])), '--').' ';
+						}	
+						$title = $title_str;
+						*/
+
+						//Compensating for known problem titles
+						if (preg_match('/.*student.*src.*/i', $content_path)
+							|| preg_match('/.*student.*sds.*/i', $content_path)
+							|| preg_match('/.*student.*postgrad.*/i', $content_path)
+							|| preg_match('/.*student.*international.*/i', $content_path)
+							|| preg_match('/.*student.*parttime.*/i', $content_path)
+							|| preg_match('/.*student.*undergrad.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*focus.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*essru.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*pet.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*envirofacts.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*hypnea.*/i', $content_path)
+							|| preg_match('/.*faculty.*law.*/i', $content_path)
+							|| preg_match('/.*faculty.*economic.*/i', $content_path)
+							|| preg_match('/.*faculty.*center.*cshe.*/i', $content_path)
+							|| preg_match('/.*faculty.*school.*/i', $content_path)
+							|| preg_match('/.*faculty.*departments.*/i', $content_path)
+							|| preg_match('/.*faculty.*unit.*avoir.*/i', $content_path)
+							|| preg_match('/.*faculty.*unit.*gender.*/i', $content_path)
+							){
+								$title = end($title);
+							} else {
+								$title = $title[1];
+							}
+		
+
+						$must_add_title = true;
 					}
 					else {
 						$title = $this->objLanguage->languageText("mod_portalimporter_missingpgtitle", "portalimporter");
+						$must_add_title = false;
 					}
 					
 					//if($title = '')
 					//{
 					//	$title = 'Title Missing';
 					//}
-					log_debug("Adding page with title $title to $csecid");
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
+
+					$must_add_content = false;
+
 					if(isset($bresults[1][0]))
 					{
-						$body = $bresults[1][0];
+						$body = $bresults[1][0];	
+						$must_add_content = true;
 					}
 					else {
-						$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
+						//$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
+						//continue;
+						$must_add_content = false;
 					}
 					// change the links in the pages to the assets to point to the correct ones.
 					
@@ -1082,7 +1187,7 @@ class portalfileutils extends object
 					// case for the public folder - i.e frontpage
 					if($secname == 'Public')
 					{
-						log_debug("Adding page $title to frontapge");
+						//log_debug("Adding Public page $title to frontapge");
 						$pagearr = array(
 						'title' => $title,
 						'sectionid' => $csecid,
@@ -1120,7 +1225,22 @@ class portalfileutils extends object
 						'isfrontpage' => 0,
 						);
 					}
-					$pgid = $this->objCmsDb->addContent($pagearr);
+					if ($must_add_content && $must_add_title){
+						$pgid = $this->objCmsDb->addContent($pagearr);
+						//log_debug("Adding page (id $pgid) with title $title to section ($csecid) | fullpath : $content_path");
+
+						//Logging content item to db:
+						$this->dbLog->log($content_path, $pgid, $csecid);
+	
+					} else {
+							if (!$must_add_title){
+						 	log_debug("Failed : Missing Title $csecid $content_path");
+						} else if (!$must_add_content) {
+						 	log_debug("Failed : Missing Content to $csecid $content_path");
+						} else {
+							log_debug("Unknown Error");
+						}
+					}
 					//var_dump($contents);
 					unset($page);
 					unset($pagearr);
@@ -1144,28 +1264,75 @@ class portalfileutils extends object
 				{
 					// ok now we need to do some magic on the pages.
 					$contents = file_get_contents($section."/".$page);
+					$content_path = $section.'/'.$page;
+
 					// grok the title
 					//preg_match_all('/\<title>(.*)\<\/title\>/U', $contents, $tresults, PREG_PATTERN_ORDER);
 					$title = $this->objRegex->get_doc_title($contents);
 					//$title = $tresults[1][0];
 					$title = explode("--", $title);
+
+					$must_add_title = false;
+
 					if(isset($title[1]))
 					{
-						$title = ltrim($title[1]);
+						//Title will consist of all other information delimited by --
+						/*
+						$total = count($title);
+						for ($i = 1; $i < $total; $i++){
+						    $title_str .= $this->str_first_upper($this->strip_ext(trim($title[$i])), '--').' ';
+                        }
+                        $title = $title_str;
+						*/
+
+						//Compensating for known problem titles
+						if (preg_match('/.*student.*src.*/i', $content_path)
+							|| preg_match('/.*student.*sds.*/i', $content_path)
+							|| preg_match('/.*student.*postgrad.*/i', $content_path)
+							|| preg_match('/.*student.*international.*/i', $content_path)
+							|| preg_match('/.*student.*parttime.*/i', $content_path)
+							|| preg_match('/.*student.*undergrad.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*focus.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*essru.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*pet.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*envirofacts.*/i', $content_path)
+							|| preg_match('/.*faculty.*project.*hypnea.*/i', $content_path)
+							|| preg_match('/.*faculty.*law.*/i', $content_path)
+							|| preg_match('/.*faculty.*economic.*/i', $content_path)
+							|| preg_match('/.*faculty.*center.*cshe.*/i', $content_path)
+							|| preg_match('/.*faculty.*school.*/i', $content_path)
+							|| preg_match('/.*faculty.*departments.*/i', $content_path)
+							|| preg_match('/.*faculty.*unit.*avoir.*/i', $content_path)
+							|| preg_match('/.*faculty.*unit.*gender.*/i', $content_path)
+							){
+								$title = end($title);
+							} else {
+								$title = $title[1];
+							}
+						
+						$must_add_title = true;
 					}
 					else {
 						$title = $this->objLanguage->languageText("mod_portalimporter_missingpgtitle", "portalimporter");
+						$must_add_title = false;
 					}
 					$title = trim($title);
-					log_debug("Adding page with title $title to top level section $secid");
+
+					//log_debug("Adding page with title $title to top level section $secid");
+
 					// grab the content body
 					preg_match_all('/<!--CONTENT_BEGIN-->(.*)<!--CONTENT_END-->/iseU', $contents, $bresults, PREG_PATTERN_ORDER);
+
+					$must_add_content = false;
+
 					if(isset($bresults[1][0]))
 					{
 						$body = $bresults[1][0];
+						$must_add_content = true;
 					}
 					else {
-						$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
+						$must_add_content = false;
+						//$body = $this->objLanguage->languageText("mod_portalimporter_missingtagsinbody", "portalimporter");
 					}
 					// change the links in the pages to the assets to point to the correct ones.
 					
@@ -1210,8 +1377,23 @@ class portalfileutils extends object
 						'isfrontpage' => '1',
 						'imagesrc' => NULL,
 						);
-						
-					$pgid = $this->objCmsDb->addContent($pagearr);
+					if ($must_add_content && $must_add_title){
+						$pgid = $this->objCmsDb->addContent($pagearr);
+						//log_debug("Adding page (id $pgid) with title $title to section ($csecid) | fullpath : $content_path");
+
+						//Logging content item to db:
+						$this->dbLog->log($content_path, $pgid, $csecid);
+					} else {
+						if (!$must_add_title){
+						 	log_debug("Failed : Missing Title $csecid $content_path");
+						} else if (!$must_add_content) {
+						 	log_debug("Failed : Missing Content to $csecid $content_path");
+						} else {
+							log_debug("Unknown Error");
+						}
+
+					}
+	
 					//var_dump($contents);
 					unset($page);
 					unset($pagearr);
@@ -1223,5 +1405,54 @@ class portalfileutils extends object
 		}
 
 	}
+
+
+
+
+
+
+				/**
+				 *  Strips a files extention
+				 */
+
+				function strip_ext($str, $extensions = 'htm|html')
+				{
+						$ext_arr = explode('|', $extensions);
+						foreach ($ext_arr as $ext)
+						{
+								$str_ext = end(explode('.', $str));
+								if ($str_ext == $ext)
+								{
+										$ret_str = str_replace('.'.$ext, '', $str);
+										echo $str."\n";
+										return $ret_str;
+								} else {
+										return $str;
+								}
+						}
+				}
+
+				/*
+				 * Makes a strings first character an uppercase character
+				 *
+				 */
+
+				function str_first_upper($str, $delim = ' '){
+						$str = explode($delim, strtolower($str));
+						for($i = 0; $i < count($str); $i++){
+								if (count($str) > 1){
+										$str[$i] = strtoupper(substr($str[$i], 0, 1)) . substr($str[$i], 1) . ' ';
+								} else {
+										$str[$i] = strtoupper(substr($str[$i], 0, 1)) . substr($str[$i], 1);
+								}
+						}
+						return implode('', $str);
+				}
+
+
+
+
+
+
 }
 ?>
