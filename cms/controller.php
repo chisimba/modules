@@ -122,6 +122,7 @@ class cms extends controller
             try {
                 // instantiate the database object for sections
                 $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+                $this->_objSimpleTree = $this->getObject('simplecontenttree', 'cmsadmin');
 
                 $this->objLayout = $this->getObject('cmslayouts', 'cms');
                 $this->rss = $this->getObject('dblayouts','cmsadmin');
@@ -252,7 +253,42 @@ class cms extends controller
         	 */
         	return $this->$method();
         }
-		    
+	
+
+
+
+
+
+ 
+        /**
+         * This method will return the child items for the particular
+		 * section for use the the jquery Simple Tree Menu (Ajax)
+		 * 
+         * @access private
+         * @return string The populated cms_section_tpl.php template
+         * 
+         */
+        private function _getMenuChildNodes()
+        {
+			$this->setPageTemplate('');
+
+            //Retrieve the section id from the querystring
+			$id = $this->getParam('id');
+			//var_dump($id);
+			$content = $this->_objSimpleTree->getMenuChildNodes($id,TRUE);
+			//var_dump($content);
+
+			$this->setVar('content', $content);
+
+			return "menu_child_node_tpl.php";
+        }
+
+
+
+
+
+
+	    
         
         /**
          * A method that corresponds to the showsection action parameter
@@ -380,7 +416,7 @@ class cms extends controller
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('washout', 'utilities');
                 $content = $this->objLayout->showBody();
-                $content = $this->bbcode->parseText($content);
+                //$content = $this->bbcode->parseText($content);
                 $this->setVarByRef('content',$content);
                 return 'cms_content_tpl.php';
         }

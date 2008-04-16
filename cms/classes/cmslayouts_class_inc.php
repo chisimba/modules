@@ -26,6 +26,7 @@ class cmslayouts extends object
     public function init()
     {
         try{
+			$this->objConfig = $this->getObject('altconfig', 'config');
             $this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
             $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
@@ -111,7 +112,8 @@ class cmslayouts extends object
                 break;
             case 'tree':
             default:
-                $menu = $this->showTreeMenu($currentNode);
+                //$menu = $this->showTreeMenu($currentNode);
+               $menu = $this->showSimpleTreeMenu($currentNode);
         }
         return $menu;
     }
@@ -133,6 +135,71 @@ class cmslayouts extends object
         $this->setSession('menuStyle', $active);
         return $active;
     }
+
+
+
+
+
+
+
+
+
+    /**
+    * Method to display the jquery Tree style menu
+    * 
+    * @access private
+    * @param string $currentNode The id of the selected node
+    * @return string html
+	* @author Charl Mert
+    */
+    private function showSimpleTreeMenu()
+    {
+        // bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $objTreeMenu = $this->newObject('cmstree', 'cmsadmin');
+        
+        $currentNode = $this->getParam('sectionid');
+
+        $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
+
+$script = "<script type=\"text/javascript\">
+jQuery(document).ready(function(){
+	jQuery('#tree1').SimpleTree();
+	jQuery('#tree2').SimpleTree({animate: true});
+	jQuery('#tree3').SimpleTree({animate: true,autoclose:true});
+	jQuery('#tree4').SimpleTree({
+		animate: true,
+		autoclose:true,
+		click:function(el){
+			alert(jQuery(el).text());
+		}
+	});
+	
+});
+</script>";
+
+		//Insert script for generating tree menu
+	//    $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery.js', 'cmsadmin'));
+	    $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
+	    $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="'.$this->objConfig->getsiteRoot().'packages/cmsadmin/resources/tree_uwc/style.css" />');
+		$this->appendArrayVar('headerParams',$script);
+              
+        $objLayer = new layer();
+        $objLayer->str = $objTreeMenu->getSimpleCMSTree($currentNode);
+        $objLayer->id = 'cmsnavigation';
+        return $objLayer->show();
+       	//$display = $objTreeMenu->getSimpleCMSTree($currentNode);
+        //return $display;
+    }
+
+
+
+
+
+
+
+
+
 
     /**
     * Method to display the Tree style menu
