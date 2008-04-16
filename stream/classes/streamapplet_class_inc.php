@@ -126,8 +126,8 @@ class streamapplet extends object
     */
     private function getUrl()
     {
-        return  $this->getParam("url",
-          "http://195.10.10.103:80/fluendo/demo/moto/low.ogg");
+        return  urldecode($this->getParam("url",
+          "http://195.10.10.103:80/fluendo/demo/moto/low.ogg"));
     }
     /**
     *
