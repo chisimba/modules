@@ -304,6 +304,41 @@ class dbcontent extends dbTable
         }
 
         /**
+         * Method to update a content record's body text
+         *
+         * @param string $id The id of the record that needs to be changed
+         * @access public
+         * @return bool
+         */
+        public function updateContentBody($contentid, $body)
+        {  
+			$fields['body'] = $body;
+			$this->update('id', $contentid, $fields);	
+			return TRUE;
+ 		}
+
+
+	/**
+    *
+    * Method to return all content items with href data
+    *
+    * @return arr content records with body that has href="..." in it
+    * @access public
+    *
+    */
+    public function getHrefContentRecords($sectionid = '') {
+        if ($sectionid != ''){
+            $data = $this->getAll("WHERE body like '%href=%' AND sectionid='$sectionid'");
+        } else {
+            $data = $this->getAll("WHERE body like '%href=%'");
+        }
+        return $data;
+    }
+
+
+
+
+        /**
          * Method move a record to trash
          *
          * @param string $id The id of the record that needs to be deleted

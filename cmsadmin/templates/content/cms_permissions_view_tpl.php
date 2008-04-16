@@ -154,7 +154,7 @@ if (isset($subSections)) {
         }
 
         //Make title link to view section
-        $objLink = new link($this->uri(array('action' => 'viewsection', 'id' => $subSecId)));
+        $objLink = new link($this->uri(array('action' => 'view_permissions_section', 'id' => $subSecId, 'parent' => $sectionId)));
         $objLink->link = $subSecMenuText;
         $viewSubSecLink = $objLink->show();
 

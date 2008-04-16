@@ -115,7 +115,6 @@ class cmstree extends object
         {
             //gets all the child nodes of id
             $nodes = $this->getChildNodes($parentId);
-
             if (count($nodes)) {
 
                 $htmlLevel = '';
@@ -143,6 +142,7 @@ class cmstree extends object
                         }
                     }
                 }
+
                 return $htmlLevel;
             } else {
                 //if no nodes return empty string
@@ -232,6 +232,20 @@ class cmstree extends object
             return $this->_objContent->getNumberOfPagesInSection($sectionId);
         }
 		
+
+	
+		/**
+		* @author Charl Mert
+		* Method to get the jquery simple tree to display on the CMS module
+		* @return string
+		*/
+		public function getSimpleCMSTree($current)
+		{
+            $this->_objSimpleTree = & $this->newObject('simplecontenttree', 'cmsadmin');
+			return $this->_objSimpleTree->show($current,FALSE,'cms','showsection','showfulltext');
+		}
+
+
 		/**
 		* Method to get the tree to display on the CMS module
 		* @return string
@@ -245,7 +259,8 @@ class cmstree extends object
             $this->_objTree = & $this->newObject('contenttree', 'cmsadmin');
 			return $this->_objTree->show($current,FALSE,'cms','showsection','showfulltext');
 		}
-		
+	
+
 		/**
 		* Method to get the tree to display on the CMS Admin module
 		* @return string

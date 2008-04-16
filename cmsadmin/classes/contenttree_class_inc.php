@@ -122,7 +122,16 @@ class contenttree extends object
             $nodes = $this->getChildNodes($parentId, $admin);
         
             //get the list of nodes that need to stay open for the currently selected node
-                    
+
+			/*
+           echo "PARENT IDs : [".$parentId."]<br/>"; 
+			if ($parentId == 'gen9Srv16Nme30_2000_1207657570' && $parentId != 0){ 
+				echo "PARENT ID : ".$parentId.'<br/>';
+				//var_dump($nodes);
+				echo "Node Title : ". $nodes['title'];
+			}
+			*/
+
             if (!empty($nodes)) {
 
                 $htmlLevel = '';
@@ -145,6 +154,9 @@ class contenttree extends object
 				    	$link.="<br />\n";
 					}
                      // if node has further child nodes, recursively call buildLevel
+					//echo 'Admin : '.$admin . '<br/>';
+					//echo "Child Nodes : ".var_dump($this->getChildNodes($node['id'], $admin))."<br/>";
+					//echo "NODE ID : $node[id] <br/>";
                     if ($this->getChildNodes($node['id'], $admin)) {
                     	$htmlLevel .= "<li class='yuimenuitem first-of-type'>".$link;
                     	$item = $this->addContent($node['id'], $module, $contentAction, $admin);

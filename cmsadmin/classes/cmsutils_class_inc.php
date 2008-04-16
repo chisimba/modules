@@ -1067,7 +1067,9 @@ class cmsutils extends object
 				$lbGreen = $this->objLanguage->languageText('mod_cmsadmin_sectionparentnotvisible', 'cmsadmin');
 
 				//Instantiate cms tree object
-				$objCmsTree =$this->newObject('cmstree', 'cmsadmin');
+				//$objCmsTree =$this->newObject('cmstree', 'cmsadmin');
+				$objSimpleCmsTree =$this->newObject('simplecontenttree', 'cmsadmin');
+				$objConfig =$this->newObject('altconfig', 'config');
 				$objFeatureBox = $this->newObject('featurebox', 'navigation');
 				//Instantiate link object
 				$link =$this->newObject('link', 'htmlelements');
@@ -1099,12 +1101,14 @@ class cmsutils extends object
 				$filemanager = $objIcon->getTextIcon($url, 'media', $link, 'png', 'icons/cms/');
 
 				$nav = '';
-				$objCMSTree = $this->getObject('cmstree');
+			//	$objCMSTree = $this->getObject('cmstree');
+				$objSimpleCMSTree = $this->getObject('simplecontenttree');
 
 				//Add links to the output layer
 				$currentNode = $this->getParam('sectionid');
 
-				$nav = $objCMSTree->getCMSAdminTree($currentNode);
+				//$nav = $objCMSTree->getCMSAdminTree($currentNode);
+				$nav = $objSimpleCMSTree->getSimpleCMSAdminTree($currentNode);
 				$nav="<div id='cmsnavigation'>".$nav."</div>\n"; 
 				$nav .= '<br/>'.'&nbsp;'.'<br />';
 				//$nav .= $viewCmsLink.'<br /><br />';
@@ -1174,11 +1178,7 @@ class cmsutils extends object
 
 		public function getSectionGroupNames($sectionid){
 
-			if(!isset($groupid))
-			{
-				$groupid = NULL;
-			}	
-			$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
+				$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
 				$group = $objGroups->getNode($groupid);
 				$names = array();
 				foreach ($group as $grp){
@@ -1211,11 +1211,7 @@ class cmsutils extends object
 
 		public function getSectionUserNames($sectionid){
 
-			if(!isset($groupid))
-			{
-				$groupid = NULL;
-			}
-			$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
+				$objGroups = & $this->newObject('dbgroups', 'cmsadmin');
 				$group = $objGroups->getNode($groupid);
 				$names = array();
 				foreach ($group as $grp){
