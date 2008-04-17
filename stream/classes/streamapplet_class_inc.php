@@ -235,7 +235,8 @@ class streamapplet extends object
     */
     public function show()
     {
-        $ret = '<object id="cortado" classid="clsid:08B0E5C0-4FCB-11CF-AAA5-00401C608501" '
+        $ret = '<table cellpadding=10 cellspacing=10><tr><td>'
+          . '<object id="cortado" classid="clsid:08B0E5C0-4FCB-11CF-AAA5-00401C608501" '
           . 'width="' . $this->getWidth() . '" height="'
           . $this->getHeight() . '" align="baseline" onerror="objectLoadError ();">'
           . '<param name="code" value="com.fluendo.player.Cortado.class"/>'
@@ -249,7 +250,14 @@ class streamapplet extends object
           . '<param name="audio" value="' . $this->getAudio() . '"/>'
           . '<param name="local" value="false"/>'
           . $this->getEmbed()
-          . '</embed></object>';
+          . '</object></td>';
+        $directLink = urldecode($this->getParam('directlink', NULL));
+        if (!$directLink == NULL) {
+            $directLink = '<a href="' . $directLink
+            . '">Play in browser</a><br />Requires OGG compatible plugin.';
+        }
+        $ret .= '<td>You are watching this stream using Chisimba.<br /><br />'
+          . $directLink . '</td></tr></table>';
         return $ret;
     }
 }
