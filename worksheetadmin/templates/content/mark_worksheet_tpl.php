@@ -9,11 +9,13 @@
 * @param array $worksheet The name of the worksheet being marked
 */
 $this->setLayoutTemplate('worksheetadmin_layout_tpl.php');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 
 // set up html elements
 $objTable = $this->newObject('htmltable','htmlelements');
-$objText = $this->newObject('textarea','htmlelements');
-$objInput = $this->newObject('textinput','htmlelements');
+//$objText = $this->newObject('textarea','htmlelements');
+//$objInput = $this->newObject('textinput','htmlelements');
 $objLink = $this->newObject('link','htmlelements');
 $objForm = $this->newObject('form','htmlelements');
 $objButton = $this->newObject('button','htmlelements');
@@ -91,7 +93,7 @@ $objTable->addCell('<b>'.$commentLabel.': </b>','','','center','','colspan=3');
 $objTable->endRow();
 
 // Text area for lecturers comments
-$objText->textarea('comment',$data['comments']);
+$objText = new textarea('comment',$data['comments']);
 
 $objTable->startRow();
 $objTable->addCell($objText->show(),'','','center','','colspan=3');
@@ -117,7 +119,7 @@ $objTable->addCell('<b>'.$markLabel.': '.$objDrop->show().' '.$outofLabel.' </b>
 $objTable->endRow();
 
 // Hidden fields for answer id and the action to be performed
-$objInput->textinput('answer_id',$data['answer_id']);
+$objInput = new textinput('answer_id',$data['answer_id']);
 $objInput->fldType='hidden';
 $hidden = $objInput->show();
 
