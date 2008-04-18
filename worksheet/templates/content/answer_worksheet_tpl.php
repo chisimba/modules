@@ -10,6 +10,8 @@
 * @param int $count The number of questions in the worksheet.
 */
 $this->setLayoutTemplate('answerworksheet_layout_tpl.php');
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
 
 // set up html objects
 $objTable =& $this->newObject('htmltable','htmlelements');
@@ -17,8 +19,8 @@ $objHead =& $this->newObject('htmlheading','htmlelements');
 $objLayer =& $this->newObject('layer','htmlelements');
 $objForm =& $this->newObject('form','htmlelements');
 $objButton =& $this->newObject('button','htmlelements');
-$objText =& $this->newObject('textarea','htmlelements');
-$objInput =& $this->newObject('textinput','htmlelements');
+//$objText =& $this->newObject('textarea','htmlelements');
+//$objInput =& $this->newObject('textinput','htmlelements');
 $objLink =& $this->newObject('link','htmlelements');
 $objImage =& $this->newObject('image','htmlelements');
 $objLayerBase =& $this->newObject('layer', 'htmlelements');

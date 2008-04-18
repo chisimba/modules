@@ -8,11 +8,12 @@
 * Template for viewing a marked worksheet.
 */
 $this->setLayoutTemplate('worksheet_layout_tpl.php');
+$this->loadClass('textinput', 'htmlelements');
 
 // Set up html elements
 $objTable =& $this->newObject('htmltable','htmlelements');
 $objForm =& $this->newObject('form','htmlelements');
-$objInput =& $this->newObject('textinput','htmlelements');
+//$objInput =& $this->newObject('textinput','htmlelements');
 $objLayer =& $this->newObject('layer','htmlelements');
 $objLink =& $this->newObject('link','htmlelements');
 $objImage =& $this->newObject('image','htmlelements');
@@ -107,7 +108,7 @@ $javascript="<script language=\"javascript\" type=\"text/javascript\">
     }
     </script>";
 
-$objInput->textinput('num','');
+$objInput = new textinput('num','');
 $objInput->fldType='hidden';
 $nav = $objInput->show();
 

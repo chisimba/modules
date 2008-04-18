@@ -79,7 +79,7 @@ foreach($ar as $line){
                 $date = $line['date'];
             }
         }
-
+        
         $rows[] = $link;
         $rows[] = $line['node'];
         $rows[] = $line['questions'];
