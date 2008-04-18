@@ -64,6 +64,7 @@ class dbcontent extends dbTable
         	try {
                 parent::init('tbl_cms_content');
                 $this->table = 'tbl_cms_content';
+                $this->_objSectionGroup = & $this->getObject('dbsectiongroup', 'cmsadmin');
                 $this->_objUser = & $this->getObject('user', 'security');
                 $this->_objSecurity = & $this->getObject('dbsecurity', 'cmsadmin');
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
@@ -74,6 +75,40 @@ class dbcontent extends dbTable
         	    exit();
      	   }
         }
+
+
+	    /**
+         * Method to return the current and next levels child content
+         *
+         * @access public
+         * @return bool
+         */
+		public function getChildContent($sectionid, $admin, $filter){
+			//get current parents child content
+			$arrContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND published=1 AND trash=0 '.$filter);
+			//getting the next level of sections child content
+			$nodes = $this->_objSectionGroup->getChildNodes($sectionid, $admin);
+			
+				if (!empty($nodes)) {
+				//var_dump($nodes);
+                foreach($nodes as $node) {
+					$subSecId = $node[id];
+					//var_dump($subSecId.$node);
+                    $nextArrContent = $this->getAll('WHERE sectionid = \''.$subSecId.'\' AND published=1 AND trash=0 '.$filter);
+					//var_dump($nextArrContent);
+					if (!empty($nextArrContent)){
+						//var_dump('Root node is empty');
+						array_push($arrContent, $nextArrContent);
+					}
+					
+				}
+			}
+			//var_dump($arrContent[0]);
+			return $arrContent;	
+		}
+
+
+
 
         /**
          * Method to save a record to the database
