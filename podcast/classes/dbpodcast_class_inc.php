@@ -82,8 +82,8 @@ class dbpodcast extends dbTable
         $objLanguage= $this->getObject('language','language');
         $title = $objLanguage->languageText('mod_podcast_latestpodcastsby', 'podcast', 'Latest Podcasts By').' '.$this->objUser->fullName($userId);
         
-        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'site', NULL, 'small');
-        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'user', NULL, 'small');
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'site', NULL, 'small', $userId);
+        $objDynamicBlocks->addBlock('podcast', 'podcastdynamicblock', 'showBlock', $userId, $title, 'user', NULL, 'small', $userId);
         
         return $podcastId;
     }
