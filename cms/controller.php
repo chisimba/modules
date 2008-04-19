@@ -6,9 +6,9 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
-* 
-* The controller that extends the base controller for the cms module 
-* 
+*
+* The controller that extends the base controller for the cms module
+*
 * Note: 2006 12 16 - Converted to direct function access from action
 *   parameter, and cleaned up some very messy code -- D. Keats
 *
@@ -19,7 +19,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 * @author Wesley  Nitsckie
 * @author Warren Windvogel
 * @author Derek Keats
-* 
+*
 */
 
 class cms extends controller
@@ -27,71 +27,71 @@ class cms extends controller
         /**
 		*
         * @var string object $_objContextCore A string to hold an instance of the contextcore object which ....
-        * @access protected 
-        * 
+        * @access protected
+        *
         */
         protected $_objContextCore;
 
         /**
         *
-        * @var string object $_objSections A string to hold an instance of the sections 
+        * @var string object $_objSections A string to hold an instance of the sections
         * database access object from CMS admin
         * @access protected
-        * 
+        *
         */
         protected $_objSections;
 
         /**
-        * @var string object $_objContent A string to hold an instance of 
+        * @var string object $_objContent A string to hold an instance of
         * the Content object which ...
         * @access protected
-        * 
+        *
         */
         protected $_objContent;
 
         /**
-        *  
-        * @var string object $_objUtils A string to hold an instance of the CMS 
+        *
+        * @var string object $_objUtils A string to hold an instance of the CMS
         * Utilities object
         * @access protected
-        * 
+        *
         */
         protected $_objUtils;
 
         /**
-         * 
-         * @var string $contextCode A string to hold the contextCode for the 
+         *
+         * @var string $contextCode A string to hold the contextCode for the
          * context that the user is in
          * @access protected
-         * 
+         *
          */
         protected $contextCode;
 
         /**
-        * 
-        * @var string $inContextMode A string to hold the context code so that 
-        * we can call it by another name for no apparent reason or a reason known 
-        * only to the developer of this module who did not put in any explanation 
+        *
+        * @var string $inContextMode A string to hold the context code so that
+        * we can call it by another name for no apparent reason or a reason known
+        * only to the developer of this module who did not put in any explanation
         * anywhere.
         * @access protected
-        * 
+        *
         */
         protected $inContextMode;
 
         /**
-        * 
+        *
         * @var string object $_objUser A string to hold an instance of the user object
         * @access protected
-        * 
+        *
         */
         protected $_objUser;
-        
+
         /**
-        * 
+        *
         * @var string $action A string to hold the value of the action parameter
         *  retrieved from the querystring
         * @access public
-        * 
+        *
         */
         public $action;
         /**
@@ -106,16 +106,16 @@ class cms extends controller
      	* @var object
     	*/
     	public $objConfig;
-    	
+
     	public $objRPC;
 
         /**
-        * 
+        *
         * The standard init method to initialise the cms object and assign some of
         * the objects used in all action derived methods.
         *
         * @access public
-        * 
+        *
         */
         public function init()
         {
@@ -159,7 +159,7 @@ class cms extends controller
             //Get the activity logger class and log this module call
             $objLog = $this->getObject('logactivity', 'logger');
             $objLog->log();
-            
+
         	}
         	catch (customException $e)
         	{
@@ -169,7 +169,7 @@ class cms extends controller
         }
 
         /**
-         * 
+         *
         * This is a method that overrides the parent class to stipulate whether
         * the current module requires login. Having it set to false gives public
         * access to this module including all its actions.
@@ -177,14 +177,14 @@ class cms extends controller
         * @access public
         * @return bool FALSE
         */
-        public function requiresLogin() 
+        public function requiresLogin()
         {
             return FALSE;
 
         }
 
         /**
-         * 
+         *
          * A standard method to handle actions from the querystring.
          * The dispatch function converts action values to function
          * names, and then calls those functions to perform the action
@@ -194,7 +194,7 @@ class cms extends controller
          * @return string The results of the method denoted by the action
          *   querystring parameter. Usually this will be a template populated
          *   with content.
-         * 
+         *
          */
         public function dispatch()
         {
@@ -210,38 +210,38 @@ class cms extends controller
             * using case selections)
             */
             try {
-            	
+
             	switch ($this->action) {
             		case 'makepdf':
-            		   
+
             			$sectionid = $this->getParam('sectionid');
         				//go and fetch the page in question from the db
         				$data = $this->_objContent->getContentPage($this->getParam('id'));
 
         				//create the pdf and send it out
-        				
+
         				$header = stripslashes($data['title']);
-        				
+
         				$body = stripslashes($data['body']);
-        				
+
         				$pagedate = $data['created'];
-        							
+
         				//put it all together
         				//get the pdfmaker classes
         				$objPdf = $this->getObject('fpdfwrapper','pdfmaker');
-        				
+
         				$text = $header . "  " . $pagedate . "\r\n" . html_entity_decode(strip_tags($body));
         				$objPdf->simplePdf($text);
-						
+
             			$method = $this->_getMethod();
 
         				break;
-        		            	
+
             		default:
             			$method = $this->_getMethod();
             			break;
             	}
-        	    
+
             } catch (Exception $e) {
                 throw customException($e->getMessage());
 			    //customException::cleanUp();
@@ -253,20 +253,20 @@ class cms extends controller
         	 */
         	return $this->$method();
         }
-	
 
 
 
 
 
- 
+
+
         /**
          * This method will return the child items for the particular
 		 * section for use the the jquery Simple Tree Menu (Ajax)
-		 * 
+		 *
          * @access private
          * @return string The populated cms_section_tpl.php template
-         * 
+         *
          */
         private function _getMenuChildNodes()
         {
@@ -288,28 +288,28 @@ class cms extends controller
 
 
 
-	    
-        
+
+
         /**
          * A method that corresponds to the showsection action parameter
          * from the querystring. It returns the formatted section text for
          * display in the template.
-         * 
+         *
          * @access private
          * @return string The populated cms_section_tpl.php template
-         * 
+         *
          */
         private function _showsection()
         {
         	$this->setLayoutTemplate('cms_layout_tpl.php');
             //Retrieve the section id from the querystring
 			$sectionId = $this->getParam('id');
-			//If the section id is not null, get the section and set the 
+			//If the section id is not null, get the section and set the
 			//  site title, otherwise set the site title to empty.
 			if($sectionId != '') {
 			    $section = $this->_objSections->getSection($sectionId);
 			    $siteTitle = $section['title'];
-			    
+
 			} else {
 			    $siteTitle = '';
 			}
@@ -364,7 +364,7 @@ class cms extends controller
         		$mcount = 0;
         		foreach($matches as $match)
         		{
-        			$postcontent['body'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".@$match[$mcount]."'/>", $postcontent['body']); 
+        			$postcontent['body'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='".@$match[$mcount]."'/>", $postcontent['body']);
         			$mcount++;
         		}
 				//thump together an email string (this must be html email as the post is html
@@ -395,12 +395,12 @@ class cms extends controller
         }
         /**
          * A method that corresponds to the showfulltext action parameter
-         * from the querystring. It returns the formatted full page of content 
+         * from the querystring. It returns the formatted full page of content
          * text for a particular content item.
-         * 
+         *
          * @access private
          * @return string The populated cms_content_tpl.php template
-         * 
+         *
          */
         private function _showfulltext()
         {
@@ -416,39 +416,39 @@ class cms extends controller
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('washout', 'utilities');
                 $content = $this->objLayout->showBody();
-                //$content = $this->bbcode->parseText($content);
+                $content = $this->bbcode->parseText($content);
                 $this->setVarByRef('content',$content);
                 return 'cms_content_tpl.php';
         }
 
         /**
          * A method that corresponds to the showcontent action parameter
-         * from the querystring. It returns the formatted full page of content 
+         * from the querystring. It returns the formatted full page of content
          * text for a particular content item. Since its the same as
          * showfulltext, it is not obvious why its needs to be here, but
          * it was in the dispatch method so I put it here.
-         * 
+         *
          * @access private
          * @return string The populated cms_content_tpl.php template
          * @todo The author needs to check if this method is necessary
-         * 
+         *
          */
         private function _showcontent()
         {
         	$this->setLayoutTemplate('cms_layout_tpl.php');
         	return $this->_showfulltext();
         }
-        
+
         /**
          * A method that corresponds to the home action parameter
-         * from the querystring. It returns the formatted content 
+         * from the querystring. It returns the formatted content
          * or next action depending on whether there is front page
          * comtent or not.
-         * 
+         *
          * @access private
          * @return string The populated cms_content_tpl.php template
          * @todo The author needs to explain the logic here
-         * 
+         *
          */
         private function _home()
         {
@@ -465,7 +465,7 @@ class cms extends controller
                 return $this->nextAction('showsection', array('id'=>$firstSectionId,'sectionid'=>$firstSectionId));
             }
         }
-        
+
 	    /**
 	    *
 	    * Method to convert the action parameter into the name of
@@ -478,20 +478,20 @@ class cms extends controller
 	    */
 	    private function _getMethod()
 	    {
-	    		
-	    	
+
+
 	        if ($this->_validAction()) {
 	            return "_" . $this->action;
 	        } else {
 	            return "_actionError";
 	        }
 	    }
-	    
+
 	    private function _releaselock()
 	    {
 	    	$this->nextAction('',array('action' => 'viewsection'), 'cmsadmin');
 	    }
-        
+
 	    /**
 	    *
 	    * Method to check if a given action is a valid method
@@ -512,7 +512,7 @@ class cms extends controller
 	            return FALSE;
 	        }
 	    }
-	    
+
 	    /**
 	    *
 	    * Method to return an error when the action is not a valid
@@ -524,20 +524,20 @@ class cms extends controller
 	    */
 	    private function _actionError()
 	    {
-	    	
+
 	        $this->setVar('str', $this->objLanguage->languageText("mod_cms_errorbadaction", 'cms') . ": <em>". $this->action . "</em>");
 	        return 'dump_tpl.php';
 	    }
-        
+
 
 	    private function _serverpc()
 	    {
 	    	// cannot require any login, as remote clients use this. Auth is done internally
             $this->requiresLogin();
-            
+
             // start the server.
-            $this->objRPC->serve();   
-            // break to be pedantic, although not strictly needed.    
+            $this->objRPC->serve();
+            // break to be pedantic, although not strictly needed.
             // break;
 	    }
         /**
@@ -553,13 +553,13 @@ class cms extends controller
                 return TRUE;
             }else{
                 return FALSE;
-            }   
+            }
         }
 
 
-        
+
         //THE METHODS BELOW HERE SEEM TO SERVE NO PURPOSE.-------------------------
-        
+
         /**
          * Method to get the Sections on the left side of the menu
          *
@@ -583,7 +583,7 @@ class cms extends controller
         {
             return $this->_objUtils->getBreadCrumbs();
         }
-        
+
         public function _feed()
         {
         	 //get the feed format parameter from the querystring
@@ -600,7 +600,7 @@ class cms extends controller
                 }
                 //print_r($posts); die();
                 //set up the feed...
-               
+
                 //title of the feed
                 $feedtitle = htmlentities($posts['title']);
                 //description
@@ -609,7 +609,7 @@ class cms extends controller
                 {
                 	$feedDescription = htmlentities($posts['menutext']);
                 }
-                
+
                 //link back to the blog
                 $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=cms";
                 //sanitize the link
@@ -618,10 +618,10 @@ class cms extends controller
                 $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=cms&action=feed&format=" . $format;
                 //print_r($feedURL);
                 $feedURL = htmlentities($feedURL);
-                 
+
                 //set up the feed
                 $result = $this->objFeedCreator->setupFeed(TRUE,$feedtitle, $feedDescription, $feedLink, $feedURL);
-               
+
                 //use the post title as the feed item title
                 $itemTitle = $posts['title'];
                 $itemLink = $this->uri(array('action' => 'showcontent', 'id' => $posts['id'], 'sectionid' => $posts['sectionid'])); //todo - add this to the posts table!
@@ -633,8 +633,8 @@ class cms extends controller
                 $itemAuthor = htmlentities( $posts['created_by']);
                 //add this item to the feed
                 $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
-               
-               
+
+
                 //check which format was chosen and output according to that
                 switch ($format) {
                     case 'rss2':
@@ -672,7 +672,7 @@ class cms extends controller
                 //output the feed
                 echo htmlentities($feed);
         }
-       
+
 
 }
 
