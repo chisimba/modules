@@ -19,13 +19,11 @@ class fsiumenu extends object
     	    	
         // List of Menu Items
         $this->menuItems = array(
-            array('title'=>'Products and Services', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_1514_1188560676', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
-            array('title'=>'Portfolio', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_9007_118967971', 'sectionid' => 'gen9Srv59Nme5_9007_1189679711'),
-            array('title'=>'The team', 'module'=>'cms', 'action' => 'showsection','id' => 'init_1', 'sectionid' => 'init_1'),
-            array('title'=>'FAQ', 'module'=>'faq'),
-            array('title'=>'News', 'module'=>'prelogin'),
-            array('title'=>'Developer Blogs', 'module'=>'blog'),
-            array('title'=>'Contact us', 'module'=>'cms', 'action' => 'showfulltext','id' => 'gen9Srv59Nme5_2845_1188820504', 'sectionid' => 'init_1'),
+            /**array('title'=>'About Us', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_1514_1188560676', 'sectionid' => 'gen9Srv59Nme5_1514_1188560676'),
+            array('title'=>'Members', 'module'=>'cms', 'action' => 'showsection','id' => 'gen9Srv59Nme5_9007_118967971', 'sectionid' => 'gen9Srv59Nme5_9007_1189679711'),
+            array('title'=>'Press Releases', 'module'=>'cms', 'action' => 'showsection ','id' => 'init_1', 'sectionid' => 'init_1'),*/
+           array('title'=>'Blog', 'module'=>'blog'),
+            array('title'=>'WIKI', 'module'=>'wiki'),
         );
         
         $this->objUser = $this->getObject('user', 'security');
