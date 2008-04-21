@@ -342,8 +342,17 @@ class blogmail extends object
                             $handle = fopen($filename, 'wb');
                             fwrite($handle, $filedata);
                             fclose($handle);
-                            $type = mime_content_type($filename);
-                            $tparts = explode("/", $type);
+                            if(extension_loaded('fileinfo'))
+                            {
+                            	$finfo = finfo_open(FILEINFO_MIME);
+                            	$type = finfo_file($finfo, $filename);
+                            }
+                            else {
+                            	$type = mime_content_type($filename);
+                            }
+                            $thing = explode(';', $type);
+                            $tparts = explode("/", $thing[0]);
+                            
                             // print_r($tparts);
                             if ($tparts[0] == "image") {
                                 // add the img stuff to the body at the end of the "post"
@@ -411,8 +420,18 @@ class blogmail extends object
                         $handle = fopen($filename, 'wb');
                         fwrite($handle, $filedata);
                         fclose($handle);
-                        $type = mime_content_type($filename);
-                        $tparts = explode("/", $type);
+                        
+                        if(extension_loaded('fileinfo'))
+                            {
+                            	$finfo = finfo_open(FILEINFO_MIME);
+                            	$type = finfo_file($finfo, $filename);
+                            }
+                            else {
+                            	$type = mime_content_type($filename);
+                            }
+                            $thing = explode(';', $type);
+                            $tparts = explode("/", $thing[0]);
+                            
                         if ($tparts[0] == "image") {
                             // add the img stuff to the body at the end of the "post"
                             $newbod.= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
@@ -594,8 +613,18 @@ class blogmail extends object
                             $handle = fopen($filename, 'wb');
                             fwrite($handle, $filedata);
                             fclose($handle);
-                            $type = mime_content_type($filename);
-                            $tparts = explode("/", $type);
+                            
+                            if(extension_loaded('fileinfo'))
+                            {
+                            	$finfo = finfo_open(FILEINFO_MIME);
+                            	$type = finfo_file($finfo, $filename);
+                            }
+                            else {
+                            	$type = mime_content_type($filename);
+                            }
+                            $thing = explode(';', $type);
+                            $tparts = explode("/", $thing[0]);
+                            
                             // print_r($tparts);
                             if ($tparts[0] == "image") {
                                 // add the img stuff to the body at the end of the "post"
@@ -660,8 +689,18 @@ class blogmail extends object
                         $handle = fopen($filename, 'wb');
                         fwrite($handle, $filedata);
                         fclose($handle);
-                        $type = mime_content_type($filename);
-                        $tparts = explode("/", $type);
+                        
+                        if(extension_loaded('fileinfo'))
+                            {
+                            	$finfo = finfo_open(FILEINFO_MIME);
+                            	$type = finfo_file($finfo, $filename);
+                            }
+                            else {
+                            	$type = mime_content_type($filename);
+                            }
+                            $thing = explode(';', $type);
+                            $tparts = explode("/", $thing[0]);
+                        
                         if ($tparts[0] == "image") {
                             // add the img stuff to the body at the end of the "post"
                             $newbod.= "[img]" . $this->objConfig->getSiteRoot() . 'usrfiles/blog/' . $filename . "[/img]" . "<br />";
