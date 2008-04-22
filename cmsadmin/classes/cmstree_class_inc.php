@@ -451,9 +451,9 @@ class cmstree extends object
 						';
 			}
 			
-            $where = 'ORDER BY nodelevel, ordering';
-            
-            $sections = $this->_objSections->getArray($sql);
+
+			$where = ' GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
+            $sections = $this->_objSections->getArray($sql.$where);
 	
 			$secureSections = array();
             //Filterring the list based on READ ACCESS
