@@ -6,11 +6,10 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 //set the layout
 $this->setLayoutTemplate('gradebook_layout_tpl.php');
-
 $assignment = 0;
 $assignment = $this->getParam("assessment", NULL);
 $studentUserId = 0;
-$studentUserId = $this->getParam("studentUserId", NULL);
+$studentUserId = $this->getParam("studentuserid", NULL);
 $check = 0;
 $check = $this->getParam("check", NULL);
 
@@ -50,7 +49,7 @@ $objForm = new form('upload');
 //parameters
 $action=$this->getParam("action", NULL);
 $assessment=$this->getParam("assessment", NULL);
-$studentUserId=$this->getParam("studentUserId", NULL);
+$studentUserId=$this->getParam("studentuserid", NULL);
 $objForm->setAction($this->uri(array('action'=>$action,'assessment'=>$assessment,'studentUserId'=>$studentUserId)));
 $objForm->displayType=3;  //Free form
 
@@ -88,6 +87,7 @@ $totalPercentMark=0;
 $totalAvgMark=0;
 $totalPercentYrMark=0;
 $count=0;
+
 if(!$numberAssignments) {
 	$this->TableInstructions->startRow();
 	$this->TableInstructions->addCell($objLanguage->languageText('mod_gradebook_noassignments','gradebook'),NULL,NULL,NULL,NULL," colspan=\"4\"");
@@ -242,6 +242,8 @@ if(!$numberAssignments) {
 							$studentResult=array();
 							$xstudentResult=array();
 							$xstudentResult=$objWorksheetresults->getAnnualResults("userId='$studentUserId' and worksheet_id='".$iassignment["id"]."'");
+							//$test = $objWorksheetresults->getAll("WHERE userId")
+							var_dump($studentUserId);
 							$classAvg=array();
 							$classAvg=$objWorksheetresults->getAnnualResults("worksheet_id='".$iassignment["id"]."'","avg(mark) classAvg");
 							$ca=0;				

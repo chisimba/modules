@@ -249,7 +249,6 @@ if(!$numberStudents) {
 	$this->TableInstructions->endRow();
 } else {
 	for($i=1;$i<=$numberStudents;$i++) {
-		
 		$this->TableInstructions->startRow(!($i%2)?"odd":"even");
 		$this->TableInstructions->addCell($userId[$i-1]);
 		$objLink = new link($this->uri(array('action'=>'assessmentDetails','assessment'=>$dropdownAssessments,'studentuserid'=>$userId[$i-1])));
