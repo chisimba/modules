@@ -43,7 +43,7 @@ class dbpodcast extends dbTable
         $podcastInfo = array();
         if($title == NULL)
         {
-        	$podcastInfo['title'] = '[- No Title -]';
+            $title = '[- No Title -]';
         }
         $podcastInfo['title'] = $title; // isset($file['title']) ? $title : '[- No Title -]';
         $podcastInfo['description'] = isset($file['description']) ? $file['description'] : '[- No Description -]';
