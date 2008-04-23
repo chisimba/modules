@@ -19,18 +19,18 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class smapparser extends object
 {
-  
+
     /**
-    * 
+    *
     * @var string $demoMap Holds the value of the demo timeline
-    * 
+    *
     */
     public $demoMap;
-    
+
     /**
-    * 
+    *
     * @var string $url Holds the value of the timeline to display
-    * 
+    *
     */
     public $url;
 
@@ -38,7 +38,7 @@ class smapparser extends object
 	* @var string $timeLineModuleLink Holds the link for the timeline module
 	*/
     public $sMapModuleLink;
-    
+
     /**
     *
     * Standard init method
@@ -50,29 +50,29 @@ class smapparser extends object
     {
         $this->sMapModuleLink = $this->Uri(array(), "simplemap");
     }
-    
+
     /*
-     * 
-     * Method to set the uri parameter for the timeline to be 
+     *
+     * Method to set the uri parameter for the timeline to be
      * parsed.
-     * 
+     *
      * @access public
      * @return string The URI for the timeline to be parsed
-     * 
+     *
      */
 	public function setMapUri($uri)
 	{
 	    $this->url = $uri;
 	    return TRUE;
 	}
-	
+
 	/*
-	 * 
+	 *
 	 * Method to get the timeline Uri as stored
-	 * 
+	 *
 	 * @access public
 	 * @return string The URI or Null if not set
-	 * 
+	 *
 	 */
 	public function getMapUri()
 	{
@@ -82,16 +82,17 @@ class smapparser extends object
 	        return NULL;
 	    }
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Show method do display the map
-	 * @access public 
+	 * @access public
 	 * @return strng The map in an iframe
-	 * 
+	 *
 	 */
     public function show()
     {
+        unset($objIframe);
     	$objIframe = $this->getObject('iframe', 'htmlelements');
         $ret = $this->sMapModuleLink;
         $url = $this->uri(array(
@@ -104,29 +105,29 @@ class smapparser extends object
 		$objIframe->height="600";
         return $objIframe->show();
     }
-    
+
     /**
-     * 
-     * Method ot use in a parser to return the map using 
+     *
+     * Method ot use in a parser to return the map using
      * the show method
      * @access public
      * @return string The map formatted in an Iframe
-     * 
+     *
      */
     public function getRemote($smapFile) {
     	$this->setMapUri($smapFile);
         return $this->show();
     }
-    
+
     /**
-     * 
+     *
      * Method to use in a parser to return the map based on
      * its id field in tbl_simplemap_maps table
-     * 
+     *
      * @access public
      * @aparam string $id The id of the map in the database
      * @return string The map in an iframe or a text error message if the id is not found
-     * 
+     *
      */
     public function getLocal($id){
     	$objDb = $this->getObject("dbmaps", "simplemap");
@@ -137,10 +138,10 @@ class smapparser extends object
 	    	$url = $ar['url'];
 	    	$glat = $ar['glat'];
 	    	$glong = $ar['glong'];
-	    	$magnify = $ar['magnify']; 
+	    	$magnify = $ar['magnify'];
     		$width = $ar['width'];
     		$height = $ar['height'];
-	    	$maptype = $ar['maptype']; 
+	    	$maptype = $ar['maptype'];
 			$frSrc = $this->uri(array(
 			  "mode" => "plain",
 	          "action" => "viewmap",
@@ -167,12 +168,12 @@ class smapparser extends object
     	} else {
 		    //Give some results when the map is not found" .
 		    $objLanguage = $this->getObject('language', 'language');
-		    $ret = "<span class=\"error\"><h1>" 
-		      . $objLanguage->languageText("mod_simplemap_error_mapnotfound", "simplemap") 
+		    $ret = "<span class=\"error\"><h1>"
+		      . $objLanguage->languageText("mod_simplemap_error_mapnotfound", "simplemap")
 		      . ": " . $id ."</h1></span>";
 		}
         return $ret;
     }
-    
+
 }
 ?>
