@@ -42,7 +42,7 @@ $script ='
 </script>
 ';
 
-$script = "<script type=\"text/javascript\">
+$script_jquery = "<script type=\"text/javascript\">
 jQuery(document).ready(function(){
     jQuery('#tree1').SimpleTree();
     jQuery('#tree2').SimpleTree({animate: true});
@@ -58,18 +58,20 @@ jQuery(document).ready(function(){
 });
 </script>";
 
+// JQuery Simple Tree Menu
         //Insert script for generating tree menu
+	/*
     //    $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery.js', 'cmsadmin'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('tree.js', 'cmsadmin'));
         $this->appendArrayVar('headerParams', '<link rel="stylesheet" href="'.$objConfig->getsiteRoot().'packages/cmsadmin/resources/tree_uwc/style.css" />');
-        $this->appendArrayVar('headerParams',$script);
-
+        $this->appendArrayVar('headerParams',$script_jquery);
+*/
 
 // Create an instance of the CSS Layout
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/skins/sam/menu.css", 'yahoolib').'" />';
 
-/* //Uncomment to use Yahoo Libs
+//Yahoo Libs
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('yahoo-dom-event/yahoo-dom-event.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('animation/animation.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container_core.js', 'yahoolib'));
@@ -77,7 +79,6 @@ $this->appendArrayVar('headerParams', $this->getJavascriptFile('menu/menu.js', '
 $this->setVar('bodyParams','class=" yui-skin-sam"');	
 $this->appendArrayVar('headerParams', $css);
 $this->appendArrayVar('headerParams',$script);
-*/
 
 //Set to automatically render htmllist into tree menu
 $cssLayout->setNumColumns(2);

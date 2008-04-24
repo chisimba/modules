@@ -1067,8 +1067,10 @@ class cmsutils extends object
 				$lbGreen = $this->objLanguage->languageText('mod_cmsadmin_sectionparentnotvisible', 'cmsadmin');
 
 				//Instantiate cms tree object
-				//$objCmsTree =$this->newObject('cmstree', 'cmsadmin');
-				$objSimpleCmsTree =$this->newObject('simplecontenttree', 'cmsadmin');
+				//TODO: Must Fork for different menus here
+				$objCmsTree =$this->newObject('cmstree', 'cmsadmin');
+				//$objSimpleCmsTree =$this->newObject('simplecontenttree', 'cmsadmin');
+
 				$objConfig =$this->newObject('altconfig', 'config');
 				$objFeatureBox = $this->newObject('featurebox', 'navigation');
 				//Instantiate link object
@@ -1101,14 +1103,17 @@ class cmsutils extends object
 				$filemanager = $objIcon->getTextIcon($url, 'media', $link, 'png', 'icons/cms/');
 
 				$nav = '';
-			//	$objCMSTree = $this->getObject('cmstree');
-				$objSimpleCMSTree = $this->getObject('simplecontenttree');
+
+				//TODO: Must fork for different menu types
+				$objCMSTree = $this->getObject('cmstree');
+				//$objSimpleCMSTree = $this->getObject('simplecontenttree');
 
 				//Add links to the output layer
 				$currentNode = $this->getParam('sectionid');
 
-				//$nav = $objCMSTree->getCMSAdminTree($currentNode);
-				$nav = $objSimpleCMSTree->getSimpleCMSAdminTree($currentNode);
+				//TODO: Must fork for different menu types
+				$nav = $objCMSTree->getCMSAdminTree($currentNode);
+				//$nav = $objSimpleCMSTree->getSimpleCMSAdminTree($currentNode);
 				$nav="<div id='cmsnavigation'>".$nav."</div>\n"; 
 				$nav .= '<br/>'.'&nbsp;'.'<br />';
 				//$nav .= $viewCmsLink.'<br /><br />';
