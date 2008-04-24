@@ -112,8 +112,8 @@ class cmslayouts extends object
                 break;
             case 'tree':
             default:
-                //$menu = $this->showTreeMenu($currentNode);
-               $menu = $this->showSimpleTreeMenu($currentNode);
+                $menu = $this->showTreeMenu($currentNode);
+               //$menu = $this->showSimpleTreeMenu($currentNode);
         }
         return $menu;
     }

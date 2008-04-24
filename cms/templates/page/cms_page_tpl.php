@@ -77,10 +77,12 @@ if (!isset($pageTitle)) {
 
 if (!isset($pageSuppressSkin)){
 	if (isset($pageSimpleSkin)) {
-	    echo $objSkin->putSimpleSkinCssLinks();
+		//TODO: Fork For Prefered Skin HERE
+	    //echo $objSkin->putSimpleSkinCssLinks();
+	    echo $objSkin->putSkinCssLinks();
 	}
 	else {
-    	//echo $objSkin->putSkinCssLinks();
+    	echo $objSkin->putSkinCssLinks();
     	echo '<link rel="stylesheet" type="text/css" href="skins/_common/common_styles.css" media="screen" />
         <link rel="stylesheet" type="text/css" href="skins/'.$objSkin->getSkin().'/main.css" media="screen" />
 				<link rel="stylesheet" type="text/css" href="skins/'.$objSkin->getSkin().'/print.css" media="print" />
