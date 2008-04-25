@@ -79,7 +79,7 @@ class podcast extends controller
             case 'downloadfile':
                 return $this->downloadFile($this->getParam('id'));
             case 'byuser':
-                return $this->showUserPodcasts($this->objUser->userName('id'));
+                return $this->showUserPodcasts($this->objUser->userName());
 	    //case 'admin':
 		//return $this->showAllPodcasts($this->getParam('id'));
             case 'rssfeed':
@@ -340,12 +340,15 @@ private function showAllPodcasts($id='')
         
         if ($id == '') {
             $podcasts = $this->objPodcast->getLast5();
-            $rssFeed->title = $this->objLanguage->languageText('mod_podcast_latestpodcastson', 'podcast').' '.$this->objConfig->getinstitutionName();
+            $rssFeed->title = $this->objLanguage->languageText('mod_podcast_latestpodcastson', 'podcast').' '.$this->objConfig->getSiteName();
             $rssFeed->rssfeedlink = $this->uri(array('action'=>'rssfeed'));
-            $rssFeed->description = $this->objLanguage->languageText('mod_podcast_latestpodcastdescription', 'podcast').' '.$this->objConfig->getinstitutionName().' - '.$this->objConfig->getsiteRoot();
+            $rssFeed->description = $this->objLanguage->languageText('mod_podcast_latestpodcastdescription', 'podcast').' '.$this->objConfig->getSiteName().' - '.$this->objConfig->getsiteRoot();
             $rssFeed->author = $this->objConfig->getItem('KEWL_SYSTEM_OWNER');
             $rssFeed->email = $this->objConfig->getsiteEmail();
         } else {
+            
+            $id = $this->objUser->getUserId($id);
+            
             $podcasts = $this->objPodcast->getUserPodcasts($id);
             $rssFeed->title = $this->objUser->fullname($id);
             $rssFeed->rssfeedlink = $this->uri(array('action'=>'rssfeed', 'id'=>$id));

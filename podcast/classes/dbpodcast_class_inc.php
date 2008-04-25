@@ -244,7 +244,7 @@ class dbpodcast extends dbTable
      */
     public function listPodcasters()
     {
-        $sql = 'SELECT DISTINCT tbl_users.id, userid, firstname, surname FROM tbl_podcast 
+        $sql = 'SELECT DISTINCT tbl_users.id, userid, username, firstname, surname FROM tbl_podcast 
         INNER JOIN tbl_users ON (tbl_podcast.creatorid = tbl_users.userid)
         ORDER BY firstname, surname ';
         

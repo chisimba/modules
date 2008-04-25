@@ -46,9 +46,9 @@ if (count($podcasters) > 0) {
     {
         if (is_null($podcaster['firstname']))
         {
-            $dropdown->addOption($podcaster['userid'], $podcaster['userid']);
+            $dropdown->addOption($podcaster['username'], $podcaster['username']);
         } else {
-            $dropdown->addOption($podcaster['userid'], $podcaster['firstname'].' '.$podcaster['surname']);
+            $dropdown->addOption($podcaster['username'], $podcaster['firstname'].' '.$podcaster['surname']);
         }
     }
     
@@ -75,10 +75,11 @@ if (count($podcasters) > 0) {
     
     
     if ($this->getParam('action') == 'byuser') {
-        $numFeeds = $this->objPodcast->getNumFeeds($this->getParam('id', $this->objUser->userId()));
+        $numFeeds = $this->objPodcast->getNumFeeds($this->objUser->getUserId($this->getParam('id', $this->objUser->userName())));
         
-        $content = $this->objLanguage->languageText('mod_podcast_rssfeedbyuser', 'podcast').': '.$this->objUser->fullname($this->getParam('id', $this->objUser->userId()));
-        $link = new link($this->uri(array('action'=>'rssfeed', 'id'=>$this->getParam('id', $this->objUser->userId()))));
+        
+        $content = $this->objLanguage->languageText('mod_podcast_rssfeedbyuser', 'podcast').': '.$this->objUser->fullname($this->objUser->getUserId($this->getParam('id', $this->objUser->userName())));
+        $link = new link($this->uri(array('action'=>'rssfeed', 'id'=>$this->getParam('id', $this->objUser->userName()))));
         $link->link = $objIcon->show();
         
         $content .= '<p align="center"><br />'.$link->show().'</p>';

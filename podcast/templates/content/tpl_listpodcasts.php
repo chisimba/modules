@@ -58,7 +58,7 @@ if (count($podcasts) == 0) {
             if (isset($id)) {  
                 $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$artist, '50%');
             } else {
-                $authorLink = new link ($this->uri(array('action'=>'byuser', 'id'=>$podcast['creatorid'])));
+                $authorLink = new link ($this->uri(array('action'=>'byuser', 'id'=>$this->objUser->userName($podcast['creatorid']))));
                 $authorLink->link = $artist;
                 $table->addCell('<strong>'.$this->objLanguage->languageText('word_by', 'system').':</strong> '.$authorLink->show(), '50%');
             }
