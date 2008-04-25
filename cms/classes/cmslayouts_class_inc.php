@@ -1084,7 +1084,7 @@ jQuery(document).ready(function(){
             $strBody .= stripslashes($page['body']);
 			$strBody .= '<hr /><p />';
              $objLayer = new layer();
-        	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center>";
+        	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center><hr/><p/>";
         	$objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
