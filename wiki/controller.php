@@ -2,13 +2,13 @@
 // security check - must be included in all scripts
 if ( !$GLOBALS['kewl_entry_point_run'] ) {
     die( "You cannot view this page directly" );
-} 
+}
 // end security check
 /**
  * The wiki version 2 controller manages
  * the wiki
- * 
- * @author Kevin Cyster 
+ *
+ * @author Kevin Cyster
  * @copyright 2007, University of the Western Cape & AVOIR Project
  * @license GNU GPL
  * @package wiki version 2
@@ -21,37 +21,37 @@ class wiki extends controller {
     * @access public
     */
     public $objLangauge;
-    
+
     /**
     * @var object $objWikidisplay: The display class in the wiki version 2 module
     * @access public
     */
     public $objWikidisplay;
-    
+
     /**
     * @var object $objDbwiki: The dbwiki class in the wiki version 2 module
     * @access public
     */
     public $objDbwiki;
-    
+
     /**
     * @var object $objLock: The wikipagelock class in the wiki version 2 module
     * @access public
     */
     public $objLock;
-    
+
     /**
     * @var object $objUser: The user class in the security module
     * @access public
     */
     public $objUser;
-    
+
     /**
     * @var string $userId: The user id of the current logged in user
     * @access public
     */
     public $userId;
-        
+
     /**
     * @var object $objContext: The dbcontext class in the context module
     * @access public
@@ -66,7 +66,7 @@ class wiki extends controller {
 
     /**
     * Method to initialise the controller
-    * 
+    *
     * @access public
     * @return void
     */
@@ -74,18 +74,18 @@ class wiki extends controller {
     {
         $this->objLanguage = $this->getObject( 'language', 'language' );
         $this->objWikidisplay = $this->newObject('wikidisplay', 'wiki');
-        $this->objDbwiki = $this->newObject('dbwiki', 'wiki');        
-        $this->objLock = $this->newObject('wikipagelock', 'wiki');        
+        $this->objDbwiki = $this->newObject('dbwiki', 'wiki');
+        $this->objLock = $this->newObject('wikipagelock', 'wiki');
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
-        
+
         $wikiId = $this->getSession('wiki_id');
         if(empty($wikiId)){
             $contextExists = $this->objModules->checkIfRegistered('context');
             if($contextExists){
-                $contextCode = $this->objContext->getContextCode();    
+                $contextCode = $this->objContext->getContextCode();
                 if(!empty($contextCode)){
                     $wikiId = $this->objDbwiki->getContextWiki($contextCode);
                     $this->setSession('wiki_id', $wikiId);
@@ -95,14 +95,14 @@ class wiki extends controller {
             }else{
                 $this->setSession('wiki_id', 'init_1');
             }
-            
+
         }
     }
-    
+
     /**
     * Method to check if login needed (depending on operation)
-    * 
-    * @access public 
+    *
+    * @access public
     * @return boolean True or False
     */
     public function requiresLogin()
@@ -146,7 +146,7 @@ class wiki extends controller {
 
     /**
     * Method the engine uses to kickstart the module
-    * 
+    *
     * @access public
     * @param string $action: The action to be performed
     * @return void
@@ -160,14 +160,14 @@ class wiki extends controller {
                 $this->setVar('popup', TRUE);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'add_page':
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showAddPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                               
+
             case 'create_page':
                 $name = $this->getParam('name');
                 $sum = $this->getParam('summary');
@@ -184,17 +184,17 @@ class wiki extends controller {
                 //$data['page_content'] = strip_tags($content, '<code>');
                 $data['page_content'] = $content;
                 $data['version_comment'] = $this->objLanguage->languageText('mod_wiki_newpage', 'wiki');
-                $pageId = $this->objDbwiki->addPage($data); 
-                    
+                $pageId = $this->objDbwiki->addPage($data);
+
                 $watch = $this->getParam('watch');
                 if(!empty($watch)){
                     $this->objDbwiki->addWatch($name);
-                }                   
+                }
                 return $this->nextAction('view_page', array(
                     'name' => $name,
                 ), 'wiki');
                 break;
-                
+
             case 'preview_iframe':
                 $name = $this->getParam('preview_name', NULL);
                 $content = $this->getParam('preview_content', NULL);
@@ -203,13 +203,13 @@ class wiki extends controller {
                 $this->setVar('iframe', TRUE);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'update_page':
                 $name = $this->getParam('name');
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
                 $main = $this->getParam('main');
-                $sum = $this->getParam('summary');                    
+                $sum = $this->getParam('summary');
                 $comment = $this->getParam('comment');
                 $content = $this->getParam('content');
                 $choice = $this->getParam('choice');
@@ -227,27 +227,30 @@ class wiki extends controller {
                 //$data['page_content'] = strip_tags($content, '<code>');
                 // removed stripping of tags
                 $data['page_content'] = $content;
-                $pageId = $this->objDbwiki->addPage($data); 
-                $this->objWikidisplay->sendMail($name);                   
+                $pageId = $this->objDbwiki->addPage($data);
+                $this->objWikidisplay->sendMail($name);
                 $this->objLock->unlockEdit('tbl_wiki_pages', $id, $this->userId);
                 return $this->nextAction('view_page', array(
                     'name' => $name,
                 ), 'wiki');
                 break;
-                
+
             case 'delete_page':
                 $name = $this->getParam('name');
                 $this->objDbwiki->deletePage($name);
                 return $this->nextAction('view_all', array(), 'wiki');
                 break;
-                
+
             case 'view_all':
                 $templateContent = $this->objWikidisplay->showAllPages();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'view_page':
+                $objMk = $this->getObject('markitup', 'htmlelements');
+                $objMk->setType('chiki');
+                $this->appendArrayVar('headerParams',$objMk->show('id', 'input_content'));
                 $name = $this->getParam('name');
                 if(!empty($name)){
                     $page = $this->objDbwiki->getPage($name);
@@ -263,7 +266,7 @@ class wiki extends controller {
                 }
                 $version = $this->getParam('version');
                 $tab = $this->getParam('tab', 0);
-                $templateContent = $this->objWikidisplay->showMain($name, $version, $tab);            
+                $templateContent = $this->objWikidisplay->showMain($name, $version, $tab);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
@@ -281,7 +284,7 @@ class wiki extends controller {
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'search_wiki':
                 $field = $this->getParam('field');
                 $value = $this->getParam('value');
@@ -297,14 +300,14 @@ class wiki extends controller {
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'view_authors':
                 $author = $this->getParam('author');
                 $templateContent = $this->objWikidisplay->showAuthors($author);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'validate_name':
                 $name = $this->getParam('name');
                 $divContent = $this->objWikidisplay->showValidateName($name);
@@ -317,21 +320,21 @@ class wiki extends controller {
                 $divContent = $this->objWikidisplay->showPreview($name, $content);
                 return $divContent;
                 break;
-                
+
             case 'deleted_page':
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showDeletedPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'check_lock':
                 $id = $this->getParam('id');
         		// If user can edit , then lock it and continue
         		$canEdit = $this->objLock->canUserEdit($id, $this->userId);
                 if($canEdit){
                     // If page is locked, force unlock
-                    $isLocked = $this->objLock->isEditLocked('tbl_wiki_pages', $id); 
+                    $isLocked = $this->objLock->isEditLocked('tbl_wiki_pages', $id);
                     if($isLocked){
                         $this->objLock->forceEditUnlock('tbl_wiki_pages', $id);
                 		$this->objLock->lockEdit('tbl_wiki_pages', $id, $this->userId);
@@ -342,38 +345,38 @@ class wiki extends controller {
                     return $this->objWikidisplay->showLockedMessage($id);
                 }
                 break;
-                
+
             case 'lock_page':
                 $id = $this->getParam('id');
                 $this->objLock->lockEdit('tbl_wiki_pages', $id, $this->userId);
                 return $this->objWikidisplay->showLockedMessage($id, 'keeplocked');
                 break;
-                
+
             case 'add_rating':
                 $name = $this->getParam('name');
                 $rating = $this->getParam('rating');
                 $this->objDbwiki->addRating($name, $rating);
                 return $this->objWikidisplay->showRating($name, TRUE);
                 break;
-                
+
             case 'view_ranking':
                 $templateContent = $this->objWikidisplay->showRanking();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'view_watchlist':
                 $templateContent = $this->objWikidisplay->showWatchlist();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'delete_watch':
                 $id =$this->getParam('id');
                 $this->objDbwiki->deleteWatchById($id);
                 return $this->nextAction('view_watchlist', array(), 'wiki');
                 break;
-                
+
             case 'update_watch':
                 $mode = $this->getParam('mode');
                 $name = $this->getParam('name');
@@ -383,27 +386,27 @@ class wiki extends controller {
                     return $this->objDbwiki->deleteWatchByName($name);
                 }
                 break;
-                
+
             case 'remove_watch':
                 $name = $this->getParam('name');
                 $userId = $this->getParam('id');
                 $this->objDbwiki->deleteWatchByName($name, $userId);
                 return $this->nextAction('', array(), 'wiki');
                 break;
-                
+
             case 'show_diff':
                 $name = $this->getParam('name');
                 $from = $this->getParam('from');
                 $to = $this->getParam('to');
                 return $this->objWikidisplay->showDiff($name, $from, $to);
                 break;
-                
+
             case 'view_links':
                 $templateContent = $this->objWikidisplay->showLinks();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'update_link':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name', $this->getParam('update_name'));
@@ -415,7 +418,7 @@ class wiki extends controller {
                 }
                 return $this->nextAction('view_links', array(), 'wiki');
                 break;
-                
+
             case 'update_post':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
@@ -431,7 +434,7 @@ class wiki extends controller {
                     'tab' => 6,
                 ), 'wiki');
                 break;
-                
+
             case 'delete_post':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
@@ -441,7 +444,7 @@ class wiki extends controller {
                     'tab' => 6,
                 ), 'wiki');
                 break;
-                
+
             case 'restore_post':
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
@@ -451,13 +454,13 @@ class wiki extends controller {
                     'tab' => 6,
                 ), 'wiki');
                 break;
-                
+
             case 'add_wiki':
                 $templateContent = $this->objWikidisplay->showAddWiki();
                 $this->setVarByRef('templateContent', $templateContent);
                 return 'template_tpl.php';
                 break;
-                
+
             case 'create_wiki':
                 $name = $this->getParam('name');
                 $desc = $this->getParam('desc');
@@ -465,13 +468,13 @@ class wiki extends controller {
                 $this->objDbwiki->addWiki($name, $desc, $visibility);
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
-                
+
             case 'select_wiki':
                 $wikiId = $this->getParam('wiki');
                 $this->setSession('wiki_id', $wikiId);
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
-                
+
             default:
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
