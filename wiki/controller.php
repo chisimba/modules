@@ -162,6 +162,9 @@ class wiki extends controller {
                 break;
 
             case 'add_page':
+                $objMk = $this->getObject('markitup', 'htmlelements');
+                $objMk->setType('chiki');
+                $this->appendArrayVar('headerParams',$objMk->show('id', 'input_content'));
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showAddPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
