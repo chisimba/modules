@@ -3,7 +3,9 @@
  *
  * Writing tools
  *
- * A suite of tools and plugins for other modules that provide functionality for learning and improving scientific writing. Much of the functionality of this module is made available via the Wiki module.
+ * A suite of tools and plugins for other modules that provide functionality
+ * for learning and improving scientific writing. Much of the functionality
+ * of this module is made available via the Wiki module.
  *
  * PHP version 5
  *
@@ -85,7 +87,7 @@ class writingtools extends controller
 
     /**
     *
-    * Intialiser for the writingtools controller
+    * Constructor for the writingtools controller
     * @access public
     *
     */
@@ -117,20 +119,17 @@ class writingtools extends controller
     {
         //Get action from query string and set default to view
         $action=$this->getParam('action', 'view');
-        // retrieve the mode (edit/add/translate) from the querystring
-        $mode = $this->getParam("mode", null);
-        // retrieve the sort order from the querystring
-        $order = $this->getParam("order", null);
-        /*
-        * Convert the action into a method (alternative to
-        * using case selections)
-        */
-        $method = $this->__getMethod($action);
-        /*
-        * Return the template determined by the method resulting
-        * from action
-        */
-        return $this->$method();
+        //Convert the action into a method (alternative to using case selections)
+        try {
+            $method = $this->_getMethod($action);
+            // Return the template determined by the method resulting from action
+            return $this->$method();
+        }
+        catch (customException $e)
+        {
+            customException::cleanUp();
+            exit;
+        }
     }
 
 
