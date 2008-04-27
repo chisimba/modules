@@ -121,7 +121,7 @@ class writingtools extends controller
         $action=$this->getParam('action', 'view');
         //Convert the action into a method (alternative to using case selections)
         try {
-            $method = $this->_getMethod($action);
+            $method = $this->__getMethod($action);
             // Return the template determined by the method resulting from action
             return $this->$method();
         }
