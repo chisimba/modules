@@ -125,6 +125,8 @@ class webpresent extends controller
     }
 
 
+
+
  public function __saveschedule()
     {
           $fileId= $this->getParam('id');
@@ -139,6 +141,29 @@ class webpresent extends controller
           }
           return $this->nextAction('home');
 }
+
+/**
+* This function generates a random string. This is used as id for the java slides server as well as
+* the client (applet)
+*/
+public function randomString($length)
+{
+    // Generate random 32 charecter string
+    $string = md5(time());
+
+    // Position Limiting
+    $highest_startpoint = 32-$length;
+
+    // Take a random starting point in the randomly
+    // Generated String, not going any higher then $highest_startpoint
+    $randomString = substr($string,rand(0,$highest_startpoint),$length);
+
+    return $randomString;
+
+}
+
+
+
  /**
      * ADDED by David Wafula  
      * Function to allow scheduling a presentation
@@ -163,13 +188,16 @@ class webpresent extends controller
      */ 
    public function __showpresenterapplet()
     {
-        //  if(!$this->slideServerRunning()){
-        //  $this->startSlidesServer();
-        //  }
+         $slideServerId=$this->randomString(32);
+          
+        if(!$this->slideServerRunning()){
+          $this->startSlidesServer($slideServerId);
+         }
           $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
+          $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
           return "presenter-applet.php";
  }
@@ -207,13 +235,16 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-        //  if(!$this->slideServerRunning()){
-      //    $this->startSlidesServer();
-    //      }
-         $id= $this->getParam('id');
+          $slideServerId=$this->randomString(32);
+          
+        if(!$this->slideServerRunning()){
+          $this->startSlidesServer($slideServerId);
+          }
+          $id= $this->getParam('id');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionid', $id);
+          $this->setVarByRef('slideServerId',$slideServerId);
           $this->setVarByRef('isPresenter', 'false');
 
           return "presenter-applet.php";
@@ -221,21 +252,19 @@ function in_str($needle, $haystack){
  /**
     *automaticaly try to start slides server
     */ 
- function startSlidesServer()
+ function startSlidesServer($slideServerId)
     {
     $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
     $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
     $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
     
-     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
-   
+    $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
   //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
-   $cmd = "java -Xms64m -Xmx128m -cp .:".    
+    $cmd = "java -Xms64m -Xmx128m -cp .:".    
     $this->objConfig->getModulePath().
-    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.client.SlidesServer >/dev/null &";
+    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.client.SlidesServer ".$slideServerId." >/dev/null &";
     system($cmd,$return_value);
-    
-    }
+  }
     /**
      * Method to display the search results
      */
