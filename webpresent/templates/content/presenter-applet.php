@@ -55,6 +55,8 @@
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=siteRoot value="'.$siteRoot.'">';
+
+   //echo '<param name=siteRoot value="http://chameleon.uwc.ac.za/app/usrfiles/webpresent/">';    
     echo '<param name=isWebPresent value="true">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';
@@ -65,6 +67,9 @@
     echo '<param name=rtcpport value="'.$rtcpport.'">';
     echo '<param name=sipport value="'.$sipport.'">';
     echo '<param name=sessionId value="'.$sessionid.'">';
+    echo '<param name=slideServerId value="'.$slideServerId.'">';
+    
+// echo '<param name=sessionId value="gen12Srv15Nme3_4074_1208767420">';
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
     echo '</applet>';
     echo '</center>';
