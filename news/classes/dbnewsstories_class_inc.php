@@ -1,17 +1,13 @@
 <?php
 
 /**
-*
-*
-*
+* Class to store News stories
 */
 class dbnewsstories extends dbtable
 {
 
     /**
-    *
-    *
-    *
+    * Constructor
     */
     public function init()
     {
@@ -26,20 +22,28 @@ class dbnewsstories extends dbtable
     }
 
     /**
-    *
-    *
-    *
+    * Method to add a news story
+    * @param string $storyTitle Title of the story
+    * @param date $storyDate Date of the Story
+    * @param string $storyCategory Category story falls under
+    * @param string $storyLocation Place where story took place
+    * @param string $storyText News Story
+    * @param string $storySource Source of item
+    * @param string $storyImage Image relating to story
+    * @param array $tags Tags for the sotry
+    * @param array $keyTags Key Tags
+    * @param date/time $publishDate Date when story should be published
     */
     public function addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL)
     {
 
         if ($publishDate == NULL) {
-			$publishDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
-		}
-		
+            $publishDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        }
+        
         $userId = $this->objUser->userId();
         
-		$data = array(
+        $data = array(
             'storytitle' => stripslashes($storyTitle),
             'storydate' => $storyDate,
             'storycategory' => $storyCategory,
@@ -87,7 +91,7 @@ class dbnewsstories extends dbtable
             
             // Add to Index
             $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents,
-            $teaser, $module, $userId, NULL, NULL, NULL, NULL, $additionalSearchIndex);
+            $teaser, $module, $userId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
 
             return $storyId;
         } else {
@@ -113,9 +117,19 @@ class dbnewsstories extends dbtable
 
 
     /**
-    *
-    *
-    *
+    * Method to update a news story
+    * 
+    * @param string $id Record Id
+    * @param string $storyTitle Title of the story
+    * @param date $storyDate Date of the Story
+    * @param string $storyCategory Category story falls under
+    * @param string $storyLocation Place where story took place
+    * @param string $storyText News Story
+    * @param string $storySource Source of item
+    * @param string $storyImage Image relating to story
+    * @param array $tags Tags for the sotry
+    * @param array $keyTags Key Tags
+    * @param date/time $publishDate Date when story should be published
     */
     public function updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate)
     {
@@ -168,7 +182,7 @@ class dbnewsstories extends dbtable
             
             // Add to Index
             $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents,
-            $teaser, $module, $userId, NULL, NULL, NULL, NULL, $additionalSearchIndex);
+            $teaser, $module, $userId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $additionalSearchIndex);
             
             return $result;
         } else {
@@ -491,14 +505,14 @@ WHERE tbl_news_keywords.keyword = \''.$keyword.'\' ORDER BY storydate DESC';
 LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid)
 LEFT JOIN tbl_files ON (tbl_news_stories.storyimage=tbl_files.id)
 WHERE tbl_news_stories.storycategory = \''.$category.'\' ';
-		
-		
-		if ($includeFutureStories == FALSE) {
-			$sql .=  ' AND dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\' ';
-		}
-		
-		$sql .= ' ORDER BY '.$orderby;
-		
+        
+        
+        if ($includeFutureStories == FALSE) {
+            $sql .=  ' AND dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\' ';
+        }
+        
+        $sql .= ' ORDER BY '.$orderby;
+        
         return $this->getArray($sql);
     }
 
@@ -562,28 +576,28 @@ ORDER BY storydate DESC';
 
         return $this->getArray($sql);
     }
-	
-	public function getMonthStories($category, $month=NULL, $year=NULL)
-	{
-		if ($month == NULL || !is_int($month)) {
-			$month = date('m');
-		}
-		
-		if ($year == NULL || !is_int($year)) {
-			$year = date('Y');
-		}
-		
-		$startPeriod = $year.'-'.$month.'-01';
-		$endPeriod = $year.'-'.$month.'-31';
-		
-		$sql = 'SELECT tbl_news_stories.*, categoryname, name as location FROM tbl_news_stories
-		INNER JOIN tbl_news_categories ON (tbl_news_stories.storycategory=tbl_news_categories.id)
-		LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid)
-		WHERE tbl_news_stories.storycategory = \''.$category.'\'  AND dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\' 
-		AND storydate >= \''.$startPeriod.'\'  AND storydate <= \''.$endPeriod.'\' ORDER BY storydate';
-		
+    
+    public function getMonthStories($category, $month=NULL, $year=NULL)
+    {
+        if ($month == NULL || !is_int($month)) {
+            $month = date('m');
+        }
+        
+        if ($year == NULL || !is_int($year)) {
+            $year = date('Y');
+        }
+        
+        $startPeriod = $year.'-'.$month.'-01';
+        $endPeriod = $year.'-'.$month.'-31';
+        
+        $sql = 'SELECT tbl_news_stories.*, categoryname, name as location FROM tbl_news_stories
+        INNER JOIN tbl_news_categories ON (tbl_news_stories.storycategory=tbl_news_categories.id)
+        LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid)
+        WHERE tbl_news_stories.storycategory = \''.$category.'\'  AND dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\' 
+        AND storydate >= \''.$startPeriod.'\'  AND storydate <= \''.$endPeriod.'\' ORDER BY storydate';
+        
         return $this->getArray($sql);
-	}
+    }
 
     /**
     *
@@ -792,8 +806,8 @@ ORDER BY storydate DESC';
             }
         }
     }
-	
-	
+    
+    
 
 
 }
