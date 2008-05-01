@@ -25,7 +25,7 @@ class block_dklasttweet extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
-        $this->title=$this->objLanguage->languageText("mod_twitter_lasttweet", "twitter");
+        $this->title=$this->objLanguage->languageText("mod_dkeatscom_lasttweet", "dkeatscom");
     }
 
     /**
@@ -33,9 +33,9 @@ class block_dklasttweet extends object
     */
     function show()
 	{
-        $objConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $userName= $objConfig->getValue('twittername', 'dkeats.com');
-        $password = $objConfig->getValue('twitterpassword', 'dkeats.com');
+        $objCf = $this->getObject('dbsysconfig', 'sysconfig');
+        $userName= $objCf->getValue('mod_dkeatscom_twittername', 'dkeatscom');
+        $password = $objCf->getValue('mod_dkeatscom_twitterpassword', 'dkeatscom');
         if ($userName!==NULL && $password !==NULL) {
             $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
             $objTwitterRemote->initializeConnection($userName, $password);
