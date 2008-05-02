@@ -24,7 +24,9 @@ class block_ohloh extends object
     function init()
     {
         //Set the title -
-        $this->title='Ohloh: Chisimba';
+        $this->title='';
+        $this->blockType = "none";
+
     }
 
     /**
@@ -32,6 +34,10 @@ class block_ohloh extends object
     */
     function show()
 	{
-       return "<script type=\"text/javascript\" src=\"http://www.ohloh.net/projects/5263/widgets/project_thin_badge\"></script>";
+       return "<span style=\"text-align: center;\">"
+         . "<p style=\"text-align: center;\">"
+         . "<script type=\"text/javascript\" "
+         . "src=\"http://www.ohloh.net/projects/5263/widgets/project_thin_badge\">"
+         . "</p></span></script>";
     }
 }
