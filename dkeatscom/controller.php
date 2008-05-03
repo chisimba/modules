@@ -148,6 +148,16 @@ class dkeatscom extends controller
         return "dump_tpl.php";
     }
 
+    private function __loadwidget()
+    {
+        $widget = $this->getParam('widget', 'errorwidget');
+        $objWidget = $this->getObject('widget_' . $widget);
+        $str = $objWidget->show();
+        $this->setVarByRef('str', $str);
+        $this->setPageTemplate(NULL);
+        return "dump_tpl.php";
+    }
+
     /**
     *
     * Method to return an error when the action is not a valid
