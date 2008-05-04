@@ -8,29 +8,27 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* The class provides a hello world block to demonstrate
-* how to use blockalicious
+* The class provides a shelfari block
 *
 * @author Derek Keats
 *
 */
-class block_xxx extends object
+class block_shelfari extends object
 {
-    var $title;
+    public $title;
+    public $blockType;
 
     /**
     * Constructor for the class
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject('language', 'language');
-        $this->objUser = $this->getObject('user', 'security');
         $this->title="";
         $this->blockType = "none";
     }
 
     /**
-    * Method to output a Tweet block
+    * Method to output block
     */
     public function show()
 	{
@@ -39,6 +37,6 @@ class block_xxx extends object
 
     private function getWidget()
     {
-        return '';
+        return '<embed width="206" height="300" src="http://www.shelfari.com/ws/shelf.swf" wmode="transparent" FlashVars="UserName=dkeats&ShelfType=list&verE=s1.5&ListType=isread&booksize=small&AmazonAssociate=dkeatscom-20&Alpha=0&BGColor=FFFFFF"></embed>';
     }
 }

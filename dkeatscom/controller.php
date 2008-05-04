@@ -115,6 +115,7 @@ class dkeatscom extends controller
     {
         //Get action from query string and set default to view
         $action=$this->getParam('action', 'view');
+        die($action);
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -153,6 +154,27 @@ class dkeatscom extends controller
         $widget = $this->getParam('widget', 'errorwidget');
         $objWidget = $this->getObject('widget_' . $widget);
         $str = $objWidget->show();
+        $this->setVarByRef('str', $str);
+        $this->setPageTemplate(NULL);
+        return "dump_tpl.php";
+    }
+
+    private function __testwidget()
+    {
+        $widget = $this->getParam('widget', 'errorwidget');
+        $objWidget = $this->getObject('widget_' . $widget);
+        $widgetUri = $this->uri(array(
+          'action' => 'loadwidget',
+          'widget' => $widget));
+        $widgetUri = str_replace('&', '&amp;', $widgetUri);
+        $c   = curl_init($widgetUri);
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+        $str = curl_exec($c);
+        curl_close($c);
+        //$widgetUri = str_replace('&', '&amp;', $widgetUri);
+        //echo "<br /><br /><br />" . $widgetUri . "<br />";
+        //$str = file_get_contents($widgetUri);
+        die(htmlentities($str));
         $this->setVarByRef('str', $str);
         $this->setPageTemplate(NULL);
         return "dump_tpl.php";
@@ -232,16 +254,7 @@ class dkeatscom extends controller
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
-            case 'view':
-                return FALSE;
-                break;
-            default:
-                return TRUE;
-                break;
-        }
-     }
+        return FALSE;
+    }
 }
 ?>
