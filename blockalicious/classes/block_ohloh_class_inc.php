@@ -38,6 +38,6 @@ class block_ohloh extends object
          . "<p style=\"text-align: center;\">"
          . "<script type=\"text/javascript\" "
          . "src=\"http://www.ohloh.net/projects/5263/widgets/project_thin_badge\">"
-         . "</p></span></script>";
+         . "</script></p></span>";
     }
 }
