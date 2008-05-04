@@ -37,13 +37,13 @@ class block_amazon extends object
 
     private function getWidget()
     {
-        return '<SCRIPT charset="utf-8" type="text/javascript" ' .
+        return '<div style="clear: both"><SCRIPT charset="utf-8" type="text/javascript" ' .
                 'src="http://ws.amazon.com/widgets/q?ServiceVersion=' .
                 '20070822&MarketPlace=US&ID=V20070822/US/dkeatscom-20/8006/' .
                 '54263f20-de60-40eb-9f12-dbe38a4a8b1c"> </SCRIPT> <NOSCRIPT>' .
                 '<A HREF="http://ws.amazon.com/widgets/q?ServiceVersion=' .
                 '20070822&MarketPlace=US&ID=V20070822%2FUS%2Fdkeatscom-' .
                 '20%2F8006%2F54263f20-de60-40eb-9f12-dbe38a4a8b1c&Operation=' .
-                'NoScript">Amazon.com Widgets</A></NOSCRIPT>';
+                'NoScript">Amazon.com Widgets</A></NOSCRIPT></div>';
     }
 }

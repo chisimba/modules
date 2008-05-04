@@ -37,11 +37,11 @@ class block_amazonkindle extends object
 
     private function getWidget()
     {
-        return '<iframe src="http://rcm.amazon.com/e/cm?t=dkeatscom-20&' .
+        return '<div style="clear: both"><iframe src="http://rcm.amazon.com/e/cm?t=dkeatscom-20&' .
                 'o=1&p=8&l=as1&asins=B000FI73MA&fc1=000000&IS2=1&lt1=' .
                 '_blank&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" ' .
                 'style="width:120px;height:240px;" scrolling="no" ' .
                 'marginwidth="0" marginheight="0" frameborder="0">' .
-                '</iframe>';
+                '</iframe></div><br />';
     }
 }

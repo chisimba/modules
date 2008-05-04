@@ -37,12 +37,12 @@ class block_shelfari extends object
 
     private function getWidget()
     {
-        return '<embed width="206" height="300" ' .
+        return '<div style="clear: both"><embed width="206" height="300" ' .
                 'src="http://www.shelfari.com/ws/shelf.swf" ' .
                 'wmode="transparent" FlashVars="UserName=dkeats&ShelfType=' .
                 'list&verE=s1.5&ListType=isread&booksize=small&' .
                 'AmazonAssociate=dkeatscom-20&Alpha=0&BGColor=FFFFFF">' .
                 '</embed> <a href="http://www.amazon.com?%5Fencoding=UTF8&tag=dkeatscom-20">' .
-                'Purchase books<br />from Amazon</a>';
+                'Purchase books<br />from Amazon</a></div>';
     }
 }

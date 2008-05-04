@@ -37,8 +37,8 @@ class block_amazonsearch extends object
 
     private function getWidget()
     {
-        return '<iframe src="http://rcm.amazon.com/e/cm?t=dkeatscom-20' .
+        return '<div style="clear: both"><iframe src="http://rcm.amazon.com/e/cm?t=dkeatscom-20' .
                 '&o=1&p=27&l=qs1&f=ifr" width="180" height="150" ' .
-                'frameborder="0" scrolling="no"></iframe>';
+                'frameborder="0" scrolling="no"></iframe><br /></div>';
     }
 }
