@@ -44,8 +44,6 @@ class block_amazon extends object
                 '<A HREF="http://ws.amazon.com/widgets/q?ServiceVersion=' .
                 '20070822&MarketPlace=US&ID=V20070822%2FUS%2Fdkeatscom-' .
                 '20%2F8006%2F54263f20-de60-40eb-9f12-dbe38a4a8b1c&Operation=' .
-                'NoScript">Amazon.com Widgets</A></NOSCRIPT>' .
-                '<a href="http://www.amazon.com?%5Fencoding=UTF8&tag=dkeatscom-20">' .
-                'Purchase books<br />from Amazon</a>';
+                'NoScript">Amazon.com Widgets</A></NOSCRIPT>';
     }
 }
