@@ -262,8 +262,9 @@ function in_str($needle, $haystack){
   //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
     $cmd = "java -Xms64m -Xmx128m -cp .:".    
     $this->objConfig->getModulePath().
-    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.client.SlidesServer ".$slideServerId." >/dev/null &";
-    system($cmd,$return_value);
+    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.tcp.client.applet.SlidesServer ".$slideServerId." >/dev/null &";
+//echo $cmd;  
+  system($cmd,$return_value);
   }
     /**
      * Method to display the search results
