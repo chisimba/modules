@@ -244,7 +244,7 @@ class dbnewscategories extends dbtable
         $this->loadClass('hiddeninput', 'htmlelements');
 
         // Check If User is editing a category
-        if ($catId != '') {
+        if ($catId != NULL) {
             // Get Category
             $category = $this->getCategory($catId);
 
@@ -269,14 +269,14 @@ class dbnewscategories extends dbtable
             $formAction = 'savebasiccategory';
         }
 
-        $objCache->setup('addnewcategorybasicform', 'news', 1000);
-        $basicForm = $objCache->get();
+        //$objCache->setup('addnewcategorybasicform', 'news', 1000);
+        //$basicForm = $objCache->get();
         
         // Start Basic Form
-        if ($catId==NULL && $id==NULL && $basicForm != FALSE)
-        {
+        //if ($catId==NULL && $id==NULL && $basicForm != FALSE)
+        //{
             
-        } else {
+        //} else {
         
             $basicForm = new form ('basicsetup', $this->uri(array('action'=>$formAction)));
     
@@ -350,20 +350,20 @@ class dbnewscategories extends dbtable
             $basicForm = $basicForm->show();
             
             // Store Contents into a a cache
-            $objCache->set($basicForm);
-        }
+            //$objCache->set($basicForm);
+        //}
         // End Basic Form
 
 
         // Start Advanced Form
-        $objCache->setup('addnewadvancecategoryform', 'news', 1000);
+        /*$objCache->setup('addnewadvancecategoryform', 'news', 1000);
         $advanceForm = $objCache->get();
         
         // Start Basic Form
         if ($catId==NULL && $id==NULL && $advanceForm != FALSE)
         {
             
-        } else {
+        } else {*/
             if (isset($category['id'])) {
                 $formAction = 'updateadvancecategory';;
             } else {
@@ -644,8 +644,8 @@ class dbnewscategories extends dbtable
             $advanceForm = $advancedForm->show();
             
             // Store Contents into a a cache
-            $objCache->set($advanceForm);
-        }
+            //$objCache->set($advanceForm);
+        //}
 
         // End Advanced Form
 
