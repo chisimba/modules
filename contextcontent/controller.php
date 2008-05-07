@@ -138,7 +138,7 @@ class contextcontent extends controller
         {
             
             case 'notincontext':
-                return 'tpl_notincontext.php';
+                return 'notincontext_tpl.php';
             case 'switchcontext':
                 die('Switch Context'); // Fix Up
             case 'addpage':
@@ -217,16 +217,16 @@ class contextcontent extends controller
             
             // If user can create chapter, show create chapter form
             if ($this->isValid('savechapter')) {
-                return 'tpl_nochapters.php';
+                return 'nochapters_tpl.php';
             } else { // Else notify user there is no content
-                return 'tpl_nocontent.php';
+                return 'nocontent_tpl.php';
             }
         } else {
             $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
             $this->setVarByRef('chapters', $chapters);
             
             $this->setLayoutTemplate('layout_firstpage_tpl.php');
-            return 'tpl_listchapters.php';
+            return 'listchapters_tpl.php';
         }
     }
     
@@ -240,7 +240,7 @@ class contextcontent extends controller
         
         $this->setLayoutTemplate('layout_firstpage_tpl.php');
         
-        return 'tpl_addeditchapter.php';
+        return 'addeditchapter_tpl.php';
     }
     
 
@@ -284,7 +284,7 @@ class contextcontent extends controller
             
             $this->setLayoutTemplate('layout_firstpage_tpl.php');
             
-            return 'tpl_addeditchapter.php';
+            return 'addeditchapter_tpl.php';
         }
     }
     
@@ -349,7 +349,7 @@ class contextcontent extends controller
                 
                 $this->setLayoutTemplate('layout_firstpage_tpl.php');
                 
-                return 'tpl_deletechapter.php';
+                return 'deletechapter_tpl.php';
             } else {
                 return $this->nextAction(NULL, array('error'=>'chapternotinthiscontext'));
             }
@@ -439,7 +439,7 @@ class contextcontent extends controller
         $tree = $this->objContentOrder->getTree($this->contextCode, $chapter, 'dropdown');
         $this->setVarByRef('tree', $tree);
         
-        return 'tpl_addeditpage.php';
+        return 'addeditpage_tpl.php';
     }
     
 
@@ -515,7 +515,7 @@ class contextcontent extends controller
         $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
         $this->setVarByRef('chapters', $chapters);
         
-        return 'tpl_viewpage.php';
+        return 'viewpage_tpl.php';
     }
     
 
@@ -546,7 +546,7 @@ class contextcontent extends controller
         $this->setVar('mode', 'edit');
         $this->setVar('formaction', 'updatepage');
         
-        return 'tpl_addeditpage.php'; 
+        return 'addeditpage_tpl.php'; 
     }
     
     /**
@@ -612,7 +612,7 @@ class contextcontent extends controller
         
         $this->setVarByRef('page', $page);
         
-        return 'tpl_deletepage.php'; 
+        return 'deletepage_tpl.php'; 
     }
     
 
@@ -979,7 +979,7 @@ class contextcontent extends controller
         $this->setVarByRef('searchText', $searchText);
         $this->setVarByRef('searchResults', $searchResults);
         
-        return 'tpl_searchresults.php';
+        return 'searchresults_tpl.php';
     }
     
     /**

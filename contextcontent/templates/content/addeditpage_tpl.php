@@ -48,6 +48,7 @@ $formTable->endRow();
 
 $htmlarea = $this->newObject('htmlarea', 'htmlelements');
 $htmlarea->setName('pagecontent');
+$htmlarea->context = TRUE;
 if ($mode == 'add') {
     $htmlarea->setContent('<h1>'.$this->objLanguage->languageText('mod_contextcontent_addtitle','contextcontent').'</h1>'.'<p>'.$this->objLanguage->languageText('mod_contextcontent_startcontent','contextcontent').'</p>');
 } else {

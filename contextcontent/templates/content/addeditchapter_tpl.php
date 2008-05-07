@@ -35,6 +35,7 @@ $table->endRow();
 $label = new label ($this->objLanguage->languageText('mod_contextcontent_aboutchapter_introduction','contextcontent'), 'input_aboutchapter');
 $htmlArea = $this->newObject('htmlarea', 'htmlelements');
 $htmlArea->name = 'intro';
+$htmlArea->context = TRUE;
 
 if ($mode == 'edit') {
     $htmlArea->value = $chapter['introduction'];
