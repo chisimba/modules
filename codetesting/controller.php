@@ -110,7 +110,7 @@ class codetesting extends controller
     public function dispatch()
     {
         //Get action from query string and set default to view
-        $action=$this->getParam('action', 'view');
+        $action=$this->getParam('action', 'truncate');
         // retrieve the mode (edit/add/translate) from the querystring
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
@@ -129,6 +129,14 @@ class codetesting extends controller
 
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
+    private function __truncate()
+    {
+        $objTruncate = $this->getObject('jqtruncate', 'htmlelements');
+        $txt="<div class=\"shorter\">Now is the time for all good cookie monsters to eat at Google at Alices Restaurant where you can get anything that you want. Just come on in, sit right down, just have a mile from the mean old town. Walk rite up and have a blast, just don't eat it all too fast.</div>";
+        $str = $objTruncate->show($txt, "shorter", 40, "More...", "...Less");
+        $this->setVarByRef('str', $str);
+        return "dump_tpl.php";
+    }
 
     private function __view()
     {
