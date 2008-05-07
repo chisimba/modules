@@ -719,7 +719,7 @@ class blog extends controller
                     //where are we getting this from
                     $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
                     //feed author
-                    $itemAuthor = htmlentities($this->objUser->email($userid));
+                    $itemAuthor = htmlentities($this->objUser->userName($userid)."<".$this->objUser->email($userid).">");
                     //add this item to the feed
                     $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
                 }
