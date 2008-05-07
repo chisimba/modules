@@ -360,6 +360,28 @@ class blog extends controller
                     return 'randblog_tpl.php';
                     break;
                 }
+                
+                // the blog aggregator case:
+                if (!empty($blog_action) && $blog_action == 'aggregate') {
+                    
+                	// get the latest posts and display em...
+                	$this->objLanguage = $this->getObject('language', 'language');
+        			$this->blogPosts = $this->getObject('blogposts', 'blog');
+        			$posts = $this->blogPosts->showLastTenPosts();
+        			// var_dump($posts);
+        			$this->setVarByRef('posts', $posts);
+        			
+        			// dummy vals so tpl doesn't complain
+        			$this->setVarByRef('stickypost', NULL);
+                    //send all that to the template
+                    $this->setVarByRef('rss', NULL);
+                    $this->setVarByRef('latestpost', NULL);
+                    $this->setVarByRef('linkcats', NULL);
+                    $this->setVarByRef('cats', NULL);
+                	return 'randblog_tpl.php';
+                    break;
+                }
+               
                 //check if the user is logged in
                 if ($this->objUser->isLoggedIn() == TRUE) {
                     //get the action
@@ -697,7 +719,7 @@ class blog extends controller
                     //where are we getting this from
                     $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
                     //feed author
-                    $itemAuthor = htmlentities($this->objUser->fullname($userid));
+                    $itemAuthor = htmlentities($this->objUser->email($userid));
                     //add this item to the feed
                     $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor);
                 }
