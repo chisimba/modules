@@ -79,7 +79,7 @@ class podcast extends controller
             case 'downloadfile':
                 return $this->downloadFile($this->getParam('id'));
             case 'byuser':
-                return $this->showUserPodcasts($this->objUser->userName());
+                return $this->showUserPodcasts($this->getParam('id'));
 	    //case 'admin':
 		//return $this->showAllPodcasts($this->getParam('id'));
             case 'rssfeed':
