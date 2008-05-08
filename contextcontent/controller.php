@@ -724,7 +724,7 @@ class contextcontent extends controller
         if ($firstPage == FALSE) {
             $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
             $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
-            return 'tpl_errormessage.php';
+            return 'errormessage_tpl.php';
         } else {
             return $this->nextAction('viewpage', array('id'=>$firstPage['id'], 'message'=>$this->getParam('message')));
         }
@@ -767,7 +767,7 @@ class contextcontent extends controller
             $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
             $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
             
-            return 'tpl_errormessage.php';
+            return 'errormessage_tpl.php';
         } else {
             // Create Absolute Path to where PDF is stored
             $destination = $this->objConfig->getcontentBasePath().'/contextcontent/'.$contextCode.'/chapter_'.$id.'.pdf';
@@ -883,7 +883,7 @@ class contextcontent extends controller
                     // Else Show Error Message
                     $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_couldnotcreatepdf', 'contextcontent', 'Could not create PDF Document'));
                     $this->setVar('errorMessage', ' ');
-                    return 'tpl_errormessage.php';
+                    return 'errormessage_tpl.php';
                 }
             }
         }
