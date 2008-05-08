@@ -71,7 +71,7 @@ $dropdown = new dropdown('id');
 
 $chapterList = '<div id="allchapters">';
 
-//print_r($chapters);
+$objWashout = $this->getObject('washout', 'utilities');
 
 foreach ($chapters as $chapter)
 {
@@ -155,7 +155,7 @@ foreach ($chapters as $chapter)
             $content .= '<p class="warning"><strong>'.$this->objLanguage->languageText('mod_contextcontent_note','contextcontent').': </strong>'.$notice.'</p>';
         }
         
-        $content .= $chapter['introduction'];
+        $content .= $objWashout->parseText($chapter['introduction']);
         
         $chapterOptions = array();
         
