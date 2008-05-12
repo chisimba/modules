@@ -46,16 +46,18 @@ if (empty($records)) {
         $objTableClass->startRow();
        //add title
         $title = $record['title'] ;
+        $titleLink = new link($this->uri(array('action' => '', 'id'=>$record['id'])));
+        $titleLink->link = $title;
         $records == $objUser->userId();
-	$objTableClass->addCell('<b>'.$rowcount.': '.$title.'</b>', '', 'left', 'left', $class,'colspan=3');
-	$objTableClass->endRow();
-
- 	$objTableClass->startRow();
+		$objTableClass->addCell('<b>'.$rowcount.': '.$titleLink->show().'</b>', '', 'left', 'left', $class,'colspan=3');
+		$objTableClass->endRow();
+	
+	 	$objTableClass->startRow();
         //add message
         $message = $record['message'];
         $objTableClass->addCell('&nbsp; &nbsp; '.$message, '', 'left', 'left', $class,'colspan=3');
 
-	$objTableClass->endRow();
+		$objTableClass->endRow();
 
  	
 	

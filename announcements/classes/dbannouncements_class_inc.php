@@ -54,8 +54,7 @@ class dbAnnouncements extends dbTable
      */
     public function listAll($contextid,$start) 
     {       
-        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT $start,5 ");
-        
+        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,$start ");
     return $userrec;
     }
     public function getLastRow($contextid) 
@@ -202,12 +201,32 @@ class dbAnnouncements extends dbTable
 		'contextid' => $contextid,
             
         );
+
         if (empty($title) && empty($message)) {
             return "add_tpl.php";
         } else {
-            return $this->insert($arrayOfRecords, 'tbl_announcements');
+            $ins = $this->insert($arrayOfRecords, 'tbl_announcements');
+
+            // Add to Search
+	        $objIndexData = $this->getObject('indexdata', 'search');
+	        
+	        // Prep Data
+	        $docId = 'announcement_entry_'.$ins;
+	        $docDate = strftime('%Y-%m-%d %H:%M:%S', $arrayOfRecords['createdOn']);
+	        $url = $this->uri(array('action'=>'', 'id'=>$ins), 'announcements');
+	        $title = $title;
+	        $contents = $title.': '.$message;
+	        $teaser = $message;
+	        $module = 'announcements';
+	        $userId = $arrayOfRecords['createdBy'];
+	        $context = $arrayOfRecords['contextid'];
+	        
+	        // Add to Index
+	        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+	        
+	        return $ins;
         }
-    }
+	}
     /**
      * Deletes a record from the tbl_announcements
      *
@@ -215,7 +234,9 @@ class dbAnnouncements extends dbTable
      */
     public function deleteRec($id) 
     {
-        return $this->delete('id', $id, 'tbl_announcements');
+        $this->delete('id', $id, 'tbl_announcements');
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex('announcement_entry_'.$id);
     }
     /**
      * Updates a record to the tbl_announcements
@@ -226,7 +247,25 @@ class dbAnnouncements extends dbTable
      */
     public function updateRec($id, $arrayOfRecords) 
     {
-        return $this->update('id', $id, $arrayOfRecords, 'tbl_announcements');
-    }
+        $this->update('id', $id, $arrayOfRecords, 'tbl_announcements');
+        
+        $announceRow = $this->getRow('id', $id);
+        // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        // Prep Data
+        $docId = 'announcement_entry_'.$id;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', $announceRow['createdOn']);
+        $url = $this->uri(array('action'=>'', 'id'=>$ins), 'announcements');
+        $title = $arrayOfRecords['title'];
+        $contents = $arrayOfRecords['title'].': '.$arrayOfRecords['message'];
+        $teaser = $arrayOfRecords['message'];
+        $module = 'announcements';
+        $userId = $announceRow['createdBy'];
+        $context = $announceRow['contextid'];
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+	}
 }
 ?>

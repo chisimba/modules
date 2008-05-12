@@ -99,11 +99,11 @@ class announcements extends controller
         try {
             $this->objAnnouncementsTools = $this->getObject('announcementsTools','announcements');
             $this->objUser = $this->getObject('user', 'security');
-	    $this->objContext = $this->getObject('dbcontext','context');
- 	    $this->objContextUsers = $this->getObject('managegroups','contextgroups');
- 	    $this->objSendMail = $this->getObject('email','mail');
+	    	$this->objContext = $this->getObject('dbcontext','context');
+ 	   	 	$this->objContextUsers = $this->getObject('managegroups','contextgroups');
+ 	    	$this->objSendMail = $this->getObject('email','mail');
             $this->objDbAnnouncements = $this->getObject('dbAnnouncements', 'announcements');
-	    $this->objDate = $this->newObject('dateandtime', 'utilities');
+	    	$this->objDate = $this->newObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -127,141 +127,133 @@ class announcements extends controller
 		$isInContext=$this->objContext->isInContext();
 		 if($isInContext)
   		 {
-   		 $this->contextCode=$this->objContext->getContextCode();
-   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
+	   		 $this->contextCode=$this->objContext->getContextCode();
+	   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
    		 }
-                 else
-                 $this->contextid="root";
+         else
+        	 $this->contextid="root";
 
-		$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
-		
-		$contextid=$this->contextid;
-                $this->setVarByRef("contextCode",$this->contextCode);
+			 $contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
+			
+			 $contextid=$this->contextid;
+             $this->setVarByRef("contextCode",$this->contextCode);
 		
 	switch ($action) {
             default:
             case 'default':
-		//set start to 0
-		//@param integer $start to indicate start of Sql Limit
-		$start=0;
-                $id=$this->getParam('id',null);
-               
-                if(empty($id))
-                {
-                $lastentry=$this->objDbAnnouncements->getLastRow($contextid);
-                $id=$lastentry[0]['id'];
-                }
-                $record = $this->objDbAnnouncements->listSingle($id);
-                $this->setVarByRef('record', $record);
-                return 'view_tpl.php';
-                break;
-            // Case to add an entry
-	    case 'archive':
-	    //set start to 5
-	    //@param integer $start to indicate start of Sql Limit
-	    $start=5;
-	    $records = $this->objDbAnnouncements->listAll($contextid,$start);
-            $this->setVarByRef('records', $records);	
-	    return 'archive_tpl.php';	
-	    break;
-            case 'add';
-            $userId = $this->objUser->userId();
-            $title = htmlentities($this->getParam('title') , ENT_QUOTES);
-            $message = htmlentities($this->getParam('message') , ENT_QUOTES);
-            $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
-            $createdby = $this->objUser->userId();
-            $contextid=$contextid;
-            
-            
-       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
-	    //prepare $RecipientList to send mails
-	    $subject=$title;
- 
-	    //array to contain recipients
-	    $RecipientList=array();
-            
-	    //count the number of context users if in context
-	    if($isInContext)
-            {
-            $count=count($contextusers);
-            //loop thro array context users to get each users id
-                for($i=0;$i<$count;$i++)
-                {
-                    $contextUserId=$contextusers[$i]['userid'];
-        
-                    //get student email address, and add them to array
-                    $contextUserEmail=$this->objUser->email($contextUserId);
-                    array_push($RecipientList,$contextUserEmail);  
-                   
-                }
-            
-            
-            }
-            else
-            {
-            $sysUsers=$this->objUser->getAll();
-            foreach($sysUsers as $sysUser)
-            {
-             //get student email address, and add them to array
-            $UserEmail=$this->objUser->email($sysUser['userid']);
-            array_push($RecipientList,$UserEmail);         
-            }        
-         
-            
-            }
-           
-	   
-            //set recipient list
-                $this->objSendMail->setValue('bc', $RecipientList);
-             //get sender's email address
-                $SenderEmail=$this->objUser->email($userId);
-                 $this->objSendMail->setValue('from', $SenderEmail);
-                //get sender's fullnames
-                 $fromFullname= $this->objUser->fullname($userId);
-                //set sender'sfullname 
+				//set start to 0
+				//@param integer $start to indicate start of Sql Limit
+				$start=0;
+		        $id=$this->getParam('id',null);
+		               
+	            if(empty($id))
+	            {
+	                $lastentry=$this->objDbAnnouncements->getLastRow($contextid);
+	                $id=$lastentry[0]['id'];
+	            }
+	                $record = $this->objDbAnnouncements->listSingle($id);
+	                $this->setVarByRef('record', $record);
+	            return 'view_tpl.php';
+            break;
+	            // Case to add an entry
+		    case 'archive':
+			    //set start to 5
+			    //@param integer $start to indicate start of Sql Limit
+			    $start=5;
+			    $records = $this->objDbAnnouncements->listAll($contextid,$start);
+		        $this->setVarByRef('records', $records);	
+		    	return 'archive_tpl.php';	
+		    	break;
+	        case 'add';
+	            $userId = $this->objUser->userId();
+	            $title = htmlentities($this->getParam('title') , ENT_QUOTES);
+	            $message = htmlentities($this->getParam('message') , ENT_QUOTES);
+	            $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
+	            $createdby = $this->objUser->userId();
+	            $contextid=$contextid;
+	            
+	            
+	       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
+			    //prepare $RecipientList to send mails
+			    $subject=$title;
+		 
+			    //array to contain recipients
+			    $RecipientList=array();
+		            
+			    //count the number of context users if in context
+			    if($isInContext)
+		        {
+		            $count=count($contextusers);
+	            	//loop thro array context users to get each users id
+	                for($i=0;$i<$count;$i++)
+	                {
+	                    $contextUserId=$contextusers[$i]['userid'];
+	        
+	                    //get student email address, and add them to array
+	                    $contextUserEmail=$this->objUser->email($contextUserId);
+	                    array_push($RecipientList,$contextUserEmail);                     
+	                }
+		        }
+	           	else
+	            {
+		            $sysUsers=$this->objUser->getAll();
+		            foreach($sysUsers as $sysUser)
+		            {
+		             //get student email address, and add them to array
+		            $UserEmail=$this->objUser->email($sysUser['userid']);
+		            array_push($RecipientList,$UserEmail);         
+		            }        
+	            }
+               //set recipient list
+               $this->objSendMail->setValue('bc', $RecipientList);
+               //get sender's email address
+               $SenderEmail=$this->objUser->email($userId);
+               $this->objSendMail->setValue('from', $SenderEmail);
+               //get sender's fullnames
+               $fromFullname= $this->objUser->fullname($userId);
+               //set sender'sfullname 
                $this->objSendMail->setValue('fromName', $fromFullname);
-                //set email subject
-                $this->objSendMail->setValue('subject', $subject);
-                //set email body
-                $this->objSendMail->setValue('body', $message);
-                //emailAltBody
-                $this->objSendMail->setValue('altBody', '');
-                //email mailer
-                $this->objSendMail->setValue('mailer', 'mail');
-                //now send emails
+               //set email subject
+               $this->objSendMail->setValue('subject', $subject);
+               //set email body
+               $this->objSendMail->setValue('body', $message);
+               //emailAltBody
+               $this->objSendMail->setValue('altBody', '');
+               //email mailer
+               $this->objSendMail->setValue('mailer', 'mail');
+               //now send emails
                $this->objSendMail->send();
-	   
-	    $this->nextAction('');
-            break;
-        // Link to the template
-        case 'link':
-            return 'add_tpl.php';
-            break;
-        // Case to get the information from the form
-        case 'edit':
-            $id = html_entity_decode($this->getParam('id'));
-            $oldrec = $this->objDbAnnouncements->listSingle($id);
-            $this->setVarByRef('oldrec', $oldrec);
-            return 'edit_tpl.php';
-        // Case to edit/update an entry
-        case 'update':
-            $id = $this->getParam('id');
-            $title = htmlentities($this->getParam('title'));
-            $message = htmlentities($this->getParam('message'));
-            $this->objUser = $this->getObject('user', 'security');
-            $arrayOfRecords = array(
-                'title' => $title,
-                'message' => $message
-
-            );
-            $this->objDbAnnouncements->updateRec($id, $arrayOfRecords);
-            return $this->nextAction('view_tpl.php');
-            break;
-        // Case to delete an entry
-        case 'delete':
-            $this->objDbAnnouncements->deleteRec($this->getParam('id'));
-            return $this->nextAction('view_tpl.php');
-            break;
+			   
+			    $this->nextAction('');
+	            break;
+	        // Link to the template
+	        case 'link':
+	            return 'add_tpl.php';
+	            break;
+	        // Case to get the information from the form
+	        case 'edit':
+	            $id = html_entity_decode($this->getParam('id'));
+	            $oldrec = $this->objDbAnnouncements->listSingle($id);
+	            $this->setVarByRef('oldrec', $oldrec);
+	            return 'edit_tpl.php';
+	        // Case to edit/update an entry
+	        case 'update':
+	            $id = $this->getParam('id');
+	            $title = htmlentities($this->getParam('title'));
+	            $message = htmlentities($this->getParam('message'));
+	            $this->objUser = $this->getObject('user', 'security');
+	            $arrayOfRecords = array(
+	                'title' => $title,
+	                'message' => $message
+	            );
+	            $this->objDbAnnouncements->updateRec($id, $arrayOfRecords);
+	            return $this->nextAction('view_tpl.php');
+	            break;
+	        // Case to delete an entry
+	        case 'delete':
+	            $this->objDbAnnouncements->deleteRec($this->getParam('id'));
+	            return $this->nextAction('view_tpl.php');
+	            break;
     } //end of switch
   }  
 } //end of dispatch function
