@@ -69,7 +69,7 @@ class functions_assignment extends object
         if(!($id === FALSE)){
             $msg = $this->objLanguage->languageText('mod_assignment_confirmsubmit','assignment');
         }
-        return $this->nextAction('',array('confirm'=>$msg));
+        return $msg;
     }
 
     /**
@@ -90,7 +90,7 @@ class functions_assignment extends object
             $fields['fileid'] = $fileId;
         }else{
             $text = $this->getParam('text', '');
-            $cleanHtmltext = $this->objhtmlcleaner->cleanHtml($text);
+            $cleanHtmltext = $this->objCleaner->cleanHtml($text);
             $fields['online'] = $cleanHtmltext;
         }
 
@@ -126,7 +126,7 @@ class functions_assignment extends object
     * Method to display the Students home page.
     * @return The template for the students home page.
     */
-    public function studentHome()
+    public function studentHome($msg)
     {
         // Get students assignments: worksheets, booked essays
         $wsData = array(); $essay = array(); $topic = array(); $essayData = array();
@@ -196,15 +196,16 @@ class functions_assignment extends object
 		}
             }
         }
-        $msg = $this->getParam('confirm');
+        /*$msg = $this->getParam('confirm');
         if(!empty($msg)){
             $this->setVarByRef('msg',$msg);
-        }
+        }*/
 		$mixed_arr = array();
 		$mixed_arr[0] = $essayData;
 		$mixed_arr[1] = $wsData;
 		$mixed_arr[2] = $testData;
 		$mixed_arr[3] = $assignData;
+		$mixed_arr[4] = $msg;
 		return $mixed_arr;
     }
 

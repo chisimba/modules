@@ -107,15 +107,16 @@ class assignment extends controller
 
                     return $this->nextAction('');
                 }
-
-                return $this->Assignment->submitAssign();
+				$msg = $this->Assignment->submitAssign();
+                return $this->nextAction('',array('confirm'=>$msg));
             // insert the submitted assignment in the database
             case 'submit':
                 $postSave = $this->getParam('save', '');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('');
                 }
-                return $this->Assignment->submitAssign();
+                $msg = $this->Assignment->submitAssign();
+                return $this->nextAction('',array('confirm'=>$msg));
 
 
             // change the editor for the assignment
@@ -170,28 +171,32 @@ class assignment extends controller
                     		'studentfileid'=>$fileId,
                     		'datesubmitted'=>date('Y-m-d H:i:s')
                         );
-                $this->dbassignmentsubmit->addSubmit($fields);
-				$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
-                // display success message
-                $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
-                $this->setVarByRef('msg',$msg);
-}
-                $mixed_arr = $this->Assignment->studentHome();
+	                $this->dbassignmentsubmit->addSubmit($fields);
+					$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
+	                // display success message
+	                $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+	                $this->setVarByRef('msg',$msg);
+				}
+				$msg = $this->getParam('confirm');
+                $mixed_arr = $this->Assignment->studentHome($msg);
 		        $this->setVarByRef('essayData', $mixed_arr[0]);
 		        $this->setVarByRef('wsData', $mixed_arr[1]);
 		        $this->setVarByRef('testData', $mixed_arr[2]);
 		        $this->setVarByRef('assignData', $mixed_arr[3]);
+		      //  $this->setVarByRef('msg', $mixed_arr[4]);
 		        return 'assignment_student_tpl.php';
 
             break;
 
             default:
-               	$mixed_arr = $this->Assignment->studentHome();
+            	$msg = $this->getParam('confirm');
+               	$mixed_arr = $this->Assignment->studentHome($msg);
 
 		        $this->setVarByRef('essayData', $mixed_arr[0]);
 		        $this->setVarByRef('wsData', $mixed_arr[1]);
 		        $this->setVarByRef('testData', $mixed_arr[2]);
 		        $this->setVarByRef('assignData', $mixed_arr[3]);
+		        $this->setVarByRef('msg', $mixed_arr[4]);
 		        return 'assignment_student_tpl.php';
 
         }//end of switch 

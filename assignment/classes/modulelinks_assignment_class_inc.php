@@ -27,10 +27,40 @@ class modulelinks_assignment extends object
     	$this->objAssignment = $this->getObject('dbassignment', 'assignment');
     }
     
-    public function show()
+     public function show()
     {
+        // Link to Module itself - First Level
+        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'assignment'), 'text'=>'Assignment'));
+        /*
+        // Get Assignments - Second Level
+        $assignments = getContextLinks();
         
+        // Extra Check
+        if (count($assignments) > 0) {
+            
+            // Array for References
+            $nodesArray = array();
+            
+            // Loop through Podcasters - second level
+            foreach ($assignments as $assignment)
+            {
+                // Create Node
+                $node =& new treenode(array('link'=>$this->uri($assignment['params']), 'text'=>$assignment['name']));
+                
+                // Create Reference to Node
+                $nodesArray['assignment'.$assignment['id']] =& $node;
+                
+                // Attach to Root Node
+                $rootNode->addItem($node);
+            }
+            
+        }
+        */
+        // Return Root Node
+        return $rootNode;
     }
+    
+    
     
     /**
      * 
@@ -49,7 +79,7 @@ class modulelinks_assignment extends object
 		 //var_dump($assignments);
           foreach ($assignments as $assignment)
           {
-                $newArr = array();    
+              $newArr = array();    
               $newArr['menutext'] = $assignment['name'];
               $newArr['description'] =$assignment['description'];
               $newArr['itemid'] = $assignment['id'];
