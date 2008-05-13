@@ -24,13 +24,46 @@ class modulelinks_assignmentadmin extends object
 
     public function init()
     {
-    	$this->objAssignment = $this->getObject('dbassignmentadmin', 'assignmentadmin');
+    	$this->loadClass('treenode','tree');
+    	//$this->objAssignment = $this->getObject('dbassignmentadmin', 'assignmentadmin');
+    	$this->objAssignment = $this->getObject('dbassignment', 'assignment');
+    	//$objDbContext = $this->getObject('dbcontext', 'context');
+ 		//$this->contextCode = $objDbContext->getContextCode();
     }
     
-    public function show()
+     public function show()
     {
+        // Link to Module itself - First Level
+        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'assignmentadmin'), 'text'=>'Assignment Management'));
         
+        // Get Assignments - Second Level
+        //$assignments = getContextLinks();
+/*
+        // Extra Check
+        if (count($assignments) > 0) {
+            
+            // Array for References
+            $nodesArray = array();
+            
+            // Loop through Podcasters - second level
+            foreach ($assignments as $assignment)
+            {
+                // Create Node
+                $node =& new treenode(array('link'=>$this->uri($assignment['params']), 'text'=>$assignment['name']));
+                
+                // Create Reference to Node
+                $nodesArray['assignment'.$assignment['id']] =& $node;
+                
+                // Attach to Root Node
+                $rootNode->addItem($node);
+            }
+            
+        }
+     */   
+        // Return Root Node
+        return $rootNode;
     }
+    
     
     /**
      * 
@@ -40,22 +73,23 @@ class modulelinks_assignmentadmin extends object
      */
     public function getContextLinks($contextCode)
     { 
-       
-       	$assignmentadmins = $this->objAssignmentadmin->getAssignmentadmin($contextCode);	   
+          $sql = "SELECT * FROM tbl_assignment WHERE context = '$contextCode' ORDER BY closing_date, name";
+          $data = $this->getArray($sql);
+             
           $bigArr = array();
-
-          foreach ($assignmentadmins as $assignmentadmin)
-          {
-                $newArr = array();    
-              $newArr['menutext'] = $assignmentadmin['userid'];
-              $newArr['description'] = 'popo';
-              $newArr['itemid'] = $assignmentadmin['id'];
-              $newArr['moduleid'] = 'assignmentadmin';
-              $newArr['params'] = array('id'=>$assignmentadmin['id'],'action' => 'view');
-              $bigArr[] = $newArr;
-          }
-          
-          return $bigArr;
+	
+	      foreach ($data as $assignmentadmin)
+	      {
+	          $newArr = array();    
+	          $newArr['name'] = $assignmentadmin['name'];
+	          $newArr['description'] = $assignmentadmin['description'];
+	          $newArr['itemid'] = $assignmentadmin['id'];
+	          $newArr['moduleid'] = 'assignmentadmin';
+	          $newArr['params'] = array('id'=>$assignmentadmin['id'],'action' => 'view');
+	          $bigArr[] = $newArr;
+	      }
+	      
+	      return $bigArr;
          
     }
     

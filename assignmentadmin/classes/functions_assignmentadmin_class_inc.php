@@ -116,35 +116,33 @@ class functions_assignmentadmin extends object
     * The lecturers mark and comment are saved to the relevant assignment
     * @return The next action: mark
     */
-    public function saveMark()
+    public function saveMark($postSave,$id,$mark,$comment,$submitId,$online,$fileId,$assignment)
     {
-        $id = $this->getParam('id', '');
+        //$id = $this->getParam('id', '');
         $fields = array();
        // save mark and comment
-        $fields['mark'] = $this->getParam('mark', '');
-        $fields['commentinfo'] = $this->getParam('comment', '');
-		$submitId = $this->getParam('submitId', '');
-		$fields['online'] = $this->getParam('online', '');
+        $fields['mark'] = $mark;
+        $fields['commentinfo'] = $comment;
+		$fields['online'] = $online;
 		//update to the tbl_assignments_submit
         $this->dbSubmit->updateSubmit($submitId, $fields);
 		//redirecting to the assignment view page.
         $action = 'mark';
-        $params = array('id'=>$this->getParam('id'));
+        $params = array('id'=>$id);
 		//condition if the save or exit was click on the page.
-        $postSave = $this->getParam('save');
         if($postSave ==$this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin')){
             // upload marked assignment - overwrite students submission
-            $fileId = $this->getParam('fileId', '');
             $action = 'upload';
-            $params['assignment'] = $this->getParam('assignment', '');
-            $params['submitId'] = $this->getParam('submitId', '');
+            $params['assignment'] = $assignment;
+            $params['submitId'] = $submitId;
 
             if(!empty($fileid)){
                 $msg = $this->objLanguage->languageText('mod_assignmentadmin_confirmupload','assignmentadmin');
                 $params['confirm'] = $msg;
             }
         }
-        return $this->nextAction($action,$params);
+        $next = array('action'=>$action, 'params'=>$params);
+        return $next;
     }
 
     /**

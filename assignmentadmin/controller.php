@@ -203,11 +203,19 @@ class assignmentadmin extends controller
           
             case 'uploadsubmit':
 				$postSave = $this->getParam('save');
+				$id = $this->getParam('id');
+                $mark = $this->getParam('mark');
+                $comment = $this->getParam('comment');
+                $submitId = $this->getParam('submitId');
+                $online = $this->getParam('online');
+                $fileId = $this->getParam('fileId');
+                $assignment = $this->getParam('assignment');
                 if($postSave == $this->objLanguage->languageText('word_exit')){
                     return $this->nextAction('mark',array('id'=>$this->getParam('id')));
                 }
-                return $this->objAssignmentAdmin->saveMark();
-
+                $next = $this->objAssignmentAdmin->saveMark($postSave,$id,$mark,$comment,$submitId,$online,$fileId,$assignment);
+                return $this->nextAction($next[0], $next[1]);
+                
             // Display search results
             case 'viewbyletter':
                 $data_title =  $this->objAssignmentAdmin->showResults();
