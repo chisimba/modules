@@ -139,7 +139,7 @@ class podcast extends controller
             $username = $this->objUser->userName();
         }
 
-	$id = $this->objUser->getUserId($username);
+        $id = $this->objUser->getUserId($username);
         
         $this->setVar('id', $id);
         
@@ -156,7 +156,7 @@ class podcast extends controller
      * @author Nonhlanhla Gangeni
      */
 
-private function showAllPodcasts($id='')
+    private function showAllPodcasts($id='')
     {
                
         $this->setVar('id', $id);
@@ -304,9 +304,11 @@ private function showAllPodcasts($id='')
             return $this->nextAction(NULL);
         }
         
+        $podcast = $this->objPodcast->getPodcast($id);
+        
         $result = $this->objPodcast->deletePodcast($id, $this->objUser->userId());
         
-        return $this->nextAction('byuser', array('message'=>$result));
+        return $this->nextAction('byuser', array('message'=>$result, 'id'=>$this->objUser->userName($podcast['creatorid'])));
     }
     
     /**

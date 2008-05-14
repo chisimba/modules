@@ -192,9 +192,19 @@ class dbpodcast extends dbTable
     {
         $podcast = $this->getRow('id', $id);
         
+        $canDelete = FALSE;
+        
+        if ($podcast['creatorid'] == $user) {
+            $canDelete = TRUE;
+        }
+        
+        if ($this->objUser->isAdmin()) {
+            $canDelete = TRUE;
+        }
+        
         if ($podcast == FALSE) {
             return 'norecord';
-        } else if ($podcast['creatorid'] != $user) {
+        } else if (!$canDelete) {
             return 'deleteothers';
         } else {
             $this->delete('id', $id);
