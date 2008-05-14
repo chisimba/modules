@@ -136,7 +136,7 @@ class twitter extends controller
 
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
-    
+
     private function __testupdate()
     {
     	$str="<h1>Version 2: update successful on Thursday Feb 14, 2008</h1>";
@@ -235,7 +235,7 @@ class twitter extends controller
     * @return boolean TRUE|FALSE
     *
     */
-    function __validAction(& $action)
+    private function __validAction(& $action)
     {
         if (method_exists($this, "__".$action)) {
             return TRUE;
