@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Derek Keats
 *
 */
-class block_amazonsearch extends object
+class block_fbaddme extends object
 {
     public $title;
     public $blockType;
@@ -23,7 +23,7 @@ class block_amazonsearch extends object
     */
     public function init()
     {
-        $this->title="";
+        $this->title="Friend me on Facebook";
         $this->blockType = "none";
     }
 
@@ -37,8 +37,12 @@ class block_amazonsearch extends object
 
     private function getWidget()
     {
-        return '<div style="clear: both"><iframe src="http://rcm.amazon.com/e/cm?t=dkeatscom-20' .
-                '&o=1&p=27&l=qs1&f=ifr" width="180" height="150" ' .
-                'frameborder="0" scrolling="no"></iframe><br /></div><br />';
+        $icon = $this->getResourceUri("fb-friend-icon.gif", "dkeatscom");
+        $icon = "<img src=\"$icon\" alt=\"Friend me on Facebook\" border=\"0\">";
+        $objLink = $this->getObject("link", "htmlelements");
+        $objLink->href = "http://www.facebook.com/addfriend.php?id=812410106";
+        $objLink->title = "Friend me on Facebook";
+        $objLink->link = $icon . "<span class=\"minute\">Add me on Facebook</span>";
+        return $objLink->show() . '<br />';
     }
 }
