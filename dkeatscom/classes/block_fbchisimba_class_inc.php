@@ -8,12 +8,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Facebook friend me widget
+* Facebook Chisimba group widget block
 *
 * @author Derek Keats
 *
 */
-class block_fbaddme extends object
+class block_fbchisimba extends object
 {
     public $title;
     public $blockType;
@@ -23,7 +23,7 @@ class block_fbaddme extends object
     */
     public function init()
     {
-        $this->title="Friend me on Facebook";
+        $this->title="Chisimba Facebook group";
         $this->blockType = "none";
     }
 
@@ -37,12 +37,12 @@ class block_fbaddme extends object
 
     private function getWidget()
     {
-        $icon = $this->getResourceUri("fb-friend-icon.gif", "dkeatscom");
-        $icon = "<img src=\"$icon\" alt=\"Friend me on Facebook\" border=\"0\">";
+        $icon = $this->getResourceUri("fb-group-icon.gif", "dkeatscom");
+        $icon = "<img src=\"$icon\" alt=\"hisimba Facebook group\" border=\"0\">";
         $objLink = $this->getObject("link", "htmlelements");
-        $objLink->href = "http://www.facebook.com/addfriend.php?id=812410106";
-        $objLink->title = "Friend me on Facebook";
-        $objLink->link = $icon . "<span class=\"minute\">Add me on Facebook</span>";
+        $objLink->href = "http://www.facebook.com/group.php?gid=14068945606";
+        $objLink->title = "Chisimba Facebook group";
+        $objLink->link = $icon . "<span class=\"minute\">Chisimba Facebook group</span>";
         return $objLink->show() . '<br />';
     }
 }
