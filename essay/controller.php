@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Controller class for the Essay Management Module.
 * @copyright (c) 2004 UWC
