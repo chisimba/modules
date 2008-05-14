@@ -42,7 +42,7 @@ class block_fbchisimba extends object
         $objLink = $this->getObject("link", "htmlelements");
         $objLink->href = "http://www.facebook.com/group.php?gid=14068945606";
         $objLink->title = "Chisimba Facebook group";
-        $objLink->link = $icon . "<span class=\"minute\">Chisimba Facebook group</span>";
+        $objLink->link = $icon . " <span class=\"minute\">Chisimba Facebook group</span>";
         return $objLink->show() . '<br />';
     }
 }

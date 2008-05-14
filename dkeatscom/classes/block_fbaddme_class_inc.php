@@ -38,11 +38,11 @@ class block_fbaddme extends object
     private function getWidget()
     {
         $icon = $this->getResourceUri("fb-friend-icon.gif", "dkeatscom");
-        $icon = "<img src=\"$icon\" alt=\"Friend me on Facebook\" border=\"0\ style=\"vertical-align:middle\"">";
+        $icon = "<img src=\"$icon\" alt=\"Friend me on Facebook\" border=\"0\" style=\"vertical-align:middle\">";
         $objLink = $this->getObject("link", "htmlelements");
         $objLink->href = "http://www.facebook.com/addfriend.php?id=812410106";
         $objLink->title = "Friend me on Facebook";
-        $objLink->link = $icon . "<span class=\"minute\">Add me on Facebook</span>";
+        $objLink->link = $icon . " <span class=\"minute\">Add me on Facebook</span>";
         return $objLink->show() . '<br />';
     }
 }
