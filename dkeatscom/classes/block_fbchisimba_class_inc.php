@@ -38,7 +38,7 @@ class block_fbchisimba extends object
     private function getWidget()
     {
         $icon = $this->getResourceUri("fb-group-icon.gif", "dkeatscom");
-        $icon = "<img src=\"$icon\" alt=\"hisimba Facebook group\" border=\"0\">";
+        $icon = "<img src=\"$icon\" alt=\"Chisimba Facebook group\" border=\"0\" style=\"vertical-align:middle\">";
         $objLink = $this->getObject("link", "htmlelements");
         $objLink->href = "http://www.facebook.com/group.php?gid=14068945606";
         $objLink->title = "Chisimba Facebook group";

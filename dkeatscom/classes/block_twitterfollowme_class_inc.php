@@ -8,12 +8,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 /**
 *
-* Facebook friend me widget
+* Follow me on Twitter widget block
 *
 * @author Derek Keats
 *
 */
-class block_fbaddme extends object
+class block_twitterfollowme extends object
 {
     public $title;
     public $blockType;
@@ -23,7 +23,7 @@ class block_fbaddme extends object
     */
     public function init()
     {
-        $this->title="Friend me on Facebook";
+        $this->title="Follow me on Twitter";
         $this->blockType = "none";
     }
 
@@ -37,12 +37,12 @@ class block_fbaddme extends object
 
     private function getWidget()
     {
-        $icon = $this->getResourceUri("fb-friend-icon.gif", "dkeatscom");
-        $icon = "<img src=\"$icon\" alt=\"Friend me on Facebook\" border=\"0\ style=\"vertical-align:middle\"">";
+        $icon = $this->getResourceUri("twitter-icon.gif", "dkeatscom");
+        $icon = "<img src=\"$icon\" alt=\"Follow me on Twitter\" border=\"0\" style=\"vertical-align:middle\">";
         $objLink = $this->getObject("link", "htmlelements");
-        $objLink->href = "http://www.facebook.com/addfriend.php?id=812410106";
-        $objLink->title = "Friend me on Facebook";
-        $objLink->link = $icon . "<span class=\"minute\">Add me on Facebook</span>";
+        $objLink->href = "http://www.twitter.com/dkeats";
+        $objLink->title = "Follow me on Twitter";
+        $objLink->link = $icon . " <span class=\"minute\">Follow me on Twitter</span>";
         return $objLink->show() . '<br />';
     }
 }
