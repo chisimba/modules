@@ -44,7 +44,7 @@ import avoir.realtime.tcp.common.packet.ModuleFileRequestPacket;
 @SuppressWarnings("serial")
 public class ServerThread extends Thread {
 
-    private static int AUDIO_FORMAT_INDEX = 0;
+   
     private static int MAX_CHAT_SIZE = 50;
     private static Random random = new Random();
     private static Logger logger = Logger.getLogger(ServerThread.class.getName());
@@ -211,8 +211,6 @@ public class ServerThread extends Thread {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-                    logger.info(obj.getClass() + "");
-
                 } catch (Exception ex) {
                     if (thisUser != null) {
                         if (thisUser.isSlidesHost()) {
@@ -334,7 +332,7 @@ public class ServerThread extends Thread {
                         //   removeStream(thisUser.getSessionId());
                         //if presenter..clear the presentation...
                         if (rmup.getUser().isPresenter()) {
-                         
+
                             removeLock(rmup.getUser().getSessionId(), rmup.getUser().getUserName());
                             //inform members of this action
                             MsgPacket p = new MsgPacket(rmup.getUser().getFullName() + " has stopped the live presentation.", false, true);
@@ -618,7 +616,7 @@ public class ServerThread extends Thread {
 
                     clients.elementAt(i).writeObject(chatPacket);
                     clients.elementAt(i).flush();
- 
+
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

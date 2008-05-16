@@ -526,9 +526,10 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
                         " few minutes, please wait...");
                 surface.setConnecting(true);
                 if (client.connect()) {
-//                    MediaManager.detectJMF(client, resourcesPath, slideServerId,
+                    surface.setStatusMessage("Initializing session, please wait ...");
+
+                    //                    MediaManager.detectJMF(client, resourcesPath, slideServerId,
                     //                          userName);
-                    LibManager.detectJSpeex(client, resourcesPath, slideServerId, userName);
                     surface.setShowSplashScreen(false);
                     voiceOptionsButton.setEnabled(true);
                     sessionButton.setEnabled(true);
@@ -542,8 +543,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
                     statusBar.setText("Connected");
                     connected = true;
                     client.publish(user);
-                    // surface.showMessage("Waiting for reply from slide server ...", false);
-                    surface.setStatusMessage("Waiting for reply from server ...");
+                    LibManager.detectJSpeex(client, resourcesPath, slideServerId, userName);
                     checkSession();
                 } else {
                     String msg = "Cannot Connect to the server.";
@@ -770,11 +770,9 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 9));
             setEnabled(false);
-            this.addMouseListener(new  
+            this.addMouseListener(new MouseAdapter() {
 
-                  MouseAdapter( ) {
-
-                    @Override
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     setContentAreaFilled(true);
                 }
@@ -799,11 +797,9 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 9));
             setEnabled(false);
-            this.addMouseListener(new  
+            this.addMouseListener(new MouseAdapter() {
 
-                  MouseAdapter( ) {
-
-                    @Override
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     setContentAreaFilled(true);
                 }
@@ -847,9 +843,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
 
         leftSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        usersList.setModel(new javax 
-
-               .swing.AbstractListModel() {
+        usersList.setModel(new javax.swing.AbstractListModel() {
 
             String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
 
@@ -888,25 +882,14 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         handButton.setFocusable(false);
         handButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         handButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        handButton.addActionListener(new java.awt 
+        handButton.addActionListener(new java.awt.event.ActionListener() {
 
-              .event.ActionListener  
-                () 
-            
-        
-          {
-
-            public  void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 handButtonActionPerformed(evt);
             }
-
-                
-                
-            }
-        );
+        });
         handButton.addMouseListener(
-                
-        new java.awt.event.MouseAdapter() {
+                new java.awt.event.MouseAdapter() {
 
                     @Override
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -928,14 +911,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         yesButton.setFocusable(false);
         yesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         yesButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        yesButton.addActionListener(new java.awt 
-
-              .event.ActionListener  
-                () 
-            
-        
-        
-         {
+        yesButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 yesButtonActionPerformed(evt);
@@ -951,15 +927,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         noButton.setFocusable(false);
         noButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         noButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        noButton.addActionListener(new java.awt 
-
-              .event.ActionListener  
-                () 
-            
-        
-        
-        
-        {
+        noButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noButtonActionPerformed(evt);
@@ -979,26 +947,10 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         chatButton.setFocusable(false);
         chatButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         chatButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        chatButton.addMouseListener(new java.awt 
+        chatButton.addMouseListener(new java.awt.event.MouseAdapter() {
 
-              .event.MouseAdapter  
-                () 
-            
-
-                {
-
-                
-            
-        
-          
-
-            @ 
-             Override  
-                
-            
-        
-        
-         public void mouseEntered(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
                 chatButtonMouseEntered(evt);
             }
 
@@ -1022,26 +974,10 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         voiceOptionsButton.setFocusable(false);
         voiceOptionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         voiceOptionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        voiceOptionsButton.addMouseListener(new java.awt 
+        voiceOptionsButton.addMouseListener(new java.awt.event.MouseAdapter() {
 
-              .event.MouseAdapter  
-                () 
-            
-
-                {
-
-                
-            
-        
-          
-
-            @ 
-             Override  
-                
-            
-        
-        
-         public void mouseEntered(java.awt.event.MouseEvent evt) {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
                 voiceOptionsButtonMouseEntered(evt);
             }
 
@@ -1066,25 +1002,14 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         refreshButton.setFocusable(false);
         refreshButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         refreshButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        refreshButton.addActionListener(new java.awt 
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
 
-              .event.ActionListener  
-                () 
-            
-        
-          {
-
-            public  void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
             }
-
-                
-                
-            }
-        );
+        });
         refreshButton.addMouseListener(
-                
-        new java.awt.event.MouseAdapter() {
+                new java.awt.event.MouseAdapter() {
 
                     @Override
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -1106,27 +1031,14 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         optionsButton.setFocusable(false);
         optionsButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         optionsButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        optionsButton.addActionListener(new java.awt 
+        optionsButton.addActionListener(new java.awt.event.ActionListener() {
 
-              .event.ActionListener  
-                () 
-            
-        
-          {
-
-            public  void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 optionsButtonActionPerformed(evt);
             }
-
-                
-                
-            }
-        );
+        });
         optionsButton.addMouseListener(
-                
-        
-         
-        new java.awt.event.MouseAdapter() {
+                new java.awt.event.MouseAdapter() {
 
                     @Override
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -1174,10 +1086,36 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         refreshConnection();
     }
 
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (Exception ex) {
+        }
+    }
+
     public void refreshConnection() {
-        client.removeUser(user);
-        checkSession();
-        connect();
+        connected = false;
+        int count = 0;
+        int max = 60;
+        while (true) {
+            client.removeUser(user);
+            checkSession();
+            connect();
+            sleep(1000);
+            if (connected) {
+                break;
+            }
+            if (count > max) {
+                break;
+            }
+            count++;
+            showMessage("Disconnected from server. Retrying " + count + " of " + max + "...", false, true);
+
+        }
+        if (!connected) {
+            showMessage("Connection to server failed. Refresh your browser page to reconnect", false, true);
+
+        }
     }
 
     private void chatButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1194,6 +1132,27 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         yesButton.setEnabled(status);
     }
 
+    private boolean encoderExists() {
+       // JOptionPane.showMessageDialog(null, "This feauture is still experimental and" +
+         //       " might not work properly");
+        try {
+            File f = new File(REALTIME_HOME + "/lib/jspeex.jar");
+            if (!f.exists()) {
+                System.out.println(f.getAbsolutePath() + " NOT FOUND");
+            }
+            LibManager.addFile(REALTIME_HOME + "/lib/jspeex.jar");
+            Class cl = Class.forName("org.xiph.speex.SpeexEncoder");
+            cl.newInstance();
+            cl = Class.forName("org.xiph.speex.SpeexDecoder");
+            cl.newInstance();
+            System.out.println("JSpeex Loaded");
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public void showAudioWizardFrame() {
         //File f = new File(REALTIME_HOME + "/conf/devicesdetected");
         //if (!f.exists()) {
@@ -1201,14 +1160,18 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         // }
         //avoir.realtime.tcp.media.MediaWizardFrame frame =
         //      new avoir.realtime.tcp.media.MediaWizardFrame(client, sessionId);
-        if (audioWizardFrame == null) {
-            audioWizardFrame = new AudioWizardFrame(client, userName, sessionId,
-                    slideServerId, resourcesPath);
-            audioWizardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            audioWizardFrame.setSize(500, 500);
-            audioWizardFrame.setLocationRelativeTo(null);
+        if (encoderExists()) {
+            if (audioWizardFrame == null) {
+                audioWizardFrame = new AudioWizardFrame(client, userName, sessionId,
+                        slideServerId, resourcesPath);
+                audioWizardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                audioWizardFrame.setSize(500, 500);
+                audioWizardFrame.setLocationRelativeTo(null);
+            }
+            audioWizardFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cannot find suitable audio decoder. Aborting.");
         }
-        audioWizardFrame.setVisible(true);
     }
 
     private void handButtonMouseEntered(java.awt.event.MouseEvent evt) {

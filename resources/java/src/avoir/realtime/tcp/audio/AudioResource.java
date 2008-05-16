@@ -17,7 +17,7 @@ public interface AudioResource {
 
     public static final int MODE = 1;	// default = 1
 
-    public static final int QUALITY = SpeexEncoding.SPEEX_Q1.getQuality();//SPEEX_Q8.getQuality();	// default = SPEEX_Q8
+    public static final int QUALITY = SpeexEncoding.SPEEX_Q8.getQuality();//SPEEX_Q8.getQuality();	// default = SPEEX_Q8
     public static final int CHANNELS = 1;	// default = 1
 
     public static final int LINE_BUFFER_SIZE = 8192;

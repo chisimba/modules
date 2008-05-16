@@ -23,34 +23,8 @@ import javax.swing.JOptionPane;
  */
 public class AudioWizardFrame extends javax.swing.JFrame {
 
-    /** wait lock till the buffer recovers from starvation*/
-    private Object messageThreadLock = null;
-    /** wait lock to pause the target line from reading*/
-    private Object pauseLock = null;
-    /** true if message thread is waiting for the buffer to fill up*/
-    private boolean messageThreadWaiting = false;
-    /** size of audio chucks speex can encode at the current sample rate*/
-    private final int rawChunkSize = AudioResource.BLOCK_SIZE; // basically at the sample rate this is 640 bytes
-
-    /** default number of speex encoded chunks the out going buffer will hold*/
-    private static final int DEFAULT_BUFFER_SIZE_MULTIPLIER = 50;
-    /** default number of speex encoded chunks to place in each message*/
-    private static final int DEFAULT_MESSAGE_SIZE_MULTIPLIER = 10;
-    /** size of the speex encoded audio. this depends on the quality setting*/
-    private int speexChunkSize = AudioResource.QUALITY;
-    /** the size in bytes each outgoing message contains*/
-    private int speexMessageSize = 0;
-    /** size in bytes of the outgoing buffer holding speex encoded bytes*/
-    private int speexBufferSize = 0;
-    /** target line buffer size*/
-    private final int rawBufferSize = rawChunkSize * 10;
-    /** size in bytes of buffer read from target Line */
-    private final int audioReadChunkSize = rawChunkSize * 5;
-    /** consumer thread, dispatches messages tcp client*/
-    private Thread messageThread = null;
-    private Encoder encoder = null;
-    /** outgoing buffer that holds que'd up speex audio blocks */
-    private VoiceDataBuffer sendBuffer = null;
+    private VoiceMicrophoneInput micInput;
+    private VoicePushTextCallControl callControl = new VoicePushTextCallControl();
     //private FloatControl gainControl;
     //private FloatControl volumeControl;
     //private BooleanControl muteControl;
@@ -58,16 +32,11 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     private TargetDataLine targetLine;
     // private SourceDataLine sourceDataLine;
     // private int bufferSize;
-    /** these represetn the logical state of the hardware to the call control*/
-    public static final int STATE_ON = 20;
-    public static final int STATE_OFF = 10;
-    public static final int STATE_PAUSE = 30;
-    /** represents the current state of the audio targetline */
-    private int micState = STATE_PAUSE;
     private String txt = "<center><h3>Realtime Audio Wizard.</h3> " +
             "Click on the <b>'Test Audio'</b> button." +
             "<br>Then say something. If you hear your own sound, then your audio system" +
-            " is working properly</center><hr>";
+            " is working properly</center><hr><h1><b><font color=\"orange\">This " +
+            " is still experimental</font></b>";
     private TCPClient tcpclient;
     private String username,  sessionId;
     private Vector<AudioPacket> testBuffer = new Vector<AudioPacket>();
@@ -75,8 +44,9 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     private String slideServerId;
     private String resourcesPath;
     boolean encode = false;
-    protected boolean voiceCaptureSupported = false;
     private VoiceSpeakerOutput voiceSpeakerOutput;
+    private boolean testing = false;
+    private boolean micinit = false;
 
     /** Creates new form AudioWizardFrame */
     public AudioWizardFrame(TCPClient tcpclient, String username, String sessionId,
@@ -88,134 +58,48 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         this.slideServerId = slideServerId;
         this.resourcesPath = resoursesPath;
         initComponents();
-        messageThreadLock = new Object();
-        pauseLock = new Object();
         infoField.setText(txt);
         cPanel.add(detectSound, BorderLayout.SOUTH);
-        Thread t = new Thread() {
-
-            @Override
-            public void run() {
-              if (!encoderExists()) {
-                    stopAudio();
-                    String msg = "No suitable encoder found. Audio disabled";
-                    JOptionPane.showMessageDialog(null, msg);
-                    displayError(msg);
-                }
-                  initDispatch();
-                initReceiverLine();
-              
-            }
+        /* Thread t = new Thread() {
+        
+        @Override
+        public void run() {
+        if (!encoderExists()) {
+        stopAudio();
+        String msg = "No suitable encoder found. Audio disabled";
+        JOptionPane.showMessageDialog(null, msg);
+        displayError(msg);
+        }
+        
+        initDispatch();
+        initReceiverLine();
+        
+        }
         };
-        t.start();
+        t.start();*/
+        micInput = new VoiceMicrophoneInput(this, callControl);
+
+        if (micInput.obtainHardware()) {
+            displayInfo("MIC Ready");
+        } else {
+            displayError("FATAL: Cannot find audio capture device");
+        }
+        initReceiverLine();
+
+    }
+
+    public DetectSound getSoundDetector() {
+        return detectSound;
     }
 
     private void stopAudio() {
-        releaseHardware();
+//        releaseHardware();
         if (voiceSpeakerOutput != null) {
             voiceSpeakerOutput.releaseHardware();
         }
-    }
-
-    /**
-     *  Restarts the target line and message send thread.
-     */
-    public void resumeMic() {
-        if (getMicState() != STATE_PAUSE) {
-            return;
+        if (micInput != null) {
+            micInput.releaseHardware();
         }
-        if (!voiceCaptureSupported) {
-            return;
-        }
-        if (getMicState() == STATE_PAUSE) {
-
-            setMicState(this.STATE_ON);
-
-            synchronized (pauseLock) {
-
-                pauseLock.notify();
-            }
-
-            synchronized (messageThreadLock) {
-
-                messageThreadLock.notify();
-            }
-        }
-
-    }
-
-    public int getMicState() {
-
-        return this.micState;
-    }
-
-    private void setMicState(int state) {
-
-        this.micState = state;
-    }
-
-    /**
-     *   Disallows reading to the target line (mic). sets thread state to
-     *   off
-     */
-    public void endMic() {
-        if (getMicState() == STATE_OFF) {
-            return;
-        }
-        if (!voiceCaptureSupported) {
-            return;
-        }
-        setMicState(this.STATE_OFF);
-        if (targetLine != null) {
-            this.targetLine.stop();
-        }
-    }
-
-    /**
-     *  Halts the reading of data to this targetline. pauses audio line read
-     *  thread.
-     */
-    public void pauseMic() {
-        if (!voiceCaptureSupported) {
-            return;
-        }
-        if (getMicState() != STATE_ON) {
-            return;
-        }
-        setMicState(this.STATE_PAUSE);
-
-    /*if(targetLine != null) {
-    this.targetLine.stop ();
-    }*/
-    }
-
-    private void initDispatch() {
-        /** This thread dispatches messages to the tcpclient and  
-         *  blocks on outgoing buffer starvation
-         */
-        messageThread = new Thread(new Runnable() {
-
-            public void run() {
-                while (true) {
-                    if (getMicState() == STATE_OFF) {
-                        //we should send any remaining data in buffer first
-                        break;
-                    }
-                    if (sendBuffer.size() >= speexMessageSize) {
-                        dispatchVoiceData(sendBuffer.get(speexMessageSize));
-                    } else {
-                        try {
-                            synchronized (messageThreadLock) {
-                                messageThreadWaiting = true;
-                                messageThreadLock.wait();
-                            }
-                        } catch (InterruptedException ix) {
-                            ix.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -224,9 +108,10 @@ public class AudioWizardFrame extends javax.swing.JFrame {
      */
     public void dispatchVoiceData(byte[] speexData) {
         AudioPacket packet = new AudioPacket(sessionId, username, speexData);
-        packet.setTest(testAudioButton.isSelected());
+        packet.setTest(testing);
         packet.setEncoded(encode);
         tcpclient.sendPacket(packet);
+
     }
 
     private boolean initReceiverLine() {
@@ -274,83 +159,74 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         infoField.setText(txt);
     }
 
-    private void initCaptureLine() {
-        if (voiceCaptureSupported) {
-            return;
-        }
-        try {
-            AudioFormat format = getAudioFormat();
-            try {
-                if (targetLine != null) {
-                    targetLine.close();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            DataLine.Info info = new DataLine.Info(
-                    TargetDataLine.class, format);
-            targetLine = (TargetDataLine) AudioSystem.getLine(info);
-            targetLine.open(format, rawBufferSize);
-            displayInfo("MIC ready");
-            voiceCaptureSupported = true;
-            testAudioButton.setEnabled(false);
-        } catch (LineUnavailableException ex) {
-            displayError("FATAL Cannot find sound capture devices.");
-            talkButton.setEnabled(false);
-            voiceCaptureSupported = false;
-            setMicState(STATE_OFF);
-            ex.printStackTrace();
-        }
-    }
-
     private void testAudio() {
-       // encode = encoderExists();
-        initCaptureLine();
-        if (testAudioButton.getText().equals("Test Audio")) {
-            talkButton.setEnabled(false);
-            testAudioButton.setText("Capturing...Click to stop.");
-            testAudioButton.setForeground(new Color(0, 131, 0));
-            testAudioButton.setBackground(Color.YELLOW);
-            beginMic();
-        }
-        if (testAudioButton.getText().equals("Capturing...Click to stop.")) {
-            testAudioButton.setEnabled(false);
-            playTestPackets();
+        //   initCaptureLine();
+        talkButton.setEnabled(false);
+        stopButton.setEnabled(true);
+        testAudioButton.setEnabled(false);
+        testAudioButton.setText("Capturing...");
+        testing = true;
+        testAudioButton.setForeground(new Color(0, 131, 0));
+        testAudioButton.setBackground(Color.YELLOW);
+        micInput.beginMic();
+        if (!micinit) {
+            //    micInput.start();
+            micinit = false;
         }
     }
 
     private void stopCapture() {
-        talkButton.setEnabled(true);
-        testAudioButton.setEnabled(true);
-        testAudioButton.setSelected(false);
-        stopButton.setEnabled(false);
-        endMic();
-        displayWarn("Streaming stopped.Use Talk button to restart");
+        if (testing) {
+            micInput.pauseMic();
+            testAudioButton.setText("Playing...");
+            testAudioButton.setBackground(Color.ORANGE);
+            Thread t = new Thread() {
 
+                public void run() {
+                    playTestPackets();
+                }
+            };
+            t.start();
+        } else {
+            talkButton.setEnabled(true);
+            testAudioButton.setEnabled(true);
+            testAudioButton.setSelected(false);
+            stopButton.setEnabled(false);
+            displayWarn("Streaming stopped.Use Talk button to restart");
+            micInput.endMic();
+        }
     }
 
     public void playPacket(final AudioPacket packet) {
+        //System.out.println(".");
         byte[] data = packet.getPacket();
-        if (packet.isTest()) {
-            testBuffer.addElement(packet);
-            return;
-        }
-        //if (sourceDataLine != null) {
-        //  sourceDataLine.write(data, 0, data.length);
-        // }
+        //if (packet.isTest()) {
+        //  testBuffer.addElement(packet);
+
+        // } else {
         voiceSpeakerOutput.receiveVoicePushTextData(data);
+    // }
+    //if (sourceDataLine != null) {
+    //  sourceDataLine.write(data, 0, data.length);
+    // }
+
     }
 
     private void playTestPackets() {
+        displayWarn("Playing test audio...");
         for (int i = 0; i < testBuffer.size(); i++) {
             byte[] data = testBuffer.elementAt(i).getPacket();
             voiceSpeakerOutput.receiveVoicePushTextData(data);
         }
         displayWarn("Test Streaming stopped");
+
         talkButton.setEnabled(true);
         testAudioButton.setEnabled(true);
         testAudioButton.setText("Test Audio");
-        endMic();
+        testAudioButton.setBackground(getBackground());
+        stopButton.setEnabled(false);
+        testBuffer.clear();
+        micInput.endMic();
     }
 
     /** This method is called from within the constructor to
@@ -362,13 +238,14 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        volume2Slider = new javax.swing.JSlider();
         jPanel1 = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
         advancedButton = new javax.swing.JButton();
         sPanel = new javax.swing.JPanel();
         talkButton = new javax.swing.JButton();
+        testAudioButton = new javax.swing.JButton();
         stopButton = new javax.swing.JButton();
-        testAudioButton = new javax.swing.JToggleButton();
         cPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoField = new javax.swing.JTextPane();
@@ -377,9 +254,18 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         volumeSlider = new javax.swing.JSlider();
         muteOpt = new javax.swing.JCheckBox();
         volumeToolbar = new javax.swing.JToolBar();
-        volume2Slider = new javax.swing.JSlider();
 
-        setTitle("Realtime Audio Wizard");
+        volume2Slider.setPaintLabels(true);
+        volume2Slider.setPaintTicks(true);
+        volume2Slider.setBorder(javax.swing.BorderFactory.createTitledBorder("Volume"));
+        volume2Slider.setPreferredSize(new java.awt.Dimension(100, 51));
+        volume2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                volume2SliderStateChanged(evt);
+            }
+        });
+
+        setTitle("Realtime Audio Wizard - Beta");
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
             }
@@ -428,6 +314,14 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         });
         sPanel.add(talkButton);
 
+        testAudioButton.setText("Test Audio Capture");
+        testAudioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testAudioButtonActionPerformed(evt);
+            }
+        });
+        sPanel.add(testAudioButton);
+
         stopButton.setText("Stop");
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -435,14 +329,6 @@ public class AudioWizardFrame extends javax.swing.JFrame {
             }
         });
         sPanel.add(stopButton);
-
-        testAudioButton.setText("Test Audio");
-        testAudioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testAudioButtonActionPerformed(evt);
-            }
-        });
-        sPanel.add(testAudioButton);
 
         getContentPane().add(sPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -483,18 +369,6 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         vPanel.add(muteOpt, java.awt.BorderLayout.CENTER);
 
         volumeToolbar.setRollover(true);
-
-        volume2Slider.setPaintLabels(true);
-        volume2Slider.setPaintTicks(true);
-        volume2Slider.setBorder(javax.swing.BorderFactory.createTitledBorder("Volume"));
-        volume2Slider.setPreferredSize(new java.awt.Dimension(100, 51));
-        volume2Slider.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                volume2SliderStateChanged(evt);
-            }
-        });
-        volumeToolbar.add(volume2Slider);
-
         vPanel.add(volumeToolbar, java.awt.BorderLayout.PAGE_START);
 
         cPanel.add(vPanel, java.awt.BorderLayout.PAGE_START);
@@ -504,18 +378,20 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void testAudioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testAudioButtonActionPerformed
-    testAudio();
-}//GEN-LAST:event_testAudioButtonActionPerformed
-
 private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_talkButtonActionPerformed
-    initCaptureLine();
-    beginMic();
-   // encode = encoderExists();
+    //initCaptureLine();
+    //beginMic();
+
+    // encode = encoderExists();
     talkButton.setEnabled(false);
     testAudioButton.setEnabled(false);
     stopButton.setEnabled(true);
-    startCapture();
+    //startCapture();
+    micInput.beginMic();
+    if (!micinit) {
+        //   micInput.start();
+        micinit = false;
+    }
 }//GEN-LAST:event_talkButtonActionPerformed
 
 private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
@@ -523,11 +399,12 @@ private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 }//GEN-LAST:event_stopButtonActionPerformed
 
 private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    stopAudio();
     setVisible(false);
 }//GEN-LAST:event_closeButtonActionPerformed
 
 private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowIconified
-    stopCapture();
+    stopAudio();
 }//GEN-LAST:event_formWindowIconified
 
 private void formWindowDeiconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowDeiconified
@@ -538,7 +415,7 @@ private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_for
 }//GEN-LAST:event_formFocusLost
 
 private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-    stopCapture();
+    stopAudio();
 }//GEN-LAST:event_formWindowClosing
 
 private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
@@ -562,6 +439,11 @@ private void muteOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 private void volume2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_volume2SliderStateChanged
     // volumeControl.setValue(volume2Slider.getValue());
 }//GEN-LAST:event_volume2SliderStateChanged
+
+private void testAudioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testAudioButtonActionPerformed
+
+    testAudio();
+}//GEN-LAST:event_testAudioButtonActionPerformed
 
 // For sampled sounds, add sliders to control volume and balance
    /* private void addSampledControls() {
@@ -621,119 +503,13 @@ private void volume2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN
         }
     }
 
-    /**
-     *  Starts the tagetLine. sets up the buffer and message size.
-     */
-    public void beginMic() {
-        if (!voiceCaptureSupported) {
-            return;
-        // We don't need a syncrhonization construct here since, we only initiate
-        // the microphone once. Threaded access is only possible hereafter
-        }
-        encoder = new Encoder(AudioResource.QUALITY);
-        if (speexMessageSize == 0) {
-            speexMessageSize = speexChunkSize * DEFAULT_MESSAGE_SIZE_MULTIPLIER;
-        }
-        if (speexBufferSize == 0) {
-
-            speexBufferSize = speexChunkSize * DEFAULT_BUFFER_SIZE_MULTIPLIER;
-        }
-        this.sendBuffer = new VoiceDataBuffer(speexBufferSize);
-        if (getMicState() == STATE_PAUSE) {
-            setMicState(this.STATE_ON);
-            synchronized (pauseLock) {
-                pauseLock.notify();
-            }
-            synchronized (messageThreadLock) {
-                messageThreadLock.notify();
-            }
-        }
-        this.targetLine.start();
-        startCapture();
-
-    }
-
-    /* 
-     *  producer thread. read from target line blocks till buffer size can be 
-     *  filled. data is encoded then added to the outgoing buffer.
-     */
-    public void capture() {
-        /** start the message dispatch thread*/
-        messageThread.start();
-        /** local buff to read raw audio into */
-        byte[] buff = new byte[audioReadChunkSize];
-        /** bytes read from targetline... if zero after read that mean the line
-        has been stopped */
-        int bytesRead = 0;
-        try {
-            while (voiceCaptureSupported) {
-                if (getMicState() == this.STATE_PAUSE) {
-                    synchronized (pauseLock) {
-                        pauseLock.wait();
-                    }
-                }
-                if (getMicState() == this.STATE_OFF) {
-                    //we should send any remaining data in buffer first
-                    break;
-                }
-                bytesRead = this.targetLine.read(buff, 0, buff.length);
-                if (bytesRead == -1) {
-                    //targetLine is closed
-                    break;
-                }
-                if (bytesRead > 0) {
-                    encodeAndStore(buff);
-                    if (messageThreadWaiting && sendBuffer.size() >= speexMessageSize) {
-
-                        messageThreadWaiting = false;
-
-                        synchronized (messageThreadLock) {
-
-                            messageThreadLock.notify();
-                        }
-                    }
-                } else {
-                    break;
-                }
-            }//while
-
-        } catch (InterruptedException ix) {
-            setMicState(this.STATE_OFF);
-            ix.printStackTrace();
-        }
-
-    }
-
-    /**
-     *  encodes the raw pcm audio from target line then stores it in the 
-     *  outgoing buffer. at the current sample rate speex encodes 640byte
-     *  blocks. we break the buff up into 640byte chunks -> encode -> store
-     */
-    private void encodeAndStore(byte[] buff) {
-        int chunks = buff.length / rawChunkSize;
-        int[] startPos = new int[chunks];
-        for (int j = 0; j < chunks; j++) {
-            startPos[j] = j * rawChunkSize;
-        }
-
-        for (int i = 0; i < chunks; i++) {
-            byte[] preEncodeBuff = new byte[rawChunkSize];
-            System.arraycopy(buff, startPos[i], preEncodeBuff, 0, rawChunkSize);
-            byte[] postEncodeBuff = null;
-            synchronized (encoder) {
-                postEncodeBuff = encoder.encode(preEncodeBuff);
-            }
-            sendBuffer.append(postEncodeBuff);
-        }
-    }
-
     private void startCapture() {
         try {
             Runnable runner = new Runnable() {
 
                 public void run() {
                     displayInfo("Capturing audio ...");
-                    capture();
+//                    capture();
                 }
             };
             Thread captureThread = new Thread(runner);
@@ -742,24 +518,6 @@ private void volume2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN
             e.printStackTrace();
         }
     }
-
-    /**
-     *  Releases hardware resources. tagetline, mixers and controls.
-     */
-    public void releaseHardware() {
-        if (!voiceCaptureSupported) {
-            return;
-        }
-        if (targetLine != null) {
-            targetLine.flush();
-
-            targetLine.stop();
-
-            targetLine.close();
-        }
-
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton advancedButton;
     private javax.swing.JPanel cPanel;
@@ -772,7 +530,7 @@ private void volume2SliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN
     private javax.swing.JPanel sPanel;
     private javax.swing.JButton stopButton;
     private javax.swing.JButton talkButton;
-    private javax.swing.JToggleButton testAudioButton;
+    private javax.swing.JButton testAudioButton;
     private javax.swing.JPanel vPanel;
     private javax.swing.JSlider volume2Slider;
     private javax.swing.JSlider volumeSlider;
