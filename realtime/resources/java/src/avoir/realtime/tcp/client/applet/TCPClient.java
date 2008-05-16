@@ -507,44 +507,48 @@ public class TCPClient {
     private void processModuleFileReplyPacket(ModuleFileReplyPacket p) {
         String filename = p.getFilename();
         File f = new File(filename);
-        System.out.println("Received: "+f.getAbsolutePath());
+        System.out.println("Received: " + f.getName());
         String dest = ".";
-        if (filename.endsWith(".jar") && (!filename.startsWith("realtime") ||
-                !filename.endsWith("jspeex.jar"))) {
+        if (filename.endsWith("jspeex.jar")) {
+            dest = REALTIME_HOME + "/lib/" + f.getName();
+            System.out.println("Writing  " + dest);
+            writeFile(dest, p.getByteArray(), false);
+            System.out.println("done");
+            return;
+        }
+        if (filename.endsWith(".jar") && !filename.startsWith("realtime") &&
+                !filename.endsWith("jspeex.jar")) {
             dest = JAVA_HOME + "/lib/ext/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), true);
         }
 
         if (filename.startsWith("realtime")) {
             dest = REALTIME_HOME + "/lib/" + f.getName();
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), false);
         }
 
-        if (filename.endsWith("jspeex.jar")) {
-            dest = REALTIME_HOME + "/lib/" + f.getName();
-            writeFile(dest, p.getByteArray());
-        }
+
         //then this is linux/unix
         if (filename.endsWith(".properties")) {
             dest = JAVA_HOME + "/lib/ext/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), true);
         }
         if (filename.endsWith(".so")) {
             dest = JAVA_HOME + "/lib/i386/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), true);
         }
         if (filename.endsWith(".sh")) {
             dest = REALTIME_HOME + "/bin/" + f.getName();
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), true);
 
         }
         //win or other exe
         if (filename.endsWith(".exe")) {
             dest = REALTIME_HOME + "/bin/" + f.getName();
-            writeFile(dest, p.getByteArray());
+            writeFile(dest, p.getByteArray(), false);
             installWinJMF();
         }
 
@@ -574,15 +578,17 @@ public class TCPClient {
         }
     }
 
-    public void writeFile(String filename, byte[] byteArray) {
+    public void writeFile(String filename, byte[] byteArray, boolean chmod) {
         try {
             FileChannel fc =
                     new FileOutputStream(filename).getChannel();
             fc.write(ByteBuffer.wrap(byteArray));
             fc.close();
-            doSudoChMod(filename);
+            if (chmod) {
+                doSudoChMod(filename);
+            }
             applet.getSurface().setConnectingString("Downloaded " + new File(filename).getName());
-            if (filename.endsWith("jmf.jar") || filename.endsWith("jspeex.jar")) {
+            if (filename.endsWith("jmf.jar")) {
                 int n = JOptionPane.showConfirmDialog(null,
                         "New media libraries have been installed.\n" +
                         "You need to restart your browser in order to use them.\n" +
