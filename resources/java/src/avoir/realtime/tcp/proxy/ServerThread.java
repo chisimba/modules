@@ -28,7 +28,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Random;
-import avoir.realtime.common.DEBUG_ENGINE;
+
 import avoir.realtime.tcp.common.user.User;
 import avoir.realtime.tcp.common.user.UserLevel;
 
@@ -84,15 +84,10 @@ public class ServerThread extends Thread {
         this.raisedHands = raisedHands;
         this.mediaInputStreams = mediaInputStreams;
         tName = getName();
-        if (DEBUG_ENGINE.debug_level > 0) {
-            DEBUG_ENGINE.print(getClass(), "Server " + tName + " aaccepted connection from " + socket.getInetAddress());
-        }
         logger.info("Server " + tName + " accepted connection from " + socket.getInetAddress() + "\n");
         this.socket = socket;
 
     }
-
- 
 
     /**
      * Run method initializes Object input and output Streams Calls dispatch
@@ -103,10 +98,6 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(getClass(), "In run ...");
-            }
             outStream = socket.getOutputStream();
             objectOutStream = new ObjectOutputStream(
                     new BufferedOutputStream(outStream));
@@ -115,27 +106,15 @@ public class ServerThread extends Thread {
             ObjectInputStream in = null;
             in = new ObjectInputStream(
                     new BufferedInputStream(inStream));
-            if (DEBUG_ENGINE.debug_level > 6) {
-                DEBUG_ENGINE.print("      Calling listen");
-            }
             listen(in, objectOutStream);
 
         } catch (Exception e) {
-            if (DEBUG_ENGINE.debug_level > 0) {
-                DEBUG_ENGINE.print("Error in server at e");
-            }
             logger.log(Level.SEVERE, "Error in Server " + tName, e);
         } finally {
-            if (DEBUG_ENGINE.debug_level > 0) {
-                DEBUG_ENGINE.print("Server " + tName + " disconnected from " + socket.getInetAddress());
-            }
             logger.info("Server " + tName + " disconnected from " + socket.getInetAddress() + "\n");
             try {
                 socket.close();
             } catch (IOException e) {
-                if (DEBUG_ENGINE.debug_level > 0) {
-                    DEBUG_ENGINE.print("Error closing socket");
-                }
                 logger.log(Level.WARNING, "Error closing socket", e);
             }
         }
@@ -155,20 +134,9 @@ public class ServerThread extends Thread {
      */
     private void removeLock(String sessionId, String userId) {
         for (int i = 0; i < presentationLocks.size(); i++) {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(getClass(), "Available Lock " + presentationLocks.elementAt(i));
-            }
             if (sessionId.trim().equals(presentationLocks.elementAt(i).getSessionId()) &&
                     userId.equals(presentationLocks.elementAt(i).getUserId())) {
-                if (DEBUG_ENGINE.debug_level > 0) {
-                    DEBUG_ENGINE.print("   Removing lock " + presentationLocks.elementAt(i).getSessionId());
-                }
-
-
                 presentationLocks.remove(i);
-                if (DEBUG_ENGINE.debug_level > 0) {
-                    DEBUG_ENGINE.print("  Done!!! Lock removed!!!");
-                }
             }
         }
     }
@@ -179,19 +147,10 @@ public class ServerThread extends Thread {
      * @return
      */
     private boolean presentationIsLocked(String sessionId) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Checking if " + sessionId + " is locked");
-        }
         for (int i = 0; i < presentationLocks.size(); i++) {
             if (sessionId.equals(presentationLocks.elementAt(i).getSessionId())) {
-                if (DEBUG_ENGINE.debug_level > 0) {
-                    DEBUG_ENGINE.print("   " + sessionId + " is locked.");
-                }
                 return true;
             }
-        }
-        if (DEBUG_ENGINE.debug_level > 0) {
-            DEBUG_ENGINE.print("   " + sessionId + " is not locked");
         }
         return false;
     }
@@ -216,23 +175,16 @@ public class ServerThread extends Thread {
      * @param user
      */
     private void tryLockingPresentation(User user) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-
-            DEBUG_ENGINE.print(user + " going to check if  " + user.getSessionId() + " is locked");
-        }
         if (!presentationIsLocked(user.getSessionId())) {
-            DEBUG_ENGINE.print(user + " trying to lock  " + user.getSessionId());
             Session session = new Session();
             session.setSessionId(user.getSessionId());
             session.setUserId(user.getUserName());
             session.setFullName(user.getFullName());
             session.setSessionHasPresenter(true);
-            session.setTime(DEBUG_ENGINE.getDateTime());
+            session.setTime(avoir.realtime.common.DEBUG_ENGINE.getDateTime());
             presentationLocks.addElement(session);
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(user + " has locked presentation " + user.getSessionId());
-            }
-            broadcastMsg(new MsgPacket(user.getFullName() + " presenting. Started at " + DEBUG_ENGINE.getDateTime(), false, false), user.getSessionId());
+            broadcastMsg(new MsgPacket(user.getFullName() + " presenting. Started at " +
+                    avoir.realtime.common.DEBUG_ENGINE.getDateTime(), false, false), user.getSessionId());
         } else {
             presentationLocked = true;
             user.setAsPresenter(false);
@@ -242,14 +194,11 @@ public class ServerThread extends Thread {
     private void removeSlideServer(User user) {
         for (int i = 0; i < slideServers.size(); i++) {
             if (user.getUserName().equals(user.getUserName())) {
-                System.out.println("Removed slide server " + user.getUserName());
                 slideServers.remove(i);
             }
         }
     }
 
-   
-   
     /**
      * Listens to clients requests
      * @param objectIn
@@ -257,29 +206,20 @@ public class ServerThread extends Thread {
      */
     private void listen(ObjectInputStream objectIn, final ObjectOutputStream objectOut) {
 
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "In listen");
-        }
         while (true) {
             try {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-    System.out.println(obj.getClass());
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        if (obj != null) {
-                            DEBUG_ENGINE.print(getClass(), "Read obj " + obj.getClass());
-                        } else {
-                            DEBUG_ENGINE.print(getClass(), "Read object in listen is " + obj);
-                        }
-                    }
+                    logger.info(obj.getClass() + "");
+
                 } catch (Exception ex) {
                     if (thisUser != null) {
                         if (thisUser.isSlidesHost()) {
                             removeSlideServer(thisUser);
                         } else {
                             clients.removeUser(thisUser);
-                            //removeStream(thisUser.getSessionId());
+                        //removeStream(thisUser.getSessionId());
                         }
                         //deal with any raised hands
                         for (int i = 0; i < raisedHands.size(); i++) {
@@ -302,20 +242,12 @@ public class ServerThread extends Thread {
                     if (obj instanceof AckPacket) {
                         AckPacket ack = (AckPacket) obj;
                         thisUser = ack.getUser();
-                                        
+
 
                         //check if user is slides host, if so, add to special list
                         if (thisUser.isSlidesHost()) {
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print("   " + thisUser + " checking in first time");
-                                DEBUG_ENGINE.print(thisUser + " is  " + thisUser.getLevel() + " and is slides server");
-                            }
                             slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut));
                         } else {
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print("   " + thisUser + " checking in first time");
-                                DEBUG_ENGINE.print(thisUser + " is  " + thisUser.getLevel() + " and is normal node");
-                            }
                             if (thisUser.getLevel().equals(UserLevel.LECTURER)) {
                                 clients.add(0, objectOut, outStream, thisUser);
                             } else {
@@ -323,9 +255,6 @@ public class ServerThread extends Thread {
                             }
                             if (thisUser.isPresenter()) {
                                 tryLockingPresentation(thisUser);
-                            }
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print("Broadcasting to new user list to member of " + thisUser.getSessionId());
                             }
                             //first send the user list
                             ClientPacket clientPacket = new ClientPacket(getUsersBySessionId(thisUser.getSessionId()));
@@ -382,7 +311,7 @@ public class ServerThread extends Thread {
                         SurveyPackPacket p = (SurveyPackPacket) packet;
                         broadcastPacket(p, thisUser.getSessionId());
                     } else if (packet instanceof ModuleFileRequestPacket) {
-                      
+
                         ModuleFileRequestPacket p = (ModuleFileRequestPacket) obj;
                         processModuleFilePacketRequest(p);
                     } else if (packet instanceof ModuleFileReplyPacket) {
@@ -402,17 +331,10 @@ public class ServerThread extends Thread {
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket rmup = (RemoveUserPacket) packet;
                         clients.removeElement(objectOut, outStream);
-                     //   removeStream(thisUser.getSessionId());
+                        //   removeStream(thisUser.getSessionId());
                         //if presenter..clear the presentation...
                         if (rmup.getUser().isPresenter()) {
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print(rmup.getUser() + " is presenter");
-                            }
-
-                            //plus remove lock
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print(rmup.getUser() + " Removing lock ");
-                            }
+                         
                             removeLock(rmup.getUser().getSessionId(), rmup.getUser().getUserName());
                             //inform members of this action
                             MsgPacket p = new MsgPacket(rmup.getUser().getFullName() + " has stopped the live presentation.", false, true);
@@ -435,9 +357,6 @@ public class ServerThread extends Thread {
                             ChatPacket p = (ChatPacket) packet;
                             chats.addLast(p);
 
-                            if (DEBUG_ENGINE.debug_level > 3) {
-                                DEBUG_ENGINE.print("received chat " + p.getContent() + " for sesession " + p.getSessionId());
-                            }
                             logChat("ChatLog.txt", "[" + p.getTime() + "] <" + p.getUsr() + "> " + p.getContent());
                             if (chats.size() > MAX_CHAT_SIZE) {
                                 chats.removeFirst();
@@ -657,9 +576,6 @@ public class ServerThread extends Thread {
      */
     public void logChat(String fileName, String txt) {
         try {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(getClass(), "Logging chat token");
-            }
             BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
             out.write(txt);
             out.close();
@@ -702,9 +618,7 @@ public class ServerThread extends Thread {
 
                     clients.elementAt(i).writeObject(chatPacket);
                     clients.elementAt(i).flush();
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        DEBUG_ENGINE.print("Send !!!!");
-                    }
+ 
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -722,9 +636,6 @@ public class ServerThread extends Thread {
                     if (!clients.nameAt(i).isPresenter()) {
                         clients.elementAt(i).writeObject(packet);
                         clients.elementAt(i).flush();
-                        if (DEBUG_ENGINE.debug_level > 3) {
-                            DEBUG_ENGINE.print("Send !!!!");
-                        }
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -765,10 +676,6 @@ public class ServerThread extends Thread {
                     if (!clients.nameAt(i).isPresenter()) {
                         clients.elementAt(i).writeObject(packet);
                         clients.elementAt(i).flush();
-                        if (DEBUG_ENGINE.debug_level > 3) {
-                            DEBUG_ENGINE.print("Send !!!!");
-                        }
-                    // System.out.println("send!");
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -786,9 +693,6 @@ public class ServerThread extends Thread {
                 try {
                     clients.elementAt(i).writeObject(packet);
                     clients.elementAt(i).flush();
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        DEBUG_ENGINE.print("Send !!!!");
-                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -806,9 +710,6 @@ public class ServerThread extends Thread {
                     if (clients.nameAt(i).isPresenter()) {
                         clients.elementAt(i).writeObject(packet);
                         clients.elementAt(i).flush();
-                        if (DEBUG_ENGINE.debug_level > 3) {
-                            DEBUG_ENGINE.print("Send !!!!");
-                        }
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -827,9 +728,6 @@ public class ServerThread extends Thread {
 
                     clients.elementAt(i).writeObject(p);
                     clients.elementAt(i).flush();
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        DEBUG_ENGINE.print("Send !!!!");
-                    }
 
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -848,9 +746,6 @@ public class ServerThread extends Thread {
                     if (clients.nameAt(i).isPresenter()) {
                         clients.elementAt(i).writeObject(p);
                         clients.elementAt(i).flush();
-                        if (DEBUG_ENGINE.debug_level > 3) {
-                            DEBUG_ENGINE.print("Send !!!!");
-                        }
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -869,9 +764,6 @@ public class ServerThread extends Thread {
 
                     clients.elementAt(i).writeObject(p);
                     clients.elementAt(i).flush();
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        DEBUG_ENGINE.print("Send !!!!");
-                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -936,42 +828,17 @@ public class ServerThread extends Thread {
     }
 
     private Session getSession(String sessionId) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Getting session for id " + sessionId);
-            DEBUG_ENGINE.print("Existing Sessions:");
-            DEBUG_ENGINE.print("**************************");
-        }
         for (int i = 0; i < presentationLocks.size(); i++) {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(i + ". " + presentationLocks.elementAt(i));
-            }
             if (sessionId.equals(presentationLocks.elementAt(i).getSessionId())) {
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Found, returning session " + sessionId);
-                }
                 return presentationLocks.elementAt(i);
             }
-        }
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print("Session for id NOT found, returning null");
         }
         return null;
     }
 
     private void setCurrentSession(Session session) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Setting current session to " + session.getSessionId());
-            DEBUG_ENGINE.print("Existing sessions:");
-            DEBUG_ENGINE.print("******************");
-        }
         for (int i = 0; i < presentationLocks.size(); i++) {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(i + ". " + presentationLocks.elementAt(i));
-            }
             if (session.getSessionId().equals(presentationLocks.elementAt(i).getSessionId())) {
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Found at " + i + ". Replacing it");
-                }
                 presentationLocks.set(i, session);
                 return;
             }
@@ -979,25 +846,15 @@ public class ServerThread extends Thread {
     }
 
     private void processNewSlideReply(NewSlideReplyPacket p, ObjectOutputStream out) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Processing New Slide Reply for relayed request for session " + p.getSessionId());
-        }
         Session session = getSession(p.getSessionId());
 
         //send it to all those people logged in on this presentation (session)
         if (p.isIsPresenter() || p.isControl()) { //if presenter, take over the presentation
 
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Slide is for presenter...setting it as current slide. session= " + p.getSessionId());
-                DEBUG_ENGINE.print("Presentation Locked: " + presentationLocked);
-            }
             if (session != null) {
                 if (presentationLocked) {
                     if (p.isIsPresenter()) {
                         p.setMessage("Presentation is locked by " + session.getFullName());
-                    }
-                    if (DEBUG_ENGINE.debug_level > 3) {
-                        DEBUG_ENGINE.print("Presentation is locked by " + p.getUserId() + ", sending it back only to " + p.getUserId());
                     }
                     sendPacket(p, out);
                 } else {
@@ -1009,18 +866,12 @@ public class ServerThread extends Thread {
 
                 }
             } else {
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Session is null!");
-                }
                 p.setMessage("You are not in sync with presenter");
                 sendPacket(p, out);
 
             }
 
         } else {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Slide not for presenter, sending it back only to " + p.getUserId());
-            }
             sendPacket(p, out);
         }
 
@@ -1030,14 +881,8 @@ public class ServerThread extends Thread {
     private void sendPacket(RealtimePacket packet, ObjectOutputStream out) {
 
         try {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(getClass(), "In send Packet method");
-            }
             out.writeObject(packet);
             out.flush();
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Send packet!!!");
-            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
