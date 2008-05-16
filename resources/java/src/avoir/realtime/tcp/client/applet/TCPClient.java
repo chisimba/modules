@@ -554,14 +554,21 @@ public class TCPClient {
     private void processModuleFileReplyPacket(ModuleFileReplyPacket p) {
         String filename = p.getFilename();
         File f = new File(filename);
+        System.out.println("Received: "+f.getAbsolutePath());
         String dest = ".";
-        if (filename.endsWith(".jar") && !filename.startsWith("realtime")) {
+        if (filename.endsWith(".jar") && (!filename.startsWith("realtime") ||
+                !filename.endsWith("jspeex.jar"))) {
             dest = JAVA_HOME + "/lib/ext/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
             writeFile(dest, p.getByteArray());
         }
 
         if (filename.startsWith("realtime")) {
+            dest = REALTIME_HOME + "/lib/" + f.getName();
+            writeFile(dest, p.getByteArray());
+        }
+
+        if (filename.endsWith("jspeex.jar")) {
             dest = REALTIME_HOME + "/lib/" + f.getName();
             writeFile(dest, p.getByteArray());
         }
@@ -622,7 +629,7 @@ public class TCPClient {
             fc.close();
             doSudoChMod(filename);
             applet.getSurface().setConnectingString("Downloaded " + new File(filename).getName());
-            if (filename.endsWith("jmf.jar")) {
+            if (filename.endsWith("jmf.jar") || filename.endsWith("jspeex.jar")) {
                 int n = JOptionPane.showConfirmDialog(null,
                         "New media libraries have been installed.\n" +
                         "You need to restart your browser in order to use them.\n" +

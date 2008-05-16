@@ -265,7 +265,7 @@ public class ServerThread extends Thread {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-
+    System.out.println(obj.getClass());
                     if (DEBUG_ENGINE.debug_level > 3) {
                         if (obj != null) {
                             DEBUG_ENGINE.print(getClass(), "Read obj " + obj.getClass());
@@ -382,6 +382,7 @@ public class ServerThread extends Thread {
                         SurveyPackPacket p = (SurveyPackPacket) packet;
                         broadcastPacket(p, thisUser.getSessionId());
                     } else if (packet instanceof ModuleFileRequestPacket) {
+                      
                         ModuleFileRequestPacket p = (ModuleFileRequestPacket) obj;
                         processModuleFilePacketRequest(p);
                     } else if (packet instanceof ModuleFileReplyPacket) {
@@ -602,9 +603,11 @@ public class ServerThread extends Thread {
             if (slideServers.elementAt(i).getId().equals(packet.getSlidesServerId())) {
                 sendPacket(packet, slideServers.elementAt(i).getObjectOutputStream());
                 slideServerFound = true;
+                System.out.println("requesting from slide server ...");
             }
         }
         if (!slideServerFound) {
+            System.out.println("slide server not foound!!");
             sendPacket(new MsgPacket("Media library server not found! Audio/Video may not work.", false, true), objectOutStream);
         }
     }
