@@ -200,7 +200,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
 
         splitPane.setRightComponent(surface);
         splitPane.setLeftComponent(leftSplitPane);
-        splitPane.setDividerLocation(150);
+        splitPane.setDividerLocation(180);
 
         agendaList.addMouseListener(new MouseAdapter() {
 

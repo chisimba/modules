@@ -28,6 +28,8 @@ public class RealtimeOptions {
             "/avoir-realtime-0.1/conf/";
     static String binDir = System.getProperty("user.home") +
             "/avoir-realtime-0.1/bin/";
+    static String libDir = System.getProperty("user.home") +
+            "/avoir-realtime-0.1/lib/";
     
 
     static {
@@ -62,7 +64,10 @@ public class RealtimeOptions {
         if (!binFile.exists()) {
             binFile.mkdirs();
         }
-
+        File libFile = new File(libDir);
+        if (!libFile.exists()) {
+            libFile.mkdirs();
+        }
         loadProperties();
     }
 

@@ -10,7 +10,6 @@ import avoir.realtime.tcp.common.user.User;
 import avoir.realtime.tcp.common.packet.*;
 
 import java.util.Vector;
-import avoir.realtime.common.DEBUG_ENGINE;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import avoir.realtime.admin.ClientAdmin;
@@ -78,9 +77,6 @@ public class TCPClient {
      * Resquests user list, but in turn also gets published
      */
     public void publish(User user) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Sending Publish request");
-        }
         sendPacket(new AckPacket(user, user.isPresenter()));
     }
 
@@ -129,9 +125,6 @@ public class TCPClient {
     public void requestNewSlide(String siteRoot, int slideIndex,
             boolean isPresenter, String sessionId, String userId,
             boolean hasControl) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Sending new slide request to " + siteRoot);
-        }
         NewSlideRequestPacket p = new NewSlideRequestPacket(siteRoot,
                 slideIndex,
                 isPresenter,
@@ -148,27 +141,14 @@ public class TCPClient {
      */
     public void sendPacket(RealtimePacket packet) {
         try {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print(getClass(), "Sending packet " + packet.getClass());
-            }
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
-
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Send !!!!");
-                }
             } else {
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Writer is null !!!! Cannot send  packet " + packet.getClass());
-                }
             }
         } catch (IOException ex) {
             if (applet != null) {
                 applet.setStatusBarMessage(ex.getMessage());
-            }
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Error !!!!!!");
             }
             ex.printStackTrace();
         }
@@ -180,9 +160,6 @@ public class TCPClient {
      */
     private void updateUserList(ClientPacket packet) {
         //update user list..but only if this user is the applet
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Updating user list");
-        }
         if (applet != null) {
             Vector<User> users = packet.getUsers();
             applet.updateUserList(users);
@@ -204,9 +181,6 @@ public class TCPClient {
      * @param user
      */
     public void removeUser(User user) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Removing user " + user);
-        }
         sendPacket(new RemoveUserPacket(user));
     }
 
@@ -270,9 +244,6 @@ public class TCPClient {
         File dir = new File(contentPath);
         String[] fileList = dir.list();
 
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "In get image file names: getting slides count");
-        }
         if (fileList != null) {
 
             java.util.Arrays.sort(fileList);
@@ -301,14 +272,8 @@ public class TCPClient {
                 }
             }
             java.util.Arrays.sort(imgNos);
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Found " + imgNos.length);
-            }
             return imgNos;
 
-        }
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print("none found. returning null ");
         }
         return null;
     }
@@ -327,9 +292,6 @@ public class TCPClient {
      * @param packet
      */
     private void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print("Processing Relayed New Slide Reply");
-        }
         int slideIndex = packet.getSlideIndex();
 
         if (applet != null) {
@@ -342,9 +304,6 @@ public class TCPClient {
             if (packet.getMessage() != null) {
                 //  applet.setStatusMessage(packet.getMessage());
                 applet.showMessage(packet.getMessage(), false, true);
-            }
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Displayed!!!");
             }
         }
     }
@@ -413,9 +372,6 @@ public class TCPClient {
      * Listens for communications from the super node
      */
     public void listen() {
-        if (DEBUG_ENGINE.debug_level > 3) {
-            DEBUG_ENGINE.print(getClass(), "Listening...");
-        }
         while (running) {
             try {
                 Object packet = null;
@@ -484,9 +440,6 @@ public class TCPClient {
             } catch (Exception ex) {
                 //for now, just cut off the listening
                 running = false;
-                if (DEBUG_ENGINE.debug_level > 3) {
-                    DEBUG_ENGINE.print("Error, taking off !!!");
-                }
                 displayDisconnectionMsg();
                 ex.printStackTrace();
             }
@@ -856,13 +809,7 @@ public class TCPClient {
      */
     private void processChatLogPacket(ChatLogPacket p) {
         if (applet != null) {
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("Received chat Log size " + p.getSize());
-            }
             applet.updateChat(p);
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("diplayed!!!");
-            }
         }
 
     }
@@ -874,9 +821,6 @@ public class TCPClient {
     private void processChatPacket(ChatPacket p) {
         if (applet != null) {
             applet.updateChat(p);
-            if (DEBUG_ENGINE.debug_level > 3) {
-                DEBUG_ENGINE.print("diplayed!!!");
-            }
         }
 
     }
