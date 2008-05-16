@@ -12,7 +12,7 @@ public interface AudioResource {
 
     public static final int BLOCK_SIZE = 640;	// default = 640
 
-    public static final int SAMPLE_RATE = 16000;	// default = 16000
+    public static final int SAMPLE_RATE = 44100;	// default = 16000
      //8000,11025,16000,22050,44100
 
     public static final int MODE = 1;	// default = 1
