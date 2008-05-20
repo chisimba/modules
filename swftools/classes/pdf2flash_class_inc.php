@@ -56,7 +56,13 @@ $GLOBALS['kewl_entry_point_run'])
 */
 class pdf2flash extends object
 {
-
+    
+    /**
+     * Method to indicate whether to use a custom viewport or not
+     */
+    public $useCustomViewPort = TRUE;
+    public $debug = FALSE;
+    
     /**
     *
     * Intialiser for the pdf2flash class
@@ -91,45 +97,68 @@ class pdf2flash extends object
         $filepath = $this->objCleanUrl->cleanUpUrl($filepath);
         
         // Get full path to viewer. This is the file with the prev/next buttons
-        $viewport = $this->getResourcePath('viewport.swf');
+        $viewport = $this->getResourcePath('a4final.swf');
         
         // Create Directory
         $this->objMkdir->mkdirs($path, 0777);
         
-        /*
-         List of Original Coummand
-         pdf2swf -t -o tmp.swf fsiu_elearn.pdf
-         swfcombine -o flashfile.swf myviewport.swf viewport=tmp.swf 
-         swfcombine --dummy `swfdump -XY tmp.swf` flashfile.swf -o flashfile.swf
-        */
-        
-        // First Create SWF from PDF
-        $command = 'pdf2swf -t -o '.$filepath.'1'.' '.$pdfFilePath;
-        
-        exec($command);
-        
-        if (!file_exists($filepath.'1')) {
-            return FALSE;
+        if ($this->useCustomViewPort) {
+            /*
+             List of Original Coummand
+             pdf2swf -t -o tmp.swf fsiu_elearn.pdf
+             swfcombine -o flashfile.swf myviewport.swf viewport=tmp.swf 
+             swfcombine --dummy `swfdump -XY tmp.swf` flashfile.swf -o flashfile.swf
+            */
+            
+            // First Create SWF from PDF
+            $command = 'pdf2swf -t -o '.$filepath.'1'.' '.$pdfFilePath;
+            
+            if ($this->debug) {
+                echo $command;
+            }
+            
+            exec($command);
+            
+            if (!file_exists($filepath.'1')) {
+                return FALSE;
+            }
+            
+            // Then include the navigation
+            $command = 'swfcombine -o '.$filepath.' '.$viewport.' viewport='.$filepath.'1';
+            
+            if ($this->debug) {
+                echo $command;
+            }
+            
+            exec($command);
+            
+            if (!file_exists($filepath)) {
+                return FALSE;
+            }
+            
+            // Then fix the resolution
+            $command = 'swfcombine --dummy `swfdump -XY '.$filepath.'1'.'` '.$filepath.' -o '.$filepath;
+            
+            if ($this->debug) {
+                echo $command;
+            }
+            
+            exec($command);
+            
+            // Delete temp file
+            unlink($filepath.'1');
+            
+            return TRUE;
+        } else {
+            $command = "pdf2swf -bl -o $filepath {$pdfFilePath}";
+            
+            exec($command);
+            if (file_exists($filepath)) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
         }
-        
-        // Then include the navigation
-        $command = 'swfcombine -o '.$filepath.' '.$viewport.' viewport='.$filepath.'1';
-        
-        exec($command);
-        
-        if (!file_exists($filepath)) {
-            return FALSE;
-        }
-        
-        // Then fix the resolution
-        $command = 'swfcombine --dummy `swfdump -XY '.$filepath.'1'.'` '.$filepath.' -o '.$filepath;
-        
-        exec($command);
-        
-        // Delete temp file
-        unlink($filepath.'1');
-        
-        return TRUE;
 
     }
 
