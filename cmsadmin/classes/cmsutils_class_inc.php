@@ -1008,6 +1008,9 @@ class cmsutils extends object
 						$tbl_meta->addCell("<input type=\"button\" class=\"button\" value=\"{$this->objLanguage->languageText('mod_cmsadmin_add_section_button','cmsadmin')}\" onclick=\"f=document.getElementById('form_addfrm');f.keyword.value=document.getElementById('form_addfrm').parent.options[document.getElementById('form_addfrm').parent.selectedIndex].text+', '+f.title.value+f.keyword.value;\" />");
 				}
 
+
+				//Moved this section outside of the tabs due to slow load issue
+				/*
 				if (isset($arrContent['body'])) {
 						$bodyInputValue = stripslashes($arrContent['body']);
 				}else{
@@ -1018,10 +1021,15 @@ class cmsutils extends object
 				$bodyInput->setContent($bodyInputValue);
 				$bodyInput->setDefaultToolBarSet();
 				$bodyInput->height = '400px';
+				*/
+
+
 				//$bodyInput->width = '50%';
 				$tbl_meta->endRow();
 				//Add items to tabs
-				$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'),$bodyInput->show(),'',TRUE,'');
+
+				//$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin'),$bodyInput->show(),'',TRUE,'');
+
 				$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_basic','cmsadmin'),$tbl_basic->show(),'',False,'');
 				$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_advanced','cmsadmin'),$tbl_advanced->show(),'',False,'');
 				$tabs->addTab($this->objLanguage->languageText('mod_cmsadmin_meta','cmsadmin'), $tbl_meta->show(),'',False,'');
@@ -3569,6 +3577,9 @@ class cmsutils extends object
 				$table->addCell($frontPage->show().'<span id="introrequiredtext" class="warning">'.$this->objLanguage->languageText('mod_cmsadmin_pleaseenterintrotext', 'cmsadmin').'</span>');
 				$table->endRow();
 
+
+
+
 				// Radio button to display the full content or only the summary on the front page
 				$lbDisplay = $this->objLanguage->languageText('mod_cmsadmin_displaysummaryorcontent', 'cmsadmin');
 				$lbIntroOnly = $this->objLanguage->languageText('mod_cmsadmin_introonly', 'cmsadmin');
@@ -3580,11 +3591,26 @@ class cmsutils extends object
 				$objRadio->setBreakSpace('&nbsp;&nbsp;');
 				$objRadio->setSelected($show_content);
 
+				$table_fr = new htmltable();
+
+				$table_fr->startRow();
+				$table_fr->addCell('<br/>');
+				$table_fr->endRow();
+
+				$table_fr->startRow();
+				$table_fr->addCell($lbDisplay.': ', null, 'top', null, null, 'colspan="2"');
+				$table_fr->endRow();
+
+				$table_fr->startRow();
+				$table_fr->addCell($objRadio->show(), '', 'center');
+				$table_fr->endRow();
+
+
 				$table->row_attributes = "id='row_id'";
 				$table->startRow();
-				$table->addCell($lbDisplay.': ');
-				$table->addCell($objRadio->show(), '', 'center');
+				$table->addCell($table_fr->show(), null, 'top', null, null, 'colspan="2"');
 				$table->endRow();
+
 
 				// Introduction Area
 				$introInput = $this->newObject('htmlarea', 'htmlelements');
@@ -3601,12 +3627,68 @@ class cmsutils extends object
 								//add hidden text input
 								$table->row_attributes = '';
 								$table->startRow();
-								$table->addCell(NULL);
-								$table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left');
+								//$table->addCell(NULL);
+								$table->addCell('<div id="introdiv"><br />'.$h3->show().$introInput->show().'</div>','','left','left', null, 'colspan="2"');
+								$table->endRow();
+
+
+
+								//Adding the FCK_EDITOR
+
+								if ($editmode) {
+
+									if (isset($arrContent['body'])) {
+				                        $bodyInputValue = stripslashes($arrContent['body']);
+					                }else{
+				                        $bodyInputValue = null;
+					                }
+
+								}
+
+				                $bodyInput = $this->newObject('htmlarea', 'htmlelements');
+				                $bodyInput->init('body', $bodyInputValue);
+				                $bodyInput->setContent($bodyInputValue);
+				                $bodyInput->setDefaultToolBarSet();
+				                $bodyInput->height = '400px';
+
+								//echo $bodyInput->show(); exit;
+								$h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
+								$h3->type = 3;
+
+								$table->startRow();
+                                $table->addCell('<br/>');
+                                $table->endRow();
+
+								$table->startRow();
+								$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+								$table->endRow();
+
+								$table->startRow();
+                                $table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+                                $table->endRow();
+
+								$table->startRow();
+								$table->addCell($bodyInput->show(), null, 'top', null, null, 'colspan="2"');
 								$table->endRow();
 
 								//add the main body
 								$table2 = new htmltable();
+
+								$h3->str = "Page Parameters";
+								$h3->type = 3;
+
+								$table2->startRow();
+                                $table2->addCell('<br/>');
+                                $table2->endRow();
+
+								$table2->startRow();
+								$table2->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+								$table2->endRow();
+
+								$table2->startRow();
+                                $table2->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+                                $table2->endRow();
+
 								$table2->startRow();
 
 								if (!$editmode) {
@@ -3618,13 +3700,12 @@ class cmsutils extends object
 								// Content Area
 
 								//Header for main body
-								$h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
-								$h3->type = 3;
+								//$h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
 								//Pass action
 								$txt_action = new textinput('action',$action,'hidden');
 								$table->startRow();
-								$table->addCell($h3->show(),null,'center','left');
-								$table->addCell($table2->show(),null,'top','left');
+								//$table->addCell($h3->show(),null,'center','left');
+								$table->addCell($table2->show(),null,'top','left', null, 'colspan="2"');
 								if ($fromModule) { 
 										$mod = new textinput('frommodule',$fromModule,'hidden');
 										$act = new textinput('fromaction',$fromAction,'hidden');
@@ -3640,17 +3721,31 @@ class cmsutils extends object
 								if ($objModulesInfo->checkIfRegistered('creativecommons')) {
 										$h3->str = $this->objLanguage->languageText('word_licence');
 										$h3->type = 3;
-										if (!$editmode) {
+										//if (!$editmode) {
+	
+												$table->startRow();
+                                                $table->addCell('<br/>');
+                                                $table->endRow();
+
+												$table->startRow();
+												$table->addCell($h3->show(),null,'center','left');
+												$table->endRow();
+
+												$table->startRow();
+           		                     			$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+                                				$table->endRow();
+
+												$table->startRow();
+												$table->addCell($objCCLicence->show(),null,'top','left', null, 'colspan="2"'); 
+												$table->endRow();
+										//}else{
+										/*
 												$table->startRow();
 												$table->addCell($h3->show(),null,'center','left');
 												$table->addCell($objCCLicence->show(),null,'top','left'); 
 												$table->endRow();
-										}else{
-												$table->startRow();
-												$table->addCell($h3->show(),null,'center','left');
-												$table->addCell($objCCLicence->show(),null,'top','left'); 
-												$table->endRow();
-										}
+										*/
+										//}
 
 
 								} 
