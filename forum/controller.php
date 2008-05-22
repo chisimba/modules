@@ -618,7 +618,7 @@ class forum extends controller
         if ($forumDetails['subscriptions'] == 'Y') {
             //http://localhost/nextgen/index.php?module=forum&action=postreply&id=gen8Srv57Nme40_1&type=context
             $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
-            $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+            //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
         } else {
             $emailSuccess=NULL;
         }
@@ -1095,7 +1095,7 @@ class forum extends controller
         
         if ($forumDetails['subscriptions'] == 'Y') {
             $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
-            $emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+            //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
         } else {
             $emailSuccess = NULL;
         }
