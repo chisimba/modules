@@ -22,8 +22,8 @@ class block_forum extends object
     */
     function init()
     {
-        $this->objLanguage =& $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_forum_lastpostindefault');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->title = $this->objLanguage->languageText('mod_forum_lastpostindefault', 'forum');
         $this->objPost =& $this->getObject('dbpost');
         $this->objForum =& $this->getObject('dbforum');
         $this->trimstrObj =& $this->getObject('trimstr', 'strings');
@@ -45,8 +45,8 @@ class block_forum extends object
     */
     function showLastPost()
     {
-        $noPost = $this->objLanguage->languageText('mod_forum_nopostsyet');
-        $todayAt = $this->objLanguage->languageText('mod_forum_todayat');
+        $noPost = $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum');
+        $todayAt = $this->objLanguage->languageText('mod_forum_todayat', 'forum');
 
         $forumId = $this->objForum->getDefaultForum($this->contextCode);
         $post = $this->objPost->getLastPost($forumId['id']);
@@ -112,7 +112,7 @@ class block_forum extends object
     */
     function getLink()
     {
-        $lnForum = $this->objLanguage->languageText('mod_forum_name');
+        $lnForum = $this->objLanguage->languageText('mod_forum_name', 'forum');
         $url = $this->uri('', 'forum');
         $this->objIcon->setModuleIcon('forum');
         $objLink = new link($url);
