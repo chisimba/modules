@@ -3,7 +3,7 @@
 $tablename = 'tbl_unihr_accstatus';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Faculty names and ID', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Accommodation status', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
