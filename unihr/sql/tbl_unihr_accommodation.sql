@@ -13,7 +13,7 @@ $fields = array(
 		),
 	'userid' => array(
 		'type' => 'text',
-		'length' => 255,
+		'length' => 50,
 		),
 	'acctype_id' => array(
 		'type' => 'text',
