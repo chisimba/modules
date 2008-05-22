@@ -5,22 +5,22 @@ class section_list extends object
 
     public function init()
     {
-		$this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->loadClass('link', 'htmlelements');
-		$this->loadClass('htmlheading', 'htmlelements');
-		
-		$this->objStories = $this->getObject('dbnewsstories');
+        $this->loadClass('htmlheading', 'htmlelements');
+        
+        $this->objStories = $this->getObject('dbnewsstories');
         // Load Menu Tools Class
         $this->objMenuTools = $this->getObject('tools', 'toolbar');
-		
-		// Permissions Module
+        
+        // Permissions Module
         $this->objDT = $this->getObject( 'decisiontable','decisiontable' );
         // Create the decision table for the current module
         $this->objDT->create('news');
         // Collect information from the database.
         $this->objDT->retrieve('news');
-		
-		$this->objIcon = $this->newObject('geticon', 'htmlelements');
+        
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
         
     }
@@ -48,9 +48,9 @@ class section_list extends object
         if (count($categoryStories) == 0) {
             $output .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_news_categorydoesnothavestories', 'news', 'This category does not have any stories yet.').'</div>';
         } else {
-			
-			$output .= '<ul>';
-			
+            
+            $output .= '<ul>';
+            
             foreach ($categoryStories as $story)
             {
                 $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$story['id'])));
@@ -60,8 +60,8 @@ class section_list extends object
                 
                 $output .= '<li>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</li>';
             }
-			
-			$output .= '</ul>';
+            
+            $output .= '</ul>';
         
         }
         
@@ -76,8 +76,8 @@ class section_list extends object
     public function renderPage($story, $category)
     {
         $objRender = $this->getObject('renderstory');
-		
-		return $objRender->render($story, $category);
+        
+        return $objRender->render($story, $category);
     }
 
 }

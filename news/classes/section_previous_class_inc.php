@@ -27,11 +27,9 @@ class section_previous extends object
             $str = '<h1>'.$category['categoryname'].'</h1>';
             $str .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_news_categorydoesnothavestories', 'news', 'This category does not have any stories yet.').'</div>';
         } else {
-            //$story = $stories[0];
             
-            $str = '<h1>'.$story['storytitle'].'</h1>';
-            
-            $str .= $story['storytext'];
+            $str = '';
+            $this->setVar('pageId', $story['id']);
             
             $nextItems = $this->objStories->getNextItem($story['id'], $category['id'], $category['pagination']);
             
@@ -46,6 +44,9 @@ class section_previous extends object
                 }
                 $str .= '</ul>';
             }
+            
+            $objRender = $this->getObject('renderstory');
+            $str = $objRender->render($story, $category, $str);
         }
         
         return $str;

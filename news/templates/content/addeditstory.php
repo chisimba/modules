@@ -129,6 +129,42 @@ $formTable->addCell('&nbsp;');
 $formTable->addCell('&nbsp;');
 $formTable->endRow();
 
+
+$sticky = new radio ('sticky');
+$sticky->addOption('Y', 'Yes');
+$sticky->addOption('N', 'No');
+
+if ($mode == 'edit') {
+    $stickySelected = $story['sticky'];
+} else {
+    $categoryId = $this->getParam('id');
+    
+    if ($categoryId == '') {
+        $stickySelected = 'N';
+    } else {
+        $category = $this->objNewsCategories->getCategory($categoryId);
+        if ($category == FALSE) {
+            $stickySelected = 'N';
+        } else {
+            $stickySelected = $category['defaultsticky'];
+        }
+    }
+}
+
+$sticky->setSelected($stickySelected);
+$sticky->setBreakSpace(' &nbsp; ');
+
+$formTable->startRow();
+$formTable->addCell($this->objLanguage->languageText('mod_news_featuredstory', 'news', 'Featured Story'));
+$formTable->addCell($sticky->show().'<br /><em>'.$this->objLanguage->languageText('mod_news_featuredstoryexplanation', 'news', 'Featured Stories are highlighted on the Front Page as a sticky or breaking or top story').'</em>');
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell('&nbsp;');
+$formTable->addCell('&nbsp;');
+$formTable->endRow();
+
+
 // Category
 
 $label = new label ($this->objLanguage->languageText('mod_news_storycategory', 'news', 'Story Category'), ' input_storycategory');

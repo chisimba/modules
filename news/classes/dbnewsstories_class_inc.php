@@ -34,7 +34,7 @@ class dbnewsstories extends dbtable
     * @param array $keyTags Key Tags
     * @param date/time $publishDate Date when story should be published
     */
-    public function addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL)
+    public function addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate = NULL, $sticky='N')
     {
 
         if ($publishDate == NULL) {
@@ -54,7 +54,8 @@ class dbnewsstories extends dbtable
             'creatorid' => $userId,
             'storyorder' => $this->getLastCategoryOrder($storyCategory)+1,
             'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-            'dateavailable' => $publishDate
+            'dateavailable' => $publishDate,
+            'sticky' => $sticky,
             );
 
         $storyId = $this->insert($data);
@@ -131,7 +132,7 @@ class dbnewsstories extends dbtable
     * @param array $keyTags Key Tags
     * @param date/time $publishDate Date when story should be published
     */
-    public function updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate)
+    public function updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishDate, $sticky)
     {
         $userId = $this->objUser->userId();
         
@@ -143,6 +144,7 @@ class dbnewsstories extends dbtable
             'storytext' => stripslashes($storyText),
             'storysource' => stripslashes($storySource),
             'storyimage' => $storyImage,
+            'sticky' => $sticky,
             'modifierid' => $userId,
             'dateavailable' => $publishDate,
             'datemodified' => strftime('%Y-%m-%d %H:%M:%S', mktime())
@@ -253,8 +255,7 @@ class dbnewsstories extends dbtable
 LEFT JOIN tbl_news_categories ON (tbl_news_stories.storycategory=tbl_news_categories.id)
 LEFT JOIN tbl_geonames ON (tbl_news_stories.storylocation=tbl_geonames.geonameid)
 LEFT JOIN tbl_files ON (tbl_news_stories.storyimage=tbl_files.id)
-WHERE dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\'
-
+WHERE sticky=\'Y\' AND dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\'
 ORDER BY storydate DESC, datecreated DESC LIMIT '.$limit;
 
         return $this->getArray($sql);
@@ -330,7 +331,7 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
                     $output .= '[ '.$story['location'].' ] ';
                 }
 
-                $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE);
+                $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 300, TRUE);
 
                 $storyLink->link = 'Read Story';
                 $output .= ' ('.$storyLink->show().')';

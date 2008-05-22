@@ -29,8 +29,9 @@ class news extends controller
         $this->objPollVotes = $this->getObject('dbnewspollsvotes');
 
         $this->objLanguage = $this->getObject('language', 'language');
-
-
+        
+        $this->objNewsBlocks = $this->getObject('dbnewsblocks');
+        $this->objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
 
         $this->loadClass('link', 'htmlelements');
 
@@ -162,9 +163,31 @@ class news extends controller
         $categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
         $this->setVarByRef('categories', $categories);
 
-        $albums = $this->objAlbums->getAlbums();
 
-        $this->setVarByRef('albums', $albums);
+        // Blocks
+        $rightBlocks = $this->objNewsBlocks->getContextBlocks($this->contextCode, 'right');
+        $this->setVarByRef('rightBlocksStr', $rightBlocks);
+        
+        $middleBlocks = $this->objNewsBlocks->getContextBlocks($this->contextCode, 'middle');
+        $this->setVarByRef('middleBlocksStr', $middleBlocks);
+        
+        $allContextBlocks = $this->objNewsBlocks->getContextBlocksArray($this->contextCode);
+        $this->setVarByRef('allContextBlocks', $allContextBlocks);
+        
+        
+        
+        $smallDynamicBlocks = $this->objDynamicBlocks->getSmallContextBlocks($this->contextCode);
+        $this->setVarByRef('smallDynamicBlocks', $smallDynamicBlocks);
+        
+        $wideDynamicBlocks = $this->objDynamicBlocks->getWideContextBlocks($this->contextCode);
+        $this->setVarByRef('wideDynamicBlocks', $wideDynamicBlocks);
+        
+        $objBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
+        $smallBlocks = $objBlocks->getBlocks('normal', 'site');
+        $this->setVarByRef('smallBlocks', $smallBlocks);
+        
+        $wideBlocks = $objBlocks->getBlocks('wide', 'site');
+        $this->setVarByRef('wideBlocks', $wideBlocks);
 
         return 'home.php';
     }
@@ -372,7 +395,7 @@ class news extends controller
         $introduction     = $this->getParam('introduction');
         $numitems         = $this->getParam('numitems');
         $othernum         = $this->getParam('othernum', 10);
-		$rssFeeds         = $this->getParam('rssfeeds');
+        $rssFeeds         = $this->getParam('rssfeeds');
         $socialBookmarks         = $this->getParam('socialbookmarks');
 
         if ($numitems == 'other') {
@@ -432,19 +455,20 @@ class news extends controller
         $storyText = $this->getParam('storytext');
         $storySource = $this->getParam('storysource');
         $storyImage = $this->getParam('imageselect');
+        $sticky = $this->getParam('sticky');
 
         $tags = $this->getParam('storytags');
         $keyTags = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag3'));
-		
-		$publishdate = $this->getParam('publishon');
-		
-		if ($publishdate == 'now')  {
-			$publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
-		} else {
-			$publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
-		}
-		
-		$storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate);
+        
+        $publishdate = $this->getParam('publishon');
+        
+        if ($publishdate == 'now')  {
+            $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        } else {
+            $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+        }
+        
+        $storyId = $this->objNewsStories->addStory($storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
 
 
         $category = $this->objNewsCategories->getCategory($storyCategory);
@@ -480,24 +504,26 @@ class news extends controller
             if ($category == FALSE) {
 
             } else {
-				
-				// Check whether story is available to be viewed
-				if (($story['dateavailable'] > strftime('%Y-%m-%d %H:%M:%S', mktime())) && !$this->isValid('viewfuturestory')) {
-					return $this->nextAction('home', array('error'=>'nostory'));
-				} else {
-					$sectionLayout = $this->getObject('section_'.$category['itemsview']);
+                
+                $this->setVarByRef('currentCategory', $category['id']);
+                
+                // Check whether story is available to be viewed
+                if (($story['dateavailable'] > strftime('%Y-%m-%d %H:%M:%S', mktime())) && !$this->isValid('viewfuturestory')) {
+                    return $this->nextAction('home', array('error'=>'nostory'));
+                } else {
+                    $sectionLayout = $this->getObject('section_'.$category['itemsview']);
 
-					$this->setVarByRef('content', $sectionLayout->renderPage($story, $category));
-					$comments = $this->objComments->getStoryComments($id);
-					$this->setVarByRef('comments', $comments);
-					$this->setVarByRef('story', $story);
-					$this->setVarByRef('category', $category);
+                    $this->setVarByRef('content', $sectionLayout->renderPage($story, $category));
+                    $comments = $this->objComments->getStoryComments($id);
+                    $this->setVarByRef('comments', $comments);
+                    $this->setVarByRef('story', $story);
+                    $this->setVarByRef('category', $category);
 
-					$menuId = $this->objNewsMenu->getIdCategoryItem($story['storycategory']);
-					$this->setVarByRef('menuId', $menuId);
+                    $menuId = $this->objNewsMenu->getIdCategoryItem($story['storycategory']);
+                    $this->setVarByRef('menuId', $menuId);
 
-					return 'viewstory.php';
-				}
+                    return 'viewstory.php';
+                }
             }
 
 
@@ -553,20 +579,21 @@ class news extends controller
         $storyText = $this->getParam('storytext');
         $storySource = $this->getParam('storysource');
         $storyImage = $this->getParam('imageselect');
-		
-		
-		$publishdate = $this->getParam('publishon');
-		
-		if ($publishdate == 'now')  {
-			$publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
-		} else {
-			$publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
-		}
+        $sticky = $this->getParam('sticky');
+        
+        
+        $publishdate = $this->getParam('publishon');
+        
+        if ($publishdate == 'now')  {
+            $publishdate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        } else {
+            $publishdate = $this->getParam('storydatepublish').' '.$this->getParam('time');
+        }
 
         $tags = $this->getParam('storytags');
         $keyTags = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag3'));
 
-        $result = $this->objNewsStories->updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate);
+        $result = $this->objNewsStories->updateStory($id, $storyTitle, $storyDate, $storyCategory, $storyLocation, $storyText, $storySource, $storyImage, $tags, $keyTags, $publishdate, $sticky);
 
         $category = $this->objNewsCategories->getCategory($storyCategory);
 
@@ -695,6 +722,7 @@ class news extends controller
 
             $sectionLayout = $this->getObject('section_'.$category['itemsview']);
             $this->setVarByRef('category', $category);
+            $this->setVarByRef('currentCategory', $category['id']);
             $this->setVarByRef('content', $sectionLayout->renderSection($category));
             return 'viewcategory.php';
         }

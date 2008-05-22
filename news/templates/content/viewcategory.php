@@ -4,6 +4,20 @@ echo $content;
 
 $editOptions = array();
 
+if (isset($pageId)) {
+    if ($this->isValid('editstory')) {
+        $editStoryLink = new link ($this->uri(array('action'=>'editstory', 'id'=>$pageId)));
+        $editStoryLink->link = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
+        $editOptions[] = $editStoryLink->show();
+    }
+    
+    if ($this->isValid('deletestory')) {
+        $deleteStoryLink = new link ($this->uri(array('action'=>'deletestory', 'id'=>$pageId)));
+        $deleteStoryLink->link = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
+        $editOptions[] = $deleteStoryLink->show();
+    }
+}
+
 if ($this->isValid('addstory')) {
     $addStoryLink = new link ($this->uri(array('action'=>'addstory', 'id'=>$category['id'])));
     $addStoryLink->link = $this->objLanguage->languageText('mod_news_addstoryincategory', 'news', 'Add Story in this Category');

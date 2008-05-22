@@ -34,42 +34,8 @@ class section_nextprevious extends object
 
     public function renderPage($story, $category)
     {
-        $objDateTime = $this->getObject('dateandtime', 'utilities');
-
-        $categoryLink = new link ($this->uri(array('action'=>'viewcategory', 'id'=>$category['id'])));
-        $categoryLink->link = $category['categoryname'];
-
-        $this->objMenuTools->addToBreadCrumbs(array($categoryLink->show(), $story['storytitle']));
-
-        $this->setVar('pageTitle', $story['storytitle']);
-
-        $header = new htmlheading();
-        $header->type = 1;
-        $header->str = $story['storytitle'];
-
-        $str = $header->show();
-
-        $str .= '<p>'.$objDateTime->formatDate($story['storydate']).'</p>';
-
-        /*
-        if ($story['storyimage'] != '') {
-            $str .= '<img class="storyimage" src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
-        }
-        */
-
-        $objWashOut = $this->getObject('washout', 'utilities');
-
-        $str .= $objWashOut->parseText($story['storytext']);
-
-        if ($story['storysource'] != '') {
-            $objUrl = &$this->getObject('url', 'strings');
-            $source = $story['storysource'];
-
-            $source = $objUrl->makeClickableLinks(htmlentities($source));
-
-
-            $str .= '<p><strong>Source:</strong><br />'.$source.'</p>';
-        }
+        $str = '';
+        $this->setVar('pageId', $story['id']);
 
         $previousPage = $this->objStories->getPreviousItem($story['id'], $category['id']);
         $nextPage = $this->objStories->getNextItem($story['id'], $category['id']);
@@ -100,7 +66,10 @@ class section_nextprevious extends object
 
             $str .= $table->show();
         }
-
+        
+        $objRender = $this->getObject('renderstory');
+        $str = $objRender->render($story, $category, $str);
+        
         return $str;
     }
 

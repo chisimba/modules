@@ -24,7 +24,7 @@ class renderstory extends object
 		$this->objIcon = $this->newObject('geticon', 'htmlelements');
     }
     
-    public function render($story, $category)
+    public function render($story, $category, $beforeOtherStuff='')
 	{
 		$objDateTime = $this->getObject('dateandtime', 'utilities');
         
@@ -33,11 +33,12 @@ class renderstory extends object
         
         $this->objMenuTools->addToBreadCrumbs(array($categoryLink->show(), $story['storytitle']));
         
-        $this->setVar('pageTitle', $story['storytitle']);
+        //$this->setVar('pageTitle', $story['storytitle']);
         
         $header = new htmlheading();
         $header->type = 1;
         $header->str = $story['storytitle'];
+        $this->setVar('pageTitle', $story['storytitle']);
         
         if ($this->objDT->isValid('editstory')) {
             $this->objIcon->setIcon('edit');
@@ -86,43 +87,25 @@ class renderstory extends object
             $str .= '<p><strong>'.$this->objLanguage->languageText('word_source', 'word', 'Source').':</strong><br />'.$source.'</p>';
         }
         
-        $serverPage = urlencode('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+        $str .= $beforeOtherStuff;
         
-        $stumbleUpon = new link ('http://www.stumbleupon.com/submit?url='.$serverPage);
-        $stumbleUpon->link = '<img src="'.$this->getResourceURI('stumbleupon.png').'" /> Stumble Upon';
+        if ($category['showsocialbookmarking'] == 'Y') {
+            $objSocialBookmarking = $this->getObject('socialbookmarking', 'utilities');
+            
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->startRow();
+            $table->addCell($objSocialBookmarking->diggThis());
+            $table->addCell($objSocialBookmarking->show(), NULL, NULL, 'center');
+            $table->endRow();
+            
+            $str .= $table->show();
+        }
         
-        $delicious = new link ('http://del.icio.us/post?url='.$serverPage);
-        $delicious->link = '<img src="'.$this->getResourceURI('delicious.png').'" /> del.icio.us';
-        
-        $newsvine = new link ('http://www.newsvine.com/_tools/seed&amp;save?u='.$serverPage);
-        $newsvine->link = '<img src="'.$this->getResourceURI('newsvine.png').'" /> Newsvine';
-        
-        $reddit = new link ('ttp://reddit.com/submit?url='.$serverPage);
-        $reddit->link = '<img src="'.$this->getResourceURI('reddit.png').'" /> Reddit';
-        
-        $muti = new link ("javascript:location.href='http://muti.co.za/submit?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title)");
-        $muti->link = '<img src="'.$this->getResourceURI('muti.png').'" /> muti';
-        
-        $facebook = new link ('http://www.facebook.com/share.php?u='.$serverPage);
-        $facebook->link = '<img src="'.$this->getResourceURI('facebook_share_icon.gif').'" /> Facebook';
-        
-        $addThis = new link ('http://www.addthis.com/bookmark.php?pub=&amp;url='.$serverPage);
-        $addThis->link = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="Bookmark this post" />';
-        
-        
-        $table = $this->newObject('htmltable', 'htmlelements');
-        $table->startRow();
-        $table->addCell('<script type="text/javascript">
-				           daigg_skin = \'compact\';
-				       </script><script src="http://digg.com/tools/diggthis.js" type="text/javascript"></script>');
-        $table->addCell($stumbleUpon->show().' '.$delicious->show().' '.$reddit->show().'<br />'.$newsvine->show().' '.$facebook->show().' '.$muti->show().'<p>'.$addThis->show().'</p>', NULL, NULL, 'center');
-        $table->endRow();
-        
-        //$str .= $table->show();
-        
-        $objComments = $this->getObject('dbnewscomments');
-        $str .= $objComments->getStoryComments($story['storyid']);
-        $str .= $objComments->commentsForm($story['storyid']);
+        if ($story['allowcomments'] == 'Y') {
+            $objComments = $this->getObject('dbnewscomments');
+            $str .= $objComments->getStoryComments($story['storyid']);
+            $str .= $objComments->commentsForm($story['storyid']);
+        }
         
         return $str;
     }

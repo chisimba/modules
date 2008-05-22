@@ -33,42 +33,11 @@ class section_page extends object
     
     public function renderPage($story, $category)
     {
-        $objDateTime = $this->getObject('dateandtime', 'utilities');
+        $this->setVar('pageId', $story['id']);
         
-        $categoryLink = new link ($this->uri(array('action'=>'viewcategory', 'id'=>$category['id'])));
-        $categoryLink->link = $category['categoryname'];
+        $objRender = $this->getObject('renderstory');
         
-        $this->objMenuTools->addToBreadCrumbs(array($categoryLink->show(), $story['storytitle']));
-        
-        $this->setVar('pageTitle', $story['storytitle']);
-        
-        $header = new htmlheading();
-        $header->type = 1;
-        $header->str = $story['storytitle'];
-        
-        $str = $header->show();
-        
-        $str .= '<p>'.$objDateTime->formatDate($story['storydate']).'</p>';
-
-        /*
-        if ($story['storyimage'] != '') {
-            $str .= '<img class="storyimage" src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
-        }
-        */
-
-        $objWashOut = $this->getObject('washout', 'utilities');
-
-        $str .= $objWashOut->parseText($story['storytext']);
-
-        if ($story['storysource'] != '') {
-            $objUrl = &$this->getObject('url', 'strings');
-            $source = $story['storysource'];
-            
-            $source = $objUrl->makeClickableLinks(htmlentities($source));
-            
-            
-            $str .= '<p><strong>Source:</strong><br />'.$source.'</p>';
-        }
+        $str = $objRender->render($story, $category);
         
         $allTitles = $this->objStories->getCategoryTitles($category['id'], str_replace('_', ' ', $category['itemsorder']));
         
