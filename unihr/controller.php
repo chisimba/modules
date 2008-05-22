@@ -31,7 +31,8 @@ class unihr extends controller
 	*/
 	public function dispatch()
 	{
-		
+		echo "This module is under heavy construction!";
+		die();
 	}
 }
 ?>
