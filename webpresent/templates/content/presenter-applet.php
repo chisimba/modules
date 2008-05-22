@@ -45,9 +45,11 @@
     
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
-    echo 'code="avoir.realtime.tcp.client.applet.TCPTunnellingApplet" name ="Avoir Realtime Applet"';
-    echo 'archive="realtime-tcpclient-0.1.jar" width="75%" height="600">';
+    echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
+     
+    echo 'archive="realtime-launcher-0.1.jar" width="75%" height="600">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
+    echo '<param name=isLocalhost value="true">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
     echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
@@ -67,7 +69,7 @@
     echo '<param name=rtcpport value="'.$rtcpport.'">';
     echo '<param name=sipport value="'.$sipport.'">';
     echo '<param name=sessionId value="'.$sessionid.'">';
-    echo '<param name=slideServerId value="'.$slideServerId.'">';
+    echo '<param name=slideServerId value="1">';//"'.$slideServerId.'">';
     
 // echo '<param name=sessionId value="gen12Srv15Nme3_4074_1208767420">';
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
