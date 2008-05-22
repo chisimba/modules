@@ -165,6 +165,7 @@ class news extends controller
 
 
         // Blocks
+        /*
         $rightBlocks = $this->objNewsBlocks->getContextBlocks($this->contextCode, 'right');
         $this->setVarByRef('rightBlocksStr', $rightBlocks);
         
@@ -188,7 +189,8 @@ class news extends controller
         
         $wideBlocks = $objBlocks->getBlocks('wide', 'site');
         $this->setVarByRef('wideBlocks', $wideBlocks);
-
+        */
+        
         return 'home.php';
     }
 
