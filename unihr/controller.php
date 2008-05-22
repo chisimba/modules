@@ -5,7 +5,7 @@ die("You cannot view this page directly");
 }
 /**
 **
-* Controller class for placemarker module. 
+* Controller class for unihr module. 
 *
 * @author 
 * @copyright 
