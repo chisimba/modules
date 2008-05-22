@@ -7,15 +7,10 @@ package avoir.realtime.tcp.audio;
 
 import avoir.realtime.tcp.client.applet.TCPClient;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.TargetDataLine;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Vector;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,14 +24,15 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     //private FloatControl volumeControl;
     //private BooleanControl muteControl;
     private int sampleSizeInBits = AudioResource.FRAME_BITS;
-    private TargetDataLine targetLine;
+    //private TargetDataLine targetLine;
     // private SourceDataLine sourceDataLine;
     // private int bufferSize;
-    private String txt = "<center><h3>Realtime Audio Wizard.</h3> " +
+    private String txt =
+            "<center><h1><b><font color=\"orange\">Beta Version</font></b></center>" +
+            "</h1><br><center><h3>Realtime Audio Wizard.</h3> " +
             "Click on the <b>'Test Audio'</b> button." +
             "<br>Then say something. If you hear your own sound, then your audio system" +
-            " is working properly</center><hr><h1><b><font color=\"orange\">This " +
-            " is still experimental</font></b>";
+            " is working properly</center><hr><br>";
     private TCPClient tcpclient;
     private String username,  sessionId;
     private Vector<AudioPacket> testBuffer = new Vector<AudioPacket>();
@@ -60,23 +56,6 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         initComponents();
         infoField.setText(txt);
         cPanel.add(detectSound, BorderLayout.SOUTH);
-        /* Thread t = new Thread() {
-        
-        @Override
-        public void run() {
-        if (!encoderExists()) {
-        stopAudio();
-        String msg = "No suitable encoder found. Audio disabled";
-        JOptionPane.showMessageDialog(null, msg);
-        displayError(msg);
-        }
-        
-        initDispatch();
-        initReceiverLine();
-        
-        }
-        };
-        t.start();*/
         micInput = new VoiceMicrophoneInput(this, callControl);
 
         if (micInput.obtainHardware()) {
@@ -93,7 +72,6 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     }
 
     private void stopAudio() {
-//        releaseHardware();
         if (voiceSpeakerOutput != null) {
             voiceSpeakerOutput.releaseHardware();
         }

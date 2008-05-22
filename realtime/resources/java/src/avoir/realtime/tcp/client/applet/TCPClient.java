@@ -13,17 +13,18 @@ import java.util.Vector;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import avoir.realtime.admin.ClientAdmin;
-import avoir.realtime.tcp.audio.AudioWizardFrame;
+
 import javax.swing.JOptionPane;
 import static avoir.realtime.common.Constants.*;
-
+import avoir.realtime.plugin.common.*;
 /**
  *
  * @author developer
  */
 public class TCPClient {
 
-    private AudioWizardFrame audioWizardFrame;
+    // private AudioWizardFrame audioWizardFrame;
+    private RealtimePluginInf realtimePlugin;
     private boolean running = true;
     private String windowManager = "GNOME";
     private boolean selectWindowManager = true;
@@ -61,8 +62,8 @@ public class TCPClient {
     public TCPClient() {
     }
 
-    public void setAudioPacketHandler(AudioWizardFrame audioWizardFrame) {
-        this.audioWizardFrame = audioWizardFrame;
+    public void setAudioPacketHandler(RealtimePluginInf realtimePlugin) {
+        this.realtimePlugin = realtimePlugin;
     }
 
     public void setObjectInputStream(ObjectInputStream in) {
@@ -514,8 +515,12 @@ public class TCPClient {
             System.out.println("Writing  " + dest);
             writeFile(dest, p.getByteArray(), false);
             System.out.println("done");
+
             return;
+
         }
+      
+
         if (filename.endsWith(".jar") && !filename.startsWith("realtime") &&
                 !filename.endsWith("jspeex.jar")) {
             dest = JAVA_HOME + "/lib/ext/" + f.getName();
@@ -529,28 +534,34 @@ public class TCPClient {
         }
 
 
-        //then this is linux/unix
+//then this is linux/unix
         if (filename.endsWith(".properties")) {
             dest = JAVA_HOME + "/lib/ext/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
             writeFile(dest, p.getByteArray(), true);
         }
+
         if (filename.endsWith(".so")) {
             dest = JAVA_HOME + "/lib/i386/" + f.getName();
             checkIfWritable(new File(JAVA_HOME + "/lib/"), f.getName());
             writeFile(dest, p.getByteArray(), true);
         }
+
         if (filename.endsWith(".sh")) {
             dest = REALTIME_HOME + "/bin/" + f.getName();
             writeFile(dest, p.getByteArray(), true);
 
         }
-        //win or other exe
+//win or other exe
+
         if (filename.endsWith(".exe")) {
             dest = REALTIME_HOME + "/bin/" + f.getName();
             writeFile(dest, p.getByteArray(), false);
             installWinJMF();
+
         }
+
+
 
     }
 
@@ -565,17 +576,20 @@ public class TCPClient {
             JOptionPane.showMessageDialog(null, "Cannot restart browser. Please restart manually", "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+
     }
 
     private void installWinJMF() {
         ProcessBuilder prb;
-        prb = new ProcessBuilder(REALTIME_HOME + "/bin/jmf-2_1_1e-windows-i586.exe");
+        prb =
+                new ProcessBuilder(REALTIME_HOME + "/bin/jmf-2_1_1e-windows-i586.exe");
         try {
             Process p = prb.start();
             p.waitFor();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
     }
 
     public void writeFile(String filename, byte[] byteArray, boolean chmod) {
@@ -587,6 +601,7 @@ public class TCPClient {
             if (chmod) {
                 doSudoChMod(filename);
             }
+
             applet.getSurface().setConnectingString("Downloaded " + new File(filename).getName());
             if (filename.endsWith("jmf.jar")) {
                 int n = JOptionPane.showConfirmDialog(null,
@@ -609,11 +624,14 @@ public class TCPClient {
                             "No Media", JOptionPane.WARNING_MESSAGE);
 
                 }
+
                 restartFirefox();
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
     }
 
     public static void changeFilePermission(String filename) {
@@ -629,6 +647,7 @@ public class TCPClient {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
     }
 
     private void processOutlinePacket(OutlinePacket p) {
@@ -637,15 +656,17 @@ public class TCPClient {
 
     private void processAudioPacket(AudioPacket packet) {
 
-        if (audioWizardFrame != null) {
-            audioWizardFrame.playPacket(packet);
+        if (realtimePlugin != null) {
+            realtimePlugin.playPacket(packet);
         }
+
     }
 
     private void processServerLogReply(ServerLogReplyPacket packet) {
         if (clientAdmin != null) {
             clientAdmin.setLog(packet.getByteArray());
         }
+
     }
 
     private void processFilePacket(FilePacket packet) {
@@ -655,6 +676,7 @@ public class TCPClient {
             if (!homeDir.exists()) {
                 homeDir.mkdirs();
             }
+
             String fn = home + "/" + packet.getFilename();
             FileChannel fc =
                     new FileOutputStream(fn).getChannel();
@@ -671,11 +693,13 @@ public class TCPClient {
                 applet.setConnecting(false);
                 applet.setConnectingString("");
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             if (applet != null) {
                 applet.showMessage("Error writing slide " + packet.getFilename(), false, true);
             }
+
         }
     }
 
@@ -687,8 +711,11 @@ public class TCPClient {
         sendPacket(new RestartServerPacket());
     }
 
-    private void sendSlide(final String filePath, final String sessionId,
-            final String username, final String filename, final boolean lastFile,
+    private void sendSlide(final String filePath,
+            final String sessionId,
+            final String username,
+            final String filename,
+            final boolean lastFile,
             int currentValue, int maxValue) {
         byte[] byteArray = readFile(filePath);
         FilePacket packet = new FilePacket(sessionId, username,
@@ -703,24 +730,28 @@ public class TCPClient {
         int slides[] = getImageFileNames(packet.getPathToSlides());
         String slidesPath = packet.getPathToSlides();
         // i hope to use threads here..dont know if it will help
-        for (int i = 0; i < slides.length; i++) {
+        for (int i = 0; i <
+                slides.length; i++) {
             String filename = "img" + i + ".jpg";
             String filePath = slidesPath + "/" + filename;
             boolean lastFile = i == (slides.length - 1) ? true : false;
             sendSlide(filePath, packet.getSessionId(), packet.getUsername(), filename, lastFile, i, slides.length);
         }
-        //then close this socket
+//then close this socket
+
         try {
             socket.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
     }
 
     private void processVotePacket(VotePacket p) {
         if (applet != null) {
             applet.setVoteSessionEnabled(p.isVote(), p.isVisibleToAll());
         }
+
     }
 
     private void processSurveyAnswerPacket(SurveyAnswerPacket p) {
@@ -728,12 +759,14 @@ public class TCPClient {
 
             applet.getSurveyManager().setSurveyAnswer(p.getQuestion(), p.isAnswer());
         }
+
     }
 
     private void processClearVotePacket(ClearVotePacket p) {
         if (applet != null) {
             applet.clearVote();
         }
+
     }
 
     private void processSurveyPacket(SurveyPackPacket p) {
@@ -741,6 +774,7 @@ public class TCPClient {
         if (applet != null) {
             applet.showSurveyFrame(p.getQuestions(), p.getTitle());
         }
+
     }
 
     /**
@@ -751,6 +785,7 @@ public class TCPClient {
         if (applet != null) {
             applet.getUserManager().removeUser(p.getUser());
         }
+
     }
 
     /**
@@ -761,6 +796,7 @@ public class TCPClient {
         if (applet != null) {
             applet.getUserManager().addNewUser(p.getUser());
         }
+
     }
 
     /**
@@ -772,6 +808,7 @@ public class TCPClient {
             applet.updateUserList(p.getUserName(), p.isHandRaised(),
                     p.isAllowControl(), p.getOrder(), p.isYes(), p.isNo(), p.isYesNoSession());
         }
+
     }
 
     /**
@@ -786,10 +823,14 @@ public class TCPClient {
                 if (msg.length() > 0) {
                     applet.setStatusMessage(msg);
                     return;
+
                 }
+
+
             }
             applet.setStatusMessage("");
         }
+
     }
 
     /**
@@ -802,11 +843,13 @@ public class TCPClient {
             if (p.isErrorMsg()) {
                 applet.setStatusMessage("");
             }
+
         }
 
         if (clientAdmin != null) {
             clientAdmin.setMessage(p.getMessage());
         }
+
     }
 
     /**
@@ -828,6 +871,5 @@ public class TCPClient {
         if (applet != null) {
             applet.updateChat(p);
         }
-
     }
 }

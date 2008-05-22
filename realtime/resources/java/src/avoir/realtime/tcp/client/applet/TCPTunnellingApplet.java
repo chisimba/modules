@@ -21,7 +21,8 @@ import java.util.Vector;
 import java.awt.Color;
 import java.awt.Component;
 import static avoir.realtime.common.Constants.*;
-import avoir.realtime.tcp.audio.AudioWizardFrame;
+//import avoir.realtime.tcp.audio.AudioWizardFrame;
+
 
 /**
  *
@@ -69,7 +70,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
     private DefaultListModel agendaListModel = new DefaultListModel();
     private JList agendaList = new JList(agendaListModel);
     private OutlineTree outlineTree;
-    private AudioWizardFrame audioWizardFrame;
+//    private AudioWizardFrame audioWizardFrame;
 
     public TCPTunnellingApplet() {
         init();
@@ -527,9 +528,6 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
                 surface.setConnecting(true);
                 if (client.connect()) {
                     surface.setStatusMessage("Initializing session, please wait ...");
-
-                    //                    MediaManager.detectJMF(client, resourcesPath, slideServerId,
-                    //                          userName);
                     surface.setShowSplashScreen(false);
                     voiceOptionsButton.setEnabled(true);
                     sessionButton.setEnabled(true);
@@ -544,6 +542,7 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
                     connected = true;
                     client.publish(user);
                     LibManager.detectJSpeex(client, resourcesPath, slideServerId, userName);
+                    LibManager.detectRealtimeAudio(client, resourcesPath, slideServerId, userName);
                     checkSession();
                 } else {
                     String msg = "Cannot Connect to the server.";
@@ -1132,46 +1131,10 @@ public class TCPTunnellingApplet extends javax.swing.JApplet {
         yesButton.setEnabled(status);
     }
 
-    private boolean encoderExists() {
-       // JOptionPane.showMessageDialog(null, "This feauture is still experimental and" +
-         //       " might not work properly");
-        try {
-            File f = new File(REALTIME_HOME + "/lib/jspeex.jar");
-            if (!f.exists()) {
-                System.out.println(f.getAbsolutePath() + " NOT FOUND");
-            }
-            LibManager.addFile(REALTIME_HOME + "/lib/jspeex.jar");
-            Class cl = Class.forName("org.xiph.speex.SpeexEncoder");
-            cl.newInstance();
-            cl = Class.forName("org.xiph.speex.SpeexDecoder");
-            cl.newInstance();
-            System.out.println("JSpeex Loaded");
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
+  
 
     public void showAudioWizardFrame() {
-        //File f = new File(REALTIME_HOME + "/conf/devicesdetected");
-        //if (!f.exists()) {
-        //MediaManager.setupJMF();
-        // }
-        //avoir.realtime.tcp.media.MediaWizardFrame frame =
-        //      new avoir.realtime.tcp.media.MediaWizardFrame(client, sessionId);
-        if (encoderExists()) {
-            if (audioWizardFrame == null) {
-                audioWizardFrame = new AudioWizardFrame(client, userName, sessionId,
-                        slideServerId, resourcesPath);
-                audioWizardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                audioWizardFrame.setSize(500, 500);
-                audioWizardFrame.setLocationRelativeTo(null);
-            }
-            audioWizardFrame.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "Cannot find suitable audio decoder. Aborting.");
-        }
+       LibManager.loadAudioCodecPlugin(client, userName, sessionId, slideServerId, resourcesPath);
     }
 
     private void handButtonMouseEntered(java.awt.event.MouseEvent evt) {
