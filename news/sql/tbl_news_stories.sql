@@ -53,6 +53,11 @@ $fields = array(
 		'length' => 1,
 		'default' => 'Y',
 	),
+    'sticky' => array (
+		'type' => 'text',
+		'length' => 1,
+		'default' => 'Y',
+	),
 	'storyorder' => array (
 		'type' => 'integer',
 		'length' => 11,
@@ -89,6 +94,7 @@ $indexes = array(
                 	'storycategory' => array(),
                 	'dateavailable' => array(),
                 	'datetopstoryexpire' => array(),
+                	'sticky' => array(),
                 	'allowcomments' => array(),
                 	'storyorder' => array(),
                 	'datecreated' => array(),
