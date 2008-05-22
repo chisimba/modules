@@ -40,9 +40,9 @@ class block_assignmentadmin extends object
     */
     public function checkSubmits()
     {
-        $hdAssign = $this->objLanguage->languageText('mod_assignmentadmin_assignments');
-        $hdMarked = $this->objLanguage->languageText('mod_assignmentadmin_marked','assignmentadmin');
-        $hdSubmitted = $this->objLanguage->languageText('mod_assignmentadmin_submitted');
+        $hdAssign = $this->objLanguage->languageText('mod_assignmentadmin_assignments', 'assignmentadmin');
+        $hdMarked = $this->objLanguage->languageText('mod_assignmentadmin_marked','assignmentadmin', 'assignmentadmin');
+        $hdSubmitted = $this->objLanguage->languageText('mod_assignmentadmin_submitted', 'assignmentadmin');
 
         $submits = $this->objSubmit->getContextSubmissions($this->contextCode);
         $assigns = array(); $str = ''; $i = 0;

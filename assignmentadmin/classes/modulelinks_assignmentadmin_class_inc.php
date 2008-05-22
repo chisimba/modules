@@ -27,18 +27,24 @@ class modulelinks_assignmentadmin extends object
     	$this->loadClass('treenode','tree');
     	//$this->objAssignment = $this->getObject('dbassignmentadmin', 'assignmentadmin');
     	$this->objAssignment = $this->getObject('dbassignment', 'assignment');
-    	//$objDbContext = $this->getObject('dbcontext', 'context');
- 		//$this->contextCode = $objDbContext->getContextCode();
+    	$this->objContext = $this->getObject('dbcontext','context');
+ 		if($this->objContext->isInContext()){
+            $this->contextCode=$this->objContext->getContextCode();
+            $this->context=$this->objContext->getTitle();
+        }
     }
     
      public function show()
     {
         // Link to Module itself - First Level
         $rootNode = new treenode (array('link'=>$this->uri(NULL, 'assignmentadmin'), 'text'=>'Assignment Management'));
-        
+        $assignments = array();
         // Get Assignments - Second Level
-        //$assignments = getContextLinks();
-/*
+        //$assignments = getContextLinks($this->contextCode);
+        $contextCode = $this->contextCode;
+        $sql = "SELECT * FROM tbl_assignment WHERE context = '$contextCode' ORDER BY name";
+        $assignments = $this->objAssignment->getArray($sql);
+
         // Extra Check
         if (count($assignments) > 0) {
             
@@ -49,7 +55,7 @@ class modulelinks_assignmentadmin extends object
             foreach ($assignments as $assignment)
             {
                 // Create Node
-                $node =& new treenode(array('link'=>$this->uri($assignment['params']), 'text'=>$assignment['name']));
+                $node =& new treenode(array('link'=>$this->uri(array('id'=>$assignment['id'],'action' => 'view')), 'text'=>$assignment['name']));
                 
                 // Create Reference to Node
                 $nodesArray['assignment'.$assignment['id']] =& $node;
@@ -59,7 +65,7 @@ class modulelinks_assignmentadmin extends object
             }
             
         }
-     */   
+       
         // Return Root Node
         return $rootNode;
     }
@@ -73,8 +79,8 @@ class modulelinks_assignmentadmin extends object
      */
     public function getContextLinks($contextCode)
     { 
-          $sql = "SELECT * FROM tbl_assignment WHERE context = '$contextCode' ORDER BY closing_date, name";
-          $data = $this->getArray($sql);
+          $sql = "SELECT * FROM tbl_assignment WHERE context = '$contextCode' ORDER BY name";
+          $data = $this->objAssignment->getArray($sql);
              
           $bigArr = array();
 	
