@@ -11,6 +11,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'userid' => array(
+			'type' => 'text',
+			'length' => 50,
+			),
 	'faculty_name' => array(
 		'type' => 'text',
 		'length' => 255,
@@ -21,4 +25,11 @@ $fields = array(
 	);
 
 //create other indexes here...
+$name = 'acc';
+
+$indexes = array(
+                'fields' => array(
+                	'userid' => array(),
+                )
+        );
 ?>
