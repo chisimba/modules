@@ -263,7 +263,7 @@ function in_str($needle, $haystack){
     $cmd = "java -Xms64m -Xmx128m -cp :".    
     $this->objConfig->getModulePath().
     "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
-    "/realtime/resources/realtime-launcher-0.1.jar voir.realtime.tcp.base.SlidesServer ".$slideServerId." >/dev/null &";
+    "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId." >/dev/null &";
 //echo $cmd;  
   system($cmd,$return_value);
   }
