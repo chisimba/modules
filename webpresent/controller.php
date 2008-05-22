@@ -260,9 +260,10 @@ function in_str($needle, $haystack){
     
     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
   //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
-    $cmd = "java -Xms64m -Xmx128m -cp .:".    
+    $cmd = "java -Xms64m -Xmx128m -cp :".    
     $this->objConfig->getModulePath().
-    "/realtime/resources/realtime-tcpclient-0.1.jar avoir.realtime.tcp.client.applet.SlidesServer ".$slideServerId." >/dev/null &";
+    "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
+    "/realtime/resources/realtime-launcher-0.1.jar voir.realtime.tcp.base.SlidesServer ".$slideServerId." >/dev/null &";
 //echo $cmd;  
   system($cmd,$return_value);
   }
