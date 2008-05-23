@@ -1703,9 +1703,14 @@ class cmsutils extends object
 		public function getTreeDropdown($setSelected = NULL, $noRoot = TRUE)
 		{
 				$objCMSTree = $this->getObject('cmstree');
-				$tree = $objCMSTree->getCMSAdminDropdownTree($setSelected, $noRoot);
-				return $tree;
+				$sections = $objCMSTree->getFlatTree($setSelected, $noRoot);
+				
+				$dropdown = new dropdown('parent');
+				foreach ($sections as $section){
+					$dropdown->addOption($section['id'], $section['title']);
+				}
 
+				return $dropdown;
 		}
 
 		/**
@@ -3544,7 +3549,7 @@ class cmsutils extends object
 				if (!$editmode) {
 						$table->startRow();
 						$table->addCell($this->objLanguage->languageText('word_section').': ');
-						$table->addCell($sections);
+						$table->addCell($sections->show());
 						$table->endRow();
 				} else {
 						$table->startRow();

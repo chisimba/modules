@@ -288,13 +288,105 @@ class cmstree extends object
 		        $menu = $this->getTree('cmsadmin', $includeRoot, FALSE);  
 		    }
 			
-			
+			var_dump($menu);
 			$this->loadClass('htmldropdown', 'tree');
 			
 			$htmldropdown = new htmldropdown($menu, array('inputName'=>'parent', 'selected'=>$defaultSelected));
             return $htmldropdown->getMenu();
 		}
-		
+
+
+
+		/**
+		* Method to generate trees when ADDING CONTENT modified to work with the NEW PERMISSIONS MODEL
+		* @param string $defaultSelected The Item to be default selccted on the drop down
+		* @param boolean $includeRoot Flag on whether to include root or not
+		* @return string
+		*/
+		public function getCMSAdminFlatDropdownTree($defaultSelected=NULL, $includeRoot=TRUE)
+		{
+		    $objDBContext = $this->getObject('dbcontext', 'context');
+		    if($objDBContext->isInContext())
+		    {		
+				//TODO : Create Flat Tree for context        
+		        $menu = $this->getTreeForInContext('cmsadmin', $includeRoot, FALSE);
+		    } else {
+		        $menu = $this->getFlatTree('cmsadmin', $includeRoot, FALSE);  
+		    }
+			
+			
+			$this->loadClass('htmldropdown', 'tree');
+
+			//var_dump($menu);
+			
+			$htmldropdown = new htmldropdown($menu, array('inputName'=>'parent', 'selected'=>$defaultSelected));
+            return $htmldropdown->getMenu($menu);
+		}
+
+
+
+		/**
+		* Method to generate trees for the CMS : getTree modified to work with the NEW PERMISSIONS MODEL
+		* @param string $module Calling Module for which to set the link to
+		* @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
+		* @param boolean $useLinks Flag whether to generate a URI or pass the ID only
+		*/
+        public function getFlatTree($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
+        {
+		    $this->loadClass('treemenu', 'tree');
+            $this->loadClass('treenode', 'tree');
+            $this->loadClass('htmllist', 'tree');
+			
+			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
+			
+			if ($module == 'cmsadmin') {
+			    
+				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+						AND tbl_cms_content.published = \'1\')
+						WHERE tbl_cms_sections.trash = \'0\' 
+						';
+				$useIcon = TRUE;
+			} else {
+				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
+						FROM tbl_cms_sections
+						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
+						AND tbl_cms_content.published = \'1\' )
+						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
+						AND tbl_cms_sections.trash = \'0\'
+						';
+			}
+			
+            //$where = ' GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
+            $where = ' GROUP BY tbl_cms_sections.id';
+            
+            $sections = $this->_objSections->getArray($sql.$where);
+	
+			$secureSections = array();
+            //Filterring the list based on WRITE ACCESS
+            foreach ($sections as $section){
+				//echo $section['title']."<br/>\n";
+                $section_id = $section['id'];
+                if ($this->_objSecurity->canUserWriteSection($section_id)){
+                        array_push($secureSections, $section);
+                }
+				
+            }
+			
+			$sections = $secureSections;
+
+			return $sections;
+            
+            
+        }
+	
+
+
+
+
+
+
 		/**
 		* Method to generate trees for the CMS
 		* @param string $module Calling Module for which to set the link to
@@ -328,21 +420,24 @@ class cmstree extends object
 						';
 			}
 			
-            $where = 'ORDER BY nodelevel, ordering';
+            //$where = ' GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
+            $where = ' GROUP BY tbl_cms_sections.id';
             
-            $sections = $this->_objSections->getArray($sql);
+            $sections = $this->_objSections->getArray($sql.$where);
 	
 			$secureSections = array();
-            //Filterring the list based on READ ACCESS
+            //Filterring the list based on WRITE ACCESS
             foreach ($sections as $section){
+				//echo $section['title']."<br/>\n";
                 $section_id = $section['id'];
                 if ($this->_objSecurity->canUserWriteSection($section_id)){
                         array_push($secureSections, $section);
                 }
+				
             }
 			
 			$sections = $secureSections;
-			
+		
             //var_dump($sectionitems);
             $menu = new treemenu();
             
@@ -363,6 +458,7 @@ class cmstree extends object
             
                 foreach ($sections as $section)
                 {
+
                     if ($useLinks) {
 						$link = $this->uri(array('action'=>$action, 'id'=>$section['id']), $module);
 					} else {
@@ -415,7 +511,7 @@ class cmstree extends object
 					}
                 }
             }
-            
+ 
 			return $menu;
             
             

@@ -484,8 +484,8 @@ class cmsadmin extends controller
 										}
 								}
 
-								//Checking weather user has sections to write to
-								$treeCount = $this->_objTree->getTreeRootCount();
+								//Checking weather user has any sections to write to
+								$treeCount = $this->_objTree->getTreeCount();
 
 								if ($treeCount == 0){
 										$this->setVarByRef('securityType', 'no_sections');

@@ -105,6 +105,8 @@ echo $display;
 
 echo $addEditForm;
 
+
+/*
 //Get blocks icon
 $objIcon->setIcon('modules/blocks');
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
@@ -129,4 +131,5 @@ if ($id != '') {
      $dialog1 .= '<div class="bd">'.$this->_objUtils->showContentBlocksForm($id, $section).'</div></div>';
      echo  $dialog1;
 } 
+*/
 ?>
