@@ -22,8 +22,18 @@ if (empty($ret)) {
         //echo $this->showfullname;
         if ($this->showfullname == 'FALSE') {
             $name = $this->objUser->userName($id);
+            $nmlink = new href($this->uri(array(
+            	'action' => 'randblog',
+            	'userid' => $id
+        	)) , $name);
+        	$name = $nmlink->show();
         } else {
             $name = $this->objUser->fullname($id);
+            $nmlink = new href($this->uri(array(
+            	'action' => 'randblog',
+            	'userid' => $id
+        	)) , $name);
+        	$name = $nmlink->show();
         }
         //$name = $this->objUser->fullName($id);
         $laston = $this->objUser->getLastLoginDate($id);
