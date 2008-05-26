@@ -350,6 +350,10 @@ class blogops extends object
             	'action' => 'randblog',
             	'userid' => $rec['id']
         	)) , stripslashes($lastentry['post_title']));
+        	$imglink = new href($this->uri(array(
+            	'action' => 'randblog',
+            	'userid' => $rec['id']
+        	)) , $rec['img']);
         }
         else {
         	$link = $this->objLanguage->languageText("mod_blog_onlydrafts", "blog");
@@ -382,7 +386,7 @@ class blogops extends object
         $stable->addHeaderCell('');
         $stable->endHeaderRow();
         $stable->startRow();
-        $stable->addCell($rec['img']);
+        $stable->addCell($imglink->show()); // $rec['img']);
         $stable->addCell($this->objLanguage->languageText("mod_blog_lastseen", "blog") . " : " . $rec['laston'] . "<br />" . $lastpost);
         $stable->endRow();
         $objFeatureBox = $this->newObject('featurebox', 'navigation');
