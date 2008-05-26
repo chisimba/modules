@@ -160,7 +160,10 @@ class swftools extends controller
         
         $path = $objFile->getFullFilePath($file);
         
-        $result = $this->objPDF2Flash->convert2PDF($path, 'swftools/'.$file.'.swf');
+        $flashFile = $this->objConfig->getcontentBasePath().'filemanager_thumbnails/'.$id.'.swf';
+        $flashFile = $this->objCleanUrl->cleanUpUrl($flashFile);
+        
+        $result = $this->objPDF2Flash->convert2SWF($path, $flashFile);
         
         if ($result) {
             return $this->nextAction('viewswf', array('id'=>$file));

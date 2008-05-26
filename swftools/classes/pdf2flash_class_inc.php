@@ -84,17 +84,17 @@ class pdf2flash extends object
      *      Has to end in .swf
      * @return boolean Whether file has been created or not
      */
-    public function convert2PDF($pdfFilePath, $destination)
+    public function convert2SWF($pdfFilePath, $destination)
     {
         // Create var for destination directory
-        $path = $this->objConfig->getcontentBasePath().dirname('/'.$destination);
+        $path = dirname('/'.$destination);
         // Clean up file name
         $path = $this->objCleanUrl->cleanUpUrl($path);
         
         // Create var for destination file
-        $filepath = $this->objConfig->getcontentBasePath().'/'.$destination;
+        //$filepath = $this->objConfig->getcontentBasePath().'/'.$destination;
         // Clean Up file name
-        $filepath = $this->objCleanUrl->cleanUpUrl($filepath);
+        $filepath = $this->objCleanUrl->cleanUpUrl($destination);
         
         // Get full path to viewer. This is the file with the prev/next buttons
         $viewport = $this->getResourcePath('a4final.swf');
@@ -117,7 +117,8 @@ class pdf2flash extends object
                 echo $command;
             }
             
-            exec($command);
+            log_debug($command);
+            log_debug(shell_exec($command));
             
             if (!file_exists($filepath.'1')) {
                 return FALSE;
@@ -130,7 +131,8 @@ class pdf2flash extends object
                 echo $command;
             }
             
-            exec($command);
+            log_debug($command);
+            log_debug(shell_exec($command));
             
             if (!file_exists($filepath)) {
                 return FALSE;
@@ -143,23 +145,50 @@ class pdf2flash extends object
                 echo $command;
             }
             
-            exec($command);
+            log_debug($command);
+            log_debug(shell_exec($command));
             
             // Delete temp file
             unlink($filepath.'1');
             
-            return TRUE;
+            if (!file_exists($filepath)) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
         } else {
             $command = "pdf2swf -bl -o $filepath {$pdfFilePath}";
             
-            exec($command);
+            log_debug(shell_exec($command));
             if (file_exists($filepath)) {
                 return TRUE;
             } else {
                 return FALSE;
             }
         }
-
+    }
+    
+    public function generateHTMLWrapper($absolutePath, $relativePath, $destination)
+    {
+        $width = substr(shell_exec('swfdump -X '.$absolutePath), 3);
+        $height = substr(shell_exec('swfdump -Y '.$absolutePath), 3);
+        
+        $width = trim ($width)+30;
+        $height = trim ($height);
+        
+        $content = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="[-WIDTH-]" height="[-HEIGHT-]">
+  <param name="movie" value="[-SOURCE-]">
+  <param name="quality" value="high">
+  <embed src="[-SOURCE-]" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="[-WIDTH-]" height="[-HEIGHT-]"></embed>
+</object>';
+        
+        $content = str_replace('[-SOURCE-]', $relativePath, $content);
+        $content = str_replace('[-HEIGHT-]', $height, $content);
+        $content = str_replace('[-WIDTH-]', $width, $content);
+        
+        $handle = fopen($destination, 'w');
+        fwrite($handle, $content);
+        fclose($handle);
     }
 
 }
