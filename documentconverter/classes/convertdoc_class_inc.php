@@ -22,6 +22,7 @@ class convertdoc extends object
     public function init()
     {
         //system('soffice -headless -accept="socket,port=8100;urp;"');
+        $this->objConfig = $this->getObject('altconfig', 'config');
     }
     
     /**
@@ -40,9 +41,16 @@ class convertdoc extends object
             return 'inputfiledoesnotexist';
         }
         
+        $objMkDir = $this->getObject('mkdir', 'files');
+        $tempDir = $flashFile = $this->objConfig->getcontentPath().'filemanager_tempfiles/';
+        
+        $objMkDir->mkdirs($tempDir);
+        
         // At the moment, only the java version is supported
         // Todo: Make it configurable to do it via python
-        return $this->javaConvert($inputFilename, $destination);
+        $result = $this->javaConvert($inputFilename, $destination);
+        
+        return $result;
     }
     
     /**
@@ -56,9 +64,14 @@ class convertdoc extends object
     {
         $command = 'java -jar '.$this->getResourcePath('jodconverter-2.2.0/lib/jodconverter-cli-2.2.0.jar').'  '.$inputFilename.' '.$destination;
         
-        //echo $command;
+        log_debug($command);
+        log_debug(shell_exec($command));
         
-        return system($command);
+        if (file_exists($destination)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     
     /**
