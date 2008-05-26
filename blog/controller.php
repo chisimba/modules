@@ -12,13 +12,11 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * Short description for class
- *
- * Long description (if any) ...
+ * Controller class for blog module
  *
  * @category  Chisimba
  * @package   blog
- * @author    Administrative User <pscott@uwc.ac.za>
+ * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2007 Administrative User
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   CVS: $Id$
