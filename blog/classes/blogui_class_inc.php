@@ -253,14 +253,14 @@ class blogui extends object
                         break;
 
                     case 'profiles':
-                        if ($this->objUser->isLoggedIn()) {
+                       /* if ($this->objUser->isLoggedIn()) {
                             $guestid = $this->objUser->userId();
                             if ($guestid == $userid) {
                                 $leftCol.= $this->objblogProfiles->showProfile($userid);
                             }
-                        } else {
+                        } else {*/
                             $leftCol.= $this->objblogProfiles->showFullProfile($userid);
-                        }
+                       /* }*/
                         break;
 
                     case 'adminsection':
