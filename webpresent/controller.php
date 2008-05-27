@@ -164,23 +164,6 @@ public function randomString($length)
 
 
 
- /**
-     * ADDED by David Wafula  
-     * Function to allow scheduling a presentation
-     *
-     */ 
-   public function __schedule()
-    {
-          $id= $this->getParam('id');
-          $title= $this->getParam('title');
-          $filename= $this->getParam('filename');
-
-          $this->setVarByRef('id', $id);
-          $this->setVarByRef('title', $title);
-          $this->setVarByRef('filename', $filename);
-          return "schedule_presentation.php";
-     }
-
     /**
      * ADDED by David Wafula  
      * Function to invoke the presenter applet 
@@ -194,8 +177,10 @@ public function randomString($length)
           $this->startSlidesServer($slideServerId);
          //}
           $id= $this->getParam('id');
+          $title=$this->getParam('title');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
+          $this->setVarByRef('title',$title);
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
@@ -241,8 +226,12 @@ function in_str($needle, $haystack){
           $this->startSlidesServer($slideServerId);
           //}
           $id= $this->getParam('id');
+          $title=$this->getParam('title');
+
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
+          $this->setVarByRef('title',$title);
+
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId',$slideServerId);
           $this->setVarByRef('isPresenter', 'false');
