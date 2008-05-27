@@ -69,6 +69,7 @@
     echo '<param name=rtcpport value="'.$rtcpport.'">';
     echo '<param name=sipport value="'.$sipport.'">';
     echo '<param name=sessionId value="'.$sessionid.'">';
+    echo '<param name=sessionTitle value="'.$title.'">';
     echo '<param name=slideServerId value="'.$slideServerId.'">';
     
 // echo '<param name=sessionId value="gen12Srv15Nme3_4074_1208767420">';
