@@ -87,7 +87,7 @@ if (count($modules) == 0) {
     $addModuleFormStr = '<div class="noRecordsMessage">'.$this->objLanguage->languageText('phrase_nomodulesfound', 'phrase', 'No Modules found').'</div>';
 } else {
     $addModuleForm = new form ('addmodule', $this->uri(array('action'=>'addmoduletomenu')));
-    $label = new label ($this->objLanguage->languageText('word_module', 'system', 'Module').': ', 'input_module');
+    $label = new label ($this->objLanguage->languageText('word_module', 'system', 'Module').': ', 'input_themodule');
     
     $moduleDropdown = new dropdown('themodule');
     foreach ($modules as $module)
@@ -107,9 +107,29 @@ if (count($modules) == 0) {
 // END - Add Module Form
 
 
+$objBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
+$blocks = $objBlocks->getBlocks('normal', 'site|prelogin');
 
-
-
+if (count($blocks) == 0) {
+    $addBlocksFormStr = '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_news_noblocksavailable', 'news', 'No blocks available').'</div>';
+} else {
+    $addBlocksForm = new form ('addmodule', $this->uri(array('action'=>'addblocktomenu')));
+    $label = new label ($this->objLanguage->languageText('word_block', 'system', 'Block').': ', 'input_block');
+    
+    $blockDropdown = new dropdown('theblock');
+    foreach ($blocks as $block)
+    {
+        $blockDropdown->addOption($block['moduleid'].'|'.$block['blockname'], $block['moduleid'].'|'.$block['blockname']);
+    }
+    
+    
+    $button = new button ('addblockbutton', $this->objLanguage->languageText('mod_news_addblocktomenu', 'news', 'Add Block to Menu'));
+    $button->setToSubmit();
+    $addBlocksForm->addToForm($label->show().$blockDropdown->show().'<br />');
+    $addBlocksForm->addToForm($button->show());
+    
+    $addBlocksFormStr = $addBlocksForm->show();
+}
 
 $switchmenu = $this->newObject('switchmenu', 'htmlelements');
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addnewscategory', 'news', 'Add News Category'), $this->objNewsCategories->showCategoryForm());
@@ -117,6 +137,7 @@ $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addlinktomenu',
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addtext', 'news', 'Add Text'), $addTextForm); 
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addlinktowebsite', 'news', 'Add Link to Website'), $addURLForm);
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_adddivider', 'news', 'Add Divider'), $addDividerForm);
+$switchmenu->addBlock($this->objLanguage->languageText('mod_prelogin_addblock', 'system', 'Add Block')', $addBlocksFormStr);
 
 
 

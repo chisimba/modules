@@ -293,6 +293,23 @@ class news extends controller
 
         return $this->nextAction('managecategories', array('newrecord'=>'moduleadded', 'id'=>$id));
     }
+    
+    /**
+    *
+    *
+    */
+    private function __addblocktomenu()
+    {
+        $block = $this->getParam('theblock');
+
+        if (trim($block) == ''){
+            return $this->nextAction('managecategories', array('error'=>'noblock'));
+        }
+
+        $id = $this->objNewsMenu->addBlock($block);
+
+        return $this->nextAction('managecategories', array('newrecord'=>'blockadded', 'id'=>$id));
+    }
 
     /**
     *
@@ -1421,6 +1438,19 @@ class news extends controller
         $id = $this->getParam('id', 'nothing');
 
         $this->objNewsMenu->deleteModule($id);
+
+        return $this->nextAction('managecategories');
+    }
+    
+    /**
+    *
+    *
+    */
+    function __deleteblock()
+    {
+        $id = $this->getParam('id', 'nothing');
+
+        $this->objNewsMenu->deleteBlock($id);
 
         return $this->nextAction('managecategories');
     }

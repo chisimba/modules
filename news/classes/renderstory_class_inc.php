@@ -101,11 +101,12 @@ class renderstory extends object
             $str .= $table->show();
         }
         
+        /*
         if ($story['allowcomments'] == 'Y') {
             $objComments = $this->getObject('dbnewscomments');
             $str .= $objComments->getStoryComments($story['storyid']);
             $str .= $objComments->commentsForm($story['storyid']);
-        }
+        }*/
         
         return $str;
     }

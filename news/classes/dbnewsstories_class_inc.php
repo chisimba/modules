@@ -551,7 +551,7 @@ ORDER BY storydate DESC';
     */
     public function getFeedLinks()
     {
-        $str = '<br /><h2>'.$this->objLanguage->languageText('mod_news_rssfeeds', 'news', 'RSS Feeds').'</h2>';
+        $str = '<br /><h5>'.$this->objLanguage->languageText('mod_news_rssfeeds', 'news', 'RSS Feeds').'</h5>';
 
         $objIcon = $this->newObject('geticon', 'htmlelements');
         $objIcon->setIcon('rss');

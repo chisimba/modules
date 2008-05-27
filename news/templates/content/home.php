@@ -16,8 +16,34 @@ $middle .= $header->show();
 
 $middle .= $topStories;
 
+if (count($categories) > 0) {
+    
+    $table = $this->newObject('htmltable', 'htmlelements');
+    //print_r($topStoriesId);
+    $counter = 0;
+    foreach ($categories as $category)
+    {
+        if ($category['blockonfrontpage'] == 'Y') {
+            $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
+            if ($nonTopStories != '') {
+                
+                if ($counter%2 == 0) {
+                    $middle .= '<br clear="all" />';
+                }
+                $middle .= '<div style="width:50%; float:left; "><h3>'.$category['categoryname'].'</h3>';
+                $middle .= $nonTopStories.'</div>';
+                
+                $counter++;
+            }
+        }
+        
+    }
+}
+
+$middle .= '<br clear="both" />';
+
 $leftContent = $this->objNewsMenu->generateMenu();
-$leftContent .= $this->objNewsStories->getFeedLinks();
+
 
 $adminOptions = array();
 
@@ -48,72 +74,12 @@ if (count($adminOptions) > 0) {
 
 }
 
-$pollLink = new link ($this->uri(array('action'=>'previouspolls')));
-$pollLink->link = $this->objLanguage->languageText('mod_news_viewpreviouspolls', 'news', 'View Previous Polls');
+$right = '';
 
-$latestPoll = $this->getObject('latestpoll');
-
-$right = $latestPoll->show().'<p>'.$pollLink->show();
-
-if ($this->isValid('addpoll')) {
-    $pollLink = new link ($this->uri(array('action'=>'addpoll')));
-    $pollLink->link = $this->objLanguage->languageText('mod_news_addpoll', 'news', 'Add Poll');
-    
-    $right .= ' / '.$pollLink->show();
-}
-
-$right .= '</p>';
-
-if (count($categories) > 0) {
-    
-    $table = $this->newObject('htmltable', 'htmlelements');
-    //print_r($topStoriesId);
-    $counter = 0;
-	foreach ($categories as $category)
-	{
-		if ($category['blockonfrontpage'] == 'Y') {
-            $nonTopStories = $this->objNewsStories->getNonTopStoriesFormatted($category['id'], $topStoriesId);
-            if ($nonTopStories != '') {
-                
-                if ($counter%2 == 0) {
-                    $middle .= '<br clear="all" />';
-                }
-                $middle .= '<div style="width:50%; float:left; "><h3>'.$category['categoryname'].'</h3>';
-                $middle .= $nonTopStories.'</div>';
-                
-                $counter++;
-            }
-        }
-		
-	}	
-}
-
-if (count($albums) > 0) {
-    $album = $albums[0];
-    
-        $right .= '<h3>'.$this->objLanguage->languageText('mod_news_latestalbums', 'news', 'Latest Albums').'</h3>';
-        $right .= '<div >';
-        
-        $objThumbnails = $this->getObject('thumbnails', 'filemanager');
-        $objPhotos = $this->getObject('dbnewsphotos', 'news');
-        
-        $firstPhoto = $objPhotos->getFirstAlbumPhoto($album['id']);
-        
-        $image = is_array($firstPhoto) ? '<br /><img src="'.$objThumbnails->getThumbnail($firstPhoto['fileid'], $firstPhoto['filename']).'" />' : '<br /><br />'.$this->objLanguage->languageText('mod_news_nophotos', 'news', 'No Photos').'<br />&nbsp;';
-        
-        $albumLink = new link ($this->uri(array('action'=>'viewalbum', 'id'=>$album['id'])));
-        $albumLink->link = $album['albumname'].$image;
-        
-        $right .= '<h3>'.$albumLink->show().'</h3>';
-        
-        $right .= '</div>';
-        
-        $albumLink = new link ($this->uri(array('action'=>'photoalbums')));
-        $albumLink->link = $this->objLanguage->languageText('mod_news_viewallalbums', 'news', 'View All Albums');
-        
-        $right .= '<p>'.$albumLink->show().'</p>';
-    
-}
+$objBlocks = $this->getObject('blocks', 'blocks');
+$right .= $objBlocks->showBlock('lastten', 'blog', NULL, 20, FALSE, FALSE);
+$right .= $objBlocks->showBlock('latestpodcast', 'podcast', NULL, 20, FALSE, FALSE);
+$right .= $this->objNewsStories->getFeedLinks();
 
 
 
@@ -124,19 +90,4 @@ $cssLayout->setRightColumnContent($right);
 
 echo $cssLayout->show();
 
-//$nonTopStories = $this->objNewsStories->getNonTopStories($topStories['topstoryids']);
 ?>
-<style type="text/css">
-.album {
-    float: left;
-    border: 1px solid blue;
-    padding: 3px;
-    text-align: center;
-    width: 150px;
-    text-overflow: hidden;
-    margin-right: 10px;
-}
-.album a {display: block;}
-
-
-</style>

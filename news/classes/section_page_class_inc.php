@@ -42,7 +42,7 @@ class section_page extends object
         $allTitles = $this->objStories->getCategoryTitles($category['id'], str_replace('_', ' ', $category['itemsorder']));
         
         if (count($allTitles) > 1) {
-            $str .= '<p style="text-align:center">';
+            $str .= '<br /><p style="text-align:center">';
             $divider = '';
             
             foreach($allTitles as $title)

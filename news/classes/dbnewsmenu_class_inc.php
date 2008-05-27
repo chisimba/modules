@@ -8,6 +8,8 @@ class dbnewsmenu extends dbtable
         parent::init('tbl_news_menu');
         $this->objLanguage =& $this->getObject('language', 'language');
         $this->loadClass('link', 'htmlelements');
+        
+        $this->objBlocks = $this->getObject('blocks', 'blocks');
     }
 
     public function toolbar($current='storyview')
@@ -65,6 +67,7 @@ class dbnewsmenu extends dbtable
         $list = $this->getMenuItems();
 
         $str = '<h2>'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>$this->objLanguage->languageText('mod_news_frontpage', 'news', 'Front Page'))).'</h2>';
+        $str = '<h2>'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>'Welcome')).'</h2>';
 
         if (count($list) == 0){
             return $str.'<p class="warning">'.$this->objLanguage->languageText('mod_news_nosectionssetupyet', 'news', 'No Sections setup yet').'.</p>';
@@ -78,7 +81,7 @@ class dbnewsmenu extends dbtable
             {
                 $text = $this->prepareItem($item);
 
-                if ($item['itemtype'] == 'divider' || $item['itemtype'] == 'text') {
+                if ($item['itemtype'] == 'divider' || $item['itemtype'] == 'text' || $item['itemtype'] == 'block') {
                     if ($inUL) {
                         $str .= '</ul>';
                         $inUL = FALSE;
@@ -149,6 +152,13 @@ class dbnewsmenu extends dbtable
         $link->link = $item['itemname'];
         return $link->show();
     }
+    
+    private function prepareItem_block($item)
+    {
+        $block = explode('|', $item['itemvalue']);
+        //var_dump($block);
+        return $this->objBlocks->showBlock($block[1], $block[0], NULL, 20, TRUE, FALSE);
+    }
 
     private function addMenuItem($itemtype, $itemvalue, $itemname)
     {
@@ -178,6 +188,11 @@ class dbnewsmenu extends dbtable
     public function addModule($module)
     {
         return $this->addMenuItem('module', $module, ucwords($this->objLanguage->code2Txt('mod_'.$module.'_name',$module)));
+    }
+    
+    public function addBlock($block)
+    {
+        return $this->addMenuItem('block', $block, $block);
     }
 
     public function addCategory($id, $name)
@@ -308,6 +323,19 @@ class dbnewsmenu extends dbtable
         if ($item == FALSE) {
             return FALSE;
         } else if ($item['itemtype'] == 'module') {
+            return $this->delete('id', $id);
+        } else {
+            return FALSE;
+        }
+    }
+    
+    function deleteBlock($id)
+    {
+        $item = $this->getItem($id);
+
+        if ($item == FALSE) {
+            return FALSE;
+        } else if ($item['itemtype'] == 'block') {
             return $this->delete('id', $id);
         } else {
             return FALSE;

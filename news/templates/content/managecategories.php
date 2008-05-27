@@ -108,6 +108,11 @@ if (count($menuItems) == 0) {
                 $delete = $objIcon->getDeleteIconWithConfirm($item['id'], array('action'=>'deletemodule','id'=>$item['id']), 'news', $this->objLanguage->languageText('mod_news_confirmdeletemodule', 'news', 'Are you sure want to remove this module?'));
                 $numItems = '&nbsp;';
                 break;
+            case 'block':
+                $edit = '&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;';
+                $delete = $objIcon->getDeleteIconWithConfirm($item['id'], array('action'=>'deleteblock','id'=>$item['id']), 'news', $this->objLanguage->languageText('mod_news_confirmdeleteblock', 'news', 'Are you sure want to remove this block?'));
+                $numItems = '&nbsp;';
+                break;
             case 'url':
                 $edit = '&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;';
                 $delete = $objIcon->getDeleteIconWithConfirm($item['id'], array('action'=>'deleteurl','id'=>$item['id']), 'news', $this->objLanguage->languageText('mod_news_confirmdeleteurl', 'news', 'Are you sure want to delete this URL?'));
