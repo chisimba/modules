@@ -181,9 +181,24 @@ if (count($latestFiles) == 0) {
 
 }
 
+$liveSessionsLink = new link ($this->uri(array('action'=>'showsessionsapplet', 'id'=>$file['id'])));
+$liveSessionsLink->link = 'Click here to view live sessions';
+$modPath=$this->objConfig->getModulePath();
+$replacewith="";
+$docRoot=$_SERVER['DOCUMENT_ROOT'];
+$appletPath=str_replace($docRoot,$replacewith,$modPath);
+$appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+$siteRoot=$this->objConfig->getSiteRoot();
+
+$applet='<applet code="avoir.realtime.sessionmonitor.SessionListing" width="100%" height="300">';
+$applet.='<param name="archive" value="'.$appletCodeBase.'/realtime-sessionmonitor-0.1.jar"/>';
+$applet.='<param name=siteRoot value="'.$siteRoot.'"/>';
+
+$applet.='</applet>';
+
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->addTab('Latest Uploads', '<h3>10 Newest Uploads:</h3>'.$latestFilesContent);
-
+$objTabs->addTab('Live Sessions', $applet);
 $tabCounter = 0;
 
 if ($objUser->isLoggedIn() && $buddiesRegistered) {
@@ -240,40 +255,6 @@ if ($objModules->checkIfRegistered('blog')) {
 
 }
 
-
-  /*$livePresentations=$this->objSchedules->getSchedules();
-  $livePresentationsContent='';
-        foreach ($livePresentations as $file)
-        {
-            $counter++;
-
-            if (trim($file['title']) == '') {
-                $filename = $file['filename'];
-            } else {
-                $filename = htmlentities($file['title']);
-            }
-
-            $linkname = $objTrim->strTrim($filename, 45);
-            $fileLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['fileid'])));
-            
-            if ($objUser->isLoggedIn()){
-              if ($file['creatorid'] == $objUser->userId()) {
-                $fileLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['fileid'])));
-              }
-            }
-            $fileLink->link = $this->objFiles->getPresentationThumbnail($file['fileid']).'<br />'.$linkname.'<br/>'.$file['schedule_date'];
-            $fileLink->title = $filename;
-
-            $extra = ($counter % 2 == 1) ? ' clear:both;' : '';
-
-            $livePresentationsContent .= '<div style="float: left; width: 160px; overflow: hidden; margin-right: 10px; padding-bottom: 10px;'.$extra.'">'.$fileLink->show().'</div>';
-        }
-
- $livePresentationBlock = $objBlocks->showBlock('live', 'table', NULL, 20, TRUE, FALSE);
-
-
- $objTabs->addTab('View Live Presentations', $livePresentationsContent);*/
- $tabCounter++;
 
 if ($tabCounter > 0) {
     $table->addCell($objTabs->show(), '37%');
