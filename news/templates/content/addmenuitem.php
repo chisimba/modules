@@ -137,7 +137,7 @@ $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addlinktomenu',
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addtext', 'news', 'Add Text'), $addTextForm); 
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_addlinktowebsite', 'news', 'Add Link to Website'), $addURLForm);
 $switchmenu->addBlock($this->objLanguage->languageText('mod_news_adddivider', 'news', 'Add Divider'), $addDividerForm);
-$switchmenu->addBlock($this->objLanguage->languageText('mod_prelogin_addblock', 'system', 'Add Block')', $addBlocksFormStr);
+$switchmenu->addBlock($this->objLanguage->languageText('mod_prelogin_addblock', 'system', 'Add Block'), $addBlocksFormStr);
 
 
 
