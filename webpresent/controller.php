@@ -9,7 +9,7 @@ class webpresent extends controller
 {
 
       public $presentationsURL;
-	  public  $objConfig;  
+      public  $objConfig;  
 
     /**
      * Constructor
@@ -171,7 +171,7 @@ public function randomString($length)
      */ 
    public function __showpresenterapplet()
     {
-         $slideServerId=$this->randomString(32);
+         $slideServerId=$this->objConfig->serverName();
           
         //if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
@@ -220,7 +220,7 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-          $slideServerId=$this->randomString(32);
+        $slideServerId=$this->objConfig->serverName();
           
         //if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
@@ -252,7 +252,7 @@ function in_str($needle, $haystack){
     $cmd = "java -Xms64m -Xmx128m -cp ".    
     $this->objConfig->getModulePath().
     "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
-    "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId." >/dev/null &";
+    "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId."  >/dev/null &";
 //echo $cmd;  
   system($cmd,$return_value);
   }
