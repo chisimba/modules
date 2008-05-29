@@ -8,7 +8,7 @@
 */
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$menuBar =& $this->getObject('sidemenu','toolbar');
+$menuBar =& $this->getObject('contextsidebar', 'context');
 $objHead =& $this->newObject('htmlheading','htmlelements');
 
 if(!isset($heading)){
@@ -28,7 +28,7 @@ $objHead->str = $heading;
 $objHead->type = 1;
 $head = $objHead->show();
 
-$cssLayout->setLeftColumnContent($menuBar->menuContext().$cm);
+$cssLayout->setLeftColumnContent($menuBar->show());
 $cssLayout->setMiddleColumnContent($head.$this->getContent());
 
 echo $cssLayout->show();
