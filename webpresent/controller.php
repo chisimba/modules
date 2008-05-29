@@ -171,10 +171,10 @@ public function randomString($length)
      */ 
    public function __showpresenterapplet()
     {
-         $slideServerId=$this->objConfig->serverName();
+         $slideServerId=$this-randomString(32);
           
         //if(!$this->slideServerRunning()){
-         // $this->startSlidesServer($slideServerId);
+          $this->startSlidesServer($slideServerId);
          //}
           $id= $this->getParam('id');
           $title=$this->getParam('title');
@@ -220,10 +220,11 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-        $slideServerId=$this->objConfig->serverName();
+    $slideServerId=$this-randomString(32);
           
         //if(!$this->slideServerRunning()){
-          //$this->startSlidesServer($slideServerId);
+          
+         $this->startSlidesServer($slideServerId);
           //}
           $id= $this->getParam('id');
           $title=$this->getParam('title');
