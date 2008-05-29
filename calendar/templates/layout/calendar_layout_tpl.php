@@ -8,12 +8,12 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
 
 
-$sideMenuBar=& $this->getObject('sidemenu','toolbar');
-
+//$sideMenuBar=& $this->getObject('sidemenu','toolbar');
+$sideMenuBar = $this->getObject('contextsidebar', 'context');
 
 
 //Set the Content of left side column
-$cssLayout->setLeftColumnContent($this->sideMenuBar->userDetails());
+$cssLayout->setLeftColumnContent($sideMenuBar->show());
 //$cssLayout->setRightColunmContent($this->sideMenuBar->userDetails()); 
 
 // Set the Content of left side column
