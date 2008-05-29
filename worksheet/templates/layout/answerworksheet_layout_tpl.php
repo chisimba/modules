@@ -6,7 +6,7 @@
 $this->setVar('pageSuppressToolbar', TRUE);
 
 $objLayer =& $this->newObject('layer', 'htmlelements');
-$leftMenu=& $this->newObject('sidemenu','toolbar');
+$leftMenu=& $this->getObject('contextsidebar', 'context');
 $objHead=& $this->newObject('htmlheading','htmlelements');
 
 if(!isset($heading))

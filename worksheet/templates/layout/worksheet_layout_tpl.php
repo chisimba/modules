@@ -5,7 +5,7 @@
 */
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$leftMenu=& $this->newObject('sidemenu','toolbar');
+$leftMenu=& $this->getObject('contextsidebar', 'context');
 $objHead=& $this->newObject('htmlheading','htmlelements');
 
 $objDBContext = & $this->getObject('dbcontext','context');
@@ -27,7 +27,7 @@ $main = $objHead->show();
 
 $main .= $this->getContent();
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
+$cssLayout->setLeftColumnContent($leftMenu->show());
 $cssLayout->setMiddleColumnContent($main);
 
 echo $cssLayout->show();
