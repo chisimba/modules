@@ -247,8 +247,8 @@ if ($action == 'edit') {
 
 $form->addToForm($table->show());
 
-$form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'Please enter a Name for the Discussion Forum'), 'required');
-$form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'Please enter a Description for the Discussion Forum'), 'required');
+$form->addRule('name', $this->objLanguage->languageText('mod_forum_forumnameneeded', 'forum'), 'required');
+$form->addRule('description', $this->objLanguage->languageText('mod_forum_forumdescriptionneeded', 'forum'), 'required');
 
 echo $form->show();
 

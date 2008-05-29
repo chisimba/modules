@@ -63,7 +63,7 @@ class introduceyourself extends object
         // IF there are no Introduce Yourself Topics - Create One
         if ($numIntro == '0') {
             //echo 'need to insert';
-            $topic_id = $this->objTopic->insertSingle($forum_id, $this->_introTypeId, 0, $this->userId);
+            $topic_id = $this->objTopic->insertSingle($forum_id, $this->_introTypeId, 0, $this->userId, 'Introduce Your Self');
             $this->objForum->updateLastTopic($forum_id, $topic_id);
         
             $post_parent = 0;

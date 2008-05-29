@@ -272,7 +272,34 @@ class dbForum extends dbTable
                             mktime()
                         );
         }
-    	
+        
+        // Add Dynamic Block for latest post in forum
+        if ($newForumId != FALSE) {
+        $this->createDynamicBlocksPost($newForumId, $forum_context, $forum_name);
+        }
+        
+        // Add Dynamic Block for the forum view
+        if ($newForumId != FALSE) {
+        $this->createDynamicBlocksView($newForumId, $forum_context, $forum_name);
+        }
+        
+         // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        // Prep Data
+        $docId = 'forum_entry_'.$newForumId;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        $url = $this->uri(array('action'=>'forum', 'id'=>$newForumId), 'forum');
+        $title = $forum_name;
+        $contents = $forum_name.': '.$forum_description;
+        $teaser = $forum_description;
+        $module = 'forum';
+        $userId = $userId;
+        $context = $forum_context;
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+        
     	return $newForumId;
     }
 
@@ -335,7 +362,7 @@ class dbForum extends dbTable
     function updateSingle($forum_id, $forum_name, $forum_description,  $forum_visible, $forum_locked, $ratingsenabled, $studentstarttopic, $attachments, $subscriptions, $moderation, $archiveDate)
     {
     	
-        return $this->update('id', $forum_id, array(
+        $this->update('id', $forum_id, array(
                 'forum_name' => $forum_name,
                 'forum_description' => $forum_description,
                 'forum_visible' => $forum_visible,
@@ -346,9 +373,40 @@ class dbForum extends dbTable
                 'subscriptions' => $subscriptions,
                 'moderation' => $moderation,
                 'archivedate' => $archiveDate
-            ));
-    	
-    }
+        ));
+		
+        // Update dynamic block to display the latest post
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        if ($forum['forum_context'] == 'root') {
+            $objDynamicBlocks->updateTitle('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $forum_id, 'site', 'Latest Post for Forum: '.$forum_name);
+        } else {
+            $objDynamicBlocks->updateTitle('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $forum_id, 'context', 'Latest Post for Forum: '.$forum_name);
+        }
+        
+        // Update dynamic block to display topic list
+        if ($forum['forum_context'] == 'root') {
+            $objDynamicBlocks->updateTitle('forum', 'dynamicblocks_forumview', 'renderForum', $forum_id, 'site', 'Forum: '.$forum_name);
+        } else {
+            $objDynamicBlocks->updateTitle('forum', 'dynamicblocks_forumview', 'renderForum', $forum_id, 'context', 'Forum: '.$forum_name);
+        }
+         // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        // Prep Data
+        $docId = 'forum_entry_'.$forum_id;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        $url = $this->uri(array('action'=>'forum', 'id'=>$forum_id), 'forum');
+        $title = $forum_name;
+        $contents = $forum_name.': '.$forum_description;
+        $teaser = $forum_description;
+        $module = 'forum';
+        $userId = $userId;
+        $context = $forum_context;
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+    
+	}
     
     /**
     * Method to update the visibility of a forum
@@ -469,7 +527,29 @@ class dbForum extends dbTable
     */
     function deleteForum($id)
     {
-        return $this->delete('id', $id);;
+        $forum = $this->getRow('id', $id);
+        
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        
+        // Delete dynamic block for latest post
+        if ($forum['forum_context'] == 'root') {
+            $objDynamicBlocks->removeBlock('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $id, 'site');
+        } else {
+            $objDynamicBlocks->removeBlock('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $id, 'context');
+        }
+        
+        // Delete dynamic block for topic list
+        if ($forum['forum_context'] == 'root') {
+            $objDynamicBlocks->removeBlock('forum', 'dynamicblocks_forumview', 'renderForum', $id, 'site');
+        } else {
+            $objDynamicBlocks->removeBlock('forum', 'dynamicblocks_forumview', 'renderForum', $id, 'context');
+        }
+        
+        // Delete lucene search entry
+        $objIndexData = $this->getObject('indexdata', 'search');
+        $objIndexData->removeIndex('forum_entry_'.$id);
+        
+        return $this->delete('id', $id);
     }
     
     /**
@@ -623,6 +703,47 @@ class dbForum extends dbTable
         }
     }
     
+     /**
+     * Method to create dynamic blocks for forum topics
+     * @param string $id Record Id of the topic
+     * @param string $context Context
+     * @param string $categoryName Name of the Category
+     */
+    private function createDynamicBlocksPost($id, $context, $forumName)
+    {
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        
+        $title = 'Latest Post for Forum: '.$forumName;
+        
+        if ($context == 'root') {
+            // Add Chapter Block
+            $result = $objDynamicBlocks->addBlock('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $id, $title, 'site', NULL, 'small');
+        } else {
+            // Add Chapter Block
+            $result = $objDynamicBlocks->addBlock('forum', 'dynamicblocks_latestpost', 'renderLatestPost', $id, $title, 'context',  $context, 'small');
+        }
+    }
+    
+     /**
+     * Method to create dynamic blocks for forum topics
+     * @param string $id Record Id of the topic
+     * @param string $context Context
+     * @param string $categoryName Name of the Category
+     */
+    private function createDynamicBlocksView($id, $context, $forumName)
+    {
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        
+        $title = 'Forum: '.$forumName;
+        
+        if ($context == 'root') {
+            // Add Chapter Block
+            $result = $objDynamicBlocks->addBlock('forum', 'dynamicblocks_forumview', 'renderForum', $id, $title, 'site', NULL, 'wide');
+        } else {
+            // Add Chapter Block
+            $result = $objDynamicBlocks->addBlock('forum', 'dynamicblocks_forumview', 'renderForum', $id, $title, 'context',  $context, 'wide');
+        }
+    }
     
  }
  ?>

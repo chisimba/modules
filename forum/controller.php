@@ -188,6 +188,8 @@ class forum extends controller
         
         switch ($action)
         {
+        	case 'test':
+        		return 'test.php';
             case 'forum':
                 return $this->showForum($this->getParam('id'));
                 
@@ -571,7 +573,8 @@ class forum extends controller
             $forum_id,
             $type_id,
             $tangentParent, // tangent parent
-            $this->userId
+            $this->userId,
+            $post_title          
         );
         
         $this->objForum->updateLastTopic($forum_id, $topic_id);
@@ -583,6 +586,9 @@ class forum extends controller
         $this->objTopic->updateFirstPost($topic_id, $post_id);
         
         $this->objForum->updateLastPost($forum_id, $post_id);
+        
+        // Insert topic details into lucene search
+        $this->objTopic->insertTopicSearch($topic_id, $post_title, $post_text, $this->userId, $forum_id);
         
         // Handle Sticky Topics
         if (isset($_POST['stickytopic']) && $_POST['stickytopic'] == '1') {
@@ -619,6 +625,7 @@ class forum extends controller
             //http://localhost/nextgen/index.php?module=forum&action=postreply&id=gen8Srv57Nme40_1&type=context
             $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
             //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+            $emailSuccess=NULL;
         } else {
             $emailSuccess=NULL;
         }
@@ -1096,6 +1103,7 @@ class forum extends controller
         if ($forumDetails['subscriptions'] == 'Y') {
             $replyUrl = $this->uri(array('action'=>'postreply','id'=>$post_id));
             //$emailSuccess = $this->objForumEmail->sendEmail($topic_id, $post_title, $post_text, $forumDetails['forum_name'], $this->userId, $replyUrl);
+        	$emailSuccess = NULL;
         } else {
             $emailSuccess = NULL;
         }

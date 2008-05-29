@@ -31,9 +31,13 @@ class dbtopic extends dbTable
         $this->loadClass('link', 'htmlelements');
         $this->objLanguage =& $this->getObject('language', 'language'); 
         $this->objPost =& $this->getObject('dbpost');
+        $this->objForum = & $this->getObject('dbForum');
         
         $this->objIcon = $this->getObject('geticon', 'htmlelements');
         $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
+        // Get Context Code Settings
+        $this->contextObject =& $this->getObject('dbcontext', 'context');
+        $this->contextCode = $this->contextObject->getContextCode();
     }
     
     /**
@@ -58,7 +62,7 @@ class dbtopic extends dbTable
     * @param string $userId: User ID of person starting the topic
     * @param string $dateLastUpdated: Date topic was started
     */
-    function insertSingle($forum_id, $type_id, $topic_tangent_parent, $userID)
+    function insertSingle($forum_id, $type_id, $topic_tangent_parent, $userID, $postTitle=NULL)
     {
     	if ($topic_tangent_parent == 0) {
             $lastRightPointer = $this->getLastRightPointer($forum_id);
@@ -79,8 +83,38 @@ class dbtopic extends dbTable
     		'userId'          => $userID,
     		'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
     	));
-    	
+
     	return $this->getLastInsertId();
+    }
+    
+    /**
+    * Insert a topic into the lucene search
+    *
+    * @param string $topicId: Record ID of the topic post is being made into
+    * @param string $postTitle: Title of the topic
+    * @param string $postContent: Content of the topic post
+    * @param string $userId: User ID of person starting the topic
+    * @param string $forumId: The id of the forum which the topic is posted in
+    */
+    function insertTopicSearch($topicId, $postTitle, $postContent, $userId, $forumId)
+    { 
+    	$forum = $this->objForum->getRow('id', $forumId);  
+        // Add to Search
+        $objIndexData = $this->getObject('indexdata', 'search');
+        
+        // Prep Data
+        $docId = 'forum_topic_'.$topicId;
+        $docDate = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        $url = $this->uri(array('action'=>'viewtopic', 'id'=>$topicId), 'forum');
+        $title = $postTitle;
+        $contents = $forum['forum_name'].': '.$postTitle;
+        $teaser = $postContent;
+        $module = 'forum';
+        $userId = $userId;
+        $context = $forum['forum_context'];
+        
+        // Add to Index
+        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
     }
     
     /**
@@ -445,8 +479,14 @@ GROUP BY tbl_forum_topic.id                ';
     */
     function deleteTopic($id)
     {
+    	$topic = $this->getRow('id', $id);
         //$topic = $this->listSingle($id);
         // To do: rearrange left and right values
+        
+       // Delete lucene search entry
+       $objIndexData = $this->getObject('indexdata', 'search');
+       $objIndexData->removeIndex('forum_topic_'.$id);
+       
         return $this->delete('id', $id);
     }
     

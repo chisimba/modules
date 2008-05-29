@@ -1,55 +1,52 @@
-<?php
-/**
-* @package forum
-*/
-
-// security check - must be included in all scripts
+<?
+  // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
 }
-// end security check
 
 /**
-* The forum block class displays the last post
-* @author Megan Watson
+* Forum dynamic blocks to view topic table
+* This class renders forum view dynamic block
+* @author Brent van Rensburg
+* @copyright (c) 2004 University of the Western Cape
+* @package forum
+* @version 1
 */
+/**
+* This class renders forum view dynamic block
+*/
+class dynamicblocks_latestpost extends object
+ {
 
-class block_forum extends object
-{
-    /**
-    * Constructor
-    */
-    function init()
-    {
-        $this->objLanguage = $this->getObject('language', 'language');
-        $this->title = $this->objLanguage->languageText('mod_forum_lastpostindefault', 'forum');
-        $this->objPost =& $this->getObject('dbpost');
-        $this->objForum =& $this->getObject('dbforum');
-        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
-
-        $this->contextObject =& $this->getObject('dbcontext', 'context');
-        $this->contextCode = $this->contextObject->getContextCode();
-
-        // If not in context, set code to be 'root'
-        if ($this->contextCode == ''){
-            $this->contextCode = 'root';
-        }
-
-        $this->objIcon =& $this->newObject('geticon', 'htmlelements');
+	/**
+	* Constructor method to define the table(default)
+	*/
+	function init()
+	{
+		$this->loadClass('label','htmlelements');
         $this->loadClass('link', 'htmlelements');
+        
+        $this->objLanguage =& $this->getObject('language', 'language'); 
+        $this->objPost =& $this->getObject('dbpost');
+        
+        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+        $this->objDateTime =& $this->getObject('dateandtime', 'utilities');
+        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
     }
-
-    /**
-    * Method to show the last post in the default forum
-    */
-    function showLastPost()
-    {
-        $noPost = $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum');
+    
+    
+     /**
+     * Method to render a forum
+     * @param string $id Record Id of the forum
+     * @return string Results
+     */
+    function renderLatestPost($id)
+    {	
+		$noPost = $this->objLanguage->languageText('mod_forum_nopostsyet', 'forum');
         $todayAt = $this->objLanguage->languageText('mod_forum_todayat', 'forum');
 
-        $forumId = $this->objForum->getDefaultForum($this->contextCode);
-        $post = $this->objPost->getLastPost($forumId['id']);
+        $post = $this->objPost->getLastPost($id);
 
         if ($post == FALSE) {
             $postDetails = '<em>'.$noPost.'</em>';
@@ -60,26 +57,24 @@ class block_forum extends object
             $postLink->link = stripslashes($post['post_title']);
             $postDetails = '<strong>'.$postLink->show().'</strong>';
             $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
-
-            /*
+			/*
             if ($post['firstName'] != '') {
                 $user = 'By: '.$post['firstName'].' '.$post['surname'].' - ';
             } else {
                 $user = '';
             }
 			*/
-            
             if ($this->formatDate($post['datelastupdated']) == date('j F Y')) {
                 $datefield = $todayAt.' '.$this->formatTime($post['datelastupdated']);
             } else {
                 $datefield = $this->formatDate($post['datelastupdated']).' - '.$this->formatTime($post['datelastupdated']);
             }
-
+			
             $postDetails .= '<br /><strong>'.$datefield.'</strong>';
         }
         return $postDetails;
     }
-
+    
     /**
     * Method to format a date.
     */
@@ -135,5 +130,5 @@ class block_forum extends object
         $str .= $this->getLink();
         return $str;
     }
-}
+ }
 ?>
