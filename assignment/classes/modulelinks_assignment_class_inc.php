@@ -25,15 +25,20 @@ class modulelinks_assignment extends object
     public function init()
     {
     	$this->objAssignment = $this->getObject('dbassignment', 'assignment');
+    	$this->objContext = $this->getObject('dbcontext','context');
+    	if($this->objContext->isInContext()){
+            $this->contextCode=$this->objContext->getContextCode();
+            $this->context=$this->objContext->getTitle();
+        }
     }
     
      public function show()
     {
         // Link to Module itself - First Level
-        $rootNode = new treenode (array('link'=>$this->uri(NULL, 'assignment'), 'text'=>'Assignment'));
-        /*
+        $rootNode = new treenode (array('link'=>$this->uri(array('action'=>'assignment')), 'text'=>'Assignment'));
+        
         // Get Assignments - Second Level
-        $assignments = getContextLinks();
+        $assignments = $this->objAssignment->getAssignment($this->contextCode);	 
         
         // Extra Check
         if (count($assignments) > 0) {
@@ -45,7 +50,7 @@ class modulelinks_assignment extends object
             foreach ($assignments as $assignment)
             {
                 // Create Node
-                $node =& new treenode(array('link'=>$this->uri($assignment['params']), 'text'=>$assignment['name']));
+                $node =& new treenode(array('link'=>$this->uri(array('action'=>'assignment')), 'text'=>$assignment['name']));
                 
                 // Create Reference to Node
                 $nodesArray['assignment'.$assignment['id']] =& $node;
@@ -55,7 +60,7 @@ class modulelinks_assignment extends object
             }
             
         }
-        */
+        
         // Return Root Node
         return $rootNode;
     }
@@ -70,8 +75,8 @@ class modulelinks_assignment extends object
      */
     public function getContextLinks($contextCode)
     { 
-       
-       	$assignments = $this->objAssignment->getAssignment($contextCode);	   
+       /*
+       	$assignments = $this->objAssignment->getAssignment($this->contextCode);	   
           $bigArr = array();
 		
 		if(count($assignments) > 1)
@@ -92,7 +97,7 @@ class modulelinks_assignment extends object
         } else {
 			return FALSE;
 		}
-         
+         */
     }
     
 }
