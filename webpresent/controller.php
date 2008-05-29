@@ -172,7 +172,7 @@ public function randomString($length)
    public function __showpresenterapplet()
     {
         // $slideServerId=$this->randomString(32);
-          $slideServerId=$this->objconfig->servername();
+          $slideServerId=$this->objConfig->serverName();
         if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
         }
@@ -221,7 +221,7 @@ function in_str($needle, $haystack){
     function __showaudienceapplet()
     {
     //$slideServerId=$this->randomString(32);
-      $slideServerId=$this->objconfig->servername();    
+      $slideServerId=$this->objConfig->serverName();    
         if(!$this->slideServerRunning()){
           
          $this->startSlidesServer($slideServerId);
