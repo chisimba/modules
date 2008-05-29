@@ -7,6 +7,8 @@ if($this->_objDBContext->isInContext())
 } else {
     $cm ='';
 }
+$toolbar = $this->getObject('contextsidebar', 'context');
+
 // Create an Instance of the CSS Layout
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
@@ -15,8 +17,8 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $userMenuBar=& $this->getObject('sidemenu','toolbar');
 
 // Set the Content of left side column
-//$cssLayout->setLeftColumnContent($userMenuBar->show());
-$cssLayout->setLeftColumnContent($cm.$userMenuBar->menuContext());
+$cssLayout->setLeftColumnContent($toolbar->show());
+//$cssLayout->setLeftColumnContent($cm.$userMenuBar->menuContext());
 
 // Set the Content of middle column
 $cssLayout->setMiddleColumnContent($this->getContent());
