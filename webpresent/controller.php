@@ -171,11 +171,11 @@ public function randomString($length)
      */ 
    public function __showpresenterapplet()
     {
-         $slideServerId=$this->randomString(32);
-          
-        //if(!$this->slideServerRunning()){
+        // $slideServerId=$this->randomString(32);
+          $slideServerId=$this->objconfig->servername();
+        if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
-         //}
+        }
           $id= $this->getParam('id');
           $title=$this->getParam('title');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
@@ -196,7 +196,7 @@ public function randomString($length)
 
     $result = array();
     $cmd='ps aux | grep java';
-    $needle='avoir.realtime.client.SlidesServer';
+    $needle=' avoir.realtime.tcp.base.SlidesServer';
     exec( $cmd, &$result);
      foreach ($result as $v ){
        
@@ -220,12 +220,12 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-    $slideServerId=$this->randomString(32);
-          
-        //if(!$this->slideServerRunning()){
+    //$slideServerId=$this->randomString(32);
+      $slideServerId=$this->objconfig->servername();    
+        if(!$this->slideServerRunning()){
           
          $this->startSlidesServer($slideServerId);
-          //}
+          }
           $id= $this->getParam('id');
           $title=$this->getParam('title');
 
