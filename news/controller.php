@@ -882,8 +882,10 @@ class news extends controller
 
         $this->objFeedCreator = $this->getObject('feeder', 'feed');
         $objTrimString = $this->getObject('trimstr', 'strings');
+        
+        $objUser = $this->getObject('user', 'security');
 
-        $this->objFeedCreator->setupFeed(TRUE, 'Muslim Views - Top Stories', 'Summary of Top Stories from Muslim Views', 'http://5ive.uwc.ac.za', 'http://127.0.0.1/chi/5ive/app/index.php?module=feed&action=createfeed');
+        $this->objFeedCreator->setupFeed(TRUE, $this->objConfig->getSiteName().' - '.$this->objLanguage->languageText('mod_news_topstories', 'news', 'Top Stories'), $this->objLanguage->languageText('mod_news_summaryoftopstories', 'news', 'Summary of Top Stories from').' '.$this->objConfig->getSiteName(), $this->objConfig->getsiteRoot(), $this->uri(array('action'=>'topstoriesfeed')));
 
         foreach ($topStories as $story)
         {
@@ -891,7 +893,7 @@ class news extends controller
 
             $content = $objTrimString->strTrim(($story['storytext']), 150, TRUE);
 
-            $this->objFeedCreator->addItem($title, $this->uri(array('action'=>'viewstory', 'id'=>$story['id'])), $content, 'here', 'Paul');
+            $this->objFeedCreator->addItem($title, $this->uri(array('action'=>'viewstory', 'id'=>$story['id'])), $content, 'here', $objUser->fullName($story['modifierid']));
         }
 
         echo $this->objFeedCreator->output();
