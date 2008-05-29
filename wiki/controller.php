@@ -162,9 +162,6 @@ class wiki extends controller {
                 break;
 
             case 'add_page':
-                $objMk = $this->getObject('markitup', 'htmlelements');
-                $objMk->setType('chiki');
-                $this->appendArrayVar('headerParams',$objMk->show('id', 'input_content'));
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showAddPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
@@ -175,7 +172,7 @@ class wiki extends controller {
                 $name = $this->getParam('name');
                 $sum = $this->getParam('summary');
                 $choice = $this->getParam('choice');
-                $content = $this->getParam('content');
+                $content = $this->getParam('wikiContent');
                 if($choice == 'yes'){
                     $summary = substr($content, 0, 255);
                 }else{
@@ -214,7 +211,7 @@ class wiki extends controller {
                 $main = $this->getParam('main');
                 $sum = $this->getParam('summary');
                 $comment = $this->getParam('comment');
-                $content = $this->getParam('content');
+                $content = $this->getParam('wikiContent');
                 $choice = $this->getParam('choice');
                 if($choice == 'yes'){
                     $summary = substr($content, 0, 255);
@@ -251,9 +248,6 @@ class wiki extends controller {
                 break;
 
             case 'view_page':
-                $objMk = $this->getObject('markitup', 'htmlelements');
-                $objMk->setType('chiki');
-                $this->appendArrayVar('headerParams',$objMk->show('id', 'input_content'));
                 $name = $this->getParam('name');
                 if(!empty($name)){
                     $page = $this->objDbwiki->getPage($name);
@@ -319,7 +313,7 @@ class wiki extends controller {
 
             case 'preview_page':
                 $name = $this->getParam('name');
-                $content = $this->getParam('content');
+                $content = $this->getParam('wikiContent');
                 $divContent = $this->objWikidisplay->showPreview($name, $content);
                 return $divContent;
                 break;

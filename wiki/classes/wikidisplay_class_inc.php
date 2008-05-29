@@ -864,6 +864,12 @@ class wikidisplay extends object
     */
     private function _showEditPage($id)
     {
+        // add header params
+        $objMk = $this->getObject('markitup', 'htmlelements');
+        $objMk->setType('chiki');
+        $headerParams = $objMk->show('id', 'input_wikiContent');
+        $this->appendArrayVar('headerParams', $headerParams);
+
         // get data
         $data = $this->objDbwiki->getPageById($id);
         $getWatched = $this->objDbwiki->getUserPageWatch($data['page_name']);
@@ -924,7 +930,7 @@ class wikidisplay extends object
         $mainInput = $objInput->show();
                
         // content textarea
-        $objText = new textarea('content', $data['page_content'], '25', '70');
+        $objText = new textarea('wikiContent', $data['page_content'], '25', '70');
         $contentText = $objText->show();
         
         // content layer
@@ -992,6 +998,10 @@ class wikidisplay extends object
     public function showAddPage($name = NULL)
     {
         // add  javascript
+        $objMk = $this->getObject('markitup', 'htmlelements');
+        $objMk->setType('chiki');
+        $headerParams = $objMk->show('id', 'input_wikiContent');
+        $this->appendArrayVar('headerParams', $headerParams);
         $headerParams = $this->getJavascriptFile('wiki.js', 'wiki');
         $this->appendArrayVar('headerParams', $headerParams);
 
@@ -1077,7 +1087,7 @@ class wikidisplay extends object
         $heading = $objHeader->show();
         
         // content textarea
-        $objText = new textarea('content', '', '25', '70');
+        $objText = new textarea('wikiContent', '', '25', '70');
         $contentText = $objText->show();
                
         // content layer

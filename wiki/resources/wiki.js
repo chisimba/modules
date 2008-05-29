@@ -21,7 +21,7 @@ function validateCreatePage(err_page, err_summary, err_content)
     var name_input = $("input_name");
     var summary_input = $("input_summary");
     var choice_input = $("input_choice");
-    var content_input = $("input_content");
+    var content_input = document.getElementsByName("wikiContent");
     
     if(name_input.value == ""){
         alert(err_page);
@@ -43,9 +43,9 @@ function validateCreatePage(err_page, err_summary, err_content)
         }
     }
     
-    if(content_input.value == ""){
+    if(content_input[0].value == ""){
         alert(err_content);
-        content_input.focus
+        content_input[0].focus
         return false;
     }
     
@@ -63,7 +63,7 @@ function validateUpdatePage(err_summary, err_content, err_comment)
 {
     var summary_input = $("input_summary");
     var choice_input = $("input_choice");
-    var content_input = $("input_content");
+    var content_input = document.getElementsByName("wikiContent");
     var comment_input = $("input_comment");
     
     
@@ -75,9 +75,9 @@ function validateUpdatePage(err_summary, err_content, err_comment)
             return false;
         }
     }
-    if(content_input.value == ""){
+    if(content_input[0].value == ""){
         alert(err_content);
-        content_input.focus
+        content_input[0].focus
         return false;
     }
 
@@ -497,7 +497,7 @@ function cancelUpdatePost(postId)
 function moveContent()
 {
     var el_name = $("input_name");
-    var el_content = $("input_content");
+    var el_content =document.getElementsByName("wikiContent");
     var el_pIframe = $("submitIframe");
     var el_iframe = el_pIframe.contentWindow || el_pIframe.contentDocument;
     if(el_iframe.document){
@@ -507,5 +507,5 @@ function moveContent()
     var el_pName = el_iframe.getElementById("input_preview_name");
     var el_pContent = el_iframe.getElementById("input_preview_content");
     el_pName.value = el_name.value;                             
-    el_pContent.value = el_content.value;
+    el_pContent.value = el_content[0].value;
 }
