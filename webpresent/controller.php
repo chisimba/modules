@@ -174,7 +174,7 @@ public function randomString($length)
          $slideServerId=$this->objConfig->serverName();
           
         //if(!$this->slideServerRunning()){
-          $this->startSlidesServer($slideServerId);
+         // $this->startSlidesServer($slideServerId);
          //}
           $id= $this->getParam('id');
           $title=$this->getParam('title');
@@ -223,7 +223,7 @@ function in_str($needle, $haystack){
         $slideServerId=$this->objConfig->serverName();
           
         //if(!$this->slideServerRunning()){
-          $this->startSlidesServer($slideServerId);
+          //$this->startSlidesServer($slideServerId);
           //}
           $id= $this->getParam('id');
           $title=$this->getParam('title');
