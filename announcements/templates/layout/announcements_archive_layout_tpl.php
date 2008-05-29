@@ -3,11 +3,12 @@
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(2);
 
-$this->leftMenu = $this->newObject('usermenu', 'toolbar');
+$toolbar = $this->getObject('contextsidebar', 'context');
+
 // Initialize left column
-$leftSideColumn = $this->leftMenu->show();
+$leftSideColumn = $toolbar->show();
 $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-$leftSideColumn=$this->objFeatureBox->show($blocktitle, $leftSideColumn);
+//$leftSideColumn=$this->objFeatureBox->show($blocktitle, $leftSideColumn);
 $cssLayout->setLeftColumnContent($leftSideColumn);
 $cssLayout->setMiddleColumnContent($this->getContent());
 //$cssLayout->setRightColumnContent($this->objAnnouncementsTools->getRightBlocks());
