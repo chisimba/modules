@@ -180,7 +180,7 @@ public function randomString($length)
           $title=$this->getParam('title');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
-          $this->setVarByRef('title',$title);
+          $this->setVarByRef('sessionTitle',$sessionTitle);
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
@@ -231,7 +231,7 @@ function in_str($needle, $haystack){
 
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
-          $this->setVarByRef('title',$title);
+          $this->setVarByRef('sessionTitle',$sessionTitle);
 
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId',$slideServerId);
