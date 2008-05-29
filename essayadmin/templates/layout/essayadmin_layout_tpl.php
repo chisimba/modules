@@ -10,7 +10,7 @@
 
 $this->loadClass('layer', 'htmlelements');
 
-$leftMenu=& $this->newObject('sidemenu','toolbar');
+$leftMenu=& $this->getObject('contextsidebar', 'context');
 $objLayer= new layer;
 
 $objHead=$this->newObject('htmlheading','htmlelements');
@@ -31,7 +31,7 @@ if(isset($foot)){
     $main.=$foot;
 }*/
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext());
+$cssLayout->setLeftColumnContent($leftMenu->show());
 $cssLayout->setMiddleColumnContent($main);
 
 echo $cssLayout->show();
