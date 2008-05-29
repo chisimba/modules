@@ -17,7 +17,7 @@ if($this->_objDBContext->isInContext())
     $cm ='';
 }
 
-$leftMenu=& $this->newObject('sidemenu','toolbar');
+$leftMenu=& $this->getObject('contextsidebar', 'context');
 
 $objLayer=$this->objLayer;
 $objHead=$this->newObject('htmlheading','htmlelements');
@@ -31,7 +31,7 @@ $objLayer->str = $this->getContent();
 
 $main.=$objLayer->show();
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
+$cssLayout->setLeftColumnContent($leftMenu->show());
 $cssLayout->setMiddleColumnContent($main);
 
 echo $cssLayout->show();
