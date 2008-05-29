@@ -17,12 +17,13 @@ if($this->_objDBContext->isInContext())
 } else {
     $cm ='';
 }
-
+$toolbar = $this->getObject('contextsidebar', 'context');
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 $leftMenu =& $this->newObject('sidemenu','toolbar');
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
+//$cssLayout->setLeftColumnContent($leftMenu->menuContext().$cm);
+$cssLayout->setLeftColumnContent($toolbar->show());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();
