@@ -18,7 +18,8 @@ else if ($this->objUser->isLecturer()) {
 else {
 	die('Access denied');
 }
-$cssLayout->setLeftColumnContent($userMenuBar->menuContext().$cm);
+$toolbar = $this->getObject('contextsidebar', 'context');
+$cssLayout->setLeftColumnContent($toolbar->show());
 //$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
 ////$sideMenuBar=& $this->getObject('sidemenu','toolbar');
 
