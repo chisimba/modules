@@ -173,9 +173,9 @@ public function randomString($length)
     {
         // $slideServerId=$this->randomString(32);
           $slideServerId=$this->objConfig->serverName();
-        if(!$this->slideServerRunning()){
+        //if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
-        }
+        //}
           $id= $this->getParam('id');
           $title=$this->getParam('title');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
@@ -222,10 +222,10 @@ function in_str($needle, $haystack){
     {
     //$slideServerId=$this->randomString(32);
       $slideServerId=$this->objConfig->serverName();    
-        if(!$this->slideServerRunning()){
+     //   if(!$this->slideServerRunning()){
           
          $this->startSlidesServer($slideServerId);
-          }
+       //   }
           $id= $this->getParam('id');
           $title=$this->getParam('title');
 
