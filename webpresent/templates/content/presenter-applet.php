@@ -47,7 +47,7 @@
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
      
-    echo 'archive="realtime-launcher-0.1.jar" width="85%" height="600">';
+    echo 'archive="realtime-launcher-0.1.jar" width="95%" height="600">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=isLocalhost value="true">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';

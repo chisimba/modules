@@ -243,11 +243,18 @@ $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $scheduleLink = new link ($this->uri(array('action'=>'schedule', 'id'=>$file['id'],'title'=>$file['title'],'filename'=>$file['filename'])));
 $scheduleLink->link = 'Schedule for Live Presentation';
 
-$presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'])));
+$agenda='';
+    if (trim($file['title']) == '') {
+            $agenda = $file['filename'];
+    } else {
+  $agenda = htmlentities($file['title']);
+}
+
+$presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
 $presenterLink->link = 'Start Live Presentation';
 
 
-$clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'])));
+$clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
 $clientLink->link = 'View Live Presentation';
 
 

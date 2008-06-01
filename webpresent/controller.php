@@ -177,10 +177,10 @@ public function randomString($length)
           $this->startSlidesServer($slideServerId);
         //}
           $id= $this->getParam('id');
-          $title=$this->getParam('title');
+          $title=$this->getParam('agenda');
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
-          $this->setVarByRef('sessionTitle',$sessionTitle);
+          $this->setVarByRef('sessionTitle',$title);
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
@@ -227,11 +227,11 @@ function in_str($needle, $haystack){
          $this->startSlidesServer($slideServerId);
        //   }
           $id= $this->getParam('id');
-          $title=$this->getParam('title');
+          $title=$this->getParam('agenda');
 
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
-          $this->setVarByRef('sessionTitle',$sessionTitle);
+          $this->setVarByRef('sessionTitle',$title);
 
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId',$slideServerId);
