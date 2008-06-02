@@ -156,11 +156,12 @@ class imagemagick extends controller
         
         $objConvert = $this->getObject('convertpdf2image');
         
-        $objConvert->convert($filePath, $destination);
+        $result = $objConvert->convert($filePath, $destination);
         
-        //var_dump($filePath);
-        
-        //var_dump(extension_loaded('imagick'));
+        if ($result) {
+            $location = $destination = $this->objConfig->getcontentPath().'filemanager_preview/'.$this->getParam('fileselect').'.jpg';
+            header('Location:'.$location);
+        }
     }
     
 
