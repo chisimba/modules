@@ -254,7 +254,7 @@ function in_str($needle, $haystack){
     $this->objConfig->getModulePath().
     "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
     "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId."  >/dev/null &";
-  echo $cmd;  
+  //echo $cmd;  
   system($cmd,$return_value);
   }
     /**
