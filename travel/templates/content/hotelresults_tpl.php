@@ -20,6 +20,7 @@ if (isset($countryString)) {
     $hotelCount =  $this->objHotels->hotelCount($cityString);
     $results = $this->objHotels->citySearch($cityString,$page);
 }
+
 $cIn = $this->getParam('checkin');
 $cOut = $this->getParam('checkout');
 
@@ -34,19 +35,28 @@ if ($nights == 1) {
     $nights .= " ".$this->objLanguage->languageText('word_nights');
 }
 
-if (($rooms = $this->getParam('searchRooms')) == 1) {
+$rooms = $this->getParam('searchRooms');
+
+$adults = $kids = 0;
+for ($i=0;$i<$rooms;$i++) {
+    $adults += $this->getParam("searchAdults_$i");
+    $kids += $this->getParam("searchChildren_$i");
+}
+
+
+if ($rooms == 1) {
     $rooms .= " ".$this->objLanguage->languageText('word_room');
 } else {
     $rooms .= " ".$this->objLanguage->languageText('word_rooms');
 }
 
-if (($adults = $this->getParam('searchAdults')) == 1) {
+if ($adults == 1) {
     $adults .= " ".$this->objLanguage->languageText('word_adult');
 } else {
     $adults .= " ".$this->objLanguage->languageText('word_adults');
 }
 
-switch ($kids = $this->getParam('searchChildren')) {
+switch ($kids) {
     case 0:
         $kids ='';
         break;

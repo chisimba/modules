@@ -25,12 +25,12 @@ if ($hotel['address3']) {
 }
 $hotel_location .= "{$hotel['city']} {$hotel['country']} {$hotel['postalcode']}";
 
-$a_images = $this->objHotelImages->getAll("WHERE id = '{$hotel['id']}' ORDER BY url ASC");
+$a_images = $this->objHotelImages->getArray("SELECT DISTINCT url, caption, thumbnail FROM tbl_travel_hotel_images WHERE id = '{$hotel['id']}' ORDER BY url ASC");
 
 $thumbs = "<div class='thumb_block'>";
 foreach ($a_images as $thumb) {
     $count++;
-    $onClick = "javascript:document.getElementById(\"hotel_img_tag\").setAttribute(\"src\",\"{$thumb['url']}\");";
+    $onClick = "document.getElementById(\"hotel_img_tag\").setAttribute(\"src\",\"{$thumb['url']}\");";
     
     
     //replaceImage(\"{$thumb['url']}\")"; 
@@ -45,11 +45,11 @@ $desc = "<div id='hotel_results' class='hotel_match'>
             <hr />
             <div class='hotel_thumb'><img src='{$image['thumbnail']}' alt='$hotelName - {$image['caption']}' /></div>
             <div class='hotel_info'>$hotel_location<br />
-                vibe
             </div>
             <hr class='top_margin'/>
             <div id='hotel_image'><img id='hotel_img_tag' src='{$image['url']}' width=272 alt='$hotelName - {$image['caption']}' /></div>
             $thumbs
+            <div class='description'>{$hotel['propertydescription']}</div>
          </div>";
 
 $content = $objH->show().$desc;
