@@ -1,7 +1,3 @@
-<?php
-	//die("DIE");
-?>
-
 
 <script language="JavaScript">
 
@@ -70,9 +66,7 @@ echo ('<h1>'.$title.'</h1>');
 $table=$this->newObject('htmltable','htmlelements');
 
 
-$table->width='';
-$table->cellspacing='2';
-$table->cellpadding='2';
+$table->width='99%';
 
 $table->startRow();
 $multiDayChoice = new radio('multidayevent');
@@ -88,12 +82,15 @@ $multiDayChoice->extra='onClick="toggleMultiDayInput()"';
 
 $text = $this->objLanguage->languageText('mod_calendarbase_isthisamultidayevent', 'calendarbase', 'Is this a multiday event? ').$multiDayChoice->show();
 
-$table->addCell($text, NULL, NULL, NULL, NULL, 'colspan="3"');
+$table->addCell($text, NULL, NULL, NULL, NULL, 'colspan="4"');
 $table->endRow();
+
+
+
 
 $table->startRow();
 $dateLabel = new label($this->objLanguage->languageText('mod_calendarbase_dateofevent', 'calendarbase').':', 'input_date');
-$table->addCell($dateLabel->show());
+$table->addCell($dateLabel->show(), 150);
 
 
 
@@ -126,10 +123,10 @@ $dateInput2->setName('date2');
 
 if ($mode == 'edit') {
     if ($event['multiday_event'] == 1) {
-		$dateInput2->setDefaultDate($event['eventdate2']);
-	} else {
-		$dateInput2->setDefaultDate($event['eventdate']);
-	}
+        $dateInput2->setDefaultDate($event['eventdate2']);
+    } else {
+        $dateInput2->setDefaultDate($event['eventdate']);
+    }
 } else {
     $dateInput2->setDefaultDate(date('Y-m-d'));
 }
@@ -188,7 +185,7 @@ $table->addCell($timeLabel->show());
 $from = $timeFromdropdown->show();
 $timeFromdropdown->name = 'timeto';
 $to = $timeFromdropdown->show();
-$table->addCell('From '.$from.'&nbsp;To '.$to );
+$table->addCell('From '.$from.'&nbsp;To '.$to , NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 // end - date inputs //
 
@@ -202,27 +199,27 @@ Ability to add to Course Calendar and Site Calendar is based on permission.
 If the user only has permission to add to their own calendar, these options are not shown.
 It will default to the users personal calendar
 */
-	
+    
 
 $eventfor = new radio('eventfor');
 $eventfor->setBreakSpace('<br />');
 $eventfor->addOption('0', $this->objLanguage->languageText('mod_calendarbase_mypersonalcalendar', 'calendarbase', 'My Personal Calendar'));
 if ($isInContext && $isContextLecturer) {
-	$courselabel = ucwords($this->objLanguage->code2Txt('mod_calendarbase_coursecalendar', 'calendarbase', NULL, '{COURSE} [-context-] Calendar'));
-	$courselabel = str_replace('{COURSE}', $courseTitle, $courselabel);
-	$eventfor->addOption('1', $courselabel);
+    $courselabel = ucwords($this->objLanguage->code2Txt('mod_calendarbase_coursecalendar', 'calendarbase', NULL, '{COURSE} [-context-] Calendar'));
+    $courselabel = str_replace('{COURSE}', $courseTitle, $courselabel);
+    $eventfor->addOption('1', $courselabel);
     $eventfor->setSelected('1');
 }
 if ($isAdmin) {
-	$eventfor->addOption('3', $this->objLanguage->languageText('mod_calendarbase_sitecalendar', 'calendarbase', 'Site Calendar'));
+    $eventfor->addOption('3', $this->objLanguage->languageText('mod_calendarbase_sitecalendar', 'calendarbase', 'Site Calendar'));
 }
 
 if (count($eventfor->options) > 1 && $mode != 'edit') { // Only show Radio buttons if more than one option is available
-	$table->startRow();
-	$titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_addeventto', 'calendarbase', 'Add Event to').':', 'input_eventfor');
-	$table->addCell($titleLabel->show());
-	$table->addCell($eventfor->show());
-	$table->endRow();
+    $table->startRow();
+    $titleLabel = new label($this->objLanguage->languageText('mod_calendarbase_addeventto', 'calendarbase', 'Add Event to').':', 'input_eventfor');
+    $table->addCell($titleLabel->show());
+    $table->addCell($eventfor->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
+    $table->endRow();
 }
 
 
@@ -272,12 +269,15 @@ $table->endRow();
 // Iframe Attachments
 $iframe = new iframe ();
 $iframe->src = $this->uri(array('action'=>'tempframe', 'id'=>$temporaryId, 'mode'=>$mode));
-$iframe->width = 450;
-$iframe->height = 120;
+$iframe->width = 600;
+$iframe->height = 150;
+$iframe->extra = ' frameborder="0"';
+
+$objSelectFile = $this->getObject('selectfile', 'filemanager');
 
 $table->startRow();
 $table->addCell($this->objLanguage->languageText('word_attachments', 'calendarbase', 'Attachments').':');
-$table->addCell($iframe->show(), NULL, NULL, NULL, NULL, 'colspan="2"');
+$table->addCell($objSelectFile->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 
 $form = new form('eventform', $this->uri( array('action'=>$action)));

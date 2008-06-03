@@ -21,9 +21,14 @@ class calendarinterface extends object
 {
     
     private $preparedEventsArray = array();
+    private $preparedListArray = array();
     
     public $month;
     public $year;
+    
+    public $isContextLecturer = FALSE;
+    public $manageSiteCalendar = FALSE;
+    public $contextCode;
     
     
     /**
@@ -35,13 +40,24 @@ class calendarinterface extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objDateFunctions = $this->getObject('dateandtime','utilities');
         
+        $this->loadClass('link', 'htmlelements');
+        
         $this->month = date('m');
         $this->year = date('Y');
+        
+        $this->objUser = $this->getObject('user', 'security');
+        
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objIcon->setIcon('edit');
+        $this->editIcon = $this->objIcon->show();
+        
+        $this->confirmDel = $this->objLanguage->languageText('mod_calendarbase_eventdeleterequestconfirm', 'calendarbase', 'Are you sure you want to delete this event?');
     }
     
     public function resetEventsArray()
     {
         $this->preparedEventsArray = array();
+        $this->preparedListArray = array();
     }
     
     
@@ -87,27 +103,112 @@ class calendarinterface extends object
     public function prepareEventsForCalendar (&$events, $type)
     {
         $objTrim =& $this->getObject('trimstr', 'strings');
-
+        
+        
+        
         foreach ($events as $event)
         {
             $day = $this->objDateFunctions->dayofMonth($event['eventdate']);
-
+            
+            $edit = '';
+            $delete = '';
+            
             switch ($type)
             {
-                case 'user':       $css = 'event_user'; break;
-                case 'context':    $css = 'event_context'; break;
-                case 'site':       $css = 'event_site'; break;
-                case 'other':      $css = 'event_other'; break;
+                case 'user':
+                    $css = 'event_user';
+                    if ($event['userfirstentry'] == $this->objUser->userId()) {
+                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link->link = $this->editIcon;
+                        $edit = $link->show();
+                        
+                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                    }
+                    break;
+                case 'context':
+                    $css = 'event_context';
+                    if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
+                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link->link = $this->editIcon;
+                        $edit = $link->show();
+                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                    }
+                    break;
+                case 'site':
+                    $css = 'event_site';
+                    if ($this->objUser->isAdmin()) {
+                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link->link = $this->editIcon;
+                        $edit = $link->show();
+                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                    }
+                    break;
+                case 'other':
+                    $css = 'event_othercontext';
+                    if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
+                        $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
+                        $link->link = $this->editIcon;
+                        $edit = $link->show();
+                        $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
+                    }
+                    break;
                 case 'workgroup':  $css = 'event_workgroup'; break;
                 default:           $css = ''; break;
             }
-
+            
+            
+            //var_dump($event);
+            
+            
+            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> <br /><div>'.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
+            
+            if ($event['eventurl'] != NULL) {
+                $link = new link($event['eventurl']);
+                $link->link = $event['eventurl'];
+                
+                $eventList .= '<p>'.$link->show().'</p>';
+            }
+            
+            $eventList .= '</div>';
+            
+            
+            
+            //var_dump($event);
+            
             if (array_key_exists($day, $this->preparedEventsArray)) {
                 $temp = rtrim ($this->preparedEventsArray[$day], '</ul>');
                 $this->preparedEventsArray[$day] = $temp.'<li class="'.$css.'" title="'.stripslashes($event['eventtitle']).'">'.$objTrim->strTrim(stripslashes($event['eventtitle']), 8).'</li></ul>';
+                $this->preparedListArray[$day] .= '<hr />'.$eventList;
             } else {
                 $this->preparedEventsArray[$day] = '<ul><li class="'.$css.'">'.stripslashes($event['eventtitle']).'</li></ul>';
+                $this->preparedListArray[$day] = $eventList;
             }
+            
+            //var_dump($this->preparedEventsArray);
+            //var_dump($this->preparedListArray);
+        }
+    }
+    
+    public function getEventsList()
+    {
+        
+        if (count($this->preparedListArray) == 0) {
+            return '<div class="noRecordsMessage">No Events for this Month</div>';
+        } else {
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->cssClass = 'eventslist';
+            
+            ksort($this->preparedListArray);
+            $monthYear = $this->objDateFunctions->monthFull($this->month).' '.$this->year;
+            
+            foreach ($this->preparedListArray as $day=>$events)
+            {
+                $table->startRow();
+                $table->addCell('<a name="'.$day.'" class="bigDayNum">'.$day.'</a><br />'.$monthYear, '100');
+                $table->addCell($events);
+                $table->endRow();
+            }
+            return $table->show();
         }
     }
     
@@ -150,13 +251,59 @@ class calendarinterface extends object
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startRow();
         $table->addCell($prevLink->show(), '30%', NULL, 'left');
-        $table->addCell($header->show(), '40%', NULL, 'center');
+        $table->addCell($this->objDateFunctions->monthFull($this->month).' '.$this->year, '40%', NULL, 'center', 'bigDayNum');
         $table->addCell($nextLink->show(), '30%', NULL, 'right');
         $table->endRow();
         
         return $table->show();
     }
     
+    
+    /**
+    * Method to check whether the user has access to edit an event
+    * @param array $event Event Details
+    * @return True if user has access, or redirects to screen with pop up message
+    */
+    function checkEventEditPermission($event)
+    {
+        // If the event does not exists, return to the Calendar
+        if ($event == FALSE) {
+            return FALSE;
+        }
+
+        // Default to Access
+        $okToEdit = TRUE;
+
+
+        // Check if User has access to edit the event
+        if ($event['userorcontext'] == 0 && $event['userFirstEntry'] != $this->userId) {
+            $okToEdit = FALSE;
+        }
+        //echo $okToEdit;
+        // Check that event is either for the current context or a site event
+        if ($event['userorcontext'] == 1 && ($event['context'] == $this->contextCode || $event['context'] == 'root')) {
+            $okToEdit = TRUE;
+        } else if ($event['userorcontext'] == 1) { // Additional if to only use context events
+            $okToEdit = FALSE;
+        }
+        
+        // If event is for current event - check if user is lecturer
+        if ($event['userorcontext'] == 1 && $event['context'] == $this->contextCode && !$this->isContextLecturer) {
+            $okToEdit = FALSE;
+        }
+        
+        // If event is a site event - check if user is admin
+        if ($event['userorcontext'] == 1 && $event['context'] == 'root' && !$this->manageSiteCalendar) {
+            $okToEdit = FALSE;
+        }
+        
+        // Redirect if no permission
+        if ($okToEdit == FALSE) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 
 } #end of class
 ?>

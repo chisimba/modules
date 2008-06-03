@@ -7,6 +7,8 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('label', 'htmlelements');
 
+$this->setVar('bodyParams', 'class="iframewindow"');
+
 $objFileIcons =& $this->getObject('fileicons', 'files');
 $objIcon = $this->getObject('geticon', 'htmlelements');
 

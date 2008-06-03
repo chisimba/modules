@@ -26,6 +26,8 @@ class calendar extends controller
         //$this->objCalendar =& $this->getObject('dbcalendar', 'calendarbase');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->dateFunctions = $this->getObject('dateandtime', 'utilities');
+        
+        $this->objCalendarInterface = $this->getObject('calendarinterface');
 
         // User Details
         $this->objUser =& $this->getObject('user', 'security');
@@ -47,7 +49,6 @@ class calendar extends controller
         $this->setVarByRef('courseTitle', $this->contextTitle);
         $this->setVarByRef('isInContext', $this->isInContext);
 
-	$this->_objCalendarBiulder =  $this->getObject('calendarbiulder', 'eventscalendar');
         $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
         $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');
 
@@ -56,14 +57,14 @@ class calendar extends controller
         $this->objDT->retrieve('calendar');
 
         // Give User Lecturer Rights if User is Admin
-        if ($this->objDT->isValid('manage_course_event')) {
+        if ($this->isValid('manage_course_event')) {
             $this->isContextLecturer = TRUE;
         } else {
             $this->isContextLecturer = FALSE;
         }
 
 
-        if ($this->objDT->isValid('manage_site_event')) {
+        if ($this->isValid('manage_site_event')) {
             $this->isContextLecturer = TRUE;
             $this->manageSiteCalendar = TRUE;
         } else {
@@ -105,8 +106,13 @@ class calendar extends controller
     function dispatch($action=Null)
     {
         $this->setVar('pageSuppressXML',true);
-        $this->setLayoutTemplate('calendar_layout_tpl.php');
-
+        
+        if ($this->isInContext) {
+            $this->setLayoutTemplate('calendar_layout_tpl.php');
+        } else {
+            $this->setLayoutTemplate('user_layout_tpl.php');
+        }
+        
         switch ($action)
         {
             case 'add':
@@ -150,54 +156,53 @@ class calendar extends controller
         $year = $this->getParam('year', date('Y'));
         $this->setVarByRef('month', $month);
         $this->setVarByRef('year', $year);
-
-        // Determines the default list of views available
-        if ($this->isInContext) {
-            $defaultList = 'all';
+        
+        $this->objCalendarInterface->month = $month;
+        $this->objCalendarInterface->year = $year;
+        
+        $siteEvents = $this->objCalendarInterface->getSiteEvents($month, $year);
+        $userEvents = $this->objCalendarInterface->getUserEvents($this->userId, $month, $year);
+        
+        if ($this->contextCode == 'root') {
+            $contextEvents = array();
         } else {
-            $defaultList = 'user';
+            $contextEvents = $this->objCalendarInterface->getContextEvents($this->contextCode, $month, $year);
         }
-
-        if ($this->getParam('action',NULL) == 'site') {
-            $eventsList = 'site';
+        
+        $objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        $userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
+        
+        
+        $otherEvents = array();
+        if (count($userContextsArray) > 0) {
+            foreach ($userContextsArray as $context)
+            {
+                if ($context['contextcode'] != $this->contextCode) {
+                    $otherContextEvents = $this->objCalendarInterface->getContextEvents($context['contextcode'], $month, $year);
+                    
+                    if (count($otherContextEvents) > 0) {
+                        $otherEvents = array_merge($otherEvents, $otherContextEvents);
+                    }
+                }
+            }
         }
-        else {
-            $eventsList = $this->getParam('events', $defaultList);
-        }
-        $this->setVarByRef('currentList', $eventsList);
-        $this->objCalendar->setEventsTag($eventsList);
-
-
-
-        switch ($eventsList)
-        {
-            case 'user':
-                $user = $this->userId;
-                $context = NULL;
-                break;
-            case 'context':
-                $user = NULL;
-                $context = $this->contextCode;
-                break;
-            case 'site':
-                $user = NULL;
-                $context = 'root';
-                break;
-            default:
-                $user = $this->userId;
-                $context = $this->contextCode;
-                break;
-        }
-
-        $events = $this->objCalendar->getEventsCalendar($user, $context, $month, $year);
-	       
-	$this->setVarByRef('eventsCalendar', $events);
-	
-
-        if ($this->getParam('error') == 'attachment') {
-            $this->setErrorMessage('Calendar attachment could not be found');
-        }
-
+        
+        $this->objCalendarInterface->prepareEventsForCalendar($userEvents, 'user');
+        $this->objCalendarInterface->prepareEventsForCalendar($siteEvents, 'site');
+        $this->objCalendarInterface->prepareEventsForCalendar($contextEvents, 'context');
+        $this->objCalendarInterface->prepareEventsForCalendar($otherEvents, 'other');
+        
+        $eventsCalendar = $this->objCalendarInterface->getCalendar();
+        
+        $this->setVarByRef('userEvents', count($userEvents));
+        $this->setVarByRef('contextEvents', count($contextEvents));
+        $this->setVar('otherContextEvents', count($otherEvents));
+        $this->setVarByRef('siteEvents', count($siteEvents));
+        
+        $this->setVarByRef('eventsCalendar', $eventsCalendar);
+        $this->setVarByRef('calendarNavigation', $this->objCalendarInterface->getNav());
+        $this->setVarByRef('eventsList', $this->objCalendarInterface->getEventsList());
+        
         return 'calendar_tpl.php';
     }
 
@@ -532,6 +537,9 @@ class calendar extends controller
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('pageSuppressContainer', TRUE);
         $this->setVar('suppressFooter', TRUE);
+        
+        $bodyParams = 'class="popupwindow" ';
+        $this->setVar('bodyParams', $bodyParams);
 
         $this->setVarByRef('id', $id);
         $this->setVarByRef('mode', $mode);
@@ -607,30 +615,27 @@ class calendar extends controller
         }
 
         // Default to Access
-        $okToEdit = TRUE;
+        $okToEdit = FALSE;
 
 
-        // Check if User has access to edit the event
-//        if ($event['userorcontext'] == 0 && $event['userFirstEntry'] != $this->userId) {
-//            $okToEdit = FALSE;
-//        }
-        //echo $okToEdit;
-        // Check that event is either for the current context or a site event
-//        if ($event['userorcontext'] == 1 && ($event['context'] == $this->contextCode || $event['context'] == 'root')) {
-//            $okToEdit = TRUE;
-//        } else if ($event['userorcontext'] == 1) { // Additional if to only use context events
-//            $okToEdit = FALSE;
-//        }
-
-        // If event is for current event - check if user is lecturer
-//        if ($event['userorcontext'] == 1 && $event['context'] == $this->contextCode && !$this->isContextLecturer) {
-//            $okToEdit = FALSE;
-//        }
-
-        // If event is a site event - check if user is admin
-//        if ($event['userorcontext'] == 1 && $event['context'] == 'root' && !$this->manageSiteCalendar) {
-//            $okToEdit = FALSE;
-//        }
+        switch ($event['userorcontext'])
+            {
+                case 0:
+                    if ($event['userfirstentry'] == $this->objUser->userId()) {
+                        $okToEdit = TRUE;
+                    }
+                    break;
+                case 1:
+                    if ($this->objUser->isContextLecturer($this->objUser->userId(), $event['context']) || $this->objUser->isAdmin()) {
+                        $okToEdit = TRUE;
+                    }
+                    break;
+                case 3:
+                    if ($this->objUser->isAdmin()) {
+                        $okToEdit = TRUE;
+                    }
+                    break;
+            }
 
         // Redirect if no permission
         if ($okToEdit == FALSE) {

@@ -5,7 +5,7 @@ $cssLayout =& $this->newObject('csslayout', 'htmlelements');
 
 // Create an Instance of the User Side Menu
 //$sideMenuBar=& $this->getObject('sidemenu','toolbar');
-$sideMenuBar = $this->getObject('contextsidebar', 'context');
+$sideMenuBar = $this->getObject('usermenu', 'toolbar');
 
 $objContext =& $this->getObject('dbcontext', 'context');
 
