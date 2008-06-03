@@ -110,6 +110,12 @@ class cmslayouts extends object
             case 'buttons':
                 $menu = $this->showButtonsMenu($currentNode);
                 break;
+
+            case 'page':
+				$menuKey = $this->getParam('menustate');
+                $menu = $this->showPageMenu($menuKey, $currentNode);
+                break;
+
             case 'tree':
             default:
                 $menu = $this->showTreeMenu($currentNode);
@@ -196,6 +202,38 @@ jQuery(document).ready(function(){
 
 
 
+    /**
+    * Method to display the Custom Style Menu
+    * 
+    * @access private
+    * @param string $currentNode The id of the selected node
+    * @param string $menuKey The key that determines which sub menu to load
+    * @return string html
+	* @author Charl Mert
+    */
+    private function showPageMenu($menuKey = '', $currentNode = '')
+    {
+        // bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $objPageMenu = $this->newObject('pagemenu', 'cmsadmin');
+        
+        $currentNode = $this->getParam('sectionid');
+
+        $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
+
+		//TODO: Load JS and CSS from tables
+		$javascript = '';
+		$css = '';
+
+		$this->appendArrayVar('headerParams', $css);
+		$this->appendArrayVar('headerParams',$javascript);
+              
+        $objLayer = new layer();
+        $objLayer->str = $objPageMenu->show($menuKey, $currentNode);
+        $objLayer->id = 'cmsnavigation';
+        
+        return $objLayer->show();
+    }
 
 
 
