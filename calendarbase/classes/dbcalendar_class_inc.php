@@ -359,7 +359,7 @@ class dbcalendar extends dbTable
             $where .= ' LIMIT '.$limit;
         }
 
-        //echo $sql.$where;
+        //echo $sql.$where.'<br /><br />';
 
         // Get the events
         return $this->getArray($sql.$where);
@@ -459,6 +459,7 @@ class dbcalendar extends dbTable
             }//&#8226;
         }
 
+/*
         $calendarCSS = '<STYLE>
 .event_user {
     list-style-image: url(modules/calendarbase/resources/event_user.gif);
@@ -478,7 +479,7 @@ class dbcalendar extends dbTable
 }
 </STYLE>';
 
-        $this->appendArrayVar('headerParams', $calendarCSS);
+        $this->appendArrayVar('headerParams', $calendarCSS);*/
 
         return $preparedArray;
     }
