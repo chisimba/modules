@@ -399,6 +399,7 @@ class podcast extends controller
             $soundFile = str_replace(' ', '%20', $soundFile);
             $objSoundPlayer->setSoundFile($soundFile);
             $this->setVarByRef('content', $objSoundPlayer->show());
+            $this->setVar('bodyParams', ' class="popupwindow"');
         }
         
         $this->setVar('pageSuppressContainer', TRUE);
