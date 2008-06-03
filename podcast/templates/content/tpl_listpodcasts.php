@@ -84,7 +84,7 @@ if (count($podcasts) == 0) {
         //leave the rest at default values
         $this->objPop->putJs(); // you only need to do this once per page
         
-        $content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
+        $content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> ('.$this->objLanguage->languageText('mod_podcast_rightclickandchoose', 'podcast', 'Right Click, and choose Save As').') '.$downloadLink->show().'</p>';
          
          
         if(!empty($courses)){

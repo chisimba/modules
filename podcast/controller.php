@@ -395,7 +395,9 @@ class podcast extends controller
             $this->appendArrayVar('bodyOnLoad', 'window.close();');
         } else {
             $objSoundPlayer = $this->getObject('buildsoundplayer', 'files');
-            $objSoundPlayer->setSoundFile(str_replace('&', '&amp;', $this->objConfig->getsiteRoot().$objFile->getFilePath($podcast['fileid'])));
+            $soundFile = str_replace('&', '&amp;', $this->objConfig->getsiteRoot().$objFile->getFilePath($podcast['fileid']));
+            $soundFile = str_replace(' ', '%20', $soundFile);
+            $objSoundPlayer->setSoundFile($soundFile);
             $this->setVarByRef('content', $objSoundPlayer->show());
         }
         
