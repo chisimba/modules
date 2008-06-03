@@ -29,7 +29,12 @@ $fields = array(
         ),
     'updated' => array(
 		'type' => 'timestamp'
-		)
+		),
+    'editable' => array(
+        'type' => 'integer',
+        'length' => 1
+        )
+
     );
 
 //create other indexes here...

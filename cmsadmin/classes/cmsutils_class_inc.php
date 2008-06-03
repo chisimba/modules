@@ -105,12 +105,12 @@ class cmsutils extends object
 		public $objFeatureBox;
 
 		/**
-         * The security object
-         *
-         * @access public
-         * @var object
-         */
-        public $_objSecurity;
+		 * The security object
+		 *
+		 * @access public
+		 * @var object
+		 */
+		public $_objSecurity;
 
 
 		/**
@@ -122,6 +122,7 @@ class cmsutils extends object
 		public function init()
 		{
 				try {
+						$this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
 						$this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
 						$this->_objSections =$this->newObject('dbsections', 'cmsadmin');
 						$this->_objDBContext =$this->getObject('dbcontext', 'context');
@@ -502,10 +503,64 @@ class cmsutils extends object
 				$iconList = '';
 
 				switch ($action) {
+
+						case 'editmenu':
+
+								// Apply
+								//$url = $this->uri(array('action' => 'releaselock'), 'cms');
+								$script = '<script type="text/javascript">
+											function testing(){
+												alert("testing");
+											}
+
+											function applyChanges(){
+												document.getElementById(\'must_apply\').value = \'1\';
+												document.getElementById(\'form_addmenu\').submit();
+												return true;
+											}
+										  </script>';
+								$this->appendArrayVar('headerParams', $script);
+
+								//$url = "javascript:document.getElementById(must_apply).value = '1';document.getElementById('form_addmenu').submit();";
+								$url = "javascript:applyChanges()";
+								$linkText = $this->objLanguage->languageText('word_apply');
+								$iconList = $icon_publish->getTextIcon($url, 'apply', $linkText, 'gif', 'icons/cms/');
+
+								// Save
+								$url = "javascript:document.getElementById('form_addmenu').submit();";
+								$linkText = $this->objLanguage->languageText('word_save');
+								$iconList .= $icon_publish->getTextIcon($url, 'save', $linkText, 'gif', 'icons/cms/');
+
+								// Cancel	 		
+								$url = "javascript:history.back();";
+								$linkText = ucwords($this->objLanguage->languageText('word_back'));
+								$iconList .= $icon_publish->getTextIcon($url, 'cancel', $linkText, 'gif', 'icons/cms/');
+
+								// Preview
+								$url1 = $this->uri('', 'cms');
+								$url = '#';
+								$extra = "onclick=\"window.open('{$url1}', 'preview_cms', ' width=700, height=500, resizable=yes, toolbar=yes, scrollbars=yes')\"";
+								$linkText = $this->objLanguage->languageText('mod_cmsadmin_viewcms', 'cmsadmin');
+								$iconList .= $icon_publish->getTextIcon($url, 'preview', $linkText, 'png', 'icons/cms/');
+
+								return '<p style="align:right;">'.$iconList.'</p>';
+								break;
+
+
+
 						case 'createcontent':
 
 								// Apply
-								$url = $this->uri(array('action' => 'releaselock'), 'cms');
+								$script = '<script type="text/javascript">
+                                            function applyChanges(){
+                                                document.getElementById(\'must_apply\').value = \'1\';
+                                                document.getElementById(\'form_addfrm\').submit();
+                                            }
+                                          </script>';
+
+                                $this->appendArrayVar('headerParams', $script);
+
+								$url = "javascript:applyChanges();";
 								$linkText = $this->objLanguage->languageText('word_apply');
 								$iconList = $icon_publish->getTextIcon($url, 'apply', $linkText, 'gif', 'icons/cms/');
 
@@ -604,7 +659,7 @@ class cmsutils extends object
 								//$link = "Permissions Manager"; 
 								$url = $this->uri(array('action' => 'permissions'));
 								$iconList .= $icon_publish->getTextIcon($url, 'permissions', $link, 'png', 'icons/cms/');
-								
+
 								// Cancel	 		
 								$url = "javascript:history.back();";
 								$linkText = ucwords($this->objLanguage->languageText('word_back'));
@@ -636,7 +691,7 @@ class cmsutils extends object
 								//$link = "Permissions Manager"; 
 								$url = $this->uri(array('action' => 'permissions'));
 								$iconList .= $icon_publish->getTextIcon($url, 'permissions', $link, 'png', 'icons/cms/');
-								
+
 								// Cancel	 		
 								$url = "javascript:history.back();";
 								$linkText = ucwords($this->objLanguage->languageText('word_back'));
@@ -1011,17 +1066,17 @@ class cmsutils extends object
 
 				//Moved this section outside of the tabs due to slow load issue
 				/*
-				if (isset($arrContent['body'])) {
-						$bodyInputValue = stripslashes($arrContent['body']);
-				}else{
-						$bodyInputValue = null;
-				}
-				$bodyInput = $this->newObject('htmlarea', 'htmlelements');
-				$bodyInput->init('body', $bodyInputValue);
-				$bodyInput->setContent($bodyInputValue);
-				$bodyInput->setDefaultToolBarSet();
-				$bodyInput->height = '400px';
-				*/
+				   if (isset($arrContent['body'])) {
+				   $bodyInputValue = stripslashes($arrContent['body']);
+				   }else{
+				   $bodyInputValue = null;
+				   }
+				   $bodyInput = $this->newObject('htmlarea', 'htmlelements');
+				   $bodyInput->init('body', $bodyInputValue);
+				   $bodyInput->setContent($bodyInputValue);
+				   $bodyInput->setDefaultToolBarSet();
+				   $bodyInput->height = '400px';
+				 */
 
 
 				//$bodyInput->width = '50%';
@@ -1704,10 +1759,10 @@ class cmsutils extends object
 		{
 				$objCMSTree = $this->getObject('cmstree');
 				$sections = $objCMSTree->getFlatTree($setSelected, $noRoot);
-				
+
 				$dropdown = new dropdown('parent');
 				foreach ($sections as $section){
-					$dropdown->addOption($section['id'], $section['title']);
+						$dropdown->addOption($section['id'], $section['title']);
 				}
 
 				return $dropdown;
@@ -2336,7 +2391,7 @@ class cmsutils extends object
 
 				}
 				$objForm->setDisplayType(3);
-				
+
 				//Start Header
 				//initiate objects for header
 				$table =  $this->newObject('htmltable', 'htmlelements');
@@ -2360,7 +2415,7 @@ class cmsutils extends object
 
 				//create a heading
 				$objH->type = '1';
-				    
+
 				//Heading box
 				$objIcon->setIcon('section', 'png', 'icons/cms/');
 				//$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
@@ -2378,12 +2433,12 @@ class cmsutils extends object
 				$objLayer->str = $topNav;
 				$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
 				$header .= $objLayer->show();
-				
+
 				$objLayer->str = '';
 				$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 				$headShow = $objLayer->show();
 				// end header
-				
+
 				//Setting up the table
 				$table = new htmlTable();
 				$table->width = "100%";
@@ -2470,12 +2525,12 @@ class cmsutils extends object
 				$lnkAddUserGroup->link = "Add User/Group";
 
 				if ($returnSubView == 1){
-                        //Setting for to return to the SubView Page
+						//Setting for to return to the SubView Page
 						$lnkAddUserGroup->href = $this->uri(array('action' => 'addpermissions_user_group', 'id' => $sectionid, 'parent' => $subSecId, 'subview' => '1'));
-                } else {
-                        //Setting form to return to the Sections List Page (Default)
-					$lnkAddUserGroup->href = $this->uri(array('action' => 'addpermissions_user_group', 'id' => $sectionid, 'parent' => $subSecId));
-                }
+				} else {
+						//Setting form to return to the Sections List Page (Default)
+						$lnkAddUserGroup->href = $this->uri(array('action' => 'addpermissions_user_group', 'id' => $sectionid, 'parent' => $subSecId));
+				}
 
 
 				$btnSubmit = new button('save_btn', 'Save');
@@ -2544,10 +2599,10 @@ class cmsutils extends object
 				$objForm->addToForm('<br/><input type="hidden" name="chkCount" value="'.$globalChkCounter.'"/>');
 				if ($returnSubView == 1){
 						//Setting for to return to the SubView Page
-					$objForm->addToForm('<br/><input type="hidden" name="action" value="view_permissions_section"/>');
+						$objForm->addToForm('<br/><input type="hidden" name="action" value="view_permissions_section"/>');
 				} else {
-					//Setting form to return to the Sections List Page (Default)
-					$objForm->addToForm('<br/><input type="hidden" name="action" value="addpermissions"/>');
+						//Setting form to return to the Sections List Page (Default)
+						$objForm->addToForm('<br/><input type="hidden" name="action" value="addpermissions"/>');
 				}
 				$objForm->addToForm( "<input type='hidden' name='button' value='saved'>" ); 
 				$objForm->addToForm("<h4>Owner:</h4>");
@@ -2764,10 +2819,10 @@ class cmsutils extends object
 				$this->setVar( 'fullPath', $fullPath );
 				$this->setVar( 'confirm', $confirm );
 
-				
+
 				$sectionName = $this->_objSections->getSection($sectionid);
 				$sectionName = $sectionName['title'];
-				
+
 				//Start Header
 				//initiate objects for header
 				$table =  $this->newObject('htmltable', 'htmlelements');
@@ -2791,7 +2846,7 @@ class cmsutils extends object
 
 				//create a heading
 				$objH->type = '1';
-				    
+
 				//Heading box
 				$objIcon->setIcon('section', 'png', 'icons/cms/');
 				//$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
@@ -2809,12 +2864,12 @@ class cmsutils extends object
 				$objLayer->str = $topNav;
 				$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
 				$header .= $objLayer->show();
-				
+
 				$objLayer->str = '';
 				$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 				$headShow = $objLayer->show();
 				// end header
-				
+
 				$this->setVar('header', $header);
 				$this->setVar('headShow', $headShow);
 
@@ -2878,7 +2933,7 @@ class cmsutils extends object
 
 				//create a heading
 				$objH->type = '1';
-				    
+
 				//Heading box
 				$objIcon->setIcon('section', 'png', 'icons/cms/');
 				//$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
@@ -2896,13 +2951,13 @@ class cmsutils extends object
 				$objLayer->str = $topNav;
 				$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
 				$header .= $objLayer->show();
-				
+
 				$objLayer->str = '';
 				$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 				$headShow = $objLayer->show();
 				// end header
-				
-				
+
+
 				//Setting up the table
 				$table = new htmlTable();
 				$table->width = "100%";
@@ -3282,13 +3337,13 @@ class cmsutils extends object
 				$tbl->cellpadding = 3;
 				$tbl->align = "left";
 
-				
+
 				$contentName = $this->_objContent->getContentPage($contentid);
 				$contentName = $contentName['title'];
-				
+
 				//create a heading
 				$objH->type = '1';
-				 
+
 				//Heading box
 				$objIcon->setIcon('section', 'png', 'icons/cms/');
 				//$objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
@@ -3306,15 +3361,15 @@ class cmsutils extends object
 				$objLayer->str = $topNav;
 				$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
 				$header .= $objLayer->show();
-				
+
 				$objLayer->str = '';
 				$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 				$headShow = $objLayer->show();
 				// end header
-				
+
 				$this->setVar('header', $header);
 				$this->setVar('headShow', $headShow);
-				
+
 				return 'cms_permissions_add_user_group_tpl.php';
 		}
 
@@ -3404,6 +3459,252 @@ class cmsutils extends object
 				return $unAuthorizedMembers;
 
 		}
+
+
+		/**
+		 * Method to return the EDIT LINK
+		 *
+		 * @param string $menuId The id of the MENU ITEM to be edited. Default Null to EDIT THE MAIN MENU
+		 * @access public
+		 * @return string html icon
+		 * @author Charl Mert
+		 */
+		public function getEditLink($params = array(), $tooltip = '')
+		{
+			$icon = $this->getObject('geticon','htmlelements');
+            $icon->setIcon('edit');
+            $icon->alt = $tooltip;
+            $link = $this->getObject('link','htmlelements');
+            $link->link($this->uri($params), 'cmsadmin');
+            $link->link = $icon->show();
+            $ret = " ".$link->show();
+			return $ret;
+		}
+
+
+
+
+		/**
+		 * Method to return the DELETE LINK
+		 *
+		 * @param string $menuId The id of the MENU ITEM to be edited. Default Null to EDIT THE MAIN MENU
+		 * @access public
+		 * @return string html icon
+		 * @author Charl Mert
+		 */
+		public function getDeleteLink($menuId, $params = array(), $tooltip = '')
+		{
+
+                $this->objIcon = &$this->getObject('geticon', 'htmlelements');
+                $delIcon = $this->objIcon->getDeleteIconWithConfirm($menuId, $params, 'cmsadmin');
+	
+			return $delIcon;
+		}
+
+
+		/**
+		 * Method to return the EDIT MENU form
+		 *
+		 * @param string $menuId The id of the MENU ITEM to be edited. Default Null to EDIT THE MAIN MENU
+		 * @access public
+		 * @return string html form used to create and edit a page
+		 * @author Charl Mert
+		 */
+		public function getEditMenuForm($headerMessage, $menuId = NULL, $menuType = NULL)
+		{
+
+				$isSub = $this->getParam('sub');
+
+ 				//Getting Default Menu
+				if ($isSub != '1'){
+					$objForm = new form('addmenu', $this->uri(array('action' => 'addmenu', 'id' => $menuId), 'cmsadmin'));
+				}else {
+					$objForm = new form('addmenu', $this->uri(array('action' => 'editmenu', 'id' => $menuId, 'menutype' => $menuType), 'cmsadmin'));
+				}
+		
+				$h3 = $this->newObject('htmlheading', 'htmlelements');
+
+				//Edit Existing Menu Item
+				if ($menuId != ''){
+					$arrContent = $this->_objPageMenu->getMenuRow($menuId);
+					if (isset($arrContent[0]['menukey'])){
+						$titleInputValue = $arrContent[0]['menukey'];
+					}
+				}
+
+ 				//Getting Default Menu
+				if ($isSub != '1'){
+						$arrContent = $this->_objPageMenu->getMenuRowByKey('default');
+				}
+	
+				$table = new htmlTable();
+				$table->width = "100%";
+				$table->cellspacing = "0";
+				$table->cellpadding = "0";
+				$table->border = "0";
+				$table->attributes = "align ='center'";
+
+				$table->startRow();
+				$table->addCell('<br/>');
+				$table->endRow();
+
+				if ($isSub != '1'){
+						$h3->str = 'Edit Sub Menu\'s';
+						$h3->type = 3;
+
+						$table->startRow();
+						$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+						$table->endRow();
+
+
+
+						$table_list = new htmlTable();
+						$table_list->width = "300px";
+						$table_list->cellspacing = "0";
+						$table_list->cellpadding = "0";
+						$table_list->border = "0";
+						$table_list->attributes = "align ='center'";
+
+						//Displaying The List Of Menus
+						$menuRows = $this->_objPageMenu->getAll();
+						if (count($menuRows) > 0){
+								foreach ($menuRows as $menu){
+										if ($menu['menukey'] != 'default'){
+												$editLink = $this->getEditLink(array('action' => 'editmenu', 'menutype' => 'page', 'sub' => '1', 'id' => $menu['id']), 'Edit Menu Item');	
+												$deleteLink = $this->getDeleteLink($menu['id'], array('action' => 'deletemenu', 'menutype' => 'page', 'id' => $menu['id']), 'Edit Menu Item');	
+												$table_list->startRow();
+												$table_list->addCell($menu['menukey'], 150);
+												$table_list->addCell($editLink.' '.$deleteLink, 150);
+												$table_list->endRow();
+										}
+								}
+
+							$table->startRow();
+							$table->addCell($table_list->show(), 150);
+							$table->endRow();
+
+						}
+
+						//Only showing the Sub Menu Link if the default menu exists
+						if ($this->_objPageMenu->hasDefaultMenu()){
+
+								$subMenuLink = '<a href="?module=cmsadmin&action=editmenu&menutype=page&sub=1"><b>Add a Sub Menu</b></a>';
+
+								if ($isSub != '1'){
+										$table->startRow();
+										$table->addCell($subMenuLink, null, 'top', null, null, 'colspan="2"');
+										$table->endRow();
+
+
+								}
+						}
+
+				}
+
+				if ($isSub == '1'){
+
+					// Title Input
+					$titleInput = new textinput ('menukey', $titleInputValue);
+					$titleInput->cssId = 'input_title'; 
+					$titleInput->extra = ' style="width: 25%"';
+
+					$table->startRow();
+					$table->addCell('Menu Key', 150);
+					$table->addCell($titleInput->show());
+					$table->endRow();
+				}
+
+				/*
+				   $lbNo = $this->objLanguage->languageText('word_no');
+				   $lbYes = $this->objLanguage->languageText('word_yes');
+				   $objRadio = new radio('hide_title');
+				   $objRadio->addOption('1', '&nbsp;'.$lbYes);
+				   $objRadio->addOption('0', '&nbsp;'.$lbNo);
+				   $objRadio->setSelected($hide_title);
+				   $objRadio->setBreakSpace('&nbsp;&nbsp;');
+
+				   $table->startRow();
+				   $table->addCell($this->objLanguage->languageText('phrase_hidetitle').': &nbsp; ');
+				   $table->addCell($objRadio->show());
+				//$table->addCell($published->show());
+				$table->endRow();
+				 */
+
+				//Adding the FCK_EDITOR
+				if (isset($arrContent[0]['body'])) {
+						$bodyInputValue = stripslashes($arrContent[0]['body']);
+				}else{
+						$bodyInputValue = null;
+				}
+
+
+				$bodyInput = $this->newObject('htmlarea', 'htmlelements');
+				$bodyInput->init('body', $bodyInputValue);
+				$bodyInput->setContent($bodyInputValue);
+				$bodyInput->setDefaultToolBarSet();
+				$bodyInput->height = '400px';
+
+				//echo $bodyInput->show(); exit;
+
+				$h3->str = $headerMessage;
+				$h3->type = 3;
+
+				$table->startRow();
+				$table->addCell('<br/>');
+				$table->endRow();
+
+				$table->startRow();
+				$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+				$table->endRow();
+
+				$table->startRow();
+				$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+				$table->endRow();
+
+				$table->startRow();
+				$table->addCell($bodyInput->show(), null, 'top', null, null, 'colspan="2"');
+				$table->endRow();
+
+				$table->startRow();
+				$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+				$table->endRow();
+
+
+				if ($isSub != '1'){
+					$table->startRow();
+					$table->addCell('<input type="hidden" name="menukey" value="default"/>', null, 'top', null, null, 'colspan="2"');
+					$table->endRow();
+				}
+
+				$table->startRow();
+				$table->addCell('<input type="submit" value=" Save " name="submitter" id="submitter">', null, 'top', null, null, 'style="padding-top:10px"');
+				$table->addCell('<input type="hidden" value="save" name="save">', null, 'top', null, null, 'style="padding-top:10px"');
+				$table->addCell('<input type="hidden" value="0" name="must_apply" id="must_apply">', null, 'top', null, null, 'style="padding-top:10px"');
+				$table->endRow();
+
+	
+				$objForm->addToForm($table->show());
+
+				//Add validation for title            
+				/*
+				   $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
+				   $objForm->addRule('title', $errTitle, 'required');
+				   $objForm->addToForm($table->show());
+				//add action
+				$objForm->addToForm($txt_action);
+				 */
+
+				$display = $objForm->show(); 	
+				return $display;
+
+		} 
+
+
+
+
+
+
+
 
 
 
@@ -3642,35 +3943,35 @@ class cmsutils extends object
 
 								if ($editmode) {
 
-									if (isset($arrContent['body'])) {
-				                        $bodyInputValue = stripslashes($arrContent['body']);
-					                }else{
-				                        $bodyInputValue = null;
-					                }
+								if (isset($arrContent['body'])) {
+								$bodyInputValue = stripslashes($arrContent['body']);
+								}else{
+								$bodyInputValue = null;
+								}
 
 								}
 
-				                $bodyInput = $this->newObject('htmlarea', 'htmlelements');
-				                $bodyInput->init('body', $bodyInputValue);
-				                $bodyInput->setContent($bodyInputValue);
-				                $bodyInput->setDefaultToolBarSet();
-				                $bodyInput->height = '400px';
+								$bodyInput = $this->newObject('htmlarea', 'htmlelements');
+								$bodyInput->init('body', $bodyInputValue);
+								$bodyInput->setContent($bodyInputValue);
+								$bodyInput->setDefaultToolBarSet();
+								$bodyInput->height = '400px';
 
 								//echo $bodyInput->show(); exit;
 								$h3->str = $this->objLanguage->languageText('mod_cmsadmin_maintext', 'cmsadmin');
 								$h3->type = 3;
 
 								$table->startRow();
-                                $table->addCell('<br/>');
-                                $table->endRow();
+								$table->addCell('<br/>');
+								$table->endRow();
 
 								$table->startRow();
 								$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
 								$table->endRow();
 
 								$table->startRow();
-                                $table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
-                                $table->endRow();
+								$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+								$table->endRow();
 
 								$table->startRow();
 								$table->addCell($bodyInput->show(), null, 'top', null, null, 'colspan="2"');
@@ -3683,23 +3984,23 @@ class cmsutils extends object
 								$h3->type = 3;
 
 								$table2->startRow();
-                                $table2->addCell('<br/>');
-                                $table2->endRow();
+								$table2->addCell('<br/>');
+								$table2->endRow();
 
 								$table2->startRow();
 								$table2->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
 								$table2->endRow();
 
 								$table2->startRow();
-                                $table2->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
-                                $table2->endRow();
+								$table2->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+								$table2->endRow();
 
 								$table2->startRow();
 
 								if (!$editmode) {
-								$table2->addCell($this->getConfigTabs());
+										$table2->addCell($this->getConfigTabs());
 								}else{
-								$table2->addCell($this->getConfigTabs($arrContent));
+										$table2->addCell($this->getConfigTabs($arrContent));
 								}
 								$table2->endRow();
 								// Content Area
@@ -3727,29 +4028,35 @@ class cmsutils extends object
 										$h3->str = $this->objLanguage->languageText('word_licence');
 										$h3->type = 3;
 										//if (!$editmode) {
-	
-												$table->startRow();
-                                                $table->addCell('<br/>');
-                                                $table->endRow();
 
-												$table->startRow();
-												$table->addCell($h3->show(),null,'center','left');
-												$table->endRow();
+										$table->startRow();
+										$table->addCell('<br/>');
+										$table->endRow();
 
-												$table->startRow();
-           		                     			$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
-                                				$table->endRow();
+										$table->startRow();
+										$table->addCell($h3->show(),null,'center','left');
+										$table->endRow();
 
-												$table->startRow();
-												$table->addCell($objCCLicence->show(),null,'top','left', null, 'colspan="2"'); 
-												$table->endRow();
+										$table->startRow();
+										$table->addCell('', null, 'top', null, null, 'style="padding-bottom:10px"');
+										$table->endRow();
+
+										$table->startRow();
+										$table->addCell($objCCLicence->show(),null,'top','left', null, 'colspan="2"'); 
+										$table->endRow();
+
+										$table->startRow();
+										$table->addCell('<input type="hidden" value="0" name="must_apply" id="must_apply">', null, 'top', null, null, 'style="padding-top:10px"');
+										$table->endRow();
+
+
 										//}else{
 										/*
-												$table->startRow();
-												$table->addCell($h3->show(),null,'center','left');
-												$table->addCell($objCCLicence->show(),null,'top','left'); 
-												$table->endRow();
-										*/
+										   $table->startRow();
+										   $table->addCell($h3->show(),null,'center','left');
+										   $table->addCell($objCCLicence->show(),null,'top','left'); 
+										   $table->endRow();
+										 */
 										//}
 
 

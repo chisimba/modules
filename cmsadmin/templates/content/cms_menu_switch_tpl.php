@@ -54,7 +54,22 @@ if(!empty($data)){
         if($item['root_nodes'] == 1){
             $label .= '&nbsp; - &nbsp;<font class="warning">'.$lbRootOnly.'</font>';
         }
-        
+
+		//If the menu is editable then display the pencil icon
+        if($item['editable'] == 1){
+			//Edit Icon for editable menu's (namely page menu for now)       
+			$icon = $this->getObject('geticon','htmlelements');
+	        $icon->setIcon('edit');
+	        //$icon->alt = $this->objLanguage->languageText('word_edit');
+	        $icon->alt = 'Create/Edit the Custom Menu';
+			
+	        $link = $this->getObject('link','htmlelements');
+	        $link->link($this->uri(array('action'=>'editmenu','menutype'=>$item['menu_style'])));
+    	    $link->link = $icon->show();
+
+			$label .= ' '.$link->show();
+		}
+ 
         $objRadio->addOption($item['id'], $label);
         
         if($item['is_active'] == 1){

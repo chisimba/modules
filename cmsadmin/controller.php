@@ -129,6 +129,7 @@ class cmsadmin extends controller
 		{
 				try {       
 						// instantiate object
+						$this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
 						$this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
 						$this->_objTree =  $this->newObject('cmstree', 'cmsadmin');
 						$this->_objSections =  $this->newObject('dbsections', 'cmsadmin');
@@ -224,6 +225,98 @@ class cmsadmin extends controller
 								$items = $this->getParam('arrayList');
 								$this->unarchiveContentPages($items);
 								return $this->nextAction('trashmanager');
+
+						case 'editmenu':
+
+								$submit = $this->getParam('save');
+								if ($submit != ''){
+									$this->_objPageMenu->addMenu();	
+								}
+
+								$menuType = $this->getParam('menutype');
+								$isSub = $this->getParam('sub');
+								$menuId = $this->getParam('id');
+
+								//Get top navigation
+								$topNav = $this->_objUtils->topNav('editmenu');
+
+								$this->setVarByRef('topNav',$topNav);
+
+								if ($isSub != '1'){
+									$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Main/Default Menu", $menuId, $menuType);
+								} else {
+									$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Sub Menu", $menuId, $menuType);
+								}
+			
+								$this->setVarByRef('addEditForm', $editMenuForm);
+								$this->setVarByRef('id', $this->getParam('id'));
+
+								return 'cms_page_menu_add_tpl.php';
+
+						case 'addmenu':
+								$menuType = $this->getParam('menutype');
+								$mustApply = $this->getParam('must_apply');
+
+								$this->_objPageMenu->addMenu();	
+
+								if ($mustApply == '1'){
+
+										$menuType = $this->getParam('menutype');
+										$isSub = $this->getParam('sub');
+										$menuId = $this->getParam('id');
+
+										//Get top navigation
+										$topNav = $this->_objUtils->topNav('editmenu');
+
+										$this->setVarByRef('topNav',$topNav);
+
+										if ($isSub != '1'){
+												$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Main/Default Menu", $menuId, $menuType);
+										} else {
+												$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Sub Menu", $menuId, $menuType);
+										}
+
+										$this->setVarByRef('addEditForm', $editMenuForm);
+										$this->setVarByRef('id', $this->getParam('id'));
+
+										return 'cms_page_menu_add_tpl.php';
+
+
+								}
+
+								//Displaying the menustyle page
+								$data = $this->dbMenuStyle->getStyles();
+								$topNav = $this->_objUtils->topNav('menu');
+								$this->setVarByRef('topNav', $topNav);
+								$this->setVarByRef('data', $data);
+
+								return 'cms_menu_switch_tpl.php';
+
+						case 'deletemenu':
+				
+								$menuType = $this->getParam('menutype');
+								$isSub = $this->getParam('sub');
+								$menuId = $this->getParam('id');
+
+								//Deleting the Menu Item
+								$this->_objPageMenu->deleteMenu($menuId);	
+
+
+								//Get top navigation
+								$topNav = $this->_objUtils->topNav('editmenu');
+
+								$this->setVarByRef('topNav',$topNav);
+
+								if ($isSub != '1'){
+									$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Main/Default Menu", $menuId, $menuType);
+								} else {
+									$editMenuForm = $this->_objUtils->getEditMenuForm("Edit Sub Menu", $menuId, $menuType);
+								}
+			
+								$this->setVarByRef('addEditForm', $editMenuForm);
+								$this->setVarByRef('id', $this->getParam('id'));
+
+								return 'cms_page_menu_add_tpl.php';
 
 						case 'restoresections':
 								$items = $this->getParam('arrayList');
@@ -514,10 +607,19 @@ class cmsadmin extends controller
 
 						case 'editcontent':
 								$this->_objContent->edit();
+								$mustApply = $this->getParam('must_apply');
+								$contentId = $this->getParam('id');
+
+
 								$sectionId = $this->getParam('parent', NULL);
 								$is_front = $this->getParam('frontman', FALSE);
 								$fromAction = $this->getParam('fromaction');
 								$fromModule = $this->getParam('frommodule',FALSE);
+
+								if ($mustApply == '1'){
+									return $this->nextAction('addcontent', array('id' => $contentId, 'frontman' => $is_front), 'cmsadmin');
+								}
+
 								if ($fromModule && $fromModule != "") {
 										if ($fromAction == "") {
 												$fromAction = NULL;

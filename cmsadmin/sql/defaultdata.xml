@@ -85,12 +85,23 @@
        <menu_style>tree</menu_style>
        <root_nodes>0</root_nodes>
        <is_active>1</is_active>
+       <editable>0</editable>
+	   
    </tbl_cms_menustyles>
    <tbl_cms_menustyles>
        <id>init_2</id>
        <menu_style>buttons</menu_style>
        <root_nodes>1</root_nodes>
        <is_active>0</is_active>
+       <editable>0</editable>
    </tbl_cms_menustyles>
-  
+
+    <tbl_cms_menustyles>
+       <id>init_3</id>
+       <menu_style>page</menu_style>
+       <root_nodes>0</root_nodes>
+       <is_active>0</is_active>
+       <editable>1</editable>
+   </tbl_cms_menustyles>
+ 
 </defaultdata>
