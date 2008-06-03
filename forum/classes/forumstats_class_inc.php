@@ -285,7 +285,7 @@ class forumstats extends dbTable
         
         $str = 'Our users have posted a total of <strong>'.$this->getNumContextTopics().' topics</strong> having <strong>'.$this->getNumContextPosts().' posts</strong> in <strong>'.$this->getNumContextForums().' forums</strong>.';
         
-        $objOnline = $this->getObject('dbloggedinusers', 'personalspace');
+        $objOnline = $this->getObject('loggedinusers', 'security');
         
         $onlineUsers = $objOnline->getRecordCount();
         
