@@ -4,7 +4,7 @@ $cssLayout = $this->getObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(2);
 
 $leftContent = $this->objNewsMenu->generateMenu();
-$leftContent .= $this->objNewsStories->getFeedLinks();
+$leftContent .= '<div id="newsfeeds">'.$this->objNewsStories->getFeedLinks().'</div>';
 
 $adminOptions = array();
 

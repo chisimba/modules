@@ -43,7 +43,7 @@ if (count($categories) > 0) {
 $middle .= '<br clear="both" />';
 
 $leftContent = $this->objNewsMenu->generateMenu();
-
+$leftContent .= '<div id="newsfeeds">'.$this->objNewsStories->getFeedLinks().'</div>';
 
 $adminOptions = array();
 
