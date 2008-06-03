@@ -17,11 +17,6 @@ function showResponse (originalRequest) {
 }
 //]]>
 </script>
-<style type="text/css">
-ul.htmlliststyle li {
-    background: transparent url("skins/_common/icons/text.gif") no-repeat 6px 0 ;
-}
-</style>
 
 <?php
 

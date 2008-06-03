@@ -105,6 +105,7 @@ echo $topTable->show();
 //$tab->addTab(array('name'=>$page['menutitle'],'url'=>'http://localhost','content'=>$page['pagecontent']));
 //echo $tab->show();
 
+/*
 if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid('changebookmark')) {
     echo '<div style="float: right; background-color: lightyellow; padding: 5px; border: 1px solid #000; margin-top: 10px;">'; 
     echo '<h5><a href="javascript:togglePageOptions();">'.$this->objLanguage->languageText('mod_contextcontent_pageoptions', 'contextcontent', 'Page Options').'...</a></h5>';
@@ -141,6 +142,7 @@ if ($this->isValid('editpage') || $this->isValid('deletepage') || $this->isValid
     echo '</div>';
     echo '</div>';
 }
+*/
 $objWashout = $this->getObject('washout', 'utilities');
 echo $objWashout->parseText($page['pagecontent']);
 
@@ -178,7 +180,7 @@ if (count($chapters) > 1 && $this->isValid('movetochapter')) {
 }
 
 
-?>
+/*
 <script type="text/javascript">
 //<![CDATA[
 
@@ -205,3 +207,6 @@ function showBookmarkResponse (originalRequest) {
 }
 //]]>
 </script>
+*/
+
+?>
