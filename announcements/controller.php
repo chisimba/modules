@@ -91,6 +91,7 @@ class announcements extends controller
     
     public $objAnnouncementTools;
     public $contextid;
+
     /**
      * Constructor method to instantiate objects and get variables
      */
@@ -107,7 +108,8 @@ class announcements extends controller
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-	  
+	  		$this->isAdmin = $this->objUser->isAdmin();
+	  		$isAdmin = $this->isAdmin;
         }
         catch(customException $e) {
             echo customException::cleanUp();
@@ -124,19 +126,21 @@ class announcements extends controller
     {
         
 	//get context so that only messages for this context are displayed
-		$isInContext=$this->objContext->isInContext();
-		 if($isInContext)
-  		 {
-	   		 $this->contextCode=$this->objContext->getContextCode();
-	   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
-   		 }
-         else
-        	 $this->contextid="root";
-
-			 $contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
-			
-			 $contextid=$this->contextid;
-             $this->setVarByRef("contextCode",$this->contextCode);
+	$isInContext=$this->objContext->isInContext();
+	if($isInContext)
+	{
+		$this->contextCode=$this->objContext->getContextCode();
+		$this->contextid=$this->objContext->getField('id',$this->contextCode);
+	}
+	else{
+		$this->contextid="root";
+		$this->contextCode="root";
+	}
+	
+	$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
+	
+	$contextid=$this->contextid;
+	$this->setVarByRef("contextCode",$this->contextCode);
 		
 	switch ($action) {
             default:
@@ -149,10 +153,14 @@ class announcements extends controller
 	            if(empty($id))
 	            {
 	                $lastentry=$this->objDbAnnouncements->getLastRow($contextid);
-	                $id=$lastentry[0]['id'];
+	                if(empty($lastentry)){
+	                	$id = null;
+	                }else{
+	                	$id=$lastentry[0]['id'];
+	                }
 	            }
-	                $record = $this->objDbAnnouncements->listSingle($id);
-	                $this->setVarByRef('record', $record);
+	            $record = $this->objDbAnnouncements->listSingle($id);
+	            $this->setVarByRef('record', $record);
 	            return 'view_tpl.php';
             break;
 	            // Case to add an entry

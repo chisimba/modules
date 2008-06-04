@@ -1,5 +1,10 @@
 <?php
 $this->setLayoutTemplate('announcements_archive_layout_tpl.php');
+//Use to check for admin user:
+$isAdmin = $this->objUser->isAdmin();
+$isLecturer = $this->objUser->isLecturer();	
+$isInContext=$this->objContext->isInContext();
+
 // Show the heading.
 $objHeading =& $this->getObject('htmlheading','htmlelements');
 $objHeading->type=4;
@@ -26,7 +31,7 @@ $tableRow = array();
 
 // Create the table header for display
 $objTableClass = $this->newObject('htmltable', 'htmlelements');
-$objTableClass->addHeader($tableHd, "heading");
+//$objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
 //language item for no records
@@ -87,7 +92,7 @@ if (empty($records)) {
 	
         $objTableClass->addCell('&nbsp; &nbsp; <b>Created By:</b> '.$createdby.'&nbsp; &nbsp; <b>On:</b> '.$createdon, '', '', 'left', $class);
  	//add author
-        
+      
 	//get id
 	$id=$record['id'];
 	//check if user is admin or a lecture, if either is true show the delete icon

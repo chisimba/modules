@@ -70,37 +70,42 @@ class dbAnnouncements extends dbTable
         $this->objLanguage = $this->newObject('language', 'language');
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objContext = $this->getObject('dbcontext','context');
+        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
+        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
         $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
         
-        //get context so that only messages for this context are displayed
+		//get context so that only messages for this context are displayed
 		$isInContext=$this->objContext->isInContext();
-		 if($isInContext)
-  		 {
-   		 $this->contextCode=$this->objContext->getContextCode();
-   		 $this->contextid=$this->objContext->getField('id',$this->contextCode);
-   		 }
-                 else
-                 $this->contextid="root";
-
-		
-		
+		if($isInContext)
+		{
+			$this->contextCode=$this->objContext->getContextCode();
+			$this->contextid=$this->objContext->getField('id',$this->contextCode);
+		}
+		else{
+			$this->contextid="root";
+			$this->contextCode="root";
+		}
+		$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
 		$contextid=$this->contextid;
-		
         
-        $list = $this->listAll($contextid,0);
+        $list = $this->getLastRow($contextid);
         $this->loadClass('link', 'htmlelements');
 
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
 
-                    $lncat = $item['title'];
-                    $objLink = new link($this->uri(array('action' => '', 'id' => $item['id'])));
-                    $objLink->link = $item['title'];
-                    $objLink->style = "color: #0000BB;";
-                    $lncat = $objLink->show();
+                $lncat = $item['title'];
+                $objLink = new link($this->uri(array('action' => '', 'id' => $item['id'])));
+                $objLink->link = $item['title'];
+                $objLink->style = "color: #0000BB;";
+                $lncat = $objLink->show();
                 
                 $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
+                
+                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
+                
+                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
             }
         }
 
@@ -110,12 +115,13 @@ class dbAnnouncements extends dbTable
         $link->link = $this->objLanguage->languageText('mod_announcements_archive', 'announcements');
         $archive = $link->show();
         $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
-        if($dispType == 'nobox'){
+       /* if($dispType == 'nobox'){
             return $str;
-        }
+        }*/
         
         return $str; //$this->objFeatureBox->show($blocktitle, $str);
     }
+    
      public function showQuickPost($contextPuid = '', $linkAll = FALSE)
     {
         $this->objLanguage = $this->newObject('language', 'language');
@@ -159,9 +165,9 @@ class dbAnnouncements extends dbTable
         $cform->addToForm($this->objconvButton->show());
         $str = $cform->show();
 
-        if($dispType == 'nobox'){
+        /*if($dispType == 'nobox'){
             return $str;
-        }
+        }*/
         $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
         
         return $str; // $this->objFeatureBox->show($blocktitle, $str);
@@ -212,7 +218,7 @@ class dbAnnouncements extends dbTable
 	        
 	        // Prep Data
 	        $docId = 'announcement_entry_'.$ins;
-	        $docDate = strftime('%Y-%m-%d %H:%M:%S', $arrayOfRecords['createdOn']);
+	        $docDate = $arrayOfRecords['createdOn'];
 	        $url = $this->uri(array('action'=>'', 'id'=>$ins), 'announcements');
 	        $title = $title;
 	        $contents = $title.': '.$message;
@@ -255,13 +261,13 @@ class dbAnnouncements extends dbTable
         
         // Prep Data
         $docId = 'announcement_entry_'.$id;
-        $docDate = strftime('%Y-%m-%d %H:%M:%S', $announceRow['createdOn']);
-        $url = $this->uri(array('action'=>'', 'id'=>$ins), 'announcements');
+        $docDate = $announceRow['createdon'];
+        $url = $this->uri(array('action'=>'', 'id'=>$id), 'announcements');
         $title = $arrayOfRecords['title'];
         $contents = $arrayOfRecords['title'].': '.$arrayOfRecords['message'];
         $teaser = $arrayOfRecords['message'];
         $module = 'announcements';
-        $userId = $announceRow['createdBy'];
+        $userId = $announceRow['createdby'];
         $context = $announceRow['contextid'];
         
         // Add to Index

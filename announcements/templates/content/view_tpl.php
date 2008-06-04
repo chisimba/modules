@@ -8,23 +8,40 @@ $objHeading->str="&nbsp;";
 
 
 //Use to check for admin user:
-    $isAdmin = $this->objUser->isAdmin();
-    $isLecturer = $this->objUser->isLecturer();	
-    $isInContext=$this->objContext->isInContext();
+$isAdmin = $this->objUser->isAdmin();
+$isLecturer = $this->objUser->isLecturer();	
+$isInContext=$this->objContext->isInContext();
 
 
-
-// Create add icon and link to add template
-if(($isLecturer or $isAdmin) && $isInContext){
-	$objAddIcon = $this->newObject('geticon', 'htmlelements');
-	$objLink = $this->uri(array(
-    'action' => 'link'
-	));
-	$objAddIcon->setIcon("add", "gif");
-	$objAddIcon->alt = $objLanguage->languageText('mod_announcements_addicon', 'announcements');
-	$add = $objAddIcon->getAddIcon($objLink);
-	$add = $objAddIcon->getAddIcon($objLink);
+if ($isInContext) {
+	if(($isLecturer or $isAdmin)){
+		$objAddIcon = $this->newObject('geticon', 'htmlelements');
+		$objLink = $this->uri(array(
+	    'action' => 'link'
+		));
+		$objAddIcon->setIcon("add", "gif");
+		$objAddIcon->alt = $objLanguage->languageText('mod_announcements_addicon', 'announcements');
+		$add = $objAddIcon->getAddIcon($objLink);
+		$add = $objAddIcon->getAddIcon($objLink);
+	} else {
+		$add = '';
+	}
+} else {
+	if(($isAdmin)){
+		$objAddIcon = $this->newObject('geticon', 'htmlelements');
+		$objLink = $this->uri(array(
+	    'action' => 'link'
+		));
+		$objAddIcon->setIcon("add", "gif");
+		$objAddIcon->alt = $objLanguage->languageText('mod_announcements_addicon', 'announcements');
+		$add = $objAddIcon->getAddIcon($objLink);
+		$add = $objAddIcon->getAddIcon($objLink);
+	} else {
+		$add = '';
+	}
 }
+// Create add icon and link to add template
+
 
 // Create header with add icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
@@ -40,16 +57,23 @@ $tableRow = array();
 
 // Create the table header for display
 $objTableClass = $this->newObject('htmltable', 'htmlelements');
-$objTableClass->addHeader($tableHd, "heading");
+//$objTableClass->addHeader($tableHd, "heading");
 $index = 0;
 $rowcount = 0;
 
+//language item for no records
+$norecords = $objLanguage->languageText('mod_announcements_nodata', 'announcements');
+//A statement not to display the records if it is empty.
+if (empty($record)) {
+    $objTableClass->addCell($norecords, NULL, NULL, 'left', 'noRecordsMessage', 'colspan="4"');
+
+}else{
         // Set odd even colour scheme
         $class = ($rowcount%2 == 0) ? 'odd' : 'even';
         $objTableClass->startRow();
        //add title
         $title = $record['title'] ;
-        $records == $objUser->userId();
+        //$records == $objUser->userId();
 	$objTableClass->addCell('', '', 'left', 'left', $class,'colspan=3');
 	$objTableClass->endRow();
 
@@ -107,7 +131,7 @@ $rowcount = 0;
         $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'announcements', $deletephrase);
         $update = $conf;
 	}
-        $records == $objUser->userId();
+        //$records == $objUser->userId();
 	
         $objTableClass->addCell($update, '', 'right', 'right', $class);
         //check if user is admin or a lecture, if either is true show the edit icon
@@ -134,14 +158,16 @@ $rowcount = 0;
 	$objTableClass->endRow();
 
 
-    
+}
 //shows the array in a table
 echo "<legend border='style:border 1px solid #cccccc'>";
 $ret = $objTableClass->show();
 //$ret="<div class='wrapperLightBkg' border='style:border 1px solid #cccccc'>".$ret."</div>";
 echo "</legend>";
 
-
-echo $pgTitle->show()."<br>".$this->objFeatureBox->show("$title", $ret);
-
+if (empty($record)) {
+	echo $pgTitle->show()."<br>".$this->objFeatureBox->show(null, $ret);	
+} else {
+	echo $pgTitle->show()."<br>".$this->objFeatureBox->show("$title", $ret);
+}
 ?>
