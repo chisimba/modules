@@ -131,16 +131,19 @@ class announcements extends controller
 	{
 		$this->contextCode=$this->objContext->getContextCode();
 		$this->contextid=$this->objContext->getField('id',$this->contextCode);
+		$contextTitle = $this->objContext->getTitle();
 	}
 	else{
 		$this->contextid="root";
 		$this->contextCode="root";
+		$contextTitle = "Site";
 	}
 	
 	$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
 	
 	$contextid=$this->contextid;
 	$this->setVarByRef("contextCode",$this->contextCode);
+	$this->setVarByRef("contextTitle",$contextTitle);
 		
 	switch ($action) {
             default:

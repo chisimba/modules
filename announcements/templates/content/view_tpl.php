@@ -46,11 +46,9 @@ if ($isInContext) {
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
 $pgTitle->type = 4;
 
-$contextCode="$contextCode&nbsp;";
-
 $latest = $objLanguage->languageText('mod_announcements_last', 'announcements');
 $latestAnnounce = $objLanguage->languageText('mod_announcements_head', 'announcements');
-$pgTitle->str = $latest."&nbsp;".ucwords($contextCode).$latestAnnounce."&nbsp;" . $add;
+$pgTitle->str = $latest."&nbsp;".ucwords($contextTitle)."&nbsp;".$latestAnnounce."&nbsp;". $add;
 //create array to hold data and set the language items
 $tableRow = array();
 
