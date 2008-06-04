@@ -112,10 +112,6 @@ class dynamicblocks_forumview extends object
 		
 		$forumForm->addToForm($header->show());
 		
-		$objForumSearch = $this->getObject('forumsearch');
-		$objForumSearch->defaultForm = $id;
-		$forumForm->addToForm($objForumSearch->show(FALSE));
-		
 		$tblTopic=$this->newObject('htmltable','htmlelements');
 		
 		$tblTopic->attributes=' align="center" border="0"';
@@ -132,9 +128,9 @@ class dynamicblocks_forumview extends object
 		// Start of First Row
 		
 		$tblTopic->startHeaderRow();     
-		        $tblTopic->addHeaderCell($this->objLanguage->languageText('word_status', 'forum', 'Status'), '30', 'center');
-		        $tblTopic->addHeaderCell($this->objLanguage->languageText('word_noun_read', 'forum'), '30', 'center');
-				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_type', 'forum', 'Type'), '30', 'center');
+		        //$tblTopic->addHeaderCell($this->objLanguage->languageText('word_status', 'forum', 'Status'), '30', 'center');
+		        //$tblTopic->addHeaderCell($this->objLanguage->languageText('word_noun_read', 'forum'), '30', 'center');
+				//$tblTopic->addHeaderCell($this->objLanguage->languageText('word_type', 'forum', 'Type'), '30', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('mod_forum_topicconversation', 'forum'), '30%', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_author'), Null, 'center', 'center');
 				$tblTopic->addHeaderCell($this->objLanguage->languageText('word_replies', 'forum', 'Replies'), Null, 'center', 'center');
@@ -155,7 +151,7 @@ class dynamicblocks_forumview extends object
 		                
 		                $objIcon = $this->getObject('geticon', 'htmlelements');
 						
-		                if ($topic['topicstatus'] == 'OPEN') {
+		                /*if ($topic['topicstatus'] == 'OPEN') {
 		                    $objIcon->setIcon('unlock', NULL, 'icons/forum/');
 		                    $objIcon->title = $this->objLanguage->languageText('mod_forum_topicisopen', 'forum');
 		                    $rowCSS = $altRowCSS;
@@ -190,7 +186,7 @@ class dynamicblocks_forumview extends object
 		                $objIcon->setIcon($topic['type_icon'], NULL, 'icons/forum/');
 		                $objIcon->title = $topic['type_name'];
 		                
-		                $tblTopic->addCell($objIcon->show(), Null, 'center');
+		                $tblTopic->addCell($objIcon->show(), Null, 'center');*/
 		                
 		                $link = new link ($this->uri(array('action'=>'viewtopic', 'id'=>$topic['topic_id'])));
 		                
