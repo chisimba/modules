@@ -90,7 +90,6 @@ class dbAnnouncements extends dbTable
         
         $list = $this->getLastRow($contextid);
         $this->loadClass('link', 'htmlelements');
-
         $str = '';
         if(!empty($list)){
             foreach($list as $item){
@@ -107,6 +106,9 @@ class dbAnnouncements extends dbTable
                 
                 $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
             }
+        }else{
+        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
+        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
         }
 
         $link = new link($this->uri(array(

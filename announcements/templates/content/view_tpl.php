@@ -22,7 +22,6 @@ if ($isInContext) {
 		$objAddIcon->setIcon("add", "gif");
 		$objAddIcon->alt = $objLanguage->languageText('mod_announcements_addicon', 'announcements');
 		$add = $objAddIcon->getAddIcon($objLink);
-		$add = $objAddIcon->getAddIcon($objLink);
 	} else {
 		$add = '';
 	}
@@ -46,11 +45,12 @@ if ($isInContext) {
 // Create header with add icon
 $pgTitle = &$this->getObject('htmlheading', 'htmlelements');
 $pgTitle->type = 4;
-if(empty($contextCode))
-$contextCode="";
-else
+
 $contextCode="$contextCode&nbsp;";
-$pgTitle->str =$contextCode.$objLanguage->languageText('mod_announcements_head', 'announcements')."&nbsp;" . $add;
+
+$latest = $objLanguage->languageText('mod_announcements_last', 'announcements');
+$latestAnnounce = $objLanguage->languageText('mod_announcements_head', 'announcements');
+$pgTitle->str = $latest."&nbsp;".ucwords($contextCode).$latestAnnounce."&nbsp;" . $add;
 //create array to hold data and set the language items
 $tableRow = array();
 
