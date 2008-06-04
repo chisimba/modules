@@ -134,7 +134,7 @@ class utils extends object
       {
           try{
               //$objGroups = $this->getObject('managegroups', 'contextgroups');
-            $objMM = $this->getObject('mmutils', 'mediamanager');
+            //$objMM = $this->getObject('mmutils', 'mediamanager');
               $arr = array();
               if($filter)
               {
@@ -153,7 +153,7 @@ class utils extends object
 
               foreach($publicCourses as $pCourse)
               {
-                  if(!$objMM->deep_in_array($pCourse['contextcode'], $myCourses))
+                  if(!$this->deep_in_array($pCourse['contextcode'], $myCourses))
                   {
                       if ($pCourse['archive'] == 0) {
                         $arr[] = $this->_objDBContext->getRow('contextcode',$pCourse['contextcode']);
@@ -618,6 +618,27 @@ class utils extends object
         return $tabBox->show();
 
         echo ($this->objHelp->show('help','help'));
+    }
+    
+    /**
+    * Method to search within an array
+    * @param  string $value the search value
+    * @param array The Array to be searched
+    * @access public
+    * @version 0.1
+    * @author Wesley Nitsckie
+    * @return bool
+    */
+    public function deep_in_array($value, $array)
+    {
+        foreach($array as $item)
+        {
+            if(!is_array($item)) continue;
+            if(in_array($value, $item)) return true;
+            else if($this->deep_in_array($value, $item)) return true;
+        }
+        
+        return false;
     }
 
 }
