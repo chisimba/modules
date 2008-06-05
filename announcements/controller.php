@@ -136,7 +136,7 @@ class announcements extends controller
 	else{
 		$this->contextid=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
 		$this->contextCode=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
-		$contextTitle = $objLanguage->languageText('mod_announcements_siteword', 'announcements');
+		$contextTitle = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements');
 	}
 	
 	$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);

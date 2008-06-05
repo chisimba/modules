@@ -239,7 +239,7 @@ class dbAnnouncements extends dbTable
             foreach($list as $item){
 
                 $lncat = $item['title'];
-                $objLink = new link($this->uri(array('action' => 'default', 'contextAnnounce' => 'root')));
+                $objLink = new link($this->uri(array('action' => 'viewannouncement', 'contextAnnounce' => 'root', 'id'=>$item['id'])));
                 $objLink->link = $item['title'];
                 $objLink->style = "color: #0000BB;";
                 $lncat = $objLink->show();
@@ -284,7 +284,7 @@ class dbAnnouncements extends dbTable
             foreach($list as $item){
 
                 $lncat = $item['title'];
-                $objLink = new link($this->uri(array('action' => 'default', 'contextAnnounce' => $contextid)));
+                $objLink = new link($this->uri(array('action' => 'viewannouncement', 'contextAnnounce' => $contextid, 'id'=>$item['id'])));
                 $objLink->link = $item['title'];
                 $objLink->style = "color: #0000BB;";
                 $lncat = $objLink->show();
