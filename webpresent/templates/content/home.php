@@ -198,7 +198,7 @@ $applet.='</applet>';
 
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->addTab('Latest Uploads', '<h3>10 Newest Uploads:</h3>'.$latestFilesContent);
-$objTabs->addTab('Live Sessions', $applet);
+//$objTabs->addTab('Live Sessions', $applet);
 $tabCounter = 0;
 
 if ($objUser->isLoggedIn() && $buddiesRegistered) {
