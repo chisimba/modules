@@ -93,7 +93,7 @@ class dbcalendar extends dbTable
     * @param string $dateFirstEntry - Date the first entry was made
     * @param string $dateLastModified - Date the entry was last updated.
     */
-    public function insertSingle($date, $multidayevent=0, $multidaystart=NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified)
+    public function insertSingle($date, $multidayevent=0, $multidaystart=NULL, $eventtitle, $eventdetails, $eventurl, $userorcontext, $context, $workgroup, $showusers, $userFirstEntry, $userLastModified, $dateFirstEntry, $dateLastModified, $timeFrom = NULL, $timeTo = NULL)
     {
 
         // This is a check to ensure that the url entered is not the default 'http://'
@@ -104,20 +104,22 @@ class dbcalendar extends dbTable
         }
 
         $this->insert(array(
-                'eventdate'                       => $date,
-                'multiday_event'               => $multidayevent,
-                'multiday_event_start_id' => $multidaystart,
-                'eventtitle'                         => $eventtitle,
-                'eventdetails'                    => $eventdetails,
-                'eventurl'                           => $eventurl,
-                'userorcontext'                  => $userorcontext,
-                'context'                            => $context,
-                'workgroup'                       => $workgroup,
-                'showusers'                       => $showusers,
-                'userFirstEntry'                  => $userFirstEntry,
-                'userLastModified'             => $userLastModified,
-                'dateFirstEntry'                  => $dateFirstEntry,
-                'dateLastModified'             => $dateLastModified
+                'eventdate'                   => $date,
+                'multiday_event'              => $multidayevent,
+                'multiday_event_start_id'     => $multidaystart,
+                'eventtitle'                  => $eventtitle,
+                'eventdetails'                => $eventdetails,
+                'eventurl'                    => $eventurl,
+                'userorcontext'               => $userorcontext,
+                'context'                     => $context,
+                'workgroup'                   => $workgroup,
+                'showusers'                   => $showusers,
+                'userFirstEntry'              => $userFirstEntry,
+                'userLastModified'            => $userLastModified,
+                'dateFirstEntry'              => $dateFirstEntry,
+                'dateLastModified'            => $dateLastModified,
+                'timefrom'                    => $timeFrom,
+                'timeto'                      => $timeTo
             ));
 
         return $this->getLastInsertId();

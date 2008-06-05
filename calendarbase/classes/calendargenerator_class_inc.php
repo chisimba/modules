@@ -122,7 +122,8 @@ class calendargenerator extends object
             5 => 'friday',
             6 => 'saturday',
         );
-
+        
+        
         if ($this->size == 'big') {
             $day_names = $this->objSimpleCal->getDaysAsArray();
             $extraCss = 'calendarTable';
@@ -131,7 +132,8 @@ class calendargenerator extends object
             $toc = '';
             $extraCss = 'mainTable';
         }
-
+        
+        
         list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
         $weekday = ($weekday + 7 - $this->first_day) % 7; #adjust for $this->first_day
 
