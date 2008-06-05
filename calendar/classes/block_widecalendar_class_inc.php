@@ -16,6 +16,7 @@ class block_widecalendar extends object
         $year = $this->getParam('year', date('Y'));
         
         $this->objCalendarInterface->setupCalendar($month, $year);
+        $this->objCalendarInterface->calendarSize = 'big';
         
         $eventsCalendar = $this->objCalendarInterface->getCalendar();
         
