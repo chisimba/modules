@@ -6,7 +6,7 @@ class block_widecalendar extends object
 {
     public function init()
     {
-        $this->title = 'Big Calendar';
+        $this->title = 'Calendar';
         $this->objCalendarInterface = $this->getObject('calendarinterface');
     }
     

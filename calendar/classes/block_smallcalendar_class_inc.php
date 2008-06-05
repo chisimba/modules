@@ -6,7 +6,7 @@ class block_smallcalendar extends object
 {
     public function init()
     {
-        $this->title = 'Small Calendar';
+        $this->title = 'Calendar';
         $this->objCalendarInterface = $this->getObject('calendarinterface');
     }
     
