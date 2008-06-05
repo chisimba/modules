@@ -328,5 +328,17 @@ class dynamicblocks_forumview extends object
 		//echo $this->showForumFooter($id);
 		return $forumForm->show();
     }
+    
+    function isValid($action)
+    {
+        // Permissions Module
+        $this->objDT = $this->getObject( 'decisiontable','decisiontable' );
+        // Create the decision table for the current module
+        $this->objDT->create('forum');
+        // Collect information from the database.
+        $this->objDT->retrieve('forum');
+        
+        return $this->objDT->isValid($action);
+    }
  }
 ?>
