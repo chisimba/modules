@@ -89,10 +89,24 @@ class block_latestcontextannouncement extends object
      */
     public function init() 
     {
-        
-         $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
-        $this->title = 'Latest Announcements';
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
+        $this->title = $this->objLanguage->languageText('mod_announcements_latestcourse', 'announcements');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $isInContext=$this->objContext->isInContext();
+		if($isInContext)
+		{
+			$this->contextCode=$this->objContext->getContextCode();
+			$this->contextid=$this->objContext->getField('id',$this->contextCode);
+			$contextTitle = $this->objContext->getTitle();
+		}
+		else{
+			$this->contextid = $this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
+			$this->contextCode = $this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
+			$contextTitle = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements');
+		}
     }
+        
     /**
      * Standard block show method.
      *
@@ -100,7 +114,10 @@ class block_latestcontextannouncement extends object
      */
     public function show() 
     {
-        return "context";//$this->objBlocks->showList();
+    	if($this->contextCode != "root"){
+    	return $this->objBlocks->showLatestCourse($this->contextCode);
+    	}
+        //return "context";//$this->objBlocks->showList();
     }
 }
 ?>

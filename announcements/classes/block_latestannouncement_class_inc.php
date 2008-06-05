@@ -89,9 +89,10 @@ class block_latestannouncement extends object
      */
     public function init() 
     {
-        
-         $this->objBlocks =& $this->getObject('announcementsTools', 'announcements');
-        $this->title = 'Latest Announcements';
+    	
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
+        $this->title = $this->objLanguage->languageText('mod_announcements_latestsite', 'announcements');
     }
     /**
      * Standard block show method.
@@ -100,7 +101,7 @@ class block_latestannouncement extends object
      */
     public function show() 
     {
-        return $this->objBlocks->showLatestBlock();
+        return $this->objBlocks->showLatestSite();
     }
 }
 ?>

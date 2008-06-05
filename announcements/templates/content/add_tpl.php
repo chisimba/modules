@@ -32,7 +32,7 @@ $pgTitle->type = 1;
 $pgTitle->str = $objLanguage->languageText('mod_announcements_return', 'announcements') . "&nbsp;" . $update;
 $this->objUser = $this->getObject('user', 'security');
 $cform = new form('announcements', $this->uri(array(
-    'action' => 'add'
+    'action' => 'add', 'contextAnnounce'=>$contextAnnounce
 )));
 //start a fieldset
 $cfieldset = $this->getObject('fieldset', 'htmlelements');

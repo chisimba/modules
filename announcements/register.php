@@ -3,7 +3,7 @@ MODULE_NAME: Announcements
 MODULE_DESCRIPTION: This module facilitates announcements from lecturers to students
 MODULE_AUTHORS: Joel Kimilu
 MODULE_RELEASEDATE: 2008 01 25
-MODULE_VERSION: 0.214
+MODULE_VERSION: 0.219
 MODULE_PATH: announcements
 MODULE_ISADMIN: 0
 MODULE_ISLECTURER: 0
@@ -23,7 +23,7 @@ SIDEMENU: elearnpostlogin-2
 TABLE: tbl_announcements
 
 BLOCK: latestannouncement
-//BLOCK: latestcontextannouncement|context
+BLOCK: latestcontextannouncement
 BLOCK: announcementquickadd
 //BLOCK: quickaddcontext|context
 
@@ -39,6 +39,10 @@ TEXT: mod_announcements_createOn|Created On|Created On
 
 TEXT: mod_announcements|Announcements|Announcements
 TEXT: mod_announcements_latest|Latest Announcements|Latest Announcement
+TEXT: mod_announcements_latestcourse|Latest Course Announcements|Latest Course Announcement
+TEXT: mod_announcements_latestsite|Latest Site Announcements|Latest Site Announcement
+TEXT: mod_announcements_course|Course Announcements|Course Announcements:
+TEXT: mod_announcements_site|Site Announcements|Site Announcements:
 TEXT: mod_announcements_back|Back to Announcements|Back to Announcements
 TEXT: mod_announcements_quickadd|Quick Add|Quick Add 
 TEXT: mod_announcements_action|Delete or edit record|Action 
@@ -50,6 +54,8 @@ TEXT: mod_announcements_last|Latest|Latest
 TEXT: mod_announcements_add|Add a Announcement|Add a Announcement
 TEXT: mod_announcements_update|Edit a Announcement|Edit Announcement
 TEXT: mod_announcements_archive|Archive|Archive
+TEXT: mod_announcements_archivesite|Archive|Site Archive
+TEXT: mod_announcements_archivecourse|Archive|Course Archive
 
 TEXT: mod_announcements_title|Title|Title
 TEXT: mod_announcements_message|Message|Message
@@ -70,3 +76,5 @@ TEXT: mod_announcements_return|Return|Click to return
 TEXT: mod_announcements_head|Announcements|Announcement
 TEXT: mod_announcements_return|Return to view_tpl|Return to Announcements
 TEXT: mod_announcements_noannounce|No Announcements|There are currently no announcements
+TEXT: mod_announcements_siteword|Site|Site
+TEXT: mod_announcements_rootword|root|root

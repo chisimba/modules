@@ -53,7 +53,7 @@ if (empty($records)) {
         $title = $record['title'] ;
         $titleLink = new link($this->uri(array('action' => '', 'id'=>$record['id'])));
         $titleLink->link = $title;
-        $records == $objUser->userId();
+        //$records == $objUser->userId();
 		$objTableClass->addCell('<b>'.$rowcount.': '.$titleLink->show().'</b>', '', 'left', 'left', $class,'colspan=3');
 		$objTableClass->endRow();
 	
@@ -66,75 +66,75 @@ if (empty($records)) {
 
  	
 	
-	$objTableClass->startRow();
-
-	//get author details
-	//add author id
-        $createdbyid = $record['createdby'];
-	//get author full names
-	$createdby=$this->objUser->fullname($createdbyid);
+		$objTableClass->startRow();
 	
-	//create a link to users profile	
-	$this->loadClass('link', 'htmlelements');
-        //$objIcon = $this->newObject('geticon', 'htmlelements');
-        $link = new link($this->uri(array(
-            'action' => '',
-            'id' => $createdbyid
-        ) , 'security'));
-        //$objIcon->setIcon('edit');
-        $link->link = $createdby;
-        $createdby = $link->show();
-	
-	//add date created
-        $createdon = $record['createdon'];
-	//format date
-	$createdon=$this->objDate->formatDate($createdon);
-	
+		//get author details
+		//add author id
+	    $createdbyid = $record['createdby'];
+		//get author full names
+		$createdby=$this->objUser->fullname($createdbyid);
+		
+		//create a link to users profile	
+		$this->loadClass('link', 'htmlelements');
+	        //$objIcon = $this->newObject('geticon', 'htmlelements');
+	        $link = new link($this->uri(array(
+	            'action' => '',
+	            'id' => $createdbyid
+	        ) , 'security'));
+	        //$objIcon->setIcon('edit');
+	        $link->link = $createdby;
+	        $createdby = $link->show();
+		
+		//add date created
+	    $createdon = $record['createdon'];
+		//format date
+		$createdon=$this->objDate->formatDate($createdon);
+		
         $objTableClass->addCell('&nbsp; &nbsp; <b>Created By:</b> '.$createdby.'&nbsp; &nbsp; <b>On:</b> '.$createdon, '', '', 'left', $class);
- 	//add author
+ 		//add author
       
-	//get id
-	$id=$record['id'];
-	//check if user is admin or a lecture, if either is true show the delete icon
-	if($isAdmin or $isLecturer){
-        // Create delete icon and delete action
-        $objDelIcon = $this->newObject('geticon', 'htmlelements');
-        $delLink = array(
-            'action' => 'delete',
-            'id' => $id,
-            'module' => 'announcements',
-            'confirm' => 'yes',
-        );
-	
-        $deletephrase = $objLanguage->languageText('mod_announcements_deleteicon', 'announcements');
-        $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'announcements', $deletephrase);
-        $update = $conf;
-	}
-        $records == $objUser->userId();
+		//get id
+		$id=$record['id'];
+		//check if user is admin or a lecture, if either is true show the delete icon
+		if($isAdmin or $isLecturer){
+	        // Create delete icon and delete action
+	        $objDelIcon = $this->newObject('geticon', 'htmlelements');
+	        $delLink = array(
+	            'action' => 'delete',
+	            'id' => $id,
+	            'module' => 'announcements',
+	            'confirm' => 'yes',
+	        );
+		
+	        $deletephrase = $objLanguage->languageText('mod_announcements_deleteicon', 'announcements');
+	        $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'announcements', $deletephrase);
+	        $update = $conf;
+		}
+        //$records == $objUser->userId();
 	
         $objTableClass->addCell($update, '', 'right', 'right', $class);
         //check if user is admin or a lecture, if either is true show the edit icon
-	// Create edit icon and action
-	if($isAdmin or $isLecturer){
-        $this->loadClass('link', 'htmlelements');
-        $objIcon = $this->newObject('geticon', 'htmlelements');
-        $link = new link($this->uri(array(
-            'action' => 'edit',
-            'id' => $id
-        ) , 'announcements'));
-        $objIcon->setIcon('edit');
-        $link->link = $objIcon->show();
-        $update = $link->show();
-	}
+		// Create edit icon and action
+		if($isAdmin or $isLecturer){
+	        $this->loadClass('link', 'htmlelements');
+	        $objIcon = $this->newObject('geticon', 'htmlelements');
+	        $link = new link($this->uri(array(
+	            'action' => 'edit',
+	            'id' => $id
+	        ) , 'announcements'));
+	        $objIcon->setIcon('edit');
+	        $link->link = $objIcon->show();
+	        $update = $link->show();
+		}
         $objTableClass->addCell($update, '', 'right', 'right', $class);
         $objTableClass->endRow();
 	
-	//add cell to make the table look neat
-	$objTableClass->startRow();
-        
-        $objTableClass->addCell('&nbsp; &nbsp;');
+		//add cell to make the table look neat
+		$objTableClass->startRow();
+	        
+	    $objTableClass->addCell('&nbsp; &nbsp;');
 
-	$objTableClass->endRow();
+		$objTableClass->endRow();
 
 
     } //end of loop   

@@ -57,71 +57,18 @@ class dbAnnouncements extends dbTable
         $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,$start ");
     return $userrec;
     }
+    
+    public function listAllContext($contextid) 
+    {       
+        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC");
+    return $userrec;
+    }
+    
     public function getLastRow($contextid) 
     {       
         $rec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,1 ");
         
     return $rec;
-    }
-    
-     public function showList($linkAll = FALSE)
-    {
-        
-        $this->objLanguage = $this->newObject('language', 'language');
-        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $this->objContext = $this->getObject('dbcontext','context');
-        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
-        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
-        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
-        
-		//get context so that only messages for this context are displayed
-		$isInContext=$this->objContext->isInContext();
-		if($isInContext)
-		{
-			$this->contextCode=$this->objContext->getContextCode();
-			$this->contextid=$this->objContext->getField('id',$this->contextCode);
-		}
-		else{
-			$this->contextid="root";
-			$this->contextCode="root";
-		}
-		$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
-		$contextid=$this->contextid;
-        
-        $list = $this->getLastRow($contextid);
-        $this->loadClass('link', 'htmlelements');
-        $str = '';
-        if(!empty($list)){
-            foreach($list as $item){
-
-                $lncat = $item['title'];
-                $objLink = new link($this->uri(array('action' => '', 'id' => $item['id'])));
-                $objLink->link = $item['title'];
-                $objLink->style = "color: #0000BB;";
-                $lncat = $objLink->show();
-                
-                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
-                
-                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
-                
-                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
-            }
-        }else{
-        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
-        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
-        }
-
-        $link = new link($this->uri(array(
-            'action' => 'archive'
-        )));
-        $link->link = $this->objLanguage->languageText('mod_announcements_archive', 'announcements');
-        $archive = $link->show();
-        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
-       /* if($dispType == 'nobox'){
-            return $str;
-        }*/
-        
-        return $str; //$this->objFeatureBox->show($blocktitle, $str);
     }
     
      public function showQuickPost($contextPuid = '', $linkAll = FALSE)
@@ -130,7 +77,7 @@ class dbAnnouncements extends dbTable
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objContext = $this->getObject('dbcontext','context');
         $cform = new form('announcements', $this->uri(array(
-    'action' => 'add'
+    	'action' => 'add'
         )));
         //start a fieldset
         $cfieldset = $this->getObject('fieldset', 'htmlelements');
@@ -275,5 +222,97 @@ class dbAnnouncements extends dbTable
         // Add to Index
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
 	}
+	
+	 public function showLatestSite($linkAll = FALSE)
+    {
+        $this->objLanguage = $this->newObject('language', 'language');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
+        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
+        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
+        
+        $list = $this->getLastRow('root');
+        $this->loadClass('link', 'htmlelements');
+        $str = '';
+        if(!empty($list)){
+            foreach($list as $item){
+
+                $lncat = $item['title'];
+                $objLink = new link($this->uri(array('action' => 'default', 'contextAnnounce' => 'root')));
+                $objLink->link = $item['title'];
+                $objLink->style = "color: #0000BB;";
+                $lncat = $objLink->show();
+                
+                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
+                
+                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
+                
+                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
+            }
+        }else{
+        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
+        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
+        }
+
+        $link = new link($this->uri(array(
+            'action' => 'archive', 'contextAnnounce'=>'root'
+        )));
+        $link->link = $this->objLanguage->languageText('mod_announcements_archivesite', 'announcements');
+        $archive = $link->show();
+        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
+       /* if($dispType == 'nobox'){
+            return $str;
+        }*/
+        
+        return $str; //$this->objFeatureBox->show($blocktitle, $str);
+    }
+    
+    public function showLatestCourse($contextid)
+    {
+        $this->objLanguage = $this->newObject('language', 'language');
+        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
+        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
+        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
+        
+        $list = $this->getLastRow($contextid);
+        $this->loadClass('link', 'htmlelements');
+        $str = '';
+        if(!empty($list)){
+            foreach($list as $item){
+
+                $lncat = $item['title'];
+                $objLink = new link($this->uri(array('action' => 'default', 'contextAnnounce' => $contextid)));
+                $objLink->link = $item['title'];
+                $objLink->style = "color: #0000BB;";
+                $lncat = $objLink->show();
+                
+                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
+                
+                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
+                
+                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
+            }
+        }else{
+        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
+        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
+        }
+
+        $link = new link($this->uri(array(
+            'action' => 'archive', 'contextAnnounce'=>$contextid
+        )));
+        $link->link = $this->objLanguage->languageText('mod_announcements_archivecourse', 'announcements');
+        $archive = $link->show();
+        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
+       /* if($dispType == 'nobox'){
+            return $str;
+        }*/
+        
+       return $str; //$this->objFeatureBox->show($blocktitle, $str);
+    }
+    
+
 }
 ?>

@@ -130,46 +130,52 @@ class announcements extends controller
 	if($isInContext)
 	{
 		$this->contextCode=$this->objContext->getContextCode();
-		$this->contextid=$this->objContext->getField('id',$this->contextCode);
+		//$this->contextid=$this->objContext->getField('id',$this->contextCode);
 		$contextTitle = $this->objContext->getTitle();
 	}
 	else{
-		$this->contextid="root";
-		$this->contextCode="root";
-		$contextTitle = "Site";
+		$this->contextid=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
+		$this->contextCode=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
+		$contextTitle = $objLanguage->languageText('mod_announcements_siteword', 'announcements');
 	}
 	
 	$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
 	
-	$contextid=$this->contextid;
+	$contextid=$this->contextCode;
 	$this->setVarByRef("contextCode",$this->contextCode);
 	$this->setVarByRef("contextTitle",$contextTitle);
 		
 	switch ($action) {
             default:
             case 'default':
-				//set start to 0
-				//@param integer $start to indicate start of Sql Limit
-				$start=0;
-		        $id=$this->getParam('id',null);
-		               
-	            if(empty($id))
-	            {
-	                $lastentry=$this->objDbAnnouncements->getLastRow($contextid);
-	                if(empty($lastentry)){
-	                	$id = null;
-	                }else{
-	                	$id=$lastentry[0]['id'];
-	                }
+				$allCourse = '';
+				
+	            if($contextid != $this->objLanguage->languageText('mod_announcements_rootword', 'announcements')){
+	            	$allCourse = $this->objDbAnnouncements->listAllContext($contextid);
 	            }
-	            $record = $this->objDbAnnouncements->listSingle($id);
-	            $this->setVarByRef('record', $record);
+				
+				$allSite = $this->objDbAnnouncements->listAllContext("root");
+				
+				$this->setVarByRef('allSite', $allSite);
+	            $this->setVarByRef('allCourse', $allCourse);
 	            return 'view_tpl.php';
             break;
+            
+            case 'viewannouncement':
+            	$id=$this->getParam('id',null);
+            	$contextAnnounce = $this->getParam('contextAnnounce');
+            	$announcement = $this->objDbAnnouncements->listSingle($id);
+            	
+            	$this->setVarByRef('contextAnnounce', $contextAnnounce);
+            	$this->setVarByRef('announcement', $announcement);
+	            
+	            return 'viewannouncement_tpl.php';
+            	break;
 	            // Case to add an entry
 		    case 'archive':
 			    //set start to 5
 			    //@param integer $start to indicate start of Sql Limit
+			    $contextid = $this->getParam('contextAnnounce');
 			    $start=5;
 			    $records = $this->objDbAnnouncements->listAll($contextid,$start);
 		        $this->setVarByRef('records', $records);	
@@ -180,8 +186,9 @@ class announcements extends controller
 	            $title = htmlentities($this->getParam('title') , ENT_QUOTES);
 	            $message = htmlentities($this->getParam('message') , ENT_QUOTES);
 	            $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
+	            $contextid = $this->getParam('contextAnnounce');
 	            $createdby = $this->objUser->userId();
-	            $contextid=$contextid;
+	            //$contextid=$contextid;
 	            
 	            
 	       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
@@ -239,6 +246,8 @@ class announcements extends controller
 	            break;
 	        // Link to the template
 	        case 'link':
+	        	$contextAnnounce = $this->getParam('contextAnnounce');
+	        	$this->setVarByRef('contextAnnounce', $contextAnnounce);
 	            return 'add_tpl.php';
 	            break;
 	        // Case to get the information from the form

@@ -37,7 +37,7 @@ class announcementsTools extends object
     public function init()
     {
         $this->objAnnouncements = $this->getObject('dbAnnouncements');
-	$this->objFeatureBox = $this->newObject('featurebox', 'navigation');
+		$this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language', 'language');
         
@@ -51,6 +51,19 @@ class announcementsTools extends object
 
         $this->userId = $this->objUser->userId();
         $this->userPkId = $this->objUser->PKId();
+        $this->objContext = $this->getObject('dbcontext','context');
+        $isInContext=$this->objContext->isInContext();
+		if($isInContext)
+		{
+			$this->contextCode=$this->objContext->getContextCode();
+			$this->contextid=$this->objContext->getField('id',$this->contextCode);
+			$contextTitle = $this->objContext->getTitle();
+		}
+		else{
+			$this->contextid="root";
+			$this->contextCode="root";
+			$contextTitle = "Site";
+		}
     }
 
     /**
@@ -62,9 +75,16 @@ class announcementsTools extends object
     public function getRightBlocks()
     {
         //is alright to display this, but only in the right context
-        $announcementsBlock= $this->objAnnouncements->showList();
-        $blocktitle=$this->objLanguage->languageText('mod_announcements_latest', 'announcements');
+        $announcementsBlock= $this->objAnnouncements->showLatestSite();
+        $blocktitle=$this->objLanguage->languageText('mod_announcements_latestsite', 'announcements');
         $announcementsBlock=$this->objFeatureBox->show($blocktitle, $announcementsBlock);
+        
+        //is alright to display this, but only in the right context
+        if($this->contextCode != "root"){
+        	$announcementsBlocks= $this->objAnnouncements->showLatestCourse($this->contextCode);
+	        $blocktitles=$this->objLanguage->languageText('mod_announcements_latestcourse', 'announcements');
+	        $announcementsCourseBlock=$this->objFeatureBox->show($blocktitles, $announcementsBlocks);
+        }
         
         //do not dispaly if user is not admin or lecturer
         if($this->checkPermissions()){
@@ -72,7 +92,11 @@ class announcementsTools extends object
         $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
         $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
         }
-        return  $announcementsBlock.$quickpostBlock.'<br />';
+        if($this->contextCode != "root"){
+        	return  $announcementsBlock.$announcementsCourseBlock.$quickpostBlock.'<br />';
+        }else{
+        	return  $announcementsBlock.$quickpostBlock.'<br />';
+        }
     }
     public function getQuickAddBlock()
     {
@@ -82,15 +106,23 @@ class announcementsTools extends object
         return  $quickpostBlock.'<br />';
     }
     
-    public function showLatestBlock()
+ /*   public function showLatestBlock()
     {
        
-        $announcementsBlock= $this->objAnnouncements->showList();
+        $announcementsBlock= $this->objAnnouncements->showLatestSite();
     
 
         return  $announcementsBlock.'<br />';
     }
     
+    public function showLatestCourseBlock($contextid)
+    {
+       
+        $announcementsBlock= $this->objAnnouncements->showLatestCourse($contextid);
+    
+
+        return  $announcementsBlock.'<br />';
+    }*/
     
     public function checkPermissions()
     {
