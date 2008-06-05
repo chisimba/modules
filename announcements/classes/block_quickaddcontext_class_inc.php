@@ -89,7 +89,6 @@ class block_quickaddcontext extends object
      */
     public function init() 
     {
-        
          $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
          $this->objBlockss =& $this->getObject('announcementsTools', 'announcements');
          $this->title = 'Quick Add';

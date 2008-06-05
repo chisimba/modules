@@ -189,8 +189,6 @@ class announcements extends controller
 	            $contextid = $this->getParam('contextAnnounce');
 	            $createdby = $this->objUser->userId();
 	            //$contextid=$contextid;
-	            
-	            
 	       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
 			    //prepare $RecipientList to send mails
 			    $subject=$title;

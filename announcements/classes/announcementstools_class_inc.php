@@ -85,12 +85,11 @@ class announcementsTools extends object
 	        $blocktitles=$this->objLanguage->languageText('mod_announcements_latestcourse', 'announcements');
 	        $announcementsCourseBlock=$this->objFeatureBox->show($blocktitles, $announcementsBlocks);
         }
-        
         //do not dispaly if user is not admin or lecturer
         if($this->checkPermissions()){
-        $quickpostBlock= $this->objAnnouncements->showQuickPost();
-        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
-        $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
+	        $quickpostBlock= $this->objAnnouncements->showQuickPost();
+	        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
+	        $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
         }
         if($this->contextCode != "root"){
         	return  $announcementsBlock.$announcementsCourseBlock.$quickpostBlock.'<br />';

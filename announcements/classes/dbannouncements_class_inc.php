@@ -45,7 +45,8 @@ class dbAnnouncements extends dbTable
     public function init() 
     {
         parent::init('tbl_announcements');
-        
+        $this->objContext = $this->getObject('dbcontext','context');
+        $this->contextCode=$this->objContext->getContextCode();
     }
     /**
      * Return all records in the tbl_announcements.
@@ -76,8 +77,12 @@ class dbAnnouncements extends dbTable
         $this->objLanguage = $this->newObject('language', 'language');
         $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
         $this->objContext = $this->getObject('dbcontext','context');
+        $this->contextCode=$this->objContext->getContextCode();
+		if($this->contextCode != 'root'){
+			$this->contextCode = 'root';
+		}
         $cform = new form('announcements', $this->uri(array(
-    	'action' => 'add'
+    	'action' => 'add', 'contextAnnounce'=>$this->contextCode
         )));
         //start a fieldset
         $cfieldset = $this->getObject('fieldset', 'htmlelements');
@@ -156,7 +161,7 @@ class dbAnnouncements extends dbTable
 		'contextid' => $contextid,
             
         );
-
+        
         if (empty($title) && empty($message)) {
             return "add_tpl.php";
         } else {
