@@ -140,51 +140,28 @@ $table->endRow();
 $table->startRow();
 $timeLabel = new label($this->objLanguage->languageText('mod_calendarbase_time', 'calendar').':', 'input_time');
 
-$timeInput = new textinput('input_time');
+
+
+
+
+$timePicker = $this->newObject('timepicker', 'htmlelements');
+$timePicker->name = 'timefrom';
+
 if ($mode == 'edit') {
-    //$timeInput->value = $event['eventime'];
+    $timePicker->value = $event['timefrom'];
 }
 
-$timeFromdropdown = new dropdown('timefrom');
-
-
-$timeFromdropdown->addOption('7:00','7:00');
-$timeFromdropdown->addOption('7:30','7:30');
-$timeFromdropdown->addOption('8:00','8:00');
-$timeFromdropdown->addOption('8:30','8:30');
-$timeFromdropdown->addOption('9:00','9:00');
-$timeFromdropdown->addOption('9:30','9:30');
-$timeFromdropdown->addOption('10:00','10:00');
-$timeFromdropdown->addOption('10:30','10:30');
-$timeFromdropdown->addOption('11:00','11:00');
-$timeFromdropdown->addOption('11:30','11:30');
-$timeFromdropdown->addOption('12:00','12:00');
-$timeFromdropdown->addOption('12:30','12:30');
-$timeFromdropdown->addOption('13:00','13:00');
-$timeFromdropdown->addOption('13:30','13:30');
-$timeFromdropdown->addOption('14:00','14:00');
-$timeFromdropdown->addOption('14:30','14:30');
-$timeFromdropdown->addOption('15:00','15:00');
-$timeFromdropdown->addOption('15:30','15:30');
-$timeFromdropdown->addOption('16:00','16:00');
-$timeFromdropdown->addOption('16:30','16:30');
-$timeFromdropdown->addOption('17:00','17:00');
-$timeFromdropdown->addOption('17:30','17:30');
-$timeFromdropdown->addOption('18:00','18:00');
-$timeFromdropdown->addOption('18:30','18:30');
-$timeFromdropdown->addOption('19:00','19:00');
-$timeFromdropdown->addOption('19:30','19:30');
-$timeFromdropdown->addOption('20:00','20:00');
-$timeFromdropdown->addOption('20:30','20:30');
-$timeFromdropdown->addOption('21:00','21:00');
-$timeFromdropdown->addOption('21:30','21:30');
-$timeFromdropdown->addOption('22:00','22:00');
-$timeFromdropdown->addOption('22:30','22:30');
-
 $table->addCell($timeLabel->show());
-$from = $timeFromdropdown->show();
-$timeFromdropdown->name = 'timeto';
-$to = $timeFromdropdown->show();
+$from = $timePicker->show();
+
+$timePicker = $this->newObject('timepicker', 'htmlelements');
+$timePicker->name = 'timeto';
+
+if ($mode == 'edit') {
+    $timePicker->value = $event['timeto'];
+}
+
+$to = $timePicker->show();
 $table->addCell('From '.$from.'&nbsp;To '.$to , NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 // end - date inputs //
@@ -266,6 +243,7 @@ $table->addCell($urlInput->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 
 
+/*
 // Iframe Attachments
 $iframe = new iframe ();
 $iframe->src = $this->uri(array('action'=>'tempframe', 'id'=>$temporaryId, 'mode'=>$mode));
@@ -279,6 +257,7 @@ $table->startRow();
 $table->addCell($this->objLanguage->languageText('word_attachments', 'calendarbase', 'Attachments').':');
 $table->addCell($objSelectFile->show(), NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
+*/
 
 $form = new form('eventform', $this->uri( array('action'=>$action)));
 $form->addToForm($table->show());

@@ -26,6 +26,8 @@ class calendarinterface extends object
     public $month;
     public $year;
     
+    public $calendarSize = 'big';
+    
     public $isContextLecturer = FALSE;
     public $manageSiteCalendar = FALSE;
     public $contextCode;
@@ -46,6 +48,20 @@ class calendarinterface extends object
         $this->year = date('Y');
         
         $this->objUser = $this->getObject('user', 'security');
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        
+        $this->userId = $this->objUser->userId();
+
+        // Determine if user is in a context
+        $this->contextCode = $this->objContext->getContextCode();
+        $this->contextTitle = $this->objContext->getTitle();
+        if ($this->contextCode == NULL) {
+            $this->contextCode = 'root';
+            $this->isInContext = FALSE;
+            $this->contextTitle = 'Lobby';
+        } else {
+            $this->isInContext = TRUE;
+        }
         
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objIcon->setIcon('edit');
@@ -58,6 +74,49 @@ class calendarinterface extends object
     {
         $this->preparedEventsArray = array();
         $this->preparedListArray = array();
+    }
+    
+    public function setupCalendar($month, $year)
+    {
+        $this->month = $month;
+        $this->year = $year;
+        
+        $siteEvents = $this->getSiteEvents($month, $year);
+        $userEvents = $this->getUserEvents($this->userId, $month, $year);
+        
+        if ($this->contextCode == 'root') {
+            $contextEvents = array();
+        } else {
+            $contextEvents = $this->getContextEvents($this->contextCode, $month, $year);
+        }
+        
+        $objManageGroups = $this->getObject('managegroups', 'contextgroups');
+        $userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
+        
+        
+        $otherEvents = array();
+        if (count($userContextsArray) > 0) {
+            foreach ($userContextsArray as $context)
+            {
+                if ($context['contextcode'] != $this->contextCode) {
+                    $otherContextEvents = $this->getContextEvents($context['contextcode'], $month, $year);
+                    
+                    if (count($otherContextEvents) > 0) {
+                        $otherEvents = array_merge($otherEvents, $otherContextEvents);
+                    }
+                }
+            }
+        }
+        
+        $this->prepareEventsForCalendar($userEvents, 'user');
+        $this->prepareEventsForCalendar($siteEvents, 'site');
+        $this->prepareEventsForCalendar($contextEvents, 'context');
+        $this->prepareEventsForCalendar($otherEvents, 'other');
+        
+        $this->numUserEvents = count($userEvents);
+        $this->numSiteEvents = count($siteEvents);
+        $this->numContextEvents = count($contextEvents);
+        $this->numOtherEvents = count($otherEvents);
     }
     
     
@@ -112,6 +171,7 @@ class calendarinterface extends object
             
             $edit = '';
             $delete = '';
+            $contextInfo = '';
             
             switch ($type)
             {
@@ -120,8 +180,8 @@ class calendarinterface extends object
                     if ($event['userfirstentry'] == $this->objUser->userId()) {
                         $link = new link ($this->uri(array('action'=>'edit', 'id'=>$event['id'])));
                         $link->link = $this->editIcon;
-                        $edit = $link->show();
                         
+                        $edit = $link->show();
                         $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
                     }
                     break;
@@ -133,6 +193,9 @@ class calendarinterface extends object
                         $edit = $link->show();
                         $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
                     }
+                    
+                    $contextInfo = '<strong>'.ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]')).':</strong> '.$this->objContext->getTitle($event['context']).'<br />';
+                    
                     break;
                 case 'site':
                     $css = 'event_site';
@@ -151,6 +214,7 @@ class calendarinterface extends object
                         $edit = $link->show();
                         $delete = $this->objIcon->getDeleteIconWithConfirm('', array('action' => 'delete', 'id'=>$event['id']), 'calendar', $this->confirmDel);
                     }
+                    $contextInfo = '<strong>'.ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]')).':</strong> '.$this->objContext->getTitle($event['context']).'<br />';
                     break;
                 case 'workgroup':  $css = 'event_workgroup'; break;
                 default:           $css = ''; break;
@@ -159,8 +223,12 @@ class calendarinterface extends object
             
             //var_dump($event);
             
-            
-            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> <br /><div>'.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
+            if ($this->calendarSize == 'small') {
+                
+            } else {
+                
+            }
+            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> <br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
             
             if ($event['eventurl'] != NULL) {
                 $link = new link($event['eventurl']);
@@ -212,12 +280,34 @@ class calendarinterface extends object
         }
     }
     
+    public function getSmallEventsList()
+    {
+        
+        if (count($this->preparedEventsArray) == 0) {
+            return '<div class="noRecordsMessage">No Events for this Month</div>';
+        } else {
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->cssClass = 'eventslist';
+            
+            ksort($this->preparedEventsArray);
+            
+            foreach ($this->preparedEventsArray as $day=>$events)
+            {
+                $table->startRow();
+                $table->addCell('<strong>'.$day.'</strong><br />', '30');
+                $table->addCell($events);
+                $table->endRow();
+            }
+            return $table->show();
+        }
+    }
+    
     public function getEventsArray()
     {
         return $this->preparedEventsArray;
     }
     
-    public function getCalendar($size = 'big')
+    public function getCalendar()
     {
         $objCalendarGenerator = $this->getObject('calendargenerator', 'calendarbase');
         
@@ -225,7 +315,7 @@ class calendarinterface extends object
         $objCalendarGenerator->month = $this->month;
         $objCalendarGenerator->events = $this->preparedEventsArray;
 
-        $objCalendarGenerator->size = $size;
+        $objCalendarGenerator->size = $this->calendarSize;
 
         return $objCalendarGenerator->show ();
     }

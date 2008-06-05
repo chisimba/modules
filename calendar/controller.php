@@ -157,47 +157,14 @@ class calendar extends controller
         $this->setVarByRef('month', $month);
         $this->setVarByRef('year', $year);
         
-        $this->objCalendarInterface->month = $month;
-        $this->objCalendarInterface->year = $year;
-        
-        $siteEvents = $this->objCalendarInterface->getSiteEvents($month, $year);
-        $userEvents = $this->objCalendarInterface->getUserEvents($this->userId, $month, $year);
-        
-        if ($this->contextCode == 'root') {
-            $contextEvents = array();
-        } else {
-            $contextEvents = $this->objCalendarInterface->getContextEvents($this->contextCode, $month, $year);
-        }
-        
-        $objManageGroups = $this->getObject('managegroups', 'contextgroups');
-        $userContextsArray = $objManageGroups->userContexts($this->userId, array('contextcode'));
-        
-        
-        $otherEvents = array();
-        if (count($userContextsArray) > 0) {
-            foreach ($userContextsArray as $context)
-            {
-                if ($context['contextcode'] != $this->contextCode) {
-                    $otherContextEvents = $this->objCalendarInterface->getContextEvents($context['contextcode'], $month, $year);
-                    
-                    if (count($otherContextEvents) > 0) {
-                        $otherEvents = array_merge($otherEvents, $otherContextEvents);
-                    }
-                }
-            }
-        }
-        
-        $this->objCalendarInterface->prepareEventsForCalendar($userEvents, 'user');
-        $this->objCalendarInterface->prepareEventsForCalendar($siteEvents, 'site');
-        $this->objCalendarInterface->prepareEventsForCalendar($contextEvents, 'context');
-        $this->objCalendarInterface->prepareEventsForCalendar($otherEvents, 'other');
+        $this->objCalendarInterface->setupCalendar($month, $year);
         
         $eventsCalendar = $this->objCalendarInterface->getCalendar();
         
-        $this->setVarByRef('userEvents', count($userEvents));
-        $this->setVarByRef('contextEvents', count($contextEvents));
-        $this->setVar('otherContextEvents', count($otherEvents));
-        $this->setVarByRef('siteEvents', count($siteEvents));
+        $this->setVarByRef('userEvents', $this->objCalendarInterface->numUserEvents);
+        $this->setVarByRef('contextEvents', $this->objCalendarInterface->numContextEvents);
+        $this->setVarByRef('otherContextEvents', $this->objCalendarInterface->numOtherEvents);
+        $this->setVarByRef('siteEvents', $this->objCalendarInterface->numSiteEvents);
         
         $this->setVarByRef('eventsCalendar', $eventsCalendar);
         $this->setVarByRef('calendarNavigation', $this->objCalendarInterface->getNav());
@@ -274,20 +241,20 @@ class calendar extends controller
                     break;
 
             }
+            
         } else {
             // Insert Single Day event
             switch ($eventFor)
             {
                 case 0: // Save Single User Event
-
                     $event = $this->objCalendar->insertSingleUserEvent($date, $eventtitle, $eventdetails, $eventurl,$this->userId, 0, NULL, $timeFrom, $timeTo);
-			$eventsList = 'user';
+                    $eventsList = 'user';
                     break;
                 case 1: // Save Single Course Event
-                    $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId);
+                    $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, 0, NULL, $timeFrom, $timeTo);
                     break;
                 case 3:  // Save Single Site Event
-                    $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId);
+                    $event = $this->objCalendar->insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, 'root', $this->userId, 0, NULL, $timeFrom, $timeTo);
                     $eventsList = 'site';
                     break;
             }
@@ -306,7 +273,7 @@ class calendar extends controller
 //            $this->objTempAttachments->deleteAttachment($file['id'], $_POST['temporary_id']);
 //        }
 //
-        $this->objAttachments->transfer($_POST['temporary_id'],$event);
+        //$this->objAttachments->transfer($_POST['temporary_id'],$event);
 
         return $this->nextAction(NULL, array('message'=>'eventadded', 'month'=>$monthYear['month'], 'year'=>$monthYear['year'], 'events'=>$eventsList));
     }
@@ -375,111 +342,15 @@ class calendar extends controller
         $eventurl  = $this->getParam('url');
         $multidayevent  = $this->getParam('multidayevent');
         $multiday_event_original = $this->getParam('multiday_event_original');
+        
+        $timeFrom = $this->getParam('timefrom');
+        $timeTo = $this->getParam('timeto');
 
         $returnevents = 'all';
-
-        if ($date2 != NULL) {
-            $this->dateFunctions->smallDateBigDate($date, $date2);
-        }
-
-        // To keep proper track, get the user who made the first entry
-        $originalEvent = $this->objCalendar->getSingle($id);
-        //$userFirstEntry = $originalEvent['userFirstEntry'];
-        //$dateFirstEntry = $originalEvent['dateFirstEntry'];
-
-                // Check if user is able to edit event
-        $this->checkEventEditPermission($originalEvent);
-
-        if ($originalEvent['userorcontext'] == '0') {
-            if ($multiday_event_original != '') {
-
-                if ($multidayevent == 1) { // continue with multi update
-
-                    /*
-                    * The steps taken here are:
-                    * 1) It updates the existing record
-                    * 2) It deletes the child events
-                    * 3) It re-inserts the events
-                    */
-                    $this->objCalendar->updateUserEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $this->userId);
-                    $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
-
-                    $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl,  $this->userId,   NULL, $eventStartId=$id);
-
-
-                } else { // switch to single day
-                    $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
-                    $this->objCalendar->updateUserEvent($id, 0, $date, $eventtitle, $eventdetails, $eventurl, $this->userId);
-                }
-            } else {
-                if ($multidayevent == 0) {
-                    $this->objCalendar->updateUserEvent($id, 0, $date, $eventtitle, $eventdetails, $eventurl, $this->userId);
-                } else {
-
-                    /*
-                    * The steps taken here are:
-                    * 1) It updates the existing record
-                    * 3) Insert Multi Event
-                    */
-                    $this->objCalendar->updateUserEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $this->userId);
-                    $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $userFirstEntry, $this->userId,  $dateFirstEntry, NULL, $eventStartId=$id);
-                }
-            }
-
-
-        /* END IF USER EVENT */
-
-        } else if ($originalEvent['userorcontext'] == '1') {
-
-        /* ELSE IF CONTEXT EVENT */
-
-            $originalContext = $originalEvent['context'];
-
-            if ($multiday_event_original != '') {
-
-                if ($multidayevent == 1) { // continue with multi update
-
-
-                    /*
-                    * The steps taken here are:
-                    * 1) It updates the existing record
-                    * 2) It deletes the child events
-                    * 3) It re-inserts the events
-                    */
-                    $this->objCalendar->updateContextEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
-                    $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
-
-                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext,   $this->userId,   NULL, $eventStartId=$id);
-
-
-                } else { // switch to single day
-                    $this->objCalendar->deleteMultiEventsChild($multiday_event_original);
-                    $this->objCalendar->updateContextEvent($id, 0, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
-                }
-            } else {
-                if ($multidayevent == 0) {
-                    $this->objCalendar->updateContextEvent($id, 0, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
-                } else {
-
-                    /*
-                    * The steps taken here are:
-                    * 1) It updates the existing record
-                    * 3) Insert Multi Event
-                    */
-                    $this->objCalendar->updateContextEvent($id, 1, $date, $eventtitle, $eventdetails, $eventurl, $originalContext, $this->userId);
-                    $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $originalContext,  $this->userId,  NULL, $eventStartId=$id);
-                }
-            }
-
-            if ($originalContext == 'root') {
-                $returnevents = 'site';
-            }
-        }
-
-        $monthYear = $this->dateFunctions->getMonthYear($date);
-
-        return $this->nextAction(NULL, array('message'=>'eventupdated', 'month'=>$monthYear['month'], 'year'=>$monthYear['year'], 'events'=>$returnevents));
-
+        
+        $this->objCalendar->deleteBatch($id);
+        
+        return $this->saveEvent();
 
     }
 

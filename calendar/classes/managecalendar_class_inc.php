@@ -34,19 +34,19 @@ class managecalendar extends object
         $this->objCalendar->module = 'calendar';
     }
 
-	/**
-	* Method to set the permission to edit/delete context events
-	* @param boolean $permission TRUE if user has permission to edit context events - else FALSE
-	*/
-	function setContextPermissions($permission)
-	{
-		$this->objCalendar->editDeletePermission[1] = $permission;
-	}
+    /**
+    * Method to set the permission to edit/delete context events
+    * @param boolean $permission TRUE if user has permission to edit context events - else FALSE
+    */
+    function setContextPermissions($permission)
+    {
+        $this->objCalendar->editDeletePermission[1] = $permission;
+    }
 
-	function setEventsTag($eventsTag)
-	{
-		$this->objCalendar->eventsTag = $eventsTag;
-	}
+    function setEventsTag($eventsTag)
+    {
+        $this->objCalendar->eventsTag = $eventsTag;
+    }
 
     /**
     * Method to get the details of a single event by providing the record Id
@@ -124,7 +124,9 @@ class managecalendar extends object
                 $userFirstEntry, // Use First Entry
                 NULL, // User Last Modified
                 strftime('%Y-%m-%d %H:%M:%S', mktime()), // date first entry
-                strftime('%Y-%m-%d %H:%M:%S', mktime()) // date of last entry
+                strftime('%Y-%m-%d %H:%M:%S', mktime()), // date of last entry
+                $timeFrom,
+                $timeTo
             );
         return $lastInsert;
     }
