@@ -109,6 +109,8 @@ if (empty($records)) {
 	        $deletephrase = $objLanguage->languageText('mod_announcements_deleteicon', 'announcements');
 	        $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'announcements', $deletephrase);
 	        $update = $conf;
+		} else{
+			$update='';
 		}
         //$records == $objUser->userId();
 	

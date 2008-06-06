@@ -85,16 +85,28 @@ class announcementsTools extends object
 	        $blocktitles=$this->objLanguage->languageText('mod_announcements_latestcourse', 'announcements');
 	        $announcementsCourseBlock=$this->objFeatureBox->show($blocktitles, $announcementsBlocks);
         }
-        //do not dispaly if user is not admin or lecturer
-        if($this->checkPermissions()){
-	        $quickpostBlock= $this->objAnnouncements->showQuickPost();
-	        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
-	        $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
-        }
+	        
         if($this->contextCode != "root"){
-        	return  $announcementsBlock.$announcementsCourseBlock.$quickpostBlock.'<br />';
+        	//do not dispaly if user is not admin or lecturer
+	        if($this->checkPermissions()){
+		        $quickpostBlock= $this->objAnnouncements->showQuickPost();
+		        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
+		        $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
+		        return  $announcementsBlock.$announcementsCourseBlock.$quickpostBlock.'<br />';
+	        }else{
+	        	return  $announcementsBlock.$announcementsCourseBlock.'<br />';
+	        }
+        	
         }else{
-        	return  $announcementsBlock.$quickpostBlock.'<br />';
+        	//do not dispaly if user is not admin or lecturer
+	        if($this->checkPermissions()){
+		        $quickpostBlock= $this->objAnnouncements->showQuickPost();
+		        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
+		        $quickpostBlock=$this->objFeatureBox->show($blocktitle, $quickpostBlock);
+		        return  $announcementsBlock.$quickpostBlock.'<br />';
+	        }else{
+	        	return  $announcementsBlock.'<br />';
+	        }
         }
     }
     public function getQuickAddBlock()

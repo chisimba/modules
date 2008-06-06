@@ -79,10 +79,12 @@ class dbAnnouncements extends dbTable
         $this->objContext = $this->getObject('dbcontext','context');
         $this->contextCode=$this->objContext->getContextCode();
 		if($this->contextCode != 'root'){
-			$this->contextCode = 'root';
+			$contextid = 'root';
+		}else{
+			$contextid = $this->contextCode;
 		}
         $cform = new form('announcements', $this->uri(array(
-    	'action' => 'add', 'contextAnnounce'=>$this->contextCode
+    	'action' => 'add', 'contextAnnounce'=>$contextid
         )));
         //start a fieldset
         $cfieldset = $this->getObject('fieldset', 'htmlelements');

@@ -88,7 +88,7 @@ if (empty($announcement)) {
 	//get author details
 	//add author id
     $createdbyid = $announcement['createdby'];
-	//get author full names
+	//get author full namesNotice: Undefined variable: update in /var/www/chisimba/chisimba_framework/app/packages/announcements/templates/content/viewannouncement_tpl.php on line 133
 	$createdby=$this->objUser->fullname($createdbyid);
         
 	
@@ -127,6 +127,8 @@ if (empty($announcement)) {
         $deletephrase = $objLanguage->languageText('mod_announcements_deleteicon', 'announcements');
         $conf = $objDelIcon->getDeleteIconWithConfirm('', $delLink, 'announcements', $deletephrase);
         $update = $conf;
+	}else{
+		$update='';
 	}
     //$records == $objUser->userId();
 	
