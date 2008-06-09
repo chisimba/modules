@@ -39,7 +39,12 @@ if ($mode == 'confirm' || $mode == 'editpodcast') {
     $table->endRow();
     
     $table->startRow();
-        $title = new textinput('title', $podcast['title']);
+        if ($mode == 'confirm') {
+            $title = new textinput('title', $podcast['metatitle']);
+        } else {
+            $title = new textinput('title', $podcast['title']);
+        }
+        
         $title->size = 80;
         $label = new label($this->objLanguage->languageText('word_title', 'system').':', 'input_title');
         $table->addCell($label->show());

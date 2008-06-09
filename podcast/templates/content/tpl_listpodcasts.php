@@ -130,6 +130,14 @@ echo '<p>';
         $HomeLink->link = $this->objLanguage->languageText('mod_podcast_podcasthome', 'podcast');
         
         echo $HomeLink->show().' / ';
+    } else {
+        
+        $HomeLink = new link($this->uri(NULL));
+        $HomeLink->link = $this->objLanguage->languageText('mod_podcast_exitpodcastreturnsite', 'podcast', 'Exit Podcast and Return to Site');
+        
+        echo $HomeLink->show().' / ';
+        
+        
     }
     
     $link = new link($this->uri(array('action'=>'addpodcast')));

@@ -233,7 +233,8 @@ class dbpodcast extends dbTable
      */
     public function getPodcast($id)
     {
-         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
+         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path, tbl_files_metadata_media.title as metatitle
+        FROM tbl_podcast 
         LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
         LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.id = \''.$id.'\' LIMIT 1';
