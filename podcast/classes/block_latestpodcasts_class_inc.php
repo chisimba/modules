@@ -53,24 +53,12 @@ class block_latestpodcasts extends object
                 $str .= '<br /><span class="minute">by '.htmlentities($this->objUser->fullName($podcast['creatorid'])).'</span>';
                 $str .= '</p>';
            }
-           /*
-           $str = '<strong>'.htmlentities($podcast['title']).'</strong>';
-           $str .= '<br />by '.htmlentities($this->objUser->fullName($podcast['creatorid']));
-           $str .= '<br />'.htmlentities($podcast['description']);
            
-           $link = new link($this->uri(NULL, 'podcast'));
-           $link->link = 'Podcast Home';
+           $podcastLink = new link ($this->uri(NULL, 'podcast'));
+           $podcastLink->link = $this->objLanguage->languageText('mod_podcast_podcasts', 'podcast', 'Podcasts');
            
-           $this->objPop=&new windowpop;
-            $this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
-            $this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
-            $this->objPop->set('width','280');
-            $this->objPop->set('height','120');
-            //leave the rest at default values
-            $this->objPop->putJs(); // you only need to do this once per page
+           $str .= '<br /><p>'.$podcastLink->show().'</p>';
            
-           $str .= '<p>'.$this->objPop->show().' / '.$link->show().'</p>';
-           */
            return $str;
         }
     }
