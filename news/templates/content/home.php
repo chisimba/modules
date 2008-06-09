@@ -78,7 +78,7 @@ $right = '';
 
 $objBlocks = $this->getObject('blocks', 'blocks');
 $right .= $objBlocks->showBlock('lastten', 'blog', NULL, 20, FALSE, FALSE);
-$right .= $objBlocks->showBlock('latestpodcast', 'podcast', NULL, 20, FALSE, FALSE);
+$right .= $objBlocks->showBlock('latestpodcasts', 'podcast', NULL, 20, FALSE, FALSE);
 $right .= $this->objNewsStories->getFeedLinks();
 
 
