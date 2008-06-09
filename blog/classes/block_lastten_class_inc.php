@@ -100,7 +100,12 @@ class block_lastten extends object
      */
     public function show() 
     {
-        return $this->display;
+        $this->loadClass('link', 'htmlelements');
+        
+        $blogLink = new link ($this->uri(NULL, 'blog'));
+        $blogLink->link = $this->objLanguage->languageText('mod_blog_blogs', 'blog', 'Blogs');
+        
+        return $this->display.'<p>'.$blogLink->show().'</p>';
     }
 }
 ?>
