@@ -3544,49 +3544,51 @@ class cmsutils extends object
 				$table->border = "0";
 				$table->attributes = "align ='center'";
 
+
+				//Only showing the Sub Menu Link if the default menu exists
+				if ($this->_objPageMenu->hasDefaultMenu()){
+
+						if ($isSub != '1'){
 				$table->startRow();
 				$table->addCell('<br/>');
 				$table->endRow();
 
-				if ($isSub != '1'){
-						$h3->str = 'Edit Sub Menu\'s';
-						$h3->type = 3;
+								$h3->str = 'Edit Sub Menu\'s';
+								$h3->type = 3;
 
-						$table->startRow();
-						$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
-						$table->endRow();
-
+								$table->startRow();
+								$table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+								$table->endRow();
 
 
-						$table_list = new htmlTable();
-						$table_list->width = "300px";
-						$table_list->cellspacing = "0";
-						$table_list->cellpadding = "0";
-						$table_list->border = "0";
-						$table_list->attributes = "align ='center'";
 
-						//Displaying The List Of Menus
-						$menuRows = $this->_objPageMenu->getAll();
-						if (count($menuRows) > 0){
-								foreach ($menuRows as $menu){
-										if ($menu['menukey'] != 'default'){
-												$editLink = $this->getEditLink(array('action' => 'editmenu', 'menutype' => 'page', 'sub' => '1', 'id' => $menu['id']), 'Edit Menu Item');	
-												$deleteLink = $this->getDeleteLink($menu['id'], array('action' => 'deletemenu', 'menutype' => 'page', 'id' => $menu['id']), 'Edit Menu Item');	
-												$table_list->startRow();
-												$table_list->addCell($menu['menukey'], 150);
-												$table_list->addCell($editLink.' '.$deleteLink, 150);
-												$table_list->endRow();
+								$table_list = new htmlTable();
+								$table_list->width = "300px";
+								$table_list->cellspacing = "0";
+								$table_list->cellpadding = "0";
+								$table_list->border = "0";
+								$table_list->attributes = "align ='center'";
+
+								//Displaying The List Of Menus
+								$menuRows = $this->_objPageMenu->getAll();
+								if (count($menuRows) > 0){
+										foreach ($menuRows as $menu){
+												if ($menu['menukey'] != 'default'){
+														$editLink = $this->getEditLink(array('action' => 'editmenu', 'menutype' => 'page', 'sub' => '1', 'id' => $menu['id']), 'Edit Menu Item');	
+														$deleteLink = $this->getDeleteLink($menu['id'], array('action' => 'deletemenu', 'menutype' => 'page', 'id' => $menu['id']), 'Edit Menu Item');	
+														$table_list->startRow();
+														$table_list->addCell($menu['menukey'], 150);
+														$table_list->addCell($editLink.' '.$deleteLink, 150);
+														$table_list->endRow();
+												}
 										}
+
+										$table->startRow();
+										$table->addCell($table_list->show(), 150);
+										$table->endRow();
+
 								}
 
-							$table->startRow();
-							$table->addCell($table_list->show(), 150);
-							$table->endRow();
-
-						}
-
-						//Only showing the Sub Menu Link if the default menu exists
-						if ($this->_objPageMenu->hasDefaultMenu()){
 
 								$subMenuLink = '<a href="?module=cmsadmin&action=editmenu&menutype=page&sub=1"><b>Add a Sub Menu</b></a>';
 
