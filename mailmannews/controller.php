@@ -96,7 +96,7 @@ class mailmannews extends controller
             	$email = $this->getParam('email');
             	if($this->objMailmanSignup->subscribeToMailman($email) === TRUE)
             	{
-            		$this->nextAction('',array(),'_default');
+            		$this->nextAction();
             		//return 'welcome_tpl.php';
             	}
             	else {
