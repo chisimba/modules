@@ -288,7 +288,6 @@ class cmstree extends object
 		        $menu = $this->getTree('cmsadmin', $includeRoot, FALSE);  
 		    }
 			
-			var_dump($menu);
 			$this->loadClass('htmldropdown', 'tree');
 			
 			$htmldropdown = new htmldropdown($menu, array('inputName'=>'parent', 'selected'=>$defaultSelected));
