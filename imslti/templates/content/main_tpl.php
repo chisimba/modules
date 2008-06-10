@@ -1,7 +1,7 @@
 <h1><?php echo $title ?></h1>
 <?php
 $url1="https://pilotfish.ucompass.com/lti.cgi?id=ucompass@gmail.com/MichaelSakai/assessment.xml";
-$secret ="secret";
+$secret ="yourkiddingright";
 /*$myXml = '<?xml version="1.0" encoding="UTF-8"?>
 <launchRequest>
   <launchData>
