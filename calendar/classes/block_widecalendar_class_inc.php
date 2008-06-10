@@ -6,7 +6,9 @@ class block_widecalendar extends object
 {
     public function init()
     {
-        $this->title = 'Calendar';
+        $this->objLanguage = $this->getObject('language', 'language');
+        
+        $this->title = $this->objLanguage->languageText('word_calendar', 'system', 'Calendar');
         $this->objCalendarInterface = $this->getObject('calendarinterface');
     }
     
@@ -20,7 +22,19 @@ class block_widecalendar extends object
         
         $eventsCalendar = $this->objCalendarInterface->getCalendar();
         
-        return $this->objCalendarInterface->getNav().$this->objCalendarInterface->getCalendar();
+        $str = $this->objCalendarInterface->getNav().$this->objCalendarInterface->getCalendar();
+        
+        $this->loadClass('link', 'htmlelements');
+        
+        $calendarLink = new link ($this->uri(NULL, 'calendar'));
+        $calendarLink->link = $this->title ;
+        
+        $addEvent = new link ($this->uri(array('action'=>'add'), 'calendar'));
+        $addEvent->link = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase', 'Add an Event');
+        
+        $str .= '<p>'.$calendarLink->show().' / '.$addEvent->show().'</p>';
+        
+        return $str;
     }
 }
 
