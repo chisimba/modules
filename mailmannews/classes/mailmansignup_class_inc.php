@@ -88,7 +88,7 @@ class mailmansignup extends object
 			return $subform;
 		} else {
 			$objFeatureBox = $this->getObject('featurebox', 'navigation');
-			$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_mailmannews_subscribe", "mailmannews") , $this->objLanguage->languageText("mod_mailmannews_subinstructions", "mailmannews") . "<br />" . $subform);
+			$ret = $objFeatureBox->show(""/*$this->objLanguage->languageText("mod_mailmannews_subscribe", "mailmannews")*/ , $this->objLanguage->languageText("mod_mailmannews_subinstructions", "mailmannews") . "<br />" . $subform);
 			return $ret;
 		}
 	}
