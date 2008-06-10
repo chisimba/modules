@@ -88,7 +88,7 @@ class block_subscribe extends object
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objMailmanSignup = $this->getObject('mailmansignup');
         $this->display = $this->objMailmanSignup->subsBox();
-        $this->title = "" //$this->objLanguage->languageText("mod_mailmannews_block_subscribe", "mailmannews");
+        $this->title = ""; //$this->objLanguage->languageText("mod_mailmannews_block_subscribe", "mailmannews");
     }
     /**
      * Standard block show method.
