@@ -114,6 +114,7 @@ class ltiwrapper extends object
     */
     public function init()
     {
+        $this->objLanguage = $this->getObject('language', 'language');
 		$this->height = "1200";
 		$this->width = "100%";
 		$this->frameborder = 0;
@@ -136,16 +137,24 @@ class ltiwrapper extends object
     */
     public function show($uri)
     {
-    	$this->loadClass("iframe", "htmlelements");
-    	$iframe = new iframe();
-    	$iframe->width=$this->width;
-    	$iframe->height=$this->height;
-    	$iframe->frameborder = $this->frameborder;
-    	$iframe->marginheight = $this->marginheight;
-    	$iframe->marginwidth = $this->marginwidth;
-    	$iframe->src = $uri;
-    	
-    	return $iframe->show();
+        switch ($uri)
+        {
+            case "504":
+                return "<span class=\"error\">" 
+                  . $this->objLanguage->languageText("mod_imslti_error_urlnotfound", "imslti")
+                  . "</span>";
+                break;
+            default:
+            	$this->loadClass("iframe", "htmlelements");
+            	$iframe = new iframe();
+            	$iframe->width=$this->width;
+            	$iframe->height=$this->height;
+            	$iframe->frameborder = $this->frameborder;
+            	$iframe->marginheight = $this->marginheight;
+            	$iframe->marginwidth = $this->marginwidth;
+            	$iframe->src = $uri;
+            	return $iframe->show();
+        }
     }
 
 

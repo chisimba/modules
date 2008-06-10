@@ -139,7 +139,13 @@ class ltifetcher extends object
     */
     private function makeValidXml($strXml)
     {
-    	return "<?xml version='1.0'?><item>$strXml</item>";
+        $verifyKey = 'launchUrl';
+        if (strpos($strXml, $verifyKey) !=0) {
+        	return "<?xml version='1.0'?><item>$strXml</item>";
+        } else {
+        	return "<?xml version='1.0'?><item><launchUrl>504</launchUrl></item>";
+        }
+    	
     }
     
     /**
