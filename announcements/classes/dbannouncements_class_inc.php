@@ -45,281 +45,201 @@ class dbAnnouncements extends dbTable
     public function init() 
     {
         parent::init('tbl_announcements');
-        $this->objContext = $this->getObject('dbcontext','context');
-        $this->contextCode=$this->objContext->getContextCode();
-    }
-    /**
-     * Return all records in the tbl_announcements.
-     * 
-     * @param $userId is the id taken from the tbl_user
-     */
-    public function listAll($contextid,$start) 
-    {       
-        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,$start ");
-    return $userrec;
-    }
-    
-    public function listAllContext($contextid) 
-    {       
-        $userrec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC");
-    return $userrec;
-    }
-    
-    public function getLastRow($contextid) 
-    {       
-        $rec = $this->getAll("WHERE contextid = '$contextid' ORDER BY createdon DESC LIMIT 0,1 ");
-        
-    return $rec;
-    }
-    
-     public function showQuickPost($contextPuid = '', $linkAll = FALSE)
-    {
-        $this->objLanguage = $this->newObject('language', 'language');
-        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $this->objContext = $this->getObject('dbcontext','context');
-        $this->contextCode=$this->objContext->getContextCode();
-		if($this->contextCode != 'root'){
-			$contextid = 'root';
-		}else{
-			$contextid = $this->contextCode;
-		}
-        $cform = new form('announcements', $this->uri(array(
-    	'action' => 'add', 'contextAnnounce'=>$contextid
-        )));
-        //start a fieldset
-        $cfieldset = $this->getObject('fieldset', 'htmlelements');
-        $ct = $this->newObject('htmltable', 'htmlelements');
-        $ct->cellpadding = 5;
-        //value textfield
-        $ct->startRow();
-        $ctvlabel = new label($this->objLanguage->languageText('mod_announcements_title', 'announcements') . ':', 'input_cvalue');
-        $ct->addCell($ctvlabel->show());
-        $ct->EndRow();
-        $ct->startRow();
-        $ctv = new textinput('title',NULL,35,29);
-        $ct->addCell($ctv->show());
-        $ct->endRow();
-        //value textfield
-        $ct->startRow();
-        $ctvlabel = new label($this->objLanguage->languageText('mod_announcements_message', 'announcements') . ':', 'input_cvalue');
-        $ct->addCell($ctvlabel->show());
-        $ct->endRow();
-        
-        $ct->startRow();
-        $ctv = new textarea('message',NULL,5,25);
-        $ct->addCell($ctv->show());
-        $ct->endRow();
-        
-        
-        
-        //end off the form and add the button
-        $this->objconvButton = new button($this->objLanguage->languageText('mod_announcements_add', 'announcements'));
-        $this->objconvButton->setValue($this->objLanguage->languageText('mod_announcements_add', 'announcements'));
-        $this->objconvButton->setToSubmit();
-        $cfieldset->addContent($ct->show());
-        $cform->addToForm($cfieldset->show());
-        $cform->addToForm($this->objconvButton->show());
-        $str = $cform->show();
-
-        /*if($dispType == 'nobox'){
-            return $str;
-        }*/
-        $blocktitle=$this->objLanguage->languageText('mod_announcements_quickadd', 'announcements');
-        
-        return $str; // $this->objFeatureBox->show($blocktitle, $str);
-    }
-    /**
-     * Return a single record in the tbl_announcements.
-     *
-     * @param $id is the id taken from the tbl_announcements
-     */
-    public function listSingle($id) 
-    {
-        $onerec = $this->getRow('id', $id);
-        return $onerec;
-    }
-    /**
-     * Insert a record in the tbl_announcements.
-     *
-     * @param $userId         is the id taken from the tbl_user
-     * @param $title      is the name taken from the form
-     * @param $message       is the surname taken from the form
-     * @param $createdBy   is the id taken from the tbl_user
-     * @param $createdOn     take from date function now
-     * @param $courseId		 is the id taken from the form from tbl_courses
-     
-     *                           
-     *                           Also checks if text inputs are empty and returns the add a record template
-     */
-    public function insertRecord($title, $message, $createdon, $createdby,$contextid) 
-    {
-        
         $this->objUser = $this->getObject('user', 'security');
-        $arrayOfRecords = array(
-            'createdBy' => $this->objUser->userId() ,
-            'title' => $title,
-            'message' => $message,
-            'createdOn' => $this->now(),
-		'contextid' => $contextid,
+    }
+    
+    function addAnnouncement($title, $message, $type='site', $contexts=array())
+    {
+        $messageId = $this->insert(array(
+                'title' => $title,
+                'message' => $message,
+                'title' => $title,
+                'createdon' => $this->now(),
+                'createdby' => $this->objUser->userId(),
+                'contextid' => $type,
+                
+            ));
+        
+        if ($type == 'site') {
             
-        );
-        
-        if (empty($title) && empty($message)) {
-            return "add_tpl.php";
+            if ($messageId != FALSE) {
+                // Add to Search
+                $objIndexData = $this->getObject('indexdata', 'search');
+                
+                // Prep Data
+                $docId = 'announcement_entry_'.$messageId;
+                $docDate = $this->now();
+                $url = $this->uri(array('action'=>'view', 'id'=>$messageId), 'announcements');
+                $title = $title;
+                $contents = $title.': '.$message;
+                $teaser = $message;
+                $module = 'announcements';
+                $userId = $this->objUser->userId();
+                $context = 'root';
+                
+                // Add to Index
+                $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+            }
+            
         } else {
-            $ins = $this->insert($arrayOfRecords, 'tbl_announcements');
-
-            // Add to Search
-	        $objIndexData = $this->getObject('indexdata', 'search');
-	        
-	        // Prep Data
-	        $docId = 'announcement_entry_'.$ins;
-	        $docDate = $arrayOfRecords['createdOn'];
-	        $url = $this->uri(array('action'=>'', 'id'=>$ins), 'announcements');
-	        $title = $title;
-	        $contents = $title.': '.$message;
-	        $teaser = $message;
-	        $module = 'announcements';
-	        $userId = $arrayOfRecords['createdBy'];
-	        $context = $arrayOfRecords['contextid'];
-	        
-	        // Add to Index
-	        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
-	        
-	        return $ins;
-        }
-	}
-    /**
-     * Deletes a record from the tbl_announcements
-     *
-     * @param $id is the generated id for a single record
-     */
-    public function deleteRec($id) 
-    {
-        $this->delete('id', $id, 'tbl_announcements');
-        $objIndexData = $this->getObject('indexdata', 'search');
-        $objIndexData->removeIndex('announcement_entry_'.$id);
-    }
-    /**
-     * Updates a record to the tbl_announcements
-     *
-     * @param $id             is the generated id for a single record
-     * @param $arrayOfRecords is an array of all the information added in the form
-     *                           
-     */
-    public function updateRec($id, $arrayOfRecords) 
-    {
-        $this->update('id', $id, $arrayOfRecords, 'tbl_announcements');
-        
-        $announceRow = $this->getRow('id', $id);
-        // Add to Search
-        $objIndexData = $this->getObject('indexdata', 'search');
-        
-        // Prep Data
-        $docId = 'announcement_entry_'.$id;
-        $docDate = $announceRow['createdon'];
-        $url = $this->uri(array('action'=>'', 'id'=>$id), 'announcements');
-        $title = $arrayOfRecords['title'];
-        $contents = $arrayOfRecords['title'].': '.$arrayOfRecords['message'];
-        $teaser = $arrayOfRecords['message'];
-        $module = 'announcements';
-        $userId = $announceRow['createdby'];
-        $context = $announceRow['contextid'];
-        
-        // Add to Index
-        $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
-	}
-	
-	 public function showLatestSite($linkAll = FALSE)
-    {
-        $this->objLanguage = $this->newObject('language', 'language');
-        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $this->objContext = $this->getObject('dbcontext','context');
-        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
-        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
-        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
-        
-        $list = $this->getLastRow('root');
-        $this->loadClass('link', 'htmlelements');
-        $str = '';
-        if(!empty($list)){
-            foreach($list as $item){
-
-                $lncat = $item['title'];
-                $objLink = new link($this->uri(array('action' => 'viewannouncement', 'contextAnnounce' => 'root', 'id'=>$item['id'])));
-                $objLink->link = $item['title'];
-                $objLink->style = "color: #0000BB;";
-                $lncat = $objLink->show();
+            
+            if ($messageId != FALSE) {
+                // Add to Search
+                $objIndexData = $this->getObject('indexdata', 'search');
                 
-                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
+                // Prep Data
+                $docId = 'announcement_entry_'.$messageId;
+                $docDate = $this->now();
+                $url = $this->uri(array('action'=>'view', 'id'=>$messageId), 'announcements');
+                $title = $title;
+                $contents = $title.': '.$message;
+                $teaser = $message;
+                $module = 'announcements';
+                $userId = $this->objUser->userId();
                 
-                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
+                foreach ($contexts as $context)
+                {
+                    $this->addMessageToContext($messageId, $context);
+                    
+                    // Add to Index
+                    $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+                }
                 
-                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
             }
-        }else{
-        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
-        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
         }
-
-        $link = new link($this->uri(array(
-            'action' => 'archive', 'contextAnnounce'=>'root'
-        )));
-        $link->link = $this->objLanguage->languageText('mod_announcements_archivesite', 'announcements');
-        $archive = $link->show();
-        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
-       /* if($dispType == 'nobox'){
-            return $str;
-        }*/
         
-        return $str; //$this->objFeatureBox->show($blocktitle, $str);
+        return $messageId;
     }
     
-    public function showLatestCourse($contextid)
+    private function addMessageToContext($messageId, $context)
     {
-        $this->objLanguage = $this->newObject('language', 'language');
-        $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-        $this->objContext = $this->getObject('dbcontext','context');
-        $this->objContextUsers = $this->getObject('managegroups','contextgroups');
-        $this->trimstrObj =& $this->getObject('trimstr', 'strings');
-        $blocktitle = $this->objLanguage->languageText('mod_announcements_latest','announcements');
+        parent::init('tbl_announcements_context');
         
-        $list = $this->getLastRow($contextid);
-        $this->loadClass('link', 'htmlelements');
-        $str = '';
-        if(!empty($list)){
-            foreach($list as $item){
-
-                $lncat = $item['title'];
-                $objLink = new link($this->uri(array('action' => 'viewannouncement', 'contextAnnounce' => $contextid, 'id'=>$item['id'])));
-                $objLink->link = $item['title'];
-                $objLink->style = "color: #0000BB;";
-                $lncat = $objLink->show();
-                
-                $str .= '<p style="margin: 0px;">'.$lncat.'</p>';
-                
-                $announce = $this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($item['message']))), 80);
-                
-                $str .= '</br>'.'<p style="margin: 0px;">'.$announce.'</p>';
-            }
-        }else{
-        	$noannouncements = $this->objLanguage->languageText('mod_announcements_noannounce','announcements');
-        	$str .= '<p>'.'<i>'.$noannouncements.'</i>'.'</p>';
-        }
-
-        $link = new link($this->uri(array(
-            'action' => 'archive', 'contextAnnounce'=>$contextid
-        )));
-        $link->link = $this->objLanguage->languageText('mod_announcements_archivecourse', 'announcements');
-        $archive = $link->show();
-        $str .= '<br><p style="margin: 0px;">'.$archive.'</p>';
-       /* if($dispType == 'nobox'){
-            return $str;
-        }*/
+        $result = $this->insert(array('announcementid'=>$messageId, 'contextid'=>$context));
         
-       return $str; //$this->objFeatureBox->show($blocktitle, $str);
+        parent::init('tbl_announcements');
+        
+        return $result;
     }
     
+    public function getMessage($id)
+    {
+        return $this->getRow('id', $id);
+    }
+    
+    public function getAllAnnouncements($contexts, $limit=NULL, $page=NULL)
+    {
+        $where = '';
+        
+        if (count($contexts) > 0) {
+            foreach($contexts as $context)
+            {
+                $where .= "tbl_announcements_context.contextid = '{$context}' OR ";
+            }
+        }
+
+        
+        $sql = "SELECT DISTINCT tbl_announcements.id, title, createdon, tbl_announcements.contextid, message, createdby FROM tbl_announcements
+        LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
+        WHERE ({$where} tbl_announcements.contextid = 'site')
+        ORDER BY createdon DESC ";
+        
+        if ($limit != NULL && $page != NULL) {
+            
+            $page = $page * $limit;
+            
+            $sql .= " LIMIT {$page}, {$limit}";
+        }
+        
+        //echo $sql;
+        
+        return $this->getArray($sql);
+    }
+    
+    public function getSiteAnnouncements($limit=NULL, $page=NULL)
+    {
+        
+        $sql = "SELECT DISTINCT tbl_announcements.id, title, createdon, tbl_announcements.contextid, message, createdby FROM tbl_announcements
+        WHERE (contextid = 'site')
+        ORDER BY createdon DESC ";
+        
+        if ($limit != NULL && $page != NULL) {
+            
+            $page = $page * $limit;
+            
+            $sql .= " LIMIT {$page}, {$limit}";
+        }
+        
+        //echo $sql;
+        
+        return $this->getArray($sql);
+    }
+    
+    public function getContextAnnouncements($context, $limit=NULL, $page=NULL)
+    {
+        
+        $sql = "SELECT DISTINCT tbl_announcements.id, title, createdon, tbl_announcements.contextid, message, createdby FROM tbl_announcements
+        LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
+        WHERE (tbl_announcements_context.contextid = '{$context}')
+        ORDER BY createdon DESC ";
+        
+        if ($limit != NULL && $page != NULL) {
+            
+            $page = $page * $limit;
+            
+            $sql .= " LIMIT {$page}, {$limit}";
+        }
+        
+        //echo $sql;
+        
+        return $this->getArray($sql);
+    }
+    
+    public function getNumAnnouncements($contexts)
+    {
+        $where = '';
+        
+        if (count($contexts) > 0) {
+            foreach($contexts as $context)
+            {
+                $where .= "tbl_announcements_context.contextid = '{$context}' OR ";
+            }
+        }
+
+        
+        $sql = "SELECT count( DISTINCT tbl_announcements.id ) AS recordcount FROM tbl_announcements
+        LEFT JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
+        WHERE ({$where} tbl_announcements.contextid = 'site')
+        ORDER BY createdon DESC ";
+        
+        $result = $this->getArray($sql);
+        
+        return $result[0]['recordcount'];
+    }
+    
+    public function getNumContextAnnouncements($context)
+    {
+        
+        $sql = "SELECT count( DISTINCT tbl_announcements.id ) AS recordcount FROM tbl_announcements
+        INNER JOIN tbl_announcements_context ON ( tbl_announcements_context.announcementid = tbl_announcements.id )
+        WHERE (tbl_announcements_context.contextid = '{$context}')
+        ORDER BY createdon DESC ";
+        
+        $result = $this->getArray($sql);
+        
+        return $result[0]['recordcount'];
+    }
+    
+    public function getMessageContexts($messageId)
+    {
+        parent::init('tbl_announcements_context');
+        
+        $result = $this->getAll(" WHERE announcementid = '{$messageId}' ");
+        
+        parent::init('tbl_announcements');
+        
+        return $result;
+    }
 
 }
 ?>

@@ -101,7 +101,29 @@ class block_latestannouncement extends object
      */
     public function show() 
     {
-        return $this->objBlocks->showLatestSite();
+        $this->loadClass('link', 'htmlelements');
+        $str = '';
+        
+        $announcements = $this->objBlocks->getSiteAnnouncements(0, 5);
+        
+        if (count($announcements) > 0) {
+            $str .= '<ul>';
+            
+            foreach ($announcements as $announcement)
+            {
+                $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
+                $link->link = $announcement['title'];
+                
+                $str .= '<li>'.$link->show().'</li>';
+            }
+            
+            $str .= '</ul>';
+        }
+        
+        $announcementLink = new link ($this->uri(NULL, 'announcements'));
+        $announcementLink->link = 'Announcements';
+        
+        return $str.'<p>'.$announcementLink->show().'</p>';
     }
 }
 ?>

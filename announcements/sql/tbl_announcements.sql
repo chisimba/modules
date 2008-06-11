@@ -24,8 +24,7 @@ $fields = array(
 		'type' => 'text'
 	),
 	'createdon' => array(
-		'type' => 'text',
-		'length' => 32,
+		'type' => 'timestamp',
 	),
 	'createdby' => array(
 		'type' => 'integer',

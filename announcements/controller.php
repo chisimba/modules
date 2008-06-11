@@ -1,278 +1,259 @@
 <?php
-/**
- * Short description for file
- * 
- * Long description (if any) ...
- * 
- * PHP version unknow
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
- * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
- 
-// security check - must be included in all scripts
-/**
- * Description for $GLOBALS
- * @global unknown $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-// security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']){
-    die("You cannot view this page directly");
-}
-// end security check
 
 /**
- *
- * Model controller for the table tbl_phonebook
- * @authors:Joel Kimilu.
- * @copyright 2007 University of the Western Cape
- */
+*
+*
+*/
 class announcements extends controller
 {
-    /**
-     * Description for public
-     * @var    unknown
-     * @access public 
-     */
-    public $objLanguage;
-
-    /**
-     * Description for public
-     * @var    unknown
-     * @access public 
-     */
-    public $objConfig;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objDBAnnouncements;
-
-    /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objUser;
- /**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objContextUsers;
-
-/**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objSendMail;
 
 
-/**
-     * Description for public
-     * @var    object
-     * @access public
-     */
-    public $objDate;
+    private $userContext;
     
-    public $objAnnouncementTools;
-    public $contextid;
-
-    /**
-     * Constructor method to instantiate objects and get variables
-     */
-    public function init() 
-    {
-        try {
-            $this->objAnnouncementsTools = $this->getObject('announcementsTools','announcements');
-            $this->objUser = $this->getObject('user', 'security');
-	    	$this->objContext = $this->getObject('dbcontext','context');
- 	   	 	$this->objContextUsers = $this->getObject('managegroups','contextgroups');
- 	    	$this->objSendMail = $this->getObject('email','mail');
-            $this->objDbAnnouncements = $this->getObject('dbAnnouncements', 'announcements');
-	    	$this->objDate = $this->newObject('dateandtime', 'utilities');
-            $this->objLanguage = $this->getObject('language', 'language');
-            $this->objConfig = $this->getObject('altconfig', 'config');
-            $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
-	  		$this->isAdmin = $this->objUser->isAdmin();
-	  		$isAdmin = $this->isAdmin;
-        }
-        catch(customException $e) {
-            echo customException::cleanUp();
-            die();
-        }
-    } //end of init function
+    private $lecturerContext;
     
     /**
-     * Method to process actions to be taken
-     *
-     * @param string $action String indicating action to be taken
-     */
-    public function dispatch($action = Null) 
+    * Constructor for the Module
+    */
+    public function init()
     {
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objContext = $this->getObject('dbcontext','context');
+        $this->objDate = $this->newObject('dateandtime', 'utilities');
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         
-	//get context so that only messages for this context are displayed
-	$isInContext=$this->objContext->isInContext();
-	if($isInContext)
-	{
-		$this->contextCode=$this->objContext->getContextCode();
-		//$this->contextid=$this->objContext->getField('id',$this->contextCode);
-		$contextTitle = $this->objContext->getTitle();
-	}
-	else{
-		$this->contextid=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
-		$this->contextCode=$this->objLanguage->languageText('mod_announcements_rootword', 'announcements');
-		$contextTitle = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements');
-	}
-	
-	$contextusers=$this->objContextUsers->contextUsers('Students', $this->contextCode);
-	
-	$contextid=$this->contextCode;
-	$this->setVarByRef("contextCode",$this->contextCode);
-	$this->setVarByRef("contextTitle",$contextTitle);
-		
-	switch ($action) {
-            default:
-            case 'default':
-				$allCourse = '';
-				
-	            if($contextid != $this->objLanguage->languageText('mod_announcements_rootword', 'announcements')){
-	            	$allCourse = $this->objDbAnnouncements->listAllContext($contextid);
-	            }
-				
-				$allSite = $this->objDbAnnouncements->listAllContext("root");
-				
-				$this->setVarByRef('allSite', $allSite);
-	            $this->setVarByRef('allCourse', $allCourse);
-	            return 'view_tpl.php';
-            break;
+        $this->objAnnouncements = $this->getObject('dbannouncements');
+        
+        $this->userId = $this->objUser->userId();
+        
+        $objUserContext = $this->getObject('usercontext', 'context');
+        $this->userContext = $objUserContext->getUserContext($this->userId);
+        $this->lecturerContext = $objUserContext->getContextWhereLecturer($this->userId);
+        
+        $this->isAdmin = $this->objUser->isAdmin();
+        
+        $this->itemsPerPage = 10;
+        
+        $this->setVar('lecturerContext', $this->lecturerContext);
+        $this->setVar('isAdmin', $this->isAdmin);
+    }
+
+
+
+    /**
+    * Standard Dispatch Function for Controller
+    *
+    * @access public
+    * @param string $action Action being run
+    * @return string Filename of template to be displayed
+    */
+    public function dispatch($action)
+    {
+        /*
+        * Convert the action into a method (alternative to
+        * using case selections)
+        */
+        $method = $this->getMethod($action);
+        
+        $this->setLayoutTemplate('announcements_layout_tpl.php');
+        
+        /*
+        * Return the template determined by the method resulting
+        * from action
+        */
+        return $this->$method();
+    }
+
+
+
+    /**
+    *
+    * Method to convert the action parameter into the name of
+    * a method of this class.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return string the name of the method
+    *
+    */
+    function getMethod(& $action)
+    {
+        if ($this->validAction($action)) {
+            return '__'.$action;
+        } else {
+            return '__home';
+        }
+    }
+
+    /**
+    *
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    *
+    */
+    function validAction(& $action)
+    {
+        if (method_exists($this, '__'.$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+
+    // Beginning of Functions Relating to Actions in the Controller //
+
+
+
+    /**
+    *
+    *
+    */
+    private function __home()
+    {
+        $numAnnouncements = $this->objAnnouncements->getNumAnnouncements($this->userContext);
+        
+        $this->setVarByRef('numAnnouncements', $numAnnouncements);
+        return 'home_tpl.php';
+    }
+    
+    private function __add()
+    {
+        $this->setVar('mode', 'add');
+        
+        return 'addedit_tpl.php';
+    }
+    
+    
+    private function __save()
+    {
+        $title = $this->getParam('title');
+        $message = $this->getParam('message');
+        $email = $this->getParam('email');
+        $mode = $this->getParam('mode');
+        $recipienttarget = $this->getParam('recipienttarget');
+        $contexts = $this->getParam('contexts');
+        
+        if ($mode == 'add' && ($title == '' || strip_tags($message) == '')) {
+            $this->setVar('mode', 'fixup');
+            $this->setVar('lecturerContext', $this->lecturerContext);
+            $this->setVar('isAdmin', $this->isAdmin);
+            return 'addedit_tpl.php';
+        } else if ($mode == 'add') {
             
-            case 'viewannouncement':
-            	$id=$this->getParam('id',null);
-            	$contextAnnounce = $this->getParam('contextAnnounce');
-            	$announcement = $this->objDbAnnouncements->listSingle($id);
-            	
-            	$this->setVarByRef('contextAnnounce', $contextAnnounce);
-            	$this->setVarByRef('announcement', $announcement);
-	            
-	            return 'viewannouncement_tpl.php';
-            	break;
-	            // Case to add an entry
-		    case 'archive':
-			    //set start to 5
-			    //@param integer $start to indicate start of Sql Limit
-			    $contextid = $this->getParam('contextAnnounce');
-			    $start=5;
-			    $records = $this->objDbAnnouncements->listAll($contextid,$start);
-		        $this->setVarByRef('records', $records);	
-		    	return 'archive_tpl.php';	
-		    	break;
-	        case 'add';
-	            $userId = $this->objUser->userId();
-	            $title = htmlentities($this->getParam('title') , ENT_QUOTES);
-	            $message = htmlentities($this->getParam('message') , ENT_QUOTES);
-	            $createdon = htmlentities($this->getParam('createdon') , ENT_QUOTES);
-	            $contextid = $this->getParam('contextAnnounce');
-	            $createdby = $this->objUser->userId();
-	            //$contextid=$contextid;
-	       	    $this->objDbAnnouncements->insertRecord($title, $message, $createdon, $createdby, $contextid);
-			    //prepare $RecipientList to send mails
-			    $subject=$title;
-		 
-			    //array to contain recipients
-			    $RecipientList=array();
-		            
-			    //count the number of context users if in context
-			    if($isInContext)
-		        {
-		            $count=count($contextusers);
-	            	//loop thro array context users to get each users id
-	                for($i=0;$i<$count;$i++)
-	                {
-	                    $contextUserId=$contextusers[$i]['userid'];
-	        
-	                    //get student email address, and add them to array
-	                    $contextUserEmail=$this->objUser->email($contextUserId);
-	                    array_push($RecipientList,$contextUserEmail);                     
-	                }
-		        }
-	           	else
-	            {
-		            $sysUsers=$this->objUser->getAll();
-		            foreach($sysUsers as $sysUser)
-		            {
-		             //get student email address, and add them to array
-		            $UserEmail=$this->objUser->email($sysUser['userid']);
-		            array_push($RecipientList,$UserEmail);         
-		            }        
-	            }
-               //set recipient list
-               $this->objSendMail->setValue('bc', $RecipientList);
-               //get sender's email address
-               $SenderEmail=$this->objUser->email($userId);
-               $this->objSendMail->setValue('from', $SenderEmail);
-               //get sender's fullnames
-               $fromFullname= $this->objUser->fullname($userId);
-               //set sender'sfullname 
-               $this->objSendMail->setValue('fromName', $fromFullname);
-               //set email subject
-               $this->objSendMail->setValue('subject', $subject);
-               //set email body
-               $this->objSendMail->setValue('body', $message);
-               //emailAltBody
-               $this->objSendMail->setValue('altBody', '');
-               //email mailer
-               $this->objSendMail->setValue('mailer', 'mail');
-               //now send emails
-               $this->objSendMail->send();
-			   
-			    $this->nextAction('');
-	            break;
-	        // Link to the template
-	        case 'link':
-	        	$contextAnnounce = $this->getParam('contextAnnounce');
-	        	$this->setVarByRef('contextAnnounce', $contextAnnounce);
-	            return 'add_tpl.php';
-	            break;
-	        // Case to get the information from the form
-	        case 'edit':
-	            $id = html_entity_decode($this->getParam('id'));
-	            $oldrec = $this->objDbAnnouncements->listSingle($id);
-	            $this->setVarByRef('oldrec', $oldrec);
-	            return 'edit_tpl.php';
-	        // Case to edit/update an entry
-	        case 'update':
-	            $id = $this->getParam('id');
-	            $title = htmlentities($this->getParam('title'));
-	            $message = htmlentities($this->getParam('message'));
-	            $this->objUser = $this->getObject('user', 'security');
-	            $arrayOfRecords = array(
-	                'title' => $title,
-	                'message' => $message
-	            );
-	            $this->objDbAnnouncements->updateRec($id, $arrayOfRecords);
-	            return $this->nextAction('view_tpl.php');
-	            break;
-	        // Case to delete an entry
-	        case 'delete':
-	            $this->objDbAnnouncements->deleteRec($this->getParam('id'));
-	            return $this->nextAction('view_tpl.php');
-	            break;
-    } //end of switch
-  }  
-} //end of dispatch function
+            $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts);
+            
+            if ($result == FALSE) {
+                
+            } else {
+                return $this->nextAction('view', array('id'=>$result));
+            }
+            
+        }
+    }
+    
+    private function __view()
+    {
+        $id = $this->getParam('id');
+        
+        $announcement = $this->objAnnouncements->getMessage($id);
+        
+        if ($announcement == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownannouncement'));
+        } else {
+            $this->setVarByRef('announcement', $announcement);
+            
+            return 'view_tpl.php';
+        }
+    }
+    
+    private function __getajax()
+    {
+        $page = $this->getParam('page', 0);
+        
+        $announcements = $this->objAnnouncements->getAllAnnouncements($this->userContext, $this->itemsPerPage, $page);
+        
+        if (count($announcements) == 0) {
+            echo '<div class="noRecordsMessage">There are no announcements</div>';
+        } else {
+            return $this->generateAjaxResponse($announcements);
+        }
+    }
+    
+    private function __getcontextajax()
+    {
+        $page = $this->getParam('page', 0);
+        
+        $announcements = $this->objAnnouncements->getContextAnnouncements($this->objContext->getContextCode(), $this->itemsPerPage, $page);
+        
+        if (count($announcements) == 0) {
+            echo '<div class="noRecordsMessage">There are no announcements</div>';
+        } else {
+            return $this->generateAjaxResponse($announcements);
+        }
+    }
+    
+    private function generateAjaxResponse($announcements)
+    {
+        $this->loadClass('link', 'htmlelements');
+            $this->loadClass('htmlheading', 'htmlelements');
+            $objDateTime = $this->getObject('dateandtime', 'utilities');
+            $objTrimString = $this->getObject('trimstr', 'strings');
+            
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->startHeaderRow();
+            $table->addHeaderCell('Date');
+            $table->addHeaderCell('Title');
+            $table->addHeaderCell('By');
+            $table->addHeaderCell('Type');
+            $table->endHeaderRow();
+            
+            /*
+            $table->startRow();
+            $table->addCell('&nbsp;');
+            $table->addCell('&nbsp;');
+            $table->addCell('&nbsp;');
+            $table->addCell('&nbsp;');
+            $table->endRow();*/
+            
+            foreach ($announcements as $announcement)
+            {
+                $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
+                $link->link = $announcement['title'];
+                
+                $table->startRow();
+                $table->addCell($objDateTime->formatDate($announcement['createdon']), 150);
+                $table->addCell($link->show());
+                $table->addCell($this->objUser->fullName($announcement['createdby']), 200);
+                
+                if ($announcement['contextid'] == 'site') {
+                    $type = 'Site';
+                } else {
+                    $type = 'Course';
+                }
+                
+                $table->addCell($type, 200);
+                $table->endRow();
+                
+                /*
+                $table->startRow();
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->addCell('&nbsp;');
+                $table->endRow();
+                */
+            }
+            
+            echo $table->show();
+    }
+}
+
 ?>
