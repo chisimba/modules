@@ -288,6 +288,7 @@ class cmstree extends object
 		        $menu = $this->getTree('cmsadmin', $includeRoot, FALSE);  
 		    }
 			
+			//var_dump($menu);
 			$this->loadClass('htmldropdown', 'tree');
 			
 			$htmldropdown = new htmldropdown($menu, array('inputName'=>'parent', 'selected'=>$defaultSelected));
@@ -332,36 +333,22 @@ class cmstree extends object
 		*/
         public function getFlatTree($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
         {
-		    $this->loadClass('treemenu', 'tree');
-            $this->loadClass('treenode', 'tree');
-            $this->loadClass('htmllist', 'tree');
-			
-			$action = ($module == 'cms') ? 'showsection' : 'viewsection';
-			
-			if ($module == 'cmsadmin') {
 			    
-				$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
-						FROM tbl_cms_sections
-						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
-						AND tbl_cms_content.published = \'1\')
-						WHERE tbl_cms_sections.trash = \'0\' 
-						';
-				$useIcon = TRUE;
-			} else {
-				$sql = 'SELECT tbl_cms_sections. * , tbl_cms_content.id AS pagevisible
-						FROM tbl_cms_sections
-						LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid
-						AND tbl_cms_content.published = \'1\' )
-						WHERE tbl_cms_sections.published = \'1\' AND tbl_cms_content.published = \'1\' 
-						AND tbl_cms_sections.trash = \'0\'
-						';
-			}
+			$sql = 'SELECT tbl_cms_sections.* , tbl_cms_content.id AS pagevisible
+					FROM tbl_cms_sections
+					LEFT JOIN tbl_cms_content ON ( tbl_cms_sections.id = tbl_cms_content.sectionid 
+					AND tbl_cms_sections.published = \'1\')
+					WHERE tbl_cms_sections.trash = \'0\' 
+					';
+			$useIcon = TRUE;
 			
             //$where = ' GROUP BY tbl_cms_sections.id ORDER BY nodelevel, ordering';
-            $where = ' GROUP BY tbl_cms_sections.id';
+            $where = ' GROUP BY tbl_cms_sections.id ORDER BY tbl_cms_sections.datecreated ASC';
             
             $sections = $this->_objSections->getArray($sql.$where);
 	
+			//echo $sql.$where; exit;
+
 			$secureSections = array();
             //Filterring the list based on WRITE ACCESS
             foreach ($sections as $section){
