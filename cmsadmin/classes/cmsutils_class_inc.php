@@ -1746,6 +1746,25 @@ class cmsutils extends object
 				$objTools->replaceBreadCrumbs(split(' / ', $str));
 		}
 
+
+		/**
+         * Method to generate the dropdown with tree indentations for selecting parent category
+         *
+         * @param string $setSelected The dropdown option to select
+         * @param bool $noRoot True Root Level option will not be displayed
+         * @return string Generated HTML for the dropdown
+         * @access public
+         * @author Warren Windvogel
+         */
+        public function getTreeDropdown($setSelected = NULL, $noRoot = TRUE)
+        {
+                $objCMSTree = $this->getObject('cmstree');
+                $tree = $objCMSTree->getCMSAdminDropdownTree($setSelected, $noRoot);
+                return $tree;
+
+        }
+
+
 		/**
 		 * Method to generate the dropdown with tree indentations for selecting parent category
 		 *
@@ -1755,12 +1774,15 @@ class cmsutils extends object
 		 * @access public
 		 * @author Warren Windvogel
 		 */
-		public function getTreeDropdown($setSelected = NULL, $noRoot = TRUE)
+		public function getContentTreeDropdown($setSelected = NULL, $noRoot = TRUE)
 		{
 				$objCMSTree = $this->getObject('cmstree');
 				$sections = $objCMSTree->getFlatTree($setSelected, $noRoot);
 
+				//var_dump($sections);
+
 				$dropdown = new dropdown('parent');
+
 				foreach ($sections as $section){
 						$dropdown->addOption($section['id'], $section['title']);
 				}
@@ -3826,9 +3848,9 @@ class cmsutils extends object
 
 				} else {
 						if (isset($section) && !empty($section)) {
-								$sections = $this->getTreeDropdown($section, FALSE);
+								$sections = $this->getContentTreeDropdown($section, FALSE);
 						} else {
-								$sections = $this->getTreeDropdown(NULL, FALSE);
+								$sections = $this->getContentTreeDropdown(NULL, FALSE);
 						}
 				}
 
