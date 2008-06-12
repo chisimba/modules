@@ -171,8 +171,9 @@ public function randomString($length)
      */ 
    public function __showpresenterapplet()
     {
-        // $slideServerId=$this->randomString(32);
-          $slideServerId=$this->objConfig->serverName();
+         $slideServerId=$this->randomString(32);
+         // $slideServerId=$this->objConfig->serverName();
+
         //if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
         //}
@@ -220,8 +221,8 @@ function in_str($needle, $haystack){
      */ 
     function __showaudienceapplet()
     {
-    //$slideServerId=$this->randomString(32);
-      $slideServerId=$this->objConfig->serverName();    
+    $slideServerId=$this->randomString(32);
+    //  $slideServerId=$this->objConfig->serverName();    
      //   if(!$this->slideServerRunning()){
           
          $this->startSlidesServer($slideServerId);
@@ -250,7 +251,7 @@ function in_str($needle, $haystack){
     
     $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
   //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
-    $cmd = "java -Xms64m -Xmx128m -cp ".    
+    $cmd = "java -Xms32m -Xmx64m -cp ".    
     $this->objConfig->getModulePath().
     "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
     "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId."  >/dev/null &";
