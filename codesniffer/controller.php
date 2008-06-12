@@ -50,12 +50,12 @@ class codesniffer extends controller
                         exec("phpcs --report=full --standard=Chisimba $codepath/classes/core/ > $this->reportPath/report.txt");
                         
                         $objMailer = $this->getObject('email', 'mail');
-			            $objMailer->setValue('to', array('pscott@uwc.ac.za'));
-			            $objMailer->setValue('from', 'codesniffer@uwc.ac.za');
+			            $objMailer->setValue('to', array('nextgen-online@mailman.uwc.ac.za', 'pscott@uwc.ac.za'));
+			            $objMailer->setValue('from', 'noreply@uwc.ac.za');
 			            $objMailer->setValue('fromName', 'CodeSniffer');
 			            $objMailer->setValue('subject', 'Code QA Report ('.date('r').')');
 			            $objMailer->setValue('body', 'Text file attached...');
-			            $objMailer->attach($this->reportPath.'/creport.txt', 'code_report.txt');
+			            $objMailer->attach($this->reportPath.'/report.txt', 'code_report.txt');
 			            if ($objMailer->send()) {
 		   		            // unlink the file and clean up
 		   		            echo $this->dumpText('Success!');
