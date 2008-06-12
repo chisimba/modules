@@ -28,6 +28,7 @@ class codesniffer extends controller
             $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             //$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->reportPath = $this->objSysConfig->getValue('report_path', 'codesniffer');
+            $this->codePath = $this->objSysConfig->getValue('code_path', 'codesniffer');
             $this->objConfig = $this->getObject('altconfig', 'config');
         }
         catch(customException $e) {
@@ -47,7 +48,7 @@ class codesniffer extends controller
             	$this->requiresLogin(FALSE);
                     try {
                     	$codepath = $this->objConfig->getSiteRootPath();
-                        exec("phpcs --report=full --standard=Chisimba $codepath/classes/core/ > $this->reportPath/report.txt");
+                        exec("phpcs --report=full --standard=Chisimba $this->codePath > $this->reportPath/report.txt");
                         
                         $objMailer = $this->getObject('email', 'mail');
 			            $objMailer->setValue('to', array('nextgen-online@mailman.uwc.ac.za', 'pscott@uwc.ac.za'));
