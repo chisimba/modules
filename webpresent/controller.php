@@ -186,22 +186,23 @@ public function randomString($length)
 
 public function sendInvitation($emails,$agenda,$url){
 $msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The agenda of the session is "'.$agenda.'". To join, simply click on '.$url;
-$emails.=',';
+//$emails.=',';
 
 //should be separated by commas
 $objMailer = $this->getObject('email', 'mail');
-$token = strtok($emails,",");
-while ($token){
+//$token = strtok($emails,",");
+//while ($token){
 
-$objMailer->setValue('to', $token);
+$objMailer->setValue('to', 'davidwaf@gmail.com');
+$objMailer->setValue('cc', $emails);
 $objMailer->setValue('from', $this->objUser->email());
 $objMailer->setValue('fromName', $this->objUser->fullname());
 $objMailer->setValue('subject', 'You have been invited for realtime presentation at '.$this->objConfig->getSiteName());
 $objMailer->setValue('body', $msg);
 $objMailer->send();
 
-$token = strtok(",");
-}
+//$token = strtok(",");
+//}
 }
 
     /**
