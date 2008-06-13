@@ -183,7 +183,7 @@ $objMailer->send();
 
 $token = strtok(",");
 }
-
+}
 
     /**
      * ADDED by David Wafula  
@@ -201,7 +201,7 @@ $token = strtok(",");
           $id= $this->getParam('id');
           $title=$this->getParam('agendaField');
           $participants=$this->getParam('participants');
-          $this->sendInvitation($participants);
+          $this->sendInvitation($participants,$title);
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionTitle',$title);
