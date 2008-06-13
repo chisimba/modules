@@ -163,9 +163,8 @@ public function randomString($length)
 }
 
 
-public function sendInvitation($emails,$agenda){
-$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. To join, simply click on '.
-'http://chameleon.uwc.ac.za/app/index.php?module=webpresent&action=view&id=gen12Srv15Nme3_1118_1213149866';
+public function sendInvitation($emails,$agenda,$url){
+$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. The agenda of the session is '.$agenda.'. To join, simply click on '.$url;
 $emails.=',';
 
 //should be separated by commas
@@ -200,7 +199,8 @@ $token = strtok(",");
           $id= $this->getParam('id');
           $title=$this->getParam('agendaField');
           $participants=$this->getParam('participants');
-          $this->sendInvitation($participants,$title);
+          $url=$this->objConfig->getsiteRoot().'/index.php?module=webpresent&action=showaudienceapplet&id='.$id.'&agenda='.$title;
+          $this->sendInvitation($participants,$title,$url);
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionTitle',$title);
