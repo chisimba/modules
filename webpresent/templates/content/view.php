@@ -243,6 +243,9 @@ $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $scheduleLink = new link ($this->uri(array('action'=>'schedule', 'id'=>$file['id'],'title'=>$file['title'],'filename'=>$file['filename'])));
 $scheduleLink->link = 'Schedule for Live Presentation';
 
+$usersLink = new link ($this->uri(array('action'=>'showusers')));
+$usersLink->link = 'Add From Users List';
+
 $agenda='';
     if (trim($file['title']) == '') {
             $agenda = $file['filename'];
@@ -280,7 +283,9 @@ $table->startRow();
 $table->addCell($objInput->show());
 $table->endRow();
 
+
 $table->startRow();
+//$table->addCell('Participants&nbsp;&nbsp;&nbsp'.$usersLink->show(), '', '', '');
 $table->addCell('Participants', '', '', '');
 $table->endRow();
 

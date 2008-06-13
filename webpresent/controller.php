@@ -37,7 +37,7 @@ class webpresent extends controller
      */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','showpresenterapplet','showaudienceapplet');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','showpresenterapplet','showaudienceapplet','showusers','addparticipant');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -143,6 +143,27 @@ class webpresent extends controller
 }
 
 /**
+ * Shows a list of users
+ */
+public function __showusers(){
+ $objDbUsers =& $this->getObject('dbusers','buddies'); 
+ $allUsers = $objDbUsers->listAll();
+ $this->setVarByRef('allUsers', $allUsers);
+ return 'users_tpl.php';
+}
+
+
+/**
+ * Adds selected user as participant
+ */
+public function __addparticipant(){
+ $userid=$this->getParam('participantid');
+ $email=$this->objUser->email($userid);
+ 
+//return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
+}
+
+/**
 * This function generates a random string. This is used as id for the java slides server as well as
 * the client (applet)
 */
@@ -164,7 +185,7 @@ public function randomString($length)
 
 
 public function sendInvitation($emails,$agenda,$url){
-$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. The agenda of the session is '.$agenda.'. To join, simply click on '.$url;
+$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The agenda of the session is "'.$agenda.'". To join, simply click on '.$url;
 $emails.=',';
 
 //should be separated by commas
@@ -218,7 +239,7 @@ $token = strtok(",");
 */
     function slideServerRunning(){
 
-    $result = array();
+    $result = array(); 
     $cmd='ps aux | grep java';
     $needle=' avoir.realtime.tcp.base.SlidesServer';
     exec( $cmd, &$result);
