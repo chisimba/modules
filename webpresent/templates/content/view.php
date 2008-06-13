@@ -184,28 +184,34 @@ $uploaderLink->link = $objUser->fullname($file['creatorid']);
 
 $rightCell .= '<p><strong>Uploaded by:</strong> '.$uploaderLink->show().'</p>';
 
-// Output the filter code for local filter
+// Output filter code for local and remote filter.
 $this->loadClass('textinput','htmlelements');
 $filterBox=new textinput('filter');
-$filterBox->size=60;
-$filterBox->setValue("[WPRESENT: id=" . $file['id'] . "]");
-$rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filter", "webpresent")
-  . "</strong>: " . $filterBox->show() . "<br />"
-  . $this->objLanguage->languageText("mod_webpresent_filterexplained", "webpresent")
-  . "</p>";
-
-//Output filter code for remote filter
-$filterBox=new textinput('filter2');
 $filterBox->size=60;
 $flashUrl =  $this->objConfig->getsiteRoot()
   . $this->objConfig->getcontentPath()
   .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
-
-$filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
+ $filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
 $filterBox->setValue($filterText);
 $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
   . "</strong>: " . $filterBox->show() . "<br />"
   . $this->objLanguage->languageText("mod_webpresent_filterbyurlexplained", "webpresent")
+  . "</p>";
+unset($filterText);
+
+$snippetText = '<div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
+  <param name="movie" value="' . $flashUrl . '">
+  <param name="quality" value="high">
+  <embed src="'.$flashUrl.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
+  </object></div>
+';
+
+$this->loadClass('textarea', 'htmlelements');
+$snippetBox=new textarea('snippet', $snippetText, 4, 80);
+$rightCell  .= "<p><strong>" 
+  . $this->objLanguage->languageText("mod_webpresent_snippet", "webpresent")
+  . "</strong>:" . $snippetBox->show() . "<br />"
+  .  $this->objLanguage->languageText("mod_webpresent_snippetexplained", "webpresent")
   . "</p>";
 
 
