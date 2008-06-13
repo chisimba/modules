@@ -164,16 +164,15 @@ public function randomString($length)
 
 
 public function sendInvitation($emails,$agenda){
-$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. To join, simply click '.
-'<a href="http://chameleon.uwc.ac.za/app/index.php?module=webpresent&action=view&id=gen12Srv15Nme3_1118_1213149866">here</a>';
-$msg.='<br><b>Details<hr><br>Agenda: '.$agenda.'<br>You have been invited as: Participant</b>';
+$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. To join, simply click on '.
+'http://chameleon.uwc.ac.za/app/index.php?module=webpresent&action=view&id=gen12Srv15Nme3_1118_1213149866';
 $emails.=',';
 
 //should be separated by commas
 $objMailer = $this->getObject('email', 'mail');
 $token = strtok($emails,",");
 while ($token){
-echo $token;
+
 $objMailer->setValue('to', $token);
 $objMailer->setValue('from', $this->objUser->email());
 $objMailer->setValue('fromName', $this->objUser->fullname());
