@@ -37,7 +37,7 @@ class webpresent extends controller
      */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','showpresenterapplet','showaudienceapplet');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -163,6 +163,27 @@ public function randomString($length)
 }
 
 
+public function sendInvitation($emails,$agenda){
+$msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. To join, simply click '.
+'<a href='..'>here</a>';
+$msg.='<br><b>Details:<br>Agenda: '.$agenda.'<br>You have been invited as: Participant</b>';
+
+
+//should be separated by commas
+$objMailer = $this->getObject('email', 'mail');
+$token = strtok($emails,",");
+while ($token){
+
+$objMailer->setValue('to', $token);
+$objMailer->setValue('from', $this->objUser->email());
+$objMailer->setValue('fromName', $this->objUser->fullname());
+$objMailer->setValue('subject', 'You have been invited for realtime presentation at '.$this->objConfig->getSiteName());
+$objMailer->setValue('body', strip_tags($msg));
+$objMailer->send();
+
+$token = strtok(",");
+}
+
 
     /**
      * ADDED by David Wafula  
@@ -171,21 +192,24 @@ public function randomString($length)
      */ 
    public function __showpresenterapplet()
     {
-         $slideServerId=$this->randomString(32);
+        $slideServerId=$this->randomString(32);
          // $slideServerId=$this->objConfig->serverName();
 
         //if(!$this->slideServerRunning()){
           $this->startSlidesServer($slideServerId);
         //}
           $id= $this->getParam('id');
-          $title=$this->getParam('agenda');
+          $title=$this->getParam('agendaField');
+          $participants=$this->getParam('participants');
+          $this->sendInvitation($participants);
           $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
           $this->setVarByRef('filePath', $filePath);
           $this->setVarByRef('sessionTitle',$title);
           $this->setVarByRef('sessionid', $id);
           $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
-          return "presenter-applet.php";
+    
+         return "presenter-applet.php";
  }
 
 /**

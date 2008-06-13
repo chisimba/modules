@@ -250,33 +250,70 @@ $agenda='';
   $agenda = htmlentities($file['title']);
 }
 
-$presenterLink = new link ($this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
-$presenterLink->link = 'Start Live Presentation';
-
-
-$clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
-$clientLink->link = 'View Live Presentation';
 
 
 $objTabs->addTab('Presentation', $table->show());
 $objTabs->addTab('Slides', $slideContent['slides']);
 $objTabs->addTab('Transcript', $slideContent['transcript']);
 
-$this->objFiles->generatePresenterJNLP($file['id']);
-$this->objFiles->generateClientJNLP($file['id']);
-//if ($file['creatorid'] == $objUser->userId()) {
- if ($objUser->isLoggedIn()){
+$objFeatureBox = $this->newObject('featurebox', 'navigation');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objIcon->setIcon('loading_circles');
 
-$codebase=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/presenter_studio.jnlp';
-$codebase2=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/client.jnlp';
+$form =$this->loadClass('form', 'htmlelements');
+$table = $this->newObject('htmltable', 'htmlelements');
+$objInput = $this->loadClass('textinput', 'htmlelements');
+$objText = $this->loadClass('textarea', 'htmlelements');
+$objButton = $this->loadClass('button', 'htmlelements');
 
-$objTabs->addTab('Live', '<li>'.$presenterLink->show().'</li><li>'.$clientLink->show().'</a></li>');
+$objInput = new textinput('agendaField', $agenda, '100');
+$objText = new textarea('participants', 'enter participants emails here separated by comma', 12, '70');
+$objButton = new button('invite', 'Start Live Presentation');
 
-}else{
-$codebase=$this->objConfig->getSitePath().'/usrfiles/webpresent/client.jnlp';
-$objTabs->addTab('Live', '<li>'.$clientLink->show().'</a></li><br>If you are logged in, you can start your own Live Presentation.');
+$table->cellpadding = '4';
 
-}
+$table->startRow();
+$table->addCell('Agenda');
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objInput->show());
+$table->endRow();
+
+$table->startRow();
+$table->addCell('Participants', '', '', '');
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objText->show());
+$table->endRow();
+
+
+$form = new form ('register', $this->uri(array('action'=>'showpresenterapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
+$button = new button ('submitform', 'Start Live Presentation');
+$button->setToSubmit();
+
+$clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$file['id'],'agenda'=>$agenda)));
+$clientLink->link = 'Join Live Presentation';
+
+$content1 = '<div id="loading_views" style="display:none; ">'.$objIcon->show().'</div><div id="data_views style="float: left; width=100">'.$table->show().'<br>'.$button->show().'</div>';
+
+$content2 = '<div id="loading_views" style="display:none;">'.$objIcon->show().'</div><div id="data_views">'.$clientLink->show().'</div>';
+
+$table = $this->newObject('htmltable', 'htmlelements');
+$table->width="130";
+$table->startRow();
+$table->addCell($objFeatureBox->show('Presenter', $content1), '50%', 'top', 'left');
+$table->endRow();
+
+$table->startRow();
+$table->addCell($objFeatureBox->show('Participant', $content2), '50%', 'top', 'left');
+$table->endRow();
+
+$form->addToForm($table->show());
+
+
+$objTabs->addTab('Live Presentation', $form->show());
 
 $objTabs->width = '95%';
 
