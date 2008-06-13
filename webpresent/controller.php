@@ -166,9 +166,9 @@ public function randomString($length)
 public function sendInvitation($emails,$agenda){
 $msg=$this->objUser->fullname(). ' has invited you for a realtime presentation. The presentation has been started. To join, simply click '.
 '<a href="http://chameleon.uwc.ac.za/app/index.php?module=webpresent&action=view&id=gen12Srv15Nme3_1118_1213149866">here</a>';
-$msg.='<br><b>Details:<br>Agenda: '.$agenda.'<br>You have been invited as: Participant</b>';
+$msg.='<br><b>Details<hr><br>Agenda: '.$agenda.'<br>You have been invited as: Participant</b>';
 $emails.=',';
-echo $msg;
+
 //should be separated by commas
 $objMailer = $this->getObject('email', 'mail');
 $token = strtok($emails,",");
@@ -209,7 +209,7 @@ $token = strtok(",");
           $this->setVarByRef('slideServerId', $slideServerId);                 
           $this->setVarByRef('isPresenter', 'true');
     
-    //     return "presenter-applet.php";
+        return "presenter-applet.php";
  }
 
 /**
