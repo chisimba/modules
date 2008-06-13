@@ -1787,7 +1787,7 @@ class cmsutils extends object
 						$dropdown->addOption($section['id'], $section['title']);
 				}
 
-				$dropdown->setSelected($section['id']);
+				$dropdown->setSelected($setSelected);
 				return $dropdown;
 		}
 
