@@ -185,8 +185,8 @@ class ltifetcher extends object
                 "PasswordDigest=\"$crap\", Nonce=\"$nonce\", " .
                 "Created=\"$creationTimestamp\"";
         $arHeader = array(
-          "Authorization" => "WSSE profile=\"UsernameToken\"",
-          "X-WSSE" => $wsse );
+          "Authorization: WSSE profile=\"UsernameToken\"",
+          "X-WSSE: $wsse" );
         return $arHeader;
     }
 
