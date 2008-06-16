@@ -1,22 +1,22 @@
 <?php
-	 $userLevel;
-         $isLoggedIn='false';
+    $userLevel;
+    $isLoggedIn='false';
 
-		if ($this->objUser->isAdmin())
-		{
-			$this->userLevel = 'admin';
-		}
-		elseif ($this->objUser->isLecturer())
-		{
-			$this->userLevel = 'lecturer';
-		}
-		elseif ($this->objUser->isStudent())
-		{
-			$this->userLevel = 'student';
-		} else
-		{
-			$this->userLevel = 'guest';
-		}
+    if ($this->objUser->isAdmin())
+    {
+        $this->userLevel = 'admin';
+    }
+    elseif ($this->objUser->isLecturer())
+    {
+        $this->userLevel = 'lecturer';
+    }
+    elseif ($this->objUser->isStudent())
+    {
+        $this->userLevel = 'student';
+    } else
+    {
+        $this->userLevel = 'guest';
+    }
     $isLoggedIn =$this->objUser->isLoggedIn();
     $modPath=$this->objConfig->getModulePath();
     $siteRoot=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/';
@@ -32,7 +32,7 @@
 
     $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
     $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
-   // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
+    //path to uploaded items    
     $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
   
     $objMkdir = $this->getObject('mkdir', 'files');
@@ -58,7 +58,7 @@
     echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=siteRoot value="'.$siteRoot.'">';
 
-   //echo '<param name=siteRoot value="http://chameleon.uwc.ac.za/app/usrfiles/webpresent/">';    
+  
     echo '<param name=isWebPresent value="true">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';
@@ -71,8 +71,7 @@
     echo '<param name=sessionId value="'.$sessionid.'">';
     echo '<param name=sessionTitle value="'.$sessionTitle.'">';
     echo '<param name=slideServerId value="'.$slideServerId.'">';
-    
-// echo '<param name=sessionId value="gen12Srv15Nme3_4074_1208767420">';
+
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
     echo '</applet>';
     echo '</center>';
