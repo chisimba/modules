@@ -286,7 +286,7 @@
 
 
             $form = new form ('register', $this->uri(array('action'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
-            $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_joinlivepresentation", "webpresent"));
+            $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
             $button->setToSubmit();
 
             $clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
