@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -24,7 +24,7 @@ class block_ohloh extends object
     function init()
     {
         //Set the title -
-        $this->title='';
+        $this->title='Ohloh';
         $this->blockType = "none";
 
     }
@@ -41,3 +41,4 @@ class block_ohloh extends object
          . "</script></p></span>";
     }
 }
+?>
