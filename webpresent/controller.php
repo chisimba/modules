@@ -312,9 +312,9 @@
             //echo $cmd;  
             system($cmd,$return_value);
         }
-    /**
-     * Method to display the search results
-     */
+        /**
+         * Method to display the search results
+         */
         public function __search()
         {
             $query = $this->getParam('q');
@@ -327,10 +327,10 @@
 
 
 
-    /**
-     * Method to edit the details of a presentation
-     *
-     */
+        /**
+         * Method to edit the details of a presentation
+         *
+         */
         function __edit()
         {
             $id = $this->getParam('id');
@@ -358,10 +358,10 @@
         }
 
 
-    /**
-     * Method to update the details of a presentation
-     *
-     */
+        /**
+         * Method to update the details of a presentation
+         *
+         */
         function __updatedetails()
         {
             $id = $this->getParam('id');
@@ -397,10 +397,10 @@
             return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
         }
 
-    /**
-     * Method to view the details of a presentation
-     *
-     */
+        /**
+         * Method to view the details of a presentation
+         *
+         */
         function __view()
         {
             $id = $this->getParam('id');
@@ -447,9 +447,9 @@
             return 'view.php';
         }
 
-    /**
-     * Method to download a presentation
-     */
+        /**
+         * Method to download a presentation
+         */
         function __download()
         {
             $id = $this->getParam('id');
@@ -470,10 +470,10 @@
         }
 
 
-    /**
-     * Method to view a list of presentations that match a particular tag
-     *
-     */
+        /**
+         * Method to view a list of presentations that match a particular tag
+         *
+         */
         function __tag()
         {
             $tag = $this->getParam('tag');
@@ -498,10 +498,10 @@
             return 'tag.php';
         }
 
-    /**
-     * Method to view a list of presentations uploaded by a particular user
-     *
-     */
+        /**
+         * Method to view a list of presentations uploaded by a particular user
+         *
+         */
         function __byuser()
         {
             $userid = $this->getParam('userid');
@@ -521,9 +521,9 @@
             return 'byuser.php';
         }
 
-    /**
-     * Method to show a tag cloud for all tags
-     */
+        /**
+         * Method to show a tag cloud for all tags
+         */
         function __tagcloud()
         {
             $tagCloud = $this->objTags->getCompleteTagCloud();
@@ -532,9 +532,9 @@
             return 'tagcloud.php';
         }
 
-    /**
-     * Ajax method to return statistics from another period/source
-     */
+        /**
+         * Ajax method to return statistics from another period/source
+         */
         function __ajaxgetstats()
         {
             $period = $this->getParam('period');
@@ -559,30 +559,30 @@
             echo $objSource->getAjaxData($period);
         }
 
-    /**
-     * Method to show interface to upload a presentation
-     *
-     */
+        /**
+         * Method to show interface to upload a presentation
+         *
+         */
         function __upload()
         {
             return 'testupload.php';
         }
 
-    /**
-     * Method to show a temporary iframe
-     * (it is hidden, and thus does nothing)
-     *
-     */
+        /**
+         * Method to show a temporary iframe
+         * (it is hidden, and thus does nothing)
+         *
+         */
         function __tempiframe()
         {
             echo '<pre>';
             print_r($_GET);
         }
 
-    /**
-     * Method to show upload errors
-     *
-     */
+        /**
+         * Method to show upload errors
+         *
+         */
         function __erroriframe()
         {
             $this->setVar('pageSuppressToolbar', TRUE);
@@ -598,10 +598,10 @@
             return 'erroriframe.php';
         }
 
-    /**
-     * Method to show upload results if the upload was successful
-     *
-     */
+        /**
+         * Method to show upload results if the upload was successful
+         *
+         */
         function __uploadiframe()
         {
             $this->setVar('pageSuppressToolbar', TRUE);
@@ -614,10 +614,10 @@
             return 'uploadiframe.php';
         }
 
-    /**
-     * Ajax Process to display form for user to add presentation info
-     *
-     */
+        /**
+         * Ajax Process to display form for user to add presentation info
+         *
+         */
         function __ajaxprocess()
         {
             $this->setPageTemplate(NULL);
@@ -642,10 +642,10 @@
             return 'process.php';
         }
 
-    /**
-     * Method to do the actual upload
-     *
-     */
+        /**
+         * Method to do the actual upload
+         *
+         */
         function __doajaxupload()
         {
             $generatedid = $this->getParam('id');
@@ -712,9 +712,9 @@
             }
         }
 
-    /**
-     * Method to push through upload results for AJAX
-     */
+        /**
+         * Method to push through upload results for AJAX
+         */
         function __ajaxuploadresults()
         {
             $this->setVar('pageSuppressToolbar', TRUE);
@@ -733,13 +733,13 @@
             return 'ajaxuploadresults.php';
         }
 
-    /**
-     * Method to Start the Conversions of Files
-     *
-     * This method is called using an Ajax process and is then
-     * run as a background process, so that it continues, even
-     * if the user closes the browser, or moves away.
-     */
+        /**
+         * Method to Start the Conversions of Files
+         *
+         * This method is called using an Ajax process and is then
+         * run as a background process, so that it continues, even
+         * if the user closes the browser, or moves away.
+         */
         function __ajaxprocessconversions()
         {
             $objBackground = $this->newObject('background', 'utilities');
@@ -759,10 +759,10 @@
         }
 
 
-    /**
-     * Method to delete a presentation
-     * Check: Users can only upload their own presentations
-     */
+        /**
+         * Method to delete a presentation
+         * Check: Users can only upload their own presentations
+         */
         function __delete()
         {
             $id = $this->getParam('id');
@@ -780,9 +780,9 @@
             return $this->_deleteslide($file);
         }
 
-    /**
-     * Method when an administrator deletes the file of another person
-     */
+        /**
+         * Method when an administrator deletes the file of another person
+         */
         function __admindelete()
         {
             $id = $this->getParam('id');
@@ -796,12 +796,12 @@
             return $this->_deleteslide($file);
         }
 
-    /**
-     * Method to display the delete form interface
-     * This method is called once it is verified the user can delete the presentation
-     *
-     * @access private
-     */
+        /**
+         * Method to display the delete form interface
+         * This method is called once it is verified the user can delete the presentation
+         *
+         * @access private
+         */
         private function _deleteslide($file)
         {
             $this->setVarByRef('file', $file);
@@ -823,10 +823,10 @@
             return 'delete.php';
         }
 
-    /**
-     * Method to delete a presentation if user confirms delete
-     *
-     */
+        /**
+         * Method to delete a presentation if user confirms delete
+         *
+         */
         private function __deleteconfirm()
         {
             // Get Id
@@ -862,20 +862,20 @@
 
         }
 
-    /**
-     * Method to display the latest presentations RSS Feed
-     *
-     */
+        /**
+         * Method to display the latest presentations RSS Feed
+         *
+         */
         function __latestrssfeed()
         {
             $objViewer = $this->getObject('viewer');
             echo $objViewer->getLatestFeed();
         }
 
-    /**
-     * Method to show a RSS Feed of presentations matching a tag
-     *
-     */
+        /**
+         * Method to show a RSS Feed of presentations matching a tag
+         *
+         */
         function __tagrss()
         {
             $tag = $this->getParam('tag');
@@ -883,10 +883,10 @@
             echo $objViewer->getTagFeed($tag);
         }
 
-    /**
-     * Method to display the latest presentations of a user RSS Feed
-     *
-     */
+        /**
+         * Method to display the latest presentations of a user RSS Feed
+         *
+         */
         public function __userrss()
         {
             $userid = $this->getParam('userid');
@@ -894,9 +894,9 @@
             echo $objViewer->getUserFeed($userid);
         }
 
-    /**
-     * Method to rebuild the search index
-     */
+        /**
+         * Method to rebuild the search index
+         */
         public function __rebuildsearch()
         {
             $files = $this->objFiles->getAll();
@@ -924,12 +924,12 @@
 
         }
 
-    /**
-     * Method to take file information and make as much of that information available
-     * for search purposes
-     *
-     * @param array $file File Information
-     */
+        /**
+         * Method to take file information and make as much of that information available
+         * for search purposes
+         *
+         * @param array $file File Information
+         */
         private function _prepareDataForSearch($file)
         {
             $content = $file['filename'];
@@ -973,11 +973,11 @@
             $this->_luceneIndex($file);
         }
 
-    /**
-     * Method to add a file to the search index
-     *
-     * @param array $file File Information
-     */
+        /**
+         * Method to add a file to the search index
+         *
+         * @param array $file File Information
+         */
         private function _luceneIndex($file)
         {
             //print_r($data); die();
@@ -1047,17 +1047,19 @@
             //$index->optimize();
 
         }
-
+        /**
+         * Test deletion
+         */
         public function __testdelete()
         {
             $fileId = $this->getParam('id');
             $this->_luceneclearFileIndex($fileId);
         }
 
-    /**
-     * Method to remove a file from the search index
-     * @param string $fileId
-     */
+        /**
+         * Method to remove a file from the search index
+         * @param string $fileId
+         */
         private function _luceneclearFileIndex($fileId)
         {
             //print_r($data); die();
@@ -1101,9 +1103,9 @@
         }
 
 
-    /**
-     * Method to regenerate the Flash or PDF version of a file
-     */
+        /**
+         * Method to regenerate the Flash or PDF version of a file
+         */
         public function __regenerate()
         {
             $id = $this->getParam('id');
@@ -1114,11 +1116,11 @@
             return $this->nextAction('view', array('id'=>$id, 'message'=>'regeneration', 'type'=>$type, 'result'=>$result));
         }
 
-    /**
-     * Method to listall Presentations
-     * Used for testing purposes
-     * @access private
-     */
+        /**
+         * Method to listall Presentations
+         * Used for testing purposes
+         * @access private
+         */
         private function __listall()
         {
             $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');
@@ -1144,8 +1146,5 @@
             }
 
         }
-
-
-
     }
 ?>
