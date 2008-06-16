@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -42,3 +42,4 @@ class block_amazonsearch extends object
                 'frameborder="0" scrolling="no"></iframe><br /></div><br />';
     }
 }
+?>

@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -46,3 +46,4 @@ class block_shelfari extends object
                 'Purchase books<br />from Amazon</a></div>';
     }
 }
+?>

@@ -1,4 +1,4 @@
-<?
+<?php
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -47,3 +47,4 @@ class block_amazon extends object
                 'NoScript">Amazon.com Widgets</A></NOSCRIPT></div>';
     }
 }
+?>
