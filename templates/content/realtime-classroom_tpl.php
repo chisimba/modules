@@ -1,31 +1,31 @@
 <?php
-if (isset ($noContextCode))
-{
-	echo $noContextCode;
-} else {
-?>
+    if (isset ($noContextCode))
+    {
+        echo $noContextCode;
+    } else {
+    ?>
 <!-- START FILE MANAGER FILE CHOOSER CODE-->
 <script type="text/javascript">
 
-   function openWindow(theURL,winName,features) {
-    newwindow=window.open(theURL,winName,features);
-     if (window.focus) {
-      newwindow.focus()
-    }
-   } 
+    function openWindow(theURL,winName,features) {
+        newwindow=window.open(theURL,winName,features);
+        if (window.focus) {
+            newwindow.focus()
+        }
+    } 
 
     /*
      * Function that is called by Java applet when user wants to select an image.
      */
     function openImageFileChooser() {
-      openWindow('<?php echo str_replace('amp;', '', $this->uri(array('action'=>'selectrealtimeimagewindow', 'name'=>'selectimage'), 'filemanager')); ?>','new','toolbar=no, menubar=no, width=600, height=400, resizable=yes, scrollbars=auto, toolbar=no top=200 screenY=200 left=300 screenY=300');
+        openWindow('<?php echo str_replace('amp;', '', $this->uri(array('action'=>'selectrealtimeimagewindow', 'name'=>'selectimage'), 'filemanager')); ?>','new','toolbar=no, menubar=no, width=600, height=400, resizable=yes, scrollbars=auto, toolbar=no top=200 screenY=200 left=300 screenY=300');
     }
 
     /*
      * Function that is called by Java applet when user wants to select a presentation.
      */
     function openPresentationFileChooser() {
-      openWindow('<?php echo str_replace('amp;', '', $this->uri(array('action'=>'selectpresentationwindow', 'name'=>'selectpresentation'), 'filemanager')); ?>','new','toolbar=no, menubar=no, width=600, height=400, resizable=yes, scrollbars=auto, toolbar=no top=200 screenY=200 left=300 screenY=300');
+        openWindow('<?php echo str_replace('amp;', '', $this->uri(array('action'=>'selectpresentationwindow', 'name'=>'selectpresentation'), 'filemanager')); ?>','new','toolbar=no, menubar=no, width=600, height=400, resizable=yes, scrollbars=auto, toolbar=no top=200 screenY=200 left=300 screenY=300');
     }
 
     /*
@@ -33,9 +33,9 @@ if (isset ($noContextCode))
      */    
     function passImageUrlToApplet(imageURL)
     {
-       // alert(imageURL);
-    // var imageURL = document.getElementById('hidden_selectimage').value;
-    document.RealtimeClassroomApplet.selectImage(imageURL);
+        // alert(imageURL);
+        // var imageURL = document.getElementById('hidden_selectimage').value;
+        document.RealtimeClassroomApplet.selectImage(imageURL);
     }
 
     /*
@@ -43,18 +43,18 @@ if (isset ($noContextCode))
      */    
     function passPresentationUrlToApplet(presentationURL,presentationPath,presentationId)
     {
-     //var presentationURL = document.getElementById('hidden_selectpresentation').value;
-    document.RealtimeClassroomApplet.selectPresentation(presentationURL,presentationPath,presentationId);
+        //var presentationURL = document.getElementById('hidden_selectpresentation').value;
+        document.RealtimeClassroomApplet.selectPresentation(presentationURL,presentationPath,presentationId);
     }
-    </script>
-   <div style="display:none;">
-   <?php
+</script>
+<div style="display:none;">
+    <?php
 
-    $objSelectFile = $this->getObject('selectfile', 'filemanager');
-    $objSelectFile->name = 'selectimage';
-    $this->setVar('pageSuppressXML', TRUE);
-    echo $objSelectFile->show();
-?>
+        $objSelectFile = $this->getObject('selectfile', 'filemanager');
+        $objSelectFile->name = 'selectimage';
+        $this->setVar('pageSuppressXML', TRUE);
+        echo $objSelectFile->show();
+    ?>
 </div>
 
 <!-- END FILE MANAGER FILE CHOOSER CODE-->
@@ -73,9 +73,9 @@ if (isset ($noContextCode))
 
     $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
     $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
-   // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
+    // $uploadURL=$this->objAltConfig->getSiteRoot()."/index.php?module=realtime&action=upload";
     $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
-  
+
     $objMkdir = $this->getObject('mkdir', 'files');
     // Path for uploaded files
     $uploadPath = $this->objAltConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");
@@ -106,7 +106,7 @@ if (isset ($noContextCode))
     echo '<param name=resourcesPath value="'.$resourcesPath.'">';
     echo '<param name=port value="'.$port.'">';
     echo '</applet>';
-    
+
 
 }
 ?>
