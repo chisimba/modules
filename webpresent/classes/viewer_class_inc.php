@@ -245,6 +245,7 @@
         /**
          * Setup display to ask the user to enter email address for the participant
          * who are to be invited.
+         * Added by David Wafula
          * @return <type>
          */
         public function createPresentationForm($id,$agenda)
@@ -311,7 +312,10 @@
             return $form->show();
             
         }
-        
+        /**
+         * Get latest feeds
+         * @return <type>
+         */
         public function getLatestFeed()
         {
             $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
@@ -323,6 +327,11 @@
             return $this->generateFeed($title, $description, $url, $files);
         }
 
+        /**
+         * Get user feed
+         * @param <type> $userId
+         * @return <type>
+         */ 
         public function getUserFeed($userId)
         {
             $fullName = $this->objUser->fullName($userId);
@@ -335,6 +344,11 @@
             return $this->generateFeed($title, $description, $url, $files);
         }
 
+        /**
+         * Get Tag Feed
+         * @param <type> $tag
+         * @return <type>
+         */
         public function getTagFeed($tag)
         {
             $title = $this->objConfig->getSiteName().' - Tag: '.$tag;
@@ -347,6 +361,14 @@
             return $this->generateFeed($title, $description, $url, $files);
         }
 
+        /**
+         * Generate Feed
+         * @param <type> $title
+         * @param <type> $description
+         * @param <type> $url
+         * @param <type> $files
+         * @return <type>
+         */
         public function generateFeed($title, $description, $url, $files)
         {
             $objFeedCreator = $this->getObject('feeder', 'feed');
@@ -383,6 +405,12 @@
             return $objFeedCreator->output();
         }
 
+        /**
+         * Generate presentation thumb nail
+         * @param <type> $id
+         * @param <type> $title
+         * @return <type>
+         */
         public function getPresentationThumbnail($id, $title='')
         {
             $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
