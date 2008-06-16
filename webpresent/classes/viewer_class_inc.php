@@ -30,335 +30,409 @@
 */
 
 
-// security check - must be included in all scripts
-if (!
-/**
- * Description for $GLOBALS
- * @global string $GLOBALS['kewl_entry_point_run']
- * @name   $kewl_entry_point_run
- */
-$GLOBALS['kewl_entry_point_run']) {
-    die("You cannot view this page directly");
-}
-// end security check
-
-/**
-*
-* Class for rendering email messages into the
-* webpresent template
-*
-* @author Derek Keats
-* @category Chisimba
-* @package webpresent
-* @copyright AVOIR
-* @licence GNU/GPL
-*
-*/
-class viewer extends object
-{
-    /**
-    *
-    * @var $objLanguage String object property for holding the
-    * language object
-    * @access private
-    *
-    */
-    public $objLanguage;
-
-    /**
-    *
-    * @var $objUser String object property for holding the
-    * user object
-    * @access private
-    *
-    */
-    public $objUser;
-
-    /**
-    *
-    * @var $objUser String object property for holding the
-    * cobnfiguration object
-    * @access private
-    *
-    */
-    public $objConfig;
-
-    /**
-    *
-    * Standard init method
-    *
-    */
-    public function init()
-    {
-        // Instantiate the language object.
-        $this->objLanguage = $this->getObject('language', 'language');
-        // Instantiate the user object.
-        $this->objUser = $this->getObject("user", "security");
-        // Instantiate the config object
-        $this->objConfig = $this->getObject('altconfig', 'config');
-
-        $this->objFile = $this->getObject('dbwebpresentfiles');
+    // security check - must be included in all scripts
+    if (!
+        /**
+        * Description for $GLOBALS
+        * @global string $GLOBALS['kewl_entry_point_run']
+        * @name   $kewl_entry_point_run
+        */
+        $GLOBALS['kewl_entry_point_run']) {
+        die("You cannot view this page directly");
     }
+    // end security check
 
     /**
-     *
-     * A method to return the flash presentation for rendering in the page
-     * @param string $id The file id of the flash file to show
-     * @return string the flash file rendered for viewing within a div
-     * @access public
-     *
-     */
-    public function showFlash($id)
+    *
+    * Class for rendering email messages into the
+    * webpresent template
+    *
+    * @author Derek Keats
+    * @category Chisimba
+    * @package webpresent
+    * @copyright AVOIR
+    * @licence GNU/GPL
+    *
+    */
+    class viewer extends object
     {
-         $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
-         if (file_exists($flashFile)) {
-             $flashFile = $this->objConfig->getcontentPath().'webpresent/' .$id .'/'. $id.'.swf';
-             $flashContent = '
+        /**
+        *
+        * @var $objLanguage String object property for holding the
+        * language object
+        * @access private
+        *
+        */
+        public $objLanguage;
+
+        /**
+        *
+        * @var $objUser String object property for holding the
+        * user object
+        * @access private
+        *
+        */
+        public $objUser;
+
+        /**
+        *
+        * @var $objUser String object property for holding the
+        * cobnfiguration object
+        * @access private
+        *
+        */
+        public $objConfig;
+
+        /**
+        *
+        * Standard init method
+        *
+        */
+        public function init()
+        {
+            // Instantiate the language object.
+            $this->objLanguage = $this->getObject('language', 'language');
+            // Instantiate the user object.
+            $this->objUser = $this->getObject("user", "security");
+            // Instantiate the config object
+            $this->objConfig = $this->getObject('altconfig', 'config');
+
+            $this->objFile = $this->getObject('dbwebpresentfiles');
+        }
+
+        /**
+         *
+         * A method to return the flash presentation for rendering in the page
+         * @param string $id The file id of the flash file to show
+         * @return string the flash file rendered for viewing within a div
+         * @access public
+         *
+         */
+        public function showFlash($id)
+        {
+            $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
+            if (file_exists($flashFile)) {
+                $flashFile = $this->objConfig->getcontentPath().'webpresent/' .$id .'/'. $id.'.swf';
+                $flashContent = '
              <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
              <param name="movie" value="'.$flashFile.'">
              <param name="quality" value="high">
              <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
             </object></div>';
-        } else {
-            $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
+            } else {
+                $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 540px; height: 302px; text-align: center;">Flash Version of Presentation being converted</div>';
+            }
+            return $flashContent;
         }
-        return $flashContent;
-    }
 
-    /**
-     *
-     * A method to return the flash presentation for rendering in the page
-     * @param string $uri The URL of the flash file to show
-     * @return string the flash file rendered for viewing within a div
-     * @access public
-     *
-     */
-    public function showFlashUrl($uri)
-    {
-         $flashFile = $uri;
-         $flashContent = '
+        /**
+         *
+         * A method to return the flash presentation for rendering in the page
+         * @param string $uri The URL of the flash file to show
+         * @return string the flash file rendered for viewing within a div
+         * @access public
+         *
+         */
+        public function showFlashUrl($uri)
+        {
+            $flashFile = $uri;
+            $flashContent = '
            <div style="border: 1px solid #000; width: 534px; height: 402px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="540" height="400">
            <param name="movie" value="'.$flashFile.'">
            <param name="quality" value="high">
            <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="534" height="402"></embed>
           </object></div>';
-        return $flashContent;
-    }
+            return $flashContent;
+        }
+        /**
+         * Display results as table
+         * @param <type> $files
+         * @return <type>
+         */
+        public function displayAsTable($files)
+        {
+            if (count($files) == 0) {
+                return '';
+            } else {
+                $table = $this->newObject('htmltable', 'htmlelements');
 
-    public function displayAsTable($files)
-    {
-        if (count($files) == 0) {
-            return '';
-        } else {
-            $table = $this->newObject('htmltable', 'htmlelements');
+                $divider = '';
 
-            $divider = '';
+                $objDateTime = $this->getObject('dateandtime', 'utilities');
+                $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
+                $objDisplayLicense->icontype = 'small';
 
-            $objDateTime = $this->getObject('dateandtime', 'utilities');
-            $objDisplayLicense = $this->getObject('displaylicense', 'creativecommons');
-            $objDisplayLicense->icontype = 'small';
+                $counter = 0;
+                $inRow = FALSE;
 
-            $counter = 0;
-            $inRow = FALSE;
+                $objTrim = $this->getObject('trimstr', 'strings');
 
-            $objTrim = $this->getObject('trimstr', 'strings');
+                foreach ($files as $file)
+                {
+                    $counter++;
 
-            foreach ($files as $file)
-            {
-                $counter++;
+                    if (($counter%2) == 1)
+                    {
+                        $table->startRow();
+                    }
+
+
+                    $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                    $link->link = $this->objFile->getPresentationThumbnail($file['id']);
+
+                    $table->addCell($link->show(), 120);
+                    $table->addCell('&nbsp;', 10);
+
+                    $rightContent = '';
+
+                    if (trim($file['title']) == '') {
+                        $filename = $file['filename'];
+                    } else {
+                        $filename = htmlentities($file['title']);
+                    }
+
+                    $link->link = $filename;
+                    $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
+
+                    if (trim($file['description']) == '') {
+                        $description = '<em>File has no description</em>';
+                    } else {
+                        $description = nl2br(htmlentities($objTrim->strTrim($file['description'], 200)));
+                    }
+
+                    $rightContent .= $description.'</p>';
+
+                    // Set License to copyright if none is set
+                    if ($file['cclicense'] == '')
+                    {
+                        $file['cclicense'] = 'copyright';
+                    }
+
+                    $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
+
+                    $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
+                    $userLink->link = $this->objUser->fullname($file['creatorid']);
+
+                    $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
+                    $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
+
+                    $table->addCell($rightContent, '40%');
+
+
+                    if (($counter%2) == 0)
+                    {
+                        $table->endRow();
+                    } else {
+                        $table->addCell('&nbsp;', '20');
+                    }
+
+                    $divider = 'addrow';
+                }
 
                 if (($counter%2) == 1)
                 {
-                    $table->startRow();
-                }
-
-
-                $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $link->link = $this->objFile->getPresentationThumbnail($file['id']);
-
-                $table->addCell($link->show(), 120);
-                $table->addCell('&nbsp;', 10);
-
-                $rightContent = '';
-
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
-                } else {
-                    $filename = htmlentities($file['title']);
-                }
-
-                $link->link = $filename;
-                $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
-
-                if (trim($file['description']) == '') {
-                    $description = '<em>File has no description</em>';
-                } else {
-                    $description = nl2br(htmlentities($objTrim->strTrim($file['description'], 200)));
-                }
-
-                $rightContent .= $description.'</p>';
-
-                // Set License to copyright if none is set
-                if ($file['cclicense'] == '')
-                {
-                    $file['cclicense'] = 'copyright';
-                }
-
-                $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
-
-                $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
-                $userLink->link = $this->objUser->fullname($file['creatorid']);
-
-                $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
-                $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
-
-                $table->addCell($rightContent, '40%');
-
-
-                if (($counter%2) == 0)
-                {
+                    $table->addCell('&nbsp;');
+                    $table->addCell('&nbsp;');
+                    $table->addCell('&nbsp;');
                     $table->endRow();
-                } else {
-                    $table->addCell('&nbsp;', '20');
                 }
 
-                $divider = 'addrow';
+                return $table->show();
+
             }
-
-            if (($counter%2) == 1)
-            {
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->endRow();
-            }
-
-            return $table->show();
-
         }
-    }
 
-    public function getLatestFeed()
-    {
-        $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
-        $description = 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site';
-        $url = $this->uri(array('action'=>'latestrssfeed'));
-
-        $files = $this->objFile->getLatestPresentations();
-
-        return $this->generateFeed($title, $description, $url, $files);
-    }
-
-    public function getUserFeed($userId)
-    {
-        $fullName = $this->objUser->fullName($userId);
-        $title = $fullName.'\'s Files';
-        $description = 'A List of the Latest Presentations uploaded by '.$fullName;
-        $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
-
-        $files = $this->objFile->getByUser($userId);
-
-        return $this->generateFeed($title, $description, $url, $files);
-    }
-
-    public function getTagFeed($tag)
-    {
-        $title = $this->objConfig->getSiteName().' - Tag: '.$tag;
-        $description = 'A List of Presentations with tag - '.$tag;
-        $url = $this->uri(array('action'=>'tagrss', 'tag'=>$tag));
-
-        $objTags = $this->getObject('dbwebpresenttags');
-        $files = $objTags->getFilesWithTag($tag);
-
-        return $this->generateFeed($title, $description, $url, $files);
-    }
-
-    public function generateFeed($title, $description, $url, $files)
-    {
-        $objFeedCreator = $this->getObject('feeder', 'feed');
-        $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
-
-        if (count($files) > 0)
+        /**
+         * Setup display to ask the user to enter email address for the participant
+         * who are to be invited.
+         * @return <type>
+         */
+        public function createPresentationForm($id,$agenda)
         {
-            $this->loadClass('link', 'htmlelements');
-            $objDate = $this->getObject('dateandtime', 'utilities');
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $objIcon = $this->newObject('geticon', 'htmlelements');
+            $objIcon->setIcon('loading_circles');
 
-            foreach ($files as $file)
+            $form =$this->loadClass('form', 'htmlelements');
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $objInput = $this->loadClass('textinput', 'htmlelements');
+            $objText = $this->loadClass('textarea', 'htmlelements');
+            $objButton = $this->loadClass('button', 'htmlelements');
+
+            $objInput = new textinput('agendaField', $agenda, '100');
+            $objText = new textarea('participants', $this->objLanguage->languageText("mod_webpresent_emailtip", "webpresent"), 12, '70');
+            $objButton = new button('invite', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
+
+            $table->cellpadding = '4';
+
+            $table->startRow();
+            $table->addCell($this->objLanguage->languageText("mod_webpresent_agenda", "webpresent"));
+            $table->endRow();
+
+            $table->startRow();
+            $table->addCell($objInput->show());
+            $table->endRow();
+
+
+            $table->startRow();
+            //$table->addCell('Participants&nbsp;&nbsp;&nbsp'.$usersLink->show(), '', '', '');
+            $table->addCell($this->objLanguage->languageText("mod_webpresent_participants", "webpresent"), '', '', '');
+            $table->endRow();
+
+            $table->startRow();
+            $table->addCell($objText->show());
+            $table->endRow();
+
+
+            $form = new form ('register', $this->uri(array('action'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
+            $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_joinlivepresentation", "webpresent"));
+            $button->setToSubmit();
+
+            $clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
+            $clientLink->link =$this->objLanguage->languageText("mod_webpresent_joinlivepresentation", "webpresent");
+
+            $content1 = '<div id="loading_views" style="display:none; ">'.$objIcon->show().'</div><div id="data_views style="float: left; width=100">'.$table->show().'<br>'.$button->show().'</div>';
+
+            $content2 = '<div id="loading_views" style="display:none;">'.$objIcon->show().'</div><div id="data_views">'.$clientLink->show().'</div>';
+
+            $table = $this->newObject('htmltable', 'htmlelements');
+            $table->width="130";
+            $table->startRow();
+            $table->addCell($objFeatureBox->show($this->objLanguage->languageText("mod_webpresent_presenter", "webpresent"), $content1), '50%', 'top', 'left');
+            $table->endRow();
+
+            $table->startRow();
+            $table->addCell($objFeatureBox->show($this->objLanguage->languageText("mod_webpresent_participant", "webpresent"), $content2), '50%', 'top', 'left');
+            $table->endRow();
+
+            $form->addToForm($table->show());
+
+
+            return $form->show();
+            
+        }
+        
+        public function getLatestFeed()
+        {
+            $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
+            $description = 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site';
+            $url = $this->uri(array('action'=>'latestrssfeed'));
+
+            $files = $this->objFile->getLatestPresentations();
+
+            return $this->generateFeed($title, $description, $url, $files);
+        }
+
+        public function getUserFeed($userId)
+        {
+            $fullName = $this->objUser->fullName($userId);
+            $title = $fullName.'\'s Files';
+            $description = 'A List of the Latest Presentations uploaded by '.$fullName;
+            $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
+
+            $files = $this->objFile->getByUser($userId);
+
+            return $this->generateFeed($title, $description, $url, $files);
+        }
+
+        public function getTagFeed($tag)
+        {
+            $title = $this->objConfig->getSiteName().' - Tag: '.$tag;
+            $description = 'A List of Presentations with tag - '.$tag;
+            $url = $this->uri(array('action'=>'tagrss', 'tag'=>$tag));
+
+            $objTags = $this->getObject('dbwebpresenttags');
+            $files = $objTags->getFilesWithTag($tag);
+
+            return $this->generateFeed($title, $description, $url, $files);
+        }
+
+        public function generateFeed($title, $description, $url, $files)
+        {
+            $objFeedCreator = $this->getObject('feeder', 'feed');
+            $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
+
+            if (count($files) > 0)
             {
+                $this->loadClass('link', 'htmlelements');
+                $objDate = $this->getObject('dateandtime', 'utilities');
 
-                if (trim($file['title']) == '') {
-                    $filename = $file['filename'];
-                } else {
-                    $filename = htmlentities($file['title']);
+                foreach ($files as $file)
+                {
+
+                    if (trim($file['title']) == '') {
+                        $filename = $file['filename'];
+                    } else {
+                        $filename = htmlentities($file['title']);
+                    }
+
+                    $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
+
+                    $imgLink = new link($link);
+                    $imgLink->link = $this->objFile->getPresentationThumbnail($file['id'], $filename);
+
+                    $date = $objDate->sqlToUnixTime($file['dateuploaded']);
+
+
+                    $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
                 }
 
-                $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
 
-                $imgLink = new link($link);
-                $imgLink->link = $this->objFile->getPresentationThumbnail($file['id'], $filename);
-
-                $date = $objDate->sqlToUnixTime($file['dateuploaded']);
-
-
-                $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
             }
 
-
+            return $objFeedCreator->output();
         }
 
-        return $objFeedCreator->output();
-    }
-
-    public function getPresentationThumbnail($id, $title='')
-    {
-        $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
-        $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
-
-        if (trim($title) == '')
+        public function getPresentationThumbnail($id, $title='')
         {
-            $title = '';
-        } else {
-            $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
-        }
+            $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
+            $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
 
-        if (file_exists($source)) {
-
-            return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
-        } else {
-            $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
-            $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
+            if (trim($title) == '')
+            {
+                $title = '';
+            } else {
+                $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
+            }
 
             if (file_exists($source)) {
-                $objMkDir = $this->getObject('mkdir', 'files');
-                $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
-                $objMkDir->mkdirs($destinationDir);
 
-                $this->objImageResize = $this->getObject('imageresize', 'files');
-
-                $this->objImageResize->setImg($source);
-
-                // Resize to 100x100 Maintaining Aspect Ratio
-                $this->objImageResize->resize(120, 120, TRUE);
-
-                //$this->objImageResize->show(); // Uncomment for testing purposes
-
-                // Determine filename for file
-                // If thumbnail can be created, give it a unique file name
-                // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
-                if ($this->objImageResize->canCreateFromSouce) {
-                    $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';
-                    $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
-                    $this->objImageResize->store($img);
-
-                    return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
-                } else {
-                    return 'Unable to generate thumbnail';
-                }
+                return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
             } else {
-                return 'No Preview Available';
+                $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
+                $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
+
+                if (file_exists($source)) {
+                    $objMkDir = $this->getObject('mkdir', 'files');
+                    $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
+                    $objMkDir->mkdirs($destinationDir);
+
+                    $this->objImageResize = $this->getObject('imageresize', 'files');
+
+                    $this->objImageResize->setImg($source);
+
+                    // Resize to 100x100 Maintaining Aspect Ratio
+                    $this->objImageResize->resize(120, 120, TRUE);
+
+                    //$this->objImageResize->show(); // Uncomment for testing purposes
+
+                    // Determine filename for file
+                    // If thumbnail can be created, give it a unique file name
+                    // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
+                    if ($this->objImageResize->canCreateFromSouce) {
+                        $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';
+                        $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
+                        $this->objImageResize->store($img);
+
+                        return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
+                    } else {
+                        return 'Unable to generate thumbnail';
+                    }
+                } else {
+                    return 'No Preview Available';
+                }
             }
         }
     }
-}
 
 ?>
