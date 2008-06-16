@@ -195,7 +195,7 @@
                     $rightContent .= '<p><strong>'.$link->show().'</strong><br />';
 
                     if (trim($file['description']) == '') {
-                        $description = '<em>File has no description</em>';
+                        $description = '<em>'.$this->objLanguage->languageText("mod_webpresent_filehasnodesc", "webpresent").'</em>';
                     } else {
                         $description = nl2br(htmlentities($objTrim->strTrim($file['description'], 200)));
                     }
@@ -208,13 +208,13 @@
                         $file['cclicense'] = 'copyright';
                     }
 
-                    $rightContent .= '<p><strong>License:</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
+                    $rightContent .= '<p><strong>'.$this->objLanguage->languageText("mod_webpresent_licence", "webpresent").':</strong> '.$objDisplayLicense->show($file['cclicense']).'<br />';
 
                     $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$file['creatorid'])));
                     $userLink->link = $this->objUser->fullname($file['creatorid']);
 
-                    $rightContent .= '<strong>Uploaded By:</strong> '.$userLink->show().'<br />';
-                    $rightContent .= '<strong>Date Uploaded:</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
+                    $rightContent .= '<strong>'.$this->objLanguage->languageText("mod_webpresent_uploadedby", "webpresent").':</strong> '.$userLink->show().'<br />';
+                    $rightContent .= '<strong>'.$this->objLanguage->languageText("mod_webpresent_dateuploaded", "webpresent").':</strong> '.$objDateTime->formatDate($file['dateuploaded']).'</p>';
 
                     $table->addCell($rightContent, '40%');
 
@@ -319,7 +319,7 @@
         public function getLatestFeed()
         {
             $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
-            $description = 'A List of the Latest Presentations to be uploaded to the '.$this->objConfig->getSiteName().' Site';
+            $description =$this->objLanguage->languageText("mod_webpresent_listphrase", "webpresent").' '.$this->objConfig->getSiteName().' '.$this->objLanguage->languageText("mod_webpresent_site", "webpresent");
             $url = $this->uri(array('action'=>'latestrssfeed'));
 
             $files = $this->objFile->getLatestPresentations();
@@ -336,7 +336,7 @@
         {
             $fullName = $this->objUser->fullName($userId);
             $title = $fullName.'\'s Files';
-            $description = 'A List of the Latest Presentations uploaded by '.$fullName;
+            $description =$this->objLanguage->languageText("mod_webpresent_phraselistuploadedby", "webpresent"). ' '.$fullName;
             $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
 
             $files = $this->objFile->getByUser($userId);
@@ -454,10 +454,10 @@
 
                         return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
                     } else {
-                        return 'Unable to generate thumbnail';
+                        return $this->objLanguage->languageText("mod_webpresent_unabletogeneratethumbnail", "webpresent");// '';
                     }
                 } else {
-                    return 'No Preview Available';
+                    return $this->objLanguage->languageText("mod_webpresent_nopreview", "webpresent");
                 }
             }
         }
