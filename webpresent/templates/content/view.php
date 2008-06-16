@@ -260,7 +260,7 @@ if (count($slideContent['slideshow']) > 0) {
    
     //construct a form for setting up a presentation then add it as a 'live presentation' tab
   
-    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($id,$agenda));
+    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda));
 
     $objTabs->width = '95%';
     //then display the tabs
