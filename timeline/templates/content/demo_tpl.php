@@ -49,4 +49,4 @@ if (!$mode=="plain") {
 } else {
     echo $str;
 }
-?>  
+?>
