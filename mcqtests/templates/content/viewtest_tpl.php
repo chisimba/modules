@@ -17,6 +17,7 @@
 	$objIcon = $this->newObject('geticon', 'htmlelements');
 	$objConfirm = $this->loadClass('confirm', 'utilities');
 	$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
+	$this->loadClass('textinput', 'htmlelements');
 
 // set up language items
 	$testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
@@ -350,6 +351,12 @@ $objLayer->str = $homeLink;
 $back = $objLayer->show();
 $str.= $back;
 //echo $str;
+if(isset($qNum)){
+	$objInput = new textinput('questionId', $questId);
+	$objInput->fldType = 'hidden';
+	$topStr.= $objInput->show();
+}
+
 
 	$answers_tab->addBoxContent($str);
 	$answers_tab->addTabLabel($addqestionslabel);

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+	<update>
+		<table>tbl_test_questions</table>
+		<version>1.030</version>
+		<description>add a question type field</description>
+		<data>
+			<add>
+				<name>questiontype</name>
+				<type>text</type>
+				<length>25</length>
+			</add>
+		</data>
+	</update>
+</updates>

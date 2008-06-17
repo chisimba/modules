@@ -46,6 +46,10 @@ $fields = array(
         'type' => 'integer',
         'length' => 2,
         ),
+    'questiontype' => array(
+        'type' => 'text',
+        'length' => 25,
+        ),
     'updated' => array(
         'type' => 'timestamp',
         ),

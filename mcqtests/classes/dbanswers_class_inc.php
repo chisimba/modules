@@ -51,41 +51,6 @@ class dbanswers extends dbtable
         return $id;
     }
 
-    /**
-     * Method to get a set of answers for a specified question.
-     *
-     * @access public
-     * @param string $questionId The id of the specified question.
-     * @return array $data The list of answers.
-     */
-    public function getAnswers($questionId)
-    {
-        $sql = 'SELECT * FROM '.$this->table;
-        $sql.= " WHERE questionid='$questionId' ORDER BY answerorder";
-        $data = $this->getArray($sql);
-        if (!empty($data)) {
-            return $data;
-        }
-        return FALSE;
-    }
-
-    /**
-     * Method to get an answer to a question.
-     *
-     * @access public
-     * @param string $answerId The id of the specified answer.
-     * @return array $data The details of the answer.
-     */
-    public function getAnswer($answerId)
-    {
-        $sql = 'SELECT * FROM '.$this->table;
-        $sql.= " WHERE id='$answerId'";
-        $data = $this->getArray($sql);
-        if (!empty($data)) {
-            return $data;
-        }
-        return FALSE;
-    }
 
     /**
      * Method to delete an answer.
@@ -131,5 +96,19 @@ class dbanswers extends dbtable
         }
         return FALSE;
     }
+    
+    /**
+     * Method to get the answers for a specific question
+     *
+     * @access public
+     * @param string $questionId The id of the specified question.
+     * @return int $array The answers associated with the question.
+     */
+    public function getAnswers($questionId)
+    {
+        $answers = $this->getAll("WHERE questionid = '$questionId' ORDER BY answerorder");
+        return $answers;
+    }
+    
 } // end of class
 ?>

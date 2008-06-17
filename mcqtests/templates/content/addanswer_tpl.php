@@ -17,6 +17,7 @@ $objText = &$this->loadClass('textarea', 'htmlelements');
 $objButton = &$this->loadClass('button', 'htmlelements');
 $objInput = &$this->loadClass('dropdown', 'htmlelements');
 $objInput = &$this->loadClass('checkbox', 'htmlelements');
+$objRadio = $this->loadClass('radio', 'htmlelements');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_mcqtests_addanswers', 'mcqtests');
@@ -40,13 +41,12 @@ if ($mode == 'edit' && !empty($answer)) {
 } else {
     $dAnswer = '';
     $dComment = '';
-    $num = $data['count']+1;
+    //$aOrder = $data['count']+1;
 }
 
-print_r($data['count']);
+//print_r($data['count']);
 
-
-$aOrder = $num;
+$num = 1;
 // Display test info
 $str = '<br /><font size="4"><b>'.$questionLabel.':</b>&nbsp;&nbsp;'.$data['question'].'</font>';
 
@@ -56,79 +56,66 @@ $str = '<br /><font size="4"><b>'.$questionLabel.':</b>&nbsp;&nbsp;'.$data['ques
 	$objTable->startRow();
 	$objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
 	$objTable->endRow();
-
-	$objText = new textarea('answer1', $dAnswer, 2, 80);
-	$objTable->startRow();
-	$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
-	$objTable->endRow();
-	$objInput = new textinput('comment1', $dComment);
-	$objInput->size = 70;
-	$objTable->startRow();
-	$objTable->addCell('<b>'.$commentLabel.':</b>', '7%', 'center', '', '');
-	$objTable->addCell($objInput->show() , '', '', '', '');
-	$objTable->endRow();
-	$objTable->row_attributes = 'height="15"';
-	$objTable->startRow();
-	$objTable->addCell('', '', '', '', '', 'colspan="3"');
-	$objTable->endRow();
-
-if ($mode == 'add') {
-
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
-    $objTable->endRow();
-
-    $objText = new textarea('answer2', '', 2, 80);
-    $objTable->startRow();
-    $objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
-    $objInput = new textinput('comment2');
-    $objInput->size = 70;
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$commentLabel.':</b>', '', 'center', '', '');
-    $objTable->addCell($objInput->show() , '', '', '', '');
-    $objTable->endRow();
-    $objTable->row_attributes = 'height="15"';
-    $objTable->startRow();
-    $objTable->addCell('', '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
-
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
-    $objTable->endRow();
-    $objText = new textarea('answer3', '', 2, 80);
-    $objTable->startRow();
-    $objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
-    $objInput = new textinput('comment3');
-    $objInput->size = 70;
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$commentLabel.':</b>', '', 'center', '', '');
-    $objTable->addCell($objInput->show() , '', '', '', '');
-    $objTable->endRow();
-    $objTable->row_attributes = 'height="15"';
-    $objTable->startRow();
-    $objTable->addCell('', '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
-
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
-    $objTable->endRow();
-    $objText = new textarea('answer4', '', 2, 80);
-    $objTable->startRow();
-    $objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
-    $objInput = new textinput('comment4');
-    $objInput->size = 70;
-    $objTable->startRow();
-    $objTable->addCell('<b>'.$commentLabel.':</b>', '', 'center', '', '');
-    $objTable->addCell($objInput->show() , '', '', '', '');
-    $objTable->endRow();
-    $objTable->row_attributes = 'height="15"';
-    $objTable->startRow();
-    $objTable->addCell('', '', '', '', '', 'colspan="2"');
-    $objTable->endRow();
+	
+if($truefalse == true){
+	$tf = array();
+	$tf[] = 'true';
+	$tf[] = 'false';
+}else{
+	$tf = array();
+	for($i=0; $i < $qNum; $i++) {
+		$tf[] = '';
+	}
 }
+$j = 1;
+if(empty($answers))
+{
+	for($i=0; $i < $qNum; $i++) {
+		$j = $i+1;
+		$objRadio = new radio('correctans');
+	    $objRadio->addOption($j, '');
+		$objText = new textarea('answer'.$j,$tf[$i], 2, 80);
+		$objTable->startRow();
+		$objTable->addCell($objRadio->show());
+		$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
+		$objTable->endRow();
+		$objInput = new textinput('comment'.$j, $dComment);
+		$objInput->size = 70;
+		$objTable->startRow();
+		$objTable->addCell('<b>'.$commentLabel.':</b>', '7%', 'center', '', '');
+		$objTable->addCell($objInput->show() , '', '', '', '');
+		$objTable->endRow();
+		$objTable->row_attributes = 'height="15"';
+		$objTable->startRow();
+		$objTable->addCell('', '', '', '', '', 'colspan="3"');
+		$objTable->endRow();
+	}
+}else{
+	foreach($answers as $answer) {
+		$objRadio = new radio('correctans');
+	    $objRadio->addOption($j, '');
+	    if($answer['correct'] == 1){
+	    	$objRadio->setSelected($answer['answerorder']);
+	    }
+		$objText = new textarea('answer'.$j,$answer['answer'], 2, 80);
+		$objTable->startRow();
+		$objTable->addCell($objRadio->show());
+		$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
+		$objTable->endRow();
+		$objInput = new textinput('comment'.$j, $answer['commenttext']);
+		$objInput->size = 70;
+		$objTable->startRow();
+		$objTable->addCell('<b>'.$commentLabel.':</b>', '7%', 'center', '', '');
+		$objTable->addCell($objInput->show() , '', '', '', '');
+		$objTable->endRow();
+		$objTable->row_attributes = 'height="15"';
+		$objTable->startRow();
+		$objTable->addCell('', '', '', '', '', 'colspan="3"');
+		$objTable->endRow();
+		$j++;
+	}
+}
+
 // hidden elements
 $objInput = new textinput('testId', $data['testid']);
 $objInput->fldType = 'hidden';
@@ -136,7 +123,7 @@ $hidden = $objInput->show();
 $objInput = new textinput('questionId', $data['id']);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
-$objInput = new textinput('answerorder', $aOrder);
+$objInput = new textinput('qNum', $qNum);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 if ($mode == 'edit') {

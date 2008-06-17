@@ -64,13 +64,13 @@
 	$errPercent = $this->objLanguage->languageText('mod_mcqtests_numericpercent', 'mcqtests');
 	$errName = $this->objLanguage->languageText('mod_mcqtests_entername', 'mcqtests');
 	$errDates = $this->objLanguage->languageText('mod_mcqtests_errordates', 'mcqtests');
-
+	/*
 	if ($mode == 'edit') {
 		$this->setVarByRef('heading', $editHeading);
 	} else {
 		$this->setVarByRef('heading', $addHeading);
 	}
-
+	*/
 	if (!empty($data)) {
 		$id = $data[0]['id'];
 		$name = $data[0]['name'];
@@ -159,6 +159,7 @@ case '1':
 		$objText->show()
 	));
 	// hidden fields
+	/*
 	$hidden = '';
 	if ($mode == 'edit') {
 		$objInput = new textinput('id', $id);
@@ -168,9 +169,10 @@ case '1':
 	$objTable->addRow(array(
 		$hidden
 	));
-
+	*/
 	// Set activity status - not active if in add mode
 	$objLabel = new label('<b>'.$statusLabel.':</b>', 'input_status');
+	/*
 	if ($mode == 'edit') {
 		$objRadio = new radio('status');
 		$objRadio->addOption('inactive', $notactiveLabel);
@@ -188,7 +190,7 @@ case '1':
 		$objLabel->show() ,
 		$statusShow
 	));
-	
+	*/
 	// set up test type
 	$objRadio = new dropdown('testType');
 	$objRadio->addOption($formativeLabel, $formativeLabel);
@@ -272,7 +274,7 @@ case '2':
 	}
 	$objDropDown->setSelected($decimal);
 	$dropStr.= '&nbsp;<b>.</b>&nbsp;&nbsp;'.$objDropDown->show() .'&nbsp;%&nbsp;&nbsp;&nbsp;';
-	$dropStr.= '<font class="warning">'.$lbTotalPercent.':&nbsp;'.$allPercent.'%</font>';
+	$dropStr.= '<font class="warning">'.$lbTotalPercent.'&nbsp;%</font>';
 	$objTable->addRow(array(
 		$objLabel->show() ,
 		$dropStr
@@ -373,7 +375,7 @@ case '3':
 	$objLink = new link($this->uri(array(
 		'action' => 'addlab',
 		'id' => $id,
-		'mode' => $mode
+	//	'mode' => $mode
 	)));
 	$objLink->link = $addLabLabel;
 	$labLink = $objLink->show();
