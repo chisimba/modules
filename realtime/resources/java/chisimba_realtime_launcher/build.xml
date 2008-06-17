@@ -1,0 +1,108 @@
+
+<project name="chisimba_realtime_launcher" default="dist" basedir=".">
+    <description>Realtime Proxy</description>
+    <!-- set global properties for this build -->
+    <!-- set global properties for this build -->
+    <property file="build.properties" />
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="."/>
+    <property name="realtime.sessionmonitor.filename" value="lib/realtime-sessionmonitor-0.1.jar" />
+    <property name="realtime.tcp.launcher.filename" value="lib/realtime-launcher-0.1.jar" />
+    <property name="realtime.tcp.proxy.filename" value="lib/realtime-proxyserver-0.1.jar" />
+    <property name="realtime.chisimba.dir" value="/opt/lampp/htdocs/chisimba_modules/realtime/resources" />
+    <property name="realtime.chisimba.realtime.dir" value="/dwaf/projects/chisimba_realtime/lib" />
+    <property name="realtime.chisimba.realtime.pluginmanager.dir" value="/dwaf/projects/chisimba_realtime_pluginmanager/lib" />
+    <property name="realtime.chisimba.realtime.base.dir" value="/dwaf/projects/chisimba_realtime_base/lib" />
+    <property name="realtime.security.dir" value="security" />
+    <property name="certs.dir" value="certs" />
+    <property name="icons.dir" value="icons" />
+    <property name="realtime.src.svn.dir" value="/opt/lampp/htdocs/chisimba_modules_svn/realtime/resources/java/src/" />
+    <property name="realtime.deploy.dir" value="/usr/lib/realtime/lib" />
+    <taskdef name="p200ant"
+             classname="de.matthiasmann.p200ant.P200AntTask"
+             classpath="lib/P200Ant.jar"/>
+    <path id="classpath.launcher">
+    </path>
+    <path id="classpath.lib">
+ <!--       <pathelement location="lib/realtime-usermanager-0.1.jar" />
+        <pathelement location="lib/jspeex.jar" />
+   -->
+    </path>
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp>
+            <format property="build.year" pattern="yyyy"/>
+            <format property="build.month" pattern="MM"/>
+            <format property="build.day" pattern="dd"/>
+            <format property="build.hour" pattern="HH"/>
+            <format property="build.minute" pattern="mm"/>
+        </tstamp>
+        <echo>Generating Version.java...</echo>
+        <echo file="src/avoir/realtime/tcp/launcher/Version.java">
+            package avoir.realtime.tcp.launcher;${line.separator}
+            public class Version{${line.separator}
+                public static float version=${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
+                public static int getVersion(){${line.separator}
+                   return (int)version;${line.separator}
+                }${line.separator}
+            }
+        </echo>
+        <mkdir dir="${build}"/>
+    </target>
+    <target name="compile" depends="init" description="compile the source ">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}" debug="true" source="1.5" debuglevel="lines, vars,source">
+            <classpath refid="classpath.lib" />
+        </javac>
+    </target>
+    <target name="dist-launcher" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.tcp.launcher.filename}">
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/launcher/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.tcp.launcher.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="dist-sessionmonitor" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.sessionmonitor.filename}">
+            <fileset dir="${build}">
+                <include name="avoir/realtime/sessionmonitor/**/*.class" />
+            </fileset>
+         <zipfileset dir="${icons.dir}" prefix="icons" includes="schedule.jpeg,view.jpeg" />
+  
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.sessionmonitor.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="sign-jar" description="Signs the client applet jar file" 
+    depends="dist-launcher,dist-sessionmonitor">
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.tcp.launcher.filename}" alias="realtime" storepass="exitwounds" />
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.sessionmonitor.filename}" alias="realtime" storepass="exitwounds" />
+    </target>
+    <target name="deploy" depends="sign-jar" description="Deploys the jar files to the web modules folder">
+        <copy file="${realtime.tcp.launcher.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.sessionmonitor.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.launcher.filename}" todir="${realtime.chisimba.realtime.pluginmanager.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.launcher.filename}" todir="${realtime.chisimba.realtime.base.dir}" overwrite="true" />
+        <copy file="${realtime.sessionmonitor.filename}" todir="${realtime.chisimba.realtime.base.dir}" overwrite="true" />
+    
+        <!--      <copy todir="${realtime.src.svn.dir}">
+            <fileset dir="${src}"/>
+        </copy>
+    -->
+    </target>
+</project>
