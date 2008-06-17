@@ -1,0 +1,137 @@
+
+<project name="chisimba_realtime_base" default="dist" basedir=".">
+    <description>Realtime Proxy</description>
+    <!-- set global properties for this build -->
+    <!-- set global properties for this build -->
+    <property file="build.properties" />
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="."/>
+    <property name="realtime.tcp.base.filename" value="lib/realtime-base-0.1.jar" />
+    <property name="realtime.tcp.whiteboard.filename" value="lib/realtime-whiteboard-0.1.jar" />
+    <property name="realtime.tcp.proxy.filename" value="lib/realtime-proxyserver-0.1.jar" />
+    <property name="realtime.chisimba.dir" value="/opt/lampp/htdocs/chisimba_modules/realtime/resources" />
+    <property name="realtime.chisimba.realtime.dir" value="/dwaf/projects/chisimba_realtime/lib" />
+    <property name="realtime.chisimba.realtime.audio.dir" value="/dwaf/projects/chisimba_realtime_audio/lib" />
+    <property name="realtime.chisimba.realtime.toolbar.dir" value="/dwaf/projects/chisimba_realtime_toolbar/lib" />
+    <property name="realtime.chisimba.realtime.pluginmanager.dir" value="/dwaf/projects/chisimba_realtime_pluginmanager/lib" />
+    <property name="realtime.chisimba.realtime.usermanager.dir" value="/dwaf/projects/chisimba_realtime_usermanager/lib" />
+    <property name="realtime.chisimba.realtime.launcher.dir" value="/dwaf/projects/chisimba_realtime_launcher/lib" />
+    <property name="realtime.security.dir" value="security" />
+    <property name="icons.dir" value="icons" />
+    <property name="realtime.src.svn.dir" value="/opt/lampp/htdocs/chisimba_modules_svn/realtime/resources/java/src/" />
+    <property name="realtime.deploy.dir" value="/usr/lib/realtime/lib" />
+    <taskdef name="p200ant"
+             classname="de.matthiasmann.p200ant.P200AntTask"
+             classpath="lib/P200Ant.jar"/>
+    <path id="classpath.base">
+    </path>
+    <path id="classpath.lib">
+        <pathelement location="lib/realtime-usermanager-0.1.jar" />
+        <pathelement location="lib/realtime-launcher-0.1.jar" />
+        <pathelement location="lib/realtime-sessionmonitor-0.1.jar" />
+        <pathelement location="lib/jspeex.jar" />
+    </path>
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp>
+            <format property="build.year" pattern="yyyy"/>
+            <format property="build.month" pattern="MM"/>
+            <format property="build.day" pattern="dd"/>
+            <format property="build.hour" pattern="HH"/>
+            <format property="build.minute" pattern="mm"/>
+        </tstamp>
+        <echo>Generating Version.java...</echo>
+        <echo file="src/avoir/realtime/tcp/base/Version.java">
+            package avoir.realtime.tcp.base;${line.separator}
+            public class Version{${line.separator}
+                public static float version=${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
+                public static int getVersion(){${line.separator}
+            return (int)version;${line.separator}
+            }${line.separator}
+            }
+        </echo>
+        <mkdir dir="${build}"/>
+    </target>
+    <target name="compile" depends="init" description="compile the source ">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}" debug="true" source="1.5" debuglevel="lines, vars,source">
+            <classpath refid="classpath.lib" />
+        </javac>
+    </target>
+    <target name="dist-whiteboard" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.tcp.whiteboard.filename}">
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/whiteboard/**/*.class" />
+                <include name="avoir/realtime/tcp/whiteboard/item/**/*.class" />
+            </fileset>
+            <zipfileset dir="${icons.dir}" prefix="icons" includes="whiteboard/*.gif,whiteboard/*.png,whiteboard/*.jpg,whiteboard/*.jpeg" />
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.tcp.whiteboard.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="dist-base" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.tcp.base.filename}">
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/base/**/*.class" />
+                <include name="avoir/realtime/tcp/common/packet/**/*.class" />
+                <include name="avoir/realtime/tcp/common/**/*.class" />
+            </fileset>
+            <zipfileset dir="${icons.dir}" prefix="icons" includes="*.gif,*.png,*.jpg,*.jpeg" />
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.tcp.base.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="dist-proxy" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.tcp.proxy.filename}">
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/proxy/**/*.class" />
+                <include name="avoir/realtime/tcp/base/packet/**/*.class" />
+                <include name="avoir/realtime/tcp/common/packet/**/*.class" />
+                <include name="avoir/realtime/tcp/base/user/**/*.class" />
+                <include name="avoir/realtime/tcp/whiteboard/**/*.class" />
+                <include name="avoir/realtime/tcp/whiteboard/item/**/*.class" />
+                <include name="zyh/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.tcp.proxy.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="sign-jar" description="Signs the client applet jar file" 
+    depends="dist-base,dist-proxy,dist-whiteboard">
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.tcp.base.filename}" alias="realtime" storepass="exitwounds" />
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.tcp.whiteboard.filename}" alias="realtime" storepass="exitwounds" />
+    </target>
+    <target name="deploy" depends="sign-jar" description="Deploys the jar files to the web modules folder">
+        <copy file="${realtime.tcp.base.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.proxy.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.whiteboard.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.base.filename}" todir="${realtime.chisimba.realtime.audio.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.base.filename}" todir="${realtime.chisimba.realtime.toolbar.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.base.filename}" todir="${realtime.chisimba.realtime.pluginmanager.dir}" overwrite="true" />
+        <copy file="${realtime.tcp.base.filename}" todir="${realtime.chisimba.realtime.usermanager.dir}" overwrite="true" />
+      
+        <!--      <copy todir="${realtime.src.svn.dir}">
+            <fileset dir="${src}"/>
+        </copy>
+    -->
+    </target>
+</project>
