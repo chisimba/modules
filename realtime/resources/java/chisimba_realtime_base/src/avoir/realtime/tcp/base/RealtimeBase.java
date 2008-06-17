@@ -105,9 +105,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private TButton arrowUpButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_up.png"));
     private TButton arrowSideButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_side.png"));
     private TButton paintBrushButton = new TButton(ImageUtil.createImageIcon(this, "/icons/paintbrush.png"));
+    private ImageIcon micOffIcon = ImageUtil.createImageIcon(this, "/icons/mic_off.png");
+    private ImageIcon micOnIcon = ImageUtil.createImageIcon(this, "/icons/mic_on.png");
     private JFrame fileTransferFrame;
     JToolBar pointerToolbar = new JToolBar(JToolBar.VERTICAL);
 
+    /**
+     * Create additional components
+     */
     private void initCustomComponents() {
         userManager = new UserListManager(this);
         toolbarManager = new ToolbarManager(this);
@@ -118,7 +123,12 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         surveyManagerFrame = new SurveyManagerFrame(this);
         menuMananger = new MenuManager(this);
         whiteboardToolbar = new WhiteboardToolbarManager(this);
-
+        talkButton.setIcon(micOffIcon);
+        talkButton.setBorderPainted(false);
+        //talkButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        //talkButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        talkButton.setFont(new java.awt.Font("Dialog", 0, 8));
+        System.out.println("size: " + talkButton.getSize());
 
         mediaPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Media Streaming"));
         mediaPanel.setPreferredSize(new java.awt.Dimension(300, 300));
@@ -245,6 +255,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return handRightButton;
     }
 
+    /**
+     * React to action events
+     * @param e
+     */
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("stepout")) {
             if (stepOutButton.isSelected()) {
@@ -310,28 +324,49 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * initialize realtime options object
+     */
     public void initRealtimeHome() {
         options = new RealtimeOptions();
 
     }
 
+    /**
+     * get menu abr manager
+     * @return
+     */
     public JMenuBar getMenuMananger() {
         return menuMananger.getMenuBar();
     }
 
+    /**
+     * get options object
+     * @return
+     */
     public RealtimeOptions getRealtimeOptions() {
         return options;
     }
 
+    /**
+     * create chat room
+     */
     public void initChatRoom() {
         chatRoom = new ChatRoom(this, user, chatLogFile, sessionId);
 
     }
 
+    /**
+     * get survey manager
+     * @return
+     */
     public SurveyManagerFrame getSurveyManagerFrame() {
         return surveyManagerFrame;
     }
 
+    /**
+     * display survey manager: for creating survey
+     */
     public void showSurveyManagerFrame() {
         surveyManagerFrame.setTitle("Survey Wizard  - Untitled");
         surveyManagerFrame.setSize(560, 500);
@@ -351,6 +386,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * display the survey frame.....for answering a survey
+     * @param questions
+     * @param title
+     */
     public void showSurveyFrame(Vector<String> questions, String title) {
         surveyFrame.setQuestions(questions);
         surveyFrame.setTitle(title);
@@ -360,22 +400,43 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         surveyFrame.setVisible(true);
     }
 
+    /**
+     * get the user manager
+     * @return
+     */
     public UserListManager getUserManager() {
         return userManager;
     }
 
+    /**
+     * get the session manager
+     * @return
+     */
     public SessionManager getSessionManager() {
         return sessionManager;
     }
 
+    /**
+     * get the toolbar manager
+     * @return
+     */
     public ToolbarManager getToolbarManager() {
         return toolbarManager;
     }
 
+    /**
+     * Get the agenda manager
+     * @return
+     */
     public AgendaManager getAgendaManager() {
         return agendaManager;
     }
 
+    /**
+     * Remove this user from the server, then release audio resources
+     * @param userid
+     * @param sessionid
+     */
     public void removeUser(String userid, String sessionid) {
         tcpClient.removeUser(user);
         if (audioWizardFrame != null) {
@@ -383,10 +444,18 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Can we use the MIc?
+     * @return
+     */
     public boolean isMicEnabled() {
         return micEnabled;
     }
 
+    /**
+     * If we can use mic, display an icon saying so
+     * @param micEnabled
+     */
     public void setMicEnabled(boolean micEnabled) {
         this.micEnabled = micEnabled;
         talkButton.setEnabled(micEnabled);
@@ -395,11 +464,19 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 userName));
     }
 
+    /**
+     * can we receive sound?
+     * @return
+     */
     public boolean isSpeakerEnabled() {
         return speakerEnabled;
 
     }
 
+    /**
+     * If we can recieve sound, the display the sound-on speaker
+     * @param speakerEnabled
+     */
     public void setSpeakerEnabled(boolean speakerEnabled) {
         this.speakerEnabled = speakerEnabled;
         muteOpt.setEnabled(speakerEnabled);
@@ -409,42 +486,98 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 userName));
     }
 
+    /**
+     * can this user control a presentation ?
+     * @return
+     */
     public boolean getControl() {
         return hasControl;
     }
 
+    /**
+     * is this a presenter?
+     * @return
+     */
     public boolean isPresenter() {
         return user.isPresenter();
     }
 
+    /**
+     * get slide server ID
+     * @return
+     */
     public String getSlideServerId() {
         return slideServerId;
     }
 
+    /**
+     * get the session ID
+     * @return
+     */
     public String getSessionId() {
         return sessionId;
     }
 
+    /**
+     * get the tcp connector object
+     * @return
+     */
     public TCPClient getTcpClient() {
         return tcpClient;
     }
 
+    /**
+     * get this user
+     * @return
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * set whether this user has control
+     * @param control
+     */
     public void setControl(boolean control) {
         this.hasControl = control;
     }
 
+    /**
+     * get the session title
+     * @return
+     */
     public String getSessionTitle() {
         return sessionTitle;
     }
 
+    /**
+     * set this session's title
+     * @param sessionTitle
+     */
     public void setSessionTitle(String sessionTitle) {
         this.sessionTitle = sessionTitle;
     }
 
+    /**
+     * This creates the actual realtime presentation screen. This is invoked 
+     * by the launcher. We could invoke it directly, but its too heavy for an applet
+     * so the trick is lauch a simple light frame for an applet, then let that
+     * invoke this
+     * @param userLevel
+     * @param fullname
+     * @param userName
+     * @param host
+     * @param port
+     * @param isPresenter
+     * @param sessionId
+     * @param slidesDir
+     * @param isSlidesHost
+     * @param siteRoot
+     * @param slideServerId
+     * @param resourcesPath
+     * @param localhost
+     * @return
+     */
     public JPanel init(
             String userLevel,
             String fullname,
@@ -490,6 +623,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
+    /**
+     * Initialize TCP connection. Actually, this is where you create an object
+     * to connect to the server
+     */
     private void initTCPCommunication() {
         initUser();
         tcpClient = new TCPClient(this);
@@ -498,6 +635,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         sessionManager.connect();
     }
 
+    /**
+     * After connecting to server, and signing in..enable necesary buttons
+     * and display correct messages
+     */
     public void doPostConnectControlsCheck() {
         surface.setStatusMessage("Initializing session, please wait ...");
         surface.setShowSplashScreen(false);
@@ -508,6 +649,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         setConnected(true);
     }
 
+    /**
+     * create this user based on parameters from the applet
+     */
     private void initUser() {
 
         //if not logged in, then assign random number
@@ -526,6 +670,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * Create the audio wizard frame
+     */
     public void initAudio() {
         audioWizardFrame = new AudioWizardFrame(RealtimeBase.this, userName, sessionId, slideServerId, resourcesPath);
         audioWizardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -534,38 +681,73 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * get the mute obj
+     * @return
+     */
     public JCheckBox getMuteOpt() {
         return muteOpt;
     }
 
+    /**
+     * get the talk button
+     * @return
+     */
     public JToggleButton getTalkButton() {
         return talkButton;
     }
 
+    /**
+     * get the volume slide obj
+     * @return
+     */
     public JSlider getVolumeSlide() {
         return volumeSlide;
     }
 
+    /**
+     * get the slides directory path
+     * @return
+     */
     public String getSlidesDir() {
         return slidesDir;
     }
 
+    /**
+     * get status bar object
+     * @return
+     */
     public JLabel getStatusBar() {
         return statusBar;
     }
 
+    /**
+     * get surface object
+     * @return
+     */
     public Surface getSurface() {
         return surface;
     }
 
+    /**
+     * Test wether we are running localhost
+     * @return
+     */
     public boolean isLocalhost() {
         return localhost;
     }
 
+    /**
+     * Get site root of the presentation
+     * @return
+     */
     public String getSiteRoot() {
         return siteRoot;
     }
 
+    /**
+     * Display the filter frame
+     */
     public void showFilterFrame() {
         String filter = "[REALTIME id=\"" + sessionId + "\" agenda=\"" + sessionTitle + "\" /]";
         FilterFrame fr = new FilterFrame(filter);
@@ -575,6 +757,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * Displays the audio wizard frame
+     */
     public void showAudioWizardFrame() {
         if (audioWizardFrame == null) {
             initAudio();
@@ -595,6 +780,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * Displays the file transfer frame
+     */
     public void showFileTransferFrame() {
         if (fileTransferFrame == null) {
             fileTransferFrame = new JFrame("Realtime File Transfer - Beta");
@@ -610,6 +798,12 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return fileTransferPanel;
     }
 
+    /**
+     * Display message both in display window and status bar.If error message, then
+     * display a warning icon or in red color
+     * @param txt
+     * @param error
+     */
     public void setText(String txt, boolean error) {
         if (error) {
             statusBar.setForeground(Color.RED);
@@ -621,6 +815,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * tests if connected to server
+     * @return
+     */
     public boolean isConnected() {
         return connected;
     }
@@ -649,14 +847,25 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         chatRoom.update(chatPacket);
     }
 
+    /**
+     * Sets the connection status
+     * @param connected
+     */
     public void setConnected(boolean connected) {
         this.connected = connected;
     }
 
+    /**
+     * Send user packet for for sign in
+     */
     public void publish() {
         tcpClient.publish(user);
     }
 
+    /**
+     * Pause for a specified time
+     * @param time
+     */
     private void sleep(long time) {
         try {
             Thread.sleep(time);
@@ -664,6 +873,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * If diconnected from server, try to auto re-connect
+     */
     public void refreshConnection() {
         connected = false;
         int count = 0;
@@ -798,8 +1010,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_talkButtonActionPerformed
     if (audioWizardFrame != null) {
         if (talkButton.isSelected()) {
+            talkButton.setIcon(micOnIcon);
             audioWizardFrame.talk();
         } else {
+            talkButton.setIcon(micOffIcon);
             audioWizardFrame.stopCapture();
         }
     }
