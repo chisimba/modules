@@ -33,7 +33,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     private Version v = new Version();
     private String REALTIME_HOME = avoir.realtime.tcp.launcher.Constants.getRealtimeHome();
-    //private String internalVer = REALTIME_HOME + "/lib/" + v.version;
+    private String internalVer = REALTIME_HOME + "/lib/" + v.version;
     int plVer = 0;
     private String[][] plugins = {
         {"jspeex.jar", "Audio Codec"},
@@ -132,9 +132,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     private void forceUpgrade() {
-        //if (!new File(internalVer).exists()) {
+        if (!new File(internalVer).exists()) {
         clearLocalLib();
-    //    }
+      }
     }
 
     /**
@@ -144,7 +144,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private void loadSystem() {
         RealtimeOptions.init();
         try {
-            // new File(internalVer).createNewFile();
+             new File(internalVer).createNewFile();
         } catch (Exception ignore) {
         }
         tcpConnector = new TCPConnector(this);
