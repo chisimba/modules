@@ -231,7 +231,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         JPanel p = new JPanel();
         p.setLayout(new BorderLayout());
 
-        surfaceTabbedPane.add(sessionTitle, surface);
+        surfaceTabbedPane.add("Presentation", surface);
         surfaceTabbedPane.add("Whiteboard", whiteboardSurface);
         p.add(surfaceTabbedPane, BorderLayout.CENTER);
         p.add(pointerToolbar, BorderLayout.WEST);
