@@ -354,7 +354,7 @@ class dbcalendar extends dbTable
         $where .= ' GROUP BY tbl_calendar.id';
 
         // Set the Order of return
-        $where .= ' ORDER BY eventdate';
+        $where .= ' ORDER BY eventdate, timefrom';
 
         // Add a limit filter
         if (isset($limit)) {
