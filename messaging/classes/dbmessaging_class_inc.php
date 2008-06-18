@@ -289,8 +289,9 @@ class dbmessaging extends dbTable
                 $data = $this->getChatRoom($roomId);
                 return $data;
             }
+        } else {
+            return $this->getRow('id', 'init_1');
         }
-        return FALSE;
     }
     
     /**
