@@ -43,6 +43,7 @@ import avoir.realtime.tcp.common.packet.SystemFilePacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.launcher.packet.LauncherPacket;
+import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
 import java.io.*;
 import java.net.*;
 
@@ -83,8 +84,8 @@ public class TCPClient {
      */
     protected ObjectOutputStream writer;
     private boolean slideServerReplying = false;
-    //private String SUPERNODE_HOST = "196.21.45.85";
-    // private int SUPERNODE_PORT = 80;
+    // private String SUPERNODE_HOST = "196.21.45.85";
+    //private int SUPERNODE_PORT = 80;
     private String SUPERNODE_HOST = "localhost";
     private int SUPERNODE_PORT = 22225;
     private boolean showChatFrame = true;
@@ -98,7 +99,8 @@ public class TCPClient {
     private boolean slidesDownloaded = false;
     private FileTransferPanel fileTransfer;
     private FileOutputStream fileOutputStream;
-    JFileChooser fc = new JFileChooser();
+    private JFileChooser fc = new JFileChooser();
+    private WhiteboardSurface whiteboardSurface;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -113,6 +115,10 @@ public class TCPClient {
 
     public TCPClient(RealtimeBase base) {
         this.base = base;
+    }
+
+    public void setWhiteboardSurfaceHandler(WhiteboardSurface whiteboardSurface) {
+        this.whiteboardSurface = whiteboardSurface;
     }
 
     public void setAudioHandler(AudioWizardFrame audioHandler) {
@@ -471,21 +477,19 @@ public class TCPClient {
     private void processWhiteboardPacket(WhiteboardPacket p) {
 
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
-            base.getSurface().addItem(p.getItem());
+            base.getWhiteboardSurface().addItem(p.getItem());
         }
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
-
-            base.getSurface().removeItem(p.getItem().getIndex());
-        }
-
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
-
-            base.getSurface().replaceItem(p.getItem().getIndex(), p.getItem());
+            base.getWhiteboardSurface().replaceItem(p.getItem(), p.getItem().getIndex());
         }
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEM) {
-
-            base.getSurface().clearItems();
-        }
+    /* if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
+    
+    base.getSurface().removeItem(p.getItem().getIndex());
+    }
+    if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEM) {
+    
+    base.getSurface().clearItems();
+    }*/
     }
 
     private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
