@@ -108,7 +108,7 @@ class managecalendar extends object
     * @param string $multidaystart - Record ID of the Start (First Day) of the multiday event
     * @return string $lastInsert - Record Id of the event that has just been added
     */
-    function insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $multidayevent = 0, $multidaystart = NULL)
+    function insertSingleContextEvent($date, $eventtitle, $eventdetails, $eventurl, $contextCode, $userFirstEntry, $multidayevent = 0, $multidaystart = NULL, $timeFrom = NULL, $timeTo = NULL)
     {
         $lastInsert = $this->objCalendar->insertSingle(
                 $date, // Date of Event

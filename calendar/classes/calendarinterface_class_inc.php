@@ -228,7 +228,13 @@ class calendarinterface extends object
             } else {
                 
             }
-            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> <br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
+            $eventList = '<div class="eventlist '.$css.'"><strong>'.$event['eventtitle'].'</strong> ';
+            
+            if ($event['timefrom'] != '') {
+                $eventList .= '('.$event['timefrom'].' - '.$event['timeto'].')';
+            }
+            
+            $eventList .= '<br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
             
             if ($event['eventurl'] != NULL) {
                 $link = new link($event['eventurl']);
