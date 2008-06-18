@@ -84,8 +84,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             ex.printStackTrace();
         }
     }
-    
-    public int getPluginsNumber(){
+
+    public int getPluginsNumber() {
         return plugins.length;
     }
 
@@ -133,8 +133,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     private void forceUpgrade() {
         if (!new File(internalVer).exists()) {
-        clearLocalLib();
-      }
+            clearLocalLib();
+        }
     }
 
     /**
@@ -144,7 +144,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private void loadSystem() {
         RealtimeOptions.init();
         try {
-             new File(internalVer).createNewFile();
+            new File(internalVer).createNewFile();
         } catch (Exception ignore) {
         }
         tcpConnector = new TCPConnector(this);
@@ -342,7 +342,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                     slideServerId,
                     resourcesPath);
             mainPanel.add(basePanel, BorderLayout.CENTER);
-            this.resize(getWidth()+5, getHeight()+5);
+            this.resize(getWidth() + 5, getHeight() + 5);
             JMenuBar menuBar = pl.getMenuBar();
             setJMenuBar(menuBar);
         } catch (Exception e) {
