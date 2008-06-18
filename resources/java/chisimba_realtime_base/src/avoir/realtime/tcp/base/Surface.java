@@ -20,7 +20,6 @@ import java.awt.event.*;
 
 import javax.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.image.MemoryImageSource;
 import java.util.Vector;
 
 /**
@@ -51,6 +50,7 @@ public class Surface extends JPanel implements MouseListener,
     private ImageIcon rightHand = ImageUtil.createImageIcon(this, "/icons/hand_right.png");
     private ImageIcon arrowUp = ImageUtil.createImageIcon(this, "/icons/arrow_up.png");
     private ImageIcon arrowSide = ImageUtil.createImageIcon(this, "/icons/arrow_side.png");
+    private ImageIcon blankIcon = ImageUtil.createImageIcon(this, "/icons/transparent.png");
     private ImageIcon paintBrush = ImageUtil.createImageIcon(this, "/icons/paintbrush.png");
     private Font msgFont = new Font("Dialog", 1, 10);
     private boolean isErrorMsg = false;
@@ -60,17 +60,13 @@ public class Surface extends JPanel implements MouseListener,
     private boolean fromPresenter = false;
     private boolean showConnectingString = false;
     private boolean showSplashScreen = true;
-    private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
-    private static final Color[] COLORS = {
-        Color.black, Color.gray, Color.lightGray, Color.white, Color.red, Color.orange, Color.yellow,
-        Color.green, Color.cyan, Color.blue, Color.magenta,
-    };
     private Vector<Item> whiteboardItems = new Vector<Item>();
     private Whiteboard whiteboard;
     private int pointer = Constants.HAND_RIGHT;
     private Pointer currentPointer = new Pointer(new Point(0, 0), rightHand);
     private Graphics2D graphics;
     private Rectangle pointerSurface = new Rectangle();
+    private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
 
     public Surface(RealtimeBase xbase) {
         this.base = xbase;
@@ -245,8 +241,8 @@ public class Surface extends JPanel implements MouseListener,
     }
 
     private void setOwnCursor() {
-        int curWidth = 16;
-        int curHeight = 16;
+        int curWidth = 32;
+        int curHeight = 32;
         int y = 0;
         int x = 0;
         int pix[] = new int[curWidth * curHeight];
@@ -297,7 +293,7 @@ public class Surface extends JPanel implements MouseListener,
         pix[1 + (curWidth * (yscale - 1)) + 1] = curCol;
         pix[(curWidth * (yscale - 1)) + yscale - 1] = curCol;
 
-        Image img = createImage(new MemoryImageSource(curWidth, curHeight, pix, 0, curWidth));
+        Image img =blankIcon.getImage();// createImage(new MemoryImageSource(curWidth, curHeight, pix, 0, curWidth));
         Cursor curCircle = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(5, 5), "circle");
         setCursor(curCircle);
 
@@ -407,7 +403,7 @@ public class Surface extends JPanel implements MouseListener,
 
     private void paintPointer(Graphics2D g) {
         if (currentPointer != null) {
-            g.drawImage(currentPointer.getIcon().getImage(), pointerSurface.x + currentPointer.getPoint().x, pointerSurface.y + currentPointer.getPoint().y, this);
+            g.drawImage(currentPointer.getIcon().getImage(), pointerSurface.x + currentPointer.getPoint().x - 10, pointerSurface.y + currentPointer.getPoint().y - 10, this);
         }
     }
 
