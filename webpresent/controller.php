@@ -267,6 +267,15 @@
     
         } 
 
+        /**
+         * This start a slide server. This function is intended to be invoked
+         * from an outside embedded appllication
+         */
+        public function __runslideserver()
+        {
+            $slideServerId=$this->getParam("slideServerId");
+            $this->startSlidesServer($slideServerId);
+        }
        /**
         * Function to invoke the audience applet 
         * @return <type>
