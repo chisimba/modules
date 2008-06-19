@@ -19,7 +19,7 @@
     }
     $isLoggedIn =$this->objUser->isLoggedIn();
     $modPath=$this->objConfig->getModulePath();
-    $siteRoot=$this->objConfig->getSiteRoot().'/usrfiles/webpresent/';
+    $siteRoot=$this->objConfig->getSiteRoot();
     $replacewith="";
     $docRoot=$_SERVER['DOCUMENT_ROOT'];
     $appletPath=str_replace($docRoot,$replacewith,$modPath);
@@ -48,6 +48,7 @@
     echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
      
     echo 'archive="realtime-launcher-0.1.jar" width="80%" height="600">';
+    echo '<param name=appletCodeBase value="'.$appletCodeBase.'">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=isLocalhost value="true">';
     echo '<param name=fullname value="'.$this->objUser->fullname().'">';
