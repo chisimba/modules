@@ -87,7 +87,7 @@ class dbpagemenu extends dbTable
 			//var_dump($pageMenu[0]);
 	
 			if (isset($pageMenu[0]['body'])){
-				$body = $pageMenu[0]['body'];
+				$body = stripslashes($pageMenu[0]['body']);
 			}
 
 			return $body;	
