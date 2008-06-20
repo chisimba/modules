@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 public class User implements Serializable {
 
     private static Logger logger = Logger.getLogger(User.class.getName());
-    private UserLevel level;
+    private int level;
     private String fullname;
     private String userName;
     private boolean hasToken;
@@ -46,7 +46,7 @@ public class User implements Serializable {
     private String sessionTitle;
     private boolean speakerOn,  micOn,  handOn,  editOn,  yesOn,  noOn;
 
-    public User(UserLevel level, String fullname, String userName, String host,
+    public User(int level, String fullname, String userName, String host,
             int port, boolean isPresenter, String sessionId, String sessionTitle, String slidesDir,
             boolean isSlidesHost, String siteRoot, String slideServerId) {
         this.level = level;
@@ -177,7 +177,7 @@ public class User implements Serializable {
      * 
      * @return UserLevel The user's level.
      */
-    public UserLevel getLevel() {
+    public int getLevel() {
         return this.level;
     }
 
@@ -226,26 +226,7 @@ public class User implements Serializable {
         return this.fullname;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if ((object == null) || (object.getClass() != this.getClass())) {
-            return false;
-        }
-        User otherUser = (User) object;
-        if (this.level.equals(otherUser.getLevel()) && this.fullname.equals(otherUser.getFullName())) {
-            if (this.userName == null && otherUser.getUserName() == null) {
-                return true;
-            }
-            if (this.userName != null && otherUser.getUserName() != null) {
-                if (this.userName.equals(otherUser.getUserName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 
     public void setFullName(String name) {
         fullname = name;
