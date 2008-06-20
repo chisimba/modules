@@ -8,7 +8,6 @@ package avoir.realtime.tcp.base;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import javax.swing.JOptionPane;
 
@@ -18,16 +17,22 @@ import javax.swing.JOptionPane;
  */
 public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
 
-    String help1 = "This filter can be pasted in any tool that supports filters.\n" +
-            "It will be replaced by the live presentation session when the page is displayed.\n";
-    String remoteFilter;
+    String help1 = "This filter can be pasted into any tool that supports filters.\n" +
+            "It will be replaced by the presentation when the page is displayed.\n" +
+            "Note that this filter can be used on the same server or any remote\n" +
+            "Chisimba-powered site or site that implements the Chisimba webpresent filter.";
+    String help2 =
+            "This HTML snippet can be pasted into any website tool on any system\n" +
+            "that allows you to past raw HTML into your content.\n" +
+            "Select all the contents of the box (CONTROL+A), copy it (CONTROL+C)\n" +
+            " and paste it into your site in edit raw HTML mode.";
     Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     /** Creates new form FilterFrame */
-    public FilterFrame(String filter) {
+    public FilterFrame(String filter, String embbed) {
         initComponents();
-        this.remoteFilter = filter;
-        this.localFilterField.setText(filter);
+        embbedField.setText(embbed);
+        filterField.setText(filter);
 
     }
 
@@ -39,16 +44,24 @@ public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
         mPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        localFilterField = new javax.swing.JTextField();
+        tabbedPane = new javax.swing.JTabbedPane();
+        filterPanel = new javax.swing.JPanel();
+        filterFieldSP = new javax.swing.JScrollPane();
+        filterField = new javax.swing.JTextArea();
+        cPanel = new javax.swing.JPanel();
+        selectyAllandCopyButton = new javax.swing.JButton();
         help1Button = new javax.swing.JButton();
-        copy2 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
+        embbedPanel = new javax.swing.JPanel();
+        embbedFieldSP = new javax.swing.JScrollPane();
+        embbedField = new javax.swing.JTextArea();
+        cPanel1 = new javax.swing.JPanel();
+        selectyAllandCopyButton1 = new javax.swing.JButton();
+        help1Button1 = new javax.swing.JButton();
+        closeButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Realtime Chisimba Filter");
@@ -59,26 +72,25 @@ public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
         jLabel1.setText("Chisimba Filters");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
-        mPanel.setLayout(new java.awt.GridBagLayout());
+        mPanel.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("Filter");
-        jLabel2.setMaximumSize(new java.awt.Dimension(300, 19));
-        jLabel2.setMinimumSize(new java.awt.Dimension(300, 15));
-        jLabel2.setPreferredSize(new java.awt.Dimension(300, 15));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
-        mPanel.add(jLabel2, gridBagConstraints);
+        filterPanel.setLayout(new java.awt.BorderLayout());
 
-        localFilterField.setMinimumSize(new java.awt.Dimension(400, 19));
-        localFilterField.setPreferredSize(new java.awt.Dimension(300, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
-        mPanel.add(localFilterField, gridBagConstraints);
+        filterField.setColumns(18);
+        filterField.setEditable(false);
+        filterField.setLineWrap(true);
+        filterField.setRows(5);
+        filterFieldSP.setViewportView(filterField);
+
+        filterPanel.add(filterFieldSP, java.awt.BorderLayout.CENTER);
+
+        selectyAllandCopyButton.setText("Copy");
+        selectyAllandCopyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectyAllandCopyButtonActionPerformed(evt);
+            }
+        });
+        cPanel.add(selectyAllandCopyButton);
 
         help1Button.setText("What does it mean?");
         help1Button.addActionListener(new java.awt.event.ActionListener() {
@@ -86,24 +98,7 @@ public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
                 help1ButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        mPanel.add(help1Button, gridBagConstraints);
-
-        copy2.setText("Copy");
-        copy2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                copy2ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        mPanel.add(copy2, gridBagConstraints);
-
-        getContentPane().add(mPanel, java.awt.BorderLayout.CENTER);
+        cPanel.add(help1Button);
 
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -111,9 +106,52 @@ public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
                 closeButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(closeButton);
+        cPanel.add(closeButton);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
+        filterPanel.add(cPanel, java.awt.BorderLayout.PAGE_END);
+
+        tabbedPane.addTab("Chisimba Filter", filterPanel);
+
+        embbedPanel.setLayout(new java.awt.BorderLayout());
+
+        embbedField.setColumns(20);
+        embbedField.setLineWrap(true);
+        embbedField.setRows(5);
+        embbedFieldSP.setViewportView(embbedField);
+
+        embbedPanel.add(embbedFieldSP, java.awt.BorderLayout.CENTER);
+
+        selectyAllandCopyButton1.setText("Copy");
+        selectyAllandCopyButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectyAllandCopyButton1ActionPerformed(evt);
+            }
+        });
+        cPanel1.add(selectyAllandCopyButton1);
+
+        help1Button1.setText("What does it mean?");
+        help1Button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                help1Button1ActionPerformed(evt);
+            }
+        });
+        cPanel1.add(help1Button1);
+
+        closeButton1.setText("Close");
+        closeButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButton1ActionPerformed(evt);
+            }
+        });
+        cPanel1.add(closeButton1);
+
+        embbedPanel.add(cPanel1, java.awt.BorderLayout.PAGE_END);
+
+        tabbedPane.addTab("HTML Embbed", embbedPanel);
+
+        mPanel.add(tabbedPane, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(mPanel, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -126,9 +164,31 @@ private void help1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     JOptionPane.showMessageDialog(this, help1);
 }//GEN-LAST:event_help1ButtonActionPerformed
 
+private void selectyAllandCopyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectyAllandCopyButtonActionPerformed
+
+
+    filterField.selectAll();
+    filterField.copy();
+
+}//GEN-LAST:event_selectyAllandCopyButtonActionPerformed
+
+private void selectyAllandCopyButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectyAllandCopyButton1ActionPerformed
+
+    embbedField.selectAll();
+    embbedField.copy();
+}//GEN-LAST:event_selectyAllandCopyButton1ActionPerformed
+
+private void help1Button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_help1Button1ActionPerformed
+    JOptionPane.showMessageDialog(this, help2);
+}//GEN-LAST:event_help1Button1ActionPerformed
+
+private void closeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButton1ActionPerformed
+    dispose();
+}//GEN-LAST:event_closeButton1ActionPerformed
+
 private void copy2ActionPerformed(java.awt.event.ActionEvent evt) {                                      
     
-localFilterField.copy();
+filterField.copy();
 
 };                                                                          
 
@@ -138,14 +198,23 @@ localFilterField.copy();
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel cPanel;
+    private javax.swing.JPanel cPanel1;
     private javax.swing.JButton closeButton;
-    private javax.swing.JButton copy2;
+    private javax.swing.JButton closeButton1;
+    private javax.swing.JTextArea embbedField;
+    private javax.swing.JScrollPane embbedFieldSP;
+    private javax.swing.JPanel embbedPanel;
+    private javax.swing.JTextArea filterField;
+    private javax.swing.JScrollPane filterFieldSP;
+    private javax.swing.JPanel filterPanel;
     private javax.swing.JButton help1Button;
+    private javax.swing.JButton help1Button1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField localFilterField;
     private javax.swing.JPanel mPanel;
+    private javax.swing.JButton selectyAllandCopyButton;
+    private javax.swing.JButton selectyAllandCopyButton1;
+    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
 }
