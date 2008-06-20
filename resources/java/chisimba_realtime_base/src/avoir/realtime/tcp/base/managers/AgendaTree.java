@@ -60,12 +60,12 @@ public class AgendaTree extends JPanel {
                     String selectedNode = (String) node.getUserObject();
                         int index=rows[0] - 2;
                         if (index > -1) {
-                            if (base.isPresenter()) {
+                           // if (base.isPresenter()) {
                                
                                 base.getSessionManager().updateSlide(index-1);
-                            } else{
-                                base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
-                            }
+                            //} else{
+                              //  base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
+                            //}
                         }
                 }
             }
