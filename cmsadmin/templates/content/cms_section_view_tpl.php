@@ -224,7 +224,7 @@ if (!empty($pages)) {
 
    		//Create view icon
 		if ($this->_objSecurity->canUserReadContent($pageId)){
-			$objIcon->title = "View Link";
+			$objIcon->title = "Preview";
 	    	$viewIcon = $objIcon->getViewIcon($this->uri(array('action' => 'showfulltext', 'id' => $pageId, 'parent' => $sectionId), 'cms'));
 		} else {
 			$viewIcon = '';
