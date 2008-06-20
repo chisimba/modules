@@ -23,8 +23,28 @@ package avoir.realtime.tcp.base.user;
  * Enumeration representing the various levels that a user may have in 
  * the system (maps directly to the groups defined in Chisimba).
  */
-public enum UserLevel {
+public class UserLevel {
 
-    ADMIN, LECTURER, STUDENT, GUEST;
+    public static final int ADMIN = 0;
+    public static final int LECTURER = 1;
+    public static final int STUDENT = 2;
+    public static final int GUEST = 3;
 
+    public static int getUserLevel(String userLevel) {
+       
+        if (userLevel.equalsIgnoreCase("admin")) {
+            return ADMIN;
+        }
+        if (userLevel.equalsIgnoreCase("lecturer")) {
+            return LECTURER;
+        }
+        if (userLevel.equalsIgnoreCase("student")) {
+            return STUDENT;
+        }
+        if (userLevel.equalsIgnoreCase("guest")) {
+            return GUEST;
+        }
+        return -1;
+
+    }
 }
