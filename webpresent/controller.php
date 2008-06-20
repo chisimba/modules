@@ -214,8 +214,8 @@
      */ 
         public function __showpresenterapplet()
         {
-            //  $slideServerId=$this->randomString(32);
-            $slideServerId=$this->objConfig->serverName();
+            $slideServerId=$this->randomString(32);
+            //$slideServerId=$this->objConfig->serverName();
 
             //if(!$this->slideServerRunning()){
             $this->startSlidesServer($slideServerId);
@@ -284,7 +284,7 @@
         public function __showaudienceapplet()
         {
             $slideServerId=$this->randomString(32);
-            $slideServerId=$this->objConfig->serverName();
+            //$slideServerId=$this->objConfig->serverName();
               
             //   if(!$this->slideServerRunning()){
           
