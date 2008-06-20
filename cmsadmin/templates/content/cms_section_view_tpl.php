@@ -145,8 +145,7 @@ if (isset($subSections)) {
 		} else {
 			$editIcon = '';
 		}
-		
-        
+       
         //Make title link to view section
         $objLink = new link($this->uri(array('action' => 'viewsection', 'id' => $subSecId)));
         $objLink->link = $subSecMenuText;
@@ -222,7 +221,15 @@ if (!empty($pages)) {
 		} else {
 			$editIcon = '';
 		}		
-        
+
+   		//Create view icon
+		if ($this->_objSecurity->canUserReadContent($pageId)){
+			$objIcon->title = "View Link";
+	    	$viewIcon = $objIcon->getViewIcon($this->uri(array('action' => 'showfulltext', 'id' => $pageId, 'parent' => $sectionId), 'cms'));
+		} else {
+			$viewIcon = '';
+		}		
+    
         //Make title link to view section
         $objLink = new link($this->uri(array('action' => 'showcontent', 'id' => $pageId, 'fromadmin' => TRUE, 'sectionid' => $sectionId), 'cms'));
         $objLink->link = $pageTitle;
@@ -262,7 +269,7 @@ if (!empty($pages)) {
 	    
 		
         if ($isRegistered) {
-            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
+            $objPagesTable->addCell('<nobr>'.$objBlocksLinkDisplay.$frontPageLink->show().$viewIcon.$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         } else {
             $objPagesTable->addCell('<nobr>'.$frontPageLink->show().$editIcon.$delIcon.'</nobr>', '', '', '', $class);
         }
