@@ -51,7 +51,7 @@
     echo '<param name=appletCodeBase value="'.$appletCodeBase.'">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=isLocalhost value="true">';
-    echo '<param name=fullname value="'.$this->objUser->fullname().'">';
+    echo '<param name=fullName value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
     echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
