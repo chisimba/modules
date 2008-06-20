@@ -9,11 +9,17 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.launcher.Launcher;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permissions;
@@ -55,6 +61,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private String slidesDir = "";
     private String slideServerId = "";
     private String resourcesPath = "";
+    private String appletCodeBase = "";
     private String siteRoot = "";
     private String host;
     private boolean isPresenter = false;
@@ -132,9 +139,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     private void forceUpgrade() {
-        if (!new File(internalVer).exists()) {
-            clearLocalLib();
-        }
+        // if (!new File(internalVer).exists()) {
+        clearLocalLib();
+    //}
     }
 
     /**
@@ -184,6 +191,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         sessionTitle = getParameter("sessionTitle");
         slidesDir = getParameter("slidesDir");
         siteRoot = getParameter("siteRoot");
+        appletCodeBase = getParameter("appletCodeBase");
         resourcesPath = getParameter("resourcesPath");
         slideServerId = getParameter("slideServerId");
         userLevel = getParameter("userLevel");
@@ -200,6 +208,47 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         host = getCodeBase().getHost();
 
         launcher = new Launcher(userName, host, sessionId, sessionTitle, slidesDir, localhost, slideServerId);
+        //start the slide server ..
+        try {
+            //  URLConnection connection = new URL(siteRoot + "/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId).openConnection();
+            //  connection.connect();
+
+            Socket socket = new Socket(host, 80);
+            OutputStream os = socket.getOutputStream();
+            boolean autoflush = true;
+
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
+             BufferedReader in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+
+            out.println("GET " + "/chisimba/app/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId + " HTTP/1.1");
+            out.println("Host: " + host + ":80");
+            out.println("Connection: Close");
+            out.println();
+// read the response
+            boolean loop = true;
+            StringBuffer sb = new StringBuffer(8096);
+
+            while (loop) {
+                if (in.ready()) {
+                    int i = 0;
+                    while (i != -1) {
+                        i = in.read();
+                        sb.append((char) i);
+                    }
+                    loop = false;
+                }
+                Thread.currentThread().sleep(50);
+            }
+
+// display the response to the out console
+            System.out.println(sb.toString());
+            socket.close();
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public boolean isLocalhost() {
@@ -329,6 +378,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             mainPanel.removeAll();
             setText("", false);
             pl.setSessionTitle(sessionTitle);
+            pl.setApplectCodeBase(appletCodeBase);
+            pl.setGlassPaneHandler(this);
             JPanel basePanel = pl.createBase(
                     userLevel,
                     fullName,
