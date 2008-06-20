@@ -7,76 +7,82 @@ $tablename = 'tbl_calendar';
 $options = array('comment' => 'Table to hold calendar events', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'multiday_event' => array(
-		'type' => 'text',
-		'length' => 10,
-		'notnull' => 1,
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'multiday_event' => array(
+        'type' => 'text',
+        'length' => 10,
+        'notnull' => 1,
         'default' => 0
-		),
-	'eventdate' => array(
-		'type' => 'date',
-		),
-	'multiday_event_start_id' => array(
-		'type' => 'text'
-		),
-	'eventtitle' => array(
-		'type' => 'text',
-		'length' => 100
-		),
-	'eventdetails' => array(
-		'type' => 'text',
-		'length' => 255
-		),
-	'eventurl' => array(
-		'type' => 'text',
-		'length' => 100
-		),
-	'userorcontext' => array(
-		'type' => 'text',
-		'length' => 10
-		),
-	'context' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'workgroup' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'showusers' => array(
-		'type' => 'text',
-		'length' => 10
-		),
-	'userFirstEntry' => array(
-		'type' => 'text',
-		'length' => 32,
-		),
-	'userLastModified' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'dateFirstEntry' => array(
-		'type' => 'date',
-		),
-	'dateLastModified' => array(
-		'type' => 'date',
-		),
-	'updated' => array(
-		'type' => 'date',
-		),
-	'timefrom' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'timeto' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	);
+        ),
+    'eventdate' => array(
+        'type' => 'date',
+        ),
+    'multiday_event_start_id' => array(
+        'type' => 'text'
+        ),
+    'eventtitle' => array(
+        'type' => 'text',
+        'length' => 100
+        ),
+    'eventdetails' => array(
+        'type' => 'text',
+        'length' => 255
+        ),
+    'eventurl' => array(
+        'type' => 'text',
+        'length' => 100
+        ),
+    'userorcontext' => array(
+        'type' => 'text',
+        'length' => 10
+        ),
+    'context' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'workgroup' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'showusers' => array(
+        'type' => 'text',
+        'length' => 10
+        ),
+    'userFirstEntry' => array(
+        'type' => 'text',
+        'length' => 32,
+        ),
+    'userLastModified' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'dateFirstEntry' => array(
+        'type' => 'date',
+        ),
+    'dateLastModified' => array(
+        'type' => 'date',
+        ),
+    'updated' => array(
+        'type' => 'date',
+        ),
+    'timefrom' => array(
+        'type' => 'time',
+        ),
+    'timeto' => array(
+        'type' => 'time',
+        ),
+    'moduleevent_table' => array(
+        'type' => 'varchar',
+        'length' => '255',
+        ),
+    'moduleevent_id' => array(
+        'type' => 'varchar',
+        'length' => '32',
+        ),
+    );
 
 //create other indexes here...
 

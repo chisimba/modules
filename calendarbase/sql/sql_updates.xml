@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_calendar</table>
+        <version>1.104</version>
+        <description>added columns to allow modules to add events</description>
+        <data>
+            <add>
+                <name>moduleevent_table</name>
+                <type>text</type>
+                <length>255</length>
+            </add>
+            <add>
+                <name>moduleevent_id</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+            <change>
+                <timefrom>
+                    <definition>
+                        <type>time</type>
+                    </definition>
+                </timefrom>
+            </change>
+            <change>
+                <timeto>
+                    <definition>
+                        <type>time</type>
+                    </definition>
+                </timeto>
+            </change>
+        </data>
+    </update>
+</updates>
