@@ -168,6 +168,7 @@ public class UserListManager {
         userList.clear();
         for (int i = 0; i < list.size(); i++) {
             User usr = list.elementAt(i);
+           
             addUser(usr, i);
         }
         table.setDefaultRenderer(UserObject.class, new LRenderer());
@@ -289,10 +290,9 @@ public class UserListManager {
     private UserObject decorateUser(UserObject userObject, User usr) {
 
         String presenter = usr.isPresenter() ? "Presenter" : "";
+       String display = "";
 
-        String display = "";
-
-        if (usr.getLevel().equals(UserLevel.ADMIN)) {
+        if (usr.getLevel() == (UserLevel.ADMIN)) {
             if (usr.isPresenter()) {
 
                 userObject.setColor(Color.ORANGE);
@@ -314,7 +314,7 @@ public class UserListManager {
             }
 
         }
-        if (usr.getLevel().equals(UserLevel.STUDENT)) {
+        if (usr.getLevel() == (UserLevel.STUDENT)) {
             if (usr.isPresenter()) {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(base.getUser().getUserName().trim())) {
@@ -334,7 +334,7 @@ public class UserListManager {
             }
 
         }
-        if (usr.getLevel().equals(UserLevel.LECTURER)) {
+        if (usr.getLevel() == (UserLevel.LECTURER)) {
             if (usr.isPresenter()) {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(base.getUser().getUserName().trim())) {
@@ -354,7 +354,7 @@ public class UserListManager {
             }
 
         }
-        if (usr.getLevel().equals(UserLevel.GUEST)) {
+        if (usr.getLevel() == (UserLevel.GUEST)) {
             if (usr.isPresenter()) {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(base.getUser().getUserName().trim())) {
@@ -376,6 +376,7 @@ public class UserListManager {
 
         }
         userObject.setDisplay(display);
+        
         return userObject;
     }
 
