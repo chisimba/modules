@@ -33,7 +33,7 @@
             $url.='<param name=chatLogPath value="'.$chatLogPath.'">';
             $url.='<param name=siteRoot value="'.$siteRoot.'">';
 
-            $url.='<param name=isWebPresent value="true">';
+            $url.='<param name=isWebPresent value="false">';
             $url.='<param name=isLoggedIn value="'.$isLoggedIn.'">';
             $url.='<param name=slidesDir value="'.$slidesDir.'">';
             $url.='<param name=uploadPath value="'.$uploadPath.'">';
