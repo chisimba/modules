@@ -32,10 +32,12 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JApplet;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -64,6 +66,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String host;
     private boolean isPresenter;
     private String sessionTitle;
+    private String appletCodeBase;
     private User user;
     private boolean localhost;
     private javax.swing.JSplitPane splitPane = new JSplitPane();
@@ -112,6 +115,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JToolBar pointerToolbar = new JToolBar(JToolBar.VERTICAL);
     private WhiteboardSurface whiteboardSurface;
     private JTabbedPane surfaceTabbedPane = new JTabbedPane();
+    private JApplet glassPaneHandler;
 
     /**
      * Create additional components
@@ -333,6 +337,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         if (e.getActionCommand().equals("paintBrush")) {
             surface.setPointer(Constants.PAINT_BRUSH);
         }
+    }
+
+    public JApplet getGlassPaneHandler() {
+        return glassPaneHandler;
+    }
+
+    public void setGlassPaneHandler(JApplet glassPaneHandler) {
+        this.glassPaneHandler = glassPaneHandler;
     }
 
     /**
@@ -570,6 +582,22 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     }
 
     /**
+     * sets the applet code base as an absolute path
+     * @return
+     */
+    public String getAppletCodeBase() {
+        return appletCodeBase;
+    }
+
+    /**
+     * get the applet code base as an absolute path
+     * @param appletCodeBase
+     */
+    public void setAppletCodeBase(String appletCodeBase) {
+        this.appletCodeBase = appletCodeBase;
+    }
+
+    /**
      * This creates the actual realtime presentation screen. This is invoked 
      * by the launcher. We could invoke it directly, but its too heavy for an applet
      * so the trick is lauch a simple light frame for an applet, then let that
@@ -672,11 +700,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             userName = "Guest" + new java.util.Random().nextInt(200);
             fullName = userName;
         }
-        UserLevel xuserLevel = UserLevel.GUEST; //assume guest unless set differently in applet param
+        int xuserLevel = UserLevel.GUEST; //assume guest unless set differently in applet param
 
-        if (userLevel != null) {
-            xuserLevel = UserLevel.valueOf(userLevel.toUpperCase());
-        }
+        xuserLevel = UserLevel.getUserLevel(userLevel.toUpperCase());
+
         user = new User(xuserLevel, fullName, userName, host, 22225, isPresenter,
                 sessionId, sessionTitle, slidesDir, false, siteRoot, slideServerId);
 
@@ -761,12 +788,70 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * Display the filter frame
      */
     public void showFilterFrame() {
-        String filter = "[REALTIME id=\"" + sessionId + "\" agenda=\"" + sessionTitle + "\" /]";
-        FilterFrame fr = new FilterFrame(filter);
-        fr.setSize(500, 300);
-        fr.setLocationRelativeTo(null);
-        fr.setVisible(true);
+        //($id,$agenda,$resourcesPath,$appletCodeBase,$slidesDir,$username,$fullnames,$userLevel,$slideServerId)
+        //  String filterNames = JOptionPane.showInputDialog("Please enter your full names  separated by space.\n" +
+        //        "This will be  used to create a filter to be used in live presentation");
 
+        String filterNames = "Guest" + new java.util.Random().nextInt(200)+" "+"RL" + new java.util.Random().nextInt(200);
+
+        if (filterNames != null) {
+            if (filterNames.trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Empty spaces are not allowed. Please enter your fullname");
+                return;
+            }
+            String[] names = filterNames.trim().split(" ");
+            for (int i = 0; i < names.length; i++) {
+                System.out.println(i + " " + names[i]);
+            }
+            if (names.length < 2) {
+                JOptionPane.showMessageDialog(null, "Atleast 2 names required");
+                return;
+            }
+            String filter = "[REALTIME: " +
+                    "id=\"" + sessionId + "\" \n" +
+                    "agenda=\"" + sessionTitle + "\" \n" +
+                    "resourcesPath=\"" + resourcesPath + "\" \n" +
+                    "appletCodeBase=\"" + appletCodeBase + "\" \n" +
+                    "slidesDir=\"" + slidesDir + "\" \n" +
+                    "username=\"" + names[0] + "\" \n" +
+                    "fullnames=\"" + filterNames + "\" \n" +
+                    "userLevel=\"admin\" \n" +
+                    "slideServerId=\"" + slideServerId + "\" \n" +
+                    "siteRoot=\"" + siteRoot + "\" /]";
+            FilterFrame fr = new FilterFrame(filter, createEmbbedStr(names[0], filterNames));
+            fr.setSize(500, 300);
+            fr.setLocationRelativeTo(null);
+            fr.setVisible(true);
+        }
+
+    }
+
+    private String createEmbbedStr(String userName, String fullName) {
+        String url = "<center>\n";
+        url += "<applet codebase=\"" + appletCodeBase + "\"\n";
+        url += "code=\"avoir.realtime.tcp.launcher.RealtimeLauncher\" name =\"Avoir Realtime Applet\"\n";
+
+        url += "archive=\"realtime-launcher-0.1.jar\" width=\"100%\" height=\"600\">\n";
+        url += "<param name=userName value=\"" + userName + "\" >\n";
+
+        url += "<param name=isLocalhost value=\"false\">\n";
+        url += "<param name=fullname value=\"" + fullName + "\">\n";
+        url += "<param name=userLevel value=\"" + userLevel + "\">\n";
+        url += "<param name=uploadURL value=\"uploadURL\">\n";
+        url += "<param name=chatLogPath value=\"chatLogPath\">\n";
+        url += "<param name=siteRoot value=\"" + siteRoot + "\">\n";
+        url += "<param name=isWebPresent value=\"true\">\n";
+        url += "<param name=slidesDir value=\"" + slidesDir + "\">\n";
+        url += "<param name=uploadPath value=\"uploadPath\">\n";
+        url += "<param name=resourcesPath value=\"" + resourcesPath + "\">\n";
+        url += "<param name=sessionId value=\"" + sessionId + "\">\n";
+        url += "<param name=sessionTitle value=\"" + sessionTitle + "\">\n";
+        url += "<param name=slideServerId value=\"" + slideServerId + "\">\n";
+
+        url += "<param name=isSessionPresenter value=\"false\">\n";
+        url += "</applet>\n";
+        url += "</center>\n";
+        return url;
     }
 
     /**
