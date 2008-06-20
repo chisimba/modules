@@ -4,6 +4,7 @@
  */
 package avoir.realtime.tcp.launcher;
 
+import javax.swing.JApplet;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -29,8 +30,13 @@ public interface RealtimePlugin {
 
     public void setSessionTitle(String title);
 
+    public void setApplectCodeBase(String codeBase);
+    
+    public void setGlassPaneHandler(JApplet applet);
+
     public int getVersion();
 
     public void removeUser(String userId, String sessionId);
+
     public JMenuBar getMenuBar();
 }
