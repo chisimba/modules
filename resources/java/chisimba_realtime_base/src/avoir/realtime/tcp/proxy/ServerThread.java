@@ -77,6 +77,7 @@ public class ServerThread extends Thread {
     private Vector<SessionMonitor> sessionmonitors;
     private boolean sendSlideServerErrorMessage = false;
     private Vector<Item> whiteboardItems;
+    private boolean waitForSlideServer = false;
 
     /**
      * Constructor accepts connections
@@ -351,7 +352,7 @@ public class ServerThread extends Thread {
                         //check if user is slides host, if so, add to special list
                         if (thisUser.isSlidesHost()) {
                             if (!slideServerExists(thisUser.getUserName())) {
-                                logger.info(thisUser.getFullName() + " registered as slide server");
+                                logger.info(thisUser.getUserName() + " registered as slide server");
                                 synchronized (slideServers) {
                                     slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
                                 }
@@ -361,8 +362,8 @@ public class ServerThread extends Thread {
                                 sendPacket(new QuitPacket(thisUser.getSessionId()), objectOut);
                             }
                         } else {
-                            log("users.txt",getDateTime()+" "+ thisUser.getFullName() + "\n");
-                            if (thisUser.getLevel().equals(UserLevel.LECTURER)) {
+                            log("users.txt", getDateTime() + " " + thisUser.getFullName() + "\n");
+                            if (thisUser.getLevel() == (UserLevel.LECTURER)) {
                                 synchronized (clients) {
 
                                     clients.add(0, socket, objectOut, outStream, thisUser);
@@ -466,6 +467,7 @@ public class ServerThread extends Thread {
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket rmup = (RemoveUserPacket) packet;
                         synchronized (clients) {
+                            waitForSlideServer = false;
                             clients.removeElement(socket, objectOut, outStream);
                         }
                         updateMonitors();
@@ -901,12 +903,13 @@ public class ServerThread extends Thread {
         int MAX_TRIES = 120;
         int nooftries = 0;
         int sleep = 1 * 1000;
+        waitForSlideServer = true;
 
         removeNullSlideServers();
         while (!slideServerFound) {
             synchronized (slideServers) {
 
-                System.out.println("Connecting to slide server attempt " + nooftries);
+                System.out.println("Connecting to slide server " + packet.getSlidesServerId() + " attempt " + nooftries);
                 for (int i = 0; i < slideServers.size(); i++) {
                     if (slideServers.elementAt(i).getId().equals(packet.getSlidesServerId())) {
                         try {
@@ -926,6 +929,8 @@ public class ServerThread extends Thread {
             }
             delay(sleep);
         }
+       
+
         if (!slideServerFound) {
             System.out.println("Slide server " + packet.getSlidesServerId() + " not found!!");
             try {
