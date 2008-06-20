@@ -84,7 +84,7 @@ public class TCPClient {
      */
     protected ObjectOutputStream writer;
     private boolean slideServerReplying = false;
-     private String SUPERNODE_HOST = "196.21.45.85";
+    private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
     //private String SUPERNODE_HOST = "localhost";
     //private int SUPERNODE_PORT = 22225;
