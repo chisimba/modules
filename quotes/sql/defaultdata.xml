@@ -434,7 +434,7 @@
     <datemodified>NULL</datemodified>
     <modifierid>NULL</modifierid>
    </tbl_quotes>
-      <tbl_quotes>
+   <tbl_quotes>
         <id>init_50</id>
         <quote>If you pick up a starving dog and make him prosperous, he will not bite you. This is the principal difference between a dog and a man.</quote>
         <whosaidit>Mark Twain</whosaidit>
@@ -443,5 +443,13 @@
     <datemodified>NULL</datemodified>
     <modifierid>NULL</modifierid>
    </tbl_quotes>
-   
+   <tbl_quotes>
+        <id>init_51</id>
+        <quote>You do not really understand something unless you can explain it to your grandmother.</quote>
+        <whosaidit>Albert Einstein</whosaidit>
+        <datecreated>2005-03-12 09:47:25</datecreated>
+        <creatorid>1</creatorid>
+    <datemodified>NULL</datemodified>
+    <modifierid>NULL</modifierid>
+   </tbl_quotes>
 </defaultdata>
