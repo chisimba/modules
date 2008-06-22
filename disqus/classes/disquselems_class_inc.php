@@ -73,6 +73,65 @@ class disquselems extends dbtable
         //
     }
 
+    /**
+    *
+    * Get the div tag that identifies where the discussion must be inserted.
+    * It is a md5 hash of the permalink
+    *
+    * @param string $disqusDiv the md5 hashed id for the div.
+    * @access public
+    */
+    public function getDiv($disqusDiv)
+    {
+        return "<div id=\"$disqusDiv\">&nbsp;</div>\n";
+    }
+
+    /**
+    *
+    * Method to get the inline Javascript that identifies the correct
+    * discussion to display
+    * @param string $url The permalink that defines the discussion
+    * @param string $disqusDIv The name of the layer that displays the discussion
+    * @return string The formatted script tags.
+    * @access public
+    *
+    */
+    public function getInlineJs($url, $disqusDiv)
+    {
+        return "<script type=\"text/javascript\">\n"
+          . "var disqus_url='$url';\n"
+          . "var disqus_container_id = \"$disqusDiv\";\n"
+          . "</script>\n";
+    }
+
+    /**
+    *
+    * Get the script that does the embedding of the discussion into
+    * the page
+    * @return string The formatted Script and noscript code
+    * @access public
+    */
+    public function getEmbedJs($disqusUser)
+    {
+        $ret = "<script type=\"text/javascript\" "
+          . "src=\"http://disqus.com/forums/$disqusUser/embed.js\">\n"
+          . "</script><noscript>\n"
+          . "<a href=\"http://$disqusUser.disqus.com/?url=ref\">"
+          . "View the forum thread.</a></noscript>";
+        return $ret;
+    }
+
+    /**
+    *
+    * Add the widget to the page. This is used in a page template,
+    * just before the closing BODY tag (&lt;/body&gt;) insert
+    *    $objDq = $this->getObject('disquselems', 'disqus');
+    *    echo $objDq->addWidget;
+    *
+    * @return VOID
+    * @access public
+    *
+    */
     public function addWidget()
     {
         $ret = "<script type='text/javascript'>
@@ -89,6 +148,7 @@ class disquselems extends dbtable
     })();
 //]]>
 </script>";
+        return $ret;
     }
 
 }
