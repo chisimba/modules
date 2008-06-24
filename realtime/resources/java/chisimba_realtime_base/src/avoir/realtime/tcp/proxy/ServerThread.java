@@ -314,6 +314,7 @@ public class ServerThread extends Thread {
                     processModuleFilePacketRequest(p);
                 }
                 if (obj instanceof ModuleFileReplyPacket) {
+
                     ModuleFileReplyPacket p = (ModuleFileReplyPacket) obj;
                     processModuleFileReplyPacket(p);
                 }
@@ -389,6 +390,9 @@ public class ServerThread extends Thread {
                             LinkedList<ChatPacket> chts = getChatLog(thisUser);
                             ChatLogPacket chatLogPacket = new ChatLogPacket(chts);
                             sendPacket(chatLogPacket, objectOut);
+                            //send over any whiteboard stuff
+                            sendPacket(new WhiteboardItems(whiteboardItems, thisUser.getSessionId()), objectOut);
+
                             //check if there is presenter....tell so
                             Session session = getSession(thisUser.getSessionId());
                             if (session == null) {
@@ -402,6 +406,7 @@ public class ServerThread extends Thread {
                                     sendPacket(outline, objectOut);
                                 }
                             }
+
                             //update any monitors too
                             updateMonitors();
 
@@ -442,6 +447,14 @@ public class ServerThread extends Thread {
                         broadcastPacket((PointerPacket) packet, true);
 
                     } else if (packet instanceof WhiteboardPacket) {
+                        WhiteboardPacket p = (WhiteboardPacket) packet;
+                        Item item = p.getItem();
+                        if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
+                            whiteboardItems.add(item);
+                        }
+                        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
+                            whiteboardItems.set(item.getIndex(), item);
+                        }
                         broadcastPacket((WhiteboardPacket) packet, true);
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
@@ -704,12 +717,16 @@ public class ServerThread extends Thread {
     }
 
     private void processModuleFileReplyPacket(ModuleFileReplyPacket packet) {
+        logger.info("Received: " + packet.getClass() + " : " + packet.getFilePath());
+        logger.info("Trying to obtain lock..");
         synchronized (launchers) {
+            logger.info("Obtained!!!!");
             for (int i = 0; i < launchers.size(); i++) {
                 if (launchers.elementAt(i).getId().equals(packet.getUsername())) {
                     try {
                         launchers.elementAt(i).getObjectOutputStream().writeObject(packet);
                         launchers.elementAt(i).getObjectOutputStream().flush();
+                        logger.info("Send!!!!");
                     } catch (Exception ex) {
                         logger.info(ex.getLocalizedMessage());
                     }
@@ -929,7 +946,7 @@ public class ServerThread extends Thread {
             }
             delay(sleep);
         }
-       
+
 
         if (!slideServerFound) {
             System.out.println("Slide server " + packet.getSlidesServerId() + " not found!!");
@@ -1393,6 +1410,7 @@ public class ServerThread extends Thread {
         try {
             out.writeObject(packet);
             out.flush();
+
         } catch (IOException ex) {
             logger.info(ex.getLocalizedMessage());
         }
