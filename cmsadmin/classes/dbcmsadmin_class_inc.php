@@ -1717,6 +1717,28 @@ class dbcmsadmin extends dbTable
 		}
 	}
 
+
+/**
+         * Method to see if a certain section exists
+         *
+         * @access public
+         * @param section name
+         * @return section array if true else false
+         */
+    public function getSectionByName($name)
+    {
+        $this->_changeTable('tbl_cms_sections');
+
+        $res = $this->getAll("WHERE title = '".mysql_escape_string($name)."' OR menutext = '".mysql_escape_string($name)."' LIMIT 1");
+
+        if (count($res) == 0){
+            return false;
+        } else {
+            return $res[0];
+        }
+    }
+
+
 	/**
 	 * Method to return the section_id for a particular group
      *
