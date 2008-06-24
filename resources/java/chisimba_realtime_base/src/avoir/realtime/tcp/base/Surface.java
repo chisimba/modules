@@ -468,7 +468,7 @@ public class Surface extends JPanel implements MouseListener,
                 slideWidth = (int) (slideWidth * 0.9);
             }
 
-            g2.drawImage(slide.getImage(), xx, yy, this);
+            g2.drawImage(slide.getImage(), xx, yy,slideWidth,slideHeight, this);
             //if (firstSlide) {
             Rectangle rect = new Rectangle(xx - 5, yy - 5, slideWidth + 10, slideHeight + 10);
             g2.draw(rect);
