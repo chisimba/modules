@@ -5,6 +5,7 @@
 package avoir.realtime.tcp.pluginmanager;
 
 import avoir.realtime.tcp.launcher.RealtimePlugin;
+import javax.swing.JApplet;
 import javax.swing.JPanel;
 import avoir.realtime.tcp.base.RealtimeBase;
 import javax.swing.JMenuBar;
@@ -41,15 +42,23 @@ public class PluginManager implements RealtimePlugin {
         base.setSessionTitle(title);
     }
 
-    public JPanel createBase(String arg0, String arg1, String arg2, String arg3, int arg4, boolean arg5, String arg6, String arg7, boolean arg8, String arg9, String arg10, String arg11, boolean arg12) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setGlassPaneHandler(JApplet applet) {
+        base.setGlassPaneHandler(applet);
     }
 
-     public void removeUser(String arg0, String arg1) {
+    public void setApplectCodeBase(String appletCode) {
+        base.setAppletCodeBase(appletCode);
+    }
+
+    public JPanel createBase(String arg0, String arg1, String arg2, String arg3, int arg4, boolean arg5, String arg6, String arg7, boolean arg8, String arg9, String arg10, String arg11, boolean arg12) {
+        return new JPanel();
+    }
+
+    public void removeUser(String arg0, String arg1) {
         base.removeUser(arg0, arg1);
     }
 
-     public JMenuBar getMenuBar() {
+    public JMenuBar getMenuBar() {
         return base.getMenuMananger();
     }
 
