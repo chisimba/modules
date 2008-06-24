@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLConnection;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permissions;
@@ -139,9 +138,10 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     private void forceUpgrade() {
-        // if (!new File(internalVer).exists()) {
-        clearLocalLib();
-    //}
+        if (!new File(internalVer).exists()) {
+            System.out.println(internalVer+" does not exist..requesting package downloads");
+            clearLocalLib();
+        }
     }
 
     /**
@@ -218,7 +218,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             boolean autoflush = true;
 
             PrintWriter out = new PrintWriter(socket.getOutputStream(), autoflush);
-             BufferedReader in = new BufferedReader(
+            BufferedReader in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
 
             out.println("GET " + "/chisimba/app/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId + " HTTP/1.1");
