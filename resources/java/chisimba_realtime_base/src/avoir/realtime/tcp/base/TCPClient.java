@@ -41,6 +41,7 @@ import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
 import avoir.realtime.tcp.common.packet.SystemFilePacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
+import avoir.realtime.tcp.common.packet.WhiteboardItems;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.launcher.packet.LauncherPacket;
 import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
@@ -56,6 +57,7 @@ import java.nio.channels.FileChannel;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -70,6 +72,7 @@ import javax.swing.JOptionPane;
  */
 public class TCPClient {
 
+    private static Logger logger = Logger.getLogger(TCPClient.class.getName());
     private boolean running = true;
     private String windowManager = "GNOME";
     private boolean selectWindowManager = true;
@@ -181,7 +184,9 @@ public class TCPClient {
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
+
             } else {
+                logger.info("Error: writer is null!!!");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -197,7 +202,9 @@ public class TCPClient {
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
+                logger.info("Confirm Send!!!");
             } else {
+                logger.info("Error: writer is null!!!");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -385,7 +392,7 @@ public class TCPClient {
                 Object packet = null;
                 try {
                     packet = reader.readObject();
-                // System.out.println(packet.getClass());
+                //     logger.info(packet.getClass() + "");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     displayDisconnectionMsg();
@@ -398,6 +405,8 @@ public class TCPClient {
                     updateUserList(clientPacket);
                 } else if (packet instanceof LocalSlideCacheRequestPacket) {
                     processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
+                } else if (packet instanceof WhiteboardItems) {
+                    processWhiteboardItems((WhiteboardItems) packet);
                 } else if (packet instanceof NewSlideReplyPacket) {
                     NewSlideReplyPacket nsr = (NewSlideReplyPacket) packet;
                     processNewSlideReplyPacket(nsr);
@@ -468,6 +477,10 @@ public class TCPClient {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void processWhiteboardItems(WhiteboardItems p) {
+        base.getWhiteboardSurface().setItems(p.getWhiteboardItems());
     }
 
     private void processPointerPacket(PointerPacket p) {
@@ -864,11 +877,15 @@ public class TCPClient {
     }
 
     private void processModuleFileRequestPacket(ModuleFileRequestPacket p) {
+
         byte[] byteArray = readFile(p.getFilePath());
+        logger.info("Read File: " + p.getFilePath());
         ModuleFileReplyPacket rep = new ModuleFileReplyPacket(byteArray,
                 p.getFilename(), p.getFilePath(), p.getUsername());
         rep.setDesc(p.getDesc());
+
         sendPacket(rep);
+        logger.info("Send Back!!!");
     }
 
     private void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
