@@ -357,6 +357,7 @@ class cmsadmin extends controller
 
 						case 'addpermissions':
 								$sectionid = $this->getParam('id');
+	
 								$this->addEditSectionPermissions($sectionid);
 
 								$submitButton = $this->getParam('save_btn');
@@ -1568,6 +1569,7 @@ class cmsadmin extends controller
 
 								}	//End Loop
 
+
 								//Updating User Permissions
 								for ($x = 0; $x < $usersCount; $x++){
 										$memberId = $usersList[$x]['user_id'];
@@ -1580,8 +1582,9 @@ class cmsadmin extends controller
 
 
 										if ($chkPropagate != 'on'){
-												//Only updating permissions for current section
-												$this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
+											//Only updating permissions for current section
+											$this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
+
 										} else {
 												//Updating permissions for current and all child items i.e. (Child Sections/Child Content)
 												$this->_objSecurity->setPermissionsUser($sectionid, $memberId, $chkReadValue, $chkWriteValue);
@@ -1595,24 +1598,30 @@ class cmsadmin extends controller
 
 										$globalChkCounter += 1;
 
-								}       //End Loop
-						} else if ($chkCount == 0){
+								} 
+						} 
+
+						if ($chkCount == 0 || $usersCount == 0 || $groupsCount == 0){
 								//This Means that there were NO groups to be Authorized
 								//To propagate this through to the children the child group access must also be removed
 
 								if ($chkPropagate == 'on'){
-									//Clearing the Permissions Section - Group for the given section
-									$this->_objSecurity->deletePermissionsGroupPropagate($sectionid);
-									//Clearing the Permissions Section - User for the given section
-									$this->_objSecurity->deletePermissionsUserPropagate($sectionid);
+									if ($groupsCount == 0){
+										//Clearing the Permissions Section - Group for the given section
+										$this->_objSecurity->deletePermissionsGroupPropagate($sectionid);
 
+										//Clearing the Permissions Content - Group for the given section
+										$this->_objSecurity->deleteContentPermissionsGroupPropagate($sectionid);
 
-
-									//Clearing the Permissions Content - Group for the given section
-									$this->_objSecurity->deleteContentPermissionsGroupPropagate($sectionid);
-									//Clearing the Permissions Section - User for the given section
-									$this->_objSecurity->deleteContentPermissionsUserPropagate($sectionid);
-
+									}
+			
+									if ($userCount == 0){
+										//Clearing the Permissions Section - User for the given section
+										$this->_objSecurity->deletePermissionsUserPropagate($sectionid);
+	
+										//Clearing the Permissions Section - User for the given section
+										$this->_objSecurity->deleteContentPermissionsUserPropagate($sectionid);
+									}
 									
 								}
 
