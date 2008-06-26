@@ -666,7 +666,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * Initialize TCP connection. Actually, this is where you create an object
      * to connect to the server
      */
-    private void initTCPCommunication() {
+    public void initTCPCommunication() {
         initUser();
         tcpClient = new TCPClient(this);
         tcpClient.setFileTransfer(fileTransferPanel);
