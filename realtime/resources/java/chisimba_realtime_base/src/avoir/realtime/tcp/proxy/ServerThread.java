@@ -183,15 +183,16 @@ public class ServerThread extends Thread {
             Vector<Session> invalidSessions = new Vector<Session>();
             for (int i = 0; i < presentationLocks.size(); i++) {
                 Socket socket = presentationLocks.elementAt(i).getSocket();
-
+                /*
                 if (socket.isClosed() ||
-                        !socket.isConnected() || socket.isInputShutdown() || socket.isOutputShutdown()) {
-                    presentationLocks.remove(i);
-                }
+                !socket.isConnected() || socket.isInputShutdown() || socket.isOutputShutdown()) {
+                invalidSessions.addElement(presentationLocks.elementAt(i));
+                }*/
                 try {
                     presentationLocks.elementAt(i).getStream().writeObject(new TestPacket());
                     presentationLocks.elementAt(i).getStream().flush();
                 } catch (Exception ex) {
+                     ex.printStackTrace();
                     logger.info(ex.getLocalizedMessage());
                     try {
                         invalidSessions.addElement(presentationLocks.elementAt(i));
@@ -452,10 +453,30 @@ public class ServerThread extends Thread {
                         if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
                             whiteboardItems.add(item);
                         }
-                        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
-                            whiteboardItems.set(item.getIndex(), item);
+                        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM ||
+                                p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
+                            for (int i = 0; i < whiteboardItems.size(); i++) {
+                                Item xt = whiteboardItems.elementAt(i);
+                                if (xt.getId().equals(item.getId())) {
+                                    switch (p.getStatus()) {
+                                        case avoir.realtime.tcp.common.Constants.REPLACE_ITEM: {
+                                            whiteboardItems.set(i, item);
+                                            break;
+                                        }
+
+                                        case avoir.realtime.tcp.common.Constants.REMOVE_ITEM: {
+                                            whiteboardItems.remove(i);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        broadcastPacket((WhiteboardPacket) packet, true);
+                        if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
+                            whiteboardItems.clear();
+                        }
+                        broadcastPacket(p, true);
+
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
                         updateUserPresenceStatus(p.isShowIcon(), p.getUserName(), p.getPresenceType());
@@ -1167,6 +1188,29 @@ public class ServerThread extends Thread {
                                 clients.elementAt(i).writeObject(packet);
                                 clients.elementAt(i).flush();
                             }
+                        }
+                    } catch (IOException ex) {
+                        logger.info(ex.getLocalizedMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Broadcasts to other users but not
+     * @param packet
+     */
+    private void broadcastWhiteboardPacket(RealtimePacket packet) {
+        synchronized (clients) {
+
+            //send it to all those people logged in on this presentation (session)
+            for (int i = 0; i < clients.size(); i++) {
+                if (clients.nameAt(i).getSessionId().equals(packet.getSessionId())) {
+                    try {
+                        if (!clients.elementAt(i).equals(objectOutStream)) {
+                            clients.elementAt(i).writeObject(packet);
+                            clients.elementAt(i).flush();
                         }
                     } catch (IOException ex) {
                         logger.info(ex.getLocalizedMessage());
