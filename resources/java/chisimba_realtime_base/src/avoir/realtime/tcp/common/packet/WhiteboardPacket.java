@@ -15,11 +15,14 @@ public class WhiteboardPacket implements RealtimePacket {
     String sessionId;
     private Item item;
     private int status;
+    private String id;
 
-    public WhiteboardPacket(String sessionId, Item item, int status) {
+    public WhiteboardPacket(String sessionId, Item item, int status,String id) {
         this.sessionId = sessionId;
         this.item = item;
         this.status = status;
+        this.item.setId(id);
+        this.id=id;
     }
 
     public Item getItem() {
@@ -43,7 +46,7 @@ public class WhiteboardPacket implements RealtimePacket {
     }
 
     public String getId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return id;
     }
 
     public String getSessionId() {
@@ -51,6 +54,6 @@ public class WhiteboardPacket implements RealtimePacket {
     }
 
     public void setId(String id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.id = id;
     }
 }
