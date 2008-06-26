@@ -89,7 +89,7 @@ public class TCPClient {
     private boolean slideServerReplying = false;
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-    //private String SUPERNODE_HOST = "localhost";
+   // private String SUPERNODE_HOST = "localhost";
     //private int SUPERNODE_PORT = 22225;
     private boolean showChatFrame = true;
     private ClientAdmin clientAdmin;
@@ -181,14 +181,21 @@ public class TCPClient {
      */
     public void sendPacket(RealtimePacket packet) {
         try {
+
+            if (packet instanceof WhiteboardPacket) {
+                WhiteboardPacket p = (WhiteboardPacket) packet;
+            //System.out.println(p.getItem());
+            }
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
 
             } else {
                 logger.info("Error: writer is null!!!");
+                //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
             }
         } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Disconnected from server");
             ex.printStackTrace();
         }
     }
@@ -488,21 +495,22 @@ public class TCPClient {
     }
 
     private void processWhiteboardPacket(WhiteboardPacket p) {
-
+        // System.out.println("Received: " + p.getItem());
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
             base.getWhiteboardSurface().addItem(p.getItem());
         }
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
-            base.getWhiteboardSurface().replaceItem(p.getItem(), p.getItem().getIndex());
+
+            base.getWhiteboardSurface().replaceItem(p.getItem());
         }
-    /* if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
-    
-    base.getSurface().removeItem(p.getItem().getIndex());
-    }
-    if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEM) {
-    
-    base.getSurface().clearItems();
-    }*/
+        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
+
+            base.getWhiteboardSurface().removeItem(p.getItem());
+        }
+        if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
+
+            base.getWhiteboardSurface().clearItems();
+        }
     }
 
     private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
@@ -573,9 +581,15 @@ public class TCPClient {
      */
     private void displayDisconnectionMsg() {
         if (base != null) {
+            base.getWhiteboardSurface().setSelectedItem(null);
             base.showMessage("Disconnected from server. Retrying...", false, true);
-            //try to auto reconnect
-            base.refreshConnection();
+            int n = JOptionPane.showConfirmDialog(null, "Disconnected from server. Reconnect?", "Disconnected", JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION) {
+                //try to auto reconnect
+                base.initTCPCommunication();
+            }else{
+                base.showMessage("Disconnected From Server", false,true);
+            }
         }
         if (slidesServer != null) {
             //if for the slide server..try to reconnect
@@ -799,6 +813,10 @@ public class TCPClient {
     private void processChatPacket(ChatPacket p) {
         if (base != null) {
             base.updateChat(p);
+            if (showChatFrame) {
+                base.showChatRoom();
+                showChatFrame = false;
+            }
         }
     }
 
@@ -922,10 +940,7 @@ public class TCPClient {
         int slideIndex = packet.getSlideIndex();
         if (base != null) {
             slideServerReplying = true;
-            if (showChatFrame) {
-                base.showChatRoom();
-                showChatFrame = false;
-            }
+
             base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter());
             if (packet.getMessage() != null) {
                 base.showMessage(packet.getMessage(), false, true);
