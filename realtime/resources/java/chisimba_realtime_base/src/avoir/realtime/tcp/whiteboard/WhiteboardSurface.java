@@ -9,6 +9,7 @@ import avoir.realtime.tcp.base.ImageUtil;
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.base.TCPClient;
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.GenerateUUID;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
 import avoir.realtime.tcp.whiteboard.item.Item;
@@ -48,7 +49,9 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
@@ -66,6 +69,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         KeyListener,
         ActionListener {
 
+    public boolean XOR = false;
     public static final int BRUSH_PEN = 0;
     public static final int BRUSH_RECT = 1;
     public static final int BRUSH_RECT_FILLED = 2;
@@ -110,6 +114,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private ImageIcon ovalFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/oval_fill.gif");
     private ImageIcon textIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/text.gif");
     private ImageIcon lineIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/line.gif");
+    private ImageIcon deleteIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/delete.gif");
+    private ImageIcon clearIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/clear.gif");
+    private ImageIcon undoIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/undo.png");
     private TButton moveButton = new TButton(moveIcon);
     private TButton penButton = new TButton(penIcon);
     private TButton rectNoFillButton = new TButton(rectNoFillIcon);
@@ -118,6 +125,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private TButton ovalFillButton = new TButton(ovalFillIcon);
     private TButton lineButton = new TButton(lineIcon);
     private TButton textButton = new TButton(textIcon);
+    private MButton deleteButton = new MButton(deleteIcon);
+    private MButton clearButton = new MButton(clearIcon);
+    private MButton undoButton = new MButton(undoIcon);
     private boolean drawingEnabled = false;
     private Vector<Item> items = new Vector<Item>();
     private JTextField textField = new JTextField();
@@ -128,12 +138,16 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private int rect_size = 8;
     private int initH;
     private int initW;
+    private int initialWidth;
+    private int initialHeight;
     private int last_w;
     private int last_h;
     private int init_x2;
     private int init_y2;
     private int init_x1;
     private int init_y1;
+    private int initPressX;
+    private int initPressY;
     private Graphics2D graphics;
     private Vector<WBLine> tempPenVector = new Vector<WBLine>();
     public JComboBox fontSizeField = new JComboBox();
@@ -141,6 +155,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public JToggleButton boldButton,  italicButton,  underButton;
     private PixelButton pixelButton = new PixelButton();
     private FontMetrics metrics;
+    private Item lastItem = null;
+    private Item resizedItem = null;
+    private Rectangle ovalRect1;
+    private Rectangle ovalRect2;
+    private Rectangle ovalRect3;
+    private Rectangle ovalRect4;
 
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(RealtimeBase base) {
@@ -165,15 +185,27 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         bg.add(ovalNoFillButton);
 
         buttonsToolbar.add(moveButton);
+        moveButton.setToolTipText("Used for selecting an item");
         buttonsToolbar.add(penButton);
+        penButton.setToolTipText("Freehand");
         buttonsToolbar.add(lineButton);
+        lineButton.setToolTipText("Draw straight lines");
         buttonsToolbar.add(rectNoFillButton);
+        rectNoFillButton.setToolTipText("Draw a rectangle: Not filled");
         buttonsToolbar.add(rectFillButton);
+        rectFillButton.setToolTipText("Draw a rectangel: Filled");
         buttonsToolbar.add(ovalNoFillButton);
+        ovalNoFillButton.setToolTipText("Draw an oval: Not filled");
         buttonsToolbar.add(ovalFillButton);
+        ovalFillButton.setToolTipText("Draw an oval: Filled");
         buttonsToolbar.add(textButton);
-
-
+        textButton.setToolTipText("Add Text");
+        buttonsToolbar.add(deleteButton);
+        deleteButton.setToolTipText("Delete selected item");
+        buttonsToolbar.add(clearButton);
+        clearButton.setToolTipText("Clear whiteboard");
+        buttonsToolbar.add(undoButton);
+        undoButton.setToolTipText("Undo last action");
         penButton.addActionListener(this);
         penButton.setActionCommand("pen");
 
@@ -197,6 +229,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         lineButton.addActionListener(this);
         lineButton.setActionCommand("line");
+
+        deleteButton.addActionListener(this);
+        deleteButton.setActionCommand("delete");
+
+        clearButton.addActionListener(this);
+        clearButton.setActionCommand("clear");
+
+        undoButton.addActionListener(this);
+        undoButton.setActionCommand("undo");
 
         penButton.setSelected(true);
         currentColorField.setBackground(colour);
@@ -244,6 +285,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     }
 
+    public void setSelectedItem(Item selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
     private void resizeTextField() {
         Font f = getSelectedFont();
         metrics = graphics.getFontMetrics(f);
@@ -269,9 +314,33 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         repaint();
     }
 
-    public void replaceItem(Item item, int index) {
-        items.set(index, item);
+    public void replaceItem(Item item) {
+        for (int i = 0; i < items.size(); i++) {
+            Item xt = items.elementAt(i);
+            if (xt.getId().equals(item.getId())) {
+                //    System.out.println("Replace " + xt + " with " + item);
+                items.set(i, item);
+            }
+        }
         repaint();
+    }
+
+    public void removeItem(Item item) {
+        for (int i = 0; i < items.size(); i++) {
+            Item xt = items.elementAt(i);
+            if (xt.getId().equals(item.getId())) {
+                items.remove(i);
+            }
+        }
+        selectedItem = null;
+        repaint();
+
+    }
+
+    public void clearItems() {
+        items.clear();
+        repaint();
+
     }
 
     public boolean isDrawingEnabled() {
@@ -301,6 +370,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public void setItems(Vector<Item> items) {
         this.items = items;
         repaint();
+
     }
 
     public void mouseClicked(MouseEvent evt) {
@@ -314,26 +384,34 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     public void mousePressed(MouseEvent evt) {
         int button = evt.getButton();
+        initPressX = evt.getX();
+        initPressY = evt.getY();
         if (dragging == true) {
             return;
         }
+
         if (button == MouseEvent.BUTTON1) {
             if (drawingEnabled) {
                 prevX = startX = evt.getX();
                 prevY = startY = evt.getY();
+
                 if (brush == BRUSH_MOVE) {
                     selected = null;
-                    selectedItem = null;
+                    selectedItem =
+                            null;
 
-                    for (int i = 0; i < items.size(); i++) {
+                    for (int i = 0; i <
+                            items.size(); i++) {
                         Item tmp = items.elementAt(i);
                         if (tmp instanceof Txt) {
                             Txt txt = (Txt) tmp;
-                            
+
                             if (txt.contains(startX, startY, graphics)) {
                                 selected = tmp;
-                                selectedItem = selected;
-                                selectedIndex = i;
+                                selectedItem =
+                                        selected;
+                                selectedIndex =
+                                        i;
 
                                 boldButton.setSelected(false);
                                 italicButton.setSelected(false);
@@ -349,29 +427,40 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 if (style == Font.BOLD) {
                                     boldButton.setSelected(true);
                                 }
+
                                 if (style == Font.ITALIC) {
                                     italicButton.setSelected(true);
                                 }
 
                                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                                repaint();
                                 break;
+
                             }
+
+
                         }
 
                         if (tmp.contains(startX, startY)) {
-                            System.out.println(tmp);
+
                             selected = tmp;
-                            selectedItem = selected;
-                            selectedIndex = i;
+                            selectedItem =
+                                    selected;
+                            selectedIndex =
+                                    i;
 
                             setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
                             if (selectedItem instanceof WBLine) {
                                 WBLine line = (WBLine) selectedItem;
-                                init_x2 = line.x2;
-                                init_y2 = line.y2;
-                                init_x1 = line.x1;
-                                init_y1 = line.y1;
+                                init_x2 =
+                                        line.x2;
+                                init_y2 =
+                                        line.y2;
+                                init_x1 =
+                                        line.x1;
+                                init_y1 =
+                                        line.y1;
 
                                 Rectangle r1 = new Rectangle(line.x1 - 5,
                                         line.y1 - 5, 10, 10);
@@ -381,6 +470,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 if (r1.contains(evt.getPoint())) {
                                     setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
                                 }
+
                                 if (r2.contains(evt.getPoint())) {
                                     setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
                                 }
@@ -389,34 +479,39 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 Rectangle bounds = tmp.getBounds();
                                 if (bounds.contains(startX, startY)) {
                                     selected = tmp;
-                                    selectedItem = selected;
-                                    selectedIndex = i;
+                                    selectedItem =
+                                            selected;
+                                    selectedIndex =
+                                            i;
                                     setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
                                     int xx = bounds.x;
                                     int yy = bounds.y;
                                     int ww = bounds.width;
                                     int hh = bounds.height;
-                                    Rectangle r1 = new Rectangle((xx + ww) - 20,
-                                            yy, 20, 20);
-                                    Rectangle r2 = new Rectangle((xx + ww) - 20,
-                                            (yy + hh) - 20, 20, 20);
-
                                     last_w = xx + ww;
                                     initW = ww;
                                     last_h = yy + hh;
                                     initH = hh;
+                                    if (ovalRect1 != null) {
+                                        Rectangle r1 = ovalRect2;//new Rectangle((xx + ww) - 20,
+                                        //yy, 20, 20);
+                                        Rectangle r2 = ovalRect3;// new Rectangle((xx + ww) - 20,
 
-                                    if (r1.contains(evt.getPoint())) {
-                                        setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-                                        last_w = xx + ww;
-                                        initW = ww;
+                                        if (r1.contains(evt.getPoint())) {
+                                            setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+                                            last_w = xx + ww;
+                                            initW = ww;
+                                        }
+
+                                        if (r2.contains(evt.getPoint())) {
+                                            setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                                        }
                                     }
-                                    if (r2.contains(evt.getPoint())) {
-                                        setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-                                    }
+                                    repaint();
                                     break;
                                 }
+
                             } else {
                                 Rectangle bounds = selected.getBounds();
                                 int xx = bounds.x;
@@ -434,45 +529,59 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 last_h = yy + hh;
                                 initH = hh;
 
+                                initialWidth = ww;
+                                initialHeight = hh;
+
                                 if (r1.contains(evt.getPoint())) {
                                     setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-                                    last_w = xx + ww;
-                                    initW = ww;
+                                    last_w =
+                                            xx + ww;
+                                    initW =
+                                            ww;
                                 }
+
                                 if (r2.contains(evt.getPoint())) {
                                     setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
                                 }
+
                                 break;
                             }
+
                         }
                     }
                 } else if (brush == BRUSH_PEN) {
                     penVector = new Vector<WBLine>();
-                    tempPenVector = new Vector<WBLine>();
+                    tempPenVector =
+                            new Vector<WBLine>();
                     penVector.addElement(new WBLine(startX, startY, startX,
                             startY, colour, strokeWidth));
-                    tempPenVector = penVector;
+                    tempPenVector =
+                            penVector;
 
                 }
+
                 if (brush == BRUSH_TEXT) {
                     if (popup.isVisible()) {
                         popup.setVisible(false);
                     }
+
                     textField.setText("");
                     Font f = getSelectedFont();
                     textField.setFont(f);
                     FontMetrics metrics = graphics.getFontMetrics(f);
 
                     int hgt = metrics.getHeight();
-
-                    //popup.setPopupSize(100, hgt);
+                  //  textField.setForeground(colour);
+                    popup.setPopupSize(100, hgt+5);
                     //popup.setPreferredSize(new Dimension(100, 50));
                     popup.show(this, evt.getX(), evt.getY() - textField.getHeight());
                     textField.requestFocus();
                 }
+
             }
             dragging = true;
         }
+
         /**
          * allow modifying of existing text through right click
          */
@@ -481,18 +590,25 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 selected = null;
 
                 int tempIndex = 0;
-                for (int i = 0; i < items.size(); i++) {
+                for (int i = 0; i <
+                        items.size(); i++) {
                     Item tmp = items.elementAt(i);
                     if (tmp.contains(startX, startY)) {
                         selected = tmp;
-                        selectedIndex = tempIndex;
+                        selectedIndex =
+                                tempIndex;
                         tempIndex++;
+
                         break;
+
                     }
+
+
                 }
                 if (editPopup.isVisible()) {
                     editPopup.setVisible(false);
                 }
+
                 if (selectedItem instanceof Txt) {
                     Txt txt = (Txt) selectedItem;
                     Font f = txt.getFont();
@@ -510,8 +626,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     if (txt.contains(evt.getX(), evt.getY(), graphics)) {
                         editPopup.show(this, evt.getX(), evt.getY() - editTextField.getHeight());
                     }
+
                     editTextField.requestFocus();
                 }
+
             }
         }
         repaint();
@@ -528,15 +646,19 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             if (brush != BRUSH_PEN) {
                 commitStroke(startX, startY, prevX, prevY, true);
             }
+
             if (brush == BRUSH_PEN) {
 
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Pen(penVector, colour,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
+                base.getTcpClient().sendPacket(
+                        new WhiteboardPacket(base.getSessionId(), new Pen(penVector, colour,
+                        strokeWidth), Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
 
                 penVector.removeAllElements();
                 tempPenVector.removeAllElements();
-                penVector = null;
+                penVector =
+                        null;
             }
+
             if (brush == BRUSH_MOVE) {
                 if (selected != null) {
                     if (this.getCursor() == Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)) {
@@ -544,11 +666,13 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                         if (!(selectedItem instanceof WBLine)) {
                             Item newItem = selected.getTranslated(prevX - startX, prevY - startY);
                             selectedItem.setIndex(selectedIndex);
+
                             newItem.setIndex(selectedIndex);
                             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    newItem, Constants.REPLACE_ITEM));
+                                    newItem, Constants.REPLACE_ITEM, selected.getId()));
 
                         }
+
                     }
                     if ((this.getCursor() == Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)) || (this.getCursor() == Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR))) {
 
@@ -559,12 +683,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             int newH = initH + changeH;
 
                             if ((newW > 10) && (newH > 10)) {
-                                selected.setSize(newW, newH);
-                                selected.setIndex(selectedIndex);
-                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                        selected, Constants.REPLACE_ITEM));
+                                Item item = selectedItem;
+
+                                item.setSize(newW, newH);
+                            //    base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                            //             item, Constants.REMOVE_ITEM, selected.getId()));
+                            //   base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                            //         item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+
                             }
                         }
+
                     }
                 }
             }
@@ -583,8 +712,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             if (brush == BRUSH_PEN) {
                 penVector.addElement(new WBLine(prevX, prevY, x, y, colour,
                         strokeWidth));
-                tempPenVector = penVector;
+                tempPenVector =
+                        penVector;
+                lastItem = new Pen(penVector, colour, strokeWidth);
+
                 drawTempPen();
+
             } else if (brush == BRUSH_MOVE) {
                 if (selected != null) {
                     if (this.getCursor() == Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)) {
@@ -601,15 +734,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             selectedItem.setIndex(selectedIndex);
 
                             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    selectedItem, Constants.REPLACE_ITEM));
+                                    selectedItem, Constants.REPLACE_ITEM, selected.getId()));
 
                         } else {
                             Item newItem = selected.getTranslated(x - startX, y - startY);
                             selectedItem = newItem;
 
                             selectedItem.setIndex(selectedIndex);
+                            //System.out.println("Existing id: " + selected.getId());
                             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    selectedItem, Constants.REPLACE_ITEM));
+                                    selectedItem, Constants.REPLACE_ITEM, selected.getId()));
+
 
                         }
                     }
@@ -627,7 +762,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             }
                             selectedItem.setIndex(selectedIndex);
                             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    selectedItem, Constants.REPLACE_ITEM));
+                                    selectedItem, Constants.REPLACE_ITEM, selected.getId()));
 
                         } else {
                             int changeW = evt.getX() - last_w;
@@ -635,10 +770,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             int newW = initW + changeW;
                             int newH = initH + changeH;
                             if ((newW > 10) && (newH > 10)) {
-                                selected.setSize(newW, newH);
+                                selectedItem.setSize(newW, newH);
                                 selectedItem.setIndex(selectedIndex);
-                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                        selectedItem, Constants.REPLACE_ITEM));
 
                             }
                         }
@@ -648,10 +781,29 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             prevX = x;
             prevY = y;
         }
+
         repaint();
     }
 
     public void mouseMoved(MouseEvent evt) {
+        if (ovalRect1 != null) {
+            Rectangle r1 = ovalRect2;//new Rectangle((xx + ww) - 20,
+            //yy, 20, 20);
+            Rectangle r2 = ovalRect3;// new Rectangle((xx + ww) - 20,
+            //(yy + hh) - 10, 20, 20);
+            // System.out.println("R1: " + r1 + "\nR2 : " + r2 + "\nEvt : " + evt.getPoint() + "\nContains R1: " + (r1.contains(evt.getPoint())) + "\nContails R2: " + r2.contains(evt.getPoint()));
+            if (r1.contains(evt.getPoint())) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+            } else {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            if (r2.contains(evt.getPoint())) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+            } else {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+        }
     }
 
     public void keyPressed(KeyEvent evt) {
@@ -664,38 +816,70 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void actionPerformed(ActionEvent evt) {
+        if (evt.getActionCommand().equals("delete")) {
+            if (selectedItem != null) {
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                        selectedItem, Constants.REMOVE_ITEM, selected.getId()));
+            }
+
+        }
+        if (evt.getActionCommand().equals("clear")) {
+            int n = JOptionPane.showConfirmDialog(this, "This action will clear whiteboard items.", "Clear", JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION) {
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                        selectedItem, Constants.CLEAR_ITEMS, GenerateUUID.getId()));
+            }
+
+        }
+        if (evt.getActionCommand().equals("undo")) {
+            if (lastItem != null) {
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                        lastItem, Constants.REMOVE_ITEM, lastItem.getId()));
+            }
+            repaint();
+        }
 
         if (evt.getActionCommand().equals("line")) {
             brush = BRUSH_LINE;
         }
+
         if (evt.getActionCommand().equals("move")) {
             brush = BRUSH_TEXT;
         }
+
         if (evt.getActionCommand().equals("move")) {
             brush = BRUSH_MOVE;
         }
+
         if (evt.getActionCommand().equals("pen")) {
             brush = BRUSH_PEN;
         }
+
         if (evt.getActionCommand().equals("rect_nofill")) {
             brush = BRUSH_RECT;
         }
+
         if (evt.getActionCommand().equals("rect_fill")) {
             brush = BRUSH_RECT_FILLED;
         }
+
         if (evt.getActionCommand().equals("oval_fill")) {
             brush = BRUSH_OVAL_FILLED;
         }
+
         if (evt.getActionCommand().equals("oval_nofill")) {
             brush = BRUSH_OVAL;
         }
+
         if (evt.getActionCommand().equals("texttool")) {
             brush = BRUSH_TEXT;
         }
+
         if (evt.getActionCommand().equals("text")) {
             commitStroke(startX, startY, prevX, prevY, true);
             popup.setVisible(false);
         }
+
     }
 
     private void drawTempPen() {
@@ -704,10 +888,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         graphics.setStroke(new BasicStroke(p.getStroke()));
         graphics.setColor(p.getCol());
         Vector<WBLine> v = p.getPoints();
-        for (int k = 0; k < v.size(); k++) {
+        for (int k = 0; k <
+                v.size(); k++) {
             WBLine l = v.elementAt(k);
             graphics.drawLine(l.x1, l.y1, l.x2, l.y2);
         }
+
     }
 
     private void commitStroke(int x1, int y1, int x2, int y2, boolean fill) {
@@ -720,61 +906,85 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         if (x2 >= x1) { // x1 is left edge
             x = x1;
-            w = x2 - x1;
+            w =
+                    x2 - x1;
         } else { // x2 is left edge
             x = x2;
-            w = x1 - x2;
+            w =
+                    x1 - x2;
         }
 
         if (y2 >= y1) { // y1 is top edge
             y = y1;
-            h = y2 - y1;
+            h =
+                    y2 - y1;
         } else { // y2 is top edge.
             y = y2;
-            h = y1 - y2;
+            h =
+                    y1 - y2;
         }
 
         switch (brush) {
             case BRUSH_LINE:
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new WBLine(x1, y1, x2, y2, colour,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
-
+                WBLine line = new WBLine(x1, y1, x2, y2, colour,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(
+                        new WhiteboardPacket(base.getSessionId(), line, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = line;
                 break;
+
             case BRUSH_RECT:
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Rect(x, y, w, h, colour, false,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
+                Rect rect = new Rect(x, y, w, h, colour, false,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), rect, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = rect;
                 break;
-            case BRUSH_OVAL:
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Oval(x, y, w, h, colour, false,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
-                break;
-            case BRUSH_RECT_FILLED:
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Rect(x, y, w, h, colour, true,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
-                break;
-            case BRUSH_OVAL_FILLED:
 
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Oval(x, y, w, h, colour, true,
-                        strokeWidth), Constants.ADD_NEW_ITEM));
+            case BRUSH_OVAL:
+                Oval oval = new Oval(x, y, w, h, colour, false,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), oval, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = oval;
                 break;
+
+            case BRUSH_RECT_FILLED:
+                Rect filledRect = new Rect(x, y, w, h, colour, true,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), filledRect, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = filledRect;
+                break;
+
+            case BRUSH_OVAL_FILLED:
+                Oval filledOval = new Oval(x, y, w, h, colour, true,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), filledOval, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = filledOval;
+                break;
+
             case BRUSH_TEXT:
                 int size = Integer.parseInt((String) fontSizeField.getSelectedItem());
                 int style = Font.PLAIN;
                 if (boldButton.isSelected()) {
                     style = Font.BOLD;
                 }
+
                 if (italicButton.isSelected()) {
                     style = Font.ITALIC;
                 }
+
                 if (boldButton.isSelected() && italicButton.isSelected()) {
                     style = Font.BOLD | Font.ITALIC;
                 }
-                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), new Txt(x, y, colour, textField.getText(),
+                Txt txt = new Txt(x, y, textField.getForeground(), textField.getText(),
                         new Font((String) fontNamesField.getSelectedItem(), style, size),
-                        underButton.isSelected()), Constants.ADD_NEW_ITEM));
-
+                        underButton.isSelected());
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), txt, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = txt;
                 break;
+
         }
+
+
     }
 
     /**
@@ -798,44 +1008,55 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         if (x2 >= x1) { // x1 is left edge
             x = x1;
-            w = x2 - x1;
+            w =
+                    x2 - x1;
         } else { // x2 is left edge
             x = x2;
-            w = x1 - x2;
+            w =
+                    x1 - x2;
         }
 
         if (y2 >= y1) { // y1 is top edge
             y = y1;
-            h = y2 - y1;
+            h =
+                    y2 - y1;
         } else { // y2 is top edge.
             y = y2;
-            h = y1 - y2;
+            h =
+                    y1 - y2;
         }
 
         switch (brush) {
             case BRUSH_PEN:
                 if (penVector != null) {
-                    for (int i = 0; i < penVector.size(); i++) {
+                    for (int i = 0; i <
+                            penVector.size(); i++) {
                         WBLine line = penVector.elementAt(i);
                         g.drawLine(line.x1, line.y1, line.x2, line.y2);
                     }
+
                 }
                 break;
             case BRUSH_LINE:
                 g.drawLine(x1, y1, x2, y2);
                 break;
+
             case BRUSH_RECT:
                 g.drawRect(x, y, w, h);
                 break;
+
             case BRUSH_OVAL:
                 g.drawOval(x, y, w, h);
                 break;
+
             case BRUSH_RECT_FILLED:
                 g.fillRect(x, y, w, h);
                 break;
+
             case BRUSH_OVAL_FILLED:
                 g.fillOval(x, y, w, h);
                 break;
+
             case BRUSH_TEXT:
                 /*Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(colour);
@@ -870,6 +1091,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 }*/
                 break;
         }
+
     }
 
     private Font getSelectedFont() {
@@ -878,12 +1100,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         if (boldButton.isSelected()) {
             style = Font.BOLD;
         }
+
         if (italicButton.isSelected()) {
             style = Font.ITALIC;
         }
+
         if (boldButton.isSelected() && italicButton.isSelected()) {
             style = Font.BOLD | Font.ITALIC;
         }
+
         return new Font((String) fontNamesField.getSelectedItem(),
                 style, size);
     }
@@ -902,9 +1127,104 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
     }
 
+    /** Our own button behavoir
+     */
+    class MButton extends JButton {
+
+        public MButton(ImageIcon icon) {
+            super(icon);
+            setBorderPainted(false);
+            setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+            setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+            setFont(new java.awt.Font("Dialog", 0, 8));
+
+        }
+    }
+//paints the current itme
+    private void paintCurrentItem(Graphics2D g2) {
+        Item temp = selectedItem;
+        if (temp instanceof Rect) {
+            Rect r = (Rect) temp;
+            g2.setStroke(new BasicStroke(r.getStroke()));
+            g2.setColor(r.getCol());
+
+            if (r.isFilled()) {
+                g2.fill(r.getRect());
+            } else {
+                g2.draw(r.getRect());
+            }
+
+        }
+        if (temp instanceof WBLine) {
+            WBLine l = (WBLine) temp;
+            g2.setStroke(new BasicStroke(l.getStroke()));
+            g2.setColor(l.getCol());
+            Line2D line = l.getLine();
+            g2.draw(line);
+        }
+
+        if (temp instanceof Pen) {
+            Pen p = (Pen) temp;
+            g2.setStroke(new BasicStroke(p.getStroke()));
+            g2.setColor(p.getCol());
+            Vector<WBLine> v = p.getPoints();
+            for (int k = 0; k <
+                    v.size(); k++) {
+                WBLine l = v.elementAt(k);
+                g2.drawLine(l.x1, l.y1, l.x2, l.y2);
+            }
+
+        }
+        if (temp instanceof Oval) {
+            Oval o = (Oval) temp;
+            g2.setStroke(new BasicStroke(o.getStroke()));
+            g2.setColor(o.getCol());
+            if (o.isFilled()) {
+                Rectangle r = o.getBounds();
+                g2.fillOval(r.x, r.y, r.width, r.height);
+            } else {
+                Rectangle r = o.getRect();
+                g2.drawOval(r.x, r.y, r.width, r.height);
+            }
+
+        }
+        if (temp instanceof Img) {
+            Img img = (Img) temp;
+            Rectangle bounds = img.getBounds();
+            g2.drawImage(img.getImg().getImage(), bounds.x, bounds.y,
+                    bounds.width, bounds.height, this);
+        }
+
+        if (temp instanceof Txt) {
+            Txt t = (Txt) temp;
+            g2.setColor(t.getCol());
+
+            String txt = t.getContent();
+            Font font = t.getFont();
+            boolean underLine = t.isUnderlined();
+            Point point = t.getPoint();
+
+            if (txt.length() > 0) {
+                AttributedString as = new AttributedString(txt);
+                as.addAttribute(TextAttribute.FONT, font);
+                if (underLine) {
+                    as.addAttribute(TextAttribute.UNDERLINE,
+                            TextAttribute.UNDERLINE_ON);
+                }
+
+                TextLayout tl = new TextLayout(as.getIterator(), g2.getFontRenderContext());
+                tl.draw(g2, point.x, point.y);
+            }
+
+        }
+
+
+    }
+
     private void paintItems(Graphics2D g2) {
 
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i <
+                items.size(); i++) {
             Item temp = items.elementAt(i);
             if (temp instanceof Rect) {
                 Rect r = (Rect) temp;
@@ -916,6 +1236,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 } else {
                     g2.draw(r.getRect());
                 }
+                resizedItem = r;
+
             }
             if (temp instanceof WBLine) {
                 WBLine l = (WBLine) temp;
@@ -924,15 +1246,18 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 Line2D line = l.getLine();
                 g2.draw(line);
             }
+
             if (temp instanceof Pen) {
                 Pen p = (Pen) temp;
                 g2.setStroke(new BasicStroke(p.getStroke()));
                 g2.setColor(p.getCol());
                 Vector<WBLine> v = p.getPoints();
-                for (int k = 0; k < v.size(); k++) {
+                for (int k = 0; k <
+                        v.size(); k++) {
                     WBLine l = v.elementAt(k);
                     g2.drawLine(l.x1, l.y1, l.x2, l.y2);
                 }
+
             }
             if (temp instanceof Oval) {
                 Oval o = (Oval) temp;
@@ -945,6 +1270,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     Rectangle r = o.getRect();
                     g2.drawOval(r.x, r.y, r.width, r.height);
                 }
+
             }
             if (temp instanceof Img) {
                 Img img = (Img) temp;
@@ -969,9 +1295,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                         as.addAttribute(TextAttribute.UNDERLINE,
                                 TextAttribute.UNDERLINE_ON);
                     }
+
                     TextLayout tl = new TextLayout(as.getIterator(), g2.getFontRenderContext());
                     tl.draw(g2, point.x, point.y);
                 }
+
             }
 
 
@@ -980,7 +1308,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         g2.setStroke(dashed);
         g2.setColor(Color.red);
-
+//System.out.println("Selected item: "+selectedItem);
         //draw red rectange around selected item
         if (selectedItem instanceof Txt) {
             Txt txt = (Txt) selectedItem;
@@ -992,6 +1320,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
                     rect_size);
         }
+
         if (selectedItem instanceof Rect) {
             Rect rr = (Rect) selectedItem;
             Rectangle r = rr.getRect();
@@ -1001,6 +1330,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
             g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
                     rect_size);
+            g2.draw(r);
         }
 
         if (selectedItem instanceof Img) {
@@ -1017,12 +1347,16 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         if (selectedItem instanceof Oval) {
             Oval oo = (Oval) selectedItem;
             Rectangle r = oo.getRect();
-            g2.fillRect(r.x, r.y, rect_size, rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
+            ovalRect1 = new Rectangle(r.x, r.y, rect_size, rect_size);
+            g2.fill(ovalRect1);
+            ovalRect2 = new Rectangle((r.x + r.width) - rect_size, r.y, rect_size,
                     rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
+            g2.fill(ovalRect2);
+            ovalRect3 = new Rectangle((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
+            g2.fill(ovalRect3);
+            ovalRect4 = new Rectangle(r.x, (r.y + r.height) - rect_size, rect_size,
                     rect_size);
+            g2.fill(ovalRect4);
         }
 
         if (selectedItem instanceof WBLine) {
@@ -1048,7 +1382,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
     
      */
-
     }
 
     /**
@@ -1062,13 +1395,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             boldButton.setToolTipText("Bold");
             mainToolbar.add(boldButton);
 
-            italicButton = new JToggleButton(ImageUtil.createImageIcon(this,
+            italicButton =
+                    new JToggleButton(ImageUtil.createImageIcon(this,
                     "/icons/whiteboard/text_italic.png"));
             italicButton.setToolTipText("Italic");
             italicButton.setBorderPainted(false);
             mainToolbar.add(italicButton);
 
-            underButton = new JToggleButton(ImageUtil.createImageIcon(this,
+            underButton =
+                    new JToggleButton(ImageUtil.createImageIcon(this,
                     "/icons/whiteboard/text_under.png"));
             underButton.setToolTipText("Underline");
             underButton.setBorderPainted(false);
@@ -1083,15 +1418,19 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
              */
             mainToolbar.add(pixelButton);
 
-            for (int i = 8; i < 100; i++) {
+            for (int i = 8; i <
+                    100; i++) {
                 fontSizeField.addItem(i + "");
             }
+
             fontSizeField.setSelectedItem("12");
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             String[] fontFamilies = ge.getAvailableFontFamilyNames();
-            for (int i = 0; i < fontFamilies.length; i++) {
+            for (int i = 0; i <
+                    fontFamilies.length; i++) {
                 fontNamesField.addItem(fontFamilies[i]);
             }
+
             fontNamesField.setSelectedItem("Dialog");
             mainToolbar.add(fontNamesField);
             JPanel p = new JPanel();
@@ -1101,9 +1440,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             mainToolbar.setEnabled(false);
 
             createPixelOptionFrame();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -1118,23 +1459,28 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         p.setSize(81, 21);
         p.add(b);
 
-        b = new PixelButtonOption(3);
+        b =
+                new PixelButtonOption(3);
         p.setSize(81, 21);
 
         p.add(b);
-        b = new PixelButtonOption(5);
+        b =
+                new PixelButtonOption(5);
         p.setSize(81, 21);
 
         p.add(b);
-        b = new PixelButtonOption(7);
+        b =
+                new PixelButtonOption(7);
         p.setSize(81, 21);
 
         p.add(b);
-        b = new PixelButtonOption(9);
+        b =
+                new PixelButtonOption(9);
         p.setSize(81, 21);
 
         p.add(b);
-        b = new PixelButtonOption(11);
+        b =
+                new PixelButtonOption(11);
         p.setSize(81, 21);
     //just put the panel on the popup for rendering
     // popup.add(p);
@@ -1160,6 +1506,36 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
 
         public void paint(Graphics g) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1310,6 +1686,36 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             int width = getSize().width, height = getSize().height;
             g.setColor(Color.white);
             g.draw3DRect(1, 1, width - 3, height - 3, !pressed);
@@ -1372,10 +1778,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        graphics = g2;
+        graphics =
+                g2;
+        if (XOR) {
+            g2.setXORMode(getBackground());
+        }
 
         drawStroke(g2);
         paintItems(g2);
+    //  paintCurrentItem(g2);
     }
 
     /** This method is called from within the constructor to
@@ -1584,57 +1995,70 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 private void blackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blackButtonActionPerformed
     colour = Color.BLACK;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_blackButtonActionPerformed
 
 private void lightGrayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightGrayButtonActionPerformed
 
     colour = Color.LIGHT_GRAY;
-    currentColorField.setBackground(colour);//GEN-LAST:event_lightGrayButtonActionPerformed
+    textField.setForeground(colour);//GEN-LAST:event_lightGrayButtonActionPerformed
+    currentColorField.setBackground(colour);                                               
     }
 
 private void grayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grayButtonActionPerformed
     colour = Color.GRAY;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_grayButtonActionPerformed
 
 private void whiteButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_whiteButttonActionPerformed
     colour = Color.WHITE;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_whiteButttonActionPerformed
 
 private void redButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redButtonActionPerformed
     colour = Color.RED;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_redButtonActionPerformed
 
 private void yellowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yellowButtonActionPerformed
     colour = Color.YELLOW;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_yellowButtonActionPerformed
 
 private void blueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blueButtonActionPerformed
     colour = Color.BLUE;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_blueButtonActionPerformed
 
 private void cyanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyanButtonActionPerformed
     colour = Color.CYAN;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_cyanButtonActionPerformed
 
 private void greenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greenButtonActionPerformed
     colour = Color.GREEN;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
+
 }//GEN-LAST:event_greenButtonActionPerformed
 
 private void orangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orangeButtonActionPerformed
     colour = Color.ORANGE;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
+
 }//GEN-LAST:event_orangeButtonActionPerformed
 
 private void magentaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magentaButtonActionPerformed
     colour = Color.MAGENTA;
     currentColorField.setBackground(colour);
+    textField.setForeground(colour);
 }//GEN-LAST:event_magentaButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton blackButton;
