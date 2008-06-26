@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package avoir.realtime.tcp.whiteboard.item;
 
 import java.awt.Color;
@@ -13,7 +12,17 @@ import java.awt.Rectangle;
  *
  * @author developer
  */
-public class FreeHand implements Item{
+public class FreeHand implements Item {
+
+    private String id;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public boolean contains(int x, int y) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -46,5 +55,4 @@ public class FreeHand implements Item{
     public void setSize(int x, int y) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
