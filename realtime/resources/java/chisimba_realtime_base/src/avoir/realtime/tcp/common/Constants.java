@@ -23,7 +23,7 @@ public class Constants {
     public static final int ADD_NEW_ITEM = 1;
     public static final int REMOVE_ITEM = 2;
     public static final int REPLACE_ITEM = 3;
-    public static final int CLEAR_ITEM = 4;
+    public static final int CLEAR_ITEMS = 4;
     public static final int PAINT_BRUSH = 10;
     public static final int HAND_LEFT = 11;
     public static final int HAND_RIGHT = 12;
