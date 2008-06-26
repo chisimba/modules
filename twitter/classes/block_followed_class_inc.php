@@ -35,12 +35,8 @@ class block_followed extends object
 	{
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         //This enables the thing to work as a blog plugin
-        $uid = $this->getParam('userid', FALSE);
-        if ($uid) {
-            $un = $this->objUser->userName($uid);
-        } else {
-            $un = $this->objUser->userName();
-        }
+        $objGuess = $this->getObject('bestguess', 'utilities');
+        $un = $objGuess->guessUserName();
         $objUserParams->setUid($un);
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");

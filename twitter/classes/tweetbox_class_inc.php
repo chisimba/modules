@@ -63,6 +63,7 @@ class tweetbox extends object
     /**
     *
     * Constructor for the twitterview class
+    *
     * @access public
     * @return VOID
     *
@@ -89,7 +90,10 @@ class tweetbox extends object
 
     /**
      *
-     * limit information will shown in a div whose id is ‘charlimitinfo’.
+     * Limit information will shown in a div whose id is ‘charlimitinfo’.
+     *
+     * @access public
+     * @return string The Javascript for the limit box
      *
      */
     public function getLimitBox($chars, $textboxid)

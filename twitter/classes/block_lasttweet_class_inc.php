@@ -16,12 +16,12 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class block_lasttweet extends object
 {
-    var $title;
+    public $title;
 
     /**
     * Constructor for the class
     */
-    function init()
+    public function init()
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
@@ -29,28 +29,28 @@ class block_lasttweet extends object
     }
 
     /**
-    * Method to output a Tweet block
+    * Method to output a lastTweet block
     */
-    function show()
+    public function show()
 	{
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         //This enables the thing to work as a blog plugin
-        $uid = $this->getParam('userid', FALSE);
-        if ($uid) {
-            $un = $this->objUser->userName($uid);
+        $objGuess = $this->getObject('bestguess', 'utilities');
+        $un = $objGuess->guessUserName();
+        if ($un) {
+            $objUserParams->setUid($un);
+            $objUserParams->readConfig();
+            $userName = $objUserParams->getValue("twittername");
+            $password = $objUserParams->getValue("twitterpassword");
+            if ($userName!==NULL && $password !==NULL) {
+                $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
+                $objTwitterRemote->initializeConnection($userName, $password);
+                return $objTwitterRemote->showStatus(TRUE, FALSE);
+            } else {
+                return $this->objLanguage->languageText("mod_twitter_nologonshort", "twitter");
+            }
         } else {
-            $un = $this->objUser->userName();
-        }
-        $objUserParams->setUid($un);
-        $objUserParams->readConfig();
-        $userName = $objUserParams->getValue("twittername");
-        $password = $objUserParams->getValue("twitterpassword");
-        if ($userName!==NULL && $password !==NULL) {
-            $objTwitterRemote = $this->getObject('twitterremote', 'twitter');
-            $objTwitterRemote->initializeConnection($userName, $password);
-            return $objTwitterRemote->showStatus(TRUE, FALSE);
-        } else {
-            return $this->objLanguage->languageText("mod_twitter_nologonshort", "twitter");
+            return $this->objLanguage->languageText("mod_twitter_cannotguess", "twitter");
         }
     }
 }
