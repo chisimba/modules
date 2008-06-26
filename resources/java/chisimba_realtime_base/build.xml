@@ -45,7 +45,7 @@
         <echo file="src/avoir/realtime/tcp/base/Version.java">
             package avoir.realtime.tcp.base;${line.separator}
             public class Version{${line.separator}
-                public static float version=${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
+                public static float version=1.0003f;//${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
                 public static int getVersion(){${line.separator}
             return (int)version;${line.separator}
             }${line.separator}
