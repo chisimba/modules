@@ -33,7 +33,15 @@ public class Txt implements Item {
     private String content;
     Font font;
     boolean underline;
+      private String id;
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
     /**
      * Constructor
      * @param ix int

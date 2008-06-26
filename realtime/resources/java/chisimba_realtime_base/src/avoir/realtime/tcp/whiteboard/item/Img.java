@@ -36,6 +36,15 @@ public class Img implements Item {
     private int height;
     private ImageIcon image;
     private String path;
+    private String id;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     /**
      * Constructs a new Image
