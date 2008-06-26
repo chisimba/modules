@@ -36,6 +36,10 @@ public interface Item extends java.io.Serializable {
 
     public int getIndex();
 
+    public void setId(String id);
+
+    public String getId();
+
     /**
      * Returns whether an object contains the specified coordinates
      * @param x horizontal coordinate

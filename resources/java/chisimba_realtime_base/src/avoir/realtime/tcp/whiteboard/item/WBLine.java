@@ -47,6 +47,15 @@ public class WBLine implements Item {
     public int y2;
     private Color Colour;
     private float stroke;
+    private String id;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     /**
      * Constructor

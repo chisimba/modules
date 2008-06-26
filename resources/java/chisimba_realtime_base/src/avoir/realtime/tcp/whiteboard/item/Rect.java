@@ -36,7 +36,15 @@ public class Rect implements Item {
     private Color colour;
     private boolean fill;
     private float stroke;
+    private String id;
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
     /**
      * Constructs a new rectangle.
      *
@@ -115,7 +123,7 @@ public class Rect implements Item {
      * @return Dimension
      */
     public java.awt.Rectangle getBounds() {
-        return new java.awt.Rectangle(x, y, width, height);
+        return new java.awt.Rectangle(this.x, this.y, width, height);
     }
 
     /**

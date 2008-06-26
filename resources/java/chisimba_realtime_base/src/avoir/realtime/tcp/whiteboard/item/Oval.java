@@ -37,6 +37,15 @@ public class Oval implements Item {
     private Color colour;
     private boolean fill;
     private float stroke;
+    private String id;
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     /**
      * Constructs a new Oval.
@@ -107,8 +116,8 @@ public class Oval implements Item {
      * @return boolean
      */
     public boolean contains(int x, int y) {
-        Ellipse2D tmp = new Ellipse2D.Double(this.x, this.y, width, height);
-
+//        Ellipse2D tmp = new Ellipse2D.Double(this.x, this.y, width, height);
+        Rectangle tmp = new Rectangle(x, y, width, height);
         return tmp.contains(x, y);
     }
 
