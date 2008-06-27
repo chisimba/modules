@@ -475,7 +475,7 @@ public class ServerThread extends Thread {
                         if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
                             whiteboardItems.clear();
                         }
-                        broadcastPacket(p, true);
+                        broadcastPacket(p,true);
 
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
