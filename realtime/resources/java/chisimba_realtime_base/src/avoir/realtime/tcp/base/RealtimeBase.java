@@ -563,6 +563,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      */
     public void setControl(boolean control) {
         this.hasControl = control;
+        whiteboardSurface.setDrawingEnabled(control);
     }
 
     /**
