@@ -287,6 +287,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     public void setSelectedItem(Item selectedItem) {
         this.selectedItem = selectedItem;
+        repaint();
     }
 
     private void resizeTextField() {
@@ -571,8 +572,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     FontMetrics metrics = graphics.getFontMetrics(f);
 
                     int hgt = metrics.getHeight();
-                  //  textField.setForeground(colour);
-                    popup.setPopupSize(100, hgt+5);
+                    //  textField.setForeground(colour);
+                    popup.setPopupSize(100, hgt + (int) (hgt * 0.2));
                     //popup.setPreferredSize(new Dimension(100, 50));
                     popup.show(this, evt.getX(), evt.getY() - textField.getHeight());
                     textField.requestFocus();
@@ -611,8 +612,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
                 if (selectedItem instanceof Txt) {
                     Txt txt = (Txt) selectedItem;
+
                     Font f = txt.getFont();
-                    editTextField.setFont(f);
+                    
                     FontMetrics metrics = graphics.getFontMetrics(f);
 
                     int hgt = metrics.getHeight();
@@ -686,10 +688,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 Item item = selectedItem;
 
                                 item.setSize(newW, newH);
-                            //    base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                            //             item, Constants.REMOVE_ITEM, selected.getId()));
-                            //   base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                            //         item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                                        item, Constants.REPLACE_ITEM, selected.getId()));
+
+                            //  base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                            //        item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
 
                             }
                         }
@@ -828,6 +831,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             if (n == JOptionPane.YES_OPTION) {
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                         selectedItem, Constants.CLEAR_ITEMS, GenerateUUID.getId()));
+                selectedItem = null;
+                repaint();
             }
 
         }
@@ -878,6 +883,38 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         if (evt.getActionCommand().equals("text")) {
             commitStroke(startX, startY, prevX, prevY, true);
             popup.setVisible(false);
+        }
+
+
+        if (evt.getActionCommand().equals("edit")) {
+            int size = Integer.parseInt((String) fontSizeField.getSelectedItem());
+            int style = Font.PLAIN;
+            if (boldButton.isSelected()) {
+                style = Font.BOLD;
+            }
+
+            if (italicButton.isSelected()) {
+                style = Font.ITALIC;
+            }
+
+            if (boldButton.isSelected() && italicButton.isSelected()) {
+                style = Font.BOLD | Font.ITALIC;
+            }
+            if (selectedItem != null) {
+                if (selectedItem instanceof Txt) {
+                    Txt old = (Txt) selectedItem;
+                    Rectangle r = old.getRect(graphics);
+                    Txt txt = new Txt(r.x, r.y, editTextField.getForeground(), editTextField.getText(),
+                            new Font((String) fontNamesField.getSelectedItem(), style, size),
+                            underButton.isSelected());
+            
+                    base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), txt, Constants.REPLACE_ITEM, old.getId()));
+
+                    editPopup.setVisible(false);
+                    selectedItem=null;
+                    repaint();
+                }
+            }
         }
 
     }
@@ -1551,6 +1588,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
 
+
+
+
+
+
+
             int width = getSize().width, height = getSize().height;
 
             // Use gray for the button sides.
@@ -1680,6 +1723,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
          * @param g Graphics
          */
         public void paint(Graphics g) {
+
+
+
+
+
+
 
 
 
@@ -2002,7 +2051,7 @@ private void lightGrayButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     colour = Color.LIGHT_GRAY;
     textField.setForeground(colour);//GEN-LAST:event_lightGrayButtonActionPerformed
-    currentColorField.setBackground(colour);                                               
+        currentColorField.setBackground(colour);
     }
 
 private void grayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grayButtonActionPerformed
