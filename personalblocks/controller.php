@@ -3,8 +3,8 @@
  *
  * Personal blocks
  *
- * Allows the creation of personal blocks for display on sidebar block areas. 
- * Requires the blockalicious module to function. Personal blocks allow the 
+ * Allows the creation of personal blocks for display on sidebar block areas.
+ * Requires the blockalicious module to function. Personal blocks allow the
  * addition of web widgets in locations such as a blog.
  *
  * PHP version 5
@@ -51,9 +51,9 @@ $GLOBALS['kewl_entry_point_run'])
 /**
 *
 * Controller class for Chisimba for the module personal blocks
-* 
-* Allows the creation of personal blocks for display on sidebar block areas. 
-* Requires the blockalicious module to function. Personal blocks allow the 
+*
+* Allows the creation of personal blocks for display on sidebar block areas.
+* Requires the blockalicious module to function. Personal blocks allow the
 * addition of web widgets in locations such as a blog.
 *
 * @author Derek Keats
@@ -136,27 +136,27 @@ class personalblocks extends controller
 
 
     /*------------- BEGIN: Set of methods to replace case selection ------------*/
-   
+
     /**
-    *  
+    *
     * View all blocks
-    * 
+    *
     * @return string A template
     * @access private
-    * 
+    *
     */
     private function __viewall()
     {
         return "viewall_tpl.php";
     }
-    
+
     /**
-    *  
+    *
     * Delete a block
-    * 
+    *
     * @return string The viewall method and template
     * @access private
-    * 
+    *
     */
     private function __delete()
     {
@@ -175,42 +175,42 @@ class personalblocks extends controller
         	$this->setVarByRef("str", $str);
             return "dump_tpl.php";
         }
-        
+
     }
-    
+
     /**
-    *  
+    *
     * Add a block
-    * 
+    *
     * @return string A template
     * @access private
-    * 
+    *
     */
     private function __addpblock()
     {
     	return "editadd_tpl.php";
     }
-    
+
     /**
-    *  
+    *
     * Edit a block
-    * 
+    *
     * @return string A template
     * @access private
-    * 
+    *
     */
     private function __editblock()
     {
         return "editadd_tpl.php";
     }
-    
+
     /**
-    *  
+    *
     * Save a bloc from edit or add
-    * 
+    *
     * @return string A template
     * @access private
-    * 
+    *
     */
     function __save()
     {
@@ -293,16 +293,8 @@ class personalblocks extends controller
     */
     public function requiresLogin()
     {
-        $action=$this->getParam('action','NULL');
-        switch ($action)
-        {
-            case 'view':
-                return FALSE;
-                break;
-            default:
-                return TRUE;
-                break;
-        }
-     }
+        return TRUE;
+    }
+
 }
 ?>
