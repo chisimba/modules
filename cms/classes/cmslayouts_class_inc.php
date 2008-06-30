@@ -470,6 +470,10 @@ jQuery(document).ready(function(){
     		// Page heading - hide if set
     		if(isset($page['hide_title']) && $page['hide_title'] == 1){
     			$pageStr = '';
+			$this->objHead->type = '2';
+	                $this->objHead->str = $this->getEditLink($arrFrontPages[0]['content_id']);
+	                $pageStr = $this->objHead->show();
+
     		}else{
     			$this->objHead->type = '2';
     			$this->objHead->str = $page['title'].$this->getEditLink($arrFrontPages[0]['content_id']);
@@ -1024,7 +1028,7 @@ jQuery(document).ready(function(){
         public function showBody()
 
         {
-        	$objFeatureBox = $this->newObject('featurebox', 'navigation');
+	    	$objFeatureBox = $this->newObject('featurebox', 'navigation');
             $contentId = $this->getParam('id');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
             $page = $this->_objContent->getContentPage($contentId);
@@ -1106,7 +1110,7 @@ jQuery(document).ready(function(){
             $this->objHead->type = 2;
 			$tblh->startRow();
             $tblh->addCell($this->objHead->show());
-            $tblh->addCell($pdflink->show() . $mtflink->show(),null,null,'center'); //pdf icon
+            //$tblh->addCell($pdflink->show() . $mtflink->show(),null,null,'center'); //pdf icon
             $tblh->endRow();
             
             $strBody = null;
