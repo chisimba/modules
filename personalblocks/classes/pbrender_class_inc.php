@@ -3,10 +3,10 @@
 *
 * Personal blocks render classs to help templates
 *
-* Allows the creation of personal blocks for display on sidebar block areas. 
-* Requires the blockalicious module to function. Personal blocks allow the 
+* Allows the creation of personal blocks for display on sidebar block areas.
+* Requires the blockalicious module to function. Personal blocks allow the
 * addition of web widgets in locations such as a blog.
-* 
+*
 */
 /* ----------- data class extends dbTable for tbl_quotes------------*/
 // security check - must be included in all scripts
@@ -17,7 +17,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 
 
 /**
-* 
+*
 * Render class for the personalblocks module. This is a view layer
 * class that helps render output to templates
 *
@@ -54,15 +54,15 @@ class pbrender extends dbTable
         $this->loadClass("htmltable", "htmlelements");
         $this->objDb = $this->getObject("dbpersonalblocks", "personalblocks");
     }
-    
+
     /**
-    * 
+    *
     * Show the title from the language item for module title. It shows the title inside
     * a H3 heading using the htmlheading class.
-    * 
+    *
     * @return string The module title in a H3 heading
     * @access public
-    *  
+    *
     */
     public function showTitle()
     {
@@ -71,46 +71,31 @@ class pbrender extends dbTable
         $h->str = $this->objLanguage->languageText("mod_personalblocks_title", "personalblocks");
     	return $h->show();
     }
-    
+
     /**
-    * 
+    *
     * Method to try to figure out which user's blocks should be displayed
     * and display accordingly. For example, if you are viewing my blog, you
     * should see my blocks, not your own.
-    * 
+    *
     * @return integer The user id of the person whose blocks should be displayed
     * @access private
-    *  
+    *
     */
     private function findUser()
     {
-        $module = $this->getParam("module", NULL);
-        // If they are in the personalblocks module use own userid
-        if ($module=="personalblocks") {
-        	$userId = $this->objUser->userId();
-        // Else try to figure out the appropriate blocks to display
-        } else {
-            $userId = $this->getParam("userid", NULL);
-            if ($userId == NULL || $userId == "") {
-            	$userName = $this->getParam("username", NULL);
-                if ($userName == NULL || $userName=="") {
-                	$userId = $this->objUser->userId();
-                } else {
-                	$userId = $this->objUser->getUserId("userName");
-                }
-            }
-        }
-    	return $userId;
+        $objGuess = $this->getObject('bestguess', 'utilities');
+        return $objGuess->guessUserId();
     }
-    
+
     /**
-    * 
+    *
     * Render the personal blocks for the left hand panel
-    * 
+    *
     * @param boolean $showName If true the block name is shown.
     * @return string The left blocks rendered out
     * @access public
-    * 
+    *
     */
     public function renderLeft($showName=FALSE)
     {
@@ -135,15 +120,15 @@ class pbrender extends dbTable
         }
         return $ret;
     }
-   
+
     /**
-    * 
+    *
     * Render the personal blocks for the right hand panel
-    * 
+    *
     * @param boolean $showName If true the block name is shown.
     * @return string The right blocks rendered out
     * @access public
-    * 
+    *
     */
     public function renderRight($showName=FALSE)
     {
@@ -170,13 +155,13 @@ class pbrender extends dbTable
     }
 
     /**
-    * 
+    *
     * Render the personal blocks for the middle panel
-    * 
+    *
     * @param boolean $showName If true the block name is shown.
     * @return string The middle blocks rendered out
     * @access public
-    * 
+    *
     */
     public function renderMiddle($showName=FALSE)
     {
@@ -204,13 +189,13 @@ class pbrender extends dbTable
 
     /**
     *
-    * Returns all personal block records formatted in a table for edit, 
+    * Returns all personal block records formatted in a table for edit,
     * add, delete or view. Records are not paginated because the use is unlikely
     * to have very large numbers of blocks.
-    * 
+    *
     * @return string A table with all records.
-    * @access public 
-    *  
+    * @access public
+    *
     */
     public function showAll()
     {
@@ -232,7 +217,7 @@ class pbrender extends dbTable
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_modifiedby','personalblocks');
         $tableHd[]=$this->getAddButton();
         $objTable->addHeader($tableHd, "heading");
-        
+
         if (isset($ar)) {
             if (count($ar) > 0) {
                 $objDate =  $this->getObject("dateandtime", "utilities");
@@ -289,7 +274,7 @@ class pbrender extends dbTable
                     //Add the row to the table for output
                     $objTable->addRow($tableRow, $oddOrEven);
                     // clear out the array
-                    $tableRow=array(); 
+                    $tableRow=array();
                     // Set rowcount for bitwise determination of odd or even
                     $rowcount = ($rowcount == 0) ? 1 : 0;
                 }
@@ -303,17 +288,17 @@ class pbrender extends dbTable
         	$ret .= $this->noRecordsMsg();
         }
         return $ret;
-        
+
     }
-    
+
     /**
     *
     * Returns the message for when no blocks are found for insertion underneath
     * the empty table within the norecorrdsmessage div
-    * 
+    *
     * @return string The norecords message
-    * @access private 
-    *  
+    * @access private
+    *
     */
     private function noRecordsMsg()
     {
@@ -321,19 +306,19 @@ class pbrender extends dbTable
           . $this->objLanguage->languageText("mod_personalblocks_noblocksfound",'personalblocks')
           . "</span>";
     }
-    
+
     private function emptyBlocks($location)
     {
         $langElem = "mod_personalblocks_no" . $location;
     	return $this->objLanguage->languageText($langElem,'personalblocks');
     }
-    
+
     /**
-    * 
+    *
     * Return an add button
     * @return string A rendered add button with the correct URL
     * @access private
-    *  
+    *
     */
     private function getAddButton()
     {
@@ -346,15 +331,15 @@ class pbrender extends dbTable
     }
 
     /**
-    * 
+    *
     * Return an edit button based on the id of the record to edit
-    * 
+    *
     * @param string $id The key of the record to edit
     * @return string A rendered edit button with the correct URL
     * @access private
-    *  
+    *
     */
-    private function getEditButton(&$id) 
+    private function getEditButton(&$id)
     {
         $objEditIcon = $this->getObject('geticon', 'htmlelements');
         //The URL for the edit link
@@ -364,16 +349,16 @@ class pbrender extends dbTable
         $objEditIcon->alt=$this->objLanguage->languageText("mod_personalblocks_editblock",'personalblocks');
         return $objEditIcon->getEditIcon($editLink);
     }
-    
+
     /**
-    * 
+    *
     * Return an delete icon
-    * 
+    *
     * @param string $id The key of the record to delete
     * @param string $blockname The name of the block for use in the confirm message
     * @return string A rendered delete icon with the correct URL
     * @access private
-    *  
+    *
     */
     private function getDeleteIcon(&$id, $blockname)
     {
@@ -387,19 +372,19 @@ class pbrender extends dbTable
           'id' => $id));
         $objConfirm = $this->getObject('confirm','utilities');
         $rep = array('TITLE' => $blockname);
-        $objConfirm->setConfirm($objDelIcon->show(), $delLink, 
+        $objConfirm->setConfirm($objDelIcon->show(), $delLink,
           $this->objLanguage->code2Txt("mod_personalblocks_confmsg",
           'personalblocks', $rep));
         return $objConfirm->show();
     }
-    
+
     /**
-    * 
+    *
     * Render an edit / add form for editing or adding a personal block
-    * 
+    *
     * @return string The rendered form
     * @access public
-    *  
+    *
     */
     public function renderEditAddForm()
     {
@@ -459,8 +444,8 @@ class pbrender extends dbTable
             $objElement->setValue($blockname);
         }
         $ifTable= "<table>\n"
-          . "<tr><td>" 
-          . $this->objLanguage->languageText("mod_personalblocks_blname", "personalblocks") 
+          . "<tr><td>"
+          . $this->objLanguage->languageText("mod_personalblocks_blname", "personalblocks")
           . "</td><td>".$objElement->show()."</td></tr>";
         // Add a text area for the block contents.
         $this->loadClass('textarea', 'htmlelements');
@@ -468,7 +453,7 @@ class pbrender extends dbTable
         $ifTable .= "<tr><td valign='top'>"
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
           . "</td><td>" . $widgetTxt->show() . "</td></tr>";
-        
+
         // Add a radio set for choosing location.
         $this->loadClass("radio", "htmlelements");
         $objRadioElement = new radio('location');
@@ -476,20 +461,20 @@ class pbrender extends dbTable
         $objRadioElement->addOption('middle', "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_middle", "personalblocks") . "&nbsp;");
         $objRadioElement->addOption('right', "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_right", "personalblocks") . "&nbsp;");
         $objRadioElement->setSelected($location);
-        $ifTable .= "<tr><td>" 
+        $ifTable .= "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_location", "personalblocks")
           . "</td><td>" . $objRadioElement->show() . "</td></tr>";
-        
-        
+
+
         // Add a radio set for active / not active.
         $objRadioActive = new radio('active');
         $objRadioActive->addOption('1',  "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_isactive", "personalblocks") . "&nbsp;");
         $objRadioActive->addOption('0', "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_inactive", "personalblocks") . "&nbsp;");
         $objRadioActive->setSelected($active);
-        $ifTable .= "<tr><td>" 
+        $ifTable .= "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_active", "personalblocks")
           . "</td><td>" . $objRadioActive->show() . "</td></tr>";
-        
+
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
         // Create a submit button
@@ -504,7 +489,7 @@ class pbrender extends dbTable
         $objForm->addToForm($ifTable);
         return $objForm->show();
     }
-    
+
 
 }
 ?>
