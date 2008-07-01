@@ -197,8 +197,9 @@ class tweetbox extends object
     public function sendWidget()
     {
         //Load the Ajax form processing
-        $js = $this->getJavascriptFile('jquery/jquery.form.js', 'htmlelements');
-        $this->appendArrayVar('headerParams', $js);
+        $objJQuery = $this->getObject('jquery', 'htmlelements');
+        $objJQuery->loadFormPlugin();
+        
         $js2 = $this->renderFormScript();
         $this->appendArrayVar('headerParams', $js2);
         if ($this->hasTwitterLogon()) {

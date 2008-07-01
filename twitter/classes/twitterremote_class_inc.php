@@ -82,6 +82,7 @@ class twitterremote extends object
     *
     */
     public $userAgent='Chisimba';
+    public $user_agent='Chisimba';
     /**
     *
     * @var string array $headers The HTML headers to be presented to Twitter
@@ -383,7 +384,7 @@ class twitterremote extends object
             curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
         }
 
-        if($this->username !== false && $this->password !== false)
+        if($this->userName !== false && $this->password !== false)
             curl_setopt($ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
 
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
