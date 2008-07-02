@@ -208,14 +208,14 @@
         }
 
     /**
-     * ADDED by David Wafula  
+     *  
      * Function to invoke the presenter applet 
      *
      */ 
         public function __showpresenterapplet()
         {
             $slideServerId=$this->randomString(32);
-            //$slideServerId=$this->objConfig->serverName();
+           // $slideServerId=$this->objConfig->serverName();
 
             //if(!$this->slideServerRunning()){
             $this->startSlidesServer($slideServerId);
