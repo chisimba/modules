@@ -1290,9 +1290,12 @@ class blog extends controller
                 }
                 $id = $this->getParam('id');
                 $this->objDbBlog->deletePost($id);
-                $this->nextAction('blogadmin', array(
-                    'mode' => 'editpost'
-                ));
+                if ($nextAction = $this->getParam('nextAction')) {
+                    return $this->nextAction($nextAction);   
+                }
+                return $this->nextAction('blogadmin', array(
+                            'mode' => 'editpost'
+                       ));
                 break;
 
             case 'postedit':

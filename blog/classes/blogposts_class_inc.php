@@ -167,8 +167,18 @@ class blogposts extends object
                         	'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    
-                    $head = $headLink->show() . "<br />" . $dt . "<br />";
+                    $icons = '';
+                    if ($post['userid'] == $userid) {
+                        $this->objIcon = $this->getObject('geticon', 'htmlelements');
+                        $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                            'action' => 'postedit',
+                            'id' => $post['id'],
+                            'module' => 'blog'
+                            )));
+                        $delIcon = $this->objIcon->getDeleteIconWithconfirm($post['id'],array('action'=>'deletepost','id'=>$post['id'],'nextAction'=>'viewblog'),'blog');
+                        $icons = "$edIcon $delIcon";
+                    }
+                    $head = $headLink->show() . " $icons<br />" . $dt . "<br />";
                     // .'<script src="http:// digg.com/tools/diggthis.js" type="text/javascript"></script>';
                     
                 }
@@ -301,12 +311,7 @@ class blogposts extends object
                 // edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
                     $tburl = $tburl . "<br />" . $numtb . "<br />" . $sendtblink;
-                    $this->objIcon = &$this->getObject('geticon', 'htmlelements');
-                    $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                        'action' => 'postedit',
-                        'id' => $post['id'],
-                        'module' => 'blog'
-                    )));
+                    
                     // Set the table name
                     $tbl = $this->newObject('htmltable', 'htmlelements');
                     $tbl->cellpadding = 3;
@@ -336,7 +341,7 @@ class blogposts extends object
                     // save as pdf
                     $tbl->endHeaderRow();
                     $tbl->startRow();
-                    $tbl->addCell($edIcon);
+                    //$tbl->addCell($edIcon);
                     // edit icon
                     $tbl->addCell($bookmark->show());
                     // bookmark link(s)
