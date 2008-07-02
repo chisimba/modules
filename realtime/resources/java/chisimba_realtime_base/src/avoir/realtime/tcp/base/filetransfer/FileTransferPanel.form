@@ -60,7 +60,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="newButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Send New File"/>
+                    <Property name="text" type="java.lang.String" value="Send File"/>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
@@ -70,17 +70,6 @@
               </SubComponents>
             </Container>
           </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="recFilesPanel">
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Received Files">
-                <Property name="tabTitle" type="java.lang.String" value="Received Files"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
         </Container>
       </SubComponents>
     </Container>

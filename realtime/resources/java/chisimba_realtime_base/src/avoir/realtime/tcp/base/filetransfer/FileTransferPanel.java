@@ -48,7 +48,7 @@ public class FileTransferPanel extends javax.swing.JPanel {
         table.setGridColor(new Color(238, 238, 238));
         table.setShowHorizontalLines(false);
         table.setDefaultRenderer(SendFile.class, new LRenderer());
-        newButton.setEnabled(this.base.getControl());
+        newButton.setEnabled(this.base.getControl() || this.base.isPresenter());
         //Ask to be notified of selection changes.
         ListSelectionModel rowSM = table.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -208,9 +208,12 @@ public class FileTransferPanel extends javax.swing.JPanel {
     }
 
     public void processBinaryFileSaveReplyPacket(String filename, String from, boolean accepted) {
-        sendFiles.add(new SendFile(filename, from, accepted, 0, "Unknown", sendFiles.size()));
-        sendFilesModel = new SendFilesTableModel(sendFiles);
-        table.setModel(sendFilesModel);
+       // sendFiles.add(new SendFile(filename, from, accepted, 0, "Unknown", sendFiles.size()));
+       // sendFilesModel = new SendFilesTableModel(sendFiles);
+       // table.setModel(sendFilesModel);
+        String status=accepted? "Yes":"No";
+        sendFilesModel.setValueAt(status, sendFiles.size() - 1, 3);
+        sendFilesModel.setValueAt(this.base.getUser().getFullName(), sendFiles.size() - 1, 1);
         if (accepted) {
             sendFile(filename, sendFiles.size() - 1, from);
         }
@@ -309,6 +312,10 @@ public class FileTransferPanel extends javax.swing.JPanel {
     private void processFileToSend(String filename) {
         base.getTcpClient().sendPacket(new BinaryFileSaveRequestPacket(base.getSessionId(), filename, base.getUser().getFullName(), base.getUser().getUserName(),
                 true));
+        sendFiles.add(new SendFile(filename, "Unknown", false, 0, "Unknown", sendFiles.size()));
+        sendFilesModel = new SendFilesTableModel(sendFiles);
+        table.setModel(sendFilesModel);
+
     }
 
     /** This method is called from within the constructor to
@@ -325,7 +332,6 @@ public class FileTransferPanel extends javax.swing.JPanel {
         sendFilesPanel = new javax.swing.JPanel();
         sendCPanel = new javax.swing.JPanel();
         newButton = new javax.swing.JButton();
-        recFilesPanel = new javax.swing.JPanel();
 
         setPreferredSize(new java.awt.Dimension(113, 40));
         setLayout(new java.awt.BorderLayout());
@@ -333,7 +339,7 @@ public class FileTransferPanel extends javax.swing.JPanel {
 
         sendFilesPanel.setLayout(new java.awt.BorderLayout());
 
-        newButton.setText("Send New File");
+        newButton.setText("Send File");
         newButton.setEnabled(false);
         newButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -346,23 +352,18 @@ public class FileTransferPanel extends javax.swing.JPanel {
 
         tabbedPane.addTab("Send Files", sendFilesPanel);
 
-        recFilesPanel.setLayout(new java.awt.BorderLayout());
-        tabbedPane.addTab("Received Files", recFilesPanel);
-
         add(tabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+    if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
         selectedFile = fc.getSelectedFile().getAbsolutePath();
         processFileToSend(selectedFile);
     }
 }//GEN-LAST:event_newButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cPanel;
     private javax.swing.JButton newButton;
-    private javax.swing.JPanel recFilesPanel;
     private javax.swing.JPanel sendCPanel;
     private javax.swing.JPanel sendFilesPanel;
     private javax.swing.JTabbedPane tabbedPane;
