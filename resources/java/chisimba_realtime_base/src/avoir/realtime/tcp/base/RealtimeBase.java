@@ -26,6 +26,7 @@ import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -104,18 +105,16 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private TButton handButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand.png"));
     private TButton laughterButton = new TButton(ImageUtil.createImageIcon(this, "/icons/laugh.jpeg"));
     private TButton applaudButton = new TButton(ImageUtil.createImageIcon(this, "/icons/applaud.jpeg"));
-    private TButton handLeftButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand_left.png"));
-    private TButton handRightButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand_right.png"));
-    private TButton arrowUpButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_up.png"));
-    private TButton arrowSideButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_side.png"));
-    private TButton paintBrushButton = new TButton(ImageUtil.createImageIcon(this, "/icons/paintbrush.png"));
+    private TButton whiteboardButton = new TButton(ImageUtil.createImageIcon(this, "/icons/wb_icon.png"));
     private ImageIcon micOffIcon = ImageUtil.createImageIcon(this, "/icons/mic_off.png");
     private ImageIcon micOnIcon = ImageUtil.createImageIcon(this, "/icons/mic_on.png");
     private JFrame fileTransferFrame;
-    private JToolBar pointerToolbar = new JToolBar(JToolBar.VERTICAL);
     private WhiteboardSurface whiteboardSurface;
     private JTabbedPane surfaceTabbedPane = new JTabbedPane();
     private JApplet glassPaneHandler;
+    private JPanel surfacePanel = new JPanel(new BorderLayout());
+    private JPanel centerPanel = new JPanel();
+    private JPanel leftCenterPanel = new JPanel();
 
     /**
      * Create additional components
@@ -183,38 +182,12 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         ButtonGroup bg = new ButtonGroup();
 
-        bg.add(handRightButton);
-        bg.add(handLeftButton);
-        bg.add(arrowUpButton);
-        bg.add(arrowSideButton);
-        bg.add(paintBrushButton);
-
-        handRightButton.setSelected(true);
-        //pointerToolbar.add(paintBrushButton);
-        paintBrushButton.addActionListener(this);
-        paintBrushButton.setActionCommand("paintBrush");
-        paintBrushButton.setToolTipText("Free Hand Paint Brush");
-
-        pointerToolbar.add(handRightButton);
-        handRightButton.addActionListener(this);
-        handRightButton.setActionCommand("handRight");
-        handRightButton.setToolTipText("Point right");
+        whiteboardButton.addActionListener(this);
+        whiteboardButton.setActionCommand("whiteBoard");
+        whiteboardButton.setToolTipText("Use whiteboard on this slide");
 
 
-        pointerToolbar.add(handLeftButton);
-        handLeftButton.addActionListener(this);
-        handLeftButton.setActionCommand("handLeft");
-        handLeftButton.setToolTipText("Point Left");
-
-        pointerToolbar.add(arrowUpButton);
-        arrowUpButton.addActionListener(this);
-        arrowUpButton.setActionCommand("arrowUp");
-        arrowUpButton.setToolTipText("Arrow Up");
-        pointerToolbar.add(arrowSideButton);
-        arrowSideButton.addActionListener(this);
-        arrowSideButton.setActionCommand("arrowSide");
-        arrowSideButton.setToolTipText("Arrow Side");
-
+        //pointerToolbar.add(whiteboardButton);
         tabbedPane.addTab("Participants", userListPanel);
         //tabbedPane.addTab("Files", fileTransferPanel);
         leftPanel.setPreferredSize(new Dimension(250, 300));
@@ -232,18 +205,57 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         mPanel.add(leftPanel, BorderLayout.WEST);
 
-        JPanel p = new JPanel();
-        p.setLayout(new BorderLayout());
+        centerPanel.setLayout(new BorderLayout());
 
-        surfaceTabbedPane.add("Presentation", surface);
-        surfaceTabbedPane.add("Whiteboard", whiteboardSurface);
-        p.add(surfaceTabbedPane, BorderLayout.CENTER);
-        p.add(pointerToolbar, BorderLayout.WEST);
-        mPanel.add(p, BorderLayout.CENTER);
+
+        surfacePanel.add(surface, BorderLayout.CENTER);
+        //surfacePanel.add(transparentBg, BorderLayout.CENTER);
+
+        surfaceTabbedPane.add("Presentation", surfacePanel);
+        //surfaceTabbedPane.add("Whiteboard", whiteboardSurface);
+        centerPanel.add(surfaceTabbedPane, BorderLayout.CENTER);
+        centerPanel.add(leftCenterPanel, BorderLayout.WEST);
+        mPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(mPanel, BorderLayout.CENTER);
         sessionManager.setIsPresenter(isPresenter);
 
         mainPanel.add(toolbarManager.createToolbar(), BorderLayout.NORTH);
+
+
+    }
+
+    public void showPointerToolBar(boolean state) {
+        if (state) {
+            leftCenterPanel.add(whiteboardSurface.getButtonsToolbar());
+            leftCenterPanel.add(whiteboardSurface.getPointerToolbar());
+            centerPanel.add(whiteboardSurface.getMainToolbar(), BorderLayout.NORTH);
+            centerPanel.add(whiteboardSurface.getColorPanel(), BorderLayout.SOUTH);
+            if (glassPaneHandler != null) {
+                glassPaneHandler.resize(glassPaneHandler.getWidth() + 5, glassPaneHandler.getHeight() + 5);
+            }
+            surface.setPointer(Constants.WHITEBOARD);
+        } else {
+            leftCenterPanel.remove(whiteboardSurface.getButtonsToolbar());
+            leftCenterPanel.remove(whiteboardSurface.getPointerToolbar());
+            centerPanel.remove(whiteboardSurface.getMainToolbar());
+            centerPanel.remove(whiteboardSurface.getColorPanel());
+            surface.setPointer(Constants.HAND_LEFT);
+            if (glassPaneHandler != null) {
+                glassPaneHandler.resize(glassPaneHandler.getWidth() - 5, glassPaneHandler.getHeight() - 5);
+            }
+        }
+    }
+
+    class GP extends JPanel {
+
+        public GP() {
+            setSize(100, 100);
+            setBackground(Color.RED);
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
     }
 
     /**
@@ -252,22 +264,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      */
     public WhiteboardSurface getWhiteboardSurface() {
         return whiteboardSurface;
-    }
-
-    public TButton getArrowSideButton() {
-        return arrowSideButton;
-    }
-
-    public TButton getArrowUpButton() {
-        return arrowUpButton;
-    }
-
-    public TButton getHandLeftButton() {
-        return handLeftButton;
-    }
-
-    public TButton getHandRightButton() {
-        return handRightButton;
     }
 
     /**
@@ -322,21 +318,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 applaudButton.setSelected(false);
             }
         }
-        if (e.getActionCommand().equals("handLeft")) {
-            surface.setPointer(Constants.HAND_LEFT);
-        }
-        if (e.getActionCommand().equals("handRight")) {
-            surface.setPointer(Constants.HAND_RIGHT);
-        }
-        if (e.getActionCommand().equals("arrowUp")) {
-            surface.setPointer(Constants.ARROW_UP);
-        }
-        if (e.getActionCommand().equals("arrowSide")) {
-            surface.setPointer(Constants.ARROW_SIDE);
-        }
-        if (e.getActionCommand().equals("paintBrush")) {
-            surface.setPointer(Constants.PAINT_BRUSH);
-        }
+
     }
 
     public JApplet getGlassPaneHandler() {
@@ -345,6 +327,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     public void setGlassPaneHandler(JApplet glassPaneHandler) {
         this.glassPaneHandler = glassPaneHandler;
+
     }
 
     /**
@@ -793,7 +776,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         //  String filterNames = JOptionPane.showInputDialog("Please enter your full names  separated by space.\n" +
         //        "This will be  used to create a filter to be used in live presentation");
 
-        String filterNames = "Guest" + new java.util.Random().nextInt(200)+" "+"RL" + new java.util.Random().nextInt(200);
+        String filterNames = "Guest" + new java.util.Random().nextInt(200) + " " + "RL" + new java.util.Random().nextInt(200);
 
         if (filterNames != null) {
             if (filterNames.trim().equals("")) {
@@ -887,6 +870,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             fileTransferPanel = new FileTransferPanel(this);
             fileTransferFrame.getContentPane().add(fileTransferPanel);
             fileTransferFrame.setSize(600, 400);
+            fileTransferFrame.setAlwaysOnTop(true);
             fileTransferFrame.setLocationRelativeTo(null);
         }
         fileTransferFrame.setVisible(true);
