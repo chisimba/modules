@@ -39,7 +39,8 @@ public class MenuManager implements ActionListener {
         JMenu helpMenu = createMenu("Help");
 
         createMenuItem(toolsMenu, "Audio Setup", "audiosetup");
-        createMenuItem(toolsMenu, "Chisimba Filter", "filter");
+        createMenuItem(toolsMenu, "Filters", "filter");
+        createMenuItem(toolsMenu, "Options", "options");
         createMenuItem(helpMenu, "About", "about");
         menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
@@ -51,6 +52,9 @@ public class MenuManager implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("options")) {
+            base.showOptionsFrame();
+        }
         if (e.getActionCommand().equals("filter")) {
             base.showFilterFrame();
         }
