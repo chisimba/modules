@@ -24,6 +24,11 @@ class fsiumenu extends object
             array('title'=>'Press Releases', 'module'=>'cms', 'action' => 'showsection ','id' => 'init_1', 'sectionid' => 'init_1'),*/
            array('title'=>'Blog', 'module'=>'blog'),
             array('title'=>'WIKI', 'module'=>'wiki'),
+	   array('title'=>'Leadership'),
+           array('title'=>'Researchers'),
+	   array('title'=>'Students'),	
+           array('title'=>'Join SANORD', 'module'=>'userregistration'),
+	    array('title'=>'Links'),	
         );
         
         $this->objUser = $this->getObject('user', 'security');
