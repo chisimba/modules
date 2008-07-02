@@ -66,7 +66,7 @@ public class Surface extends JPanel implements MouseListener,
     private Graphics2D graphics;
     private Rectangle pointerSurface = new Rectangle();
     private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
-   // private PointerSurface pointerSurface = new PointerSurface();
+    // private PointerSurface pointerSurface = new PointerSurface();
     private boolean firstSlide = true;
 
     public Surface(RealtimeBase xbase) {
@@ -74,14 +74,15 @@ public class Surface extends JPanel implements MouseListener,
         setLayout(new BorderLayout());
         setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
+        setFocusable(true);
+        this.requestFocus();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
         //setBounds(100, 100, 300, 300);
 
         //this.base.getGlassPaneHandler().setGlassPane(pointerSurface);
-       // pointerSurface.setVisible(true);
+        // pointerSurface.setVisible(true);
         setCursor(DRAW_CURSOR);
     }
 
@@ -115,7 +116,8 @@ public class Surface extends JPanel implements MouseListener,
     }
 
     public void keyPressed(KeyEvent evt) {
-        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            base.getWhiteboardSurface().deleteSelectedItem();
         }
     }
 
@@ -129,11 +131,12 @@ public class Surface extends JPanel implements MouseListener,
         Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
 
         if (pointerSurface.contains(xpoint)) {
+
             int xOffset = evt.getX() - pointerSurface.x;
             int yOffset = evt.getY() - pointerSurface.y;
             Point point = new Point(xOffset, yOffset);
             switch (pointer) {
-               
+
                 case Constants.HAND_LEFT: {
 
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
@@ -155,10 +158,17 @@ public class Surface extends JPanel implements MouseListener,
 
                     break;
                 }
+                case Constants.WHITEBOARD: {
+                    base.getWhiteboardSurface().setGraphics(graphics);
+                    base.getWhiteboardSurface().processMouseDragged(evt);
+                  
+                    repaint();
+                    break;
+                }
             }
         }
 
-       
+
         //repaint();
         paintPointer(graphics);
     }
@@ -241,59 +251,7 @@ public class Surface extends JPanel implements MouseListener,
     }
 
     private void setOwnCursor() {
-        int curWidth = 32;
-        int curHeight = 32;
-        int y = 0;
-        int x = 0;
-        int pix[] = new int[curWidth * curHeight];
-        for (y = 0; y <= curHeight; y++) {
-            for (x = 0; x <= curWidth; x++) {
-                pix[y + x] = 0; // all points transparent
-            // black circle - outside
-            }
-        }
-        int curCol = Color.WHITE.getRGB();
-        int yscale = 10;
-        int xscale = 10;
-        for (x = 2; x <= 8; x++) {
-            pix[x] = curCol; // up
-        }
-        for (x = 2; x <= 8; x++) {
-            pix[(yscale * curWidth) + x] = curCol; // bottom			
-        }
-        for (y = 2; y <= 8; y++) {
-            pix[curWidth * y] = curCol; // left
-        }
-        for (y = 2; y <= 8; y++) {
-            pix[(curWidth * y) + yscale] = curCol; // right
-        }
-        pix[1 + curWidth] = curCol;
-        pix[yscale + curWidth - 1] = curCol;
-        pix[1 + (curWidth * (yscale - 1))] = curCol;
-        pix[(curWidth * (yscale - 1)) + yscale - 1] = curCol;
-
-        // white circle - inside
-        curCol = Color.white.getRGB();
-        yscale = yscale - 1;
-        xscale = xscale - 1;
-        for (x = 3; x <= 7; x++) {
-            pix[x + curWidth] = curCol; // up
-        }
-        for (x = 3; x <= 7; x++) {
-            pix[(yscale * curWidth) + x] = curCol; // bottom			
-        }
-        for (y = 3; y <= 7; y++) {
-            pix[curWidth * y + 1] = curCol; // left
-        }
-        for (y = 3; y <= 7; y++) {
-            pix[(curWidth * y) + yscale] = curCol; // right
-        }
-        pix[2 + curWidth + curWidth] = curCol;
-        pix[yscale + curWidth + curWidth - 1] = curCol;
-        pix[1 + (curWidth * (yscale - 1)) + 1] = curCol;
-        pix[(curWidth * (yscale - 1)) + yscale - 1] = curCol;
-
-        Image img = blankIcon.getImage();// createImage(new MemoryImageSource(curWidth, curHeight, pix, 0, curWidth));
+        Image img = blankIcon.getImage();
         Cursor curCircle = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(5, 5), "circle");
         setCursor(curCircle);
 
@@ -305,14 +263,14 @@ public class Surface extends JPanel implements MouseListener,
         Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
 
         if (pointerSurface.contains(xpoint)) {
-            int xOffset = evt.getX() - (int)pointerSurface.getX();
-            int yOffset = evt.getY() - (int)pointerSurface.getY();
+            int xOffset = evt.getX() - (int) pointerSurface.getX();
+            int yOffset = evt.getY() - (int) pointerSurface.getY();
             Point point = new Point(xOffset, yOffset);
             switch (pointer) {
                 case Constants.PAINT_BRUSH: {
                     prevX = startX = evt.getX();
                     prevY = startY = evt.getY();
-                   
+
                     break;
                 }
                 case Constants.HAND_LEFT: {
@@ -335,6 +293,12 @@ public class Surface extends JPanel implements MouseListener,
 
                     break;
                 }
+                case Constants.WHITEBOARD: {
+                    base.getWhiteboardSurface().setGraphics(graphics);
+                    base.getWhiteboardSurface().processMousePressed(evt);
+                    repaint();
+                    break;
+                }
 
 
             }
@@ -344,7 +308,11 @@ public class Surface extends JPanel implements MouseListener,
 
     public void mouseReleased(MouseEvent evt) {
 
-       
+        if (pointer == Constants.WHITEBOARD) {
+            base.getWhiteboardSurface().setGraphics(graphics);
+            base.getWhiteboardSurface().processMouseReleased(evt);
+            repaint();
+        }
         setCursor(DRAW_CURSOR);
     }
 
@@ -403,9 +371,6 @@ public class Surface extends JPanel implements MouseListener,
         pointerSurface.setPointer(currentPointer.getIcon());
         pointerSurface.repaint();
         }*/
-        graphics.drawImage(currentPointer.getIcon().getImage(),
-                (int)pointerSurface.x + currentPointer.getPoint().x - 10,
-                (int)pointerSurface.y + currentPointer.getPoint().y - 10, this);
         repaint();
     }
 
@@ -446,7 +411,7 @@ public class Surface extends JPanel implements MouseListener,
         as.addAttribute(TextAttribute.FOREGROUND, Color.RED);
         drawText(g2, as);
         yValue += 10;
-        FontMetrics fm = g2.getFontMetrics();
+
     }
 
     private void paintSlides(Graphics2D g2) {
@@ -459,10 +424,10 @@ public class Surface extends JPanel implements MouseListener,
                 slideWidth = (int) (slideWidth * 0.9);
             }
 
-            g2.drawImage(slide.getImage(), xx, yy,slideWidth,slideHeight, this);
+            g2.drawImage(slide.getImage(), xx, yy, slideWidth, slideHeight, this);
             //if (firstSlide) {
             Rectangle rect = new Rectangle(xx - 5, yy - 5, slideWidth + 10, slideHeight + 10);
-            pointerSurface=new Rectangle(xx, yy, slideWidth, slideHeight);
+            pointerSurface = new Rectangle(xx, yy, slideWidth, slideHeight);
             g2.draw(rect);
             firstSlide = false;
             //}
@@ -485,7 +450,7 @@ public class Surface extends JPanel implements MouseListener,
         super.paintComponent(g);
         graphics = (Graphics2D) g;
         paintSlides(graphics);
-        drawWhiteboardItems(graphics);
+      
         paintPointer(graphics);
 
         graphics.setStroke(new BasicStroke(1));
@@ -510,16 +475,17 @@ public class Surface extends JPanel implements MouseListener,
             }
             graphics.drawString(infoMessage, 30, 30);
         }
-    }
 
-    private void drawWhiteboardItems(Graphics2D g) {
-
-        for (int i = 0; i < pointerLocations.size(); i++) {
-            pointerLocations.elementAt(i).paint(g);
+       base.getWhiteboardSurface().drawStroke(graphics);
+        base.getWhiteboardSurface().paintItems(graphics);
+        if (currentPointer != null) {
+            graphics.drawImage(currentPointer.getIcon().getImage(),
+                    (int) pointerSurface.x + currentPointer.getPoint().x - 10,
+                    (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
         }
-
     }
 
+   
     class Pointer {
 
         Point point;
