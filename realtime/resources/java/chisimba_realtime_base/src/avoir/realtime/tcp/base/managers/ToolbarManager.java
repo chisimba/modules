@@ -30,11 +30,13 @@ public class ToolbarManager extends JToolBar {
     private JToolBar slidesToolBar = new JToolBar();
     private JToolBar controlToolbar = new JToolBar();
     private JToolBar generalToolbar = new JToolBar();
-    private MButton firstSlideButton,  surveyButton,  nextSlideButton,  backSlideButton,  lastSlideButton;
+    private MButton firstSlideButton,  nextSlideButton,  backSlideButton,  lastSlideButton;
     private TButton sessionButton;
     private javax.swing.JToggleButton yesButton;
+    private javax.swing.JButton surveyButton;
     private javax.swing.JButton voiceOptionsButton;
     private javax.swing.JToggleButton noButton;
+    private javax.swing.JToggleButton wbButton;
     private javax.swing.JButton optionsButton;
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton fileTransferButton;
@@ -42,9 +44,11 @@ public class ToolbarManager extends JToolBar {
     private javax.swing.JButton chatButton;
     private javax.swing.JToggleButton handButton;
     private RealtimeBase base;
-
+   
     public ToolbarManager(RealtimeBase base) {
         this.base = base;
+       
+
     }
 
     public MButton getBackSlideButton() {
@@ -63,6 +67,7 @@ public class ToolbarManager extends JToolBar {
         lastSlideButton.setEnabled(base.isPresenter());
         yesButton.setEnabled(base.isPresenter());
         noButton.setEnabled(base.isPresenter());
+        wbButton.setEnabled(base.isPresenter());
     }
 
     public MButton getLastSlideButton() {
@@ -92,6 +97,13 @@ public class ToolbarManager extends JToolBar {
     }
 
     private void setCustomActions() {
+        wbButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                base.showPointerToolBar(wbButton.isSelected());
+            }
+        });
+
         surveyButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -173,7 +185,7 @@ public class ToolbarManager extends JToolBar {
         return sessionButton;
     }
 
-    public MButton getSurveyButton() {
+    public JButton getSurveyButton() {
         return surveyButton;
     }
 
@@ -354,7 +366,6 @@ public class ToolbarManager extends JToolBar {
             }
         });
         generalToolbar.add(voiceOptionsButton);
-
         refreshButton.setFont(new java.awt.Font("Dialog", 0, 9));
         refreshButton.setText("Refresh");
         refreshButton.setToolTipText("Reload");
@@ -449,8 +460,31 @@ public class ToolbarManager extends JToolBar {
         optionsButton.setIcon(createImageIcon(this, "/icons/options.png"));
 
         add(generalToolbar);
-        surveyButton = new MButton(createImageIcon(this, "/icons/survey.png"));
+        surveyButton = new JButton(createImageIcon(this, "/icons/survey.png"));
         surveyButton.setText("Survey");
+        surveyButton.setBorderPainted(false);
+        surveyButton.setContentAreaFilled(false);
+        surveyButton.setFocusable(false);
+        surveyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        surveyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        surveyButton.setIcon(createImageIcon(this, "/icons/survey.png"));
+        surveyButton.setFont(new java.awt.Font("Dialog", 0, 9));
+        surveyButton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        surveyButton.setContentAreaFilled(true);
+                    }
+
+                    @Override
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        surveyButton.setContentAreaFilled(false);
+                    }
+                });
+
+
+
         sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
         sessionButton.setText("Start");
         surveyButton.setToolTipText("Conduct Survey");
@@ -469,6 +503,25 @@ public class ToolbarManager extends JToolBar {
         }
         generalToolbar.addSeparator();
         generalToolbar.setBorder(BorderFactory.createEtchedBorder());
+
+        wbButton = new javax.swing.JToggleButton();
+        wbButton.setFont(new java.awt.Font("Dialog", 0, 9));
+        wbButton.setText("Whiteboard");
+        wbButton.setBorderPainted(false);
+        //wbButton.setContentAreaFilled(false);
+        wbButton.setFocusable(false);
+        wbButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        wbButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        wbButton.setIcon(createImageIcon(this, "/icons/wb_icon.png"));
+        wbButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                base.showPointerToolBar(wbButton.isSelected());
+            }
+        });
+    
+        generalToolbar.add(wbButton);
+
         setCustomActions();
     }// </editor-fold>                        
 
