@@ -45,17 +45,17 @@ class fsiumenu extends object
         $str = '<div id="sanordmenu">';
         
         /** SHow link to login
-          *if (!$this->objUser->isLoggedIn()) {
-          *  $objIcon = $this->newObject('geticon', 'htmlelements');
-          *  $objIcon->setIcon('loginlink');
-          *  $objIcon->alt = 'Login';
-          *  $objIcon->title = 'Login';
-          *  $objIcon->align = 'top';
-          *  $this->loadClass('link','htmlelements');
-          *  $link = new link ($this->uri(array('action'=>'error', 'message'=>'needlogin'), *'security'));
-          *  $link->link = $objIcon->show();
-          *  $str .=  '<div style="float:right;">'.$link->show().'</div>';
-        } */
+          if (!$this->objUser->isLoggedIn()) {
+            $objIcon = $this->newObject('geticon', 'htmlelements');
+            $objIcon->setIcon('loginlink');
+            $objIcon->alt = 'Login';
+            $objIcon->title = 'Login';
+            $objIcon->align = 'top';
+            $this->loadClass('link','htmlelements');
+            $link = new link ($this->uri(array('action'=>'error', 'message'=>'needlogin'), 'security'));
+            $link->link = $objIcon->show();
+            
+        }*/
         
         $str .= '<ul>';
         
