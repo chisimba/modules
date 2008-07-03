@@ -23,7 +23,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 *
 * @author Derek Keats
 *
-* $Id: dbpersonalblocks_class_inc.php,v 1.1 2006/09/14 08:19:14 Abdurahim Ported to PHP5
+* @todo insert the contextblock code
 *
 */
 class pbrender extends dbTable
@@ -90,6 +90,26 @@ class pbrender extends dbTable
 
     /**
     *
+    * Method to try to figure out which context the user is in for the display
+    * of context specific blocks.
+    *
+    * @return integer The user id of the person whose blocks should be displayed
+    * @access private
+    *
+    */
+    public function findContext()
+    {
+        $contextObject = $this->getObject('dbcontext', 'context');
+        $contextCode = $this->contextObject->getContextCode();
+        if (!$contextCode || $contextCode="") {
+            return FALSE;
+        } else {
+            return $contextCode;
+        }
+    }
+
+    /**
+    *
     * Render the personal blocks for the left hand panel
     *
     * @param boolean $showName If true the block name is shown.
@@ -97,10 +117,16 @@ class pbrender extends dbTable
     * @access public
     *
     */
-    public function renderLeft($showName=FALSE)
+    public function renderLeft($showName=FALSE, $blockType='personal')
     {
-        $creatorId = $this->findUser();
-    	$ar = $this->objDb->getLeftBlocks($creatorId);
+        if ($blockType = 'personal') {
+            $creatorId = $this->findUser();
+            $ar = $this->objDb->getLeftBlocks($creatorId);
+        } else {
+            $context = $this->findContext();
+            $ar = $this->objDb->getLeftBlocksContext($context);
+        }
+
         $ret ="";
         $blockname="";
         if (isset($ar)) {
@@ -130,10 +156,15 @@ class pbrender extends dbTable
     * @access public
     *
     */
-    public function renderRight($showName=FALSE)
+    public function renderRight($showName=FALSE, $blockType='personal')
     {
-        $creatorId = $this->findUser();
-        $ar = $this->objDb->getRightBlocks($creatorId);
+        if ($blockType = 'personal') {
+            $creatorId = $this->findUser();
+            $ar = $this->objDb->getRightBlocks($creatorId);
+        } else {
+            $context = $this->findContext();
+            $ar = $this->objDb->getRightBlocksContext($context);
+        }
         $ret ="";
         $blockname="";
         if (isset($ar)) {
@@ -163,10 +194,15 @@ class pbrender extends dbTable
     * @access public
     *
     */
-    public function renderMiddle($showName=FALSE)
+    public function renderMiddle($showName=FALSE, $blockType='personal')
     {
-        $creatorId = $this->findUser();
-        $ar = $this->objDb->getMiddleBlocks($creatorId);
+        if ($blockType = 'personal') {
+            $creatorId = $this->findUser();
+            $ar = $this->objDb->getMiddleBlocks($creatorId);
+        } else {
+            $context = $this->findContext();
+            $ar = $this->objDb->getMiddleBlocksContext($context);
+        }
         $ret ="";
         $blockname="";
         if (isset($ar)) {
@@ -302,7 +338,7 @@ class pbrender extends dbTable
     */
     private function noRecordsMsg()
     {
-    	return "<span class=\"noRecordsMessage\">"
+    	return "<br /><span class=\"noRecordsMessage\">"
           . $this->objLanguage->languageText("mod_personalblocks_noblocksfound",'personalblocks')
           . "</span>";
     }
@@ -418,12 +454,15 @@ class pbrender extends dbTable
             $ar = $this->objDb->getRow('id', $keyvalue);
             $id = $ar['id'];
             $blockname = $ar['blockname'];
+            $blocktype = $ar['blocktype'];
+            $context = $ar['context'];
             $location = $ar['location'];
             $active = $ar['active'];
             $blockcontent = $ar['blockcontent'];
         } else {
         	$location="left";
             $blockname="";
+            $blocktype = "personal";
             $blockcontent="";
             $active="1";
         }
@@ -437,6 +476,7 @@ class pbrender extends dbTable
         $objElement->fldType="hidden";
         //Add the hidden PK field to the form
         $objForm->addToForm($objElement->show());
+
         //Create an element for the input of blockname
         $objElement = new textinput ("blockname");
         //Set the value of the element to $blockid
@@ -447,12 +487,18 @@ class pbrender extends dbTable
           . "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_blname", "personalblocks")
           . "</td><td>".$objElement->show()."</td></tr>";
+
         // Add a text area for the block contents.
         $this->loadClass('textarea', 'htmlelements');
-        $widgetTxt = new textarea('blockcontent', $blockcontent, 8, 60);
+        $widgetTxt = new textarea('blockcontent', $blockcontent);
+        $widgetTxt->setAutoGrow(TRUE);
+        $widgetTxt->setId("blockcontentstyle");
         $ifTable .= "<tr><td valign='top'>"
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
           . "</td><td>" . $widgetTxt->show() . "</td></tr>";
+        //Make it an expanding textarea
+        $aG = $this->getObject("jqexpanding", "htmlelements");
+        $aG->show("blockcontentstyle");
 
         // Add a radio set for choosing location.
         $this->loadClass("radio", "htmlelements");
@@ -475,6 +521,30 @@ class pbrender extends dbTable
           . $this->objLanguage->languageText("mod_personalblocks_active", "personalblocks")
           . "</td><td>" . $objRadioActive->show() . "</td></tr>";
 
+        //Add a radio for the  block type (Personal, context)
+        $objRadioBlocktype = new radio('blocktype');
+        $objRadioBlocktype->addOption('personal',  "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_personal", "personalblocks") . "&nbsp;");
+        $contextTranslated = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_context',
+          'personalblocks', NULL, '[-context-] code'));
+        $objRadioBlocktype->addOption('context', "&nbsp;" . $contextTranslated . "&nbsp;");
+
+        $objRadioBlocktype->setSelected($blocktype);
+        $ifTable .= "<tr><td>"
+          . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
+          . "</td><td>" . $objRadioBlocktype->show() . "</td></tr>";
+
+        //Add a dropdown for the context
+        //@ToDo add the dropdown and some JS to make it visible
+        $objElement = new textinput ("context");
+        //Set the value of the element to $blockid
+        if (isset($context)) {
+            $objElement->setValue($context);
+        }
+        $label = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_contextcode',
+          'personalblocks', NULL, '[-context-] code'));
+        $ifTable .= "<tr><td>" . $label . "</td><td>"
+          .$objElement->show()."</td></tr>";
+
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
         // Create a submit button
@@ -489,7 +559,5 @@ class pbrender extends dbTable
         $objForm->addToForm($ifTable);
         return $objForm->show();
     }
-
-
 }
 ?>

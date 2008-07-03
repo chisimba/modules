@@ -13,7 +13,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Derek Keats
 *
 */
-class block_pbleft extends object
+class block_contextleft extends object
 {
     public $title;
     public $blockType;
@@ -23,7 +23,7 @@ class block_pbleft extends object
     */
     public function init()
     {
-        $this->title="Personal blocks: left";
+        $this->title="Context blocks: left";
         $this->blockType = "none";
     }
 
@@ -46,7 +46,7 @@ class block_pbleft extends object
     {
         // Instantiate the rendering class
         $objPbrender = $this->getObject("pbrender", "personalblocks");
-        return $objPbrender->renderLeft();
+        return $objPbrender->renderLeft("context");
     }
 }
 ?>

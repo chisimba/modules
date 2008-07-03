@@ -23,6 +23,15 @@ $fields = array(
 	'blockcontent' => array(
 		'type'=>'clob'
 		),
+    'blocktype' => array(
+        'type' => 'text',
+        'length' => 15,
+        'default' =>'personal'
+        ),
+    'context' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
 	'active' => array(
         'type' => 'integer',
         'length' => 1,
