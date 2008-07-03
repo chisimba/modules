@@ -24,9 +24,9 @@ class fsiumenu extends object
             array('title'=>'Press Releases', 'module'=>'cms', 'action' => 'showsection ','id' => 'init_1', 'sectionid' => 'init_1'),*/
            array('title'=>'Blog', 'module'=>'blog'),
             array('title'=>'WIKI', 'module'=>'wiki'),
-	   array('title'=>'Leadership'),
-           array('title'=>'Researchers'),
-	   array('title'=>'Students'),	
+	   array('title'=>'Leadership','module'=>'cms','action'=>'showcontent','id'=>'gen22Srv38Nme10_5177_1213881863','sectionid'=>'gen8Srv56Nme56_1234_1207871796'),
+           array('title'=>'Researchers','module'=>'cms','action'=>'showsection','id'=>'gen22Srv38Nme10_5805_1214398614','sectionid'=>'gen22Srv38Nme10_5805_1214398614'),
+	   array('title'=>'Students','module'=>'cms','action'=>'showsection','id'=>'gen8Srv56Nme56_9859_1207871891','sectionid'=>'gen8Srv56Nme56_9859_1207871891'),	
            array('title'=>'Join SANORD', 'module'=>'userregistration'),
 	    array('title'=>'Links'),	
         );
