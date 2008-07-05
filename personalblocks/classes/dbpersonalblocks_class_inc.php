@@ -59,9 +59,10 @@ class dbpersonalblocks extends dbTable
             $location = $this->getParam('location', NULL);
             $blockname = $this->getParam('blockname', NULL);
             $blockcontent = $this->getParam('blockcontent', NULL);
-            $blocktype = $this->getParam('blockcontent', NULL);
-            $context = $this->getParam('blockcontent', NULL);
+            $blocktype = $this->getParam('blocktype', NULL);
+            $context = $this->getParam('context', NULL);
             $active = $this->getParam('active', NULL);
+            $sortorder = $this->getParam('sortorder', NULL);
             // If we are doing and edit use the update method.
             if ($mode=="edit") {
                 $this->update("id", $id, array(
@@ -71,6 +72,7 @@ class dbpersonalblocks extends dbTable
                 'blocktype' => $blocktype,
                 'context' => $context,
                 'active' => $active,
+                'sortorder' => $sortorder,
                 'datemodified' => $this->now(),
                 'modified' => $this->now(),
                 'modifierid' => $this->objUser->userId()));
@@ -84,6 +86,7 @@ class dbpersonalblocks extends dbTable
                 'blocktype' => $blocktype,
                 'context' => $context,
                 'active' => $active,
+                'sortorder' => $sortorder,
                 'datecreated' => $this->now(),
                 'creatorid' => $this->objUser->userId(),
                 'modified' => $this->now()));
@@ -116,6 +119,7 @@ class dbpersonalblocks extends dbTable
         if ($location){
         	$where .= "AND location='" . $location . "'";
         }
+        $where .= " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -138,6 +142,7 @@ class dbpersonalblocks extends dbTable
         if ($location){
             $where .= "AND location='" . $location . "'";
         }
+        $where .= " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -151,7 +156,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getLeftBlocks($creatorId)
     {
-        $where = " WHERE creatorid='" . $creatorId . "' AND active=1 AND location='left'";
+        $where = " WHERE creatorid='" . $creatorId
+          . "' AND active=1 AND location='left'"
+          . " ORDER BY 'sortorder'";
     	return $this->getAll($where);
     }
 
@@ -165,7 +172,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getRightBlocks($creatorId)
     {
-        $where = " WHERE creatorid='" . $creatorId . "' AND active=1 AND location='right'";
+        $where = " WHERE creatorid='" . $creatorId
+        . "' AND active=1 AND location='right'"
+        . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -179,7 +188,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getMiddleBlocks($creatorId)
     {
-        $where = " WHERE creatorid='" . $creatorId . "' AND active=1 AND location='middle'";
+        $where = " WHERE creatorid='" . $creatorId
+        . "' AND active=1 AND location='middle'"
+        . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -193,7 +204,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getLeftBlocksContext($context)
     {
-        $where = " WHERE context='" . $context . "' AND active=1 AND location='left'";
+        $where = " WHERE context='" . $context
+          . "' AND active=1 AND location='left'"
+          . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -207,7 +220,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getRightBlocksContext($context)
     {
-        $where = " WHERE context='" . $context . "' AND active=1 AND location='right'";
+        $where = " WHERE context='" . $context
+          . "' AND active=1 AND location='right'"
+          . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 
@@ -221,7 +236,9 @@ class dbpersonalblocks extends dbTable
     */
     public function getMiddleBlocksContext($creatorId)
     {
-        $where = " WHERE context='" . $context . "' AND active=1 AND location='middle'";
+        $where = " WHERE context='" . $context
+          . "' AND active=1 AND location='middle'"
+          . " ORDER BY 'sortorder'";
         return $this->getAll($where);
     }
 

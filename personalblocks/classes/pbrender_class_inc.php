@@ -247,9 +247,14 @@ class pbrender extends dbTable
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_title','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_location','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_active','personalblocks');
+        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_blocktype','personalblocks');
+        $contextTranslated = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_context',
+          'personalblocks', NULL, '[-context-] code'));
+        $tableHd[]=$contextTranslated;
+        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_sortorder','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datecreated','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_createdby','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datemodified','personalblocks');
+        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_createdby','personalblocks');
+        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datemodified','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_modifiedby','personalblocks');
         $tableHd[]=$this->getAddButton();
         $objTable->addHeader($tableHd, "heading");
@@ -264,7 +269,7 @@ class pbrender extends dbTable
                         $blockname = $line['blockname'];
                         $tableRow[]=$blockname;
                     } else {
-                        $tableRow[]= '';
+                        $tableRow[]= '&nbsp;';
                         $blockname ="";
                     }
                     if(!empty($line['location'])){
@@ -273,38 +278,64 @@ class pbrender extends dbTable
                         // @todo - add function for that purpose
                         $tableRow[]= $location;
                     } else {
-                        $tableRow[]= '';
+                        $tableRow[]= '&nbsp;';
                     }
                     if(!empty($line['active'])){
                         $active = $line['active'];
-                        // Get active text from code
-                        // @todo - add function for that purpose
-                        $tableRow[] = $active;
+                        $activeIco = $this->getYesNoIcon($active);
+                        $tableRow[] = $activeIco;
                     } else {
-                        $tableRow[]= '';
+                        $active = FALSE;
+                        $activeIco = $this->getYesNoIcon($active);
+                        $tableRow[] = $activeIco;
+                    }
+                   if(!empty($line['blocktype'])){
+                        $blocktype = $line['blocktype'];
+                        // Get blocktype text from code
+                        // @todo - add function for that purpose
+                        $tableRow[] = $blocktype;
+                    } else {
+                        $tableRow[]= '&nbsp;';
+                    }
+
+                    if(!empty($line['context'])){
+                        $context = $line['context'];
+                        // Get context text from code
+                        // @todo - add function for that purpose
+                        $tableRow[] = $context;
+                    } else {
+                        $tableRow[]= '&nbsp;';
+                    }
+                    if(!empty($line['sortorder'])){
+                        $sortorder = $line['sortorder'];
+                        // Get sortorder text from code
+                        // @todo - add function for that purpose
+                        $tableRow[] = $sortorder;
+                    } else {
+                        $tableRow[]= '&nbsp;';
                     }
                     if(!empty($line['datecreated'])){
                         $tableRow[]=$objDate->formatDate($line['datecreated']);
                     } else {
-                        $tableRow[]= '';
+                        $tableRow[]= '&nbsp;';
                     }
-                    if(!empty($line['creatorid'])){
+                    /*if(!empty($line['creatorid'])){
                         $creatorid = $line['creatorid'];
                         $tableRow[] = $this->objUser->fullName($creatorid);
                     } else {
-                        $tableRow[]= '';
-                    }
+                        $tableRow[]= '&nbsp;';
+                    }*/
                     if(!empty($line['datemodified'])){
                         $tableRow[]=$objDate->formatDate($line['datemodified']);
                     } else {
-                        $tableRow[]= '';
+                        $tableRow[]= '&nbsp;';
                     }
-                    if(!empty($line['modifierid'])){
+                    /*if(!empty($line['modifierid'])){
                         $modifierid = $line['modifierid'];
                         $tableRow[] = $this->objUser->fullName($modifierid);
                     } else {
-                        $tableRow[]= '';
-                    }
+                        $tableRow[]= '&nbsp;';
+                    }*/
                     $tableRow[] = $this->getEditButton($id)
                      . " " . $this->getDeleteIcon($id, $blockname);
                     //Add the row to the table for output
@@ -388,6 +419,59 @@ class pbrender extends dbTable
 
     /**
     *
+    * Return a green checkmark or a red x mark depending on whether
+    * it is passed a 0 or a 1
+    *
+    * @param boolean $flag Either true or false
+    * @return string An image tag pointing to the appropriate icon
+    * @access private
+    *
+    */
+    private function getYesNoIcon($flag)
+    {
+        if ($flag==1 || $flag==TRUE) {
+            return  $this->getCheckIcon();
+        } else {
+            return $this->getXIcon();
+        }
+    }
+
+
+
+    /**
+    *
+    * Return a green checkmark
+    *
+    * @return string An image tag pointing to the green check icon
+    * @access private
+    *
+    */
+    private function getCheckIcon()
+    {
+        $objChIcon = $this->getObject('geticon', 'htmlelements');
+        $objChIcon->alt = $this->objLanguage->languageText("word_yes");
+        $objChIcon->setIcon("greentick");
+        return $objChIcon->show();
+    }
+
+    /**
+    *
+    * Return a red X mark
+    *
+    * @return string An image tag pointing to the red X icon
+    * @access private
+    *
+    */
+    private function getXIcon()
+    {
+        $objXIcon = $this->getObject('geticon', 'htmlelements');
+        $objXIcon->alt = $this->objLanguage->languageText("word_no");
+        $objXIcon->setIcon("redcross");
+        return $objXIcon->show();
+    }
+
+    /**
+    *
     * Return an delete icon
     *
     * @param string $id The key of the record to delete
@@ -457,6 +541,7 @@ class pbrender extends dbTable
             $blocktype = $ar['blocktype'];
             $context = $ar['context'];
             $location = $ar['location'];
+            $sortorder = $ar['sortorder'];
             $active = $ar['active'];
             $blockcontent = $ar['blockcontent'];
         } else {
@@ -465,6 +550,8 @@ class pbrender extends dbTable
             $blocktype = "personal";
             $blockcontent="";
             $active="1";
+            $sortorder = "";
+            $context = NULL;
         }
         //Create an element for the hidden text input
         $objElement = new textinput("id");
@@ -491,7 +578,7 @@ class pbrender extends dbTable
         // Add a text area for the block contents.
         $this->loadClass('textarea', 'htmlelements');
         $widgetTxt = new textarea('blockcontent', $blockcontent);
-        $widgetTxt->setAutoGrow(TRUE);
+        //$widgetTxt->setAutoGrow(TRUE);
         $widgetTxt->setId("blockcontentstyle");
         $ifTable .= "<tr><td valign='top'>"
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
