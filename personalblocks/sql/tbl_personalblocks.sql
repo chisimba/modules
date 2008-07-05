@@ -28,6 +28,10 @@ $fields = array(
         'length' => 15,
         'default' =>'personal'
         ),
+    'sortorder' => array(
+        'type' => 'integer',
+        'length' => 4
+        ),
     'context' => array(
         'type' => 'text',
         'length' => 32
