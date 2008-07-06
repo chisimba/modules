@@ -238,12 +238,13 @@ class pbrender extends dbTable
         $userId = $this->objUser->userId();
         $ar = $this->objDb->getBlocks($userId);
         $objTable = new htmltable("personalblocks");
-        $objTable->cellspacing="2";
+        $objTable->cellspacing="0";
         $objTable->cellpadding="2";
         $objTable->border=0;
         $objTable->width="98%";
         //Create the array for the table header
         $tableHd=array();
+        $tableHd[]= $this->getBlkInfIconGrey();
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_title','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_location','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_active','personalblocks');
@@ -254,29 +255,34 @@ class pbrender extends dbTable
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_sortorder','personalblocks');
         $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datecreated','personalblocks');
         //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_createdby','personalblocks');
-        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datemodified','personalblocks');
-        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_modifiedby','personalblocks');
-        $tableHd[]=$this->getAddButton();
+        $tableHd[]=$this->objLanguage->languageText('mod_personalblocks_datemodified','personalblocks');
+        //$tableHd[]=$this->objLanguage->languageText('mod_personalblocks_modifiedby','personalblocks');
+        $tableHd[] = $this->getAddButton();
         $objTable->addHeader($tableHd, "heading");
 
         if (isset($ar)) {
             if (count($ar) > 0) {
                 $objDate =  $this->getObject("dateandtime", "utilities");
+                $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
                 foreach ($ar as $line) {
                     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                     $id = $line['id'];
+
+                    // Insert the name and blockinfo icon
+                    $infIco = $this->getBlockInfoIcon();
+                    $tableRow[] = $infIco;
                     if(!empty($line['blockname'])){
                         $blockname = $line['blockname'];
-                        $tableRow[]=$blockname;
+                        $tableRow[] = $blockname;
                     } else {
-                        $tableRow[]= '&nbsp;';
+                        $tableRow[] = "&nbsp;";
                         $blockname ="";
                     }
                     if(!empty($line['location'])){
                         $location = $line['location'];
-                        // Get location text from word
-                        // @todo - add function for that purpose
-                        $tableRow[]= $location;
+                        // Get location icon from word
+                        $locIcon = $this->getLocationIcon($location);
+                        $tableRow[]= $locIcon;
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
@@ -292,8 +298,8 @@ class pbrender extends dbTable
                    if(!empty($line['blocktype'])){
                         $blocktype = $line['blocktype'];
                         // Get blocktype text from code
-                        // @todo - add function for that purpose
-                        $tableRow[] = $blocktype;
+                        $blocktypeIco = $this->getBlockTypeIcon($blocktype);
+                        $tableRow[] = $blocktypeIco;
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
@@ -314,11 +320,15 @@ class pbrender extends dbTable
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
+                    // The date the entry was created
                     if(!empty($line['datecreated'])){
-                        $tableRow[]=$objDate->formatDate($line['datecreated']);
+                        $humanTime = $objHumanizeDate->getDifference($line['datecreated']);
+                        $tableRow[]= $humanTime;
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
+
+
                     /*if(!empty($line['creatorid'])){
                         $creatorid = $line['creatorid'];
                         $tableRow[] = $this->objUser->fullName($creatorid);
@@ -326,7 +336,8 @@ class pbrender extends dbTable
                         $tableRow[]= '&nbsp;';
                     }*/
                     if(!empty($line['datemodified'])){
-                        $tableRow[]=$objDate->formatDate($line['datemodified']);
+                        $humanTime = $objHumanizeDate->getDifference($line['datemodified']);
+                        $tableRow[]= $humanTime;
                     } else {
                         $tableRow[]= '&nbsp;';
                     }
@@ -436,8 +447,6 @@ class pbrender extends dbTable
         }
     }
 
-
-
     /**
     *
     * Return a green checkmark
@@ -448,7 +457,7 @@ class pbrender extends dbTable
     */
     private function getCheckIcon()
     {
-        $objChIcon = $this->getObject('geticon', 'htmlelements');
+        $objChIcon = $this->newObject('geticon', 'htmlelements');
         $objChIcon->alt = $this->objLanguage->languageText("word_yes");
         $objChIcon->setIcon("greentick");
         return $objChIcon->show();
@@ -464,10 +473,117 @@ class pbrender extends dbTable
     */
     private function getXIcon()
     {
-        $objXIcon = $this->getObject('geticon', 'htmlelements');
+        $objXIcon = $this->newObject('geticon', 'htmlelements');
         $objXIcon->alt = $this->objLanguage->languageText("word_no");
         $objXIcon->setIcon("redcross");
         return $objXIcon->show();
+    }
+
+    /**
+    *
+    * Return a block info icon
+    *
+    * @return string An image tag pointing to the block info icon
+    * @access private
+    *
+    */
+    private function getBlockInfoIcon()
+    {
+        $objBlIcon = $this->newObject('geticon', 'htmlelements');
+        $objBlIcon->alt = $this->objLanguage->languageText("word_no");
+        $objBlIcon->valign = "middle";
+        $objBlIcon->setIcon("blockinfo", "png");
+        return $objBlIcon->show();
+    }
+
+    /**
+    *
+    * Return a block info icon greyed out for the header
+    *
+    * @return string An image tag pointing to the block info icon
+    * @access private
+    *
+    */
+    private function getBlkInfIconGrey()
+    {
+        $objBlGIcon = $this->newObject('geticon', 'htmlelements');
+        $objBlGIcon->alt = $this->objLanguage->languageText("word_no");
+        $objBlGIcon->valign = "middle";
+        $objBlGIcon->setIcon("blockinfo_grey", "png");
+        return $objBlGIcon->show();
+    }
+
+    /**
+    *
+    * Return a block location icon indicating left, middle, right
+    *
+    * @return string An image tag for an icon indicating left, middle, right
+    * @access private
+    *
+    */
+    private function getLocationIcon($location)
+    {
+        $objBlLocIcon = $this->newObject('geticon', 'htmlelements');
+        $objBlLocIcon->alt = $location;
+        $objBlLocIcon->valign = "middle";
+        $objBlLocIcon->setIcon("blocklocation_$location", "png");
+        return $objBlLocIcon->show();
+    }
+
+    /**
+    *
+    * Return a green checkmark or a red x mark depending on whether
+    * it is passed a 0 or a 1
+    *
+    * @param boolean $flag Either true or false
+    * @return string An image tag pointing to the appropriate icon
+    * @access private
+    *
+    */
+    private function getBlockTypeIcon($blocktype)
+    {
+        if ($blocktype=="personal") {
+            return  $this->getPersonalIcon();
+        } else {
+            return $this->getContextIcon();
+        }
+    }
+
+
+    /**
+    *
+    * Return a icon indicating personal block
+    *
+    * @return string An image tag pointing to the personal.gif icon
+    * @access private
+    *
+    */
+    private function getPersonalIcon()
+    {
+        $objChIcon = $this->newObject('geticon', 'htmlelements');
+        $objChIcon->alt = $this->objLanguage->languageText(
+          "mod_personalblocks_personal", "personalblocks");
+        $objChIcon->setIcon("personal", "png");
+        return $objChIcon->show();
+    }
+
+    /**
+    *
+    * Return a icon indicating context block
+    *
+    * @return string An image tag pointing to the personal.gif icon
+    * @access private
+    *
+    */
+    private function getContextIcon()
+    {
+        $objChIcon = $this->newObject('geticon', 'htmlelements');
+        $objChIcon->alt = ucfirst($this->objLanguage->code2Txt(
+          'mod_personalblocks_context',
+          'personalblocks', NULL,
+          '[-context-] code'));
+        $objChIcon->setIcon("course", "png");
+        return $objChIcon->show();
     }
 
     /**
@@ -619,6 +735,17 @@ class pbrender extends dbTable
         $ifTable .= "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
           . "</td><td>" . $objRadioBlocktype->show() . "</td></tr>";
+
+        // Add a textbox for the sort order
+        //@todo Make it an ajax thing
+        $objElement = new textinput ("sortorder");
+        //Set the value of the element to $sortorder
+        if (isset($sortorder)) {
+            $objElement->setValue($sortorder);
+        }
+        $ifTable .= "<tr><td>"
+          . $this->objLanguage->languageText("mod_personalblocks_sortorder", "personalblocks")
+          . "</td><td>".$objElement->show()."</td></tr>";
 
         //Add a dropdown for the context
         //@ToDo add the dropdown and some JS to make it visible
