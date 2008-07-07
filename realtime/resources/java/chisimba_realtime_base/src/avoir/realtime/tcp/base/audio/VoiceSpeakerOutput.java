@@ -11,7 +11,7 @@ public final class VoiceSpeakerOutput extends Thread {
     /**
      * speaker line out
      */
-     private SourceDataLine sourceLine = null;
+    private SourceDataLine sourceLine = null;
     /**
      * wrapper form speex decoder
      */
@@ -152,12 +152,7 @@ public final class VoiceSpeakerOutput extends Thread {
      */
     public boolean obtainHardware() {
 
-        //AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 16000, 16, 1, 2, 16000, false);
-        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                AudioResource.SAMPLE_RATE, 16,
-                AudioResource.CHANNELS, AudioResource.FRAME_BITS,
-                AudioResource.SAMPLE_RATE, false);
-
+        AudioFormat format = AudioResource.audioFormat;
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format, AudioSystem.NOT_SPECIFIED);//rawBufferSize);
 
         try {
@@ -456,55 +451,55 @@ public final class VoiceSpeakerOutput extends Thread {
 
         if (getSpeakerState() != this.STATE_OFF ||
                 getSpeakerState() != this.STATE_PAUSE) {
-
+            /*
             int chunks = buf.length / speexChunkSize;
-
+            
             byte[] decodedBuff = new byte[chunks * rawChunkSize];
-
+            
             int[] encodedStartPos = new int[chunks];
-
+            
             int[] decodedStartPos = new int[chunks];
-
+            
             for (int j = 0; j < chunks; j++) {
-
-                encodedStartPos[j] = j * speexChunkSize;
-
-                decodedStartPos[j] = j * rawChunkSize;
+            
+            encodedStartPos[j] = j * speexChunkSize;
+            
+            decodedStartPos[j] = j * rawChunkSize;
             }
-
-
+            
+            
             for (int i = 0; i < chunks; i++) {
-
-                byte[] preDecodeBuff = new byte[speexChunkSize];
-
-                System.arraycopy(buf, encodedStartPos[i], preDecodeBuff, 0, speexChunkSize);
-
-                long in = System.currentTimeMillis();
-
-                byte[] postDecodeBuff = decoder.decode(preDecodeBuff);
-
-                long out = System.currentTimeMillis();
-
-                long roundTrip = (out - in);
-
-                if (averageDecodeTime != 0) {
-
-                    averageDecodeTime = (long) (averageDecodeTime + roundTrip) / 2;
-
-                } else {
-
-                    averageDecodeTime = roundTrip;
-                }
-
-                try {
-                    System.arraycopy(postDecodeBuff, 0, decodedBuff, decodedStartPos[i], rawChunkSize);
-                } catch (Exception e) {
-                    // What happens here is a possible null pointer exception due to change of quality
-                    // we ignore until the correct chunk size is set.
-                    return;
-                }
-
+            
+            byte[] preDecodeBuff = new byte[speexChunkSize];
+            
+            System.arraycopy(buf, encodedStartPos[i], preDecodeBuff, 0, speexChunkSize);
+            
+            long in = System.currentTimeMillis();
+            
+            byte[] postDecodeBuff = decoder.decode(preDecodeBuff);
+            
+            long out = System.currentTimeMillis();
+            
+            long roundTrip = (out - in);
+            
+            if (averageDecodeTime != 0) {
+            
+            averageDecodeTime = (long) (averageDecodeTime + roundTrip) / 2;
+            
+            } else {
+            
+            averageDecodeTime = roundTrip;
             }
+            
+            try {
+            System.arraycopy(postDecodeBuff, 0, decodedBuff, decodedStartPos[i], rawChunkSize);
+            } catch (Exception e) {
+            // What happens here is a possible null pointer exception due to change of quality
+            // we ignore until the correct chunk size is set.
+            return;
+            }
+            
+            }*/
 
             boolean sourceLineWaiting = false;
 
@@ -522,7 +517,8 @@ public final class VoiceSpeakerOutput extends Thread {
                     sourceLineThreadLock.notify();
                 }
             }
-            sourceLineThread.put(decodedBuff);
+            // sourceLineThread.put(decodedBuff);
+            sourceLineThread.put(buf);
         //sourceLine.write (decodedBuff, 0, decodedBuff.length);
         } else {
 
@@ -612,7 +608,11 @@ public final class VoiceSpeakerOutput extends Thread {
                     //      pcmBuffer.size () > writeBlockSize) {
                     if (pcmBuffer.size() > (640)) {
                         int l = pcmBuffer.size();
-                        sourceLine.write(pcmBuffer.get(l), 0, l);
+                        byte[] buff = pcmBuffer.get(l);
+                        sourceLine.write(buff, 0, l);
+                        audioWizardFrame.getBase().getSpeakerVolumeMeter().setValue(audioWizardFrame.getSoundDetector().calcCurrVol(buff, 0, l));
+                       
+
                     //sourceLine.write (pcmBuffer.get (writeBlockSize), 0, writeBlockSize);
                     } else {
 
