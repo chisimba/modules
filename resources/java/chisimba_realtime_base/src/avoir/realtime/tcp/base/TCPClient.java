@@ -13,7 +13,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 
 import avoir.realtime.tcp.base.user.User;
-import avoir.realtime.tcp.base.voice.AudioPlayback;
+
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
@@ -105,7 +105,6 @@ public class TCPClient {
     private FileOutputStream fileOutputStream;
     private JFileChooser fc = new JFileChooser();
     private WhiteboardSurface whiteboardSurface;
-    private AudioPlayback audioPlaybackHandler;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -715,11 +714,7 @@ public class TCPClient {
             audioHandler.playPacket(packet);
 
         }
-        if (audioPlaybackHandler != null) {
-            byte[] buff = packet.getPacket();
-            System.out.println(buff.length);
-            audioPlaybackHandler.playAudio(buff);
-        }
+       
 
     }
 
@@ -1039,9 +1034,6 @@ public class TCPClient {
 
     }
 
-    public void setAudioPlaybackHandler(AudioPlayback audioPlaybackHandler) {
-        this.audioPlaybackHandler = audioPlaybackHandler;
-    }
 
     /***
      * /////////////////////////////////////////////////////////////////
