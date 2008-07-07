@@ -17,7 +17,6 @@ import avoir.realtime.tcp.base.survey.SurveyFrame;
 import avoir.realtime.tcp.base.survey.SurveyManagerFrame;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.base.user.UserLevel;
-import avoir.realtime.tcp.base.voice.AudioModel;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
@@ -117,7 +116,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel surfacePanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
     private JPanel leftCenterPanel = new JPanel();
-    private AudioModel audioModel;
 
     /**
      * Create additional components
@@ -1114,9 +1112,6 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             talkButton.setIcon(micOffIcon);
             audioWizardFrame.stopCapture();
         }
-    }
-    if (audioModel != null) {
-        audioModel.initMIC();
     }
 }//GEN-LAST:event_talkButtonActionPerformed
 
