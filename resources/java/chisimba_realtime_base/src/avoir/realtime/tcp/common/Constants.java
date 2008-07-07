@@ -14,12 +14,12 @@ public class Constants {
     public static final String REALTIME_HOME = System.getProperty("user.home") + "/avoir-realtime-0.1";
 
     public static String getRealtimeHome() {
-        /* if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS")) {
-        return WIN_REALTIME_HOME;
+        if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS")) {
+            return WIN_REALTIME_HOME;
         } else {
-        return REALTIME_HOME;
-        }*/
-        return REALTIME_HOME;
+            return REALTIME_HOME;
+        }
+    //return REALTIME_HOME;
     }
     public static final int ADD_NEW_ITEM = 1;
     public static final int REMOVE_ITEM = 2;
@@ -31,4 +31,5 @@ public class Constants {
     public static final int ARROW_UP = 13;
     public static final int ARROW_SIDE = 14;
     public static final int WHITEBOARD = 15;
+    public static final int NO_POINTER = 16;
 }
