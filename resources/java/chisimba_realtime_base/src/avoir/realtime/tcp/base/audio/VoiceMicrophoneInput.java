@@ -9,6 +9,7 @@ import java.io.*;
 import javax.sound.sampled.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  * @author Ravi
  * @author jamoore
@@ -62,7 +63,6 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
     private boolean messageThreadWaiting = false;
     /** size of audio chucks speex can encode at the current sample rate*/
     private final int rawChunkSize = BLOCK_SIZE; // basically at the sample rate this is 640 bytes
-
     /** size of the speex encoded audio. this depends on the quality setting*/
     private int speexChunkSize = 0;
     ;
@@ -89,7 +89,7 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
     public static final String tmpFileExtention = "." + tmpFileFormatType.getExtension();
     public static final String fileExtention = "." + "ogg";
     private File voicemail = null;
-    private static final String base =  "/sounds/";
+    private static final String base = "/sounds/";
     private static final File voicemessagedir = new File(".");//base + File.separator + Env.VOICE_MESSAGE_UNSENT_DIR);
     String filename = null;
     String pipeID = null;
@@ -160,7 +160,8 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
     public boolean obtainHardware() {
 
         //AudioFormat  audioFormat = new AudioFormat (AudioFormat.Encoding.PCM_SIGNED, 16000.0F, 16, 1, 2, 16000.0F, false);
-        AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, AudioResource.SAMPLE_RATE, 16, AudioResource.CHANNELS, AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE, false);
+        // AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, AudioResource.SAMPLE_RATE, 16, AudioResource.CHANNELS, AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE, false);
+        AudioFormat audioFormat = AudioResource.audioFormat;
         voiceCaptureSupported = true;
 
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, audioFormat);
@@ -292,7 +293,7 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
 
                 if (bytesRead > 0) {
 
-                    encodeAndStore(buff);
+                    encodeAndStore(buff, bytesRead);
 
                     if (messageThreadWaiting && sendBuffer.size() >= speexMessageSize) {
 
@@ -343,9 +344,8 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
      *  outgoing buffer. at the current sample rate speex encodes 640byte
      *  blocks. we break the buff up into 640byte chunks -> encode -> store
      */
-    private void encodeAndStore(byte[] buff) {
-
-        wizard.getSoundDetector().isThereSound(buff);
+    private void encodeAndStore(byte[] buff, int bytesRead) {
+        wizard.getBase().getMicVolumeMeter().setValue(wizard.getSoundDetector().calcCurrVol(buff, 0, bytesRead));
         int chunks = buff.length / rawChunkSize;
 
         int[] startPos = new int[chunks];
@@ -354,37 +354,40 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
 
             startPos[j] = j * rawChunkSize;
         }
-
+        /*
         for (int i = 0; i < chunks; i++) {
-
-            byte[] preEncodeBuff = new byte[rawChunkSize];
-
-            System.arraycopy(buff, startPos[i], preEncodeBuff, 0, rawChunkSize);
-
-            long in = System.currentTimeMillis();
-
-            byte[] postEncodeBuff = null;
-            synchronized (encoder) {
-                postEncodeBuff = encoder.encode(preEncodeBuff);
-            }
-
-            long out = System.currentTimeMillis();
-
-            int roundTrip = (int) (out - in);
-
-            if (averageEncodeTime != 0) {
-
-                averageEncodeTime = (int) (averageEncodeTime + roundTrip) / 2;
-            } else {
-
-                averageEncodeTime = roundTrip;
-            }
-
-            if (!writingFile) {
-                sendBuffer.append(postEncodeBuff);
-            }
-
+        
+        byte[] preEncodeBuff = new byte[rawChunkSize];
+        
+        System.arraycopy(buff, startPos[i], preEncodeBuff, 0, rawChunkSize);
+        
+        long in = System.currentTimeMillis();
+        
+        byte[] postEncodeBuff = null;
+        synchronized (encoder) {
+        postEncodeBuff = encoder.encode(preEncodeBuff);
         }
+        
+        long out = System.currentTimeMillis();
+        
+        int roundTrip = (int) (out - in);
+        
+        if (averageEncodeTime != 0) {
+        
+        averageEncodeTime = (int) (averageEncodeTime + roundTrip) / 2;
+        } else {
+        
+        averageEncodeTime = roundTrip;
+        }
+        
+        if (!writingFile) {
+        sendBuffer.append(postEncodeBuff);
+        sendBuffer.append(buff);
+        }
+        
+        }*/
+        sendBuffer.append(buff);
+
     }
 
     /**
@@ -558,11 +561,13 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
 
         super.start();
 
-    // Going to record all the shit to my drink in order to test this line record shit
-        /*try {
+    // for recording
+       /* try {
     this.pauseMic();
-    AudioSystem.write(new AudioInputStream(targetLine), targetType, new java.io.File ("TestRecordingVPT."+targetType.getExtension()));
-    } catch (Exception e) {e.printStackTrace();}
+    AudioSystem.write(new AudioInputStream(targetLine), targetType, new java.io.File("TestRecordingVPT." + targetType.getExtension()));
+    } catch (Exception e) {
+    e.printStackTrace();
+    }
      */
     }
 
