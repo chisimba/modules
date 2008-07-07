@@ -1,6 +1,8 @@
 <?php
 if (isset($str)) {
-   echo $str; 
+
+echo $str; 
+
 }
 if (isset($ar)) {
     //Create an instance of the table object

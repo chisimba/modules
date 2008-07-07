@@ -92,9 +92,13 @@ class codetesting extends controller
     public function init()
     {
         $this->objUser = $this->getObject('user', 'security');
+        //$this->ajax = $this->getObject('ajax', 'codetesting');$groupId = $this->getParam('id', null);
         $this->objLanguage = $this->getObject('language', 'language');
         // Create the configuration object
         $this->objConfig = $this->getObject('config', 'config');
+	$this->objaltConfig = $this->getObject('altconfig', 'config');
+        $this->objUpload = $this->getObject('upload', 'filemanager');
+        $this->objFolders = $this->getObject('dbfolder', 'filemanager');
     }
 
 
@@ -109,6 +113,8 @@ class codetesting extends controller
      */
     public function dispatch()
     {
+        //$this->appendArrayVar('headerParams', $ajax);
+	//$this->setVar('bodyParams', "onload='process()'");
         //Get action from query string and set default to view
         $action=$this->getParam('action', 'truncate');
         // retrieve the mode (edit/add/translate) from the querystring
@@ -149,6 +155,76 @@ class codetesting extends controller
         $str = "<textarea class='blabla' id=\"markItUp\"></textarea>";
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
+    }
+//Upload using ajax and file manager functionality
+    private function __ajaxuploadread()
+    {
+        $objMk = $this->getObject('markitup', 'htmlelements');
+        $setType = $this->getParam('set', 'chiki');
+        $objMk->setTYpe($setType);
+        $this->appendArrayVar('headerParams',$objMk->show('id', 'markItUp'));
+/*
+	$mysuccessMessage = $successMessage;
+	$myerrorMessage = $errorMessage;
+	$myoverwriteMessage = $overwriteMessage;
+	$theseMessages = $this->getParam('messages', Null);
+	$this->setVarByRef('messages',$theseMessages);		
+	$test = "Just testing";
+	$this->setVarByRef('mytest',$test);		
+	$this->setVarByRef('successMessage',$mysuccessMessage);		
+	$this->setVarByRef('errorMessage',$myerrorMessage);		
+	$this->setVarByRef('overwriteMessage',$myoverwriteMessage);	
+	//return "ajaxuploadread_tpl.php";
+*/
+	return "fileupload_tpl.php";
+    }
+//modified the upload function for use in wiki, upload and read textfile
+    private function __uploadfileajax()
+    {
+
+        // Upload Files
+	$fileupload = $this->getParam('fileupload');
+        $results = $this->objUpload->uploadFiles();
+
+        // Check if User entered page by typing in URL
+        if ($results == FALSE) {
+                echo 'failed';
+        } else {
+                echo 'ok';
+        }
+    }
+//View ajax php form
+    private function __ajaxread()
+    {
+        $str = "<textarea class='blabla' id='myName'></textarea><div id='divMessage' /><br />";
+	
+        $this->setVarByRef('str', $str);
+        return "quickstart_tpl.php";
+    }
+    private function __ajaxstart()
+    {
+	$myName = $this->getParam('myName', Null);
+	$this->setVarByRef('myName',$myName);
+	
+	$myName = $this->getParam('divMessage', Null);
+	$this->setVarByRef('divMessage',$divMessage);
+	return "ajaxstart_tpl.php";
+    }
+    private function __simpleajax()
+    {
+	return "index_tpl.php";
+    }
+    private function __ajaxchat()
+    {
+	return "ajaxchat_tpl.php";
+    }
+
+//View ajax php form
+    private function __ajaxview()
+    {
+         $str = "<textarea class='blabla' id='myName'></textarea><div id='divMessage' /><br />";
+        $this->setVarByRef('str', $str);
+        return "quickstart_tpl.php";
     }
     /**
     *
@@ -279,5 +355,7 @@ because it is inside an ANCHOR tag. This is an image here:<br /><img src='http:/
                 break;
         }
      }
+
+
 }
 ?>
