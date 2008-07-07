@@ -25,7 +25,7 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
     private VoiceMicrophoneInput micInput;
     private VoicePushTextCallControl callControl = new VoicePushTextCallControl();
-     //private FloatControl gainControl;
+    //private FloatControl gainControl;
     //private FloatControl volumeControl;
     //private BooleanControl muteControl;
     private int sampleSizeInBits = 16;//AudioResource.FRAME_BITS;
@@ -97,6 +97,10 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
     public DetectSound getSoundDetector() {
         return detectSound;
+    }
+
+    public RealtimeBase getBase() {
+        return base;
     }
 
     public void stopAudio() {
@@ -244,7 +248,7 @@ public class AudioWizardFrame extends javax.swing.JFrame {
     // micInput.endMic();
     }
 
-     public void talk() {
+    public void talk() {
         speakerTestButton.setEnabled(false);
         micTestButton.setEnabled(false);
         stopButton.setEnabled(true);
@@ -258,11 +262,12 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
     private void playAudioFile() {
         AudioInputStream audioInputStream = null;
-        String testFile = avoir.realtime.tcp.common.Constants.getRealtimeHome() +"/sounds/test.wav";
+        String testFile = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/sounds/test.wav";
         File file = new File(testFile);
         try {
-            audioInputStream = AudioSystem.getAudioInputStream(file);
-            //  audioInputStream = AudioSystem.getAudioInputStream(getAudioFormat(), audioInputStream);
+             audioInputStream = AudioSystem.getAudioInputStream(file);
+           
+           //   audioInputStream = AudioSystem.getAudioInputStream(getAudioFormat(), audioInputStream);
             int nBytesRead = 0;
             byte[] abData = new byte[1024];
             while (nBytesRead != -1) {
@@ -290,20 +295,6 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
             public void run() {
                 playAudioFile();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             }
         };
@@ -556,7 +547,7 @@ private void micTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private AudioFormat getAudioFormat() {
         return new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
                 AudioResource.SAMPLE_RATE, 16, AudioResource.CHANNELS,
-                AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE, false);
+                AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE,false);
 
     /* //true,false
     return new AudioFormat(sampleRate,
@@ -581,9 +572,11 @@ private void micTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void startCapture() {
         try {
-            Runnable runner = new Runnable() {
+            Runnable runner = new  
 
-                public void run() {
+                  Runnable() {
+
+                    public void run() {
                     displayInfo("Capturing audio ...");
 //                    capture();
                 }
