@@ -22,7 +22,8 @@ public class DetectSound extends JPanel {
     JSlider volumeSlider = new JSlider();
     JSlider thresholdSlider = new JSlider(0, thresholdMax, threshold);
     BorderLayout borderLayout1 = new BorderLayout();
-    JProgressBar dataBar = new JProgressBar();
+    JProgressBar dataBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 128);
+    protected int lastLevel = -1;
 
     /**
      * Initialize the sound detection panel.
@@ -81,6 +82,7 @@ public class DetectSound extends JPanel {
         this.threshold = threshold;
     }
 
+    
     /**
      * Determine if there are enough data points above the threshold to be
      * counted as valid sound data (e.g. someone talking).
@@ -119,13 +121,63 @@ public class DetectSound extends JPanel {
                 }
             }
         }
-       
+        System.out.println(nmax);
         dataBar.setValue(nmax / 10);
         if (max > threshold && nmax > 10) {
             return true;
         } else {
             return false;
         }
+    }
+    // find the current playback level: the maximum value of this buffer
+    public int calcCurrVol(byte[] b, int off, int len) {
+        int end = off + len;
+        int sampleSize = (AudioResource.audioFormat.getSampleSizeInBits() + 7) / 8;
+        int max = 0;
+        if (sampleSize == 1) {
+            // 8-bit
+            for (; off < end; off++) {
+                int sample = (byte) (b[off] + 128);
+                if (sample < 0) {
+                    sample = -sample;
+                }
+                if (sample > max) {
+                    max = sample;
+                }
+            }
+            lastLevel = max;
+        } else if (sampleSize == 2) {
+            if (AudioResource.audioFormat.isBigEndian()) {
+                // 16-bit big endian
+                for (; off < end; off += 2) {
+                    int sample = (short) ((b[off] << 8) | (b[off + 1] & 0xFF));
+                    if (sample < 0) {
+                        sample = -sample;
+                    }
+                    if (sample > max) {
+                        max = sample;
+                    }
+                }
+            } else {
+                // 16-bit little endian
+                for (; off < end; off += 2) {
+                    int sample = (short) ((b[off + 1] << 8) | (b[off] & 0xFF));
+                    if (sample < 0) {
+                        sample = -sample;
+                    }
+                    if (sample > max) {
+                        max = sample;
+                    }
+                }
+            }
+            //System.out.print("max="+max+" ");
+            lastLevel = max >> 8;
+        //System.out.print(":"+len+":");
+        //System.out.print("[lL="+lastLevel+" "+getClass().toString()+"]");
+        } else {
+            lastLevel = -1;
+        }
+       return lastLevel;
     }
 
     /**
