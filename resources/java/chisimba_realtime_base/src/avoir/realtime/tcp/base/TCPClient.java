@@ -13,6 +13,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 
 import avoir.realtime.tcp.base.user.User;
+import avoir.realtime.tcp.base.voice.AudioPlayback;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
@@ -104,6 +105,7 @@ public class TCPClient {
     private FileOutputStream fileOutputStream;
     private JFileChooser fc = new JFileChooser();
     private WhiteboardSurface whiteboardSurface;
+    private AudioPlayback audioPlaybackHandler;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -192,7 +194,7 @@ public class TCPClient {
 
             } else {
                 logger.info("Error: writer is null!!!");
-                //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
+            //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Disconnected from server");
@@ -575,6 +577,12 @@ public class TCPClient {
         }
     }
 
+    public void sendAudioPacket(byte[] buff) {
+        System.out.println("s: " + buff.length);
+        sendPacket(new AudioPacket(base.getSessionId(), base.getUser().getUserName(), buff));
+
+    }
+
     /**
      * Something went wrong..so the communication pipe between applet and server
      * is broken. Inform the user
@@ -587,8 +595,8 @@ public class TCPClient {
             if (n == JOptionPane.YES_OPTION) {
                 //try to auto reconnect
                 base.initTCPCommunication();
-            }else{
-                base.showMessage("Disconnected From Server", false,true);
+            } else {
+                base.showMessage("Disconnected From Server", false, true);
             }
         }
         if (slidesServer != null) {
@@ -702,9 +710,15 @@ public class TCPClient {
      * @param packet
      */
     private void processAudioPacket(AudioPacket packet) {
+
         if (audioHandler != null) {
             audioHandler.playPacket(packet);
 
+        }
+        if (audioPlaybackHandler != null) {
+            byte[] buff = packet.getPacket();
+            System.out.println(buff.length);
+            audioPlaybackHandler.playAudio(buff);
         }
 
     }
@@ -1023,6 +1037,10 @@ public class TCPClient {
         packet.setCurrentValue(currentValue);
         sendPacket(packet);
 
+    }
+
+    public void setAudioPlaybackHandler(AudioPlayback audioPlaybackHandler) {
+        this.audioPlaybackHandler = audioPlaybackHandler;
     }
 
     /***
