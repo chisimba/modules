@@ -61,8 +61,8 @@ public class Surface extends JPanel implements MouseListener,
     private boolean showConnectingString = false;
     private boolean showSplashScreen = true;
     private Vector<Item> pointerLocations = new Vector<Item>();
-    private int pointer = Constants.HAND_RIGHT;
-    private Pointer currentPointer = new Pointer(new Point(0, 0), rightHand);
+    private int pointer = Constants.NO_POINTER;
+    private Pointer currentPointer = new Pointer(new Point(0, 0), blankIcon);
     private Graphics2D graphics;
     private Rectangle pointerSurface = new Rectangle();
     private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
@@ -161,7 +161,7 @@ public class Surface extends JPanel implements MouseListener,
                 case Constants.WHITEBOARD: {
                     base.getWhiteboardSurface().setGraphics(graphics);
                     base.getWhiteboardSurface().processMouseDragged(evt);
-                  
+
                     repaint();
                     break;
                 }
@@ -364,6 +364,10 @@ public class Surface extends JPanel implements MouseListener,
         repaint();
     }
 
+    public Rectangle getPointerSurface() {
+        return pointerSurface;
+    }
+
     private void paintPointer(Graphics2D g) {
         /*if (currentPointer != null) {
         pointerSurface.setXValue(pointerSurface.getX() + currentPointer.getPoint().x - 10);
@@ -450,7 +454,7 @@ public class Surface extends JPanel implements MouseListener,
         super.paintComponent(g);
         graphics = (Graphics2D) g;
         paintSlides(graphics);
-      
+
         paintPointer(graphics);
 
         graphics.setStroke(new BasicStroke(1));
@@ -476,7 +480,7 @@ public class Surface extends JPanel implements MouseListener,
             graphics.drawString(infoMessage, 30, 30);
         }
 
-       base.getWhiteboardSurface().drawStroke(graphics);
+        base.getWhiteboardSurface().drawStroke(graphics);
         base.getWhiteboardSurface().paintItems(graphics);
         if (currentPointer != null) {
             graphics.drawImage(currentPointer.getIcon().getImage(),
@@ -485,7 +489,6 @@ public class Surface extends JPanel implements MouseListener,
         }
     }
 
-   
     class Pointer {
 
         Point point;
