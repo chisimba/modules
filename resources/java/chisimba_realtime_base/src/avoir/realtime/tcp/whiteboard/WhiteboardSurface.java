@@ -1401,6 +1401,34 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     }
 
+    private Rectangle getPenRect(Vector<WBLine> vector) {
+        int minX = 0;
+        int minY = 0;
+        int maxX = 0;
+        int maxY = 0;
+        for (int i = 0; i < vector.size(); i++) {
+            WBLine line = vector.elementAt(i);
+            if (i == 0) {
+                minX = line.x1;
+                minY = line.y1;
+            } else {
+                if (line.x1 < minX) {
+                    minX = line.x1;
+                }
+                if (line.y1 < minY) {
+                    minY = line.y1;
+                }
+                if (line.x2 > maxX) {
+                    maxX = line.x2;
+                }
+                if (line.y2 > maxY) {
+                    maxY = line.y2;
+                }
+            }
+        }
+        return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+    }
+
     public void paintItems(Graphics2D g2) {
 
         for (int i = 0; i <
@@ -1419,6 +1447,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
             }
+
+
             if (temp instanceof WBLine) {
                 WBLine l = (WBLine) temp;
                 g2.setStroke(new BasicStroke(l.getStroke()));
@@ -1501,6 +1531,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     rect_size);
         }
 
+        if (selectedItem instanceof Pen) {
+            Pen pen = (Pen) selectedItem;
+            Rectangle r = getPenRect(pen.getPoints());
+            g2.fillRect(r.x, r.y, rect_size, rect_size);
+            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
+                    rect_size);
+            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
+            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
+                    rect_size);
+            g2.draw(r);
+        }
         if (selectedItem instanceof Rect) {
             Rect rr = (Rect) selectedItem;
             Rectangle r = rr.getRect();
@@ -1743,7 +1784,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
 
-            int width = getSize().width, height = getSize().height;
+            int width = getSize().width,  height = getSize().height;
 
             // Use gray for the button sides.
             g.setColor(Color.GRAY);
@@ -1872,7 +1913,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
          * @param g Graphics
          */
         public void paint(Graphics g) {
-            int width = getSize().width, height = getSize().height;
+            int width = getSize().width,  height = getSize().height;
             g.setColor(Color.white);
             g.draw3DRect(1, 1, width - 3, height - 3, !pressed);
             g.setColor(Color.white);
@@ -2186,7 +2227,7 @@ private void yellowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 }//GEN-LAST:event_yellowButtonActionPerformed
 
 private void blueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blueButtonActionPerformed
-    colour = Color.BLUE;
+    colour = new Color(0, 0, 255, alpha);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_blueButtonActionPerformed
