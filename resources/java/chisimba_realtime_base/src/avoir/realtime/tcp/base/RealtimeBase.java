@@ -17,6 +17,7 @@ import avoir.realtime.tcp.base.survey.SurveyFrame;
 import avoir.realtime.tcp.base.survey.SurveyManagerFrame;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.base.user.UserLevel;
+import avoir.realtime.tcp.base.voice.AudioModel;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
@@ -40,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -115,6 +117,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel surfacePanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
     private JPanel leftCenterPanel = new JPanel();
+    private AudioModel audioModel;
 
     /**
      * Create additional components
@@ -130,6 +133,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         menuMananger = new MenuManager(this);
         whiteboardToolbar = new WhiteboardToolbarManager(this);
         whiteboardSurface = new WhiteboardSurface(this);
+
+        micVolumeMeter.setMinimum(0);
+        micVolumeMeter.setMaximum(128);
+
+        speakerVolumeMeter.setMinimum(0);
+        speakerVolumeMeter.setMaximum(128);
+        //speakerVolumeMeter.setPreferredSize(new Dimension(128, 7));
 
         talkButton.setIcon(micOffIcon);
         talkButton.setBorderPainted(false);
@@ -194,13 +204,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         leftPanel.add(tabbedPane, BorderLayout.NORTH);
         agendaPanel.setLayout(new BorderLayout());
         agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
-        agendaPanel.setPreferredSize(new Dimension(250, 150));
+        agendaPanel.setPreferredSize(new Dimension(250, 130));
         leftPanel.add(agendaPanel, BorderLayout.SOUTH);
 
 
-        audioPanel.setPreferredSize(new Dimension(100, 200));
-        volumeSlide.setPreferredSize(new Dimension(150, 32));
-        speakerPb.setPreferredSize(new Dimension(150, 21));
+        audioPanel.setPreferredSize(new Dimension(100, 250));
+        volumeSlide.setPreferredSize(new Dimension(150, 20));
+        speakerVolumeMeter.setPreferredSize(new Dimension(150, 7));
         leftPanel.add(audioPanel, BorderLayout.CENTER);
 
         mPanel.add(leftPanel, BorderLayout.WEST);
@@ -655,6 +665,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         tcpClient = new TCPClient(this);
         tcpClient.setFileTransfer(fileTransferPanel);
         whiteboardSurface.setTCPClient(tcpClient);
+        //audioModel = new AudioModel(tcpClient);
         initChatRoom();
         sessionManager.connect();
     }
@@ -1004,6 +1015,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    public JProgressBar getMicVolumeMeter() {
+        return micVolumeMeter;
+    }
+
+    public JProgressBar getSpeakerVolumeMeter() {
+        return speakerVolumeMeter;
+    }
+
     /** This method is called from within the init() method to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -1013,14 +1032,16 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        speakerPb = new javax.swing.JProgressBar();
         audioPanel = new javax.swing.JPanel();
         mAudioPanel = new javax.swing.JPanel();
+        audioControlPanel = new javax.swing.JPanel();
         volumeSlide = new javax.swing.JSlider();
         muteOpt = new javax.swing.JCheckBox();
+        audioMonitorPanel = new javax.swing.JPanel();
+        speakerVolumeMeter = new javax.swing.JProgressBar();
         cPanel = new javax.swing.JPanel();
         talkButton = new javax.swing.JToggleButton();
-        pb = new javax.swing.JProgressBar();
+        micVolumeMeter = new javax.swing.JProgressBar();
         mainPanel = new javax.swing.JPanel();
         statusBar = new javax.swing.JLabel();
 
@@ -1029,6 +1050,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         audioPanel.setLayout(new java.awt.BorderLayout());
 
         mAudioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Speaker"));
+        mAudioPanel.setLayout(new java.awt.BorderLayout());
 
         volumeSlide.setEnabled(false);
         volumeSlide.setMinimumSize(new java.awt.Dimension(50, 40));
@@ -1038,7 +1060,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 volumeSlideStateChanged(evt);
             }
         });
-        mAudioPanel.add(volumeSlide);
+        audioControlPanel.add(volumeSlide);
 
         muteOpt.setText("Mute");
         muteOpt.setEnabled(false);
@@ -1047,7 +1069,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 muteOptActionPerformed(evt);
             }
         });
-        mAudioPanel.add(muteOpt);
+        audioControlPanel.add(muteOpt);
+
+        mAudioPanel.add(audioControlPanel, java.awt.BorderLayout.PAGE_START);
+
+        audioMonitorPanel.setLayout(new java.awt.BorderLayout());
+        mAudioPanel.add(audioMonitorPanel, java.awt.BorderLayout.PAGE_END);
+        mAudioPanel.add(speakerVolumeMeter, java.awt.BorderLayout.CENTER);
 
         audioPanel.add(mAudioPanel, java.awt.BorderLayout.CENTER);
 
@@ -1055,14 +1083,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         cPanel.setLayout(new java.awt.GridBagLayout());
 
         talkButton.setText("Talk");
-        talkButton.setEnabled(false);
         talkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 talkButtonActionPerformed(evt);
             }
         });
         cPanel.add(talkButton, new java.awt.GridBagConstraints());
-        cPanel.add(pb, new java.awt.GridBagConstraints());
+        cPanel.add(micVolumeMeter, new java.awt.GridBagConstraints());
 
         audioPanel.add(cPanel, java.awt.BorderLayout.PAGE_END);
 
@@ -1087,6 +1114,9 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             talkButton.setIcon(micOffIcon);
             audioWizardFrame.stopCapture();
         }
+    }
+    if (audioModel != null) {
+        audioModel.initMIC();
     }
 }//GEN-LAST:event_talkButtonActionPerformed
 
@@ -1126,13 +1156,15 @@ private void volumeSlideStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-F
     }
 }//GEN-LAST:event_volumeSlideStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel audioControlPanel;
+    private javax.swing.JPanel audioMonitorPanel;
     private javax.swing.JPanel audioPanel;
     private javax.swing.JPanel cPanel;
     private javax.swing.JPanel mAudioPanel;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JProgressBar micVolumeMeter;
     private javax.swing.JCheckBox muteOpt;
-    private javax.swing.JProgressBar pb;
-    private javax.swing.JProgressBar speakerPb;
+    private javax.swing.JProgressBar speakerVolumeMeter;
     private javax.swing.JLabel statusBar;
     private javax.swing.JToggleButton talkButton;
     private javax.swing.JSlider volumeSlide;
