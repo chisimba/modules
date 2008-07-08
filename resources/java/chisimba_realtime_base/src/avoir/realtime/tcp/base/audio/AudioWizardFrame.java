@@ -6,16 +6,23 @@
 package avoir.realtime.tcp.base.audio;
 //import avoir.realtime.tcp.client.applet.TCPClient;
 import avoir.realtime.tcp.base.RealtimeBase;
+import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import javax.sound.sampled.AudioFormat;
 //import avoir.realtime.tcp.common.packet.AudioPacket;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 
 /**
  *
@@ -77,6 +84,10 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         }
         initReceiverLine();
 
+    }
+
+    public VoiceMicrophoneInput getMicInput() {
+        return micInput;
     }
 
     public void setUsername(String username) {
@@ -191,10 +202,9 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         testing = true;
         micTestButton.setForeground(new Color(0, 131, 0));
         micTestButton.setBackground(Color.YELLOW);
-
         if (!micinit) {
             micInput.beginMic();
-            micinit = false;
+            micinit = true;
         } else {
             micInput.resumeMic();
         }
@@ -224,11 +234,11 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
     public void playPacket(final AudioPacket packet) {
         byte[] data = packet.getPacket();
-        if (packet.isTest()) {
-            testBuffer.add(packet);
-        } else {
-            voiceSpeakerOutput.receiveVoicePushTextData(data);
-        }
+        //if (packet.isTest()) {
+        //  testBuffer.add(packet);
+        //} else {
+        voiceSpeakerOutput.receiveVoicePushTextData(data);
+    //}
     }
 
     private void playTestPackets() {
@@ -238,15 +248,76 @@ public class AudioWizardFrame extends javax.swing.JFrame {
             voiceSpeakerOutput.receiveVoicePushTextData(data);
         }
         displayWarn("Test Streaming stopped");
-
+        /*ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(len);
+        len = 0;
+        int prev=0;
+        for (int i = 0; i < testBuffer.size(); i++) {
+        byte[] data = testBuffer.elementAt(i).getPacket();
+        prev += data.length;
+        byteArrayOutputStream.write(data, prev, data.length);
+        }*/
         speakerTestButton.setEnabled(true);
         micTestButton.setEnabled(true);
         micTestButton.setText("Test Microphone");
         micTestButton.setBackground(getBackground());
         stopButton.setEnabled(false);
+        // byte audioData[] = byteArrayOutputStream.toByteArray();
+        // saveAudio(audioData);
         testBuffer.clear();
-    // micInput.endMic();
+        micInput.pauseMic();
+
     }
+
+    private void saveAudio(byte audioData[]) {
+        try {
+
+            InputStream byteArrayInputStream = new ByteArrayInputStream(
+                    audioData);
+            AudioFormat audioFormat =
+                    getAudioFormat();
+            AudioInputStream audioInputStream =
+                    new AudioInputStream(
+                    byteArrayInputStream,
+                    audioFormat,
+                    audioData.length / audioFormat.getFrameSize());
+
+            Thread saveThread =
+                    new Thread(new SaveThread(audioInputStream, Constants.getRealtimeHome() + "sounds.test"));
+            saveThread.start();
+        } catch (Exception e) {
+            System.out.println(e);
+            System.exit(0);
+        }//end catch
+    }//end playAudio
+
+    class SaveThread extends Thread {
+
+        byte tempBuffer[] = new byte[10000];
+        AudioInputStream audioInputStream;
+        String fileName;
+
+        public SaveThread(AudioInputStream audioInputStream, String fileName) {
+            this.audioInputStream = audioInputStream;
+            this.fileName = fileName;
+        }
+
+        public void run() {
+            try {
+
+
+                if (AudioSystem.isFileTypeSupported(AudioFileFormat.Type.AU,
+                        audioInputStream)) {
+                    AudioSystem.write(audioInputStream, AudioFileFormat.Type.AU, new File(fileName + ".au"));
+
+                }
+
+            } catch (Exception e) {
+                System.out.println(e);
+                System.exit(0);
+            }//end catch
+        }//end run
+    }//end inner class PlayThread
+//===================================//
 
     public void talk() {
         speakerTestButton.setEnabled(false);
@@ -260,14 +331,14 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         }
     }
 
-    private void playAudioFile() {
+    private void xplayAudioFile() {
         AudioInputStream audioInputStream = null;
         String testFile = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/sounds/test.wav";
         File file = new File(testFile);
         try {
-             audioInputStream = AudioSystem.getAudioInputStream(file);
-           
-           //   audioInputStream = AudioSystem.getAudioInputStream(getAudioFormat(), audioInputStream);
+            audioInputStream = AudioSystem.getAudioInputStream(file);
+
+            //   audioInputStream = AudioSystem.getAudioInputStream(getAudioFormat(), audioInputStream);
             int nBytesRead = 0;
             byte[] abData = new byte[1024];
             while (nBytesRead != -1) {
@@ -295,10 +366,72 @@ public class AudioWizardFrame extends javax.swing.JFrame {
 
             public void run() {
                 playAudioFile();
-
             }
         };
         t.start();
+    }
+
+    public void playAudioFile() {
+        //close main speaker system
+        voiceSpeakerOutput.releaseHardware();
+        int EXTERNAL_BUFFER_SIZE = 128000;
+        String strFilename = Constants.getRealtimeHome() + "/sounds/test.wav";
+        File soundFile = new File(strFilename);
+
+        /*
+        We have to read in the sound file.
+         */
+        AudioInputStream audioInputStream = null;
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (Exception e) {
+            /*
+            In case of an exception, we dump the exception
+            including the stack trace to the console output.
+            Then, we exit the program.
+             */
+            e.printStackTrace();
+
+        }
+
+
+        AudioFormat audioFormat = audioInputStream.getFormat();
+        SourceDataLine line = null;
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+                audioFormat);
+        try {
+            line = (SourceDataLine) AudioSystem.getLine(info);
+
+            line.open(audioFormat);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+
+        line.start();
+        int nBytesRead = 0;
+        byte[] abData = new byte[EXTERNAL_BUFFER_SIZE];
+        while (nBytesRead != -1) {
+            try {
+                nBytesRead = audioInputStream.read(abData, 0, abData.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (nBytesRead >= 0) {
+                int nBytesWritten = line.write(abData, 0, nBytesRead);
+            }
+        }
+
+
+        line.drain();
+        line.close();
+        //then restart it 
+        voiceSpeakerOutput.beginSpeaker();
+        speakerTestButton.setEnabled(true);
     }
 
     /** This method is called from within the constructor to
@@ -547,7 +680,7 @@ private void micTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private AudioFormat getAudioFormat() {
         return new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
                 AudioResource.SAMPLE_RATE, 16, AudioResource.CHANNELS,
-                AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE,false);
+                AudioResource.FRAME_BITS, AudioResource.SAMPLE_RATE, false);
 
     /* //true,false
     return new AudioFormat(sampleRate,
