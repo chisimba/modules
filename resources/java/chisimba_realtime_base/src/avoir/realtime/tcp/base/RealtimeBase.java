@@ -938,6 +938,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         chatRoom.update(chatPacket);
     }
 
+    public AudioWizardFrame getAudioWizardFrame() {
+        return audioWizardFrame;
+    }
+
     /**
      * Sets the connection status
      * @param connected
@@ -1111,6 +1115,8 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } else {
             talkButton.setIcon(micOffIcon);
             audioWizardFrame.stopCapture();
+            audioWizardFrame.getMicInput().record("lastSlide");
+            
         }
     }
 }//GEN-LAST:event_talkButtonActionPerformed
