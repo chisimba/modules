@@ -4,6 +4,7 @@
  */
 package avoir.realtime.tcp.base.audio;
 
+import avoir.realtime.tcp.common.Constants;
 import java.io.*;
 
 import javax.sound.sampled.*;
@@ -97,6 +98,7 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
     private static final int DIALOG_DISCONNECTED = 25;
     private int failedDispatches = 0;
     private AudioWizardFrame wizard;
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     /**
      * 
@@ -294,7 +296,7 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
                 if (bytesRead > 0) {
 
                     encodeAndStore(buff, bytesRead);
-
+                    out.write(buff, 0, bytesRead);
                     if (messageThreadWaiting && sendBuffer.size() >= speexMessageSize) {
 
                         messageThreadWaiting = false;
@@ -387,6 +389,8 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
         
         }*/
         sendBuffer.append(buff);
+    //also keep another copy for saving
+
 
     }
 
@@ -561,14 +565,55 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
 
         super.start();
 
-    // for recording
-       /* try {
-    this.pauseMic();
-    AudioSystem.write(new AudioInputStream(targetLine), targetType, new java.io.File("TestRecordingVPT." + targetType.getExtension()));
-    } catch (Exception e) {
-    e.printStackTrace();
+    //record();
     }
-     */
+
+    public void record(final String fileName) {
+        // for recording
+        Thread t = new Thread() {
+
+            public void run() {
+                try {
+                    byte audioData[] = out.toByteArray();
+
+                    InputStream byteArrayInputStream = new ByteArrayInputStream(
+                            audioData);
+                    AudioFormat audioFormat =
+                            AudioResource.audioFormat;
+                    AudioInputStream audioInputStream =
+                            new AudioInputStream(
+                            byteArrayInputStream,
+                            audioFormat,
+                            audioData.length / audioFormat.getFrameSize());
+
+                    //make sure we are in a right dir
+                    String session = wizard.getBase().getSessionTitle();
+                    if (session == null) {
+                        session = "general";
+                    }
+                    File f = new File(Constants.getRealtimeHome() + "/sounds/" + session);
+                    if (!f.exists()) {
+                        f.mkdirs();
+                    }
+                    String audioFileName = f.getAbsolutePath() + "/" + fileName + "." + targetType.getExtension();
+                    //this.pauseMic();
+                    File audioFile = new File(audioFileName);
+                    if (audioFile.exists()) {
+
+                        //then dont overrite
+
+                        audioFileName = f.getAbsolutePath() + "/" + fileName + Constants.getDateTime() + "." + targetType.getExtension();
+                        audioFile = new File(audioFileName);
+                    }
+                    AudioSystem.write(audioInputStream, targetType, audioFile);
+                    //then clear the buffer
+                    out.reset();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
     }
 
     /**
