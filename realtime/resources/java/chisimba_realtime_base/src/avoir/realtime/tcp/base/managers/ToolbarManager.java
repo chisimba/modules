@@ -44,10 +44,10 @@ public class ToolbarManager extends JToolBar {
     private javax.swing.JButton chatButton;
     private javax.swing.JToggleButton handButton;
     private RealtimeBase base;
-   
+
     public ToolbarManager(RealtimeBase base) {
         this.base = base;
-       
+
 
     }
 
@@ -119,6 +119,9 @@ public class ToolbarManager extends JToolBar {
                 if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
                     base.getSessionManager().setSlideIndex(++slideIndex);
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    //record audio if any
+                    base.getAudioWizardFrame().getMicInput().record("slide" + (slideIndex));
+
                 }
             }
         });
@@ -519,7 +522,7 @@ public class ToolbarManager extends JToolBar {
                 base.showPointerToolBar(wbButton.isSelected());
             }
         });
-    
+
         generalToolbar.add(wbButton);
 
         setCustomActions();
