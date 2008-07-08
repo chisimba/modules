@@ -58,20 +58,22 @@ public class AgendaTree extends JPanel {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
                     int[] rows = tree.getSelectionRows();
                     String selectedNode = (String) node.getUserObject();
-                        int index=rows[0] - 2;
-                        if (index > -1) {
-                           // if (base.isPresenter()) {
-                               
-                                base.getSessionManager().updateSlide(index-1);
-                            //} else{
-                              //  base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
-                            //}
-                        }
+                    int index = rows[0] - 2;
+                    if (index > -1) {
+                        // if (base.isPresenter()) {
+
+                        base.getSessionManager().updateSlide(index - 1);
+                        //record audio if any
+                        base.getAudioWizardFrame().getMicInput().record("slide" + (index));
+                    //} else{
+                    //  base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
+                    //}
+                    }
                 }
             }
         });
 
-      
+
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
     }
