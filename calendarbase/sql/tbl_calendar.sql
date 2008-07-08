@@ -75,11 +75,11 @@ $fields = array(
         'type' => 'time',
         ),
     'moduleevent_table' => array(
-        'type' => 'varchar',
+        'type' => 'text',
         'length' => '255',
         ),
     'moduleevent_id' => array(
-        'type' => 'varchar',
+        'type' => 'text',
         'length' => '32',
         ),
     );

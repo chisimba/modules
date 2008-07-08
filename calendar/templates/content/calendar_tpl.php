@@ -67,30 +67,31 @@ $checkboxes = array();
 
 $checkbox = new checkbox('userbox', NULL, TRUE);
 $checkbox->cssId='userbox';
-$label = new label('User Events ('.$userEvents.')', 'userbox');
+
+$label = new label($this->objLanguage->languageText('mod_calendar_personalevents','calendar').' ('.$userEvents.')', 'userbox');
 $checkboxes[] = $checkbox->show().' '.$label->show();
 
 if ($this->contextCode == 'root') {
     $checkbox = new checkbox('otherbox', NULL, TRUE);
     $checkbox->cssId='otherbox';
-    $label = new label('My Courses ('.$otherContextEvents.')', 'otherbox');
+    $label = new label($this->objLanguage->languageText('mod_calendar_mycourses','calendar').' ('.$otherContextEvents.')', 'otherbox');
     $checkboxes[] = $checkbox->show().' '.$label->show();
 
 } else {
     $checkbox = new checkbox('contextbox', NULL, TRUE);
     $checkbox->cssId='contextbox';
-    $label = new label('Current Course: '.$this->contextTitle.' ('.$contextEvents.')', 'contextbox');
+    $label = new label($this->objLanguage->languageText('mod_calendar_currentcourse','calendar').' '.$this->contextTitle.' ('.$contextEvents.')', 'contextbox');
     $checkboxes[] = $checkbox->show().' '.$label->show();
     
     $checkbox = new checkbox('otherbox', NULL, TRUE);
     $checkbox->cssId='otherbox';
-    $label = new label('Other Courses ('.$otherContextEvents.')', 'otherbox');
+    $label = new label($this->objLanguage->languageText('mod_calendar_othercourses','calendar').' ('.$otherContextEvents.')', 'otherbox');
     $checkboxes[] = $checkbox->show().' '.$label->show();
 }
 
 $checkbox = new checkbox('sitebox', NULL, TRUE);
 $checkbox->cssId='sitebox';
-$label = new label('Site Events ('.$siteEvents.')', 'sitebox');
+$label = new label($this->objLanguage->languageText('mod_calendar_siteevents','calendar').' ('.$siteEvents.')', 'sitebox');
 $checkboxes[] = $checkbox->show().$label->show();
 
 $divider = '';
