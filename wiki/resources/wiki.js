@@ -80,14 +80,14 @@ function validateUpdatePage(err_summary, err_content, err_comment)
         content_input[0].focus
         return false;
     }
-
+ 
     if(comment_input.value == ""){
         alert(err_comment);
         comment_input.focus
         return false;
     }
-    
-   $("form_update").submit();
+   var temp = document.getElementById('form_update');
+   temp.submit();
 }
 
 /**
