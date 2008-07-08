@@ -10,6 +10,10 @@ $this->loadClass('label', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
+//Load jquery
+$objJQuery = $this->getObject('jquery','htmlelements');
+$objJQuery->loadFormPlugin();
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objIcon->setIcon('loader');
 
@@ -58,10 +62,12 @@ $objIcon->setIcon('loader');
 		        //data: "module=codetesting&action=uploadfileajax&fileupload="+code,	      
 		                    
 		        // DO Ajax
-		        jQuery.ajax({
+			//jQuery.ajax
+			//jQuery.ajax({
+		        jQuery("#form_uploadform").ajaxForm({
 		        type: "GET", 
 		        url: "index.php", 
-			data: "module=filemanager&action=uploadreadajax&fileupload="+code,
+			data: "module=filemanager&action=uploadreadajax&fileupload",
 		        success: function(msg){  
 
 //Start Remove
@@ -107,7 +113,7 @@ echo '<br />'.$header->show();
 
 
 // CREATE FORM
-$form = new form ('createcontext', $this->uri(array('action'=>$formAction)));
+$form = new form ('uploadform', $this->uri(array('action'=>$formAction)));
 
 
 //$code = new textinput('contextcode',null,'file',null);
