@@ -430,7 +430,7 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         line.drain();
         line.close();
         //then restart it 
-        voiceSpeakerOutput.beginSpeaker();
+        initReceiverLine();
         speakerTestButton.setEnabled(true);
     }
 
