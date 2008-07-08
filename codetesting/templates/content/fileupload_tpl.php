@@ -67,7 +67,7 @@ $objIcon->setIcon('loader');
 		        jQuery("#form_uploadform").ajaxForm({
 		        type: "GET", 
 		        url: "index.php", 
-			data: "module=filemanager&action=uploadreadajax&fileupload",
+			data: "module=filemanager&action=upload",
 		        success: function(msg){  
 
 //Start Remove
