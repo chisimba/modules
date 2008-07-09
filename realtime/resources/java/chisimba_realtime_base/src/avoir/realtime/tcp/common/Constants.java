@@ -13,7 +13,7 @@ import java.util.Date;
  * @author developer
  */
 public class Constants {
-   private static DateFormat dateFormat = new SimpleDateFormat("H-mm-ss");
+   private static DateFormat dateFormat = new SimpleDateFormat("yyy-MM-ddd-H-mm-ss");
  
     public static final String WIN_REALTIME_HOME = "c:\\avoir-realtime-0.1\\";
     public static final String REALTIME_HOME = System.getProperty("user.home") + "/avoir-realtime-0.1";
