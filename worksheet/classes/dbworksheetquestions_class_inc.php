@@ -66,6 +66,26 @@ class dbworksheetquestions extends dbTable
         return $result;
     }
     
+    public function updateQuestion($question_id, $question, $answer, $question_worth)
+    {
+        $result = $this->update('id', $question_id, array(
+                'question' => $question,
+                'model_answer' => $answer,
+                'question_worth' => $question_worth,
+                'userid' => $this->objUser->userId(),
+                'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+            ));
+        
+        if ($result != FALSE) {
+            $objWorksheet = $this->getObject('dbworksheet');
+            $question = $this->getQuestion($question_id);
+            $objWorksheet->updateTotalMark($question['worksheet_id']);
+        }
+        
+        return $result;
+    }
+    
     /**
     * Method to get the number of the last question in the worksheet.
     * @param string $worksheet_id The id of the current worksheet.
@@ -98,13 +118,6 @@ class dbworksheetquestions extends dbTable
         $result = $this->getArray($sql);
 
         if(!empty($result)){
-            // Delete image if set
-            if(!empty($result[0]['imageId'])){
-                $objFile =& $this->getObject('dbfile','filemanager');
-                //$objFile->changeTables('tbl_worksheet_filestore','tbl_worksheet_blob');
-                $objFile->deleteFile($result[0]['imageid']);
-            }
-
             // Reorder remaining questions
             $row = $this->getQuestions($result[0]['worksheet_id'], $result[0]['question_order'], FALSE);
             if(!empty($row)){
@@ -115,7 +128,7 @@ class dbworksheetquestions extends dbTable
             }
         }
 
-        $this->delete('id',$id);
+        return $this->delete('id',$id);
     }
 
 
@@ -163,14 +176,7 @@ class dbworksheetquestions extends dbTable
     */
     public function getQuestion($id)
     {
-        $sql = 'SELECT * FROM '.$this->table." WHERE id='$id'";
-        $rows=$this->getArray($sql);
-
-        if($rows){
-            $rows[0]['num_questions']=$this->getNumQuestions($rows[0]['worksheet_id']);
-            return $rows[0];
-        }
-        return FALSE;
+        return $this->getRow('id', $id);
     }
 
     /**

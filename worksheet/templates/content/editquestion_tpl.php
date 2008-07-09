@@ -45,7 +45,7 @@ $objDateTime = $this->getObject('dateandtime', 'utilities');
 $table = $this->newObject('htmltable', 'htmlelements');
 $table->startRow();
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_closingdate', 'worksheet', 'Closing Date').'</strong>: '.$objDateTime->formatDate($worksheet['closing_date']), '55%');
-$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_questions', 'worksheet', 'Questions').'</strong>: '.count($questions), '15%');
+$table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_questions', 'worksheet', 'Questions').'</strong>: '.$numQuestions, '15%');
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_percentage', 'worksheet', 'Percentage').'</strong>: '.$worksheet['percentage'].'%', '15%');
 $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark').'</strong>: '.$worksheet['total_mark'], '15%');
 $table->endRow();
@@ -55,60 +55,18 @@ echo $table->show();
 echo '<hr />';
 
 
-echo '<div id="worksheetquestions">';
 
-if (count($questions) > 0) {
-    $counter = 1;
-    
-    $objIcon->setIcon('edit');
-    $editIcon = $objIcon->show();
-    
-    $deletephrase = $this->objLanguage->languageText('mod_worksheet_confirmdeletequestion', 'worksheet', 'Are you sure you want to delete this question');
-    
-    $objWashout = $this->getObject('washout', 'utilities');
-    foreach ($questions as $question)
-    {
-        echo '<div class="newForumContainer">';
-            echo '<div class="newForumTopic">';
-                if ($worksheet['activity_status'] == 'inactive') {
-                    $questionLink = new link($this->uri(array('action'=>'editquestion', 'id'=>$question['id'])));
-                    $questionLink->link = $editIcon;
-                    
-                    $deleteArray = array('action'=>'deletequestion', 'question'=>$question['id'], 'worksheet'=>$id);
-                    
-                    
-                    $deleteIcon = $objIcon->getDeleteIconWithConfirm($question['id'], $deleteArray, 'worksheet', $deletephrase);
-                    
-                    echo '<div style="float:right;">'.$questionLink->show().' '.$deleteIcon.'</div>';
-                }
-                echo '<strong>'.$this->objLanguage->languageText('mod_worksheet_question', 'worksheet', 'Question').' '.$counter.':</strong><br />';
-                echo $objWashout->parseText($question['question']);
-                echo '<strong>'.$this->objLanguage->languageText('mod_worksheet_marks', 'worksheet', 'Marks').'</strong> ('.$question['question_worth'].')';
-            echo '</div>';
-            echo '<div class="newForumContent">';
-                echo '<strong>'.$this->objLanguage->languageText('mod_worksheet_modelanswer', 'worksheet', 'Model Answer').':</strong><br />';
-                echo nl2br($question['model_answer']);
-            echo '</div>';
-        
-        echo '</div>';
-        
-        $counter++;
-    }
-} else {
-    echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_worksheet_noquestions', 'worksheet', 'There are no questions at present').'</div>';
-}
-echo '</div>';
 
-if ($worksheet['activity_status'] == 'inactive') {
+
     $heading = new htmlHeading();
     $heading->type = 3;
-    $heading->str = $this->objLanguage->languageText('mod_worksheet_addquestion', 'worksheet', 'Add Question');
+    $heading->str = $this->objLanguage->languageText('mod_worksheet_editquestion', 'worksheet', 'Edit Question');
     
     echo $heading->show();
     
     //var_dump($questions);
     
-    $form = new form ('addquestion', $this->uri(array('action'=>'savequestion')));
+    $form = new form ('addquestion', $this->uri(array('action'=>'updatequestion')));
     
     $table = $this->newObject('htmltable', 'htmlelements');
     
@@ -118,6 +76,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     
     $htmlArea = $this->newObject('htmlarea', 'htmlelements');
     $htmlArea->name = 'question';
+    $htmlArea->value = $question['question'];
     
     $table->addCell($htmlArea->show());
     $table->endRow();
@@ -129,6 +88,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     $textarea = new textarea('modelanswer');
     $textarea->extra = ' style="width: 100%"';
     $textarea->rows = 10;
+    $textarea->value = $question['model_answer'];
     
     $table->addCell($textarea->show());
     $table->endRow();
@@ -138,6 +98,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     $table->addCell('<strong>'.$this->objLanguage->languageText('mod_worksheet_questionworth', 'worksheet', 'Question Worth').'</strong>:');
     
     $textinput = new textinput('mark');
+    $textinput->value = $question['question_worth'];
     
     $table->addCell($textinput->show());
     $table->endRow();
@@ -161,7 +122,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     
     $form->addToForm($table->show());
     
-    $hiddenInput = new hiddeninput('worksheet', $worksheet['id']);
+    $hiddenInput = new hiddeninput('id', $question['id']);
     $form->addToForm($hiddenInput->show());
     
     $form->addRule('mark', $this->objLanguage->languageText('mod_worksheet_validation_mark', 'worksheet', 'Mark should be a number'), 'numeric');
@@ -169,7 +130,7 @@ if ($worksheet['activity_status'] == 'inactive') {
     
     echo $form->show();
 
-}
+
 
 echo '<hr />';
 

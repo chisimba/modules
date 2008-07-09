@@ -128,7 +128,7 @@ class worksheet extends controller
      */
     public function isValid($action)
     {
-        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet');
+        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet', 'editquestion');
         
         if (in_array($action, $lecturerActions)) {
             if ($this->objUser->isCourseAdmin()) {
@@ -502,6 +502,77 @@ class worksheet extends controller
         return $this->nextAction('viewstudentworksheet', array('id'=>$resultId['id'], 'message'=>'worksheetmarked'));
     }
     
+    /**
+     * Method to edit a question
+     */
+    private function __editquestion()
+    {
+        $id = $this->getParam('id');
+        $question = $this->objWorksheetQuestions->getQuestion($id);
+        
+        if ($question == FALSE) {
+            return $this->nextAction(NULL);
+        }
+        
+        $worksheet = $this->objWorksheet->getWorksheet($question['worksheet_id']);
+        $numQuestions = $this->objWorksheetQuestions->getNumQuestions($question['worksheet_id']);
+        
+        $this->setVarByRef('question', $question);
+        $this->setVarByRef('worksheet', $worksheet);
+        $this->setVarByRef('id', $worksheet['id']);
+        $this->setVarByRef('numQuestions', $numQuestions);
+        
+        return 'editquestion_tpl.php';
+    }
+    
+    /**
+     * Method to update a question
+     */
+    private function __updatequestion()
+    {
+        //var_dump($_POST);
+        $id = $this->getParam('id');
+        $question = $this->getParam('question');
+        $modelanswer = $this->getParam('modelanswer');
+        $mark = $this->getParam('mark');
+        
+        $result = $this->objWorksheetQuestions->updateQuestion($id, $question, $modelanswer, $mark);
+        
+        if ($result) {
+            $questionInfo = $this->objWorksheetQuestions->getQuestion($id);
+            
+            return $this->nextAction('managequestions', array('id'=>$questionInfo['worksheet_id'], 'message'=>'questionupdated', 'question'=>$id));
+        } else {
+            return $this->nextAction(NULL, array('error'=>'couldnotupdatequestion'));
+        }
+    }
+    
+    /**
+     * Method to delete a question
+     */
+    private function __deletequestion()
+    {
+        //var_dump($_REQUEST);
+        
+        $question = $this->getParam('question');
+        $worksheet = $this->getParam('worksheet');
+        
+        if ($question == '' || $worksheet == '') {
+            return $this->nextAction(NULL, array('error'=>'unabletodeletequestion'));
+        }
+        
+        $questionInfo = $this->objWorksheetQuestions->getQuestion($question);
+        
+        if ($questionInfo == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unabletodeletequestion'));
+        }
+        
+        $this->objWorksheetQuestions->deleteQuestion($question);
+        
+        $this->objWorksheet->updateTotalMark($worksheet);
+        
+        return $this->nextAction('managequestions', array('id'=>$worksheet, 'message'=>'questiondeleted'));
+    }
     
     /*------------- END: Set of methods to replace case selection ------------*/
 }
