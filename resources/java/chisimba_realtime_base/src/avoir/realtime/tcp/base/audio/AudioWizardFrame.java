@@ -222,6 +222,8 @@ public class AudioWizardFrame extends javax.swing.JFrame {
                 }
             };
             t.start();
+         
+            testing = false;
         } else {
             speakerTestButton.setEnabled(true);
             micTestButton.setEnabled(true);
@@ -229,6 +231,8 @@ public class AudioWizardFrame extends javax.swing.JFrame {
             stopButton.setEnabled(false);
             displayWarn("Streaming stopped.Use Talk button to restart");
             micInput.pauseMic();
+          getMicInput().setAudioClipFileName("testing");
+           getMicInput().recordAudioClip();
         }
     }
 
@@ -266,6 +270,10 @@ public class AudioWizardFrame extends javax.swing.JFrame {
         testBuffer.clear();
         micInput.pauseMic();
 
+    }
+
+    public boolean isTesting() {
+        return testing;
     }
 
     private void saveAudio(byte audioData[]) {
@@ -705,11 +713,9 @@ private void micTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void startCapture() {
         try {
-            Runnable runner = new  
+            Runnable runner = new Runnable() {
 
-                  Runnable() {
-
-                    public void run() {
+                public void run() {
                     displayInfo("Capturing audio ...");
 //                    capture();
                 }
