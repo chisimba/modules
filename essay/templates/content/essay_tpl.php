@@ -7,10 +7,20 @@
 /**************** Set Layout template ***************************/
 $this->setLayoutTemplate('essay_layout_tpl.php');
 
-$this->loadclass('htmltable','htmlelements'); 
+$this->loadclass('htmltable','htmlelements');
+$this->loadclass('link','htmlelements');
 
 /**************** Display Page data *****************************/
 
 
 echo $list;
+
+
+if ($objUser->isCourseAdmin()) {
+    $link = new link ($this->uri(NULL, 'essayadmin'));
+    $link->link = $this->objLanguage->languageText('mod_essayadmin_desc', 'essayadmin', 'Essay Management');
+    
+    echo $link->show();
+}
+
 ?>
