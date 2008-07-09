@@ -709,6 +709,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         audioWizardFrame = new AudioWizardFrame(RealtimeBase.this, userName, sessionId, slideServerId, resourcesPath);
         audioWizardFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         audioWizardFrame.setSize(500, 500);
+        audioWizardFrame.setAlwaysOnTop(true);
         audioWizardFrame.setLocationRelativeTo(null);
 
     }
@@ -1115,8 +1116,13 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         } else {
             talkButton.setIcon(micOffIcon);
             audioWizardFrame.stopCapture();
-            audioWizardFrame.getMicInput().record("lastSlide");
-            
+            String filename = "lastSlide" + Constants.getDateTime();
+            if (audioWizardFrame.isTesting()) {
+                filename = "testing";
+            }
+            audioWizardFrame.getMicInput().setAudioClipFileName(filename);
+            audioWizardFrame.getMicInput().recordAudioClip();
+
         }
     }
 }//GEN-LAST:event_talkButtonActionPerformed
