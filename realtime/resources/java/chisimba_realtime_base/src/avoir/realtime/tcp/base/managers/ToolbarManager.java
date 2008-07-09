@@ -120,7 +120,8 @@ public class ToolbarManager extends JToolBar {
                     base.getSessionManager().setSlideIndex(++slideIndex);
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
                     //record audio if any
-                    base.getAudioWizardFrame().getMicInput().record("slide" + (slideIndex));
+                    base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+slideIndex);
+                    base.getAudioWizardFrame().getMicInput().recordAudioClip();
 
                 }
             }
