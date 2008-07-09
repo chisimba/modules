@@ -447,4 +447,14 @@ if(!empty($assignData)){
     $objTable2->endRow();
 }
 echo $objTable2->show();
+
+
+if ($objUser->isCourseAdmin()) {
+    $link = new link ($this->uri(NULL, 'assignmentadmin'));
+    $link->link = $this->objLanguage->languageText('mod_assignmentadmin_name', 'assignmentadmin', 'Assignment Management');
+    
+    echo '<p>'.$link->show().'</p>';
+
+}
+
 ?>
