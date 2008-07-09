@@ -64,7 +64,8 @@ public class AgendaTree extends JPanel {
 
                         base.getSessionManager().updateSlide(index - 1);
                         //record audio if any
-                        base.getAudioWizardFrame().getMicInput().record("slide" + (index));
+                        base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+index);
+                        base.getAudioWizardFrame().getMicInput().recordAudioClip();
                     //} else{
                     //  base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
                     //}
