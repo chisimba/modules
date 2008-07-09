@@ -1,16 +1,57 @@
 <?php
 /**
-* @package worksheet
-* @filesource
-*/
-
+ * 
+* Controller class for the worksheet module.
+*
+* Worksheet provides functionality for lectures to create, edit and delete worksheets and mark
+* answered worksheets submitted by the students in the context.
+*
+* Functionality is provided for students to answer the worksheet and submit it for marking, and
+* view the marked worksheet.
+ * 
+ * PHP version 5
+ * 
+ * This program is free software; you can redistribute it and/or modify 
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation; either version 2 of the License, or 
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the 
+ * Free Software Foundation, Inc., 
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * 
+ * @category  Chisimba
+ * @package   worksheet
+ * @author    Tohir Solomons tsolomons@uwc.ac.za
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ */
+ 
 // security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run']){
-    die("You cannot view this page directly");
+if (!
+/**
+ * The $GLOBALS is an array used to control access to certain constants.
+ * Here it is used to check if the file is opening in engine, if not it
+ * stops the file from running.
+ * 
+ * @global entry point $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ *         
+ */
+$GLOBALS['kewl_entry_point_run'])
+{
+        die("You cannot view this page directly");
 }
-
+// end security check
 
 /**
+* 
 * Controller class for the worksheet module.
 *
 * Worksheet provides functionality for lectures to create, edit and delete worksheets and mark
@@ -19,379 +60,450 @@ if (!$GLOBALS['kewl_entry_point_run']){
 * Functionality is provided for students to answer the worksheet and submit it for marking, and
 * view the marked worksheet.
 *
-* @author Megan Watson
 * @author Tohir Solomons
-* @copyright (c) 2004 UWC
 * @package worksheet
-* @version 0.2
+*
 */
 class worksheet extends controller
 {
+    
     /**
-    * @var string $action The action parameter from the querystring
+    * 
+    * @var string $objConfig String object property for holding the 
+    * configuration object
+    * @access public;
+    * 
     */
-   public $action;
+    public $objConfig;
+    
+    /**
+    * 
+    * @var string $objLanguage String object property for holding the 
+    * language object
+    * @access public
+    * 
+    */
+    public $objLanguage;
+    /**
+    *
+    * @var string $objLog String object property for holding the 
+    * logger object for logging user activity
+    * @access public
+    * 
+    */
+    public $objLog;
 
     /**
-    * Standard constructor method
+    * 
+    * Intialiser for the worksheet controller
+    * @access public
+    * 
     */
     public function init()
     {
-        // Check if the module is registered and redirect if not.
-        // Check if the assignment module is registered and can be linked to.
-        $this->objModules =& $this->newObject('modules','modulecatalogue');
-        if(!$this->objModules->checkIfRegistered('worksheet')){
-            return $this->nextAction('notregistered',array(),'redirect');
-        }
-        $this->assignment = FALSE;
-        //if($this->objModules->checkIfRegistered('Assignment Management', 'assignment')){
-        //    $this->assignment = TRUE;
-        //}
-				
-        $this->action = $this->getParam('action', NULL);
-        $this->objLanguage = &$this->getObject('language', 'language');
-        $this->objWorksheet =& $this->getObject('dbworksheet','worksheet');
-        $this->objWorksheetQuestions =& $this->getObject('dbworksheetquestions','worksheet');
-        $this->objWorksheetAnswers =& $this->getObject('dbworksheetanswers','worksheet');
-        $this->objWorksheetResults =& $this->getObject('dbworksheetresults','worksheet');
-        $this->objDate =& $this->newObject('dateandtime','utilities');
-			
-        // User
-        $this->objUser =& $this->getObject('user', 'security');
-        $this->user = $this->objUser->fullname();
-        $this->userId = $this->objUser->userId();
-
-        $this->objFile =& $this->getObject('upload','filemanager');
-       // $this->objFile->changeTables('tbl_worksheet_filestore','tbl_worksheet_blob');
-
-        // Context Code
-        $this->contextObject =& $this->getObject('dbcontext', 'context');
-        $this->objContentNodes =& $this->getObject('dbcontentnodes', 'context');
-        $this->contextCode = $this->contextObject->getContextCode();
-        $this->contextTitle = $this->contextObject->getTitle();
-
-        if ($this->contextCode == ''){
-            $this->contextCode = 'root';
-            $this->contextTitle = $this->objLanguage->languageText('word_inLobby');
-        }
-
-        $this->setVarByRef('contextCode', $this->contextCode);
-        $this->setVarByRef('contextTitle', $this->contextTitle);
-
-        // Multi Lingualisation
-        $this->setVarByRef('objLanguage', $this->objLanguage);
-			
-        // Log this call if registered
-        if(!$this->objModules->checkIfRegistered('logger', 'logger')){
-            //Get the activity logger class
-            $this->objLog=$this->newObject('logactivity', 'logger');
-            //Log this module call
-            $this->objLog->log();
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objLanguage = $this->getObject('language', 'language');
+        // Create the configuration object
+        $this->objConfig = $this->getObject('config', 'config');
+        //Get the activity logger class
+        $this->objLog=$this->newObject('logactivity', 'logger');
+        //Log this module call
+        $this->objLog->log();
+        
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->contextCode = $this->objContext->getContextCode();
+        
+        $this->objWorksheet = $this->getObject('dbworksheet', 'worksheet');
+        $this->objWorksheetQuestions = $this->getObject('dbworksheetquestions', 'worksheet');
+        $this->objWorksheetAnswers = $this->getObject('dbworksheetanswers', 'worksheet');
+        $this->objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
+        
+        
+    }
+    
+    /**
+     * Method to override permissions check
+     * @param string $action Name of the Action to be run
+     * @return boolean Whether user has permission to access action or not
+     */
+    public function isValid($action)
+    {
+        $lecturerActions = array('add', 'saveworksheet', 'worksheetinfo', 'managequestions', 'savequestion', 'activate', 'updatestatus', 'viewstudentworksheet');
+        
+        if (in_array($action, $lecturerActions)) {
+            if ($this->objUser->isCourseAdmin()) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return TRUE;
         }
     }
-
-
+    
+    
     /**
-    * Standard dispatch method
-    */
-    public function dispatch()
+     * 
+     * The standard dispatch method for the worksheet2 module.
+     * The dispatch method uses methods determined from the action 
+     * parameter of the  querystring and executes the appropriate method, 
+     * returning its appropriate template. This template contains the code 
+     * which renders the module output.
+     * 
+     */
+    public function dispatch($action='home')
     {
-        switch ($this->action) {
-            // Display the start of a worksheet for answering
-            case 'selectforanswer':
-                $qNum=$this->objWorksheetAnswers->countAnswers($this->getParam('id'),$this->userId);
-                $count=$this->objWorksheetQuestions->getNumQuestions($this->getParam('id'));
-                if($count == $qNum){
-                    $qNum = 0;
-                }
-                return $this->answerWorksheet($this->getParam('id'), $qNum);
-
-            // Display the rest of the worksheet for answering
-            case 'question':
-                return $this->answerWorksheet($this->getParam('id'), $this->getParam('qNum'));
-
-            // Save an answer
-            case 'saveanswer':
-                return $this->saveAnswer();
-
-            // change the editor for the question
-            case 'changeeditor':
-                $editor = $this->getParam('neweditor');
-                $worksheet_id = $this->getParam('worksheet_id', '');
-                $qNum = $this->getParam('qNum', '')-4;
-                if($qNum < 0){
-                    $qNum = 0;
-                }
-                $this->addAnswers($worksheet_id);
-                return $this->nextAction('question', array('id'=>$worksheet_id, 'qNum'=>$qNum, 'editor'=>$editor));
-
-            // Display marked worksheet for viewing by the student
-            case 'viewmarked':
-                $action = $this->getParam('num');
-                if($action == 'exit'){
-                    return $this->nextAction('');
-                }
-                return $this->viewMarked();
-
-            // Display image
-            // Option: use filepreview,filemanager 
-            case 'viewimage':
-                $fileId = $this->getParam('fileid', NULL);
-                return $this->objFile->outputFile2($fileId);
-
-            default:
-                return $this->worksheetHome();
-        }//switch
-    } // dispatch
-
-    /**
-    * Method to display a list of worksheets in context to the user.
-    * @return The template for the worksheet home page.
-    */
-    public function worksheetHome()
-    {
-        $ar = $this->objWorksheet->getWorksheetsInContext($this->contextCode);
-		//echo '<pre />';		
-		//print_r($ar);
-		//die ();
-        if(!empty($ar)){
-            foreach($ar as $key=>$row){
-                $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-                $sql .= "id = '".$row['chapter']."'";
-                $nodes = $this->objContentNodes->getArray($sql);
-
-                if(!empty($nodes)){
-                    $ar[$key]['node'] = $nodes[0]['title'];
-                }else{
-                    $ar[$key]['node'] = '';
-                }
-                $ar[$key]['date'] = $this->formatDate($row['closing_date']);
-            }
-
-            $data=$this->objWorksheetResults->checkSubmit($this->userId);
-            if(!empty($data)){
-                foreach($data as $line){
-                    foreach($ar as $key=>$row){
-                        if($row['id']==$line['worksheet_id']){
-                            $ar[$key]['completed']=TRUE;
-                        }else{
-                            $ar[$key]['completed']=FALSE;
-                        }
-                    }
-                }
-            }
+        if ($this->contextCode == '') {
+            return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
-        $this->setVarByRef('ar', $ar);
-        return 'worksheet_student_tpl.php';
-    }
-
-    /**
-    * Method to display worksheet questions for answering.
-    * $id The id of the current worksheet.
-    * $qNum The number of the current question in the worksheet.
-    * @return The template to answer a worksheet.
-    */
-    public function answerWorksheet($id,$qNum)
-    {
-        if(empty($qNum)){
-            $qNum=0;
-        }
-        $worksheet =& $this->objWorksheet->getRow('id', $id);
-        $worksheet['qNum']=$qNum;
-        if ($worksheet == '') {
+        
+        if (!$this->isValid($action)) {
             return $this->nextAction(NULL);
         }
-        $this->setVarByRef('worksheet',$worksheet);
-
-        $question = $this->objWorksheetQuestions->getQuestions($id,$qNum);
-
-        $count = $this->objWorksheetQuestions->getNumQuestions($worksheet['id']);
-        $this->setVarByRef('count',$count);
-
-        // Get answered questions
-        foreach($question as $key=>$val){
-            if($this->objWorksheetAnswers->answerExists($val['id'],$this->userId)){
-                $result=$this->objWorksheetAnswers->getAnswer($val['id'],$this->userId);
-                $question[$key]['answer']=$result[0]['answer'];
-            }else{
-                $question[$key]['answer']='';
-            }
-        }
-        $this->setVarByRef('question', $question);
-        return 'answer_worksheet_tpl.php';
+        
+        $this->setLayoutTemplate('context_layout_tpl.php');
+        
+        
+        /*
+        * Convert the action into a method (alternative to 
+        * using case selections)
+        */
+        $method = $this->__getMethod($action);
+        /*
+        * Return the template determined by the method resulting 
+        * from action
+        */
+        return $this->$method();
     }
-
+    
     /**
-    * Method to insert Students answer(s) in database.
-    * @param string $worksheet_id The id of the current worksheet.
-    * @return
+    * 
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action 
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    * 
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    * 
     */
-    public function addAnswers($worksheet_id)
+    function __validAction(& $action)
     {
-        // Insert answers
-        $fields = array(); $last = FALSE;
-        $num = $this->getParam('num', '');
-
-        // Count back from the last entered answer till find a non empty answer
-        for($i = $num-1; $i >= 0; $i--){
-            $postAnswer = $this->getParam('answer'.$i, '');
-            $fields[$i]['question_id'] = $this->getParam('question'.$i, '');
-            $fields[$i]['student_id'] = $this->userId;
-            $fields[$i]['dateAnswered'] = date('Y-m-d H:i:s');
-            $fields[$i]['answer'] = $postAnswer;
+        if (method_exists($this, "__".$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
-        $this->objWorksheetAnswers->insertAnswer($fields);
-
-        // Save the date updated to the results table. $result_id = FALSE if it doesn't exist.
-        $result_id = $this->objWorksheetResults->getId($this->userId, $worksheet_id);
-        $fields = array();
-        $fields['worksheet_id'] = $worksheet_id;
-        $fields['completed'] = 'N';
-        $fields['userId'] = $this->userId;
-        $fields['last_modified'] = date('Y-m-d H:i:s');
-
-        // Set worksheet as completed if student has submitted
-        $postSave = $this->getParam('save', NULL);
-        $postSubmit = $this->getParam('submitAns', NULL);
-        if(isset($postSubmit)){
-            $fields['completed']='Y';
-        }
-        $this->objWorksheetResults->addResult($fields,$result_id);
     }
-
+    
     /**
-    * Method to insert Students answer(s) in database.
-    * @return The next action: question or default.
+    * 
+    * Method to convert the action parameter into the name of 
+    * a method of this class.
+    * 
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return stromg the name of the method
+    * 
     */
-    public function saveAnswer()
+    function __getMethod(& $action)
     {
-        $qNum = $this->getParam('qNum', '');
-        $editor = $this->getParam('editor', '');
-        $worksheet_id = $this->getParam('worksheet_id', '');
-        $postSave = $this->getParam('save', NULL);
-        $postSubmit = $this->getParam('submitAns', NULL);
-
-        $this->addAnswers($worksheet_id);
-
-        // If student used navigation at bottom of page
-        if(!isset($postSave) && !isset($postSubmit)){
-            return $this->nextAction('question', array('id'=>$worksheet_id, 'qNum'=>$qNum, 'editor'=>$editor));
+        if ($this->__validAction($action)) {
+            return "__" . $action;
+        } else {
+            return "__home";
         }
-
-        // If student clicked save and continue button
-        $continue = $this->objLanguage->languageText('mod_worksheet_continue','worksheet');
-        if(isset($postSave) && !(strpos($postSave, $continue) === FALSE)){
-            return $this->nextAction('question', array('id'=>$worksheet_id, 'qNum'=>$qNum, 'editor'=>$editor));
-        }
-        return $this->nextAction('');
     }
-
+    
+    
+    
+    /*------------- BEGIN: Set of methods to replace case selection ------------*/
+    
+    
+    
     /**
-    * Method to display a list of links to other questions in the worksheet.
-    * @param string $current The current question.
-    * @param string $total The total number of questions in the worksheet.
-    * @param string $worksheet_id The id of the worksheet being answered.
-    * @return The links.
+    * Method to show the worksheet home page
+    * @access private
     */
-    public function generateLinks($current, $total, $num=4)
+    private function __home()
     {
-        $this->loadClass('link', 'htmlelements');
-        $output='';
-        if($current==0){
-            $current=1;
-        }
-        $rem=($current-1)%$num;
-
-        if($rem!=0){
-            if($rem==1){
-                $link = '1';
-            }else{
-                $link = "1 - $rem";
-            }
-            $objLink = new link("javascript:submitform('0');");
-            $objLink->link=$link;
-            $output .= $objLink->show();
-        }
-
-        for($i=$rem+1; $i<=$total; $i=$i+$num){
-            $end=$i+$num-1;
-            if($end > $total){
-                $link = $i.'&nbsp;-&nbsp;'.$total;
-            }else{
-                if($i==$end){
-                    $link = $i;
-                }else{
-                    $link = $i.'&nbsp;-&nbsp;'.$end;
-                }
-            }
-            if($i==$current){
-                if($i==1){
-                    $output .=  $link;
-                }else{
-                    $output .= '&nbsp;&nbsp;|&nbsp;&nbsp;'.$link;
-                }
-            }else{
-                $j=$i-1;
-                $objLink = new link("javascript:submitform('$j');");
-                $objLink->link=$link;
-                if($i==1){
-                    $output .= $objLink->show();
-                }else{
-                    $output .= '&nbsp;&nbsp;|&nbsp;&nbsp;'.$objLink->show();
-                }
-            }
-        }
-        return $output;
+        $worksheets = $this->objWorksheet->getWorksheetsInContext($this->contextCode);
+        $this->setVarByRef('worksheets', $worksheets);
+        
+        return 'home_tpl.php';
     }
-
+    
     /**
-    * Method to display the marked worksheet to the student.
-    * @return The template to view a marked worksheet.
+    * Method to add a worksheet
+    * @access private
     */
-    public function viewMarked()
+    private function __add()
     {
-        $worksheet_id = $this->getParam('worksheet_id');
-        $num = $this->getParam('num');
-        $student_id = $this->userId;
-
-        if(empty($num)){
-            $num=0;
-        }
-        $worksheet = $this->objWorksheet->getWorksheet($worksheet_id,
-        'id, name, chapter, percentage, total_mark');
-
-        $sql = "SELECT title FROM tbl_context_nodes WHERE ";
-        $sql .= "id = '$worksheet_id'";
-        $nodes = $this->objContentNodes->getArray($sql);
-
-			if(isset($nodes[0]['title'])){
-        		$worksheet[0]['node'] = $nodes[0]['title'];
-        }else{
-        		$worksheet[0]['node'] = '';
-        }
-
-        $count = $this->objWorksheetQuestions->getNumQuestions($worksheet_id);
-        $worksheet[0]['count']=$count;
-
-        $data = $this->objWorksheetAnswers->getAnswers($worksheet_id, $student_id,
-        $num, 5);
-
-        $this->setVarByRef('worksheet',$worksheet[0]);
-        $this->setVarByRef('data',$data);
-
-        return 'view_marked_tpl.php';
+        $this->setVar('mode', 'add');
+        
+        return 'step1_tpl.php';
     }
-
+    
     /**
-    * Method to take a datetime string and reformat it as text.
-    * @param string $date The date in datetime format.
-    * @return string $ret The formatted date.
+    * Method to save a worksheet
+    * @access private
     */
-    public function formatDate($date)
+    private function __saveworksheet()
     {
-        $ret = $this->objDate->formatDate($date);
-        return $ret;
+        //var_dump($_POST);
+        
+        $title = $this->getParam('title');
+        $description = $this->getParam('description');
+        $date = $this->getParam('calendardate');
+        $time = $this->getParam('time');
+        $percentage = $this->getParam('percentage');
+        
+        $activity_status = 'inactive';
+        $closing_date = $date.' '.$time;
+        
+        $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description);
+        
+        return $this->nextAction('managequestions', array('id'=>$id));
     }
+    
+    /**
+    * Method to show the worksheet information, students who have submitted, etc.
+    * @access private
+    */
+    private function __worksheetinfo()
+    {
+        $this->setVar('mode', 'edit');
+        
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        $this->setVarByRef('id', $id);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($id);
+        $this->setVarByRef('questions', $questions);
+        
+        $worksheetResults = $this->objWorksheetResults->getResults($id);
+        $this->setVarByRef('worksheetResults', $worksheetResults);
+        
+        return 'worksheetinfo_tpl.php';
+    }
+    
+    /**
+    * Method to add/remove questions to the worksheet
+    * @access private
+    */
+    private function __managequestions()
+    {
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL);
+        }
+        
+        
+        if ($worksheet['context'] != $this->contextCode) {
+            return $this->nextAction(NULL);
+        }
+        
+        $this->setVarByRef('id', $id);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($id);
+        $this->setVarByRef('questions', $questions);
+        
+        return 'step2_tpl.php';
+    }
+    
+    /**
+    * Method to save a question
+    * @access private
+    */
+    private function __savequestion()
+    {
+        
+        $question        = $this->getParam('question');
+        $modelanswer     = $this->getParam('modelanswer');
+        $question_worth  = $this->getParam('mark');
+        $worksheet_id    = $this->getParam('worksheet');
+        
+        $result = $this->objWorksheetQuestions->insertSingle($worksheet_id, $question, $modelanswer, $question_worth);
+        
+        return $this->nextAction('managequestions', array('msg'=>'questionadded', 'id'=>$worksheet_id, 'question'=>$result));
+    }
+    
+    /**
+    * Method to activate a worksheet - change activity status
+    * @access private
+    */
+    private function __activate()
+    {
+        $this->setVar('mode', 'edit');
+        
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        $this->setVarByRef('id', $id);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($id);
+        $this->setVarByRef('questions', $questions);
+        
+        return 'step3_tpl.php';
+    }
+    
+    /**
+    * Method to update a worksheet's activity status
+    * @access private
+    */
+    private function __updatestatus()
+    {
+        $id = $this->getParam('id');
+        $activityStatus = $this->getParam('activity_status');
+        $closingDate = $this->getParam('calendardate').' '.$this->getParam('time');
+        
+        $result = $this->objWorksheet->updateStatus($id, $activityStatus, $closingDate);
+        
+        if ($result) {
+            return $this->nextAction(NULL, array('message'=>'statusupdate', 'id'=>$id));
+        } else {
+            return $this->nextAction(NULL, array('error'=>'unabletofindworksheet'));
+        }
+    }
+    
+    /**
+    * Method to view a worksheet - student view
+    * @access private
+    */
+    private function __viewworksheet()
+    {
+        
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        $this->setVarByRef('id', $id);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($id);
+        $this->setVarByRef('questions', $questions);
+        
+        $worksheetResult = $this->objWorksheetResults->getWorksheetResult($this->objUser->userId(), $id);
+        
+        if ($worksheet['activity_status'] == 'open' && !$worksheetResult) {
+            $this->setLayoutTemplate(NULL);
+            $this->setVar('pageSuppressToolbar', TRUE);
+            $this->setVar('pageSuppressBanner', TRUE);
+            $this->setVar('pageSuppressSearch', TRUE);
+            $this->setVar('suppressFooter', TRUE);
+            return 'answerworksheet_tpl.php';
+        } else {
+            
+            $this->setVarByRef('worksheetResult', $worksheetResult);
+            
+            return 'viewworksheet_tpl.php';
+        }
+    }
+    
+    /**
+    * Method to save the answers a student submits
+    * @access private
+    */
+    private function __saveanswers()
+    {
+        
+        $id = $this->getParam('id');
+        
+        $worksheet = $this->objWorksheet->getWorksheet($id);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        if ($this->getParam('user') != $this->objUser->userId()) {
+            return $this->nextAction(NULL, array('error'=>'userswitched'));
+        }
+        
+        $this->objWorksheetAnswers->saveAnswers($id, $this->objUser->userId());
+        
+        if (isset($_POST['saveandclose'])) {
+            
+            $this->objWorksheetResults->setWorksheetCompleted($this->objUser->userId(), $id);
+            
+            return $this->nextAction(NULL, array('message'=>'worksheetsaved', 'id'=>$id));
+        } else {
+            return $this->nextAction('viewworksheet', array('message'=>'worksheetsaved', 'id'=>$id));
+        }
+    }
+    
+    /**
+    * Method to view the answers a student submitted
+    * @access private
+    */
+    private function __viewstudentworksheet()
+    {
+        
+        $resultId = $this->getParam('id');
+        
+        $result = $this->objWorksheetResults->getRow('id', $resultId);
+        
+        if ($result == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'resultnotavailable'));
+        }
+        
+        $worksheet = $this->objWorksheet->getWorksheet($result['worksheet_id']);
+        
+        if ($worksheet == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownworksheet'));
+        }
+        
+        $this->setVarByRef('id', $result['worksheet_id']);
+        $this->setVarByRef('worksheet', $worksheet);
+        
+        $questions = $this->objWorksheetQuestions->getQuestions($result['worksheet_id']);
+        $this->setVarByRef('questions', $questions);
+        $this->setVarByRef('worksheetResult', $result);
+        
+        return 'viewstudentworksheet_tpl.php';
+    }
+    
+    /**
+    * Method to save a lecturer marking a student worksheet
+    * @access private
+    */
+    private function __savestudentmark()
+    {
+        //var_dump($_POST);
+        
+        $student = $this->getParam('student');
+        $worksheet = $this->getParam('worksheet');
+        
+        $this->objWorksheetAnswers->saveMarks($student, $worksheet, $this->objUser->userId());
+        
+        $resultId = $this->objWorksheetResults->getWorksheetResult($student, $worksheet);
+        
+        return $this->nextAction('viewstudentworksheet', array('id'=>$resultId['id'], 'message'=>'worksheetmarked'));
+    }
+    
+    
+    /*------------- END: Set of methods to replace case selection ------------*/
+}
 
-} // end of class
 ?>

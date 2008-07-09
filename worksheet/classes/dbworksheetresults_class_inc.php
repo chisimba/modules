@@ -28,7 +28,41 @@ class dbworksheetresults extends dbtable
         parent::init('tbl_worksheet_results');
         $this->table='tbl_worksheet_results';
     }
-
+    
+    
+    public function setWorksheetCompleted($userId, $worksheet)
+    {
+        return $this->insert(array(
+                'worksheet_id' => $worksheet,
+                'completed' => 'Y',
+                'userid' => $userId,
+                'last_modified' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+            ));
+    }
+    
+    public function checkWorksheetCompleted($userId, $worksheet)
+    {
+        $result = $this->getRecordCount(" WHERE worksheet_id='{$worksheet}' AND userid='{$userId}' AND completed='Y' LIMIT 1");
+        
+        if (count($result) == 1) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    public function getWorksheetResult($userId, $worksheet)
+    {
+        $result = $this->getAll(" WHERE worksheet_id='{$worksheet}' AND userid='{$userId}' AND completed='Y' LIMIT 1");
+        
+        if (count($result) == 1) {
+            return $result[0];
+        } else {
+            return FALSE;
+        }
+    }
+    
     /**
     * Method to insert a students results into the database.
     * @param array $fields The values to be inserted.

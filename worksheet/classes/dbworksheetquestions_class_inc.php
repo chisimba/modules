@@ -29,52 +29,10 @@ class dbworksheetquestions extends dbTable
     {
         parent::init('tbl_worksheet_questions');
         $this->table='tbl_worksheet_questions';
+        
+        $this->objUser = $this->getObject('user', 'security');
     }
 
-    /**
-    * Save method for inserting or updating a record in the table.
-    * @param string $mode Edit if mode is edit, else insert
-    * @param string $userId The id of the current user.
-    * @return
-    */
-    public function saveRecord($mode, $userId, $imageFile=NULL)
-    {
-        $question = string_replace('<p>','','question');
-        $question .= string_replace('</p>','','question');
-        $id=addslashes(TRIM($this->getParam('id', '')));
-        $worksheet_id = addslashes(TRIM($this->getParam('worksheet_id', '')));        
-        $question = addslashes(TRIM($this->getParam('question', '')));        
-        $answer = $this->getParam('answer', '');
-        $answer = string_replace('<p>','','answer');
-        $answer = string_replace('</p>','',$answer);
-        $question_worth = addslashes(TRIM($this->getParam('worth', '')));
-        $question_order = addslashes(TRIM($this->getParam('order', '')));
-        $dateLastUpdated = date('Y-m-d H:i:s');
-
-        $array = array(
-        'question' => $question,
-        'model_answer' => $answer,
-        'question_worth' => $question_worth,
-        'userid' => $userId,
-        'datelastupdated' => $dateLastUpdated);
-
-        if(!is_null($imageFile) && !empty($imageFile)){
-            $array['imageid'] = $imageFile['id'];
-            $array['imagename'] = $imageFile['name'];
-        }
-
-        // if edit use update
-        if ($mode=="edit") {
-            $this->update("id", $id, $array);
-
-        }
-        if ($mode=="add") {
-            $array['worksheet_id'] = $worksheet_id;
-            $array['question_order'] = $question_order;
-            $this->insert($array);
-
-        }//if
-    }//function
 
     /**
     * Method to insert a single question into the database.
@@ -87,21 +45,43 @@ class dbworksheetquestions extends dbTable
     * @param string $dateLastUpdated The time of editing
     * @return
     */
-    public function insertSingle($worksheet_id, $question, $answer, $question_worth, $question_order, $userId, $dateLastUpdated, $imageId='', $imageName='')
+    public function insertSingle($worksheet_id, $question, $answer, $question_worth)
     {
-    		
-        $id = $this->insert(array(
+        $result = $this->insert(array(
                 'worksheet_id' => $worksheet_id,
                 'question' => $question,
                 'model_answer' => $answer,
                 'question_worth' => $question_worth,
-                'question_order' => $question_order,
-                'userid' => $userId,
-                'datelastupdated' => $dateLastUpdated,
-                'updated' => date('Y-m-d H:i:s'),
-                'imageid' => $imageId,
-                'imagename' => $imageName));
-        return $id;
+                'question_order' => $this->getLastOrder($worksheet_id)+1,
+                'userid' => $this->objUser->userId(),
+                'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+            ));
+        
+        if ($result != FALSE) {
+            $objWorksheet = $this->getObject('dbworksheet');
+            $objWorksheet->updateTotalMark($worksheet_id);
+        }
+        
+        return $result;
+    }
+    
+    /**
+    * Method to get the number of the last question in the worksheet.
+    * @param string $worksheet_id The id of the current worksheet.
+    * @return string $lastOrder The number of the last question in the worksheet.
+    */
+    public function getLastOrder($worksheet_id)
+    {
+        $sql = "SELECT question_order FROM tbl_worksheet_questions WHERE worksheet_id='{$worksheet_id}' ORDER BY question_order DESC LIMIT 1";
+        
+        $result = $this->getArray($sql);
+        
+        if (count($result) == 0) {
+            return 0;
+        } else {
+            return $result[0]['question_order'];
+        }
     }
 
     /**
@@ -138,27 +118,8 @@ class dbworksheetquestions extends dbTable
         $this->delete('id',$id);
     }
 
-    /**
-    * Method to get the number of the last question in the worksheet.
-    * @param string $worksheet_id The id of the current worksheet.
-    * @return string $lastOrder The number of the last question in the worksheet.
-    */
-    public function getLastOrder($worksheet_id)
-    {
-        $sql = 'SELECT question_order FROM  tbl_worksheet_questions
-        WHERE worksheet_id = "'.$worksheet_id.'"
-        ORDER BY question_order DESC LIMIT 1';
 
-        $results = $this->getArray($sql);
 
-        if (count($results) == 0) {
-            $lastOrder = 1;
-        } else {
-            $lastOrder = $results[0]['question_order']+1;
-        }
-
-        return $lastOrder;
-    }
 
     /**
     * Method to get the number of questions in the worksheet.

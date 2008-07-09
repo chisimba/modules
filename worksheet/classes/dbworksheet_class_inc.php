@@ -28,6 +28,8 @@ class dbworksheet extends dbTable
     {
         parent::init('tbl_worksheet');
         $this->table = 'tbl_worksheet';
+        
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -37,23 +39,32 @@ class dbworksheet extends dbTable
     */
     public function getWorksheetsInContext($context)
     {
-    	
-       $sql = 'SELECT ws.id, ws.context, ws.chapter, ws.name, ws.activity_status, ws.percentage, ws.total_mark, ';
-       $sql .='ws.closing_date, ws. description, count(quest.worksheet_id) AS questions ';
+        
+        $sql = 'SELECT ws.id, ws.context, ws.chapter, ws.name, ws.activity_status, ws.percentage, ws.total_mark, ';
+        $sql .='ws.closing_date, ws. description, count(quest.worksheet_id) AS questions ';
         $sql .= 'FROM tbl_worksheet AS ws ';
         $sql .= 'LEFT JOIN tbl_worksheet_questions AS quest ON (quest.worksheet_id = ws.id) ';
         $sql .= "WHERE ws.context='{$context}' ";
         $sql .= "GROUP BY quest.worksheet_id, ws.activity_status, ws.context, ws.name, ws.id";
-		
-		/*Removing left joins
-		  $sql = 'SELECT ws.*, count(quest.worksheet_id) AS questions ';
-        $sql .= 'FROM tbl_worksheet AS ws, tbl_worksheet_questions AS quest ';
-        $sql .= "WHERE ws.context='{$context}' AND quest.worksheet_id = ws.id";
-        $sql .=" GROUP BY ws.id ORDER BY chapter";
-		 //end of modification 
-		 */
+        
         $result = $this->getArray($sql);
         return $result;
+    }
+    
+    public function getStatusText($status)
+    {
+        $this->objLanguage = $this->getObject('language', 'language');
+        switch ($status)
+        {
+            case 'inactive':
+                return $this->objLanguage->languageText('mod_worksheet_activityinactive', 'worksheet', 'Not Active');
+            case 'open':
+                return $this->objLanguage->languageText('mod_worksheet_activityopen', 'worksheet', 'Open for Entry');
+            case 'closed':
+                return $this->objLanguage->languageText('mod_worksheet_activityclosed', 'worksheet', 'Closed for Marking');
+            case 'marked':
+                return $this->objLanguage->languageText('mod_worksheet_activitymarked', 'worksheet', 'Marked and Viewable');
+        }
     }
 
     /**
@@ -91,11 +102,11 @@ class dbworksheet extends dbTable
     */
     public function getWorksheet($id,$fields='*')
     {
-        $sql = "SELECT $fields FROM ".$this->table." WHERE id='$id'";
+        $sql = "SELECT $fields FROM ".$this->table." WHERE id='$id' LIMIT 1";
         $data = $this->getArray($sql);
 
         if($data){
-            return $data;
+            return $data[0];
         }
         return FALSE;
     }
@@ -135,7 +146,7 @@ class dbworksheet extends dbTable
     * @param string $lastModified The time of creation.
     * @return
     */
-    public function insertWorkSheet($context, $chapter, $worksheet_name, $activity_status, $percentage, $closing_date, $description, $userId, $lastModified)
+    public function insertWorkSheet($context, $chapter, $worksheet_name, $activity_status, $percentage, $closing_date, $description)
     {
         $id = $this->insert(array(
                 'context' => $context,
@@ -145,8 +156,8 @@ class dbworksheet extends dbTable
                 'percentage' => $percentage,
                 'closing_date' => $closing_date,
                 'description' => $description,
-                'userid' => $userId,
-                'last_modified' => $lastModified));
+                'userid' => $this->objUser->userId(),
+                'last_modified' => strftime('%Y-%m-%d %H:%M:%S', mktime())));
         return $id;
     }
 
@@ -184,7 +195,7 @@ class dbworksheet extends dbTable
     * @param bool $new If TRUE ? add $total to total_mark : replace total_mark with $total
     * @return
     */
-    public function setTotal($id, $total, $new)
+    public function setTotal($id, $total, $new=TRUE)
     {
         if($new){
             $sql="SELECT total_mark from tbl_worksheet WHERE id='$id'";
@@ -192,8 +203,29 @@ class dbworksheet extends dbTable
             $total=$total+$rows[0]['total_mark'];
         }
 
-        $this->update("id", $id, array(
+        return $this->update("id", $id, array(
                 'total_mark' => $total));
     }
+    
+    public function updateTotalMark($id)
+    {
+        $worksheetQuestions = $this->getObject('dbworksheetquestions');
+        $questions = $worksheetQuestions->getQuestions($id, 0, FALSE);
+        
+        $total = 0;
+        
+        foreach ($questions as $question)
+        {
+            $total += $question['question_worth'];
+        }
+        
+        return $this->setTotal($id, $total, FALSE);
+    }
+    
+    public function updateStatus($id, $status, $closingDate)
+    {
+        return $this->update('id', $id, array('activity_status'=>$status, 'closing_date'=>$closingDate));
+    }
+    
 } //end of class
 ?>

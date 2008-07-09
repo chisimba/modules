@@ -29,22 +29,64 @@ class dbworksheetanswers extends dbTable
         parent::init('tbl_worksheet_answers');
         $this->table='tbl_worksheet_answers';
     }
-
-    /**
-    * Method to insert or update a students answers into the database
-    * @param array $answers The students answers to the worksheet, maximum of 4
-    * @return
-    */
-    public function insertAnswer($answers)
+    
+    
+    public function saveAnswers($worksheetId, $userId)
     {
-        foreach($answers as $answer){
-            $id=$this->answerExists($answer['question_id'], $answer['student_id']);
-            if(!$id){
-                $this->insert($answer);
-            }else{
-                $this->update('id',$id,$answer);
+        $objWorksheetQuestion = $this->getObject('dbworksheetquestions');
+        
+        $questions = $objWorksheetQuestion->getQuestions($worksheetId, 0, FALSE);
+        
+        foreach ($questions as $question)
+        {
+            $answer = $this->getParam($question['id']);
+            
+            $id = $this->answerExists($question['id'], $userId);
+            
+            if ($id == FALSE) {
+                $this->insert(array(
+                        'question_id' => $question['id'],
+                        'student_id' => $userId,
+                        'dateanswered' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                        'answer' => $answer,
+                        'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                    ));
+            } else {
+                $this->update('id', $id, array(
+                        'question_id' => $question['id'],
+                        'student_id' => $userId,
+                        'dateanswered' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                        'answer' => $answer,
+                        'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                    ));
             }
         }
+    }
+    
+    public function saveMarks($student, $worksheet, $lecturer)
+    {
+        $studentAnswers = $this->getStudentAnswers($worksheet, $student);
+        
+        $finalMark = 0;
+        
+        foreach ($studentAnswers as $answer)
+        {
+            $result = $this->update('id', $answer['id'], array(
+                'mark' => $this->getParam($answer['id'], 0),
+                'comments' => $this->getParam('comment_'.$answer['id']),
+                'lecturer_id' => $lecturer,
+                'datemarked' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+            ));
+            if ($result) {
+                $finalMark += $this->getParam($answer['id'], 0);
+            }
+        }
+        
+        $objWorksheetResults = $this->getObject('dbworksheetresults', 'worksheet');
+        $resultId = $objWorksheetResults->getWorksheetResult($student, $worksheet);
+        
+        return $objWorksheetResults->addResult(array('mark'=>$finalMark), $resultId['id']);
+        
     }
 
     /**
@@ -88,21 +130,15 @@ class dbworksheetanswers extends dbTable
     * @param string $student_id The id of the student answering the worksheet.
     * @return array $data The details of the last marked answer.
     */
-    public function getMarkedAnswer($worksheet_id, $student_id)
+    public function getStudentAnswers($worksheet_id, $student_id)
     {
-        $sql = 'SELECT * FROM '.$this->table."
+        $sql = 'SELECT '.$this->table.'.* FROM '.$this->table."
         INNER JOIN tbl_worksheet_questions ON (tbl_worksheet_questions.worksheet_id='$worksheet_id'
         AND ".$this->table.".question_id = tbl_worksheet_questions.id)
         WHERE ".$this->table.".student_id='$student_id'
-        AND ".$this->table.".datemarked!=0
-        ORDER BY tbl_worksheet_questions.question_order DESC LIMIT 1";
-
-        $data=$this->getArray($sql);
-
-        if($data){
-            return $data;
-        }
-        return FALSE;
+        ORDER BY tbl_worksheet_questions.question_order";
+        
+        return $this->getArray($sql);
     }
 
     /**
@@ -141,14 +177,15 @@ class dbworksheetanswers extends dbTable
     public function getAnswer($question_id, $student_id)
     {
         $sql = 'SELECT * FROM '.$this->table."
-        WHERE student_id='$student_id' AND question_id='$question_id'";
+        WHERE student_id='$student_id' AND question_id='$question_id' LIMIT 1";
 
         $data=$this->getArray($sql);
 
-        if($data){
-            return $data;
+        if(count($data) > 0){
+            return $data[0];
+        } else {
+            return FALSE;
         }
-        return FALSE;
     }
 
     /**
