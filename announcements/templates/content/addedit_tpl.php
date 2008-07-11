@@ -167,5 +167,5 @@ $addLink->link = 'Post New Announcement';
 echo $addLink->show();
 
 
-var_dump($lecturerContext);
+
 ?>
