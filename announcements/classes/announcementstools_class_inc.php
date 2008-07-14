@@ -107,7 +107,7 @@ class announcementsTools extends object
     public function getQuickAddBlock()
     {
     
-        $quickpostBlock= $this->objAnnouncements->showQuickPost();
+//        $quickpostBlock= $this->objAnnouncements->showQuickPost();
 
         return  $quickpostBlock.'<br />';
     }
