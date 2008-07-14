@@ -59,7 +59,7 @@ public class MenuManager implements ActionListener {
             base.showFilterFrame();
         }
         if (e.getActionCommand().equals("audiosetup")) {
-            MenuManager.this.base.showOptionsFrame();
+            MenuManager.this.base.showAudioWizardFrame();
         }
         if (e.getActionCommand().equals("about")) {
             JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 0.1" +
