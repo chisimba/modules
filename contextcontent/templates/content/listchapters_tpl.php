@@ -112,9 +112,10 @@ foreach ($chapters as $chapter)
         
         $chapterLink = new link($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
         $chapterLink->link = $chapter['chaptertitle'];
+        $chapterLink->name = $chapter['chapterid'];
         
         if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-            $content = '<h1>'.$chapter['chaptertitle'];
+            $content = '<h1>'."<a name='{$chapter['chapterid']}' style='text-decoration:none;color:inherit'>{$chapter['chaptertitle']}</a>";
         } else {
             $content = '<h1>'.$chapterLink->show();
         }
@@ -232,7 +233,7 @@ $chapterList .= '</div>';
 if (count($chapters) > 1) {
     $form->addToForm($dropdown->show());
 
-    $button = new button ('', 'Go');
+    $button = new button ('', $this->objLanguage->languageText('word_go'));
     $button->setToSubmit();
     
     if ($notVisibleCounter == $addedCounter) {

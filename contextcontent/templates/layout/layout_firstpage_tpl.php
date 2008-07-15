@@ -55,13 +55,17 @@ if (count($chapters) > 0) {
         }
         
         if ($showChapter) {
+            $bookmarkLink = new link("#{$chapter['chapterid']}");
+            $bookmarkLink->link = "->";
+            $bookmarkLink->title = "Scroll to Chapter";
             if ($chapter['pagecount'] == 0) {
-                $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'].'</li>';
+                $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
             } else {
                 $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
                 $link->link = $chapter['chaptertitle'];
-                $content .= '<li>'.$link->show().'</li>';
+                $content .= '<li>'.$link->show();
             }
+            $content .= " ".$bookmarkLink->show().'</li>';
         }
     }
     
