@@ -47,7 +47,7 @@ if ($this->isValid('movepageup')) {
     $middle .= '<br />';
     
     if ($isFirstPageOnLevel) {
-        $middle .= '<span style="text-decoration: line-through;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
+        $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_isfirstpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent').'</span>';
     } else {
         $link = new link($this->uri(array('action'=>'movepageup', 'id'=>$page['id'])));
         $link->link = $this->objLanguage->languageText('mod_contextcontent_movepageup','contextcontent');
@@ -57,7 +57,7 @@ if ($this->isValid('movepageup')) {
     $middle .= ' / ';
     
     if ($isLastPageOnLevel) {
-        $middle .= '<span style="text-decoration: line-through;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
+        $middle .= '<span style="color:grey;" title="'.$this->objLanguage->languageText('mod_contextcontent_islastpageonlevel','contextcontent').'">'.$this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent').'</span>';
     } else {
         $link = new link($this->uri(array('action'=>'movepagedown', 'id'=>$page['id'])));
         $link->link = $this->objLanguage->languageText('mod_contextcontent_movepagedown','contextcontent');

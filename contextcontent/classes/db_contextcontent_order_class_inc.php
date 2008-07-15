@@ -547,13 +547,15 @@ class db_contextcontent_order extends dbtable
         $results = $this->getArray($sql);
         
         if (count($results) == 0) {
-            return '';
+            $page = $this->getArray("SELECT chaptertitle FROM tbl_contextcontent_chaptercontent WHERE chapterid = '$chapter'");
+            $link = new link ($this->uri(array("action"=>"home"), $module)."#$chapter");
+            $link->link = '&#171; '.'Back to Chapter: '.htmlentities($page[0]['chaptertitle']);
         } else {
             $page = $results[0];
             $link = new link ($this->uri(array('action'=>'viewpage', 'id'=>$page['id']), $module));
             $link->link = '&#171; '.'Previous Page: '.htmlentities($page['menutitle']);
-            return $link->show();
         }
+        return $link->show();
     }
     
     /**
