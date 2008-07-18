@@ -1,532 +1,725 @@
 <?php
-// security check - must be included in all scripts
-if ( !$GLOBALS['kewl_entry_point_run'] ) {
-    die( "You cannot view this page directly" );
-} 
-// end security check
-/**
- * The tutorial controller manages the tutorial module
- * @author Kevin Cyster 
- * @copyright 2007, University of the Western Cape & AVOIR Project
- * @license GNU GPL
- * @package tutorials
- */
+/* -------------------- tutorials extends controller ----------------*/
 
-class tutorials extends controller {
+// security check-must be included in all scripts
+if(!$GLOBALS['kewl_entry_point_run']){
+    die("You cannot view this page directly");
+}
+// end security check
+
+/**
+* Module class to create, answer and mark online tutorials
+* @copyright (c) 2008 KEWL.NextGen
+* @version 1.0
+* @package tutorials
+* @author Kevin Cyster
+*
+* $Id: controller.php
+*/
+
+class tutorials extends controller
+{
+    /**
+    * @var object $objUser: The user class in the security module
+    * @access private
+    */
+    private $objUser;
+
+    /**
+    * @var string $userId: The userId of the current user
+    * @access private
+    */
+    private $userId;
+
+    /**
+    * @var string $name: The full name of the current user
+    * @access private
+    */
+    private $name;
+
+    /**
+    * @var boolean $isAdmin: TRUE if the user is in the site admin group, FALSE if not
+    * @access private
+    */
+    private $isAdmin;
+
+    /**
+    * @var object $objContext: The dbcontext class in the context module
+    * @access private
+    */
+    private $objContext;
+
+    /**
+    * @var string $contextCode: The context code if the user is in a context
+    * @access private
+    */
+    private $contextCode;
+
+    /**
+    * @var boolean $isLecturer: TRUE if the user is a lecturer for this context, FALSE if not
+    * @access private
+    */
+    private $isLecturer;
+
+    /**
+    * @var boolean $isStudent: TRUE if the user is a student for this context, FALSE if not
+    * @access private
+    */
+    private $isStudent;
+
+   /**
+    * @var object $objTutDisplay: The display class in the messaging module
+    * @access protected
+    */
+    private $objTutDisplay;
+
+    /**
+    * @var object $objDatetime: The dateandtime class in the utilities module
+    * @access private
+    */
+    private $objDatetime;
 
     /**
     * @var object $objLanguage: The language class in the language module
-    * @access public
+    * @access private
     */
-    public $objLangauge;
-    
-    /**
-    * @var object $objTutDisplay: The display class in the tutorials module
-    * @access public
-    */
-    public $objTutDisplay;
-    
-    /**
-    * @var object $objTutDb: The dbtutorials class in the tutorials module
-    * @access public
-    */
-    public $objTutDb;
-        
-    /**
-    * @var object $objModules: The modules class in the modulecatalogue module
-    * @access public
-    */
-    public $objModules;
+    private $objLanguage;
 
     /**
-    * Method to initialise the controller
-    * 
-    * @access public
-    * @return void
+    * @var object $objDbTut: The dbtutorial class in the tutorial module
+    * @access private
+    */
+    private $objDbTutorials;
+
+    /**
+    * Method to construct the class
+    *
+    * @access private
+    * @return
     */
     public function init()
     {
-        $this->objLanguage = $this->getObject( 'language', 'language' );
-        $this->objTutDisplay = $this->newObject('tutorialsdisplay', 'tutorials');
-        $this->objTutDb = $this->newObject('dbtutorials', 'tutorials');        
-        $this->objModules = $this->getObject('modules', 'modulecatalogue');
-    }
-    
-    /**
-    * Method the engine uses to kickstart the module
-    * 
-    * @access public
-    * @param string $action: The action to be performed
-    * @return void
-    */
-    function dispatch( $action )
-    {
-        switch($action){
-         	case 'show_home':
-         		$templateContent = $this->objTutDisplay->showHome();
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'add_tutorial':
-        		$templateContent = $this->objTutDisplay->showAddTutorial();
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'add_tutorial_update':
-        		$name = $this->getParam('name');
-        		$type = $this->getParam('type');
-        		$description = $this->getParam('description');
-        		$percentage = $this->getParam('percentage');
-        		$answerOpen = $this->getParam('answer_open');
-        		$answerClose = $this->getParam('answer_close');
-        		$markingClose = $this->getParam('mark_close');
-        		$moderationClose = $this->getParam('moderate_close');
-        		$nameSpace = $this->objTutDb->addTutorial($name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose, $moderationClose);
-                return $this->nextAction('view_tutorial', array(
-                    'id' => $nameSpace,
-                ), 'tutorials');
-        		break;
-        		
-        	case 'edit_tutorial':
-	        	$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showEditTutorial($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'edit_tutorial_update':
-        		$tNameSpace = $this->getParam('id');
-        		$name = $this->getParam('name');
-        		$type = $this->getParam('type');
-        		$description = $this->getParam('description');
-        		$percentage = $this->getParam('percentage');
-        		$answerOpen = $this->getParam('answer_open');
-        		$answerClose = $this->getParam('answer_close');
-        		$markingClose = $this->getParam('mark_close');
-        		$moderationClose = $this->getParam('moderate_close');
-        		$mark = $this->getParam('mark');
-        		$nameSpace = $this->objTutDb->editTutorial($tNameSpace, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose, $moderationClose, $mark, 0);
-				 return $this->nextAction('view_tutorial', array(
-                    'id' => $nameSpace,
-                ), 'tutorials');
-        		break;
-        		
-        	case 'delete_tutorial':
-        		$tNameSpace = $this->getParam('id');
-        		$this->objTutDb->deleteTutorial($tNameSpace);
-        		return $this->nextAction('show_home', array(), 'tutorials');
-        		break;
-         		
-        	case 'view_tutorial':
-        		$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showViewTutorial($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'add_question':
-        		$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showAddQuestion($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'add_question_update':
-        		$tNameSpace = $this->getParam('id');
-        		$question = $this->getParam('question');
-        		$answer = $this->getParam('answer');
-        		$worth = $this->getParam('worth');
-        		$value = $this->getParam('value');
-        		$this->objTutDb->addQuestion($tNameSpace, $question, $answer, $worth, $value);
-        		return $this->nextAction('view_tutorial', array(
-					'id' => $nameSpace,
-				), 'tutorials');
-        		break;
-        		
-        	case 'edit_question':
-        		$qNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showEditQuestion($qNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'edit_question_update':
-        		$tNameSpace = $this->getParam('tutId');
-        		$qNameSpace = $this->getParam('id');
-        		$question = $this->getParam('question');
-        		$answer = $this->getParam('answer');
-        		$worth = $this->getParam('worth');
-        		$order = $this->getParam('order');
-        		$value = $this->getParam('value');
-        		$return = $this->getParam('return');
-        		$this->objTutDb->editQuestion($tNameSpace, $qNameSpace, $question, $answer, $order, $worth, $value, 0);
-        		if($return == 'answers'){
-        			return $this->nextAction('view_answers', array(
-						'id' => $tNameSpace,
-						'qNum' => $order,
-					), 'tutorials');
-        		}else{
-        			return $this->nextAction('view_tutorial', array(
-						'id' => $tNameSpace,
-					), 'tutorials');
-				}
-        		break;
-        		
-        	case 'delete_question':
-        		$tNameSpace = $this->getParam('tutId');
-        		$qNameSpace = $this->getParam('id');
-        		$this->objTutDb->deleteQuestion($qNameSpace);
-        		return $this->nextAction('view_tutorial', array(
-					'id' => $tNameSpace,
-				), 'tutorials');
-				break;
+        // system objects
+        $this->objUser = $this->getObject('user', 'security');
+        $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objDatetime = $this->getObject('dateandtime', 'utilities');
+        $this->objLanguage = $this->getObject('language', 'language');
 
-        	case 'import_questions':
-        		$tNameSpace = $this->getParam('id');
-        		$error = $this->getParam('error', FALSE);
-        		$templateContent = $this->objTutDisplay->showImportQuestions($tNameSpace, $error);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'import_questions_update':
-        		$tNameSpace = $this->getParam('id');
-        		$overwrite = $this->getParam('overwrite');
-                $file = $_FILES;
-				if(!isset($file['import'])){
-                    return $this->nextAction('import_questions', array(
-                        'id' => $tNameSpace,
-                        'error' => 1,
-                    ), 'tutorials');
-				}elseif($file['import']['error'] != 0){
-                    return $this->nextAction('import_questions', array(
-                        'id' => $tNameSpace,
-                        'error' => $file['import']['error'],
-                    ), 'tutorials');
-                }elseif(substr($file['import']['name'], -3) != 'csv'){
-                    return $this->nextAction('import_questions', array(
-                        'id' => $tNameSpace,
-                        'error' => 5,
+        // system variables
+        $this->userId = $this->objUser->userId();
+        $this->name = $this->objUser->fullname($this->userId);
+        $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
+        $this->contextCode = $this->objContext->getContextCode();
+        $this->isLecturer = $this->objUser->isContextLecturer();  
+        $this->isStudent = $this->objUser->isContextStudent();  
+        
+        // messaging objects
+        $this->objTutDisplay = $this->getObject('tutorialsdisplay', 'tutorials');
+        $this->objDbTutorials = $this->getObject('dbtutorials', 'tutorials');
+    }
+
+    /**
+    * This is the main method of the class
+    * It calls other functions depending on the value of $action
+    *
+    * @access private
+    * @param string $action
+    * @return
+    */
+    public function dispatch($action)
+    {
+        // Now the main switch statement to pass values for $action
+        switch($action){
+            case 'home':
+                if($this->isLecturer == TRUE || $this->isAdmin == TRUE){
+                    $templateContent = $this->objTutDisplay->showLecturerHome();
+                }else{
+                    $templateContent = $this->objTutDisplay->showStudentHome();
+                }
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
+                break;
+                
+            case 'tutorial':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id', NULL);
+                    $templateContent = $this->objTutDisplay->showAddEditTut($id);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                
+            case 'savetutorial':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id', NULL);
+                    $name = $this->getParam('name');
+                    $type = $this->getParam('type');
+                    $description = $this->getParam('description');
+                    $percentage = $this->getParam('percentage');
+                    $answerOpen = $this->getParam('answerOpen');
+                    $answerClose = $this->getParam('answerClose');
+                    $markOpen = $this->getParam('markOpen');
+                    $markClose = $this->getParam('markClose');
+                    $moderateOpen = $this->getParam('moderateOpen');
+                    $moderateClose = $this->getParam('moderateClose');
+                    $penalty = $this->getParam('penalty');
+                    if(empty($id)){
+                        $tutorialId = $this->objDbTutorials->addTutorial($name, $type, $description, $percentage, $answerOpen, $answerClose, $markOpen, $markClose, $moderateOpen, $moderateClose, $penalty);
+                    }else{
+                        $tutorialId = $this->objDbTutorials->editTutorial($id, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markOpen, $markClose, $moderateOpen, $moderateClose, $penalty);
+                    }
+                    return $this->nextAction('view', array(
+                        'id' => $tutorialId,
                     ), 'tutorials');
                 }
-                $this->objTutDb->importQuestions($file, $tNameSpace, $overwrite);
-                return $this->nextAction('view_tutorial', array(
-                    'id' => $tNameSpace,
-                ), 'tutorials');
                 break;
                 
-            case 'reorder_questions':
-            	$tNameSpace = $this->getParam('id');
-            	$list = $this->getParam('sortorder');
-            	$list = str_replace('list[]=', '', $list);
-            	$list = str_replace('*', '_', $list);
-            	$list = explode('&', $list);
-				$this->objTutDb->reorderQuestions($list);
-                return $this->nextAction('view_tutorial', array(
-                    'id' => $tNameSpace,
-                ), 'tutorials');
+            case 'view':
+                $id = $this->getParam('id');
+                if($this->isStudent == TRUE){
+                    $status = $this->objTutDisplay->tutStatus($id, TRUE);
+                    $markedBy = $this->objDbTutorials->countCompletedMarked($id, $this->userId);
+                    $lecturer = $this->objDbTutorials->checkLecturerMarked($id, $this->userId);
+                    $error = $this->getParam('error', FALSE);
+                    $order = $this->getParam('order', 1);
+                    if($status['value'] < 6){
+                        return $this->nextAction('', array(), 'tutorials');
+                    }elseif($status['value'] == 6){
+                        if($markedBy < 3 and $lecturer == FALSE){
+                            return $this->nextAction('', array(), 'tutorials');
+                        }else{
+                            $templateContent = $this->objTutDisplay->showStudentView($id, $order, $error);
+                        }
+                    }else{
+                        if($lecturer == TRUE or $markedBy == 3){
+                            $templateContent = $this->objTutDisplay->showStudentView($id, $order, $error);
+                        }else{
+                            return $this->nextAction('', array(), 'tutorials');
+                        }
+                    }
+                }else{
+                    $templateContent = $this->objTutDisplay->showLecturerView($id);
+                }
+                $this->setVarByRef('templateContent', $templateContent);
+                return 'template_tpl.php';
                 break;
                 
-            case 'answer_tutorial':
-        		$tNameSpace = $this->getParam('id');
-        		$qNum = $this->getParam('qNum', 1);
-        		$templateContent = $this->objTutDisplay->showTakeTutorial($tNameSpace, $qNum);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'submit_answers':
-        		$act = $this->getParam('submit');
-        		$qNum = $this->getParam('qNum');
-        		$cNum = $this->getParam('cNum');
-        		$tNameSpace = $this->getParam('id');
-        		$qNameSpace = $this->getParam('qId');
-        		$aNameSpace = $this->getParam('aId');
-        		if($act == $this->objLanguage->languageText('word_submit')){
-				 	foreach($qNameSpace as $key => $line){
-						$this->objTutDb->addAnswer($tNameSpace, $line, $this->getParam('answer_'.$key), $aNameSpace[$key]);
-					}
-					$this->objTutDb->setAnswered($tNameSpace);
-					return $this->nextAction('show_home', array(), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_next')){
-				 	foreach($qNameSpace as $key => $line){
-						$this->objTutDb->addAnswer($tNameSpace, $line, $this->getParam('answer_'.$key), $aNameSpace[$key]);
-					}
-					return $this->nextAction('answer_tutorial', array(
-						'id' => $tNameSpace,
-						'qNum' => $qNum,
-					), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_exit')){
-				 	foreach($qNameSpace as $key => $line){
-						$this->objTutDb->addAnswer($tNameSpace, $line, $this->getParam('answer_'.$key), $aNameSpace[$key]);
-					}
-					return $this->nextAction('show_home', array(), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_previous')){
-				 	foreach($qNameSpace as $key => $line){
-						$this->objTutDb->addAnswer($tNameSpace, $line, $this->getParam('answer_'.$key), $aNameSpace[$key]);
-					}
-					return $this->nextAction('answer_tutorial', array(
-						'id' => $tNameSpace,
-						'qNum' => $cNum,
-					), 'tutorials');
-				}
-				break;  
-				
-			case 'status_list':
-        		$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showStatusList($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;         		
-
-            case 'mark_student':
-        		$tNameSpace = $this->getParam('id');
-        		$qNum = $this->getParam('qNum', 1);
-        		$templateContent = $this->objTutDisplay->showMarkByStudent($tNameSpace, $qNum);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-
-        	case 'submit_student':
-        		$act = $this->getParam('submit');
-        		$qNum = $this->getParam('qNum');
-        		$cNum = $this->getParam('cNum');
-        		$tNameSpace = $this->getParam('id');
-        		$aNameSpace = $this->getParam('aId');
-        		$mark = $this->getParam('mark');
-        		$comment = $this->getParam('comment');
-        		if($act == $this->objLanguage->languageText('word_submit')){
-        		 	$this->objTutDb->addPeerMark($aNameSpace, $mark, $comment);
-        		 	$this->objTutDb->setMarked($tNameSpace);
-        		 	$this->objTutDb->updateResults($tNameSpace);
-					return $this->nextAction('show_home', array(), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_next')){
-        		 	$this->objTutDb->addPeerMark($aNameSpace, $mark, $comment);
-					return $this->nextAction('mark_student', array(
-						'id' => $tNameSpace,
-						'qNum' => $qNum,
-					), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_exit')){
-        		 	$this->objTutDb->addPeerMark($aNameSpace, $mark, $comment);
-					return $this->nextAction('show_home', array(), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_previous')){
-        		 	$this->objTutDb->addPeerMark($aNameSpace, $mark, $comment);
-					return $this->nextAction('mark_student', array(
-						'id' => $tNameSpace,
-						'qNum' => $cNum,
-					), 'tutorials');
-				}
-				break;
-				
-			case 'request_moderation':
-        		$tNameSpace = $this->getParam('id');
-        		$act = $this->getParam('submit');
-        		$qNum = $this->getParam('qNum');
-        		$cNum = $this->getParam('cNum');
-        		if($act == $this->objLanguage->languageText('word_next')){
-        		 	$num = $qNum;
-				}elseif($act == $this->objLanguage->languageText('word_previous')){
-					$num = $cNum;
-				}else{
-					$num = 1;
-				}        		
-        		$templateContent = $this->objTutDisplay->showRequestModeration($tNameSpace, $num);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'submit_request':
-        		$aNameSpace = $this->getParam('id');
-        		$reason = $this->getParam('reason');
-        		return $this->objTutDb->submitModerationRequest($aNameSpace, $reason);
-				
-			case 'review_tutorial':
-        		$tNameSpace = $this->getParam('id');
-        		$act = $this->getParam('submit');
-        		$qNum = $this->getParam('qNum');
-        		$cNum = $this->getParam('cNum');
-        		if($act == $this->objLanguage->languageText('word_next')){
-        		 	$num = $qNum;
-				}elseif($act == $this->objLanguage->languageText('word_previous')){
-					$num = $cNum;
-				}else{
-					$num = 1;
-				}        		
-        		$templateContent = $this->objTutDisplay->showReviewTutorial($tNameSpace, $num);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-         	case 'moderate_tutorial':
-         		$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showModerateTutorial($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'submit_moderation':
-        		$act = $this->getParam('submit');
-        		$tNameSpace = $this->getParam('id');
-        		$aNameSpace = $this->getParam('aId');
-        		$studentId = $this->getParam('sId');
-        		$mark = $this->getParam('mark');
-        		$count = $this->getParam('count');
-        		$comment = $this->getParam('comment');
-        		if($act == $this->objLanguage->languageText('word_submit')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, TRUE);
-        		 	$this->objTutDb->setMarker($tNameSpace, $studentId, TRUE);
-        		 	$this->objTutDb->updateResults($tNameSpace, TRUE, $studentId);
-					if($count != 1){
-						return $this->nextAction('moderate_tutorial', array(
-							'id' => $tNameSpace,
-						), 'tutorials');
-					}
-				}elseif($act == $this->objLanguage->languageText('word_exit')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, FALSE);
-				}
-				return $this->nextAction('view_tutorial', array(
-					'id' => $tNameSpace,
-				), 'tutorials');
-				break;
-				
-            case 'marking_list':
-        		$tNameSpace = $this->getParam('id');
-        		$templateContent = $this->objTutDisplay->showMarkingList($tNameSpace);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-
-            case 'mark_tutorial':
-        		$tNameSpace = $this->getParam('id');
-        		$studentId = $this->getParam('sId');
-        		$qNum = $this->getParam('qNum', 1);
-        		$templateContent = $this->objTutDisplay->showMarkByLecturer($tNameSpace, $qNum, $studentId);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-
-        	case 'submit_lecturer':
-        		$act = $this->getParam('submit');
-        		$qNum = $this->getParam('qNum');
-        		$cNum = $this->getParam('cNum');
-        		$tNameSpace = $this->getParam('id');
-        		$aNameSpace = $this->getParam('aId');
-        		$studentId = $this->getParam('sId');
-        		$mark = $this->getParam('mark');
-        		$comment = $this->getParam('comment');
-        		if($act == $this->objLanguage->languageText('word_submit')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, TRUE);
-        		 	$this->objTutDb->setMarker($tNameSpace, $studentId, TRUE);
-        		 	$this->objTutDb->updateResults($tNameSpace, TRUE, $studentId);
-					return $this->nextAction('marking_list', array(
-						'id' => $tNameSpace,
-					), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_next')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, TRUE);
-					return $this->nextAction('mark_tutorial', array(
-						'id' => $tNameSpace,
-						'sId' => $studentId,
-						'qNum' => $qNum,
-					), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_exit')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, FALSE);
-					return $this->nextAction('marking_list', array(
-						'id' => $tNameSpace,
-					), 'tutorials');
-				}elseif($act == $this->objLanguage->languageText('word_previous')){
-        		 	$this->objTutDb->addModeratorMark($aNameSpace, $mark, $comment, TRUE);
-					return $this->nextAction('mark_tutorial', array(
-						'id' => $tNameSpace,
-						'sId' => $studentId,
-						'qNum' => $cNum,
-					), 'tutorials');
-				}
-				break;
-				
-			case 'show_instructions':
-        		$templateContent = $this->objTutDisplay->showInstructions();
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-				
-			case 'add_instructions':
-        		$templateContent = $this->objTutDisplay->showAddInstructions();
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-				
-			case 'add_instructions_update':
-				$instructions = $this->getParam('instructions');
-				$this->objTutDb->addInstructions($instructions);
-         		return $this->nextAction('show_instructions', array(), 'tutorials');
-         		break;
-				
-			case 'edit_instructions':
-        		$templateContent = $this->objTutDisplay->showEditInstructions();
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-				
-			case 'edit_instructions_update':
-				$instructions = $this->getParam('instructions');
-				$this->objTutDb->updateInstructions($instructions);
-         		return $this->nextAction('show_instructions', array(), 'tutorials');
-         		break;
-         		
-        	case 'delete_instructions':
-				$this->objTutDb->deleteInstructions();
-        		return $this->nextAction('show_instructions', array(), 'tutorials');
-        		break;
-        		
-        	case 'view_answers':
-        		$tNameSpace = $this->getParam('id');
-        		$qNum = $this->getParam('qNum', 1);
-        		$aNum = $this->getParam('aNum', 1);
-        		$templateContent = $this->objTutDisplay->showAnswers($tNameSpace, $qNum, $aNum);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
- 
-        	case 'late_submissions':
-        		$tNameSpace = $this->getParam('id');
-        		$studentId = $this->getParam('sId', NULL);
-        		$templateContent = $this->objTutDisplay->showLateSubmissions($tNameSpace, $studentId);
-         		$this->setVarByRef('templateContent', $templateContent);
-         		return 'template_tpl.php';
-         		break;
-         		
-        	case 'submit_late':
-        		$tNameSpace = $this->getParam('id');
-        		$studentId = $this->getParam('sId');
-        		$answer = $this->getParam('answer_close');
-        		$mark = $this->getParam('mark_close');
-        		$moderate = $this->getParam('moderate_close');
-        		$action = $this->getParam('cancel', NULL);
-        		if($action != NULL){
-					return $this->nextAction('late_submissions', array(
-						'id' => $tNameSpace,
-					), 'tutorials');
-				}
-				$this->objTutDb->addLateSubmission($tNameSpace, $studentId, $answer, $mark, $moderate);
-				return $this->nextAction('late_submissions', array(
-					'id' => $tNameSpace,
-				), 'tutorials');
-				break;
-				
-			case 'delete_late':
-				$tNameSpace = $this->getParam('id');
-				$studentId = $this->getParam('sId');
-				$this->objTutDb->deleteLateSubmissions($tNameSpace, $studentId);
-				return $this->nextAction('late_submissions', array(
-					'id' => $tNameSpace,
-				), 'tutorials');
-				break;
-				
- 			default:
-                return $this->nextAction('show_home', array(), 'tutorials');
+            case 'deletetutorial':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $this->objDbTutorials->deleteTutorial($id);
+                    return $this->nextAction('', array(
+                        'id' => $id,
+                    ), 'tutorials');
+                }
                 break;
+
+            case 'instructions':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $templateContent = $this->objTutDisplay->showInstructions();
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                
+            case 'saveinstructions':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $instructions = $this->getParam('instructions');
+                    $this->objDbTutorials->updateInstructions($instructions);
+                    return $this->nextAction('home', array(), 'tutorials');
+                }
+                break;
+                
+            case 'deleteinstructions':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $this->objDbTutorials->deleteInstructions();
+                    return $this->nextAction('home', array(), 'tutorials');
+                }
+                break;
+                
+            case 'questions':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $id = $this->getParam('id', NULL);
+                    $error = $this->getParam('error', NULL);
+                    $question = $this->getParam('question', NULL);
+                    $model = $this->getParam('model', NULL);
+                    $worth = $this->getParam('worth', NULL);
+                    $templateContent = $this->objTutDisplay->showAddEditQuestions($tutId, $id, $error, $question, $model, $worth);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;                
+                
+            case 'savequestion':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $id = $this->getParam('id', NULL);
+                    $question = $this->getParam('question');
+                    $model = $this->getParam('model');
+                    $worth = $this->getParam('worth');
+                    $add = $this->getParam('submitAdd', NULL);
+                    if($question == ''){
+                        return $this->nextAction('questions', array(
+                            'tutId' => $tutId,
+                            'id' => $id,
+                            'error' => 'question',
+                            'question' => $question,
+                            'model' => $model,
+                            'worth' => $worth,
+                        ), 'tutorials');
+                    }
+                    if($model == ''){
+                        return $this->nextAction('questions', array(
+                            'tutId' => $tutId,
+                            'id' => $id,
+                            'error' => 'model',
+                            'question' => $question,
+                            'model' => $model,
+                            'worth' => $worth,
+                        ), 'tutorials');
+                    }
+                    if(empty($id)){
+                        $questionId = $this->objDbTutorials->addQuestion($tutId, $question, $model, $worth);
+                    }else{
+                        $questionId = $this->objDbTutorials->editQuestion($id, $question, $model, $worth);
+                    }
+                    if(isset($add)){
+                        return $this->nextAction('questions', array(
+                            'tutId' => $tutId,
+                        ), 'tutorials');
+                    }else{
+                        return $this->nextAction('view', array(
+                            'id' => $tutId,
+                        ), 'tutorials');
+                    }
+                }
+                break;
+                
+            case 'deletequestion':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $id = $this->getParam('id');
+                    $this->objDbTutorials->deleteQuestion($tutId, $id);
+                    $this->objDbTutorials->reorderQuestions($tutId);
+                    return $this->nextAction('view', array(
+                        'id' => $tutId,
+                    ), 'tutorials');
+                }
+                break;
+
+            case 'deleteall':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $this->objDbTutorials->deleteTutorialQuestions($tutId);
+                    return $this->nextAction('view', array(
+                        'id' => $tutId,
+                    ), 'tutorials');
+                }
+                break;
+
+            case 'movequestions':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $id = $this->getParam('id');
+                    $dir = $this->getParam('dir');
+                    $this->objDbTutorials->moveQuestion($tutId, $id, $dir);
+                    return $this->nextAction('view', array(
+                        'id' => $tutId,
+                    ), 'tutorials');
+                }
+                break;
+                
+            case 'answer':
+                $id = $this->getParam('id');
+                $order = $this->getParam('order', 1);
+                $status = $this->objTutDisplay->tutStatus($id, TRUE);
+                if($status['value'] == 2){
+                    $result = $this->objDbTutorials->addResult($id);
+                    if($result == FALSE){
+                        return $this->nextAction('', array(), 'tutorials');
+                    }elseif($result['has_submitted'] == 0){
+                        $templateContent = $this->objTutDisplay->showAnswer($id, $order);
+                        $this->setVarByRef('templateContent', $templateContent);
+                        $this->setVar('answer', TRUE);
+                        return 'template_tpl.php';
+                    }else{
+                        return $this->nextAction('', array(), 'tutorials');
+                    }
+                }else{
+                    return $this->nextAction('', array(), 'tutorials');
+                }
+                break;
+                
+            case 'saveanswer':
+                $id = $this->getParam('id');
+                $qId = $this->getParam('qId');
+                $answer = $this->getParam('answer');
+                $order = $this->getParam('order');
+                $next = $this->getParam('next', NULL);
+                $previous = $this->getParam('previous', NULL);
+                $exit = $this->getParam('exit', NULL);
+                $submit = $this->getParam('submit', NULL);
+                $this->objDbTutorials->updateAnswers($id, $qId, $answer);
+                if(!empty($next)){
+                    return $this->nextAction('answer', array(
+                        'id' => $id,
+                        'order' => ($order + 1),
+                        ), 'tutorials');
+                }
+                if(!empty($previous)){
+                    return $this->nextAction('answer', array(
+                        'id' => $id,
+                        'order' => ($order - 1),
+                        ), 'tutorials');
+                }
+                if(!empty($exit)){
+                    return $this->nextAction('', array(), 'tutorials');
+                }
+                if(!empty($submit)){
+                    $this->objDbTutorials->updateSubmitted($id);
+                    return $this->nextAction('', array(), 'tutorials');
+                }
+                break;
+                
+            case 'liststudents':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $status = $this->getParam('status', NULL);
+                    $templateContent = $this->objTutDisplay->showStudentList($id, $status);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                 }
+                break;
+                
+            case 'mark':
+                if($this->isStudent == TRUE){
+                    $id = $this->getParam('id');
+                    $results = $this->objDbTutorials->getResult($id, $this->userId);
+                    $count = $this->objDbTutorials->getMarkedStudents($id);
+                    $status = $this->objTutDisplay->tutStatus($id, TRUE);
+                    if($count < 3 and $results['has_submitted'] == 1 and $status['value'] == 4){
+                        $studentId = $this->objDbTutorials->getStudentToMark($id);
+                        if($studentId != FALSE){
+                            $this->objDbTutorials->setStudentToMark($id, $studentId);
+                            $order = $this->getParam('order', 1);
+                            $error = $this->getParam('error', FALSE);
+                            $comment = $this->getParam('comment', NULL);
+                            $mark = $this->getParam('mark', NULL);
+                            $templateContent = $this->objTutDisplay->showMarking($id, $studentId, $order, $error, $comment, $mark, $this->isStudent);
+                            $this->setVarByRef('templateContent', $templateContent);
+                            $this->setVar('answer', TRUE);
+                            return 'template_tpl.php';
+                        }else{
+                            return $this->nextAction('', array(), 'tutorials');
+                        }
+                    }else{
+                        return $this->nextAction('', array(), 'tutorials');
+                    }
+                }else{
+                    $id = $this->getParam('id');
+                    $studentId = $this->getParam('studentId');
+                    $this->objDbTutorials->setStudentToMark($id, $studentId);
+                    $order = $this->getParam('order', 1);
+                    $error = $this->getParam('error', FALSE);
+                    $comment = $this->getParam('comment', NULL);
+                    $mark = $this->getParam('mark', NULL);
+                    $templateContent = $this->objTutDisplay->showMarking($id, $studentId, $order, $error, $comment, $mark);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    $this->setVar('answer', TRUE);
+                    return 'template_tpl.php';
+                 }
+                break;
+                
+            case 'savemarking':
+                $id = $this->getParam('id');
+                $aId = $this->getParam('aId');
+                $sId = $this->getParam('sId');
+                $order = $this->getParam('order');
+                $comment = $this->getParam('comment');
+                $mark = $this->getParam('mark');
+                if($comment == ''){
+                    if($this->isStudent == TRUE){
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'order' => $order,
+                            'error' => TRUE,
+                            'comment' => $comment,
+                            'mark' => $mark,
+                        ), 'tutorials');
+                    }else{
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'studentId' => $sId,
+                            'order' => $order,
+                            'error' => TRUE,
+                            'comment' => $comment,
+                            'mark' => $mark,
+                        ), 'tutorials');
+                    }
+                }
+                $next = $this->getParam('next', NULL);
+                $previous = $this->getParam('previous', NULL);
+                $exit = $this->getParam('exit', NULL);
+                $submit = $this->getParam('submit', NULL);
+                $this->objDbTutorials->updateMarking($id, $aId, $sId, $comment, $mark);
+                if(!empty($next)){
+                    if($this->isStudent == TRUE){
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'order' => ($order + 1),
+                        ), 'tutorials');
+                    }else{
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'studentId' => $sId,
+                            'order' => ($order + 1),
+                        ), 'tutorials');
+                    }
+                }
+                if(!empty($previous)){
+                    if($this->isStudent == TRUE){
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'order' => ($order - 1),
+                        ), 'tutorials');
+                    }else{
+                        return $this->nextAction('mark', array(
+                            'id' => $id,
+                            'studentId' => $sId,
+                            'order' => ($order - 1),
+                        ), 'tutorials');
+                    }
+                }
+                if(!empty($exit)){
+                    return $this->nextAction('liststudents', array(
+                        'id' => $id,
+                    ), 'tutorials');
+                }
+                if(!empty($submit)){
+                    $this->objDbTutorials->updateMarker($id, $sId);
+                    if($this->isStudent == TRUE){
+                        $this->objDbTutorials->updateStudentMarks($id, $sId);
+                        return $this->nextAction('', array(), 'tutorials');
+                    }else{
+                        $this->objDbTutorials->updateMarks($id, $sId);
+                        return $this->nextAction('liststudents', array(
+                            'id' => $id,
+                        ), 'tutorials');
+                    }
+                }
+                break;
+                
+            case 'late':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $studentId = $this->getParam('studentId');
+                    $mode = $this->getParam('mode', NULL);
+                    $templateContent = $this->objTutDisplay->showLate($id, $studentId, $mode);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                 
+            case 'savelate':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $studentId = $this->getParam('studentId');
+                    $open = $this->getParam('answerOpen');
+                    $close = $this->getParam('answerClose');
+                    $this->objDbTutorials->updateLate($id, $studentId, $open, $close);
+                    return $this->nextAction('late', array(
+                        'id' => $id,
+                        'studentId' => $studentId,
+                    ), 'tutorials');
+                 }
+                break;
+
+            case 'deletelate':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $tutId = $this->getParam('tutId');
+                    $id = $this->getParam('id');
+                    $this->objDbTutorials->deleteLate($id);
+                    return $this->nextAction('liststudents', array(
+                        'id' => $tutId,
+                    ), 'tutorials');
+                }
+                break;
+                
+            case 'import':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $templateContent = $this->objTutDisplay->showImport($id);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                
+            case 'saveimport':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $file = $_FILES;
+                    $overwrite = $this->getParam('overwrite');
+                    if($file['file']['error'] == 0){
+                        $this->objTutDisplay->doImport($id, $file, $overwrite);
+                    }
+                    return $this->nextAction('view', array(
+                        'id' => $id,
+                    ), 'tutorials');
+                }
+                break;
+                
+            case 'saverequest':
+                $id = $this->getParam('id');
+                $order = $this->getParam('order');
+                $aId = $this->getParam('aId');
+                $reason = $this->getParam('reason');
+                if($reason == ''){
+                    return $this->nextAction('view', array(
+                        'id' => $id,
+                        'order' => $order,
+                        'error' => TRUE,
+                    ), 'tutorials');
+                }else{
+                    $aId = $this->objDbTutorials->addModeration($aId, $reason);
+                    return $this->nextAction('view', array(
+                        'id' => $id,
+                        'order' => $order,
+                    ), 'tutorials');
+                }
+                break;
+                
+            case 'moderate':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $error = $this->getParam('error', FALSE);
+                    $comment = $this->getParam('comment', NULL);
+                    $mark = $this->getParam('mark', NULL);
+                    $templateContent = $this->objTutDisplay->showModerate($id, $error, $comment, $mark);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                
+            case 'savemod':
+                $id = $this->getParam('id');
+                $aId = $this->getParam('aId');
+                $sId = $this->getParam('sId');
+                $comment = $this->getParam('comment');
+                $mark = $this->getParam('mark');
+                $emailList = $this->getParam('emailList');
+                $marks = $this->getParam('marks');
+                $order = $this->getParam('order');
+                if($comment == ''){
+                    return $this->nextAction('moderate', array(
+                        'id' => $id,
+                        'error' => TRUE,
+                        'comment' => $comment,
+                        'mark' => $mark,
+                    ), 'tutorials');
+                }
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $this->objDbTutorials->updateMarking($id, $aId, $sId, $comment, $mark);
+                    $this->objDbTutorials->updateModeratorMarks($id, $aId, $sId);
+                    $this->objDbTutorials->updateModeration($aId);
+                    $this->objTutDisplay->emailModeration($id, $order, $emailList, $marks, $mark, $comment);
+                    return $this->nextAction('moderate', array(
+                        'id' => $id,
+                    ), 'tutorials');
+                }                
+                break;
+                
+            case 'answerlist':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $order = $this->getParam('order', 1);
+                    $num = $this->getParam('num', 1);
+                    $templateContent = $this->objTutDisplay->showAnswerList($id, $order, $num);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+                
+            case 'export':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $templateContent = $this->objTutDisplay->showExport($id);
+                    $this->setVarByRef('templateContent', $templateContent);
+                    return 'template_tpl.php';
+                }
+                break;
+
+            case 'doexport':
+                if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $type = $this->getParam('type', 1);
+                    $status = $this->objTutDisplay->doExport($id, $type);
+                    $this->objTutDisplay->emailResults($id);
+                    return $this->nextAction('liststudents', array(
+                        'id' => $id,
+                        'status' => $status,
+                    ), 'tutorials');
+                }
+                break;
+                
+            case 'archive':
+                 if($this->isStudent == TRUE){
+                    return $this->nextAction('', array(), 'tutorials');
+                }else{
+                    $id = $this->getParam('id');
+                    $this->objDbTutorials->archiveResults($id);
+                    return $this->nextAction('liststudents', array(
+                        'id' => $id,
+                    ), 'tutorials');
+                }
+                break;
+
+            default:
+                return $this->nextAction('home', array(), 'tutorials');
         }
     }
 }

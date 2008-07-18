@@ -3,7 +3,7 @@
 $tablename = 'tbl_tutorials';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Table to store the information of the tutorials.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Table to hold tutorials', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -11,49 +11,49 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
-	'name_space' => array(
+	'contextcode' => array(
 		'type' => 'text',
 		'length' => 255,
 	),
-	'name_space_order' => array(
+	'name' => array(
+		'type' => 'text',
+		'length' => 255,
+    ),
+	'tutorial_type' => array(
 		'type' => 'integer',
-		'length' => 7,
+		'length' => '1',
 	),
-	'contextcode' => array(
-	   'type' => 'text',
-	   'length' => 32,
+    'description' => array(
+        'type' => 'clob',
     ),
-    'name' => array(
-        'type' => 'text',
-        'length' => 255,
+    'percentage' => array(
+        'type' => 'float',
     ),
-    'type' => array( // standard, interactive
+    'total_mark' => array(
         'type' => 'integer',
-        'length' => 1,
+        'length' => '3',
     ),
-	'description' => array(
-		'type' => 'clob',
-	),
-	'percentage' => array(
-		'type' => 'integer',
-		'length' => 3,
-	),
-	'total_mark' => array(
-		'type' => 'integer',
-		'length' => 4,
-	),
-	'answer_open_date' => array(
-		'type' => 'timestamp',
-	),
-	'answer_close_date' => array(
-		'type' => 'timestamp',
-	),
-	'marking_close_date' => array(
-		'type' => 'timestamp',
-	),
-	'moderating_close_date' => array(
-		'type' => 'timestamp',
-	),
+    'answer_open' => array(
+        'type' => 'timestamp',
+    ),
+    'answer_close' => array(
+        'type' => 'timestamp',
+    ),
+    'marking_open' => array(
+        'type' => 'timestamp',
+    ),
+    'marking_close' => array(
+        'type' => 'timestamp',
+    ),
+    'moderation_open' => array(
+        'type' => 'timestamp',
+    ),
+    'moderation_close' => array(
+        'type' => 'timestamp',
+    ),
+    'penalty' => array(
+        'type' => 'float',
+    ),
 	'deleted' => array( // active, deleted
 		'type' => 'integer', 
 		'length' => 1,

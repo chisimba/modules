@@ -3,7 +3,7 @@
 $tablename = 'tbl_tutorials_late';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Table to store the late submission information.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Table to hold students allowed late submissions', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -11,29 +11,18 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
-	'tutorial_name_space' => array(
-	   'type' => 'text',
-	   'length' => 255,
-    ),
-	'name_space' => array(
-	   'type' => 'text',
-	   'length' => 255,
-    ),
-	'name_space_order' => array(
-	   'type' => 'integer',
-	   'length' => 7,
-    ),
+	'tutorial_id' => array(
+		'type' => 'text',
+		'length' => 32,
+	),
 	'student_id' => array(
-	   'type' => 'text',
-	   'length' => 32,
+		'type' => 'text',
+		'length' => 32,
     ),
-	'answer_close_date' => array(
+	'answer_open' => array(
 		'type' => 'timestamp',
 	),
-	'marking_close_date' => array(
-		'type' => 'timestamp',
-	),
-	'moderating_close_date' => array(
+	'answer_close' => array(
 		'type' => 'timestamp',
 	),
 	'deleted' => array( // active, deleted

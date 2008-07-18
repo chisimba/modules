@@ -12,11 +12,15 @@ if(!$GLOBALS['kewl_entry_point_run']){
 */
 
 /**
-* Template for the tutorials module
-* Author Kevin Cyster
+* Displays for the tutorials module
+* @author Kevin Cyster
 * */
 
-$this->setLayoutTemplate('layout_tpl.php');
+if(!isset($answer)){
+    $this->setLayoutTemplate('layout_tpl.php');
+}else{
+    $this->setVar('pageSuppressToolbar', TRUE);
+}
 
 echo $templateContent;
 ?>

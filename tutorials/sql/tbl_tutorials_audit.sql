@@ -3,7 +3,7 @@
 $tablename = 'tbl_tutorials_audit';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Table to store audit trail information on the tutorials module.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Table to hold tutorials audit data', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -11,24 +11,38 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
 	),
-	'table_affected' => array(
-	   'type' => 'text',
-	   'length' => 255,
+	'contextcode' => array(
+		'type' => 'text',
+		'length' => 255,
+	),
+	'table_name' => array(
+        'type' => 'text',
+        'length' => '255',
     ),
-	'name_space' => array(
-	   'type' => 'text',
-	   'length' => 255,
+	'record_id' => array(
+		'type' => 'text',
+		'length' => '32',
+	),
+    'field_name' => array(
+        'type' => 'text',
+        'length' => '255',
     ),
-    'user_id' => array(
+    'old_value' => array(
+        'type' => 'clob',
+    ),
+    'new_value' => array(
+        'type' => 'clob',
+    ),
+    'trans_type' => array(
+        'type' => 'text',
+        'length' => '6',
+    ),
+	'modifier_id' => array(
         'type' => 'text',
         'length' => 32,
-    ),
-	'date_record_updated' => array(
-		'type' => 'timestamp',
 	),
-	'audit_comment' => array(
-	   'type' => 'text',
-	   'length' => 255,
+	'date_modified' => array(
+		'type' => 'timestamp', 
 	),
 	'updated' => array(
 		'type' => 'timestamp',

@@ -1,5 +1,5 @@
 <?php
-/* ------ data class extends dbTable for all tutorials database tables ------*/
+/* ----------- data class extends dbTable for tutorials database tables ----------*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -18,47 +18,48 @@ class dbtutorials extends dbTable
     * @access private
     */
     private $objLanguage;
+    
     /**
     * @var object $objUser: The user class in the security module
     * @access private
     */
     private $objUser;
-
+    
     /**
-    * @var string $userId: The user id of the current user
+    * @var string $userId: The userid of the currently logged in user
     * @access private
     */
     private $userId;
-
+    
     /**
     * @var object $objContext: The dbcontext class in the context module
-    * @access public
+    * @access private
     */
-    public $objContext;
-
-    /**
-    * @var string $contextCode: The active context of the current logged in user
-    * @access public
-    */
-    public $contextCode;
-        
+    private $objContext;
+    
     /**
     * @var object $objGroups: The managegroups class in the contextgroups module
-    * @access public
+    * @access private
     */
-    public $objGroups;
-
+    private $objGroups;
+    
     /**
-    * @var string $table: The the name of the current table
+    * @var string $contextCode: The context code of the context the user is currently in
+    * @access private
+    */
+    private $contextCode;
+      
+    /**
+    * @var string $table: The current table name
     * @access private
     */
     private $table;
-
+      
     /**
     * Method to construct the class
     *
     * @access public
-    * @return
+    * @return void
     */
     public function init()
     {
@@ -67,1555 +68,1900 @@ class dbtutorials extends dbTable
         $this->userId = $this->objUser->userId();
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
-        $this->objGroups = $this->getObject('managegroups', 'contextgroups');
+        $this->isLecturer = $this->objUser->isContextLecturer();  
+        $this->isStudent = $this->objUser->isContextStudent();  
     }
     
-/* ----- Functions for changeing tables ----- */
+/***** Methods for switching tables *****/
 
-	/**
-	* Method to dynamically switch tables
-	*
-	* @access private
-	* @param string $table: The name of the table
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _changeTable($table)
-	{
-		try{
-		 	$this->table = $table;
-			parent::init($table);
-			return TRUE;
-		}catch(customException $e){
-			customException::cleanUp();
-			return FALSE;
-		}
-	}
-	
-	/**
-	* Method to set the tutorials table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setTutorials()
-	{
+    /**
+    * Method to switch between tables
+    *
+    * @access private
+    * @param string $table: The table to switch to
+    * @return void
+    */
+    private function _changeTable($table)
+    {   
+        $this->table = $table;
+        parent::init($table);
+    }
+    
+    /**
+    * Method to set the tutorials table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setTutorials()
+    {
         return $this->_changeTable('tbl_tutorials');
     }
 
-	/**
-	* Method to set the tutorials questions table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setQuestions()
-	{
+    /**
+    * Method to set the tutorials questions table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setQuestions()
+    {
         return $this->_changeTable('tbl_tutorials_questions');
     }
 
-	/**
-	* Method to set the tutorials answers table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setAnswers()
-	{
+    /**
+    * Method to set the tutorials answers table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setAnswers()
+    {
         return $this->_changeTable('tbl_tutorials_answers');
     }
-
-	/**
-	* Method to set the tutorials results table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setResults()
-	{
+    
+    /**
+    * Method to set the tutorials marking table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setMarking()
+    {
+        return $this->_changeTable('tbl_tutorials_marking');
+    }
+    
+    /**
+    * Method to set the tutorials marking table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setMarker()
+    {
+        return $this->_changeTable('tbl_tutorials_marker');
+    }
+    
+    /**
+    * Method to set the tutorials results table
+    * 
+    * @access private
+    * @return void
+    */
+    private private function _setResults()
+    {
         return $this->_changeTable('tbl_tutorials_results');
     }
-
-	/**
-	* Method to set the tutorials instructions table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setInstructions()
-	{
+    
+    /**
+    * Method to set the tutorials instructions table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setInstructions()
+    {
         return $this->_changeTable('tbl_tutorials_instructions');
     }
-
-	/**
-	* Method to set the tutorials late submissions table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setLate()
-	{
+    
+    /**
+    * Method to set the tutorials late submissions table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setLate()
+    {
         return $this->_changeTable('tbl_tutorials_late');
     }
-
-	/**
-	* Method to set the tutorials audit table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setAudit()
-	{
+    
+    /**
+    * Method to set the tutorials audit table
+    * 
+    * @access private
+    * @return void
+    */
+    private function _setAudit()
+    {
         return $this->_changeTable('tbl_tutorials_audit');
     }
+    
+/***** General methods *****/
 
-/* ----- Functions for name spacing ----- */
-
-	/**
-	* Method to define the name space for tutorials
-	*
-	* @access private
-	* @return string $nameSpace: The name space
-	*/
-	private function _defineNameSpace()
-	{
-		$nameSpace = rand(1, 9999).'_'.$this->contextCode.'_'.rand(1, 9999);
-
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE name_space='".$nameSpace."'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			$this->_defineNameSpace($tableName);
-		}
-		return $nameSpace;
-	}
-
-	/**
-	* Method to determine the name space order (number) of the tutorials
-	*
-	* @access private
-	* @param string $nameSpace: The name space of the tutorial
-* @param string $tableName: The name of the table to create a name space in
-	* @return integer $nOrder: The order (number) of the name space being added
-	*/
-	private function _getNameSpaceOrder($nameSpace)
-	{
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE name_space = '".$nameSpace."'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			$nOrder = (count($data) + 1);
-		}else{
-			$nOrder = 1;
-		}
-		return $nOrder;
-	}
-	
-/* ----- Functions for tbl_tutorials ----- */
+    /**
+    * Method to get a student to mark
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @return string $studentId: The id of the student to mark
+    */
+    public function getStudentToMark($tutorialId)
+    {
+        $studentId = $this->getIncompleteMarked($tutorialId);
+        if($studentId == FALSE){
+            $studentId = $this->getStudent($tutorialId);
+        }
+        return $studentId;
+    }
+    
+    /**
+    * Method to archive results for a tutorial
+    * 
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @return void
+    */
+    public function archiveResults($id)
+    {
+        $this->deleteTutorialAnswers($id);
+        $this->deleteTutorialMarkers($id);
+        $this->deleteTutorialMarking($id);            
+        $this->deleteTutorialResults($id);
+        $this->deleteTutorialLate($id);
+    }
+    
+/***** Methods for tbl_tutorials *****/
 
     /**
     * Method to add a tutorial
     *
     * @access public
     * @param string $name: The name of the tutorial
-    * @param string $type: The type of the tutorial (normal/interactive)
-    * @param string $description: The description of the tutorial
-    * @param string $percentage: The % that this tutorial counts towards the year mark
-    * @param string $answerOpen: The date the tutorial is open for answers
-    * @param string $answerClose: The date the tutorial is closed for answers
-    * @param string $markingClose: The date the tutorial is closed for marking
-    * @param string $moderationClosed: The date the tutorial is closed for moderation
-    * @return string|bool $tutorialId: The tutorial id |False on failure
+    * @param string $type: The type of tutorial
+    * @param string $desc: The description of the tutorial
+    * @param string $perc: The percentage of the year mark for this tutorial
+    * @param string $ansOpen: The date the answer phase opens
+    * @param string $ansClose: The date the answer phase closes
+    * @param string $markOpen: The date the marking phase opens
+    * @param string $markClose: The date the marking phase closes
+    * @param string $modOpen: The date the moderation phase opens
+    * @param string $modClose: The date the moderation phase closes
+    * @param string $penalty: The penalty pecentage for not marking
+    * @return string|bool $id: The id on success | FALSE on failure
     */
-    public function addTutorial($name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose = NULL, $moderationClose = NULL)
+    public function addTutorial($name, $type, $desc, $perc, $ansOpen, $ansClose, $markOpen, $markClose, $modOpen, $modClose, $penalty)
     {
         $this->_setTutorials();
-        
-        $date = date('Y-m-d H:i:s');
-        $tNameSpace = $this->_defineNameSpace();
+        $tableName = $this->table;
         
         $fields = array();
-        $fields['name_space'] = $tNameSpace;
-        $fields['name_space_order'] = 1;
         $fields['contextcode'] = $this->contextCode;
         $fields['name'] = $name;
-        $fields['type'] = $type;
-        $fields['description'] = $description;
-        $fields['percentage'] = $percentage;
-        $fields['answer_open_date'] = $answerOpen;
-        $fields['answer_close_date'] = $answerClose;
-        $fields['marking_close_date'] = $markingClose;
-        $fields['moderating_close_date'] = $moderationClose;
+        $fields['tutorial_type'] = $type;
+        $fields['description'] = $desc;
+        $fields['percentage'] = $perc;
+        $fields['answer_open'] = $ansOpen;
+        $fields['answer_close'] = $ansClose;
+        $fields['marking_open'] = $markOpen;
+        $fields['marking_close'] = $markClose;
+        $fields['moderation_open'] = $modOpen;
+        $fields['moderation_close'] = $modClose;
+        $fields['penalty'] = $penalty;
         $fields['deleted'] = 0;
-        $fields['updated'] = $date;
-        $tutorialId = $this->insert($fields);
-        if($tutorialId != FALSE){
-         	$comment = $this->objLanguage->languageText('word_add');
-			$this->_addAuditTrail($this->table, $tNameSpace, $date, $comment);
-	        return $tNameSpace;
-		}
-		return FALSE;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $id = $this->insert($fields);
+        
+        if($id != FALSE){
+            foreach($fields as $key=>$field){
+                $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add');
+            }    
+        }
+    
+        return $id;
     }
     
     /**
     * Method to edit a tutorial
     *
     * @access public
-    * @param string $tNameSpace: The name space of the tutorial
+    * @param string $id: The id of the tutorial to edit
     * @param string $name: The name of the tutorial
-    * @param string $type: The type of the tutorial (normal/interactive)
-    * @param string $description: The description of the tutorial
-    * @param string $percentage: The % that this tutorial counts towards the year mark
-    * @param string $answerOpen: The date the tutorial is open for answers
-    * @param string $answerClose: The date the tutorial is closed for answers
-    * @param string $markingClose: The date the tutorial is closed for marking
-    * @param string $moderationClosed: The date the tutorial is closed for moderation
-    * @param string $deleted: Indicator if the record is deleted
-    * @param string $comment: Audit comment
-    * @return void
+    * @param string $type: The type of tutorial
+    * @param string $desc: The description of the tutorial
+    * @param string $perc: The percentage of the year mark for this tutorial
+    * @param string $ansOpen: The date the answer phase opens
+    * @param string $ansClose: The date the answer phase closes
+    * @param string $markOpen: The date the marking phase opens
+    * @param string $markClose: The date the marking phase closes
+    * @param string $modOpen: The date the moderation phase opens
+    * @param string $modClose: The date the moderation phase closes
+    * @param string $penalty: The penalty for not marking
+    * @return string|bool $id: The id on success | FALSE on failure
     */
-    public function editTutorial($tNameSpace, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose, $moderationClose, $mark, $deleted = 0, $comment = NULL)
+    public function editTutorial($id, $name, $type, $desc, $perc, $ansOpen, $ansClose, $markOpen, $markClose, $modOpen, $modClose, $penalty)
+    {
+        $data = $this->getTutorial($id);
+        
+        $this->_setTutorials();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['name'] = $name;
+        $fields['tutorial_type'] = $type;
+        $fields['description'] = $desc;
+        $fields['percentage'] = $perc;
+        $fields['answer_open'] = $ansOpen;
+        $fields['answer_close'] = $ansClose;
+        $fields['marking_open'] = $markOpen;
+        $fields['marking_close'] = $markClose;
+        $fields['moderation_open'] = $modOpen;
+        $fields['moderation_close'] = $modClose;
+        $fields['penalty'] = $penalty;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $update = $this->update('id', $id, $fields);
+        
+        if($update != FALSE){
+            foreach($fields as $key=>$field){
+                if($data[$key] != $field){
+                    $this->_addAuditRecord($tableName, $id, $key, $data[$key], $field, 'edit');
+                }
+            }    
+            return $id;
+        }
+        return FALSE;    
+    }
+    
+    /**
+    * Method to get a tutorial
+    *
+    * @access public
+    * @param string $id: The id of the tutorial to retrieve
+    * @return array|bool $data: The tutorial data on success | FALSE on failure
+    */
+    public function getTutorial($id)
     {
         $this->_setTutorials();
-        $nOrder = $this->_getNameSpaceOrder($tNameSpace);
         
-        $date = date('Y-m-d H:i:s');
-        $fields = array();
-		$fields['name_space'] = $tNameSpace;
-		$fields['name_space_order'] = $nOrder;
-		$fields['contextcode'] = $this->contextCode;       
-        $fields['name'] = $name;
-        $fields['type'] = $type;
-        $fields['description'] = $description;
-        $fields['percentage'] = $percentage;
-        $fields['total_mark'] = $mark;
-        $fields['answer_open_date'] = $answerOpen;
-        $fields['answer_close_date'] = $answerClose;
-        $fields['marking_close_date'] = $markingClose;
-        $fields['moderating_close_date'] = $moderationClose;
-        $fields['deleted'] = $deleted;
-        $fields['updated'] = $date;
-		$tutorialId = $this->insert($fields);
-		if($tutorialId != FALSE){
-		 	if(!isset($comment)){
-        		$comment = $this->objLanguage->languageText('word_edit');
-        	}
-			$this->_addAuditTrail($this->table, $tNameSpace, $date, $comment);
-			return $tNameSpace;
-		}
-		return FALSE;
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE id='".$id."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
     }
-
+    
+    /**
+    * Method to get tutorials within a context
+    *
+    * @access public 
+    * @param string $contextCode: The code of the context the tutorials are in
+    * @return array|bool $data: The tutorial data on success | FALSE on failure
+    */
+    public function getContextTuts($contextCode)
+    {
+        $this->_setTutorials();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE contextcode='".$contextCode."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+    
     /**
     * Method to delete a tutorial
     *
     * @access public
-    * @param string $tNameSpace: The name space of the tutorial being deleted
-    * @return void
+    * @param string $id: The id of the tutorial to detele
+    * @return string|bool $id: The tutorial id on success | FALSE on failure
     */
-    public function deleteTutorial($tNameSpace)
+    public function deleteTutorial($id)
     {
-        $data = $this->getTutorial($tNameSpace);
-        if($data != FALSE){
-			$tNameSpace = $data['name_space'];
-        	$name = $data['name'];
-        	$type = $data['type'];
-        	$description = $data['description'];
-        	$percentage = $data['percentage'];
-        	$answerOpen = $data['answer_open_date'];
-        	$answerClose = $data['answer_close_date'];
-        	$markingClose = $data['marking_close_date'];
-        	$moderationClose = $data['moderating_close_date'];
-        	$mark = $data['total_mark'];
-			$comment = $this->objLanguage->languageText('word_delete');
-        	
-			return $this->editTutorial($tNameSpace, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose, $moderationClose, $mark, 1, $comment);
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to list all tutorials in a context
-	*
-	* @access public
-	* @return array|bool $data: The tutorial list on success | FALSE on failure
-	*/
-	public function listTutorials()
-	{
-		$this->_setTutorials();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND contextcode='".$this->contextCode."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY name ASC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to get a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to retrieve
-	* @return array|bool $data: The tutorial data on success | FALSE on failure
-	*/
-	public function getTutorial($tNameSpace)
-	{
-		$this->_setTutorials();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND name_space='".$tNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to update the total marks for the tutorial
-	*
-	* @access private
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param integer $value: The value of the change to the total marks
-	* @return void
-	*/
-	private function _updateMarks($tNameSpace, $value)
-	{
-		$data = $this->getTutorial($tNameSpace);
-		$data['total_mark'] = ($data['total_mark'] + $value);
-        $name = $data['name'];
-        $type = $data['type'];
-        $description = $data['description'];
-        $percentage = $data['percentage'];
-        $mark = $data['total_mark'];
-        $answerOpen = $data['answer_open_date'];
-        $answerClose = $data['answer_close_date'];
-        $markingClose = $data['marking_close_date'];
-        $moderationClose = $data['moderating_close_date'];
-        
-		$this->editTutorial($tNameSpace, $name, $type, $description, $percentage, $answerOpen, $answerClose, $markingClose, $moderationClose, $mark);			
-	}
-
-/* ----- Functions for tbl_tutorials_questions ----- */
-
-    /**
-    * Method to add a question to the tutorial
-    *
-    * @access public
-    * @param string $tNameSpace: The name space of the tutorial the question is added to
-    * @param string $question: The question text
-    * @param string $answer: The model answer
-    * @param string $worth: The question worth
-    * @return string|bool $questionId: The tutorial id |False on failure
-    */
-    public function addQuestion($tNameSpace, $question, $answer, $worth)
-    {
-        $this->_setQuestions();
-        $qNameSpace = $this->_defineNameSpace();
-        
-        $date = date('Y-m-d H:i:s');
-        $qOrder = $this->_getQuestionOrder($tNameSpace);
+        $this->_setTutorials();
+        $tableName = $this->table;
         
         $fields = array();
-        $fields['tutorial_name_space'] = $tNameSpace;
-        $fields['name_space'] = $qNameSpace;
-        $fields['name_space_order'] = 1;
-        $fields['question'] = $question;
-        $fields['model_answer'] = $answer;
-        $fields['question_value'] = $worth;
-        $fields['question_order'] = $qOrder;
-        $fields['deleted'] = 0;
-        $fields['updated'] = $date;
-        $questionId = $this->insert($fields);
-        if($questionId != FALSE){
-         	$comment = $this->objLanguage->languageText('word_add');
-			$this->_addAuditTrail($this->table, $qNameSpace, $date, $comment);
-			$this->_updateMarks($tNameSpace, $worth);
-		}
-        return $questionId;
+        $fields['deleted'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $updated = $this->update('id', $id, $fields);
+        
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'deleted', 0, 1, 'delete');
+            $this->deleteTutorialQuestions($id);
+            $this->deleteTutorialAnswers($id);
+            $this->deleteTutorialMarkers($id);
+            $this->deleteTutorialMarking($id);            
+            $this->deleteTutorialResults($id);
+            $this->deleteTutorialLate($id);
+            return $id;            
+        }
+        return FALSE;       
     }
     
     /**
-    * Method to edit a question on the tutorial
+    * Method to update the total mark for the tutorial
+    *
+    * @access private
+    * @param string $id: The tutorialId of the tutorial to total marks for
+    * @return string|bool $tutorialId: The id of the tutorial on success | FALSE on failure
+    */
+    public function _updateMarks($id)
+    {
+        $tutorial = $this->getTutorial($id);
+        $questions = $this->getQuestions($id);
+        
+        $this->_setTutorials();
+        $tableName = $this->table;
+        
+        $total = 0;
+        if($questions != FALSE){
+            foreach($questions as $question){
+                $total = $total + $question['question_value'];
+            }
+        }
+        if($tutorial['total_mark'] != $total){
+            $fields = array();
+            $fields['total_mark'] = $total;
+            $fields['updated'] = date('Y-m-d H:i:s');
+            
+            $updated = $this->update('id', $id, $fields);
+            if($updated != FALSE){
+                $this->_addAuditRecord($tableName, $id, 'total_mark', $tutorial['total_mark'], $total, 'edit');            
+            }
+            return $id;
+        }
+        return FALSE;
+    }
+    
+/***** Methods for tbl_tutorials_audit *****/
+
+    /** 
+    * Method to add an audit record
+    *
+    * @access private
+    * @param string $table: The name of the table affected
+    * @param string $id: The id of the affected record
+    * @param string $field: The name of the affected field
+    * @param string $oldValue: The old value of the field
+    * @param string $newValue: The new value of the field
+    * @param string $transType: The type of transaction
+    * @return string|bool $auditId: The auditId on success | FALSE on failure
+    */
+    public function _addAuditRecord($table, $id, $field, $oldValue, $newValue, $transType)
+    {
+        $this->_setAudit();
+        $fields = array();
+        $fields['contextcode'] = $this->contextCode;
+        $fields['table_name'] = $table;
+        $fields['record_id'] = $id;
+        $fields['field_name'] = $field;
+        $fields['old_value'] = $oldValue;
+        $fields['new_value'] = $newValue;
+        $fields['trans_type'] = $transType;
+        $fields['modifier_id'] = $this->userId;
+        $fields['date_modified'] = date('Y-m-d H:i:s');
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $auditId = $this->insert($fields);
+        
+        return $auditId;
+    }
+    
+/***** Methods for tbl_tutorials_instructions *****/
+
+    /** 
+    * Method to get tutorial instructions for a course
     *
     * @access public
-    * @param string $tNameSpace: The name space of the tutorial
-    * @param string $qNameSpace: The name space of the question being edited
-    * @param string $question: The question text
-    * @param string $answer: The model answer
-    * @param string $newValue: The new value of the question
-    * @param string $oldValue: The old value of the question
-    * @return string|bool $questionId: The question id on success |FALSE on failure
+    * @return array|bool $data: The instruction data on success | FALSE on failure
     */
-    public function editQuestion($tNameSpace, $qNameSpace, $question, $answer, $qOrder, $newValue, $oldValue, $deleted, $comment = NULL)
+    public function getInstructions()
+    {
+        $this->_setInstructions();
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE contextcode='".$this->contextCode."'";
+        $sql .= " AND deleted ='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to add/edit instructions
+    *
+    * @access public
+    * @param string $instructions: The instructions for the students
+    * @return string|bool $id: The id on success | FALSE on failure
+    */
+    public function updateInstructions($instructions)
+    {
+        $data = $this->getInstructions();
+        
+        $this->_setInstructions();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['contextcode'] = $this->contextCode;
+        $fields['instructions'] = $instructions;
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        if($data == FALSE){
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key=>$field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add');
+                }
+                return $id;    
+            }            
+        }else{
+            $updated = $this->update('id', $data['id'], $fields);
+            if($updated != FALSE){
+                if($data['instructions'] != $fields['instructions']){
+                    $this->_addAuditRecord($tableName, $data['id'], 'instructions', $data['instructions'], $fields['instructions'], 'edit');
+                }
+                return $data['id'];    
+            }            
+        }
+        return FALSE;        
+    }
+    
+    /**
+    * Method to delete instructions
+    *
+    * @access public
+    * @return string|bool $id: The id on success | FALSE on failure
+    */
+    public function deleteInstructions()
+    {
+        $this->_setInstructions();
+        $tableName = $this->table;
+        $data = $this->getInstructions();
+        
+        $fields = array();
+        $fields['deleted'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $updated = $this->update('contextcode', $this->contextCode, $fields);
+        
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $data['id'], 'deleted', 0, 1, 'delete');
+            return $data['id'];            
+        }
+        return FALSE;       
+    }
+    
+/***** Methods for tbl_tutorials_questions *****/
+    
+    /** 
+    * Method to get questions for a tutorial
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial to get the questions of
+    * @return array|bool $data: The questions data on success | FALSE on failure
+    */
+    public function getQuestions($tutorialId)
     {
         $this->_setQuestions();
-        $nOrder = $this->_getNameSpaceOrder($qNameSpace);
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        $sql .= " ORDER BY question_order ASC";
         
-        $date = date('Y-m-d H:i:s');
-        $fields = array();
-        $fields['tutorial_name_space'] = $tNameSpace;
-        $fields['name_space'] = $qNameSpace;
-        $fields['name_space_order'] = $nOrder;
-        $fields['question'] = $question;
-        $fields['model_answer'] = $answer;
-        $fields['question_value'] = $newValue;
-        $fields['question_order'] = $qOrder;
-        $fields['deleted'] = $deleted;
-        $fields['updated'] = $date;
-        $questionId = $this->insert($fields);
-        if($questionId != FALSE){
-         	if(!isset($comment)){
-        		$comment = $this->objLanguage->languageText('word_edit');
-        	}
-			$this->_addAuditTrail($this->table, $qNameSpace, $date, $comment);
-         	$worth = ($newValue - $oldValue);
-         	if($worth != 0){
-				$this->_updateMarks($tNameSpace, $worth);
-			}
-		}
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
     }
+    
+    /** 
+    * Method to get a question by id
+    *
+    * @access public
+    * @param string $id: The id of the question to get
+    * @return array|bool $data: The questions data on success | FALSE on failure
+    */
+    public function getQuestionById($id)
+    {
+        $this->_setQuestions();
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE id='".$id."'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to add a question
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $question: The question text
+    * @param string $model: The model answer text
+    * @param string $worth: The value of the question
+    * @return string|bool $id: The id on success | FALSE on failure
+    */
+    public function addQuestion($tutorialId, $question, $model, $worth)
+    {
+        $questions = $this->getQuestions($tutorialId);
+        $count = ($questions != FALSE) ? (count($questions) + 1) : 1;
+        
+        $this->_setQuestions();
+        $tableName = $this->table;
+        
+        $fields = array();
+        $fields['tutorial_id'] = $tutorialId;
+        $fields['question'] = $question;
+        $fields['model_answer'] = $model;
+        $fields['question_value'] = $worth;
+        $fields['question_order'] = $count;
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $id = $this->insert($fields);
+        
+        if($id != FALSE){
+            foreach($fields as $key=>$field){
+                $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add');
+            }
+            $this->_updateMarks($tutorialId);    
+            return $id;
+        }        
+        return FALSE;    
+    }
+    
+    /**
+    * Method to edit a question
+    *
+    * @access public
+    * @param string $id: The id of the question to edit
+    * @param string $question: Thye question text
+    * @param string $model: The model answer text
+    * @param string $worth: The value of the question
+    * @return string|bool $id: The questionId on success | FALSE on failure
+    */
+    public function editQuestion($id, $question, $model, $worth)
+    {
+        $data = $this->getQuestionById($id);
+        
+        $this->_setQuestions();
+        $tableName = $this->table;
 
+        $fields = array();
+        $fields['question'] = $question;
+        $fields['model_answer'] = $model;
+        $fields['question_value'] = $worth;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $update = $this->update('id', $id, $fields);
+        
+        if($update != FALSE){
+            foreach($fields as $key=>$field){
+                if($data[$key] != $field){
+                    $this->_addAuditRecord($tableName, $id, $key, $data[$key], $field, 'edit');
+                }
+            }    
+            $this->_updateMarks($data['tutorial_id']);    
+            return $id;
+        }
+        return FALSE;    
+    }
+    
     /**
     * Method to delete a question
     *
     * @access public
-    * @param string $qNameSpace: The name space of the question being deleted
-    * @return void
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $id: The id of the question to detele
+    * @return string|bool $questionId: The question id on success | FALSE on failure
     */
-    public function deleteQuestion($qNameSpace)
+    public function deleteQuestion($tutorialId, $id)
     {
-        $data = $this->getQuestion($qNameSpace);
-		if($data != FALSE){
-        	$tNameSpace = $data['tutorial_name_space'];
-        	$qNameSpace = $data['name_space'];
-        	$question = $data['question'];
-        	$answer = $data['model_answer'];
-        	$qOrder = $data['question_order'];
-        	$oldValue = $data['question_value'];
-        	$deleted = $data['deleted'];
-		 
-	        $comment = $this->objLanguage->languageText('word_delete');
-			$this->editQuestion($tNameSpace, $qNameSpace, $question, $answer, $qOrder, 0, $oldValue, 1, $comment);
-			$qAllData = $this->listQuestions($tNameSpace);
-			foreach($qAllData as $line){
-				$qData[] = $line['name_space'];
-			}
-			$this->reorderQuestions($qData);
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to list all question on a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @return array|bool $data: The question list on success | FALSE on failure
-	*/
-	public function listQuestions($tNameSpace)
-	{
-		$this->_setQuestions();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY question_order ASC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to list 4 questions on a tutorial for answering
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param string $qNum: The question order from which to get questions for answering
-	* @return array|bool $data: The question list on success | FALSE on failure
-	*/
-	public function listQuestionsForAnswering($tNameSpace, $qNum)
-	{
-		$questions = $this->listQuestions($tNameSpace);
-		
-		$this->_setQuestions();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " AND question_order >= '".$qNum."'";
- 		$sql .= " ORDER BY question_order ASC";
- 		$sql .= " LIMIT 0, 4";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	$data[0]['total'] = count($questions);
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to get a question
-	*
-	* @access public
-	* @param string $qNameSpace: The name space of the tutorial to retrieve
-	* @return array|bool $data: The tutorial data on success | FALSE on failure
-	*/
-	public function getQuestion($qNameSpace)
-	{
-		$this->_setQuestions();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND name_space='".$qNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to determine the question order (number) of the question being added
-	*
-	* @access private
-	* @param string $tNameSpace: The name space of the tutorial the question is on
-	* @return integer $qOrder: The order (number)of the question being added
-	*/
-	private function _getQuestionOrder($tNameSpace)
-	{
-		$this->_setQuestions();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY question_order ASC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			$qOrder = (count($data) + 1);
-		}else{
-			$qOrder = 1;
-		}
-		return $qOrder;
-	}
-	
-	/**
-	* Method to import questions
-	*
-	* @access public
-	* @param array $file: The uploaded file details
-	* @param string $tNameSpace: The name space of the tutorial the questions are imported to
-	* @param integer $overwrite: An indicator to see if the questions are to be deleted
-	* @return void
-	*/
-	public function importQuestions($file, $tNameSpace, $overwrite)
-	{
-		if(is_uploaded_file($file['import']['tmp_name'])){
-			if($overwrite == 1){
-				$data = $this->listQuestions($tNameSpace);
-				if($data != FALSE){
-					foreach($data as $line){
-						$this->deleteQuestion($line['name_space']);
-					}
-				}
-			}
-			$handle = fopen($file['import']['tmp_name'], "r");
-			while(($data = fgetcsv($handle, 0, ",")) !== FALSE){
-				$this->addQuestion($tNameSpace, $data[0], $data[1], $data[2]);			
-			}
-			fclose($handle);
-		}
-	}
-	
-	/**
-	* Method to reorder the question list
-	*
-	* @access public
-	* @param array $list: The list of guestions
-	* @return bool $result: TRUE on success | FALSE on failure
-	*/
-	public function reorderQuestions($list)
-	{
-		$this->_setQuestions();
-		if(is_array($list)){
-		 	$order = 1;
-			foreach($list as $qNameSpace){
-				$data = $this->getQuestion($qNameSpace);
-				if($data != FALSE){
-					$this->editQuestion($data['tutorial_name_space'], $qNameSpace, $data['question'], $data['model_answer'], $order, $data['question_value'], $data['question_value'], 0);
-					$order++;					
-				}				
-			}
-			return TRUE;	
-		}
-		return FALSE;
-	}
-
-	/**
-	* Method to get a question on the tutorial for marking
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param string $qNum: The question order to get the question for marking
-	* @return array|bool $data: The question list on success | FALSE on failure
-	*/
-	public function getQuestionForMarking($tNameSpace, $qNum)
-	{
-		$questions = $this->listQuestions($tNameSpace);
-		
-		$this->_setQuestions();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " AND question_order='".$qNum."'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	$data[0]['total'] = count($questions);
-			return $data[0];
-		}
-		return FALSE;
-	}
-
-/* ----- Functions for tbl_tutorial_answers ----- */
-
-	/**
-	* Method to add an answer record
-	*
-	* @access public
-    * @param string $tNameSpace: The name space of the tutorial
-    * @param string $qNameSpace: The name space of the question
-    * @param string $answer: The student answer
-    * @param string $aNameSpace: The answer name space if any
-    * @return string|bool $answerId: The answer id |False on failure
-    */
-    public function addAnswer($tNameSpace, $qNameSpace, $answer, $aNameSpace = NULL)
-    {
-        $this->_setAnswers();
-        if($aNameSpace == NULL){
-        	$nameSpace = $this->_defineNameSpace();
-        	$order = 1;
-			$comment = $this->objLanguage->languageText('word_add');
-        }else{
-			$nameSpace = $aNameSpace;
-			$order = $this->_getNameSpaceOrder($nameSpace);
-			$comment = $this->objLanguage->languageText('word_edit');
-		}
+        $this->_setQuestions();
+        $tableName = $this->table;
         
-        $date = date('Y-m-d H:i:s');
-
         $fields = array();
-        $fields['tutorial_name_space'] = $tNameSpace;
-        $fields['question_name_space'] = $qNameSpace;
-        $fields['name_space'] = $nameSpace;
-        $fields['name_space_order'] = $order;
-        $fields['answer'] = $answer;
-        $fields['student_id'] = $this->userId;
-        $fields['request_moderation'] = 0;
-        $fields['moderation_complete'] = 0;
-        $fields['deleted'] = 0;
-        $fields['updated'] = $date;
-        $answerId = $this->insert($fields);
-        if($answerId != FALSE){         	
-			$this->_addAuditTrail($this->table, $nameSpace, $date, $comment);
-		}
-        return $answerId;
-    }
-    
-	/**
-	* Method to update an answer record
-	*
-	* @access public
-    * @param array $aData: The answer data
-    * @return string|bool $answerId: The answer id |False on failure
-    */
-    public function updateAnswer($aData)
-    {
-        $this->_setAnswers();
-		$nameSpace = $aData['name_space'];
-		$aData['name_space_order'] = $this->_getNameSpaceOrder($nameSpace);
-		$comment = $this->objLanguage->languageText('word_edit');
+        $fields['deleted'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
         
-        $date = date('Y-m-d H:i;s');
-		$aData['updated'] =$date;
-
-        $answerId = $this->insert($aData);
-        if($answerId != FALSE){         	
-			$this->_addAuditTrail($this->table, $nameSpace, $date, $comment);
-		}
-        return $answerId;
+        $updated = $this->update('id', $id, $fields);
+        
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'deleted', 0, 1, 'delete');
+            $this->_updateMarks($tutorialId);
+            return $id;           
+        }
+        return FALSE;       
     }
-    
-	/**
-	* Method to get an answer for a question
-	*
-	* @access public
-	* @param string $qNameSpace: The name space of the question to retrieve an answer for
-	* @return array|bool $data: The answer data on success | FALSE on failure
-	*/
-	public function getQuestionAnswer($qNameSpace, $studentId = NULL)
-	{
-		if(!isset($studentId) || empty($studentId)){
-			$studentId = $this->userId;
-		}
-		
-		$this->_setAnswers();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND question_name_space='".$qNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to get an answer
-	*
-	* @access public
-	* @param string $aNameSpace: The name space of the answer
-	* @return array|bool $data: The answer data on success | FALSE on failure
-	*/
-	public function getAnswer($aNameSpace)
-	{
-		$this->_setAnswers();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND name_space='".$aNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to get a student to be marked
-	*
-	* @access public
-	* @param string $qNameSpace: The name space of the question to retrieve an answer for
-	* @param bool $checkOnly: TRUE if for checking only | FALSE if not
-	* @return string|bool $data: The student id
-	*/
-	public function getStudentToMark($tNameSpace, $checkOnly = TRUE)
-	{
-		$this->_setAnswers();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND peer_id='".$this->userId."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY name_space_order DESC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0]['student_id'];
-		}
-		
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id != '".$this->userId."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY name_space_order DESC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	$studentId = $data[0]['student_id'];
-		 	$hasSubmitted = $this->hasSubmitted($tNameSpace, $studentId);
-		 	if(!$hasSubmitted){
-				return $this->getStudentToMark($tNameSpace, $checkOnly);
-			}
-		 	if(!$checkOnly){
-			  	$aData = $this->listStudentAnswers($tNameSpace, $studentId);
-		 		$this->setMarker($tNameSpace, $studentId);
-		 		$this->setStudent($tNameSpace, $studentId);
-		 		foreach($aData as $line){
-		 		 	unset($line['id']);
-		 		 	unset($line['puid']);
-		 		 	$line['peer_id'] = $this->userId;
-		 			$this->updateAnswer($line);
-		 		}
-		 	}
-			return $studentId;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to check if a student has marked the tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param string $studentId: The id of the student
-	* @return bool $hasMarked: TURE if the student has marked | FALSE if not
-	*/
-	public function checkHasMarked($tNameSpace, $studentId = NULL)
-	{
-		$studentId = isset($studentId) ? $studentId : $this->userId;
-		
-		$this->_setAnswers();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND peer_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return TRUE;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to list all the answers for a student
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param string $studentId: The id of the student
-	* @return array|bool $data: The students answers on success | FALSE on failure
-	*/
-	public function listStudentAnswers($tNameSpace, $studentId)
-	{
-		$this->_setAnswers();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to add peer marks and comments
-	* 
-	* @access public
-	* @param string $aNameSpace: The name space of the answer
-	* @param string $mark: The peer mark given
-	* @param string $comment: The peer comment made
-	* @return string|bool $aNameSpace: The name space of the answer on success | FALSE if not
-	*/
-	public function addPeerMark($aNameSpace, $mark, $comment)
-	{
-		$aData = $this->getAnswer($aNameSpace);
-		unset($aData['id']);
-		unset($aData['puid']);
-		$aData['peer_id'] = $this->userId;
-		$aData['peer_mark'] = $mark;
-		$aData['peer_comment'] = $comment;
-		$aData['moderator_id'] = $this->userId;
-		$aData['moderator_mark'] = $mark;
-		$aData['moderator_comment'] = $comment;
-		return $this->updateAnswer($aData);
-	}
-	
-	/**
-	* Method to add moderator marks and comments
-	* 
-	* @access public
-	* @param string $aNameSpace: The name space of the answer
-	* @param string $mark: The peer mark given
-	* @param string $comment: The peer comment made
-	* @param bool $completed: TRUE if the moderator submitted | FALSE if not 
-	* @return string|bool $aNameSpace: The name space of the answer on success | FALSE if not
-	*/
-	public function addModeratorMark($aNameSpace, $mark, $comment, $completed)
-	{
-		$aData = $this->getAnswer($aNameSpace);
-		unset($aData['id']);
-		unset($aData['puid']);
-		$aData['moderator_id'] = $this->userId;
-		$aData['moderator_mark'] = $mark;
-		$aData['moderator_comment'] = $comment;
-		if($completed){
-			$aData['moderation_complete'] = 1;
-		}
-		return $this->updateAnswer($aData);
-	}
-	
-	/**
-	* Method to update the answer record with the moderation request
-	*
-	* @access public
-	* @param string $aNameSpace: The name space of the answer
-	* @param string $reason: The reason for moderation
-	* @return string|bool $aNameSpace: The name space of the answer on success | FALSE if not
-	*/
-	public function submitModerationRequest($aNameSpace, $reason)
-	{
-		$aData = $this->getAnswer($aNameSpace);
-		unset($aData['id']);
-		unset($aData['puid']);
-		$aData['request_moderation'] = 1;
-		$aData['moderation_reason'] = $reason;
-		return $this->updateAnswer($aData);
-	}
-	
-	/**
-	* Method to return an answer for moderation
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @return array|bool $data: The answer data on success | FALSE on failure
-	*/
-	public function getAnswerToModerate($tNameSpace)
-	{
-		$this->_setAnswers();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND request_moderation='1'";
-		$sql .= " AND moderation_complete!='1'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	$data[0]['total'] = count($data);
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to list all tutorial answers
-	*
-	* @access public
-	* @param string $qNum: The question order number
-	* @param string $aNum: The answer count from which to list
-	* @return array|bool $data: The answer data on success | FALSE on failure
-	*/
-	public function listAnswers($qNameSpace, $aNum)
-	{
-		$this->_setAnswers();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND question_name_space='".$qNameSpace."'";
-		$sql .= " AND deleted='0'";
- 		$sql .= " ORDER BY student_id ASC";
- 		$sql .= " LIMIT ".($aNum - 1).", 20";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	$count = $this->countAnswers($qNameSpace);
-		 	$data[0]['total'] = $count;
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to count all tutorial answers
-	*
-	* @access public
-	* @param string $qNameSpace: The question name space
-	* @return array|bool $data: The answer data on success | FALSE on failure
-	*/
-	public function countAnswers($qNameSpace)
-	{
-		$this->_setAnswers();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND question_name_space='".$qNameSpace."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return count($data);
-		}
-		return 0;
-	}
-/* ----- Functions for tbl_tutorial_results ----- */
 
-	/**
-	* Method to check if the user has a result record
-	*
-	* @access public
-    * @param string $tNameSpace: The name space of the tutorial
-    * @return string|bool $resultId: The result id |False on failure
+    /**
+    * Method to delete all tutorial question
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial to detele all questions from
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
     */
-    public function checkResult($tNameSpace)
+    public function deleteTutorialQuestions($tutorialId)
     {
-		$this->_setResults();
-		$sql = "SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$this->userId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data == FALSE){
-			$this->addResult($tNameSpace);
-		}
-		return TRUE;
+        $questions = $this->getQuestions($tutorialId);
+        
+        if($questions != FALSE){
+            foreach($questions as $question){
+                $this->deleteQuestion($tutorialId, $question['id']);
+            }
+            return $tutorialId;
+        }
+        return FALSE;       
     }
     
-	/**
-	* Method to add an results record
-	*
-	* @access public
-    * @param string $tNameSpace: The name space of the tutorial
-    * @return string|bool $resultId: The result id |False on failure
+    /**
+    * Method to reorder questions
+    *
+    * @access public
+    * @param string $tutorialId: The id of the titorial to reorder questions for
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
     */
-    public function addResult($tNameSpace)
+    public function reorderQuestions($tutorialId)
+    {
+        $questions = $this->getQuestions($tutorialId);
+        
+        if($questions != FALSE){
+            foreach($questions as $key => $question){
+                $order = $question['question_order'];
+                if($order != ($key + 1)){
+                    
+                    $this->_setQuestions();
+                    $tableName = $this->table;
+
+                    $fields = array();
+                    $fields['question_order'] = ($key + 1);
+                    $fields['updated'] = date('Y-m-d H:i:s');
+        
+                    $update = $this->update('id', $question['id'], $fields);
+        
+                    if($update != FALSE){
+                        $this->_addAuditRecord($tableName, $question['id'], 'question_order', $order, ($key + 1), 'edit');
+                    }
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to move a question in the question order
+    *
+    * @access public
+    * @param string $tutorialId: The tutorial Id
+    * @param string $id: The id of the question
+    * @param string $dir: The direction to move
+    * @return string|bool $id: The question id on success | FALSE on failure
+    */
+    public function moveQuestion($tutorialId, $id, $dir)
+    {
+        $questions = $this->getQuestions($tutorialId);
+        
+        foreach($questions as $key => $question){
+            $order = $question['question_order'];
+            if($question['id'] == $id){
+                if($dir == 'down'){
+                    $nextId = $questions[$key + 1]['id'];
+                    $newOrder = ($order + 1);
+                }else{
+                    $nextId = $questions[$key - 1]['id'];
+                    $newOrder = ($order - 1);                   
+                }
+                $this->_setQuestions();
+                $tableName = $this->table;
+
+                $array = array();
+                $fields['question_order'] = $newOrder;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                    
+                $updated = $this->update('id', $id, $fields);
+                    
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $id, 'question_order', $order, $newOrder, 'edit');
+                }
+
+                $this->_setQuestions();
+                $tableName = $this->table;
+
+                $array = array();
+                $fields['question_order'] = $order;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                    
+                $updated = $this->update('id', $nextId, $fields);
+                    
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $nextId, 'question_order', $newOrder, $order, 'edit');
+                }
+                return $id;
+            }
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get questions and their associated answers for a student
+    * 
+    * @access public
+    * @param string $tutorialId: The tutorial id
+    * @return array|bool $data: The question and answer array on success | FALSE on failure
+    */
+    public function getStudentLinkData($tutorialId)
+    {
+        $this->_setQuestions();
+        $sql = "SELECT * FROM ".$this->table." AS questions";
+        $sql .= " RIGHT JOIN tbl_tutorials_answers AS answers";
+        $sql .= " ON questions.id=answers.question_id";
+        $sql .= " WHERE questions.tutorial_id='".$tutorialId."'";
+        $sql .= " AND questions.deleted='0'";
+        $sql .= " AND answers.student_id='".$this->userId."'";
+        $sql .= " AND answers.deleted='0'";
+        $sql .= " ORDER BY questions.question_order ASC";
+
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;        
+    }
+    
+    /**
+    * Method to get questions and their associated answers with the associated marking for a student
+    * 
+    * @access public
+    * @param string $tutorialId: The tutorial id
+    * @param string $studentId: The id of the student
+    * @return array|bool $data: The question and answer array on success | FALSE on failure
+    */
+    public function getMarkerLinkData($tutorialId, $studentId)
+    {
+        $this->_setQuestions();
+        $sql = "SELECT * FROM ".$this->table." AS questions";
+        $sql .= " LEFT JOIN tbl_tutorials_answers AS answers";
+        $sql .= " ON questions.id=answers.question_id";
+        $sql .= " LEFT JOIN tbl_tutorials_marking AS marking";
+        $sql .= " ON answers.id=marking.answer_id";
+        $sql .= " WHERE questions.tutorial_id='".$tutorialId."'";
+        $sql .= " AND questions.deleted='0'";
+        $sql .= " AND answers.student_id='".$studentId."'";
+        $sql .= " AND answers.deleted='0'";
+        $sql .= " AND marking.marker_id='".$this->userId."'";
+        $sql .= " AND marking.deleted='0'";
+        $sql .= " ORDER BY questions.question_order ASC";
+
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;        
+    }
+    
+/***** Methods for tbl_tutorial_results *****/
+
+    /**
+    * Method to get the students results for a tutorial
+    *
+    * @access public
+    * @param string $tutorialId: The tutorial id
+    * @param string $studentId: The student id
+    * @return array|bool $data: The results array on success | FALSE on failure
+    */
+    public function getResult($tutorialId, $studentId)
     {
         $this->_setResults();
-        $rNameSpace = $this->_defineNameSpace();
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND deleted='0'";
         
-        $date = date('Y-m-d H:i:s');
-
-        $fields = array();
-        $fields['tutorial_name_space'] = $tNameSpace;
-        $fields['name_space'] = $rNameSpace;
-        $fields['name_space_order'] = 1;
-        $fields['student_id'] = $this->userId;
-        $fields['completed'] = 0;
-        $fields['marked'] = 0;
-        $fields['mark_obtained'] = 0;
-        $fields['deleted'] = 0;
-        $fields['updated'] = $date;
-        $resultId = $this->insert($fields);
-        if($resultId != FALSE){
-         	$comment = $this->objLanguage->languageText('word_add');
-			$this->_addAuditTrail($this->table, $rNameSpace, $date, $comment);
-		}
-        return $resultId;
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
     }
     
     /**
-    * Method to set a student as having submitted a tutorial
+    * Method to get the students results for a tutorial for export
     *
     * @access public
-    * @param string $tNameSpace: The tutorial name space
-    * @return string|bool $resultId: The result id |False on failure
+    * @param string $tutorialId: The tutorial id
+    * @param string $studentId: The student id
+    * @return array|bool $data: The results array on success | FALSE on failure
     */
-    public function setAnswered($tNameSpace)
+    public function getResultsForExport($tutorialId)
     {
-		$data = $this->getResult($tNameSpace);
-		if($data != FALSE){
-		 	$this->_setResults();
-			unset($data['id']);
-			unset($data['puid']);
-			$order = $this->_getNameSpaceOrder($data['name_space']);
-			$data['name_space_order'] = $order;
-			$data['completed'] = 1;
-      		$date = date('Y-m-d H:i:s');
-      		$data['updated'] = $date;
-	        $resultId = $this->insert($data);
-    	    if($resultId != FALSE){
-        	 	$comment = $this->objLanguage->languageText('word_edit');
-				$this->_addAuditTrail($this->table, $data['name_space'], $date, $comment);
-			}
-        	return $resultId;
-		}
-		return FALSE;
-	}
+        $this->_setResults();
+        $sql = "SELECT * FROM ".$this->table." AS results";
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
     
     /**
-    * Method to set a student as having marked a tutorial
+    * Method to add a result
     *
     * @access public
-    * @param string $tNameSpace: The tutorial name space
-    * @return string|bool $resultId: The result id |False on failure
+    * @param string $tutorialId: The id of the tutorial
+    * @return array|bool $result: The result array on success | FALSE on failure
     */
-    public function setMarked($tNameSpace)
+    public function addResult($tutorialId)
     {
-		$data = $this->getResult($tNameSpace);
-		if($data != FALSE){
-		 	$this->_setResults();
-			unset($data['id']);
-			unset($data['puid']);
-			$order = $this->_getNameSpaceOrder($data['name_space']);
-			$data['name_space_order'] = $order;
-			$data['marked'] = 1;
-      		$date = date('Y-m-d H:i:s');
-      		$data['updated'] = $date;
-	        $resultId = $this->insert($data);
-    	    if($resultId != FALSE){
-        	 	$comment = $this->objLanguage->languageText('word_edit');
-				$this->_addAuditTrail($this->table, $data['name_space'], $date, $comment);
-			}
-        	return $resultId;
-		}
-		return FALSE;
-	}
-    
+        $result = $this->getResult($tutorialId, $this->userId);
+        
+        if($result == FALSE){
+            $this->_setResults();
+            $tableName = $this->table;
+        
+            $fields = array();
+            $fields['tutorial_id'] = $tutorialId;
+            $fields['student_id'] = $this->userId;
+            $fields['has_submitted'] = 0;            
+            $fields['deleted'] = 0;
+            $fields['updated'] = date('Y-m-d H:i:s');
+        
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key => $field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add'); 
+                }
+                $result = $this->getResult($tutorialId, $this->userId);
+                return $result;
+            }
+        }else{
+            return $result;
+        }
+        return FALSE;
+    }
+
     /**
-    * Method to set the id of the student who is being marked
+    * Method to get a student to mark
     *
     * @access public
-    * @param string $tNameSpace: The tutorial name space
-    * @params string $studentId: The id of the student who is being marked
-    * @return string|bool $resultId: The result id |False on failure
+    * @param string $tutorialId: The id of the tutorial
+    * @return string|bool $studentId: The id of the student to mark on sucess | FALSE on failure
     */
-    public function setStudent($tNameSpace, $studentId)
+    public function getStudent($tutorialId)
     {
-		$data = $this->getResult($tNameSpace);
-		if($data != FALSE){
-		 	$this->_setResults();
-			unset($data['id']);
-			unset($data['puid']);
-			$order = $this->_getNameSpaceOrder($data['name_space']);
-			$data['name_space_order'] = $order;
-			$data['student_marked'] = $studentId;
-      		$date = date('Y-m-d H:i:s');
-      		$data['updated'] = $date;
-	        $resultId = $this->insert($data);
-    	    if($resultId != FALSE){
-        	 	$comment = $this->objLanguage->languageText('word_edit');
-				$this->_addAuditTrail($this->table, $data['name_space'], $date, $comment);
-			}
-        	return $resultId;
-		}
-		return FALSE;
-	}
-    
-	/**
-	* Method to get a students result
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial result retrieve
-	* @param string $studentId: The id of the student
-	* @return array|bool $data: The result data on success | FALSE on failure
-	*/
-	public function getResult($tNameSpace, $studentId = NULL)
-	{
-		$studentId = isset($studentId) ? $studentId : $this->userId;
-		
-		$this->_setResults();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to check if a student has submitted a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial result retrieve
-	* @return bool $data: TRUE if yes | FALSE if no
-	*/
-	public function hasSubmitted($tNameSpace, $studentId = NULL)
-	{
-		$studentId = isset($studentId) ? $studentId : $this->userId;
-		$this->_setResults();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY name_space_order DESC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	if($data[0]['completed'] == 1){
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to check if a student has marked a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial result retrieve
-	* @return bool $data: TRUE if yes | FALSE if no
-	*/
-	public function hasMarked($tNameSpace, $studentId = NULL)
-	{
-		$studentId = isset($studentId) ? $studentId : $this->userId;
-		$this->_setResults();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$sql .= " ORDER BY name_space_order DESC";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-		 	if($data[0]['marked'] == 1){
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to check if a student has submitted a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial result retrieve
-	* @param string $studentId: The id of the student to update
-	* @return string|bool $data: TRUE if yes | FALSE if no
-	*/
-	public function updateResults($tNameSpace, $moderator = FALSE, $studentId = NULL)
-	{
-		if(!$moderator){
-			$studentId = $this->getStudentToMark($tNameSpace);
-		}
-		$aData = $this->listStudentAnswers($tNameSpace, $studentId);
-		$total = 0;
-		foreach($aData as $line){
-			$total = $total + $line['moderator_mark'];
-		}
-		$rData = $this->getResult($tNameSpace, $studentId);
-		$rNameSpace = $rData['name_space'];
-		$order = $this->_getNameSpaceOrder($rNameSpace);
-		$date = date('Y-m-d H:i:s');
-		
-		unset($rData['id']);
-		unset($rData['puid']);
-		$rData['mark_obtained'] = $total;
-		$rData['name_space_order'] = $order;
-	   	$resultId = $this->insert($rData);
-    	if($resultId != FALSE){
-        	$comment = $this->objLanguage->languageText('word_edit');
-			$this->_addAuditTrail($this->table, $rNameSpace, $date, $comment);
-		}
-        return $resultId;
-	}
-	
-	/**
-	* Method to set the marker on the results record
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @param string $studentId: The id of the student
-	* @param bool $moderator: TRUE if the current user is a lecturer | FALSE if not
-	* @return string|bool $resultId: The result id on success | FALSE if not
-	*/
-	public function setMarker($tNameSpace, $studentId, $moderator = FALSE)
-	{
-		$data = $this->getResult($tNameSpace, $studentId);
-		if($data != FALSE){
-			unset($data['id']);
-			unset($data['puid']);
-      		$date = date('Y-m-d H:i:s');
-      		$data['updated'] = $date;
-			$order = $this->_getNameSpaceOrder($data['name_space']);
-			$data['name_space_order'] = $order;
-			if($moderator){
-				$data['moderator_id'] = $this->userId;
-			}else{
-				$data['peer_id'] = $this->userId;
-			}
+        $this->_setResults();
 
-		 	$this->_setResults();
-	        $resultId = $this->insert($data);
-    	    if($resultId != FALSE){
-        	 	$comment = $this->objLanguage->languageText('word_edit');
-				$this->_addAuditTrail($this->table, $data['name_space'], $date, $comment);
-			}
-        	return $resultId;
-		
-		}
-		return FALSE;
-	}
+        $sql = "SELECT *, results.student_id AS sid,";
+        $sql .= "COUNT(results.student_id) AS cnt";
+        $sql .= " FROM ".$this->table." AS results";
+        $sql .= " LEFT JOIN tbl_tutorials_marker AS marker";
+        $sql .= " ON (results.tutorial_id=marker.tutorial_id";
+        $sql .= " AND results.student_id=marker.student_id)";
+        $sql .= " WHERE results.tutorial_id='".$tutorialId."'";
+        $sql .= " AND results.student_id!='".$this->userId."'";
+        $sql .= " AND results.has_submitted='1'";
+        $sql .= " AND (marker.is_lecturer='0' OR marker.is_lecturer IS NULL)";
+        $sql .= " AND (marker.marker_id!='".$this->userId."' OR marker.marker_id IS NULL)";
+        $sql .= " AND results.deleted='0'";
+        $sql .= " GROUP BY results.student_id";
 
-	/** 
-	* Methid to delete a students results
-	*
-	* @access public
-	* @param string $tNameSpace: The name space	of the tutorial
-	* @param string $studentId: The id of the student
-	* @return string|bool $id: The id on success | FALSE on failure
-	*/
-	public function deleteResults($tNameSpace, $studentId)
-	{
-		$rData = $this->getResult($tNameSpace, $studentId);
-		if($rData != FALSE){
-			$order = $this->_getNameSpaceOrder($rData['name_space']);
-			$date = date('Y-m-d H:i:s');
-			unset($rData['id']);
-			unset($rData['puit']);
-			$rData['name_space_order'] = $order;
-			$rData['deleted'] = 1;
-			$rData['updated'] = $date;
-		 	$this->_setResults();
-	        $id = $this->insert($data);
-    	    if($id != FALSE){
-        	 	$comment = $this->objLanguage->languageText('word_delete');
-				$this->_addAuditTrail($this->table, $data['name_space'], $date, $comment);
-			}
-        	return $id;
-		}
-		return FALSE;
-	}
-
-	
-/* ----- Functions for tbl_tutorial_instructions ----- */
-
-	/**
-	* MEthod to add instructions for the tutorial
-	* 
-	* @access public
-	* @param string $instructions: The instructions for the tutorial
-	* @return string|bool $id: The instruction id on success | FALSE on failure
-	*/
-	public function addInstructions($instructions)
-	{
-		$this->_setInstructions();
-		$nameSpace = $this->_defineNameSpace();		
-		$date = date('Y-m-d H:i:s');
-		
-		$fields = array();
-		$fields['contextcode'] = $this->contextCode;
-		$fields['name_space'] = $nameSpace;
-		$fields['name_space_order'] = 1;
-		$fields['instructions'] = $instructions;
-		$fields['deleted'] = 0;
-		$fields['updated'] = $date;
-		$id = $this->insert($fields);
-		if($id != FALSE){
-        	$comment = $this->objLanguage->languageText('word_add');
-			$this->_addAuditTrail($this->table, $nameSpace, $date, $comment);
-		}
-	}
-	
-	/**
-	* Method to get the instructiosn for a tutorial
-	*
-	* @access public
-	* @return array|bool $data: The instructions data on success | FALSE on failure
-	*/
-	public function getInstructions()
-	{
-		$this->_setInstructions();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND contextcode='".$this->contextCode."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to edit the instructions
-	*
-	* @access public
-	* @param string $instructions: The instructions for the tutorial
-	* @return string|bool $id: The instruction id on success | FALSE on failure
-	*/
-	public function updateInstructions($instructions)
-	{
-		$iData = $this->getInstructions();
-		if($iData != FALSE){
-			$order = $this->_getNameSpaceOrder($iData['name_space']);
-			$date = date('Y-m-d H:i:s');
-			unset($iData['id']);
-			unset($iData['puid']);
-			$iData['name_space_order'] = $order;
-			$iData['instructions'] = $instructions;
-			$iData['updated'] = $date;
-
-			$this->_setInstructions();
-			$id = $this->insert($iData);
-			if($id != FALSE){
-        		$comment = $this->objLanguage->languageText('word_edit');
-				$this->_addAuditTrail($this->table, $iData['name_space'], $date, $comment);
-			}
-			return $id;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to delete instructions
-	*
-	* @access public
-	* @return string|bool $id: The instruction id on success | FALSE on failure
-	*/
-	public function deleteInstructions()
-	{
-		$iData = $this->getInstructions();
-		if($iData != FALSE){
-			$order = $this->_getNameSpaceOrder($iData['name_space']);
-			$date = date('Y-m-d H:i:s');
-			unset($iData['id']);
-			unset($iData['puid']);
-			$iData['name_space_order'] = $order;
-			$iData['deleted'] = 1;
-			$iData['updated'] = $date;
-
-			$this->_setInstructions();
-			$id = $this->insert($iData);
-			if($id != FALSE){
-        		$comment = $this->objLanguage->languageText('word_delete');
-				$this->_addAuditTrail($this->table, $iData['name_space'], $date, $comment);
-			}
-			return $id;
-		}
-		return FALSE;
-	}
-	
-/* ----- Functions for tbl_tutorial_late ----- */
-
-	/**
-	* Method to get the late submissions for a tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name spacel of the tutorial
-	* @param string $studentId: The id of the student
-	* @return array|bool $data: The late submission data on success | FALSE on failure
-	*/
-	public function getLateSubmissions($tNameSpace, $studentId)
-	{
-		$this->_setLate();
-		$sql = " SELECT * FROM ".$this->table;
-		$sql .= " WHERE (name_space, name_space_order)";
-		$sql .= "  IN (SELECT name_space, MAX(name_space_order)";
-		$sql .= "      FROM ".$this->table." GROUP BY name_space)";
-		$sql .= " AND tutorial_name_space='".$tNameSpace."'";
-		$sql .= " AND student_id='".$studentId."'";
-		$sql .= " AND deleted='0'";
-		$data = $this->getArray($sql);
-		if($data != FALSE){
-			return $data[0];
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to add late submissions
-	* 
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial
-	* @param string $studentId: The id of the student
-	* @param string $answer: The answer closing date
-	* @param string $mark: The marking closing date
-	* @param string $moderate: The moderating closing date
-	* @return string|bool $id: The id on success | FALSE on failure
-	*/
-	public function addLateSubmission($tNameSpace, $studentId, $answer, $mark, $moderate)
-	{
-		$lData = $this->getLateSubmissions($tNameSpace, $studentId);
-		$date = date('Y-m-d H:i:s');
-		if($lData != FALSE){
-			$order = $this->_getNameSpaceOrder($lData['name_space']);
-			unset($lData['id']);
-			unset($lData['puid']);
-			$lData['name_space_order'] = $order;
-			$lData['answer_close_date'] = $answer;
-			$lData['marking_close_date'] = $mark;
-			$lData['moderating_close_date'] = $moderate;
-			$comment = $this->objLanguage->languageText('word_edit');
-		}else{
-		 	$nameSpace = $this->_defineNameSpace();
-			$lData = array();
-			$lData['tutorial_name_space'] = $tNameSpace;
-			$lData['name_space'] = $nameSpace;			
-			$lData['name_space_order'] = 1;
-			$lData['answer_close_date'] = $answer;
-			$lData['marking_close_date'] = $mark;
-			$lData['moderating_close_date'] = $moderate;
-			$comment = $this->objLanguage->languageText('word_add');
-		}
-		$lData['student_id'] = $studentId;
-		$lData['updated'] = $date;
-		$lData['deleted'] = 0;
-		$this->_setLate();
-		
-		$id = $this->insert($lData);
-		if($id != FALSE){
-			$this->_addAuditTrail($this->table, $lData['name_space'], $date, $comment);
-		}
-		return $id;
-	}
-	
-	/**
-	* Method to delete a late submission
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @param string $studentId: The id of the student
-	* @return string|bool $id: The id on success | FALSE on failure
-	*/
-	public function deleteLateSubmissions($tNameSpace, $studentId)
-	{
-		$lData = $this->getLateSubmissions($tNameSpace, $studentId);
-		if($lData != FALSE){
-		 	$date = date('Y-m-d H:i:s');
-			$order = $this->_getNameSpaceOrder($lData['name_space']);
-			unset($lData['id']);
-			unset($lData['puid']);
-			$lData['name_space_order'] = $order;
-			$lData['deleted'] = 1;
-			$lData['updated'] = $date;
-			$comment = $this->objLanguage->languageText('word_delete');
-			$id = $this->insert($lData);
-			if($id != FALSE){
-				$this->_addAuditTrail($this->table, $lData['name_space'], $date, $comment);
-			}
-			return $id;
-		}
-		return FALSE;
-	}
-	
-/* ----- Functions for tbl_tutorial_audit ----- */
+        $data = $this->getArray($sql);      
+        if($data != FALSE){
+            foreach($data as $key => $line){
+                if($line['cnt'] >= 3){
+                    unset($data[$key]);
+                }
+            }
+            if(empty($data)){
+                return FALSE;
+            }
+            shuffle($data);
+            $studentId = $data[0]['sid'];
+            return $studentId;  
+        }
+        return FALSE;
+    }
 
     /**
-    * Method to add a tutorial audit trail record
-    * @access private
-    * @param string $table: The table that was affected
-    * @param string $nameSpace: The name space of the records on the affected table
-    * @param string $recordDate: The date the record was added
-    * @param string $comment: A comment on the audit record
-    * @return string|bool $auditId: The audit trail id |False on failure
+    * Method to update submission indicator
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $questionId: The id of the question
+    * @param string $answer: The answer to the tutorial question
+    * @return string|bool $id: The result id on success | FALSE on failure
     */
-    private function _addAuditTrail($table, $nameSpace, $recordDate, $comment)
+    public function updateSubmitted($tutorialId)
     {
-        $this->_setAudit();
-        $auditDate = date('Y-m-d H:i:s');
+        $result = $this->getResult($tutorialId, $this->userId);
+        
+        $this->_setResults();
+        $tableName = $this->table;
+
         $fields = array();
-        $fields['table_affected'] = $table;
-        $fields['name_space'] = $nameSpace;
-        $fields['user_id'] = $this->userId;
-        $fields['date_record_updated'] = $recordDate;
-        $fields['audit_comment'] = $comment;
-        $fields['updated'] = $auditDate;
-        $auditId = $this->insert($fields);
-        return $auditId;
+        $fields['has_submitted'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $result['id'], $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $result['id'], 'has_submitted', $result['has_submitted'], 1, 'edit');
+            return $result['id'];           
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to update results for lecturer marking
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $questionId: The id of the question
+    * @param string $answer: The answer to the tutorial question
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateMarks($tutorialId, $studentId)
+    {
+        $result = $this->getResult($tutorialId, $studentId);
+        $marked = $this->getUsersMarkingForStudent($tutorialId, $studentId);
+        
+        $this->_setResults();
+        $tableName = $this->table;
+        
+        $total = 0;
+        foreach($marked as $mark){
+            $total = $total + $mark['mark'];
+        }
+
+        $fields = array();
+        $fields['mark_obtained'] = $total;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $result['id'], $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $result['id'], 'mark_obtained', $result['mark_obtained'], $total, 'edit');
+            return $result['id'];           
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to update results for peer marking
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $questionId: The id of the question
+    * @param string $answer: The answer to the tutorial question
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateStudentMarks($tutorialId, $studentId)
+    {
+        $result = $this->getResult($tutorialId, $studentId);
+        $marked = $this->getUsersMarkingForStudent($tutorialId, $studentId);
+        $count = $this->countCompletedMarked($tutorialId, $studentId);
+        
+        $this->_setResults();
+        $tableName = $this->table;
+        
+        $score = 0;
+        foreach($marked as $mark){
+            $score = $score + $mark['mark'];
+        }
+        
+        switch($count){
+            case 1:
+                $total = $score;
+                break;
+            case 2:
+                $total = ($result['mark_obtained'] + $score) / 2;
+                break;
+            case 3:
+                $total = (($result['mark_obtained'] * 2) + $score) / 3;
+                break;
+        }
+        
+        $fields = array();
+        $fields['mark_obtained'] = $total;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $result['id'], $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $result['id'], 'mark_obtained', $result['mark_obtained'], $total, 'edit');
+            return $result['id'];           
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to update results for moderator marking
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $questionId: The id of the question
+    * @param string $answer: The answer to the tutorial question
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateModeratorMarks($tutorialId, $answerId, $studentId)
+    {
+        $result = $this->getResult($tutorialId, $studentId);
+        $marked = $this->getMarkingForStudentAnswer($answerId, $studentId);
+        
+        $this->_setResults();
+        $tableName = $this->table;
+        
+        $ave = 0;
+        foreach($marked as $mark){
+            if($mark['is_moderator'] == 1){
+                $score = $mark['mark'];
+            }else{
+                $ave = ($ave + $mark['mark']);
+            }
+        }
+        $ave = ($ave / 3);
+        
+        $total = ($result['mark_obtained'] + $score - $ave);
+    
+        $fields = array();
+        $fields['mark_obtained'] = $total;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $result['id'], $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $result['id'], 'mark_obtained', $result['mark_obtained'], $total, 'edit');
+            return $result['id'];           
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to delete tutorial results
+    *
+    * @access private
+    * @param string $tutorialId: The tutorial id
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
+    */
+    public function deleteTutorialResults($tutorialId)
+    {
+        $this->_setResults();
+        $tableName = $this->table;
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            foreach($data as $line){
+                $this->_setResults();
+                
+                $fields = array();
+                $fields['deleted'] = 1;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                
+                $updated = $this->update('id', $line['id'], $fields);
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $line['id'], 'deleted', 0, 1, 'delete');
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
+    }
+
+/***** Methods for tbl_tutorial_answers *****/
+
+    /**
+    * Method to get the students answer for a question
+    *
+    * @access public
+    * @param string $questionId: The id of the question
+    * @param string $studentId: The id of the student
+    * @return array|bool $data: The answer array on success | FALSE on failure
+    */
+    public function getAnswer($questionId, $studentId)
+    {
+        $this->_setAnswers();
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE question_id='".$questionId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get the all the answers for a question
+    *
+    * @access public
+    * @param string $questionId: The id of the question
+    * @param string $number: The starting number of the answers to retrieve
+    * @return array|bool $data: The answer array on success | FALSE on failure
+    */
+    public function getAnswers($questionId, $number)
+    {
+        $this->_setAnswers();
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE question_id='".$questionId."'";
+        $sql .= " AND deleted='0'";
+        $sql .= " ORDER BY updated ASC";
+        
+        $answers = $this->getArray($sql);
+        if(!empty($answers)){
+            $data = array_slice($answers, ($number - 1), 10);
+            $data[0]['count'] = count($answers);
+            return $data;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to add/edit answers
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $questionId: The id of the question
+    * @param string $answer: The answer to the tutorial question
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateAnswers($tutorialId, $questionId, $studentAnswer)
+    {
+        $answer = $this->getAnswer($questionId, $this->userId);
+        
+        $this->_setAnswers();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['tutorial_id'] = $tutorialId;
+        $fields['question_id'] = $questionId;
+        $fields['student_id'] = $this->userId;
+        $fields['answer'] = $studentAnswer;
+        $fields['moderation_complete'] = 0;
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        if($answer == FALSE){         
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key => $field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add'); 
+                }
+                return $id;               
+            }
+        }else{
+            $updated = $this->update('id', $answer['id'], $fields);
+            if($updated != FALSE){
+                if($answer['answer'] != $fields['answer']){
+                    $this->_addAuditRecord($tableName, $answer['id'], 'answer', $answer['answer'], $fields['answer'], 'edit');
+                }
+                return $answer['id'];    
+            }            
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to add moderation request
+    *
+    * @access public
+    * @param string $id: The id of the answer
+    * @param string $reason: The reason for the moderation request
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function addModeration($id, $reason)
+    {
+        $this->_setAnswers();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['moderation_reason'] = $reason;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $id, $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'moderation_reason', NULL, $reason, 'edit');
+            return $id;                
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to update moderation completed indicator
+    *
+    * @access public
+    * @param string $id: The id of the answer
+    * @param string $reason: The reason for the moderation request
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateModeration($id)
+    {
+        $this->_setAnswers();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['moderation_complete'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $id, $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'moderation_complete', NULL, '1', 'edit');
+            return $id;                
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get moderation requests
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function getModerationRequests($tutorialId)
+    {
+        $this->_setAnswers();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND moderation_reason IS NOT NULL";
+        $sql .= " AND moderation_complete='0'";
+        $sql .= " AND deleted='0'";
+        $sql .= " ORDER BY student_id ASC";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;   
+        }        
+        return FALSE;
+    }
+    
+    /**
+    * Method to check if moderation for a user is complete
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @return bool $mod: TRUE if no outstanding moderation requests | FALSE on failure
+    */
+    public function moderationComplete($tutorialId)
+    {
+        $this->_setAnswers();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$this->userId."'";
+        $sql .= " AND moderation_reason IS NOT NULL";
+        $sql .= " AND moderation_complete='0'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return FALSE;   
+        }        
+        return TRUE;
+    }
+    
+    /**
+    * Method to delete tutorial answers
+    *
+    * @access private
+    * @param string $tutorialId: The tutorial id
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
+    */
+    public function deleteTutorialAnswers($tutorialId)
+    {
+        $this->_setAnswers();
+        $tableName = $this->table;
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            foreach($data as $line){
+                $this->_setAnswers();
+
+                $fields = array();
+                $fields['deleted'] = 1;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                
+                $updated = $this->update('id', $line['id'], $fields);
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $line['id'], 'deleted', 0, 1, 'delete');
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
+    }
+    
+/***** Methods for tbl_tutorial_marking *****/
+
+    /**
+    * Method to get the user's marking for a student's tutorial
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return array|bool $data: The marking array on success | FALSE on failure
+    */
+    public function getUsersMarkingForStudent($tutorialId, $studentId)
+    {
+        $this->_setMarking();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND marker_id='".$this->userId."'";
+        $sql .= " AND deleted='0'";
+         
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get the marking for a student's answer
+    *
+    * @access public
+    * @param string $answerId: The id of the answer
+    * @param string $studentId: The id of the student
+    * @return array|bool $data: The marking array on success | FALSE on failure
+    */
+    public function getMarkingForStudentAnswer($answerId, $studentId)
+    {
+        $this->_setMarking();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE answer_id='".$answerId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND deleted='0'";
+        $sql .= " ORDER BY is_moderator ASC";
+         
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to get the user's marking for a student's answer
+    *
+    * @access public
+    * @param string $answerId: The id of the students andwer
+    * @param string $markerId: The id of the marker
+    * @return array|bool $data: The marking array on success | FALSE on failure
+    */
+    public function getUsersMarkingForAnswer($answerId, $markerId)
+    {
+        $this->_setMarking();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE answer_id='".$answerId."'";
+        $sql .= " AND marker_id='".$markerId."'";
+        $sql .= " AND deleted='0'";
+         
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to add/edit marking
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $answerId: The id of the answers
+    * @param string $studentId: The id of the student
+    * @param string $comment: The comment on the answer
+    * @param string $mark: The mark given
+    * @param bool $isMod: TRUE if the user is a moderator | FALSE if not
+    * @return string|bool $id: The answer id on success | FALSE on failure
+    */
+    public function updateMarking($tutorialId, $answerId, $studentId, $comment, $mark)
+    {
+        $marking = $this->getUsersMarkingForAnswer($answerId, $this->userId);
+        
+        $this->_setMarking();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['tutorial_id'] = $tutorialId;
+        $fields['answer_id'] = $answerId;
+        $fields['student_id'] = $studentId;
+        $fields['mark'] = $mark;
+        $fields['markers_comment'] = $comment;
+        $fields['marker_id'] = $this->userId;
+        if($this->isLecturer == TRUE){
+            $fields['is_moderator'] = 1;
+        }else{
+            $fields['is_moderator'] = 0;
+        }
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        if($marking == FALSE){         
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key => $field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add'); 
+                }
+                return $id;               
+            }
+        }else{
+            $updated = $this->update('id', $marking['id'], $fields);
+            if($updated != FALSE){
+                foreach($fields as $key => $field){
+                    if($fields[$key] != $marking[$key]){
+                        $this->_addAuditRecord($tableName, $marking['id'], $key, $marking[$key], $fields[$key], 'edit');
+                    }
+                }
+                return $marking['id'];    
+            }            
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to delete tutorial marking
+    *
+    * @access private
+    * @param string $tutorialId: The tutorial id
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
+    */
+    public function deleteTutorialMarking($tutorialId)
+    {
+        $this->_setMarking();
+        $tableName = $this->table;
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            foreach($data as $line){
+                $this->_setMarking();
+                
+                $fields = array();
+                $fields['deleted'] = 1;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                
+                $updated = $this->update('id', $line['id'], $fields);
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $line['id'], 'deleted', 0, 1, 'delete');
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
+    }
+
+/***** Methods for tbl_tutorials_late *****/
+
+    /**
+    * Method to get the late submissions for a student
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param stringt $studentId: The id of the student
+    * @return array|bool $data: The late submission data on success | FALSE on failure
+    */
+    public function getLate($tutorialId, $studentId)
+    {
+        $this->_setLate();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data['0'];
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to add/edit late submissions
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @param string $answerOpen: The date late submissions open
+    * @param string $answerClose: The date late submissions close
+    * @return string|bool $id: The late submission id on success | FALSE on failure
+    */
+    public function updateLate($tutorialId, $studentId, $answerOpen, $answerClose)
+    {
+        $late = $this->getLate($tutorialId, $studentId);
+        
+        $this->_setLate();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['tutorial_id'] = $tutorialId;
+        $fields['student_id'] = $studentId;
+        $fields['answer_open'] = $answerOpen;
+        $fields['answer_close'] = $answerClose;
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+
+        if($late == FALSE){         
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key => $field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add'); 
+                }
+                return $id;               
+            }
+        }else{
+            $updated = $this->update('id', $late['id'], $fields);
+            if($updated != FALSE){
+                foreach($fields as $key => $field){
+                    if($fields[$key] != $marking[$key]){
+                        $this->_addAuditRecord($tableName, $late['id'], $key, $late[$key], $fields[$key], 'edit');
+                    }
+                }
+                return $late['id'];    
+            }            
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to delete a late submission
+    *
+    * @access public
+    * @param string $id: The id of the late submission to delete
+    * @return string|bool $id: The late submission id on success | FALSE on failure
+    */
+    public function deleteLate($id)
+    {
+        $this->_setLate();
+        $tableName = $this->table;
+        
+        $fields = array();
+        $fields['deleted'] = 1;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        
+        $updated = $this->update('id', $id, $fields);
+        
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'deleted', 0, 1, 'delete');
+            return $id;           
+        }
+        return FALSE;       
+    }
+
+    /**
+    * Method to delete tutorial late submissions
+    *
+    * @access private
+    * @param string $id: The tutorial id
+    * @return string|bool $id: The tutorial id on success | FALSE on failure
+    */
+    public function deleteTutorialLate($tutorialId)
+    {
+        $this->_setLate();
+        $tableName = $this->table;
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            foreach($data as $line){
+                $this->_setLate();
+
+                $fields = array();
+                $fields['deleted'] = 1;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                
+                $updated = $this->update('id', $line['id'], $fields);
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $line['id'], 'deleted', 0, 1, 'delete');
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
+    }
+    
+/***** Methods for tbl_tutorials_marker *****/
+
+    /**
+    * Method to get an incompletly marked student's tutorial
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @return string|bool $studentId: The id of the student to mark on sucess | FALSE on failure
+    */
+    public function getIncompleteMarked($tutorialId)
+    {
+        $this->_setMarker();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND marker_id='".$this->userId."'";
+        $sql .= " AND is_completed='0'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            $studentId = $data[0]['student_id'];
+            return $studentId;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to check if a student has been marked by the user
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string|bool $marked: The id of the record if the student has been marked | FALSE if not
+    */
+    public function checkMarked($tutorialId, $studentId)
+    {
+        $this->_setMarker();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND marker_id='".$this->userId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data[0]['id'];
+        }
+        return FALSE;        
+    }
+    
+    /**
+    * Method to check if a lecturer has marked a student's tutorial
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string|bool $marked: The count of the records | ZERO if none
+    */
+    public function checkLecturerMarked($tutorialId, $studentId)
+    {
+        $this->_setMarker();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND is_lecturer='1'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data[0]['id'];
+        }
+        return FALSE;        
+    }
+    
+    /**
+    * Method to count the number of times a student has been selected to be marked
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string|bool $marked: The count of the records | ZERO if none
+    */
+    public function countMarked($tutorialId, $studentId)
+    {
+        $this->_setMarker();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return count($data);
+        }
+        return 0;        
+    }
+    
+    /**
+    * Method to count the number of times a student has been completely marked
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string|bool $marked: The count of the records | ZERO if none
+    */
+    public function countCompletedMarked($tutorialId, $studentId)
+    {
+        $this->_setMarker();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND student_id='".$studentId."'";
+        $sql .= " AND is_completed='1'";
+        $sql .= " AND is_lecturer='0'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return count($data);
+        }
+        return 0;        
+    }
+    
+    /**
+    * Method to add a student to mark
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string/bool $id: The marker id on success | FALSE on failure
+    */
+    public function setStudentToMark($tutorialId, $studentId)
+    {
+        $id = $this->checkMarked($tutorialId, $studentId);
+        if($id == FALSE){
+            $this->_setMarker();
+            $tableName = $this->table;
+        
+            $fields = array();
+            $fields['tutorial_id'] = $tutorialId;
+            $fields['student_id'] = $studentId;
+            $fields['marker_id'] = $this->userId;
+            $fields['is_completed'] = 0;
+            $fields['is_lecturer'] = 0;
+            $fields['deleted'] = 0;
+            $fields['updated'] = date('Y-m-d H:i:s');
+            
+            $id = $this->insert($fields);
+            if($id != FALSE){
+                foreach($fields as $key => $field){
+                    $this->_addAuditRecord($tableName, $id, $key, NULL, $field, 'add'); 
+                }
+            }        
+        }
+        return $id;               
+    }
+
+    /**
+    * Method to update is completed indicator
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string|bool $id: The marker id on success | FALSE on failure
+    */
+    public function updateMarker($tutorialId, $studentId)
+    {
+        $id = $this->checkMarked($tutorialId, $studentId);
+        
+        $this->_setMarker();
+        $tableName = $this->table;
+
+        $fields = array();
+        $fields['is_completed'] = 1;
+        if($this->isLecturer == TRUE){
+            $fields['is_lecturer'] = 1;
+        }else{
+            $fields['is_lecturer'] = 0;
+        }
+        $fields['updated'] = date('Y-m-d H:i:s');
+            
+        $updated = $this->update('id', $id, $fields);
+        if($updated != FALSE){
+            $this->_addAuditRecord($tableName, $id, 'is_completed', '0', '1', 'edit');
+            $this->_addAuditRecord($tableName, $id, 'is_lecturer', '0', $fields['is_lecturer'], 'edit');
+            return $id;           
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to get the students that have been marked by the user
+    *
+    * @access public
+    * @param string $tutorialId: The id of the tutorial
+    * @return array|bool $data: The marked student data array on success | FALSE on failure
+    */
+    public function getMarkedStudents($tutorialId, $userId = NULL)
+    {
+        $this->_setMarker();
+        
+        if(empty($userId)){
+            $userId = $this->userId;    
+        }
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND marker_id='".$userId."'";
+        $sql .= " AND is_completed='1'";
+        $sql .= " AND deleted='0'";
+         
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return count($data);
+        }
+        return 0;
+    }
+
+    /**
+    * Method to delete tutorial markers
+    *
+    * @access private
+    * @param string $tutorialId: The tutorial id
+    * @return string|bool $tutorialId: The tutorial id on success | FALSE on failure
+    */
+    public function deleteTutorialMarkers($tutorialId)
+    {
+        $this->_setMarker();
+        $tableName = $this->table;
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE tutorial_id='".$tutorialId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            foreach($data as $line){
+                $this->_setMarker();
+
+                $fields = array();
+                $fields['deleted'] = 1;
+                $fields['updated'] = date('Y-m-d H:i:s');
+                
+                $updated = $this->update('id', $line['id'], $fields);
+                if($updated != FALSE){
+                    $this->_addAuditRecord($tableName, $line['id'], 'deleted', 0, 1, 'delete');
+                }
+            }
+            return $tutorialId;   
+        }
+        return FALSE;
     }
 }
 ?>

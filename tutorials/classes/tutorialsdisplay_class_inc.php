@@ -1,5 +1,5 @@
 <?php
-/* ----------- templates class extends object ----------*/
+/* ----------- tutorialsdisplay class extends object ----------*/
 
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
@@ -7,12 +7,24 @@ if(!$GLOBALS['kewl_entry_point_run']){
 }
 
 /**
-* Templates class for tutorials module
+* Display class for tutorials module
 * @author Kevin Cyster
 */
 
 class tutorialsdisplay extends object
 {
+    /**
+    * @var object $objIcon: The geticon class of the htmlelements module
+    * @access private
+    */
+    private $objIcon;
+     
+    /**
+    * @var object $objPopupcal: The datepickajax class in the popupcalendar module
+    * @access private
+    */
+    private $objPopupcal;
+
     /**
     * @var object $objLanguage: The language class of the language module
     * @access private
@@ -20,107 +32,95 @@ class tutorialsdisplay extends object
     private $objLanguage;
      
     /**
-    * @var object $objTutDb: The dbtutorials class in the tutorials module
-    * @access public
+    * @var object $objUser: The user class of the security module
+    * @access private
     */
-    public $objTutDb;
+    private $objUser;
+     
+    /**
+    * @var object $objDatetime: The dateandtime class of the utilities module
+    * @access private
+    */
+    private $objDatetime;
+     
+    /**
+    * @var object $objContext: The dbcontexr class in the context module
+    * @access private
+    */
+    private $objContext;
 
     /**
-    * @var object $objIcon: The geticon class in the htmlelements module
-    * @access public
+    * @var string $userId: The user id of the current logged in user
+    * @access private
     */
-    public $objIcon;
+    private $userId;
 
     /**
-    * @var object $objFeature: The featurebox class in the navigation module
-    * @access public
+    * @var boolean $isLecturer: TRUE if the user is a lecturer in the current context
+    * @access private
     */
-    public $objFeature;
+    private $isLecturer;
 
     /**
-    * @var object $objPopup: The windowpop class in the htmlelements module
+    * @var string $contextCode: The context code if the user is in a context
     * @access public
     */
-    public $objPopup;
+    private $contextCode;
 
     /**
-    * @var object $objDate: The dateandtime class in the utilities module
+    * @var string $menuText: The menu text for the context the user is in
     * @access public
     */
-    public $objDate;
+    private $menuText;
 
     /**
-    * @var object $objTab: The tabpane class in the htmlelements module
-    * @access public
+    * @var object $objDbTutorials: The dbtutorilas class in the turorials module
+    * @access private
     */
-    public $objTab;
+    private $objDbTutorials;
 
     /**
-    * @var object $objPopupcal: The datepickajax class in the popupcalendar module
+    * @var object $objModules: The modulesadmin class in the modulelist module
+    * @access private
+    */
+    private $objModules;
+
+    /**
+    * @var boolean $assignment: TRUE if the assignmentadmin module is registered, FALSE if not
     * @access public
     */
-    public $objPopupcal;
+    private $assignment;
 
     /**
     * @var object $objEditor: The htmlarea class in the htmlelements module
     * @access public
     */
-    public $objEditor;
+    private $objEditor;
 
     /**
-    * @var object $objContext: The dbcontext class in the context module
+    * @var object $objMsg: The timeoutmessage class in the htmlelements module
     * @access public
     */
-    public $objContext;
+    private $objMsg;
 
     /**
-    * @var string $contextCode: The active context of the current logged in user
+    * @var object $objTabbedbox: The tabbedbox class in the htmlelements module
     * @access public
     */
-    public $contextCode;
+    private $objTabbedbox;
 
     /**
-    * @var object $objUser: The user class in the securities module
+    * @var object $objGroupadmin: The groupadminmodel class in the groupadmin module
     * @access public
     */
-    public $objUser;
+    private $objGroupadmin;
 
     /**
-    * @var string $userId: The user id of the current logged in user
+    * @var object $objConfig: The dbsysconfig class in the sysconfig module
     * @access public
     */
-    public $userId;
+    public $objConfig;
 
-    /**
-    * @var string $pkId: The primary id of the current logged in user
-    * @access public
-    */
-    public $pkId;
-
-    /**
-    * @var string $isLoggedIn: The login status of the user
-    * @access public
-    */
-    public $isLoggedIn;
-
-    /**
-    * @var bool $isAdmin: TRUE if the user is in the Site Admin group FALSE if not
-    * @access public
-    */
-    public $isAdmin;
-
-    /**
-    * @var object $objGroup: The groupadminmodel class in the groupadmin module
-    * @access public
-    */
-    public $objGroup;
-        
-    /**
-    * @var string $status: The ststus of the current tutorial
-    * @access public
-    */
-    public $status;
-        
     /**
     * Method to construct the class
     *
@@ -134,3659 +134,3587 @@ class tutorialsdisplay extends object
         $this->loadClass('htmltable', 'htmlelements');
         $this->loadClass('link', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
-        $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('textarea', 'htmlelements');
-        $this->loadClass('button', 'htmlelements');
         $this->loadClass('radio', 'htmlelements');
+        $this->loadClass('dropdown', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
-        $this->loadClass('layer', 'htmlelements');
-        $this->loadClass('checkbox', 'htmlelements');
-		$this->loadClass('tabbedbox', 'htmlelements');
-		$this->loadClass('fieldset', 'htmlelements');
-		
+        $this->loadClass('button', 'htmlelements');
+        $this->loadClass('layer','htmlelements');
+        $this->objIcon = $this->newObject('geticon', 'htmlelements');
+        $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
+        $this->objEditor = $this->newObject('htmlarea','htmlelements');
+        $this->objMsg = $this->newObject('timeoutmessage','htmlelements');
+        $this->objTabbedbox = $this->newObject('tabbedbox','htmlelements');
+        $this->objGroupadmin = $this->newObject('groupadminmodel','groupadmin');
+        
         // system classes
         $this->objLanguage = $this->getObject('language','language');
-        $this->objTutDb = $this->getObject('dbtutorials', 'tutorials');
-        $this->objIcon = $this->newObject('geticon', 'htmlelements');
-        $this->objFeature = $this->newObject('featurebox', 'navigation');
-        $this->objPopup = $this->newObject('windowpop', 'htmlelements');
-        $this->objEditor = $this->newObject('htmlarea', 'htmlelements');
-        $this->objDate = $this->getObject('dateandtime', 'utilities');
         $this->objUser = $this->getObject('user', 'security');
-        $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
-        $this->objTab = $this->newObject('tabber', 'htmlelements');
+        $this->objDatetime = $this->getObject('dateandtime', 'utilities');
         $this->objContext = $this->getObject('dbcontext', 'context');
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        
+        // system variables
+        $this->userId = $this->objUser->userId(); 
+        $this->isLecturer = $this->objUser->isContextLecturer();  
+        $this->isStudent = $this->objUser->isContextStudent();  
         $this->contextCode = $this->objContext->getContextCode();
+        $this->menuText = $this->objContext->getMenuText($this->contextCode);
+        
+        // tutorials classes     
+        $this->objDbTutorials = $this->getObject('dbtutorials', 'tutorials');
 
-        $this->objUser = $this->getObject('user', 'security');
-        $this->userId = $this->objUser->userId();
-        $this->pkId = $this->objUser->PKId($this->userId);
-        $this->isLoggedIn = $this->objUser->isLoggedIn();
-        $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
+        // assessment modules
+        $this->assignment = FALSE;
+        if($this->objModules->checkIfRegistered('Assignment Management', 'assignmentadmin')){
+            $this->assignment = TRUE;
 
-        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+        }
+        $css = '<link id="calender_css" type="text/css" rel="stylesheet" href="'.$this->objConfig->getModuleURI().$this->getParam('module').'/resources/tutorials.css" />';
+        $this->appendArrayVar('headerParams', $css);
+    }
+
+    /**
+    * Method to output the lecturer tutorial home page
+    *
+    * @access public
+    * @return string $content: The template output string
+    */
+    public function showLecturerHome()
+    {
+        // get data
+        $tutorials = $this->objDbTutorials->getContextTuts($this->contextCode);
+        $instructions = $this->objDbTutorials->getInstructions();
+
+        // set up language elements
+        $lblStudents = $this->objLanguage->languageText('word_students');
+        $array = array();
+        $array['coursename'] = $this->menuText;
+        $lblHeading = $this->objLanguage->code2Txt('mod_tutorials_administration', 'tutorials', $array);
+        $lblAdd = $this->objLanguage->languageText('mod_tutorials_add', 'tutorials');
+        $lblEdit = $this->objLanguage->languageText('mod_tutorials_edit', 'tutorials');
+        $array = array();
+        $array['readonlys'] = $lblStudents;
+        $lblAddInstructions = $this->objLanguage->code2Txt('mod_tutorials_instructions', 'tutorials', $array);
+        $lblName = $this->objLanguage->languageText('word_name');
+        $lblQuestions = $this->objLanguage->languageText('word_questions');
+        $lblStatus = $this->objLanguage->languageText('phrase_activitystatus');
+        $lblPercentage = $this->objLanguage->languageText('word_percentage');
+        $lblMark = $this->objLanguage->languageText('phrase_totalmark');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblAssignments = $this->objLanguage->languageText('mod_assignmentadmin_name');
+        $lblConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfim', 'tutorials');
+        $array['readonlys'] = $lblStudents;
+        $lblList = $this->objLanguage->code2Txt('mod_tutorials_liststudents', 'tutorials', $array);
+        $lblModerate = $this->objLanguage->languageText('phrase_moderatetutorial');
+        $lblInstructions = $this->objLanguage->languageText('word_instructions');
+                
+        // set up add tutorial icon
+        $this->objIcon->title = $lblAdd;
+        $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
+            'action' => 'tutorial',
+        ), 'tutorials'));
+
+        // set up tutorial instruction icon
+        $this->objIcon->title = $lblAddInstructions;
+        $this->objIcon->extra = '';
+        $icoInstructions = $this->objIcon->getLinkedIcon($this->uri(array(
+            'action' => 'instructions',
+        )), 'configure');
+
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading.'&#160;'.$icoAdd.'&#160;'.$icoInstructions;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // display instructions
+        if($instructions != FALSE){
+            // set up delete icon
+            $deleteArray = array(
+                'action' => 'deleteinstructions',
+            );
+            $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
+
+            // tabbed box
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel('<b>'.$lblInstructions.'</b>&#160;'.$icoDelete);
+            $this->objTabbedbox->addBoxContent($instructions['instructions']);
+            $content .= $this->objTabbedbox->show();
+        }
+    
+        // set up links
+        $this->objLink = new link($this->uri(array(
+            'action'=>'tutorial',
+        ), 'tutorials'));
+        $this->objLink->link = $lblAdd;
+        $lnkAdd = $this->objLink->show();
+        
+        if($this->assignment){
+            $this->objLink = new link($this->uri(array(), 'assignmentadmin'));
+            $this->objLink->link = $lblAssignments;
+            $lnkAssignments = $this->objLink->show();
+            
+            $links = $lnkAdd.'&#160;|&#160;'.$lnkAssignments;
+        }else{
+            $links = $lnkAdd;
+        }
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblName, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblQuestions, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblStatus, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblPercentage, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblMark, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell('', '', '', '', 'tuts-header', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        
+        if($tutorials == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="6"');
+            $this->objTable->endRow();
+        }else{
+            foreach($tutorials as $tutorial){
+                $status = $this->tutStatus($tutorial['id']);
+                
+                // get data
+                $questions = $this->objDbTutorials->getQuestions($tutorial['id']);
+                if(empty($questions)){
+                    $count = 0;
+                }else{
+                    $count = count($questions);
+                }
+                
+                // set up view link
+                $this->objLink = new link($this->uri(array(
+                    'action' => 'view',
+                    'id' => $tutorial['id'],
+                ), 'tutorials'));
+                $this->objLink->link = $tutorial['name'];
+                $lnkName = $this->objLink->show();
+                
+                // set up edit icon
+                $this->objIcon->title=$lblEdit;
+                $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'tutorial',
+                    'id' => $tutorial['id'],
+                ), 'tutorials'));
+                
+                // set up delete icon
+                $deleteArray = array(
+                    'action' => 'deletetutorial',
+                    'id' => $tutorial['id'],
+                );
+                $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
+
+                // set up list students icon
+                if($status['value'] != 1){
+                    $this->objIcon->title = $lblList;
+                    $this->objIcon->extra = '';
+                    $icoList = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'liststudents',
+                        'id' => $tutorial['id'],
+                    )), 'comment');
+                }else{
+                    $icoList = '';
+                }
+                
+                // set up moderate Icon
+                if($status['value'] >= 6 and $tutorial['tutorial_type'] == 1){
+                    $this->objIcon->title = $lblModerate;
+                    $this->objIcon->extra = '';
+                    $icoModerate = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'moderate',
+                        'id' => $tutorial['id'],
+                    )), 'options');
+                }else{
+                    $icoModerate = '';
+                }
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($lnkName, '', '', '', '', '');
+                $this->objTable->addCell($count, '', '', '', '', '');
+                $this->objTable->addCell($status['text'], '', '', '', '', '');
+                $this->objTable->addCell($tutorial['percentage'], '', '', '', '', '');
+                $this->objTable->addCell($tutorial['total_mark'], '', '', '', '', '');
+                $this->objTable->addCell($icoEdit.'&#160;'.$icoDelete.'&#160;'.$icoList.'&#160;'.$icoModerate, '', '', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $content .= $this->objTable->show();        
+
+        $this->objTable = new htmltable();
+        $this->objTable->startRow();
+        $this->objTable->addCell($links, '', '', 'center', '' ,'');
+        $this->objTable->endRow();
+        
+        $content .= $this->objTable->show();        
+        
+        return $content;
     }
     
-	/**
-    * Method to determin if the user logged in
+    /**
+    * Method to output the tutorial status
     *
     * @access private
-    * @return bool $isAdmin: TRUE if the user is Logged in | FALSE if not
+    * @param array $id: The id of the tutorial
+    * @return array $status: The status output array
     */
-    private function _isLoggedIn()
+    public function tutStatus($id, $isStudent = FALSE)
     {
-		return $this->isLoggedIn;
-	}
+        // get data
+        $tut = $this->objDbTutorials->getTutorial($id);
+        $type = $tut['tutorial_type'];
+        $date = strtotime(date('Y-m-d H:i:s'));
+        $open = $tut['answer_open'];
+        $close = $tut['answer_close'];
+        if($isStudent == TRUE){
+            $late = $this->objDbTutorials->getLate($tut['id'], $this->userId);
+            if($late != FALSE){
+                $open = $late['answer_open'];
+                $close = $late['answer_close'];
+            }
+        }
+        $answerOpen = strtotime($open);
+        $answerClose = strtotime($close);
+        $markOpen = strtotime($tut['marking_open']);
+        $markClose = strtotime($tut['marking_close']);
+        $modOpen = strtotime($tut['moderation_open']);
+        $modClose = strtotime($tut['moderation_close']);
+
+        // set up language elements
+        $lblNotOpen = $this->objLanguage->languageText('mod_tutorials_notopen', 'tutorials');
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($open, FALSE);
+        $lblAnswerOpen = $this->objLanguage->code2Txt('mod_tutorials_aopen', 'tutorials', $array);
+        $lblAnswer = $this->objLanguage->languageText('mod_tutorials_answer', 'tutorials');
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($close, FALSE);
+        $lblAnswerClose = $this->objLanguage->code2Txt('mod_tutorials_aclose', 'tutorials', $array);
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($tut['marking_open'], FALSE);
+        $lblMarkOpen = $this->objLanguage->code2Txt('mod_tutorials_mopen', 'tutorials', $array);
+        $lblMark = $this->objLanguage->languageText('mod_tutorials_mark', 'tutorials');
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($tut['marking_close'], FALSE);
+        $lblMarkClose = $this->objLanguage->code2Txt('mod_tutorials_mclose', 'tutorials', $array);
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($tut['moderation_open'], FALSE);
+        $lblModOpen = $this->objLanguage->code2Txt('mod_tutorials_modopen', 'tutorials', $array);
+        $lblMod = $this->objLanguage->languageText('mod_tutorials_mod', 'tutorials');
+        $array = array();
+        $array['date'] = $this->objDatetime->formatDate($tut['moderation_close'], FALSE);
+        $lblModClose = $this->objLanguage->code2Txt('mod_tutorials_modclose', 'tutorials', $array);
+        $lblCompleted = $this->objLanguage->languageText('word_completed');
+        
+        $status = array();
+        if($type == 0){
+            if($date < $answerOpen){
+                $content = '<font class="error">'.$lblNotOpen.'</font>';
+                $content .= '<br />'.$lblAnswerOpen;
+                $value = 1;
+            }elseif($date >= $answerOpen and $date < $answerClose){
+                $content = '<font class="error">'.$lblAnswer.'</font>';
+                $content .= '<br />'.$lblAnswerClose;
+                $value = 2;
+            }else{
+                $content = '<font class="error">'.$lblCompleted.'</font>';
+                $value = 7;
+            }
+        }else{
+            if($date < $answerOpen){
+                $content = '<font class="error">'.$lblNotOpen.'</font>';
+                $content .= '<br />'.$lblAnswerOpen;
+                $value = 1;
+            }elseif($date >= $answerOpen and $date < $answerClose){
+                $content = '<font class="error">'.$lblAnswer.'</font>';
+                $content .= '<br />'.$lblAnswerClose;
+                $content .= '<br />'.$lblMarkOpen;
+                $value = 2;
+            }elseif($date >= $answerClose and $date < $markOpen){
+                $content = '<font class="error">'.$lblNotOpen.'</font>';
+                $content .= '<br />'.$lblMarkOpen;
+                $value = 3;
+            }elseif($date >= $markOpen and $date < $markClose){
+                $content = '<font class="error">'.$lblMark.'</font>';
+                $content .= '<br />'.$lblMarkClose;
+                $content .= '<br />'.$lblModOpen;
+                $value = 4;
+            }elseif($date >= $markClose and $date < $modOpen){
+                $content = '<font class="error">'.$lblNotOpen.'</font>';
+                $content .= '<br />'.$lblModOpen;
+                $value = 5;
+            }elseif($date >= $modOpen and $date < $modClose){
+                $content = '<font class="error">'.$lblMod.'</font>';
+                $content .= '<br />'.$lblModClose;
+                $value = 6;
+            }else{
+                $content = '<font class="error">'.$lblCompleted.'</font>';
+                $value = 7;
+            }
+        }
+        $status['text'] = '<b>'.$content.'</b>';
+        $status['value'] = $value;
+        
+        return $status;        
+    }
     
     /**
-    * Method to determin if the user is in the Admin group
+    * Method to output the add/edit tutorial page
     *
-    * @access private
-    * @return bool $isAdmin: TRUE if the user is in the admin group | FALSE if not
+    * @access public
+    * @param string $id: The id of the tutorial to edit if applicable
+    * @return string $content: The template output string
     */
-    private function _isAdmin()
+    public function showAddEditTut($id)
     {
-		return $this->isAdmin;
-	}
-    
-    /**
-    * Method to determin if the user is a lecturer of the current context
-    *
-    * @access private
-    * @return bool $isLecturer: TRUE, if user is a lecturer in the current context | FALSE if not
-    */
-    private function _isLecturer()
-    {
-		$groupId = $this->objGroup->getLeafId(array(
-			$this->contextCode,
-			'Lecturers',
-		));
-		$isLecturer = $this->objGroup->isGroupMember($this->pkId, $groupId);
-		
-		return $isLecturer;
-	}
-
-    /**
-    * Method to determin if the user is a student of the current context
-    *
-    * @access private
-    * @return bool $isStudent: TRUE, if user is a student in the current context | FALSE if not
-    */
-    private function _isStudent()
-    {
-		$groupId = $this->objGroup->getLeafId(array(
-			$this->contextCode,
-			'Students',
-		));
-		$isStudent = $this->objGroup->isGroupMember($this->pkId, $groupId);
-		
-		return $isStudent;
-	}
-
-    /**
-    * Method to determin if the user is a guest of the current context
-    *
-    * @access private
-    * @return bool $isGuest: TRUE, if user is a guest in the current context | FALSE if not
-    */
-    private function _isGuest()
-    {
-		$groupId = $this->objGroup->getLeafId(array(
-			$this->contextCode,
-			'Guest',
-		));
-		$isGuest = $this->objGroup->isGroupMember($this->pkId, $groupId);
-		
-		return $isGuest;
-	}
-	
-	/**
-	* Method to list students of this context
-	*
-	* @access private
-	* @return array|bool $data: An array of user data on success | FALSE on failure
-	*/
-	private function _listStudents()
-	{
-		$groupId = $this->objGroup->getLeafId(array(
-			$this->contextCode,
-			'Students',
-		));
-		//getGroupUsers($groupId, $fields = null, $filter = null)
-		$data = $this->objGroup->getGroupUsers($groupId, NULL, NULL);
-		if($data != FALSE){
-			return $data;
-		}
-		return FALSE;
-	}
-	
-	/**
-	* Method to show a redirect message on error
-	*
-	* @access private
-	* @return string $str: The output string
-	*/
-	private function _redirect()
-	{
-		$lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
-		$lblError = $this->objLanguage->code2Txt('mod_tutorials_accesserror', 'tutorials');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_titleback', 'tutorials');
-
-		$string = '<b><font class="error">'.$lblError.'</font></b>';
-		$objLink = new link($this->uri(array(), '_default'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= '<br />'.$objLink->show();
-
-		$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		return $str;
-	}
-
-	/**
-	* Method to show the tutorials home page
-	*
-	* @access public
-	* @return string $str: The output string
-	*/
-	public function showHome()
-	{
-		// text elements
-		$lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
-		$lblError = $this->objLanguage->code2Txt('mod_tutorials_homeerror', 'tutorials');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_titleback', 'tutorials');
-		
-		if($this->_isLecturer() || $this->_isAdmin()){
-			$str = $this->_showLecturerHome();
-		}elseif($this->_isStudent()){
-			$str = $this->_showStudentHome();
-		}else{
-			$string = '<b><font class="error">'.$lblError.'</font></b>';
-			$objLink = new link($this->uri(array(), '_default'));
-			$objLink->link = $lblBack;
-			$objLink->title = $lblBackTitle;
-			$string .= '<br />'.$objLink->show();
-
-			$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		}
-		return $str;
-	}
-
-    /**
-    * Method to show the tutorial home page for lecturers
-    *
-    * @access private
-    * @return string $str: The output string
-    */
-    private function _showLecturerHome()
-    {	
-		// data to be displayed
-		$arrData = $this->objTutDb->listTutorials($this->contextCode);
-		
-		// text elements
-		$lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblStatus = $this->objLanguage->languageText('word_status');
-		$lblPercentage = $this->objLanguage->languageText('word_percentage');
-		$lblMark = $this->objLanguage->languageText('phrase_totalmark');
-		$lblAdd = $this->objLanguage->languageText('word_add');
-		$lblAddTitle = $this->objLanguage->languageText('mod_tutorials_titleadd', 'tutorials');
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblDelete = $this->objLanguage->languageText('word_delete');
-		$lblEditTitle = $this->objLanguage->languageText('mod_tutorials_titleedittut', 'tutorials');
-		$lblDeleteTitle = $this->objLanguage->languageText('mod_tutorials_titledeletetut', 'tutorials');
-		$lblDelConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfirm', 'tutorials');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_titleback', 'tutorials');
-		$lblNameTitle = $this->objLanguage->languageText('mod_tutorials_titlename', 'tutorials');
-		$lblInstructionsTitle = $this->objLanguage->languageText('mod_tutorials_titleinstructions', 'tutorials');
-		$lblInstructions = $this->objLanguage->languageText('word_instructions');
-		
-		// links
-		$objLink = new link($this->uri(array(
-			'action' => 'add_tutorial'
-		), 'tutorials'));
-		$objLink->link = $lblAdd;
-		$objLink->title = $lblAddTitle;
-		$string = $objLink->show();
-		
-		$objLink = new link($this->uri(array(
-			'action' => 'show_instructions',
-		), 'tutorials'));
-		$objLink->link = $lblInstructions;
-		$objLink->title = $lblInstructionsTitle;
-		$string .= '&#160;<b>|</b>&#160;'.$objLink->show();
-
-		// display table
-		$objTable = new htmltable();
-		$objTable->id = 'tutorialList';
-		$objTable->css_class = 'sorttable';
-		$objTable->cellpadding = '4';
-		$objTable->row_attributes = 'name="row_'.$objTable->id.'"';
-		
-		$objTable->startRow();
-		$objTable->addCell($lblName, '', '', '', 'heading', '');
-		$objTable->addCell($lblStatus, '', '', '', 'heading', '');
-		$objTable->addCell($lblPercentage, '', '', '', 'heading', '');
-		$objTable->addCell($lblMark, '', '', '', 'heading', '');
-		$objTable->addCell('', '', '', '', 'heading', '');
-		$objTable->endRow();
-
-		if($arrData == FALSE){
-			$objTable->startRow();
-			$objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
-			$objTable->endRow();
-		}else{
-			foreach($arrData as $line){
-			 	$name = $line['name'];
-			 	$status = $this->_getStatus($line);
-			 	$percentage = $line['percentage'];
-			 	$mark = $line['total_mark'];
-			 	
-			 	// name link
-				 $objLink = new link($this->uri(array(
-				 	'action' => 'view_tutorial',
-					'id' => $line['name_space'],
-				), 'tutorials'));
-				$objLink->link = $name;
-				$objLink->title = $lblNameTitle;
-				$nameLink = $objLink->show();
-				
-			 	// edit link
-			 	$objLink = new link($this->uri(array(
-				 	'action' => 'edit_tutorial',
-					'id' => $line['name_space'],
-				), 'tutorials'));
-				$objLink->link = $lblEdit;
-				$objLink->title = $lblEditTitle;
-				$links = $objLink->show();
-				
-			 	// delete link
-			 	$objLink = new link($this->uri(array(
-					'action' => 'delete_tutorial',
-					'id' => $line['name_space'],
-				), 'tutorials'));
-				$objLink->link = $lblDelete;
-				$objLink->title = $lblDeleteTitle;
-				$objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblDelConfirm.'\')){return false;}"';
-				$links .= '&#160;|&#160;'.$objLink->show();
-			 	
-				$objTable->startRow();
-				$objTable->addCell($nameLink, '', '', '', '', '');
-				$objTable->addCell($status, '', '', '', '', '');
-				$objTable->addCell($percentage, '', '', '', '', '');
-				$objTable->addCell($mark, '', '', '', '', '');
-				$objTable->addCell($links, '10%', '', '', '', '');
-				$objTable->endRow();
-			}		
-		}
-		$string .= $objTable->show();	
-		
-		// exit link
-		$objLink = new link($this->uri(array(), '_default'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= '<br />'.$objLink->show();
-
-		$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		
-		return $str;
-	}
-	
-    /**
-    * Method to show the tutorial home page for lecturers
-    *
-    * @access private
-    * @return string $str: The output string
-    */
-    private function _showStudentHome()
-    {	
-		// data to be displayed
-		$tData = $this->objTutDb->listTutorials();
-		$iData = $this->objTutDb->getInstructions();
-		
-		// text elements
-		$lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblStatus = $this->objLanguage->languageText('word_status');
-		$lblPercentageYear = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
-		$lblPercentage = $this->objLanguage->languageText('word_percentage');
-		$lblTotal = $this->objLanguage->languageText('phrase_totalmark');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_titleback', 'tutorials');
-		$lblTakeTitle = $this->objLanguage->languageText('mod_tutorials_titletake', 'tutorials');
-		$lblMarkTitle = $this->objLanguage->languageText('mod_tutorials_titlemark', 'tutorials');
-		$lblModerateTitle = $this->objLanguage->languageText('mod_tutorials_titlemoderate', 'tutorials');
-		$lblViewTitle = $this->objLanguage->languageText('mod_tutorials_titleview', 'tutorials');
-		$lblHasSubmitted = $this->objLanguage->languageText('mod_tutorial_hassubmitted', 'tutorials');
-		$lblHasMarked = $this->objLanguage->code2Txt('mod_tutorial_hasmarked', 'tutorials');
-		$lblNoStudent = $this->objLanguage->code2Txt('mod_tutorial_nostudent', 'tutorials');
-		$lblMarkingUnavailable = $this->objLanguage->languageText('mod_tutorial_markingunavailable', 'tutorials');
-		$lblModerationUnavailable = $this->objLanguage->languageText('mod_tutorial_moderationunavailable', 'tutorials');
-		$lblNoMarked = $this->objLanguage->languageText('mod_tutorial_nomarked', 'tutorials');
-		$lblNotMarked = $this->objLanguage->languageText('mod_tutorial_notmarked', 'tutorials');
-		$lblAnswer = $this->objLanguage->languageText('word_answer');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblModerate = $this->objLanguage->languageText('phrase_requestmoderation');
-		$lblView = $this->objLanguage->languageText('word_view');
-		$lblReviewUnavailable = $this->objLanguage->languageText('mod_tutorial_reviewunavailable', 'tutorials');
-		$lblInstructions = $this->objLanguage->languageText('word_instructions');
-		
-		$string = '';
-		if($iData != FALSE){
-			$objTable = new htmltable();
-			$objTable->cellpadding = '2';
-			$objTable->cellspacing = '2';
-			
-			$objTable->startRow();
-			$objTable->addCell($iData['instructions'], '', '', '', 'even', '');
-			$objTable->endRow();
-			$displayTable = $objTable->show();
-			
-			$objTabbedbox = new tabbedbox();
-			$objTabbedbox->extra = 'style="padding: 10px;"';
-			$objTabbedbox->addTabLabel('<b>'.$lblInstructions.'</b>');
-			$objTabbedbox->addBoxContent($displayTable);
-			$string = $objTabbedbox->show();
-		}
-		
-		// display table
-		$objTable = new htmltable();
-		$objTable->cellpadding = '2';
-		$objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell($lblName, '', '', '', 'heading', '');
-		$objTable->addCell($lblStatus, '', '', '', 'heading', '');
-		$objTable->addCell($lblPercentageYear, '', '', '', 'heading', '');
-		$objTable->addCell($lblTotal, '', '', '', 'heading', '');
-		$objTable->addCell($lblPercentage, '', '', '', 'heading', '');
-		$objTable->endRow();
-
-		if($tData == FALSE){
-			$objTable->startRow();
-			$objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
-			$objTable->endRow();
-		}else{
-			foreach($tData as $line){
-			 	$hasSubmitted = $this->objTutDb->hasSubmitted($line['name_space']);
-			 	$hasMarked = $this->objTutDb->hasMarked($line['name_space']);
-			 	$rData = $this->objTutDb->getResult($line['name_space']);
-				$student = $this->objTutDb->getStudentToMark($line['name_space']);
-			 	
-			 	$name = $line['name'];
-			 	$status = $this->_getStatus($line, $this->userId);
-			 	$percentage = $line['percentage'];
-			 	$mark = $line['total_mark'];
-			 	$result = round(($rData['mark_obtained']/$mark)*100).'%';
-			 	
-			 	// name link
-				if($this->status == 1){
-					$link = '';
-				}elseif($this->status == 2){
-				 	if(!$hasSubmitted){
-						$objLink = new link($this->uri(array(
-					 		'action' => 'answer_tutorial',
-							'id' => $line['name_space'],
-						), 'tutorials'));
-						$objLink->link = $lblAnswer;
-						$objLink->title = $lblTakeTitle;
-						$link = $objLink->show();
-					}else{
-						$link = '<b><font class="warning">'.$lblHasSubmitted.'</font></b>';
-					}
-				}elseif($this->status == 3){
-				 	if($hasSubmitted){
-					  	if(!$hasMarked){
-						   	if($student != FALSE){				 	 
-								$objLink = new link($this->uri(array(
-				 					'action' => 'mark_student',
-									'id' => $line['name_space'],
-								), 'tutorials'));
-								$objLink->link = $lblMark;
-								$objLink->title = $lblMarkTitle;
-								$link = $objLink->show();
-							}else{
-								$link = '<b><font class="warning">'.$lblNoStudent.'</font></b>';;
-							}
-						}else{
-							$link = '<b><font class="warning">'.$lblHasMarked.'</font></b>';
-						}
-					}else{
-						$link = '<b><font class="warning">'.$lblMarkingUnavailable.'</font></b>';
-					}
-				}elseif($this->status == 4){
-				 	if($hasSubmitted){
-				 	 	if((isset($rData['moderator_id']) && !empty($rData['moderator_id'])) || (isset($rData['peer_id']) && !empty($rData['peer_id']))){
-							$objLink = new link($this->uri(array(
-				 				'action' => 'request_moderation',
-								'id' => $line['name_space'],
-							), 		'tutorials'));
-							$objLink->link = $lblModerate;
-							$objLink->title = $lblModerateTitle;
-							$link = $objLink->show();
-						}else{
-							$link = '<b><font class="warning">'.$lblNotMarked.'</font></b>';
-						}
-					}else{
-						$link = '<b><font class="warning">'.$lblModerationUnavailable.'</font></b>';
-					}
-				}elseif($this->status == 5){
-				 	if($hasSubmitted){
-						if((isset($rData['moderator_id']) && !empty($rData['moderator_id'])) || (isset($rData['peer_id']) && !empty($rData['peer_id']))){
-							$objLink = new link($this->uri(array(
-				 				'action' => 'review_tutorial',
-								'id' => $line['name_space'],
-							), 		'tutorials'));
-							$objLink->link = $lblView;
-							$objLink->title = $lblViewTitle;
-							$link = $objLink->show();
-						}else{
-							$link = '<b><font class="warning">'.$lblNoMarked.'</font></b>';
-						}
-					}else{
-						$link = '<b><font class="warning">'.$lblReviewUnavailable.'</font></b>';
-					}
-				}
-				
-				$objTable->startRow();
-				$objTable->addCell($name, '', '', '', '', '');
-				$objTable->addCell($status, '', '', '', '', '');
-				$objTable->addCell($percentage, '', '', '', '', '');
-				$objTable->addCell($mark, '', '', '', '', '');
-				if($this->status == 5){
-					$objTable->addCell($result, '', '', '', '', '');
-				}
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell($link, '', '', '', '', 'colspan="4"');
-				$objTable->endRow();
-			}		
-		}
-		$string .= $objTable->show();	
-		
-		// exit link
-		$objLink = new link($this->uri(array(), '_default'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= '<br />'.$objLink->show();
-
-		$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		
-		return $str;
-	}
-
-	/**
-	* Method to show the tutorial status
-	*
-	* @access private
-	* @param array $line: The array of tutorial data
-	* @param string $studentId: The id of the student if applicable
-	* @reurn string $status: The status of the tutorial
-	*/
-	private function _getStatus($line, $studentId = NULL)
-	{
-		// data to be displayed
-		if($studentId != NULL && !empty($studentId)){
-			$lData = $this->objTutDb->getLateSubmissions($line['name_space'], $studentId);
-		}else{
-			$lData = FALSE;
-		}
-		$date = strtotime(date('Y-m-d H:i:s'));
-        $openDate = strtotime($line['answer_open_date']);
-        if($lData != FALSE){
-        	$closeDate = $lData['answer_close_date'];
-        	$markDate = $lData['marking_close_date'];
-        	$moderateDate = $lData['moderating_close_date'];
-		}else{
-        	$closeDate = $line['answer_close_date'];
-        	$markDate = $line['marking_close_date'];
-        	$moderateDate = $line['moderating_close_date'];
+        // get data
+        if(empty($id)){
+            $name = '';
+            $type = 0;
+            $style = 'style="display: none" ';
+            $percentage = 0;
+            $answerOpen = date('Y-m-d H:i');
+            $answerClose = date('Y-m-d H:i');            
+            $markOpen = date('Y-m-d H:i');
+            $markClose = date('Y-m-d H:i');            
+            $moderateOpen = date('Y-m-d H:i');
+            $moderateClose = date('Y-m-d H:i');
+            $penalty = 0;
+            $description = '';
+        }else{
+            $tutorial = $this->objDbTutorials->getTutorial($id);
+            $name = $tutorial['name'];
+            $type = $tutorial['tutorial_type'];
+            if($type == 0){
+                $style = 'style="display: none" ';
+            }else{
+                $style = '';
+            }
+            $percentage = $tutorial['percentage'];
+            $answerOpen = $tutorial['answer_open'];
+            $answerClose = $tutorial['answer_close'];            
+            $markOpen = $tutorial['marking_open'];
+            $markClose = $tutorial['marking_close'];            
+            $moderateOpen = $tutorial['moderation_open'];
+            $moderateClose = $tutorial['moderation_close'];
+            $penalty = $tutorial['penalty'];   
+            $description = $tutorial['description'];
         }
-
-		// text elements
-		$lblInactive = $this->objLanguage->languageText('word_inactive');
-		$lblOpen = $this->objLanguage->languageText('word_open');
-		$lblCompleted = $this->objLanguage->languageText('word_completed');
-		$array = array(
-			'date' => $this->_formatDate($closeDate), 
-		);
-		$lblAnswerClose = $this->objLanguage->code2Txt('mod_tutorials_answersclosing', 'tutorials', $array);
-		$array = array(
-			'date' => $this->_formatDate($markDate),
-		);
-		$lblMarkClose = $this->objLanguage->code2Txt('mod_tutorials_markingclosing', 'tutorials', $array);
-		$array = array(
-			'date' => $this->_formatDate($moderateDate),
-		);
-		$lblModerateClose = $this->objLanguage->code2Txt('mod_tutorials_moderatingclosing', 'tutorials', $array);
-		
-		if($line['type'] == 2){
-		 	if($date < $openDate){
-				$status = $lblInactive;
-				$this->status = 1;
-			}elseif($date >= $openDate && $date < strtotime($closeDate)){
-				$status = $lblAnswerClose;
-				$this->status = 2;
-			}elseif($date >= $closeDate && $date < strtotime($markDate)){
-				$status = $lblMarkClose;
-				$this->status = 3;
-			}elseif($date >= $markDate && $date < strtotime($moderateDate)){
-				$status = $lblModerateClose;
-				$this->status = 4;
-			}else{
-				$status = $lblCompleted;
-				$this->status = 5;
-			}			
-		}else{
-			if($date < $openDate){
-				$status = $lblInactive;			
-				$this->status = 1;
-			}elseif($date >= $openDate && $date < strtotime($closeDate)){
-				$status = $lblAnswerClose;
-				$this->status = 2;
-			}else{
-				$status = $lblCompleted;
-				$this->status = 5;
-			}
-		}	
-		return $status;
-	}
-	
-	/**
-	* Method to format a date
-	*
-	* @access private
-	* @param string $date: The date to be formatted
-	* @return string $str: The formatted date string
-	*/
-	private function _formatDate($date)
-	{
-		$months = $this->objDate->getMonthsAsArray('3letter');
-		
-		$arrString = explode(' ', $date);
-		$arrDate = explode('-', $arrString[0]);
-		
-		$str = $arrDate[2].' ';
-		$str .= $months[$arrDate[1] - 1].' ';
-		$str .= $arrDate[0];
-		
-        if(isset($arrString[1]) && $arrString[1] != 0){
-            $str .= ' '.substr($arrString[1], 0, 5);
-        }
-        return $str;
-	}
-	
-	/** 
-	* Method to show the add tutorial page
-	*
-	* @access public
-	* @return string $str: The output string
-	*/
-	public function showAddTutorial()
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// add  javascript
-        $headerParams = $this->getJavascriptFile('tutorials.js', 'tutorials');
-        $this->appendArrayVar('headerParams', $headerParams);
-
-		// text elements
-		$lblAdd = $this->objLanguage->languageText('word_add');
-		$lblTut = $this->objLanguage->languageText('mod_tutorials_tutorial', 'tutorials');
-		$lblSelect = $this->objLanguage->languageText('word_select');
-		$lblStandard = $this->objLanguage->languageText('word_standard');
-		$lblInteractive = $this->objLanguage->languageText('word_interactive');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblType = $this->objLanguage->languageText('word_type');
-		$lblDescription = $this->objLanguage->languageText('word_description');
-		$lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
-		$lblOpen = $this->objLanguage->languageText('mod_tutorials_dateopen', 'tutorials');
-		$lblClose = $this->objLanguage->languageText('mod_tutorials_dateclose', 'tutorials');
-		$lblMark = $this->objLanguage->languageText('mod_tutorials_datemark', 'tutorials');
-		$lblModerate = $this->objLanguage->languageText('mod_tutorials_datemoderate', 'tutorials');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblNameError = $this->objLanguage->languageText('mod_tutorials_requiredname', 'tutorials');		
-		$heading = $lblAdd.' '.strtolower($lblTut);
-		
-		// form elements
-		$objInput = new textinput('name', '', '', 68);
-		$nameInput = $objInput->show();
-		
-		$objDrop = new dropdown('type');
-		$objDrop->addOption(NULL, '- '.$lblSelect.' -');
-		$objDrop->addOption(1, $lblStandard);
-		$objDrop->addOption(2, $lblInteractive);
-		$objDrop->extra = 'onchange="javascript:toggleDateDisplay(this);"';
-		$typeDrop = $objDrop->show();
-
-		$objText = new textarea('description', '', 4, 50);
-		$descriptionText = $objText->show();
-
-		$objInput = new textinput('percentage', '', '', '');
-		$percentageInput = $objInput->show();
-		
-        // date inputs
-        $openField = $this->objPopupcal->show('answer_open', 'yes', 'no', date('Y-m-d H:i'));
-        $closeField = $this->objPopupcal->show('answer_close', 'yes', 'no', date('Y-m-d H:i'));
-        $markField = $this->objPopupcal->show('mark_close', 'yes', 'no', date('Y-m-d H:i'));
-        $moderateField = $this->objPopupcal->show('moderate_close', 'yes', 'no', date('Y-m-d H:i'));
         
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-        //$objTable->border = '1';
-		
-		$objTable->startRow();
-		$objTable->addCell($lblName, '25%', '', '', '', '');
-		$objTable->addCell($nameInput, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblType, '25%', '', '', '', '');
-		$objTable->addCell($typeDrop, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell($lblDescription, '25%', '', '', '', '');
-		$objTable->addCell($descriptionText, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblPercentage, '25%', '', '', '', '');
-		$objTable->addCell($percentageInput, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblOpen, '25%', '', '', '', '');
-		$objTable->addCell($openField, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblClose, '25%', '', '', '', '');
-		$objTable->addCell($closeField, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-
-		
-		// dates table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-
-		$objTable->startRow();
-		$objTable->addCell($lblMark, '25%', '', '', '', '');
-		$objTable->addCell($markField, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblModerate, '25%', '', '', '', '');
-		$objTable->addCell($moderateField, '', '', '', '', '');
-		$objTable->endRow();
-		$datesTable = $objTable->show();
-
-		// dates layer
-		$objLayer = new layer();
-		$objLayer->id = 'datesDiv';
-		$objLayer->display = 'none';
-		$objLayer->addToStr($datesTable);
-		$datesLayer = $objLayer->show();
-		
-		// form
-		$objForm = new form('addtut', $this->uri(array(
-			'action' => 'add_tutorial_update',
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($datesLayer);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$objForm->addRule('name', $lblNameError, 'required');
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		
-		return $str;
-	}	
-
-	/** 
-	* Method to show the edit tutorial page
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to edit
-	* @return string $str: The output string
-	*/
-	public function showEditTutorial($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-        // add  javascript
-        $headerParams = $this->getJavascriptFile('tutorials.js', 'tutorials');
-        $this->appendArrayVar('headerParams', $headerParams);
-
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$name = $tData['name'];
-		$type = $tData['type'];
-		$description = $tData['description'];
-		$percentage = $tData['percentage'];
-		$answerOpen = $tData['answer_open_date'];
-		$answerClose = $tData['answer_close_date'];
-		$markClose = $tData['marking_close_date'];
-		$moderateClose = $tData['moderating_close_date'];
-		$totalMark = $tData['total_mark'];
-		
-		// text elements
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblTut = $this->objLanguage->languageText('mod_tutorials_tutorial', 'tutorials');
-		$lblSelect = $this->objLanguage->languageText('word_select');
-		$lblStandard = $this->objLanguage->languageText('word_standard');
-		$lblInteractive = $this->objLanguage->languageText('word_interactive');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblType = $this->objLanguage->languageText('word_type');
-		$lblDescription = $this->objLanguage->languageText('word_description');
-		$lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
-		$lblOpen = $this->objLanguage->languageText('mod_tutorials_dateopen', 'tutorials');
-		$lblClose = $this->objLanguage->languageText('mod_tutorials_dateclose', 'tutorials');
-		$lblMark = $this->objLanguage->languageText('mod_tutorials_datemark', 'tutorials');
-		$lblModerate = $this->objLanguage->languageText('mod_tutorials_datemoderate', 'tutorials');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblNameError = $this->objLanguage->languageText('mod_tutorials_requiredname', 'tutorials');		
-		$heading = $lblEdit.' '.strtolower($lblTut);
-		
-		// form elements
-		$objInput = new textinput('name', $name, '', 68);
-		$nameInput = $objInput->show();
-		
-		$objDrop = new dropdown('type');
-		$objDrop->addOption(NULL, '- '.$lblSelect.' -');
-		$objDrop->addOption(1, $lblStandard);
-		$objDrop->addOption(2, $lblInteractive);
-		$objDrop->setSelected($type);
-		$objDrop->extra = 'onchange="javascript:toggleDateDisplay(this);"';
-		$typeDrop = $objDrop->show();
-
-		$objText = new textarea('description', $description, 4, 50);
-		$descriptionText = $objText->show();
-
-		$objInput = new textinput('percentage', $percentage, '', '');
-		$percentageInput = $objInput->show();
-		
-        // date inputs
-        $openField = $this->objPopupcal->show('answer_open', 'yes', 'no', date('Y-m-d H:i', strtotime($answerOpen)));
-        $closeField = $this->objPopupcal->show('answer_close', 'yes', 'no', date('Y-m-d H:i', strtotime($answerClose)));
-        $markField = $this->objPopupcal->show('mark_close', 'yes', 'no', date('Y-m-d H:i', strtotime($markClose)));
-        $moderateField = $this->objPopupcal->show('moderate_close', 'yes', 'no', date('Y-m-d H:i', strtotime($moderateClose)));
-        
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-        //$objTable->border = '1';
-		
-		$objTable->startRow();
-		$objTable->addCell($lblName, '25%', '', '', '', '');
-		$objTable->addCell($nameInput, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblType, '25%', '', '', '', '');
-		$objTable->addCell($typeDrop, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell($lblDescription, '25%', '', '', '', '');
-		$objTable->addCell($descriptionText, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblPercentage, '25%', '', '', '', '');
-		$objTable->addCell($percentageInput, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblOpen, '25%', '', '', '', '');
-		$objTable->addCell($openField, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblClose, '25%', '', '', '', '');
-		$objTable->addCell($closeField, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-
-		
-		// dates table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-
-		$objTable->startRow();
-		$objTable->addCell($lblMark, '25%', '', '', '', '');
-		$objTable->addCell($markField, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell($lblModerate, '25%', '', '', '', '');
-		$objTable->addCell($moderateField, '', '', '', '', '');
-		$objTable->endRow();
-		$datesTable = $objTable->show();
-
-		// dates layer
-		$objLayer = new layer();
-		$objLayer->id = 'datesDiv';
-		if($type != 2){
-			$objLayer->display = 'none';
-		}
-		$objLayer->addToStr($datesTable);
-		$datesLayer = $objLayer->show();
-		
-		// form
-		$objForm = new form('edittut', $this->uri(array(
-			'action' => 'edit_tutorial_update',
-			'id' => $tNameSpace,
-			'mark' => $totalMark,
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($datesLayer);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$objForm->addRule('name', $lblNameError, 'required');
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		
-		return $str;
-	}	
-
-	/** 
-	* Method to show the view tutorial page
-	*
-	* @access public
-	* @param string $tNameSpace: The nameSpace of the tutorial to display
-	* @return string $str: The output string
-	*/
-	public function showViewTutorial($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$name = $tData['name'];
-		$type = $tData['type'];
-		$description = $tData['description'];
-		$percentage = $tData['percentage'];
-		$totalMark = $tData['total_mark'] < 1 ? 0 : $tData['total_mark'];
-		$answerOpen = $tData['answer_open_date'];
-		$answerClose = $tData['answer_close_date'];
-		$markClose = $tData['marking_close_date'];
-		$moderateClose = $tData['moderating_close_date'];
-		
-		$qData = $this->objTutDb->listQuestions($tNameSpace);
-		$mData = $this->objTutDb->getAnswerToModerate($tNameSpace);
-
-		// text elements
-		$lblView = $this->objLanguage->languageText('word_view');
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblEditTutTitle = $this->objLanguage->languageText('mod_tutorials_titleedittut', 'tutorials');
-		$lblEditQuestionTitle = $this->objLanguage->languageText('mod_tutorials_titleeditquestion', 'tutorials');
-		$lblDelete = $this->objLanguage->languageText('word_delete');
-		$lblDeleteTitle = $this->objLanguage->languageText('mod_tutorials_titledeletequestion', 'tutorials');
-		$lblTut = $this->objLanguage->languageText('mod_tutorials_tutorial', 'tutorials');
-		$lblStandard = $this->objLanguage->languageText('word_standard');
-		$lblInteractive = $this->objLanguage->languageText('word_interactive');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblType = $this->objLanguage->languageText('word_type');
-		$lblDescription = $this->objLanguage->languageText('word_description');
-		$lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
-		$lblOpen = $this->objLanguage->languageText('mod_tutorials_dateopen', 'tutorials');
-		$lblClose = $this->objLanguage->languageText('mod_tutorials_dateclose', 'tutorials');
-		$lblMark = $this->objLanguage->languageText('mod_tutorials_datemark', 'tutorials');
-		$lblModerate = $this->objLanguage->languageText('mod_tutorials_datemoderate', 'tutorials');
-		$lblAddQuestions = $this->objLanguage->languageText('phrase_addquestions');
-		$lblAddQuestionsTitle = $this->objLanguage->languageText('mod_tutorials_titleaddquestions', 'tutorials');
-		$lblImportQuestions = $this->objLanguage->languageText('phrase_importquestions');
-		$lblImportQuestionsTitle = $this->objLanguage->languageText('mod_tutorials_titleimportquestions', 'tutorials');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblQuestions = $this->objLanguage->languageText('word_questions');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblWordMark = $this->objLanguage->languageText('word_mark');
-		$lblTotalMark = $this->objLanguage->languageText('phrase_totalmark');
-		$lblNo = $this->objLanguage->languageText('word_no');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$heading = $lblView.' '.strtolower($lblTut);
-		$lblMore = $this->objLanguage->languageText('word_more');
-		$lblDelConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfirm', 'tutorials');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblDrag = $this->objLanguage->languageText('mod_tutorials_drag', 'tutorials');
-		$lblSave = $this->objLanguage->languageText('mod_tutorials_savequestionorder', 'tutorials');
-		$lblWarning = $this->objLanguage->languageText('mod_tutorials_warningquestionorder', 'tutorials');
-		$lblStudent = $this->objLanguage->code2Txt('word_student');
-		$lblStatus = $this->objLanguage->languageText('word_status');
-		$lblList = ucfirst($lblStudent).'&#160;'.strtolower($lblStatus);
-		$lblListTitle = $this->objLanguage->code2Txt('mod_tutorials_titlelist', 'tutorials');
-		$lblModerate = $this->objLanguage->languageText('word_moderate');
-		$lblModerateTitle = $this->objLanguage->languageText('mod_tutorials_titlemoderate', 'tutorials');
-		$lblMarkTitle = $this->objLanguage->languageText('mod_tutorials_titlemark', 'tutorials');
-		$lblMarkTut = $this->objLanguage->languageText('word_mark');
-		$lblExportTitle = $this->objLanguage->languageText('mod_tutorials_titleexport', 'tutorials');
-		$lblExport = $this->objLanguage->languageText('phrase_exportresults');
-		$lblLateTitle = $this->objLanguage->languageText('mod_tutorials_titlelate', 'tutorials');
-		$lblLate = $this->objLanguage->languageText('phrase_latesubmissions');
-		$lblAnswersTitle = $this->objLanguage->languageText('mod_tutorials_titleanswers', 'tutorials');
-		$lblAnswers = $this->objLanguage->languageText('phrase_viewanswers');
-
-		if($type == 2){
-			$lblTutType = $lblInteractive;
-		}else{
-			$lblTutType = $lblStandard;
-		}
-		
-		// tutorial tabbed box
-		
-		//links
-		$objLink = new link($this->uri(array(
-			'action' => 'edit_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblEdit;
-		$objLink->title = $lblEditTutTitle;
-		$string = $objLink->show();
-
-		$objLink = new link($this->uri(array(
-			'action' => 'status_list',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblList;
-		$objLink->title = $lblListTitle;
-		$string .= '&#160;|&#160;'.$objLink->show();
-
-		$objLink = new link($this->uri(array(
-			'action' => 'view_answers',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblAnswers;
-		$objLink->title = $lblAnswersTitle;
-		$string .= '&#160;|&#160;'.$objLink->show();
-
-		$objLink = new link($this->uri(array(
-			'action' => 'marking_list',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblMarkTut;
-		$objLink->title = $lblMarkTitle;
-		$string .= '&#160;|&#160;'.$objLink->show();
-
-		$objLink = new link($this->uri(array(
-			'action' => 'late_submissions',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblLate;
-		$objLink->title = $lblLateTitle;
-		$string .= '&#160;|&#160;'.$objLink->show();
-
-		if($type == 2 && $mData != FALSE){
-		 	$objLink = new link($this->uri(array(
-				'action' => 'moderate_tutorial',
-				'id' => $tNameSpace,
-			), 'tutorials'));
-			$objLink->link = $lblModerate;
-			$objLink->title = $lblModerateTitle;
-			$string .= '&#160;|&#160;'.$objLink->show();
-		}
-
-		$objLink = new link($this->uri(array(
-			'action' => 'export_results',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblExport;
-		$objLink->title = $lblExportTitle;
-		$string .= '&#160;|&#160;'.$objLink->show();
-
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblName.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($name, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblType.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($lblTutType, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblDescription.'</b>', '30%', 'top', '', '', '');
-		$objTable->addCell(nl2br($description), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblPercentage.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($percentage, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblTotalMark.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($totalMark, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblOpen.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($answerOpen), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblClose.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($answerClose), '', '', '', '', '');
-		$objTable->endRow();
-		$string .= $objTable->show();
-
-		
-		// dates table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMark.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($markClose), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblModerate.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($moderateClose), '', '', '', '', '');
-		$objTable->endRow();
-		$datesTable = $objTable->show();
-
-		// dates layer
-		$objLayer = new layer();
-		$objLayer->id = 'datesDiv';
-		if($type != 2){
-			$objLayer->display = 'none';
-		}
-		$objLayer->addToStr($datesTable);
-		$string .= $objLayer->show();
-		
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblTutorial.'</b>');
-		$objTabbedbox->addBoxContent($string);
-		$tabbedboxes = $objTabbedbox->show();
-
-		// Questions tabbed box
-		
-		//links
-		$objLink = new link($this->uri(array(
-			'action' => 'add_question',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblAddQuestions;
-		$objLink->title = $lblAddQuestionsTitle;
-		$links = $objLink->show();
-
-		$objLink = new link($this->uri(array(
-			'action' => 'import_questions',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblImportQuestions;
-		$objLink->title = $lblImportQuestionsTitle;
-		$links .= '&#160;|&#160;'.$objLink->show();
-
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell($lblNo, '5%', '', '', 'heading', '');
-		$objTable->addCell($lblQuestion, '', '', '', 'heading', '');
-		$objTable->addCell($lblWordMark, '5%', '', '', 'heading', '');
-		$objTable->addCell('', '10%', '', '', 'heading', '');
-		$objTable->endRow();
-		
-		if($qData == FALSE){
-		 	$str = '';
-			$objLayer = new layer();
-			$objLayer->cssClass = 'noRecordsMessage';
-			$objLayer->addToStr($lblNoRecords);
-			$string = $objLayer->show();
-		}else{
-		 	$str = '';
-			 if(count($qData) > 1){
-        		// load javascript
-				$headerParams = $this->getJavascriptFile('tutorials.js', 'tutorials');
-        		$this->appendArrayVar('headerParams', $headerParams);
-
-	        	$body = 'Sortable.create("list", {onUpdate: doUpdate , handle:"handle"});SORTLIST = "list";';
-    	    	$this->appendArrayVar('bodyOnLoad', $body);
-		            
-				// css styles
-				$style = '<style type="text/css" media="screen">
-					#list {
-						list-style-type: none;
-					}
-					#list li {
-						margin:5px;
-					}
-					#list li div.handle {
-			 			background: green;
-						padding: 2px;
-						border-bottom: 2px solid #fff;
-						width: 200px;
-						display: inline;
-						color: #fff;
-						cursor: pointer;
-					}
-				</style>';
-  				$str = $style;
-  			}
-  		
-			$string = '<ul id="list">';
-			foreach($qData as $line){
-		 	 	$objLink = new link($this->uri(array(
-				  	'action' => 'edit_question',
-					'id' => $line['name_space'],
-				), 'tutorials'));
-				$objLink->link = $lblEdit;
-				$objLink->title = $lblEditQuestionTitle;
-				$qLinks = $objLink->show();
-				
-		 	 	$objLink = new link($this->uri(array(
-				  	'action' => 'delete_question',
-					'tutId' => $tNameSpace,
-					'id' => $line['name_space'],
-				), 'tutorials'));
-				$objLink->link = $lblDelete;
-				$objLink->title = $lblDeleteTitle;
-				$objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblDelConfirm.'\')){return false;}"';
-
-				$qLinks .= '&#160;|&#160;'.$objLink->show();
-				
-				// replace _ with *
-				$id = str_replace('_', '*', $line['name_space']);
-				
-        		$string .= '<li id="sort_'.$id.'">';
-        		
-				if(count($qData) > 1){
-				 	$objLayer = new layer();
-					$objLayer->cssClass = 'handle" ondragstart="return false';
-					$objLayer->display = 'inline';
-					$objLayer->addToStr($lblDrag);
-					$handle = $objLayer->show();
-				}
-				
-				$objTable = new htmltable();
-				$objTable->cellspacing = 2;
-				$objTable->cellpadding = 2;
-				$objTable->startRow();
-				$objTable->addCell($line['question'], '', '', '', '', '');
-				$objTable->addCell($line['question_value'], '5%', '', '', '', '');
-				$objTable->addCell($qLinks, '10%', '', '', '', '');
-				if(count($qData) > 1){
-					$objTable->addCell($handle, '15%', '', '', '', '');
-				}
-				$objTable->endRow();
-				$string .= $objTable->show();
-				
-				$string .= '</li>';
-			}
-			$string .= '</ul>';
-			
-			// sort order form
-			$objInput = new textinput('sortorder', '', 'hidden');
-			$sortInput = $objInput->show();
-			
-			$objButton = new button('save', $lblSave);
-			$objButton->setToSubmit();
-			$submitButton = $objButton->show();
-			
-			$warning = '<span class="warning" id="warning">';
-			$warning .= $lblWarning;
-			$warning .= '</span>';
-			
-			$objForm = new form('sortform', $this->uri(array(
-				'action' => 'reorder_questions',
-				'id' => $tNameSpace,
-			), 'tutorials'));
-			$objForm->addToForm($sortInput.$warning.'<br />'.$submitButton);
-			$objForm->extra = 'style="display: none;"';
-			$string .= $objForm->show();			
-		}
-
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblQuestions.'</b>');
-		$objTabbedbox->addBoxContent($links.$string);
-		$tabbedboxes .= $objTabbedbox->show();
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string = $objLink->show();
-
-		$str .= $this->objFeature->show($heading, $tabbedboxes.$string).'<br />';
-		
-		return $str;
-	}	
-
-	/** 
-	* Method to show the add question page
-	*
-	* @access public
-	* @param string $tNameSpace: The nameSpace of the tutorial the question is being added to
-	* @return string $str: The output string
-	*/
-	public function showAddQuestion($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// text elements
-		$lblAdd = $this->objLanguage->languageText('word_add');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$heading = $lblAdd.'&#160;'.strtolower($lblQuestion);
-		$lblWorth = $this->objLanguage->languageText('mod_tutorials_questionworth', 'tutorials');
-		$lblAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		
-		// form elements
-		$this->objEditor->init('question', '', '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$questionArea = $this->objEditor->showFCKEditor();
-		
-		$this->objEditor->init('answer', '', '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$answerArea = $this->objEditor->showFCKEditor();
-		
-		$objInput = new textinput('worth', '', '', '');
-		$worthInput = $objInput->show();		
-		
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblQuestion.': </b><br />'.$questionArea, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answerArea, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblWorth.':</b><br />'.$worthInput, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-		
-		// form
-		$objForm = new form('addquestion', $this->uri(array(
-			'action' => 'add_question_update',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		
-		return $str;
-	}
-
-	/** 
-	* Method to show the edit question page
-	*
-	* @access public
-	* @param string $tNameSpace: The nameSpace of the tutorial the question is being added to
-	* @return string $str: The output string
-	*/
-	public function showEditQuestion($qNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// Data to be displayed
-		$qData = $this->objTutDb->getQuestion($qNameSpace);
-		
-		// text elements
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$heading = $lblEdit.'&#160;'.strtolower($lblQuestion);
-		$lblWorth = $this->objLanguage->languageText('mod_tutorials_questionworth', 'tutorials');
-		$lblAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		
-		// form elements
-		$this->objEditor->init('question', $qData['question'], '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$questionArea = $this->objEditor->showFCKEditor();
-		
-		$this->objEditor->init('answer', $qData['model_answer'], '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$answerArea = $this->objEditor->showFCKEditor();
-		
-		$objInput = new textinput('worth', $qData['question_value'], '', '');
-		$worthInput = $objInput->show();		
-		
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblQuestion.': </b><br />'.$questionArea, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answerArea, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblWorth.':</b><br />'.$worthInput, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-		
-		// form
-		$objForm = new form('editquestion', $this->uri(array(
-			'action' => 'edit_question_update',
-			'tutId' => $qData['tutorial_name_space'],
-			'id' => $qNameSpace,
-			'order' => $qData['question_order'],
-			'value' => $qData['question_value'],
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $qData['tutorial_name_space'],
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the import questions page
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to import questions to
-	* @param integer $error: The error status of the upload
-	* @return string $str: the output string
-	*/
-	public function showImportQuestions($tNameSpace, $error)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// text elements
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblOverwrite = $this->objLanguage->languageText('mod_tutorials_overwrite', 'tutorials');
-		$lblYes = $this->objLanguage->languageText('word_yes');
-		$lblNo = $this->objLanguage->languageText('word_no');
-		$heading = $this->objLanguage->languageText('phrase_importquestions');
-		$lblTypeError = $this->objLanguage->languageText('mod_tutorials_filetypeerror', 'tutorials');
-		$lblSizeError = $this->objLanguage->languageText('mod_tutorials_maxsizeerror', 'tutorials');
-		$lblNoFileError = $this->objLanguage->languageText('mod_tutorials_nofileerror', 'tutorials');
-		$lblPartialError = $this->objLanguage->languageText('mod_tutorials_partialerror', 'tutorials');
-						
-		if($error == 1){
-			$string = '<font class="error"><b>'.$lblSizeError.'</b></font>';	
-		}elseif($error == 3){
-			$string = '<font class="error"><b>'.$lblPartialError.'</b></font>';
-		}elseif($error == 4){
-			$string = '<font class="error"><b>'.$lblNoFileError.'</b></font>';
-		}elseif($error == 5){
-			$string = '<font class="error"><b>'.$lblTypeError.'</b></font>';
-		}else{
-			$string = '';
-		}
-		
-		// form elements
-		$objRadio = new radio('overwrite');
-		$objRadio->addOption(1, '&#160;'.$lblYes);
-		$objRadio->addOption(2, '&#160;'.$lblNo);
-		$objRadio->setSelected(1);
-		$objRadio->setBreakSpace('<br />');
-		$objRadio->extra = 'style="vertical-align: middle;"';
-		$overwriteRadio = $objRadio->show();
-		
-		$objInput = new textinput('import', '', 'file', 70);
-		$fileInput = $objInput->show();
-		
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell('<b><font class="warning">'.$lblOverwrite.'</font></b><br />'.$overwriteRadio, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell($fileInput, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$displayTable = $objTable->show();
-
-		// form
-		$objForm = new form('importquestion', $this->uri(array(
-			'action' => 'import_questions_update',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$objForm->extra = 'enctype="multipart/form-data"';
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $string.$form.$hiddenForm).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the page for the student to take the tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to take
-	* @param integer $qNum: The start number of the questions to get
-	* @return string $str: The output string
-	*/
-	public function showAnswerTutorial($tNameSpace, $qNum)
-	{
-		// data to be displayed
-		$this->objTutDb->checkResult($tNameSpace);
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->listQuestionsForAnswering($tNameSpace, $qNum);
-
-		// text elelments
-		$lblAnswer = $this->objLanguage->languageText('word_answer');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblAnswer.'&#160;'.strtolower($lblTutorial);
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblExit = $this->objLanguage->languageText('word_exit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblOf = $this->objLanguage->languageText('word_of');
-		
-		$heading = $lblHeading.':&#160;'.$tData['name'];
-		
-		if($qData == FALSE){
-			$string = '<b><font class="noRecordsMessage">'.$lblNoRecords.'</font></b><br />';					
-		}else{
-			$questions = '';
-			$lastQuestion = FALSE;
-			$hiddenInput = '';
-			foreach($qData as $key => $line){
-			 	// form elements
-				$objInput = new textinput('qId[]', $line['name_space'], 'hidden', '');
-				$hiddenInput .= $objInput->show();
-				
-				$aData = $this->objTutDb->getAnswer($line['name_space']);
-				if($aData != FALSE){
-					$answer = $aData['answer'];
-					$aId = $aData['name_space'];
-				}else{
-					$answer = '';
-					$aId = '';
-				}
-			
-				$objInput = new textinput('aId[]', $aId, 'hidden', '');
-				$hiddenInput .= $objInput->show();
-				
-				$this->objEditor->init('answer_'.$key, $answer, '', '');
-				$this->objEditor->setDefaultToolBarSetWithoutSave();
-				$answerArea = $this->objEditor->showFCKEditor();
-		
-				$objTable = new htmltable();
-				$objTable->cellspacing = 2;
-				$objTable->cellpadding = 2;
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($line['question']), '', '', '', 'odd', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($line['question_value']), '', '', '', 'even', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell($answerArea, '', '', '', '', '');
-				$objTable->endRow();
-				$displayTable = $objTable->show();
-
-				$objTabbedbox = new tabbedbox();
-				$objTabbedbox->extra = 'style="padding: 10px;"';
-				$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$line['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData[0]['total'].'</b>');
-				$objTabbedbox->addBoxContent($displayTable);
-				$questions .= $objTabbedbox->show();
-				
-				if($line['question_order'] == $qData[0]['total']){
-					$lastQuestion = TRUE;
-				}
-			}
-			// buttons
-			$objButton = new button('submit', $lblSubmit);
-			$objButton->setToSubmit();
-			$submitButton = $objButton->show();
-			
-			$objButton = new button('cancel', $lblCancel);
-			$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-			$cancelButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblExit);
-			$objButton->setToSubmit();
-			$exitButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblNext);
-			$objButton->setToSubmit();
-			$nextButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblPrevious);
-			$objButton->setToSubmit();
-			$previousButton = $objButton->show();
-			
-			if($lastQuestion){
-				$buttons = $previousButton.'&#160;'.$submitButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-			}elseif($qNum == 1){
-				$buttons = $nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-			}else{
-				$buttons = $previousButton.'&#160;'.$nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-			}
-		
-			// hidden input
-			$cNum = $qNum - 4;
-			$objInput = new textinput('cNum', $cNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-			
-			$qNum = $qNum + count($qData);
-			$objInput = new textinput('qNum', $qNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-
-			// form
-			$objForm = new form('answer', $this->uri(array(
-				'action' => 'submit_answers',
-				'id' => $tNameSpace,
-			), 'tutorials'));
-			$objForm->addToForm($questions);
-			$objForm->addToForm($hiddenInput);
-			$objForm->addToForm($buttons);
-			$string = $objForm->show();
-		
-			$objForm = new form('cancelform', $this->uri(array(
-				'action' => 'show_home',
-			), 'tutorials'));
-			$string .= $objForm->show();
-		}
-	
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to display a page with list the status of students on this tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of this tutorial
-	* @return string $str: The output string
-	*/
-	public function showStatusList($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// load javascript
-		$headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
-        $this->appendArrayVar('headerParams', $headerParams);
-        
-        // data to be displayed
-        $tData = $this->objTutDb->getTutorial($tNameSpace);
-        $sData = $this->_listStudents();
-		      
-        // text elements
-		$lblStudent = $this->objLanguage->code2Txt('word_student');
-		$lblStatus = $this->objLanguage->languageText('word_status');
-		$lblList = ucfirst($lblStudent).'&#160;'.strtolower($lblStatus);
-        $lblStudentNo = $this->objLanguage->languageText('phrase_studentnumber');
+        // set up language elements
+        $lblAdd = $this->objLanguage->languageText('mod_tutorials_add', 'tutorials');
+        $lblEdit = $this->objLanguage->languageText('mod_tutorials_edit', 'tutorials');
         $lblName = $this->objLanguage->languageText('word_name');
-        $lblSurname = $this->objLanguage->languageText('word_surname');
-        $lblPercentage = $this->objLanguage->languageText('word_percentage');
-        $lblStatus = $this->objLanguage->languageText('word_status');
-        $lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblAnswersSaved = $this->objLanguage->languageText('mod_tutorials_answerssaved', 'tutorials');
-		$lblAnswersSubmitted = $this->objLanguage->languageText('mod_tutorials_answerssubmitted', 'tutorials');
-		$lblMarksSaved = $this->objLanguage->languageText('mod_tutorials_markssaved', 'tutorials');
-		$lblMarksSubmitted = $this->objLanguage->languageText('mod_tutorials_markssubmitted', 'tutorials');
-		$lblDidNotAccess = $this->objLanguage->languageText('mod_tutorials_didnotaccess', 'tutorials');
-		$lblDidNotMark = $this->objLanguage->languageText('mod_tutorials_didnotmark', 'tutorials');
-		$lblMarkingStatus = $this->objLanguage->languageText('mod_tutorials_markingstatus', 'tutorials');
-		$lblMarker = $this->objLanguage->languageText('phrase_markedby');
-		$lblModerator = $this->objLanguage->languageText('phrase_moderatedby');
-		
-		$lblHeading = $lblList.':&#160;'.$tData['name'];
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblSelect = $this->objLanguage->languageText('phrase_selectdate');
+        $lblStandard = $this->objLanguage->languageText('word_standard');
+        $lblInteractive = $this->objLanguage->languageText('word_interactive');
+        $lblDescription = $this->objLanguage->languageText('word_description');
+        $lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
+        $lblType = $this->objLanguage->languageText('mod_tutorials_type', 'tutorials');
+        $lblNameRequired = $this->objLanguage->languageText('mod_tutorials_namerequired', 'tutorials');
+        $lblPercentRequired = $this->objLanguage->languageText('mod_tutorials_percentrequired', 'tutorials');
+        $lblPercentNumeric = $this->objLanguage->languageText('mod_tutorials_numericpercent', 'tutorials');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        $lblAnswerOpen = $this->objLanguage->languageText('mod_tutorials_answerstart', 'tutorials');
+        $lblAnswerClose = $this->objLanguage->languageText('mod_tutorials_answerclose', 'tutorials');
+        $lblMarkOpen = $this->objLanguage->languageText('mod_tutorials_markstart', 'tutorials');
+        $lblMarkClose = $this->objLanguage->languageText('mod_tutorials_markclose', 'tutorials');
+        $lblModerateOpen = $this->objLanguage->languageText('mod_tutorials_moderatestart', 'tutorials');
+        $lblModerateClose = $this->objLanguage->languageText('mod_tutorials_moderateclose', 'tutorials');
+        $lblPenalty = $this->objLanguage->languageText('mod_tutorials_penalty', 'tutorials');
+        $lblPenaltyMax = $this->objLanguage->languageText('mod_tutorials_penaltymax', 'tutorials');
+        $lblPenaltyRequired = $this->objLanguage->languageText('mod_tutorials_penaltyrequired', 'tutorials');
+        $lblPenaltyNumeric = $this->objLanguage->languageText('mod_tutorials_penaltynumeric', 'tutorials');
+        $lblPenaltyLess = $this->objLanguage->languageText('mod_tutorials_penaltyless', 'tutorials');
+        $lblPenaltyGreater = $this->objLanguage->languageText('mod_tutorials_penaltygreater', 'tutorials');
+                
+        // set up page heading
+        if(empty($id)){
+            $lblHeading = $lblAdd;
+        }else{
+            $lblHeading = $lblEdit;
+        }
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up htmlelements
+        $this->objInput = new textinput('name', $name, '', '70');
+        $inpName = $this->objInput->show();
+        
+        $this->objDrop = new dropdown('type');
+        $this->objDrop->addOption(0, $lblStandard.'&#160;');
+        $this->objDrop->addOption(1, $lblInteractive.'&#160;');
+        $this->objDrop->setselected($type);
+        $this->objDrop->extra = 'onchange="if(this.value == \'0\'){Element.hide(\'markOpen\');Element.hide(\'markClose\');Element.hide(\'moderateOpen\');Element.hide(\'moderateClose\');Element.hide(\'penalty\');adjustLayout();}else{Element.show(\'markOpen\');Element.show(\'markClose\');Element.show(\'moderateOpen\');Element.show(\'moderateClose\');Element.show(\'penalty\');adjustLayout();}"';
+        $drpType = $this->objDrop->show();
+        
+        $this->objInput = new textinput('percentage', $percentage, '', '4');
+        $this->objInput->extra='MAXLENGTH=5';
+        $inpPercentage = $this->objInput->show();
+        
+        $this->objText = new textarea('description', $description, '5', '68');
+        $txtDescription = $this->objText->show();
+        
+        $inpAnswerOpen = $this->objPopupcal->show('answerOpen', 'yes', 'no', $answerOpen);
+        $inpAnswerClose = $this->objPopupcal->show('answerClose', 'yes', 'no', $answerClose);
+        $inpMarkOpen = $this->objPopupcal->show('markOpen', 'yes', 'no', $markOpen);
+        $inpMarkClose = $this->objPopupcal->show('markClose', 'yes', 'no', $markClose);
+        $inpModerateOpen = $this->objPopupcal->show('moderateOpen', 'yes', 'no', $moderateOpen);
+        $inpModerateClose = $this->objPopupcal->show('moderateClose', 'yes', 'no', $moderateClose);
+
+        $this->objInput = new textinput('penalty', $penalty, '', '4');
+        $this->objInput->extra='MAXLENGTH=5';
+        $inpPenalty = $this->objInput->show();
+        
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+        $this->objTable->cellspacing = '2';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblName.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpName, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblType.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($drpType, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblPercentage.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpPercentage, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswerOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpAnswerOpen, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpAnswerClose, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = $style.'id="markOpen" onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMarkOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpMarkOpen, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = $style.'id="markClose" onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMarkClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpMarkClose, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = $style.'id="moderateOpen" onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblModerateOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpModerateOpen, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = $style.'id="moderateClose" onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblModerateClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpModerateClose, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = $style.'id="penalty" onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblPenalty.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($inpPenalty.' <b><font class="error">'.$lblPenaltyMax.'</font></b>', '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblDescription.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($txtDescription, '', '', '', '', '');
+        $this->objTable->endRow();
+        
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmTutorials',$this->uri(array(
+            'action'=>'savetutorial',
+            'id' => $id,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm('<br />'.$btnSubmit.'&#160;'.$btnCancel);
+        $this->objForm->addRule('name', $lblNameRequired, 'required');
+        $this->objForm->addRule('percentage', $lblPercentRequired, 'required');
+        $this->objForm->addRule('percentage', $lblPercentNumeric, 'floatingpoint');
+        $this->objForm->addRule('penalty', $lblPenaltyRequired, 'required');
+        $this->objForm->addRule('penalty', $lblPenaltyNumeric, 'floatingpoint');
+        $this->objForm->addRule(array(
+            'name' => 'penalty',
+            'minnumber' => 0,
+        ), $lblPenaltyLess, 'minnumber');
+        $this->objForm->addRule(array(
+            'name' => 'penalty',
+            'maxnumber' => 33.33,
+        ), $lblPenaltyGreater, 'maxnumber');
+        
+        $content .= $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
+        $content .= $this->objForm->show();        
+
+        $this->objLink = new link($this->uri(array(),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+
+    /**
+    * Method to output the tutorial instructions page
+    *
+    * @access public
+    * @return string $content: The template output string
+    */
+    public function showInstructions()
+    {
+        // get data
+        $instructions = $this->objDbTutorials->getInstructions();
+        $date = $this->objDatetime->formatDate(date('Y-m-d H:i:s'));
+        
+        // set up language elements
+        $array['coursename'] = $this->menuText;
+        $lblHeading = $this->objLanguage->code2Txt('mod_tutorials_administration', 'tutorials', $array);
+        $lblStudents = $this->objLanguage->languageText('word_students');
+        $array = array();
+        $array['readonlys'] = $lblStudents;
+        $lblInstructions = $this->objLanguage->code2Txt('mod_tutorials_instructions', 'tutorials', $array);
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $array = array();
+        $array['date'] = $date;
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblInstructions;
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up htmlelements
+        $this->objEditor->init('instructions', $instructions['instructions'], '300px', '70%', NULL);
+        $this->objEditor->setDefaultToolBarSetWithoutSave();
+        $edtInstructions = $this->objEditor->show();
+        
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($edtInstructions, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('', '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', '');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmInstructions',$this->uri(array(
+            'action' => 'saveinstructions',
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $content .= $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
+        $content .= $this->objForm->show();        
+
+        $this->objLink = new link($this->uri(array(), 'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+    
+    /**
+    * Method to output the view tutorial page
+    *
+    * @access public
+    * @param string $id: The tutorial to view
+    * @return string $content: The template output string
+    */
+    public function showLecturerView($id)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $answerOpen = $this->objDatetime->formatDate($tutorial['answer_open']);
+        $answerClose = $this->objDatetime->formatDate($tutorial['answer_close']);
+        $markOpen = $this->objDatetime->formatDate($tutorial['marking_open']);
+        $markClose = $this->objDatetime->formatDate($tutorial['marking_close']);
+        $moderateOpen = $this->objDatetime->formatDate($tutorial['moderation_open']);
+        $moderateClose = $this->objDatetime->formatDate($tutorial['moderation_close']);
+        $questions = $this->objDbTutorials->getQuestions($id);
+        $status = $this->tutStatus($id);
+        
+        // set up language elements
+        $lblView = $this->objLanguage->languageText('mod_tutorials_view', 'tutorials');
+        $lblEdit = $this->objLanguage->languageText('mod_tutorials_edit', 'tutorials');
+        $lblQuestions = $this->objLanguage->languageText('word_questions');
+        $lblTutorials = $this->objLanguage->languageText('word_tutorials');
+        $lblName = $this->objLanguage->languageText('word_name');
+        $lblStandard = $this->objLanguage->languageText('word_standard');
+        $lblInteractive = $this->objLanguage->languageText('word_interactive');
+        $lblDescription = $this->objLanguage->languageText('word_description');
+        $lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
+        $lblType = $this->objLanguage->languageText('mod_tutorials_type', 'tutorials');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        $lblAnswerOpen = $this->objLanguage->languageText('mod_tutorials_answerstart', 'tutorials');
+        $lblAnswerClose = $this->objLanguage->languageText('mod_tutorials_answerclose', 'tutorials');
+        $lblMarkOpen = $this->objLanguage->languageText('mod_tutorials_markstart', 'tutorials');
+        $lblMarkClose = $this->objLanguage->languageText('mod_tutorials_markclose', 'tutorials');
+        $lblModerateOpen = $this->objLanguage->languageText('mod_tutorials_moderatestart', 'tutorials');
+        $lblModerateClose = $this->objLanguage->languageText('mod_tutorials_moderateclose', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblNo = $this->objLanguage->languageText('word_no');
+        $lblAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblTotal = $this->objLanguage->languageText('phrase_totalmark');
+        $lblAdd = $this->objLanguage->languageText('mod_tutorials_addquestion', 'tutorials');
+        $lblConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfim', 'tutorials');
+        $lblAllConfirm = $this->objLanguage->languageText('mod_tutorials_allconfim', 'tutorials');
+        $lblDown = $this->objLanguage->languageText('phrase_movedown');
+        $lblUp = $this->objLanguage->languageText('phrase_moveup');
+        $lblStatus = $this->objLanguage->languageText('phrase_activitystatus');
+        $lblImport = $this->objLanguage->languageText('phrase_importquestions');
+        $lblPenalty = $this->objLanguage->languageText('mod_tutorials_penalty', 'tutorials');
+                
+        if($tutorial['tutorial_type'] == 0){
+            $type = $lblStandard;
+        }else{
+            $type = $lblInteractive;
+        }
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblView;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
         
         // display table
-		$objTable = new htmltable();
-        $objTable->id = 'studentList';
-        $objTable->css_class = 'sorttable';
-        $objTable->cellpadding = '2';
-        $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
-        
-        $objTable->startRow();
-        $objTable->addCell($lblStudentNo, '', '', '', 'heading', '');
-        $objTable->addCell($lblName, '', '', '', 'heading', '');
-        $objTable->addCell($lblSurname, '', '', '', 'heading', '');
-        $objTable->addCell($lblPercentage, '', '', '', 'heading', '');
-        $objTable->addCell($lblStatus, '', '', '', 'heading', '');
-        if($tData['type'] == 2){
-        	$objTable->addCell($lblMarkingStatus, '', '', '', 'heading', '');
-		}
-        $objTable->addCell($lblMarker, '', '', '', 'heading', '');
-        if($tData['type'] == 2){
-        	$objTable->addCell($lblModerator, '', '', '', 'heading', '');
-		}
-        $objTable->addCell('', '', '', '', 'heading', '');
-        $objTable->endRow();
-        
-        if($sData == FALSE){
-	        $objTable->startRow();
-    	    $objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="9"');
-        	$objTable->endRow();
-		}else{
-		 	foreach($sData as $line){
-		 	 	// student data
-				$rData = $this->objTutDb->getResult($tNameSpace, $line['userid']);
-		 	 	if($rData == FALSE){
-					$percentage = '0%';
-					$aStatus = $lblDidNotAccess;
-					$mStatus = $lblDidNotMark;
-					$peer = '';
-					$moderator = '';
-				}else{
-					$percentage = round($rData['mark_obtained']/$tData['total_mark']*100).'%';
-					if($rData['completed'] == 1){
-						$aStatus = $lblAnswersSubmitted;
-					}else{
-						$aStatus = $lblAnswersSaved;
-					}
-					if($rData['marked'] == 1){
-						$mStatus = $lblMarksSubmitted;
-					}else{					 	
-					 	if($rData['student_marked'] != ''){
-							$mStatus = $lblMarksSaved;
-						}else{
-							$mStatus = $lblDidNotMark;
-						}
-					}
-					if($rData['peer_id'] != NULL){
-						$peer = $this->objUser->fullname($rData['peer_id']);
-					}else{
-						$peer = '';
-					}
-					if($rData['moderator_id'] != NULL){
-						$moderator = $this->objUser->fullname($rData['moderator_id']);
-					}else{
-						$moderator = '';
-					}
-				}
-        		$objTable->startRow();
-		        $objTable->addCell($line['userid'], '', '', '', '', '');
-        		$objTable->addCell($line['firstname'], '', '', '', '', '');
-		        $objTable->addCell($line['surname'], '', '', '', '', '');
-        		$objTable->addCell($percentage, '', '', '', '', '');
-		        $objTable->addCell($aStatus, '', '', '', '', '');
-		        if($tData['type'] == 2){
-		        	$objTable->addCell($mStatus, '', '', '', '', '');					
-				}
-				if($tData['type'] == 2){
-				 	$objTable->addCell($peer);
-				 	$objTable->addCell($moderator);
-				}else{
-				 	$objTable->addCell($moderator);
-				}
-        		$objTable->addCell('', '', '', '', '', '');
-        		$objTable->endRow();
-			}			
-		}		
-		$string = $objTable->show();	
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= '<br />'.$objLink->show();
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+        $this->objTable->cellspacing = '2';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
 
-		$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the page for marking of the tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to take
-	* @param integer $qNum: The start number of the questions to get
-	* @return string $str: The output string
-	*/
-	public function showMarkByStudent($tNameSpace, $qNum)
-	{
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->getQuestionForMarking($tNameSpace, $qNum);
-		$studentId = $this->objTutDb->getStudentToMark($tNameSpace, FALSE);
-		$aData = $this->objTutDb->getQuestionAnswer($qData['name_space'], $studentId);
-		
-		// text elelments
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblMark.'&#160;'.strtolower($lblTutorial);
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblExit = $this->objLanguage->languageText('word_exit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblModelAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblComment = $this->objLanguage->languageText('word_comment');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblAnswer = $this->objLanguage->languageText('word_answer');
-		$lblOf = $this->objLanguage->languageText('word_of');
-		$lblStudent = $this->objLanguage->languageText('word_student');
-						
-		$heading = $lblHeading.':&#160;'.$tData['name'];
-		
-		$lastQuestion = FALSE;
-		$hiddenInput = '';
-		
-		// form elements
-		$objInput = new textinput('aId', $aData['name_space'], 'hidden', '');
-		$hiddenInput .= $objInput->show();
-				
-		$this->objEditor->init('comment', $aData['peer_comment'], '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$commentArea = $this->objEditor->showFCKEditor();
-		
-		$objDrop = new dropdown('mark');
-		for($i = 0; $i <= $qData['question_value']; $i++){
-			$objDrop->addOption($i, $i);
-		}
-		$objDrop->setSelected($aData['peer_mark']);
-		$markDrop = $objDrop->show();
-		
-		$objTable = new htmltable();
-		$objTable->cellspacing = 2;
-		$objTable->cellpadding = 2;
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($qData['question']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($qData['question_value']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblModelAnswer.':</b><br />'.nl2br($qData['model_answer']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblAnswer.':</b><br />'.nl2br($aData['answer']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMark.':</b><br />'.$markDrop, '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblComment.':</b><br />'.$commentArea, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblName.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($tutorial['name'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblType.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($type, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblPercentage.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($tutorial['percentage'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblTotal.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($tutorial['total_mark'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswerOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($answerOpen, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($answerClose, '', '', '', '', '');
+        $this->objTable->endRow();
+        if($tutorial['tutorial_type'] == 1){
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblMarkOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+            $this->objTable->addCell($markOpen, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblMarkClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+            $this->objTable->addCell($markClose, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModerateOpen.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+            $this->objTable->addCell($moderateOpen, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModerateClose.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+            $this->objTable->addCell($moderateClose, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblPenalty.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+            $this->objTable->addCell($tutorial['penalty'], '', '', '', '', '');
+            $this->objTable->endRow();
+        }
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblDescription.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell(nl2br($tutorial['description']), '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblStatus.'&#160:</b>', '33%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($status['text'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblTutorials = $this->objTable->show();
+                
+        // set up icons
+        $this->objIcon->title=$lblEdit;
+        $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
+            'action' => 'tutorial',
+            'id' => $tutorial['id'],
+        ), 'tutorials'));
 
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$qData['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData['total'].'</b>');
-		$objTabbedbox->addBoxContent($displayTable);
-		$question = $objTabbedbox->show();
-				
-		if($qData['question_order'] == $qData['total']){
-			$lastQuestion = TRUE;
-		}
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblTutorials.'</b>&#160;'.$icoEdit);
+        $this->objTabbedbox->addBoxContent($tblTutorials);
+        $content .= $this->objTabbedbox->show();
 
-		// buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-			
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblExit);
-		$objButton->setToSubmit();
-		$exitButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblNext);
-		$objButton->setToSubmit();
-		$nextButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblPrevious);
-		$objButton->setToSubmit();
-		$previousButton = $objButton->show();
-			
-		if($lastQuestion){
-			$buttons = $previousButton.'&#160;'.$submitButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}elseif($qNum == 1){
-			$buttons = $nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}else{
-			$buttons = $previousButton.'&#160;'.$nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}
-		
-		// hidden input
-		$cNum = $qNum - 1;
-		$objInput = new textinput('cNum', $cNum, 'hidden', '');
-		$hiddenInput .= $objInput->show();
-			
-		$qNum = $qNum + 1;
-		$objInput = new textinput('qNum', $qNum, 'hidden', '');
-		$hiddenInput .= $objInput->show();
-
-		// form
-		$objForm = new form('answer', $this->uri(array(
-			'action' => 'submit_student',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objForm->addToForm($question);
-		$objForm->addToForm($hiddenInput);
-		$objForm->addToForm($buttons);
-		$string = $objForm->show();
-		
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$string .= $objForm->show();
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the request moderation page
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to request moderation for
-	* @param integer $qNum: The start number of the questions to get
-	* @return string $str: The output string
-	*/
-	public function showRequestModeration($tNameSpace, $qNum)
-	{
-		// add  javascript
-        $headerParams = $this->getJavascriptFile('tutorials.js', 'tutorials');
-        $this->appendArrayVar('headerParams', $headerParams);
-
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->listQuestionsForAnswering($tNameSpace, $qNum);
-
-		// text elelments
-		$lblRequestModeration = $this->objLanguage->languageText('phrase_requestmoderation');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblRequestModeration;
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblModelAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblYourAnswer = $this->objLanguage->languageText('mod_tutorials_youranswer', 'tutorials');
-		$lblRequest = $this->objLanguage->languageText('mod_tutorials_request', 'tutorials');
-		$lblMarker = $this->objLanguage->languageText('word_marker');
-		$lblModerator = $this->objLanguage->languageText('word_moderator');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblCommentBy = $this->objLanguage->languageText('mod_tutorials_commentby', 'tutorials');
-		$lblAllocatedBy = $this->objLanguage->languageText('mod_tutorials_allocatedby', 'tutorials');
-		$lblModComment = $lblCommentBy.'&#160;'.strtolower($lblModerator);
-		$lblModAllocate = $lblMark.'&#160;'.strtolower($lblAllocatedBy).'&#160;'.strtolower($lblModerator);
-		$lblMarkComment = $lblCommentBy.'&#160;'.strtolower($lblMarker);
-		$lblMarkAllocate = $lblMark.'&#160;'.strtolower($lblAllocatedBy).'&#160;'.strtolower($lblMarker);
-		$lblRequestReason = $this->objLanguage->languageText('mod_tutorials_requestreason', 'tutorials');
-		$lblOf = $this->objLanguage->languageText('word_of');
-		
-		$heading = $lblHeading.':&#160;'.$tData['name'];
-		
-		if($qData == FALSE){
-			$string = '<b><font class="noRecordsMessage">'.$lblNoRecords.'</font></b><br />';					
-		}else{
-			$questions = '';
-			$lastQuestion = FALSE;
-			$hiddenInput = '';
-			foreach($qData as $key => $line){
-				$aData = $this->objTutDb->getQuestionAnswer($line['name_space']);
-				
-				// display table
-				$displayTable = '';
-				$objTable = new htmltable();
-				$objTable->cellspacing = 2;
-				$objTable->cellpadding = 2;
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($line['question']), '', '', '', 'odd', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($line['question_value']), '', '', '', 'even', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblModelAnswer.':</b><br />'.nl2br($line['model_answer']), '', '', '', 'odd', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblYourAnswer.':</b><br />'.nl2br($aData['answer']), '', '', '', 'even', '');
-				$objTable->endRow();
-				if($aData['peer_id'] != ''){
-					$objTable->startRow();
-					$objTable->addCell('<b>'.$lblMarkAllocate.':</b><br />'.nl2br($aData['peer_mark']), '', '', '', 'odd', '');
-					$objTable->endRow();
-					$objTable->startRow();
-					$objTable->addCell('<b>'.$lblMarkComment.':</b><br />'.nl2br($aData['peer_comment']), '', '', '', 'even', '');
-					$objTable->endRow();
-				}
-				if($aData['peer_id'] != $aData['moderator_id']){
-					$objTable->startRow();
-					$objTable->addCell('<b>'.$lblModAllocate.':</b><br />'.nl2br($aData['moderator_mark']), '', '', '', 'odd', '');
-					$objTable->endRow();
-					$objTable->startRow();
-					$objTable->addCell('<b>'.$lblModComment.':</b><br />'.nl2br($aData['moderator_comment']), '', '', '', 'even', '');
-					$objTable->endRow();
-				}
-				$displayTable .= $objTable->show();
-				
-				if($aData['request_moderation'] != 1 && $aData['moderation_complete'] != 1){
-				 	// form element
-				 	$objText = new textarea('request', '', 4, 70);
-				 	$requestText = $objText->show();
-
-					$objButton = new button('submit', $lblSubmit);
-					$objButton->extra = 'onclick="javascript:submitRequest(\''.$lblRequestReason.'\', \''.$aData['name_space'].'\');"';
-					$submitButton = $objButton->show();
-
-				 	$content = '<b><font class="warning">'.$lblRequestReason.'</font></b><br />'.$requestText.'<br />'.$submitButton;
-				 	
-					$objTabbedbox = new tabbedbox();
-					$objTabbedbox->extra = 'style="padding: 10px;"';
-					$objTabbedbox->addTabLabel('<b>'.$lblRequest.'</b>');
-					$objTabbedbox->addBoxContent($content);
-				 	$requestBox = $objTabbedbox->show();
-				 	
-					$objTable = new htmltable();
-					$objTable->cellspacing = 2;
-					$objTable->cellpadding = 2;
-					$objTable->startRow();
-					$objTable->addCell($requestBox, '', '', '', '', '');
-					$objTable->endRow();					
-					
-					$objLayer = new layer();
-					$objLayer->id = $aData['name_space'];
-					$objLayer->addToStr($objTable->show());
-					$displayTable .= $objLayer->show();		
-				}
-
-				$objTabbedbox = new tabbedbox();
-				$objTabbedbox->extra = 'style="padding: 10px;"';
-				$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$line['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData[0]['total'].'</b>');
-				$objTabbedbox->addBoxContent($displayTable);
-				$questions .= $objTabbedbox->show();
-				
-				if($line['question_order'] == $qData[0]['total']){
-					$lastQuestion = TRUE;
-				}
-			}
-			// buttons
-			$objButton = new button('cancel', $lblCancel);
-			$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-			$cancelButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblNext);
-			$objButton->setToSubmit();
-			$nextButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblPrevious);
-			$objButton->setToSubmit();
-			$previousButton = $objButton->show();
-			
-			if($lastQuestion){
-				$buttons = $previousButton.'&#160;'.$cancelButton;
-			}elseif($qNum == 1){
-				$buttons = $nextButton.'&#160;'.$cancelButton;
-			}else{
-				$buttons = $previousButton.'&#160;'.$nextButton.'&#160;'.$cancelButton;
-			}
-		
-			// hidden input
-			$cNum = $qNum - 4;
-			$objInput = new textinput('cNum', $cNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-			
-			$qNum = $qNum + count($qData);
-			$objInput = new textinput('qNum', $qNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-
-			// form
-			$objForm = new form('answer', $this->uri(array(
-				'action' => 'request_moderation',
-				'id' => $tNameSpace,
-			), 'tutorials'));
-			$objForm->addToForm($questions);
-			$objForm->addToForm($hiddenInput);
-			$objForm->addToForm($buttons);
-			$string = $objForm->show();
-		
-			$objForm = new form('cancelform', $this->uri(array(
-				'action' => 'show_home',
-			), 'tutorials'));
-			$string .= $objForm->show();
-		}
-	
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-
-	/**
-	* Method to show the review tutorial page
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to request moderation for
-	* @param integer $qNum: The start number of the questions to get
-	* @return string $str: The output string
-	*/
-	public function showReviewTutorial($tNameSpace, $qNum)
-	{
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->listQuestionsForAnswering($tNameSpace, $qNum);
-		$rData = $this->objTutDb->getResult($tNameSpace);
-		$score = round(($rData['mark_obtained']/$tData['total_mark'])*100);
-
-		// text elelments
-		$lblView = $this->objLanguage->languageText('word_view');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblView.'&#160;'.strtolower($lblTutorial);
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblModelAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblYourAnswer = $this->objLanguage->languageText('mod_tutorials_youranswer', 'tutorials');
-		$lblMarker = $this->objLanguage->languageText('word_marker');
-		$lblModerator = $this->objLanguage->languageText('word_moderator');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblCommentBy = $this->objLanguage->languageText('mod_tutorials_commentby', 'tutorials');
-		$lblAllocatedBy = $this->objLanguage->languageText('mod_tutorials_allocatedby', 'tutorials');
-		$lblMarkComment = $lblCommentBy.'&#160;'.strtolower($lblMarker);
-		$lblModComment = $lblCommentBy.'&#160;'.strtolower($lblModerator);
-		$lblMarkAllocate = $lblMark.'&#160;'.strtolower($lblAllocatedBy).'&#160;'.strtolower($lblMarker);
-		$lblModAllocate = $lblMark.'&#160;'.strtolower($lblAllocatedBy).'&#160;'.strtolower($lblModerator);
-		$lblScore = $this->objLanguage->languageText('word_score');
-		$lblPercentage = $this->objLanguage->languageText('word_percentage');
-		$lblOf = $this->objLanguage->languageText('word_of');
-
-		$heading = $lblHeading.':&#160;'.$tData['name'].'<br />'.$lblScore.':&#160;'.$rData['mark_obtained'].'<br />'.$lblPercentage.':&#160;'.$score.'%';
-		
-		if($qData == FALSE){
-			$string = '<b><font class="noRecordsMessage">'.$lblNoRecords.'</font></b><br />';					
-		}else{
-			$questions = '';
-			$lastQuestion = FALSE;
-			$hiddenInput = '';
-			foreach($qData as $key => $line){
-				$aData = $this->objTutDb->getQuestionAnswer($line['name_space']);
-				
-				// display table
-				$objTable = new htmltable();
-				$objTable->cellspacing = 2;
-				$objTable->cellpadding = 2;
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($line['question']), '', '', '', 'odd', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($line['question_value']), '', '', '', 'even', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblModelAnswer.':</b><br />'.nl2br($line['model_answer']), '', '', '', 'odd', '');
-				$objTable->endRow();
-				$objTable->startRow();
-				$objTable->addCell('<b>'.$lblYourAnswer.':</b><br />'.nl2br($aData['answer']), '', '', '', 'even', '');
-				$objTable->endRow();
-				if($tData['type'] == 2){
-				 	if($aData['peer_id'] != ''){
-						$objTable->startRow();
-						$objTable->addCell('<b>'.$lblMarkAllocate.':</b><br />'.nl2br($aData['peer_mark']), '', '', '', 'odd', '');
-						$objTable->endRow();
-				 		$objTable->startRow();
-						$objTable->addCell('<b>'.$lblMarkComment.':</b><br />'.nl2br($aData['peer_comment']), '', '', '', 'even', '');
-						$objTable->endRow();
-					}
-					if($aData['peer_id'] != $aData['moderator_id']){
-						$objTable->startRow();
-						$objTable->addCell('<b>'.$lblModAllocate.':</b><br />'.nl2br($aData['moderator_mark']), '', '', '', 'odd', '');
-						$objTable->endRow();
-						$objTable->startRow();
-						$objTable->addCell('<b>'.$lblModComment.':</b><br />'.nl2br($aData['moderator_comment']), '', '', '', 'even', '');
-						$objTable->endRow();
-					}
-				}else{
-					$objTable->startRow();
-					$objTable->addCell('<b>'.$lblMarkAllocate.':</b><br />'.nl2br($aData['moderator_mark']), '', '', '', 'odd', '');
-					$objTable->endRow();
-				 	$objTable->startRow();
-					$objTable->addCell('<b>'.$lblMarkComment.':</b><br />'.nl2br($aData['moderator_comment']), '', '', '', 'even', '');
-					$objTable->endRow();
-				}
-				$displayTable = $objTable->show();
-
-				$objTabbedbox = new tabbedbox();
-				$objTabbedbox->extra = 'style="padding: 10px;"';
-				$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$line['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData[0]['total'].'</b>');
-				$objTabbedbox->addBoxContent($displayTable);
-				$questions .= $objTabbedbox->show();
-				
-				if($line['question_order'] == $qData[0]['total']){
-					$lastQuestion = TRUE;
-				}
-			}
-			// buttons
-			$objButton = new button('cancel', $lblCancel);
-			$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-			$cancelButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblNext);
-			$objButton->setToSubmit();
-			$nextButton = $objButton->show();
-			
-			$objButton = new button('submit', $lblPrevious);
-			$objButton->setToSubmit();
-			$previousButton = $objButton->show();
-			
-			if($lastQuestion){
-				$buttons = $previousButton.'&#160;'.$cancelButton;
-			}elseif($qNum == 1){
-				$buttons = $nextButton.'&#160;'.$cancelButton;
-			}else{
-				$buttons = $previousButton.'&#160;'.$nextButton.'&#160;'.$cancelButton;
-			}
-		
-			// hidden input
-			$cNum = $qNum - 4;
-			$objInput = new textinput('cNum', $cNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-			
-			$qNum = $qNum + count($qData);
-			$objInput = new textinput('qNum', $qNum, 'hidden', '');
-			$hiddenInput .= $objInput->show();
-
-			// form
-			$objForm = new form('answer', $this->uri(array(
-				'action' => 'review_tutorial',
-				'id' => $tNameSpace,
-			), 'tutorials'));
-			$objForm->addToForm($questions);
-			$objForm->addToForm($hiddenInput);
-			$objForm->addToForm($buttons);
-			$string = $objForm->show();
-		
-			$objForm = new form('cancelform', $this->uri(array(
-				'action' => 'show_home',
-			), 'tutorials'));
-			$string .= $objForm->show();
-		}
-	
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the moderate page template
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @return string $str: The output string
-	*/
-	public function showModerateTutorial($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$aData = $this->objTutDb->getAnswerToModerate($tNameSpace);
-		$qData = $this->objTutDb->getQuestion($aData['question_name_space']);
-		
-		// text elelments
-		$lblModerate = $this->objLanguage->languageText('word_moderate');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblModerate.'&#160;'.strtolower($lblTutorial);
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblExit = $this->objLanguage->languageText('word_exit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblModelAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblComment = $this->objLanguage->languageText('word_comment');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblAnswer = $this->objLanguage->languageText('word_answer');
-		$lblLeft = $this->objLanguage->languageText('mod_tutorials_requestsleft', 'tutorials');
-		$lblMarker = $this->objLanguage->languageText('word_marker');
-		$lblCommentBy = $this->objLanguage->languageText('mod_tutorials_commentby', 'tutorials');
-		$lblAllocatedBy = $this->objLanguage->languageText('mod_tutorials_allocatedby', 'tutorials');
-		$lblMarkComment = $lblCommentBy.'&#160;'.strtolower($lblMarker);
-		$lblMarkAllocate = $lblMark.'&#160;'.strtolower($lblAllocatedBy).'&#160;'.strtolower($lblMarker);
-		$lblStudent = $this->objLanguage->code2Txt('word_student');
-						
-		$heading = $lblHeading.':&#160;'.$tData['name'].'<br />'.$lblLeft.':&#160;'.$aData['total'];
-		
-		$string = '<b>'.ucfirst($lblStudent).':&#160;'.$this->objUser->fullname($aData['student_id']).'</b>';
-		
-		if($aData['peer_id'] != $aData['moderator_id']){
-			$comment = $aData['moderator_comment'];
-			$mark = $aData['moderator_mark'];		
-		}else{
-			$comment = '';
-			$mark = '';		
-		}
-	
-		// form elements
-		$objInput = new textinput('aId', $aData['name_space'], 'hidden', '');
-		$hiddenInput = $objInput->show();
-				
-		$objInput = new textinput('count', $aData['total'], 'hidden', '');
-		$hiddenInput .= $objInput->show();
-				
-		$this->objEditor->init('comment', $comment, '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$commentArea = $this->objEditor->showFCKEditor();
-		
-		$objDrop = new dropdown('mark');
-		for($i = 0; $i <= $qData['question_value']; $i++){
-			$objDrop->addOption($i, $i);
-		}
-		$objDrop->setSelected($mark);
-		$markDrop = $objDrop->show();
-		
-		// display table
-		$objTable = new htmltable();
-		$objTable->cellspacing = 2;
-		$objTable->cellpadding = 2;
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($qData['question']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($qData['question_value']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblModelAnswer.':</b><br />'.nl2br($qData['model_answer']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblAnswer.':</b><br />'.nl2br($aData['answer']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMarkAllocate.':</b><br />'.$aData['peer_mark'], '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMarkComment.':</b><br />'.nl2br($aData['peer_comment']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMark.':</b><br />'.$markDrop, '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblComment.':</b><br />'.$commentArea, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$qData['question_order'].'</b>');
-		$objTabbedbox->addBoxContent($displayTable);
-		$questions = $objTabbedbox->show();
-				
-		// buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-			
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblExit);
-		$objButton->setToSubmit();
-		$exitButton = $objButton->show();
-			
-			
-		$buttons = $submitButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-
-		// form
-		$objForm = new form('moderation', $this->uri(array(
-			'action' => 'submit_moderation',
-			'id' => $tNameSpace,
-			'sId' => $aData['student_id'],
-		), 'tutorials'));
-		$objForm->addToForm($questions);
-		$objForm->addToForm($hiddenInput);
-		$objForm->addToForm($buttons);
-		$string .= $objForm->show();
-		
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$string .= $objForm->show();
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-
-	/**
-	* Method to display a page which lists the status of students on this tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of this tutorial
-	* @return string $str: The output string
-	*/
-	public function showMarkingList($tNameSpace)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// load javascript
-		$headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
-        $this->appendArrayVar('headerParams', $headerParams);
-        
-        // data to be displayed
-        $tData = $this->objTutDb->getTutorial($tNameSpace);
-        $sData = $this->_listStudents();
-		      
-        // text elements
-        $lblListStudents = $this->objLanguage->code2txt('phrase_markinglist');
-        $lblStudentNo = $this->objLanguage->languageText('phrase_studentnumber');
-        $lblName = $this->objLanguage->languageText('word_name');
-        $lblSurname = $this->objLanguage->languageText('word_surname');
-        $lblPercentage = $this->objLanguage->languageText('word_percentage');
-        $lblStatus = $this->objLanguage->languageText('word_status');
-        $lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblAnswersSaved = $this->objLanguage->languageText('mod_tutorials_answerssaved', 'tutorials');
-		$lblAnswersSubmitted = $this->objLanguage->languageText('mod_tutorials_answerssubmitted', 'tutorials');
-		$lblMarksSaved = $this->objLanguage->languageText('mod_tutorials_markssaved', 'tutorials');
-		$lblMarksSubmitted = $this->objLanguage->languageText('mod_tutorials_markssubmitted', 'tutorials');
-		$lblDidNotAccess = $this->objLanguage->languageText('mod_tutorials_didnotaccess', 'tutorials');
-		$lblDidNotMark = $this->objLanguage->languageText('mod_tutorials_didnotmark', 'tutorials');
-		$lblMarkingStatus = $this->objLanguage->languageText('mod_tutorials_markingstatus', 'tutorials');
-		$lblMarkTitle = $this->objLanguage->languageText('mod_tutorials_titlemark', 'tutorials');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-				
-		$lblHeading = $lblListStudents.':&#160;'.$tData['name'];
-        
         // display table
-		$objTable = new htmltable();
-        $objTable->id = 'studentList';
-        $objTable->css_class = 'sorttable';
-        $objTable->cellpadding = '2';
-        $objTable->row_attributes = ' name="row_'.$objTable->id.'"';
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+        $this->objTable->cellspacing = '2';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblNo, '5%', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblQuestion, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblAllocated.'<br />('.$lblTotal.':&#160;'.$tutorial['total_mark'].')', '15%', '', '', 'tuts-header', '');
+        $this->objTable->addCell('', '10%', '', '', 'tuts-header', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\'" onmouseout="this.className=\'\'"';
         
-        $objTable->startRow();
-        $objTable->addCell($lblStudentNo, '', '', '', 'heading', '');
-        $objTable->addCell($lblName, '', '', '', 'heading', '');
-        $objTable->addCell($lblSurname, '', '', '', 'heading', '');
-        $objTable->addCell($lblPercentage, '', '', '', 'heading', '');
-        $objTable->addCell($lblStatus, '', '', '', 'heading', '');
-        if($tData['type'] == 2){
-        	$objTable->addCell($lblMarkingStatus, '', '', '', 'heading', '');
-		}
-        $objTable->addCell('', '', '', '', 'heading', '');
-        $objTable->endRow();
+        if($questions == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="4"');
+            $this->objTable->endRow();
+        }else{
+            foreach($questions as $question){
+
+                // set up edit icon
+                $this->objIcon->title=$lblEdit;
+                $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'questions',
+                    'tutId' => $question['tutorial_id'],
+                    'id' => $question['id'],
+                ), 'tutorials'));
+                
+                // set up delete icon
+                $deleteArray = array(
+                    'action' => 'deletequestion',
+                    'tutId' => $question['tutorial_id'],
+                    'id' => $question['id'],
+                );
+                $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
+                
+                // set up move down icon
+                $this->objIcon->title = $lblDown;
+                $this->objIcon->extra = '';
+                $icoDown = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'movequestions',
+                    'tutId' => $question['tutorial_id'],
+                    'id' => $question['id'],
+                    'dir' => 'down',
+                )), 'mvdown');
+
+                // set up move up icon
+                $this->objIcon->title = $lblUp;
+                $this->objIcon->extra = '';
+                $icoUp = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'movequestions',
+                    'tutId' => $question['tutorial_id'],
+                    'id' => $question['id'],
+                    'dir' => 'up',
+                )), 'mvup');
+                
+                if(count($questions) > 1){
+                    if($question['question_order'] == 1){
+                        $icoMove = $icoDown.'&#160;&#160;&#160;';
+                    }elseif($question['question_order'] == count($questions)){
+                        $icoMove = $icoUp;
+                    }else{
+                        $icoMove = $icoDown.'&#160;'.$icoUp;
+                    }
+                }else{
+                    $icoMove = '';
+                }
+
+                $this->objTable->startRow();
+                $this->objTable->addCell($question['question_order'], '', '', '', '', '');
+                $this->objTable->addCell($question['question'], '', '', '', '', '');
+                $this->objTable->addCell($question['question_value'], '', '', '', '', '');
+                $this->objTable->addCell($icoMove.'&#160;'.$icoEdit.'&#160;'.$icoDelete, '', '', 'right', '', '');
+                $this->objTable->endRow();
+            }
+        }        
+        $tblQuestions = $this->objTable->show();
         
-        if($sData == FALSE){
-	        $objTable->startRow();
-    	    $objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="9"');
-        	$objTable->endRow();
-		}else{
-		 	foreach($sData as $line){
-		 	 	// student data
-				$rData = $this->objTutDb->getResult($tNameSpace, $line['userid']);
+        // set up add questions icon
+        $this->objIcon->title = $lblAdd;
+        $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
+            'action' => 'questions',
+            'tutId' => $id,
+        ), 'tutorials'));
 
-		 	 	if($rData == FALSE){
-					$percentage = '0%';
-					$aStatus = $lblDidNotAccess;
-					$mStatus = $lblDidNotMark;
-					$link = '';
-				}else{
-					$percentage = round($rData['mark_obtained']/$tData['total_mark']*100).'%';
-					if($rData['completed'] == 1){
-						$aStatus = $lblAnswersSubmitted;
-						$objLink = new link($this->uri(array(
-							'action' => 'mark_tutorial',
-							'id' => $tData['name_space'],
-							'sId' => $line['userid'],
-						), 'tutorials'));
-						$objLink->link = $lblMark;
-						$objLink->title = $lblMarkTitle;
-						$link = $objLink->show();
-					}else{
-						$aStatus = $lblAnswersSaved;
-						$libk = '';
-					}
-					if($rData['marked'] == 1){
-						$mStatus = $lblMarksSubmitted;
-					}else{
-					 	$hasMarked = $this->objTutDb->checkHasMarked($tNameSpace, $line['userid']);
-					 	if($hasMarked){
-							$mStatus = $lblMarksSaved;
-						}else{
-							$mStatus = $lblDidNotMark;
-						}
-					}
-				}
-        		$objTable->startRow();
-		        $objTable->addCell($line['userid'], '', '', '', '', '');
-        		$objTable->addCell($line['firstname'], '', '', '', '', '');
-		        $objTable->addCell($line['surname'], '', '', '', '', '');
-        		$objTable->addCell($percentage, '', '', '', '', '');
-		        $objTable->addCell($aStatus, '', '', '', '', '');
-		        if($tData['type'] == 2){
-		        	$objTable->addCell($mStatus, '', '', '', '', '');					
-				}
-        		$objTable->addCell($link, '', '', '', '', '');
-        		$objTable->endRow();
-			}			
-		}		
-		$string = $objTable->show();	
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= '<br />'.$objLink->show();
+        // set up delete icon
+        if($questions != FALSE){
+            $deleteArray = array(
+                'action' => 'deleteall',
+                'tutId' => $id,
+            );
+            $icoDelete = '&#160;'.$this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblAllConfirm);
+        }else{
+            $icoDelete = '';
+        }
+                
+        // set up import questions icon
+        $this->objIcon->title = $lblImport;
+        $this->objIcon->extra = '';
+        $icoImport = $this->objIcon->getLinkedIcon($this->uri(array(
+            'action' => 'import',
+            'id' => $id,
+        )), 'importcvs');
 
-		$str = $this->objFeature->show($lblHeading, $string).'<br />';
-		
-		return $str;
-	}
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblQuestions.'</b>&#160;'.$icoAdd.$icoDelete.'&#160;'.$icoImport);
+        $this->objTabbedbox->addBoxContent($tblQuestions);
+        $content .= $this->objTabbedbox->show();
 
-	/**
-	* Method to show the page for marking of the tutorial
-	*
-	* @access public
-	* @param string $tNameSpace: The name space of the tutorial to take
-	* @param integer $qNum: The start number of the questions to get
-	* @return string $str: The output string
-	*/
-	public function showMarkByLecturer($tNameSpace, $qNum, $studentId)
-	{
-		// data to be displayed
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// display data
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->getQuestionForMarking($tNameSpace, $qNum);
-		$aData = $this->objTutDb->getQuestionAnswer($qData['name_space'], $studentId);
-		
-		// text elelments
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblHeading = $lblMark.'&#160;'.strtolower($lblTutorial);
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblValue = $this->objLanguage->languageText('word_value');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblExit = $this->objLanguage->languageText('word_exit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblModelAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		$lblComment = $this->objLanguage->languageText('word_comment');
-		$lblMark = $this->objLanguage->languageText('word_mark');
-		$lblAnswer = $this->objLanguage->languageText('word_answer');
-		$lblOf = $this->objLanguage->languageText('word_of');
-		$lblStudent = $this->objLanguage->code2Txt('word_student');
-						
-		$heading = $lblHeading.':&#160;'.$tData['name'];
-		
-		$string = '<b>'.ucfirst($lblStudent).':&#160;'.$this->objUser->fullname($aData['student_id']).'</b>';			
+        // return link
+        $this->objLink = new link($this->uri(array(), 'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
 
-		if($aData['peer_id'] != $aData['moderator_id']){
-			$comment = $aData['moderator_comment'];
-			$mark = $aData['moderator_mark'];
-		}else{
-			$comment = '';
-			$mark = '';
-		}
-		$lastQuestion = FALSE;
-		$hiddenInput = '';
-		
-		// form elements
-		$objInput = new textinput('aId', $aData['name_space'], 'hidden', '');
-		$hiddenInput .= $objInput->show();
-				
-		$this->objEditor->init('comment', $comment, '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$commentArea = $this->objEditor->showFCKEditor();
-		
-		$objDrop = new dropdown('mark');
-		for($i = 0; $i <= $qData['question_value']; $i++){
-			$objDrop->addOption($i, $i);
-		}
-		$objDrop->setSelected($mark);
-		$markDrop = $objDrop->show();
-		
-		// display table
-		$objTable = new htmltable();
-		$objTable->cellspacing = 2;
-		$objTable->cellpadding = 2;
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($qData['question']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblValue.':</b><br />'.nl2br($qData['question_value']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblModelAnswer.':</b><br />'.nl2br($qData['model_answer']), '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblAnswer.':</b><br />'.nl2br($aData['answer']), '', '', '', 'even', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMark.':</b><br />'.$markDrop, '', '', '', 'odd', '');
-		$objTable->endRow();
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblComment.':</b><br />'.$commentArea, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
+    /**
+    * Method to output the add/edit questions page
+    *
+    * @access public
+    * @param string $tutId: The id of the tutorial the question is for
+    * @param string $id: The id of the question to edit if applicable
+    * @param string $e: The type of error if applicable
+    * @param string $q: The question text
+    * @param string $m: The model answer text
+    * @param string $w: The question value  
+    * @return string $content: The template output string
+    */
+    public function showAddEditQuestions($tutId, $id, $e = NULL, $q = NULL, $m = NULL, $w = NULL)
+    {
+        // get data
+        $questions = $this->objDbTutorials->getQuestions($tutId);
+        $count = ($questions == FALSE) ? 1: count($questions) + 1;
+        if(empty($id)){
+            $question = '';
+            $model = '';
+            $worth = 0;
+            $number = $count;
+        }else{
+            $arrQuestion = $this->objDbTutorials->getQuestionById($id);
+            $question = $arrQuestion['question'];
+            $model = $arrQuestion['model_answer'];
+            $worth = $arrQuestion['question_value'];
+            $number = $arrQuestion['question_order'];
+        }
+        if($e == 'question'){
+            $question = $q;
+            $model = $m;
+            $worth = $w;
+        }elseif($e == 'model'){
+            $question = $q;
+            $model = $m;
+            $worth = $w;
+        }
+        
+        // set up language elements
+        $lblAdd = $this->objLanguage->languageText('mod_tutorials_addquestion', 'tutorials');
+        $lblEdit = $this->objLanguage->languageText('mod_tutorials_editquestion', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblModel = $this->objLanguage->languageText('phrase_modelanswer');
+        $lblWorth = $this->objLanguage->languageText('phrase_questionworth');
+        $lblSubmitAdd = $this->objLanguage->languageText('mod_tutorials_submitnew', 'tutorials');
+        $lblQuestionRequired = $this->objLanguage->languageText('mod_tutorials_questionrequired', 'tutorials');
+        $lblModelRequired = $this->objLanguage->languageText('mod_tutorials_modelrequired', 'tutorials');
+        $lblWorthRequired = $this->objLanguage->languageText('mod_tutorials_worrhrequired', 'tutorials');
+        $lblWorthNumeric = $this->objLanguage->languageText('mod_tutorials_worthnumeric', 'tutorials');
+        $lblWorthGreater = $this->objLanguage->languageText('mod_tutorials_worthgtzero', 'tutorials');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnview', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+                        
+        if($e == 'question'){
+            $body = 'alert("'.$lblQuestionRequired.'")';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }elseif($e == 'model'){
+            $body = 'alert("'.$lblModelRequired.'")';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }
+        
+        // set up page heading
+        if(empty($id)){
+            $lblHeading = $lblAdd;
+        }else{
+            $lblHeading = $lblEdit;
+        }
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up htmlelements
+        $this->objEditor->init('question', $question, '500px', '100%', NULL);
+        $this->objEditor->setDefaultToolBarSetWithoutSave();
+        $edtQuestion = $this->objEditor->show();
+        
+        $this->objEditor->init('model', $model, '500px', '100%', NULL);
+        $this->objEditor->setDefaultToolBarSetWithoutSave();
+        $edtModel = $this->objEditor->show();
+        
+        $this->objInput = new textinput('worth', $worth);
+        $inpWorth = $this->objInput->show();
+        
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
 
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblQuestion.'&#160;'.$qData['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData['total'].'</b>');
-		$objTabbedbox->addBoxContent($displayTable);
-		$string .= $objTabbedbox->show();
-				
-		if($qData['question_order'] == $qData['total']){
-			$lastQuestion = TRUE;
-		}
+        $this->objButton=new button('submitAdd',$lblSubmitAdd);
+        $this->objButton->setToSubmit();
+        if(empty($id)){
+            $btnSubmitAdd = $this->objButton->show().'&#160';
+        }else{
+            $btnSubmitAdd = '';
+        }
 
-		// buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-			
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblExit);
-		$objButton->setToSubmit();
-		$exitButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblNext);
-		$objButton->setToSubmit();
-		$nextButton = $objButton->show();
-			
-		$objButton = new button('submit', $lblPrevious);
-		$objButton->setToSubmit();
-		$previousButton = $objButton->show();
-			
-		if($lastQuestion){
-			$buttons = $previousButton.'&#160;'.$submitButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}elseif($qNum == 1){
-			$buttons = $nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}else{
-			$buttons = $previousButton.'&#160;'.$nextButton.'&#160;'.$exitButton.'&#160;'.$cancelButton;
-		}
-		
-		// hidden input
-		$cNum = $qNum - 1;
-		$objInput = new textinput('cNum', $cNum, 'hidden', '');
-		$hiddenInput .= $objInput->show();
-			
-		$qNum = $qNum + 1;
-		$objInput = new textinput('qNum', $qNum, 'hidden', '');
-		$hiddenInput .= $objInput->show();
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
 
-		// form
-		$objForm = new form('answer', $this->uri(array(
-			'action' => 'submit_lecturer',
-			'id' => $tNameSpace,
-			'sId' => $studentId,
-		), 'tutorials'));
-		$objForm->addToForm($string);
-		$objForm->addToForm($hiddenInput);
-		$objForm->addToForm($buttons);
-		$string = $objForm->show();
-		
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'marking_list',
-			'id' => $tData['name_space'],
-		), 'tutorials'));
-		$string .= $objForm->show();
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'marking_list',
-			'id' => $tData['name_space'],
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		
-		return $str;
-	}
-	
-	/**
-	* Method to show the page to show the tutorial instructions
-	* 
-	* @access public
-	* @return string $str: The output string
-	*/
-	public function showInstructions()
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// data to be diaplayed
-		$iData = $this->objTutDb->getInstructions();
-		
-		// text elements
-		$lblAdd = $this->objLanguage->languageText('word_add');
-		$lblAddTitle = $this->objLanguage->languageText('mod_tutorials_titleaddinstructions', 'tutorials');
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblEditTitle = $this->objLanguage->languageText('mod_tutorials_titleeditinstructions', 'tutorials');
-		$lblDelete = $this->objLanguage->languageText('word_delete');
-		$lblDeleteTitle = $this->objLanguage->languageText('mod_tutorials_titledeleteinstructions', 'tutorials');
-		$lblDelConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfirm', 'tutorials');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblHeading = $this->objLanguage->languageText('word_instructions');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		
-		$heading = $lblHeading;
-
-		// links
-		if($iData == FALSE){
-			$objLink = new link($this->uri(array(
-				'action' => 'add_instructions',
-			), 'tutorials'));
-			$objLink->link = $lblAdd;
-			$objLink->title = $lblAddTitle;
-			$string = $objLink->show();
-
-			$string .= '<ul><li><font class="noRecordsMessage">'.$lblNoRecords.'</font></li></ul>';
-			
-		}else{
-			$objLink = new link($this->uri(array(
-				'action' => 'edit_instructions',
-			), 'tutorials'));
-			$objLink->link = $lblEdit;
-			$objLink->title = $lblEditTitle;
-			$string = $objLink->show();
-
-			$objLink = new link($this->uri(array(
-				'action' => 'delete_instructions',
-			), 'tutorials'));
-			$objLink->link = $lblDelete;
-			$objLink->title = $lblDeleteTitle;
-			$objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblDelConfirm.'\')){return false;}"';
-			$string .= '&#160;|&#160;'.$objLink->show();
-
-			// display table
-			$objTable = new htmltable();
-        	$objTable->cellpadding = '2';
-        	$objTable->cellspacing = '2';
-		
-			$objTable->startRow();
-			$objTable->addCell(nl2br($iData['instructions']), '', '', '', 'even', '');
-			$objTable->endRow();
-			$string .= $objTable->show();				
-		}
-		
-		// display table
-		
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'show_home',
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		return $str;		
-	}
-	
-	/**
-	* Method to show the page to add the tutorial instructions
-	* 
-	* @access public
-	* @return string $str: The output string
-	*/
-	public function showAddInstructions()
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// text elements
-		$lblAdd = $this->objLanguage->languageText('word_add');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblInstructions = $this->objLanguage->languageText('word_instructions');
-		$lblHeading = $this->objLanguage->languageText('word_instructions');
-		
-		$heading = $lblAdd.'&#160;'.strtolower($lblInstructions);
-
-		// form elements
-		$this->objEditor->init('instructions', '', '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$instructionsArea = $this->objEditor->showFCKEditor();
-		
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell($instructionsArea, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-				
-		// form
-		$objForm = new form('addinstructions', $this->uri(array(
-			'action' => 'add_instructions_update',
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'show_instructions',
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		return $str;		
-	}
-
-	/**
-	* Method to show the page to edit the tutorial instructions
-	* 
-	* @access public
-	* @return string $str: The output string
-	*/
-	public function showEditInstructions()
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// data to be displayed
-		$iData = $this->objTutDb->getInstructions();
-		
-		// text elements
-		$lblEdit = $this->objLanguage->languageText('word_edit');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblInstructions = $this->objLanguage->languageText('word_instructions');
-		$lblHeading = $this->objLanguage->languageText('word_instructions');
-		
-		$heading = $lblEdit.'&#160;'.strtolower($lblInstructions);
-
-		// form elements
-		$this->objEditor->init('instructions', $iData['instructions'], '', '');
-		$this->objEditor->setDefaultToolBarSetWithoutSave();
-		$instructionsArea = $this->objEditor->showFCKEditor();
-		
-		// form buttons
-		$objButton = new button('submit', $lblSubmit);
-		$objButton->setToSubmit();
-		$submitButton = $objButton->show();
-		
-		$objButton = new button('cancel', $lblCancel);
-		$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-		$cancelButton = $objButton->show();
-		
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell($instructionsArea, '', '', '', '', '');
-		$objTable->endRow();
-		$displayTable = $objTable->show();
-				
-		// form
-		$objForm = new form('editinstructions', $this->uri(array(
-			'action' => 'edit_instructions_update',
-		), 'tutorials'));
-		$objForm->addToForm($displayTable);
-		$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-		$form = $objForm->show();
-				
-		$objForm = new form('cancelform', $this->uri(array(
-			'action' => 'show_instructions',
-		), 'tutorials'));
-		$hiddenForm = $objForm->show();
-
-		$str = $this->objFeature->show($heading, $form.$hiddenForm).'<br />';
-		return $str;		
-	}
-	
-	/**
-	* Method to display the view answers page
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @param string $qNum: The question order number
-	* @param string $aNum: The answer count number
-	* @return string $str: The output string
-	*/
-	public function showAnswers($tNameSpace, $qNum, $aNum)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$qData = $this->objTutDb->getQuestionForMarking($tNameSpace, $qNum);
-		$aData = $this->objTutDb->listAnswers($qData['name_space'], $aNum);
-		$aCount = count($aData);
-				
-		// text elements
-		$lblViewAnswers = $this->objLanguage->languageText('phrase_viewanswers');
-		$lblQuestion = $this->objLanguage->languageText('word_question');
-		$lblOf = $this->objLanguage->languageText('word_of');
-		$lblTo = $this->objLanguage->languageText('word_to');
-		$lblAnswers = $this->objLanguage->languageText('word_answers');
-		$lblFirst = $this->objLanguage->languageText('word_first');
-		$lblLast = $this->objLanguage->languageText('word_last');
-		$lblNext = $this->objLanguage->languageText('word_next');
-		$lblPrevious = $this->objLanguage->languageText('word_previous');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblNoRecords= $this->objLanguage->languageText('phrase_norecordsfound');
-		$lblWorth = $this->objLanguage->languageText('mod_tutorials_questionworth', 'tutorials');
-		$lblAnswer = $this->objLanguage->languageText('mod_tutorials_modelanswer', 'tutorials');
-		
-		$heading = $lblViewAnswers.':&#160;'.$tData['name'];
-		
-		if($qData == FALSE){
-			$display = '<ul>';
-			$display .= '<li>';
-			$display .= $lblNoRecords;
-			$display .= '</li>';
-			$display .= '</ul>';
-		}else{		 	
-		 	// navigation icons
-		 	if($qData['question_order'] == 1){
-    			$this->objIcon->title = $lblFirst.' '.$lblQuestion;
-    			$this->objIcon->setIcon('first_grey');
-    			$icons = $this->objIcon->show();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblQuestion.'&#160:</b><br />'.$edtQuestion, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblModel.'&#160:</b><br />'.$edtModel, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblWorth.'&#160:</b><br />'.$inpWorth, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnSubmitAdd.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmQuestions',$this->uri(array(
+            'action' => 'savequestion',
+            'tutId' => $tutId,
+            'id' => $id,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addRule('worth', $lblWorthRequired, 'required');
+        $this->objForm->addRule('worth', $lblWorthNumeric, 'numeric');
+        $this->objForm->addRule(array(
+            'name' => 'worth',
+            'minnumber' => 1,
+        ), $lblWorthGreater, 'minnumber');
+        
+        $tabContent = $this->objForm->show();
     
-    			$this->objIcon->title = $lblPrevious.' '.$lblQuestion;
-    			$this->objIcon->setIcon('prev_grey');
-    			$icons .= $this->objIcon->show();
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'view',
+            'id' => $tutId,
+        ), 'tutorials'));
+        $tabContent .= $this->objForm->show();        
 
-    			$this->objIcon->title = $lblNext.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => ($qNum + 1),
-        			'aNum' => 1,
-    			)), 'next');
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblQuestion.':</b>&#160;'.$number);
+        $this->objTabbedbox->addBoxContent($tabContent);
+        $content .= $this->objTabbedbox->show();
 
-    			$this->objIcon->title = $lblLast.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => $qData['total'],
-        			'aNum' => 1,
-    			)), 'last');
-			}elseif($qData['question_order'] == $qData['total']){
-    			$this->objIcon->title = $lblFirst.' '.$lblQuestion;
-    			$icons = $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => 1,
-        			'aNum' => 1,
-    			)), 'first');
-
-    			$this->objIcon->title = $lblPrevious.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => ($qData['total'] - 1),
-        			'aNum' => 1,
-    			)), 'prev');    
-
-    			$this->objIcon->title = $lblNext.' '.$lblQuestion;
-    			$this->objIcon->setIcon('next_grey');
-    			$icons .= $this->objIcon->show();
+        $this->objLink = new link($this->uri(array(
+            'action' => 'view',
+            'id' => $tutId,
+        ),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
     
-    			$this->objIcon->title = $lblLast.' '.$lblQuestion;
-    			$this->objIcon->setIcon('last_grey');
-    			$icons .= $this->objIcon->show();
-			}else{
-    			$this->objIcon->title = $lblFirst.' '.$lblQuestion;
-    			$icons = $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => 1,
-        			'aNum' => 1,
-    			)), 'first');
-
-    			$this->objIcon->title = $lblPrevious.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => ($qNum - 1),
-        			'aNum' => 1,
-    			)), 'prev');    
-
-    			$this->objIcon->title = $lblNext.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-       			 	'qNum' => ($qNum + 1),
-        			'aNum' => 1,
-    			)), 'next');
-
-    			$this->objIcon->title = $lblLast.' '.$lblQuestion;
-    			$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-        			'action' => 'view_answers',
-        			'id' => $tNameSpace,
-        			'qNum' => $qData['total'],
-        			'aNum' => 1,
-    			)), 'last');				
-			}
-		 	
-			//form elements
-			$this->objEditor->init('answer', $qData['model_answer'], '', '');
-			$this->objEditor->setDefaultToolBarSetWithoutSave();
-			$answerArea = $this->objEditor->showFCKEditor();
-		
-			$objInput = new textinput('worth', $qData['question_value'], '', '');
-			$worthInput = $objInput->show();		
-		
-			// form buttons
-			$objButton = new button('submit', $lblSubmit);
-			$objButton->setToSubmit();
-			$submitButton = $objButton->show();
-		
-			$objButton = new button('cancel', $lblCancel);
-			$objButton->extra = 'onclick="javascript:$(\'form_cancelform\').submit();"';
-			$cancelButton = $objButton->show();
-		
-			// display table
-			$objTable = new htmltable();
-			$objTable->cellpadding = 2;
-			$objTable->cellspacing = 2;
-			$objTable->startRow();
-			$objTable->addCell('<b>'.$lblQuestion.':</b><br />'.nl2br($qData['question']), '', '', '', '', '');
-			$objTable->endRow();
-			$objTable->startRow();
-			$objTable->addCell('<b>'.$lblAnswer.'</b><br />'.$answerArea, '', '', '', '', '');
-			$objTable->endRow();
-			$objTable->startRow();
-			$objTable->addCell('<b>'.$lblWorth.'</b><br />'.$worthInput, '', '', '', '', '');
-			$objTable->endRow();
-			$displayTable = $objTable->show();
-			
-			// form
-			$objForm = new form('editquestion', $this->uri(array(
-				'action' => 'edit_question_update',
-				'tutId' => $tNameSpace,
-				'id' => $qData['name_space'],
-				'order' => $qData['question_order'],
-				'value' => $qData['question_value'],
-				'return' => 'answers',
-			), 'tutorials'));
-			$objForm->addToForm($displayTable);
-			$objForm->addToForm($submitButton.'&#160;&#160;'.$cancelButton);		
-			$form = $objForm->show();
-					
-			$objForm = new form('cancelform', $this->uri(array(
-				'action' => 'view_answers',
-				'id' => $tNameSpace,
-				'qNum' => $qNum,
-			), 'tutorials'));
-			$hiddenForm = $objForm->show();
-			
-			$display = $form.$hiddenForm;		
-		}
-		
-		$questionLabel = '<b>'.$lblQuestion.'&#160;'.$qData['question_order'].'&#160;'.strtolower($lblOf).'&#160;'.$qData['total'].'</b>';
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel($questionLabel);
-		$objTabbedbox->addBoxContent($icons.$display);
-		$string = $objTabbedbox->show();
-
-		if($aData == FALSE){
-			$display = '<ul>';
-			$display .= '<li>';
-			$display .= $lblNoRecords;
-			$display .= '</li>';
-			$display .= '</ul>';
-		}else{
-		 	// navigation icons
-    		$max = (intval($aData[0]['total'] / 20) * 20) + 1;
-    		if($max == 1){
-        		$this->objIcon->title = $lblFirst.' '.$lblAnswers;
-        		$this->objIcon->setIcon('first_grey');
-        		$icons = $this->objIcon->show();
+    /**
+    * Method to output the student tutorial home page
+    *
+    * @access public
+    * @return string $content: The template output string
+    */
+    public function showStudentHome()
+    {
+        // get data
+        $tutorials = $this->objDbTutorials->getContextTuts($this->contextCode);
+        $instructions = $this->objDbTutorials->getInstructions();
+        
+        // set up language elements
+        $lblStudents = $this->objLanguage->languageText('word_students');
+        $lblHeading = $this->objLanguage->languageText('mod_tutorials_name', 'tutorials');
+        $lblName = $this->objLanguage->languageText('word_name');
+        $lblQuestions = $this->objLanguage->languageText('word_questions');
+        $lblStatus = $this->objLanguage->languageText('phrase_activitystatus');
+        $lblPercentage = $this->objLanguage->languageText('word_percentage');
+        $lblTotal = $this->objLanguage->languageText('phrase_totalmark');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblAssignment = $this->objLanguage->languageText('mod_assignment_name');
+        $lblConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfim', 'tutorials');
+        $lblAnswer = $this->objLanguage->languageText('mod_tutorials_answertut', 'tutorials');
+        $lblMark = $this->objLanguage->languageText('mod_tutorials_marktut', 'tutorials');
+        $lblAnswerComplete = $this->objLanguage->languageText('mod_tutorials_answercomplete', 'tutorials');
+        $lblMarkComplete = $this->objLanguage->languageText('mod_tutorials_markcomplete', 'tutorials');
+        $lblInstructions = $this->objLanguage->languageText('word_instructions');
+        $lblMarkObtained = $this->objLanguage->languageText('phrase_markobtained');
+        $lblLeft = $this->objLanguage->languageText('mod_tutorials_studentsleft', 'tutorials');
+        $lblNotReady = $this->objLanguage->languageText('mod_tutorials_notready', 'tutorials');
+        $lblUnavailable = $this->objLanguage->languageText('mod_tutorials_markingunavailable', 'tutorials');
+        $lblNoAccess = $this->objLanguage->code2Txt('mod_tutorials_noaccess', 'tutorials', NULL);
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading.': '.$this->menuText;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        if($instructions != FALSE){
+            // tabbed box
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel('<b>'.$lblInstructions.'</b>');
+            $this->objTabbedbox->addBoxContent($instructions['instructions']);
+            $content .= $this->objTabbedbox->show();
+        }
     
-        		$this->objIcon->title = $lblPrevious.' 20 '.$lblAnswers;
-        		$this->objIcon->setIcon('prev_grey');
-        		$icons .= $this->objIcon->show();
+        // set up links
+        if($this->assignment){
+            $this->objLink = new link($this->uri(array(), 'assignment'));
+            $this->objLink->link = $lblAssignment;
+            $lnkAssignments = $this->objLink->show();
+            
+            $links = $lnkAssignments;
+        }else{
+            $links = '';
+        }
 
-        		$this->objIcon->title = $lblNext.' 20 '.$lblAnswers;
-        		$this->objIcon->setIcon('next_grey');
-        		$icons .= $this->objIcon->show();
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblName, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblQuestions, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblStatus, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblPercentage, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblTotal, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell('', '', '', '', 'tuts-header', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+        
+        if($tutorials == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="6"');
+            $this->objTable->endRow();
+        }else{
+            if($this->isStudent == TRUE){
+                foreach($tutorials as $tutorial){
+                    // get data
+                    $status = $this->tutStatus($tutorial['id'], TRUE);
+                    $questions = $this->objDbTutorials->getQuestions($tutorial['id']);
+                    $results = $this->objDbTutorials->getResult($tutorial['id'], $this->userId);
+                    $markedBy = $this->objDbTutorials->countCompletedMarked($tutorial['id'], $this->userId);
+                    $markedFor = $this->objDbTutorials->getMarkedStudents($tutorial['id'], $this->userId);
+                    $lecturer = $this->objDbTutorials->checkLecturerMarked($tutorial['id'], $this->userId);
+                    $modComplete = $this->objDbTutorials->moderationComplete($tutorial['id']);
+                
+                    $qCount = empty($questions) ? 0 : count($questions);
+
+                    // set up view link
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'view',
+                        'id' => $tutorial['id'],
+                    ), 'tutorials'));
+                    $this->objLink->link = $tutorial['name'];
+                    $lnkView = $this->objLink->show();
     
-        		$this->objIcon->title = $lblLast.' '.$lblAnswers;
-        		$this->objIcon->setIcon('last_grey');
-        		$icons .= $this->objIcon->show();
-    		}elseif($aNum == 1){
-        		$this->objIcon->title = $lblFirst.' '.$lblAnswers;
-        		$this->objIcon->setIcon('first_grey');
-        		$icons = $this->objIcon->show();
+                    // set up answer link
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'answer',
+                        'id' => $tutorial['id'],
+                    ), 'tutorials'));
+                    $this->objLink->link = $lblAnswer;
+                    $lnkAnswer = $this->objLink->show();                
+                    
+                    // set up mark link
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'mark',
+                        'id' => $tutorial['id'],
+                    ), 'tutorials'));
+                    $this->objLink->link = $lblMark;
+                    $lnkMark = $this->objLink->show();                
+                
+                    $link = '';
+                    $name = $tutorial['name'];
+                    switch($status['value']){
+                        case 2:
+                            if($results['has_submitted'] == 0){
+                                if($questions != FALSE){
+                                    $link = $lnkAnswer; 
+                                }
+                            }else{
+                                $link = $lblAnswerComplete;                            
+                            }
+                            break;
+                        case 4:
+                            if($results['has_submitted'] == 1){
+                                if($markedFor < 3){
+                                    $link = $lnkMark;
+                                    $link .= '<br /><b>'.$lblLeft.': '.(3 - $markedFor).'</b>';
+                                }else{
+                                    $link = $lblMarkComplete;
+                                }
+                            }else{
+                                $link = $lblUnavailable;
+                            }
+                            break;
+                        case 6:
+                        case 7:                        
+                            $lecturer = $this->objDbTutorials->checkLecturerMarked($tutorial['id'], $this->userId);
+                            if($markedBy == 3 or $lecturer == TRUE){
+                                $name = $lnkView;
+                                $mark = round(($results['mark_obtained'] / $tutorial['total_mark']) * 100, 0);
+                                $late = $this->objDbTutorials->getLate($tutorial['id'], $this->userId);
+                                if($late == FALSE){
+                                    $penalty = ($tutorial['penalty'] * (3 - $markedFor));
+                                    $mark = $mark - round(($mark * ($penalty / 100)), 0);
+                                }                                    
+                                $mark = $mark.'%';
+                                $link = $lblMarkObtained.' - '.$mark;                                
+                            }elseif($results['has_submitted'] != 1){
+                                $link = $lblMarkObtained.' - 0%';
+                            }else{
+                                $link = $lblNotReady;   
+                            }                            
+                            break;
+                    }
+
+                    $this->objTable->startRow();
+                    $this->objTable->addCell($name, '', '', '', '', '');
+                    $this->objTable->addCell($qCount, '', '', '', '', '');
+                    $this->objTable->addCell($status['text'], '', '', '', '', '');
+                    $this->objTable->addCell($tutorial['percentage'], '', '', '', '', '');
+                    $this->objTable->addCell($tutorial['total_mark'], '', '', '', '', '');
+                    $this->objTable->addCell($link, '', '', '', '', '');
+                    $this->objTable->endRow();
+                }
+            }else{
+                $this->objTable->startRow();
+                $this->objTable->addCell($lblNoAccess, '', '', '', 'noRecordsMessage', 'colspan="6"');
+                $this->objTable->endRow();
+            }
+        }
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('', '', '', '', '' ,'colspan="6"');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($links, '', '', 'center', '' ,'colspan="6"');
+        $this->objTable->endRow();
+        
+        $content .= $this->objTable->show();        
+        
+        return $content;
+    }
     
-        		$this->objIcon->title = $lblPrevious.' 20 '.$lblAnswers;
-        		$this->objIcon->setIcon('prev_grey');
-        		$icons .= $this->objIcon->show();
+    /**
+    * Method to output the answer tutorial page
+    *
+    * @access public
+    * @param string $id: The id of the tutorial to answer
+    * @param string $order: The question number to answer
+    * @return string $content: The template output string
+    */
+    public function showAnswer($id, $order)
+    {   
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $questions = $this->objDbTutorials->getQuestions($id);
+        $question = $questions[$order - 1];
+        $answer = $this->objDbTutorials->getAnswer($question['id'], $this->userId);
+                
+        // set up language elements
+        $lblHeading = $this->objLanguage->languageText('mod_tutorials_answertut', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblNext = $this->objLanguage->languageText('word_next');
+        $lblPrevious = $this->objLanguage->languageText('word_previous');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblExit = $this->objLanguage->languageText('word_exit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblAnswer = $this->objLanguage->languageText('word_answer');
+        $lblOf = $this->objLanguage->languageText('word_of');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
 
-        		$this->objIcon->title = $lblNext.' 20 '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => ($aNum + 20),
-        		)), 'next');
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $string = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $string .= $header;
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
 
-        		$this->objIcon->title = $lblLast.' '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => $max,
-        		)), 'last');
-    		}elseif($aNum == $max){
-        		$this->objIcon->title = $lblFirst.' '.$lblAnswers;
-        		$icons = $this->objIcon->getLinkedIcon($this->uri(array(
-           			'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => 1,
-        		)), 'first');
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblQuestion.':</b><br />'.$question['question'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$question['question_value'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // tabbed box
+        $label = '<b>'.$lblQuestion.'  '.$order.'  '.strtolower($lblOf).'  '.count($questions).'</b>';
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel($label);
+        $this->objTabbedbox->addBoxContent($tblDisplay);
+        $string .= $this->objTabbedbox->show();
+        
+        // set up form elements
+        $this->objEditor->init('answer', $answer['answer'], '500px', '100%', NULL);
+        $this->objEditor->setDefaultToolBarSetWithoutSave();
+        $edtAnswer = $this->objEditor->show();
+        
+        $this->objButton=new button('next',$lblNext);
+        $this->objButton->setToSubmit();
+        $btnNext = $this->objButton->show();
 
-        		$this->objIcon->title = $lblPrevious.' 20 '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => ($max - 20),
-        		)), 'prev');    
+        $this->objButton=new button('previous',$lblPrevious);
+        $this->objButton->setToSubmit();
+        $btnPrevious = $this->objButton->show();
 
-        		$this->objIcon->title = $lblNext.' 20 '.$lblAnswers;
-        		$this->objIcon->setIcon('next_grey');
-        		$icons .= $this->objIcon->show();
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('exit',$lblExit);
+        $this->objButton->setToSubmit();
+        $btnExit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        if($order == 1){
+            $buttons = $btnNext.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }elseif($order == count($questions)){
+            $buttons = $btnPrevious.'&#160;'.$btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }else{
+            $buttons = $btnNext.'&#160;'.$btnPrevious.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($edtAnswer, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmAnswer',$this->uri(array(
+            'action' => 'saveanswer',
+            'id' => $id,
+            'qId' => $question['id'],
+            'order' => $order,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $tabContent = $this->objForm->show();
     
-        		$this->objIcon->title = $lblLast.' '.$lblAnswers;
-        		$this->objIcon->setIcon('last_grey');
-        		$icons .= $this->objIcon->show();
-    		}else{
-        		$this->objIcon->title = $lblFirst.' '.$lblAnswers;
-        		$icons = $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => 1,
-        		)), 'first');
+        $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
+        $tabContent .= $this->objForm->show();        
 
-        		$this->objIcon->title = $lblPrevious.' 20 '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => ($aNum - 20),
-        		)), 'prev');    
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblAnswer.'</b>');
+        $this->objTabbedbox->addBoxContent($tabContent);
+        $string .= $this->objTabbedbox->show();
+        
+        $string .= $this->_showStudentLinks($id, 'answer');
 
-        		$this->objIcon->title = $lblNext.' 20 '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => ($aNum + 20),
-        		)), 'next');
-
-        		$this->objIcon->title = $lblLast.' '.$lblAnswers;
-        		$icons .= $this->objIcon->getLinkedIcon($this->uri(array(
-            		'action' => 'view_answers',
-            		'id' => $tNameSpace,
-            		'qNum' => $qNum,
-            		'aNum' => $max,
-        		)), 'last');
-    		}
-
-			// display table
-			$objTable = new htmltable();
-			$objTable->cellpadding = 2;
-			$objTable->cellspacing = 2;
-			$i = 0;
-		 	foreach($aData as $key => $line){
-                $class = (($i++%2) == 0) ? 'even' : 'odd';
-				$objTable->startRow();
-				$objTable->addCell('<b>'.($aNum + $key).'.</b>', '5%', '', '', $class, '');
-				$objTable->addCell(nl2br($line['answer']), '', '', '', $class, '');
-				$objTable->endRow();
-			}
-			$display = $objTable->show();
-		}
-		
-		$answerLabel = '<b>'.$lblAnswers.'&#160;'.$aNum.'&#160;'.strtolower($lblTo).'&#160;'.$aCount.'&#160;'.strtolower($lblOf).'&#160;'.$aData[0]['total'].'</b>';
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel($answerLabel);
-		$objTabbedbox->addBoxContent($icons.$display);
-		$string .= $objTabbedbox->show();
-
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string .= $objLink->show();
-
-		$str = $this->objFeature->show($heading, $string).'<br />';
-		return $str;		
-	}
-	
-	/**
-	* Method to display the late submissions page
-	*
-	* @access public
-	* @param string $tNameSpace: The tutorial name space
-	* @param string $studentId: The id of the student to edit
-	* @return string $str: The output string
-	*/
-	public function showLateSubmissions($tNameSpace, $studentId = NULL)
-	{
-        // redirect
-		if(!$this->_isLecturer() || !$this->_isAdmin()){
-			return $this->_redirect();
-		}
-		
-		// load javascript
-		$headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->objLayer = new layer();
+        $this->objLayer->padding = '10px';
+        $this->objLayer->addToStr($string);
+        $content = $this->objLayer->show();        
+        
+        return $content;  
+    }
+    
+    /**
+    * Method to list links for a student
+    *
+    * @access private
+    * @param string $id: The tutorial id
+    * @param string $action: The action of the link
+    * @return array|string $list: The links on success | NULL on failure
+    */
+    private function _showStudentLinks($id, $action)
+    {
+        // get data
+        $data = $this->objDbTutorials->getStudentLinkData($id);
+       
+        // set up language elements
+        $lblGoto = $this->objLanguage->languageText('mod_tutorials_gotoquestion', 'tutorials');
+        
+        if($data != FALSE){
+            $links = '';
+            foreach($data as $key => $line){
+                $this->objLink = new link($this->uri(array(
+                    'action' => $action,
+                    'id' => $id,
+                    'order' => $line['question_order'],
+                ), 'tutorials'));
+                $this->objLink->link = $line['question_order'];
+                $links .= $this->objLink->show();
+                if(count($data) != ($key + 1)){
+                    $links .= '&#160;|&#160;';
+                }
+            }
+            return '<b>'.$lblGoto.': </b>'.$links;
+        }
+        return '';
+    }
+    
+    /**
+    * Method to list links for a marker
+    *
+    * @access private
+    * @param string $id: The tutorial id
+    * @param string $studentId: The id of the student
+    * @return array|string $list: The links on success | NULL on failure
+    */
+    private function _showMarkerLinks($id, $studentId)
+    {
+        // get data
+        $data = $this->objDbTutorials->getMarkerLinkData($id, $studentId);
+        
+        // set up language elements
+        $lblGoto = $this->objLanguage->languageText('mod_tutorials_gotoquestion', 'tutorials');
+        
+        if($data != FALSE){
+            $links = '';
+            foreach($data as $key => $line){
+                if($this->isLecturer == FALSE){
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'mark',
+                        'id' => $id,
+                        'order' => $line['question_order'],
+                    ), 'tutorials'));
+                }else{
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'mark',
+                        'id' => $id,
+                        'studentId' => $studentId,
+                        'order' => $line['question_order'],
+                    ), 'tutorials'));
+                }
+                $this->objLink->link = $line['question_order'];
+                $links .= $this->objLink->show();
+                if(count($data) != ($key + 1)){
+                    $links .= '&#160;|&#160;';
+                }
+            }
+            return '<b>'.$lblGoto.': </b>'.$links;
+        }
+        return '';
+    }
+    
+    /**
+    * Method to show the list of students
+    *
+    * @param string $id: The id of the tutorial
+    * @param bool $status: The status of results export of applicable
+    * @return string $content: The template output string
+    */
+    public function showStudentList($id, $status)
+    {
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
         
-		// data to be displayed
-		$tData = $this->objTutDb->getTutorial($tNameSpace);
-		$name = $tData['name'];
-		$type = $tData['type'];
-		$description = $tData['description'];
-		$percentage = $tData['percentage'];
-		$totalMark = $tData['total_mark'] < 1 ? 0 : $tData['total_mark'];
-		$answerOpen = $tData['answer_open_date'];
-		$answerClose = $tData['answer_close_date'];
-		$markClose = $tData['marking_close_date'];
-		$moderateClose = $tData['moderating_close_date'];
-		
-        $sData = $this->_listStudents();
-
-		// text elements
-		$lblStandard = $this->objLanguage->languageText('word_standard');
-		$lblInteractive = $this->objLanguage->languageText('word_interactive');
-		$lblName = $this->objLanguage->languageText('word_name');
-		$lblType = $this->objLanguage->languageText('word_type');
-		$lblDescription = $this->objLanguage->languageText('word_description');
-		$lblPercentage = $this->objLanguage->languageText('mod_tutorials_percentage', 'tutorials');
-		$lblOpen = $this->objLanguage->languageText('mod_tutorials_dateopen', 'tutorials');
-		$lblClose = $this->objLanguage->languageText('mod_tutorials_dateclose', 'tutorials');
-		$lblMark = $this->objLanguage->languageText('mod_tutorials_datemark', 'tutorials');
-		$lblModerate = $this->objLanguage->languageText('mod_tutorials_datemoderate', 'tutorials');
-		$lblTutorial = $this->objLanguage->languageText('word_tutorial');
-		$lblNoRecords = $this->objLanguage->languageText('phrase_norecordsfound');
-		$heading = $this->objLanguage->languageText('phrase_latesubmissions');
-		$lblBack = $this->objLanguage->languageText('word_back');
-		$lblBackTitle = $this->objLanguage->languageText('mod_tutorials_back', 'tutorials');
-		$lblStudents = $this->objLanguage->code2Txt('word_students');
-		$lblTotalMark = $this->objLanguage->languageText('phrase_totalmark');
-        $lblStudentNo = $this->objLanguage->languageText('phrase_studentnumber');
-        $lblName = $this->objLanguage->languageText('word_name');
-        $lblSurname = $this->objLanguage->languageText('word_surname');
-		$lblLateClose = $this->objLanguage->languageText('mod_tutorials_lateanswersclosing', 'tutorials');
-		$lblLateMark = $this->objLanguage->languageText('mod_tutorials_latemarkingclosing', 'tutorials');
-		$lblLateModerate = $this->objLanguage->languageText('mod_tutorials_latemoderatingclosing', 'tutorials');
-		$lblDelete = $this->objLanguage->languageText('word_delete');
-		$lblDeleteTitle = $this->objLanguage->languageText('mod_tutorials_titledeletelate', 'tutorials');
-		$lblDelConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfirm', 'tutorials');
-		$lblSubmit = $this->objLanguage->languageText('word_submit');
-		$lblCancel = $this->objLanguage->languageText('word_cancel');
-		$lblWarning = $this->objLanguage->languageText('mod_tutorials_latewarning', 'tutorials');
-
-		if($type == 2){
-			$lblTutType = $lblInteractive;
-		}else{
-			$lblTutType = $lblStandard;
-		}
-		
-		// tutorial tabbed box
-		// display table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblName.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($name, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblType.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($lblTutType, '', '', '', '', '');
-		$objTable->endRow();
-		
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblDescription.'</b>', '30%', 'top', '', '', '');
-		$objTable->addCell(nl2br($description), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblPercentage.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($percentage, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblTotalMark.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($totalMark, '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblOpen.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($answerOpen), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblClose.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($answerClose), '', '', '', '', '');
-		$objTable->endRow();
-		$string = $objTable->show();
-
-		
-		// dates table
-		$objTable = new htmltable();
-        $objTable->cellpadding = '2';
-        $objTable->cellspacing = '2';
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblMark.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($markClose), '', '', '', '', '');
-		$objTable->endRow();
-
-		$objTable->startRow();
-		$objTable->addCell('<b>'.$lblModerate.'</b>', '30%', '', '', '', '');
-		$objTable->addCell($this->_formatDate($moderateClose), '', '', '', '', '');
-		$objTable->endRow();
-		$datesTable = $objTable->show();
-
-		// dates layer
-		$objLayer = new layer();
-		$objLayer->id = 'datesDiv';
-		if($type != 2){
-			$objLayer->display = 'none';
-		}
-		$objLayer->addToStr($datesTable);
-		$string .= $objLayer->show();
-		
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblTutorial.'</b>');
-		$objTabbedbox->addBoxContent($string);
-		$tabbedboxes = $objTabbedbox->show();
-
-		// students tabbed box
-		if($sData == FALSE){
-			$string = '<ul>';
-			$string .= '<li>';
-			$string .= '<b><font class="noRecordsMessage">'.$lblNoRecords.'</font></b>';
-			$string .= '</ul>';
-			$string .= '</li>';
-		}else{
-			$objTable = new htmltable();
-        	$objTable->id = 'studentList';
-        	$objTable->css_class = 'sorttable';
-        	$objTable->cellpadding = '2';
-        	$objTable->row_attributes = ' name="row_'.$objTable->id.'"';
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $groupId = $this->objGroupadmin->getLeafId(array(
+            $this->contextCode,
+            'Students',
+        ));
+        $students = $this->objGroupadmin->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+        $date = date('Y-m-d H:i:s');
         
-        	$objTable->startRow();
-        	$objTable->addCell($lblStudentNo, '', '', '', 'heading', '');
-        	$objTable->addCell($lblName, '', '', '', 'heading', '');
-        	$objTable->addCell($lblSurname, '', '', '', 'heading', '');
-	        $objTable->addCell($lblLateClose, '', '', '', 'heading', '');
-	        if($type == 2){
-	        	$objTable->addCell($lblLateMark, '', '', '', 'heading', '');
-	        	$objTable->addCell($lblLateModerate, '', '', '', 'heading', '');
-			}
-	        $objTable->addCell('', '', '', '', 'heading', '');
-	        $objTable->endRow();
-			foreach($sData as $line){
-			 	$lData = $this->objTutDb->getLateSubmissions($tNameSpace, $line['userid']);
-			 	
-			 	// edit link
-				 $objLink = new link($this->uri(array(
-			 		'action' => 'late_submissions',
-				 	'id' => $tNameSpace,
-					 'sId' => $line['userid'],
-				), 'tutorials'));
-				$objLink->link = $line['userid'];
-				$objLink->name = $line['userid'];
-				$objLink->anchor = $line['userid'];
-				$link = $objLink->show();
-				
-				if($studentId == $line['userid']){
-					if($lData != FALSE){
-			 			// delete link
-					 	$objLink = new link($this->uri(array(
-					 		'action' => 'delete_late',
-						 	'id' => $tNameSpace,
-							 'sId' => $line['userid'],
-						), 'tutorials'));
-						$objLink->link = $lblDelete;
-						$objLink->title = $lblDeleteTitle;
-						$objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblDelConfirm.'\')){return false;}"';
-						$delete = $objLink->show();
-				
-    		   			$closeField = $this->objPopupcal->show('answer_close', 'yes', 'no', date('Y-m-d H:i', strtotime($lData['answer_close_date'])));
-        				$markField = $this->objPopupcal->show('mark_close', 'yes', 'no', date('Y-m-d H:i', strtotime($lData['marking_close_date'])));
-        				$moderateField = $this->objPopupcal->show('moderate_close', 'yes', 'no', date('Y-m-d H:i', strtotime($lData['moderating_close_date'])));        
-        			}else{
-    		   			$closeField = $this->objPopupcal->show('answer_close', 'yes', 'no', date('Y-m-d H:i'));
-        				$markField = $this->objPopupcal->show('mark_close', 'yes', 'no', date('Y-m-d H:i'));
-        				$moderateField = $this->objPopupcal->show('moderate_close', 'yes', 'no', date('Y-m-d H:i'));
-						$delete = '';        
-					}
-			
-					// hidden input
-					$objInput = new textinput('sId', $line['userid'], 'hidden');
-					$hidden = $objInput->show();
-					
-					// form buttons
-					$objButton = new button('submit', $lblSubmit);
-					$objButton->setToSubmit();
-					$buttons = $objButton->show();
-		
-					$objButton = new button('cancel', $lblCancel);
-					$objButton->setToSubmit();
-					$buttons .= '&#160;'.$objButton->show();		
-				}else{
-					if($lData != FALSE){
-			 			// delete link
-					 	$objLink = new link($this->uri(array(
-					 		'action' => 'delete_late',
-						 	'id' => $tNameSpace,
-							 'sId' => $line['userid'],
-						), 'tutorials'));
-						$objLink->link = $lblDelete;
-						$objLink->title = $lblDeleteTitle;
-						$objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblDelConfirm.'\')){return false;}"';
-						$delete = $objLink->show();
-				
-						$closeField = $this->_formatDate($lData['answer_close_date']);	
-        				$markField = $this->_formatDate($lData['marking_close_date']);
-        				$moderateField = $this->_formatDate($lData['moderating_close_date']);        
-        			}else{
-						$closeField = '';
-						$markField = '';
-						$moderateField = '';
-						$delete = '';	
-					}
-				}
-				 	
-				$objTable->startRow();
-				$objTable->addCell($link, '', '', '', '', '');
-				$objTable->addCell($line['firstname'], '', '', '', '', '');
-				$objTable->addCell($line['surname'], '', '', '', '', '');
-				$objTable->addCell($closeField, '', '', '', '', '');
-				if($type == 2){
-					$objTable->addCell($markField, '', '', '', '', '');
-					$objTable->addCell($moderateField, '', '', '', '', '');
-				}
-				$objTable->addCell($delete, '', '', '', '', '');
-				$objTable->endRow();
-				if($studentId == $line['userid']){
-					$objTable->startRow();
-					$objTable->addCell($hidden.$buttons, '', '', '', '', 'colspan="7"');
-					$objTable->endRow();
-				}
-			}
-			$string = $objTable->show();	
-		}
-		
-		$objForm = new form('addlate', $this->uri(array(
-			'action' => 'submit_late',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objForm->addToForm($string);
-		$form = $objForm->show();
-		
-		$objTabbedbox = new tabbedbox();
-		$objTabbedbox->extra = 'style="padding: 10px;"';
-		$objTabbedbox->addTabLabel('<b>'.$lblStudents.'</b>');
-		$objTabbedbox->addBoxContent('<b><font class="warning">'.$lblWarning.'</font></b>'.$form);
-		$tabbedboxes .= $objTabbedbox->show();
+        // set up language elements
+        $lblStudents = $this->objLanguage->languageText('word_students');
+        $array['readonlys'] = $lblStudents;
+        $lblList = $this->objLanguage->code2Txt('mod_tutorials_liststudents', 'tutorials', $array);
+        $lblStudentNo = $this->objLanguage->languageText('mod_tutorials_studentno', 'tutorials');
+        $lblName = $this->objLanguage->languageText('phrase_firstname');
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblMarkTut = $this->objLanguage->languageText('mod_tutorials_marktut', 'tutorials');
+        $lblStatus = $this->objLanguage->languageText('word_status');
+        $lblSubmitted = $this->objLanguage->languageText('word_submitted');
+        $lblNotStarted = $this->objLanguage->languageText('phrase_notstarted');
+        $lblNotSubmitted = $this->objLanguage->languageText('word_started');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblLate = $this->objLanguage->languageText('mod_tutorials_late', 'tutorials');
+        $lblOpen = $this->objLanguage->languageText('word_open');
+        $lblClose = $this->objLanguage->languageText('word_close');
+        $lblNotMarked = $this->objLanguage->languageText('phrase_notmarked');
+        $lblMarking = $this->objLanguage->languageText('word_marking');
+        $lblMarked = $this->objLanguage->languageText('word_marked');
+        $lblCompleted = $this->objLanguage->languageText('word_completed');
+        $lblAnswer = $this->objLanguage->languageText('mod_tutorials_answerlist', 'tutorials');       
+        $lblExport = $this->objLanguage->languageText('mod_tutorials_exportresults', 'tutorials');       
+        $array['date'] = $this->objDatetime->formatDate($date, FALSE);
+        $lblTrue = $this->objLanguage->code2Txt('mod_tutorials_true', 'tutorials', $array);       
+        $lblFalse = $this->objLanguage->languageText('mod_tutorials_false', 'tutorials');
+        $lblArchive = $this->objLanguage->languageText('mod_tutorials_archive', 'tutorials');       
+        $lblArchiveConfirm = $this->objLanguage->languageText('mod_tutorials_confirmarchive', 'tutorials');       
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up answer list icon
+        $this->objIcon->title = $lblAnswer;
+        $this->objIcon->extra = '';
+        $icoList = $this->objIcon->getLinkedIcon($this->uri(array(
+            'action' => 'answerlist',
+            'id' => $id,
+        )), 'onlineresume');
+        
+        // set up export icon
+        $this->objIcon->title = $lblExport;
+        $this->objIcon->extra = '';
+        if($tutorial['tutorial_type'] == 0){
+            $icoExport = $this->objIcon->getLinkedIcon($this->uri(array(
+                'action' => 'doexport',
+                'id' => $id,
+            )), 'exportcvs');
+        }else{
+            $icoExport = $this->objIcon->getLinkedIcon($this->uri(array(
+                'action' => 'export',
+                'id' => $id,
+            )), 'exportcvs');
+        }
 
-		// exit link
-		$objLink = new link($this->uri(array(
-			'action' => 'view_tutorial',
-			'id' => $tNameSpace,
-		), 'tutorials'));
-		$objLink->link = $lblBack;
-		$objLink->title = $lblBackTitle;
-		$string = $objLink->show();
+        $icon = '';
+        if($tutorial['tutorial_type'] == 1){
+            $icon = ' '.$icoList;
+        }
+        $icon .= ' '.$icoExport;
 
-		$str = $this->objFeature->show($heading, $tabbedboxes.$string).'<br />';
-		
-		return $str;
-	}
+        // set up archive icon
+        $this->objIcon->title = $lblArchive;
+        $this->objIcon->setIcon('folder');
+        $this->objLink = new link($this->uri(array(
+            'action' => 'archive',
+            'id' => $id,
+        )));
+        $this->objLink->link = $this->objIcon->show();
+        $this->objLink->extra = 'onclick="javascript:if(!confirm(\''.$lblArchiveConfirm.'\')){return false;};"';
+        $icoArchive = $this->objLink->show();
+        $icon .= ' '.$icoArchive;
+        
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'].$icon;
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        if($status === '1'){
+            $this->objMsg->setMessage($lblTrue);
+            $this->objMsg->setTimeOut(10000);
+            $content .= '<p>'.$this->objMsg->show().'</p>';
+        }elseif($status === '0'){
+            $this->objMsg->setMessage($lblFalse);
+            $this->objMsg->setTimeOut(10000);
+            $content .= '<p>'.$this->objMsg->show().'</p>';
+        }
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "folderList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblStudentNo, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblStatus ,'', '', '', 'tuts-header', '');
+        if($tutorial['tutorial_type'] == 1){
+            $this->objTable->addCell($lblMarking ,'', '', '', 'tuts-header', '');            
+            $this->objTable->addCell($lblMarked ,'', '', '', 'tuts-header', '');            
+        }
+        $this->objTable->addCell($lblMark ,'', '', '', 'tuts-header', '');
+        $this->objTable->addCell($lblLate, '', '', '', 'tuts-header', '');
+        $this->objTable->addCell('' ,'', '', '', 'tuts-header', '');
+        $this->objTable->endRow();
+        
+        if($students == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', 'colspan="9"');
+            $this->objTable->endRow();
+        }else{
+            foreach($students as $student){
+                $result = $this->objDbTutorials->getResult($id, $student['userid']);
+                $late = $this->objDbTutorials->getLate($id, $student['userid']);
+                $markedBy = $this->objDbTutorials->countCompletedMarked($id, $student['userid']);
+                $markedFor = $this->objDbTutorials->getMarkedStudents($id, $student['userid']);
+                $lecturer = $this->objDbTutorials->checkLecturerMarked($id, $student['userid']);
+                
+                if($late != FALSE){
+                    $answerOpen = $this->objDatetime->formatDate($late['answer_open']);
+                    $answerClose = $this->objDatetime->formatDate($late['answer_close']);
+                    $lateText = '<b>'.$lblOpen.':</b> '.$answerOpen;
+                    $lateText .= '<br /><b>'.$lblClose.':</b> '.$answerClose;
+                }else{
+                    $lateText = '';
+                }
+                
+                // set up marking link
+                $this->objIcon->title = $lblLate;
+                $this->objIcon->extra = '';
+                $lnkLate = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'late',
+                    'id' => $id,
+                    'studentId' => $student['userid'],
+                )), 'clock');
+
+                $this->objIcon->title = $lblMarkTut;
+                $this->objIcon->extra = '';
+                $lnkMark = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'mark',
+                    'id' => $id,
+                    'studentId' => $student['userid'],
+                )), 'greentick');
+
+                if($result == FALSE){
+                    $lnkMark = '';
+                    $mark = '0%';
+                    $status = '<font class="error"><b>'.$lblNotStarted.'</b></font>';
+                }else{
+                    if($result['has_submitted'] == 0){
+                        $lnkMark = '';
+                        $status = '<font class="warning">'.$lblNotSubmitted.'</font>';
+                        $mark = '0%';
+                    }else{
+                        $status = $lblSubmitted;
+                        if($result['mark_obtained'] != NULL){
+                            $mark = round(($result['mark_obtained'] / $tutorial['total_mark']) * 100, 0).'%';
+                            if($tutorial['tutorial_type'] == 1){
+                                if($markedBy < 3 and $lecturer == FALSE){
+                                    $mark = '<font class="error"><b>'.$mark.'</b></font>';
+                                }else{
+                                    $mark = round(($result['mark_obtained'] / $tutorial['total_mark']) * 100, 0);
+                                    $late = $this->objDbTutorials->getLate($id, $student['userid']);
+                                     if($late == FALSE){
+                                        $penalty = ($tutorial['penalty'] * (3 - $markedFor));
+                                        $mark = $mark - round($mark * ($penalty / 100), 0);
+                                    }                                    
+                                    $mark = $mark.'%';
+                                }
+                            }
+                        }else{
+                            $mark = '<font class="error"><b>'.$lblNotMarked.'</b></font>';
+                        }
+                    }
+                } 
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($student['userid'], '', '', '', '', '');
+                $this->objTable->addCell($student['firstname'], '', '', '', '', '');
+                $this->objTable->addCell($student['surname'], '', '', '', '', '');
+                $this->objTable->addCell($status, '', '', '', '', '');
+                if($tutorial['tutorial_type'] == 1){
+                    $array = array();
+                    $array['count'] = $markedFor;
+                    $lblMarking = $this->objLanguage->code2Txt('mod_tutorials_marking', 'tutorials', $array);
+                    if($markedFor < 3){
+                        $lblMarking = '<font class="error">'.$lblMarking.'</font>';
+                    }
+                    $lblMarked = '';
+                    if($lecturer != FALSE){
+                        $lblMarked = '<font class="warning">'.$lblCompleted.'</font><br />';
+                    }
+                    $array = array();
+                    $array['count'] = $markedBy;
+                    $marked = $this->objLanguage->code2Txt('mod_tutorials_marked', 'tutorials', $array);
+                    if($markedBy < 3 and $lecturer == FALSE){
+                        $lblMarked = '<font class="error">'.$marked.'</font>';
+                    }else{
+                        $lblMarked .= $marked;
+                    }
+                    
+                    $this->objTable->addCell($lblMarking, '', '', '', '', '');
+                    $this->objTable->addCell($lblMarked, '', '', '', '', '');
+                }
+                $this->objTable->addCell($mark, '', '', 'right', '', '');
+                $this->objTable->addCell($lateText, '', '', 'center', '', '');
+                $this->objTable->addCell($lnkLate.' '.$lnkMark, '', '', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        $content .= $tblDisplay;        
+
+        $this->objLink = new link($this->uri(array(),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+    
+    /**
+    * Method to show the marking page
+    *
+    * @param string $id: The id of the tutorial
+    * @param string $studentId: The id of the student being marked
+    * @param string $order: The question to be marked
+    * @param string $e: The type of error if applicable
+    * @param string $c: The comment text
+    * @param string $m: The mark given
+    * @param bool $isStudent: TRUE if the user is a student | FALSE if not
+    * @return string $content: The template output string
+    */
+    public function showMarking($id, $studentId, $order, $e, $c, $m, $isStudent = FALSE)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $questions = $this->objDbTutorials->getQuestions($id);
+        $question = $questions[$order - 1];
+        $answer = $this->objDbTutorials->getAnswer($question['id'], $studentId);
+        $name = $this->objUser->fullname($studentId);
+        $marking = $this->objDbTutorials->getUsersMarkingForAnswer($answer['id'], $this->userId);
+        if($marking == FALSE){
+            $comment = '';
+            $mark = '';
+        }else{
+            $comment = $marking['markers_comment'];
+            $mark = $marking['mark'];
+        }
+        if($e == TRUE){
+            $comment = $c;
+            $mark = $m;
+        }
+               
+        // set up language elements
+        $lblHeading = $this->objLanguage->languageText('mod_tutorials_marktut', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblMarkAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblMarking = $this->objLanguage->languageText('word_marking');
+        $lblNext = $this->objLanguage->languageText('word_next');
+        $lblPrevious = $this->objLanguage->languageText('word_previous');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblExit = $this->objLanguage->languageText('word_exit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblAnswer = $this->objLanguage->languageText('word_answer');
+        $lblOf = $this->objLanguage->languageText('word_of');
+        $lblModel = $this->objLanguage->languageText('phrase_modelanswer');
+        $lblStudent = $this->objLanguage->code2Txt('word_student');
+        $lblStudentNo = $this->objLanguage->languageText('mod_tutorials_studentno', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblComment = $this->objLanguage->languageText('word_comment');
+        $lblNumeric = $this->objLanguage->languageText('mod_tutorials_marknumeric', 'tutorials');
+        $lblMarkRequired = $this->objLanguage->languageText('mod_tutorials_markrequired', 'tutorials');
+        $lblCommentRequired = $this->objLanguage->languageText('mod_tutorials_commentrequired', 'tutorials');
+        $array = array();
+        $array['mark'] = $question['question_value'];
+        $lblRange = $this->objLanguage->code2Txt('mod_tutorials_markrrange', 'tutorials', $array);
+        
+        if($e == TRUE){
+            $body = 'alert("'.$lblCommentRequired.'")';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $string = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $string .= $header;
+        
+        if($isStudent == FALSE){
+            // set up page heading
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = ucfirst($lblStudent).': '.$name;
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $string .= $header;
+        
+            // set up page heading
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = $lblStudentNo.': '.$studentId;
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $string .= $header;
+        }
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblQuestion.':</b><br />'.$question['question'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMarkAllocated.':</b><br />'.$question['question_value'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // tabbed box
+        $label = '<b>'.$lblQuestion.'  '.$order.'</b>';
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel($label);
+        $this->objTabbedbox->addBoxContent($tblDisplay);
+        $string .= $this->objTabbedbox->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // tabbed box
+        $label = '<b>'.$lblAnswer.'</b>';
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel($label);
+        $this->objTabbedbox->addBoxContent($tblDisplay);
+        $string .= $this->objTabbedbox->show();
+        
+        // set up form elements
+        $this->objEditor->init('comment', $comment, '300px', '100%', NULL);
+        $this->objEditor->setDefaultToolBarSetWithoutSave();
+        $edtComment = $this->objEditor->show();
+        
+        $this->objDrop = new dropdown('mark');
+        for($i = 0; $i <= $question['question_value']; $i++){
+            $this->objDrop->addOption($i, $i.'&#160;');
+        }
+        $this->objDrop->setSelected($mark);
+        $drpMark = $this->objDrop->show();
+
+        $this->objButton=new button('next',$lblNext);
+        $this->objButton->setToSubmit();
+        $btnNext = $this->objButton->show();
+
+        $this->objButton=new button('previous',$lblPrevious);
+        $this->objButton->setToSubmit();
+        $btnPrevious = $this->objButton->show();
+
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('exit',$lblExit);
+        $this->objButton->setToSubmit();
+        $btnExit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        if($order == 1){
+            $buttons = $btnNext.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }elseif($order == count($questions)){
+            $buttons = $btnPrevious.'&#160;'.$btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }else{
+            $buttons = $btnNext.'&#160;'.$btnPrevious.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$drpMark, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblComment.':</b><br />'.$edtComment, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmMark',$this->uri(array(
+            'action' => 'savemarking',
+            'id' => $id,
+            'aId' => $answer['id'],
+            'sId' => $studentId,
+            'order' => $order,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $tabContent = $this->objForm->show();        
+
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'liststudents',
+            'id' => $id,
+        ), 'tutorials'));
+        $tabContent .= $this->objForm->show();        
+
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
+        $this->objTabbedbox->addBoxContent($tabContent);
+        $string .= $this->objTabbedbox->show();
+        
+        $string .= $this->_showMarkerLinks($id, $studentId);
+
+        $this->objLayer = new layer();
+        $this->objLayer->padding = '10px';
+        $this->objLayer->addToStr($string);
+        $content = $this->objLayer->show();        
+        
+        return $content;  
+    }
+    
+    /**
+    * Method to show the student view page
+    *
+    * @param string $id: The id of the tutorial
+    * @return string $content: The template output string
+    */
+    public function showStudentView($id, $order, $e = FALSE)    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $questions = $this->objDbTutorials->getQuestions($id);
+        $question = $questions[$order - 1];
+        $answer = $this->objDbTutorials->getAnswer($question['id'], $this->userId);
+        $marking = $this->objDbTutorials->getMarkingForStudentAnswer($answer['id'], $this->userId);
+        $result = $this->objDbTutorials->getResult($id, $this->userId);
+        $status = $this->tutStatus($id, TRUE);
+        $lecturer = $this->objDbTutorials->checkLecturerMarked($id, $this->userId);
+        $markedBy = $this->objDbTutorials->countCompletedMarked($id, $this->userId);
+        $modComplete = $this->objDbTutorials->moderationComplete($id);
+        $late = $this->objDbTutorials->getLate($id, $this->userId);
+        $markedFor = $this->objDbTutorials->getMarkedStudents($id, $this->userId);
+        
+        // set up language elements
+        $lblView = $this->objLanguage->languageText('mod_tutorials_view', 'tutorials');
+        $lblMarkObtained = $this->objLanguage->languageText('phrase_markobtained');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblMarkAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblMarking = $this->objLanguage->languageText('word_marking');
+        $lblAnswer = $this->objLanguage->languageText('word_answer');
+        $lblOf = $this->objLanguage->languageText('word_of');
+        $lblModel = $this->objLanguage->languageText('phrase_modelanswer');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblComment = $this->objLanguage->languageText('phrase_markerscomment');
+        $lblStudent = $this->objLanguage->code2Txt('word_student');
+        $lblRequest = $this->objLanguage->languageText('mod_tutorials_request', 'tutorials');
+        $lblReason = $this->objLanguage->languageText('mod_tutorials_reason', 'tutorials');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblSubmitted = $this->objLanguage->languageText('mod_tutorials_modsubmitted', 'tutorials');
+        $lblModerator = $this->objLanguage->languageText('word_moderator');
+        $lblModComment = $this->objLanguage->languageText('phrase_moderatorscomment');
+        $lblNotReady = $this->objLanguage->languageText('mod_tutorials_notready', 'tutorials');
+        $lblPenalty = $this->objLanguage->languageText('word_penalty');
+        $lblFinal = $this->objLanguage->languageText('word_final');
+
+        if($e == TRUE){
+            $body = 'alert("'.$lblReason.'")';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }
+        
+        if($status['value'] < 6){
+            $mark = '<font class="error">'.$lblNotReady.'</font>';
+        }else{
+            if($lecturer == TRUE or $markedBy == 3){
+                $mark = round(($result['mark_obtained'] / $tutorial['total_mark']) * 100, 0);
+            }else{
+                $mark = '0';
+            }
+        }
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblView;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblMarkObtained.': '.$mark.'%';
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        if($tutorial['tutorial_type'] == 1 and $tutorial['penalty'] > 0 and $late == FALSE and $markedFor < 3){
+            // set up page heading
+            $penalty = ($tutorial['penalty'] * (3 - $markedFor));
+            $penalty = round($mark * ($penalty / 100), 0);            
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = $lblPenalty.': '.$penalty.'%';
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $content .= $header;
+        
+            // set up page heading
+            $mark = $mark - $penalty;
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = $lblFinal.' '.strtolower($lblMark).': '.$mark.'%';
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $content .= $header;
+        }
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblQuestion.':</b><br />'.$question['question'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblMarkAllocated.':</b><br />'.$question['question_value'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // tabbed box
+        $label = '<b>'.$lblQuestion.'  '.$order.'  '.strtolower($lblOf).'  '.count($questions).'</b>';
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel($label);
+        $this->objTabbedbox->addBoxContent($tblDisplay);
+        $content .= $this->objTabbedbox->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // tabbed box
+        $label = '<b>'.$lblAnswer.'</b>';
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel($label);
+        $this->objTabbedbox->addBoxContent($tblDisplay);
+        $content .= $this->objTabbedbox->show();
+        
+        if($tutorial['tutorial_type'] == 0){
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblComment.':</b><br />'.$marking[0]['markers_comment'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$marking[0]['mark'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $display = $this->objTable->show();
+        }else{
+            $display = '';
+            foreach($marking as $key => $line){
+                // set up display table
+                $this->objTable = new htmltable();
+                $this->objTable->cellspacing = '2';
+                $this->objTable->cellpadding = '5';
+                $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$line['mark'], '', '', '', '', '');
+                $this->objTable->endRow();
+                $this->objTable->startRow();
+                if($line['is_moderator'] == 0){
+                    $this->objTable->addCell('<b>'.$lblComment.':</b><br />'.$line['markers_comment'], '', '', '', '', '');
+                }else{
+                    $this->objTable->addCell('<b>'.$lblModComment.':</b><br />'.$line['markers_comment'], '', '', '', '', '');
+                    
+                }
+                $this->objTable->endRow();
+                $tblDisplay = $this->objTable->show();
+
+                // tabbed box
+                $this->objTabbedbox=new tabbedbox();
+                if($line['is_moderator'] == 0){
+                    $this->objTabbedbox->addTabLabel('<b>'.ucfirst($lblStudent).' '.($key + 1).'</b>');
+                }else{
+                    $this->objTabbedbox->addTabLabel('<b>'.$lblModerator.'</b>');
+                }
+                $this->objTabbedbox->addBoxContent($tblDisplay);
+                $tabDisplay = $this->objTabbedbox->show();
+                
+                if(($lecturer == FALSE and $line['is_moderator'] == 0) or $line['is_moderator'] == 1){
+                    $this->objLayer = new layer();
+                    $this->objLayer->padding = '10px';
+                    if($line['is_moderator'] == 0){
+                        $this->objLayer->background_color = '';
+                    }else{
+                        $this->objLayer->background_color = 'rgb(100,255,100)';
+                    }
+                    $this->objLayer->addToStr($tabDisplay);
+                    $display .= $this->objLayer->show();        
+                }
+            }            
+        }
+        
+        // tabbed box
+        $this->objTabbedbox=new tabbedbox();
+        $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
+        $this->objTabbedbox->addBoxContent($display);
+        $content .= $this->objTabbedbox->show();
+        
+        if($status['value'] == 6 and empty($answer['moderation_reason'])){
+            if($lecturer == FALSE){
+                // set up htmlelements
+                $this->objEditor->init('reason', '', '300px', '60%', NULL);
+                $this->objEditor->setDefaultToolBarSetWithoutSave();
+                $edtReason = $this->objEditor->show();
+        
+                $this->objButton=new button('submit',$lblSubmit);
+                $this->objButton->setToSubmit();
+                $btnSubmit = $this->objButton->show();
+
+                $this->objButton=new button('cancel',$lblCancel);
+                $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+                $btnCancel = $this->objButton->show();
+        
+                // set up display table
+                $this->objTable = new htmltable();
+                $this->objTable->cellspacing = '2';
+                $this->objTable->cellpadding = '5';
+                $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblReason.'</b><br />'.$edtReason, '', '', '', '', '');
+                $this->objTable->endRow();
+                $this->objTable->row_attributes = '';
+                $this->objTable->startRow();
+                $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+                $this->objTable->endRow();
+                $this->objTable->startRow();
+                $this->objTable->addCell($btnSubmit.' '.$btnCancel, '', '', '', '', 'colspan="2"');        
+                $this->objTable->endRow();
+                $tblDisplay = $this->objTable->show();
+        
+                // set up forms
+                $this->objForm=new form('frmAnswer',$this->uri(array(
+                    'action' => 'saverequest',
+                    'id' => $id,
+                    'aId' => $answer['id'],
+                    'order' => $order,
+                ), 'tutorials'));
+                $this->objForm->addToForm($tblDisplay);
+                $tabContent = $this->objForm->show();
+    
+                $this->objForm=new form('frmCancel',$this->uri(array(
+                    'action' => 'view',
+                    'id' => $id,
+                    'order' => $order,
+                ), 'tutorials'));
+                $tabContent .= $this->objForm->show();       
+                       
+                $this->objTabbedbox=new tabbedbox();
+                $this->objTabbedbox->addTabLabel('<b>'.$lblRequest.'</b>');
+                $this->objTabbedbox->addBoxContent($tabContent);
+                $content .= $this->objTabbedbox->show();
+            }
+        }elseif($status['value'] >= 6 and !empty($answer['moderation_reason'])){
+            if($answer['moderation_complete'] != 1){
+                // set up display table
+                $this->objTable = new htmltable();
+                $this->objTable->cellspacing = '2';
+                $this->objTable->cellpadding = '5';
+                $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblSubmitted.':</b>', '', '', '', 'noRecordsMessage', '');
+                $this->objTable->endRow();
+                $this->objTable->row_attributes = '';
+                $tblDisplay = $this->objTable->show();
+        
+                $this->objTabbedbox=new tabbedbox();
+                $this->objTabbedbox->addTabLabel('<b>'.$lblRequest.'</b>');
+                $this->objTabbedbox->addBoxContent($tblDisplay);
+                $content .= $this->objTabbedbox->show();
+            }
+        }
+        
+        $content .= $this->_showStudentLinks($id, 'view');
+
+        $this->objLink = new link($this->uri(array(),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br /><br />'.$lnkReturn;            
+        
+        return $content;  
+    }
+    
+    /**
+    * Method to show the late submissions page
+    *
+    * @param string $id: The id of the tutorial
+    * @param string $studentId: The id of the student
+    * @return string $content: The template output string
+    */
+    public function showLate($id, $studentId, $mode)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $late = $this->objDbTutorials->getLate($id, $studentId);
+        $name = $this->objUser->fullname($studentId);
+        $result = $this->objDbTutorials->getResult($id, $studentId);
+        
+        if($late != FALSE){
+            $answerOpen = $late['answer_open'];
+            $answerClose = $late['answer_close'];
+        }else{
+            $answerOpen = date('Y-m-d H:i');
+            $answerClose = date('Y-m-d H:i');            
+        }
+        
+        // set up language elements
+        $lblLate = $this->objLanguage->languageText('mod_tutorials_late', 'tutorials');
+        $lblStudent = $this->objLanguage->code2Txt('word_student');
+        $lblStudentNo = $this->objLanguage->languageText('mod_tutorials_studentno', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblAnswerOpen = $this->objLanguage->languageText('mod_tutorials_latestart', 'tutorials');
+        $lblAnswerClose = $this->objLanguage->languageText('mod_tutorials_lateclose', 'tutorials');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblSelect = $this->objLanguage->languageText('phrase_selectdate');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnlist', 'tutorials');
+        $lblConfirm = $this->objLanguage->languageText('mod_tutorials_deleteconfim', 'tutorials');
+        $lblAdd = $this->objLanguage->languageText('mod_tutorials_addlate', 'tutorials');
+        $lblEdit = $this->objLanguage->languageText('mod_tutorials_editlate', 'tutorials');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        
+        $icons = '';
+        if($late != FALSE){
+            if($mode == 'edit'){
+                $icons = '';
+            }else{    
+                if($result == FALSE){
+                    // set up edit icon
+                    $this->objIcon->title=$lblEdit;
+                    $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
+                        'action' => 'late',
+                        'id' => $id,
+                        'studentId' => $studentId,
+                        'mode' => 'edit',
+                    ), 'tutorials'));
+                    $icons = $icoEdit;
+                
+                    // set up delete icon
+                    $deleteArray = array(
+                        'action' => 'deletelate',
+                        'tutId' => $id,
+                        'id' => $late['id'],
+                    );
+                    $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'tutorials', $lblConfirm);
+                    $icons .= ' '.$icoDelete;                
+                }
+            }                
+        }else{
+            if($mode == 'add'){
+                $icons = '';
+            }else{
+                // set up add icon
+                $this->objIcon->title = $lblAdd;
+                $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
+                    'action' => 'late',
+                    'id' => $id,
+                    'studentId' => $studentId,
+                    'mode' => 'add',
+                ), 'tutorials'));
+                $icons = $icoAdd;
+            }
+        }
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblLate.' '.$icons;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = ucfirst($lblStudent).': '.$name;
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblStudentNo.': '.$studentId;
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        if($late == FALSE and $mode != 'add'){
+            // display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', 'left', 'noRecordsMessage', '');
+            $this->objTable->endRow();
+            
+            $content .= $this->objTable->show();
+        }elseif(!empty($mode)){// set up htmlelements
+            $inpAnswerOpen = $this->objPopupcal->show('answerOpen', 'yes', 'no', $answerOpen);
+            $inpAnswerClose = $this->objPopupcal->show('answerClose', 'yes', 'no', $answerClose);
+
+            $this->objButton=new button('submit',$lblSubmit);
+            $this->objButton->setToSubmit();
+            $btnSubmit = $this->objButton->show();
+
+            $this->objButton=new button('cancel',$lblCancel);
+            $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+            $btnCancel = $this->objButton->show();
+        
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblAnswerOpen.'&#160:</b>', '33%', '', '', '', '');
+            $this->objTable->addCell($inpAnswerOpen, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', '', '');
+            $this->objTable->addCell($inpAnswerClose, '', '', '', '', '');
+            $this->objTable->endRow();       
+            $this->objTable->row_attributes = '';
+            $this->objTable->startRow();
+            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // set up forms
+            $this->objForm=new form('frmLate',$this->uri(array(
+                'action'=>'savelate',
+                'id' => $id,
+                'studentId' => $studentId,
+            ), 'tutorials'));
+            $this->objForm->addToForm($tblDisplay);
+            $content .= $this->objForm->show();
+    
+            $this->objForm=new form('frmCancel',$this->uri(array(
+                'action' => 'liststudents',
+                'id' => $id,
+            ), 'tutorials'));
+            $content .= $this->objForm->show();        
+        }else{
+            $answerOpen = $this->objDatetime->formatDate($late['answer_open']);
+            $answerClose = $this->objDatetime->formatDate($late['answer_close']);
+            
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblAnswerOpen.'&#160:</b>', '33%', '', '', '', '');
+            $this->objTable->addCell($answerOpen, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblAnswerClose.'&#160:</b>', '33%', '', '', '', '');
+            $this->objTable->addCell($answerClose, '', '', '', '', '');
+            $this->objTable->endRow();       
+            $content .= $this->objTable->show();
+        }
+            
+        $this->objLink = new link($this->uri(array(
+            'action' => 'liststudents',
+            'id' => $id,
+        ),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+    
+    /**
+    * Method to show the import questions page
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @return string $content: The template output string
+    */
+    public function showImport($id)
+    {
+        $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        
+        // set up language elements
+        $lblImport = $this->objLanguage->languageText('phrase_importquestions');
+        $lblOverwrite = $this->objLanguage->languageText('mod_tutorials_overwrite', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblYes = $this->objLanguage->languageText('word_yes');
+        $lblNo = $this->objLanguage->languageText('word_no');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnview', 'tutorials');
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblImport;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up htmlelements
+        $this->objRadio = new radio('overwrite');
+        $this->objRadio->addOption('1', $lblYes);
+        $this->objRadio->addOption('2', $lblNo);
+        $this->objRadio->setSelected('1');
+        $this->objRadio->setBreakSpace('<br />');
+        $radOverwrite = $this->objRadio->show();
+        
+        $this->objInput = new textinput('file', '', 'file', '70');
+        $inpImport = $this->objInput->show();
+        
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblOverwrite.'</b>', '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($radOverwrite, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($inpImport, '', '', '', '', '');
+        $this->objTable->endRow();
+
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmImport',$this->uri(array(
+            'action'=>'saveimport',
+            'id' => $id,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->extra = 'enctype="multipart/form-data"';
+        $content .= $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'view',
+            'id' => $id,
+        ), 'tutorials'));
+        $content .= $this->objForm->show();        
+
+        $this->objLink = new link($this->uri(array(
+           'action' => 'view',
+            'id' => $id,
+        ),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+    
+    /**
+    * Method to do the actual question import
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @param array $file: The array of file data
+    * @param string $overwrite: indicator if the questions must be overwritten
+    */
+    public function doImport($id, $file, $overwrite)
+    {
+        if($overwrite == 1){
+            $this->objDbTutorials->deleteTutorialQuestions($id);
+        }
+        $fp = fopen($file['file']['tmp_name'], 'r');
+        while($line = fgetcsv($fp, 1024, ","))
+        {
+            $array[] = $line;
+        }
+        fclose($fp);
+        if(!empty($array)){
+            foreach($array as $key => $line){
+                $questionId = $this->objDbTutorials->addQuestion($id, $line[0], $line[1], $line[2]);
+            }
+        }
+        unlink($file['file']['tmp_name']);
+    } 
+
+    /**
+    * Method to show the moderation page
+    *
+    * @param string $id: The id of the tutorial
+    * @param string $e: The type of error if applicable
+    * @param string $c: The comment text
+    * @param string $m: The mark given
+    * @return string $content: The template output string
+    */
+    public function showModerate($id, $e, $c, $m)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $moderation = $this->objDbTutorials->getModerationRequests($id);
+        $name = $this->objUser->fullname($moderation[0]['student_id']);
+        $studentId = $moderation[0]['student_id'];
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $question = $this->objDbTutorials->getQuestionById($moderation[0]['question_id']);
+        $answer = $moderation[0];
+        $marking = $this->objDbTutorials->getMarkingForStudentAnswer($moderation[0]['id'], $studentId);    
+        if($e == TRUE){
+            $comment = $c;
+            $mark = $m;
+        }else{
+            $comment = '';
+            $mark = '';
+        }
+
+        // set up language elements
+        $lblModerate = $this->objLanguage->languageText('phrase_moderatetutorial');
+        $lblStudent = $this->objLanguage->code2Txt('word_student');
+        $lblStudentNo = $this->objLanguage->languageText('mod_tutorials_studentno', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblLeft = $this->objLanguage->languageText('mod_tutorials_left', 'tutorials');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnhome', 'tutorials');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblMarkAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblMarking = $this->objLanguage->languageText('word_marking');
+        $lblAnswer = $this->objLanguage->languageText('word_answer');
+        $lblModel = $this->objLanguage->languageText('phrase_modelanswer');
+        $lblComment = $this->objLanguage->languageText('phrase_markerscomment');
+        $lblModeration = $this->objLanguage->languageText('word_moderation');
+        $lblModComment = $this->objLanguage->languageText('phrase_moderatorscomment');
+        $lblModMark = $this->objLanguage->languageText('phrase_moderatorsmark');
+        $lblNumeric = $this->objLanguage->languageText('mod_tutorials_marknumeric', 'tutorials');
+        $lblMarkRequired = $this->objLanguage->languageText('mod_tutorials_markrequired', 'tutorials');
+        $lblCommentRequired = $this->objLanguage->languageText('mod_tutorials_commentrequired', 'tutorials');
+        $array = array();
+        $array['mark'] = $question['question_value'];
+        $lblRange = $this->objLanguage->code2Txt('mod_tutorials_markrrange', 'tutorials', $array);
+
+        if($e == TRUE){
+            $body = 'alert("'.$lblCommentRequired.'");document.getElementById("comment___Frame").focus();';
+            $this->appendArrayVar('bodyOnLoad', $body);
+        }
+        
+        // set up page heading
+        if($moderation != FALSE){
+            $heading = $lblModerate.' - '.$lblLeft.': '.count($moderation);
+        }else{
+            $heading = $lblModerate;
+        }
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $heading;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        if($moderation != FALSE){
+            // set up page heading
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = ucfirst($lblStudent).': '.$name;
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $content .= $header;
+        
+            // set up page heading
+            $this->objHeading = new htmlHeading();
+            $this->objHeading->str = $lblStudentNo.': '.$studentId;
+            $this->objHeading->type = 3;
+            $header = $this->objHeading->show();        
+            $content .= $header;
+        }
+        
+        if($moderation == FALSE){
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
+            $this->objTable->endRow();
+            $content .= $this->objTable->show();
+        
+           
+        }else{            
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblQuestion.':</b><br />'.$question['question'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblMarkAllocated.':</b><br />'.$question['question_value'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // tabbed box
+            $label = '<b>'.$lblQuestion.'  '.$question['question_order'].'</b>';
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel($label);
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();
+        
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblAnswer.':</b><br />'.$answer['answer'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // tabbed box
+            $label = '<b>'.$lblAnswer.'</b>';
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel($label);
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();
+        
+            $display = '';
+            $students = '';
+            $marks = '';
+            foreach($marking as $key => $line){
+                $name = $this->objUser->fullName($line['marker_id']);
+                $students .= $line['marker_id'];
+                $marks .= $line['mark'];
+                if(count($marking) != ($key + 1)){
+                    $students .= '|';
+                    $marks .= '|';
+                }
+                // set up display table
+                $this->objTable = new htmltable();
+                $this->objTable->cellspacing = '2';
+                $this->objTable->cellpadding = '5';
+                $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblComment.':</b><br />'.$line['markers_comment'], '', '', '', '', '');
+                $this->objTable->endRow();
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblMark.':</b><br />'.$line['mark'], '', '', '', '', '');
+                $this->objTable->endRow();
+                $tblDisplay = $this->objTable->show();
+
+                // tabbed box
+                $this->objTabbedbox=new tabbedbox();
+                $this->objTabbedbox->addTabLabel('<b>'.ucfirst($lblStudent).' '.($key + 1).'</b><br />'.$name.'<br />'.$line['marker_id']);
+                $this->objTabbedbox->addBoxContent($tblDisplay);
+                $tabDisplay = $this->objTabbedbox->show();
+                
+                $this->objLayer = new layer();
+                $this->objLayer->padding = '10px';
+                $this->objLayer->addToStr($tabDisplay);
+                $display .= $this->objLayer->show();        
+            }            
+        
+            // tabbed box
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel('<b>'.$lblMarking.'</b>');
+            $this->objTabbedbox->addBoxContent($display);
+            $content .= $this->objTabbedbox->show();
+        
+            // set up form elements
+            $this->objEditor->init('comment', $comment, '300px', '60%', NULL);
+            $this->objEditor->setDefaultToolBarSetWithoutSave();
+            $edtComment = $this->objEditor->show();
+            
+            $this->objDrop = new dropdown('mark');
+            for($i = 0; $i <= $question['question_value']; $i++){
+                $this->objDrop->addOption($i, $i.'&#160;');
+            }
+            $this->objDrop->setSelected($mark);
+            $drpMark = $this->objDrop->show();
+
+            $this->objButton=new button('submit',$lblSubmit);
+            $this->objButton->setToSubmit();
+            $btnSubmit = $this->objButton->show();
+
+            $this->objButton=new button('cancel',$lblCancel);
+            $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+            $btnCancel = $this->objButton->show();
+        
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModMark.':</b><br />'.$drpMark, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModComment.':</b><br />'.$edtComment, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->row_attributes = '';
+            $this->objTable->startRow();
+            $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // set up forms
+            $this->objForm = new form('frmMod',$this->uri(array(
+                'action' => 'savemod',
+                'id' => $id,
+                'aId' => $answer['id'],
+                'sId' => $studentId,
+                'emailList' => $students,
+                'marks' => $marks,
+                'order' => $question['question_order'],
+            ), 'tutorials'));
+            $this->objForm->addToForm($tblDisplay);
+
+            $tabContent = $this->objForm->show();            
+            $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
+            $tabContent .= $this->objForm->show();        
+
+            // tabbed box
+            $this->objTabbedbox = new tabbedbox();
+            $this->objTabbedbox->addTabLabel('<b>'.$lblModeration.'</b>');
+            $this->objTabbedbox->addBoxContent($tabContent);
+            $content .= $this->objTabbedbox->show();
+        }
+        
+        $this->objLink = new link($this->uri(array(),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br /><br />'.$lnkReturn;            
+        
+        return $content;  
+    }
+    
+    /**
+    * Method to show the answers list page
+    *
+    * @param string $id: The id of the tutorial
+    * @param string $order: The question order number
+    * @param string $num: The start number of the answers
+    * @return string $content: The template output string
+    */
+    public function showAnswerList($id, $order, $num)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $questions = $this->objDbTutorials->getQuestions($id);
+        $question = $questions[$order - 1];
+        $answers = $this->objDbTutorials->getAnswers($question['id'], $num);
+        
+        // set up language elements
+        $lblList = $this->objLanguage->languageText('mod_tutorials_answerlist', 'tutorials');
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblNext = $this->objLanguage->languageText('word_next');
+        $lblPrevious = $this->objLanguage->languageText('word_previous');
+        $lblFirst = $this->objLanguage->languageText('word_first');
+        $lblLast = $this->objLanguage->languageText('word_last');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnlist', 'tutorials');
+        $lblNoRecords = $this->objLanguage->languageText('mod_tutorials_norecords', 'tutorials');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblModel = $this->objLanguage->languageText('phrase_modelanswer');
+        $lblMarkAllocated = $this->objLanguage->languageText('phrase_allocatedmark');
+        $lblAnswers = $this->objLanguage->languageText('word_answers');
+        $lblAnswer = $this->objLanguage->languageText('word_answer');
+        $lblOf = $this->objLanguage->languageText('word_of');
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        if($questions == FALSE){
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+                
+            // tabbed box
+            $label = '<b>'.$lblQuestion.'</b>';
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel($label);
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();                
+
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+                
+            // tabbed box
+            $label = '<b>'.$lblAnswers.'</b>';
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel($label);
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();                
+        }else{            
+            // set up navigation icons
+            if($order == 1){
+                // first
+                $this->objIcon->title = $lblFirst;
+                $this->objIcon->extra = '';
+                $this->objIcon->setIcon('first_grey');
+                $icons = $this->objIcon->show();
+                
+                // previous
+                $this->objIcon->title = $lblPrevious;
+                $this->objIcon->extra = '';
+                $this->objIcon->setIcon('prev_grey');
+                $icons .= '&#160;'.$this->objIcon->show();
+                
+                // next
+                $this->objIcon->title = $lblNext;
+                $this->objIcon->extra = '';
+                $icoNext = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => ($order + 1),
+                )), 'next');
+                $icons .= '&#160;'.$icoNext;
+                
+                // last
+                $this->objIcon->title = $lblLast;
+                $this->objIcon->extra = '';
+                $icoLast = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => count($questions),
+                )), 'last');
+                $icons .= '&#160;'.$icoLast;
+            }elseif($order == count($questions)){
+                // first
+                $this->objIcon->title = $lblFirst;
+                $this->objIcon->extra = '';
+                $icoFirst = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => 1,
+                )), 'first');
+                $icons = '&#160;'.$icoFirst;
+                
+                // previous
+                $this->objIcon->title = $lblPrevious;
+                $this->objIcon->extra = '';
+                $icoPrevious = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => ($order - 1),
+                )), 'prev');
+                $icons .= '&#160;'.$icoPrevious;
+
+                // next
+                $this->objIcon->title = $lblNext;
+                $this->objIcon->extra = '';
+                $this->objIcon->setIcon('next_grey');
+                $icons .= $this->objIcon->show();
+                
+                // last
+                $this->objIcon->title = $lblLast;
+                $this->objIcon->extra = '';
+                $this->objIcon->setIcon('last_grey');
+                $icons .= '&#160;'.$this->objIcon->show();
+            }else{
+                // first
+                $this->objIcon->title = $lblFirst;
+                $this->objIcon->extra = '';
+                $icoFirst = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => 1,
+                )), 'first');
+                $icons = '&#160;'.$icoFirst;
+                
+                // previous
+                $this->objIcon->title = $lblPrevious;
+                $this->objIcon->extra = '';
+                $icoPrevious = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => ($order - 1),
+                )), 'prev');
+                $icons .= '&#160;'.$icoPrevious;
+
+                // next
+                $this->objIcon->title = $lblNext;
+                $this->objIcon->extra = '';
+                $icoNext = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => ($order + 1),
+                )), 'next');
+                $icons .= '&#160;'.$icoNext;
+                
+                // last
+                $this->objIcon->title = $lblLast;
+                $this->objIcon->extra = '';
+                $icoLast = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'answerlist',
+                    'id' => $id,
+                    'order' => count($questions),
+                )), 'last');
+                $icons .= '&#160;'.$icoLast;
+            }
+            
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '5';
+            
+            $this->objTable->startRow();
+            $this->objTable->addCell($icons, '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblQuestion.':</b><br />'.$question['question'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblModel.':</b><br />'.$question['model_answer'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $this->objTable->startRow();
+            $this->objTable->addCell('<b>'.$lblMarkAllocated.':</b><br />'.$question['question_value'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // tabbed box
+            $label = '<b>'.$lblQuestion.'&#160;'.$order.'&#160;'.strtolower($lblOf).'&#160;'.count($questions).'</b>';
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel($label);
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();
+            
+            if($answers == FALSE){
+                // set up display table
+                $this->objTable = new htmltable();
+                $this->objTable->cellspacing = '2';
+                $this->objTable->cellpadding = '5';
+                $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                $this->objTable->startRow();
+                $this->objTable->addCell('<b>'.$lblNoRecords.'</b>', '', '', '', 'noRecordsMessage', '');
+                $this->objTable->endRow();
+                $tblDisplay = $this->objTable->show();
+                
+                // tabbed box
+                $label = '<b>'.$lblAnswers.'</b>';
+                $this->objTabbedbox=new tabbedbox();
+                $this->objTabbedbox->addTabLabel($label);
+                $this->objTabbedbox->addBoxContent($tblDisplay);
+                $content .= $this->objTabbedbox->show();                
+            }else{
+                // set up navigation icons
+                $group = 10;
+                $last = ((intval($answers[0]['count']/ $group) * $group) + 1);
+                $next = ($num + $group);
+                $prev = ($num - $group);
+                if($answers[0]['count'] < $group){
+                    // first
+                    $this->objIcon->title = $lblFirst;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('first_grey');
+                    $icons = $this->objIcon->show();
+                
+                    // previous
+                    $this->objIcon->title = $lblPrevious;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('prev_grey');
+                    $icons .= '&#160;'.$this->objIcon->show();
+                
+                    // next
+                    $this->objIcon->title = $lblNext;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('next_grey');
+                    $icons .= $this->objIcon->show();
+                
+                    // last
+                    $this->objIcon->title = $lblLast;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('last_grey');
+                    $icons .= '&#160;'.$this->objIcon->show();
+                }elseif($num == 1){
+                    // first
+                    $this->objIcon->title = $lblFirst;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('first_grey');
+                    $icons = $this->objIcon->show();
+                
+                    // previous
+                    $this->objIcon->title = $lblPrevious;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('prev_grey');
+                    $icons .= '&#160;'.$this->objIcon->show();
+                
+                    // next
+                    $this->objIcon->title = $lblNext;
+                    $this->objIcon->extra = '';
+                    $icoNext = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => $next,
+                    )), 'next');
+                    $icons .= '&#160;'.$icoNext;
+                
+                    // last
+                    $this->objIcon->title = $lblLast;
+                    $this->objIcon->extra = '';
+                    $icoLast = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => $last,
+                    )), 'last');
+                    $icons .= '&#160;'.$icoLast;
+                }elseif($num == $last){
+                    // first
+                    $this->objIcon->title = $lblFirst;
+                    $this->objIcon->extra = '';
+                    $icoFirst = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => 1,
+                    )), 'first');
+                    $icons = '&#160;'.$icoFirst;
+                    
+                    // previous
+                    $this->objIcon->title = $lblPrevious;
+                    $this->objIcon->extra = '';
+                    $icoPrevious = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => $prev,
+                    )), 'prev');
+                    $icons .= '&#160;'.$icoPrevious;
+
+                    // next
+                    $this->objIcon->title = $lblNext;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('next_grey');
+                    $icons .= $this->objIcon->show();
+                
+                    // last
+                    $this->objIcon->title = $lblLast;
+                    $this->objIcon->extra = '';
+                    $this->objIcon->setIcon('last_grey');
+                    $icons .= '&#160;'.$this->objIcon->show();
+                }else{
+                    // first
+                    $this->objIcon->title = $lblFirst;
+                    $this->objIcon->extra = '';
+                    $icoFirst = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => 1,
+                    )), 'first');
+                    $icons = '&#160;'.$icoFirst;
+                
+                    // previous
+                    $this->objIcon->title = $lblPrevious;
+                    $this->objIcon->extra = '';
+                    $icoPrevious = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => $prev,
+                    )), 'prev');
+                    $icons .= '&#160;'.$icoPrevious;
+    
+                    // next
+                    $this->objIcon->title = $lblNext;
+                    $this->objIcon->extra = '';
+                    $icoNext = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' => $order,
+                        'num' => $next,
+                    )), 'next');
+                    $icons .= '&#160;'.$icoNext;
+                    
+                    // last
+                    $this->objIcon->title = $lblLast;
+                    $this->objIcon->extra = '';
+                    $icoLast = $this->objIcon->getLinkedIcon($this->uri(array(
+                        'action' => 'answerlist',
+                        'id' => $id,
+                        'order' =>$order,
+                        'num' => $last,
+                    )), 'last');
+                    $icons .= '&#160;'.$icoLast;
+                }
+            
+                // set up display table
+                $string = $icons;
+                foreach($answers as $key => $answer){
+                    $this->objTable = new htmltable();
+                    $this->objTable->cellspacing = '2';
+                    $this->objTable->cellpadding = '5';
+                    $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+                    $this->objTable->startRow();
+                    $this->objTable->addCell($answer['answer'], '', '', '', '', '');
+                    $this->objTable->endRow();
+                    $tblDisplay = $this->objTable->show();
+                
+                    // tabbed box
+                    $label = '<b>'.$lblAnswer.' '.($num + $key).'</b>';
+                    $this->objTabbedbox=new tabbedbox();
+                    $this->objTabbedbox->addTabLabel($label);
+                    $this->objTabbedbox->addBoxContent($tblDisplay);
+                    $tabDisplay = $this->objTabbedbox->show();                
+                    
+                    $this->objLayer = new layer();
+                    $this->objLayer->padding = '10px';
+                    $this->objLayer->addToStr($tabDisplay);
+                    $string .= $this->objLayer->show();        
+                }
+                
+                // tabbed box
+                $label = '<b>'.$lblAnswers.'</b>';
+                $this->objTabbedbox=new tabbedbox();
+                $this->objTabbedbox->addTabLabel($label);
+                $this->objTabbedbox->addBoxContent($string);
+                $content .= $this->objTabbedbox->show();                
+            }            
+        }
+        
+        $this->objLink = new link($this->uri(array(
+            'action' => 'liststudents',
+            'id' => $id,
+        ),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br /><br />'.$lnkReturn;            
+        
+        return $content;  
+    }
+
+    /**
+    * Method to show the export results page
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @return string $content: The template output string
+    */
+    public function showExport($id)
+    {
+        $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        
+        // set up language elements
+        $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblType = $this->objLanguage->languageText('mod_tutorials_exporttype', 'tutorials');
+        $lblExport = $this->objLanguage->languageText('mod_tutorials_exportresults', 'tutorials');
+        $lblResults = $this->objLanguage->languageText('mod_tutorials_results', 'tutorials');
+        $lblMarks = $this->objLanguage->languageText('mod_tutorials_marks', 'tutorials');
+        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblReturn = $this->objLanguage->languageText('mod_tutorials_returnlist', 'tutorials');
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblExport;
+        $this->objHeading->type = 1;
+        $header = $this->objHeading->show();        
+        $content = $header;
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblTutorial.': '.$tutorial['name'];
+        $this->objHeading->type = 3;
+        $header = $this->objHeading->show();        
+        $content .= $header;
+        
+        // set up htmlelements
+        $this->objRadio = new radio('type');
+        $this->objRadio->addOption('1', $lblResults);
+        $this->objRadio->addOption('2', $lblMarks);
+        $this->objRadio->setSelected('1');
+        $this->objRadio->setBreakSpace('<br />');
+        $radType = $this->objRadio->show();
+               
+        $this->objButton=new button('submit',$lblSubmit);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpadding = '5';
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblType.'</b>', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'\'; "';
+
+        $this->objTable->startRow();
+        $this->objTable->addCell($radType, '', '', '', '', '');
+        $this->objTable->endRow();
+
+        $this->objTable->row_attributes = '';
+        $this->objTable->startRow();
+        $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($btnSubmit.'&#160;'.$btnCancel, '', '', '', '', 'colspan="2"');        
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm=new form('frmExport',$this->uri(array(
+            'action'=>'doexport',
+            'id' => $id,
+        ), 'tutorials'));
+        $this->objForm->addToForm($tblDisplay);
+        $content .= $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'view',
+            'id' => $id,
+        ), 'tutorials'));
+        $content .= $this->objForm->show();        
+
+        $this->objLink = new link($this->uri(array(
+           'action' => 'liststudents',
+            'id' => $id,
+        ),'tutorials'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+        $content .= '<br />'.$lnkReturn;
+            
+        return $content;
+    }
+
+    /**
+    * Method to do the actual results export
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @param array $type: The type of results to export
+    * @param bool $status: TRUE on success | FALSE on failure
+    */
+    public function doExport($id, $type)
+    {
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $results = $this->objDbTutorials->getResultsForExport($id);
+        $groupId = $this->objGroupadmin->getLeafId(array(
+            $this->contextCode,
+            'Students',
+        ));
+        $students = $this->objGroupadmin->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+
+        // set up language elements
+        $lblStudentNo = $this->objLanguage->languageText('mod_tutorials_studentno', 'tutorials');
+        $lblName = $this->objLanguage->languageText('phrase_firstname');
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblQuestion = $this->objLanguage->languageText('word_question');
+        $lblResult = $this->objLanguage->languageText('word_result');
+        $lblMark = $this->objLanguage->languageText('word_mark');
+        $lblSubmitted = $this->objLanguage->languageText('word_submitted');
+        $lblYes = $this->objLanguage->languageText('word_yes');
+        $lblNo = $this->objLanguage->languageText('word_no');
+        $lblNotMarked = $this->objLanguage->languageText('phrase_notmarked');
+        $lblMarkedBy = $this->objLanguage->languageText('phrase_markedby');
+        $lblMarked = $this->objLanguage->languageText('word_marked');
+        $lblLecturer = $this->objLanguage->languageText('word_lecturer');
+
+        if($type == 1){
+            if($results == FALSE){
+                return FALSE;
+            }else{
+                $userFileLocation = $this->objConfig->getValue('KEWL_CONTENT_BASEPATH');
+                $fileLocation = $userFileLocation.'attachments/'.$this->userId;
+                $checkDirectory = file_exists($fileLocation);
+                if($checkDirectory === FALSE){
+                    mkdir($userFileLocation.'attachments/'.$this->userId.'/');
+                }
+                $file = $fileLocation.'/results.csv';
+                $outputFile = fopen($file, 'wb');
+                $str = '"'.$lblStudentNo.'"';
+                $str .= ',"'.$lblName.'"';
+                $str .= ',"'.$lblSurname.'"';
+                $str .= ',"'.$lblSubmitted.'"';
+                if($tutorial['tutorial_type'] == 1){
+                    $str .= ',"'.$lblMarked.'"';
+                    $str .= ',"'.$lblMarkedBy.'"';
+                    $str .= ',"'.$lblMarkedBy.' '.strtolower($lblLecturer).'"';
+                }
+                $str .= ',"'.$lblMark.'"';
+                $str .= ',"'.$lblResult.'"';
+                $str .= "\n";
+                fwrite($outputFile, $str);
+                foreach($students as $key => $student){
+                    $array = array_merge($student, array(
+                        'has_submitted' => '0',
+                    ));
+                    foreach($results as $result){
+                        if($student['userid'] == $result['student_id']){
+                            $array = array_merge($student, $result);
+                        }
+                    }
+                    $students[$key] = $array;
+                }
+                $status = TRUE;
+                foreach($students as $student){
+                    if($student['has_submitted'] == 0){
+                        $submitted = $lblNo;
+                        $mark = '0';
+                        $percentage = '0%';
+                    }else{
+                        $submitted = $lblYes;
+                        if($student['mark_obtained'] == NULL){
+                            $mark = $lblNotMarked;
+                            $percentage = '0%';
+                        }else{
+                            $mark = $student['mark_obtained'];
+                            $percentage = round(($student['mark_obtained'] / $tutorial['total_mark']) * 100, 0).'%';
+                        }
+                    }
+                    $line = '"'.$student['userid'].'"';
+                    $line .= ',"'.$student['firstname'].'"';
+                    $line .= ',"'.$student['surname'].'"';
+                    $line .= ',"'.$submitted.'"';
+                    if($tutorial['tutorial_type'] == 1){
+                        $lecturer = $this->objDbTutorials->checkLecturerMarked($id, $student['userid']);
+                        $markedBy = $this->objDbTutorials->countCompletedMarked($id, $student['userid']);
+                        $markedFor = $this->objDbTutorials->getMarkedStudents($id, $student['userid']);
+                        $line .= ',"'.$markedFor.'"';
+                        $line .= ',"'.$markedBy.'"';
+                        if($lecturer == TRUE){
+                            $line .= ',"'.$lblYes.'"';
+                        }else{
+                            $line .= ',"'.$lblNo.'"';
+                        }
+                    }
+                    $line .= ',"'.$mark.'"';
+                    $line .= ',"'.$percentage.'"';
+                    $result = fwrite($outputFile, $line."\n");
+                    if($result == FALSE){
+                        $status = FALSE;
+                    }
+                }
+                return $status;
+            }            
+        }else{
+            
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to send the results via email
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @return void
+    */
+    public function emailResults($id) 
+    {
+        // set up email object
+        $this->objEmail = $this->getObject('dbemail', 'internalmail');
+        $this->objAttachments = $this->getObject('dbattachments', 'internalmail');
+        
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        
+        // set up language elements
+        $lblSubject = $this->objLanguage->languageText('mod_tutorials_resultssubject', 'tutorials');
+        $array = array();
+        $array['item'] = $tutorial['name'];
+        $lblBody = $this->objLanguage->code2Txt('mod_tutorials_resultsbody', 'tutorials', $array);
+        
+        $emailId = $this->objEmail->sendMail($this->userId, $lblSubject, $lblBody, '1');
+        $this->objAttachments->addAttachments($emailId, 'text/csv');
+        
+        $this->fileLocation = $this->objConfig->getValue('KEWL_CONTENT_BASEPATH').'attachments/';
+        $this->attachLocation = $this->fileLocation.$this->userId."/";
+
+        $files = $this->attachLocation.'*';
+        if(glob($files)!=FALSE){
+            foreach(glob($files) as $filename){
+                unlink($filename);
+            }
+        }
+        $checkDirectory = file_exists($this->attachLocation);
+        if($checkDirectory){
+            rmdir($this->attachLocation);
+        }
+    }
+
+    /**
+    * Method to send the moderation reason via email
+    *
+    * @access public
+    * @param string $id: The id of the tutorial
+    * @param string $order: The question orrder
+    * @param string $emailList: The pipe separated list of email recipients
+    * @param string $marks: The pipe separated list of marks
+    * @param string $mark: The moderators mark
+    * @param string $comment: The moderators comment
+    * @return void
+    */
+    public function emailModeration($id, $order, $emailList, $marks, $mark, $comment) 
+    {
+        // set up email object
+        $this->objEmail = $this->getObject('dbemail', 'internalmail');
+        
+        // get data
+        $tutorial = $this->objDbTutorials->getTutorial($id);
+        $emails = explode('|', $emailList);
+        $studentMarks = explode('|', $marks);
+        
+        // set up language elements
+        $lblSubject = $this->objLanguage->languageText('mod_tutorials_moderatesubject', 'tutorials');
+        
+        foreach($emails as $key => $email){
+            if($mark != $studentMarks[$key]){
+                $array = array();
+                $array['num'] = $order;
+                $array['name'] = $tutorial['name'];
+                $array['student'] = $studentMarks[$key];
+                $array['moderator'] = $mark;
+                $array['reason'] = $comment;
+                $lblBody = $this->objLanguage->code2Txt('mod_tutorials_moderatebody', 'tutorials', $array);
+        
+                $emailId = $this->objEmail->sendMail($email, $lblSubject, $lblBody, '0');
+            }
+        }
+    }
 }
 ?>

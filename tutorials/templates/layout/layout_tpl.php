@@ -7,10 +7,10 @@
 * Default layout for the tutorials module
 */
 
-$cssLayout = $this->newObject('csslayout', 'htmlelements');
-$leftMenu = $this->newObject('sidemenu', 'toolbar');
+$cssLayout = $this->newObject('csslayout','htmlelements');
+$leftMenu = $this->getObject('contextsidebar', 'context');
 
-$cssLayout->setLeftColumnContent($leftMenu->menuContext());
+$cssLayout->setLeftColumnContent($leftMenu->show());
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();
