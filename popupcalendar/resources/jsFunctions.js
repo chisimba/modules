@@ -26,6 +26,24 @@ function jsBuildCal(xDay, xMonth, xYear)
 */
 function jsInsertDate(xDay, xMonth, xYear)
 {
+    if(!isNaN(xDay)){
+        if(xDay < 10){
+            xDay.toString();
+            xDay = "0"+xDay;            
+        }else{
+            xDay.toString();
+        }
+    }
+
+    if(!isNaN(xMonth)){
+        if(xMonth < 10){
+            xMonth.toString();
+            xMonth = "0"+xMonth;            
+        }else{
+            xMonth.toString();
+        }
+    }
+
     var el_Date = document.getElementById("input_date");
     el_Date.value = xYear+"-"+xMonth+"-"+xDay; /*xDay+"-"+xMonth+"-"+xYear; */
 }
