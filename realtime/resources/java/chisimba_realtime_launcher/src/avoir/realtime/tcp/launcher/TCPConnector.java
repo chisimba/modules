@@ -33,7 +33,9 @@ import javax.swing.JOptionPane;
  * @author developer
  */
 public class TCPConnector {
-    private int value = 0;private static Logger logger = Logger.getLogger(TCPConnector.class.getName());
+
+    private int value = 0;
+    private static Logger logger = Logger.getLogger(TCPConnector.class.getName());
     private String REALTIME_HOME = avoir.realtime.tcp.launcher.Constants.getRealtimeHome();
     private final String JAVA_HOME = System.getProperty("java.home");
     private RealtimePlugin realtimePlugin;
@@ -52,12 +54,11 @@ public class TCPConnector {
     private boolean slideServerReplying = false;
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-    //private String SUPERNODE_HOST = "localhost";
-    //private int SUPERNODE_PORT = 22225;
+  //  private String SUPERNODE_HOST = "localhost";
+   // private int SUPERNODE_PORT = 22225;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
     private SSLSocket socket;
-
 
     public TCPConnector() {
     }
