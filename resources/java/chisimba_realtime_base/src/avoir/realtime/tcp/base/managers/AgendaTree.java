@@ -63,12 +63,7 @@ public class AgendaTree extends JPanel {
                         // if (base.isPresenter()) {
 
                         base.getSessionManager().updateSlide(index - 1);
-                        //record audio if any
-                        base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+index);
-                        base.getAudioWizardFrame().getMicInput().recordAudioClip();
-                    //} else{
-                    //  base.getSurface().showMessage("Cannot change slide. You are not a presenter!", true);
-                    //}
+                        base.recordXml(index - 1);
                     }
                 }
             }
@@ -78,6 +73,8 @@ public class AgendaTree extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
     }
+
+  
 
     public void processDoubleClick() {
     }
