@@ -815,6 +815,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             FilterFrame fr = new FilterFrame(filter, createEmbbedStr(names[0], filterNames));
             fr.setSize(500, 300);
             fr.setLocationRelativeTo(null);
+            fr.setAlwaysOnTop(true);
             fr.setVisible(true);
         }
 
@@ -1113,20 +1114,50 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         if (talkButton.isSelected()) {
             talkButton.setIcon(micOnIcon);
             audioWizardFrame.talk();
-        } else {
-            talkButton.setIcon(micOffIcon);
-            audioWizardFrame.stopCapture();
-            String filename = "lastSlide" + Constants.getDateTime();
-            if (audioWizardFrame.isTesting()) {
-                filename = "testing";
+            if (sessionTitle == null) {
+                sessionTitle = "general";
             }
+            //start an xml file to be later used for synchronizing
+            String filename = sessionTitle + "_" + Constants.getDateTime();
             audioWizardFrame.getMicInput().setAudioClipFileName(filename);
-            audioWizardFrame.getMicInput().recordAudioClip();
-
+            long startTime = System.currentTimeMillis();
+            audioWizardFrame.getMicInput().setAudioTimeStamp(startTime);
+            audioWizardFrame.getMicInput().setAudioRecordStart(startTime);
+            audioWizardFrame.getMicInput().saveXML("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+            audioWizardFrame.getMicInput().saveXML("<session>\n");
+        } else {
+            audioWizardFrame.getMicInput().saveXML("</session>");
         }
+    /* else {
+    talkButton.setIcon(micOffIcon);
+    audioWizardFrame.stopCapture();
+    String filename = "lastSlide" + Constants.getDateTime();
+    if (audioWizardFrame.isTesting()) {
+    filename = "testing";
+    }
+    audioWizardFrame.getMicInput().setAudioClipFileName(filename);
+    audioWizardFrame.getMicInput().recordAudioClip();
+
+    }*/
     }
 }//GEN-LAST:event_talkButtonActionPerformed
-
+    public void recordXml(int slideIndex) {
+        String slideName = "slide" + slideIndex + ".jpg";
+        long currentTime = System.currentTimeMillis();
+        long prevTime = getAudioWizardFrame().getMicInput().getAudioTimeStamp();
+        long duration = currentTime - prevTime;
+        long startTime = prevTime - getAudioWizardFrame().getMicInput().getAudioRecordStart();
+        long endTime = startTime + duration;
+        getAudioWizardFrame().getMicInput().setAudioTimeStamp(currentTime);
+        getAudioWizardFrame().getMicInput().saveXML(
+                "<slide>\n" +
+                "\t<slideName>" + slideName + "</slideName>\n" +
+                "\t<start>" + startTime + "</start>\n" +
+                "\t<end>" + endTime + "</end>\n" +
+                "</slide>\n");
+        getAudioWizardFrame().getMicInput().recordAudioClip();
+        getAudioWizardFrame().getMicInput().setAudioTimeStamp(currentTime);
+    }
 private void muteOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_muteOptActionPerformed
     if (audioWizardFrame != null) {
         audioWizardFrame.mute(muteOpt.isSelected());
