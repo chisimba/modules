@@ -6,13 +6,13 @@ package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.base.user.User;
+import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -117,11 +117,11 @@ public class ToolbarManager extends JToolBar {
             public void actionPerformed(ActionEvent e) {
                 int slideIndex = base.getSessionManager().getSlideIndex();
                 if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
+                    base.recordXml(slideIndex);
                     base.getSessionManager().setSlideIndex(++slideIndex);
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
-                    //record audio if any
-                    base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+slideIndex);
-                    base.getAudioWizardFrame().getMicInput().recordAudioClip();
+                //record audio if any
+                //base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+slideIndex);
 
                 }
             }
@@ -131,10 +131,11 @@ public class ToolbarManager extends JToolBar {
 
             public void actionPerformed(ActionEvent e) {
                 int slideIndex = base.getSessionManager().getSlideIndex();
-
+                base.recordXml(slideIndex);
                 if (slideIndex > 0) {
                     base.getSessionManager().setSlideIndex(--slideIndex);
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+
                 }
             }
         });
@@ -144,6 +145,7 @@ public class ToolbarManager extends JToolBar {
                 int slideIndex = 0;
                 base.getSessionManager().setSlideIndex(slideIndex);
                 base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                base.recordXml(slideIndex);
             }
         });
         lastSlideButton.addActionListener(new ActionListener() {
@@ -152,6 +154,7 @@ public class ToolbarManager extends JToolBar {
                 int slideIndex = base.getSessionManager().getSlideCount() - 1;
                 base.getSessionManager().setSlideIndex(slideIndex);
                 base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                base.recordXml(slideIndex);
             }
         });
 
