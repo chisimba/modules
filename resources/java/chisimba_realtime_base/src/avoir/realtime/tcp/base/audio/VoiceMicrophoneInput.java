@@ -98,7 +98,10 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
     private static final int DIALOG_DISCONNECTED = 25;
     private int failedDispatches = 0;
     private AudioWizardFrame wizard;
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private String audioClipFileName;
+    private long audioTimeStamp = 0;
+    private long audioRecordStart = 0;
 
     /**
      * 
@@ -201,6 +204,30 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
         }
 
         return true;
+    }
+
+    public long getAudioRecordStart() {
+        return audioRecordStart;
+    }
+
+    public void setAudioRecordStart(long audioRecordStart) {
+        this.audioRecordStart = audioRecordStart;
+    }
+
+    public long getAudioTimeStamp() {
+        return audioTimeStamp;
+    }
+
+    public void setAudioTimeStamp(long audioTimeStamp) {
+        this.audioTimeStamp = audioTimeStamp;
+    }
+
+    public String getAudioClipFileName() {
+        return audioClipFileName;
+    }
+
+    public void setAudioClipFileName(String audioClipFileName) {
+        this.audioClipFileName = audioClipFileName;
     }
 
     /**
@@ -429,6 +456,28 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
         return this.rawChunkSize;
     }
 
+    private void record() {
+
+        try {
+            //make sure we are in a right dir
+            String session = wizard.getBase().getSessionTitle();
+            if (session == null) {
+                session = "general";
+            }
+            File f = new File(Constants.getRealtimeHome() + "/sounds/" + session);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+            String audioFileName = f.getAbsolutePath() + "/" + audioClipFileName + Constants.getDateTime() + "." + targetType.getExtension();
+
+            //     this.pauseMic();
+            AudioSystem.write(new AudioInputStream(targetLine), targetType, new java.io.File(audioFileName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void writeToDisk() {
         /*
         if (!writingFile) {
@@ -564,56 +613,90 @@ public final class VoiceMicrophoneInput extends Thread implements AudioResource 
         this.targetLine.start();
 
         super.start();
-
-    //record();
-    }
-
-    public void record(final String fileName) {
-        // for recording
         Thread t = new Thread() {
 
             public void run() {
-                try {
-                    byte audioData[] = out.toByteArray();
-
-                    InputStream byteArrayInputStream = new ByteArrayInputStream(
-                            audioData);
-                    AudioFormat audioFormat =
-                            AudioResource.audioFormat;
-                    AudioInputStream audioInputStream =
-                            new AudioInputStream(
-                            byteArrayInputStream,
-                            audioFormat,
-                            audioData.length / audioFormat.getFrameSize());
-
-                    //make sure we are in a right dir
-                    String session = wizard.getBase().getSessionTitle();
-                    if (session == null) {
-                        session = "general";
-                    }
-                    File f = new File(Constants.getRealtimeHome() + "/sounds/" + session);
-                    if (!f.exists()) {
-                        f.mkdirs();
-                    }
-                    String audioFileName = f.getAbsolutePath() + "/" + fileName + "." + targetType.getExtension();
-                    //this.pauseMic();
-                    File audioFile = new File(audioFileName);
-                    if (audioFile.exists()) {
-
-                        //then dont overrite
-
-                        audioFileName = f.getAbsolutePath() + "/" + fileName + Constants.getDateTime() + "." + targetType.getExtension();
-                        audioFile = new File(audioFileName);
-                    }
-                    AudioSystem.write(audioInputStream, targetType, audioFile);
-                    //then clear the buffer
-                    out.reset();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                record();
             }
         };
         t.start();
+    }
+
+    /**
+     * Logs the chat of a specific session
+     * @param fileName
+     * @param txt
+     */
+    public void saveXML(String txt) {
+        try {
+
+            //make sure we are in a right dir
+            String session = wizard.getBase().getSessionTitle();
+            if (session == null) {
+                session = "general";
+            }
+            File f = new File(Constants.getRealtimeHome() + "/sounds/" + session);
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+            String xmlFileName = f.getAbsolutePath() + "/" + audioClipFileName + ".xml";
+
+            BufferedWriter out = new BufferedWriter(new FileWriter(xmlFileName, true));
+            out.write(txt);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recordAudioClip() {
+
+        /*    // for recording
+        Thread t = new Thread() {
+
+        public void run() {
+        try {
+        byte audioData[] = out.toByteArray();
+
+        InputStream byteArrayInputStream = new ByteArrayInputStream(
+        audioData);
+        AudioFormat audioFormat =
+        AudioResource.audioFormat;
+        AudioInputStream audioInputStream =
+        new AudioInputStream(
+        byteArrayInputStream,
+        audioFormat,
+        audioData.length / audioFormat.getFrameSize());
+
+        //make sure we are in a right dir
+        String session = wizard.getBase().getSessionTitle();
+        if (session == null) {
+        session = "general";
+        }
+        File f = new File(Constants.getRealtimeHome() + "/sounds/" + session);
+        if (!f.exists()) {
+        f.mkdirs();
+        }
+        String audioFileName = f.getAbsolutePath() + "/" + audioClipFileName + "." + targetType.getExtension();
+        //this.pauseMic();
+        File audioFile = new File(audioFileName);
+        if (audioFile.exists()) {
+
+        //then dont overrite
+
+        audioFileName = f.getAbsolutePath() + "/" + audioClipFileName + Constants.getDateTime() + "." + targetType.getExtension();
+        audioFile = new File(audioFileName);
+        }
+        AudioSystem.write(audioInputStream, targetType, audioFile);
+        //then clear the buffer
+        out.reset();
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+        }
+        };
+        t.start();
+         */
     }
 
     /**
