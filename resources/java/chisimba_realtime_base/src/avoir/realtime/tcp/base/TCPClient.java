@@ -91,7 +91,7 @@ public class TCPClient {
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
    //  private String SUPERNODE_HOST = "localhost";
-    // private int SUPERNODE_PORT = 22225;
+   //  private int SUPERNODE_PORT = 22225;
     private boolean showChatFrame = true;
     private ClientAdmin clientAdmin;
     //everything is encrypted here
@@ -903,7 +903,7 @@ public class TCPClient {
 
     }
 
-    private void processModuleFileRequestPacket(ModuleFileRequestPacket p) {
+    private synchronized void processModuleFileRequestPacket(ModuleFileRequestPacket p) {
 
         byte[] byteArray = readFile(p.getFilePath());
         logger.info("Read File: " + p.getFilePath());
