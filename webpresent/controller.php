@@ -8,7 +8,7 @@
     class webpresent extends controller
     {
 
-        public  $objConfig;  
+        public  $objConfig;
 
     /**
      * Constructor
@@ -23,8 +23,8 @@
             $this->objTags = $this->getObject('dbwebpresenttags');
             $this->objSlides = $this->getObject('dbwebpresentslides');
             $this->objSchedules = $this->getObject('dbwebpresentschedules');
-  
-               
+
+
         }
         /**
          * Method to override login for certain actions
@@ -43,7 +43,7 @@
         }
 
 
-    
+
        /**
         * Standard Dispatch Function for Controller
         * @param <type> $action
@@ -128,11 +128,11 @@
         {
             $fileId= $this->getParam('id');
             $date= $this->getParam('presentationDate');
-          
+
             $file=$this->objSchedules->getFile($fileId);
             if(count($file) > 0){
                 $this->objSchedules->updateSchedule($file['id'], $date, 'pre');
-         
+
             }else{
                 $this->objSchedules->schedulePresentation($fileId, $date, 'pre');
             }
@@ -145,7 +145,7 @@
          */
         public function __showusers()
         {
-            $objDbUsers =& $this->getObject('dbusers','buddies'); 
+            $objDbUsers =& $this->getObject('dbusers','buddies');
             $allUsers = $objDbUsers->listAll();
             $this->setVarByRef('allUsers', $allUsers);
             return 'users_tpl.php';
@@ -158,16 +158,16 @@
         {
             $userid=$this->getParam('participantid');
             $email=$this->objUser->email($userid);
- 
+
             //return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
         }
-    
+
     /**
      * This function generates a random string. This is used as id for the java slides server as well as
      * the client (applet)
      * @param <type> $length
      * @return <type>
-     */ 
+     */
         public function randomString($length)
         {
             // Generate random 32 charecter string
@@ -208,14 +208,20 @@
         }
 
     /**
-     *  
-     * Function to invoke the presenter applet 
      *
-     */ 
+     * Function to invoke the presenter applet
+     *
+     */
         public function __showpresenterapplet()
         {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $this->setVarByRef('supernodeHost', $supernodeHost);
+            $this->setVarByRef('supernodePort', $supernodePort);
+
             //$slideServerId=$this->randomString(32);
-           $slideServerId=$this->objConfig->serverName();
+            $slideServerId=$this->objConfig->serverName();
 
             //if(!$this->slideServerRunning()){
             $this->startSlidesServer($slideServerId);
@@ -225,13 +231,13 @@
             $participants=$this->getParam('participants');
             $url=$this->objConfig->getsiteRoot().'/index.php?module=webpresent&action=showaudienceapplet&id='.$id.'&agenda='.$title;
             $this->sendInvitation($participants,$title,$url);
-            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
+            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
             $this->setVarByRef('filePath', $filePath);
             $this->setVarByRef('sessionTitle',$title);
             $this->setVarByRef('sessionid', $id);
-            $this->setVarByRef('slideServerId', $slideServerId);                 
+            $this->setVarByRef('slideServerId', $slideServerId);
             $this->setVarByRef('isPresenter', 'true');
-    
+
             return "presenter-applet.php";
         }
 
@@ -242,14 +248,14 @@
         public function slideServerRunning()
         {
 
-            $result = array(); 
+            $result = array();
             $cmd='ps aux | grep java';
             $needle=' avoir.realtime.tcp.base.SlidesServer';
             exec( $cmd, &$result);
             foreach ($result as $v ){
-       
+
                 if($this->in_str($needle,$v)){
-        
+
                     return true;
                 }
             }
@@ -264,8 +270,8 @@
         public function in_str($needle, $haystack)
         {
             return (false !== strpos($haystack, $needle))  ? true : false;
-    
-        } 
+
+        }
 
         /**
          * This start a slide server. This function is intended to be invoked
@@ -278,22 +284,28 @@
             echo 'started slide server';
         }
        /**
-        * Function to invoke the audience applet 
+        * Function to invoke the audience applet
         * @return <type>
         */
         public function __showaudienceapplet()
         {
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $this->setVarByRef('supernodeHost', $supernodeHost);
+            $this->setVarByRef('supernodePort', $supernodePort);
+
             $slideServerId=$this->randomString(32);
             //$slideServerId=$this->objConfig->serverName();
-              
+
             //   if(!$this->slideServerRunning()){
-          
+
             $this->startSlidesServer($slideServerId);
             //   }
             $id= $this->getParam('id');
             $title=$this->getParam('agenda');
 
-            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id; 
+            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
             $this->setVarByRef('filePath', $filePath);
             $this->setVarByRef('sessionTitle',$title);
 
@@ -303,7 +315,7 @@
 
             return "presenter-applet.php";
         }
- 
+
         /**
          * Start an instance of the slide server, each with a unique id
          * @param <type> $slideServerId
@@ -313,14 +325,14 @@
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
             $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
-    
+
             $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
             //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
-            $cmd = "java -Xms32m -Xmx64m -cp ".    
+            $cmd = "java -Xms32m -Xmx64m -cp ".
             $this->objConfig->getModulePath().
     "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
     "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId."  >/dev/null &";
-            //echo $cmd;  
+            //echo $cmd;
             system($cmd,$return_value);
         }
         /**
@@ -1143,15 +1155,15 @@
                 foreach ($results as $file)
                 {
                     echo $file['title'];
-                
+
                     $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
                     $link->link = 'Flash';
 
                     echo ' - '.$link->show();
-                
+
                     $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
                     $link->link = 'Slides';
-                
+
                     echo ' / '.$link->show().'<br />';
                 }
             }
