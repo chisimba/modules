@@ -32,9 +32,9 @@
 
     $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
     $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
-    //path to uploaded items    
+    //path to uploaded items
     $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
-  
+
     $objMkdir = $this->getObject('mkdir', 'files');
     // Path for uploaded files
     $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
@@ -42,24 +42,24 @@
     $resourcesPath =$modPath.'/realtime/resources';
     $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
     $objMkdir->mkdirs($chatLogPath, 0777);
-    
+
     echo '<center>';
     echo '<applet codebase="'.$appletCodeBase.'"';
     echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
-     
+
     echo 'archive="realtime-launcher-0.1.jar" width="80%" height="600">';
     echo '<param name=appletCodeBase value="'.$appletCodeBase.'">';
     echo '<param name=userName value="'.$this->objUser->userName().'">';
     echo '<param name=isLocalhost value="true">';
     echo '<param name=fullName value="'.$this->objUser->fullname().'">';
     echo '<param name=userLevel value="'.$this->userLevel.'">';
-    echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';    
+    echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';
     echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
     echo '<param name=uploadURL value="'.$uploadURL.'">';
     echo '<param name=chatLogPath value="'.$chatLogPath.'">';
     echo '<param name=siteRoot value="'.$siteRoot.'">';
-
-  
+    echo '<param name=supernodeHost value="'.$supernodeHost.'">';
+    echo '<param name=supernodePort value="'.$supernodePort.'">';
     echo '<param name=isWebPresent value="true">';
     echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
     echo '<param name=slidesDir value="'.$filePath.'">';
