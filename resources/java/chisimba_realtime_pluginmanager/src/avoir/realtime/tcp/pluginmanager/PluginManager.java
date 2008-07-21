@@ -38,6 +38,14 @@ public class PluginManager implements RealtimePlugin {
                 siteRoot, slideServerId, resourcesPath, false);
     }
 
+    public void setSupernodeHost(String host) {
+       base.setSupernodeHost(host);
+    }
+
+    public void setSupernodePort(int port) {
+        base.setSupernodePort(port);
+    }
+
     public void setSessionTitle(String title) {
         base.setSessionTitle(title);
     }
