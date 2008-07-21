@@ -42,7 +42,7 @@
         <echo file="src/avoir/realtime/tcp/launcher/Version.java">
             package avoir.realtime.tcp.launcher;${line.separator}
             public class Version{${line.separator}
-                public static long version= 100179;// System.currentTimeMillis();${line.separator} //${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
+                public static long version= 100187;// System.currentTimeMillis();${line.separator} //${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
                 public static int getVersion(){${line.separator}
                    return (int)version;${line.separator}
                 }${line.separator}
