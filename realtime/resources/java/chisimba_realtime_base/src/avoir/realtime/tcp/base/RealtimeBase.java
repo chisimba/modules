@@ -654,6 +654,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
+    public void setSupernodePort(int port) {
+        tcpClient.setSuperNodePort(port);
+    }
+
+    public void setSupernodeHost(String host) {
+        tcpClient.setSuperNodeHost(host);
+    }
+
     /**
      * Initialize TCP connection. Actually, this is where you create an object
      * to connect to the server
@@ -661,6 +669,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     public void initTCPCommunication() {
         initUser();
         tcpClient = new TCPClient(this);
+        tcpClient.setSuperNodeHost(host);
+        tcpClient.setSuperNodePort(port);
         tcpClient.setFileTransfer(fileTransferPanel);
         whiteboardSurface.setTCPClient(tcpClient);
         //audioModel = new AudioModel(tcpClient);
@@ -824,7 +834,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String createEmbbedStr(String userName, String fullName) {
         String url = "<center>\n";
         url += "<applet codebase=\"" + appletCodeBase + "\"\n";
-        url += "code=\"avoir.realtime.tcp.launcher.RealtimeLauncher\" name =\"Avoir Realtime Applet\"\n";
+        url += "code=\"avoir.realtime.tcp.launcher.RealtimeLauncher\" name =\"Chisimba Realtime Applet\"\n";
 
         url += "archive=\"realtime-launcher-0.1.jar\" width=\"100%\" height=\"600\">\n";
         url += "<param name=userName value=\"" + userName + "\" >\n";
