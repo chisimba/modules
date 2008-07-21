@@ -30,8 +30,12 @@ public interface RealtimePlugin {
 
     public void setSessionTitle(String title);
 
+    public void setSupernodeHost(String host);
+
+    public void setSupernodePort(int port);
+
     public void setApplectCodeBase(String codeBase);
-    
+
     public void setGlassPaneHandler(JApplet applet);
 
     public int getVersion();
