@@ -149,8 +149,7 @@
                 
             //Log this module call
             $this->objLog->log();
-            $this->objrealtime =  $this->getObject('dbrealtime');
-                
+               
         
                 
             // classes we need
@@ -175,18 +174,7 @@
             $this->objContext = $this->getObject('dbcontext', 'context');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $location = "http://" . $_SERVER['HTTP_HOST'];
-            $this->whiteboardURL = $location . $this->getResourceUri('whiteboard', 'realtime');
-            $this->presentationsURL = $location .'/'. $this->getResourceUri('classroom', 'realtime');
-               
-            $this->moduleRootPath=$this->objAltConfig->getModulePath();
-            $this->classroomURL =$this->moduleRootPath.'/realtime/resources/classroom';
-            $this->voiceURL = $location . $this->getResourceUri('voice', 'realtime');
-            $this->realtimeControllerURL = $location . "/chisimba_framework/app/index.php?module=realtime";
-            $this->jodconverterPath = $location . $this->getResourceUri('whiteboard', 'realtime');
-        
-            $this->objFiles = $this->getObject('dbwebpresentfiles','webpresent');
-            $this->converter = $this->getObject('convertdoc','documentconverter'); 
-                
+            
         }
 
         /**
@@ -247,10 +235,10 @@
                 case 'assigntoken' :
                 return $this->assignToken($this->getParam('id'), $this->contextCode);	
                 default :
-                $this->startWhiteboardServer();
-                $this->startOpenOffice();
+                //$this->startWhiteboardServer();
+                //$this->startOpenOffice();
                 //$this->validJavaVersion();
-                return $this->showClassRoom($this->contextCode);
+                return $this->explainRealtime();
             }
         }
 
@@ -613,10 +601,10 @@
         /**
          * shows classroom applet to user if the user first entered a context
          */
-        public function showClassRoom($contextcode)
+        public function explainRealtime()
         {
-            if(empty($contextcode)){
-                $desc= $this->objLanguage->code2Txt('mod_realtime_nocontextcode', 'realtime');
+            
+                $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
                 $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
                 $this->setVarByRef('title', $title);
                 $this->setVarByRef('desc', $desc);
@@ -624,14 +612,8 @@
                 //$this->setVar('pageSuppressToolbar', FALSE);
                 //$this->setVar('pageSuppressBanner', FALSE);
                 return "dump_tpl.php";		
-            } else{
-                $this->setVar('pageSuppressToolbar', TRUE);
-                $this->setVar('pageSuppressBanner', TRUE);
-                $this->setLayoutTemplate('layout_tpl.php');
-                $this->setVarByRef('sessionid', $contextcode);
-                return "realtime-classroom_tpl.php";
-                
-            }
+           
+            
         }
     }
 ?>
