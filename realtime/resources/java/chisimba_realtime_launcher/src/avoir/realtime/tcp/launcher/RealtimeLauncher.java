@@ -70,6 +70,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private NetworkClassLoader classLoader;
     private Timer pluginMonitor = new Timer();
     private boolean pluginDownloaded = false;
+    private String supernodeHost = "196.21.45.85";
+    private int supernodePort = 80;
 
     /** Initializes the applet RealtimeLauncher */
     @Override
@@ -139,7 +141,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     private void forceUpgrade() {
         if (!new File(internalVer).exists()) {
-            System.out.println(internalVer+" does not exist..requesting package downloads");
+            System.out.println(internalVer + " does not exist..requesting package downloads");
             clearLocalLib();
         }
     }
@@ -154,7 +156,16 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             new File(internalVer).createNewFile();
         } catch (Exception ignore) {
         }
+        supernodeHost = getParameter("supernodeHost");
+        try {
+            supernodePort = Integer.parseInt(getParameter("supernodePort").trim());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Invalid supernode port: " + getParameter("supernodePort") + ". Using default 80",
+                    "Invalid super node Port", JOptionPane.ERROR_MESSAGE);
+        }
         tcpConnector = new TCPConnector(this);
+        tcpConnector.setSuperNodeHost(supernodeHost);
+        tcpConnector.setSuperNodePort(supernodePort);
         initUser();
         //for non proxy connections...just connect direct
         if (RealtimeOptions.useDirectConnection()) {
@@ -195,6 +206,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         resourcesPath = getParameter("resourcesPath");
         slideServerId = getParameter("slideServerId");
         userLevel = getParameter("userLevel");
+
         isPresenter = new Boolean(getParameter("isSessionPresenter")).booleanValue();
         localhost = new Boolean(getParameter("isLocalhost")).booleanValue();
 
@@ -213,7 +225,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             //  URLConnection connection = new URL(siteRoot + "/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId).openConnection();
             //  connection.connect();
 
-            Socket socket = new Socket(host, 80);
+            Socket socket = new Socket(host, supernodePort);
             OutputStream os = socket.getOutputStream();
             boolean autoflush = true;
 
@@ -222,7 +234,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                     new InputStreamReader(socket.getInputStream()));
 
             out.println("GET " + "/chisimba/app/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId + " HTTP/1.1");
-            out.println("Host: " + host + ":80");
+            out.println("Host: " + host + ":" + supernodePort + "");
             out.println("Connection: Close");
             out.println();
 // read the response
@@ -379,12 +391,14 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             setText("", false);
             pl.setSessionTitle(sessionTitle);
             pl.setApplectCodeBase(appletCodeBase);
+          //  pl.setSupernodeHost(supernodeHost);
+           // pl.setSupernodePort(supernodePort);
             pl.setGlassPaneHandler(this);
             JPanel basePanel = pl.createBase(
                     userLevel,
                     fullName,
                     userName,
-                    host, 22225,
+                    supernodeHost,supernodePort,
                     isPresenter,
                     sessionId,
                     slidesDir,
