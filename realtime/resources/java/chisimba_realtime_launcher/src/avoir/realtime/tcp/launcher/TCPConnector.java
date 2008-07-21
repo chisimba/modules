@@ -236,7 +236,7 @@ public class TCPConnector {
         try {
             try {
                 if (base != null) {
-                    base.setText("Connecting ...", false);//to " + SUPERNODE_HOST+" ...");
+                    base.setText("Connecting to "+SUPERNODE_HOST+":"+SUPERNODE_PORT+"...", false);//to " + SUPERNODE_HOST+" ...");
 
                 }
 
@@ -253,6 +253,7 @@ public class TCPConnector {
                 try {
                     socket.startHandshake();
                 } catch (Exception ex) {
+                   base.setText("Connection Error: Cannot connect to server", true);
                     ex.printStackTrace();
                 }
                 result = true;
