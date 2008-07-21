@@ -155,18 +155,27 @@ public class ChatRoom
         });
     }
 
+    /**
+     * this sends an edit icon to show that the user has entered some text
+     */
     private void showUserEnteredText() {
         base.getTcpClient().sendPacket(new PresencePacket(sessionId,
                 PresenceConstants.EDIT_ICON, PresenceConstants.TEXT_AVAILABLE,
                 usr.getUserName()));
     }
 
+    /**
+     * this sends a signal to show that the user is removing text
+     */
     private void showUserRemovedText() {
         base.getTcpClient().sendPacket(new PresencePacket(sessionId,
                 PresenceConstants.EDIT_ICON, PresenceConstants.NO_TEXT,
                 usr.getUserName()));
     }
 
+    /**
+     * sends the chat packet
+     */
     private void sendChat() {
         ChatPacket p = new ChatPacket(ChatRoom.this.usr.getFullName(), chatIn.getText() + "\n",
                 getTime(), ChatRoom.this.chatLogFile, ChatRoom.this.sessionId);
@@ -211,6 +220,10 @@ public class ChatRoom
         messagePanel.repaint();
     }
 
+    /**
+     * basically repaint to show the latest of the messages
+     * @param chatPacket
+     */
     public void update(ChatPacket chatPacket) {
         chatPacket.setTime(getTime());
         this.chatLog.add(chatPacket);
