@@ -192,7 +192,7 @@ public class ServerThread extends Thread {
                     presentationLocks.elementAt(i).getStream().writeObject(new TestPacket());
                     presentationLocks.elementAt(i).getStream().flush();
                 } catch (Exception ex) {
-                     ex.printStackTrace();
+                    ex.printStackTrace();
                     logger.info(ex.getLocalizedMessage());
                     try {
                         invalidSessions.addElement(presentationLocks.elementAt(i));
@@ -475,7 +475,7 @@ public class ServerThread extends Thread {
                         if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
                             whiteboardItems.clear();
                         }
-                        broadcastPacket(p,true);
+                        broadcastPacket(p, true);
 
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
@@ -966,6 +966,10 @@ public class ServerThread extends Thread {
                 break;
             }
             delay(sleep);
+            try {
+                wait();
+            } catch (Exception ex) {
+            }
         }
 
 
@@ -986,7 +990,7 @@ public class ServerThread extends Thread {
             }
         }
     }
-
+ 
     private void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
         //locate the slides server based on the ids
         boolean slideServerFound = false;
@@ -996,6 +1000,7 @@ public class ServerThread extends Thread {
                 if (slideServers.elementAt(i).getId().equals(packet.getSlidesServerId())) {
                     sendPacket(packet, slideServers.elementAt(i).getObjectOutputStream());
                     slideServerFound = true;
+                    notify();
                 }
             }
         }
