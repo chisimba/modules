@@ -20,6 +20,7 @@
 package avoir.realtime.tcp.proxy;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,6 @@ import java.util.LinkedList;
 import java.net.InetAddress;
 import java.util.Stack;
 import javax.net.ServerSocketFactory;
-import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 
 /**
@@ -84,14 +84,7 @@ public class ServerListener extends Thread {
         try {
             //ServerSocket serverSocket = new ServerSocket(port);
             ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
-            SSLServerSocket ssocket = (SSLServerSocket)ssocketFactory.createServerSocket(port);
-            // use an anonymous cipher suite so that a KeyManager or TrustManager
-// is not needed
-// NOTE:  this assumes that the cipher suite is known.  A check -should-
-//        be done first.
-            final String[] enabledCipherSuites = {"SSL_DH_anon_WITH_RC4_128_MD5"};
-            ssocket.setEnabledCipherSuites(enabledCipherSuites);
-
+            ServerSocket ssocket = ssocketFactory.createServerSocket(port);
             logger.info("SSL factory started..");
             logger.info("Listening for connections on port " + port);
             while (true) {
