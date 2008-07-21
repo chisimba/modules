@@ -204,8 +204,6 @@ class contextcontent extends controller
     */
     protected function showContextChapters()
     {
-        //$this->objContentOrder->checkPagesNotInChapter($this->contextCode);
-        
         
         $numContextChapters = $this->objContextChapters->getNumContextChapters($this->contextCode);
         

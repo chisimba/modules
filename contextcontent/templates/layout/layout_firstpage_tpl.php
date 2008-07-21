@@ -32,8 +32,13 @@ $label = new label ('Search for:', 'input_contentsearch');
 $objFieldset->setLegend($label->show());
 $objFieldset->contents = $form->show();
 
+$header = new htmlHeading();
+$header->str = ucwords($this->objLanguage->code2Txt('mod_contextcontent_name', 'contextcontent', NULL, '[-context-] Content'));
+$header->type = 2;
 
-$content = $objFieldset->show();
+$content = $header->show();
+
+$content .= $objFieldset->show();
 
 $content .= '<h3>Chapters:</h3>';
 $chapters = $this->objContextChapters->getContextChapters($this->contextCode);

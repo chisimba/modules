@@ -1,10 +1,52 @@
 <?php
 
 /**
-* Class to Arrange the order of pages
-*
-*
-*/
+ * Class to Arrange the order of pages
+ *
+ * This class arranges pages of content within a chapters
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    CVS: $Id$
+ * @package    contextcontent
+ * @author     Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright  2006-2007 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://avoir.uwc.ac.za
+ */
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
+/**
+ * Class to Arrange the order of pages
+ *
+ * This class arranges pages of content within a chapters
+ *
+ * @author Tohir Solomons
+ *
+ */
 class db_contextcontent_order extends dbtable
 {
 
@@ -106,39 +148,12 @@ class db_contextcontent_order extends dbtable
         }
     }
     
-    public function checkPagesNotInChapter($context)
-    {
-        $pagesNotInChapter = $this->getPagesNotInChapters($context);
-        
-        if (count($pagesNotInChapter) > 0) {
-            $title = 'Chapter 1';
-            $intro = '<p>This chapter has been autocreated during an upgrade. Please ask the lecturer in this course to change this introduction</p>';
-            $visibility = 'Y';
-            
-            $objChapters =& $this->getObject('db_contextcontent_chapters');
-            $objContextChapters =& $this->getObject('db_contextcontent_contextchapter');
-            
-            $chapterId = $objChapters->addChapter('', $title, $intro);
-            
-            $result = $objContextChapters->addChapterToContext($chapterId, $context, $visibility);
-            
-            if ($result) {
-                foreach ($pagesNotInChapter as $page)
-                {
-                    $this->update('id', $page['id'], array('chapterid'=>$chapterId));
-                }
-            }
-        }
-    }
-    
-    private function getPagesNotInChapters($context)
-    {
-        return $this->getAll(' WHERE contextcode= \''.$context.'\' AND chapterid IS NULL ');
-    }
     
     /**
-    *
-    *
+    * Method to get the list of pages in a context / chapter
+    * @param string $context Context Code
+    * @param string $chapter Chapter Id
+    * @return array
     */
     public function getContextPages($context, $chapter='')
     {
@@ -156,17 +171,34 @@ class db_contextcontent_order extends dbtable
         return $this->getArray($sql);
     }
     
-    
+    /**
+     * Method to bookmark a page
+     * @param string $id Record Id of the Page
+     * @return boolean
+     */
     public function bookmarkPage($id)
     {
         return $this->update('id', $id, array('isbookmarked'=>'Y'));
     }
     
+    /**
+     * Method to remove a page bookmark
+     * @param string $id Record Id of the Page
+     * @return boolean
+     */
     public function removeBookmark($id)
     {
         return $this->update('id', $id, array('isbookmarked'=>'N'));
     }
     
+    /**
+     * Method to get the list of bookmarked pages
+     * @param string $context Context Code
+     * @param string $chapter Chapter Id
+     * @param string $defaultSelected Default selected bookmark
+     * @param string $module Module to point links to
+     * @return string
+     */
     public function getBookmarkedPages($context, $chapter='', $defaultSelected='', $module='contextcontent')
     {
         $results = $this->getContextPages($context, $chapter);
@@ -370,14 +402,23 @@ class db_contextcontent_order extends dbtable
     }
     
     /**
-    * Method to get a content page
-    * @param string $pageId Record Id of the Page
-    * @param string $contextCode Context the Page is In
-    * @return array Details of the Page, FALSE if does not exist
+    * Method to add a content page
+    *
+    * This is the method that should be used, as it adjusts the left/right values of the
+    * modified preorder traversal approach for the tree
+    * 
+    * @param string $titleId Title Id for translation purposes
+    * @param string $parentId Parent Id of Page, under which page is it a subpage
+    * @param string $context Context the Page is In
+    * @param string $chapter Chapter the Page is In
+    * @param string $bookmark ??
+    * @param string $isBookmark ??
+    * @return Record Id
     * @access private
     */
     public function addPageToContext($titleId, $parentId, $context, $chapter='', $bookmark='', $isBookmark='')
     {
+        // Adjust left right
         $lastRight = $this->getLastRight($context, $parentId, $chapter);
         $leftPointer = $lastRight;
         
@@ -392,13 +433,17 @@ class db_contextcontent_order extends dbtable
             $this->updateLeftRightPointers($chapter, $lastRight-1);
         }
         
+        // get last order
         $pageOrder = $this->getLastOrder($chapter, $parentId)+1;
         
+        // clear pdf
         $this->clearChapterPDF($chapter, $context);
         
+        // insert
         $result = $this->insertTitle($context, $chapter, $titleId, $parentId, $leftPointer, $rightPointer, $pageOrder, 'Y', $bookmark, $isBookmark);
         
         if ($result != FALSE) {
+            // if successful, add to search
             $page = $this->getPage($result, $context);
             
             if ($page != FALSE) {
@@ -410,7 +455,20 @@ class db_contextcontent_order extends dbtable
     }
     
     
-    
+    /**
+     * Method to add a page
+     * @param string $context     Context page belongs to
+     * @param string $chapter     Chapter page belongs to
+     * @param string $titleId     Title Id for translation purposes
+     * @param string $parentId    Parent Id of Page, under which page is it a subpage
+     * @param string $left        Left Value of Tree
+     * @param string $right       Right Value of Tree
+     * @param string $pageOrder   Page Order on Level
+     * @param string $visibility  Visibility
+     * @param string $bookmark    ??
+     * @param string $isBookmark  ??
+     *
+     */
     private function insertTitle($context, $chapter, $titleId, $parentId, $left, $right, $pageOrder=1, $visibility='Y', $bookmark='', $isBookmark='N')
     {
         $lastId = $this->insert(array(
@@ -424,8 +482,8 @@ class db_contextcontent_order extends dbtable
                 'visibility' => $visibility,
                 'creatorid' => $this->objUser->userId(),
                 'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
-        'bookmark' => $bookmark,
-        'isbookmarked' => $isBookmark
+                'bookmark' => $bookmark,
+                'isbookmarked' => $isBookmark
             ));
         
         // Extra Step to Prevent Null Values
@@ -439,6 +497,12 @@ class db_contextcontent_order extends dbtable
         return $lastId;
     }
     
+    /**
+     * Method to add a page to the search database
+     * @param string $context Context Code
+     * @param array $page Details of the page
+     *
+     */
     public function indexData($context, $page)
     {
         // Prepare to add context to search index

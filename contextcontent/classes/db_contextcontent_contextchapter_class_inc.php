@@ -1,12 +1,52 @@
 <?php
 
 /**
-* Class to Control which Chapters should be available in a context
-*
-* This allows for a single chapter to be reused in multiple contexts
-*
-* @author Tohir Solomons
-*/
+ * Class to Control which Chapters should be available in a context
+ *
+ * This allows for a single chapter to be reused in multiple contexts
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @version    CVS: $Id$
+ * @package    contextcontent
+ * @author     Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright  2006-2007 AVOIR
+ * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @link       http://avoir.uwc.ac.za
+ */
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
+
+/**
+ * Class to Control which Chapters should be available in a context
+ *
+ * This allows for a single chapter to be reused in multiple contexts
+ *
+ * @author Tohir Solomons
+ *
+ */
 class db_contextcontent_contextchapter extends dbtable
 {
 
@@ -59,7 +99,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     * @param string $chapterId
     * @return string Title of Chapter : FALSE
     */
-    function getContextChapterTitle($chapterId)
+    public function getContextChapterTitle($chapterId)
     {
         $sql = 'SELECT tbl_contextcontent_chaptercontent.chaptertitle FROM tbl_contextcontent_chapters, tbl_contextcontent_chaptercontent WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapters.id) AND tbl_contextcontent_chapters.id=\''.$chapterId.'\' LIMIT 1';
         
@@ -216,7 +256,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
      * @param string $context Context Code
      * @return boolean Result of deletion
      */
-    function removeChapterFromContext($chapterId, $context)
+    public function removeChapterFromContext($chapterId, $context)
     {
         $results = $this->getAll('WHERE contextcode =\''.$context.'\' AND chapterid=\''.$chapterId.'\' ');
         if (count($results) > 0) {
@@ -240,7 +280,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     * @param string $id Record Id of the Chapter
     * @return boolean Result of Chapter Move
     */
-    function moveChapterUp($id)
+    public function moveChapterUp($id)
     {
         $chapter = $this->getRow('id', $id);
         
@@ -270,7 +310,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     * @param string $id Record Id of the Chapter
     * @return boolean Result of Chapter Move
     */
-    function moveChapterDown($id)
+    public function moveChapterDown($id)
     {
         $chapter = $this->getRow('id', $id);
         
@@ -301,7 +341,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     * @param string $visibility Visibility Status
     * @return boolean
     */
-    function updateChapterVisibility($id, $visibility)
+    public function updateChapterVisibility($id, $visibility)
     {
         return $this->update('id', $id, array('visibility'=>$visibility));
     }
