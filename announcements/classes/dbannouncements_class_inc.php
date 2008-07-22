@@ -48,7 +48,7 @@ class dbAnnouncements extends dbTable
         $this->objUser = $this->getObject('user', 'security');
     }
     
-    function addAnnouncement($title, $message, $type='site', $contexts=array())
+    function addAnnouncement($title, $message, $type='site', $contexts=array(), $email=FALSE)
     {
         $messageId = $this->insert(array(
                 'title' => $title,
@@ -79,6 +79,10 @@ class dbAnnouncements extends dbTable
                 
                 // Add to Index
                 $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
+                
+                if ($email) {
+                    $this->sendEmail($title, $message, $this->getSiteRecipients());
+                }
             }
             
         } else {
@@ -97,14 +101,20 @@ class dbAnnouncements extends dbTable
                 $module = 'announcements';
                 $userId = $this->objUser->userId();
                 
+                $emailList = array();
+                
                 foreach ($contexts as $context)
                 {
                     $this->addMessageToContext($messageId, $context);
+                    $emailList = array_merge($emailList, $this->getContextRecipients($contextCode));
                     
                     // Add to Index
                     $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
                 }
                 
+                if ($email) {
+                    $this->sendEmail($title, $message, $this->getSiteRecipients());
+                }
             }
         }
         
@@ -120,6 +130,44 @@ class dbAnnouncements extends dbTable
         parent::init('tbl_announcements');
         
         return $result;
+    }
+    
+    private function sendEmail($title, $message, $recipients)
+    {
+        $recipients = array_unique($recipients);
+        
+        $objMailer = $this->getObject('email', 'mail');
+        $objMailer->setValue('from', $this->objUser->email());
+        $objMailer->setValue('fromName', $this->objUser->fullname());
+        $objMailer->setValue('subject', $title);
+        $objMailer->setValue('bcc', $recipients);
+        $objMailer->setValue('body', $message);
+        
+        $objMailer->send(TRUE);
+    }
+    
+    private function getSiteRecipients()
+    {
+        $users = $this->objUser->getAll();
+        $emailList = array();
+        
+        foreach ($users as $user)
+        {
+            $emailList[] = $user['emailaddress'];
+        }
+        
+        return $emailList;
+    }
+    
+    private function getContextRecipients($contextCode)
+    {
+        $objGroups =  $this->getObject('managegroups', 'contextgroups');
+        
+        $lecturers = $objGroups->contextUsers('Lecturers', $contextCode, array('emailAddress'));
+        $students = $objGroups->contextUsers('Students', $contextCode, array('emailAddress'));
+        $guests = $objGroups->contextUsers('Guests', $contextCode, array('emailAddress'));
+        
+        return array_merge($lecturers, $students, $guests);
     }
     
     public function getMessage($id)
@@ -163,9 +211,8 @@ class dbAnnouncements extends dbTable
         WHERE (contextid = 'site')
         ORDER BY createdon DESC ";
         
-        if ($limit != NULL && $page != NULL) {
-            
-            $page = $page * $limit;
+        
+        if (is_int($limit) && is_int($page)) {
             
             $sql .= " LIMIT {$page}, {$limit}";
         }

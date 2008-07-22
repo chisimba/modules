@@ -141,6 +141,8 @@ class announcements extends controller
         $recipienttarget = $this->getParam('recipienttarget');
         $contexts = $this->getParam('contexts');
         
+        $email = ($email == 'Y') ? TRUE : FALSE;
+        
         if ($mode == 'add' && ($title == '' || strip_tags($message) == '')) {
             $this->setVar('mode', 'fixup');
             $this->setVar('lecturerContext', $this->lecturerContext);
@@ -148,7 +150,7 @@ class announcements extends controller
             return 'addedit_tpl.php';
         } else if ($mode == 'add') {
             
-            $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts);
+            $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
             
             if ($result == FALSE) {
                 

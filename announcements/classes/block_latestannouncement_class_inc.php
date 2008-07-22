@@ -92,7 +92,7 @@ class block_latestannouncement extends object
     	
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objBlocks =& $this->getObject('dbAnnouncements', 'announcements');
-        $this->title = $this->objLanguage->languageText('mod_announcements_latestsite', 'announcements');
+        $this->title = $this->objLanguage->languageText('mod_announcements_siteannouncement', 'announcements', 'Site Announcement');
     }
     /**
      * Standard block show method.
@@ -104,7 +104,7 @@ class block_latestannouncement extends object
         $this->loadClass('link', 'htmlelements');
         $str = '';
         
-        $announcements = $this->objBlocks->getSiteAnnouncements(0, 5);
+        $announcements = $this->objBlocks->getSiteAnnouncements(5, 0);
         
         if (count($announcements) > 0) {
             $str .= '<ul>';
@@ -121,7 +121,7 @@ class block_latestannouncement extends object
         }
         
         $announcementLink = new link ($this->uri(NULL, 'announcements'));
-        $announcementLink->link = 'Announcements';
+        $announcementLink->link = $this->objLanguage->languageText('mod_announcements_previousannouncements', 'announcements', 'Previous Announcements');
         
         return $str.'<p>'.$announcementLink->show().'</p>';
     }
