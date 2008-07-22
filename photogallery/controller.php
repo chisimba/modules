@@ -70,13 +70,13 @@ class photogallery extends controller
           	//default:
           	
 				
-			case null:
-				if($this->_objUser->isLoggedIn())
-				{
-					return $this->nextAction('overview');
-				} else {
-					return $this->nextAction('front');
-				}
+	    case null:
+		    if($this->_objUser->isLoggedIn())
+		    {
+			    return $this->nextAction('overview');
+		    } else {
+			    return $this->nextAction('front');
+		    }
           	
             case 'front':
             	return $this->front();
@@ -92,33 +92,33 @@ class photogallery extends controller
             	return $this->viewImage();
             
 			
-			//comments
-			case 'addcomment':
-                                if (!$this->_objUser->isLoggedIn() && (md5(strtoupper($this->getParam('request_captcha'))) != $this->getParam('captcha')) ){
-                                    $this->setErrorMessage($this->objLanguage->languageText('mod_photogallery_captcha','photogallery'));
-                                    return $this->viewImage();
-                                } else {
-                                    $this->_objDBComments->addComment();
-                                }
-				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
-			
-			case 'comments':
-				$this->setVar('comments', $this->_objDBComments->getUserComments());
-				return 'comments_tpl.php';
-			case 'editcomment':
-				$this->setVar('comment', $this->_objDBComments->getRow('id',$this->getParam('commentid')));
-				return 'editcomment_tpl.php';
-			case 'saveedit':
-				$this->_objDBComments->saveEdit();
-				return $this->nextAction('comments');
-			case 'deletecomment':
-				$this->_objDBComments->delete('id', $this->getParam('commentid'));
-				return $this->nextAction('comments');
-			case 'addflickrcomment':
-				$this->initFlickr();
-				$this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment'));
-				return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid'), 'mode' => 'flickr'));
-			
+	    //comments
+	    case 'addcomment':
+		    if (!$this->_objUser->isLoggedIn() && (md5(strtoupper($this->getParam('request_captcha'))) != $this->getParam('captcha')) ){
+			$this->setErrorMessage($this->objLanguage->languageText('mod_photogallery_captcha','photogallery'));
+			return $this->viewImage();
+		    } else {
+			$this->_objDBComments->addComment();
+		    }
+		    return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid')));
+	    
+	    case 'comments':
+		    $this->setVar('comments', $this->_objDBComments->getUserComments());
+		    return 'comments_tpl.php';
+	    case 'editcomment':
+		    $this->setVar('comment', $this->_objDBComments->getRow('id',$this->getParam('commentid')));
+		    return 'editcomment_tpl.php';
+	    case 'saveedit':
+		    $this->_objDBComments->saveEdit();
+		    return $this->nextAction('comments');
+	    case 'deletecomment':
+		    $this->_objDBComments->delete('id', $this->getParam('commentid'));
+		    return $this->nextAction('comments');
+	    case 'addflickrcomment':
+		    $this->initFlickr();
+		    $this->_objFlickr->photos_comments_addComment($this->getParam('imageid'), $this->getParam('comment'));
+		    return $this->nextAction('viewimage', array('albumid' => $this->getParam('albumid'), 'imageid' => $this->getParam('imageid'), 'mode' => 'flickr'));
+	    
 		
          
 			//upload section
@@ -137,103 +137,103 @@ class photogallery extends controller
                 return 'overview_tpl.php';
             
 			//edit section
-			case 'editsection':
-				$this->setVar('arrAlbum',$this->_objDBAlbum->getUserAlbums());
-				if($this->initFlickr())
-				{				
-            		$this->setVar('flickrusernames',$this->_objDBFlickrUsernames->getUsernames());	
-				} else {				
-	            	$this->setVar('flickrusernames',NULL);
-				}
+	    case 'editsection':
+		$this->setVar('arrAlbum',$this->_objDBAlbum->getUserAlbums());
+		if($this->initFlickr())
+		{				
+		    $this->setVar('flickrusernames',$this->_objDBFlickrUsernames->getUsernames());	
+		} else {				
+		    $this->setVar('flickrusernames',NULL);
+		}
             	
                 return 'edit_tpl.php';
-               
-        	case 'editalbum':
-        		$this->setVar('album', $this->_objDBAlbum->getRow('id',$this->getParam('albumid')));
-        		$this->setVar('thumbnails', $this->_objDBImage->getAlbumImages($this->getParam('albumid')));
-        		$this->setVar('tagsStr', $this->_objUtils->getTagLIst($this->getParam('albumid')));
-        		return 'editalbum_tpl.php';
-        	case 'savealbumedit':
-        		$this->_objUtils->saveAlbumEdit();
+	   
+	    case 'editalbum':
+		    $this->setVar('album', $this->_objDBAlbum->getRow('id',$this->getParam('albumid')));
+		    $this->setVar('thumbnails', $this->_objDBImage->getAlbumImages($this->getParam('albumid')));
+		    $this->setVar('tagsStr', $this->_objUtils->getTagLIst($this->getParam('albumid')));
+		    return 'editalbum_tpl.php';
+	    case 'savealbumedit':
+		    $this->_objUtils->saveAlbumEdit();
 //        		return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
-        	case 'savealbumorder':
-        		$this->_objDBAlbum->reOrderAlbums();
-        		return $this->nextAction('editsection');
-        	case 'deletealbum':
-        		$this->_objUtils->deleteAlbum($this->getParam('albumid'));
-        		return $this->nextAction('editsection');
-        	case 'deleteimage':
-        		$this->_objUtils->deleteImage($this->getParam('imageid'));
-        		return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
-        	case 'sortalbumimages':
-        		$this->setVar('album', $this->_objDBAlbum->getRow('id',$this->getParam('albumid')));
-        		$this->setVar('thumbnails', $this->_objDBImage->getAlbumImages($this->getParam('albumid')));
-        		return 'orderimages_tpl.php';
-        	case 'saveimageorder':
-        		$this->_objDBImage->reOrderImages($this->getParam('albumid'));
-        		return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
-        	case 'savealbumdescription':
-        		
-        		$this->setPageTemplate('');
-				$this->setLayoutTemplate('');
-        		$this->_objDBAlbum->saveDescription($this->getParam('albumid'), $this->getParam('myparam'));
-        		echo $this->getParam('myparam');
-        		break;
-        	case 'saveimage':
-        	die('ha'.$this->getParam('imageid'));
-        		$this->setPageTemplate('');
-				$this->setLayoutTemplate('');
-        		$this->_objDBImage->saveField($this->getParam('imageid'),$this->getParam('field'), $this->getParam('myparam'));
-        		echo $this->getParam('myparam');
-        		break;
-			//flickr	
-        	case 'flickr':
-        		//$this->initFlickr();
-        		if($this->getParam('msg') != '')
-        		{
-					$this->setVar('msg',$this->getParam('msg'));	
-				}
-        		
-        		$this->setVar('usernames', $this->_objDBFlickrUsernames->getUsernames());
-        		return 'flickr_tpl.php';
-        	case 'validateflickusername':
-        		return $this->validateFlickrUsernames();
-				
-			case 'addtags':
-				$uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));					
-				
-				$this->setPageTemplate('');
-				$this->setLayoutTemplate('');
-				$this->_objTags->insertTags(array($this->getParam('myinput'.$this->getParam('imageid'))), $this->_objUser->userId(), $this->getParam('imageid'), 'photogallery', $uri);	
-				echo $this->_objUtils->getTagLIst($this->getParam('imageid'));
-				break; 
-				
-			case 'deletetag':
-			
-				$this->_objTags->delete('id', $this->getParam('tagid'), 'tbl_tags');
-				return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
-				
-			case 'popular':
-				$this->setVar('cloud',$this->_objUtils->getPopular());
-				$this->setVar('imagelist', $this->_objUtils->getPopularPhotos());
-				if($this->getParam('meta_value'))
-				{
-					$this->setVar('taggedImages', $this->_objUtils->getTaggedImages($this->getParam('meta_value')));
-				}
-				return 'popular_tpl.php';
-			case 'deleteflickrusername':
-         		$this->_objDBFlickrUsernames->deleteUsername($this->getParam('username'));
-				return $this->nextAction('flickr');
-			case 'savealbumfield':
-				$field = $this->getParam('field');
-				$value = $this->getParam('myparam');
-				
-			case 'getresults':			
-				$this->setPageTemplate('blankpage_tpl.php');
-				$this->setLayoutTemplate('blank_tpl.php');
-				$this->setVar('str', 'some stuff'/*$this->editAlbum($this->getParam('albumid'))*/);
-				return 'blank_tpl.php';
-			
+	    case 'savealbumorder':
+		    $this->_objDBAlbum->reOrderAlbums();
+		    return $this->nextAction('editsection');
+	    case 'deletealbum':
+		    $this->_objUtils->deleteAlbum($this->getParam('albumid'));
+		    return $this->nextAction('editsection');
+	    case 'deleteimage':
+		    $this->_objUtils->deleteImage($this->getParam('imageid'));
+		    return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
+	    case 'sortalbumimages':
+		    $this->setVar('album', $this->_objDBAlbum->getRow('id',$this->getParam('albumid')));
+		    $this->setVar('thumbnails', $this->_objDBImage->getAlbumImages($this->getParam('albumid')));
+		    return 'orderimages_tpl.php';
+	    case 'saveimageorder':
+		    $this->_objDBImage->reOrderImages($this->getParam('albumid'));
+		    return $this->nextAction('sortalbumimages',array('albumid' => $this->getParam('albumid')));
+	    case 'savealbumdescription':
+		    
+		    $this->setPageTemplate('');
+			    $this->setLayoutTemplate('');
+		    $this->_objDBAlbum->saveDescription($this->getParam('albumid'), $this->getParam('myparam'));
+		    echo $this->getParam('myparam');
+		    break;
+	    case 'saveimage':
+	    die('ha'.$this->getParam('imageid'));
+		    $this->setPageTemplate('');
+			    $this->setLayoutTemplate('');
+		    $this->_objDBImage->saveField($this->getParam('imageid'),$this->getParam('field'), $this->getParam('myparam'));
+		    echo $this->getParam('myparam');
+		    break;
+		    //flickr	
+	    case 'flickr':
+		    //$this->initFlickr();
+		    if($this->getParam('msg') != '')
+		    {
+				    $this->setVar('msg',$this->getParam('msg'));	
+			    }
+		    
+		    $this->setVar('usernames', $this->_objDBFlickrUsernames->getUsernames());
+		    return 'flickr_tpl.php';
+	    case 'validateflickusername':
+		    return $this->validateFlickrUsernames();
+			    
+	    case 'addtags':
+		    $uri = $this->uri(array('action' => 'viewalbum', 'albumid' => $this->getParam('albumid')));					
+		    
+		    $this->setPageTemplate('');
+		    $this->setLayoutTemplate('');
+		    $this->_objTags->insertTags(array($this->getParam('myinput'.$this->getParam('imageid'))), $this->_objUser->userId(), $this->getParam('imageid'), 'photogallery', $uri);	
+		    echo $this->_objUtils->getTagLIst($this->getParam('imageid'));
+		    break; 
+		    
+	    case 'deletetag':
+	    
+		    $this->_objTags->delete('id', $this->getParam('tagid'), 'tbl_tags');
+		    return $this->nextAction('editalbum',array('albumid' => $this->getParam('albumid')));
+		    
+	    case 'popular':
+		    $this->setVar('cloud',$this->_objUtils->getPopular());
+		    $this->setVar('imagelist', $this->_objUtils->getPopularPhotos());
+		    if($this->getParam('meta_value'))
+		    {
+			    $this->setVar('taggedImages', $this->_objUtils->getTaggedImages($this->getParam('meta_value')));
+		    }
+		    return 'popular_tpl.php';
+	    case 'deleteflickrusername':
+	    $this->_objDBFlickrUsernames->deleteUsername($this->getParam('username'));
+		    return $this->nextAction('flickr');
+	    case 'savealbumfield':
+		    $field = $this->getParam('field');
+		    $value = $this->getParam('myparam');
+		    
+	    case 'getresults':			
+		    $this->setPageTemplate('blankpage_tpl.php');
+		    $this->setLayoutTemplate('blank_tpl.php');
+		    $this->setVar('str', 'some stuff'/*$this->editAlbum($this->getParam('albumid'))*/);
+		    return 'blank_tpl.php';
+	    
 				
         }
     }
@@ -369,30 +369,30 @@ class photogallery extends controller
     */
     public function validateFlickrUsernames()
     {
-		//check if the flickr username is already added to the database
-		//by some other user or by the the same user
-		if($this->_objDBFlickrUsernames->usernameExist($this->getParam('username')))
-		{
-			$msg = "Username is already in the database";
-			return $this->nextAction('flickr',array('msg' => $msg));
-		}
-		
-		//check if the username is valid in flickr
-		if($this->initFlickr())
-		{	
-    		if($this->_objFlickr->people_findByUsername($this->getParam('username')) == FALSE)
-    		{  
-			 	 $msg = 'The username you added was invalid';
-			 	 
-			} else {
-     			 $this->_objDBFlickrUsernames->addUsername();					
-     			 $msg = '';
-			}
-		} else {
-			$msg = "Cannot connect Flickr";
-		}
+	//check if the flickr username is already added to the database
+	//by some other user or by the the same user
+	if($this->_objDBFlickrUsernames->usernameExist($this->getParam('username')))
+	{
+		$msg = "Username is already in the database";
 		return $this->nextAction('flickr',array('msg' => $msg));
 	}
+
+	//check if the username is valid in flickr
+	if($this->initFlickr())
+	{	
+	    if($this->_objFlickr->people_findByUsername($this->getParam('username')) == FALSE)
+	    {  
+		$msg = 'The username you added was invalid';
+			     
+	    } else {
+		$this->_objDBFlickrUsernames->addUsername();					
+		$msg = '';
+	    }
+	} else {
+		$msg = "Cannot connect Flickr";
+	}
+	return $this->nextAction('flickr',array('msg' => $msg));
+    }
 	
 	/**
 	* Method to upload an image

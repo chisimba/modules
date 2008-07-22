@@ -29,8 +29,17 @@ $button->setToSubmit();
 $form->addToForm($username);
 //$form->addToForm($password);
 $form->addToForm($button);
+if ($this->getParam('msg') != '' ) 
+{
+    $message = $this->getParam('msg');
+    $this->setSession('displayconfirmationmessage', FALSE);
+	    
+    $timeoutMessage = $this->getObject('timeoutmessage', 'htmlelements');
+    $timeoutMessage->setMessage($message);
+    $timeoutMessage->timeout = 10000;
 
-
+    echo '<p>'.$timeoutMessage->show().'</p>';
+}
 if(count($usernames) > 0)
 {
  	$table = new htmltable();
