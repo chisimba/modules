@@ -381,7 +381,7 @@ class tutorials extends controller
                 $next = $this->getParam('next', NULL);
                 $previous = $this->getParam('previous', NULL);
                 $exit = $this->getParam('exit', NULL);
-                $submit = $this->getParam('submit', NULL);
+                $submit = $this->getParam('inpSubmit', NULL);
                 $this->objDbTutorials->updateAnswers($id, $qId, $answer);
                 if(!empty($next)){
                     return $this->nextAction('answer', array(
@@ -485,7 +485,7 @@ class tutorials extends controller
                 $next = $this->getParam('next', NULL);
                 $previous = $this->getParam('previous', NULL);
                 $exit = $this->getParam('exit', NULL);
-                $submit = $this->getParam('submit', NULL);
+                $submit = $this->getParam('inpSubmit', NULL);
                 $this->objDbTutorials->updateMarking($id, $aId, $sId, $comment, $mark);
                 if(!empty($next)){
                     if($this->isStudent == TRUE){

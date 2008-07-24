@@ -140,6 +140,8 @@ class tutorialsdisplay extends object
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('layer','htmlelements');
+        $this->loadClass('checkbox','htmlelements');
+        $this->loadClass('label','htmlelements');
         $this->objIcon = $this->newObject('geticon', 'htmlelements');
         $this->objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
         $this->objEditor = $this->newObject('htmlarea','htmlelements');
@@ -1392,6 +1394,10 @@ class tutorialsdisplay extends object
     */
     public function showAnswer($id, $order)
     {   
+        // add highlight labels
+        $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
         $questions = $this->objDbTutorials->getQuestions($id);
@@ -1404,12 +1410,14 @@ class tutorialsdisplay extends object
         $lblMark = $this->objLanguage->languageText('word_mark');
         $lblNext = $this->objLanguage->languageText('word_next');
         $lblPrevious = $this->objLanguage->languageText('word_previous');
-        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblSubmit = $this->objLanguage->languageText('phrase_submitformarking');
         $lblExit = $this->objLanguage->languageText('word_exit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblAnswer = $this->objLanguage->languageText('word_answer');
         $lblOf = $this->objLanguage->languageText('word_of');
         $lblTutorial = $this->objLanguage->languageText('word_tutorial');
+        $lblConfirm = $this->objLanguage->languageText('phrase_submissionconfirmed');
+        $lblConfirmSubmission = $this->objLanguage->languageText('mod_tutorials_confirmsubmission', 'tutorials');
 
         // set up page heading
         $this->objHeading = new htmlHeading();
@@ -1447,6 +1455,9 @@ class tutorialsdisplay extends object
         $string .= $this->objTabbedbox->show();
         
         // set up form elements
+        $this->objInput = new textinput('inpSubmit', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+        
         $this->objEditor->init('answer', $answer['answer'], '500px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtAnswer = $this->objEditor->show();
@@ -1459,8 +1470,8 @@ class tutorialsdisplay extends object
         $this->objButton->setToSubmit();
         $btnPrevious = $this->objButton->show();
 
-        $this->objButton=new button('submit',$lblSubmit);
-        $this->objButton->setToSubmit();
+        $this->objButton=new button('submitbutton',$lblSubmit);
+        $this->objButton->extra = 'onclick="if($(\'input_inpConfirm\').checked){$(\'input_inpSubmit\').value=\'submit\';$(\'form_frmAnswer\').submit();}else{alert(\''.$lblConfirmSubmission.'\');$(\'input_inpConfirm\').focus();return false;}"';
         $btnSubmit = $this->objButton->show();
 
         $this->objButton=new button('exit',$lblExit);
@@ -1468,10 +1479,19 @@ class tutorialsdisplay extends object
         $btnExit = $this->objButton->show();
 
         $this->objButton=new button('cancel',$lblCancel);
-        $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
         $btnCancel = $this->objButton->show();
         
-        if($order == 1){
+        $this->objCheck = new checkbox('inpConfirm');
+        $this->objCheck->setValue('yes');
+        $chkConfirm = $this->objCheck->show();
+        
+        $this->objLabel = new label($lblConfirm, 'input_inpConfirm');
+        $lblCheck = $this->objLabel->show();
+        
+        if(count($questions) == 1){
+            $buttons = $btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }elseif($order == 1){
             $buttons = $btnNext.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }elseif($order == count($questions)){
             $buttons = $btnPrevious.'&#160;'.$btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
@@ -1493,6 +1513,11 @@ class tutorialsdisplay extends object
         $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
         $this->objTable->endRow();
         $this->objTable->startRow();
+        if($order == count($questions)){
+            $this->objTable->startRow();
+            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();            
+        }
         $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
         $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
@@ -1504,7 +1529,7 @@ class tutorialsdisplay extends object
             'qId' => $question['id'],
             'order' => $order,
         ), 'tutorials'));
-        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$tblDisplay);
         $tabContent = $this->objForm->show();
     
         $this->objForm=new form('frmCancel',$this->uri(array(), 'tutorials'));
@@ -1875,6 +1900,10 @@ class tutorialsdisplay extends object
     */
     public function showMarking($id, $studentId, $order, $e, $c, $m, $isStudent = FALSE)
     {
+        // add highlight labels
+        $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
         // get data
         $tutorial = $this->objDbTutorials->getTutorial($id);
         $questions = $this->objDbTutorials->getQuestions($id);
@@ -1902,7 +1931,7 @@ class tutorialsdisplay extends object
         $lblMarking = $this->objLanguage->languageText('word_marking');
         $lblNext = $this->objLanguage->languageText('word_next');
         $lblPrevious = $this->objLanguage->languageText('word_previous');
-        $lblSubmit = $this->objLanguage->languageText('word_submit');
+        $lblSubmit = $this->objLanguage->languageText('phrase_submitmarking');
         $lblExit = $this->objLanguage->languageText('word_exit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblAnswer = $this->objLanguage->languageText('word_answer');
@@ -1918,6 +1947,8 @@ class tutorialsdisplay extends object
         $array = array();
         $array['mark'] = $question['question_value'];
         $lblRange = $this->objLanguage->code2Txt('mod_tutorials_markrrange', 'tutorials', $array);
+        $lblConfirm = $this->objLanguage->languageText('phrase_submissionconfirmed');
+        $lblConfirmSubmission = $this->objLanguage->languageText('mod_tutorials_confirmsubmission', 'tutorials');
         
         if($e == TRUE){
             $body = 'alert("'.$lblCommentRequired.'")';
@@ -1997,6 +2028,9 @@ class tutorialsdisplay extends object
         $string .= $this->objTabbedbox->show();
         
         // set up form elements
+        $this->objInput = new textinput('inpSubmit', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+        
         $this->objEditor->init('comment', $comment, '300px', '100%', NULL);
         $this->objEditor->setDefaultToolBarSetWithoutSave();
         $edtComment = $this->objEditor->show();
@@ -2016,8 +2050,8 @@ class tutorialsdisplay extends object
         $this->objButton->setToSubmit();
         $btnPrevious = $this->objButton->show();
 
-        $this->objButton=new button('submit',$lblSubmit);
-        $this->objButton->setToSubmit();
+        $this->objButton=new button('submitbutton',$lblSubmit);
+        $this->objButton->extra = 'onclick="if($(\'input_inpConfirm\').checked){$(\'input_inpSubmit\').value=\'submit\';$(\'form_frmMark\').submit();}else{alert(\''.$lblConfirmSubmission.'\');$(\'input_inpConfirm\').focus();return false;}"';
         $btnSubmit = $this->objButton->show();
 
         $this->objButton=new button('exit',$lblExit);
@@ -2028,7 +2062,16 @@ class tutorialsdisplay extends object
         $this->objButton->extra = 'onclick="document.frmCancel.submit();"';
         $btnCancel = $this->objButton->show();
         
-        if($order == 1){
+        $this->objCheck = new checkbox('inpConfirm');
+        $this->objCheck->setValue('yes');
+        $chkConfirm = $this->objCheck->show();
+        
+        $this->objLabel = new label($lblConfirm, 'input_inpConfirm');
+        $lblCheck = $this->objLabel->show();
+        
+        if(count($questions) == 1){
+            $buttons = $btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
+        }elseif($order == 1){
             $buttons = $btnNext.'&#160;'.$btnExit.'&#160;'.$btnCancel;
         }elseif($order == count($questions)){
             $buttons = $btnPrevious.'&#160;'.$btnSubmit.'&#160;'.$btnExit.'&#160;'.$btnCancel;
@@ -2052,6 +2095,11 @@ class tutorialsdisplay extends object
         $this->objTable->startRow();
         $this->objTable->addCell('&#160;', '', '', '', '', 'colspan="2"');        
         $this->objTable->endRow();
+        if($order == count($questions)){
+            $this->objTable->startRow();
+            $this->objTable->addCell($chkConfirm.'&#160;'.$lblCheck, '', '', '', '', 'colspan="2"');        
+            $this->objTable->endRow();            
+        }
         $this->objTable->startRow();
         $this->objTable->addCell($buttons, '', '', '', '', 'colspan="2"');        
         $this->objTable->endRow();
@@ -2065,7 +2113,7 @@ class tutorialsdisplay extends object
             'sId' => $studentId,
             'order' => $order,
         ), 'tutorials'));
-        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$tblDisplay);
         $tabContent = $this->objForm->show();        
 
         $this->objForm=new form('frmCancel',$this->uri(array(
