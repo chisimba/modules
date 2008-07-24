@@ -16,11 +16,11 @@ class attachments extends object {
         $contentPath = substr($contentPath,0,strlen($contentPath)-1);
 		$dir = "{$siteRootPath}{$contentPath}/calendar";
 		if (!file_exists($dir)) {
-		    mkdir($dir,0777);
+		    //mkdir($dir,0777);
 		}
 		$dir = "{$siteRootPath}{$contentPath}/calendar/attachments";
 		if (!file_exists($dir)) {
-		    mkdir($dir,0777);
+		    //mkdir($dir,0777);
 		}
 	}
 	function uploadFile($id)
