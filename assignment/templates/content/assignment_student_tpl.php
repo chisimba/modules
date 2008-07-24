@@ -20,6 +20,8 @@ $this->loadClass('link','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 $objTimeOut = $this->newObject('timeoutMessage','htmlelements');
 
+$objTrim = $this->getObject('trimstr', 'strings');
+
 $repWords = array('authors'=>'lecturers');
 
 // Set up language items
@@ -244,7 +246,7 @@ if($this->ws){
 
                 $objTable1->startRow();
                 $objTable1->addCell($line['name'],'20%','','',$class);
-                $objTable1->addCell($description,'','','',$class);
+                $objTable1->addCell($objTrim->strTrim(strip_tags($description), 50),'','','',$class);
                 $objTable1->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
                 $objTable1->addCell($this->formatDate($line['closing_date']),'15%','','',$class);
                 $objTable1->addCell($status,'12%','','',$class);
@@ -312,7 +314,7 @@ if($this->test){
                 }
                 $objTable3->startRow();
                 $objTable3->addCell($line['name'],'20%','','',$class);
-                $objTable3->addCell($description,'','','',$class);
+                $objTable3->addCell($objTrim->strTrim(strip_tags($description), 50),'','','',$class);
                 $objTable3->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
                 $objTable3->addCell($this->formatDate($line['closing_date']),'15%','','',$class);
                 $objTable3->addCell($mark,'12%','','',$class);
@@ -426,7 +428,7 @@ if(!empty($assignData)){
         $objTable2->startRow();
         $objTable2->addCell($name,'20%','','',$class);
         $objTable2->addCell($format,'13%','','',$class);
-        $objTable2->addCell($description,'','','',$class);
+        $objTable2->addCell($objTrim->strTrim(strip_tags($description), 50),'','','',$class);
         $objTable2->addCell($this->objUser->fullname($line['userid']),'15%','','',$class);
         $objTable2->addCell($this->objDate->formatDate($line['closing_date']),'15%','','',$class);
         $objTable2->addCell($status,'12%','','',$class);
