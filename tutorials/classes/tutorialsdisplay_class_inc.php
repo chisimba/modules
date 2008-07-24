@@ -1411,7 +1411,7 @@ class tutorialsdisplay extends object
         $lblNext = $this->objLanguage->languageText('word_next');
         $lblPrevious = $this->objLanguage->languageText('word_previous');
         $lblSubmit = $this->objLanguage->languageText('phrase_submitformarking');
-        $lblExit = $this->objLanguage->languageText('word_exit');
+        $lblExit = $this->objLanguage->languageText('phrase_saveandexit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblAnswer = $this->objLanguage->languageText('word_answer');
         $lblOf = $this->objLanguage->languageText('word_of');
@@ -1932,7 +1932,7 @@ class tutorialsdisplay extends object
         $lblNext = $this->objLanguage->languageText('word_next');
         $lblPrevious = $this->objLanguage->languageText('word_previous');
         $lblSubmit = $this->objLanguage->languageText('phrase_submitmarking');
-        $lblExit = $this->objLanguage->languageText('word_exit');
+        $lblExit = $this->objLanguage->languageText('phrase_saveandexit');
         $lblCancel = $this->objLanguage->languageText('word_cancel');
         $lblAnswer = $this->objLanguage->languageText('word_answer');
         $lblOf = $this->objLanguage->languageText('word_of');
