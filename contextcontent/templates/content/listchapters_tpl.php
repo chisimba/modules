@@ -73,6 +73,8 @@ $chapterList = '<div id="allchapters">';
 
 $objWashout = $this->getObject('washout', 'utilities');
 
+//var_dump($chapters);
+
 foreach ($chapters as $chapter)
 {
     $showChapter = TRUE;
@@ -114,11 +116,20 @@ foreach ($chapters as $chapter)
         $chapterLink->link = $chapter['chaptertitle'];
         $chapterLink->name = $chapter['chapterid'];
         
-        if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
-            $content = '<h1>'."<a name='{$chapter['chapterid']}' style='text-decoration:none;color:inherit'>{$chapter['chaptertitle']}</a>";
+        $content = '<h1>'.$chapterLink->show();
+        
+        //if (trim($chapterPages) == '<ul class="htmlliststyle"></ul>') {
+            //$content = '<h1>'."<a name='{$chapter['chapterid']}' style='text-decoration:none;color:inherit'>{$chapter['chaptertitle']}</a>";
+        //} else {
+        //    $content = '<h1>'.$chapterLink->show();
+        //}
+        
+        if ($chapter['pagecount'] == 1) {
+            $content .= ' ('.$chapter['pagecount'].' '.$this->objLanguage->languageText('mod_toolbar_page', 'toolbar', 'Page').')';
         } else {
-            $content = '<h1>'.$chapterLink->show();
+            $content .= ' ('.$chapter['pagecount'].' '.$this->objLanguage->languageText('word_pages', 'system', 'Pages').')';
         }
+        
         
         if ($this->isValid('editchapter')) {
             $content .= ' '.$editLink->show();
@@ -247,12 +258,7 @@ if (count($chapters) > 1) {
 
 echo $chapterList;
 
-if ($this->isValid('addchapter')) {
-    $link = new link ($this->uri(array('action'=>'addchapter')));
-    $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
-    
-    echo $link->show();
-}
+
 
 
 ?>

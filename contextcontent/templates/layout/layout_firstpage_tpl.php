@@ -63,18 +63,29 @@ if (count($chapters) > 0) {
             $bookmarkLink = new link("#{$chapter['chapterid']}");
             $bookmarkLink->link = "->";
             $bookmarkLink->title = "Scroll to Chapter";
-            if ($chapter['pagecount'] == 0) {
-                $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
-            } else {
+            //if ($chapter['pagecount'] == 0) {
+            //    $content .= '<li title="Chapter has no content pages">'.$chapter['chaptertitle'];
+            //} else {
                 $link = new link ($this->uri(array('action'=>'viewchapter', 'id'=>$chapter['chapterid'])));
                 $link->link = $chapter['chaptertitle'];
                 $content .= '<li>'.$link->show();
+            //}
+            
+            if (isset($showScrollLinks) && $showScrollLinks) {
+                $content .= " ".$bookmarkLink->show().'</li>';
             }
-            $content .= " ".$bookmarkLink->show().'</li>';
+            
         }
     }
     
     $content .= '</ol>';
+}
+
+if ($this->isValid('addchapter')) {
+    $link = new link ($this->uri(array('action'=>'addchapter')));
+    $link->link = $this->objLanguage->languageText('mod_contextcontent_addanewchapter','contextcontent');
+    
+    $content .=  '<br /><p>'.$link->show().'</p>';
 }
 
 

@@ -1,3 +1,12 @@
+<?php
+$showNav = TRUE;
+
+if (isset($hideNavSwitch) && $hideNavSwitch) {
+    $showNav = FALSE;
+}
+
+if ($showNav) {
+    ?>
 <script type="text/javascript">
 //<![CDATA[
 
@@ -17,9 +26,8 @@ function showResponse (originalRequest) {
 }
 //]]>
 </script>
-
-<?php
-
+    <?php
+}
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
@@ -81,23 +89,34 @@ if (isset($currentChapter)) {
     
     $navigationType = $this->getSession('navigationType', 'tree');
     
+    
+    
     if ($navigationType == 'tree') {
         $left .= '<div id="contentnav">';
         $left .= $this->objContentOrder->getTree($this->contextCode, $currentChapter, 'htmllist', $pageId, 'contextcontent');
-        $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+        
+        if ($showNav) {
+            $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+        }
         
         $left .= '</div>';
     }  else if ($navigationType == 'bookmarks') {
         $left .= '<div id="contentnav">';
         $left .= $this->objContentOrder->getBookmarkedPages($this->contextCode, $currentChapter, $pageId);
-        $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
-                
+        
+        if ($showNav) {
+            $left .= '<hr /><p><a href="javascript:changeNav(\'twolevel\');">'.$this->objLanguage->languageText('mod_contextcontent_viewtwolevels', 'contextcontent', 'View Two Levels at a time').' ...</a><br /><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a></p>';
+        }
+        
         $left .= '</div>';
     }else {
         $left .= '<div id="contentnav">';
         $left .= $this->objContentOrder->getTwoLevelNav($this->contextCode, $currentChapter, $pageId);
-        $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
-        $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+        
+        if ($showNav) {
+            $left .= '<hr /><p><a href="javascript:changeNav(\'tree\');">'.$this->objLanguage->languageText('mod_contextcontent_viewastree', 'contextcontent', 'View as Tree').'...</a>';
+            $left .= '<br /><a href="javascript:changeNav(\'bookmarks\');">'.$this->objLanguage->languageText('mod_contextcontent_viewbookmarkedpages', 'contextcontent', 'View Bookmarked Pages').'</a></p>';
+        }
         
         $left .= '</div>';
     }
@@ -110,7 +129,7 @@ if (isset($currentChapter)) {
     }
     
     $returnLink = new link ($this->uri(NULL));
-    $returnLink->link = 'Return to Chapter List';
+    $returnLink->link = $this->objLanguage->languageText('mod_contextcontent_returntochapterlist', 'contextcontent', 'Return to Chapter List');
     
     $left .= '<hr /><p>'.$returnLink->show().'</p>';
     

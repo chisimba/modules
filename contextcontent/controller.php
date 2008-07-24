@@ -223,6 +223,8 @@ class contextcontent extends controller
             $chapters = $this->objContextChapters->getContextChapters($this->contextCode);
             $this->setVarByRef('chapters', $chapters);
             
+            $this->setVar('showScrollLinks', TRUE);
+            
             $this->setLayoutTemplate('layout_firstpage_tpl.php');
             return 'listchapters_tpl.php';
         }
@@ -258,7 +260,7 @@ class contextcontent extends controller
         if ($result == FALSE) {
             return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
         } else {
-            return $this->nextAction(NULL, array('message'=>'chaptercreated', 'id'=>$result));
+            return $this->nextAction('viewchapter', array('message'=>'chaptercreated', 'id'=>$chapterId));
         }
     }
     
@@ -279,8 +281,13 @@ class contextcontent extends controller
             
             $this->setVarByRef('chapter', $chapter);
             $this->setVarByRef('id', $id);
+            $this->setVarByRef('currentChapter', $id);
             
-            $this->setLayoutTemplate('layout_firstpage_tpl.php');
+            $this->setVar('hideNavSwitch', TRUE);
+            $this->setVar('currentPage', NULL);
+            
+            
+            //$this->setLayoutTemplate('layout_firstpage_tpl.php');
             
             return 'addeditchapter_tpl.php';
         }
@@ -720,9 +727,19 @@ class contextcontent extends controller
         $firstPage = $this->objContentOrder->getFirstChapterPage($this->contextCode, $id);
         
         if ($firstPage == FALSE) {
-            $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
-            $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted. Please choose another chapter'));
-            return 'errormessage_tpl.php';
+            
+            $chapter = $this->objContextChapters->getChapter($id);
+            
+            if ($chapter == FALSE) {
+                return $this->nextAction(NULL, array('error'=>'chapterdoesnotexist'));
+            } else {
+                $this->setVarByRef('chapter', $chapter);
+                
+                $this->setVar('errorTitle', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontent', 'contextcontent', 'Chapter has no content'));
+                $this->setVar('errorMessage', $this->objLanguage->languageText('mod_contextcontent_chapterhasnocontentinstruction', 'contextcontent', 'The chapter you have tried to view does not have any content, or had content which has now been deleted.'));
+                return 'chapternocontent_tpl.php';
+            }
+            
         } else {
             return $this->nextAction('viewpage', array('id'=>$firstPage['id'], 'message'=>$this->getParam('message')));
         }
