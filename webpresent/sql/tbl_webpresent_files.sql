@@ -57,7 +57,7 @@ $name = 'webpresent_files_index';
 
 $indexes = array(
     'fields' => array(
-        'fileid' => array(),
+        'id' => array(),
         'creatorid' => array(),
         ),
     );

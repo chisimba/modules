@@ -30,7 +30,6 @@ $name = 'webpresent_tags_index';
 $indexes = array(
     'fields' => array(
         'fileid' => array(),
-        'tag' => array(),
         ),
     );
 ?>
