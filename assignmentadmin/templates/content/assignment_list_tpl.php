@@ -23,6 +23,7 @@ $objPop = $this->newObject('windowpop','htmlelements');
 $this->objFiles = $this->getObject('dbfile','filemanager');
 $this->objConfig = $this->getObject('altconfig', 'config');
 
+$objTrim = $this->getObject('trimstr', 'strings');
 
 // Set up language items
 $assignment = $this->objLanguage->languageText('mod_assignmentadmin_name','assignmentadmin');

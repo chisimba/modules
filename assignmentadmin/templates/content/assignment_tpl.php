@@ -19,6 +19,7 @@ $this->loadClass('link','htmlelements');
 $objIcon = $this->newObject('geticon','htmlelements');
 $objConfirm = $this->newObject('confirm','utilities');
 $objMsg = $this->newObject('timeoutmessage', 'htmlelements');
+$objTrim = $this->getObject('trimstr', 'strings');
 
 // Set up language items
 $assignmentsLabel = $this->objLanguage->languageText('mod_assignmentadmin_assignments','assignmentadmin');
@@ -126,7 +127,7 @@ if(!empty($data)){
 
             $objTable->startRow();
             $objTable->addCell($link,'','','',$class);
-            $objTable->addCell($description,'','','',$class);
+            $objTable->addCell($objTrim->strTrim(strip_tags($description), 50),'','','',$class);
             $objTable->addCell($typeLabel,'','','',$class);
             $objTable->addCell($this->objUser->fullname($line['userid']),'','','',$class);
             $objTable->addCell($this->objAssignmentAdmin->formatDate($line['closing_date']),'','','',$class);
@@ -146,7 +147,7 @@ $table1 = $objTable->show();
 $space = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 // Set up links to create online or uploadable assignments
-$objIcon->setModuleIcon('addassignment');
+$objIcon->setIcon('addassignment');
 $objIcon->title = $assignmentsLabel;
 $objLink = new link($this->uri(''));
 $objLink->link = $objIcon->show();
