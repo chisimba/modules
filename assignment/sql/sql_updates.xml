@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<updates>
+    <update>
+        <table>tbl_assignment</table>
+        <version>0.310</version>
+        <description>Added opening date - when assignments become visible to students</description>
+        <data>
+            <add>
+                <name>opening_date</name>
+                <type>timestamp</type>
+            </add>
+        </data>
+    </update>
+</updates>

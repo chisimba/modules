@@ -52,6 +52,9 @@ $fields = array(
 	'closing_date' => array(
 		'type' => 'timestamp',
 		),
+    'opening_date' => array(
+		'type' => 'timestamp',
+		),
 	'last_modified' => array(
 		'type' => 'timestamp',
 		),
