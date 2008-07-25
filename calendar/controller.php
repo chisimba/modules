@@ -122,7 +122,7 @@ class calendar extends controller
                 return $this->showEditForm($this->getParam('id'));
 
             case 'saveevent':
-                return $this->saveEvent();
+                return $this->saveEvent($this->getParam('eventfor', '0'));
 
             case 'updateevent':
                 return $this->updateEvent();
@@ -204,7 +204,7 @@ class calendar extends controller
     /**
     * Method to process a form and save an event
     */
-    function saveEvent()
+    function saveEvent($eventFor)
     {
         $date = $this->getParam('date');
         $date2 = $this->getParam('date2');
@@ -212,7 +212,6 @@ class calendar extends controller
         $eventdetails = $this->getParam('details');
         $eventurl  = $this->getParam('url');
         $multidayevent  = $this->getParam('multidayevent');
-        $eventFor = $this->getParam('eventfor', '0');
         $timeFrom = $this->getParam('timefrom');
         $timeTo = $this->getParam('timeto');
 
@@ -345,12 +344,22 @@ class calendar extends controller
         
         $timeFrom = $this->getParam('timefrom');
         $timeTo = $this->getParam('timeto');
-
-        $returnevents = 'all';
         
-        $this->objCalendar->deleteBatch($id);
+        $event = $this->objCalendar->getSingle($id);
         
-        return $this->saveEvent();
+        if ($event != FALSE) {
+            $returnevents = 'all';
+            
+            //var_dump($event);
+            
+            $this->objCalendar->deleteBatch($id);
+            
+            return $this->saveEvent($event['userorcontext']);
+        } else {
+            return $this->nextAction(NULL);
+        }
+        
+        
 
     }
 

@@ -161,8 +161,8 @@ class calendarinterface extends object
     */
     public function prepareEventsForCalendar (&$events, $type)
     {
-        $objTrim =& $this->getObject('trimstr', 'strings');
-        
+        $objTrim = $this->getObject('trimstr', 'strings');
+        $objWashout = $this->getObject('washout', 'utilities');
         
         
         foreach ($events as $event)
@@ -234,7 +234,7 @@ class calendarinterface extends object
                 $eventList .= '('.$event['timefrom'].' - '.$event['timeto'].')';
             }
             
-            $eventList .= '<br /><div>'.$contextInfo.$event['eventdetails'].'</div>'.$edit.' '.$delete.'';
+            $eventList .= '<br /><div>'.$objWashout->parseText($contextInfo.$event['eventdetails']).'</div>'.$edit.' '.$delete.'';
             
             if ($event['eventurl'] != NULL) {
                 $link = new link($event['eventurl']);
