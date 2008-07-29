@@ -609,8 +609,8 @@ class pbrender extends dbTable
         $objConfirm = $this->getObject('confirm','utilities');
         $rep = array('TITLE' => $blockname);
         $objConfirm->setConfirm($objDelIcon->show(), $delLink,
-          $this->objLanguage->code2Txt("mod_personalblocks_confmsg",
-          'personalblocks', $rep));
+          $this->objLanguage->code2Txt("mod_personalblocks_confmsg", 
+           'personalblocks', $rep));
         return $objConfirm->show();
     }
 
@@ -682,6 +682,9 @@ class pbrender extends dbTable
 
         //Create an element for the input of blockname
         $objElement = new textinput ("blockname");
+        $requiredName = $this->objLanguage->languageText("mod_personalblocks_namerequired", "personalblocks");
+        //Add a validation rule
+        $objForm->addRule('blockname',$requiredName,'required');
         //Set the value of the element to $blockid
         if (isset($blockname)) {
             $objElement->setValue($blockname);
@@ -690,19 +693,20 @@ class pbrender extends dbTable
           . "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_blname", "personalblocks")
           . "</td><td>".$objElement->show()."</td></tr>";
-
+                    
         // Add a text area for the block contents.
         $this->loadClass('textarea', 'htmlelements');
         $widgetTxt = new textarea('blockcontent', $blockcontent);
-        //$widgetTxt->setAutoGrow(TRUE);
+        $requiredContents = $this->objLanguage->languageText("mod_personalblocks_contentsrequired", "personalblocks");
         $widgetTxt->setId("blockcontentstyle");
+        //Add a validation rule
+        $objForm->addRule('blockcontentstyle',$requiredContents,'required');
         $ifTable .= "<tr><td valign='top'>"
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
           . "</td><td>" . $widgetTxt->show() . "</td></tr>";
         //Make it an expanding textarea
         $aG = $this->getObject("jqexpanding", "htmlelements");
         $aG->show("blockcontentstyle");
-
         // Add a radio set for choosing location.
         $this->loadClass("radio", "htmlelements");
         $objRadioElement = new radio('location');
@@ -713,8 +717,6 @@ class pbrender extends dbTable
         $ifTable .= "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_location", "personalblocks")
           . "</td><td>" . $objRadioElement->show() . "</td></tr>";
-
-
         // Add a radio set for active / not active.
         $objRadioActive = new radio('active');
         $objRadioActive->addOption('1',  "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_isactive", "personalblocks") . "&nbsp;");
@@ -723,18 +725,67 @@ class pbrender extends dbTable
         $ifTable .= "<tr><td>"
           . $this->objLanguage->languageText("mod_personalblocks_active", "personalblocks")
           . "</td><td>" . $objRadioActive->show() . "</td></tr>";
-
-        //Add a radio for the  block type (Personal, context)
-        $objRadioBlocktype = new radio('blocktype');
-        $objRadioBlocktype->addOption('personal',  "&nbsp;" . $this->objLanguage->languageText("mod_personalblocks_personal", "personalblocks") . "&nbsp;");
-        $contextTranslated = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_context',
-          'personalblocks', NULL, '[-context-] code'));
-        $objRadioBlocktype->addOption('context', "&nbsp;" . $contextTranslated . "&nbsp;");
-
-        $objRadioBlocktype->setSelected($blocktype);
-        $ifTable .= "<tr><td>"
-          . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
-          . "</td><td>" . $objRadioBlocktype->show() . "</td></tr>";
+          
+        // Check if they are in a context and have rights to add a block to it.
+        // If they are in a context, and have rights to it, this should be visible
+        // If they are not in a context, or have no rights to it, this should not be visible
+        $objContext = $this->getObject('dbcontext', 'context');
+        if($objContext->isInContext()){
+            //Check if they have edit/author rights
+            if ($this->objUser->isContextAuthor() || $this->objUser->isContextEditor) {
+            	$curContext = TRUE;
+            } else {
+            	$curContext = FALSE;
+            }
+            $contextCode = $objContext->getContextCode();
+        } else {
+            $curContext = FALSE;
+            $contextCode="";
+        }
+        $indicator = $this->getBlockTypeIcon($blocktype);
+        //If they are not in a context, or have no rights to it then don't show context block
+        if (!$curContext) {
+            $objBlockType = new textinput("blocktype");
+            //Set the field type to hidden for the block type
+            $objBlockType->fldType="hidden";
+            //Add the hidden blocktype field to the form
+            $ifTable .= "<tr><td>"
+              . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
+              . "</td><td valign=\"middle\">{$indicator}&nbsp;&nbsp;" . $blocktype . $objBlockType->show() . "</td></tr>"; 
+        } else {
+            // Load the Javascript for setting the context
+            $this->loadContextClickJavascript($contextCode);
+            // Add a radio for the  block type (Personal, context)
+            $contextTranslated = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_context',
+              'personalblocks', NULL, '[-context-] code'));
+            //The radio button for the default block type of personal
+            $radioPersonal = '<input type="radio" value="personal" ' .
+                    'name="blocktype" ';
+            if ($blocktype == "personal") {
+                $radioPersonal.= ' checked="checked" ';
+                $visibility="hidden";
+            }
+            $radioPersonal.= 'onclick="setContextCode(\'personal\');">&nbsp;' 
+              . '<label for="personal">'
+              . $this->objLanguage->languageText("mod_personalblocks_personal", "personalblocks") 
+              . '</label>&nbsp;';
+            //The radio button for the context block type
+            $radioContext = '<input type="radio" value="context" ' .
+                    'name="blocktype" ';
+            if ($blocktype == "context") {
+                $radioContext .= ' checked="checked" ';
+                $visibility="visible";
+            }
+            $radioContext .= 'onclick="setContextCode(\'context\');">&nbsp;' 
+              . '<label for="context">'
+              . $contextTranslated . '</label>&nbsp;';
+              
+            $ifTable .= "<tr><td>" 
+              . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
+              . "</td><td valign=\"middle\">" 
+              . $radioPersonal . "&nbsp;&nbsp;" . $radioContext 
+              . "&nbsp;&nbsp;<span id=\"typeIndicator\">{$indicator}</span></td></tr>";
+        }
 
         // Add a textbox for the sort order
         //@todo Make it an ajax thing
@@ -750,14 +801,22 @@ class pbrender extends dbTable
         //Add a dropdown for the context
         //@ToDo add the dropdown and some JS to make it visible
         $objElement = new textinput ("context");
-        //Set the value of the element to $blockid
+        //Set the value of the element to the cntext
         if (isset($context)) {
             $objElement->setValue($context);
         }
-        $label = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_contextcode',
-          'personalblocks', NULL, '[-context-] code'));
-        $ifTable .= "<tr><td>" . $label . "</td><td>"
-          .$objElement->show()."</td></tr>";
+        // $visibility is used by the Javascript to set the visibility of the context
+        if (!$curContext) {
+            //Set the field type to hidden for the block type
+            $objElement->fldType="hidden";
+            $ifTable .= $objElement->show();
+        } else {
+            $label = ucfirst($this->objLanguage->code2Txt('mod_personalblocks_contextcode',
+              'personalblocks', NULL, '[-context-] code'));
+            $ifTable .= "<tr><td><span id='contextLabel' style=\"visibility: {$visibility};\">" 
+              . $label . "</span></td><td><span id='contextCode' style=\"visibility: {$visibility};\">"
+              .$objElement->show()."</span></td></tr>";
+        }
 
         // Create an instance of the button object
         $this->loadClass('button', 'htmlelements');
@@ -773,5 +832,47 @@ class pbrender extends dbTable
         $objForm->addToForm($ifTable);
         return $objForm->show();
     }
+
+    /**
+    * 
+    * Create the JS for the block type. It hides and shows the context
+    * textbox and its label, as well as setting the value to the current
+    * context when the context radio button is clicked, and removing the
+    * value when personal block is clicked.
+    * 
+    * @param string $contextCode The context code of the context that the user is in.
+    * @access private
+    * @return TRUE
+    *  
+    */
+    private function loadContextClickJavascript($contextCode)
+    {
+        $ret = '
+<script type="text/javascript">
+//<![CDATA[
+function setContextCode(blocktype){
+    var contextCode = document.getElementById(\'contextCode\');
+    var contextLabel = document.getElementById(\'contextLabel\');
+    var typeIndicator = document.getElementById(\'typeIndicator\');
+    if (blocktype == "context") {
+        document.forms[\'personalblock\'].context.value=\'' . $contextCode . '\';
+        contextCode.style.visibility="visible";
+        contextLabel.style.visibility="visible";
+        typeIndicator.innerHTML = \'' . $this->getContextIcon() . '\';
+    } else {
+        document.forms[\'personalblock\'].context.value=\'\';
+        contextCode.style.visibility="hidden";
+        contextLabel.style.visibility="hidden";
+        typeIndicator.innerHTML = \'' . $this->getPersonalIcon() . '\';
+    }
+}
+// ]]>
+</script>';
+        $this->appendArrayVar('headerParams', $ret);
+        
+        return TRUE;
+    }
+    
+
 }
 ?>
