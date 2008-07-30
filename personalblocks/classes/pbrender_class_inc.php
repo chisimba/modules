@@ -698,15 +698,15 @@ class pbrender extends dbTable
         $this->loadClass('textarea', 'htmlelements');
         $widgetTxt = new textarea('blockcontent', $blockcontent);
         $requiredContents = $this->objLanguage->languageText("mod_personalblocks_contentsrequired", "personalblocks");
-        $widgetTxt->setId("blockcontentstyle");
+        //---------------$widgetTxt->setId("blockcontentstyle");
         //Add a validation rule
-        $objForm->addRule('blockcontentstyle',$requiredContents,'required');
+        $objForm->addRule('blockcontent',$requiredContents,'required');
         $ifTable .= "<tr><td valign='top'>"
           . $this->objLanguage->languageText("mod_personalblocks_content", "personalblocks")
           . "</td><td>" . $widgetTxt->show() . "</td></tr>";
         //Make it an expanding textarea
         $aG = $this->getObject("jqexpanding", "htmlelements");
-        $aG->show("blockcontentstyle");
+        $aG->show("input_blockcontent");
         // Add a radio set for choosing location.
         $this->loadClass("radio", "htmlelements");
         $objRadioElement = new radio('location');
