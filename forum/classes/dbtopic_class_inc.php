@@ -61,8 +61,9 @@ class dbtopic extends dbTable
     * @param string $topic_tangent_parent: Record Id of tangent parent
     * @param string $userId: User ID of person starting the topic
     * @param string $dateLastUpdated: Date topic was started
+    * @param string $id Id - Optional, used by API
     */
-    function insertSingle($forum_id, $type_id, $topic_tangent_parent, $userID, $postTitle=NULL)
+    function insertSingle($forum_id, $type_id, $topic_tangent_parent, $userID, $postTitle=NULL, $id=NULL)
     {
     	if ($topic_tangent_parent == 0) {
             $lastRightPointer = $this->getLastRightPointer($forum_id);
@@ -73,6 +74,7 @@ class dbtopic extends dbTable
         // provide support for tangents
         
         $this->insert(array(
+    		'id'              => $id,
     		'forum_id'        => $forum_id,
     		'type_id'         => $type_id,
     		'views'           => 0,

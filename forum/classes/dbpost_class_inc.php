@@ -127,9 +127,10 @@ class dbPost extends dbTable
     * @param string $topic_id: Record ID of the Topic
     * @param string $userId: User ID of person posting the post
     * @param string $dateLastUpdated: Date Post was made
+    * @param string $id Id - Optional, used by API
     * @return string $this->getLastInsertId()
     */
-    function insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $userId, $level=1)
+    function insertSingle($post_parent, $post_tangent_parent, $forum_id, $topic_id,  $userId, $level=1, $id=NULL)
     {
         // Interim measure. Alternative, use regexp and replace with space
         //$post_title = strip_tags($post_title);
@@ -154,15 +155,16 @@ class dbPost extends dbTable
         }
 
         $this->insert(array(
+            'id'                    => $id,
             'post_parent'           => $post_parent,
             'post_tangent_parent'   => $post_tangent_parent,
             'topic_id'              => $topic_id,
-            'post_order'           => $this->getLastPostOrder($topic_id),
+            'post_order'            => $this->getLastPostOrder($topic_id),
             'userId'                => $userId,
-            'lft'                => $leftPointer,
-            'rght'                => $rightPointer,
-            'level'                => $level,
-            'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+            'lft'                   => $leftPointer,
+            'rght'                  => $rightPointer,
+            'level'                 => $level,
+            'datelastupdated'       => strftime('%Y-%m-%d %H:%M:%S', mktime())
         ));
 
         return $this->getLastInsertId();

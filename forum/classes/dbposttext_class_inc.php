@@ -40,9 +40,10 @@ class dbPostText extends dbTable
     * @param string $language Language the post was made in
     * @param int $original_post Either 0 or 1 to indicate whether this is the original post, or a translation
     * @param string $userId Record Id of the User
+    * @param string $id Id - Optional, used by API
     * @return string Last Insert Id
     */
-    function insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $userId)
+    function insertSingle($post_id, $post_title, $post_text,  $language, $original_post, $userId, $id=NULL)
     {
     	// Interim measure. Alternative, use regexp and replace with space
         $post_title = strip_tags($post_title);
@@ -51,14 +52,15 @@ class dbPostText extends dbTable
         $post_text = $this->cleanUpPostText($post_text);
         
         $this->insert(array(
-    		'post_id'                => $post_id,
-    		'post_title'             => stripslashes($post_title),
+    		'id'                    => $id,
+    		'post_id'               => $post_id,
+    		'post_title'            => stripslashes($post_title),
     		'post_text'             => stripslashes($post_text),
     		'language'              => $language,
             'original_post'         => $original_post,
-            'userId'                 => $userId,
-            'wordcount'           => $this->objTextStats->count_words(strip_tags($post_text)),
-    		'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+            'userId'                => $userId,
+            'wordcount'             => $this->objTextStats->count_words(strip_tags($post_text)),
+    		'dateLastUpdated'       => strftime('%Y-%m-%d %H:%M:%S', mktime())
     	));
     	
     	return $this->getLastInsertId();
