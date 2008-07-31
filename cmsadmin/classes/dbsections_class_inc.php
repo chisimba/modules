@@ -201,6 +201,19 @@ class dbsections extends dbTable
             return $this->getRow('id', $id);
         }
 
+
+        /**
+         * Method to return the Parent of the given sub section
+         *
+         * @access public
+         * @return array (Parent items record) or false if record couldn't be found
+         */
+        public function getParent($sectionId){
+            //getting the parent record
+            $arrSection = $this->getArray("SELECT * FROM tbl_cms_sections WHERE id = '$sectionId'");
+            return $arrSection[0];	
+        }
+        
         /**
          * Method to get the first sections id(pk)
          *
@@ -292,6 +305,7 @@ class dbsections extends dbTable
                 if ($result != FALSE) {
                     $index['id'] = $result;
                     $this->luceneIndex($index);
+                    $this->_objSecurity->inheritSectionPermissions($result);
                 }
                 
                 return $result;
@@ -347,6 +361,7 @@ class dbsections extends dbTable
                 if ($result != FALSE) {
                     $index['id'] = $result;
                     $this->luceneIndex($index);
+                    $this->_objSecurity->inheritSectionPermissions($result);
                 }
                 
                 return $result;
@@ -376,7 +391,7 @@ class dbsections extends dbTable
          * @param bool $showintroduction Whether introduction will be visible or not
          * @param int $numpagedisplay Number of pages to display 
          * @param string $ordertype How the page should be ordered
-         * @param string $contextCode The context code if you are using the cms as the context content manager
+         * @param string $contextCode The context code if you are using the cms as the context section manager
          * @access public
          * @return bool
          */
@@ -731,12 +746,12 @@ class dbsections extends dbTable
                 
                 if(!empty($nodes)){
                     foreach($nodes as $item){
-                        $this->_objDBContent->resetSection($item['id']);
+                        $this->_objDBsection->resetSection($item['id']);
                         $this->archive($item['id']);
                     }
                 }
                 // Restore root node
-                $this->_objDBContent->resetSection($id);
+                $this->_objDBsection->resetSection($id);
                 $this->archive($id);
             }else{
                 // find nodes below section
@@ -747,7 +762,7 @@ class dbsections extends dbTable
                         $this->deleteSection($item['id']);
                     }
                 }
-                $this->_objDBContent->resetSection($id);
+                $this->_objDBsection->resetSection($id);
                 $this->archive($id);
             }
         }
@@ -792,12 +807,12 @@ class dbsections extends dbTable
                 
                 if(!empty($nodes)){
                     foreach($nodes as $item){
-                        $this->unarchiveSectionContent($item['id']);
+                        $this->unarchiveSectionsection($item['id']);
                         $this->archive($item['id'], TRUE);
                     }
                 }
                 // Restore root node
-                $this->unarchiveSectionContent($id);
+                $this->unarchiveSectionsection($id);
                 $this->archive($id, TRUE);
             }else{
                 // find nodes below section
@@ -808,21 +823,21 @@ class dbsections extends dbTable
                         $this->unarchiveSection($item['id']);
                     }
                 }
-                $this->unarchiveSectionContent($id);
+                $this->unarchiveSectionsection($id);
                 $this->archive($id, TRUE);
             }
         }
         
         /**
-        * Method to loop through and restore the content in a section
+        * Method to loop through and restore the section in a section
         *
         * @access private
         * @param string $id The section id
         * @return bool
         */
-        private function unarchiveSectionContent($id)
+        private function unarchiveSectionsection($id)
         {
-            return $this->_objDBContent->unarchiveSection($id);
+            return $this->_objDBsection->unarchiveSection($id);
         }
 
         /**
@@ -951,20 +966,20 @@ class dbsections extends dbTable
         public function changeOrder($id, $ordering, $parentid)
         {
             //Get array of all sections in level
-            $fpContent = $this->getAll("WHERE parentid = '$parentid' AND trash = 0 ORDER BY ordering ");
+            $fpsection = $this->getAll("WHERE parentid = '$parentid' AND trash = 0 ORDER BY ordering ");
             //Search for entry to be reordered and update order
-            foreach($fpContent as $content) {
-                if ($content['id'] == $id) {
+            foreach($fpsection as $section) {
+                if ($section['id'] == $id) {
                     if ($ordering == 'up') {
-                        $changeTo = $content['ordering'];
-                        $toChange = $content['ordering'] + 1;
+                        $changeTo = $section['ordering'];
+                        $toChange = $section['ordering'] + 1;
                         $updateArray = array(
                                            'ordering' => $toChange
                                        );
                         $this->update('id', $id, $updateArray);
                     } else {
-                        $changeTo = $content['ordering'];
-                        $toChange = $content['ordering'] - 1;
+                        $changeTo = $section['ordering'];
+                        $toChange = $section['ordering'] - 1;
                         $updateArray = array(
                                            'ordering' => $toChange
                                        );

@@ -182,6 +182,7 @@ class dbcontent extends dbTable
                 $this->_objFrontPage->add($newId);
             }
 
+            $this->_objSecurity->inheritContentPermissions($newId);
             return $newId;
         }
 
@@ -974,7 +975,29 @@ class dbcontent extends dbTable
         $objLucene->luceneIndex($docId, $data['created'], $url, $data['title'], $data['title'].$data['body'], $data['introtext'], 'cms', $data['created_by']);
     }
     
-    
+    /**
+         * Method to return the Parent of the given content item
+         *
+         * @access public
+         * @return array (Parent items record) or false if record couldn't be found
+         */
+        public function getParent($contentId){
+            //get current parents child content
+            //Getting the content record to find the parent
+            $arrContent = $this->getAll("WHERE id = '$contentId'", 'tbl_cms_content');
+            
+            if (isset($arrContent[0]['sectionid'])){
+              $sectionId = $arrContent[0]['sectionid'];
+            } else if (isset($arrContent['sectionid'])) {
+              $sectionId = $arrContent['sectionid'];
+            } else {
+              return false;
+            }
+            //getting the parent record
+            $arrSection = $this->getArray("SELECT * FROM tbl_cms_sections WHERE id = '$sectionId'");
+            return $arrSection[0];	
+        }
+
 
 }
 
