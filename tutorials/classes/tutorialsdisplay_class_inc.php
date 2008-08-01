@@ -2825,6 +2825,7 @@ class tutorialsdisplay extends object
         $array = array();
         $array['mark'] = $question['question_value'];
         $lblRange = $this->objLanguage->code2Txt('mod_tutorials_markrrange', 'tutorials', $array);
+        $lblReason = $this->objLanguage->languageText('mod_tutorials_modreason', 'tutorials');
 
         if($e == TRUE){
             $body = 'alert("'.$lblCommentRequired.'");document.getElementById("comment___Frame").focus();';
@@ -2916,7 +2917,7 @@ class tutorialsdisplay extends object
             $tblDisplay = $this->objTable->show();
         
             // tabbed box
-            $label = '<b>'.$lblAnswer.'</b>';
+            $label = '<b>'.$lblStudent.'&#160;'.strtolower($lblAnswer).'</b>';
             $this->objTabbedbox=new tabbedbox();
             $this->objTabbedbox->addTabLabel($label);
             $this->objTabbedbox->addBoxContent($tblDisplay);
@@ -2965,6 +2966,23 @@ class tutorialsdisplay extends object
             $this->objTabbedbox->addBoxContent($display);
             $content .= $this->objTabbedbox->show();
         
+            // set up display table
+            $this->objTable = new htmltable();
+            $this->objTable->cellspacing = '2';
+            $this->objTable->cellpadding = '2';
+            $this->objTable->row_attributes = 'onmouseover="this.className=\'tuts-ruler\';" onmouseout="this.className=\'none\'; "';
+
+            $this->objTable->startRow();
+            $this->objTable->addCell($answer['moderationReason'], '', '', '', '', '');
+            $this->objTable->endRow();
+            $tblDisplay = $this->objTable->show();
+        
+            // tabbed box
+            $this->objTabbedbox=new tabbedbox();
+            $this->objTabbedbox->addTabLabel('<b>'.$lblReason.'</b>');
+            $this->objTabbedbox->addBoxContent($tblDisplay);
+            $content .= $this->objTabbedbox->show();
+
             // set up form elements
             $this->objEditor->init('comment', $comment, '300px', '60%', NULL);
             $this->objEditor->setDefaultToolBarSetWithoutSave();
