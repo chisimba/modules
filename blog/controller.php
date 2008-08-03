@@ -353,6 +353,7 @@ class blog extends controller
                     $this->setVarByRef('posts', $posts);
                     $this->setVarByRef('linkcats', $linkcats);
                     $this->setVarByRef('cats', $catarr);
+                    
                     //return the template!
                     // $this->setVar('pageSuppressXML', TRUE);
                     return 'randblog_tpl.php';
