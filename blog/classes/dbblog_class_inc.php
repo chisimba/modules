@@ -339,7 +339,7 @@ class dbblog extends dbTable
         $prevmonth = $times['prevmonth'];
         $nextmonth = $times['nextmonth'];
         //get the entries from the db
-        $filter = "WHERE post_ts > '$prevmonth' AND post_ts < '$nextmonth' AND userid = '$userid' ORDER BY post_ts DESC";
+        $filter = "WHERE post_ts > '$prevmonth' AND post_ts < '$nextmonth' AND post_status = '0' AND userid = '$userid' ORDER BY post_ts DESC";
         $ret = $this->getAll($filter);
         return $ret;
     }
