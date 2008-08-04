@@ -51,7 +51,7 @@ class codesniffer extends controller
                         exec("phpcs --report=full --standard=Chisimba $this->codePath > $this->reportPath/report.txt");
                         
                         $objMailer = $this->getObject('email', 'mail');
-			            $objMailer->setValue('to', array('nextgen-online@mailman.uwc.ac.za', 'pscott@uwc.ac.za'));
+			            $objMailer->setValue('to', array('nextgen-online@mailman.uwc.ac.za'));
 			            $objMailer->setValue('from', 'noreply@uwc.ac.za');
 			            $objMailer->setValue('fromName', 'CodeSniffer');
 			            $objMailer->setValue('subject', 'Code QA Report ('.date('r').')');
