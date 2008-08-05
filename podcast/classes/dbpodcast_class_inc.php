@@ -182,6 +182,24 @@ class dbpodcast extends dbTable
     }
     
     /**
+     * Method to get ALL the podcasts by a particular user
+     *
+     * @param string $userId User Id of the User
+     * @return array
+     */
+    public function getAllUserPodcasts($userId)
+    {
+        //return $this->getAll('ORDER BY datecreated LIMIT 10');
+        $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
+        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        WHERE tbl_podcast.creatorid = \''.$userId.'\'
+        ORDER BY tbl_podcast.datecreated DESC';
+        
+        return $this->getArray($sql);
+    }
+    
+    /**
      * Method to delete a podcast
      *
      * @param string $id Record Id of Podcast
