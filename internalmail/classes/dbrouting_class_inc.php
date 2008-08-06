@@ -129,8 +129,11 @@ class dbrouting extends dbTable
      * @param string $filter The filter if any
      * @return array $data the email data
      */
-    public function getAllMail($folderId, $sortOrder, $filter)
+    public function getAllMail($folderId, $sortOrder, $filter, $userId=Null)
     {
+	
+	$this->userId = ($userId) ? $userId : $this->objUser->userId();
+	
         $sql = "SELECT * FROM ".$this->tblConfig;
         $sql .= " WHERE user_id ='".$this->userId."'";
         $data = $this->getArray($sql);
@@ -179,6 +182,9 @@ class dbrouting extends dbTable
         }
         return FALSE;
     }
+    
+    /**
+    *
 
     /**
      * Method to retrieve email for a user
