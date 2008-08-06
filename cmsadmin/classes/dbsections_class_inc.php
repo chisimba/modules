@@ -837,7 +837,7 @@ class dbsections extends dbTable
         */
         private function unarchiveSectionsection($id)
         {
-            return $this->_objDBsection->unarchiveSection($id);
+            return $this->_objDBContent->unarchiveSection($id);
         }
 
         /**
