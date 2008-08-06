@@ -746,12 +746,12 @@ class dbsections extends dbTable
                 
                 if(!empty($nodes)){
                     foreach($nodes as $item){
-                        $this->_objDBsection->resetSection($item['id']);
+                        $this->_objDBContent->resetSection($item['id']);
                         $this->archive($item['id']);
                     }
                 }
                 // Restore root node
-                $this->_objDBsection->resetSection($id);
+                $this->_objDBContent->resetSection($id);
                 $this->archive($id);
             }else{
                 // find nodes below section
@@ -762,7 +762,7 @@ class dbsections extends dbTable
                         $this->deleteSection($item['id']);
                     }
                 }
-                $this->_objDBsection->resetSection($id);
+                $this->_objDBContent->resetSection($id);
                 $this->archive($id);
             }
         }
