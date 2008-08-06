@@ -149,6 +149,11 @@ class personalblocks extends controller
     {
         return "viewall_tpl.php";
     }
+    
+    public function __testing()
+    {
+        return "testing_tpl.php";
+    }
 
     /**
     *
