@@ -20,7 +20,7 @@
 	$emailobjHeading =& $this->getObject('htmlheading','htmlelements');
 	$demographicsobjHeading =& $this->getObject('htmlheading','htmlelements');
 	$objactivityTitles =& $this->getObject('htmlheading','htmlelements');
-	$objaddressTitles =& $this->getObject('htmlheading','htmlelements');
+	//$objaddressTitles =& $this->getObject('htmlheading','htmlelements');
 	$objaffiliationTitles =& $this->getObject('htmlheading','htmlelements');
 	$objtranscriptTitles =& $this->getObject('htmlheading','htmlelements');
 	$objqclTitles =& $this->getObject('htmlheading','htmlelements');
@@ -59,9 +59,24 @@
 	$objHeading->str ='<font color="#EC4C00">'.$objLanguage->languageText("mod_eportfolio_maintitle",'eportfolio').'</font>';
 	echo $objHeading->show();
 	echo "</br>";
+
+        //Link to print pdf 
+        $iconPdf = $this->getObject('geticon','htmlelements');
+		$iconPdf->setIcon('pdf');	
+		$iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf",'eportfolio');
+		$mngpdflink = new link($this->uri(array(
+		'module'=>'eportfolio',
+		'action'=>'makepdf',
+		'tables'=>$activityLabel
+	)));
+	$mngpdflink->link = $iconPdf->show();
+	$linkpdfManage = $mngpdflink->show();     
+	//echo '<div align="center">'.$linkpdfManage.'</div>';
+	//echo "</br>";
+
 	$objHeading->type=2;
 	$objHeading->align=center;
-	$objHeading->str = '<font color="#FF8800">'.$objUser->fullName().' '.$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio').'</font>';
+	$objHeading->str = '<font color="#FF8800">'.$objUser->fullName().' '.$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio').'    '.$linkpdfManage.'</font>';
 	echo $objHeading->show();
 
 
@@ -69,10 +84,10 @@
 	$objinfoTitles->type=1;
 	$objaddressTitles->type=1;
 	$objcontactTitles->type=1;
+
 $hasAccess = $this->objEngine->_objUser->isContextLecturer();
 $hasAccess|= $this->objEngine->_objUser->isAdmin();
 $this->setVar('pageSuppressXML',true);
-
 
 $link = new link($this->uri(array('module'=>'eportfolio','action'=>'view_contact')));
 $link->link = 'View Identification Details';
@@ -184,8 +199,8 @@ $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'ep
     $addressTable->startRow();
     $addressTable->addCell($objaddressTitles->show(), '', '', '','', 'colspan="8"');
 
-    $addressTable->startRow();
     $addressTable->endRow();
+    $addressTable->startRow();
     $addressTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_contypes",'eportfolio')."</b>");
     $addressTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_streetno",'eportfolio')."</b>");
     $addressTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_streetname",'eportfolio')."</b>");
@@ -201,7 +216,7 @@ $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'ep
     // Display each field for addresses
         $addressTable->startRow();
 	$cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
-        $addressTable->startRow();
+        //$addressTable->startRow();
         $addressTable->addCell($cattype[0]['type'], "", NULL, NULL, NULL, '');
         $addressTable->addCell($addressItem['street_no'], "", NULL, NULL, NULL, '');
         $addressTable->addCell($addressItem['street_name'], "", NULL, NULL, NULL, '');
@@ -299,9 +314,8 @@ $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'ep
     $contactTable->width = "100%";
     // Add the table heading.
     $contactTable->startRow();
-
-    $contactTable->endRow();
     $contactTable->addCell($objcontactTitles->show(), '', '', '', '', 'colspan="6"');
+    $contactTable->endRow();
     $contactTable->startRow();
     $contactTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_contypes",'eportfolio')."</b>");
     $contactTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_contacttype",'eportfolio')."</b>");
@@ -310,10 +324,10 @@ $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'ep
     $contactTable->addCell("<b>".$objLanguage->languageText("mod_eportfolio_contactnumber",'eportfolio')."</b>");
     $contactTable->endRow();
     
-    // Step through the list of addresses.
+    // Step through the list of contacts
     if (!empty($contactList)) {
      foreach ($contactList as $contactItem) {
-     // Display each field for addresses
+     // Display each field for contacts
 	$cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
 	$modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
         $contactTable->startRow();

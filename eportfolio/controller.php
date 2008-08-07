@@ -76,7 +76,8 @@ class eportfolio extends controller
 	$this->objDbProductList =& $this->getObject('dbeportfolio_product', 'eportfolio');
 	$this->objDbCategoryList =& $this->getObject('dbeportfolio_category', 'eportfolio');
 	$this->objDbCategorytypeList =& $this->getObject('dbeportfolio_categorytypes', 'eportfolio');
-
+	$this->objGetall =& $this->getObject('getall_eportfolio', 'eportfolio');
+	$this->objExport =& $this->getObject('export_eportfolio', 'eportfolio');
 	$this->userId=$this->objUser->userId(); //To pick user userid
 	$this->setVarByRef('userId', $this->userId);
         $userPid = $this->objUser->PKId($this->objUser->userId());//To pick user id
@@ -111,7 +112,62 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
 	
         switch ($action)
-        { //manage_group
+        { 
+	   case 'export':
+		$myid = $this->objUser->userId();
+		$address = $this->objExport->exportAddress( $myid );
+		return $address;	   
+	   case 'makepdf':
+
+		//$sectionid = $this->getParam('sectionid');
+		$fullnames = $this->objUser->fullName()."'s ".$this->objLanguage->languageText("mod_eportfolio_wordEportfolio",'eportfolio');
+		$type = $this->getParam('tables', NULL);
+		$myid = $this->objUser->userId();
+		$myPid = $this->objUser->PKId($this->objUser->userId());
+		$address = $this->objGetall->getAddress( $myid );
+		$contacts = $this->objGetall->getContacts( $myid );
+		$emails = $this->objGetall->getEmail( $myid );
+		$demographics = $this->objGetall->getDemographics( $myid );
+		$activity = $this->objGetall->getActivity ($myid );
+		$affiliation = $this->objGetall->getAffiliation ( $myid );
+		$transcripts = $this->objGetall->getTranscripts( $myid );
+		$qualification = $this->objGetall->getQualification( $myid );
+		$goals = $this->objGetall->getGoals( $myid );
+		$competency = $this->objGetall->getCompetency( $myid );
+		$interests = $this->objGetall->getInterests( $myid );
+		$reflections = $this->objGetall->getReflections( $myid );
+		$assertions = $this->objGetall->getAssertions( $myPid );
+
+
+		//get the pdfmaker classes
+		$objPdf = $this->getObject('tcpdfwrapper','pdfmaker');
+
+
+		$text = '<h1>'.$fullnames. "</h1><br></br>\r\n".$address.$contacts.$emails.$demographics;
+
+		$otherText = $activity.$affiliation.$transcripts.$qualification.$goals.$competency.$interests.$reflections.$assertions;
+/*
+.$email.$demographics.$activity.$affiliation.$transcripts.$qualification.$goals.$competency.$interests.$reflections.$assertions
+
+$text = '<h1>'.$fullnames. "</h1><br></br>\r\n".html_entity_decode($address). "\r\n".html_entity_decode($contacts). "\r\n".html_entity_decode($email). "\r\n".html_entity_decode($demographics). "\r\n".html_entity_decode($activity). "\r\n".html_entity_decode($affiliation). "\r\n".html_entity_decode($transcripts). "\r\n".html_entity_decode(strip_tags($qualification)). "\r\n".html_entity_decode($goals). "\r\n".html_entity_decode($competency). "\r\n".html_entity_decode($interests). "\r\n".html_entity_decode($reflections). "\r\n".html_entity_decode($assertions);
+*/
+		//Write pdf
+		$objPdf->initWrite();
+		$objPdf->partWrite($text);
+		$objPdf->partWrite($activity);
+		$objPdf->partWrite($affiliation);
+		$objPdf->partWrite($transcripts);
+		$objPdf->partWrite($qualification);
+		$objPdf->partWrite($competency);
+		$objPdf->partWrite($goals);
+		$objPdf->partWrite($interests);
+		$objPdf->partWrite($reflections);
+		$objPdf->partWrite($assertions);
+		return $objPdf->show();
+
+		break;
+
+	     //manage_group
              case 'addparts':
 		$selectedParts=$this->getArrayParam('arrayList');
 		$groupId = $this->getParam('groupId', NULL);
