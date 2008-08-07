@@ -147,8 +147,18 @@
         {
             $objDbUsers =& $this->getObject('dbusers','buddies');
             $allUsers = $objDbUsers->listAll();
-            $this->setVarByRef('allUsers', $allUsers);
+            $inviteeList="";
+            foreach ($allUsers as $user) {
+                // Get user name
+                $inviteeList .= '#'.$user["firstname"] . "&nbsp;" . $user["surname"].',';
+                // Get user email
+                $inviteeList .= $user["emailaddress"];
+            }
+           /**
+            *             *  $this->setVarByRef('allUsers', $allUsers);
             return 'users_tpl.php';
+        */
+            echo $inviteeList;
         }
 
      /**
