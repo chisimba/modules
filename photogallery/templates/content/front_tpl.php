@@ -121,10 +121,7 @@ if(count($albums) > 0 && $this->_objUser->isLoggedIn() && $this->getParam('mode'
 		}
 		
 		$str = '';
-		//print '<pre>';
-		//print_r($flickralbums);
-		//print(count($flickralbums));
-		if(count($flickralbums) > 0 )
+		if(isset($flickralbums) && (count($flickralbums) > 0 ))
 		{
 			
 			foreach($flickralbums as $userAlbums)			
