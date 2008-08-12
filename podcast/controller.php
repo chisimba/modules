@@ -88,6 +88,8 @@ class podcast extends controller
                 return $this->showCoursePoadcasts($this->getParam('contextcode'));
             case 'rssfeedbycourse':
                 return $this->showRssFeedByCourse($this->getParam('contextcode'));
+            case 'uploadpodcast':
+                return $this->uploadPodcast();
             default:
                 return $this->podcastHome();
         }
@@ -163,7 +165,6 @@ class podcast extends controller
         
         $podcasts = $this->objPodcast->getPodcasts($id);
         $this->setVar('podcasts', $podcasts);
-	
         
         return 'tpl_listpodcasts.php';
     }
@@ -477,6 +478,41 @@ class podcast extends controller
         $this->setLayoutTemplate(NULL);
         
         return 'tbl_podcastfeed.php';
+    }
+    
+    function uploadPodcast()
+    {
+        $objFileUpload = $this->getObject('uploadinput', 'filemanager');
+        $objFileUpload->enableOverwriteIncrement = TRUE;
+        $results = $objFileUpload->handleUpload('fileupload');
+        
+        // Technically, FALSE can never be returned, this is just a precaution
+        // FALSE means there is no fileinput with that name
+        if ($results == FALSE) {
+            return $this->nextAction('addpodcast');
+        } else {
+            // If successfully Uploaded
+            if ($results['success']) {
+                
+                // add to db as podcast
+                $podcastResult = $this->objPodcast->addPodcast($results['fileid']);
+                
+                // check result of adding as podcast
+                if ($podcastResult == 'nofile') {
+                    return $this->nextAction(NULL, array('error'=>'podcastcouldnotbeadded'));
+                } else if ($podcastResult == 'fileusedalready') {
+                    return $this->nextAction('confirmadd', array('fileid'=>$results['fileid']));
+                } else {
+                    return $this->nextAction('confirmadd', array('id'=>$podcastResult));
+                }
+                
+            } else {
+                // If not successfully uploaded
+                return $this->nextAction('addpodcast', array('error'=>$results['reason']));
+            }
+        }
+        
+        var_dump($results);
     }
 }
 ?>
