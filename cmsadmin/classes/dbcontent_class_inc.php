@@ -675,18 +675,18 @@ class dbcontent extends dbTable
          * Method to get all pages in a specific section, including those on the front page
          *
          * @access public
-         * @author Megan Watson
+         * @author Megan Watson, Charl Mert
          * @param string $sectionId The id of the section
          * @return array $data An array of all pages in the section
          */
         public function getPagesInSectionJoinFront($sectionId)
         {
-            $sql = "SELECT *, fr.id AS front_id, co.id AS page_id, co.ordering AS co_order 
+            $sql = "SELECT *, co.public_access as public_access, fr.id AS front_id, co.id AS page_id, co.ordering AS co_order 
                 FROM tbl_cms_content AS co 
                 LEFT JOIN tbl_cms_content_frontpage AS fr ON (fr.content_id = co.id)
                 WHERE sectionid = '$sectionId' AND trash='0'
                 ORDER BY co.ordering";
-                
+            
             $data = $this->getArray($sql);
 	    
 	    $secureData = array();

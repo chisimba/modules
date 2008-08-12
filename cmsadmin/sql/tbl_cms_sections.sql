@@ -139,7 +139,11 @@ $fields = array(
 	'contextcode' => array(
 		'type' => 'text',
 		'length' => 255
-        )    
+                ),
+	'public_access' => array(
+		'type' => 'boolean',
+		'default' => '1'
+		)		
 	);
 	$name = 'contextcode';
 

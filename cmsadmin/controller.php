@@ -15,6 +15,7 @@
  * @license GNU GPL
  * @author Wesley  Nitsckie
  * @author Warren Windvogel
+ * @author Charl Mert
  */
 
     class cmsadmin extends controller
@@ -333,6 +334,34 @@
                 $this->getsections(null, null, 'permissions');
                 return 'cms_permissions_list_tpl.php';
 
+                case 'setpublicaccess':
+                $id = $this->getParam('id');
+                $cid = $this->getParam('cid');
+                $mode = $this->getParam('mode');
+                
+                if ($id != ''){
+                  $this->_objSecurity->setSectionPublicAccess($id, $mode);
+                }
+                
+                if ($cid != ''){
+                  $this->_objSecurity->setContentPublicAccess($cid, $mode);
+                }
+
+                $subView = $this->getParam('subview');
+                if ($subView == 1){
+                    $parentId = $this->getParam('parent');
+                    $params = array('id' => "$parentId");
+                    return $this->nextAction('view_permissions_section', $params, 'cmsadmin');
+                }
+
+                $sectionId = $this->getParam('sectionid');
+                if(!empty($sectionId)){
+                    return $this->nextAction('viewsection', array('id' => $sectionId));
+                }
+                return $this->nextAction('permissions');
+                //return 'cms_permissions_list_tpl.php';
+
+
                 case 'viewsection':
                 $this->viewsections();
                 return 'cms_section_view_tpl.php';
@@ -418,8 +447,6 @@
                 }
 
                 $this->viewPermissionsSections();
-
-                //echo "HERE"; exit;
 
                 return 'cms_permissions_view_tpl.php';
 
@@ -508,7 +535,6 @@
                 $this->setVarByRef('arrSections', $arrSections);
                 $this->setVar('viewType', 'root');
                 return 'cms_permissions_list_tpl.php';            			
-
 
                 case 'sectionpublish':
                 $id = $this->getParam('id');
@@ -1423,12 +1449,19 @@
 
                 $owner = $this->getParam('drp_owner');
                 $this->_objSecurity->setContentOwner($contentid, $owner);
+                
+                $chkNoPublic = $this->getParam('chk_public');
+                
+                if ($chkNoPublic == 'on'){
+                    $this->_objSecurity->setContentPermissionsPublicAccess($contentid, false);
+                } else {
+                    $this->_objSecurity->setContentPermissionsPublicAccess($contentid, true);
+                }
+                
 
                 //echo "Set owner $owner for $contentid";
                 //exit;
             }								
-
-
 
 
             //echo "Section ID : $sectionid";
@@ -1443,6 +1476,7 @@
 
             //Get content pages
             $pages = $this->_objContent->getPagesInSectionJoinFront($id);
+            
             //Get top Nav
             $topNav = $this->_objUtils->topNav('view_permissions_section');
             $this->setVarByRef('topNav',$topNav);
@@ -1521,6 +1555,7 @@
             if ($this->getParam('save_btn') == 'Save'){
 
                 $chkPropagate = $this->getParam('chk_propagate');
+                $chkNoPublic = $this->getParam('chk_public');
                 $chkPropagateOwner = $this->getParam('chk_propagate_owner');
 
                 $chkCount = $this->getParam('chkCount');
@@ -1641,6 +1676,29 @@
                     $this->_objSecurity->setContentOwnerPropagate($sectionid, $owner);
         
                 }
+                
+                
+                if ($chkNoPublic == 'on'){
+                    if ($chkPropagate == 'on'){
+                        //Propagate
+                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, false);
+                        $this->_objSecurity->setSectionPermissionsPublicAccessPropagate($sectionid, false);
+                    } else {
+                        //Single
+                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, false);
+                    }
+                } else {
+                    if ($chkPropagate == 'on'){
+                        //Propagate
+                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, true);
+                        $this->_objSecurity->setSectionPermissionsPublicAccessPropagate($sectionid, true);
+                    } else {
+                        //Single
+                        $this->_objSecurity->setSectionPermissionsPublicAccess($sectionid, true);
+                    }
+                }
+
+                
             }
 
             $addEditSectionPermissionsForm = $this->_objUtils->getAddEditPermissionsSectionForm($sectionid, $returnSubView);

@@ -13,11 +13,16 @@ $fields = array(
 		'length' => 32,
 		),
 	'ordering' => array(
-		'type' => 'text',
-		'length' => 11,
-        'notnull' => TRUE,
-        'default' => 0
-		)
+            'type' => 'text',
+            'length' => 11,
+            'notnull' => TRUE,
+            'default' => 0
+		),
+	'public_access' => array(
+		'type' => 'boolean',
+		'default' => '1'
+		)		
+
     );
 
 $name = 'content_id';

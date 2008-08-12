@@ -155,6 +155,10 @@ $fields = array(
 		'type' => 'timestamp',
 
 		),
+	'public_access' => array(
+		'type' => 'boolean',
+		'default' => '1'
+		)		
 	
 	);
 

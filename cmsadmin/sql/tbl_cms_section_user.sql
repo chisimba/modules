@@ -25,7 +25,7 @@ $fields = array(
 		),
 	'write_access' => array(
 		'type' => 'boolean'
-		)		
+		)
     );
 
 ?>

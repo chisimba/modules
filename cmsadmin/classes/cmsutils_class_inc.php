@@ -1116,6 +1116,33 @@
             return $objIcon->show();
         }
 
+
+
+                /**
+                 * Method to get the public vs logged in toggle button
+                 *
+                 * @param  $isCheck Booleans value with either TRUE|FALSE
+                 * @return string icon
+                 * @access public
+                 */
+        public function getPublicAccessIcon($isCheck, $returnFalse = TRUE)
+        {
+            $objIcon = $this->newObject('geticon', 'htmlelements');
+
+            if ($isCheck) {
+                $objIcon->setIcon('permission_unlock', 'gif');
+                $objIcon->title = 'Click to Deny Public Access';//$this->objLanguage->languageText('word_published');
+            } else {
+                if ($returnFalse) {
+                    $objIcon->setIcon('permission_lock', 'gif');
+                    $objIcon->title = 'Click to Allow Public Access';//$this->objLanguage->languageText('phrase_notpublished');
+                }
+            }
+
+            return $objIcon->show();
+        }
+
+
                 /**
                  * Method to generate the navigation
                  *
@@ -1979,15 +2006,15 @@
             return $isVisible;
         }
 
-                /**
-                 * Method to return the add edit section form
-                 *
-                 * @param string $sectionId The id of the section to be edited. Default NULL for adding new section
-                 * @param string $parentid The id of the section it is found in. Default NULL for adding root node
-                 * @return string $middleColumnContent The form used to create and edit a section
-                 * @access public
-                 * @author Warren Windvogel
-                 */
+        /**
+         * Method to return the add edit section form
+         *
+         * @param string $sectionId The id of the section to be edited. Default NULL for adding new section
+         * @param string $parentid The id of the section it is found in. Default NULL for adding root node
+         * @return string $middleColumnContent The form used to create and edit a section
+         * @access public
+         * @author Warren Windvogel
+         */
         public function getAddEditSectionForm($sectionId = NULL, $parentid = NULL)
         {
 
@@ -2404,8 +2431,8 @@
 
             $subSecId = $this->getParam('parent');
 
-            $sectionName = $this->_objSections->getSection($sectionid);
-            $sectionName = $sectionName['title'];
+            $sectionArr = $this->_objSections->getSection($sectionid);
+            $sectionName = $sectionArr['title'];
 
             $this->loadClass('form', 'htmlelements');
             $this->loadClass('checkbox', 'htmlelements');
@@ -2509,7 +2536,6 @@
                 $canRead = (($memberReadAccess == 1) ? true : false);
                 $canWrite = (($memberWriteAccess == 1) ? true : false);
 
-
                 $chkRead = new checkbox('chk_read-'.$globalChkCounter, 'Read', $canRead);
                 $chkWrite = new checkbox('chk_write-'.$globalChkCounter, 'Write', $canWrite);
 
@@ -2529,17 +2555,15 @@
                 $memberName = $usersList[$x]['username'];
                 $memberReadAccess = $usersList[$x]['read_access'];
                 $memberWriteAccess = $usersList[$x]['write_access'];
-
                 $oddOrEven = ($rowcount == 0) ? "even" : "odd";
 
                 $canRead = (($memberReadAccess == 1) ? true : false);
                 $canWrite = (($memberWriteAccess == 1) ? true : false);
-
+                
                 $chkRead = new checkbox('chk_read-'.$globalChkCounter, 'Read', $canRead);
                 $chkWrite = new checkbox('chk_write-'.$globalChkCounter, 'Write', $canWrite);
 
                 $globalChkCounter += 1;
-
 
                 //Adding Users / Groups
                 $table->startRow();
@@ -2613,8 +2637,11 @@
             //$tblOwner->addCell($chkInherit->show()." Force Ownership on Child Sections &amp; Content Items");
             //$tblOwner->endRow();
 
+            $canPublic = (($sectionArr['public_access'] == 0)? true : false);
+            
+            $chkPublic = new checkbox('chk_public', 'Public', $canPublic);
             $topNav = $this->topNav('addpermissions');
-
+            
             //$objForm->addToForm("<h1>Edit Section Permissions</h1><h3>Section Title : $sectionName</h3><br/>");
             $objForm->addToForm($header.$headShow);
             $objForm->addToForm("<br/><h4>Authorised Members:</h4><br/>");
@@ -2622,7 +2649,8 @@
             $objForm->addToForm('<br/>');
             $objForm->addToForm($lnkAddUserGroup->show());
             $objForm->addToForm('<br/>');
-            $objForm->addToForm($chkPropagate->show()." Allow permissions to propagate to child items.");
+            $objForm->addToForm($chkPublic->show() . ' Only allow logged in users to access this section.');
+            $objForm->addToForm('<br/><br/>' .$chkPropagate->show()." Allow permissions to propagate to child items.");
             $objForm->addToForm('<br/><input type="hidden" name="id" value="'.$this->getParam('parent').'"/>');
             $objForm->addToForm('<br/><input type="hidden" name="cid" value="'.$sectionid.'"/>');
             $objForm->addToForm( "<input type='hidden' name='subview' value='$returnSubView'>" );
@@ -2926,8 +2954,8 @@
 
             $sectionid = $this->getParam('parent');
 
-            $contentName = $this->_objContent->getContentPage($contentid);
-            $contentName = $contentName['title'];
+            $contentArr = $this->_objContent->getContentPage($contentid);
+            $contentName = $contentArr['title'];
 
             $this->loadClass('form', 'htmlelements');
             $this->loadClass('checkbox', 'htmlelements');
@@ -3074,9 +3102,9 @@
             $lnkAddUserGroup->link = "Add User/Group";
             $lnkAddUserGroup->href = $this->uri(array('action' => 'addpermissions_content_user_group', 'id' => $contentid, 'parent' => $sectionid));
 
+            
             $btnSubmit = new button('save_btn', 'Save');
             $btnSubmit->setToSubmit(); 
-
 
             //Setting up the Owner table
             $tblOwner = new htmlTable();
@@ -3121,6 +3149,9 @@
             //$tblOwner->addCell($chkInherit->show()." Force Ownership on Child contents &amp; Content Items");
             //$tblOwner->endRow();
 
+            $canPublic = (($contentArr['public_access'] == 0)? true : false);
+            $chkPublic = new checkbox('chk_public', 'Public', $canPublic);
+
             $topNav = $this->topNav('addpermissions');
 
             //$objForm->addToForm("<h1>Edit Content Permissions</h1><h3>Content Title : $contentName</h3><br/>");
@@ -3130,6 +3161,7 @@
             $objForm->addToForm('<br/>');
             $objForm->addToForm($lnkAddUserGroup->show());
             $objForm->addToForm('<br/>');
+            $objForm->addToForm($chkPublic->show() . ' Only allow logged in users to access this section.');
             $objForm->addToForm('<br/><input type="hidden" name="chkCount" value="'.$globalChkCounter.'"/>');
             $objForm->addToForm('<br/><input type="hidden" name="id" value="'.$this->getParam('parent').'"/>');
             $objForm->addToForm('<br/><input type="hidden" name="cid" value="'.$contentid.'"/>');

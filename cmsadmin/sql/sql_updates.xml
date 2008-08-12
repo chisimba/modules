@@ -287,18 +287,19 @@
     <description>Added a start publishing date and end publishing Field</description>
     <data>
        	<add>
-   			<name>start_publish</name>
-	    	<type>date</type>
+            <name>start_publish</name>
+            <type>date</type>
    			
-		</add>
-	</data>
-	<data>
+        </add>
+    </data>
+    
+    <data>
        	<add>
-   			<name>end_publish</name>
-	    	<type>date</type>
+            <name>end_publish</name>
+            <type>date</type>
    			
-		</add>
-	</data>
+        </add>
+    </data>
 	
   </update>
   <update>
@@ -317,6 +318,46 @@
 			</change>
 		</data>
 	</update>
+        
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.593</version>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <data>
+       	<add>
+            <name>public_access</name>
+            <type>boolean</type>
+            <default>1</default>
+        </add>
+    </data>
+  </update>        
+
+  <update>
+    <table>tbl_cms_content_frontpage</table>
+    <version>1.593</version>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <data>
+       	<add>
+            <name>public_access</name>
+            <type>boolean</type>
+            <default>1</default>
+        </add>
+    </data>
+  </update>        
+
+  <update>
+    <table>tbl_cms_sections</table>
+    <version>1.593</version>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <data>
+       	<add>
+            <name>public_access</name>
+            <type>boolean</type>
+            <default>1</default>
+        </add>
+    </data>
+  </update>        
+
 </updates>
 
 

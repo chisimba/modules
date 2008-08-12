@@ -24,6 +24,11 @@ $fields = array(
         'notnull' => TRUE,
         'default' => 0
 		)
+	'public_access' => array(
+		'type' => 'boolean',
+		'default' => '1'
+		)		
+
     );
 
 $name = 'content_id';
