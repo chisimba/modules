@@ -25,11 +25,7 @@ $fields = array(
 		),
 	'write_access' => array(
 		'type' => 'boolean'
-		),
-	'public_access' => array(
-		'type' => 'boolean',
-		'default' => '1'
-		)		
+		)
     );
 
 ?>

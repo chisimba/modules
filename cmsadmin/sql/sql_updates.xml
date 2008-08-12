@@ -322,7 +322,7 @@
   <update>
     <table>tbl_cms_content</table>
     <version>1.593</version>
-    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections. Don't forget to do svn update in skins/_common/icons</description>
     <data>
        	<add>
             <name>public_access</name>
@@ -335,7 +335,7 @@
   <update>
     <table>tbl_cms_content_frontpage</table>
     <version>1.593</version>
-    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections. Don't forget to do svn update in skins/_common/icons</description>
     <data>
        	<add>
             <name>public_access</name>
@@ -348,7 +348,7 @@
   <update>
     <table>tbl_cms_sections</table>
     <version>1.593</version>
-    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections</description>
+    <description>Added and Tested Public Access Control for public/logged in node level access to Content and Sections. Don't forget to do svn update in skins/_common/icons</description>
     <data>
        	<add>
             <name>public_access</name>
