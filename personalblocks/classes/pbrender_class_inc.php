@@ -748,6 +748,7 @@ class pbrender extends dbTable
             $objBlockType = new textinput("blocktype");
             //Set the field type to hidden for the block type
             $objBlockType->fldType="hidden";
+            $objBlockType->setValue($blocktype);
             //Add the hidden blocktype field to the form
             $ifTable .= "<tr><td>"
               . $this->objLanguage->languageText("mod_personalblocks_blocktype", "personalblocks")
