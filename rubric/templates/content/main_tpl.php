@@ -33,7 +33,7 @@
 	}
 	    $tblclass->startRow();
     
-	//if ($this->isValid('createtable')) {
+	if ($this->isValid('createtable')) {
 	    // Display create button.
 	    $icon = $this->getObject('geticon','htmlelements');
 	    $icon->setIcon('add');
@@ -48,7 +48,7 @@
 	            'type'=>($contextCode == "root" ? 'predefined' : 'context')
 	        ))
 	    . "\">" . $icon->show() . "</a>";
-	//}
+	}
 	    
     $tblclass->addCell($pageTitle->show(), "null", "top", "left", "",null);
     $tblclass->endRow();
