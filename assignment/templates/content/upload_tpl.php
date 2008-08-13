@@ -12,6 +12,7 @@
 $this->setLayoutTemplate('assignment_layout_tpl.php');
 
 // set up html elements
+$this->loadClass('htmlheading', 'htmlelements');
 $this->loadclass('htmltable','htmlelements');
 $this->loadclass('textinput','htmlelements');
 $objConfirm = $this->newObject('timeoutmessage','htmlelements');
@@ -25,6 +26,26 @@ $btnexit=$this->objLanguage->languageText('word_exit');
 $wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
 
 /************************* set up table ******************************/
+
+
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_filemanager_uploadnewfile', 'filemanager', 'Upload new file');
+$header->type = 4;
+
+echo $header->show();
+
+$form = new form('addpodcastbyupload', $this->uri(array('action'=>'directuploadsubmit','id'=>$id)));
+$form->extra = 'enctype="multipart/form-data"';
+
+$objUpload = $this->newObject('uploadinput', 'filemanager');
+
+$button = new button('submitform', $btnupload);
+$button->setToSubmit();;
+
+$form->addToForm($objUpload->show().'<br />'.$button->show());
+
+
+echo $form->show();
 
 // header
 //$this->setVarByRef('heading',$head);
@@ -77,15 +98,6 @@ $objTable->endRow();
 $objSelectFile->name ='file';
 
 
-// file input
-//$this->objInput = new textinput('file');
-//$this->objInput->fldType='file';
-//$this->objInput->size=''; 
-
-//$objTable->startRow();
-//$objTable->addCell('');
-//$objTable->addCell($this->objInput->show(),'','','left','',' colspan="2"');
-//$objTable->endRow();
 
 // submit and exit buttons
 $this->objButton = new button('submit',$btnupload);
@@ -108,6 +120,8 @@ $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();
 
+
+
 /************************* set up form ******************************/
 
 $this->objForm = new form('upload',$this->uri(array('action'=>'uploadsubmit','id'=>$id)));
@@ -116,5 +130,13 @@ $this->objForm->addToForm($objSelectFile->show());
 $this->objForm->addToForm($objTable->show());
 
 /************************* display page ******************************/
+
+$header = new htmlHeading();
+$header->str = $this->objLanguage->languageText('mod_filemanager_chooseexisting', 'filemanager', 'Choose existing file from file manager');
+$header->type = 4;
+
+echo $header->show();
+
 echo $this->objForm->show();
+
 ?>

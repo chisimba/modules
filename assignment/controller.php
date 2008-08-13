@@ -142,6 +142,46 @@ class assignment extends controller
 	     		return 'upload_tpl.php';
          	break;
          	
+            case 'directuploadsubmit':
+                $objFileUpload = $this->getObject('uploadinput', 'filemanager');
+                $objFileUpload->enableOverwriteIncrement = TRUE;
+                $results = $objFileUpload->handleUpload('fileupload');
+                
+                // Technically, FALSE can never be returned, this is just a precaution
+                // FALSE means there is no fileinput with that name
+                if ($results == FALSE) {
+                    return $this->nextAction(NULL);
+                } else {
+                    
+                    $id=$this->getParam('id');
+                    
+                    // If successfully Uploaded
+                    if ($results['success']) {
+                        $msg = '';
+                        
+                        //var_dump($results);
+                        
+                        $this->useUploadedAssignment($id, $results['fileid']);
+                        
+                        // display success message
+                        $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+                        $this->setVarByRef('msg',$msg);
+                        
+                        $mixed_arr = $this->Assignment->studentHome($msg);
+                        $this->setVarByRef('essayData', $mixed_arr[0]);
+                        $this->setVarByRef('wsData', $mixed_arr[1]);
+                        $this->setVarByRef('testData', $mixed_arr[2]);
+                        $this->setVarByRef('assignData', $mixed_arr[3]);
+                      //  $this->setVarByRef('msg', $mixed_arr[4]);
+                        return 'assignment_student_tpl.php';
+                    
+                    } else {
+                        // If not successfully uploaded
+                        return $this->nextAction('upload', array('id'=>$id, 'error'=>$results['reason']));
+                    }
+                }
+                break;
+            
          	case 'uploadsubmit':
                 // get topic id
                 $id=$this->getParam('id');
@@ -155,36 +195,25 @@ class assignment extends controller
                 }
 
                 // upload essay and return to form
-                if($postSubmit==$this->objLanguage->languageText('mod_assignment_upload', 'assignment')){
-
-                    // change the file name to fullname_studentId
-                    $studentid = $this->userId;
-                    //$name = $this->user;
-    				$fileId = $this->getParam('file');
-                    // upload file to database
-					
-                    	// save file id and submit date to database
-                    	$fields=array(
-                    		'userid'=>$studentid,
-                    		'assignmentid'=>$id,
-                    		'updated'=>date('Y-m-d H:i:s'),
-                    		'studentfileid'=>$fileId,
-                    		'datesubmitted'=>date('Y-m-d H:i:s')
-                        );
-	                $this->dbassignmentsubmit->addSubmit($fields);
-					$this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $id, 'studentfileid', $this->contextcode, '', TRUE);	
-	                // display success message
-	                $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
-	                $this->setVarByRef('msg',$msg);
+                if($postSubmit==$this->objLanguage->languageText('mod_assignment_upload', 'assignment')) {
+                    
+                    if ($this->getParam('file') != '') {
+                        $this->useUploadedAssignment($id, $this->getParam('file'));
+                        
+                        // display success message
+                        $msg = $this->objLanguage->languageText('mod_assignment_confirmupload','assignment');
+                        $this->setVarByRef('msg',$msg);
+                    }
+                    
 				}
 				$msg = $this->getParam('confirm');
                 $mixed_arr = $this->Assignment->studentHome($msg);
-		        $this->setVarByRef('essayData', $mixed_arr[0]);
-		        $this->setVarByRef('wsData', $mixed_arr[1]);
-		        $this->setVarByRef('testData', $mixed_arr[2]);
-		        $this->setVarByRef('assignData', $mixed_arr[3]);
-		      //  $this->setVarByRef('msg', $mixed_arr[4]);
-		        return 'assignment_student_tpl.php';
+                $this->setVarByRef('essayData', $mixed_arr[0]);
+                $this->setVarByRef('wsData', $mixed_arr[1]);
+                $this->setVarByRef('testData', $mixed_arr[2]);
+                $this->setVarByRef('assignData', $mixed_arr[3]);
+              //  $this->setVarByRef('msg', $mixed_arr[4]);
+                return 'assignment_student_tpl.php';
 
             break;
 
@@ -212,7 +241,22 @@ class assignment extends controller
     {
         $ret = $this->objDate->formatDate($date);
         return $ret;
-	}
+    }
+    
+    private function useUploadedAssignment($assignmentId, $fileId)
+    {
+        // save file id and submit date to database
+        $fields=array(
+            'userid'=>$this->userId,
+            'assignmentid'=>$assignmentId,
+            'updated'=>date('Y-m-d H:i:s'),
+            'studentfileid'=>$fileId,
+            'datesubmitted'=>date('Y-m-d H:i:s')
+        );
+        
+        $this->dbassignmentsubmit->addSubmit($fields);
+        $this->objFileRegister->registerUse($fileId, 'assignment', 'tbl_assignment_submit', $assignmentId, 'studentfileid', $this->contextcode, '', TRUE);
+    }
 }// end class assignment
 
 ?>
