@@ -20,6 +20,7 @@ import java.nio.channels.FileChannel;
 
 
 
+import java.util.TimerTask;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
@@ -54,11 +55,12 @@ public class TCPConnector {
     private boolean slideServerReplying = false;
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-  //  private String SUPERNODE_HOST = "localhost";
-   // private int SUPERNODE_PORT = 22225;
+    //  private String SUPERNODE_HOST = "localhost";
+    // private int SUPERNODE_PORT = 22225;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
     private SSLSocket socket;
+    private boolean binRequestReplied = false;
 
     public TCPConnector() {
     }
@@ -119,11 +121,54 @@ public class TCPConnector {
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
+
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * sends a TCP Packet to Super Node
+     * @param packet
+     */
+    /*public void sendBinPacket(LauncherPacket xpacket) {
+        try {
+            if (writer != null) {
+                writer.writeObject(xpacket);
+                writer.flush();
+
+                //block and wait for reply..but only for a few seconds
+                try {
+                    Object packet = reader.readObject();
+                    if (packet instanceof ModuleFileReplyPacket) {
+                        ModuleFileReplyPacket p = (ModuleFileReplyPacket) packet;
+                        processModuleFileReplyPacket(p);
+                    } else if (packet instanceof ModuleFileRequestPacket) {
+                        ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
+                        processModuleFileRequestPacket(p);
+                    } else if (packet instanceof LauncherMsgPacket) {
+                        LauncherMsgPacket p = (LauncherMsgPacket) packet;
+                        JOptionPane.showMessageDialog(null, p.getMessage());
+                        base.setText("Server connection error.", true);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    if (base != null) {
+                        base.setText("Disconnected from server.", true);
+                    }
+                    running = false;
+                }
+
             } else {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+*/
+    public boolean isBinRequestReplied() {
+        return binRequestReplied;
     }
 
     private byte[] readFile(String filePath) {
@@ -236,7 +281,7 @@ public class TCPConnector {
         try {
             try {
                 if (base != null) {
-                    base.setText("Connecting to "+SUPERNODE_HOST+":"+SUPERNODE_PORT+"...", false);//to " + SUPERNODE_HOST+" ...");
+                    base.setText("Connecting to " + SUPERNODE_HOST + ":" + SUPERNODE_PORT + "...", false);//to " + SUPERNODE_HOST+" ...");
 
                 }
 
@@ -253,7 +298,7 @@ public class TCPConnector {
                 try {
                     socket.startHandshake();
                 } catch (Exception ex) {
-                   base.setText("Connection Error: Cannot connect to server", true);
+                    base.setText("Connection Error: Cannot connect to server", true);
                     ex.printStackTrace();
                 }
                 result = true;
@@ -292,7 +337,7 @@ public class TCPConnector {
 
             @Override
             public void run() {
-                listen();
+                 listen();
             }
         };
         t.start();
