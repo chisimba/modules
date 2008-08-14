@@ -72,6 +72,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private boolean pluginDownloaded = false;
     private String supernodeHost = "196.21.45.85";
     private int supernodePort = 80;
+    private Timer monitor;
 
     /** Initializes the applet RealtimeLauncher */
     @Override
@@ -291,6 +292,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
         }
 
+
     }
 
     public JProgressBar getPb() {
@@ -305,6 +307,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     private void requestForPlugins() {
         for (int i = 0; i < plugins.length; i++) {
+            setText("Requesting for " + plugins[i][1] + " ...", false);
+          
             requestForResource(plugins[i][0], plugins[i][1]);
             //got to monitor this one for 1 full minute.
             if (i == plugins.length - 1) {
@@ -328,13 +332,26 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     private void requestForResource(String filename, String desc) {
+
         String filepath = resourcesPath + "/" + filename;
         ModuleFileRequestPacket p =
                 new ModuleFileRequestPacket(null, filename, filepath,
                 slideServerId, userName);
         p.setDesc(desc);
         tcpConnector.sendPacket(p);
+    // monitor = new java.util.Timer();
+    // monitor.schedule(new BinFileRequestMonitor(), 10 * 1000);
 
+    }
+
+    class BinFileRequestMonitor extends TimerTask {
+
+        public void run() {
+            if (!tcpConnector.isBinRequestReplied()) {
+                setText("Error: Server taking too long to reply.", true);
+            }
+            monitor.cancel(); //Terminate the thread
+        }
     }
 
     public static void main(String[] args) {
@@ -391,14 +408,14 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             setText("", false);
             pl.setSessionTitle(sessionTitle);
             pl.setApplectCodeBase(appletCodeBase);
-          //  pl.setSupernodeHost(supernodeHost);
-           // pl.setSupernodePort(supernodePort);
+            //  pl.setSupernodeHost(supernodeHost);
+            // pl.setSupernodePort(supernodePort);
             pl.setGlassPaneHandler(this);
             JPanel basePanel = pl.createBase(
                     userLevel,
                     fullName,
                     userName,
-                    supernodeHost,supernodePort,
+                    supernodeHost, supernodePort,
                     isPresenter,
                     sessionId,
                     slidesDir,
