@@ -45,6 +45,7 @@ import java.util.LinkedList;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  * Handles communications for the server, to and from the clients Processes
@@ -280,6 +281,45 @@ public class ServerThread extends Thread {
     }
 
     /**
+     * Add a new laucher client. However, duplicates lock up things..i have
+     * no idea why. So, just remove them and get smooth sailing!
+     * @param lc
+     */
+    private void addLauncherClient(LauncherClient lc) {
+        //first, remove any existing ones wih same name
+        Vector<Integer> dups = new Vector<Integer>();
+        for (int i = 0; i < launchers.size(); i++) {
+            if (launchers.elementAt(i).getId().equals(lc.getId())) {
+                dups.add(i);
+            }
+        }
+
+        for (int i = 0; i < dups.size(); i++) {
+            launchers.removeElementAt(i);
+        }
+
+        launchers.addElement(lc);
+    }
+
+    /**
+     * Add new slide server. But we dont need duplicates, so take care of those first
+     * @param ss
+     */
+    private void addSlideServer(SlideServer ss) {
+        Vector<Integer> dups = new Vector<Integer>();
+        for (int i = 0; i < slideServers.size(); i++) {
+            if (slideServers.elementAt(i).getId().equals(ss.getId())) {
+                dups.add(i);
+            }
+        }
+        for (int i = 0; i < dups.size(); i++) {
+            slideServers.removeElementAt(i);
+        }
+
+        slideServers.add(ss);
+    }
+
+    /**
      * Listens to clients requests
      * @param objectIn
      * @param objectOut
@@ -290,9 +330,10 @@ public class ServerThread extends Thread {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-                //logger.info(obj.getClass() + "");
+                   // logger.info(obj.getClass() + "");
                 } catch (Exception ex) {
                     logger.info(ex.getLocalizedMessage());
+                    waitForSlideServer = false;
                     /* if (thisUser != null) {
                     removeDisconnectedUsers();
                     removeNullLockedPresentations();
@@ -306,7 +347,7 @@ public class ServerThread extends Thread {
                 if (obj instanceof LauncherAckPacket) {
                     LauncherAckPacket lack = (LauncherAckPacket) obj;
                     synchronized (launchers) {
-                        launchers.add(new LauncherClient(lack.getUser().getUserName(), objectOutStream));
+                        addLauncherClient(new LauncherClient(lack.getUser().getUserName(), objectOutStream));
                     }
                 }
                 if (obj instanceof ModuleFileRequestPacket) {
@@ -356,7 +397,8 @@ public class ServerThread extends Thread {
                             if (!slideServerExists(thisUser.getUserName())) {
                                 logger.info(thisUser.getUserName() + " registered as slide server");
                                 synchronized (slideServers) {
-                                    slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
+                             //       slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
+                                addSlideServer(new SlideServer(thisUser.getUserName(), objectOut, socket));
                                 }
                             } else {
                                 logger.info(thisUser.getFullName() + " already exists ...shutting down!");
@@ -738,16 +780,20 @@ public class ServerThread extends Thread {
     }
 
     private void processModuleFileReplyPacket(ModuleFileReplyPacket packet) {
-        logger.info("Received: " + packet.getClass() + " : " + packet.getFilePath());
-        logger.info("Trying to obtain lock..");
+    //    logger.info("Received: " + packet.getClass() + " : " + packet.getFilePath());
+      //  logger.info("Trying to obtain lock..");
         synchronized (launchers) {
-            logger.info("Obtained!!!!");
+        //    logger.info("Obtained!!!! .. Launchers size: " + launchers.size());
             for (int i = 0; i < launchers.size(); i++) {
+          //      logger.info("Loop " + i + ": testing " + launchers.elementAt(i).getId() + " against " + packet.getUsername());
                 if (launchers.elementAt(i).getId().equals(packet.getUsername())) {
                     try {
+            //            logger.info("Match found ...sending packet");
+                        launchers.elementAt(i).getObjectOutputStream().flush();
+
                         launchers.elementAt(i).getObjectOutputStream().writeObject(packet);
                         launchers.elementAt(i).getObjectOutputStream().flush();
-                        logger.info("Send!!!!");
+              //          logger.info("Send!!!!");
                     } catch (Exception ex) {
                         logger.info(ex.getLocalizedMessage());
                     }
@@ -755,6 +801,7 @@ public class ServerThread extends Thread {
 
             }
         }
+        //logger.info("Released lock...");
     }
 
     private void processServerLogRequest(ServerLogRequestPacket packet) {
@@ -990,7 +1037,7 @@ public class ServerThread extends Thread {
             }
         }
     }
- 
+
     private void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
         //locate the slides server based on the ids
         boolean slideServerFound = false;
