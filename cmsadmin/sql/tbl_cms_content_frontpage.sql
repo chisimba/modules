@@ -23,7 +23,7 @@ $fields = array(
 		'length' => 11,
         'notnull' => TRUE,
         'default' => 0
-		)
+		),
 	'public_access' => array(
 		'type' => 'boolean',
 		'default' => '1'
