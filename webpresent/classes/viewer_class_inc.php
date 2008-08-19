@@ -285,11 +285,11 @@
             $table->endRow();
 
 
-            $form = new form ('register', $this->uri(array('action'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
+            $form = new form ('register', $this->uri(array('action'=>'willappletrun','actiontype'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
             $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
             $button->setToSubmit();
 
-            $clientLink = new link ($this->uri(array('action'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
+            $clientLink = new link ($this->uri(array('action'=>'willappletrun','actiontype'=>'showaudienceapplet', 'id'=>$id,'agenda'=>$agenda)));
             $clientLink->link =$this->objLanguage->languageText("mod_webpresent_joinlivepresentation", "webpresent");
 
             $content1 = '<div id="loading_views" style="display:none; ">'.$objIcon->show().'</div><div id="data_views style="float: left; width=100">'.$table->show().'<br>'.$button->show().'</div>';
@@ -310,157 +310,157 @@
 
 
             return $form->show();
-            
-        }
-        /**
-         * Get latest feeds
-         * @return <type>
-         */
-        public function getLatestFeed()
+
+}
+/**
+ * Get latest feeds
+ * @return <type>
+ */
+public function getLatestFeed()
+{
+    $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
+    $description =$this->objLanguage->languageText("mod_webpresent_listphrase", "webpresent").' '.$this->objConfig->getSiteName().' '.$this->objLanguage->languageText("mod_webpresent_site", "webpresent");
+    $url = $this->uri(array('action'=>'latestrssfeed'));
+
+    $files = $this->objFile->getLatestPresentations();
+
+    return $this->generateFeed($title, $description, $url, $files);
+}
+
+/**
+ * Get user feed
+ * @param <type> $userId
+ * @return <type>
+ */
+public function getUserFeed($userId)
+{
+    $fullName = $this->objUser->fullName($userId);
+    $title = $fullName.'\'s Files';
+    $description =$this->objLanguage->languageText("mod_webpresent_phraselistuploadedby", "webpresent"). ' '.$fullName;
+    $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
+
+    $files = $this->objFile->getByUser($userId);
+
+    return $this->generateFeed($title, $description, $url, $files);
+}
+
+/**
+ * Get Tag Feed
+ * @param <type> $tag
+ * @return <type>
+ */
+public function getTagFeed($tag)
+{
+    $title = $this->objConfig->getSiteName().' - Tag: '.$tag;
+    $description = 'A List of Presentations with tag - '.$tag;
+    $url = $this->uri(array('action'=>'tagrss', 'tag'=>$tag));
+
+    $objTags = $this->getObject('dbwebpresenttags');
+    $files = $objTags->getFilesWithTag($tag);
+
+    return $this->generateFeed($title, $description, $url, $files);
+}
+
+/**
+ * Generate Feed
+ * @param <type> $title
+ * @param <type> $description
+ * @param <type> $url
+ * @param <type> $files
+ * @return <type>
+ */
+public function generateFeed($title, $description, $url, $files)
+{
+    $objFeedCreator = $this->getObject('feeder', 'feed');
+    $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
+
+    if (count($files) > 0)
+    {
+        $this->loadClass('link', 'htmlelements');
+        $objDate = $this->getObject('dateandtime', 'utilities');
+
+        foreach ($files as $file)
         {
-            $title = $this->objConfig->getSiteName().' - 10 Newest Uploads';
-            $description =$this->objLanguage->languageText("mod_webpresent_listphrase", "webpresent").' '.$this->objConfig->getSiteName().' '.$this->objLanguage->languageText("mod_webpresent_site", "webpresent");
-            $url = $this->uri(array('action'=>'latestrssfeed'));
 
-            $files = $this->objFile->getLatestPresentations();
-
-            return $this->generateFeed($title, $description, $url, $files);
-        }
-
-        /**
-         * Get user feed
-         * @param <type> $userId
-         * @return <type>
-         */ 
-        public function getUserFeed($userId)
-        {
-            $fullName = $this->objUser->fullName($userId);
-            $title = $fullName.'\'s Files';
-            $description =$this->objLanguage->languageText("mod_webpresent_phraselistuploadedby", "webpresent"). ' '.$fullName;
-            $url = $this->uri(array('action'=>'userrss', 'userid'=>$userId));
-
-            $files = $this->objFile->getByUser($userId);
-
-            return $this->generateFeed($title, $description, $url, $files);
-        }
-
-        /**
-         * Get Tag Feed
-         * @param <type> $tag
-         * @return <type>
-         */
-        public function getTagFeed($tag)
-        {
-            $title = $this->objConfig->getSiteName().' - Tag: '.$tag;
-            $description = 'A List of Presentations with tag - '.$tag;
-            $url = $this->uri(array('action'=>'tagrss', 'tag'=>$tag));
-
-            $objTags = $this->getObject('dbwebpresenttags');
-            $files = $objTags->getFilesWithTag($tag);
-
-            return $this->generateFeed($title, $description, $url, $files);
-        }
-
-        /**
-         * Generate Feed
-         * @param <type> $title
-         * @param <type> $description
-         * @param <type> $url
-         * @param <type> $files
-         * @return <type>
-         */
-        public function generateFeed($title, $description, $url, $files)
-        {
-            $objFeedCreator = $this->getObject('feeder', 'feed');
-            $objFeedCreator->setupFeed(TRUE, $title, $description, $this->objConfig->getsiteRoot(), $url);
-
-            if (count($files) > 0)
-            {
-                $this->loadClass('link', 'htmlelements');
-                $objDate = $this->getObject('dateandtime', 'utilities');
-
-                foreach ($files as $file)
-                {
-
-                    if (trim($file['title']) == '') {
-                        $filename = $file['filename'];
-                    } else {
-                        $filename = htmlentities($file['title']);
-                    }
-
-                    $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
-
-                    $imgLink = new link($link);
-                    $imgLink->link = $this->objFile->getPresentationThumbnail($file['id'], $filename);
-
-                    $date = $objDate->sqlToUnixTime($file['dateuploaded']);
-
-
-                    $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
-                }
-
-
-            }
-
-            return $objFeedCreator->output();
-        }
-
-        /**
-         * Generate presentation thumb nail
-         * @param <type> $id
-         * @param <type> $title
-         * @return <type>
-         */
-        public function getPresentationThumbnail($id, $title='')
-        {
-            $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
-            $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
-
-            if (trim($title) == '')
-            {
-                $title = '';
+            if (trim($file['title']) == '') {
+                $filename = $file['filename'];
             } else {
-                $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
+                $filename = htmlentities($file['title']);
             }
 
-            if (file_exists($source)) {
+            $link = str_replace('&amp;', '&', $this->uri(array('action'=>'view', 'id'=>$file['id'])));
 
-                return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
+            $imgLink = new link($link);
+            $imgLink->link = $this->objFile->getPresentationThumbnail($file['id'], $filename);
+
+            $date = $objDate->sqlToUnixTime($file['dateuploaded']);
+
+
+            $objFeedCreator->addItem($filename, $link, $imgLink->show().'<br />'.$file['description'], 'here', $this->objUser->fullName($file['creatorid']), $date);
+        }
+
+
+    }
+
+    return $objFeedCreator->output();
+}
+
+/**
+ * Generate presentation thumb nail
+ * @param <type> $id
+ * @param <type> $title
+ * @return <type>
+ */
+public function getPresentationThumbnail($id, $title='')
+{
+    $source = $this->objConfig->getcontentBasePath().'webpresent_thumbnails/'.$id.'.jpg';
+    $relLink = $this->objConfig->getsiteRoot().$this->objConfig->getcontentPath().'webpresent_thumbnails/'.$id.'.jpg';
+
+    if (trim($title) == '')
+    {
+        $title = '';
+    } else {
+        $title = ' title="'.htmlentities($title).'" alt="'.htmlentities($title).'"';
+    }
+
+    if (file_exists($source)) {
+
+        return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
+    } else {
+        $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
+        $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
+
+        if (file_exists($source)) {
+            $objMkDir = $this->getObject('mkdir', 'files');
+            $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
+            $objMkDir->mkdirs($destinationDir);
+
+            $this->objImageResize = $this->getObject('imageresize', 'files');
+
+            $this->objImageResize->setImg($source);
+
+            // Resize to 100x100 Maintaining Aspect Ratio
+            $this->objImageResize->resize(120, 120, TRUE);
+
+            //$this->objImageResize->show(); // Uncomment for testing purposes
+
+            // Determine filename for file
+            // If thumbnail can be created, give it a unique file name
+            // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
+            if ($this->objImageResize->canCreateFromSouce) {
+                $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';
+                $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
+                $this->objImageResize->store($img);
+
+                return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
             } else {
-                $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
-                $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
-
-                if (file_exists($source)) {
-                    $objMkDir = $this->getObject('mkdir', 'files');
-                    $destinationDir = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails';
-                    $objMkDir->mkdirs($destinationDir);
-
-                    $this->objImageResize = $this->getObject('imageresize', 'files');
-
-                    $this->objImageResize->setImg($source);
-
-                    // Resize to 100x100 Maintaining Aspect Ratio
-                    $this->objImageResize->resize(120, 120, TRUE);
-
-                    //$this->objImageResize->show(); // Uncomment for testing purposes
-
-                    // Determine filename for file
-                    // If thumbnail can be created, give it a unique file name
-                    // Else resort to [ext].jpg - prevents clutter, other files with same type can reference this one file
-                    if ($this->objImageResize->canCreateFromSouce) {
-                        $img = $this->objConfig->getcontentBasePath().'/webpresent_thumbnails/'.$id.'.jpg';
-                        $imgRel = $this->objConfig->getcontentPath().'/webpresent_thumbnails/'.$id.'.jpg';
-                        $this->objImageResize->store($img);
-
-                        return '<img src="'.$imgRel.'" '.$title.' style="border:1px solid #000;" />';
-                    } else {
-                        return $this->objLanguage->languageText("mod_webpresent_unabletogeneratethumbnail", "webpresent");// '';
-                    }
-                } else {
-                    return $this->objLanguage->languageText("mod_webpresent_nopreview", "webpresent");
-                }
+                return $this->objLanguage->languageText("mod_webpresent_unabletogeneratethumbnail", "webpresent");// '';
             }
+        } else {
+            return $this->objLanguage->languageText("mod_webpresent_nopreview", "webpresent");
         }
     }
+}
+}
 
 ?>
