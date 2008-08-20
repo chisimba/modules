@@ -85,7 +85,8 @@ class mailmansignup extends object
 		$subform->addToForm($this->objSubButton->show());
 		$subform = $subform->show();
 		if ($featurebox == FALSE) {
-			return $subform;
+			return $this->objLanguage->languageText("mod_mailmannews_subinstructions", "mailmannews") 
+              . "<br />" . $subform;
 		} else {
 			$objFeatureBox = $this->getObject('featurebox', 'navigation');
 			$ret = $objFeatureBox->show(""/*$this->objLanguage->languageText("mod_mailmannews_subscribe", "mailmannews")*/ , $this->objLanguage->languageText("mod_mailmannews_subinstructions", "mailmannews") . "<br />" . $subform);
