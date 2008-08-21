@@ -41,7 +41,7 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * A block to return the last 10 blog posts
+ * A block to create a form to subscribe to the list
  *
  * @category  Chisimba
  * @author    Paul Scott
@@ -67,13 +67,18 @@ class block_subscribe extends object
     public $display;
     
     /**
-     * Description for public
+     * Language elements
      *
      * @var    object
      * @access public
      */
     public $objLanguage;
     
+    /**
+     * Mailman signup object
+     *
+     * @var unknown_type
+     */
     public $objMailmanSignup;
     
     /**
