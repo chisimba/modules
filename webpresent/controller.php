@@ -1,6 +1,7 @@
 <?php
     /**
-     * Webpresent can be used for creating and sharing presentations online.
+     * Webpresent is used for sharing presentations online.
+     * Registered users can upload and manage thier presentations
      * Supported file formats range from open office, power point to pdf.
      * JODConverter is used primarly as the document converter engine, although
      * in same cases we are using swftools.
@@ -42,6 +43,7 @@ class webpresent extends controller
 
     public  $realtimeManager;
 
+    public  $presentManager;
     /**
      * Constructor
      */
@@ -56,7 +58,7 @@ class webpresent extends controller
         $this->objSlides = $this->getObject('dbwebpresentslides');
         $this->objSchedules = $this->getObject('dbwebpresentschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
-
+        $this->presentManager = $this->getObject('presentmanager');
     }
         /**
          * Method to override login for certain actions
@@ -153,7 +155,7 @@ class webpresent extends controller
 
 
     /**
-     * function to test whether audience applet can be invoked
+     * function to test whether target machine has java well installed
      */
     public function __willappletrun()
     {
@@ -169,13 +171,30 @@ class webpresent extends controller
     }
 
     /**
-     * Function to test if a presenter applet can be called
-     *
+     * This calls function that displays actual applet after veryifying that java exists
+     * The applet is invoked in presenter mode
+     *  @return <type>
      */
     public function __showpresenterapplet()
     {
        return $this->showapplet('true');
     }
+
+    /**
+     * Calls function to display applet, but in participant mode
+     * @return <type>
+     */
+    public function __showaudienceapplet()
+    {
+      return $this->showapplet('false');
+    }
+    
+    
+    /**
+     * Displays actual applet by returning the template responsible for this
+     * @param <type> $isPresenter
+     * @return <type>
+     */
     private  function showapplet($isPresenter){
         
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -203,14 +222,6 @@ class webpresent extends controller
     }
 
     /**
-     * This displays actuall applet
-     */
-    public function __showaudienceapplet()
-    {
-      return $this->showapplet('false');
-    }
-    
-    /**
      * displayes error
      */
     public function __showerror()
@@ -228,9 +239,9 @@ class webpresent extends controller
         return "dump_tpl.php";
         
     }
-        /**
-         * Method to display the search results
-         */
+    /**
+     * Method to display the search results
+     */
     public function __search()
     {
         $query = $this->getParam('q');
@@ -243,10 +254,10 @@ class webpresent extends controller
 
 
 
-        /**
-         * Method to edit the details of a presentation
-         *
-         */
+    /**
+     * Method to edit the details of a presentation
+     *
+     */
     function __edit()
     {
         $id = $this->getParam('id');
@@ -274,10 +285,10 @@ class webpresent extends controller
     }
 
 
-        /**
-         * Method to update the details of a presentation
-         *
-         */
+    /**
+     * Method to update the details of a presentation
+     *
+     */
     function __updatedetails()
     {
         $id = $this->getParam('id');
@@ -414,10 +425,10 @@ class webpresent extends controller
         return 'tag_tpl.php';
     }
 
-        /**
-         * Method to view a list of presentations uploaded by a particular user
-         *
-         */
+    /**
+     * Used to view a list of presentations uploaded by a particular user
+     *
+     */
     function __byuser()
     {
         $userid = $this->getParam('userid');
@@ -437,9 +448,9 @@ class webpresent extends controller
         return 'byuser_tpl.php';
     }
 
-        /**
-         * Method to show a tag cloud for all tags
-         */
+    /**
+     * Used to show a tag cloud for all tags
+     */
     function __tagcloud()
     {
         $tagCloud = $this->objTags->getCompleteTagCloud();
@@ -448,9 +459,9 @@ class webpresent extends controller
         return 'tagcloud_tpl.php';
     }
 
-        /**
-         * Ajax method to return statistics from another period/source
-         */
+    /**
+     * Ajax method to return statistics from another period/source
+     */
     function __ajaxgetstats()
     {
         $period = $this->getParam('period');
@@ -475,30 +486,30 @@ class webpresent extends controller
         echo $objSource->getAjaxData($period);
     }
 
-        /**
-         * Method to show interface to upload a presentation
-         *
-         */
+    /**
+     * Used to show interface to upload a presentation
+     *
+     */
     function __upload()
     {
         return 'testupload_tpl.php';
     }
 
-        /**
-         * Method to show a temporary iframe
-         * (it is hidden, and thus does nothing)
-         *
-         */
+    /**
+     * Used to show a temporary iframe
+     * (it is hidden, and thus does nothing)
+     *
+     */
     function __tempiframe()
     {
         echo '<pre>';
         print_r($_GET);
     }
 
-        /**
-         * Method to show upload errors
-         *
-         */
+    /**
+     * Used to show upload errors
+     *
+     */
     function __erroriframe()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -514,10 +525,10 @@ class webpresent extends controller
         return 'erroriframe_tpl.php';
     }
 
-        /**
-         * Method to show upload results if the upload was successful
-         *
-         */
+    /**
+     * Used to show upload results if the upload was successful
+     *
+     */
     function __uploadiframe()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -530,10 +541,10 @@ class webpresent extends controller
         return 'uploadiframe.php';
     }
 
-        /**
-         * Ajax Process to display form for user to add presentation info
-         *
-         */
+    /**
+     * Ajax Process to display form for user to add presentation info
+     *
+     */
     function __ajaxprocess()
     {
         $this->setPageTemplate(NULL);
@@ -558,10 +569,10 @@ class webpresent extends controller
         return 'process.php';
     }
 
-        /**
-         * Method to do the actual upload
-         *
-         */
+    /**
+     * Used to do the actual upload
+     *
+     */
     function __doajaxupload()
     {
         $generatedid = $this->getParam('id');
@@ -628,9 +639,9 @@ class webpresent extends controller
         }
     }
 
-        /**
-         * Method to push through upload results for AJAX
-         */
+    /**
+     * Used to push through upload results for AJAX
+     */
     function __ajaxuploadresults()
     {
         $this->setVar('pageSuppressToolbar', TRUE);
@@ -649,13 +660,13 @@ class webpresent extends controller
         return 'ajaxuploadresults_tpl.php';
     }
 
-        /**
-         * Method to Start the Conversions of Files
-         *
-         * This method is called using an Ajax process and is then
-         * run as a background process, so that it continues, even
-         * if the user closes the browser, or moves away.
-         */
+    /**
+     * Used to Start the Conversions of Files
+     *
+     * This method is called using an Ajax process and is then
+     * run as a background process, so that it continues, even
+     * if the user closes the browser, or moves away.
+     */
     function __ajaxprocessconversions()
     {
         $objBackground = $this->newObject('background', 'utilities');
@@ -675,10 +686,10 @@ class webpresent extends controller
     }
 
 
-        /**
-         * Method to delete a presentation
-         * Check: Users can only upload their own presentations
-         */
+    /**
+     * Used to delete a presentation
+     * Check: Users can only upload their own presentations
+     */
     function __delete()
     {
         $id = $this->getParam('id');
@@ -696,9 +707,9 @@ class webpresent extends controller
         return $this->_deleteslide($file);
     }
 
-        /**
-         * Method when an administrator deletes the file of another person
-         */
+    /**
+     * Used when an administrator deletes the file of another person
+     */
     function __admindelete()
     {
         $id = $this->getParam('id');
@@ -712,12 +723,12 @@ class webpresent extends controller
         return $this->_deleteslide($file);
     }
 
-        /**
-         * Method to display the delete form interface
-         * This method is called once it is verified the user can delete the presentation
-         *
-         * @access private
-         */
+    /**
+     * Used to display the delete form interface
+     * This method is called once it is verified the user can delete the presentation
+     *
+     * @access private
+     */
     private function _deleteslide($file)
     {
         $this->setVarByRef('file', $file);
@@ -739,10 +750,10 @@ class webpresent extends controller
         return 'delete_tpl.php';
     }
 
-        /**
-         * Method to delete a presentation if user confirms delete
-         *
-         */
+    /**
+     * Used to delete a presentation if user confirms delete
+     *
+     */
     private function __deleteconfirm()
     {
         // Get Id
@@ -778,20 +789,20 @@ class webpresent extends controller
 
     }
 
-        /**
-         * Method to display the latest presentations RSS Feed
-         *
-         */
+    /**
+     * Used to display the latest presentations RSS Feed
+     *
+     */
     function __latestrssfeed()
     {
         $objViewer = $this->getObject('viewer');
         echo $objViewer->getLatestFeed();
     }
 
-        /**
-         * Method to show a RSS Feed of presentations matching a tag
-         *
-         */
+    /**
+     * Used to show a RSS Feed of presentations matching a tag
+     *
+     */
     function __tagrss()
     {
         $tag = $this->getParam('tag');
@@ -799,10 +810,10 @@ class webpresent extends controller
         echo $objViewer->getTagFeed($tag);
     }
 
-        /**
-         * Method to display the latest presentations of a user RSS Feed
-         *
-         */
+    /**
+     * Used to display the latest presentations of a user RSS Feed
+     *
+     */
     public function __userrss()
     {
         $userid = $this->getParam('userid');
@@ -810,9 +821,9 @@ class webpresent extends controller
         echo $objViewer->getUserFeed($userid);
     }
 
-        /**
-         * Method to rebuild the search index
-         */
+    /**
+     * Used to rebuild the search index
+     */
     public function __rebuildsearch()
     {
         $files = $this->objFiles->getAll();
@@ -840,12 +851,12 @@ class webpresent extends controller
 
     }
 
-        /**
-         * Method to take file information and make as much of that information available
-         * for search purposes
-         *
-         * @param array $file File Information
-         */
+    /**
+     * Used to take file information and make as much of that information available
+     * for search purposes
+     *
+     * @param array $file File Information
+     */
     private function _prepareDataForSearch($file)
     {
         $content = $file['filename'];
@@ -889,11 +900,11 @@ class webpresent extends controller
         $this->_luceneIndex($file);
     }
 
-        /**
-         * Method to add a file to the search index
-         *
-         * @param array $file File Information
-         */
+    /**
+     * Used to add a file to the search index
+     *
+     * @param array $file File Information
+     */
     private function _luceneIndex($file)
     {
         //print_r($data); die();
@@ -963,19 +974,19 @@ class webpresent extends controller
         //$index->optimize();
 
     }
-        /**
-         * Test deletion
-         */
+    /**
+     * Test deletion
+     */
     public function __testdelete()
     {
         $fileId = $this->getParam('id');
         $this->_luceneclearFileIndex($fileId);
     }
 
-        /**
-         * Method to remove a file from the search index
-         * @param string $fileId
-         */
+    /**
+     * Used to remove a file from the search index
+     * @param string $fileId
+     */
     private function _luceneclearFileIndex($fileId)
     {
         //print_r($data); die();
@@ -1019,9 +1030,9 @@ class webpresent extends controller
     }
 
 
-        /**
-         * Method to regenerate the Flash or PDF version of a file
-         */
+    /**
+     * Method to regenerate the Flash or PDF version of a file
+     */
     public function __regenerate()
     {
         $id = $this->getParam('id');
@@ -1032,11 +1043,11 @@ class webpresent extends controller
         return $this->nextAction('view', array('id'=>$id, 'message'=>'regeneration', 'type'=>$type, 'result'=>$result));
     }
 
-        /**
-         * Method to listall Presentations
-         * Used for testing purposes
-         * @access private
-         */
+    /**
+     * Method to listall Presentations
+     * Used for testing purposes
+     * @access private
+     */
     private function __listall()
     {
         $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');
