@@ -1,5 +1,8 @@
 <?php
 
+
+// This file can be deleted!
+
 $cssLayout = $this->getObject('csslayout', 'htmlelements');
 
 

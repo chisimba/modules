@@ -1,10 +1,11 @@
 <?php
 
+
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 
-$cssLayout = $this->getObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
+
 
 $header = new htmlheading();
 $header->type = 1;
@@ -42,52 +43,6 @@ if (count($categories) > 0) {
 
 $middle .= '<br clear="both" />';
 
-$leftContent = $this->objNewsMenu->generateMenu();
-$leftContent .= '<div id="newsfeeds">'.$this->objNewsStories->getFeedLinks().'</div>';
-
-$adminOptions = array();
-
-if ($this->isValid('managecategories')) {
-    $newsCategoriesLink = new link ($this->uri(array('action'=>'managecategories')));
-    $newsCategoriesLink->link = $this->objLanguage->languageText('mod_news_managenewscategories', 'news', 'Manage News Categories');
-    $adminOptions[] = '<li>'.$newsCategoriesLink->show().'</li>';
-}
-
-if ($this->isValid('addstory')) {
-    $addNewsStoryLink = new link ($this->uri(array('action'=>'addstory')));
-    $addNewsStoryLink->link = $this->objLanguage->languageText('mod_news_addnewsstory', 'news', 'Add News Story');
-    $adminOptions[] = '<li>'.$addNewsStoryLink->show().'</li>';
-}
-
-if (count($adminOptions) > 0) {
-
-    $leftContent .= '<h3>'.$this->objLanguage->languageText('mod_news_newsoptions', 'news', 'News Options').'</h3>';
-
-    $leftContent .= '<ul>';
-
-    foreach ($adminOptions as $option)
-    {
-        $leftContent .= $option;
-    }
-
-    $leftContent .= '</ul>';
-
-}
-
-$right = '';
-
-$objBlocks = $this->getObject('blocks', 'blocks');
-$right .= $objBlocks->showBlock('lastten', 'blog', NULL, 20, FALSE, FALSE);
-$right .= $objBlocks->showBlock('latestpodcasts', 'podcast', NULL, 20, FALSE, FALSE);
-$right .= $this->objNewsStories->getFeedLinks();
-
-
-
-
-$cssLayout->setLeftColumnContent($leftContent);
-$cssLayout->setMiddleColumnContent($middle);
-$cssLayout->setRightColumnContent($right);
-
-echo $cssLayout->show();
+echo $middle;
 
 ?>

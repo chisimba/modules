@@ -18,24 +18,16 @@ class news extends controller
         $this->objKeywords = $this->getObject('dbnewskeywords');
         $this->objTags = $this->getObject('dbnewstags');
         $this->objComments = $this->getObject('dbnewscomments');
-
-
-        $this->objAlbums = $this->getObject('dbnewsalbums');
-        $this->objAlbumKeywords = $this->getObject('dbnewsalbumkeywords');
-        $this->objPhotos = $this->getObject('dbnewsphotos');
-
-        $this->objPolls = $this->getObject('dbnewspolls');
-        $this->objPollOptions = $this->getObject('dbnewspollsoptions');
-        $this->objPollVotes = $this->getObject('dbnewspollsvotes');
-
+        
         $this->objLanguage = $this->getObject('language', 'language');
         
         $this->objNewsBlocks = $this->getObject('dbnewsblocks');
         $this->objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
-
+        
         $this->loadClass('link', 'htmlelements');
-
+        
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -153,50 +145,28 @@ class news extends controller
     */
     private function __home()
     {
-        $this->setLayoutTemplate('NULL');
+        $this->setLayoutTemplate('blocks_layout_tpl.php');
         
         $topStories = $this->objNewsStories->getTopStoriesFormatted();
         $this->setVarByRef('topStories', $topStories['stories']);
-
         $this->setVarByRef('topStoriesId', $topStories['topstoryids']);
-
+        
         $categories = $this->objNewsCategories->getCategoriesWithStories('categoryname');
         $this->setVarByRef('categories', $categories);
-
-
-        // Blocks
-        /*
-        $rightBlocks = $this->objNewsBlocks->getContextBlocks($this->contextCode, 'right');
-        $this->setVarByRef('rightBlocksStr', $rightBlocks);
         
-        $middleBlocks = $this->objNewsBlocks->getContextBlocks($this->contextCode, 'middle');
-        $this->setVarByRef('middleBlocksStr', $middleBlocks);
+        // Load Blocks
+        $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage');
         
-        $allContextBlocks = $this->objNewsBlocks->getContextBlocksArray($this->contextCode);
-        $this->setVarByRef('allContextBlocks', $allContextBlocks);
-        
-        
-        
-        $smallDynamicBlocks = $this->objDynamicBlocks->getSmallContextBlocks($this->contextCode);
-        $this->setVarByRef('smallDynamicBlocks', $smallDynamicBlocks);
-        
-        $wideDynamicBlocks = $this->objDynamicBlocks->getWideContextBlocks($this->contextCode);
-        $this->setVarByRef('wideDynamicBlocks', $wideDynamicBlocks);
-        
-        $objBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
-        $smallBlocks = $objBlocks->getBlocks('normal', 'site');
-        $this->setVarByRef('smallBlocks', $smallBlocks);
-        
-        $wideBlocks = $objBlocks->getBlocks('wide', 'site');
-        $this->setVarByRef('wideBlocks', $wideBlocks);
-        */
+        $this->setVar('pageType', 'frontpage');
+        $this->setVar('pageId', 'frontpage');
         
         return 'home.php';
     }
-
+    
+    
+    
     /**
-    *
-    *
+    * A Pseudo Action to require the user to login before accessing the home page of the news module
     */
     private function __login()
     {
@@ -506,22 +476,22 @@ class news extends controller
     private function __viewstory()
     {
         $id = $this->getParam('id');
-
-        // Turn off exist Template
-        // Content uses 3 col layout
-        $this->setLayoutTemplate(NULL);
-
+        
+        $this->setLayoutTemplate('blocks_layout_tpl.php');
+        
         $story = $this->objNewsStories->getStory($id);
-
+        
+        // If story does not exist
         if ($story == FALSE) {
             return $this->nextAction('home', array('error'=>'nostory'));
         } else {
-            $this->setVarByRef('story', $story);
-
+            
+            // Get Category
             $category = $this->objNewsCategories->getCategory($story['storycategory']);
-
+            
+            // Check that category exists
             if ($category == FALSE) {
-
+                return $this->nextAction('home', array('error'=>'nostory'));
             } else {
                 
                 $this->setVarByRef('currentCategory', $category['id']);
@@ -530,17 +500,29 @@ class news extends controller
                 if (($story['dateavailable'] > strftime('%Y-%m-%d %H:%M:%S', mktime())) && !$this->isValid('viewfuturestory')) {
                     return $this->nextAction('home', array('error'=>'nostory'));
                 } else {
+                    
                     $sectionLayout = $this->getObject('section_'.$category['itemsview']);
-
                     $this->setVarByRef('content', $sectionLayout->renderPage($story, $category));
                     $comments = $this->objComments->getStoryComments($id);
                     $this->setVarByRef('comments', $comments);
                     $this->setVarByRef('story', $story);
                     $this->setVarByRef('category', $category);
-
+                    
                     $menuId = $this->objNewsMenu->getIdCategoryItem($story['storycategory']);
                     $this->setVarByRef('menuId', $menuId);
-
+                    
+                    //Load Blocks for Page
+                    $this->objNewsBlocks->getBlocksAndSendToTemplate('story', $id);
+                    $this->setVar('pageType', 'story');
+                    $this->setVar('pageId', $id);
+                    
+                    $rightContent = '';
+                    $rightContent .= $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
+                    $rightContent .= $this->objKeywords->getStoryKeywordsBlock($story['id']);
+                    
+                    // Send to Layout Template
+                    $this->setVar('rightContent', $rightContent);
+                    
                     return 'viewstory.php';
                 }
             }
@@ -550,7 +532,7 @@ class news extends controller
     }
 
     /**
-    *
+    * Method to edit a story
     *
     */
     private function __editstory()
@@ -582,7 +564,7 @@ class news extends controller
     }
 
     /**
-    *
+    * Method to update a story
     *
     */
     private function __updatestory()
@@ -725,7 +707,7 @@ class news extends controller
     {
         $id = $this->getParam('id');
 
-        $this->setLayoutTemplate('2collayout.php');
+        $this->setLayoutTemplate('blocks_layout_tpl.php');
 
         $category = $this->objNewsCategories->getCategory($id);
 
@@ -736,9 +718,15 @@ class news extends controller
 
             return $this->nextAction(NULL, array('error'=>'categorydoesnotexist'));
         } else {
+            
+            //Load Blocks for Page
+            $this->objNewsBlocks->getBlocksAndSendToTemplate('category', $id);
+            $this->setVar('pageType', 'category');
+            $this->setVar('pageId', $id);
+            
             $menuId = $this->objNewsMenu->getIdCategoryItem($id);
             $this->setVarByRef('menuId', $menuId);
-
+            
             $sectionLayout = $this->getObject('section_'.$category['itemsview']);
             $this->setVarByRef('category', $category);
             $this->setVarByRef('currentCategory', $category['id']);
@@ -781,94 +769,7 @@ class news extends controller
     private function __generatekml()
     {
         header('Content-type: text/javascript');
-
-        $items = $this->objNewsStories->generateNewsSmap();
-
-        $objTrimString = $this->getObject('trimstr', 'strings');
-
-        $locations = array();
-        foreach ($items as $item)
-        {
-            if (array_key_exists($item['storylocation'], $locations)) {
-                $locations[$item['storylocation']] = $locations[$item['storylocation']] + 1;
-            } else {
-                $locations[$item['storylocation']] = 1;
-            }
-        }
-
-        foreach ($locations as $location=>$value)
-        {
-            if ($value == 1) {
-                unset($locations[$location]);
-            }
-        }
-
-        $groupItems = array();
-
-        foreach ($items as $item)
-        {
-            $latitude = $item['latitude'];
-            $longitude = $item['longitude'];
-
-            if (array_key_exists($item['storylocation'], $locations)) {
-
-                $groupItems[$item['storylocation']]['content'][] = array('id'=>$item['storyid'], 'title'=>$item['storytitle']);
-                $groupItems[$item['storylocation']]['latitude'] = $latitude;
-                $groupItems[$item['storylocation']]['longitude'] = $longitude;
-                $groupItems[$item['storylocation']]['locationname'] = $item['location'];
-
-            } else {
-                echo 'var point = new GLatLng('.$latitude.','.$longitude.');'."\r\n";
-                $content = '<h3>'.$item['location'].': '.$item['storytitle'].'</h3>';
-
-                $content .= $objTrimString->strTrim(($item['storytext']), 150, TRUE);
-
-                $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$item['storyid'])));
-                $storyLink->link = 'Read Story';
-
-                $link = $storyLink->show();
-                $link = str_replace('&amp;', '&', $link);
-
-                $content .= ' ('.$link.')';
-
-                $content = '<div style="width:300px;">'.$content.'</div>';
-
-                $content = stripslashes($content);
-                $content = str_replace('"', '\"', $content);
-
-                $content = ereg_replace("[\n\r]", " ", $content);
-                //$content = ereg_replace("\t\t+", "\n", $content);
-
-                echo 'var marker = createMarker(point,"'.$content.'");'."\r\n";
-                echo 'map.addOverlay(marker);'."\r\n";
-            }
-        }
-
-        if (count($groupItems) > 0) {
-            foreach ($groupItems as $group)
-            {
-                echo 'var point = new GLatLng('.$group['latitude'].', '.$group['longitude'].');'."\r\n";
-                $content = '<h3>'.$group['locationname'].'</h3><ul>';
-                foreach ($group['content'] as $item)
-                {
-                    $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$item['id'])));
-                    $storyLink->link = $item['title'];
-
-                    $content .= '<li>'.$storyLink->show().'</li>';
-                }
-
-                $content .= '</ul>';
-
-                $content = '<div style="width:300px;">'.$content.'</div>';
-
-                $content = stripslashes($content);
-                $content = str_replace('"', '\"', $content);
-
-                echo 'var marker = createMarker(point,"'.$content.'");'."\r\n";
-                echo 'map.addOverlay(marker);'."\r\n";
-            }
-
-        }
+        echo $this->objNewsStories->generateNewsSmap();
     }
 
     /**
@@ -877,26 +778,7 @@ class news extends controller
     */
     private function __topstoriesfeed()
     {
-        $topStories = $this->objNewsStories->getTopStories();
-        //print_r($topStories);
-
-        $this->objFeedCreator = $this->getObject('feeder', 'feed');
-        $objTrimString = $this->getObject('trimstr', 'strings');
-        
-        $objUser = $this->getObject('user', 'security');
-
-        $this->objFeedCreator->setupFeed(TRUE, $this->objConfig->getSiteName().' - '.$this->objLanguage->languageText('mod_news_topstories', 'news', 'Top Stories'), $this->objLanguage->languageText('mod_news_summaryoftopstories', 'news', 'Summary of Top Stories from').' '.$this->objConfig->getSiteName(), $this->objConfig->getsiteRoot(), $this->uri(array('action'=>'topstoriesfeed')));
-
-        foreach ($topStories as $story)
-        {
-            $title = $story['storytitle'];
-
-            $content = $objTrimString->strTrim(($story['storytext']), 150, TRUE);
-
-            $this->objFeedCreator->addItem($title, $this->uri(array('action'=>'viewstory', 'id'=>$story['id'])), $content, 'here', $objUser->fullName($story['modifierid']));
-        }
-
-        echo $this->objFeedCreator->output();
+        echo $this->objNewsStories->topStoriesFeed();
     }
 
     /**
@@ -1043,354 +925,7 @@ class news extends controller
         return $this->nextAction('managecategories', array('id'=>$id, 'act'=>'movedup', 'result'=>$result));
     }
 
-    /**
-    *
-    *
-    */
-    function __photoalbums()
-    {
-        $albums = $this->objAlbums->getAlbums();
 
-        $this->setVarByRef('albums', $albums);
-
-        return 'photoalbums.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __addalbum()
-    {
-        $this->setVar('mode', 'add');
-
-        return 'addeditalbum.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __savealbum()
-    {
-        $albumname = $this->getParam('albumname');
-        $albumdescription = $this->getParam('albumdescription');
-        $albumdate = $this->getParam('albumdate');
-        $albumlocation = $this->getParam('location');
-
-        $keywords = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag'));
-
-
-        $albumId = $this->objAlbums->addAlbum($albumname, $albumdescription, $albumdate, $albumlocation);
-        $this->objAlbumKeywords->addKeywords($albumId, $keywords);
-
-        return $this->nextAction('editalbumphotos', array('id'=>$albumId));
-    }
-
-    /**
-    *
-    *
-    */
-    function __viewalbum()
-    {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $this->setVarByRef('album', $album);
-
-        $albumPhotos = $this->objPhotos->getAlbumPhotos($id);
-
-        $this->setVarByRef('albumPhotos', $albumPhotos);
-
-        return 'viewalbum.php';
-    }
-
-    function __editalbum()
-    {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $this->setVarByRef('album', $album);
-
-        $keywords = $this->objAlbumKeywords->getAlbumKeywords($id);
-        $this->setVarByRef('keywords', $keywords);
-
-        $this->setVar('mode', 'edit');
-
-        return 'addeditalbum.php';
-    }
-
-    function __updatealbum()
-    {
-        $id = $this->getParam('id');
-        $albumname = $this->getParam('albumname');
-        $albumdescription = $this->getParam('albumdescription');
-        $albumdate = $this->getParam('albumdate');
-        $albumlocation = $this->getParam('location');
-
-        $keywords = array($this->getParam('keytag1'), $this->getParam('keytag2'), $this->getParam('keytag'));
-
-        $albumId = $this->objAlbums->updateAlbum($id, $albumname, $albumdescription, $albumdate, $albumlocation);
-        $this->objAlbumKeywords->addKeywords($id, $keywords);
-
-        return $this->nextAction('viewalbum', array('id'=>$id));
-    }
-
-    /**
-    *
-    *
-    */
-    function __editalbumphotos()
-    {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $this->setVarByRef('album', $album);
-
-        $albumPhotos = $this->objPhotos->getAlbumPhotos($id);
-
-        $this->setVarByRef('albumPhotos', $albumPhotos);
-
-        $objNewsFiles = $this->getObject('dbnewsfilemanagement');
-        $folders = $objNewsFiles->getFolders();
-
-        $this->setVarByRef('folders', $folders);
-
-        return 'editalbumphotos.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __loadfolderimages()
-    {
-        $id = $this->getParam('id');
-        $albumid = $this->getParam('albumid');
-
-        $objNewsFiles = $this->getObject('dbnewsfilemanagement');
-        $files = $objNewsFiles->getFiles($id);
-
-        $this->setVarByRef('files', $files);
-
-        $usedImages = $this->objPhotos->getAlbumUsedFiles($albumid);
-        $this->setVarByRef('usedImages', $usedImages);
-
-        $this->setPageTemplate(NULL);
-        $this->setLayoutTemplate(NULL);
-
-        return 'loadfolderimages.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __addphototoalbum()
-    {
-        $id = $this->getParam('id');
-        $album = $this->getParam('album');
-
-        $this->objPhotos->addPhotoToAlbum($id, $album);
-    }
-
-    /**
-    *
-    *
-    */
-    function __removephotofromalbum()
-    {
-        $id = $this->getParam('id');
-        $album = $this->getParam('album');
-
-        $this->objPhotos->removePhotoFromAlbum($id, $album);
-    }
-
-    /**
-    *
-    *
-    */
-    function __photocaptions()
-    {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $this->setVarByRef('album', $album);
-
-        $albumPhotos = $this->objPhotos->getAlbumPhotos($id);
-
-        $this->setVarByRef('albumPhotos', $albumPhotos);
-
-        return 'photocaptions.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __savecaptions()
-    {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $albumPhotos = $this->objPhotos->getAlbumPhotos($id);
-
-        if (count($albumPhotos) > 0) {
-            foreach($albumPhotos as $photo)
-            {
-                $caption = $this->getParam($photo['id']);
-
-                if ($caption != '') {
-                    $this->objPhotos->updateCaption($photo['id'], $caption);
-                }
-            }
-        }
-
-        return $this->nextAction('viewalbum', array('id'=>$id));
-    }
-
-    /**
-    *
-    *
-    */
-    function __previouspolls()
-    {
-        $polls = $this->objPolls->getPolls();
-
-        $this->setVarByRef('polls', $polls);
-
-        return 'previouspolls.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __addpoll()
-    {
-        $this->setVar('mode', 'add');
-
-        return 'addeditpoll.php';
-    }
-
-    /**
-    *
-    *
-    */
-    function __savenewpoll()
-    {
-        $question = stripslashes($this->getParam('question'));
-        $options = array();
-        for ($i=1; $i<=5; $i++)
-        {
-            $option = stripslashes($this->getParam('option'.$i));
-
-            if ($option != '') {
-                $options[] = $option;
-            }
-        }
-
-        $poll = $this->objPolls->addPoll($question);
-
-
-        if ($poll == FALSE) {
-            return $this->nextAction('managepolls', array('error'=>'couldnotaddpoll'));
-        } else {
-            $this->objPollOptions->addOptions($poll, $options);
-            return $this->nextAction('managepolls', array('id'=>$poll));
-        }
-
-    }
-
-    /**
-    *
-    *
-    */
-    function __savevote()
-    {
-        $vote = $this->getParam('vote');
-
-        if ($vote != '') {
-
-            $poll = $this->objPolls->getPollFromOption($vote);
-
-            if ($poll == FALSE) {
-                echo '<div class="noRecordsMessage">Poll does not exist</div>';
-            } else if ($poll['pollactive'] == 'Y') {
-                $this->objPollVotes->saveVote($vote);
-
-                echo '<p><strong>Poll Results:</strong></p>';
-
-                echo $this->objPolls->showPollMiniResults($poll['id']);
-
-
-            } else {
-                echo '<div class="noRecordsMessage">Poll is no longer active</div>';
-            }
-
-        } else {
-            echo '<div class="noRecordsMessage">No Vote has been cast</div>';
-
-        }
-
-
-
-        /*
-        $graph = $this->newObject('graph', 'utilities');
-        $graph->setup('180px' , '180px');
-        $graph->addSimpleData('sadd', 'asfafs', 300);
-        $graph->addSimpleData('aadd', 'aafafs', 200);
-        $graph->addPlotArea();
-        $graph->labelAxes();
-        echo $this->objConfig->getcontentBasePath().'asfas.png';
-        echo $graph->show($this->objConfig->getcontentBasePath().'asfas.png');
-        */
-    }
 
     /**
     *
@@ -1587,15 +1122,6 @@ class news extends controller
         }
     }
 
-    /**
-    *
-    *
-    */
-    function __pollimage()
-    {
-        $id = $this->getParam('id');
-        return $this->objPolls->pollImage($id);
-    }
 
     /**
     *
@@ -1746,60 +1272,104 @@ class news extends controller
     }
 
 
-    function __deletealbum()
+    
+    /**
+     * Method to render a block
+     */
+    protected function __renderblock()
     {
-        $id = $this->getParam('id');
-
-        if ($id == '') {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $album = $this->objAlbums->getAlbum($id);
-
-        if ($album == FALSE) {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-        }
-
-        $this->setVarByRef('album', $album);
-
-        $this->setVarByRef('id', $id);
-
-
-        $random = rand(1, 20000);
-        $this->setSession('delete_'.$id, $random);
-        $this->setVarByRef('random', $random);
-
-        return 'deletealbum.php';
-    }
-
-    function __deletealbumconfirm()
-    {
-
-        $id = $this->getParam('id');
-        $confirm = $this->getParam('confirm');
-        $random = $this->getParam('random');
-
-        if ($confirm == 'yes') {
-            $session = $this->getSession('delete_'.$id, rand(30000, 40000));
-
-            if ($session == $random) {
-                $album = $this->objAlbums->getAlbum($id);
-
-                if ($album == FALSE) {
-                    return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
-                }
-
-                $result = $this->objAlbums->deleteAlbum($id);
-
-                return $this->nextAction('photoalbums', array('result'=>'albumdeleted', 'title'=>$album['albumname']));
-
+        if ($this->objUser->isAdmin()) {
+            $blockId = $this->getParam('blockid');
+            $side = $this->getParam('side');
+            
+            $block = explode('|', $blockId);
+            
+            
+            $blockId = $side.'___'.str_replace('|', '___', $blockId);
+            
+            if ($block[0] == 'block') {
+                $objBlocks = $this->getObject('blocks', 'blocks');
+                echo '<div id="'.$blockId.'" class="block highlightblock">'.$objBlocks->showBlock($block[1], $block[2], NULL, 20, TRUE, FALSE).'</div>';
+            } if ($block[0] == 'dynamicblock') {
+                echo '<div id="'.$blockId.'" class="block highlightblock">'.$this->objDynamicBlocks->showBlock($block[1]).'</div>';
             } else {
-                return $this->nextAction('deletealbum', array('id'=>$id, 'error'=>'deleteattemptfailed'));
+                echo '';
             }
-        } else {
-            return $this->nextAction('photoalbums', array('error'=>'unknownalbum', 'id'=>$id));
         }
     }
+    
+    /**
+     * Method to add a block
+     */
+    protected function __addblock()
+    {
+        if ($this->objUser->isAdmin()) {
+            $blockId = $this->getParam('blockid');
+            $pageType = $this->getParam('pagetype');
+            $pageId = $this->getParam('pageid');
+            $side = $this->getParam('side');
+            
+            $block = explode('|', $blockId);
+            
+            if ($block[0] == 'block' || $block[0] == 'dynamicblock') {
+                // Add Block
+                $result = $this->objNewsBlocks->addBlock($blockId, $side, $pageType, $pageId, $block[2]);
+                
+                if ($result == FALSE) {
+                    echo '';
+                } else {
+                    echo $result;
+                }
+            } else {
+                echo '';
+            }
+        }
+    }
+    
+    /**
+     * Method to remove a context block
+     */
+    protected function __removeblock()
+    {
+        if ($this->objUser->isAdmin()) {
+            $blockId = $this->getParam('blockid');
+            
+            $result = $this->objNewsBlocks->removeBlock($blockId);
+            
+            if ($result) {
+                echo 'ok';
+            } else {
+                echo 'notok';
+            }
+        }
+    }
+    
+    /**
+     * Method to move a context block
+     */
+    protected function __moveblock()
+    {
+        if ($this->objUser->isAdmin()) {
+            $blockId = $this->getParam('blockid');
+            $pageType = $this->getParam('pagetype');
+            $pageId = $this->getParam('pageid');
+            $side = $this->getParam('side');
+            $direction = $this->getParam('direction');
+            
+            if ($direction == 'up') {
+                $result = $this->objNewsBlocks->moveBlockUp($blockId, $pageType, $pageId);
+            } else {
+                $result = $this->objNewsBlocks->moveBlockDown($blockId, $pageType, $pageId);
+            }
+            
+            if ($result) {
+                echo 'ok';
+            } else {
+                echo 'notok';
+            }
+        }
+    }
+    
 }
 
 ?>

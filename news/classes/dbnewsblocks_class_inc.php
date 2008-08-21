@@ -74,15 +74,34 @@ class dbnewsblocks extends dbTable
         $this->objUser = $this->getObject('user','security');
     }
     
+    public function getBlocksAndSendToTemplate($pageType, $pageId)
+    {
+        // Blocks
+        $rightBlocks = $this->getPageBlocks($pageType, $pageId, 'right');
+        $this->setVar('rightBlocksStr', $rightBlocks);
+        
+        $objBlocks = $this->getObject('dbmoduleblocks', 'modulecatalogue');
+        
+        $smallBlocks = $objBlocks->getBlocks('normal', 'site');
+        $this->setVar('smallBlocks', $smallBlocks);
+        
+        $objDynamicBlocks = $this->getObject('dynamicblocks', 'blocks');
+        $smallDynamicBlocks = $objDynamicBlocks->getSmallSiteBlocks();
+        $this->setVar('smallDynamicBlocks', $smallDynamicBlocks);
+        
+        
+        return $rightBlocks;
+    }
+    
     /**
      * Method to get a list of blocks used in a context, and have them rendered one time
      * @param string $contextCode Context Code
      * @param string $side Side on which the blocks are on
      * @param return array
      */
-    public function getPageBlocks($contextCode, $side='')
+    public function getPageBlocks($pageType, $pageId, $side='')
     {
-        $results = $this->getContextBlocksList($contextCode, $side);
+        $results = $this->getPageBlocksList($side, $pageType, $pageId);
         
         if (count($results) == 0) {
            return '';
@@ -127,9 +146,9 @@ class dbnewsblocks extends dbTable
      * @param string $side Side on which the blocks are on
      * @param return array
      */
-    public function getContextBlocksList($contextCode, $side)
+    public function getPageBlocksList($side, $pageType, $pageId)
     {
-        return $this->getAll(' WHERE side=\''.$side.'\' AND contextcode=\''.$contextCode.'\' ORDER BY position');
+        return $this->getAll(' WHERE side=\''.$side.'\' AND pagetype=\''.$pageType.'\' AND pageid=\''.$pageId.'\' ORDER BY position');
     }
     
     
@@ -163,14 +182,15 @@ class dbnewsblocks extends dbTable
      * @param string $module Module Block is from
      *
      */
-    public function addBlock($block, $side, $contextCode, $module)
+    public function addBlock($block, $side, $pageType, $pageId, $module)
     {
         return $this->insert(array(
-                'contextcode' => $contextCode,
+                'pagetype' => $pageType,
+                'pageid' => $pageId,
                 'block' => $block,
                 'side' => $side,
                 'module' => $module,
-                'position' => $this->getLastOrder($side, $contextCode)+1,
+                'position' => $this->getLastOrder($side, $pageType, $pageId)+1,
                 'updatedby' => $this->objUser->userId(),
                 'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
             ));
@@ -185,9 +205,9 @@ class dbnewsblocks extends dbTable
      *
      * @return int
      */
-    private function getLastOrder($side, $contextCode)
+    private function getLastOrder($side, $pageType, $pageId)
     {
-        $results = $this->getAll(' WHERE side=\''.$side.'\' AND contextcode=\''.$contextCode.'\' ORDER BY position DESC LIMIT 1');
+        $results = $this->getAll(' WHERE side=\''.$side.'\' AND pagetype=\''.$pageType.'\' AND pageid=\''.$pageId.'\' ORDER BY position DESC LIMIT 1');
         
         if (count($results) == 0) {
             return 0;
@@ -207,21 +227,12 @@ class dbnewsblocks extends dbTable
     }
     
     /**
-     * Method to remove a block
-     * @param string $id Block Id
-     */
-    public function removeContextBlocks($contextCode)
-    {
-        return $this->delete('contextcode', $contextCode);
-    }
-    
-    /**
      * Method to move a block up
      *
      * @param string $id Block Id
      * @param string $contextCode Context Code - required to prevent malicious changes
      */
-    public function moveBlockUp($id, $contextCode)
+    public function moveBlockUp($id, $pageType, $pageId)
     {
         $record = $this->getRow('id', $id);
         
@@ -229,11 +240,11 @@ class dbnewsblocks extends dbTable
             return FALSE;
         } else {
             
-            if ($record['contextcode'] != $contextCode) {
+            if ($record['pagetype'] != $pageType && $record['pageid'] != $pageId ) {
                 return FALSE;
             }
             
-            $prevRecord = $this->getPreviousBlock($record['contextcode'], $record['side'], $record['position']);
+            $prevRecord = $this->getPreviousBlock($record['pagetype'], $record['pageid'], $record['side'], $record['position']);
             
             if ($prevRecord == FALSE) {
                 return FALSE;
@@ -252,7 +263,7 @@ class dbnewsblocks extends dbTable
      * @param string $id Block Id
      * @param string $contextCode Context Code - required to prevent malicious changes
      */
-    public function moveBlockDown($id, $contextCode)
+    public function moveBlockDown($id, $pageType, $pageId)
     {
         $record = $this->getRow('id', $id);
         
@@ -260,11 +271,11 @@ class dbnewsblocks extends dbTable
             return FALSE;
         } else {
             
-            if ($record['contextcode'] != $contextCode) {
+            if ($record['pagetype'] != $pageType && $record['pageid'] != $pageId ) {
                 return FALSE;
             }
             
-            $nextRecord = $this->getNextBlock($record['contextcode'], $record['side'], $record['position']);
+            $nextRecord = $this->getNextBlock($record['pagetype'], $record['pageid'], $record['side'], $record['position']);
             
             if ($nextRecord == FALSE) {
                 return FALSE;
@@ -286,9 +297,9 @@ class dbnewsblocks extends dbTable
      *
      * @return array
      */
-    private function getPreviousBlock($contextCode, $side, $position)
+    private function getPreviousBlock($pageType, $pageId, $side, $position)
     {
-        $results = $this->getAll(' WHERE side=\''.$side.'\' AND contextcode=\''.$contextCode.'\' AND position < '.$position.' ORDER BY position DESC LIMIT 1');
+        $results = $this->getAll(' WHERE side=\''.$side.'\' AND pagetype=\''.$pageType.'\' AND pageid=\''.$pageId.'\' AND position < '.$position.' ORDER BY position DESC LIMIT 1');
         
         if (count($results) == 0) {
             return FALSE;
@@ -306,9 +317,9 @@ class dbnewsblocks extends dbTable
      *
      * @return array
      */
-    private function getNextBlock($contextCode, $side, $position)
+    private function getNextBlock($pageType, $pageId, $side, $position)
     {
-        $results = $this->getAll(' WHERE side=\''.$side.'\' AND contextcode=\''.$contextCode.'\' AND position > '.$position.' ORDER BY position LIMIT 1');
+        $results = $this->getAll(' WHERE side=\''.$side.'\' AND pagetype=\''.$pageType.'\' AND pageid=\''.$pageId.'\' AND position > '.$position.' ORDER BY position LIMIT 1');
         
         if (count($results) == 0) {
             return FALSE;

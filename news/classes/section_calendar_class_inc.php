@@ -63,7 +63,7 @@ class section_calendar extends object
                 
                 $storyLink->link = $story['storytitle'];
                 
-                $output .= '<li>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</li>';
+                $output .= '<li>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</li>';
                 
                 $events[$day][] = $storyLink->show();
             }

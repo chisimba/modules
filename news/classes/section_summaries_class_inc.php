@@ -30,7 +30,7 @@ class section_summaries extends object
         
         $header = new htmlheading();
         $header->type = 1;
-        $header->str = 'Category: '.$category['categoryname'];
+        $header->str = $category['categoryname'];
         
         
         
@@ -64,7 +64,7 @@ class section_summaries extends object
                 
                 $storyLink->link = $story['storytitle'];
                 
-                $output .= '<h3>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</h3>';
+                $output .= '<h3>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</h3>';
                 
                 if ($story['location'] != '') {
                     $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));

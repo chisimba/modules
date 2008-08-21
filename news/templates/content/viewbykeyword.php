@@ -45,12 +45,12 @@ foreach ($stories as $story)
     if ($story['storyimage'] != '') {
         $storyLink->link = '<img class="storyimage" src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
         
-        $output .= $storyLink->show();
+        $output .= '<div class="storyimagewrapper">'.$storyLink->show().'</div>';
     }
     
     $storyLink->link = $story['storytitle'];
     
-    $output .= '<h3>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</h3>';
+    $output .= '<h3>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</h3>';
     
     if ($story['location'] != '') {
         $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));

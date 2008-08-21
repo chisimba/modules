@@ -20,7 +20,7 @@ class dbnewsmenu extends dbtable
         if ($toolbar != 1) {
             return '';
         } else {
-            $options = array('storyview', 'showmap', 'map', 'viewtimeline', 'timeline', 'themecloud', 'photoalbums', 'photos');
+            $options = array('storyview', 'showmap', 'map', 'viewtimeline', 'timeline', 'themecloud');
 
             if (!in_array($current, $options)) {
                 $current = 'storyview';
@@ -34,15 +34,9 @@ class dbnewsmenu extends dbtable
                 case 'timeline':
                     $current = 'viewtimeline';
                     break;
-                case 'photos':
-                    $current = 'photoalbums';
-                    break;
-                case 'photos':
-                    $current = 'photoalbums';
-                    break;
             }
 
-            $menuOptions = array('storyview', 'showmap', 'viewtimeline', 'themecloud', 'photoalbums');
+            $menuOptions = array('storyview', 'showmap', 'viewtimeline', 'themecloud');
 
             $toolbar = '<div id="topnewsbar"><div id="modernbricksmenu"><ul>';
 
@@ -53,7 +47,7 @@ class dbnewsmenu extends dbtable
 
                 $isCurrent = ($option == $current) ? ' id="current"' : '';
 
-                $toolbar .= '<li'.$isCurrent.'>'.$link->show().'</li>';
+                $toolbar .= '<li'.$isCurrent.' class="'.$option.'">'.$link->show().'</li>';
             }
 
             $toolbar .= '</ul></div><div id="modernbricksmenuline">&nbsp;</div></div>';

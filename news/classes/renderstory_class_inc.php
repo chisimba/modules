@@ -10,7 +10,7 @@ class renderstory extends object
 		$this->loadClass('htmlheading', 'htmlelements');
         $this->objLanguage = $this->getObject('language', 'language');
 		
-		$this->objStories = $this->getObject('dbnewsstories');
+		
         // Load Menu Tools Class
         $this->objMenuTools = $this->getObject('tools', 'toolbar');
 		
@@ -64,7 +64,7 @@ class renderstory extends object
         
         $str = $header->show();
         
-        $str .= '<p>'.$objDateTime->formatDate($story['storydate']).'</p>';
+        $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p>';
         
         /*
         if ($story['storyimage'] != '') {
@@ -107,6 +107,19 @@ class renderstory extends object
             $str .= $objComments->getStoryComments($story['storyid']);
             $str .= $objComments->commentsForm($story['storyid']);
         }*/
+        
+        $objNewsStories = $this->getObject('dbnewsstories');
+        $objKeywords = $this->getObject('dbnewskeywords');
+        
+        $rightContent = '';
+        $rightContent .= $objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
+        $rightContent .= $objKeywords->getStoryKeywordsBlock($story['id']);
+        
+        $objNewsBlocks = $this->getObject('dbnewsblocks');
+        $objNewsBlocks->getBlocksAndSendToTemplate('story', $story['id']);
+        
+        // Send to Layout Template
+        $this->setVar('rightContent', $rightContent);
         
         return $str;
     }

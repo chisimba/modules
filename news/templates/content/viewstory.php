@@ -1,51 +1,18 @@
 <?php
 
+// Load link Class
 $this->loadClass('link', 'htmlelements');
-$this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('form', 'htmlelements');
-$this->loadClass('textinput', 'htmlelements');
-$this->loadClass('textarea', 'htmlelements');
-$this->loadClass('button', 'htmlelements');
-$this->loadClass('hiddeninput', 'htmlelements');
 
-$objIcon = $this->getObject('geticon', 'htmlelements');
-
-$objDateTime = $this->getObject('dateandtime', 'utilities');
-$objUrl = &$this->getObject('url', 'strings'); 
-$objThumbnails = $this->getObject('thumbnails', 'filemanager');
-
-$objIcon->setIcon('edit');
-$editLink = new link ($this->uri(array('action'=>'editstory', 'id'=>$story['id'])));
-$editLink->link = $objIcon->show();
-
-$header = new htmlheading();
-$header->type = 1;
-$header->str = $story['storytitle'];
-
-if ($this->isValid('editstory')) {
-    $header->str .= ' '.$editLink->show();
-}
-
-
+// Set Story as Middle Content
 $middleContent = $content;
 
-
-
-
-$leftContent = $this->objNewsMenu->generateMenu();
-$leftContent .= $this->objNewsStories->getFeedLinks();
-
-$rightContent = '';
-
-
-$rightContent .= $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
+// Generate Right Content
+$rightContent = $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
 $rightContent .= $this->objKeywords->getStoryKeywordsBlock($story['id']);
 
 
 
-
-
-
+// Array for list of options based on permissions
 $editOptions = array();
 
 if ($this->isValid('editstory')) {
@@ -78,6 +45,7 @@ if ($this->isValid('editmenuitem') && $menuId != FALSE) {
     $editOptions[] = $editCategoryLink->show();
 }
 
+// Loop through permissions and add page.
 if (count($editOptions) > 0) {
     $divider = '';
     $middleContent .= '<p>';
@@ -89,17 +57,7 @@ if (count($editOptions) > 0) {
     $middleContent .= '</p>';
 }
 
-$cssLayout = $this->getObject('csslayout', 'htmlelements');
-
-$cssLayout->setLeftColumnContent($leftContent);
-$cssLayout->setMiddleColumnContent($middleContent);
-
-if ($rightContent != '') {
-    $cssLayout->setNumColumns(3);
-    $cssLayout->setRightColumnContent($rightContent);
-}
-
-echo $cssLayout->show();
-
+// Display
+echo $middleContent;
 
 ?>

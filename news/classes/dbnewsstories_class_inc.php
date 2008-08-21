@@ -573,6 +573,105 @@ ORDER BY storydate DESC';
     */
     public function generateNewsSmap()
     {
+        $items = $this->generateNewsSmapSQL();
+        $str = '';
+
+        $objTrimString = $this->getObject('trimstr', 'strings');
+
+        $locations = array();
+        foreach ($items as $item)
+        {
+            if (array_key_exists($item['storylocation'], $locations)) {
+                $locations[$item['storylocation']] = $locations[$item['storylocation']] + 1;
+            } else {
+                $locations[$item['storylocation']] = 1;
+            }
+        }
+
+        foreach ($locations as $location=>$value)
+        {
+            if ($value == 1) {
+                unset($locations[$location]);
+            }
+        }
+
+        $groupItems = array();
+
+        foreach ($items as $item)
+        {
+            $latitude = $item['latitude'];
+            $longitude = $item['longitude'];
+
+            if (array_key_exists($item['storylocation'], $locations)) {
+
+                $groupItems[$item['storylocation']]['content'][] = array('id'=>$item['storyid'], 'title'=>$item['storytitle']);
+                $groupItems[$item['storylocation']]['latitude'] = $latitude;
+                $groupItems[$item['storylocation']]['longitude'] = $longitude;
+                $groupItems[$item['storylocation']]['locationname'] = $item['location'];
+
+            } else {
+                $str .= 'var point = new GLatLng('.$latitude.','.$longitude.');'."\r\n";
+                $content = '<h3>'.$item['location'].': '.$item['storytitle'].'</h3>';
+
+                $content .= $objTrimString->strTrim(($item['storytext']), 150, TRUE);
+
+                $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$item['storyid'])));
+                $storyLink->link = 'Read Story';
+
+                $link = $storyLink->show();
+                $link = str_replace('&amp;', '&', $link);
+
+                $content .= ' ('.$link.')';
+
+                $content = '<div style="width:300px;">'.$content.'</div>';
+
+                $content = stripslashes($content);
+                $content = str_replace('"', '\"', $content);
+
+                $content = ereg_replace("[\n\r]", " ", $content);
+                //$content = ereg_replace("\t\t+", "\n", $content);
+
+                $str .= 'var marker = createMarker(point,"'.$content.'");'."\r\n";
+                $str .= 'map.addOverlay(marker);'."\r\n";
+            }
+        }
+
+        if (count($groupItems) > 0) {
+            foreach ($groupItems as $group)
+            {
+                $str .= 'var point = new GLatLng('.$group['latitude'].', '.$group['longitude'].');'."\r\n";
+                $content = '<h3>'.$group['locationname'].'</h3><ul>';
+                foreach ($group['content'] as $item)
+                {
+                    $storyLink = new link ($this->uri(array('action'=>'viewstory', 'id'=>$item['id'])));
+                    $storyLink->link = $item['title'];
+
+                    $content .= '<li>'.$storyLink->show().'</li>';
+                }
+
+                $content .= '</ul>';
+
+                $content = '<div style="width:300px;">'.$content.'</div>';
+
+                $content = stripslashes($content);
+                $content = str_replace('"', '\"', $content);
+
+                $str .= 'var marker = createMarker(point,"'.$content.'");'."\r\n";
+                $str .= 'map.addOverlay(marker);'."\r\n";
+            }
+
+        }
+        
+        return $str;
+    }
+    
+    /**
+    *
+    *
+    *
+    */
+    public function generateNewsSmapSQL()
+    {
         $sql = 'SELECT tbl_news_stories.*, tbl_news_stories.id as storyid, latitude, longitude, name as location FROM tbl_news_stories INNER JOIN tbl_geonames ON (tbl_news_stories.storylocation = tbl_geonames.geonameid) WHERE dateavailable <= \''.strftime('%Y-%m-%d %H:%M:%S', mktime()).'\'';
 
         return $this->getArray($sql);
@@ -809,6 +908,29 @@ ORDER BY storydate DESC';
     }
     
     
+    function topStoriesFeed()
+    {
+        $topStories = $this->getTopStories();
+        //print_r($topStories);
+
+        $this->objFeedCreator = $this->getObject('feeder', 'feed');
+        $objTrimString = $this->getObject('trimstr', 'strings');
+        
+        $objUser = $this->getObject('user', 'security');
+
+        $this->objFeedCreator->setupFeed(TRUE, $this->objConfig->getSiteName().' - '.$this->objLanguage->languageText('mod_news_topstories', 'news', 'Top Stories'), $this->objLanguage->languageText('mod_news_summaryoftopstories', 'news', 'Summary of Top Stories from').' '.$this->objConfig->getSiteName(), $this->objConfig->getsiteRoot(), $this->uri(array('action'=>'topstoriesfeed')));
+
+        foreach ($topStories as $story)
+        {
+            $title = $story['storytitle'];
+
+            $content = $objTrimString->strTrim(($story['storytext']), 150, TRUE);
+
+            $this->objFeedCreator->addItem($title, $this->uri(array('action'=>'viewstory', 'id'=>$story['id'])), $content, 'here', $objUser->fullName($story['modifierid']));
+        }
+
+        return $this->objFeedCreator->output();
+    }
 
 
 }

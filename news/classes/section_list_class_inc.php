@@ -43,6 +43,11 @@ class section_list extends object
         $this->setVar('pageTitle', $category['categoryname']);
         $this->objMenuTools->addToBreadCrumbs(array($category['categoryname']));
         
+        //var_dump ($category);
+        if ($category['showintroduction'] == 'Y') {
+            $output .= $category['introduction'].'<br /><br />';
+        }
+        
         $categoryStories = $this->objStories->getCategoryStories($category['id']);
         
         if (count($categoryStories) == 0) {
@@ -58,7 +63,7 @@ class section_list extends object
                 
                 $storyLink->link = $story['storytitle'];
                 
-                $output .= '<li>'.$objDateTime->formatDate($story['storydate']).' - '.$storyLink->show().'</li>';
+                $output .= '<li>'.$objDateTime->formatDateOnly($story['storydate']).' - '.$storyLink->show().'</li>';
             }
             
             $output .= '</ul>';
