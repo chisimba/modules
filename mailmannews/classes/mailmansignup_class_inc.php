@@ -111,7 +111,9 @@ class mailmansignup extends object
 		$this->objMailer->setValue('body', 'subscribe');
 		if ($this->objMailer->send()) {
 			return TRUE;
+			
 		} else {
+			
 			return FALSE;
 		}
 	}
