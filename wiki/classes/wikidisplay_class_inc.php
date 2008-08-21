@@ -3114,7 +3114,7 @@ You can create tables using pairs of vertical bars:
         $cancelLabel = $this->objLanguage->languageText('word_cancel');
         $publicLabel = $this->objLanguage->languageText('word_public');
         $openLabel = $this->objLanguage->languageText('word_open');
-        $privateLabel = $this->objLanguage->languageText('word_private');
+        $privateLabel = $this->objLanguage->languageText('word_private', 'wiki');
         $publicTextLabel = $this->objLanguage->languageText('mod_wiki_public', 'wiki');
         $openTextLabel = $this->objLanguage->languageText('mod_wiki_open', 'wiki');
         $privateTextLabel = $this->objLanguage->languageText('mod_wiki_private', 'wiki');
