@@ -138,7 +138,7 @@ echo $display;
 		<!--<div style="background-color: #000080; padding:5px;">-->
         <div class="wrapperDarkBkg">
 <?php
-		echo "<b>" . $index . " : " . "</b>" . nl2br($element["question"]);
+		echo "<b>" . $index . ": " . "</b>" . nl2br($element["question"]);
 ?>
         
 <!--<div style="background-color: #FFFFFF; padding:5px;">-->
