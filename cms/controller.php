@@ -404,14 +404,14 @@ class cms extends controller
          */
         private function _showfulltext()
         {
-        		$this->setLayoutTemplate('cms_layout_tpl.php');
+                $this->setLayoutTemplate('cms_layout_tpl.php');
                 $fromadmin = $this->getParam('fromadmin', FALSE);
                 $sectionId = $this->getParam('sectionid', NULL);
                 $rss = $this->rss->getUserRss($sectionId);
                 $this->setVarByRef('rss', $rss);
                 $this->setVarByRef('sectionId', $sectionId);
                 $this->setVarByRef('fromadmin', $fromadmin);
-                $page = $this->_objContent->getContentPage($this->getParam('id'));
+                $page = $this->_objContent->getContentPageFiltered($this->getParam('id'));
                 $siteTitle = $page['title'];
                 $this->setVarByRef('pageTitle', $siteTitle);
                 $this->bbcode = $this->getObject('washout', 'utilities');

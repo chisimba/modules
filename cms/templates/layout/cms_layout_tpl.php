@@ -92,6 +92,7 @@ if($hasBlocks){
     $cssLayout->setNumColumns(2);
 }
 $cssLayout->setLeftColumnContent($leftSide.'<br />');
+
 $cssLayout->setMiddleColumnContent($this->getBreadCrumbs().$this->getContent().'<br />'.$searchResults);
 
 echo $cssLayout->show();

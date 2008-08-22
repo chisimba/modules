@@ -26,7 +26,7 @@ class cmslayouts extends object
     public function init()
     {
         try{
-			$this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objConfig = $this->getObject('altconfig', 'config');
             $this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
             $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
@@ -1028,10 +1028,19 @@ jQuery(document).ready(function(){
         public function showBody()
 
         {
-	    	$objFeatureBox = $this->newObject('featurebox', 'navigation');
+            $objFeatureBox = $this->newObject('featurebox', 'navigation');
             $contentId = $this->getParam('id');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
-            $page = $this->_objContent->getContentPage($contentId);
+            $page = $this->_objContent->getContentPageFiltered($contentId);
+            
+            if ($page == ''){
+                $objLayer = new layer();
+                $objLayer->str = '';
+                $objLayer->id = 'cmscontent';
+                return $objLayer->show();
+            }
+                
+            
             $sectionId = $page['sectionid'];
             $section = $this->_objSections->getSection($sectionId);
 
@@ -1124,10 +1133,10 @@ jQuery(document).ready(function(){
             //parse for mathml as well
             $page['body'] = $objMath->parseAll($page['body']);
             $strBody .= stripslashes($page['body']);
-			$strBody .= '<hr /><p />';
-             $objLayer = new layer();
-        	$objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center><hr/><p/>";
-        	$objLayer->id = 'cmscontent';
+            $strBody .= '<hr /><p />';
+            $objLayer = new layer();
+            $objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center><hr/><p/>";
+            $objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
                          
