@@ -17,10 +17,10 @@ class dbpopularity extends dbTable
     /**
      * Public method to insert a record to the popularity contest table as a log.
      * 
-     * This method takes the IP and module_name and inserts the record. 
+     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis. 
      *
-     * @param unknown_type $recarr
-     * @return unknown
+     * @param array $recarr
+     * @return string $id
      */
     public function addRecord($recarr)
     {
