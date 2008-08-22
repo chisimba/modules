@@ -45,7 +45,8 @@ class section_list extends object
         
         //var_dump ($category);
         if ($category['showintroduction'] == 'Y') {
-            $output .= $category['introduction'].'<br /><br />';
+            $objWashOut = $this->getObject('washout', 'utilities');
+            $output .= $objWashOut->parseText($category['introduction']).'<br /><br />';
         }
         
         $categoryStories = $this->objStories->getCategoryStories($category['id'], str_replace('_', ' ', $category['itemsorder']));

@@ -5,10 +5,10 @@ class section_thumbnails extends object
 
     public function init()
     {
-		$this->objUser = $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->loadClass('link', 'htmlelements');
-		
-		$this->objStories = $this->getObject('dbnewsstories');
+        
+        $this->objStories = $this->getObject('dbnewsstories');
         // Load Menu Tools Class
         $this->objMenuTools =& $this->getObject('tools', 'toolbar');
         $this->loadClass('htmlheading', 'htmlelements');
@@ -38,6 +38,11 @@ class section_thumbnails extends object
         
         
         $output = $header->show();
+        
+        if ($category['showintroduction'] == 'Y') {
+            $objWashOut = $this->getObject('washout', 'utilities');
+            $output .= $objWashOut->parseText($category['introduction']).'<br /><br />';
+        }
 
         $objTrimString = $this->getObject('trimstr', 'strings');
         $objThumbnails = $this->getObject('thumbnails', 'filemanager');
@@ -51,10 +56,10 @@ class section_thumbnails extends object
         if (count($categoryStories) == 0) {
             $output .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_news_categorydoesnothavestories', 'news', 'This category does not have any stories yet.').'</div>';;
         } else {
-			
-			$this->objIcon->setIcon('imagepreview');
-			$noImage = $this->objIcon->show();
-			
+            
+            $this->objIcon->setIcon('imagepreview');
+            $noImage = $this->objIcon->show();
+            
             foreach ($categoryStories as $story)
             {
                 
@@ -65,17 +70,17 @@ class section_thumbnails extends object
                 if ($story['storyimage'] != '') {
                     $storyImage = '<img  src="'.$objThumbnails->getThumbnail($story['storyimage'], $story['filename']).'" alt="'.$story['storytitle'].'" title="'.$story['storytitle'].'" />';
                 } else {
-					$storyImage = $noImage;
-				}
+                    $storyImage = $noImage;
+                }
                 
                 $storyLink->link = '<div class="newsblockimage">'.$storyImage.'</div>'.$story['storytitle'];
-				
+                
                 $output .= $storyLink->show();
                 
                 $output .= '</div>';
             }
-			
-			$output .= '<br clear="both" /><br />';
+            
+            $output .= '<br clear="both" /><br />';
         
         }
         
@@ -85,8 +90,8 @@ class section_thumbnails extends object
     public function renderPage($story, $category)
     {
         $objRender = $this->getObject('renderstory');
-		
-		return $objRender->render($story, $category);
+        
+        return $objRender->render($story, $category);
     }
 
 }

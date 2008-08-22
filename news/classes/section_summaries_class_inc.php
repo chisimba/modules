@@ -35,6 +35,11 @@ class section_summaries extends object
         
         
         $output = $header->show();
+        
+        if ($category['showintroduction'] == 'Y') {
+            $objWashOut = $this->getObject('washout', 'utilities');
+            $output .= $objWashOut->parseText($category['introduction']).'<br /><br />';
+        }
 
         $objTrimString = $this->getObject('trimstr', 'strings');
         $objThumbnails = $this->getObject('thumbnails', 'filemanager');
