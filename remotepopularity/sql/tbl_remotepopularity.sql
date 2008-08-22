@@ -18,6 +18,9 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
+	'downloadedon' => array(
+		'type' => 'timestamp',
+		),
 	);
 
 ?>
