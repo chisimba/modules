@@ -65,6 +65,7 @@ class remotepopularity extends controller
         $action = $this->getParam('action');
     	switch ($action) {
             case null:
+            	// this will be the case to show the stats
             	echo "I am popular!";
             	die();
             	break;
