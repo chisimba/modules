@@ -55,7 +55,8 @@ foreach ($stories as $story)
     if ($story['location'] != '') {
         $locationLink = new link ($this->uri(array('action'=>'viewbylocation', 'id'=>$story['storylocation'])));
         $locationLink->link = $story['location'];
-        $output .= '[ '.$locationLink->show().'] ';
+        //$output .= '[ '.$locationLink->show().' ] ';
+        $output .= '[ '.$story['location'].' ] ';
     }
     
     $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 150, TRUE);
