@@ -61,7 +61,7 @@
     }
 **/
     echo "<h1>" .
-        $objLanguage->languageText("word_faq") ." : " .' '.$addLink.
+        $objLanguage->languageText("word_faq") .": " .' '.$addLink.
         "</h1>";
 
     // Category Form.
@@ -72,7 +72,7 @@
     $form->addToForm($moduleHiddenInput->show());
     $actionHiddenInput = new hiddeninput('action', 'changeCategory');
     $form->addToForm($actionHiddenInput->show());
-    $label = new label($objLanguage->languageText("faq_category","faq") . " : ", 'input_category');
+    $label = new label($objLanguage->languageText("faq_category","faq") . ": ", 'input_category');
     $form->addToForm($label->show());
     $dropdown = new dropdown('category');
     $dropdown->addOption("All Categories","All Categories");
@@ -116,7 +116,7 @@
         <!--<div style="background-color: #000080; padding:5px;">-->
         <div class="wrapperDarkBkg">
 <?php
-        echo "<b>" . $index . " : " . "</b>" . nl2br($element["question"]);
+        echo "<b>" . $index . ": " . "</b>" . nl2br($element["question"]);
 ?>
         <!--<div style="background-color: #FFFFFF; padding:5px;">-->
         <div class="wrapperLightBkg">
