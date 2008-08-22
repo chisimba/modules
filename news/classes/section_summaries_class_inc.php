@@ -43,7 +43,7 @@ class section_summaries extends object
         $this->setVar('pageTitle', $category['categoryname']);
         $this->objMenuTools->addToBreadCrumbs(array($category['categoryname']));
         
-        $categoryStories = $this->objStories->getCategoryStories($category['id']);
+        $categoryStories = $this->objStories->getCategoryStories($category['id'], str_replace('_', ' ', $category['itemsorder']));
         
         if (count($categoryStories) == 0) {
             $output .= '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_news_categorydoesnothavestories', 'news', 'This category does not have any stories yet.').'</div>';;
