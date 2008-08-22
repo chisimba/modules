@@ -54,5 +54,21 @@ class dbpopularity extends dbTable
     	$recarr['downloadedon'] = $times;
     	return $this->insert($recarr, 'tbl_remotepopularity');
     }
+    
+    public function getRecCount($module)
+    {
+    	return $this->getRecordCount("WHERE module_name = '$module'");
+    }
+    
+    public function getModList()
+    {
+    	$list = $this->getAll();
+    	foreach($list as $items)
+    	{
+    		$un[] = $items['module_name'];
+    	}
+    	$list = array_unique($un);
+    	return $list;	
+    }
 }
 ?>

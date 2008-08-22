@@ -66,8 +66,32 @@ class remotepopularity extends controller
     	switch ($action) {
             case null:
             	// this will be the case to show the stats
-            	echo "I am popular!";
-            	die();
+            	// generate the flash graph data from the table and display it
+            	
+ 				$objFlashGraph = $this->getObject('flashgraph', 'utilities');
+ 				$objFlashGraph->dataSource = $this->uri(array('action'=>'getdata'));
+ 				$graph = $objFlashGraph->show(); 
+ 				$this->setVarByRef('graph', $graph);
+ 				return 'graph_tpl.php';
+            	break;
+            	
+            case 'getdata':
+            	$colours = array('#3334AD', '#00ff00', '#9900CC');
+            	$objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+ 				$objFlashGraphData->graphType = 'pie';
+ 				
+ 				// Get the unique names of the modules
+ 				$mods = $this->objDbPop->getModList();
+ 				foreach($mods as $mod)
+ 				{
+ 					// get the record count
+ 					$count = $this->objDbPop->getRecCount($mod);
+ 					$colour = array_rand($colours);
+ 					$objFlashGraphData->addPieDataSet($count, $colour, $mod);
+ 				}
+ 				
+ 				$graphdata = $objFlashGraphData->show();
+            	echo $graphdata;
             	break;
             		
             default:
