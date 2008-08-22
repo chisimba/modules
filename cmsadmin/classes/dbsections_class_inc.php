@@ -68,7 +68,7 @@ class dbsections extends dbTable
                 $this->_objLanguage = $this->getObject('language', 'language');
                 $this->_objUser =  $this->getObject('user', 'security');
                 $this->_objGroupAdmin =  $this->getObject('groupadminmodel', 'groupadmin');
-		$this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
+				$this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
                 $this->TreeNodes = & $this->newObject('treenodes', 'cmsadmin');
            } catch (Exception $e){
        		    throw customException($e->getMessage());

@@ -1774,7 +1774,7 @@
         }
 
 
-                /**
+        /**
          * Method to generate the dropdown with tree indentations for selecting parent category
          *
          * @param string $setSelected The dropdown option to select
@@ -1791,16 +1791,33 @@
 
         }
 
+        /**
+         * Method to generate the dropdown with tree indentations for selecting parent category
+         *
+         * @param string $setSelected The dropdown option to select
+         * @param bool $noRoot True Root Level option will not be displayed
+         * @return string Generated HTML for the dropdown
+         * @access public
+         * @author Warren Windvogel
+         */
+        public function getSectionTreeDropdown($setSelected = NULL, $noRoot = TRUE)
+        {
+            $objCMSTree = $this->getObject('cmstree');
+            $tree = $objCMSTree->getCMSAdminSectionDropdownTree($setSelected, $noRoot);
+            return $tree;
 
-                /**
-                 * Method to generate the dropdown with tree indentations for selecting parent category
-                 *
-                 * @param string $setSelected The dropdown option to select
-                 * @param bool $noRoot True Root Level option will not be displayed
-                 * @return string Generated HTML for the dropdown
-                 * @access public
-                 * @author Warren Windvogel
-                 */
+        }
+
+
+        /**
+         * Method to generate the dropdown with tree indentations for selecting parent category
+         *
+         * @param string $setSelected The dropdown option to select
+         * @param bool $noRoot True Root Level option will not be displayed
+         * @return string Generated HTML for the dropdown
+         * @access public
+         * @author Warren Windvogel
+         */
         public function getContentTreeDropdown($setSelected = NULL, $noRoot = TRUE)
         {
             $objCMSTree = $this->getObject('cmstree');
@@ -2013,7 +2030,7 @@
          * @param string $parentid The id of the section it is found in. Default NULL for adding root node
          * @return string $middleColumnContent The form used to create and edit a section
          * @access public
-         * @author Warren Windvogel
+         * @author Warren Windvogel, Charl Mert
          */
         public function getAddEditSectionForm($sectionId = NULL, $parentid = NULL)
         {
@@ -2156,15 +2173,16 @@
                 $table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
 
                 if (isset($parentid)) {
-                    //$table->addCell($this->getTreeDropdown($parentid).'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
+                    $table->addCell($this->getSectionTreeDropdown($parentid).'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
 
-                    $sections = $this->getContentTreeDropdown($parentid, FALSE);
-                    $table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
+                    //$sections = $this->getContentTreeDropdown($parentid, FALSE);
+                    //$table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
 
                 } else {
-                    //$table->addCell($this->getTreeDropdown().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
-                    $sections = $this->getContentTreeDropdown(null, FALSE);
-                    $table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
+                    $table->addCell($this->getSectionTreeDropdown().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
+                    
+                    //$sections = $this->getContentTreeDropdown(null, FALSE);
+                    //$table->addCell($sections->show().'&nbsp;'.'-'.'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_parentsectiondesc', 'cmsadmin'),'','','','',"colspan='2'");
                     
                 }
 

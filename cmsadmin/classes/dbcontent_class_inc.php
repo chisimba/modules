@@ -1,10 +1,10 @@
 <?php
-// security check - must be included in all scripts
-if (!$GLOBALS['kewl_entry_point_run'])
-{
-    die("You cannot view this page directly");
-}
-// end security check
+    // security check - must be included in all scripts
+    if (!$GLOBALS['kewl_entry_point_run'])
+    {
+        die("You cannot view this page directly");
+    }
+    // end security check
 
 /**
 * Data access class for the cmsadmin module. Used to access data in the content table.
@@ -17,8 +17,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @author Warren Windvogel
 */
 
-class dbcontent extends dbTable
-{
+    class dbcontent extends dbTable
+    {
 
         /**
         * The user object
@@ -53,15 +53,15 @@ class dbcontent extends dbTable
         */
         protected $_objBlocks;
 
-	   /**
-	    * Class Constructor
-	    *
-	    * @access public
-	    * @return void
-	    */
+           /**
+            * Class Constructor
+            *
+            * @access public
+            * @return void
+            */
         public function init()
         {
-        	try {
+            try {
                 parent::init('tbl_cms_content');
                 $this->table = 'tbl_cms_content';
                 $this->_objSectionGroup = & $this->getObject('dbsectiongroup', 'cmsadmin');
@@ -70,42 +70,42 @@ class dbcontent extends dbTable
                 $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
                 $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
-           } catch (Exception $e){
-       		    throw customException($e->getMessage());
-        	    exit();
-     	   }
+            } catch (Exception $e){
+                throw customException($e->getMessage());
+                exit();
+            }
         }
 
 
-	    /**
+            /**
          * Method to return the current and next levels child content
          *
          * @access public
          * @return bool
          */
-		public function getChildContent($sectionid, $admin, $filter){
-			//get current parents child content
-			$arrContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND published=1 AND trash=0 '.$filter);
-			//getting the next level of sections child content
-			$nodes = $this->_objSectionGroup->getChildNodes($sectionid, $admin);
-			
-				if (!empty($nodes)) {
-				//var_dump($nodes);
+        public function getChildContent($sectionid, $admin, $filter){
+            //get current parents child content
+            $arrContent = $this->getAll('WHERE sectionid = \''.$sectionid.'\' AND published=1 AND trash=0 '.$filter);
+            //getting the next level of sections child content
+            $nodes = $this->_objSectionGroup->getChildNodes($sectionid, $admin);
+                        
+            if (!empty($nodes)) {
+                //var_dump($nodes);
                 foreach($nodes as $node) {
-					$subSecId = $node[id];
-					//var_dump($subSecId.$node);
+                    $subSecId = $node[id];
+                    //var_dump($subSecId.$node);
                     $nextArrContent = $this->getAll('WHERE sectionid = \''.$subSecId.'\' AND published=1 AND trash=0 '.$filter);
-					//var_dump($nextArrContent);
-					if (!empty($nextArrContent)){
-						//var_dump('Root node is empty');
-						array_push($arrContent, $nextArrContent);
-					}
-					
-				}
-			}
-			//var_dump($arrContent[0]);
-			return $arrContent;	
-		}
+                    //var_dump($nextArrContent);
+                    if (!empty($nextArrContent)){
+                        //var_dump('Root node is empty');
+                        array_push($arrContent, $nextArrContent);
+                    }
+                                        
+                }
+            }
+            //var_dump($arrContent[0]);
+            return $arrContent;	
+        }
 
 
 
@@ -132,20 +132,20 @@ class dbcontent extends dbTable
             }
             $end_publish = $this->getParam('end_date',null);
             if ($override_date==null) {
-            	$override_date =  $this->now();
+                $override_date =  $this->now();
             }
             $creatorid = $this->getParam('creator',null);
             if ($creatorid==NUll) {
-            	 $creatorid = $this->_objUser->userId();
+                $creatorid = $this->_objUser->userId();
             }
             $hide_title = $this->getParam('hide_title','0');
            
             $access = $this->getParam('access');
-			$created_by = $this->getParam('title_alias',null);
-			$introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $created_by = $this->getParam('title_alias',null);
+            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $metakey = $this->getParam('keyword',null);
-			$metadesc = $this->getParam('description',null);
+            $metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons',null);
 
             $newArr = array(
@@ -170,11 +170,11 @@ class dbcontent extends dbTable
                           'start_publish'=>$start_publish,
                           'end_publish'=>$end_publish
                           
-                      );
+            );
 
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
-			$this->luceneIndex($newArr);
+            $this->luceneIndex($newArr);
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
 
@@ -204,24 +204,24 @@ class dbcontent extends dbTable
         {
             $introText = str_ireplace("<br />", " <br /> ", $introText);
             $fullText = str_ireplace("<br />", " <br /> ", $fullText);
-			$override_date = $this->getParam('overide_date',null);
+            $override_date = $this->getParam('overide_date',null);
             $start_publish = $this->getParam('publish_date',null);
             $end_publish = $this->getParam('end_date',null);
             if ($override_date!=null) {
-            	$override_date =  $this->now();
+                $override_date =  $this->now();
             }
             $creatorid = $this->getParam('creator',null);
             if ($creatorid==NUll) {
-            	 $creatorid = $this->_objUser->userId();
+                $creatorid = $this->_objUser->userId();
             }
 
-          	$access = $this->getParam('access');
-			$created_by = $this->getParam('author_alias',null);
-			
+            $access = $this->getParam('access');
+            $created_by = $this->getParam('author_alias',null);
+                        
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $metakey = $this->getParam('keyword',null);
-			$metadesc = $this->getParam('description',null);
+            $metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
             $hide_title = $this->getParam('hide_title','0');
 
@@ -245,11 +245,11 @@ class dbcontent extends dbTable
                           'metadesc'=>$metadesc,
                           'start_publish'=>$start_publish,
                           'end_publish'=>$$end_publish
-                      );
+            );
 
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
-			$this->luceneIndex($newArr);
+            $this->luceneIndex($newArr);
             if ($isFrontPage == 'on') {
                 $this->_objFrontPage->add($newId);
             }
@@ -279,17 +279,17 @@ class dbcontent extends dbTable
             }
             $end_publish = $this->getParam('end_date',null);
             if ($override_date!=null) {
-            	$override_date =  $this->now();
+                $override_date =  $this->now();
             }
             
-          	$access = $this->getParam('access');
-          	$modifiedBy = $this->_objUser->userId();
-          	$modifiedDate = $this->now();
-			
+            $access = $this->getParam('access');
+            $modifiedBy = $this->_objUser->userId();
+            $modifiedDate = $this->now();
+                        
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
             $metakey = $this->getParam('keyword',null);
-			$metadesc = $this->getParam('description',null);
+            $metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
             $hide_title = $this->getParam('hide_title','0');
 
@@ -310,7 +310,7 @@ class dbcontent extends dbTable
                           'metadesc'=>$metadesc,
                           'start_publish'=>$start_publish,
                           'end_publish'=>$end_publish
-                      );
+            );
 
             
             $creatorid = $this->getParam('creator',null);
@@ -320,7 +320,7 @@ class dbcontent extends dbTable
             
             //process the forntpage
             $isFrontPage = $this->getParam('frontpage');
-			//$this->luceneIndex($newArr);
+            //$this->luceneIndex($newArr);
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
@@ -348,13 +348,13 @@ class dbcontent extends dbTable
          */
         public function updateContentBody($contentid, $body)
         {  
-			$fields['body'] = $body;
-			$this->update('id', $contentid, $fields);	
-			return TRUE;
- 		}
+            $fields['body'] = $body;
+            $this->update('id', $contentid, $fields);	
+            return TRUE;
+        }
 
 
-	/**
+        /**
     *
     * Method to return all content items with href data
     *
@@ -362,14 +362,14 @@ class dbcontent extends dbTable
     * @access public
     *
     */
-    public function getHrefContentRecords($sectionid = '') {
-        if ($sectionid != ''){
-            $data = $this->getAll("WHERE body like '%href=%' AND sectionid='$sectionid'");
-        } else {
-            $data = $this->getAll("WHERE body like '%href=%'");
+        public function getHrefContentRecords($sectionid = '') {
+            if ($sectionid != ''){
+                $data = $this->getAll("WHERE body like '%href=%' AND sectionid='$sectionid'");
+            } else {
+                $data = $this->getAll("WHERE body like '%href=%'");
+            }
+            return $data;
         }
-        return $data;
-    }
 
 
 
@@ -513,7 +513,7 @@ class dbcontent extends dbTable
             } else {
                 $filter = ' WHERE trash=0 ';
             }
-
+            
             return $this->getAll($filter.' ORDER BY ordering');
         }
 
@@ -546,10 +546,32 @@ class dbcontent extends dbTable
          */
         public function getContentPage($id)
         {
-           	$content = $this->getRow('id', $id );
-           	return $content;
+            $content = $this->getRow('id', $id );
+            return $content;
         }
 
+        /**
+         * Method to get a filtered page content record
+         *
+         * @param string $id The id of the page content
+         * @access public
+         * @return array $content An associative array of content page details
+         */
+        public function getContentPageFiltered($id, $filter = '')
+        {
+            if ($filter == 'trash') {
+                $filter = ' WHERE trash=1 ';
+            } else {
+                $filter = ' WHERE trash=0 ';
+            }
+            
+            $content = $this->getAll($filter." AND id = '$id' ORDER BY ordering");
+            $content = $content[0];
+            
+            return $content;
+        }
+        
+        
         /**
          * Method to toggle the publish field
          *
@@ -582,14 +604,14 @@ class dbcontent extends dbTable
         {
             switch($task){
                 case 'publish':
-                    $fields['published'] = 1;
-                    $fields['start_publish'] = $this->now();
-                    $fields['end_publish'] = '';
-                    break;
+                $fields['published'] = 1;
+                $fields['start_publish'] = $this->now();
+                $fields['end_publish'] = '';
+                break;
                 case 'unpublish':
-                    $fields['published'] = 0;
-                    $fields['end_publish'] = $this->now();
-                    break;
+                $fields['published'] = 0;
+                $fields['end_publish'] = $this->now();
+                break;
             }
             
             return $this->update('id', $id, $fields);
@@ -662,10 +684,10 @@ class dbcontent extends dbTable
             }
             $pages = $this->getAll($filter.' ORDER BY ordering');
 
-	    $secureData = array();
+            $secureData = array();
             foreach ($pages as $d){
                 if ($this->_objSecurity->canUserReadContent($d['id'])){
-                        array_push($secureData, $d);
+                    array_push($secureData, $d);
                 }
             }
             return $secureData;            
@@ -688,13 +710,13 @@ class dbcontent extends dbTable
                 ORDER BY co.ordering";
             
             $data = $this->getArray($sql);
-	    
-	    $secureData = array();
-	    foreach ($data as $d){
-		if ($this->_objSecurity->canUserReadContent($d['page_id'])){
-			array_push($secureData, $d);
-		}
-	    }
+            
+            $secureData = array();
+            foreach ($data as $d){
+                if ($this->_objSecurity->canUserReadContent($d['page_id'])){
+                    array_push($secureData, $d);
+                }
+            }
 
             return $secureData;
         }
@@ -713,13 +735,13 @@ class dbcontent extends dbTable
             //If only the section id is set, return all records in the section
             if($title == NULL && $limit != NULL){
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE trash = '0' ORDER BY created DESC LIMIT '$limit'";
-            //If only the limit is set, return set amount of pages from all sections
+                //If only the limit is set, return set amount of pages from all sections
             } else if($title != NULL && $limit == NULL){
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE title = '$title' ORDER BY created DESC";
-            //If both params are set, return set amount of pages from specified section
+                //If both params are set, return set amount of pages from specified section
             } else if($title != NULL && $limit != NULL){
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE title = '$title' ORDER BY created DESC LIMIT '$limit'";
-            //Else if neither param is set, return all records
+                //Else if neither param is set, return all records
             } else {
                 $sql = "SELECT id, title FROM tbl_cms_content WHERE trash = '0' ORDER BY created DESC";
             }
@@ -883,7 +905,7 @@ class dbcontent extends dbTable
                         $updateArray = array(
                                            'modified' => $this->now(),
                                            'ordering' => $toChange
-                                       );
+                        );
                         $this->update('id', $id, $updateArray);
                     } else {
                         $changeTo = $content['ordering'];
@@ -891,7 +913,7 @@ class dbcontent extends dbTable
                         $updateArray = array(
                                            'ordering' => $toChange,
                                            'modified' => $this->now()
-                                       );
+                        );
                         $this->update('id', $id, $updateArray);
                     }
                 }
@@ -904,7 +926,7 @@ class dbcontent extends dbTable
                     $upArr = array(
                                  'ordering' => $changeTo,
                                  'modified' => $this->now()
-                             );
+                    );
                     $result = $this->update('id', $entry['id'], $upArr);
                 }
             }
@@ -915,65 +937,65 @@ class dbcontent extends dbTable
         }
 
     /**
-	 * Method to scrub grubby html
-	 *
-	 * @param string $document
-	 * @return string
-	 */
-	public function html2txt($document, $scrub = TRUE)
-	{
-		if($scrub == TRUE)
-		{
-			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
-               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
-               	   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
-				   );
+         * Method to scrub grubby html
+         *
+         * @param string $document
+         * @return string
+         */
+        public function html2txt($document, $scrub = TRUE)
+        {
+            if($scrub == TRUE)
+            {
+                $search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+                   /*'@<[\/\!]*?[^<>]*?>@si',*/            // Strip out HTML tags
+                   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+                   '@<![\s\S]*?--[ \t\n\r]*>@'        // Strip multi-line comments including CDATA
+                );
 
-		}
-		else {
-			$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
-            	   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
-               	   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
-               	   '@<![\s\S]*?--[ \t\n\r]*>@',        // Strip multi-line comments including CDATA
-               	   '!(\n*(.+)\n*!x',                   //strip out newlines...
-				   );
-		}
-		$text = preg_replace($search, '', $document);
-		$text = str_replace("<br /><br />", '' ,$text);
-		//$text = str_replace("<br />", '' ,$text);
-		//$text = str_replace( '\n\n\n' , '\n' ,$text);
-		$text = str_replace("<br />  <br />", "<br />", $text);
-		$text = str_replace("<br\">","",$text);
-		$text = str_replace("<br />", " <br /> ", $text);
-		//$text = str_replace("<", " <", $text);
-		//$text = str_replace(">", "> ", $text);
-		$text = rtrim($text, "\n");
-		return $text;
-	}
-	
-	/**
-	 * The method implements the lucene indexer
-	 * The method accepts an array of data,
-	 * generates a document to be indexed based on the
-	 * url and content inserted into the database 
-	 *
-	 * @param array $data
-	 */
-	public function luceneIndex($data)
-    {
-        $objLucene = $this->getObject('indexdata', 'search');
+            }
+            else {
+                $search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+                   '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+                   /*'@<style[^>]*?>.*?</style>@siU',*/    // Strip style tags properly
+                   '@<![\s\S]*?--[ \t\n\r]*>@',        // Strip multi-line comments including CDATA
+                   '!(\n*(.+)\n*!x',                   //strip out newlines...
+                );
+            }
+            $text = preg_replace($search, '', $document);
+            $text = str_replace("<br /><br />", '' ,$text);
+            //$text = str_replace("<br />", '' ,$text);
+            //$text = str_replace( '\n\n\n' , '\n' ,$text);
+            $text = str_replace("<br />  <br />", "<br />", $text);
+            $text = str_replace("<br\">","",$text);
+            $text = str_replace("<br />", " <br /> ", $text);
+            //$text = str_replace("<", " <", $text);
+            //$text = str_replace(">", "> ", $text);
+            $text = rtrim($text, "\n");
+            return $text;
+        }
         
-        $docId = 'cms_page_'.$data['id'];
+        /**
+         * The method implements the lucene indexer
+         * The method accepts an array of data,
+         * generates a document to be indexed based on the
+         * url and content inserted into the database 
+         *
+         * @param array $data
+         */
+        public function luceneIndex($data)
+        {
+            $objLucene = $this->getObject('indexdata', 'search');
         
-        $url = $this->uri(array
-                            ('module' => 'cms', 
+            $docId = 'cms_page_'.$data['id'];
+        
+            $url = $this->uri(array
+                ('module' => 'cms', 
                             'action' => 'showfulltext', 
                             'id' => $data['id'],
                             'sectionid'=> $data['sectionid']), 'cms');
         
-        $objLucene->luceneIndex($docId, $data['created'], $url, $data['title'], $data['title'].$data['body'], $data['introtext'], 'cms', $data['created_by']);
-    }
+            $objLucene->luceneIndex($docId, $data['created'], $url, $data['title'], $data['title'].$data['body'], $data['introtext'], 'cms', $data['created_by']);
+        }
     
     /**
          * Method to return the Parent of the given content item
@@ -987,11 +1009,11 @@ class dbcontent extends dbTable
             $arrContent = $this->getAll("WHERE id = '$contentId'", 'tbl_cms_content');
             
             if (isset($arrContent[0]['sectionid'])){
-              $sectionId = $arrContent[0]['sectionid'];
+                $sectionId = $arrContent[0]['sectionid'];
             } else if (isset($arrContent['sectionid'])) {
-              $sectionId = $arrContent['sectionid'];
+                $sectionId = $arrContent['sectionid'];
             } else {
-              return false;
+                return false;
             }
             //getting the parent record
             $arrSection = $this->getArray("SELECT * FROM tbl_cms_sections WHERE id = '$sectionId'");
@@ -999,6 +1021,6 @@ class dbcontent extends dbTable
         }
 
 
-}
+    }
 
 ?>
