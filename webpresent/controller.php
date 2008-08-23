@@ -566,7 +566,7 @@ class webpresent extends controller
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
 
-        return 'process.php';
+        return 'process_tpl.php';
     }
 
     /**
