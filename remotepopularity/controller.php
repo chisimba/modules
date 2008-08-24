@@ -86,7 +86,8 @@ class remotepopularity extends controller
  				{
  					// get the record count
  					$count = $this->objDbPop->getRecCount($mod);
- 					$colour = array_rand($colours);
+ 					$choice = array_rand($colours);
+ 					$colour = $colours[$choice];
  					$objFlashGraphData->addPieDataSet($count, $colour, $mod);
  				}
  				
