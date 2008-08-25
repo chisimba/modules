@@ -21,12 +21,22 @@ public class UserObject {
     private ImageIcon speakerIcon;
     private ImageIcon micIcon;
     private ImageIcon presenceIcon;
+    private boolean online;
 
-    public UserObject(User user, Color color, boolean active, boolean handRaised) {
+    public UserObject(User user, Color color, boolean active, boolean handRaised, boolean online) {
         this.user = user;
         this.color = color;
         this.active = active;
         this.handRaised = handRaised;
+        this.online = online;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     // @Override
