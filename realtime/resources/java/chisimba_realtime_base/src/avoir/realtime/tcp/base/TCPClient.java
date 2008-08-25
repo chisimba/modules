@@ -14,6 +14,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 
 import avoir.realtime.tcp.base.user.User;
 
+import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
@@ -24,6 +25,7 @@ import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.ClientPacket;
 import avoir.realtime.tcp.common.packet.FilePacket;
+import avoir.realtime.tcp.common.packet.HeartBeat;
 import avoir.realtime.tcp.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.tcp.common.packet.MsgPacket;
 import avoir.realtime.tcp.common.packet.NewSlideReplyPacket;
@@ -79,6 +81,9 @@ public class TCPClient {
     private boolean selectWindowManager = true;
     private RealtimeBase base;
     private AudioWizardFrame audioHandler;
+    private boolean ALIVE = true;
+    private long HEARTBEAT = 1000;
+    private boolean SEND_HEARTBEAT = true;
     /**
      * Reader for the ObjectInputStream
      */
@@ -90,8 +95,8 @@ public class TCPClient {
     private boolean slideServerReplying = false;
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-   //  private String SUPERNODE_HOST = "localhost";
-   //  private int SUPERNODE_PORT = 22225;
+    //  private String SUPERNODE_HOST = "localhost";
+    //  private int SUPERNODE_PORT = 22225;
     private boolean showChatFrame = true;
     private ClientAdmin clientAdmin;
     //everything is encrypted here
@@ -105,6 +110,7 @@ public class TCPClient {
     private FileOutputStream fileOutputStream;
     private JFileChooser fc = new JFileChooser();
     private WhiteboardSurface whiteboardSurface;
+    int count = 0;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -361,6 +367,8 @@ public class TCPClient {
                 dfactory = context.getSocketFactory();
                 socket = (SSLSocket) dfactory.createSocket(SUPERNODE_HOST, SUPERNODE_PORT);
                 socket.startHandshake();
+                //  socket.setKeepAlive(true);
+
                 result = true;
             } catch (UnknownHostException ex) {
                 if (base != null) {
@@ -378,7 +386,14 @@ public class TCPClient {
 
                 @Override
                 public void run() {
+                    startHeartBeat();
+                    logger.info("Started hearbeat ..");
+                    //monitor it after every 1 min
+                    Timer timer = new Timer();
+
+                    timer.scheduleAtFixedRate(new HeartBeatMonitor(), 0, 5 * 1000);
                     listen();
+
                 }
             };
             t.start();
@@ -418,6 +433,8 @@ public class TCPClient {
                 } else if (packet instanceof NewSlideReplyPacket) {
                     NewSlideReplyPacket nsr = (NewSlideReplyPacket) packet;
                     processNewSlideReplyPacket(nsr);
+                } else if (packet instanceof HeartBeat) {
+                    processHeartBeat((HeartBeat) packet);
                 } else if (packet instanceof SlideNotFoundPacket) {
                     processSlideNotFoundPacket((SlideNotFoundPacket) packet);
                 } else if (packet instanceof ChatLogPacket) {
@@ -514,6 +531,11 @@ public class TCPClient {
         }
     }
 
+    private void processHeartBeat(HeartBeat p) {
+        SEND_HEARTBEAT = true;
+        base.showMessage("Ok", false, false);
+    }
+
     private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
         if (fileOutputStream != null) {
             try {
@@ -571,7 +593,7 @@ public class TCPClient {
 
             int userIndex = base.getUserManager().getUserIndex(p.getUserName());
             if (userIndex > -1) {
-                base.getUserManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon());
+                base.getUserManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon(), true);
             }
         }
     }
@@ -1049,6 +1071,7 @@ public class TCPClient {
         SystemFilePacket p = new SystemFilePacket("", "", byteArray, "/usr/lib/realtime/lib/" + filename, false);
         sendPacket(p);
     }
+
     /**
      * User has raised/or put down the hand. Send to server for processing
      * @param userName
@@ -1062,4 +1085,58 @@ public class TCPClient {
     sendPacket(new AttentionPacket(userName, sessionId, raised,
     allowControl, yes, no, isYesNoSession, isPrivate, speakerEnabled, micEnabled));
     }*/
+    private void startHeartBeat() {
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                if (base != null) {
+                    while (ALIVE) {
+                        if (SEND_HEARTBEAT) {
+                            heartBeat();
+                        }
+                        try {
+                            sleep(HEARTBEAT);
+                        } catch (Exception ex) {
+                        }
+                    }
+                }
+            }
+        };
+        t.start();
+
+    }
+
+    /**
+     * send heartbeat every 30 secs to see if connection is alive
+     */
+    private void heartBeat() {
+        try {
+            if (writer != null) {
+                writer.writeObject(new HeartBeat(base.getSessionId()));
+                writer.flush();
+                SEND_HEARTBEAT = false;
+            } else {
+                logger.info("Error: writer is null!!!");
+            //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
+            }
+        } catch (IOException ex) {
+            base.showMessage("Disconnected from Server", false, true);
+            ALIVE = false;
+            ex.printStackTrace();
+        }
+    }
+
+    class HeartBeatMonitor extends TimerTask {
+
+        public void run() {
+            if (SEND_HEARTBEAT == false) {
+                int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
+                base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+                        PresenceConstants.OFFLINE, true);
+                base.showMessage("Network Error!!!", false, true);
+
+            }
+        }
+    }
 }
