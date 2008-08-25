@@ -44,6 +44,7 @@ class remotepopularity extends controller
         	$this->objUser =  $this->getObject("user", "security");
         	//Create an instance of the language object
         	$this->objLanguage = $this->getObject("language", "language");
+        	$this->objPopOps = $this->getObject('rempopops');
     	}
     	catch (customException $e)
     	{
@@ -65,12 +66,8 @@ class remotepopularity extends controller
         $action = $this->getParam('action');
     	switch ($action) {
             case null:
-            	// this will be the case to show the stats
             	// generate the flash graph data from the table and display it
-            	
- 				$objFlashGraph = $this->getObject('flashgraph', 'utilities');
- 				$objFlashGraph->dataSource = $this->uri(array('action'=>'getdata'));
- 				$graph = $objFlashGraph->show(); 
+ 				$graph = $this->objPopOps->getFullGraph();
  				$this->setVarByRef('graph', $graph);
  				return 'graph_tpl.php';
             	break;
@@ -79,7 +76,6 @@ class remotepopularity extends controller
             	$colours = $this->getObject('websafecolours', 'utilities');
             	$objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
  				$objFlashGraphData->graphType = 'pie';
- 				
  				// Get the unique names of the modules
  				$mods = $this->objDbPop->getModList();
  				foreach($mods as $mod)
@@ -94,7 +90,7 @@ class remotepopularity extends controller
             	echo $graphdata;
             	break;
             	
-            case 'getlastdata':
+            case 'gettopdata':
             	$num = $this->getParam('number', 5);
             	$colours = $this->getObject('websafecolours', 'utilities');
             	$objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
