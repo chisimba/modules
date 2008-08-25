@@ -85,13 +85,10 @@ class block_remotepopularity extends object
      */
     public function init() 
     {
-    	$this->objDbPop = $this->getObject('dbpopularity');
+		$this->objDbPop = $this->getObject('dbpopularity');
     	$this->objLanguage = $this->getObject('language', 'language');
-        $objFlashGraph = $this->getObject('flashgraph', 'utilities');
- 		$objFlashGraph->dataSource = $this->uri(array('action'=>'getlastdata', 'number' => 5));
- 		$objFlashGraph->width = "100%";
- 		//$objFlashGraph->height = "200";
- 		$graph = $objFlashGraph->show(); 
+    	$this->objPopOps = $this->getObject('rempopops');
+    	$graph = $this->objPopOps->getTopDownloads(5);
         $this->display = $graph;
         $this->title = $this->objLanguage->languageText("mod_rempop_tofive", "remotepopularity");
     }
