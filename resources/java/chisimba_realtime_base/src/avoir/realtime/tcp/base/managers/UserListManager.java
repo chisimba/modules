@@ -197,16 +197,22 @@ public class UserListManager {
             }
             if (val instanceof UserObject) {
                 UserObject userObject = (UserObject) val;
+               if(userObject.isOnline()){
                 if (userObject.isActive()) {
+                    
                     setFont(new java.awt.Font("Dialog", 0, 10));
                     this.setText(userObject.getDisplay());
                     this.setForeground(userObject.getColor());
-                } else {
+                } else{
                     setFont(new java.awt.Font("Dialog", 3, 10));
-                    setForeground(Color.RED);
+                    setForeground(Color.YELLOW);
                     this.setText(userObject.getDisplay() + "-Away");
                 }
-
+               }else{
+                     setFont(new java.awt.Font("Dialog", 3, 10));
+                    setForeground(Color.RED);
+                    this.setText(userObject.getDisplay() + "-Offline");
+               }
             }
 
         }
@@ -386,7 +392,7 @@ public class UserListManager {
      * @param index index at which the user is to be added
      */
     public void addUser(User usr, int index) {
-        UserObject userObject = new UserObject(usr, Color.BLACK, true, false);
+        UserObject userObject = new UserObject(usr, Color.BLACK, true, false,usr.isOnline());
         userObject.setSpeakerIcon(usr.isSpeakerOn() ? speakerIcon : blankIcon);
         userObject.setMicIcon(usr.isMicOn() ? micIcon : blankIcon);
         userObject.setPresenceIcon(usr.isEditOn() ? editIcon : blankIcon);
@@ -417,10 +423,12 @@ public class UserListManager {
      * @param order order in which user raised hand relative to others..if 
      * the user raised hand
      */
-    public void setUser(int index, int iconType, boolean show) {
+    public void setUser(int index, int iconType, boolean show,boolean online) {
         table.setDefaultRenderer(UserObject.class, new LRenderer());
         UserObject userObject = userList.elementAt(index);
+        userObject.setOnline(online);
         User usr = userObject.getUser();
+        usr.setOnline(online);
         ImageIcon icon = blankIcon;
         String fullNames = usr.getFullName();
         if (iconType == PresenceConstants.SPEAKER_ICON) {
@@ -589,6 +597,7 @@ public class UserListManager {
                 }
 
                 model.setValueAt(blankIcon, index, 2);
+                base.getToolbarManager().getHandButton().setSelected(false);
 
             }
         };
