@@ -74,6 +74,8 @@ class block_remotepopularity extends object
      */
     public $objLanguage;
     
+    public $objDbPop;
+    
     /**
      * Standard init function
      *
@@ -83,6 +85,7 @@ class block_remotepopularity extends object
      */
     public function init() 
     {
+    	$this->objDbPop = $this->getObject('dbpopularity');
     	$this->objLanguage = $this->getObject('language', 'language');
         $objFlashGraph = $this->getObject('flashgraph', 'utilities');
  		$objFlashGraph->dataSource = $this->uri(array('action'=>'getlastdata', 'number' => 5));
@@ -101,7 +104,12 @@ class block_remotepopularity extends object
     {
     	$popLink = new link ($this->uri(NULL, 'remotepopularity'));
         $popLink->link = $this->objLanguage->languageText('mod_rempop_linktext', 'remotepopularity');
-        
+        $lastfive = $this->objDbPop->getTop(5);
+        $list = NULL;
+        foreach($lastfive as $modules)
+        {
+        	$list .= "$modules<br />";
+        }
         return $this->display.'<p>'.$popLink->show().'</p>';
         //return $this->display;
     }
