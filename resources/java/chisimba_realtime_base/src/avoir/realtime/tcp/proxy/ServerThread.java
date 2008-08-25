@@ -330,7 +330,7 @@ public class ServerThread extends Thread {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-                   // logger.info(obj.getClass() + "");
+                // logger.info(obj.getClass() + "");
                 } catch (Exception ex) {
                     logger.info(ex.getLocalizedMessage());
                     waitForSlideServer = false;
@@ -397,8 +397,8 @@ public class ServerThread extends Thread {
                             if (!slideServerExists(thisUser.getUserName())) {
                                 logger.info(thisUser.getUserName() + " registered as slide server");
                                 synchronized (slideServers) {
-                             //       slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
-                                addSlideServer(new SlideServer(thisUser.getUserName(), objectOut, socket));
+                                    //       slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
+                                    addSlideServer(new SlideServer(thisUser.getUserName(), objectOut, socket));
                                 }
                             } else {
                                 logger.info(thisUser.getFullName() + " already exists ...shutting down!");
@@ -468,7 +468,8 @@ public class ServerThread extends Thread {
                         broadcastPacket(packet, false);
                     } else if (packet instanceof SurveyAnswerPacket) {
                         broadcastSurveyAnswerPacket(packet, thisUser.getSessionId());
-
+                    } else if (packet instanceof HeartBeat) {
+                        processHeartBeat((HeartBeat) packet);
                     } else if (packet instanceof LocalSlideCacheRequestPacket) {
                         processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
                     } else if (packet instanceof FilePacket) {
@@ -620,6 +621,16 @@ public class ServerThread extends Thread {
                     }
                 }
             }
+        }
+    }
+
+    private void processHeartBeat(HeartBeat p) {
+        try {
+            //just reply it back
+            objectOutStream.writeObject(p);
+            objectOutStream.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -780,20 +791,20 @@ public class ServerThread extends Thread {
     }
 
     private void processModuleFileReplyPacket(ModuleFileReplyPacket packet) {
-    //    logger.info("Received: " + packet.getClass() + " : " + packet.getFilePath());
-      //  logger.info("Trying to obtain lock..");
+        //    logger.info("Received: " + packet.getClass() + " : " + packet.getFilePath());
+        //  logger.info("Trying to obtain lock..");
         synchronized (launchers) {
-        //    logger.info("Obtained!!!! .. Launchers size: " + launchers.size());
+            //    logger.info("Obtained!!!! .. Launchers size: " + launchers.size());
             for (int i = 0; i < launchers.size(); i++) {
-          //      logger.info("Loop " + i + ": testing " + launchers.elementAt(i).getId() + " against " + packet.getUsername());
+                //      logger.info("Loop " + i + ": testing " + launchers.elementAt(i).getId() + " against " + packet.getUsername());
                 if (launchers.elementAt(i).getId().equals(packet.getUsername())) {
                     try {
-            //            logger.info("Match found ...sending packet");
+                        //            logger.info("Match found ...sending packet");
                         launchers.elementAt(i).getObjectOutputStream().flush();
 
                         launchers.elementAt(i).getObjectOutputStream().writeObject(packet);
                         launchers.elementAt(i).getObjectOutputStream().flush();
-              //          logger.info("Send!!!!");
+                    //          logger.info("Send!!!!");
                     } catch (Exception ex) {
                         logger.info(ex.getLocalizedMessage());
                     }
@@ -801,7 +812,7 @@ public class ServerThread extends Thread {
 
             }
         }
-        //logger.info("Released lock...");
+    //logger.info("Released lock...");
     }
 
     private void processServerLogRequest(ServerLogRequestPacket packet) {
