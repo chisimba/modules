@@ -101,15 +101,13 @@ class remotepopularity extends controller
  				$objFlashGraphData->graphType = 'bar';
  				
  				// Get the unique names of the modules
- 				$mods = $this->objDbPop->getLast($num);
- 				
+ 				$mods = $this->objDbPop->getTop($num);
  				$max = 1;
  				foreach($mods as $mod)
  				{
  					// get the record count
  					$count = $this->objDbPop->getRecCount($mod);
  					$colour = $colours->getRandomColour();
- 					//$objFlashGraphData->addPieDataSet($count, $colour, $mod);
  					
  					if ($count > $max) {
  						$max = $count;
@@ -120,7 +118,6 @@ class remotepopularity extends controller
  				
  				//$objFlashGraphData->setupXAxisLabels(array('Modules'));
  				$objFlashGraphData->setupYAxis($this->objLanguage->languageText('mod_repop_downloads', 'remotepopularity'), NULL, NULL, $max, $absmax);
- 				
  				
  				$graphdata = $objFlashGraphData->show();
             	echo $graphdata;
