@@ -11,7 +11,7 @@ $leftColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_rempop_remstatsheader', 'rempop');
+$header->str = $this->objLanguage->languageText('mod_rempop_remstatsheader', 'remotepopularity');
 $header->type = 1;
 
 $middleColumn .= $header->show();
