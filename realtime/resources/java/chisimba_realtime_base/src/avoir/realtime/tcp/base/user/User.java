@@ -35,6 +35,7 @@ public class User implements Serializable {
     private String userName;
     private boolean hasToken;
     private boolean isPresenter;
+    private boolean online;
     boolean active = true;
     private String host;
     private int port;
@@ -62,6 +63,14 @@ public class User implements Serializable {
         this.slideServerId = slideServerId;
         this.sessionTitle = sessionTitle;
         logger.finest("Created new user object with name " + fullname + " and level " + level);
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public String getSessionTitle() {
@@ -225,8 +234,6 @@ public class User implements Serializable {
     public String toString() {
         return this.fullname;
     }
-
-
 
     public void setFullName(String name) {
         fullname = name;
