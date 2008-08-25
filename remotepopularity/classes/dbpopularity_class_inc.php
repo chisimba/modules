@@ -70,5 +70,17 @@ class dbpopularity extends dbTable
     	$list = array_unique($un);
     	return $list;	
     }
+    
+    
+    public function getLast($num = 5)
+    {
+    	$filter = "ORDER BY downloadedon DESC LIMIT {$num}";
+    	$list = $this->getAll($filter);
+    	foreach($list as $items)
+    	{
+    		$un[] = $items['module_name']; 
+    	}
+    	return $un;
+    }
 }
 ?>
