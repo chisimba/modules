@@ -118,6 +118,10 @@ class remotepopularity extends controller
  				$graphdata = $objFlashGraphData->show();
             	echo $graphdata;
             	break;
+            case 'getremotedata':
+            	$obj = $this->getObject('poprpcclient', 'api');
+            	echo $obj->fullGraph();
+            	break;
             		
             default:
             	die("unknown action");
