@@ -58,7 +58,7 @@ class webpresent extends controller
         $this->objSlides = $this->getObject('dbwebpresentslides');
         $this->objSchedules = $this->getObject('dbwebpresentschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
-        $this->presentManager = $this->getObject('presentmanager');
+        //$this->presentManager = $this->getObject('presentmanager');
     }
         /**
          * Method to override login for certain actions
