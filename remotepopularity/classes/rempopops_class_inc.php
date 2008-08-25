@@ -70,5 +70,24 @@ class rempopops extends object
  		return $graph;
 	}
 
+	public function getFullDataSrc()
+	{
+		$this->objDbPop = $this->getObject('dbpopularity');
+		$colours = $this->getObject('websafecolours', 'utilities');
+        $objFlashGraphData = $this->newObject('flashgraphdata', 'utilities');
+ 		$objFlashGraphData->graphType = 'pie';
+ 		// Get the unique names of the modules
+ 		$mods = $this->objDbPop->getModList();
+ 		foreach($mods as $mod)
+ 		{
+ 			// get the record count
+ 			$count = $this->objDbPop->getRecCount($mod);
+ 			$colour = $colours->getRandomColour();
+ 			$objFlashGraphData->addPieDataSet($count, $colour, $mod);
+ 		}
+ 		
+ 		$graphdata = $objFlashGraphData->show();
+ 		return $graphdata;
+	}
 }
 ?>
