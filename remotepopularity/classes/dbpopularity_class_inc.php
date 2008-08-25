@@ -82,5 +82,24 @@ class dbpopularity extends dbTable
     	}
     	return $un;
     }
+    
+    public function getTop($num = 5)
+    {
+    	$list = $this->getModList();
+    	foreach ($list as $things)
+    	{
+    		$recCount[] = array($things => (int)$this->getRecordCount("WHERE module_name = '$things'"));
+    	}
+    	$recs = array();
+    	foreach($recCount as $rec)
+    	{
+    		$recs = array_merge($recs, $rec);
+    	}
+    	natsort($recs);
+    	$nats = array_reverse($recs, TRUE);
+    	$nats = array_slice($nats, 0, $num, TRUE);
+    	$nats = array_keys($nats);
+    	return $nats;
+    }
 }
 ?>
