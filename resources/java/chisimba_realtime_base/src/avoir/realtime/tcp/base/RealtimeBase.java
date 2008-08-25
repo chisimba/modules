@@ -1,7 +1,21 @@
-/*
- * RealtimeBase.java
+/**
+ * 	$Id: ChatRoom.java,v 1.3 2007/02/02 10:59:15 davidwaf Exp $
  *
- * Created on 18 May 2008, 05:41
+ *  Copyright (C) GNU/GPL AVOIR 2007
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base;
 
@@ -51,7 +65,7 @@ import javax.swing.JToolBar;
 
 /**
  *
- * @author  developer
+ * @author  david wafula
  */
 public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
@@ -232,6 +246,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * this displays the whiteboard tool bar, but since its enjoined with the pointer
+     * toolbar, its renamed accordingly. It sets the pointer on off
+     * @param state
+     */
     public void showPointerToolBar(boolean state) {
         if (state) {
             leftCenterPanel.add(whiteboardSurface.getButtonsToolbar());
@@ -254,6 +273,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
     }
 
+    /**
+     * own simple panel to display color
+     */
     class GP extends JPanel {
 
         public GP() {
@@ -329,6 +351,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * get a glass handler. will be used in future to handle whiteboard overlays
+     * for now due to perfomance problems, nothing much can be achieved from this
+     * @return
+     */
     public JApplet getGlassPaneHandler() {
         return glassPaneHandler;
     }
@@ -654,10 +681,18 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
+    /**
+     * for configurating the supernode port
+     * @param port
+     */
     public void setSupernodePort(int port) {
         tcpClient.setSuperNodePort(port);
     }
 
+    /**
+     * for configuring the super node host
+     * @param host
+     */
     public void setSupernodeHost(String host) {
         tcpClient.setSuperNodeHost(host);
     }
@@ -831,6 +866,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     }
 
+    /**
+     * this creates an embbed string than can be pasted into any container that supports html
+     * then the realtime session will be played
+     * @param userName
+     * @param fullName
+     * @return
+     */
     private String createEmbbedStr(String userName, String fullName) {
         String url = "<center>\n";
         url += "<applet codebase=\"" + appletCodeBase + "\"\n";
@@ -1025,7 +1067,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 Thread.sleep(10000);
             } catch (Exception ex) {
             }
-            surface.showMessage(prevMsg, false);
+            surface.showMessage("", false);
         }
     }
 
@@ -1119,6 +1161,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         add(mainPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Controls the start/end talk sessions. it is also used for switching on/off recording
+     * @param evt
+     */
 private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_talkButtonActionPerformed
     if (audioWizardFrame != null) {
         if (talkButton.isSelected()) {
@@ -1151,6 +1197,11 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }*/
     }
 }//GEN-LAST:event_talkButtonActionPerformed
+
+    /**
+     * this generates an xml file that can be used for playback, when a session has been recorded
+     * @param slideIndex
+     */
     public void recordXml(int slideIndex) {
         String slideName = "slide" + slideIndex + ".jpg";
         long currentTime = System.currentTimeMillis();
@@ -1168,6 +1219,11 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         getAudioWizardFrame().getMicInput().recordAudioClip();
         getAudioWizardFrame().getMicInput().setAudioTimeStamp(currentTime);
     }
+
+    /**
+     * respond to mute actions
+     * @param evt
+     */
 private void muteOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_muteOptActionPerformed
     if (audioWizardFrame != null) {
         audioWizardFrame.mute(muteOpt.isSelected());
