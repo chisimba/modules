@@ -11,15 +11,17 @@ package avoir.realtime.tcp.common;
 public class PresenceConstants {
 
     public static final int SPEAKER_ICON = 0;
-     public static final int MIC_ICON = 1;
+    public static final int MIC_ICON = 1;
     public static final int EDIT_ICON = 2;
     public static final int YES_ICON = 3;
     public static final int NO_ICON = 4;
     public static final int HAND_ICON = 5;
     public static final int CONTROL_ICON = 6;
-    public static final int STEP_OUT_ICON=7;
-    public static final int LAUGHTER_ICON=8;
-    public static final int APPLAUD_ICON=9;
+    public static final int STEP_OUT_ICON = 7;
+    public static final int LAUGHTER_ICON = 8;
+    public static final int APPLAUD_ICON = 9;
+    public static final int ONLINE_STATUS_ICON = 10;
+    
     
     public static final boolean TEXT_AVAILABLE = true;
     public static final boolean NO_TEXT = false;
@@ -39,4 +41,6 @@ public class PresenceConstants {
     public static final boolean CONTROL_DISABLED = false;
     public static final boolean MIC_ENABLED = true;
     public static final boolean MIC_DISABLED = false;
+    public static final boolean ONLINE = true;
+    public static final boolean OFFLINE = false;
 }
