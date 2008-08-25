@@ -323,7 +323,7 @@ public class Surface extends JPanel implements MouseListener,
     public void showMessage(String msg, boolean isErrorMessage) {
         this.infoMessage = msg;
         this.isErrorMsg = isErrorMessage;
-        this.showInfoMessage = true;
+        this.showInfoMessage = msg.trim().length() > 0 ? true:false;
         repaint();
     }
 
@@ -435,17 +435,25 @@ public class Surface extends JPanel implements MouseListener,
             g2.draw(rect);
             firstSlide = false;
             //}
+
+            /*FontMetrics fm = graphics.getFontMetrics(msgFont);
+            String msg = "Presenter Slide " + presenterSlideIndex + " of " + totalSlideCount;
+            graphics.setColor(Color.white);
+            graphics.fillRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
+            graphics.setColor(Color.BLACK);
+            graphics.drawRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
+         
             if (presenterSlideIndex > 0) {
                 g2.setColor(Color.BLACK);
                 g2.setFont(msgFont);
-                g2.drawString("Presenter Slide " + presenterSlideIndex + " of " + totalSlideCount, getWidth() - 130, 30);
+                g2.drawString(msg, getWidth() - 130, 30);
             }
             if (slideIndex > 0) {
-
+                msg = "Own Slide " + slideIndex + " of " + totalSlideCount;
                 g2.setColor(Color.ORANGE);
                 g2.setFont(msgFont);
-                g2.drawString("Own Slide " + slideIndex + " of " + totalSlideCount, getWidth() - 130, 50);
-            }
+                g2.drawString(msg, getWidth() - 130, 50);
+            }*/
         }
     }
 
