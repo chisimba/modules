@@ -22,6 +22,7 @@ import java.util.TimerTask;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -168,7 +169,7 @@ public class UserListManager {
         userList.clear();
         for (int i = 0; i < list.size(); i++) {
             User usr = list.elementAt(i);
-           
+
             addUser(usr, i);
         }
         table.setDefaultRenderer(UserObject.class, new LRenderer());
@@ -181,6 +182,7 @@ public class UserListManager {
         return table;
     }
     //TableCellRenderer r = new DefaultTableCellRenderer();
+
     class LRenderer extends DefaultTableCellRenderer {
 
         public LRenderer() {
@@ -197,22 +199,23 @@ public class UserListManager {
             }
             if (val instanceof UserObject) {
                 UserObject userObject = (UserObject) val;
-               if(userObject.isOnline()){
-                if (userObject.isActive()) {
-                    
-                    setFont(new java.awt.Font("Dialog", 0, 10));
-                    this.setText(userObject.getDisplay());
-                    this.setForeground(userObject.getColor());
-                } else{
+                if (userObject.isOnline()) {
+                    if (userObject.isActive()) {
+
+                        setFont(new java.awt.Font("Dialog", 0, 10));
+                        this.setText(userObject.getDisplay());
+                        this.setForeground(userObject.getColor());
+                    } else {
+                        setFont(new java.awt.Font("Dialog", 3, 10));
+                        setForeground(Color.YELLOW);
+                        this.setText(userObject.getDisplay() + "-Away");
+                    }
+                } else {
+
                     setFont(new java.awt.Font("Dialog", 3, 10));
-                    setForeground(Color.YELLOW);
-                    this.setText(userObject.getDisplay() + "-Away");
-                }
-               }else{
-                     setFont(new java.awt.Font("Dialog", 3, 10));
                     setForeground(Color.RED);
                     this.setText(userObject.getDisplay() + "-Offline");
-               }
+                }
             }
 
         }
@@ -239,16 +242,22 @@ public class UserListManager {
             }
             if (val instanceof UserObject) {
                 UserObject userObject = (UserObject) val;
-                if (userObject.isActive()) {
-                    setFont(new java.awt.Font("Dialog", 0, 10));
-                    this.setForeground(userObject.getColor());
-                    this.setText(userObject.getDisplay());
+                if (userObject.isOnline()) {
+                    if (userObject.isActive()) {
+                        setFont(new java.awt.Font("Dialog", 0, 10));
+                        this.setForeground(userObject.getColor());
+                        this.setText(userObject.getDisplay());
 
+                    } else {
+                        setFont(new java.awt.Font("Dialog", 3, 10));
+                        setForeground(Color.RED);
+                        this.setText(userObject.getDisplay() + "-Away");
+
+                    }
                 } else {
                     setFont(new java.awt.Font("Dialog", 3, 10));
-                    setForeground(Color.RED);
-                    this.setText(userObject.getDisplay() + "-Away");
-
+                    setForeground(Color.LIGHT_GRAY);
+                    this.setText(userObject.getDisplay() + "- Offline");
                 }
             }
             return this;
@@ -296,7 +305,7 @@ public class UserListManager {
     private UserObject decorateUser(UserObject userObject, User usr) {
 
         String presenter = usr.isPresenter() ? "Presenter" : "";
-       String display = "";
+        String display = "";
 
         if (usr.getLevel() == (UserLevel.ADMIN)) {
             if (usr.isPresenter()) {
@@ -382,7 +391,7 @@ public class UserListManager {
 
         }
         userObject.setDisplay(display);
-        
+
         return userObject;
     }
 
@@ -392,7 +401,7 @@ public class UserListManager {
      * @param index index at which the user is to be added
      */
     public void addUser(User usr, int index) {
-        UserObject userObject = new UserObject(usr, Color.BLACK, true, false,usr.isOnline());
+        UserObject userObject = new UserObject(usr, Color.BLACK, true, false, usr.isOnline());
         userObject.setSpeakerIcon(usr.isSpeakerOn() ? speakerIcon : blankIcon);
         userObject.setMicIcon(usr.isMicOn() ? micIcon : blankIcon);
         userObject.setPresenceIcon(usr.isEditOn() ? editIcon : blankIcon);
@@ -423,9 +432,16 @@ public class UserListManager {
      * @param order order in which user raised hand relative to others..if 
      * the user raised hand
      */
-    public void setUser(int index, int iconType, boolean show,boolean online) {
+    public void setUser(int index, int iconType, boolean show, boolean online) {
+
         table.setDefaultRenderer(UserObject.class, new LRenderer());
-        UserObject userObject = userList.elementAt(index);
+        UserObject userObject;
+        try {
+            userObject = userList.elementAt(index);
+
+        } catch (Exception ex) {
+            return;
+        }
         userObject.setOnline(online);
         User usr = userObject.getUser();
         usr.setOnline(online);
@@ -552,7 +568,11 @@ public class UserListManager {
             userObject.setActive(!show);
             model.setValueAt(userObject, index, 3);
         }
+        if (iconType == PresenceConstants.ONLINE_STATUS_ICON) {
 
+            userObject.setOnline(online);
+            model.setValueAt(userObject, index, 3);
+        }
 
         userList.set(index, decorateUser(userObject, usr));
 
