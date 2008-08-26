@@ -533,7 +533,10 @@ public class TCPClient {
 
     private void processHeartBeat(HeartBeat p) {
         SEND_HEARTBEAT = true;
-        base.showMessage("Ok", false, false);
+        base.showMessage("", false, false);
+        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
+        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+                PresenceConstants.ONLINE, true);
     }
 
     private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
@@ -1133,8 +1136,8 @@ public class TCPClient {
             if (SEND_HEARTBEAT == false) {
                 int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
                 base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-                        PresenceConstants.OFFLINE, true);
-                base.showMessage("Network Error!!!", false, true);
+                        PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
+                base.showMessage("Network Error!!! ", false, true);
 
             }
         }
