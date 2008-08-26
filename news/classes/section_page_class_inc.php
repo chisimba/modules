@@ -34,6 +34,8 @@ class section_page extends object
     public function renderPage($story, $category)
     {
         $this->setVar('pageId', $story['id']);
+        $this->setVar('pageType', 'story');
+        $this->setVar('pageTypeId', $story['id']);
         
         $objRender = $this->getObject('renderstory');
         
