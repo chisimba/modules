@@ -511,8 +511,6 @@ class podcast extends controller
                 return $this->nextAction('addpodcast', array('error'=>$results['reason']));
             }
         }
-        
-        var_dump($results);
     }
 }
 ?>
