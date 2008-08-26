@@ -10,7 +10,7 @@
 * 
 * To run this class, you need:
 * 1) either python or java installed
-* 2) OpenOffice started as a service: soffice -headless -accept="socket,port=8100;urp;"&
+* 2) OpenOffice started as a service: soffice -headless -nofirststartwizard -accept="socket,port=8100;urp;"&
 *
 * @author Tohir Solomons
 */
