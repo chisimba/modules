@@ -1,5 +1,7 @@
 <?php
 
+
+
 // Add JavaScript if User can update blocks
 if ($objUser->isAdmin()) {
     
@@ -27,7 +29,7 @@ if ($objUser->isAdmin()) {
     turnEditingOff = '<?php echo $objLanguage->languageText('mod_context_turneditingoff', 'context', 'Turn Editing Off'); ?>';
     theModule = 'news';
     pageType = '<?php echo $pageType; ?>';
-    pageId = '<?php echo $pageId; ?>';
+    pageId = '<?php echo $pageTypeId; ?>';
 
 // ]]>
 </script>

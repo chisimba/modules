@@ -39,7 +39,7 @@ class news extends controller
     */
     function requiresLogin($action='home')
     {
-        $allowedActions = array(NULL, 'home', 'storyview', 'showmap', 'viewtimeline', 'generatetimeline', 'themecloud', 'photoalbums', 'generatekml', 'viewcategory', 'viewstory', 'viewbykeyword', 'generatekeywordtimeline', 'viewalbum', 'savevote', 'previouspolls', 'pollimage', 'search', 'topstoriesfeed');
+        $allowedActions = array(NULL, 'home', 'storyview', 'showmap', 'viewtimeline', 'generatetimeline', 'themecloud', 'generatekml', 'viewcategory', 'viewstory', 'viewbykeyword', 'generatekeywordtimeline', 'search', 'topstoriesfeed');
 
         if (in_array($action, $allowedActions)) {
             return FALSE;
@@ -83,7 +83,7 @@ class news extends controller
     */
     private function putLayoutTemplate($action)
     {
-        $twoCols = array('admin', 'addcategory', 'managecategories', 'managelocations', 'addlocation', 'savelocation', 'viewlocation', 'addstory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation', 'viewlocation', 'viewlocation', 'viewstories', 'showmap', 'editalbumphotos', 'addalbum', 'savealbum', 'photocaptions', 'editalbum', 'viewalbum', 'previouspolls', 'addpoll', 'editmenuitem', 'liststories', 'photoalbums', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
+        $twoCols = array('admin', 'addcategory', 'managecategories', 'viewlocation', 'addstory', 'editstory', 'themecloud', 'tagcloud', 'viewtimeline', 'viewbykeyword', 'viewcategory', 'viewlocation',  'viewstories', 'showmap', 'editmenuitem', 'liststories', 'addmenuitem', 'search', 'deletestory', 'deletecategory');
 
         if (in_array($action, $twoCols)) {
             $this->setLayoutTemplate('2collayout.php');
@@ -158,7 +158,7 @@ class news extends controller
         $this->objNewsBlocks->getBlocksAndSendToTemplate('frontpage', 'frontpage');
         
         $this->setVar('pageType', 'frontpage');
-        $this->setVar('pageId', 'frontpage');
+        $this->setVar('pageTypeId', 'frontpage');
         
         return 'home.php';
     }
@@ -514,7 +514,7 @@ class news extends controller
                     //Load Blocks for Page
                     $this->objNewsBlocks->getBlocksAndSendToTemplate('story', $id);
                     $this->setVar('pageType', 'story');
-                    $this->setVar('pageId', $id);
+                    $this->setVar('pageTypeId', $id);
                     
                     $rightContent = '';
                     $rightContent .= $this->objNewsStories->getRelatedStoriesFormatted($story['id'], $story['storydate'], $story['datecreated']);
@@ -722,7 +722,7 @@ class news extends controller
             //Load Blocks for Page
             $this->objNewsBlocks->getBlocksAndSendToTemplate('category', $id);
             $this->setVar('pageType', 'category');
-            $this->setVar('pageId', $id);
+            $this->setVar('pageTypeId', $id);
             
             $menuId = $this->objNewsMenu->getIdCategoryItem($id);
             $this->setVarByRef('menuId', $menuId);
