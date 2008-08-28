@@ -9,7 +9,7 @@ if (!
  * @global unknown $GLOBALS['kewl_entry_point_run']
  * @name   $kewl_entry_point_run
  */
-$GLOBALS['kewl_entry_point_run']){
+    $GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
 
@@ -95,14 +95,14 @@ class dbwebpresentviewcounter extends dbtable
         switch ($period)
         {
             case 'alltime':
-                $files = $this->getMostViewedAllTime();
-                break;
+            $files = $this->getMostViewedAllTime();
+            break;
             case 'week':
-                $files = $this->getMostViewedThisWeek();
-                break;
+            $files = $this->getMostViewedThisWeek();
+            break;
             default:
-                $files = $this->getMostViewedToday();
-                break;
+            $files = $this->getMostViewedToday();
+            break;
         }
         return $this->prepContent($files, $period);
     }
@@ -214,14 +214,14 @@ class dbwebpresentviewcounter extends dbtable
             switch ($period)
             {
                 case 'alltime':
-                    $str = 'No presentations have been viewed on this site';
-                    break;
+                $str = 'No presentations have been viewed on this site';
+                break;
                 case 'week':
-                    $str = 'No presentations have been viewed this week';
-                    break;
+                $str = 'No presentations have been viewed this week';
+                break;
                 default:
-                    $str = 'No presentations have been viewed today';
-                    break;
+                $str = 'No presentations have been viewed today';
+                break;
             }
 
             $content = '<div class="noRecordsMessage">'.$str.'</div>';
@@ -233,15 +233,22 @@ class dbwebpresentviewcounter extends dbtable
             $counter = 0;
 
             $this->loadClass('link', 'htmlelements');
-
+            $filetitle='Presentation';
             foreach ($data as $file)
             {
+
+                if ($file['title'] == '') {
+                    $filetitle= $file['filename'];
+                } else {
+                    $filetitle = $file['title'];
+                }
+
                 $counter++;
                 $table->startRow();
                 $table->addCell($counter.'.', 20, 'top', 'center');
 
                 $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
-                $fileLink->link = $file['title'];
+                $fileLink->link = $filetitle;
 
                 $table->addCell($fileLink->show());
                 $table->addCell($file['viewcount'], 20, 'top', 'center');
