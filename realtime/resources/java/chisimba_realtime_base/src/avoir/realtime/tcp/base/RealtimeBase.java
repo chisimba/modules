@@ -266,7 +266,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             leftCenterPanel.remove(whiteboardSurface.getPointerToolbar());
             centerPanel.remove(whiteboardSurface.getMainToolbar());
             centerPanel.remove(whiteboardSurface.getColorPanel());
-            surface.setPointer(Constants.HAND_LEFT);
+            surface.setPointer(Constants.NO_POINTER);
             if (glassPaneHandler != null) {
                 glassPaneHandler.resize(glassPaneHandler.getWidth() - 5, glassPaneHandler.getHeight() - 5);
             }
