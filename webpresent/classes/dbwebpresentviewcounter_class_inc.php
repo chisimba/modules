@@ -234,11 +234,12 @@ class dbwebpresentviewcounter extends dbtable
 
             $this->loadClass('link', 'htmlelements');
             $filetitle='Presentation';
+
             foreach ($data as $file)
             {
 
                 if ($file['title'] == '') {
-                    $filetitle= $file['filename'];
+                    $filetitle.='-'.$counter;
                 } else {
                     $filetitle = $file['title'];
                 }
