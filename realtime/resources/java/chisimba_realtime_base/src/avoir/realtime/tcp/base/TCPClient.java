@@ -82,8 +82,9 @@ public class TCPClient {
     private RealtimeBase base;
     private AudioWizardFrame audioHandler;
     private boolean ALIVE = true;
-    private long HEARTBEAT = 1000;
-    private boolean SEND_HEARTBEAT = true;
+    private long HEARTBEAT_DELAY = 10;
+    private final int INITIAL_HEARBEAT_DELAY = 30;
+    private boolean NETWORK_ALIVE = true;
     /**
      * Reader for the ObjectInputStream
      */
@@ -111,6 +112,7 @@ public class TCPClient {
     private JFileChooser fc = new JFileChooser();
     private WhiteboardSurface whiteboardSurface;
     int count = 0;
+    private Timer monitorTimer = new Timer();
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -202,7 +204,7 @@ public class TCPClient {
             //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
             }
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Disconnected from server");
+            //JOptionPane.showMessageDialog(null, "Disconnected from server");
             ex.printStackTrace();
         }
     }
@@ -386,14 +388,11 @@ public class TCPClient {
 
                 @Override
                 public void run() {
-                    startHeartBeat();
-                    logger.info("Started hearbeat ..");
-                    //monitor it after every 1 min
-                    Timer timer = new Timer();
+                    if (base != null) {
+                        startHearBeat();
 
-                    timer.scheduleAtFixedRate(new HeartBeatMonitor(), 0, 5 * 1000);
+                    }
                     listen();
-
                 }
             };
             t.start();
@@ -404,6 +403,28 @@ public class TCPClient {
             ex.printStackTrace();
         }
         return result;
+    }
+
+    private void startHearBeat() {
+        Thread t = new Thread() {
+
+            public void run() {
+                Timer timer = new Timer();
+
+                timer.scheduleAtFixedRate(new HeartBeatGenerator(), 0, HEARTBEAT_DELAY * 1000);
+
+                logger.info("Started hearbeat ..");
+
+            }
+        };
+        t.start();
+    }
+
+    private void delay(long duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (Exception ex) {
+        }
     }
 
     /**
@@ -529,14 +550,6 @@ public class TCPClient {
 
             base.getWhiteboardSurface().clearItems();
         }
-    }
-
-    private void processHeartBeat(HeartBeat p) {
-        SEND_HEARTBEAT = true;
-        base.showMessage("", false, false);
-        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-                PresenceConstants.ONLINE, true);
     }
 
     private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
@@ -1076,49 +1089,15 @@ public class TCPClient {
     }
 
     /**
-     * User has raised/or put down the hand. Send to server for processing
-     * @param userName
-     * @param sessionId
-     * @param raised
-     * @param allowControl
+     * Send a heart beat pulse
      */
-    /* public void sendAttentionPacket(String userName, String sessionId,
-    boolean raised, boolean allowControl, boolean yes, boolean no,
-    boolean isYesNoSession, boolean isPrivate, boolean speakerEnabled, boolean micEnabled) {
-    sendPacket(new AttentionPacket(userName, sessionId, raised,
-    allowControl, yes, no, isYesNoSession, isPrivate, speakerEnabled, micEnabled));
-    }*/
-    private void startHeartBeat() {
-        Thread t = new Thread() {
-
-            @Override
-            public void run() {
-                if (base != null) {
-                    while (ALIVE) {
-                        if (SEND_HEARTBEAT) {
-                            heartBeat();
-                        }
-                        try {
-                            sleep(HEARTBEAT);
-                        } catch (Exception ex) {
-                        }
-                    }
-                }
-            }
-        };
-        t.start();
-
-    }
-
-    /**
-     * send heartbeat every 30 secs to see if connection is alive
-     */
-    private void heartBeat() {
+    private void sendPulse() {
         try {
             if (writer != null) {
                 writer.writeObject(new HeartBeat(base.getSessionId()));
                 writer.flush();
-                SEND_HEARTBEAT = false;
+                NETWORK_ALIVE = false;
+                monitorPulse();
             } else {
                 logger.info("Error: writer is null!!!");
             //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
@@ -1130,15 +1109,62 @@ public class TCPClient {
         }
     }
 
+    private void monitorPulse() {
+        //delay for 3 secs , then monitor it after every 1 secs
+
+        monitorTimer = new Timer();
+        monitorTimer.scheduleAtFixedRate(new HeartBeatMonitor(), 3000, 1000);
+
+    }
+
+    private void processHeartBeat(HeartBeat p) {
+
+        cancelMonitor();
+        NETWORK_ALIVE = true;
+        base.showMessage("", false, false);
+        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
+        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+                PresenceConstants.ONLINE, true);
+    }
+
+    private void cancelMonitor() {
+        monitorTimer.cancel();
+    }
+
+    public boolean isNetworkAlive() {
+        return NETWORK_ALIVE;
+    }
+
+    public void setUserOffline() {
+        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
+        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+                PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
+        base.showMessage("Network Error!!! ", false, true);
+
+    }
+
     class HeartBeatMonitor extends TimerTask {
 
-        public void run() {
-            if (SEND_HEARTBEAT == false) {
-                int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-                base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-                        PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
-                base.showMessage("Network Error!!! ", false, true);
+        int monitorCount = 0;
 
+        public void run() {
+            monitorCount++;
+            //System.out.println("count: " + monitorCount);
+            if (monitorCount > 30) {
+                setUserOffline();
+                cancelMonitor();
+
+            }
+        }
+    }
+
+    class HeartBeatGenerator extends TimerTask {
+
+        public void run() {
+            if (ALIVE) {
+                if (NETWORK_ALIVE) {
+                    sendPulse();
+                }
             }
         }
     }
