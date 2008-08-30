@@ -13,8 +13,8 @@ import java.util.Date;
  * @author developer
  */
 public class Constants {
-   private static DateFormat dateFormat = new SimpleDateFormat("yyy-MM-ddd-H-mm-ss");
- 
+
+    private static DateFormat dateFormat = new SimpleDateFormat("yyy-MM-ddd-H-mm-ss");
     public static final String WIN_REALTIME_HOME = "c:\\avoir-realtime-0.1\\";
     public static final String REALTIME_HOME = System.getProperty("user.home") + "/avoir-realtime-0.1";
 
@@ -37,8 +37,11 @@ public class Constants {
     public static final int ARROW_SIDE = 14;
     public static final int WHITEBOARD = 15;
     public static final int NO_POINTER = 16;
+
     public static String getDateTime() {
         Date date = new Date();
         return "[" + dateFormat.format(date) + "]";
     }
+    public static int APPLET = 0;
+    public static int WEBSTART = 1;
 }
