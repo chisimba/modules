@@ -33,7 +33,7 @@ public class SSLHttpTunnellingClient {
     RealtimeLauncher launcher;
 
     /** Creates a new instance of SSLHttpTunnellingClient */
-    public SSLHttpTunnellingClient(String proxyhost, String proxyport, RealtimeLauncher launcher) {
+    public SSLHttpTunnellingClient(String proxyhost, String proxyport, RealtimeLauncher launcher,String superNodeHost,int superNodePort) {
         tunnelHost = proxyhost;
         tunnelPort = Integer.parseInt(proxyport);
         this.launcher = launcher;
@@ -47,7 +47,7 @@ public class SSLHttpTunnellingClient {
 
         try {
 
-            Socket ss = createSocket("196.21.45.85", 80);
+            Socket ss = createSocket(superNodeHost,superNodePort);
 
             ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(ss.getOutputStream()));
             ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(ss.getInputStream()));
@@ -56,7 +56,7 @@ public class SSLHttpTunnellingClient {
             launcher.getTcpConnector().startListen();
           
             launcher.getTcpConnector().publish(launcher.getLauncher());
-            launcher.checkPlugins();
+            launcher.checkPluginsAndResources();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error: " + e);
