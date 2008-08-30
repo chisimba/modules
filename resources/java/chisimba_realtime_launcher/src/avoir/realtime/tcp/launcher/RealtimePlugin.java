@@ -43,4 +43,8 @@ public interface RealtimePlugin {
     public void removeUser(String userId, String sessionId);
 
     public JMenuBar getMenuBar();
+
+    public void setMode(int mode);
+
+    public JPanel createClassroomBase(int mode);
 }
