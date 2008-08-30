@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This is used as a bridge to use the plugin interface to load external jar files
+ * 
  */
 package avoir.realtime.tcp.pluginmanager;
 
@@ -39,11 +39,14 @@ public class PluginManager implements RealtimePlugin {
     }
 
     public void setSupernodeHost(String host) {
-       base.setSupernodeHost(host);
+        base.setSupernodeHost(host);
     }
 
     public void setSupernodePort(int port) {
         base.setSupernodePort(port);
+    }
+
+    public void setMode(int mode) {
     }
 
     public void setSessionTitle(String title) {
@@ -60,6 +63,11 @@ public class PluginManager implements RealtimePlugin {
 
     public JPanel createBase(String arg0, String arg1, String arg2, String arg3, int arg4, boolean arg5, String arg6, String arg7, boolean arg8, String arg9, String arg10, String arg11, boolean arg12) {
         return new JPanel();
+    }
+
+    public JPanel createClassroomBase(int mode) {
+        base.setMODE(mode);
+        return base.initAsClassroom();
     }
 
     public void removeUser(String arg0, String arg1) {
