@@ -28,6 +28,8 @@ if (count($podcasts) == 0) {
         echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_podcast_nopodcastsavailable', 'podcast').'</div>'; 
     }
 } else {
+    $objFile = $this->getObject('dbfile', 'filemanager');
+    
     foreach ($podcasts as $pod => $value)
     {
 		foreach ($value as $podcast)
@@ -80,7 +82,12 @@ if (count($podcasts) == 0) {
        	//leave the rest at default values
        	$this->objPop->putJs(); // you only need to do this once per page
         
-       	$content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
+        $objSoundPlayer = $this->newObject('buildsoundplayer', 'files');
+        $soundFile = str_replace('&', '&amp;', $objFile->getFilePath($podcast['fileid']));
+        $soundFile = str_replace(' ', '%20', $soundFile);
+        $objSoundPlayer->setSoundFile($soundFile);
+        
+       	$content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
          
 		if(!empty($courses)){
 			$content .= "<strong>".$this->objLanguage->languageText('mod_podcast_listcourse','podcast')."</strong>";

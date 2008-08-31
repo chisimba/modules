@@ -135,8 +135,8 @@ class dbpodcast extends dbTable
     public function getLast5()
     {
         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
-        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
         
         return $this->getArray($sql);
@@ -150,8 +150,8 @@ class dbpodcast extends dbTable
     public function getLastPodcast()
     {
         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license FROM tbl_podcast 
-        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         ORDER BY tbl_podcast.datecreated DESC LIMIT 1';
         
         $results = $this->getArray($sql);
@@ -173,8 +173,8 @@ class dbpodcast extends dbTable
     {
         //return $this->getAll('ORDER BY datecreated LIMIT 10');
         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
-        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.creatorid = \''.$userId.'\'
         ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
         
@@ -191,8 +191,8 @@ class dbpodcast extends dbTable
     {
         //return $this->getAll('ORDER BY datecreated LIMIT 10');
         $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
-        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.creatorid = \''.$userId.'\'
         ORDER BY tbl_podcast.datecreated DESC';
         
@@ -253,8 +253,8 @@ class dbpodcast extends dbTable
     {
          $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path, tbl_files_metadata_media.title as metatitle
         FROM tbl_podcast 
-        LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-        LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+        INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+        INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
         WHERE tbl_podcast.id = \''.$id.'\' LIMIT 1';
         
         $results = $this->getArray($sql);
@@ -427,8 +427,8 @@ class dbpodcast extends dbTable
         {
 
             $sql = 'SELECT tbl_podcast.*, artist, filename, playtime, filesize, license, path FROM tbl_podcast 
-            LEFT JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
-            LEFT JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
+            INNER JOIN tbl_files ON (tbl_podcast.fileid = tbl_files.id)
+            INNER JOIN tbl_files_metadata_media ON (tbl_podcast.fileid = tbl_files_metadata_media.fileid)
             WHERE tbl_podcast.id = \''.$id['podcastid'].'\'
             ORDER BY tbl_podcast.datecreated DESC LIMIT 5';
             $podcasts[] = $this->getArray($sql);

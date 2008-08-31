@@ -58,15 +58,13 @@ $content .= $table->show();
 $downloadLink = new link ($this->objConfig->getcontentPath().$podcast['path']);
 $downloadLink->link = htmlentities($podcast['filename']);
 
-$this->objPop=&new windowpop;
-$this->objPop->set('location',$this->uri(array('action'=>'playpodcast', 'id'=>$podcast['id']), 'podcast'));
-$this->objPop->set('linktext', $this->objLanguage->languageText('mod_podcast_listenonline', 'podcast'));
-$this->objPop->set('width','280');
-$this->objPop->set('height','120');
-//leave the rest at default values
-$this->objPop->putJs(); // you only need to do this once per page
+$objFile = $this->getObject('dbfile', 'filemanager');
+$objSoundPlayer = $this->newObject('buildsoundplayer', 'files');
+$soundFile = str_replace('&', '&amp;', $objFile->getFilePath($podcast['fileid']));
+$soundFile = str_replace(' ', '%20', $soundFile);
+$objSoundPlayer->setSoundFile($soundFile);
 
-$content .= '<br /><p>'.$this->objPop->show().' / <strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
+$content .= '<br /><p>'.$objSoundPlayer->show().'</p><p><strong>'.$this->objLanguage->languageText('mod_podcast_downloadpodcast', 'podcast').':</strong> '.$downloadLink->show().'</p>';
 
 
 if(!empty($courses)){
