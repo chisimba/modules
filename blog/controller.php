@@ -994,6 +994,10 @@ class blog extends controller
                 $stickypost = $this->objDbBlog->getStickyPosts($userid);
                 $this->setVarByRef('stickypost', $stickypost);
                 //send all that to the template
+                if(!isset($catid))
+                {
+                	$catid = NULL;
+                }
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
                 $this->setVarByRef('linkcats', $linkcats);
