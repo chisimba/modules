@@ -14,6 +14,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 
 import avoir.realtime.tcp.base.user.User;
 
+import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
@@ -530,7 +531,12 @@ public class TCPClient {
     }
 
     private void processPointerPacket(PointerPacket p) {
-        base.getSurface().setCurrentPointer(p.getType(), p.getPoint());
+        if (base.getMODE() == Constants.APPLET) {
+            base.getSurface().setCurrentPointer(p.getType(), p.getPoint());
+        } else {
+            base.getWhiteboardSurface().setCurrentPointer(p.getType(), p.getPoint());
+        }
+
     }
 
     private void processWhiteboardPacket(WhiteboardPacket p) {
