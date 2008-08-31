@@ -53,6 +53,8 @@ class rempopops extends object
 	{
 		$objFlashGraph = $this->getObject('flashgraph', 'utilities');
  		$objFlashGraph->dataSource = $this->uri(array('action'=>'getdata'));
+ 		$objFlashGraph->width = '100%';
+ 		//$objFlashGraph->height = '100%';
  		$graph = $objFlashGraph->show();
  		
  		return $graph; 
