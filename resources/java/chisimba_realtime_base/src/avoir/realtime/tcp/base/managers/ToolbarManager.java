@@ -6,13 +6,13 @@ package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.base.user.User;
-import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
