@@ -1,6 +1,8 @@
 /*
  * RealtimeLauncher.java
- *
+ * This is a light weight class that launches the main application bundled in a
+ * different jar. This is accomplished using some fairly advanced reflection API
+ * It can be invoked both as an application  or as an applet. 
  * Created on 18 May 2008, 05:41
  */
 package avoir.realtime.tcp.launcher;
@@ -9,6 +11,8 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.launcher.Launcher;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +29,7 @@ import java.security.Permissions;
 import java.security.Policy;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,19 +37,20 @@ import javax.swing.JProgressBar;
 
 /**
  *
- * @author  developer
+ * @author  David Wafula
  */
 public class RealtimeLauncher extends javax.swing.JApplet {
 
     private Version v = new Version();
     private String REALTIME_HOME = avoir.realtime.tcp.launcher.Constants.getRealtimeHome();
     private String internalVer = REALTIME_HOME + "/lib/" + v.version;
+    private int MODE = Constants.APPLET;
     int plVer = 0;
     private String[][] plugins = {
         {"jspeex.jar", "Audio Codec"},
-        {"realtime-base-0.1.jar", "Realtime Base",},
-        {"realtime-whiteboard-0.1.jar", "Whiteboard",},
-        {"realtime-pluginmanager-0.1.jar", "Plugin Manager"},
+        {"realtime-base-1.0.1.jar", "Realtime Base",},
+        {"realtime-whiteboard-1.0.1.jar", "Whiteboard",},
+        {"realtime-pluginmanager-1.0.1.jar", "Plugin Manager"},
     };
     private String[] sounds = {
         "test.wav",
@@ -59,7 +65,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private String sessionTitle = "xx";
     private String slidesDir = "";
     private String slideServerId = "";
-    private String resourcesPath = "";
+    private String resourcesPath = "../";
     private String appletCodeBase = "";
     private String siteRoot = "";
     private String host;
@@ -73,6 +79,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private String supernodeHost = "196.21.45.85";
     private int supernodePort = 80;
     private Timer monitor;
+    private JFrame mainFrame = new JFrame("Chisimba Realtime Virtual Classroom");
 
     /** Initializes the applet RealtimeLauncher */
     @Override
@@ -81,6 +88,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
 
                 public void run() {
+                    MODE = Constants.APPLET;
                     initSecurity();
                     initComponents();
                     initCustomComponents();
@@ -94,6 +102,10 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    /**
+     * How many plugins do we need?
+     * @return
+     */
     public int getPluginsNumber() {
         return plugins.length;
     }
@@ -120,15 +132,25 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         });
     }
 
+    /**
+     * initialize network launcher
+     */
     private void initCustomComponents() {
 
         classLoader = new NetworkClassLoader(this.getClass().getClassLoader());
     }
 
+    /**
+     * update plugin download status
+     * @param state
+     */
     public void setPluginDownloaded(boolean state) {
         pluginDownloaded = state;
     }
 
+    /**
+     * initialize the system load
+     */
     private void initSystemLoad() {
         Thread t = new Thread() {
 
@@ -140,7 +162,12 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         t.start();
     }
 
+    /**
+     * Check if an upgrade available, or some files are missing. If so force
+     * upgrade of everything
+     */
     private void forceUpgrade() {
+
         if (!new File(internalVer).exists()) {
             System.out.println(internalVer + " does not exist..requesting package downloads");
             clearLocalLib();
@@ -157,28 +184,33 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             new File(internalVer).createNewFile();
         } catch (Exception ignore) {
         }
-        supernodeHost = getParameter("supernodeHost");
-        try {
-            supernodePort = Integer.parseInt(getParameter("supernodePort").trim());
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Invalid supernode port: " + getParameter("supernodePort") + ". Using default 80",
-                    "Invalid super node Port", JOptionPane.ERROR_MESSAGE);
+        if (MODE == Constants.APPLET) {
+            supernodeHost = getParameter("supernodeHost");
+
+            try {
+                supernodePort = Integer.parseInt(getParameter("supernodePort").trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid supernode port: " + getParameter("supernodePort") + ". Using default 80",
+                        "Invalid super node Port", JOptionPane.ERROR_MESSAGE);
+            }
         }
         tcpConnector = new TCPConnector(this);
         tcpConnector.setSuperNodeHost(supernodeHost);
         tcpConnector.setSuperNodePort(supernodePort);
-        initUser();
+        if (MODE == Constants.APPLET) {
+            initUser();
+        } else {
+            launcher = new Launcher(userName, host, sessionId, sessionTitle, slidesDir, localhost, slideServerId);
+
+        }
         //for non proxy connections...just connect direct
         if (RealtimeOptions.useDirectConnection()) {
-
-
             pb.setIndeterminate(true);
-
             if (tcpConnector.connect()) {
 
                 setText("Connected...initializing system load...", false);
                 tcpConnector.publish(launcher);
-                checkPlugins();
+                checkPluginsAndResources();
 
             } else {
                 setText("Error connecting to server.", true);
@@ -187,7 +219,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         //here we use manual proxy..and do the tunnelling through the proxy
         if (RealtimeOptions.useManualProxy()) {
             sslClient = new SSLHttpTunnellingClient(RealtimeOptions.getProxyHost(),
-                    RealtimeOptions.getProxyPort(), this);
+                    RealtimeOptions.getProxyPort(), this, supernodeHost, supernodePort);
+
         }
 
     }
@@ -264,11 +297,19 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    /**
+     * Are we local host? For debugging purposes
+     * @return
+     */
     public boolean isLocalhost() {
         return localhost;
     }
 
-    public void checkPlugins() {
+    /**
+     * Check to see if we have all the plugins needed and thier associated
+     * resources. And if the versions are up to date
+     */
+    public void checkPluginsAndResources() {
         boolean pluginsOK = true;
         for (int i = 0; i < sounds.length; i++) {
             File f = new File(REALTIME_HOME + "/sounds/" + sounds[i]);
@@ -295,21 +336,39 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     }
 
+    /**
+     * Get the progress bar instance
+     * @return
+     */
     public JProgressBar getPb() {
         return pb;
     }
 
+    /**
+     * We dont have sound files..so request 
+     */
     private void requestForSounds() {
         for (int i = 0; i < sounds.length; i++) {
-            requestForResource("sounds/" + sounds[i], "sounds");
+            String path = "../sounds/" + sounds[i];
+            if (MODE == Constants.APPLET) {
+                path = "/sounds/" + sounds[i];
+            }
+            requestForResource(path, "sounds");
         }
     }
 
+    /**
+     * Request for the plugins. These are basically jar files
+     */
     private void requestForPlugins() {
         for (int i = 0; i < plugins.length; i++) {
             setText("Requesting for " + plugins[i][1] + " ...", false);
-          
-            requestForResource(plugins[i][0], plugins[i][1]);
+            String path = "../lib/" + plugins[i][0];
+            if (MODE == Constants.APPLET) {
+
+                path = plugins[i][0];
+            }
+            requestForResource(path, plugins[i][1]);
             //got to monitor this one for 1 full minute.
             if (i == plugins.length - 1) {
                 try {
@@ -321,6 +380,12 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    /**
+     * Display text. If is error, paint it in RED and show the reconnect
+     * panel, else black
+     * @param txt
+     * @param error
+     */
     public void setText(String txt, boolean error) {
         if (error) {
             infoField.setForeground(Color.RED);
@@ -331,9 +396,17 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         infoField.setText(txt);
     }
 
+    /**
+     * Here we actually send a real request to the server
+     * @param filename
+     * @param desc
+     */
     private void requestForResource(String filename, String desc) {
 
-        String filepath = resourcesPath + "/" + filename;
+        String filepath = filename;
+        if (MODE == Constants.APPLET) {
+            filepath = resourcesPath + "/" + filename;
+        }
         ModuleFileRequestPacket p =
                 new ModuleFileRequestPacket(null, filename, filepath,
                 slideServerId, userName);
@@ -344,6 +417,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     }
 
+    /**
+     * Monitor the status of a resource request
+     */
     class BinFileRequestMonitor extends TimerTask {
 
         public void run() {
@@ -354,8 +430,52 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    /**
+     * Launch this as an application. Not as an applet. Now, when launched as
+     * an application, the whiteboard is set as the default surface. But if
+     * launched as applet (webPresent mode), then the slide surface is the default
+     * surface.
+     * @param host
+     * @param port
+     */
+    private void launchAsApplication(String host, int port) {
+        MODE = Constants.WEBSTART;
+        supernodeHost = host;
+        supernodePort = port;
+        initSecurity();
+        initComponents();
+        initCustomComponents();
+
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //JWindow mainFrame = new JWindow();
+        mainFrame.setContentPane(mainPanel);
+        mainFrame.setSize(400, 300);
+        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setVisible(true);
+
+        pb.setIndeterminate(true);
+        initSystemLoad();
+
+    }
+
+    /**
+     * If run as application
+     * @param args
+     */
     public static void main(String[] args) {
-        new RealtimeLauncher().init();
+        int port = 80;
+        String host = "196.21.45.85";
+        try {
+            host = args[0];
+            port = Integer.parseInt(args[1]);
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid Supernode Port");
+            port = 80;
+            host = "196.21.45.85";
+        }
+
+        new RealtimeLauncher().launchAsApplication(host, port);
     }
 
     @Override
@@ -374,6 +494,11 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         addURL(f.toURI().toURL());
     }// end method
 
+    /**
+     * Add a URL to the network classloader path
+     * @param u
+     * @throws java.io.IOException
+     */
     public static void addURL(URL u) throws IOException {
         URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
 
@@ -391,12 +516,16 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
     }// end method
 
+    /**
+     * Means we have all required plugins..so load all of them
+     */
     public void loadAllPlugins() {
+
         try {
             String[] xplugins = {
-                "realtime-whiteboard-0.1.jar",
-                "realtime-base-0.1.jar",
-                "realtime-pluginmanager-0.1.jar",
+                "realtime-whiteboard-1.0.1.jar",
+                "realtime-base-1.0.1.jar",
+                "realtime-pluginmanager-1.0.1.jar",
                 "jspeex.jar",
             };
             for (int n = 0; n < xplugins.length; n++) {
@@ -408,25 +537,37 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             setText("", false);
             pl.setSessionTitle(sessionTitle);
             pl.setApplectCodeBase(appletCodeBase);
-            //  pl.setSupernodeHost(supernodeHost);
-            // pl.setSupernodePort(supernodePort);
             pl.setGlassPaneHandler(this);
-            JPanel basePanel = pl.createBase(
-                    userLevel,
-                    fullName,
-                    userName,
-                    supernodeHost, supernodePort,
-                    isPresenter,
-                    sessionId,
-                    slidesDir,
-                    localhost,
-                    siteRoot,
-                    slideServerId,
-                    resourcesPath);
-            mainPanel.add(basePanel, BorderLayout.CENTER);
-            this.resize(getWidth() + 5, getHeight() + 5);
-            JMenuBar menuBar = pl.getMenuBar();
-            setJMenuBar(menuBar);
+
+            if (MODE == Constants.APPLET) {
+                JPanel basePanel = pl.createBase(
+                        userLevel,
+                        fullName,
+                        userName,
+                        supernodeHost, supernodePort,
+                        isPresenter,
+                        sessionId,
+                        slidesDir,
+                        localhost,
+                        siteRoot,
+                        slideServerId,
+                        resourcesPath);
+                mainPanel.add(basePanel, BorderLayout.CENTER);
+                JMenuBar menuBar = pl.getMenuBar();
+                setJMenuBar(menuBar);
+                this.resize(getWidth() + 5, getHeight() + 5);
+
+            } else {
+                Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+                JPanel basePanel = pl.createClassroomBase(supernodeHost,supernodePort, MODE);
+                JMenuBar menuBar = pl.getMenuBar();
+                mainPanel.add(basePanel, BorderLayout.CENTER);
+                mainFrame.setJMenuBar(menuBar);
+
+                mainFrame.setSize((ss.width / 8) * 7, (ss.height / 8) * 7);
+                mainFrame.setLocationRelativeTo(null);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "There was an error when loading plugins." +
@@ -435,6 +576,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    /**
+     * Show options frmae
+     */
     private void showOptionsFrame() {
 
         avoir.realtime.tcp.launcher.RealtimeOptionsFrame optionsFrame = new avoir.realtime.tcp.launcher.RealtimeOptionsFrame(RealtimeLauncher.this);
@@ -443,6 +587,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         optionsFrame.setVisible(true);
     }
 
+    /**
+     * Displays a panel that allows user to reconnect
+     */
     private void showOptionsReconnectPanel() {
         retryButton.setEnabled(true);
         optionsButton.setEnabled(true);
@@ -454,10 +601,17 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         introPanel.add(retryPanel, gridBagConstraints);
     }
 
+    /**
+     * Get TCP Connect instance
+     * @return
+     */
     public TCPConnector getTcpConnector() {
         return tcpConnector;
     }
 
+    /**
+     * Ideally delete the files in the local cache
+     */
     private void clearLocalLib() {
         String cache = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/lib/";
         java.io.File f = new java.io.File(cache);
@@ -487,9 +641,6 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         public void run() {
             if (!pluginDownloaded) {
                 setText("Error: Server taking too long to reply.", true);
-                JOptionPane.showMessageDialog(null, "The server is taking too long to respond.\n" +
-                        "To resolve this, please restart the browser.");
-
             }
             pluginMonitor.cancel(); //Terminate the thread
         }
