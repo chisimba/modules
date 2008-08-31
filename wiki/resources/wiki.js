@@ -297,7 +297,7 @@ function manipulateRadios(el_radio)
 
     if(el_radio.name == "from"){
         for(var i = 0; i <= toRadios.length - 1; i++){
-            if(toRadios[i].value > el_radio.value){
+            if(Number(toRadios[i].value) > Number(el_radio.value)){
                 toRadios[i].style.visibility = "";
             }else{
                 toRadios[i].style.visibility = "hidden";
@@ -305,7 +305,7 @@ function manipulateRadios(el_radio)
         }
     }else{
         for(var i = 0; i <= fromRadios.length - 1; i++){
-            if(fromRadios[i].value < el_radio.value){
+            if(Number(fromRadios[i].value) < Number(el_radio.value)){
                 fromRadios[i].style.visibility = "";
             }else{
                 fromRadios[i].style.visibility = "hidden";
