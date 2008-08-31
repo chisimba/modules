@@ -107,22 +107,21 @@ public class ToolbarManager extends JToolBar {
         surveyButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-
-
                 base.showSurveyManagerFrame();
             }
         });
         nextSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int slideIndex = base.getSessionManager().getSlideIndex();
-                if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
-                    base.recordXml(slideIndex);
-                    base.getSessionManager().setSlideIndex(++slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
-                //record audio if any
-                //base.getAudioWizardFrame().getMicInput().setAudioClipFileName("slide"+slideIndex);
-
+                if (base.getTcpClient().isNetworkAlive()) {
+                    int slideIndex = base.getSessionManager().getSlideIndex();
+                    if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
+                        base.recordXml(slideIndex);
+                        base.getSessionManager().setSlideIndex(++slideIndex);
+                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    }
+                } else {
+                    base.getTcpClient().setUserOffline();
                 }
             }
         });
@@ -130,31 +129,43 @@ public class ToolbarManager extends JToolBar {
         backSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int slideIndex = base.getSessionManager().getSlideIndex();
-                base.recordXml(slideIndex);
-                if (slideIndex > 0) {
-                    base.getSessionManager().setSlideIndex(--slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                if (base.getTcpClient().isNetworkAlive()) {
+                    int slideIndex = base.getSessionManager().getSlideIndex();
+                    base.recordXml(slideIndex);
+                    if (slideIndex > 0) {
+                        base.getSessionManager().setSlideIndex(--slideIndex);
+                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
 
+                    }
+                } else {
+                    base.getTcpClient().setUserOffline();
                 }
             }
         });
         firstSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int slideIndex = 0;
-                base.getSessionManager().setSlideIndex(slideIndex);
-                base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
-                base.recordXml(slideIndex);
+                if (base.getTcpClient().isNetworkAlive()) {
+                    int slideIndex = 0;
+                    base.getSessionManager().setSlideIndex(slideIndex);
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    base.recordXml(slideIndex);
+                } else {
+                    base.getTcpClient().setUserOffline();
+                }
             }
         });
         lastSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                int slideIndex = base.getSessionManager().getSlideCount() - 1;
-                base.getSessionManager().setSlideIndex(slideIndex);
-                base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
-                base.recordXml(slideIndex);
+                if (base.getTcpClient().isNetworkAlive()) {
+                    int slideIndex = base.getSessionManager().getSlideCount() - 1;
+                    base.getSessionManager().setSlideIndex(slideIndex);
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    base.recordXml(slideIndex);
+                } else {
+                    base.getTcpClient().setUserOffline();
+                }
             }
         });
 
@@ -527,7 +538,7 @@ public class ToolbarManager extends JToolBar {
             }
         });
 
-        generalToolbar.add(wbButton);
+       // generalToolbar.add(wbButton);
 
         setCustomActions();
     }// </editor-fold>                        
