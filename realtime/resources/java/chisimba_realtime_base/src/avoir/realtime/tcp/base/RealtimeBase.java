@@ -1,5 +1,5 @@
 /**
- * 	$Id: ChatRoom.java,v 1.3 2007/02/02 10:59:15 davidwaf Exp $
+ * 
  *
  *  Copyright (C) GNU/GPL AVOIR 2007
  *
@@ -72,15 +72,15 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String defaultHome = "avoir-realtime-0.1";
     private RealtimeOptions options;
     private TCPClient tcpClient;
-    private String userName;
-    private String fullName;
-    private String sessionId;
+    private String userName="Anonymous";
+    private String fullName="DAO";
+    private String sessionId="whiteboard";
     private String slidesDir;
     private String slideServerId;
     private String resourcesPath;
     private String siteRoot;
     private String host;
-    private boolean isPresenter;
+    private boolean isPresenter=true;
     private String sessionTitle;
     private String appletCodeBase;
     private User user;
@@ -130,6 +130,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel surfacePanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
     private JPanel leftCenterPanel = new JPanel();
+    private int MODE = Constants.APPLET;
 
     /**
      * Create additional components
@@ -235,7 +236,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         surfaceTabbedPane.add("Presentation", surfacePanel);
         //surfaceTabbedPane.add("Whiteboard", whiteboardSurface);
-        centerPanel.add(surfaceTabbedPane, BorderLayout.CENTER);
+        if (MODE == Constants.APPLET) {
+            centerPanel.add(surfaceTabbedPane, BorderLayout.CENTER);
+        } else {
+            centerPanel.add(whiteboardSurface, BorderLayout.CENTER);
+        }
+
+
         centerPanel.add(leftCenterPanel, BorderLayout.WEST);
         mPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(mPanel, BorderLayout.CENTER);
@@ -271,6 +278,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 glassPaneHandler.resize(glassPaneHandler.getWidth() - 5, glassPaneHandler.getHeight() - 5);
             }
         }
+    }
+
+    public int getMODE() {
+        return MODE;
+    }
+
+    public void setMODE(int MODE) {
+        this.MODE = MODE;
     }
 
     /**
@@ -668,7 +683,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         initUser();
         initComponents();
         initCustomComponents();
-
+        showPointerToolBar(true);
         Thread t = new Thread() {
 
             @Override
@@ -679,6 +694,41 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         t.start();
 
         return this;
+    }
+
+    public JPanel initAsClassroom(String host,int port) {
+        this.host=host;
+        this.port=port;
+        initRealtimeHome();
+        initWhiteBoardUser();
+        initComponents();
+        initCustomComponents();
+        showPointerToolBar(true);
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                initTCPCommunication();
+            }
+        };
+        t.start();
+
+        return this;
+    }
+
+    private void initWhiteBoardUser() {
+        
+        int xuserLevel = UserLevel.GUEST;
+        user = new User(xuserLevel, userName, userName, "localhost", 22225, isPresenter,
+                sessionId, sessionTitle, slidesDir, false, siteRoot, slideServerId);
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /**
@@ -702,7 +752,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * to connect to the server
      */
     public void initTCPCommunication() {
-        initUser();
+
         tcpClient = new TCPClient(this);
         tcpClient.setSuperNodeHost(host);
         tcpClient.setSuperNodePort(port);
@@ -1193,7 +1243,7 @@ private void talkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     audioWizardFrame.getMicInput().setAudioClipFileName(filename);
     audioWizardFrame.getMicInput().recordAudioClip();
-
+    
     }*/
     }
 }//GEN-LAST:event_talkButtonActionPerformed
