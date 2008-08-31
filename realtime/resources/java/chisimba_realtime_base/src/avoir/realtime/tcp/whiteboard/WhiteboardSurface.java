@@ -10,6 +10,8 @@ import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.base.TCPClient;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.GenerateUUID;
+
+import avoir.realtime.tcp.common.packet.PointerPacket;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.whiteboard.item.FreeHand;
 import avoir.realtime.tcp.whiteboard.item.Img;
@@ -35,8 +37,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -96,7 +100,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private int startY; //mouse cursor position on draw start
     private int prevX; //last captured mouse co-ordinate pair
     private int prevY; //last captured mouse co-ordinate pair
-    private Color colour = new Color(255, 255, 0, alpha);
+    private Color colour = new Color(255, 255, 0);//, alpha);
     private Item selected;
     private Item selectedItem;
     private int selectedIndex = -1;
@@ -108,10 +112,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private float strokeWidth = 5;
     private RealtimeBase base;
     private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
-    private static final Color[] COLORS = {
-        Color.black, Color.gray, Color.lightGray, Color.white, Color.red, Color.orange, Color.yellow,
-        Color.green, Color.cyan, Color.blue, Color.magenta,
-    };
+    private Color solidBlack = Color.BLACK;
+    private Color alpaBlack = new Color(0, 0, 0, 100);
+    private Color solidGray = Color.GRAY;
+    private Color alphaGray = new Color(255, 255, 255, alpha);
+    private Color solidBlue = Color.BLUE;
+    private Rectangle pointerSurface = new Rectangle();
+    /*Color.gray, Color.lightGray, Color.white, Color.red, Color.orange, Color.yellow,
+    Color.green, Color.cyan, Color.blue, Color.magenta,
+    };*/
     private ImageIcon penIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/pentool.gif");
     private ImageIcon moveIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/movearrow.gif");
     private ImageIcon rectNoFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/rectangle_nofill.gif");
@@ -139,7 +148,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private MButton deleteButton = new MButton(deleteIcon);
     private MButton clearButton = new MButton(clearIcon);
     private MButton undoButton = new MButton(undoIcon);
-    private boolean drawingEnabled = false;
+    private boolean drawingEnabled = true;
     private Vector<Item> items = new Vector<Item>();
     private JTextField textField = new JTextField();
     private JTextField editTextField = new JTextField();
@@ -171,6 +180,16 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private JMenuItem deleteMenuItem = new JMenuItem("Delete");
     private AlphaComposite ac =
             AlphaComposite.getInstance(AlphaComposite.SRC, 0.5f);
+    private Vector<Item> pointerLocations = new Vector<Item>();
+    private int pointer = Constants.WHITEBOARD;
+    private ImageIcon warnIcon = ImageUtil.createImageIcon(this, "/icons/warn.png");
+    private ImageIcon leftHand = ImageUtil.createImageIcon(this, "/icons/hand_left.png");
+    private ImageIcon rightHand = ImageUtil.createImageIcon(this, "/icons/hand_right.png");
+    private ImageIcon arrowUp = ImageUtil.createImageIcon(this, "/icons/arrow_up.png");
+    private ImageIcon arrowSide = ImageUtil.createImageIcon(this, "/icons/arrow_side.png");
+    private ImageIcon blankIcon = ImageUtil.createImageIcon(this, "/icons/transparent.png");
+    private ImageIcon paintBrush = ImageUtil.createImageIcon(this, "/icons/paintbrush.png");
+    private Pointer currentPointer = new Pointer(new Point(0, 0), blankIcon);
 
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(RealtimeBase base) {
@@ -182,12 +201,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         addMouseListener(this);
         addKeyListener(this);
         addMouseMotionListener(this);
-
-
-
-
         setDrawingEnabled(base.getControl() || base.isPresenter());
-
         ButtonGroup bg = new ButtonGroup();
         bg.add(penButton);
         bg.add(moveButton);
@@ -324,6 +338,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         deleteMenuItem.setActionCommand("delete");
         deleteMenuItem.addActionListener(this);
         deletePopup.add(deleteMenuItem);
+        pointerSurface = new Rectangle(0, 0, 800, 600);
     }
 
     public JToolBar getPointerToolbar() {
@@ -524,7 +539,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                     editPopup.setPopupSize(size);
 
                                     if (txt.contains(evt.getX(), evt.getY(), graphics)) {
-                                        editPopup.show(base.getSurface(), evt.getX(), evt.getY() - editTextField.getHeight());
+                                        if (base.getMODE() == Constants.APPLET) {
+                                            editPopup.show(base.getSurface(), evt.getX(), evt.getY() - editTextField.getHeight());
+                                        } else {
+                                            editPopup.show(this, evt.getX(), evt.getY() - editTextField.getHeight());
+                                        }
+
                                     }
 
                                     editTextField.requestFocus();
@@ -669,7 +689,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     //  textField.setForeground(colour);
                     popup.setPopupSize(100, hgt + (int) (hgt * 0.2));
                     //popup.setPreferredSize(new Dimension(100, 50));
-                    popup.show(base.getSurface(), evt.getX(), evt.getY() - textField.getHeight());
+                    if (base.getMODE() == Constants.APPLET) {
+                        popup.show(base.getSurface(), evt.getX(), evt.getY() - textField.getHeight());
+                    } else {
+                        popup.show(this, evt.getX(), evt.getY() - textField.getHeight());
+                    }
+
                     textField.requestFocus();
                 }
 
@@ -706,7 +731,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
                 if (brush == BRUSH_MOVE) {
                     if (selectedItem != null) {
-                        deletePopup.show(base.getSurface(), evt.getX(), evt.getY());
+                        if (base.getMODE() == Constants.APPLET) {
+                            deletePopup.show(base.getSurface(), evt.getX(), evt.getY());
+                        } else {
+                            deletePopup.show(this, evt.getX(), evt.getY());
+                        }
                     }
 
                 }
@@ -716,7 +745,51 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void mousePressed(MouseEvent evt) {
-        processMousePressed(evt);
+        setOwnCursor();
+        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+
+        if (pointerSurface.contains(xpoint)) {
+            int xOffset = evt.getX() - (int) pointerSurface.getX();
+            int yOffset = evt.getY() - (int) pointerSurface.getY();
+            Point point = new Point(xOffset, yOffset);
+            switch (pointer) {
+                case Constants.PAINT_BRUSH: {
+                    prevX = startX = evt.getX();
+                    prevY = startY = evt.getY();
+
+                    break;
+                }
+                case Constants.HAND_LEFT: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
+
+                    break;
+                }
+                case Constants.HAND_RIGHT: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_RIGHT));
+
+                    break;
+                }
+                case Constants.ARROW_UP: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_UP));
+
+                    break;
+                }
+                case Constants.ARROW_SIDE: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_SIDE));
+
+                    break;
+                }
+                case Constants.WHITEBOARD: {
+
+                    processMousePressed(evt);
+                    repaint();
+                    break;
+                }
+
+
+            }
+        }
+        repaint();
     }
 
     public void processMouseReleased(MouseEvent evt) {
@@ -787,17 +860,28 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void mouseReleased(MouseEvent evt) {
-        processMouseReleased(evt);
+
+        if (pointer == Constants.WHITEBOARD) {
+            processMouseReleased(evt);
+            repaint();
+        }
+        setCursor(DRAW_CURSOR);
+    }
+
+    private void fixPenTransparency() {
+        if (brush == BRUSH_PEN) {
+            alpha = 255;
+        } else {
+            alpha = 100;
+        }
     }
 
     public void processMouseDragged(MouseEvent evt) {
         drawStroke = true;
+
         if (dragging == false) {
             return;
         }
-
-
-
         int x = evt.getX();
         int y = evt.getY();
         if (drawingEnabled) {
@@ -879,8 +963,53 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         repaint();
     }
 
+    private void setOwnCursor() {
+        Image img = blankIcon.getImage();
+        Cursor curCircle = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(5, 5), "circle");
+        setCursor(curCircle);
+    }
+
     public void mouseDragged(MouseEvent evt) {
-        processMouseDragged(evt);
+        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+
+        if (pointerSurface.contains(xpoint)) {
+
+            int xOffset = evt.getX() - pointerSurface.x;
+            int yOffset = evt.getY() - pointerSurface.y;
+            Point point = new Point(xOffset, yOffset);
+            switch (pointer) {
+
+                case Constants.HAND_LEFT: {
+
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
+
+                    break;
+                }
+                case Constants.HAND_RIGHT: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_RIGHT));
+
+                    break;
+                }
+                case Constants.ARROW_UP: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_UP));
+
+                    break;
+                }
+                case Constants.ARROW_SIDE: {
+                    base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_SIDE));
+
+                    break;
+                }
+                case Constants.WHITEBOARD: {
+
+                    processMouseDragged(evt);
+
+                    repaint();
+                    break;
+                }
+            }
+
+        }
     }
 
     public void processMouseMoved(MouseEvent evt) {
@@ -937,29 +1066,145 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         repaint();
     }
 
-    public void actionPerformed(ActionEvent evt) {
-        base.getSurface().setPointer(Constants.WHITEBOARD);
-        if (evt.getActionCommand().equals("handLeft")) {
+    class Pointer {
 
-            base.getSurface().setPointer(Constants.HAND_LEFT);
+        Point point;
+        ImageIcon icon;
+
+        public Pointer(Point point, ImageIcon icon) {
+            this.point = point;
+            this.icon = icon;
+        }
+
+        public ImageIcon getIcon() {
+            return icon;
+        }
+
+        public void setIcon(ImageIcon icon) {
+            this.icon = icon;
+        }
+
+        public Point getPoint() {
+            return point;
+        }
+
+        public void setPoint(Point point) {
+            this.point = point;
+        }
+    }
+
+    public void setCurrentPointer(int type, Point point) {
+        switch (type) {
+            case Constants.HAND_LEFT: {
+                currentPointer = new Pointer(point, leftHand);
+                break;
+            }
+            case Constants.HAND_RIGHT: {
+                currentPointer = new Pointer(point, rightHand);
+                break;
+            }
+            case Constants.ARROW_UP: {
+                currentPointer = new Pointer(point, arrowUp);
+                break;
+            }
+            case Constants.ARROW_SIDE: {
+                currentPointer = new Pointer(point, arrowSide);
+                break;
+            }
+            case Constants.PAINT_BRUSH: {
+                currentPointer = new Pointer(point, paintBrush);
+                break;
+            }
+        }
+        repaint();
+    }
+
+    public void setPointer(int type) {
+        pointer = type;
+        pointerLocations.clear();
+        setCurrentPointer(pointer);
+    }
+
+    private void setCurrentPointer(int type) {
+
+        switch (type) {
+            case Constants.HAND_LEFT: {
+                currentPointer.setIcon(leftHand);
+                break;
+            }
+            case Constants.HAND_RIGHT: {
+
+                currentPointer.setIcon(rightHand);
+                break;
+            }
+            case Constants.ARROW_UP: {
+                currentPointer.setIcon(arrowUp);
+                break;
+            }
+            case Constants.ARROW_SIDE: {
+                currentPointer.setIcon(arrowSide);
+                break;
+            }
+            case Constants.PAINT_BRUSH: {
+                currentPointer.setIcon(paintBrush);
+                break;
+            }
+            default:
+                currentPointer.setIcon(blankIcon);
+        }
+        repaint();
+    }
+
+    public void actionPerformed(ActionEvent evt) {
+        if (base.getMODE() == Constants.APPLET) {
+            base.getSurface().setPointer(Constants.WHITEBOARD);
+        } else {
+
+            setPointer(Constants.WHITEBOARD);
+        }
+
+        if (evt.getActionCommand().equals("handLeft")) {
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.HAND_LEFT);
+            } else {
+
+                setPointer(Constants.HAND_LEFT);
+            }
         }
         if (evt.getActionCommand().equals("handRight")) {
-
-            base.getSurface().setPointer(Constants.HAND_RIGHT);
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.HAND_RIGHT);
+            } else {
+                setPointer(Constants.HAND_RIGHT);
+            }
         }
         if (evt.getActionCommand().equals("arrowUp")) {
-
-            base.getSurface().setPointer(Constants.ARROW_UP);
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.ARROW_UP);
+            } else {
+                setPointer(Constants.ARROW_UP);
+            }
         }
         if (evt.getActionCommand().equals("arrowSide")) {
-
-            base.getSurface().setPointer(Constants.ARROW_SIDE);
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.ARROW_SIDE);
+            } else {
+                setPointer(Constants.ARROW_SIDE);
+            }
         }
         if (evt.getActionCommand().equals("paintBrush")) {
-            base.getSurface().setPointer(Constants.PAINT_BRUSH);
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.PAINT_BRUSH);
+            } else {
+                setPointer(Constants.PAINT_BRUSH);
+            }
         }
         if (evt.getActionCommand().equals("whiteBoard")) {
-            base.getSurface().setPointer(Constants.WHITEBOARD);
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setPointer(Constants.WHITEBOARD);
+            } else {
+                setPointer(Constants.WHITEBOARD);
+            }
         }
         if (evt.getActionCommand().equals("delete")) {
             deleteSelectedItem();
@@ -1321,6 +1566,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
     }
 //paints the current itme
+
     private void paintCurrentItem(Graphics2D g2) {
         Item temp = selectedItem;
         if (temp instanceof Rect) {
@@ -1460,6 +1706,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             if (temp instanceof Pen) {
                 Pen p = (Pen) temp;
                 g2.setStroke(new BasicStroke(p.getStroke()));
+
                 g2.setColor(p.getCol());
                 Vector<WBLine> v = p.getPoints();
                 for (int k = 0; k <
@@ -1727,64 +1974,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
 
         public void paint(Graphics g) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            int width = getSize().width,  height = getSize().height;
+            int width = getSize().width, height = getSize().height;
 
             // Use gray for the button sides.
             g.setColor(Color.GRAY);
@@ -1913,7 +2103,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
          * @param g Graphics
          */
         public void paint(Graphics g) {
-            int width = getSize().width,  height = getSize().height;
+            int width = getSize().width, height = getSize().height;
             g.setColor(Color.white);
             g.draw3DRect(1, 1, width - 3, height - 3, !pressed);
             g.setColor(Color.white);
@@ -1981,9 +2171,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             g2.setXORMode(getBackground());
         }
 
+
         drawStroke(g2);
         paintItems(g2);
-    //  paintCurrentItem(g2);
+        //  paintCurrentItem(g2);
+        if (currentPointer != null) {
+            graphics.drawImage(currentPointer.getIcon().getImage(),
+                    (int) pointerSurface.x + currentPointer.getPoint().x - 10,
+                    (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -2190,70 +2386,92 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }// </editor-fold>//GEN-END:initComponents
 
 private void blackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blackButtonActionPerformed
-    colour = new Color(0, 0, 0, 100);
+    fixPenTransparency();
+    //colour = new Color(0, 0, 0, alpha);
+    colour = new Color(0, 0, 0);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_blackButtonActionPerformed
 
 private void lightGrayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightGrayButtonActionPerformed
-
-    colour = new Color(192, 192, 192, alpha);
+    fixPenTransparency();
+    //colour = new Color(192, 192, 192, alpha);
+    colour = new Color(192, 192, 192);
     textField.setForeground(colour);//GEN-LAST:event_lightGrayButtonActionPerformed
         currentColorField.setBackground(colour);
     }
 
 private void grayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grayButtonActionPerformed
-    colour = new Color(128, 128, 128, alpha);
+    fixPenTransparency();
+    // colour = new Color(128, 128, 128, alpha);
+    colour = new Color(128, 128, 128);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_grayButtonActionPerformed
 
 private void whiteButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_whiteButttonActionPerformed
-    colour = new Color(255, 255, 255, alpha);
+    fixPenTransparency();
+    //colour = new Color(255, 255, 255, alpha);
+    colour = new Color(255, 255, 255);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_whiteButttonActionPerformed
 
 private void redButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redButtonActionPerformed
-    colour = new Color(255, 0, 0, 100);
+    fixPenTransparency();
+    // colour = new Color(255, 0, 0, 100);
+    colour = new Color(255, 0, 0);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_redButtonActionPerformed
 
 private void yellowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yellowButtonActionPerformed
-    colour = new Color(255, 255, 0, 100);
+    fixPenTransparency();
+    //colour = new Color(255, 255, 0, 100);
+    colour = new Color(255, 255, 0);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_yellowButtonActionPerformed
 
 private void blueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blueButtonActionPerformed
-    colour = new Color(0, 0, 255, alpha);
+    fixPenTransparency();
+    //colour = new Color(0, 0, 255, alpha);
+    colour = new Color(0, 0, 255);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_blueButtonActionPerformed
 
 private void cyanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyanButtonActionPerformed
-    colour = new Color(0, 255, 255, alpha);
+    fixPenTransparency();
+    //colour = new Color(0, 255, 255, alpha);
+    colour = new Color(0, 255, 255);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_cyanButtonActionPerformed
 
 private void greenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greenButtonActionPerformed
-    colour = new Color(0, 255, 0, alpha);
+    fixPenTransparency();
+    //colour = new Color(0, 255, 0, alpha);
+    colour = new Color(0, 255, 0);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 
 }//GEN-LAST:event_greenButtonActionPerformed
 
 private void orangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orangeButtonActionPerformed
-    colour = new Color(255, 200, 0, alpha);
+    fixPenTransparency();
+    //colour = new Color(255, 200, 0, alpha);
+    colour = new Color(255, 200, 0);
+
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 
 }//GEN-LAST:event_orangeButtonActionPerformed
 
 private void magentaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magentaButtonActionPerformed
-    colour = new Color(255, 0, 255, alpha);
+    fixPenTransparency();
+    //colour = new Color(255, 0, 255, alpha);
+    colour = new Color(255, 0, 255);
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_magentaButtonActionPerformed
