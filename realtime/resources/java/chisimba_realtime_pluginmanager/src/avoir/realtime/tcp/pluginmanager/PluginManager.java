@@ -65,9 +65,9 @@ public class PluginManager implements RealtimePlugin {
         return new JPanel();
     }
 
-    public JPanel createClassroomBase(int mode) {
+    public JPanel createClassroomBase(String host,int port,int mode) {
         base.setMODE(mode);
-        return base.initAsClassroom();
+        return base.initAsClassroom(host,port);
     }
 
     public void removeUser(String arg0, String arg1) {
