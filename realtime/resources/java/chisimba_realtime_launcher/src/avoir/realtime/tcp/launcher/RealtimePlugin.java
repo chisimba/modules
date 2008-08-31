@@ -46,5 +46,5 @@ public interface RealtimePlugin {
 
     public void setMode(int mode);
 
-    public JPanel createClassroomBase(int mode);
+    public JPanel createClassroomBase(String host,int port,int mode);
 }
