@@ -90,7 +90,7 @@ class block_lastten extends object
     {
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->blogPosts = &$this->getObject('blogposts', 'blog');
-        $this->display = $this->blogPosts->showLastTenPosts();
+        $this->display = $this->blogPosts->showLastTenPosts(5);
         $this->title = $this->objLanguage->languageText("mod_blog_block_latestblogs", "blog");
     }
     /**
