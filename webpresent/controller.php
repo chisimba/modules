@@ -67,7 +67,7 @@ class webpresent extends controller
          */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','showaudienceapplet','showpresenterapplet');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -177,7 +177,7 @@ class webpresent extends controller
      */
     public function __showpresenterapplet()
     {
-       return $this->showapplet('true');
+        return $this->showapplet('true');
     }
 
     /**
@@ -186,7 +186,7 @@ class webpresent extends controller
      */
     public function __showaudienceapplet()
     {
-      return $this->showapplet('false');
+        return $this->showapplet('false');
     }
     
     
@@ -204,7 +204,7 @@ class webpresent extends controller
         $this->setVarByRef('supernodeHost', $supernodeHost);
         $this->setVarByRef('supernodePort', $supernodePort);
 
-        $slideServerId=$this->realtimeManager->randomString(32);
+        $slideServerId='gen19Srv8Nme50';//$this->realtimeManager->randomString(32);
         $this->realtimeManager->startSlidesServer($slideServerId);
         
         $id= $this->getParam('id');
@@ -297,6 +297,13 @@ class webpresent extends controller
         $tags = explode(',', $this->getParam('tags'));
         $newTags = array();
 
+        // Create an Array to store problems
+        $problems = array();
+        // Check that username is available
+        if ($title == '') {
+            $problems[] = 'emptytitle';
+        }
+        $title=$id;
         // Clean up Spaces
         foreach ($tags as $tag)
         {
@@ -319,11 +326,14 @@ class webpresent extends controller
         $this->_luceneclearFileIndex($id);
         $this->_prepareDataForSearch($file);
 
-        //_luceneReIndex($file)
-
-        return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
+        if (count($problems) > 0) {
+            $this->setVar('mode', 'addfixup');
+            $this->setVarByRef('problems', $problems);
+            return 'process_tpl.php';
+        }else{
+            return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
+        }
     }
-
         /**
          * Method to view the details of a presentation
          *
@@ -568,7 +578,18 @@ class webpresent extends controller
 
         return 'process_tpl.php';
     }
-
+  /**
+     * Method to display the error messages/problems in the user registration
+     * @param string $problem Problem Code
+     * @return string Explanation of Problem
+     */
+    protected function explainProblemsInfo($problem)
+    {
+        switch ($problem) {
+            case 'emptytitle':
+                return 'Title of Presentation Required';
+          }
+    }
     /**
      * Used to do the actual upload
      *
