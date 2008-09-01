@@ -299,6 +299,42 @@ class dbwiki extends dbTable
     } 
     
     /**
+    * Method to get a wikis
+    * 
+    * @access public
+    * @param string $wikiId
+    * @return array|bool $data: The wiki data on success|FALSE on failure
+    */
+    public function getWiki($wikiId)
+    {
+        $this->_setWiki();
+        $sql = " WHERE id = '".$wikiId."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return $data[0];
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to update the wiki visibility
+    *
+    * @access public
+    * @param string $id: The id of the wiki to update
+    * @param string $visibility: The wiki visibility status
+    * @return string|bool $wikiId: The id of the wiki on SUCCESS| FALSE on failure
+    */
+    public function editWiki($id, $visibility)
+    {
+        $this->_setWiki();
+        $fields = array();
+        $fields['wiki_visibility'] = $visibility;
+        $fields['date_created'] = date('Y-m-d H:i:s');
+        $this->update('id', $id, $fields);
+        return $id;
+    }
+    
+    /**
     * Method to get the open wikis
     * 
     * @access public

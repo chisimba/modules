@@ -125,8 +125,9 @@ class wiki extends controller {
             case 'delete_post':
             case 'restore_post':
             case 'add_wiki';
-            case 'create_wiki';
+            case 'create_wiki':
             case 'add_rating':
+            case 'change_visibility':
                 return TRUE;
                 //Allow viewing anonymously
             case 'view_rules':
@@ -471,6 +472,12 @@ class wiki extends controller {
                 $this->setSession('wiki_id', $wikiId);
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
+                
+            case 'change_visibility':
+                $wikiId = $this->getParam('wikiId');
+                $visibility = $this->getParam('visibility');
+                $this->objDbwiki->editWiki($wikiId, $visibility);
+                return $this->nextAction('view_page', array(), 'wiki');
 
             default:
                 return $this->nextAction('view_page', array(), 'wiki');

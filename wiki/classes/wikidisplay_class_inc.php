@@ -415,7 +415,7 @@ class wikidisplay extends object
         }else{
             $data = $this->objDbwiki->getPage($name, $version);
         }
-
+        $wiki = $this->objDbwiki->getWiki($data['wiki_id']);
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
@@ -442,6 +442,7 @@ class wikidisplay extends object
         $deleteLabel = $this->objLanguage->languageText('mod_wiki_deletepage', 'wiki');
         $deleteTitleLabel = $this->objLanguage->languageText('mod_wiki_deletetitle', 'wiki');
         $delConfirmLabel = $this->objLanguage->languageText('mod_wiki_deleteconfirm', 'wiki');
+        $visibilityLabel = $this->objLanguage->languageText('mod_wiki_visibility', 'wiki');
         
         // wiki page
         $contents = '';
@@ -469,6 +470,23 @@ class wikidisplay extends object
         $heading = $objHeader->show();
         $contents .= $heading;
        
+        // visibility nested tab
+        if($wiki['creator_id'] == $this->userId && $wiki['id'] != 'init_1' && $data['page_name'] == 'MainPage'){
+            $visibility = $this->_showVisibility($wiki);
+             
+            $objLayer = new layer();
+            $objLayer->id = 'visibilityDiv';
+            $objLayer->addToStr($visibility);
+            $visibilityLayer = $objLayer->show();
+        
+            $visibilityTab = array(
+                'name' => $visibilityLabel,
+                'content' => $visibilityLayer,
+            );
+        }else{
+            $visibilityTab = '';
+        }
+
         // rating nested tab
         if(empty($version)){
             $rating = $this->showRating($name);
@@ -483,6 +501,13 @@ class wikidisplay extends object
                 'content' => $ratingLayer,
             );
         }
+        
+        //display tabs
+        $this->objTab->init();
+        $this->objTab->tabId = 'visibilityTab'; 
+        $this->objTab->addTab($visibilityTab);
+        $string = $this->objTab->show();
+        $contents .= $string.'<br />';
         
         //display tabs
         $this->objTab->init();
@@ -3366,6 +3391,45 @@ You can create tables using pairs of vertical bars:
             $str .= '</ul>';
             return $str;   
         }
+    }
+    
+    /**
+    * Method to show the wiki visibility tab
+    *
+    * @access private
+    * @param string $wiki_id: The id of the wiki
+    * @return string $str: The output string
+    */
+    private function _showVisibility($wiki)
+    {
+        // text elements
+        $visibilityLabel = $this->objLanguage->languageText('mod_wiki_changevisibility', 'wiki');
+        $publicLabel = $this->objLanguage->languageText('word_public');
+        $openLabel = $this->objLanguage->languageText('word_open');
+        $privateLabel = $this->objLanguage->languageText('word_private', 'wiki');
+        
+        // set up htmlelements
+        $objRadio = new radio('visibility');
+        $objRadio->addOption(1, '&#160;'.$publicLabel.'&#160;&#160;&#160;');
+        $objRadio->addOption(2, '&#160;'.$openLabel.'&#160;&#160;&#160;');
+        $objRadio->addOption(3, '&#160;'.$privateLabel);
+        $objRadio->setSelected($wiki['wiki_visibility']);
+        $changeRadio = $objRadio->show();
+        
+        // create button
+        $objButton = new button('change', $visibilityLabel);
+        $objButton->setToSubmit();
+        $changeButton = $objButton->show();
+        
+        $objForm = new form('visibility', $this->uri(array(
+            'action' => 'change_visibility',
+            'wikiId' => $wiki['id'], 
+        ), 'wiki'));
+        $objForm->addToForm($changeRadio.'<p />');
+        $objForm->addToForm($changeButton);
+        $str = $objForm->show();
+        
+        return $str.'<br />';
     }
 }
 ?>
