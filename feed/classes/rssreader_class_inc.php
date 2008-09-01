@@ -44,7 +44,7 @@ class rssreader extends object
 
 	public function getRssStruct()
 	{
-		return $this->rss->$rss->getStructure();
+		return $this->rss->getStructure();
 	}
 
 	public function getChanInfo()
