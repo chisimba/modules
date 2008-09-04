@@ -1,4 +1,5 @@
 <?php
+ini_set('error_reporting', 'E_ALL & ~E_NOTICE');
 /**
  * IM controller class
  * 
@@ -106,23 +107,21 @@ class im extends controller
 							$pl = $event[1];
 							switch($event[0]) {
 								case 'message':
-									// log_debug($pl);
 									// Bang the array into a table to keep a record of it.
 									$this->objDbIm->addRecord($pl);
 									// Send a response message
-									$this->conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
+									$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im')); 
+									//.": ".$pl['body'].".", $type=$pl['type']);
 									if($pl['body'] == 'quit') $this->conn->disconnect();
 									if($pl['body'] == 'break') $this->conn->send("</end>");
 									break;
 								case 'presence':
-									// print "Presence: {$pl['from']} [{$pl['show']}] {$pl['status']}\n";
 									// Update the table presence info
 									$this->objDbImPres->updatePresence($pl);
 									break;
 								case 'session_start':
-									print "Session Start\n";
 									$this->conn->getRoster();
-									$this->conn->presence($status="Hello!");
+									$this->conn->presence($status=$this->objLanguage->languageText('mod_im_presgreeting', 'im'));
 									break;
 							}
 						}
