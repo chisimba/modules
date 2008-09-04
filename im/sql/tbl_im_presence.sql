@@ -19,7 +19,7 @@ $fields = array(
 		'type' => 'text',
 		'length' => 255,
 		),
-	'show' => array(
+	'presshow' => array(
 		'type' => 'text',
 		'length' => 255,
 		),

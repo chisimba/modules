@@ -43,21 +43,23 @@ class dbimpresence extends dbTable
     
     public function updatePresence($userarr)
     {
+    	//log_debug($userarr);
     	// check if user exists in msg table
     	$status = $this->userExists($userarr['from']);
+    	$times = $this->now();
+    	$insarr['datesent'] = $times;
+    	$insarr['person'] = $userarr['from'];
+    	$person = $insarr['person'];
+    	$insarr['status'] = $userarr['type'];
+    	$insarr['presshow'] = $userarr['show'];
+    	
     	if($status == FALSE)
-    	{
-    		$times = $this->now();
-    		$insarr['datesent'] = $times;
-    		$insarr['person'] = $userarr['from'];
-    		$insarr['status'] = $userarr['status'];
-    		$insarr['show'] = $userarr['show'];
-    		
+    	{	
     		$this->addRecord($insarr);
     	}
     	else {
     		// update the presence info for this user
-    		
+    		$this->update('id', $status[0]['id'], $insarr, 'tbl_im_presence');
     	}
     }
     
@@ -69,29 +71,18 @@ class dbimpresence extends dbTable
      * @param array $recarr
      * @return string $id
      */
-    private function addRecord($pl)
+    private function addRecord($insarr)
     {
-    	$times = $this->now();
-    	$recarr['datesent'] = $times;
-    	$recarr['msgtype'] = $pl['type'];
-    	$recarr['msgfrom'] = $pl['from'];
-    	$recarr['msgbody'] = $pl['body'];
-    	// Check for empty messages
-    	if($recarr['msgbody'] == "")
-    	{
-    		return;
-    	}
-    	else {
-    		return $this->insert($recarr, 'tbl_im');
-    	}
+    	
+    	return $this->insert($insarr, 'tbl_im_presence');
     }
 
     public function userExists($user)
     {
-    	$count = $this->getRecordCount("WHERE msgfrom = '$user'");	
+    	$count = $this->getRecordCount("WHERE person = '$user'");	
     	if($count > 0)
     	{
-    		return TRUE;
+    		return $this->getAll("WHERE person = '$user'");
     	}
     	else {
     		return FALSE;
