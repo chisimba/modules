@@ -75,9 +75,25 @@ class im extends controller
 		$action = $this->getParam('action');
 		switch ($action) {
 			case null:
-				// echo "booyakasha!";
-				$this->conn->autoSubscribe();
+				echo "booyakasha!";
+				
+				break;
 
+			case 'sendmessage':
+				try {
+					$this->conn->connect();
+					$this->conn->processUntil('session_start');
+					$this->conn->presence();
+					$this->conn->message('pscott209@gmail.com', $this->objUser->userName()." says: Hello you!");
+					$this->conn->disconnect();
+				} catch(customException $e) {
+					customException::cleanUp();
+					exit;
+				}
+				break;
+
+			case 'messagehandler':
+				$this->conn->autoSubscribe();
 				try {
 					$this->conn->connect();
 					while(!$this->conn->isDisconnected()) {
@@ -109,20 +125,7 @@ class im extends controller
 					exit;
 				}
 				break;
-
-			case 'sendmessage':
-				try {
-					$this->conn->connect();
-					$this->conn->processUntil('session_start');
-					$this->conn->presence();
-					$this->conn->message('pscott209@gmail.com', $this->objUser->userName()." says: Hello you!");
-					$this->conn->disconnect();
-				} catch(customException $e) {
-					customException::cleanUp();
-					exit;
-				}
-				break;
-
+				
 			default:
 				die("unknown action");
 				break;
