@@ -471,7 +471,9 @@ class wikidisplay extends object
         $contents .= $heading;
        
         // visibility nested tab
-        if($wiki['creator_id'] == $this->userId && $wiki['id'] != 'init_1' && $data['page_name'] == 'MainPage'){
+        if($wiki['creator_id'] == $this->userId
+        and $wiki['group_type'] == 'personal'
+        and $data['page_name'] == 'MainPage'){
             $visibility = $this->_showVisibility($wiki);
              
             $objLayer = new layer();
@@ -3139,7 +3141,7 @@ You can create tables using pairs of vertical bars:
         $cancelLabel = $this->objLanguage->languageText('word_cancel');
         $publicLabel = $this->objLanguage->languageText('word_public');
         $openLabel = $this->objLanguage->languageText('word_open');
-        $privateLabel = $this->objLanguage->languageText('word_private', 'wiki');
+        $privateLabel = $this->objLanguage->languageText('mod_wiki_wordprivate', 'wiki');
         $publicTextLabel = $this->objLanguage->languageText('mod_wiki_public', 'wiki');
         $openTextLabel = $this->objLanguage->languageText('mod_wiki_open', 'wiki');
         $privateTextLabel = $this->objLanguage->languageText('mod_wiki_private', 'wiki');
@@ -3406,7 +3408,7 @@ You can create tables using pairs of vertical bars:
         $visibilityLabel = $this->objLanguage->languageText('mod_wiki_changevisibility', 'wiki');
         $publicLabel = $this->objLanguage->languageText('word_public');
         $openLabel = $this->objLanguage->languageText('word_open');
-        $privateLabel = $this->objLanguage->languageText('word_private', 'wiki');
+        $privateLabel = $this->objLanguage->languageText('mod_wiki_wordprivate', 'wiki');
         
         // set up htmlelements
         $objRadio = new radio('visibility');
