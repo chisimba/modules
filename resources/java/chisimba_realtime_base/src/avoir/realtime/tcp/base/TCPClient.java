@@ -7,6 +7,7 @@ package avoir.realtime.tcp.base;
 import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
+import avoir.realtime.tcp.base.filetransfer.FileUploader;
 import avoir.realtime.tcp.common.packet.AckPacket;
 import avoir.realtime.tcp.common.packet.RealtimePacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
@@ -15,7 +16,6 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.base.user.User;
 
 import avoir.realtime.tcp.common.Constants;
-import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
@@ -23,6 +23,7 @@ import avoir.realtime.tcp.common.packet.BinaryFileSaveReplyPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
+import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.ClientPacket;
 import avoir.realtime.tcp.common.packet.FilePacket;
@@ -44,6 +45,7 @@ import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
 import avoir.realtime.tcp.common.packet.SystemFilePacket;
+import avoir.realtime.tcp.common.packet.UploadOKPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardItems;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
@@ -67,6 +69,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -114,6 +117,7 @@ public class TCPClient {
     private WhiteboardSurface whiteboardSurface;
     int count = 0;
     private Timer monitorTimer = new Timer();
+    private FileUploader fileUploader;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -231,7 +235,6 @@ public class TCPClient {
     private byte[] readFile(String filePath) {
         File f = new File(filePath);
         File parentFile = f.getParentFile();
-        String filename = parentFile.getName() + "/" + f.getName();//either bin or lib
 
         try {
             if (f.exists()) {
@@ -448,6 +451,8 @@ public class TCPClient {
                 if (packet instanceof ClientPacket) {
                     ClientPacket clientPacket = (ClientPacket) packet;
                     updateUserList(clientPacket);
+                } else if (packet instanceof ClassroomSlidePacket) {
+                    processClassroomSlidePacket((ClassroomSlidePacket) packet);
                 } else if (packet instanceof LocalSlideCacheRequestPacket) {
                     processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
                 } else if (packet instanceof WhiteboardItems) {
@@ -506,6 +511,8 @@ public class TCPClient {
                 } else if (packet instanceof PresencePacket) {
                     PresencePacket p = (PresencePacket) packet;
                     processPresencePacket(p);
+                } else if (packet instanceof UploadOKPacket) {
+                    processUploadOKPacket((UploadOKPacket) packet);
                 } else if (packet instanceof QuitPacket) {
                     QuitPacket p = (QuitPacket) packet;
                     processQuitPacket(p);
@@ -526,6 +533,12 @@ public class TCPClient {
         }
     }
 
+    private void processUploadOKPacket(UploadOKPacket p) {
+        if (fileUploader != null) {
+            fileUploader.setProgress(p.getChunkNo());
+        }
+    }
+
     private void processWhiteboardItems(WhiteboardItems p) {
         base.getWhiteboardSurface().setItems(p.getWhiteboardItems());
     }
@@ -540,7 +553,7 @@ public class TCPClient {
     }
 
     private void processWhiteboardPacket(WhiteboardPacket p) {
-        // System.out.println("Received: " + p.getItem());
+        //   System.out.println("Received: " + p.getItem());
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
             base.getWhiteboardSurface().addItem(p.getItem());
         }
@@ -836,6 +849,50 @@ public class TCPClient {
         }
     }
 
+    private void processClassroomSlidePacket(ClassroomSlidePacket packet) {
+        try {
+            int dot = packet.getPresentationName().lastIndexOf(".");
+            String dir = packet.getPresentationName();
+            if (dot > 0) {
+                dir = packet.getPresentationName().substring(0, dot);
+            }
+
+            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides/" + dir;
+            File homeDir = new File(home);
+            if (!homeDir.exists()) {
+                homeDir.mkdirs();
+            }
+
+            String fn = home + "/" + packet.getFilename();
+            FileChannel fc =
+                    new FileOutputStream(fn).getChannel();
+            byte[] byteArray = packet.getByteArray();
+            fc.write(ByteBuffer.wrap(byteArray));
+            fc.close();
+            if (packet.isLastFile()) {
+                base.getSessionManager().setSlideCount(packet.getMaxValue());
+                int[] slidesList = getImageFileNames(home);
+
+                base.getAgendaManager().addAgenda(createSlideNames(slidesList), packet.getPresentationName());
+                base.getWhiteboardSurface().setCurrentSlide(new ImageIcon(home + "/img0.jpg"), 0, slidesList.length, true);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (base != null) {
+                base.showMessage("Error writing slide " + packet.getFilename(), false, true);
+            }
+
+        }
+    }
+
+    public String[] createSlideNames(int[] n) {
+        String[] names = new String[n.length];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = "Slide" + (i + 1);
+        }
+        return names;
+    }
+
     /**
      * send the chatlog to the chat room for the newly logged in user
      * @param p
@@ -874,7 +931,7 @@ public class TCPClient {
     }
 
     private void processOutlinePacket(OutlinePacket p) {
-        base.getAgendaManager().addNewAgenda(p.getOutlines(), base.getSessionTitle());
+        base.getAgendaManager().addAgenda(p.getOutlines(), base.getSessionTitle());
 
     }
 
@@ -993,8 +1050,8 @@ public class TCPClient {
         int slideIndex = packet.getSlideIndex();
         if (base != null) {
             slideServerReplying = true;
-
-            base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter());
+            String slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + slideIndex + ".jpg";
+            base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
             if (packet.getMessage() != null) {
                 base.showMessage(packet.getMessage(), false, true);
             }
@@ -1024,8 +1081,8 @@ public class TCPClient {
         public void run() {
             if (!slidesDownloaded) {
                 base.setText("Error: Server taking too long to reply. Click on 'Refresh' button to resolve.", true);
-                JOptionPane.showMessageDialog(null, "The server is taking too long to respond.\n" +
-                        "To resolve this, please click on the 'Refresh Button' on the toolbar.");
+                //   JOptionPane.showMessageDialog(null, "The server is taking too long to respond.\n" +
+                //         "To resolve this, please click on the 'Refresh Button' on the toolbar.");
                 base.setStatusMessage("The server is taking too long to respond." +
                         "To resolve this, click on 'Refresh' button to resolve.");
 
@@ -1078,6 +1135,10 @@ public class TCPClient {
 
     }
 
+    public void setFileUploadHandler(FileUploader fileUploader) {
+        this.fileUploader = fileUploader;
+    }
+
     /***
      * /////////////////////////////////////////////////////////////////
      * These method are for sending non repliable messages to the server
@@ -1098,21 +1159,21 @@ public class TCPClient {
      * Send a heart beat pulse
      */
     private void sendPulse() {
-        try {
-            if (writer != null) {
-                writer.writeObject(new HeartBeat(base.getSessionId()));
-                writer.flush();
-                NETWORK_ALIVE = false;
-                monitorPulse();
-            } else {
-                logger.info("Error: writer is null!!!");
-            //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
-            }
-        } catch (IOException ex) {
-            base.showMessage("Disconnected from Server", false, true);
-            ALIVE = false;
-            ex.printStackTrace();
+        /* try {
+        if (writer != null) {
+        writer.writeObject(new HeartBeat(base.getSessionId()));
+        writer.flush();
+        NETWORK_ALIVE = false;
+        monitorPulse();
+        } else {
+        logger.info("Error: writer is null!!!");
+        //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
         }
+        } catch (IOException ex) {
+        base.showMessage("Disconnected from Server", false, true);
+        ALIVE = false;
+        ex.printStackTrace();
+        }*/
     }
 
     private void monitorPulse() {
@@ -1129,8 +1190,9 @@ public class TCPClient {
         NETWORK_ALIVE = true;
         base.showMessage("", false, false);
         int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-                PresenceConstants.ONLINE, true);
+    /*   base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+    PresenceConstants.ONLINE, true);
+     */
     }
 
     private void cancelMonitor() {
@@ -1143,10 +1205,10 @@ public class TCPClient {
 
     public void setUserOffline() {
         int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-                PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
-        base.showMessage("Network Error!!! ", false, true);
-
+    /* base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
+    PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
+    base.showMessage("Network Error!!! ", false, true);
+     */
     }
 
     class HeartBeatMonitor extends TimerTask {
