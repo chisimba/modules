@@ -22,7 +22,7 @@ $fields = array(
 	'msgbody' => array(
 		'type' => 'clob',
 		),
-	'when' => array(
+	'datesent' => array(
 		'type' => 'timestamp',
 		),
 	);

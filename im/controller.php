@@ -105,6 +105,10 @@ class im extends controller
 									//echo "Message from: {$pl['from']}<br />";
 									//echo $pl['body'] . "<br />";
 									//echo "<hr />";
+									
+									// Bang the array into a table to keep a record of it.
+									
+									
 									$this->conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
 									if($pl['body'] == 'quit') $this->conn->disconnect();
 									if($pl['body'] == 'break') $this->conn->send("</end>");
@@ -125,7 +129,8 @@ class im extends controller
 					exit;
 				}
 				// OK something went wrong, make sure the sysadmin knows about it!
-				$call2 = $this->objBack->setCallBack("pscott@uwc.ac.za", "IM Module", "Something has gone wrong with the IM module, please restart the listener!");
+				$email = $this->objConfig->getsiteEmail();
+				$call2 = $this->objBack->setCallBack($email, $this->objLanguage->languageText('mod_im_msgsubject', 'im'), $this->objLanguage->languageText('mod_im_callbackmsg', 'im'));
 				break;
 
 			default:
