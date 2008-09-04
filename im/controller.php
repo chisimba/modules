@@ -110,7 +110,10 @@ class im extends controller
 									// Bang the array into a table to keep a record of it.
 									$this->objDbIm->addRecord($pl);
 									// Send a response message
-									$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im')); 
+									if($pl['body'] != "")
+									{
+										$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im')); 
+									}
 									//.": ".$pl['body'].".", $type=$pl['type']);
 									if($pl['body'] == 'quit') $this->conn->disconnect();
 									if($pl['body'] == 'break') $this->conn->send("</end>");
