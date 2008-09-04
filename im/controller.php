@@ -53,7 +53,7 @@ class im extends controller
 			$this->objUser =  $this->getObject("user", "security");
 			//Create an instance of the language object
 			$this->objLanguage = $this->getObject("language", "language");
-			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_INFO);
+			
 		}
 		catch (customException $e)
 		{
@@ -76,20 +76,11 @@ class im extends controller
 		switch ($action) {
 			case null:
 				echo "booyakasha!";
-				
 				break;
 
 			case 'sendmessage':
-				try {
-					$this->conn->connect();
-					$this->conn->processUntil('session_start');
-					$this->conn->presence();
-					$this->conn->message('pscott209@gmail.com', $this->objUser->userName()." says: Hello you!");
-					$this->conn->disconnect();
-				} catch(customException $e) {
-					customException::cleanUp();
-					exit;
-				}
+				$to = 'pscott209@gmail.com';
+				$this->objImOps->sendMessage($to, 'Hope this works!');
 				break;
 
 			case 'messagehandler':
@@ -125,10 +116,29 @@ class im extends controller
 					exit;
 				}
 				break;
-				
+
 			default:
 				die("unknown action");
 				break;
+		}
+	}
+
+	/**
+     * Overide the login object in the parent class
+     *
+     * @param  void
+     * @return bool
+     * @access public
+     */
+	public function requiresLogin($action)
+	{
+		$actionsRequiringLogin = array(
+		'sendmessage'
+		);
+		if (in_array($action, $actionsRequiringLogin)) {
+			return TRUE;
+		} else {
+			return FALSE;
 		}
 	}
 

@@ -28,10 +28,10 @@ class imops extends object
      * @access public
      */
 	public $objConfig;
-	
-	// public $objXMPP;
+
+	public $conn;
 	// public $objXMPPLog;
-	
+
 	/**
      * Standard init function called by the constructor call of Object
      *
@@ -42,18 +42,33 @@ class imops extends object
 	public function init()
 	{
 		try {
-			
+
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch(customException $e) {
 			echo customException::cleanUp();
 			die();
 		}
 	}
-	
-	
-	
+
+	public function sendMessage($to, $message)
+	{
+		try {
+			$this->conn->connect();
+			$this->conn->processUntil('session_start');
+			$this->conn->presence();
+			$range = 0;
+			$this->conn->message($to, $message);
+			// disconnect
+			$this->conn->disconnect();
+		} catch(customException $e) {
+			customException::cleanUp();
+			exit;
+		}
+	}
+
 }
 ?>
