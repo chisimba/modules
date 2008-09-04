@@ -35,6 +35,7 @@ class im extends controller
 	public $objImOps;
 	public $objUser;
 	public $objLanguage;
+	public $objBack;
 
 	public $conn;
 	/**
@@ -53,7 +54,8 @@ class im extends controller
 			$this->objUser =  $this->getObject("user", "security");
 			//Create an instance of the language object
 			$this->objLanguage = $this->getObject("language", "language");
-			
+			$this->objBack = $this->getObject('background', 'utilities');
+			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch (customException $e)
 		{
@@ -84,6 +86,12 @@ class im extends controller
 				break;
 
 			case 'messagehandler':
+				// This is a looooong running task... Lets use the background class to handle it
+				//check the connection status
+ 				$status = $this->objBack->isUserConn();
+				//keep the user connection alive even if the browser is closed
+				$callback = $this->objBack->keepAlive();
+ 				// Now the code is backrounded and cannot be aborted! Be careful now...
 				$this->conn->autoSubscribe();
 				try {
 					$this->conn->connect();
@@ -93,9 +101,10 @@ class im extends controller
 							$pl = $event[1];
 							switch($event[0]) {
 								case 'message':
-									echo "Message from: {$pl['from']}<br />";
-									echo $pl['body'] . "<br />";
-									echo "<hr />";
+									log_debug($pl);
+									//echo "Message from: {$pl['from']}<br />";
+									//echo $pl['body'] . "<br />";
+									//echo "<hr />";
 									$this->conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
 									if($pl['body'] == 'quit') $this->conn->disconnect();
 									if($pl['body'] == 'break') $this->conn->send("</end>");
@@ -115,6 +124,8 @@ class im extends controller
 					customException::cleanUp();
 					exit;
 				}
+				// OK something went wrong, make sure the sysadmin knows about it!
+				$call2 = $this->objBack->setCallBack("pscott@uwc.ac.za", "IM Module", "Something has gone wrong with the IM module, please restart the listener!");
 				break;
 
 			default:
