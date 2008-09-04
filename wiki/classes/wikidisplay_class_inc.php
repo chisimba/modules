@@ -74,6 +74,12 @@ class wikidisplay extends object
     public $isAdmin;
 
     /**
+    * @var bool $isContextLecturer: TRUE if the user is a lecturer of the current course group FALSE if not
+    * @access public
+    */
+    public $isContextLecturer;
+
+    /**
     * @var object $objTab: The tabpane class in the htmlelements module
     * @access public
     */
@@ -162,6 +168,7 @@ class wikidisplay extends object
         $this->userId = $this->objUser->userId();
         $this->isLoggedIn = $this->objUser->isLoggedIn();
         $this->isAdmin = $this->objUser->inAdminGroup($this->userId);
+        $this->isContextLecturer = $this->objUser->isContextLecturer();
 
         $this->objTab = $this->newObject('tabber', 'htmlelements');
         $this->objBizCard = $this->getObject('userbizcard', 'useradmin');
@@ -503,9 +510,9 @@ class wikidisplay extends object
         $contents .= $heading;
        
         // visibility nested tab
-        if($wiki['creator_id'] == $this->userId
-        and $wiki['group_type'] == 'personal'
-        and $data['page_name'] == 'MainPage'){
+        if((($wiki['creator_id'] == $this->userId and $wiki['group_type'] == 'personal') 
+            or ($wiki['group_type'] == 'context' and ($this->isContextLecturer or $this->isAdmin)))
+                and $data['page_name'] == 'MainPage'){
             $visibility = $this->_showVisibility($wiki);
              
             $objLayer = new layer();
