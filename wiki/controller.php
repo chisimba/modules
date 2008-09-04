@@ -53,12 +53,6 @@ class wiki extends controller {
     public $userId;
 
     /**
-    * @var object $objContext: The dbcontext class in the context module
-    * @access public
-    */
-    public $objContext;
-
-    /**
     * @var object $objModules: The modules class in the modulecatalogue module
     * @access public
     */
@@ -78,24 +72,13 @@ class wiki extends controller {
         $this->objLock = $this->newObject('wikipagelock', 'wiki');
         $this->objUser = $this->newObject('user', 'security');
         $this->userId = $this->objUser->userId();
-        $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
 
+        $contextExists = $this->objModules->checkIfRegistered('context');
+        $this->setSession('context_exists', $contextExists);
         $wikiId = $this->getSession('wiki_id');
         if(empty($wikiId)){
-            $contextExists = $this->objModules->checkIfRegistered('context');
-            if($contextExists){
-                $contextCode = $this->objContext->getContextCode();
-                if(!empty($contextCode)){
-                    $wikiId = $this->objDbwiki->getContextWiki($contextCode);
-                    $this->setSession('wiki_id', $wikiId);
-                }else{
-                    $this->setSession('wiki_id', 'init_1');
-                }
-            }else{
-                $this->setSession('wiki_id', 'init_1');
-            }
-
+            $this->setSession('wiki_id', 'init_1');
         }
     }
 
@@ -128,6 +111,7 @@ class wiki extends controller {
             case 'create_wiki':
             case 'add_rating':
             case 'change_visibility':
+            case 'context_wiki':
                 return TRUE;
                 //Allow viewing anonymously
             case 'view_rules':
@@ -477,6 +461,11 @@ class wiki extends controller {
                 $wikiId = $this->getParam('wikiId');
                 $visibility = $this->getParam('visibility');
                 $this->objDbwiki->editWiki($wikiId, $visibility);
+                return $this->nextAction('view_page', array(), 'wiki');
+                
+            case 'context_wiki':
+                $contextCode = $this->getParam('contextCode');
+                $this->objDbwiki->createContextWiki($contextCode);
                 return $this->nextAction('view_page', array(), 'wiki');
 
             default:

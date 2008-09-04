@@ -122,6 +122,12 @@ class wikidisplay extends object
     public $objTextdiff;
 
     /**
+    * @var object $objContext: The dbcontext class in the context module
+    * @access public
+    */
+    public $objContext;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -164,6 +170,11 @@ class wikidisplay extends object
 		$this->objMailer = $this->getObject('email', 'mail');
 		$this->objWash = $this->getObject('washout', 'utilities');		
 		$this->objTextdiff = $this->getObject('wikitextdiff', 'wiki');		
+
+        $contextExists = $this->getSession('context_exists');
+        if($contextExists){
+            $this->objContext = $this->getObject('dbcontext', 'context');
+        }
     }
 
     /**
@@ -204,6 +215,8 @@ class wikidisplay extends object
         $linkTitleLabel = $this->objLanguage->languageText('mod_wiki_viewlinktitle', 'wiki');
         $createLabel = $this->objLanguage->languageText('mod_wiki_createwiki', 'wiki');
         $createTitleLabel = $this->objLanguage->languageText('mod_wiki_createwikititle', 'wiki');
+        $createContextLabel = $this->objLanguage->languageText('mod_wiki_createcontextwiki', 'wiki');
+        $createContextTitleLabel = $this->objLanguage->languageText('mod_wiki_createcontexttitle', 'wiki');
         
         $str = '';
         // login box
@@ -218,7 +231,7 @@ class wikidisplay extends object
         $string .= '<ul>';
         if($this->isLoggedIn){
             // get data
-            $hasWiki = $this->objDbwiki->hasWiki($this->userId);            
+            $hasWiki = $this->objDbwiki->hasPersonalWiki($this->userId);            
             if(!$hasWiki){
                 // create wiki link
                 $objLink = new link($this->uri(array(
@@ -228,6 +241,25 @@ class wikidisplay extends object
                 $objLink->title = $createTitleLabel;
                 $addLink = $objLink->show();
                 $string .= '<li>'.$addLink.'</li>';
+            }
+            
+            $contextExists = $this->getSession('context_exists');
+            if($contextExists){
+                $contextCode = $this->objContext->getContextCode();
+                if(!empty($contextCode)){
+                    $hasContextWiki = $this->objDbwiki->hasContextWiki($contextCode);
+                    if(!$hasContextWiki){
+                        // create wiki link
+                        $objLink = new link($this->uri(array(
+                            'action' => 'context_wiki',
+                            'contextCode' => $contextCode,
+                        ), 'wiki'));
+                        $objLink->link = $createContextLabel;
+                        $objLink->title = $createContextTitleLabel;
+                        $addLink = $objLink->show();
+                        $string .= '<li>'.$addLink.'</li>';
+                    }   
+                }
             }
         }
         

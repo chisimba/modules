@@ -173,7 +173,7 @@ class dbwiki extends dbTable
     * @param string $userId: The user id of the user to check
     * @return bool $hasWiki: TRUE if the user has a wiki | FALSE if not
     */
-    public function hasWiki($userId)
+    public function hasPersonalWiki($userId)
     {
         $this->_setWiki();
         $sql = "WHERE group_type = 'personal'";
@@ -211,6 +211,26 @@ class dbwiki extends dbTable
         $this->wikiId = $wikiId;
         $this->personalMainPage();
         return $wikiId;
+    }
+    
+    /**
+    * Method to check if a context has a wiki
+    *
+    * @access public
+    * @param string $contextCode: The contextCode of the context to check
+    * @return bool $hasWiki: TRUE if the context has a wiki | FALSE if not
+    */
+    public function hasContextWiki($contextCode)
+    {
+        $this->_setWiki();
+        $sql = "WHERE group_type = 'context'";
+        $sql .= " AND group_id = '".$contextCode."'";
+        $data = $this->getAll($sql);
+        if(!empty($data)){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
     }
     
     /**
