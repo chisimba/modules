@@ -60,7 +60,7 @@ class imops extends object
 			$this->conn->connect();
 			$this->conn->processUntil('session_start');
 			$this->conn->presence();
-			$range = 0;
+			// send the message
 			$this->conn->message($to, $message);
 			// disconnect
 			$this->conn->disconnect();
