@@ -31,6 +31,11 @@
 
 class im extends controller 
 {
+	
+	public $objImOps;
+	public $objUser;
+	public $objLanguage;
+	
 	/**
     *
     * Standard constructor method to retrieve the action from the
@@ -40,6 +45,7 @@ class im extends controller
   public  function init()
     {
     	try {
+    		$this->objImOps = $this->getObject('imops');
         	$this->objUser =  $this->getObject("user", "security");
         	//Create an instance of the language object
         	$this->objLanguage = $this->getObject("language", "language");
