@@ -21,7 +21,9 @@ package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
+import avoir.realtime.tcp.base.filetransfer.FileUploader;
 import avoir.realtime.tcp.base.managers.AgendaManager;
+import avoir.realtime.tcp.base.managers.FileManager;
 import avoir.realtime.tcp.base.managers.MenuManager;
 import avoir.realtime.tcp.base.managers.ToolbarManager;
 import avoir.realtime.tcp.base.managers.UserListManager;
@@ -43,9 +45,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Vector;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JCheckBox;
@@ -72,23 +74,25 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String defaultHome = "avoir-realtime-0.1";
     private RealtimeOptions options;
     private TCPClient tcpClient;
-    private String userName="Anonymous";
-    private String fullName="DAO";
-    private String sessionId="whiteboard";
+    private String userName = "Anonymous";
+    private String fullName = "DAO";
+    private String sessionId = "whiteboard";
     private String slidesDir;
     private String slideServerId;
     private String resourcesPath;
     private String siteRoot;
     private String host;
-    private boolean isPresenter=true;
+    private boolean isPresenter = true;
     private String sessionTitle;
     private String appletCodeBase;
     private User user;
     private boolean localhost;
     private javax.swing.JSplitPane splitPane = new JSplitPane();
     private javax.swing.JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    private javax.swing.JSplitPane leftBottomSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     private JPanel mediaPanel = new JPanel();
-    private JTabbedPane tabbedPane = new JTabbedPane();
+    private JTabbedPane userListTabbedPane = new JTabbedPane();
+    private JTabbedPane agendaTabbedPane = new JTabbedPane();
     private JLabel logo = new JLabel();
     private String userLevel;
     private int port;
@@ -104,6 +108,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private SurveyManagerFrame surveyManagerFrame;
     private AudioWizardFrame audioWizardFrame;
     private FileTransferPanel fileTransferPanel;
+    private FileManager fileManager;
+    private FileUploader fileUploader;
     private boolean hasControl = false;
     private ChatRoom chatRoom;
     private String chatLogFile = "ChatLog.txt";
@@ -131,6 +137,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel centerPanel = new JPanel();
     private JPanel leftCenterPanel = new JPanel();
     private int MODE = Constants.APPLET;
+    private String selectedFile;
 
     /**
      * Create additional components
@@ -146,7 +153,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         menuMananger = new MenuManager(this);
         whiteboardToolbar = new WhiteboardToolbarManager(this);
         whiteboardSurface = new WhiteboardSurface(this);
-
+        fileUploader = new FileUploader(this);
+        fileManager = new FileManager(this);
         micVolumeMeter.setMinimum(0);
         micVolumeMeter.setMaximum(128);
 
@@ -163,7 +171,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         mediaPanel.setLayout(new java.awt.BorderLayout());
         logo.setIcon(ImageUtil.createImageIcon(this, "/icons/realtime128.png"));
         mediaPanel.add(logo);
-        leftSplitPane.setDividerLocation(getHeight() / 2);
+
         mPanel.setLayout(new BorderLayout());
 
         leftPanel.setLayout(new BorderLayout());
@@ -202,31 +210,23 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         userItemsPanel.add(laughterButton);
         userItemsPanel.add(applaudButton);
 
-
-        ButtonGroup bg = new ButtonGroup();
-
         whiteboardButton.addActionListener(this);
         whiteboardButton.setActionCommand("whiteBoard");
         whiteboardButton.setToolTipText("Use whiteboard on this slide");
 
 
         //pointerToolbar.add(whiteboardButton);
-        tabbedPane.addTab("Participants", userListPanel);
-        //tabbedPane.addTab("Files", fileTransferPanel);
+        userListTabbedPane.addTab("Participants", userListPanel);
+        //userListTabbedPane.addTab("Files", fileTransferPanel);
         leftPanel.setPreferredSize(new Dimension(250, 300));
-        leftPanel.add(tabbedPane, BorderLayout.NORTH);
-        agendaPanel.setLayout(new BorderLayout());
-        agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
-        agendaPanel.setPreferredSize(new Dimension(250, 130));
-        leftPanel.add(agendaPanel, BorderLayout.SOUTH);
 
 
-        audioPanel.setPreferredSize(new Dimension(100, 250));
+
+        audioPanel.setPreferredSize(new Dimension(100, 150));
         volumeSlide.setPreferredSize(new Dimension(150, 20));
         speakerVolumeMeter.setPreferredSize(new Dimension(150, 7));
-        leftPanel.add(audioPanel, BorderLayout.CENTER);
 
-        mPanel.add(leftPanel, BorderLayout.WEST);
+
 
         centerPanel.setLayout(new BorderLayout());
 
@@ -241,16 +241,44 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         } else {
             centerPanel.add(whiteboardSurface, BorderLayout.CENTER);
         }
-
-
         centerPanel.add(leftCenterPanel, BorderLayout.WEST);
-        mPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(mPanel, BorderLayout.CENTER);
+
+        agendaPanel.setLayout(new BorderLayout());
+        agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
+        agendaPanel.setPreferredSize(new Dimension(250, 150));
+        // agendaPanel.add(audioPanel, BorderLayout.NORTH);
+
+        agendaTabbedPane.add(agendaPanel, "Agenda");
+        leftBottomSplitPane.setTopComponent(audioPanel);
+        leftBottomSplitPane.setBottomComponent(agendaTabbedPane);
+        leftBottomSplitPane.setDividerLocation(150);
+
+        leftSplitPane.setDividerLocation(300);
+        leftSplitPane.setTopComponent(userListTabbedPane);
+        leftSplitPane.setBottomComponent(leftBottomSplitPane);
+        /*
+        leftPanel.add(agendaPanel, BorderLayout.SOUTH);
+        leftPanel.add(audioPanel, BorderLayout.CENTER);
+        leftPanel.add(userListTabbedPane, BorderLayout.NORTH);
+         */
         sessionManager.setIsPresenter(isPresenter);
 
+        // mPanel.add(centerPanel, BorderLayout.CENTER);
+        //mPanel.add(leftPanel, BorderLayout.WEST);
+
+        splitPane.setLeftComponent(leftSplitPane);
+        splitPane.setRightComponent(centerPanel);
         mainPanel.add(toolbarManager.createToolbar(), BorderLayout.NORTH);
+        mainPanel.add(splitPane, BorderLayout.CENTER);
 
+    }
 
+    public String getSelectedFile() {
+        return selectedFile;
+    }
+
+    public void setSelectedFile(String selectedFile) {
+        this.selectedFile = selectedFile;
     }
 
     /**
@@ -263,11 +291,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             leftCenterPanel.add(whiteboardSurface.getButtonsToolbar());
             leftCenterPanel.add(whiteboardSurface.getPointerToolbar());
             centerPanel.add(whiteboardSurface.getMainToolbar(), BorderLayout.NORTH);
+
             centerPanel.add(whiteboardSurface.getColorPanel(), BorderLayout.SOUTH);
             if (glassPaneHandler != null) {
                 glassPaneHandler.resize(glassPaneHandler.getWidth() + 5, glassPaneHandler.getHeight() + 5);
             }
             surface.setPointer(Constants.WHITEBOARD);
+
         } else {
             leftCenterPanel.remove(whiteboardSurface.getButtonsToolbar());
             leftCenterPanel.remove(whiteboardSurface.getPointerToolbar());
@@ -301,6 +331,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
         }
+    }
+
+    public FileUploader getFileUploader() {
+        return fileUploader;
     }
 
     /**
@@ -454,6 +488,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         surveyFrame.setLocationRelativeTo(null);
         // surveyFrame.setAlwaysOnTop(true);
         surveyFrame.setVisible(true);
+    }
+
+    /**
+     * Get hold of the file manager
+     * @return
+     */
+    public FileManager getFileManager() {
+        return fileManager;
     }
 
     /**
@@ -696,9 +738,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
-    public JPanel initAsClassroom(String host,int port) {
-        this.host=host;
-        this.port=port;
+    public JPanel initAsClassroom(String host, int port) {
+        this.host = host;
+        this.port = port;
         initRealtimeHome();
         initWhiteBoardUser();
         initComponents();
@@ -709,6 +751,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             @Override
             public void run() {
                 initTCPCommunication();
+                loadCachedDocuments();
             }
         };
         t.start();
@@ -717,7 +760,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     }
 
     private void initWhiteBoardUser() {
-        
+
         int xuserLevel = UserLevel.GUEST;
         user = new User(xuserLevel, userName, userName, "localhost", 22225, isPresenter,
                 sessionId, sessionTitle, slidesDir, false, siteRoot, slideServerId);
@@ -1112,13 +1155,20 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     public void showMessage(String msg, boolean temp, boolean isErrorMessage) {
         String prevMsg = surface.getMessage();
         surface.showMessage(msg, isErrorMessage);
-        if (temp) {
-            try {
-                Thread.sleep(10000);
-            } catch (Exception ex) {
+        whiteboardSurface.showMessage(msg, isErrorMessage);
+        Thread t = new Thread() {
+
+            public void run() {
+                try{
+                sleep(10000);
+                }catch(Exception ex){}
+                surface.showMessage("", false);
+                whiteboardSurface.showMessage("", false);
+
             }
-            surface.showMessage("", false);
-        }
+        };
+        t.start();
+
     }
 
     public JProgressBar getMicVolumeMeter() {
@@ -1127,6 +1177,22 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     public JProgressBar getSpeakerVolumeMeter() {
         return speakerVolumeMeter;
+    }
+
+    private void loadCachedDocuments() {
+        agendaManager.addAgenda(new String[0], "Whiteboard");
+        File cacheHome = new File(avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides");
+        if (!cacheHome.exists()) {
+            return;
+        }
+        String[] slides = cacheHome.list();
+        if (slides != null) {
+            for (int i = 0; i < slides.length; i++) {
+                String presentation = cacheHome.getAbsolutePath() + "/" + slides[i];
+                int[] slidesList = tcpClient.getImageFileNames(presentation);
+                agendaManager.addAgenda(tcpClient.createSlideNames(slidesList), new File(presentation).getName());
+            }
+        }
     }
 
     /** This method is called from within the init() method to
@@ -1152,7 +1218,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         statusBar = new javax.swing.JLabel();
 
         audioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        audioPanel.setMinimumSize(new java.awt.Dimension(50, 111));
+        audioPanel.setMinimumSize(new java.awt.Dimension(50, 11));
+        audioPanel.setPreferredSize(new java.awt.Dimension(229, 100));
         audioPanel.setLayout(new java.awt.BorderLayout());
 
         mAudioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Speaker"));
@@ -1180,8 +1247,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         mAudioPanel.add(audioControlPanel, java.awt.BorderLayout.PAGE_START);
 
         audioMonitorPanel.setLayout(new java.awt.BorderLayout());
+        audioMonitorPanel.add(speakerVolumeMeter, java.awt.BorderLayout.CENTER);
+
         mAudioPanel.add(audioMonitorPanel, java.awt.BorderLayout.PAGE_END);
-        mAudioPanel.add(speakerVolumeMeter, java.awt.BorderLayout.CENTER);
 
         audioPanel.add(mAudioPanel, java.awt.BorderLayout.CENTER);
 
