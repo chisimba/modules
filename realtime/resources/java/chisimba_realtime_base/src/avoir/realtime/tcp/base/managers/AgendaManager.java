@@ -31,51 +31,27 @@ public class AgendaManager {
             title = "";
         }
          addAgenda(new String[0], "Whiteboard");
-        DefaultMutableTreeNode p = agendaTree.addObject(null, title);
+        DefaultMutableTreeNode p = agendaTree.addObject(null, new Slide(-1, "",title));
         for (int i = 0; i < base.getSessionManager().getSlideCount(); i++) {
-            agendaTree.addObject(p, "Item " + (i + 1), true);
+            agendaTree.addObject(p,new Slide(i, "Item " + (i + 1),title), true);
         }
         
     }
 
-    public void addNewAgenda(String[] outline, String title) {
-
-        if (outline == null) {
-            return;
-        }
-        if (title == null) {
-            title = "Slides";
-        }
-        if (title.trim().equals("")) {
-            title = "";
-        }
-        agendaTree.clear();
-        addAgenda(new String[0], "Whiteboard");
-        DefaultMutableTreeNode p = agendaTree.addObject(null, title);
-
-        for (int i = 0; i < outline.length; i++) {
-            if (outline[i] == null) {
-                agendaTree.addObject(p, "Item " + (i + 1), true);
-            } else {
-                agendaTree.addObject(p, outline[i], true);
-
-            }
-        }
-       
-    }
+    
 
     public void addAgenda(String[] outline, String title) {
 
         if (outline == null) {
             return;
         }
-        DefaultMutableTreeNode p = agendaTree.addObject(null, title);
+        DefaultMutableTreeNode p = agendaTree.addObject(null,new Slide(-1,"", title));
 
         for (int i = 0; i < outline.length; i++) {
             if (outline[i] == null) {
-                agendaTree.addObject(p, "Item " + (i + 1), true);
+                agendaTree.addObject(p,new Slide(i+1, "Item"+(1+1),title), false);
             } else {
-                agendaTree.addObject(p, outline[i], true);
+                agendaTree.addObject(p,new Slide(i, outline[i],title)  , false);
 
             }
         }
