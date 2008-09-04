@@ -45,8 +45,16 @@ class imops extends object
 
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->objLanguage = $this->getObject('language', 'language');
-			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
+			// Get the sysconfig variables for the Jabber user to set up the connection.
+			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->jserver = $this->objSysConfig->getValue('jabberserver', 'im');
+            $this->jport = $this->objSysConfig->getValue('jabberport', 'im');
+			$this->juser = $this->objSysConfig->getValue('jabberuser', 'im');
+			$this->jpass = $this->objSysConfig->getValue('jabberpass', 'im');
+			$this->jclient = $this->objSysConfig->getValue('jabberclient', 'im');
+			$this->jdomain = $this->objSysConfig->getValue('jabberdomain', 'im');
+			
+			$this->conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch(customException $e) {
 			echo customException::cleanUp();
