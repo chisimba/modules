@@ -37,7 +37,9 @@ class im extends controller
 	public $objLanguage;
 	public $objBack;
 
+	public $objDbIm;
 	public $conn;
+	public $objDbImPres;
 	/**
     *
     * Standard constructor method to retrieve the action from the
@@ -55,6 +57,9 @@ class im extends controller
 			//Create an instance of the language object
 			$this->objLanguage = $this->getObject("language", "language");
 			$this->objBack = $this->getObject('background', 'utilities');
+			$this->objDbIm = $this->getObject('dbim');
+			$this->objDbImPres = $this->getObject('dbimpresence');
+			
 			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch (customException $e)
@@ -101,20 +106,18 @@ class im extends controller
 							$pl = $event[1];
 							switch($event[0]) {
 								case 'message':
-									log_debug($pl);
-									//echo "Message from: {$pl['from']}<br />";
-									//echo $pl['body'] . "<br />";
-									//echo "<hr />";
-									
+									// log_debug($pl);
 									// Bang the array into a table to keep a record of it.
-									
-									
+									$this->objDbIm->addRecord($pl);
+									// Send a response message
 									$this->conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
 									if($pl['body'] == 'quit') $this->conn->disconnect();
 									if($pl['body'] == 'break') $this->conn->send("</end>");
 									break;
 								case 'presence':
-									print "Presence: {$pl['from']} [{$pl['show']}] {$pl['status']}\n";
+									// print "Presence: {$pl['from']} [{$pl['show']}] {$pl['status']}\n";
+									// Update the table presence info
+									$this->objDbImPres->updatePresence($pl);
 									break;
 								case 'session_start':
 									print "Session Start\n";
