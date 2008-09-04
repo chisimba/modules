@@ -1,6 +1,7 @@
 package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.RealtimeBase;
+import avoir.realtime.tcp.common.Constants;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -55,16 +56,36 @@ public class AgendaTree extends JPanel {
                 if (lsm.isSelectionEmpty()) {
                 } else {
                     TreePath parentPath = tree.getSelectionPath();
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
-                    int[] rows = tree.getSelectionRows();
-                    String selectedNode = (String) node.getUserObject();
-                    int index = rows[0] - 2;
-                    if (index > -1) {
-                        // if (base.isPresenter()) {
 
-                        base.getSessionManager().updateSlide(index - 1);
-                        base.recordXml(index - 1);
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
+
+                    Slide selectedNode = (Slide) node.getUserObject();
+                    int index = selectedNode.getSlideIndex();
+                    if (index > -1) {
+
+                        if (node.isLeaf()) {
+                            //index--;
+
+                            //Object[] p = node.getUserObjectPath();
+                            String presentationName = selectedNode.getPresentationName();
+                            int dot = presentationName.lastIndexOf(".");
+                            if (dot > 0) {
+                                presentationName = presentationName.substring(0, dot);
+                            }
+                            String slidePath = "";
+                            if (base.getMODE() == Constants.APPLET) {
+                                slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + index + ".jpg";
+                                base.getSessionManager().setCurrentSlide(index, base.isPresenter(), slidePath);
+                            } else {
+                                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + presentationName + "/img" + index + ".jpg";
+                                base.getSessionManager().setCurrentSlide(index, base.isPresenter(), slidePath);
+                            }
+
+                        }
+                        base.getSessionManager().updateSlide(index);
                     }
+
+
                 }
             }
         });
@@ -73,8 +94,6 @@ public class AgendaTree extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
     }
-
-  
 
     public void processDoubleClick() {
     }
@@ -124,7 +143,7 @@ public class AgendaTree extends JPanel {
 
     public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
             Object child) {
-        return addObject(parent, child, false);
+        return addObject(parent, child, true);
     }
 
     public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
