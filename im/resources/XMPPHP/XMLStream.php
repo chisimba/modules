@@ -32,7 +32,7 @@ require_once 'Exception.php';
 require_once 'XMLObj.php';
 
 /** XMPPHP_Log */
-require_once 'Log.php';
+//require_once 'Log.php';
 
 /**
  * XMPPHP XML Stream

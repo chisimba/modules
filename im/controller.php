@@ -29,35 +29,40 @@
  * @see       xmpphp
  */
 
-class im extends controller 
+class im extends controller
 {
-	
+
 	public $objImOps;
 	public $objUser;
 	public $objLanguage;
-	
+
+	public $conn;
 	/**
     *
     * Standard constructor method to retrieve the action from the
     * querystring, and instantiate the user and lanaguage objects
     *
     */
-  public  function init()
-    {
-    	try {
-    		$this->objImOps = $this->getObject('imops');
-        	$this->objUser =  $this->getObject("user", "security");
-        	//Create an instance of the language object
-        	$this->objLanguage = $this->getObject("language", "language");
-    	}
-    	catch (customException $e)
-    	{
-    		customException::cleanUp();
-    		exit;
-    	}
-    }
+	public  function init()
+	{
+		try {
+			// Include the needed libs from resources
+			include($this->getResourcePath('XMPPHP/XMPP.php'));
+			include($this->getResourcePath('XMPPHP/XMPPHP_Log.php'));
+			$this->objImOps = $this->getObject('imops');
+			$this->objUser =  $this->getObject("user", "security");
+			//Create an instance of the language object
+			$this->objLanguage = $this->getObject("language", "language");
+			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_INFO);
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+		}
+	}
 
-    /**
+	/**
     * Standard dispatch method to handle adding and saving
     * of comments
     *
@@ -65,18 +70,63 @@ class im extends controller
     * @param void
     * @return void
     */
- 	public  function dispatch()
-    {
-        $action = $this->getParam('action');
-    	switch ($action) {
-            case null:
-            	echo "booyakasha!";
-            	break;
-            			
-            default:
-            	die("unknown action");
-            	break;
-        }
-    }
-	
+	public  function dispatch()
+	{
+		$action = $this->getParam('action');
+		switch ($action) {
+			case null:
+				// echo "booyakasha!";
+				$this->conn->autoSubscribe();
+
+				try {
+					$this->conn->connect();
+					while(!$this->conn->isDisconnected()) {
+						$payloads = $this->conn->processUntil(array('message', 'presence', 'end_stream', 'session_start'));
+						foreach($payloads as $event) {
+							$pl = $event[1];
+							switch($event[0]) {
+								case 'message':
+									echo "Message from: {$pl['from']}<br />";
+									echo $pl['body'] . "<br />";
+									echo "<hr />";
+									$this->conn->message($pl['from'], $body="Thanks for sending me \"{$pl['body']}\".", $type=$pl['type']);
+									if($pl['body'] == 'quit') $this->conn->disconnect();
+									if($pl['body'] == 'break') $this->conn->send("</end>");
+									break;
+								case 'presence':
+									print "Presence: {$pl['from']} [{$pl['show']}] {$pl['status']}\n";
+									break;
+								case 'session_start':
+									print "Session Start\n";
+									$this->conn->getRoster();
+									$this->conn->presence($status="Hello!");
+									break;
+							}
+						}
+					}
+				} catch(customException $e) {
+					customException::cleanUp();
+					exit;
+				}
+				break;
+
+			case 'sendmessage':
+				try {
+					$this->conn->connect();
+					$this->conn->processUntil('session_start');
+					$this->conn->presence();
+					$this->conn->message('pscott209@gmail.com', $this->objUser->userName()." says: Hello you!");
+					$this->conn->disconnect();
+				} catch(customException $e) {
+					customException::cleanUp();
+					exit;
+				}
+				break;
+
+			default:
+				die("unknown action");
+				break;
+		}
+	}
+
 }

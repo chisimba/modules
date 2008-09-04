@@ -29,6 +29,9 @@ class imops extends object
      */
 	public $objConfig;
 	
+	// public $objXMPP;
+	// public $objXMPPLog;
+	
 	/**
      * Standard init function called by the constructor call of Object
      *
@@ -39,6 +42,7 @@ class imops extends object
 	public function init()
 	{
 		try {
+			
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
