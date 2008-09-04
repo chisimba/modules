@@ -65,7 +65,10 @@ class dbim extends dbTable
     	}
     }
 
-    
+    public function getLast($num)
+    {
+    	return $this->getAll("ORDER BY datesent DESC LIMIT {$num}");
+    }
     
 }
 ?>

@@ -89,5 +89,11 @@ class dbimpresence extends dbTable
     	}
     }
     
+    public function getPresence($jid)
+    {
+    	$res = $this->getAll("WHERE person = '$jid'");
+    	return $res[0]['presshow'];
+    }
+    
 }
 ?>
