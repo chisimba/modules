@@ -41,6 +41,15 @@ class im extends controller
 	public $objDbIm;
 	public $conn;
 	public $objDbImPres;
+	
+	public $objSysConfig;
+	public $jserver;
+	public $jport;
+	public $juser;
+	public $jpass;
+	public $jclient;
+	public $jdomain;
+	
 	/**
     *
     * Standard constructor method to retrieve the action from the
@@ -61,7 +70,16 @@ class im extends controller
 			$this->objDbIm = $this->getObject('dbim');
 			$this->objDbImPres = $this->getObject('dbimpresence');
 			
-			$this->conn = new XMPPHP_XMPP('talk.google.com', 5222, 'fsiu123', 'fsiu2008', 'xmpphp', 'gmail.com', $printlog=TRUE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
+			// Get the sysconfig variables for the Jabber user to set up the connection.
+			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $this->jserver = $this->objSysConfig->getValue('jabberserver', 'im');
+            $this->jport = $this->objSysConfig->getValue('jabberport', 'im');
+			$this->juser = $this->objSysConfig->getValue('jabberuser', 'im');
+			$this->jpass = $this->objSysConfig->getValue('jabberpass', 'im');
+			$this->jclient = $this->objSysConfig->getValue('jabberclient', 'im');
+			$this->jdomain = $this->objSysConfig->getValue('jabberdomain', 'im');
+			
+			$this->conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch (customException $e)
 		{
