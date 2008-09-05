@@ -4,7 +4,6 @@ import avoir.realtime.tcp.common.packet.RealtimePacket;
 
 public class NewSlideRequestPacket implements RealtimePacket {
 
-    
     private String slideDirHost;
     private int slideIndex;
     private String id;
@@ -13,6 +12,23 @@ public class NewSlideRequestPacket implements RealtimePacket {
     private String sessionId;
     private String userId;
     private String slideServerId;
+    private String presentationName;
+
+    public boolean isIsPresenter() {
+        return isPresenter;
+    }
+
+    public void setIsPresenter(boolean isPresenter) {
+        this.isPresenter = isPresenter;
+    }
+
+    public String getPresentationName() {
+        return presentationName;
+    }
+
+    public void setPresentationName(String presentationName) {
+        this.presentationName = presentationName;
+    }
 
     public String getSlideServerId() {
         return slideServerId;
@@ -21,7 +37,6 @@ public class NewSlideRequestPacket implements RealtimePacket {
     public void setSlideServerId(String slideServerId) {
         this.slideServerId = slideServerId;
     }
-    
 
     public boolean isControl() {
         return control;
@@ -31,7 +46,6 @@ public class NewSlideRequestPacket implements RealtimePacket {
         this.control = control;
     }
 
-    
     public boolean isPresenter() {
         return isPresenter;
     }
@@ -48,12 +62,14 @@ public class NewSlideRequestPacket implements RealtimePacket {
         return sessionId;
     }
 
-    public NewSlideRequestPacket(String slideDirHost, int slideIndex, boolean isPresenter, String sessionId, String userId) {
+    public NewSlideRequestPacket(String slideDirHost, int slideIndex, boolean isPresenter, String sessionId, String userId,
+            String presentationName) {
         this.slideIndex = slideIndex;
         this.slideDirHost = slideDirHost;
         this.isPresenter = isPresenter;
         this.sessionId = sessionId;
         this.userId = userId;
+        this.presentationName = presentationName;
     }
 
     public String getUserId() {
@@ -63,8 +79,6 @@ public class NewSlideRequestPacket implements RealtimePacket {
     public String getSlideDirHost() {
         return slideDirHost;
     }
-
- 
 
     public int getSlideIndex() {
         return slideIndex;
