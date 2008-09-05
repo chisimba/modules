@@ -72,6 +72,7 @@ public class AgendaTree extends JPanel {
                             if (dot > 0) {
                                 presentationName = presentationName.substring(0, dot);
                             }
+                            base.setSelectedFile(presentationName);
                             String slidePath = "";
                             if (base.getMODE() == Constants.APPLET) {
                                 slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + index + ".jpg";
