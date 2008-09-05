@@ -5,6 +5,7 @@
 package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.*;
+import avoir.realtime.tcp.common.Constants;
 import java.io.File;
 import javax.swing.ImageIcon;
 
@@ -51,7 +52,7 @@ public class SessionManager {
                     base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(),
                             slideIndex, base.isPresenter(),
-                            base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                            base.getSessionId(), base.getUser().getUserName(), base.getControl(),base.getSelectedFile());
                     return;
                 }
             } else {
@@ -87,7 +88,7 @@ public class SessionManager {
         slideIndex = index;
         base.getTcpClient().requestNewSlide(base.getSiteRoot(),
                 slideIndex, base.isPresenter(),
-                base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                base.getSessionId(), base.getUser().getUserName(), base.getControl(),base.getSelectedFile());
 
     }
 
@@ -97,19 +98,23 @@ public class SessionManager {
      * @param slide
      * @param slideIndex
      */
-    public void setCurrentSlide(int slideIndex, boolean fromPresenter) {
+    public void setCurrentSlide(int slideIndex, boolean fromPresenter, String slidePath) {
         this.slideIndex = slideIndex;
+        System.out.println(slidePath);
         /*if (!base.isPresenter()) {
         base.getAgendaManager().getAgendaTree().setSelectedRow(slideIndex + 1);
         }*/
-        String slidePath = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/presentations/" +
-                base.getSessionId() + "/img" + slideIndex + ".jpg";
         try {
             java.awt.Image img = javax.imageio.ImageIO.read(new File(slidePath));
             ImageIcon slide = new ImageIcon(img);
-            base.getSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
-
-            base.getSurface().setStatusMessage(" ");
+            if (base.getMODE() == Constants.APPLET) {
+                base.getSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
+                base.getSurface().setStatusMessage(" ");
+            }else{
+                base.getWhiteboardSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
+                base.getWhiteboardSurface().showMessage("",false);
+                
+            }
             base.setText("Slide " + (this.slideIndex + 1) + " of " + slideCount, false);
             base.getToolbarManager().enableButtons(true);
         } catch (Exception ex) {
@@ -141,9 +146,9 @@ public class SessionManager {
                         base.getToolbarManager().getLastSlideButton().setEnabled(base.isPresenter());
                         base.getToolbarManager().getYesButton().setEnabled(base.isPresenter());
                         base.getToolbarManager().getNoButton().setEnabled(base.isPresenter());
-                        
+
                         base.getSurface().setConnecting(false);
-                        base.setText("Connected", true);
+                        base.setText("Connected", false);
                         base.setConnected(true);
                         base.publish();
 
