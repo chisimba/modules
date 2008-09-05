@@ -29,6 +29,7 @@ public class FilePacket implements RealtimePacket {
     private boolean lastFile;
     private int maxValue;
     private int currentValue;
+    private String presentationName;
 
     public int getCurrentValue() {
         return currentValue;
@@ -46,14 +47,23 @@ public class FilePacket implements RealtimePacket {
         this.maxValue = maxValue;
     }
 
+    public String getPresentationName() {
+        return presentationName;
+    }
+
+    public void setPresentationName(String presentationName) {
+        this.presentationName = presentationName;
+    }
+
     
     
-    public FilePacket(String sessionId, String username, byte[] byteArray, String filename, boolean lastFile) {
+    public FilePacket(String sessionId, String username, byte[] byteArray, String filename, boolean lastFile,String presentationName) {
         this.sessionId = sessionId;
         this.username = username;
         this.byteArray = byteArray;
         this.filename = filename;
         this.lastFile = lastFile;
+        this.presentationName=presentationName;
     }
 
     public boolean isLastFile() {
