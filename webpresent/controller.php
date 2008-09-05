@@ -204,7 +204,7 @@ class webpresent extends controller
         $this->setVarByRef('supernodeHost', $supernodeHost);
         $this->setVarByRef('supernodePort', $supernodePort);
 
-        $slideServerId='gen19Srv8Nme50';//$this->realtimeManager->randomString(32);
+        $slideServerId=$this->realtimeManager->randomString(32);
         $this->realtimeManager->startSlidesServer($slideServerId);
         
         $id= $this->getParam('id');
