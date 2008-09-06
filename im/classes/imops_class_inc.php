@@ -78,5 +78,22 @@ class imops extends object
 		}
 	}
 
+	/**
+     * Method to display the login box for prelogin blog operations
+     *
+     * @param  bool   $featurebox
+     * @return string
+     */
+    public function loginBox($featurebox = FALSE) 
+    {
+        $objLogin = $this->getObject('logininterface', 'security');
+        $objRegister = $this->getObject('block_register', 'security');
+        if ($featurebox == FALSE) {
+            return $objLogin->renderLoginBox('im') . "<br />" . $objRegister->show();
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('im') . "<br />" . $objRegister->show());
+        }
+    }
 }
 ?>
