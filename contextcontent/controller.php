@@ -49,6 +49,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @category  Chisimba
  * @package   contextcontent
  * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @extension scorm functionality by Paul Mungai <pwando@uonbi.ac.ke>
  * @copyright 2008 Tohir Solomons
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   Release: @package_version@
@@ -76,6 +77,8 @@ class contextcontent extends controller
             $this->objContextChapters = $this->getObject('db_contextcontent_contextchapter');
             $this->objContentOrder = $this->getObject('db_contextcontent_order');
             // $this->objContentTitles = $this->getObject('db_contextcontent_titles');
+            $this->objFiles = $this->getObject('dbfile','filemanager');
+	    $this->objFolders = $this->getObject('dbfolder','filemanager');
             
             // Load Content Classes
             $this->objContentPages = $this->getObject('db_contextcontent_pages');
@@ -145,6 +148,10 @@ class contextcontent extends controller
                 return $this->addPage($this->getParam('chapter'), $this->getParam('id', ''), $this->getParam('context', ''));
             case 'savepage':
                 return $this->savePage();
+            case 'addscorm':
+                return $this->addScormChapter();
+            case 'editscorm':
+                return $this->editScormChapter($this->getParam('id'));
             case 'editpage':
                 return $this->editPage($this->getParam('id'), $this->getParam('context'));
             case 'updatepage':
@@ -163,12 +170,16 @@ class contextcontent extends controller
                 return $this->movePageDown($this->getParam('id'));
             case 'savechapter':
                 return $this->saveChapter();
+            case 'savescormchapter':
+                return $this->saveScormChapter();
             case 'addchapter':
                 return $this->addChapter();
             case 'editchapter':
                 return $this->editChapter($this->getParam('id'));
             case 'updatechapter':
                 return $this->updateChapter();
+            case 'updatescormchapter':
+                return $this->updateScormChapter();
             case 'deletechapter':
                 return $this->deleteChapter($this->getParam('id'));
             case 'deletechapterconfirm':
@@ -242,7 +253,17 @@ class contextcontent extends controller
         
         return 'addeditchapter_tpl.php';
     }
-    
+    /**
+    * Method to add a new scorm chapter
+    */
+    protected function addScormChapter()
+    {
+        $this->setVar('mode', 'add');
+        
+        $this->setLayoutTemplate('layout_firstpage_tpl.php');
+        
+        return 'addeditscormchapter_tpl.php';
+    }      
 
     /**
     * Method to save a newly create chapter
@@ -264,6 +285,26 @@ class contextcontent extends controller
         }
     }
     
+    /**
+    * Method to save a newly created scorm chapter
+    */
+    protected function saveScormChapter()
+    {
+        $title = $this->getParam('chapter');
+        $intro = $this->getParam('parentfolder');
+        $visibility = $this->getParam('visibility');
+        $scorm = $this->getParam('scorm');
+        
+        $chapterId = $this->objChapters->addChapter('', $title, $intro);
+        
+        $result = $this->objContextChapters->addChapterToContext($chapterId, $this->contextCode, $visibility, $scorm);
+        
+        if ($result == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'couldnotcreatechapter'));
+        } else {
+            return $this->nextAction(NULL, array('message'=>'chaptercreated', 'id'=>$result));
+        }
+    }
 
     /**
     * Method to edit a chapter
@@ -293,7 +334,28 @@ class contextcontent extends controller
         }
     }
     
-
+    /**
+    * Method to edit a scorm chapter
+    *
+    * @param string $id Record Id of the Chapter
+    */
+    protected function editScormChapter($id)
+    {
+        $chapter = $this->objContextChapters->getChapter($id);
+        
+        if ($chapter == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'editchapterdoesnotexist'));
+        } else {
+            $this->setVar('mode', 'edit');
+            
+            $this->setVarByRef('chapter', $chapter);
+            $this->setVarByRef('id', $id);
+            
+            $this->setLayoutTemplate('layout_firstpage_tpl.php');
+            
+            return 'addeditscormchapter_tpl.php';
+        }
+    }
     /**
     * Method to update a chapter
     */
@@ -327,7 +389,40 @@ class contextcontent extends controller
         }
         
     }
-    
+   /**
+    * Method to update a scorm chapter
+    */
+    protected function updateScormChapter()
+    {
+        
+        $id = $this->getParam('id');
+        $chaptercontentid = $this->getParam('chaptercontentid');
+        $contextchapterid = $this->getParam('contextchapterid');
+        $title = $this->getParam('chapter');
+        $intro = $this->getParam('parentfolder');
+        $visibility = $this->getParam('visibility');
+        $scorm = $this->getParam('scorm');        
+        if ($id == '' || $chaptercontentid == '' || $contextchapterid == '') {
+            return $this->nextAction(NULL, array('error'=>'noidprovided'));
+        } else {
+            $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
+            
+            $chapter = $objChapterContent->getRow('id', $chaptercontentid);
+            
+            if ($chapter == FALSE) {
+                return $this->nextAction(NULL, array('error'=>'invalididprovided'));
+            } else if ($chapter['chapterid'] != $id) {
+                return $this->nextAction(NULL, array('error'=>'invalididprovided'));
+            } else {
+                $objChapterContent->updateChapter($chaptercontentid, $title, $intro);
+                $this->objContextChapters->updateChapterVisibility($contextchapterid, $visibility);
+                
+                return $this->nextAction(NULL, array('message'=>'chapterupdated', 'id'=>$id));
+            }
+        }
+        
+    }
+        
     /**
      * Method to delete a chapter
      *

@@ -80,6 +80,7 @@ class db_contextcontent_contextchapter extends dbtable
         return $this->query($this->getContextChaptersSQL($context));
     }
     
+    
     /**
     * Method to get the SQL statement to get the list of chapters in a context
     * @param string $context Context Code
@@ -87,13 +88,12 @@ class db_contextcontent_contextchapter extends dbtable
     */
     public function getContextChaptersSQL($context)
     {
-        $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid, (Select count(id) FROM  tbl_contextcontent_order WHERE tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_order.chapterid) as pagecount 
+        $sql = 'SELECT tbl_contextcontent_chaptercontext.visibility, tbl_contextcontent_chaptercontext.scorm, tbl_contextcontent_chaptercontent. *, tbl_contextcontent_chaptercontext.id as contextchapterid, (Select count(id) FROM  tbl_contextcontent_order WHERE tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_order.chapterid) as pagecount 
 FROM tbl_contextcontent_chaptercontext, tbl_contextcontent_chaptercontent
 WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chaptercontext.chapterid) AND tbl_contextcontent_chaptercontext.contextcode=\''.$context.'\' ORDER BY tbl_contextcontent_chaptercontext.chapterorder';
         
         return $sql;
-    }
-    
+    }   
     /**
     * Method to get the title of a chapter by providing the record id of the chapter
     * @param string $chapterId
@@ -133,13 +133,14 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     }
     
     
+    
     /**
     * Method to add a chapter to a context
     * @param string $chapterId Record Id of the CHapter
     * @param string $context Context Code
     * @param string $visibility Visibility status of chapter within a context
     */
-    public function addChapterToContext($chapterId, $context, $visibility)
+    public function addChapterToContext($chapterId, $context, $visibility, $scorm = 'N')
     {
         $objChapterContent = $this->getObject('db_contextcontent_chaptercontent');
         $chapterContent = $objChapterContent->getChapterContent($chapterId);
@@ -149,7 +150,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
         } else {
             $order = $this->getLastOrder($context)+1;
             
-            $result = $this->insertTitle($context, $chapterId, $order, $visibility);
+            $result = $this->insertTitle($context, $chapterId, $order, $visibility, $scorm);
             
             // If Successfully Added, Index Chapter
             if ($result != FALSE) {
@@ -163,7 +164,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
             return $result;
         }
     }
-    
+     
     
     /**
      * Method to add a dynamic block
@@ -211,6 +212,7 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     }
     
     
+    
     /**
     * Method to add a chapter to a context - Saves Record to Database
     * @param string $chapterId Record Id of the CHapter
@@ -218,18 +220,19 @@ WHERE (tbl_contextcontent_chaptercontent.chapterid = tbl_contextcontent_chapterc
     * @param int $order Order of the Item
     * @param string $visibility Visibility status of chapter within a context
     */
-    private function insertTitle($context, $chapterId, $order, $visibility='Y')
+    private function insertTitle($context, $chapterId, $order, $visibility='Y', $scorm = 'N')
     {
         return $this->insert(array(
                 'contextcode' => $context,
                 'chapterid' => $chapterId,
                 'chapterorder' => $order,
                 'visibility' => $visibility,
+                'scorm' => $scorm,
                 'creatorid' => $this->objUser->userId(),
                 'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
             ));
     }
-    
+       
     /**
     * Method to get the order of the last chapter in a context
     * @param string $context Context Code
