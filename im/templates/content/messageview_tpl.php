@@ -7,6 +7,7 @@ $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
+$this->objImOps = $this->getObject('imops');
 
 $middleColumn = NULL;
 $leftColumn = NULL;
@@ -22,10 +23,15 @@ foreach($msgs as $msg)
 {
 	// whip out a content featurebox and plak the messages in
 	$from = explode('/', $msg['msgfrom']);
-	$middleColumn .= $this->objFeatureBox->show($from[0], $objWashout->parseText($msg['msgbody']));
+	$middleColumn .= $this->objFeatureBox->show($from[0], $objWashout->parseText(htmlentities($msg['msgbody'])));
 }
 
-$leftColumn .= $this->leftMenu->show();
+if (!$this->objUser->isLoggedIn()) {
+	$leftColumn.= $this->objImOps->loginBox(TRUE);
+}
+else {
+	$leftColumn .= $this->leftMenu->show();
+}
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
