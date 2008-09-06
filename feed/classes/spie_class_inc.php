@@ -52,7 +52,15 @@ class spie extends object
         return $this->objSimplePieWrapper->set_feed_url($url);
     }
     
-    
+    /**
+    * 
+    * Get the feed provided by the given URL
+    * 
+    * @param string $url The URL of the feed
+    * @return string The rendered feed
+    * @access public
+    * 
+    */
     public function getFeed($url)
     {
         $this->setFeedUrl($url);
@@ -70,7 +78,6 @@ class spie extends object
         return $ret;
     }
     
-    
     /**
     *
     * Wrapper method for get_title in the SimplePie
@@ -78,12 +85,30 @@ class spie extends object
     * get_titlemethod.
     * 
     * Gets the title of the channel
+    * 
+    * @return String The feed title
+    * @access Public
     *
     */
     public function getTitle()
     {
         return $this->objSimplePieWrapper->get_title();
     }
+    
+    
+    //--------------------- PLEASE NOTE --------------------------//
+    /* 
+     * I am working here. This is incomplete. Documentation will be inserted
+     * as I update or add functionality
+     * 
+     * @Todo -- 
+     *  1. Deal with proxy settings (can SimplePie handle it?)  
+     *
+     * 
+     */
+    
+    
+    
     /**
     *
     * Wrapper method for get_author in the SimplePie
