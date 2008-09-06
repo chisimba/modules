@@ -70,17 +70,6 @@ class spie extends object
         return $ret;
     }
     
-
-        
-
-    
-    
-    
-    
-    
-    
-    
-    
     
     /**
     *
@@ -102,7 +91,7 @@ class spie extends object
     * get_authormethod.
     *
     */
-    public function getAuthor($key)
+    public function getAuthor($key=0)
     {
         return $this->objSimplePieWrapper->get_author($key);
     }
