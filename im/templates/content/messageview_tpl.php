@@ -23,7 +23,9 @@ foreach($msgs as $msg)
 {
 	// whip out a content featurebox and plak the messages in
 	$from = explode('/', $msg['msgfrom']);
-	$middleColumn .= $this->objFeatureBox->show($from[0], $objWashout->parseText(htmlentities($msg['msgbody'])));
+	$sentat = $this->objLanguage->languageText('mod_im_sentat', 'im');
+	$fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
+	$middleColumn .= $this->objFeatureBox->show($fromuser.": ".$from[0].", ".$sentat.": ".$msg['datesent'], $objWashout->parseText(htmlentities($msg['msgbody'])));
 }
 
 if (!$this->objUser->isLoggedIn()) {
