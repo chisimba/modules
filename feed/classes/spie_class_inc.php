@@ -57,7 +57,8 @@ class spie extends object
     {
         $this->setFeedUrl($url);
         $this->objSimplePieWrapper->init();
-        $ret="";
+        $title = $this->getTitle();
+        $ret="<h3>$title</h3><br />";
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $ret .= '<div class="feed_render_top" />'
               . '<div class="feed_render_default">'
