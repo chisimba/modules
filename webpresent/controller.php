@@ -204,7 +204,7 @@ class webpresent extends controller
         $this->setVarByRef('supernodeHost', $supernodeHost);
         $this->setVarByRef('supernodePort', $supernodePort);
 
-        $slideServerId=$this->realtimeManager->randomString(32);
+        $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
         $this->realtimeManager->startSlidesServer($slideServerId);
         
         $id= $this->getParam('id');
@@ -218,6 +218,8 @@ class webpresent extends controller
         $this->setVarByRef('slideServerId',$slideServerId);
         $this->setVarByRef('isPresenter', $isPresenter);
         
+         $this->setVar('pageSuppressBanner', TRUE);
+         
         return "showapplet_tpl.php";
     }
 
@@ -302,8 +304,10 @@ class webpresent extends controller
         // Check that username is available
         if ($title == '') {
             $problems[] = 'emptytitle';
-        }
         $title=$id;
+            
+        }
+        //
         // Clean up Spaces
         foreach ($tags as $tag)
         {
