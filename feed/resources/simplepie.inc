@@ -4,9 +4,7 @@
  *
  * A PHP-Based RSS and Atom Feed Framework.
  * Takes the hard work out of managing a complete RSS/Atom solution.
- * 
- * Modified by Derek Keats to support Chisimba's proxy settings
- * 
+ *
  * Copyright (c) 2004-2008, Ryan Parman and Geoffrey Sneddon
  * All rights reserved.
  *
@@ -676,15 +674,6 @@ class SimplePie
 	 * @access private
 	 */
 	var $item_limit = 0;
-    
-    // ----- Added by Derek Keats to support Proxy settings -----------------//
-    var $useProxy=FALSE;
-    var $useProxyAuth=FALSE;
-    var $proxyUrl=FALSE;
-    var $proxyPort=FALSE;
-    var $proxyUser=FALSE;
-    var $proxyPwd=FALSE;
-    // ---- End added to support proxy --------------------------------------//
 
 	/**
 	 * @var array Stores the default attributes to be stripped by strip_attributes().
@@ -7621,17 +7610,6 @@ class SimplePie_File
 				{
 					curl_setopt($fp, CURLOPT_ENCODING, '');
 				}
-                
-                // ------------- Added by DEREK KEATS to support proxy --------------------------//
-                if ($this->useProxy) {
-                    curl_setopt($fp, CURLOPT_PROXY, $this->proxyUrl);
-                    curl_setopt($fp, CURLOPT_PROXYPORT, $this->proxyPort);
-                    if ($this->useProxyAuth) {
-                        curl_setopt ($fp, CURLOPT_PROXYUSERPWD, $this->proxyUser . ":" . $this->proxyPwd); 
-                    }
-                }
-                // ------------- End of added by DEREK KEATS to support proxy ------------------//
-                
 				curl_setopt($fp, CURLOPT_URL, $url);
 				curl_setopt($fp, CURLOPT_HEADER, 1);
 				curl_setopt($fp, CURLOPT_RETURNTRANSFER, 1);

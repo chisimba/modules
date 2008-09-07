@@ -36,12 +36,6 @@ class spie extends object
         // Set the cache location to usrfiles/feed/cache/
         $cacheLocation = $this->objConfig->getsiteRootPath() . "usrfiles/feed/cache/";
         $this->objSimplePieWrapper->set_cache_location($cacheLocation);
-        // Get Proxy String and set proxy settings
-        $this->setProxy();
-        // Set the proxy settings for SimplePie
-        if ($this->useProxy) {
-            $this->setProxySpie();
-        }
     }
     
     /**
@@ -98,6 +92,7 @@ class spie extends object
                     $this->proxyUser = isset($userInfo[0]) ? $userInfo[0] : '';
                     // Record password if it exists
                     $this->proxyPwd = isset($userInfo[1]) ? $userInfo[1] : '';
+                    $this->useProxyAuth=TRUE;
                 }
             }
             // If it has server information, perform further split
@@ -152,7 +147,14 @@ class spie extends object
     */
     public function getFeed($url)
     {
-        $this->setFeedUrl($url);
+        if (!$this->useProxy) {
+            $this->setFeedUrl($url);
+        } else {
+            // We are using a proxy so use the curl wrapper to return the string
+            $objCurl = $this->getObject('curlwrapper', 'utilities');
+            $rss = $objCurl->exec($link);
+            $this->objSimplePieWrapper->set_raw_data($rss);
+        }
         $this->objSimplePieWrapper->init();
         $title = $this->getTitle();
         $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
