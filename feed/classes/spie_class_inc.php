@@ -94,7 +94,7 @@ class spie extends object
             $this->setFeedUrl($url);
         } else {
             // We are using a proxy so use the curl wrapper to return the string
-            $objCurl = $this->getObject('curlwrapper', 'utilities');
+            $objCurl = $this->getObject('curl', 'utilities');
             $rss = $objCurl->exec($link);
             $this->objSimplePieWrapper->set_raw_data($rss);
         }
