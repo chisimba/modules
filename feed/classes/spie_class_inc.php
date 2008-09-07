@@ -51,12 +51,13 @@ class spie extends object
     */
     private function checkProxy()
     {
-        // Remove http:// from beginning of string
+        
         $proxy = $this->objConfig->getProxy();
         if ($proxy && $proxy !=="") {
             $this->useProxy=TRUE;
+        } else {
+            return FALSE;
         }
-        return TRUE;
     }
     
     /**
@@ -148,6 +149,8 @@ class spie extends object
     * Wrapper method for get_author in the SimplePie
     * class being wrapped. See that class for details of the 
     * get_authormethod.
+    * 
+    * 
     *
     */
     public function getAuthor($key=0)
