@@ -36,82 +36,25 @@ class spie extends object
         // Set the cache location to usrfiles/feed/cache/
         $cacheLocation = $this->objConfig->getsiteRootPath() . "usrfiles/feed/cache/";
         $this->objSimplePieWrapper->set_cache_location($cacheLocation);
+        //Check the proxy settings
+        $this->checkProxy();
     }
-    
-    /**
-    *
-    * Method to pass the proxy settings from the chisimba settings
-    * to Simplepie
-    * 
-    * @access private
-    * @return TRUE
-    *
-    */
-    private function setProxySpie()
-    {
-        if ($this->useProxy) {
-            $this->objSimplePieWrapper->useProxy = TRUE;
-            $this->objSimplePieWrapper->proxyUrl = $this->proxyUrl;
-            $this->objSimplePieWrapper->proxyPort = $this->proxyPort;
-            if ($this->proxyUser && $this->proxyPwd) {
-                $this->objSimplePieWrapper->proxyUser = $this->proxyUser;
-                $this->objSimplePieWrapper->proxyPwd = $this->proxyPwd;
-            }
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-    
+        
     /**
     *
     * Method to extract the proxy settings from the chisimba settings
-    * and prepare them for use in curl.
+    * and set the useProxy to TRUE if settings found
     * 
     * @access private
     * @return TRUE
     *
     */
-    private function setProxy()
+    private function checkProxy()
     {
         // Remove http:// from beginning of string
         $proxy = $this->objConfig->getProxy();
         if ($proxy && $proxy !=="") {
             $this->useProxy=TRUE;
-            // Remove http:// from proxy
-            $proxy =  preg_replace('%\Ahttp://%i', '', $proxy);
-            // Check if string has @, indicator of username/password and server/port
-            if (preg_match('/@/i', $proxy)) {
-                // Split string into username and password
-                preg_match_all('/(?P<userinfo>.*)@(?P<serverinfo>.*)/i', $proxy, $result, PREG_PATTERN_ORDER);
-                // If it has user information, perform further split
-                if (isset($result['userinfo'][0])) {
-                    // Split at : to get username and password
-                    $userInfo = explode(':', $result['userinfo'][0]);
-                    // Record username if it exists
-                    $this->proxyUser = isset($userInfo[0]) ? $userInfo[0] : '';
-                    // Record password if it exists
-                    $this->proxyPwd = isset($userInfo[1]) ? $userInfo[1] : '';
-                    $this->useProxyAuth=TRUE;
-                }
-            }
-            // If it has server information, perform further split
-            if (isset($result['serverinfo'][0])) {
-                // Split at : to get server and port
-                $serverInfo = explode(':', $result['serverinfo'][0]);
-                // Record server if it exists
-                $this->proxyUrl = isset($serverInfo[0]) ? $serverInfo[0] : '';
-                // Record port if it exists
-                $this->proxyPort = isset($serverInfo[1]) ? $serverInfo[1] : '';
-            }
-        // Else only has server and port details
-        } else {
-            // Split at : to get server and port
-            $serverInfo = explode(':', $proxy);
-            // Record server if it exists
-            $this->proxyUrl = isset($serverInfo[0]) ? $serverInfo[0] : '';
-            // Record port if it exists
-            $this->proxyPort= isset($serverInfo[1]) ? $serverInfo[1] : '';
         }
         return TRUE;
     }
