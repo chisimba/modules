@@ -414,7 +414,9 @@ if(minVer != 1){
 window.open("';
 $jsContent.=$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action='.$appletaction.'&id='.$id.'&agenda='.$agenda.'","_self","fullscreen"); 
 }else{
-window.open("'.$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action=showerror&title='.$title.'&content='.$content.'&desc='.$desc.'","_self","fullscreen");
+window.open("';
+$jsContent.=$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action='.$appletaction.'&id='.$id.'&agenda='.$agenda.'","_self","fullscreen"); 
+
 }
 //--></script>';
 
