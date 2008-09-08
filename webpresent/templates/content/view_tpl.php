@@ -262,7 +262,7 @@ if (count($slideContent['slideshow']) > 0) {
     $script_src = '<script type="text/javascript" language="javascript" src="/chisimba_modules/webpresent/resources/gwt/avoir.realtime.base.gwt.Invite.nocache.js"></script>';
     $this->appendArrayVar('headerParams', $script_src);
 
-   
+
    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda));
 
     $objTabs->width = '95%';
