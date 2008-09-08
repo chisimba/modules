@@ -1,80 +1,88 @@
+<script type="text/javascript">
+
+    function openWindow() {
+        window.open(<?php echo $this->objConfig->getSiteRoot().'/index.php?module=webpresent&action=home'?>,"_self","fullscreen"); 
+    } 
+</script>
 <?php
-$userLevel;
-$isLoggedIn='false';
 
-if ($this->objUser->isAdmin())
-{
-    $this->userLevel = 'admin';
-}
-elseif ($this->objUser->isLecturer())
-{
-    $this->userLevel = 'lecturer';
-}
-elseif ($this->objUser->isStudent())
-{
-    $this->userLevel = 'student';
-} else
-{
-    $this->userLevel = 'guest';
-}
-$isLoggedIn =$this->objUser->isLoggedIn();
-$modPath=$this->objConfig->getModulePath();
-$siteRoot=$this->objConfig->getSiteRoot();
-$replacewith="";
-$docRoot=$_SERVER['DOCUMENT_ROOT'];
-$appletPath=str_replace($docRoot,$replacewith,$modPath);
-$appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
-$objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-$port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
-$rtpport=$objSysConfig->getValue('RTPPORT', 'realtime');
-$rtcpport=$objSysConfig->getValue('RTCPPORT', 'realtime');
-$sipport=$objSysConfig->getValue('SIP_PORT', 'realtime');
 
-$linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
-$linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
-//path to uploaded items
-$uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
+    $userLevel;
+    $isLoggedIn='false';
 
-$objMkdir = $this->getObject('mkdir', 'files');
-// Path for uploaded files
-$uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
-$objMkdir->mkdirs($uploadPath, 0777);
-$resourcesPath =$modPath.'/realtime/resources';
-$chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
-$objMkdir->mkdirs($chatLogPath, 0777);
+    if ($this->objUser->isAdmin())
+    {
+        $this->userLevel = 'admin';
+    }
+    elseif ($this->objUser->isLecturer())
+    {
+        $this->userLevel = 'lecturer';
+    }
+    elseif ($this->objUser->isStudent())
+    {
+        $this->userLevel = 'student';
+    } else
+    {
+        $this->userLevel = 'guest';
+    }
+    $isLoggedIn =$this->objUser->isLoggedIn();
+    $modPath=$this->objConfig->getModulePath();
+    $siteRoot=$this->objConfig->getSiteRoot();
+    $replacewith="";
+    $docRoot=$_SERVER['DOCUMENT_ROOT'];
+    $appletPath=str_replace($docRoot,$replacewith,$modPath);
+    $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
+    $rtpport=$objSysConfig->getValue('RTPPORT', 'realtime');
+    $rtcpport=$objSysConfig->getValue('RTCPPORT', 'realtime');
+    $sipport=$objSysConfig->getValue('SIP_PORT', 'realtime');
 
-echo '<center>';
-echo '<applet codebase="'.$appletCodeBase.'"';
-echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
+    $linuxJMFPathLib=$modPath.'/realtime/resources/jmf-linux-i586/lib/';
+    $linuxJMFPathBin=$modPath.'/realtime/resources/jmf-linux-i586/bin/';
+    //path to uploaded items
+    $uploadURL="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/templates/content/uploadfile.php';
 
-echo 'archive="realtime-launcher-1.0.1.jar" width="80%" height="600">';
-echo '<param name=appletCodeBase value="'.$appletCodeBase.'">';
-echo '<param name=userName value="'.$this->objUser->userName().'">';
-echo '<param name=isLocalhost value="true">';
-echo '<param name=fullName value="'.$this->objUser->fullname().'">';
-echo '<param name=userLevel value="'.$this->userLevel.'">';
-echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';
-echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
-echo '<param name=uploadURL value="'.$uploadURL.'">';
-echo '<param name=chatLogPath value="'.$chatLogPath.'">';
-echo '<param name=siteRoot value="'.$siteRoot.'">';
-echo '<param name=supernodeHost value="'.$supernodeHost.'">';
-echo '<param name=supernodePort value="'.$supernodePort.'">';
-echo '<param name=isWebPresent value="true">';
-echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
-echo '<param name=slidesDir value="'.$filePath.'">';
-echo '<param name=uploadPath value="'.$uploadPath.'">';
-echo '<param name=resourcesPath value="'.$resourcesPath.'">';
-echo '<param name=port value="'.$port.'">';
-echo '<param name=rtpport value="'.$rtpport.'">';
-echo '<param name=rtcpport value="'.$rtcpport.'">';
-echo '<param name=sipport value="'.$sipport.'">';
-echo '<param name=sessionId value="'.$sessionid.'">';
-echo '<param name=sessionTitle value="'.$sessionTitle.'">';
-echo '<param name=slideServerId value="'.$slideServerId.'">';
+    $objMkdir = $this->getObject('mkdir', 'files');
+    // Path for uploaded files
+    $uploadPath = $this->objConfig->getcontentBasePath().'/realtime/'.$this->contextCode.'/'.date("Y-m-d-H-i");//.'/'.time();
+    $objMkdir->mkdirs($uploadPath, 0777);
+    $resourcesPath =$modPath.'/realtime/resources';
+    $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
+    $objMkdir->mkdirs($chatLogPath, 0777);
 
-echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
-echo '</applet>';
-echo '</center>';
+    echo '<center>';
+    echo '<applet codebase="'.$appletCodeBase.'"';
+    echo 'code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
+
+    echo 'archive="realtime-launcher-1.0.1.jar" width="100%" height="700">';
+    echo '<param name=appletCodeBase value="'.$appletCodeBase.'">';
+    echo '<param name=userName value="'.$this->objUser->userName().'">';
+    echo '<param name=isLocalhost value="true">';
+    echo '<param name=fullName value="'.$this->objUser->fullname().'">';
+    echo '<param name=userLevel value="'.$this->userLevel.'">';
+    echo '<param name=linuxJMFPathLib value="'.$linuxJMFPathLib.'">';
+    echo '<param name=linuxJMFPathBin value="'.$linuxJMFPathBin.'">';
+    echo '<param name=uploadURL value="'.$uploadURL.'">';
+    echo '<param name=chatLogPath value="'.$chatLogPath.'">';
+    echo '<param name=siteRoot value="'.$siteRoot.'">';
+    echo '<param name=supernodeHost value="'.$supernodeHost.'">';
+    echo '<param name=supernodePort value="'.$supernodePort.'">';
+    echo '<param name=isWebPresent value="true">';
+    echo '<param name=isLoggedIn value="'.$isLoggedIn.'">';
+    echo '<param name=slidesDir value="'.$filePath.'">';
+    echo '<param name=uploadPath value="'.$uploadPath.'">';
+    echo '<param name=resourcesPath value="'.$resourcesPath.'">';
+    echo '<param name=port value="'.$port.'">';
+    echo '<param name=rtpport value="'.$rtpport.'">';
+    echo '<param name=rtcpport value="'.$rtcpport.'">';
+    echo '<param name=sipport value="'.$sipport.'">';
+    echo '<param name=sessionId value="'.$sessionid.'">';
+    echo '<param name=sessionTitle value="'.$sessionTitle.'">';
+    echo '<param name=slideServerId value="'.$slideServerId.'">';
+
+    echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
+    echo '</applet>';
+    echo '</center>';
 
 ?>

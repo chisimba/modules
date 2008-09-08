@@ -236,30 +236,7 @@ if (count($slideContent['slideshow']) > 0) {
     $table->addCell($rightCell);
 
     $objTabs = $this->newObject('tabcontent', 'htmlelements');
-/*
-    $alert=
-'<script language="Javascript">
 
-<!--
-function say(message){
-  alert ("Why did you click me? Arghhh!");
-}
-//-->
-
-</script>';
-
-
-   $objTab = $this->newObject('tabber', 'htmlelements');
-   $objTab->init();
-   $objTab->tabId = 'mainTab';
-   $objTab->addTab(array('name'=>'Live1', 'content'=>'bbbb'));
-   $objTab->addTab(array('name'=>'Live2', 'content'=>'ccccccc'));
-   $objTab->addTab(array('name'=>'Live', 'onclick'=>'say("Hello")'));
-
-   echo $objTab->show();
-*/
-
-    
  /**
   *      * We need the agenda, so find it. If the presentation was not given any specific
      * title (which is used as default agenda), then use the file name.
@@ -285,10 +262,8 @@ function say(message){
     $script_src = '<script type="text/javascript" language="javascript" src="/chisimba_modules/webpresent/resources/gwt/avoir.realtime.base.gwt.Invite.nocache.js"></script>';
     $this->appendArrayVar('headerParams', $script_src);
 
-    $link = '<a href="javascript: ;"
-onclick="document.getElementById(\'__gwt_historyFrame\').innerHTML=myJS;">Live2</a>';
-    // $objTabs->addTab('Live','<div id="__gwt_historyFrame"></div>');
-    $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda));
+   
+   $objTabs->addTab($this->objLanguage->languageText("mod_webpresent_livepresentation", "webpresent"), $objView->createPresentationForm($file['id'],$agenda));
 
     $objTabs->width = '95%';
     //then display the tabs

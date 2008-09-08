@@ -208,14 +208,16 @@ class realtimemanager extends Object
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $port=$objSysConfig->getValue('WHITEBOARDPORT', 'realtime');
         $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
-
+        $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+        $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+        
         $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
         //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
         $this->objConfig = $this->getObject('altconfig', 'config');
         $cmd = "java -Xms32m -Xmx64m -cp ".
         $this->objConfig->getModulePath().
-    "/realtime/resources/realtime-base-0.1.jar:".$this->objConfig->getModulePath().
-    "/realtime/resources/realtime-launcher-0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId."  >/dev/null &";
+    "/realtime/resources/realtime-base-1.0.1.jar:".$this->objConfig->getModulePath().
+    "/realtime/resources/realtime-launcher-1.0.1.jar avoir.realtime.tcp.base.SlidesServer ".$slideServerId." ".$supernodeHost." ".$supernodePort." >/dev/null &";
         //echo $cmd;
         system($cmd,$return_value);
     }

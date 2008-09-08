@@ -13,6 +13,29 @@ $heading->type = 1;
 
 echo $heading->show();
 
+if ($mode == 'addfixup') {
+
+    foreach ($problems as $problem)
+    {
+        $messages[] = $this->explainProblemsInfo($problem);
+    }
+}
+
+
+if ($mode == 'addfixup' && count($messages) > 0) {
+    echo '<ul><li><span class="error">'.$this->objLanguage->languageText('mod_userdetails_infonotsavedduetoerrors', 'userdetails').'</span>';
+
+    echo '<ul>';
+        foreach ($messages as $message)
+        {
+            if ($message != '') {
+                echo '<li class="error">'.$message.'</li>';
+            }
+        }
+
+    echo '</ul></li></ul>';
+}
+
 $form = new form ('updatedetails', $this->uri(array('action'=>'updatedetails')));
 $form->extra = ' target="_top" ';
 

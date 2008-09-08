@@ -181,20 +181,7 @@ if (count($latestFiles) == 0) {
 
 }
 
-$liveSessionsLink = new link ($this->uri(array('action'=>'showsessionsapplet', 'id'=>$file['id'])));
-$liveSessionsLink->link = 'Click here to view live sessions';
-$modPath=$this->objConfig->getModulePath();
-$replacewith="";
-$docRoot=$_SERVER['DOCUMENT_ROOT'];
-$appletPath=str_replace($docRoot,$replacewith,$modPath);
-$appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
-$siteRoot=$this->objConfig->getSiteRoot();
 
-$applet='<applet code="avoir.realtime.sessionmonitor.SessionListing" width="100%" height="300">';
-$applet.='<param name="archive" value="'.$appletCodeBase.'/realtime-sessionmonitor-0.1.jar"/>';
-$applet.='<param name=siteRoot value="'.$siteRoot.'"/>';
-
-$applet.='</applet>';
 
 $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->addTab('Latest Uploads', '<h3>10 Newest Uploads:</h3>'.$latestFilesContent);
