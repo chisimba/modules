@@ -2,7 +2,7 @@
 <!-- JNLP File for Notepad -->
 
 <jnlp spec="1.0+"
-      codebase="http://localhost/chisimba_modules/realtime/resources/" 
+      codebase="http://172.16.64.32/chisimba_modules/realtime/resources/" 
       href="classroom-2.jnlp">
    <information>
       <title>Realtime Classroom</title>
