@@ -95,13 +95,15 @@ public function readManifest($rootFolder, $courseFolder=Null){
 	$doc->load( 'usrfiles/'.$rootFolder.'/imsmanifest.xml' );
 
 	$books = $doc->getElementsByTagName( "item" );
+	$allbooks = $doc->getElementsByTagName( "organization" );
 	$resources = $doc->getElementsByTagName( "resource" );
 	$arrIdentifier = array();
 	$nodeArrId = array();
 	$arrId = 0;
 	$nArr = 0;
 	$nodesItem = $books->item(0);
-	$content = $this->getContent($nodesItem,$resources,$rootFolder);
+//	$content = $this->getContent($nodesItem,$resources,$rootFolder);
+	$content = $this->xmlMicroxTree($nodesItem,$resources,$rootFolder,$ident="");
 	//another method
 	//print_r($this->xml2array($books));
 	foreach( $books as $book )
@@ -188,8 +190,9 @@ public function readManifest($rootFolder, $courseFolder=Null){
 	//$navigation = $navigation."<p>$fullPath</p>";
 	}
 	$parentNode = Null;
-echo $content;
-var_dump($nodeArrId);
+//echo $content;
+//echo "<br />\n";
+//var_dump($nodeArrId);
 	//$staticMenu = $this->getStaticTree($arrIdentifier);
 
 	$xmlString = "<treemenu>";
@@ -202,8 +205,8 @@ var_dump($nodeArrId);
 	$xmlString = $xmlString."</treemenu>";
         //$this->_objTreeMenu =& new treemenu();
 	//$xmlMenu = $this->_objTreeMenu->createFromXML($xmlString);
-	return $navigation.'<br>'.$staticMenu;
-	//return $arrIdentifier;
+	//return $navigation.'<br>'.$staticMenu;
+	return $content;
 }
 
 function getContent($nod,$resources,$rootFolder)
@@ -216,7 +219,9 @@ function getContent($nod,$resources,$rootFolder)
 	}	
         $nodemane=$nod2->nodeName;
         $nodevalue=$nod2->nodeValue;
-	$NodeContent .=  $nodevalue."<br>";
+        $nodeAttr=$nod2->attribute;
+var_dump($nodeAttr);
+	$NodeContent .=  $nodevalue.$nodeAttr."<br>";
 
 	$cid = $nod->getAttribute('identifierref'); 
 	//an array to hold the tag id
@@ -232,6 +237,47 @@ function getContent($nod,$resources,$rootFolder)
 	$navigation = $navigation."<div>$fullPath</div>";
     }
    return $navigation;
+}
+function xmlMicroxTree($nod,$resources,$rootFolder,$ident)
+{ 
+	$NodList=$nod->childNodes;	
+	$treeTxt = "";//var to content temp
+    for( $j=0 ;  $j < $NodList->length; $j++ )
+    { 	//each child node
+      $nod2=$NodList->item($j);//Node j
+	//no white spaces
+	if($nod2->nodeType==1){
+		if($nod2->nodeName=="title"){
+		$treeTxt = "<br />\n".$treeTxt.$ident;
+		}
+		if($nod2->childNodes->length==0){//no children.Get nodeValue
+			$treeTxt = $treeTxt.$nod2->nodeValue;
+			$atribId = $nod2->parentNode->getAttribute('identifierref');
+			foreach ( $resources as $myresources ){
+				if( $myresources->getAttribute('identifier') ==  $atribId){
+					$resourcePath = $myresources->getAttribute('href');
+					//An Iframe with name content is the link target
+					$treeTxt = '<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$treeTxt.'</a>';
+				}
+			}			
+			$treeTxt = $treeTxt."<br />\n";
+		}else if ($nod2->childNodes->length>0){//children.Get first child
+			//$treeTxt = $treeTxt.$nod2->firstChild->nodeValue;
+			$atribId = $nod2->parentNode->getAttribute('identifierref');
+			foreach ( $resources as $myresources ){
+				if( $myresources->getAttribute('identifier') ==  $atribId){
+					$resourcePath = $myresources->getAttribute('href');
+					//An Iframe with name content is the link target
+					$treeTxt = $treeTxt.'<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$nod2->firstChild->nodeValue.'</a>';
+				}
+			}			
+		//recursive to child of children
+		$treeTxt = $treeTxt.$this->xmlMicroxTree($nod2,$resources,$rootFolder,$ident."&nbsp;&nbsp;");
+
+		}
+	}
+     }
+     return $treeTxt;
 }
 
     /**
