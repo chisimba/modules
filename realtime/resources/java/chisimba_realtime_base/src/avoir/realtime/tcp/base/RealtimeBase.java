@@ -34,11 +34,13 @@ import avoir.realtime.tcp.base.survey.SurveyManagerFrame;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.base.user.UserLevel;
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
+import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -71,7 +73,6 @@ import javax.swing.JToolBar;
  */
 public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
-    private String defaultHome = "avoir-realtime-0.1";
     private RealtimeOptions options;
     private TCPClient tcpClient;
     private String userName = "Anonymous";
@@ -138,11 +139,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel leftCenterPanel = new JPanel();
     private int MODE = Constants.APPLET;
     private String selectedFile;
+    private AppletContext appletContext;
 
     /**
      * Create additional components
      */
     private void initCustomComponents() {
+        whiteboardSurface = new WhiteboardSurface(this);
         userManager = new UserListManager(this);
         toolbarManager = new ToolbarManager(this);
         surface = new Surface(this);
@@ -152,7 +155,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         surveyManagerFrame = new SurveyManagerFrame(this);
         menuMananger = new MenuManager(this);
         whiteboardToolbar = new WhiteboardToolbarManager(this);
-        whiteboardSurface = new WhiteboardSurface(this);
+
         fileUploader = new FileUploader(this);
         fileManager = new FileManager(this);
         micVolumeMeter.setMinimum(0);
@@ -231,17 +234,17 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         centerPanel.setLayout(new BorderLayout());
 
 
-        surfacePanel.add(surface, BorderLayout.CENTER);
+
         //surfacePanel.add(transparentBg, BorderLayout.CENTER);
 
-        surfaceTabbedPane.add("Presentation", surfacePanel);
+        //surfaceTabbedPane.add("Presentation", surfacePanel);
         //surfaceTabbedPane.add("Whiteboard", whiteboardSurface);
         if (MODE == Constants.APPLET) {
-            centerPanel.add(surfaceTabbedPane, BorderLayout.CENTER);
+            centerPanel.add(surfacePanel, BorderLayout.CENTER);
         } else {
             centerPanel.add(whiteboardSurface, BorderLayout.CENTER);
         }
-        centerPanel.add(leftCenterPanel, BorderLayout.WEST);
+
 
         agendaPanel.setLayout(new BorderLayout());
         agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
@@ -256,21 +259,32 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         leftSplitPane.setDividerLocation(300);
         leftSplitPane.setTopComponent(userListTabbedPane);
         leftSplitPane.setBottomComponent(leftBottomSplitPane);
-        /*
-        leftPanel.add(agendaPanel, BorderLayout.SOUTH);
-        leftPanel.add(audioPanel, BorderLayout.CENTER);
-        leftPanel.add(userListTabbedPane, BorderLayout.NORTH);
-         */
         sessionManager.setIsPresenter(isPresenter);
-
-        // mPanel.add(centerPanel, BorderLayout.CENTER);
-        //mPanel.add(leftPanel, BorderLayout.WEST);
 
         splitPane.setLeftComponent(leftSplitPane);
         splitPane.setRightComponent(centerPanel);
-        mainPanel.add(toolbarManager.createToolbar(), BorderLayout.NORTH);
-        mainPanel.add(splitPane, BorderLayout.CENTER);
+        JToolBar toolbar = new JToolBar();
+        toolbar.add(toolbarManager.getGeneralToolbar());
 
+
+        toolbar.add(whiteboardSurface.getMainToolbar());
+
+        //toolbar.add();
+        if (MODE == Constants.APPLET) {
+            surface.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
+            //another line
+            surfacePanel.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
+            surfacePanel.add(whiteboardSurface.getPointerToolbar(), BorderLayout.WEST);
+        } else {
+            whiteboardSurface.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
+            whiteboardSurface.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
+            whiteboardSurface.add(whiteboardSurface.getPointerToolbar(), BorderLayout.WEST);
+        }
+        surfacePanel.add(surface, BorderLayout.CENTER);
+
+
+        mainPanel.add(toolbar, BorderLayout.NORTH);
+        mainPanel.add(splitPane, BorderLayout.CENTER);
     }
 
     public String getSelectedFile() {
@@ -281,41 +295,16 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         this.selectedFile = selectedFile;
     }
 
-    /**
-     * this displays the whiteboard tool bar, but since its enjoined with the pointer
-     * toolbar, its renamed accordingly. It sets the pointer on off
-     * @param state
-     */
-    public void showPointerToolBar(boolean state) {
-        if (state) {
-            leftCenterPanel.add(whiteboardSurface.getButtonsToolbar());
-            leftCenterPanel.add(whiteboardSurface.getPointerToolbar());
-            centerPanel.add(whiteboardSurface.getMainToolbar(), BorderLayout.NORTH);
-
-            centerPanel.add(whiteboardSurface.getColorPanel(), BorderLayout.SOUTH);
-            if (glassPaneHandler != null) {
-                glassPaneHandler.resize(glassPaneHandler.getWidth() + 5, glassPaneHandler.getHeight() + 5);
-            }
-            surface.setPointer(Constants.WHITEBOARD);
-
-        } else {
-            leftCenterPanel.remove(whiteboardSurface.getButtonsToolbar());
-            leftCenterPanel.remove(whiteboardSurface.getPointerToolbar());
-            centerPanel.remove(whiteboardSurface.getMainToolbar());
-            centerPanel.remove(whiteboardSurface.getColorPanel());
-            surface.setPointer(Constants.NO_POINTER);
-            if (glassPaneHandler != null) {
-                glassPaneHandler.resize(glassPaneHandler.getWidth() - 5, glassPaneHandler.getHeight() - 5);
-            }
-        }
-    }
-
     public int getMODE() {
         return MODE;
     }
 
     public void setMODE(int MODE) {
         this.MODE = MODE;
+    }
+
+    public AppletContext getAppletContext() {
+        return appletContext;
     }
 
     /**
@@ -589,7 +578,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * @return
      */
     public boolean getControl() {
-        return hasControl;
+        return hasControl || isPresenter;
     }
 
     /**
@@ -706,7 +695,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             String siteRoot,
             String slideServerId,
             String resourcesPath,
-            boolean localhost) {
+            boolean localhost,
+            AppletContext appletContext) {
         this.userLevel = userLevel;
         this.fullName = fullname;
         this.userName = userName;
@@ -714,23 +704,25 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         this.port = port;
         this.isPresenter = isPresenter;
         this.sessionId = sessionId;
-
+        this.selectedFile = sessionId;
         this.slidesDir = slidesDir;
         this.isSlidesHost = isSlidesHost;
         this.siteRoot = siteRoot;
         this.slideServerId = slideServerId;
         this.resourcesPath = resourcesPath;
         this.localhost = localhost;
+        this.appletContext = appletContext;
         initRealtimeHome();
         initUser();
         initComponents();
         initCustomComponents();
-        showPointerToolBar(true);
+
         Thread t = new Thread() {
 
             @Override
             public void run() {
                 initTCPCommunication();
+
             }
         };
         t.start();
@@ -738,14 +730,24 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
-    public JPanel initAsClassroom(String host, int port) {
+    public JPanel initAsClassroom(
+            String host,
+            int port,
+            String username,
+            String fullnames,
+            boolean isPresenter,
+            String sessionId) {
         this.host = host;
         this.port = port;
+        this.userName = username;
+        this.fullName = fullnames;
+        this.isPresenter = isPresenter;
+        this.sessionId = sessionId;
         initRealtimeHome();
-        initWhiteBoardUser();
+        initClassroomUser();
         initComponents();
         initCustomComponents();
-        showPointerToolBar(true);
+
         Thread t = new Thread() {
 
             @Override
@@ -759,11 +761,17 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return this;
     }
 
-    private void initWhiteBoardUser() {
+    private void initClassroomUser() {
+        //if not logged in, then assign random number
+        if (userName == null || userName.startsWith("Language")) { //not logging on through KEWL for dev, so give random user name
 
+            userName = "Guest" + new java.util.Random().nextInt(200);
+            fullName = userName;
+        }
         int xuserLevel = UserLevel.GUEST;
         user = new User(xuserLevel, userName, userName, "localhost", 22225, isPresenter,
                 sessionId, sessionTitle, slidesDir, false, siteRoot, slideServerId);
+
     }
 
     public String getUserName() {
@@ -1004,6 +1012,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         audioWizardFrame.setVisible(true);
     }
 
+    public JFrame getChatFrame() {
+        return chatFrame;
+    }
+
     /**
      * Diplays the chat room (frame)
      */
@@ -1011,7 +1023,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         chatFrame.setTitle(user.getFullName() + ": Chat Session: " + user.getSessionTitle());
         chatFrame.setAlwaysOnTop(true);
         chatFrame.add(chatRoom);
-        chatFrame.setSize(400, 350);
+        chatFrame.setSize(400, 400);
         chatFrame.setLocationRelativeTo(null);
         chatFrame.setVisible(true);
 
@@ -1022,7 +1034,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      */
     public void showFileTransferFrame() {
         if (fileTransferFrame == null) {
-            fileTransferFrame = new JFrame("Realtime File Transfer - Beta");
+            fileTransferFrame = new JFrame("Realtime File Transfer ");
             fileTransferPanel = new FileTransferPanel(this);
             fileTransferFrame.getContentPane().add(fileTransferPanel);
             fileTransferFrame.setSize(600, 400);
@@ -1089,6 +1101,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return audioWizardFrame;
     }
 
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
     /**
      * Sets the connection status
      * @param connected
@@ -1123,6 +1139,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         int count = 0;
         int max = 10;
         while (!connected) {
+            showMessage("Disconnected from server. Retrying " + count + " of " + max + "...", false, true,MessageCode.ALL);
             connected = tcpClient.connect();
 
             if (connected) {
@@ -1135,11 +1152,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             }
             sleep(5000);
             count++;
-            showMessage("Disconnected from server. Retrying " + count + " of " + max + "...", false, true);
+
 
         }
         if (!connected) {
-            showMessage("Connection to server failed. Refresh your browser page to reconnect", false, true);
+            showMessage("Connection to server failed. Refresh your browser page to reconnect. If the applet hangls, you will need to restart the browser.", false, true,MessageCode.ALL);
 
         }
     }
@@ -1152,23 +1169,42 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * @param isErrorMessage if is error message or not. error messages at preappended
      * with a warning icon
      */
-    public void showMessage(String msg, boolean temp, boolean isErrorMessage) {
+    public void showMessage(String msg, boolean temp, boolean isErrorMessage, int messageType) {
         String prevMsg = surface.getMessage();
-        surface.showMessage(msg, isErrorMessage);
-        whiteboardSurface.showMessage(msg, isErrorMessage);
-        Thread t = new Thread() {
-
-            public void run() {
-                try{
-                sleep(10000);
-                }catch(Exception ex){}
-                surface.showMessage("", false);
-                whiteboardSurface.showMessage("", false);
-
+        if (messageType == MessageCode.ALL) {
+            surface.showMessage(msg, isErrorMessage);
+            whiteboardSurface.showMessage(msg, isErrorMessage);
+        }
+        if (messageType == MessageCode.CLASSROOM_SPECIFIC) {
+            if (MODE == Constants.WEBSTART) {
+                
+                whiteboardSurface.showMessage(msg, isErrorMessage);
+                return;
             }
-        };
-        t.start();
+        }
 
+        if (messageType == MessageCode.WEBPRESENT_SPECIFIC) {
+            if (MODE == Constants.APPLET) {
+                surface.showMessage(msg, isErrorMessage);
+                
+                return;
+            }
+        }
+        if (temp) {
+            Thread t = new Thread() {
+
+                public void run() {
+                    try {
+                        sleep(10000);
+                    } catch (Exception ex) {
+                    }
+                    surface.showMessage("", false);
+                    whiteboardSurface.showMessage("", false);
+
+                }
+            };
+            t.start();
+        }
     }
 
     public JProgressBar getMicVolumeMeter() {
@@ -1186,10 +1222,13 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             return;
         }
         String[] slides = cacheHome.list();
+
         if (slides != null) {
             for (int i = 0; i < slides.length; i++) {
                 String presentation = cacheHome.getAbsolutePath() + "/" + slides[i];
+
                 int[] slidesList = tcpClient.getImageFileNames(presentation);
+
                 agendaManager.addAgenda(tcpClient.createSlideNames(slidesList), new File(presentation).getName());
             }
         }
