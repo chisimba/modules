@@ -99,7 +99,7 @@ public class MenuManager implements ActionListener {
             MenuManager.this.base.showAudioWizardFrame();
         }
         if (e.getActionCommand().equals("about")) {
-            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 0.1" +
+            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.1" +
                     " beta Build " + Version.version + "</center>");
 
         }
