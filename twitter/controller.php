@@ -122,6 +122,9 @@ class twitter extends controller
         $mode = $this->getParam("mode", null);
         // retrieve the sort order from the querystring
         $order = $this->getParam("order", null);
+        // retrieve the type of timeline type
+        $timeline = $this->getParam('timeline', 'public');
+        $this->setVarByRef('timeline', $timeline);
         /*
         * Convert the action into a method (alternative to
         * using case selections)

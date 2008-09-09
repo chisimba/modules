@@ -314,17 +314,26 @@ class twitterremote extends object
     /**
     *
     * Returns the 20 most recent updates from non-protected users who have
-    * a custom user icon.  This method does not require authentication.
+    * a custom user icon.
     *
-    * @return object An XML object with the public timeline from Twitter
+    * @return object An XML object with the timeline from Twitter
     *
     */
-    function getPublicTimeline($sinceid=false)
+    function getTimeline($sinceid=false, $type='public')
     {
         $qs='';
         if($sinceid!==false)
-            $qs='?since_id='.intval($sinceid);
-        $request = 'http://twitter.com/statuses/public_timeline.xml'.$qs;
+            $qs='since_id='.intval($sinceid);
+        switch ($type) {
+            case 'friends':
+                $request = "http://$this->userName:$this->password@twitter.com/statuses/friends_timeline.xml?$qs";
+                break;
+            case 'user':
+                $request = "http://twitter.com/statuses/user_timeline.xml?id=$this->userName&$qs";
+                break;
+            default:
+                $request = "http://twitter.com/statuses/public_timeline.xml?$qs";
+        }
         $this->oC->initializeCurl($request);
         $this->oC->setopt(CURLOPT_HEADER, FALSE);
         $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
@@ -338,12 +347,12 @@ class twitterremote extends object
     * Returns the 20 most recent updates from non-protected users who have
     * a custom user icon and formats it into a table for display.
     *
-    * @return string A table with the public timeline listed.
+    * @return string A table with the timeline listed.
     *
     */
-    public function showPublicTimeline($sinceid=false)
+    public function showTimeline($sinceid=false, $type='public')
     {
-        $xml = $this->getPublicTimeline($sinceid);
+        $xml = $this->getTimeline($sinceid, $type);
         if ($xml) {
         	$ret="<table>";
         	$objHumanizeDate = $this->getObject("translatedatedifference", "utilities");

@@ -30,11 +30,15 @@ $cssLayout->setLeftColumnContent($statusUpdate);
 
 
 
-//Add public timeline
-$publicTimeline = $this->objTwitterRemote->showPublicTimeline();
-$middleBit = "<table><tr><td>"
-  . "<h3>" . $this->objLanguage->languageText("mod_twitter_pubtimeline", "twitter")
-  . "</h3>" . $publicTimeline
+//Add timeline
+$this->loadClass('href', 'htmlelements');
+$public = new href($this->uri(array('module'=>'twitter','timeline'=>'public')),$this->objLanguage->languageText('mod_twitter_timeline_public','twitter'),NULL);
+$friends = new href($this->uri(array('module'=>'twitter','timeline'=>'friends')),$this->objLanguage->languageText('mod_twitter_timeline_friends','twitter'),NULL);
+$user = new href($this->uri(array('module'=>'twitter','timeline'=>'user')),$this->objLanguage->languageText('mod_twitter_timeline_user','twitter'),NULL);
+$timelineOutput = $this->objTwitterRemote->showTimeline(false, $timeline);
+$middleBit = "<table><tr><td>[ " . $public->show() . " ] [ " . $friends->show() . " ] [ " . $user->show() . " ]</td></tr><tr><td>"
+  . "<h3>" . $this->objLanguage->languageText("mod_twitter_timeline_$timeline", "twitter")
+  . "</h3>" . $timelineOutput
   . "</td></tr></table>";
 $cssLayout->setMiddleColumnContent($middleBit);
 
