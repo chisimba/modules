@@ -20,8 +20,12 @@
 	      href="http://java.sun.com/products/autodl/j2se"/>
    </resources>
    <application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">
-     <argument>localhost</argument>
+     <argument>172.16.64.32</argument>
      <argument>22225</argument>
+<argument>s3</argument>
+ <argument>s3</argument>
+ <argument>true</argument>
+ <argument>contextCode</argument>
    </application-desc>
 <security>
    <all-permissions/>
