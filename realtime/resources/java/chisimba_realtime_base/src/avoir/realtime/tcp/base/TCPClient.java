@@ -4,6 +4,7 @@
  */
 package avoir.realtime.tcp.base;
 
+import avoir.realtime.tcp.base.filetransfer.FileReceiverManager;
 import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
@@ -16,6 +17,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.base.user.User;
 
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
@@ -24,9 +26,11 @@ import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
+import avoir.realtime.tcp.common.packet.ClearSlidesPacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.ClientPacket;
 import avoir.realtime.tcp.common.packet.FilePacket;
+import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import avoir.realtime.tcp.common.packet.HeartBeat;
 import avoir.realtime.tcp.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.tcp.common.packet.MsgPacket;
@@ -39,13 +43,14 @@ import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.common.packet.QuitPacket;
 import avoir.realtime.tcp.common.packet.RemoveMePacket;
 import avoir.realtime.tcp.common.packet.RemoveUserPacket;
+import avoir.realtime.tcp.common.packet.RestartServerPacket;
 import avoir.realtime.tcp.common.packet.ServerLogReplyPacket;
 import avoir.realtime.tcp.common.packet.ServerLogRequestPacket;
 import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
 import avoir.realtime.tcp.common.packet.SystemFilePacket;
-import avoir.realtime.tcp.common.packet.UploadOKPacket;
+import avoir.realtime.tcp.common.packet.UploadMsgPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardItems;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
@@ -89,6 +94,7 @@ public class TCPClient {
     private long HEARTBEAT_DELAY = 10;
     private final int INITIAL_HEARBEAT_DELAY = 30;
     private boolean NETWORK_ALIVE = true;
+    boolean connected = false;
     /**
      * Reader for the ObjectInputStream
      */
@@ -118,13 +124,16 @@ public class TCPClient {
     int count = 0;
     private Timer monitorTimer = new Timer();
     private FileUploader fileUploader;
+    private FileReceiverManager fileReceiverManager;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
+
     }
 
     public TCPClient(ClientAdmin clientAdmin) {
         this.clientAdmin = clientAdmin;
+
     }
 
     public TCPClient() {
@@ -132,6 +141,7 @@ public class TCPClient {
 
     public TCPClient(RealtimeBase base) {
         this.base = base;
+        fileReceiverManager = new FileReceiverManager(base);
     }
 
     public void setWhiteboardSurfaceHandler(WhiteboardSurface whiteboardSurface) {
@@ -189,6 +199,10 @@ public class TCPClient {
         return SUPERNODE_PORT;
     }
 
+    public void sendRestartServerPacket() {
+        sendPacket(new RestartServerPacket());
+    }
+
     /**
      * sends a TCP Packet to Super Node
      * @param packet
@@ -206,6 +220,9 @@ public class TCPClient {
 
             } else {
                 logger.info("Error: writer is null!!!");
+                if (base != null) {
+                    base.showMessage("FATAL: Disconnected from server", true, true, MessageCode.ALL);
+                }
             //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
             }
         } catch (IOException ex) {
@@ -376,6 +393,7 @@ public class TCPClient {
                 //  socket.setKeepAlive(true);
 
                 result = true;
+                connected = true;
             } catch (UnknownHostException ex) {
                 if (base != null) {
                     base.setText("Connection Error: Cannot connect to server", true);
@@ -440,17 +458,23 @@ public class TCPClient {
                 Object packet = null;
                 try {
                     packet = reader.readObject();
-                //     logger.info(packet.getClass() + "");
+                    connected = true;
+
+                // logger.info(packet.getClass() + "");
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    displayDisconnectionMsg();
+                    connected = false;
+
                     running = false;
+
                     break;
 
                 }
                 if (packet instanceof ClientPacket) {
                     ClientPacket clientPacket = (ClientPacket) packet;
                     updateUserList(clientPacket);
+                } else if (packet instanceof ClearSlidesPacket) {
+                    processClearSlidesPacket();
                 } else if (packet instanceof ClassroomSlidePacket) {
                     processClassroomSlidePacket((ClassroomSlidePacket) packet);
                 } else if (packet instanceof LocalSlideCacheRequestPacket) {
@@ -511,8 +535,7 @@ public class TCPClient {
                 } else if (packet instanceof PresencePacket) {
                     PresencePacket p = (PresencePacket) packet;
                     processPresencePacket(p);
-                } else if (packet instanceof UploadOKPacket) {
-                    processUploadOKPacket((UploadOKPacket) packet);
+
                 } else if (packet instanceof QuitPacket) {
                     QuitPacket p = (QuitPacket) packet;
                     processQuitPacket(p);
@@ -521,22 +544,28 @@ public class TCPClient {
                     processModuleFileRequestPacket(p);
                 } else if (packet instanceof BinaryFileSaveReplyPacket) {
                     processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
-                } else if (packet instanceof BinaryFileChunkPacket) {
-                    processBinaryFileChunkPacket((BinaryFileChunkPacket) packet);
+                } else if (packet instanceof FileUploadPacket) {
+                    fileReceiverManager.processFileUpload((FileUploadPacket) packet);
+                } else if (packet instanceof UploadMsgPacket) {
+                    UploadMsgPacket msg = (UploadMsgPacket) packet;
+                    System.out.println(msg.getMessage() + " for " + msg.getRecepientIndex());
+                    fileTransfer.setProgress(msg.getRecepientIndex(), msg.getMessage());
                 }
             } catch (Exception ex) {
                 //for now, just cut off the listening
                 running = false;
-                displayDisconnectionMsg();
+                connected = false;
+                // displayDisconnectionMsg();
                 ex.printStackTrace();
             }
         }
+        if (!connected && !running) {
+            displayDisconnectionMsg();
+        }
     }
 
-    private void processUploadOKPacket(UploadOKPacket p) {
-        if (fileUploader != null) {
-            fileUploader.setProgress(p.getChunkNo());
-        }
+    private void processClearSlidesPacket() {
+        base.getWhiteboardSurface().setCurrentSlide(null, 0, 0, true);
     }
 
     private void processWhiteboardItems(WhiteboardItems p) {
@@ -553,21 +582,26 @@ public class TCPClient {
     }
 
     private void processWhiteboardPacket(WhiteboardPacket p) {
-        //   System.out.println("Received: " + p.getItem());
+        //     System.out.println("Received: " + p.getItem());
+
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
             base.getWhiteboardSurface().addItem(p.getItem());
+            base.getSurface().repaint();
         }
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
 
             base.getWhiteboardSurface().replaceItem(p.getItem());
+            base.getSurface().repaint();
         }
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
 
             base.getWhiteboardSurface().removeItem(p.getItem());
+            base.getSurface().repaint();
         }
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
 
             base.getWhiteboardSurface().clearItems();
+            base.getSurface().repaint();
         }
     }
 
@@ -610,7 +644,7 @@ public class TCPClient {
         if (n == JOptionPane.YES_OPTION) {
             fc.setSelectedFile(new File(filename));
             if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                createFile(fc.getSelectedFile().getAbsolutePath());
+                fileReceiverManager.setFilename(fc.getSelectedFile().getAbsolutePath());
                 sendPacket(new BinaryFileSaveReplyPacket(p.getSessionId(), p.getFileName(), base.getUser().getFullName(), p.getSenderName(), true, p.getUserName()));
             } else {
                 sendPacket(new BinaryFileSaveReplyPacket(p.getSessionId(), p.getFileName(), base.getUser().getFullName(), p.getSenderName(), false, p.getUserName()));
@@ -639,27 +673,54 @@ public class TCPClient {
 
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
     /**
      * Something went wrong..so the communication pipe between applet and server
      * is broken. Inform the user
      */
     private void displayDisconnectionMsg() {
-        if (base != null) {
-            base.getWhiteboardSurface().setSelectedItem(null);
-            base.showMessage("Disconnected from server. Retrying...", false, true);
-            int n = JOptionPane.showConfirmDialog(null, "Disconnected from server. Reconnect?", "Disconnected", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                //try to auto reconnect
-                base.initTCPCommunication();
-            } else {
-                base.showMessage("Disconnected From Server", false, true);
-            }
-        }
-        if (slidesServer != null) {
-            //if for the slide server..try to reconnect
-            slidesServer.reconnect();
-        }
 
+        base.refreshConnection();
+    /*
+    int noOfTries = 0;
+    int maxTries = 60;
+
+    while (noOfTries < maxTries) {
+    if (connected) {
+    break;
+    }
+    if (base != null) {
+
+    base.getWhiteboardSurface().setSelectedItem(null);
+    base.showMessage("Disconnected from server. Retrying..." + noOfTries+" of "+maxTries, false, true);
+
+    base.refreshConnection();
+    }
+    if (slidesServer != null) {
+    //if for the slide server..try to reconnect
+    slidesServer.reconnect();
+    }
+    noOfTries++;
+    delay(1000);
+    }
+
+    if (!connected && base != null) {
+    int n = JOptionPane.showConfirmDialog(null, "Disconnected from server. Reconnect?", "Disconnected", JOptionPane.YES_NO_OPTION);
+    if (n == JOptionPane.YES_OPTION) {
+    //try to auto reconnect
+    base.initTCPCommunication();
+    } else {
+    base.showMessage("Disconnected From Server", false, true);
+    }
+    }
+     */
     }
 
     /**
@@ -798,7 +859,7 @@ public class TCPClient {
      */
     private void processMsgPacket(MsgPacket p) {
         if (base != null) {
-            base.showMessage(p.getMessage(), p.isTemporary(), p.isErrorMsg());
+            base.showMessage(p.getMessage(), p.isTemporary(), p.isErrorMsg(), p.getMessageType());
             if (p.isErrorMsg()) {
                 base.setStatusMessage("");
             }
@@ -833,7 +894,7 @@ public class TCPClient {
             if (!initSlideRequest) {
                 requestNewSlide(base.getSiteRoot(), 0, base.isPresenter(),
                         base.getSessionId(), base.getUser().getUserName(),
-                        base.isPresenter());
+                        base.isPresenter(), packet.getPresentationName());
                 base.getSurface().setConnecting(false);
                 base.getSurface().setConnectingString("");
                 base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
@@ -843,7 +904,7 @@ public class TCPClient {
         } catch (Exception ex) {
             ex.printStackTrace();
             if (base != null) {
-                base.showMessage("Error writing slide " + packet.getFilename(), false, true);
+                base.showMessage("Error writing slide " + packet.getFilename(), false, true, MessageCode.ALL);
             }
 
         }
@@ -869,17 +930,19 @@ public class TCPClient {
             byte[] byteArray = packet.getByteArray();
             fc.write(ByteBuffer.wrap(byteArray));
             fc.close();
+            base.getSessionManager().setSlideCount(packet.getMaxValue());
             if (packet.isLastFile()) {
                 base.getSessionManager().setSlideCount(packet.getMaxValue());
                 int[] slidesList = getImageFileNames(home);
 
                 base.getAgendaManager().addAgenda(createSlideNames(slidesList), packet.getPresentationName());
                 base.getWhiteboardSurface().setCurrentSlide(new ImageIcon(home + "/img0.jpg"), 0, slidesList.length, true);
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             if (base != null) {
-                base.showMessage("Error writing slide " + packet.getFilename(), false, true);
+                base.showMessage("Error writing slide " + packet.getFilename(), false, true, MessageCode.ALL);
             }
 
         }
@@ -926,6 +989,13 @@ public class TCPClient {
             if (showChatFrame) {
                 base.showChatRoom();
                 showChatFrame = false;
+            } else {
+                if (!base.getChatFrame().isActive()) {
+                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_off.png").getImage());
+                } else {
+                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_on.png").getImage());
+base.getChatFrame().toFront();
+                }
             }
         }
     }
@@ -1026,7 +1096,7 @@ public class TCPClient {
                 String filename = "img" + i + ".jpg";
                 String filePath = slidesPath + "/" + filename;
                 boolean lastFile = i == (slides.length - 1) ? true : false;
-                replySlide(filePath, packet.getSessionId(), packet.getUsername(), filename, lastFile, i, slides.length);
+                replySlide(filePath, packet.getSessionId(), packet.getUsername(), filename, lastFile, i, slides.length, new File(slidesPath).getName());
             }
         }
     //then close this socket
@@ -1035,7 +1105,7 @@ public class TCPClient {
     //close the client..then close the app, whicever closes first
     sendPacket(new QuitPacket((packet.getSessionId())));
     socket.close();
-    } catch (Exception ex) {
+    } catch (Exception ex) {MessageCode.ALL
     ex.printStackTrace();
     }
      */
@@ -1048,12 +1118,17 @@ public class TCPClient {
      */
     private void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
         int slideIndex = packet.getSlideIndex();
+        base.setSelectedFile(packet.getPresentationName());
         if (base != null) {
             slideServerReplying = true;
             String slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + slideIndex + ".jpg";
+
+            if (base.getMODE() == Constants.WEBSTART) {
+                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
+            }
             base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
             if (packet.getMessage() != null) {
-                base.showMessage(packet.getMessage(), false, true);
+                base.showMessage(packet.getMessage(), false, true, MessageCode.ALL);
             }
         }
     }
@@ -1073,18 +1148,18 @@ public class TCPClient {
         sendPacket(new LocalSlideCacheRequestPacket(sessinId, slidesServerId, pathToSlides, username));
         //monitor 
         slidesMonitor = new Timer();
-        slidesMonitor.schedule(new LocalSlideCacheRequestMonitor(), 20 * 1000);
+    // slidesMonitor.schedule(new LocalSlideCacheRequestMonitor(), 20 * 1000);
     }
 
     class LocalSlideCacheRequestMonitor extends TimerTask {
 
         public void run() {
             if (!slidesDownloaded) {
-                base.setText("Error: Server taking too long to reply. Click on 'Refresh' button to resolve.", true);
+                base.setText("The slide server is currently under maintenance and we regret cannot do live presentation.", true);
                 //   JOptionPane.showMessageDialog(null, "The server is taking too long to respond.\n" +
                 //         "To resolve this, please click on the 'Refresh Button' on the toolbar.");
-                base.setStatusMessage("The server is taking too long to respond." +
-                        "To resolve this, click on 'Refresh' button to resolve.");
+                base.showMessage("Slide Server under maintenance", true, true, MessageCode.ALL);
+                base.setStatusMessage("The slide server is currently under maintenance and we regret cannot do live presentation.");
 
             }
             slidesMonitor.cancel(); //Terminate the thread
@@ -1099,12 +1174,12 @@ public class TCPClient {
      */
     public void requestNewSlide(String siteRoot, int slideIndex,
             boolean isPresenter, String sessionId, String userId,
-            boolean hasControl) {
+            boolean hasControl, String presentationName) {
         NewSlideRequestPacket p = new NewSlideRequestPacket(siteRoot,
                 slideIndex,
                 isPresenter,
                 sessionId,
-                userId);
+                userId, presentationName);
         p.setControl(hasControl);
         p.setSlideServerId(base.getSlideServerId());
         sendPacket(p);
@@ -1125,10 +1200,10 @@ public class TCPClient {
             final String username,
             final String filename,
             final boolean lastFile,
-            int currentValue, int maxValue) {
+            int currentValue, int maxValue, String presentationName) {
         byte[] byteArray = readFile(filePath);
         FilePacket packet = new FilePacket(sessionId, username,
-                byteArray, filename, lastFile);
+                byteArray, filename, lastFile, presentationName);
         packet.setMaxValue(maxValue);
         packet.setCurrentValue(currentValue);
         sendPacket(packet);
@@ -1151,7 +1226,7 @@ public class TCPClient {
 
     public void sendSystemFile(String filePath, String filename) {
         byte[] byteArray = readFile(filePath);
-        SystemFilePacket p = new SystemFilePacket("", "", byteArray, "/usr/lib/realtime/lib/" + filename, false);
+        SystemFilePacket p = new SystemFilePacket("", "", byteArray, "/usr/lib/chisimba-realtime-server/1.0.1/lib/" + filename, false);
         sendPacket(p);
     }
 
@@ -1188,7 +1263,7 @@ public class TCPClient {
 
         cancelMonitor();
         NETWORK_ALIVE = true;
-        base.showMessage("", false, false);
+        base.showMessage("", false, false, MessageCode.ALL);
         int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
     /*   base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
     PresenceConstants.ONLINE, true);
