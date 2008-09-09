@@ -67,7 +67,7 @@ public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNode
    fwrite($fh,   ' <homepage href="http://avoir.uwc.ac.za"/>');
    fwrite($fh,    ' <description kind="short">Realtime Virtual Classroom</description>');
    fwrite($fh,    ' <icon href="images/logo.png"/> ');
-   fwrite($fh,    ' <icon kind="splash" href="images/splash.jpg"/> ');
+   fwrite($fh,    ' <icon kind="splash" href="images/splash_realtime.png"/> ');
    fwrite($fh,    ' <offline-allowed/>');
    fwrite($fh,   '</information>');
    fwrite($fh, '<resources>     ');
