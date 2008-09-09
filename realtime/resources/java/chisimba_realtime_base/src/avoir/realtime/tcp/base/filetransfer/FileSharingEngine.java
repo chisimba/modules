@@ -6,8 +6,10 @@ package avoir.realtime.tcp.base.filetransfer;
 
 import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
+import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import javax.swing.JOptionPane;
@@ -22,6 +24,13 @@ public class FileSharingEngine {
 
     public FileSharingEngine(RealtimeBase base) {
         this.base = base;
+    }
+
+    private void delay(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (Exception ex) {
+        }
     }
 
     private byte[] readFile(String filePath) {
@@ -51,62 +60,58 @@ public class FileSharingEngine {
 
     }
 
-    public void readBinaryFile(String filepath, int index, String rec) {
+    public void readBinaryFile(String filepath, int index, String recepient) {
+        int BUFFER_SIZE = 4096;
+        int MAX_CHUNK_SIZE = 1 * BUFFER_SIZE; //~4.1MB
         String filename = "unknown";
+        /*
         byte[] byteArray = readFile(filepath);
         base.getTcpClient().sendPacket(new BinaryFileChunkPacket(base.getSessionId(), filename, byteArray, rec, false));
         //notify that this is the last chunk
         BinaryFileChunkPacket lastChunk = new BinaryFileChunkPacket(base.getSessionId(), filename, new byte[0], rec, true);
         base.getTcpClient().sendPacket(lastChunk);
         base.getFileTransferPanel().setProgress(index, "Complete");
+         */
+        try {
 
-    /*int bufferSize = 16 * 1024;
-    try {
-    File f = new File(filepath);
-    filename = f.getName();
-    byte[] buffer = new byte[bufferSize];
-    long size = f.length();
-    int noOfChuncks = (int) (size / bufferSize);
-    System.out.print("\nSize: ");
-    System.out.println(size);
-    
-    if (noOfChuncks == 0) {
-    Long b=new Long(size);
-    buffer = new byte[b.byteValue()];
-    noOfChuncks = 1;
-    }
-    if (size % noOfChuncks != 0) {
-    noOfChuncks += 1;
-    }
-    System.out.println("No of chuncks: " + noOfChuncks);
-    
-    FileInputStream fIn = new FileInputStream(f);
-    
-    int read = fIn.read(buffer);
-    int totalRead = 0;
-    int chuncksRead = 0;
-    while (read > 0) {
-    chuncksRead++;
-    if (chuncksRead < noOfChuncks) {
-    System.out.println("hunk size:" + bufferSize);
-    read = fIn.read(buffer);
-    } else {
-    long lastChunkSize =  size - totalRead;
-    buffer = new byte[new Long(lastChunkSize).byteValue()];
-    System.out.println("Last chunk size:" + lastChunkSize);
-    read = fIn.read(buffer);
-    }
-    totalRead += read;
-    base.getTcpClient().sendPacket(new BinaryFileChunkPacket(base.getSessionId(), filename, buffer, rec, false));
-    base.getFileTransferPanel().setProgress(index, totalRead + "/" + size);
-    }
-    System.out.println(totalRead + " read of " + size);
-    //notify that this is the last chunk
-    BinaryFileChunkPacket lastChunk = new BinaryFileChunkPacket(base.getSessionId(), filename, new byte[0], rec, true);
-    base.getTcpClient().sendPacket(lastChunk);
-    } catch (IOException ex) {
-    ex.printStackTrace();
-    JOptionPane.showMessageDialog(null, "Cannot read file " + filename);
-    }*/
+            File file = new File(filepath);
+            long fileSize = file.length();
+
+            FileInputStream in = new FileInputStream(file);
+
+            int nChunks = (int) (fileSize / MAX_CHUNK_SIZE);
+            if (fileSize % MAX_CHUNK_SIZE > 0) {
+                nChunks++;
+            }
+
+
+            long bytesRemaining = fileSize;
+
+            String clientID = String.valueOf((long) (Long.MIN_VALUE *
+                    Math.random()));
+
+            for (int i = 0; i < nChunks; i++) {
+
+                int chunkSize = (int) ((bytesRemaining > MAX_CHUNK_SIZE) ? MAX_CHUNK_SIZE : bytesRemaining);
+                bytesRemaining -= chunkSize;
+                byte[] buf = new byte[chunkSize];
+
+                int read = in.read(buf);
+                if (read == -1) {
+                    break;
+                } else if (read > 0) {
+
+                    base.getTcpClient().sendPacket(new FileUploadPacket(base.getSessionId(),
+                            base.getSessionId(), buf, i, nChunks, file.getName(),
+                            clientID, recepient, false, base.getUserName(), index));
+                    //simulate
+                    //delay(1000);
+                }
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
