@@ -48,6 +48,47 @@
             $url.='</center>';
             
             return $url;
-        } 
+        }
+
+
+public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNodePort,$username,$fullnames,$isPresenter,$sessionId){
+  
+    $jnlpFile = $fileBase.'/chisimba_classroom.jnlp';
+    $fh = fopen($jnlpFile, 'w') or die("can't open file");
+
+   fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
+   fwrite($fh,'<jnlp spec="1.0+" ');
+   fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
+   fwrite($fh,     ' href="chisimba_classroom.jnlp">');
+   fwrite($fh,   '<information>');
+   fwrite($fh,    ' <title>Realtime Classroom</title>');
+   fwrite($fh,    ' <vendor>AVOIR</vendor>');
+   fwrite($fh,    ' <description>Realtime Classroom</description>');
+   fwrite($fh,   ' <homepage href="http://avoir.uwc.ac.za"/>');
+   fwrite($fh,    ' <description kind="short">Realtime Virtual Classroom</description>');
+   fwrite($fh,    ' <icon href="images/logo.png"/> ');
+   fwrite($fh,    ' <icon kind="splash" href="images/splash.jpg"/> ');
+   fwrite($fh,    ' <offline-allowed/>');
+   fwrite($fh,   '</information>');
+   fwrite($fh, '<resources>     ');
+   fwrite($fh,  	'<jar href="realtime-launcher-1.0.1.jar"/>   ');
+   fwrite($fh,	'<j2se version="1.5+"');
+   fwrite($fh,	 '     href="http://java.sun.com/products/autodl/j2se"/>');
+   fwrite($fh,   '</resources>');
+   fwrite($fh,  '<application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">');
+   fwrite($fh,   ' <argument>'.$supernodeHost.'</argument>');
+   fwrite($fh,   ' <argument>'.$superNodePort.'</argument>');
+   fwrite($fh,   ' <argument>'.$username.'</argument>');
+   fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
+   fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
+   fwrite($fh,   ' <argument>'.$sessionId.'</argument>');
+
+   fwrite($fh,   '</application-desc>');
+   fwrite($fh,'<security>');
+   fwrite($fh,'  <all-permissions/>');
+   fwrite($fh,'</security> ');
+   fwrite($fh,'</jnlp>');
+   fclose($fh); 
     }
+}
 ?>
