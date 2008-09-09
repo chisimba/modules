@@ -14,10 +14,6 @@ class spie extends object
     public $objSimplePieWrapper;
     public $objConfig;
     public $useProxy=FALSE;
-    public $proxyUrl=FALSE;
-    public $proxyPort=FALSE;
-    public $proxyUser=FALSE;
-    public $proxyPwd=FALSE;
     
     /**
     * 
@@ -36,6 +32,8 @@ class spie extends object
         // Set the cache location to usrfiles/feed/cache/
         $cacheLocation = $this->objConfig->getsiteRootPath() . "usrfiles/feed/cache/";
         $this->objSimplePieWrapper->set_cache_location($cacheLocation);
+
+        
         //Check the proxy settings
         $this->checkProxy();
     }
@@ -82,14 +80,19 @@ class spie extends object
     
     /**
     * 
-    * Get the feed provided by the given URL
+    * Get the feed provided by the given URL and hand off to
+    * the display method indicated by $display. Valid methods
+    * are:
+    *   displayPlain (boring, title and description)
+    *   displaySmart (try to figure out what feed it is and display accordingly)
     * 
+    * @param string $display The method to use to render the output
     * @param string $url The URL of the feed
     * @return string The rendered feed
     * @access public
     * 
     */
-    public function getFeed($url)
+    public function getFeed($url, $display="displayPlain")
     {
         if (!$this->useProxy) {
             $this->setFeedUrl($url);
@@ -100,9 +103,34 @@ class spie extends object
             $this->objSimplePieWrapper->set_raw_data($rss);
         }
         $this->objSimplePieWrapper->init();
+        return $this->$display();
+    }
+    
+    /**
+    * 
+    * Render the output as a plain display of Title and description
+    * 
+    * @return string the formatted output
+    * @access private
+    * 
+    */
+    private function displayPlain()
+    {
         $title = $this->getTitle();
-        $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
+        if ($logo = $this->getImageUrl()) {
+        $logo = '<img src="' . $logo
+          . '" width="' . $this->getImageWidth() 
+          . '" height="' . $this->getImageHeight() 
+          . '" alt="' . $title . '" />';
+        $ret='<div class="feed_render_title_forcewhite">'  
+          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
+          . $title . '</h3></td></tr></table></div>';
+        } else {
+            $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
+        }
+        $counter=0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
+            $counter++;
             $ret .= '<div class="feed_render_top"></div>'
               . '<div class="feed_render_default">'
               . '<p class="feed_render_link"><a href="' . $item->get_permalink() . '">' . $item->get_title() . '</a></p>'
@@ -112,6 +140,237 @@ class spie extends object
         }
         return $ret;
     }
+    
+    /**
+     * 
+     * Try to figure out what kind of feed we have and be a bit
+     * smart about how it is rendered. It uses some criteria to 
+     * identify known feed sources, and calls the appropriate method
+     * to render them. It degrades to displayPlain if it does not
+     * recognize the source.
+     * 
+     * @return string the formatted output
+     * @access private
+     * 
+     */
+    private function displaySmart()
+    {
+        $title = $this->getTitle();
+        if ($this->isTwitterSearch($title)) {
+            return $this->twitterSearch();
+        } 
+        $permaLink = $this->getPermalink();
+        if ($this->isYouTube($permaLink)) {
+            return $this->youTubeFeed();
+        }
+        if ($this->isSlideShare($permaLink)) {
+            return $this->slideShareFeed();
+        }
+        // Degrade to the plain display so as not to fail when it cannot identify feed
+        return $this->displayPlain();
+    }
+    
+    /**
+    * 
+    * Process the results of a feed from a twitter search. This
+    * avoids the title and description (which are the same in the 
+    * feed) being duplicated, and caters for a bug with links in the 
+    * title in the current version of SimplePie.
+    * 
+    * @return string The rendered feed
+    * 
+    */
+    public function twitterSearch()
+    {
+        $title = $this->getTitle();
+        $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
+        $counter=0;
+        foreach ($this->objSimplePieWrapper->get_items() as $item) {
+            $counter++;
+            $author = $item->get_author();
+            $name = $author->get_name();
+            $ln = $author->get_link();
+            $nickAr = explode(" (", $name);
+            $nick = "<a href=\"" . $ln . "\">" . $nickAr[0] . "</a>:&nbsp;&nbsp;";
+            $description = $item->get_description();
+            $info = $nick . " " . $description;
+            $ret .= '<div class="feed_render_top"></div>'
+              . '<div class="feed_render_default">'
+              . '<p class="feed_render_description">' . $info 
+              . '<br /><span class="feed_render_date">' 
+              .  $item->get_date('j F Y | g:i a') 
+              . '</span></p>'
+              . '</div><div class="feed_render_bottom"></div>';
+        }
+        unset($author, $name, $ln, $nickAr, $nick, $description, $info);
+        return $ret;
+    }
+    
+    /**
+    * 
+    * Process the output of a YouTube feed. This avoids the title 
+    * being repeated since it is already part of the description. It
+    * also inserts the YouTube logo
+    * 
+    * @return string The rendered feed
+    * 
+    */
+    public function youTubeFeed()
+    {
+        // YouTube has some really ugly feeds
+        $permaLink = $this->getPermalink();
+        if (!$this->isYoutTubeStandards($permaLink)) {
+            $standardsFeed = FALSE;
+        }
+        $title = $this->getTitle();
+        $logo = '<img src="' . $this->getImageUrl() 
+          . '" width="' . $this->getImageWidth() 
+          . '" height="' . $this->getImageHeight() 
+          . '" alt="You Tube" />';
+        //Need to hard code this or it looks ugly
+        $ret='<div class="feed_render_title_forcewhite">'  
+          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
+          . $title . '</h3></td></tr></table></div>';
+        $counter=0;
+        foreach ($this->objSimplePieWrapper->get_items() as $item) {
+            $counter++;
+            $description = $item->get_description();
+            if (!$standardsFeed) {
+                $title = $item->get_title();
+                $ln = $item->get_link();
+                $title = '<a href="' . $ln . '">'. $title . '</a>';
+                $description = str_replace("align=\"right\"", "style=\"float:left; margin-left: 5px; margin-right: 20px;\"", $description);
+                $description = $title . "<br />" . $description;
+            }
+            $ret .= '<div class="feed_render_top"></div>'
+              . '<div class="feed_render_default">'
+              . '<p class="feed_render_description">' . $description 
+              . '<br /><span class="feed_render_date">' 
+              .  $item->get_date('j F Y | g:i a') 
+              . '</span></p>'
+              . '</div><div class="feed_render_bottom"></div>';
+        }
+        unset($title, $description, $logo);
+        return $ret;
+        
+    }
+    
+    /**
+    * Process the output of a SlideShare feed
+    * 
+    * Slideshare embeds its whole layout in a CDATA tag and does not give
+    * any control over layout. This sucks. It floats the thumbnail right, which looks very ugly.
+    * Thus we take it and float it left
+    * 
+    * @return string The rendered feed
+    * 
+    */
+    public function slideShareFeed()
+    {
+        $title = $this->getTitle();
+        $logo = '<img src="' . $this->getImageUrl() 
+          . '" width="' . $this->getImageWidth() 
+          . '" height="' . $this->getImageHeight() 
+          . '" alt="Slideshare" />';
+        $ret='<div class="feed_render_title_forcewhite">'  
+          . '<table><tr><td>' . $logo . '</td><td><h3>&nbsp;&nbsp;' 
+          . $title . '</h3></td></tr></table></div>';
+        $counter=0;
+        foreach ($this->objSimplePieWrapper->get_items() as $item) {
+            $counter++;
+            $description = $item->get_description();
+            $description = str_replace("float:right;", "float:left; margin-left: 5px; margin-right: 20px;", $description);
+            $title = $item->get_title();
+            $ln = $item->get_link();
+            $ret .= '<div class="feed_render_top"></div>'
+              . '<div class="feed_render_default">'
+              . '<p class="feed_render_description"><a href="' 
+              . $ln . '">' . $title . '</a><br />' . $description 
+              . '<br /><span class="feed_render_date">' 
+              .  $item->get_date('j F Y | g:i a') 
+              . '</span></p>'
+              . '</div><div class="feed_render_bottom"></div>';
+        }
+        return $ret;
+    }
+    
+    
+    
+    
+    
+    // --------------- Methods for determining the search type
+    
+    /**
+     * 
+     * Method to determine if a feed is a twitter search feed
+     * 
+     * @param string Title The title from the feed
+     * @return TRUE|FALSE
+     * @access private
+     * 
+     */
+    private function isTwitterSearch($title)
+    {
+        // Check for Twitter search results
+        $twitterSearch = stripos($title, "Twitter Search");
+        if (!$twitterSearch == FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * 
+     * Method to determine if a feed is a Youtube feed
+     * 
+     * @param string $permaLink The permaLink from the feed
+     * @return TRUE|FALSE
+     * @access private
+     * 
+     */
+    private function isYouTube($permaLink)
+    {
+        $yt = stripos($permaLink, "youtube.com");
+        if (!$yt == FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    private function isYoutTubeStandards($permaLink)
+    {
+        $yt = stripos($permaLink, "standards");
+        if (!$yt == FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    /**
+     * 
+     * Method to determine if a feed is a Slideshare feed
+     * 
+     * @param string $permaLink The permaLink from the feed
+     * @return TRUE|FALSE
+     * @access private
+     * 
+     */
+    public function isSlideShare($permaLink)
+    {
+        $ss = stripos($permaLink, "slideshare.net");
+        if (!$ss == FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+        
+    }
+    
+    // --------------- End methods for determining search type
+    
     
     /**
     *
@@ -128,6 +387,98 @@ class spie extends object
     public function getTitle()
     {
         return $this->objSimplePieWrapper->get_title();
+    }
+    
+    /**
+    *
+    * Wrapper method for get_permalink in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_permalinkmethod.
+    *
+    * Gets the permalink of the channel
+    * 
+    * @return String The feed permalink
+    * @access Public
+    * 
+    */
+    public function getPermalink()
+    {
+        return $this->objSimplePieWrapper->get_permalink();
+    }
+    
+    /**
+    *
+    * Wrapper method for get_image_title in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_image_titlemethod.
+    * 
+    * @return String The logo Title
+    * @access Public
+    *
+    */
+    public function getImageTitle()
+    {
+        return $this->objSimplePieWrapper->get_image_title();
+    }
+
+    /**
+    *
+    * Wrapper method for get_image_url in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_image_urlmethod.
+    * 
+    * @return String The Logo image URL
+    * @access Public
+    *
+    */
+    public function getImageUrl()
+    {
+        return $this->objSimplePieWrapper->get_image_url();
+    }
+
+    /**
+    *
+    * Wrapper method for get_image_link in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_image_linkmethod.
+    * 
+    * @return String The logo image Link
+    * @access Public
+    *
+    */
+    public function getImageLink()
+    {
+        return $this->objSimplePieWrapper->get_image_link();
+    }
+
+    /**
+    *
+    * Wrapper method for get_image_width in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_image_widthmethod.
+    * 
+    * @return String The logo image width
+    * @access Public
+    *
+    */
+    public function getImageWidth()
+    {
+        return $this->objSimplePieWrapper->get_image_width();
+    }
+
+    /**
+    *
+    * Wrapper method for get_image_height in the SimplePie
+    * class being wrapped. See that class for details of the 
+    * get_image_heightmethod.
+    *
+    * @return String The logo image height
+    * @access Public
+    *
+    */
+    public function getImageHeight()
+    {
+        return $this->objSimplePieWrapper->get_image_height();
     }
     
     
@@ -150,7 +501,9 @@ class spie extends object
     * class being wrapped. See that class for details of the 
     * get_authormethod.
     * 
+    * This returns the author of a feed identified by key
     * 
+    * @access public
     *
     */
     public function getAuthor($key=0)
@@ -158,17 +511,7 @@ class spie extends object
         return $this->objSimplePieWrapper->get_author($key);
     }
 
-    /**
-    *
-    * Wrapper method for get_permalink in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_permalinkmethod.
-    *
-    */
-    public function getPermalink()
-    {
-        return $this->objSimplePieWrapper->get_permalink();
-    }
+
 
     /**
     *
@@ -230,65 +573,7 @@ class spie extends object
         return $this->objSimplePieWrapper->get_longitude();
     }
 
-    /**
-    *
-    * Wrapper method for get_image_title in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_image_titlemethod.
-    *
-    */
-    public function get_image_title()
-    {
-        return $this->objSimplePieWrapper->get_image_title();
-    }
 
-    /**
-    *
-    * Wrapper method for get_image_url in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_image_urlmethod.
-    *
-    */
-    public function get_image_url()
-    {
-        return $this->objSimplePieWrapper->get_image_url();
-    }
-
-    /**
-    *
-    * Wrapper method for get_image_link in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_image_linkmethod.
-    *
-    */
-    public function get_image_link()
-    {
-        return $this->objSimplePieWrapper->get_image_link();
-    }
-
-    /**
-    *
-    * Wrapper method for get_image_width in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_image_widthmethod.
-    *
-    */
-    public function get_image_width()
-    {
-        return $this->objSimplePieWrapper->get_image_width();
-    }
-
-    /**
-    *
-    * Wrapper method for get_image_height in the SimplePie
-    * class being wrapped. See that class for details of the 
-    * get_image_heightmethod.
-    *
-    */
-    public function get_image_height()
-    {
-        return $this->objSimplePieWrapper->get_image_height();
-    }
 
     /**
     *
