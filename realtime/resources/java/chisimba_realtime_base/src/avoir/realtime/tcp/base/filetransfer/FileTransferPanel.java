@@ -208,12 +208,13 @@ public class FileTransferPanel extends javax.swing.JPanel {
     }
 
     public void processBinaryFileSaveReplyPacket(String filename, String from, boolean accepted) {
-       // sendFiles.add(new SendFile(filename, from, accepted, 0, "Unknown", sendFiles.size()));
-       // sendFilesModel = new SendFilesTableModel(sendFiles);
-       // table.setModel(sendFilesModel);
-        String status=accepted? "Yes":"No";
-        sendFilesModel.setValueAt(status, sendFiles.size() - 1, 3);
-        sendFilesModel.setValueAt(this.base.getUser().getFullName(), sendFiles.size() - 1, 1);
+        // sendFiles.add(new SendFile(filename, from, accepted, 0, "Unknown", sendFiles.size()));
+        // sendFilesModel = new SendFilesTableModel(sendFiles);
+        // table.setModel(sendFilesModel);
+        //String filename, String receipient, boolean accepted, long filesize, String progress, int row
+        sendFiles.add(new SendFile(filename, from, accepted, 0, "0%", sendFiles.size()));
+        sendFilesModel = new SendFilesTableModel(sendFiles);
+        table.setModel(sendFilesModel);
         if (accepted) {
             sendFile(filename, sendFiles.size() - 1, from);
         }
@@ -312,10 +313,6 @@ public class FileTransferPanel extends javax.swing.JPanel {
     private void processFileToSend(String filename) {
         base.getTcpClient().sendPacket(new BinaryFileSaveRequestPacket(base.getSessionId(), filename, base.getUser().getFullName(), base.getUser().getUserName(),
                 true));
-        sendFiles.add(new SendFile(filename, "Unknown", false, 0, "Unknown", sendFiles.size()));
-        sendFilesModel = new SendFilesTableModel(sendFiles);
-        table.setModel(sendFilesModel);
-
     }
 
     /** This method is called from within the constructor to
@@ -339,7 +336,7 @@ public class FileTransferPanel extends javax.swing.JPanel {
 
         sendFilesPanel.setLayout(new java.awt.BorderLayout());
 
-        newButton.setText("Send File");
+        newButton.setText("Select File And Send");
         newButton.setEnabled(false);
         newButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
