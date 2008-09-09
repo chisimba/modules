@@ -32,10 +32,22 @@ class spie extends object
         // Set the cache location to usrfiles/feed/cache/
         $cacheLocation = $this->objConfig->getsiteRootPath() . "usrfiles/feed/cache/";
         $this->objSimplePieWrapper->set_cache_location($cacheLocation);
-
-        
         //Check the proxy settings
         $this->checkProxy();
+    }
+    
+    /**
+    * 
+    * Set the limit for the number of feeds to display
+    * 
+    * @param int $limit The number of feeds to display
+    * @return VOID
+    * @access public
+    * 
+    */
+    public function setLimit($limit=5)
+    {
+        $this->limit = $limit;
     }
         
     /**
@@ -108,6 +120,69 @@ class spie extends object
     
     /**
     * 
+    * Get the feeds and display only a list of fields
+    * 
+    * @param string $url The URL of the feed
+    * @param string $fields An array of fields to display
+    * @return string The rendered feed
+    * @access public
+    */
+    public function getFields($url, $fields)
+    {   
+        if (!$this->useProxy) {
+            $this->setFeedUrl($url);
+        } else {
+            // We are using a proxy so use the curl wrapper to return the string
+            $objCurl = $this->getObject('curl', 'utilities');
+            $rss = $objCurl->exec($link);
+            $this->objSimplePieWrapper->set_raw_data($rss);
+        }
+        $this->objSimplePieWrapper->init();
+        $title = $this->getTitle();
+        if ($logo = $this->getImageUrl()) {
+        $logo = '<img src="' . $logo
+          . '" width="' . $this->getImageWidth() 
+          . '" height="' . $this->getImageHeight() 
+          . '" alt="' . $title . '" />';
+        $ret='<div class="feed_render_title_forcewhite">'  
+          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
+          . $title . '</h3></td></tr></table></div>';
+        } else {
+            $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
+        }
+        $counter = 0;
+        foreach ($this->objSimplePieWrapper->get_items() as $item) {
+            $counter++;
+            // Now get the fields
+            $ret .= '<div class="feed_render_top"></div>'
+              . '<div class="feed_render_default">';
+            foreach ($fields as $field) {
+                $method = "get_" . $field;
+                $$field = $item->$method();
+                if ($field == "title") {
+                    $ln = $item->get_link();
+                    $ret .= '<a href="' . $ln . '">' . $$field . '</a><br />';
+                } else {
+                    if ($field == "date") {
+                        $ret .= '<p class="feed_render_date">' 
+                          .  $item->get_date('j F Y | g:i a') . '</p>';
+                    } else {
+                        $ret .= $$field . "<br />";
+                    }
+                }
+            }
+            $ret .= '</div><div class="feed_render_bottom"></div>';
+            if (isset($this->limit)) {
+                if ($counter==$this->limit) {
+                    break;
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    /**
+    * 
     * Render the output as a plain display of Title and description
     * 
     * @return string the formatted output
@@ -137,6 +212,11 @@ class spie extends object
               . '<p class="feed_render_description">' . $item->get_description() . '</p>'
               . '<p class="feed_render_date">' .  $item->get_date('j F Y | g:i a') . '</p>'
               . '</div><div class="feed_render_bottom"></div>';
+            if (isset($this->limit)) {
+                if ($counter==$this->limit) {
+                    break;
+                }
+            }
         }
         return $ret;
     }
@@ -201,6 +281,11 @@ class spie extends object
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
               . '</div><div class="feed_render_bottom"></div>';
+            if (isset($this->limit)) {
+                if ($counter==$this->limit) {
+                    break;
+                }
+            }
         }
         unset($author, $name, $ln, $nickAr, $nick, $description, $info);
         return $ret;
@@ -249,6 +334,11 @@ class spie extends object
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
               . '</div><div class="feed_render_bottom"></div>';
+            if (isset($this->limit)) {
+                if ($counter==$this->limit) {
+                    break;
+                }
+            }
         }
         unset($title, $description, $logo);
         return $ret;
@@ -290,6 +380,11 @@ class spie extends object
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
               . '</div><div class="feed_render_bottom"></div>';
+            if (isset($this->limit)) {
+                if ($counter==$this->limit) {
+                    break;
+                }
+            }
         }
         return $ret;
     }
