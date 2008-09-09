@@ -57,14 +57,16 @@ class calendar extends controller
         $this->objDT->retrieve('calendar');
 
         // Give User Lecturer Rights if User is Admin
-        if ($this->isValid('manage_course_event')) {
+        //if ($this->isValid('manage_course_event')) {
+        if ($this->objUser->isCourseAdmin()) {
             $this->isContextLecturer = TRUE;
         } else {
             $this->isContextLecturer = FALSE;
         }
 
 
-        if ($this->isValid('manage_site_event')) {
+        //if ($this->isValid('manage_site_event')) {
+        if ($this->objUser->isAdmin()) {
             $this->isContextLecturer = TRUE;
             $this->manageSiteCalendar = TRUE;
         } else {
