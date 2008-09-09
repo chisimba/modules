@@ -5,14 +5,15 @@
 package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.PointerPacket;
 
+import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
 import avoir.realtime.tcp.whiteboard.item.Item;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -68,6 +69,8 @@ public class Surface extends JPanel implements MouseListener,
     private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
     // private PointerSurface pointerSurface = new PointerSurface();
     private boolean firstSlide = true;
+    int currentX, currentY;
+    private boolean drawSelection = false;
 
     public Surface(RealtimeBase xbase) {
         this.base = xbase;
@@ -83,13 +86,17 @@ public class Surface extends JPanel implements MouseListener,
 
         //this.base.getGlassPaneHandler().setGlassPane(pointerSurface);
         // pointerSurface.setVisible(true);
-        setCursor(DRAW_CURSOR);
+        setCursor(SELECT_CURSOR);
     }
 
     public void addItem(Item item) {
         pointerLocations.addElement(item);
-        paintPointer(graphics);
 
+
+    }
+
+    public void setTotalSlideCount(int totalSlideCount) {
+        this.totalSlideCount = totalSlideCount;
     }
 
     public void replaceItem(int index, Item item) {
@@ -99,7 +106,7 @@ public class Surface extends JPanel implements MouseListener,
             pointerLocations.addElement(item);
         }
         currentPointer = null;
-        paintPointer(graphics);
+
     }
 
     public void removeItem(int index) {
@@ -128,10 +135,12 @@ public class Surface extends JPanel implements MouseListener,
     }
 
     public void mouseDragged(MouseEvent evt) {
-        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
-
-        if (pointerSurface.contains(xpoint)) {
-
+        if (base.getControl()) {
+            Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+            currentX = evt.getX();
+            currentY = evt.getY();
+            //   if (pointerSurface.contains(xpoint)) {
+            drawSelection = true;
             int xOffset = evt.getX() - pointerSurface.x;
             int yOffset = evt.getY() - pointerSurface.y;
             Point point = new Point(xOffset, yOffset);
@@ -139,38 +148,73 @@ public class Surface extends JPanel implements MouseListener,
 
                 case Constants.HAND_LEFT: {
 
+                    drawSelection = false;
+                    setCurrentPointer(Constants.HAND_LEFT, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
 
                     break;
                 }
                 case Constants.HAND_RIGHT: {
+                    drawSelection = false;
+                    setCurrentPointer(Constants.HAND_RIGHT, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_RIGHT));
 
                     break;
                 }
                 case Constants.ARROW_UP: {
+                    drawSelection = false;
+                    setCurrentPointer(Constants.ARROW_UP, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_UP));
 
                     break;
                 }
                 case Constants.ARROW_SIDE: {
+                    drawSelection = false;
+                    setCurrentPointer(Constants.ARROW_SIDE, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_SIDE));
 
                     break;
                 }
                 case Constants.WHITEBOARD: {
+                    drawSelection = false;
+                    if (base.getWhiteboardSurface().getBrush() == WhiteboardSurface.BRUSH_SELECT) {
+                        drawSelection = true;
+                    }
                     base.getWhiteboardSurface().setGraphics(graphics);
                     base.getWhiteboardSurface().processMouseDragged(evt);
 
                     repaint();
                     break;
                 }
+                //  }
             }
+
+        } else {
+            base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
+
         }
+        if (base.getWhiteboardSurface().getBrush() == WhiteboardSurface.BRUSH_MOVE &&
+                pointer == Constants.NO_POINTER) {
+            drawSelection = true;
+        }
+        repaint();
 
+    }
 
-        //repaint();
-        paintPointer(graphics);
+    private void paintSelection(Graphics2D g2) {
+        if (drawSelection && base.getWhiteboardSurface().getSelectedItem() == null) {
+            Rectangle rect = new Rectangle(startX, startY, currentX - startX, currentY - startY);
+            base.getWhiteboardSurface().setCurrentSelectionArea(rect);
+            g2.draw(rect);
+        }
+    }
+
+    public boolean isDrawSelection() {
+        return drawSelection;
+    }
+
+    public void setDrawSelection(boolean drawSelection) {
+        this.drawSelection = drawSelection;
     }
 
     public void mouseMoved(MouseEvent evt) {
@@ -214,6 +258,8 @@ public class Surface extends JPanel implements MouseListener,
                 currentPointer.setIcon(paintBrush);
                 break;
             }
+            default:
+                currentPointer.setIcon(blankIcon);
         }
         repaint();
     }
@@ -259,10 +305,13 @@ public class Surface extends JPanel implements MouseListener,
     }
 
     public void mousePressed(MouseEvent evt) {
-        setOwnCursor();
-        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+        if (base.getControl()) {
+            drawSelection = false;
+            Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
 
-        if (pointerSurface.contains(xpoint)) {
+            //  if (pointerSurface.contains(xpoint)) {
+            startX = evt.getX();
+            startY = evt.getY();
             int xOffset = evt.getX() - (int) pointerSurface.getX();
             int yOffset = evt.getY() - (int) pointerSurface.getY();
             Point point = new Point(xOffset, yOffset);
@@ -274,21 +323,25 @@ public class Surface extends JPanel implements MouseListener,
                     break;
                 }
                 case Constants.HAND_LEFT: {
+                    setOwnCursor();
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
 
                     break;
                 }
                 case Constants.HAND_RIGHT: {
+                    setOwnCursor();
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_RIGHT));
 
                     break;
                 }
                 case Constants.ARROW_UP: {
+                    setOwnCursor();
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_UP));
 
                     break;
                 }
                 case Constants.ARROW_SIDE: {
+                    setOwnCursor();
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_SIDE));
 
                     break;
@@ -302,18 +355,22 @@ public class Surface extends JPanel implements MouseListener,
 
 
             }
+        } else {
+            base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
+
         }
         repaint();
     }
 
     public void mouseReleased(MouseEvent evt) {
-
+        drawSelection = false;
         if (pointer == Constants.WHITEBOARD) {
             base.getWhiteboardSurface().setGraphics(graphics);
             base.getWhiteboardSurface().processMouseReleased(evt);
-            repaint();
+
         }
-        setCursor(DRAW_CURSOR);
+        setCursor(SELECT_CURSOR);
+        repaint();
     }
 
     public String getMessage() {
@@ -323,7 +380,7 @@ public class Surface extends JPanel implements MouseListener,
     public void showMessage(String msg, boolean isErrorMessage) {
         this.infoMessage = msg;
         this.isErrorMsg = isErrorMessage;
-        this.showInfoMessage = msg.trim().length() > 0 ? true:false;
+        this.showInfoMessage = msg.trim().length() > 0 ? true : false;
         repaint();
     }
 
@@ -368,65 +425,22 @@ public class Surface extends JPanel implements MouseListener,
         return pointerSurface;
     }
 
-    private void paintPointer(Graphics2D g) {
-        /*if (currentPointer != null) {
-        pointerSurface.setXValue(pointerSurface.getX() + currentPointer.getPoint().x - 10);
-        pointerSurface.setYValue(pointerSurface.getX() + currentPointer.getPoint().x - 10);
-        pointerSurface.setPointer(currentPointer.getIcon());
-        pointerSurface.repaint();
-        }*/
-        repaint();
-    }
-
-    private void showStatusMessage(Graphics2D g2) {
-        Font font = new Font("Dialog", Font.BOLD, 12);
-        if (statusMessage.length() > 0) {
-            AttributedString as = new AttributedString(statusMessage);
-            as.addAttribute(TextAttribute.FONT, font);
-            yValue = 100;
-            xValue = (int) (getWidth() * .2);
-            g2.setColor(new Color(0, 131, 0));
-            drawText(g2, as);
-            yValue += 40;
-        }
-    }
-
-    private void showSplashScreen(Graphics2D g2) {
-        Font font = new Font("Dialog", Font.BOLD, 18);
-        AttributedString as = new AttributedString(title);
-        as.addAttribute(TextAttribute.FONT, font);
-        yValue = 80;
-        xValue = (int) (getWidth() * .2);
-        drawText(g2, as);
-        yValue += 40;
-        yValue += 20;
-
-        if (showConnectingString) {
-            font = new Font("Dialog", Font.BOLD, 10);
-            as = new AttributedString(connectingStr);
-            as.addAttribute(TextAttribute.FONT, font);
-            as.addAttribute(TextAttribute.FOREGROUND, Color.RED);
-            drawText(g2, as);
-            yValue += 30;
-        }
-        font = new Font("Dialog", Font.BOLD, 10);
-        as = new AttributedString(statusMessage);
-        as.addAttribute(TextAttribute.FONT, font);
-        as.addAttribute(TextAttribute.FOREGROUND, Color.RED);
-        drawText(g2, as);
-        yValue += 10;
-
-    }
-
     private void paintSlides(Graphics2D g2) {
         if (slide != null) {
-            int xx = (getWidth() - slide.getIconWidth()) / 2;
-            int yy = (getHeight() - slide.getIconHeight()) / 2;
             int slideWidth = slide.getIconWidth();
             int slideHeight = slide.getIconHeight();
             if (slideWidth >= getWidth()) {
                 slideWidth = (int) (slideWidth * 0.9);
             }
+
+            // if (slideWidth >= getHeight()) {
+            //   slideHeight = (int) (slideHeight * 0.9);
+            // }
+
+            int xx = (getWidth() - slide.getIconWidth()) / 2;
+            int yy = (getHeight() - slide.getIconHeight()) / 2;
+            g2.setFont(new Font("Dialog", 1, 10));
+            g2.drawString(base.getSelectedFile()+" - " + (base.getSessionManager().getSlideIndex()+1) + " of " + totalSlideCount, xx, yy - 15);
 
             g2.drawImage(slide.getImage(), xx, yy, slideWidth, slideHeight, this);
             //if (firstSlide) {
@@ -434,26 +448,26 @@ public class Surface extends JPanel implements MouseListener,
             pointerSurface = new Rectangle(xx, yy, slideWidth, slideHeight);
             g2.draw(rect);
             firstSlide = false;
-            //}
+        //}
 
-            /*FontMetrics fm = graphics.getFontMetrics(msgFont);
-            String msg = "Presenter Slide " + presenterSlideIndex + " of " + totalSlideCount;
-            graphics.setColor(Color.white);
-            graphics.fillRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
-            graphics.setColor(Color.BLACK);
-            graphics.drawRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
-         
-            if (presenterSlideIndex > 0) {
-                g2.setColor(Color.BLACK);
-                g2.setFont(msgFont);
-                g2.drawString(msg, getWidth() - 130, 30);
-            }
-            if (slideIndex > 0) {
-                msg = "Own Slide " + slideIndex + " of " + totalSlideCount;
-                g2.setColor(Color.ORANGE);
-                g2.setFont(msgFont);
-                g2.drawString(msg, getWidth() - 130, 50);
-            }*/
+        /*FontMetrics fm = graphics.getFontMetrics(msgFont);
+        String msg = "Presenter Slide " + presenterSlideIndex + " of " + totalSlideCount;
+        graphics.setColor(Color.white);
+        graphics.fillRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
+        graphics.setColor(Color.BLACK);
+        graphics.drawRect(getWidth() - 130, 15, fm.stringWidth(msg) + 20, fm.getHeight()*2 + 15);
+        
+        if (presenterSlideIndex > 0) {
+        g2.setColor(Color.BLACK);
+        g2.setFont(msgFont);
+        g2.drawString(msg, getWidth() - 130, 30);
+        }
+        if (slideIndex > 0) {
+        msg = "Own Slide " + slideIndex + " of " + totalSlideCount;
+        g2.setColor(Color.ORANGE);
+        g2.setFont(msgFont);
+        g2.drawString(msg, getWidth() - 130, 50);
+        }*/
         }
     }
 
@@ -463,31 +477,20 @@ public class Surface extends JPanel implements MouseListener,
         graphics = (Graphics2D) g;
         paintSlides(graphics);
 
-        paintPointer(graphics);
-
-        graphics.setStroke(new BasicStroke(1));
-        if (showStatusMessage) {
-            showStatusMessage(graphics);
-        }
-
-        if (showSplashScreen) {
-            showSplashScreen(graphics);
-        }
-
-
         if (showInfoMessage) {
             FontMetrics fm = graphics.getFontMetrics(msgFont);
             graphics.setColor(Color.white);
-            graphics.fillRect(5, 15, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
+            graphics.fillRect(5, 65, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
             graphics.setColor(Color.BLACK);
-            graphics.drawRect(5, 15, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
+            graphics.drawRect(5, 65, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
             graphics.setFont(msgFont);
-            if (isErrorMsg) {
-                graphics.drawImage(warnIcon.getImage(), 10, 20, this);
-            }
-            graphics.drawString(infoMessage, 30, 30);
-        }
 
+            if (isErrorMsg) {
+                graphics.drawImage(warnIcon.getImage(), 10, 70, this);
+            }
+            graphics.drawString(infoMessage, 30, 80);
+        }
+        graphics.setColor(Color.BLACK);
         base.getWhiteboardSurface().drawStroke(graphics);
         base.getWhiteboardSurface().paintItems(graphics);
         if (currentPointer != null) {
@@ -495,6 +498,7 @@ public class Surface extends JPanel implements MouseListener,
                     (int) pointerSurface.x + currentPointer.getPoint().x - 10,
                     (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
         }
+        paintSelection(graphics);
     }
 
     class Pointer {
