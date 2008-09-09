@@ -49,6 +49,7 @@ import java.awt.Font;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
+import javax.swing.JSplitPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -80,6 +81,7 @@ public class ChatRoom
     RealtimeBase base;
     private javax.swing.JLabel titleLabel = new javax.swing.JLabel("Use" +
             " SHIFT+ENTER to move to next line", javax.swing.JLabel.LEADING);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
     /**
      * Constructor
@@ -112,6 +114,7 @@ public class ChatRoom
         chatScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         messagePanel.setPreferredSize(new Dimension(getWidth(), 100));
         chatScroll.setViewportView(messagePanel);
+       // chatScroll.setMinimumSize(new Dimension(300, 300));
         chatInputPanel.setLayout(new BorderLayout());
 
         chatIn.setMinimumSize(new Dimension(300, 100));
@@ -122,8 +125,11 @@ public class ChatRoom
         chatInputPanel.add(p, BorderLayout.EAST);
 
         this.setLayout(new BorderLayout());// new java.awt.GridLayout(2, 0));
-        this.add(chatScroll, BorderLayout.CENTER);
-        this.add(chatInputPanel, BorderLayout.SOUTH);
+        splitPane.setTopComponent(chatScroll);
+        splitPane.setBottomComponent(chatInputPanel);
+        this.add(splitPane, BorderLayout.CENTER);
+        splitPane.setDividerLocation(250);
+        //this.add(chatInputPanel, BorderLayout.SOUTH);
         chatIn.getDocument().addDocumentListener(new DocumentListener() {
 
             public void changedUpdate(DocumentEvent arg0) {
@@ -177,10 +183,12 @@ public class ChatRoom
      * sends the chat packet
      */
     private void sendChat() {
+        // if (chatIn.getText().trim().length() > 0) {
         ChatPacket p = new ChatPacket(ChatRoom.this.usr.getFullName(), chatIn.getText() + "\n",
                 getTime(), ChatRoom.this.chatLogFile, ChatRoom.this.sessionId);
         ChatRoom.this.base.getTcpClient().addChat(p);
         chatIn.setText("");
+    // }
     }
 
     /**
