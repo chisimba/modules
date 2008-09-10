@@ -59,7 +59,7 @@ public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNode
    fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
    fwrite($fh,'<jnlp spec="1.0+" ');
    fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
-   fwrite($fh,     ' href="chisimba_classroom.jnlp">');
+   fwrite($fh,     ' href="'.$username.'_chisimba_classroom.jnlp">');
    fwrite($fh,   '<information>');
    fwrite($fh,    ' <title>Realtime Classroom</title>');
    fwrite($fh,    ' <vendor>AVOIR</vendor>');
