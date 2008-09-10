@@ -148,6 +148,7 @@ class spie extends object
     */
     private function getTitleWithLogo()
     {
+        unset($logo);
         $title = $this->getTitle();
         if ($logo = $this->getImageUrl()) {
             $logo = '<img src="' . $logo
@@ -160,6 +161,7 @@ class spie extends object
         } else {
             return '<h3 class="feed_render_title">' . $title . '</h3><br />';
         }
+        
     }
     
     private function getFeedTop()
@@ -414,7 +416,6 @@ class spie extends object
     
     
     // --------------- Methods for determining the search type
-    
     /**
      * 
      * Method to determine if a feed is a twitter search feed
@@ -483,7 +484,6 @@ class spie extends object
         }
         
     }
-    
     // --------------- End methods for determining search type
     
     
