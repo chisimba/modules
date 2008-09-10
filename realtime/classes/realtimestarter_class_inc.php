@@ -53,7 +53,7 @@
 
 public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNodePort,$username,$fullnames,$isPresenter,$sessionId){
   
-    $jnlpFile = $fileBase.'/chisimba_classroom.jnlp';
+    $jnlpFile = $fileBase.'/'.$username.'_chisimba_classroom.jnlp';
     $fh = fopen($jnlpFile, 'w') or die("can't open file");
 
    fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
