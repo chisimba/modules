@@ -71,6 +71,32 @@ class spie extends object
     }
     
     /**
+    * 
+    * Check the proxy settings and start SimplePie
+    * This just avoids having to replicate the code in every
+    * method that uses it.
+    * 
+    * @param string $url The URL of the feed
+    * @return TRUE
+    * @access private
+    *  
+    */
+    private function startPie($url)
+    {
+        if (!$this->useProxy) {
+            $this->setFeedUrl($url);
+        } else {
+            // We are using a proxy so use the curl wrapper to return the string
+            $objCurl = $this->getObject('curl', 'utilities');
+            $rss = $objCurl->exec($link);
+            $this->objSimplePieWrapper->set_raw_data($rss);
+        }
+        $this->objSimplePieWrapper->init();
+        return TRUE;
+    }
+    
+    
+    /**
      * This is the URL of the feed you want to parse.
      *
      * This allows you to enter the URL of the feed you want to parse, or the
@@ -106,16 +132,54 @@ class spie extends object
     */
     public function getFeed($url, $display="displayPlain")
     {
-        if (!$this->useProxy) {
-            $this->setFeedUrl($url);
-        } else {
-            // We are using a proxy so use the curl wrapper to return the string
-            $objCurl = $this->getObject('curl', 'utilities');
-            $rss = $objCurl->exec($link);
-            $this->objSimplePieWrapper->set_raw_data($rss);
-        }
-        $this->objSimplePieWrapper->init();
+        $this->startPie($url);
         return $this->$display();
+    }
+    
+    /**
+    * 
+    * Get the title for the whole feed, and insert the logo if
+    * there is a logo that exists. If no logo, then just use the 
+    * title.
+    * 
+    * @return string The rendered title, with or without a logo
+    * @access private 
+    *   
+    */
+    private function getTitleWithLogo()
+    {
+        $title = $this->getTitle();
+        if ($logo = $this->getImageUrl()) {
+            $logo = '<img src="' . $logo
+              . '" width="' . $this->getImageWidth() 
+              . '" height="' . $this->getImageHeight() 
+              . '" alt="' . $title . '" />';
+            return '<div class="feed_render_title_forcewhite">'  
+              . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
+              . $title . '</h3></td></tr></table></div>';
+        } else {
+            return '<h3 class="feed_render_title">' . $title . '</h3><br />';
+        }
+    }
+    
+    private function getFeedTop()
+    {
+        return '<div class="feed_render_feedtop"></div>';
+    }
+    
+    private function getFeedBottom()
+    {
+        return '<div class="feed_render_feedbottom"></div>';
+    }
+    
+    private function getItemTop()
+    {
+        return '<div class="feed_render_top"></div>';
+    }
+    
+    private function getItemBottom()
+    {
+        return '<div class="feed_render_bottom"></div>';
     }
     
     /**
@@ -129,32 +193,13 @@ class spie extends object
     */
     public function getFields($url, $fields)
     {   
-        if (!$this->useProxy) {
-            $this->setFeedUrl($url);
-        } else {
-            // We are using a proxy so use the curl wrapper to return the string
-            $objCurl = $this->getObject('curl', 'utilities');
-            $rss = $objCurl->exec($link);
-            $this->objSimplePieWrapper->set_raw_data($rss);
-        }
-        $this->objSimplePieWrapper->init();
-        $title = $this->getTitle();
-        if ($logo = $this->getImageUrl()) {
-        $logo = '<img src="' . $logo
-          . '" width="' . $this->getImageWidth() 
-          . '" height="' . $this->getImageHeight() 
-          . '" alt="' . $title . '" />';
-        $ret='<div class="feed_render_title_forcewhite">'  
-          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
-          . $title . '</h3></td></tr></table></div>';
-        } else {
-            $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
-        }
+        $this->startPie($url);
+        $ret = $this->getTitleWithLogo();
         $counter = 0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
             // Now get the fields
-            $ret .= '<div class="feed_render_top"></div>'
+            $ret .= $this->getFeedTop()
               . '<div class="feed_render_default">';
             foreach ($fields as $field) {
                 $method = "get_" . $field;
@@ -171,7 +216,7 @@ class spie extends object
                     }
                 }
             }
-            $ret .= '</div><div class="feed_render_bottom"></div>';
+            $ret .= '</div>' . $this->getFeedBottom();
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -192,26 +237,16 @@ class spie extends object
     private function displayPlain()
     {
         $title = $this->getTitle();
-        if ($logo = $this->getImageUrl()) {
-        $logo = '<img src="' . $logo
-          . '" width="' . $this->getImageWidth() 
-          . '" height="' . $this->getImageHeight() 
-          . '" alt="' . $title . '" />';
-        $ret='<div class="feed_render_title_forcewhite">'  
-          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
-          . $title . '</h3></td></tr></table></div>';
-        } else {
-            $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
-        }
+        $ret = $this->getTitleWithLogo();
         $counter=0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
-            $ret .= '<div class="feed_render_top"></div>'
+            $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_link"><a href="' . $item->get_permalink() . '">' . $item->get_title() . '</a></p>'
               . '<p class="feed_render_description">' . $item->get_description() . '</p>'
               . '<p class="feed_render_date">' .  $item->get_date('j F Y | g:i a') . '</p>'
-              . '</div><div class="feed_render_bottom"></div>';
+              . '</div>' . $this->getItemBottom();
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -262,8 +297,7 @@ class spie extends object
     */
     public function twitterSearch()
     {
-        $title = $this->getTitle();
-        $ret='<h3 class="feed_render_title">' . $title . '</h3><br />';
+        $ret = $this->getTitleWithLogo();
         $counter=0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
@@ -274,13 +308,13 @@ class spie extends object
             $nick = "<a href=\"" . $ln . "\">" . $nickAr[0] . "</a>:&nbsp;&nbsp;";
             $description = $item->get_description();
             $info = $nick . " " . $description;
-            $ret .= '<div class="feed_render_top"></div>'
+            $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description">' . $info 
               . '<br /><span class="feed_render_date">' 
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
-              . '</div><div class="feed_render_bottom"></div>';
+              . '</div>' . $this->getItemBottom();;
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -307,15 +341,7 @@ class spie extends object
         if (!$this->isYoutTubeStandards($permaLink)) {
             $standardsFeed = FALSE;
         }
-        $title = $this->getTitle();
-        $logo = '<img src="' . $this->getImageUrl() 
-          . '" width="' . $this->getImageWidth() 
-          . '" height="' . $this->getImageHeight() 
-          . '" alt="You Tube" />';
-        //Need to hard code this or it looks ugly
-        $ret='<div class="feed_render_title_forcewhite">'  
-          . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
-          . $title . '</h3></td></tr></table></div>';
+        $ret = $this->getTitleWithLogo();
         $counter=0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
@@ -327,13 +353,13 @@ class spie extends object
                 $description = str_replace("align=\"right\"", "style=\"float:left; margin-left: 5px; margin-right: 20px;\"", $description);
                 $description = $title . "<br />" . $description;
             }
-            $ret .= '<div class="feed_render_top"></div>'
+            $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description">' . $description 
               . '<br /><span class="feed_render_date">' 
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
-              . '</div><div class="feed_render_bottom"></div>';
+              . '</div>' . $this->getItemBottom();;
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -358,13 +384,7 @@ class spie extends object
     public function slideShareFeed()
     {
         $title = $this->getTitle();
-        $logo = '<img src="' . $this->getImageUrl() 
-          . '" width="' . $this->getImageWidth() 
-          . '" height="' . $this->getImageHeight() 
-          . '" alt="Slideshare" />';
-        $ret='<div class="feed_render_title_forcewhite">'  
-          . '<table><tr><td>' . $logo . '</td><td><h3>&nbsp;&nbsp;' 
-          . $title . '</h3></td></tr></table></div>';
+        $ret = $this->getTitleWithLogo();
         $counter=0;
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
@@ -372,14 +392,14 @@ class spie extends object
             $description = str_replace("float:right;", "float:left; margin-left: 5px; margin-right: 20px;", $description);
             $title = $item->get_title();
             $ln = $item->get_link();
-            $ret .= '<div class="feed_render_top"></div>'
+            $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description"><a href="' 
               . $ln . '">' . $title . '</a><br />' . $description 
               . '<br /><span class="feed_render_date">' 
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
-              . '</div><div class="feed_render_bottom"></div>';
+              . '</div>' . $this->getItemBottom();
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -575,6 +595,13 @@ class spie extends object
     {
         return $this->objSimplePieWrapper->get_image_height();
     }
+    
+   
+   
+   
+   
+   
+   
     
     
     //--------------------- PLEASE NOTE --------------------------//
