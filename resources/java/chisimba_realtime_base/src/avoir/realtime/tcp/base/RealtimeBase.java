@@ -1,7 +1,7 @@
 /**
  * 
  *
- *  Copyright (C) GNU/GPL AVOIR 2007
+ *  Copyright (C) GNU/GPL AVOIR 2008
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -151,8 +151,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         surface = new Surface(this);
         sessionManager = new SessionManager(this);
         agendaManager = new AgendaManager(this);
-        surveyFrame = new SurveyFrame(this);
-        surveyManagerFrame = new SurveyManagerFrame(this);
+
+
         menuMananger = new MenuManager(this);
         whiteboardToolbar = new WhiteboardToolbarManager(this);
 
@@ -447,7 +447,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * display survey manager: for creating survey
      */
     public void showSurveyManagerFrame() {
-        surveyManagerFrame.setTitle("Survey Wizard  - Untitled");
+        if (surveyManagerFrame == null) {
+            surveyManagerFrame = new SurveyManagerFrame(this);
+        }
+        surveyManagerFrame.setTitle("Survey Wizard (Beta) - Untitled");
         surveyManagerFrame.setSize(560, 500);
         surveyManagerFrame.setLocationRelativeTo(null);
         surveyManagerFrame.setVisible(true);
@@ -471,6 +474,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * @param title
      */
     public void showSurveyFrame(Vector<String> questions, String title) {
+        if (surveyFrame == null) {
+            surveyFrame = new SurveyFrame(this);
+        }
         surveyFrame.setQuestions(questions);
         surveyFrame.setTitle(title);
         surveyFrame.setSize(500, 400);
@@ -1139,7 +1145,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         int count = 0;
         int max = 10;
         while (!connected) {
-            showMessage("Disconnected from server. Retrying " + count + " of " + max + "...", false, true,MessageCode.ALL);
+            showMessage("Disconnected from server. Retrying " + count + " of " + max + "...", false, true, MessageCode.ALL);
             connected = tcpClient.connect();
 
             if (connected) {
@@ -1156,7 +1162,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         }
         if (!connected) {
-            showMessage("Connection to server failed. Refresh your browser page to reconnect. If the applet hangls, you will need to restart the browser.", false, true,MessageCode.ALL);
+            showMessage("Connection to server failed. Refresh your browser page to reconnect. If the applet hangls, you will need to restart the browser.", false, true, MessageCode.ALL);
 
         }
     }
@@ -1177,7 +1183,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         }
         if (messageType == MessageCode.CLASSROOM_SPECIFIC) {
             if (MODE == Constants.WEBSTART) {
-                
+
                 whiteboardSurface.showMessage(msg, isErrorMessage);
                 return;
             }
@@ -1186,7 +1192,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         if (messageType == MessageCode.WEBPRESENT_SPECIFIC) {
             if (MODE == Constants.APPLET) {
                 surface.showMessage(msg, isErrorMessage);
-                
+
                 return;
             }
         }

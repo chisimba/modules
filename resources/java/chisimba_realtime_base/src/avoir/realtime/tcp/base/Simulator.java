@@ -21,8 +21,8 @@ public class Simulator {
     String userLevel = "admin";
     String fullname = "sim1";
     String userName = "sim1";
-    String host = "xx";
-    int port = 100;
+    String host = "localhost";
+    int port = 22225;
     boolean isPresenter = true;
     String sessionId = "default_1216_1212841216";
     boolean isSlidesHost = false;
@@ -47,38 +47,21 @@ public class Simulator {
                 fullname = userName;
                 isPresenter = false;
                 b.setSessionTitle("Simulator 1");
-                b.init(userLevel, fullname, userName, host, port, isPresenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost);
-             
+                b.init(userLevel, fullname, userName, host, port, isPresenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost,null);
+
             }
         };
         t.start();
     }
 
-    private void createSlideServer() {
-        Thread t = new Thread() {
+   
 
-            public void run() {
-                new SlidesServer("1", "true");
-            }
-        };
-        t.start();
-    }
-
-    private String createVer() {
-        String ver = "";
-
-        ver += Math.abs(random.nextInt(1000000));
-
-        return ver;
-    }
 
     public Simulator(String username, boolean presenter) {
 
-        //    createSlideServer();
         logger.info("Simulator 0.1 started ...");
         RealtimeBase base = new RealtimeBase();
-//        base.setRealtimeHome("avoir-realtime-0.1" + createVer());
-        JPanel p = base.init(userLevel, username, username, host, port, presenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost);
+        JPanel p = base.init(userLevel, username, username, host, port, presenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost,null);
         JFrame fr = new JFrame(username);
         fr.setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
@@ -86,15 +69,5 @@ public class Simulator {
         fr.setSize(800, 600);
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.setVisible(true);
-        //simulate other extra connections
-        /*int MAX = 3;
-        for (int i = 0; i < MAX; i++) {
-        try {
-        Thread.sleep(Math.abs(random.nextInt(2000)));
-        createSlideServer();
-        createUser();
-        } catch (Exception ex) {
-        }
-        }*/
     }
 }

@@ -1,6 +1,19 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) GNU/GPL AVOIR 2008
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base;
 
@@ -11,16 +24,13 @@ import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
 import avoir.realtime.tcp.base.filetransfer.FileUploader;
 import avoir.realtime.tcp.common.packet.AckPacket;
 import avoir.realtime.tcp.common.packet.RealtimePacket;
-import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 
 import avoir.realtime.tcp.base.user.User;
 
-import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
-import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveReplyPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
@@ -74,41 +84,37 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author developer
+ *Our main communication protocol. Every packet send and received from server
+ * passes through here and is interpreted here
+ * @author David Wafula
  */
 public class TCPClient {
 
     private static Logger logger = Logger.getLogger(TCPClient.class.getName());
+  
+      private final int INITIAL_HEARBEAT_DELAY = 30;
+       private long HEARTBEAT_DELAY = 10;
     private boolean running = true;
-    private String windowManager = "GNOME";
     private boolean selectWindowManager = true;
+    private boolean ALIVE = true;
+   
+  private boolean slideServerReplying = false;
+    private boolean NETWORK_ALIVE = true;
+    private boolean connected = false;
+ 
     private RealtimeBase base;
     private AudioWizardFrame audioHandler;
-    private boolean ALIVE = true;
-    private long HEARTBEAT_DELAY = 10;
-    private final int INITIAL_HEARBEAT_DELAY = 30;
-    private boolean NETWORK_ALIVE = true;
-    boolean connected = false;
-    /**
-     * Reader for the ObjectInputStream
-     */
+    
+    private String windowManager = "GNOME";
     protected ObjectInputStream reader;
-    /**
-     * Writer for the ObjectOutputStream
-     */
     protected ObjectOutputStream writer;
-    private boolean slideServerReplying = false;
+    
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-    //  private String SUPERNODE_HOST = "localhost";
-    //  private int SUPERNODE_PORT = 22225;
-    private boolean showChatFrame = true;
+   
     private ClientAdmin clientAdmin;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
@@ -119,12 +125,13 @@ public class TCPClient {
     private boolean slidesDownloaded = false;
     private FileTransferPanel fileTransfer;
     private FileOutputStream fileOutputStream;
-    private JFileChooser fc = new JFileChooser();
+ 
     private WhiteboardSurface whiteboardSurface;
     int count = 0;
     private Timer monitorTimer = new Timer();
     private FileUploader fileUploader;
     private FileReceiverManager fileReceiverManager;
+    private TCPConsumer consumer;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -133,7 +140,7 @@ public class TCPClient {
 
     public TCPClient(ClientAdmin clientAdmin) {
         this.clientAdmin = clientAdmin;
-
+        consumer = new TCPConsumer(this, clientAdmin);
     }
 
     public TCPClient() {
@@ -142,6 +149,7 @@ public class TCPClient {
     public TCPClient(RealtimeBase base) {
         this.base = base;
         fileReceiverManager = new FileReceiverManager(base);
+        consumer = new TCPConsumer(this, base);
     }
 
     public void setWhiteboardSurfaceHandler(WhiteboardSurface whiteboardSurface) {
@@ -158,6 +166,38 @@ public class TCPClient {
 
     public void setObjectOutputStream(ObjectOutputStream out) {
         writer = out;
+    }
+
+    public FileReceiverManager getFileReceiverManager() {
+        return fileReceiverManager;
+    }
+
+    public AudioWizardFrame getAudioHandler() {
+        return audioHandler;
+    }
+
+    public boolean isInitSlideRequest() {
+        return initSlideRequest;
+    }
+
+    public boolean isSlidesDownloaded() {
+        return slidesDownloaded;
+    }
+
+    public void setSlidesDownloaded(boolean slidesDownloaded) {
+        this.slidesDownloaded = slidesDownloaded;
+    }
+
+    public void setInitSlideRequest(boolean initSlideRequest) {
+        this.initSlideRequest = initSlideRequest;
+    }
+
+    public FileTransferPanel getFileTransfer() {
+        return fileTransfer;
+    }
+
+    public FileOutputStream getFileOutputStream() {
+        return fileOutputStream;
     }
 
     /**
@@ -207,13 +247,9 @@ public class TCPClient {
      * sends a TCP Packet to Super Node
      * @param packet
      */
-    public void sendPacket(RealtimePacket packet) {
+    public synchronized void sendPacket(RealtimePacket packet) {
         try {
 
-            if (packet instanceof WhiteboardPacket) {
-                WhiteboardPacket p = (WhiteboardPacket) packet;
-            //System.out.println(p.getItem());
-            }
             if (writer != null) {
                 writer.writeObject(packet);
                 writer.flush();
@@ -249,7 +285,12 @@ public class TCPClient {
         }
     }
 
-    private byte[] readFile(String filePath) {
+    /**
+     * Read file in binary mode
+     * @param filePath
+     * @return
+     */
+    public byte[] readFile(String filePath) {
         File f = new File(filePath);
         File parentFile = f.getParentFile();
 
@@ -278,6 +319,9 @@ public class TCPClient {
 
     }
 
+    /**
+     * prepare to listen from seerver
+     */
     public void startListen() {
         Thread t = new Thread() {
 
@@ -359,13 +403,7 @@ public class TCPClient {
         }
     };
 
-    public boolean isShowChatFrame() {
-        return showChatFrame;
-    }
-
-    public void setShowChatFrame(boolean showChatFrame) {
-        this.showChatFrame = showChatFrame;
-    }
+   
 
     /**
      * Initial connection
@@ -412,7 +450,6 @@ public class TCPClient {
                 public void run() {
                     if (base != null) {
                         startHearBeat();
-
                     }
                     listen();
                 }
@@ -427,6 +464,9 @@ public class TCPClient {
         return result;
     }
 
+    /**
+     * Start the pulses ..for monitoring n/w status
+     */
     private void startHearBeat() {
         Thread t = new Thread() {
 
@@ -474,81 +514,81 @@ public class TCPClient {
                     ClientPacket clientPacket = (ClientPacket) packet;
                     updateUserList(clientPacket);
                 } else if (packet instanceof ClearSlidesPacket) {
-                    processClearSlidesPacket();
+                    consumer.processClearSlidesPacket();
                 } else if (packet instanceof ClassroomSlidePacket) {
-                    processClassroomSlidePacket((ClassroomSlidePacket) packet);
+                    consumer.processClassroomSlidePacket((ClassroomSlidePacket) packet);
                 } else if (packet instanceof LocalSlideCacheRequestPacket) {
-                    processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
+                    consumer.processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
                 } else if (packet instanceof WhiteboardItems) {
-                    processWhiteboardItems((WhiteboardItems) packet);
+                    consumer.processWhiteboardItems((WhiteboardItems) packet);
                 } else if (packet instanceof NewSlideReplyPacket) {
                     NewSlideReplyPacket nsr = (NewSlideReplyPacket) packet;
-                    processNewSlideReplyPacket(nsr);
+                    consumer.processNewSlideReplyPacket(nsr);
                 } else if (packet instanceof HeartBeat) {
-                    processHeartBeat((HeartBeat) packet);
+                    consumer.processHeartBeat((HeartBeat) packet);
                 } else if (packet instanceof SlideNotFoundPacket) {
-                    processSlideNotFoundPacket((SlideNotFoundPacket) packet);
+                    consumer.processSlideNotFoundPacket((SlideNotFoundPacket) packet);
                 } else if (packet instanceof ChatLogPacket) {
                     ChatLogPacket p = (ChatLogPacket) packet;
-                    processChatLogPacket(p);
+                    consumer.processChatLogPacket(p);
                 } else if (packet instanceof ServerLogReplyPacket) {
-                    processServerLogReply((ServerLogReplyPacket) packet);
+                    consumer.processServerLogReply((ServerLogReplyPacket) packet);
                 } else if (packet instanceof FilePacket) {
-                    processFilePacket((FilePacket) packet);
+                    consumer.processFilePacket((FilePacket) packet);
                 } else if (packet instanceof ClearVotePacket) {
                     ClearVotePacket p = (ClearVotePacket) packet;
-                    processClearVotePacket(p);
+                    consumer.processClearVotePacket(p);
                 } else if (packet instanceof BinaryFileSaveRequestPacket) {
-                    processBinaryFileSaveRequestPacket((BinaryFileSaveRequestPacket) packet);
+                    consumer.processBinaryFileSaveRequestPacket((BinaryFileSaveRequestPacket) packet);
                 } else if (packet instanceof VotePacket) {
                     VotePacket p = (VotePacket) packet;
-                    processVotePacket(p);
+                    consumer.processVotePacket(p);
                 } else if (packet instanceof SurveyAnswerPacket) {
                     SurveyAnswerPacket p = (SurveyAnswerPacket) packet;
-                    processSurveyAnswerPacket(p);
+                    consumer.processSurveyAnswerPacket(p);
                 } else if (packet instanceof SurveyPackPacket) {
                     SurveyPackPacket p = (SurveyPackPacket) packet;
-                    processSurveyPacket(p);
+                    consumer.processSurveyPacket(p);
                 } else if (packet instanceof NewUserPacket) {
                     NewUserPacket p = (NewUserPacket) packet;
-                    processNewUserPacket(p);
+                    consumer.processNewUserPacket(p);
                 } else if (packet instanceof PointerPacket) {
-                    processPointerPacket((PointerPacket) packet);
+                    consumer.processPointerPacket((PointerPacket) packet);
                 } else if (packet instanceof OutlinePacket) {
-                    processOutlinePacket((OutlinePacket) packet);
+                    consumer.processOutlinePacket((OutlinePacket) packet);
                 } else if (packet instanceof ChatPacket) {
                     ChatPacket p = (ChatPacket) packet;
-                    processChatPacket(p);
+                    consumer.processChatPacket(p);
                 } else if (packet instanceof AttentionPacket) {
                     AttentionPacket p = (AttentionPacket) packet;
-                    processAttentionPacket(p);
+                    consumer.processAttentionPacket(p);
                 } else if (packet instanceof RemoveUserPacket) {
                     RemoveUserPacket p = (RemoveUserPacket) packet;
-                    processRemoveUserPacket(p);
+                    consumer.processRemoveUserPacket(p);
                 } else if (packet instanceof AudioPacket) {
-                    processAudioPacket((AudioPacket) packet);
+                    consumer.processAudioPacket((AudioPacket) packet);
                 } else if (packet instanceof MsgPacket) {
                     MsgPacket p = (MsgPacket) packet;
-                    processMsgPacket(p);
+                    consumer.processMsgPacket(p);
                 } else if (packet instanceof WhiteboardPacket) {
-                    processWhiteboardPacket((WhiteboardPacket) packet);
+                    consumer.processWhiteboardPacket((WhiteboardPacket) packet);
                 } else if (packet instanceof PresencePacket) {
                     PresencePacket p = (PresencePacket) packet;
-                    processPresencePacket(p);
+                    consumer.processPresencePacket(p);
 
                 } else if (packet instanceof QuitPacket) {
                     QuitPacket p = (QuitPacket) packet;
-                    processQuitPacket(p);
+                    consumer.processQuitPacket(p);
                 } else if (packet instanceof ModuleFileRequestPacket) {
                     ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
-                    processModuleFileRequestPacket(p);
+                    consumer.processModuleFileRequestPacket(p);
                 } else if (packet instanceof BinaryFileSaveReplyPacket) {
-                    processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
+                    consumer.processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
                 } else if (packet instanceof FileUploadPacket) {
                     fileReceiverManager.processFileUpload((FileUploadPacket) packet);
                 } else if (packet instanceof UploadMsgPacket) {
                     UploadMsgPacket msg = (UploadMsgPacket) packet;
-                    System.out.println(msg.getMessage() + " for " + msg.getRecepientIndex());
+                    //   System.out.println("From " + msg.getRecepient() + " " + msg.getMessage());
                     fileTransfer.setProgress(msg.getRecepientIndex(), msg.getMessage());
                 }
             } catch (Exception ex) {
@@ -564,106 +604,12 @@ public class TCPClient {
         }
     }
 
-    private void processClearSlidesPacket() {
-        base.getWhiteboardSurface().setCurrentSlide(null, 0, 0, true);
-    }
-
-    private void processWhiteboardItems(WhiteboardItems p) {
-        base.getWhiteboardSurface().setItems(p.getWhiteboardItems());
-    }
-
-    private void processPointerPacket(PointerPacket p) {
-        if (base.getMODE() == Constants.APPLET) {
-            base.getSurface().setCurrentPointer(p.getType(), p.getPoint());
-        } else {
-            base.getWhiteboardSurface().setCurrentPointer(p.getType(), p.getPoint());
-        }
-
-    }
-
-    private void processWhiteboardPacket(WhiteboardPacket p) {
-        //     System.out.println("Received: " + p.getItem());
-
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.ADD_NEW_ITEM) {
-            base.getWhiteboardSurface().addItem(p.getItem());
-            base.getSurface().repaint();
-        }
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REPLACE_ITEM) {
-
-            base.getWhiteboardSurface().replaceItem(p.getItem());
-            base.getSurface().repaint();
-        }
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.REMOVE_ITEM) {
-
-            base.getWhiteboardSurface().removeItem(p.getItem());
-            base.getSurface().repaint();
-        }
-        if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
-
-            base.getWhiteboardSurface().clearItems();
-            base.getSurface().repaint();
-        }
-    }
-
-    private void processBinaryFileChunkPacket(BinaryFileChunkPacket p) {
-        if (fileOutputStream != null) {
-            try {
-                if (!p.isLast()) {
-
-                    fileOutputStream.write(p.getChunk());
-                    System.out.println("received chunck: " + p.getFilename() + " " + p.getChunk().length);
-                } else {
-                    fileOutputStream.close();
-                    System.out.println("closed");
-                    fileOutputStream = null;
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());
-            }
-        }
-    }
-
-    private void processBinaryFileSaveReplyPacket(BinaryFileSaveReplyPacket p) {
-        fileTransfer.processBinaryFileSaveReplyPacket(p.getFileName(), p.getFullName(), p.isAccepted());
-    }
-
     private void createFile(String path) {
         try {
             fileOutputStream = new FileOutputStream(path);
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, ex.getLocalizedMessage());
-        }
-    }
-
-    private void processBinaryFileSaveRequestPacket(BinaryFileSaveRequestPacket p) {
-        String filename = new File(p.getFileName()).getName();
-        int n = JOptionPane.showConfirmDialog(base, p.getSenderName() + " has send you file " + filename + "\n" +
-                "Accept?", "New File", JOptionPane.YES_NO_OPTION);
-        if (n == JOptionPane.YES_OPTION) {
-            fc.setSelectedFile(new File(filename));
-            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                fileReceiverManager.setFilename(fc.getSelectedFile().getAbsolutePath());
-                sendPacket(new BinaryFileSaveReplyPacket(p.getSessionId(), p.getFileName(), base.getUser().getFullName(), p.getSenderName(), true, p.getUserName()));
-            } else {
-                sendPacket(new BinaryFileSaveReplyPacket(p.getSessionId(), p.getFileName(), base.getUser().getFullName(), p.getSenderName(), false, p.getUserName()));
-
-            }
-
-        } else {
-            sendPacket(new BinaryFileSaveReplyPacket(p.getSessionId(), p.getFileName(), base.getUser().getFullName(), p.getSenderName(), false, p.getUserName()));
-
-        }
-    }
-
-    private void processPresencePacket(PresencePacket p) {
-        if (base != null) {
-
-            int userIndex = base.getUserManager().getUserIndex(p.getUserName());
-            if (userIndex > -1) {
-                base.getUserManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon(), true);
-            }
         }
     }
 
@@ -691,16 +637,16 @@ public class TCPClient {
     /*
     int noOfTries = 0;
     int maxTries = 60;
-
+    
     while (noOfTries < maxTries) {
     if (connected) {
     break;
     }
     if (base != null) {
-
+    
     base.getWhiteboardSurface().setSelectedItem(null);
     base.showMessage("Disconnected from server. Retrying..." + noOfTries+" of "+maxTries, false, true);
-
+    
     base.refreshConnection();
     }
     if (slidesServer != null) {
@@ -710,7 +656,7 @@ public class TCPClient {
     noOfTries++;
     delay(1000);
     }
-
+    
     if (!connected && base != null) {
     int n = JOptionPane.showConfirmDialog(null, "Disconnected from server. Reconnect?", "Disconnected", JOptionPane.YES_NO_OPTION);
     if (n == JOptionPane.YES_OPTION) {
@@ -818,319 +764,12 @@ public class TCPClient {
         sendPacket(packet);
     }
 
-    // ///////////////////////////////////////////////////////////////////
-    // These methods are for acting on the requests send from the server//
-    // They all start with process preappended to the name              //
-    /////////////////////////////////////////////////////////////////////
-    /**
-     * This handles the audio packets
-     * @param packet
-     */
-    private void processAudioPacket(AudioPacket packet) {
-
-        if (audioHandler != null) {
-            audioHandler.playPacket(packet);
-
-        }
-
-
-    }
-
-    private void processQuitPacket(QuitPacket p) {
-        //just quit but not good this way...we need a way of checking if this
-        //was meant for us and not just a broadcast (DOF Attacks :) )
-        System.exit(0);
-    }
-
-    /**
-     * Removes this user from the user list. let the GUI applet handle that
-     * @param p
-     */
-    private void processRemoveUserPacket(RemoveUserPacket p) {
-        if (base != null) {
-            base.getUserManager().removeUser(p.getUser());
-        }
-
-    }
-
-    /**
-     * Send message to surface to be displayed
-     * @param p
-     */
-    private void processMsgPacket(MsgPacket p) {
-        if (base != null) {
-            base.showMessage(p.getMessage(), p.isTemporary(), p.isErrorMsg(), p.getMessageType());
-            if (p.isErrorMsg()) {
-                base.setStatusMessage("");
-            }
-
-        }
-
-        if (clientAdmin != null) {
-            clientAdmin.setMessage(p.getMessage());
-        }
-
-    }
-
-    private void processFilePacket(FilePacket packet) {
-        try {
-            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
-            File homeDir = new File(home);
-            if (!homeDir.exists()) {
-                homeDir.mkdirs();
-            }
-
-            String fn = home + "/" + packet.getFilename();
-            FileChannel fc =
-                    new FileOutputStream(fn).getChannel();
-            byte[] byteArray = packet.getByteArray();
-            fc.write(ByteBuffer.wrap(byteArray));
-            fc.close();
-            base.getSessionManager().setSlideCount(packet.getMaxValue());
-
-            float perc = ((float) packet.getCurrentValue() + 1 / (float) packet.getMaxValue()) * 100;
-            base.getSurface().setConnectingString("Please wait " + new java.text.DecimalFormat("##.#").format(perc) + "% ...");
-
-            if (!initSlideRequest) {
-                requestNewSlide(base.getSiteRoot(), 0, base.isPresenter(),
-                        base.getSessionId(), base.getUser().getUserName(),
-                        base.isPresenter(), packet.getPresentationName());
-                base.getSurface().setConnecting(false);
-                base.getSurface().setConnectingString("");
-                base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
-                initSlideRequest = true;
-            }
-            slidesDownloaded = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            if (base != null) {
-                base.showMessage("Error writing slide " + packet.getFilename(), false, true, MessageCode.ALL);
-            }
-
-        }
-    }
-
-    private void processClassroomSlidePacket(ClassroomSlidePacket packet) {
-        try {
-            int dot = packet.getPresentationName().lastIndexOf(".");
-            String dir = packet.getPresentationName();
-            if (dot > 0) {
-                dir = packet.getPresentationName().substring(0, dot);
-            }
-
-            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides/" + dir;
-            File homeDir = new File(home);
-            if (!homeDir.exists()) {
-                homeDir.mkdirs();
-            }
-
-            String fn = home + "/" + packet.getFilename();
-            FileChannel fc =
-                    new FileOutputStream(fn).getChannel();
-            byte[] byteArray = packet.getByteArray();
-            fc.write(ByteBuffer.wrap(byteArray));
-            fc.close();
-            base.getSessionManager().setSlideCount(packet.getMaxValue());
-            if (packet.isLastFile()) {
-                base.getSessionManager().setSlideCount(packet.getMaxValue());
-                int[] slidesList = getImageFileNames(home);
-
-                base.getAgendaManager().addAgenda(createSlideNames(slidesList), packet.getPresentationName());
-                base.getWhiteboardSurface().setCurrentSlide(new ImageIcon(home + "/img0.jpg"), 0, slidesList.length, true);
-
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            if (base != null) {
-                base.showMessage("Error writing slide " + packet.getFilename(), false, true, MessageCode.ALL);
-            }
-
-        }
-    }
-
     public String[] createSlideNames(int[] n) {
         String[] names = new String[n.length];
         for (int i = 0; i < names.length; i++) {
             names[i] = "Slide" + (i + 1);
         }
         return names;
-    }
-
-    /**
-     * send the chatlog to the chat room for the newly logged in user
-     * @param p
-     */
-    private void processChatLogPacket(ChatLogPacket p) {
-        if (base != null) {
-            base.updateChat(p);
-        }
-
-    }
-
-    /**
-     * User has raised/not raised the hand. update the user
-     * @param p
-     */
-    private void processAttentionPacket(AttentionPacket p) {
-        /*        if (base != null) {
-        base.getUserManager().updateUserList(p.getUserName(), p.isHandRaised(),
-        p.isAllowControl(), p.getOrder(), p.isYes(), p.isNo(), p.isYesNoSession(), p.isSpeakerEnabled(), p.isMicEnabled());
-        }
-         */
-    }
-
-    /**
-     * Send the chat packet to the chat room
-     * @param p
-     */
-    private void processChatPacket(ChatPacket p) {
-        if (base != null) {
-            base.updateChat(p);
-            if (showChatFrame) {
-                base.showChatRoom();
-                showChatFrame = false;
-            } else {
-                if (!base.getChatFrame().isActive()) {
-                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_off.png").getImage());
-                } else {
-                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_on.png").getImage());
-base.getChatFrame().toFront();
-                }
-            }
-        }
-    }
-
-    private void processOutlinePacket(OutlinePacket p) {
-        base.getAgendaManager().addAgenda(p.getOutlines(), base.getSessionTitle());
-
-    }
-
-    /**
-     * New user. Add at the bottom of the user list
-     * @param p
-     */
-    private void processNewUserPacket(NewUserPacket p) {
-        if (base != null) {
-            base.getUserManager().addNewUser(p.getUser());
-        }
-
-    }
-
-    /**
-     * Requested slide not found..paint this message on the surface 
-     * to inform the user
-     * @param p
-     */
-    private void processSlideNotFoundPacket(SlideNotFoundPacket p) {
-        if (base != null) {
-            String msg = p.getMessage();
-            if (msg != null) {
-                if (msg.length() > 0) {
-                    base.setStatusMessage(msg);
-                    return;
-
-                }
-
-
-            }
-            base.setStatusMessage("");
-        }
-
-    }
-
-    private void processSurveyAnswerPacket(SurveyAnswerPacket p) {
-        if (base != null) {
-
-            base.getSurveyManagerFrame().setSurveyAnswer(p.getQuestion(), p.isAnswer());
-        }
-
-    }
-
-    private void processVotePacket(VotePacket p) {
-        if (base != null) {
-            base.getToolbarManager().setVoteButtonsEnabled(p.isVote(), p.isVisibleToAll());
-        }
-    }
-
-    private void processSurveyPacket(SurveyPackPacket p) {
-
-        if (base != null) {
-            base.showSurveyFrame(p.getQuestions(), p.getTitle());
-        }
-
-    }
-
-    private void processServerLogReply(ServerLogReplyPacket packet) {
-        if (clientAdmin != null) {
-            clientAdmin.setLog(packet.getByteArray());
-        }
-
-    }
-
-    private void processClearVotePacket(ClearVotePacket p) {
-        if (base != null) {
-            base.getUserManager().clearVote();
-        }
-
-    }
-
-    private synchronized void processModuleFileRequestPacket(ModuleFileRequestPacket p) {
-
-        byte[] byteArray = readFile(p.getFilePath());
-        logger.info("Read File: " + p.getFilePath());
-        ModuleFileReplyPacket rep = new ModuleFileReplyPacket(byteArray,
-                p.getFilename(), p.getFilePath(), p.getUsername());
-        rep.setDesc(p.getDesc());
-
-        sendPacket(rep);
-        logger.info("Send Back!!!");
-    }
-
-    private void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
-        int slides[] = getImageFileNames(packet.getPathToSlides());
-        String slidesPath = packet.getPathToSlides();
-        // i hope to use threads here..dont know if it will help
-        if (slides != null) {
-            for (int i = 0; i <
-                    slides.length; i++) {
-                String filename = "img" + i + ".jpg";
-                String filePath = slidesPath + "/" + filename;
-                boolean lastFile = i == (slides.length - 1) ? true : false;
-                replySlide(filePath, packet.getSessionId(), packet.getUsername(), filename, lastFile, i, slides.length, new File(slidesPath).getName());
-            }
-        }
-    //then close this socket
-
-    /*      try {
-    //close the client..then close the app, whicever closes first
-    sendPacket(new QuitPacket((packet.getSessionId())));
-    socket.close();
-    } catch (Exception ex) {MessageCode.ALL
-    ex.printStackTrace();
-    }
-     */
-    }
-
-    /**
-     * New slide. Look for it in the local cache and display it.
-     * But let the GUI class do that
-     * @param packet
-     */
-    private void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
-        int slideIndex = packet.getSlideIndex();
-        base.setSelectedFile(packet.getPresentationName());
-        if (base != null) {
-            slideServerReplying = true;
-            String slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + slideIndex + ".jpg";
-
-            if (base.getMODE() == Constants.WEBSTART) {
-                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
-            }
-            base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
-            if (packet.getMessage() != null) {
-                base.showMessage(packet.getMessage(), false, true, MessageCode.ALL);
-            }
-        }
     }
 
     /**
@@ -1195,7 +834,7 @@ base.getChatFrame().toFront();
      * They all start with reply pre-appended
      * //////////////////////////////////////////////////////////////////
      */
-    private void replySlide(final String filePath,
+    public void replySlide(final String filePath,
             final String sessionId,
             final String username,
             final String filename,
@@ -1257,17 +896,6 @@ base.getChatFrame().toFront();
         monitorTimer = new Timer();
         monitorTimer.scheduleAtFixedRate(new HeartBeatMonitor(), 3000, 1000);
 
-    }
-
-    private void processHeartBeat(HeartBeat p) {
-
-        cancelMonitor();
-        NETWORK_ALIVE = true;
-        base.showMessage("", false, false, MessageCode.ALL);
-        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-    /*   base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-    PresenceConstants.ONLINE, true);
-     */
     }
 
     private void cancelMonitor() {
