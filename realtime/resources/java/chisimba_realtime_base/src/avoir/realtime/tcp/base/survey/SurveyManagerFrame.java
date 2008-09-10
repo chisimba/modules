@@ -5,12 +5,12 @@
  */
 package avoir.realtime.tcp.base.survey;
 
-
 import avoir.realtime.tcp.base.ImageUtil;
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
+import java.awt.BorderLayout;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
@@ -31,10 +31,17 @@ import java.awt.Component;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 import java.awt.Color;
+import java.awt.Font;
 import javax.swing.JProgressBar;
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  *
@@ -46,7 +53,11 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
     private boolean saved = true;
     Vector<String> questions = new Vector<String>();
     private Vector<Answer> answers = new Vector<Answer>();
+    private JLabel timerField = new JLabel();
     QuestionsTableModel model;//= new QuestionsTableModel(questions);
+    private Timer timer;
+    boolean paused = false;
+    private JButton pauseButton = new JButton("Pause");
     JTable table = new JTable() {
 
         public TableCellRenderer getCellRenderer(int row, int column) {
@@ -88,6 +99,7 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
     public SurveyManagerFrame(RealtimeBase base) {
         this.base = base;
         initComponents();
+        pauseButton.setEnabled(false);
         model = new QuestionsTableModel(questions);
         questionsPanel.add(new JScrollPane(table));
         table.setShowGrid(false);
@@ -323,6 +335,9 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
                 saveSurvey();
             }
         }
+        if (timer != null) {
+            timer.cancel();
+        }
         dispose();
     }
 
@@ -346,7 +361,7 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         clearButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        buttonsToolbar = new javax.swing.JToolBar();
         openButton = new javax.swing.JButton();
         newButton = new javax.swing.JButton();
         delButton = new javax.swing.JButton();
@@ -388,14 +403,14 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
             }
         });
         cPanel.add(endButton);
-        newButton.setText("New");
+        newButton.setText("New Question");
         newButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addQuestionButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(newButton);
+        buttonsToolbar.add(newButton);
         clearButton.setText("Clear");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
 
@@ -416,27 +431,27 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
 
         questionsPanel.add(cPanel, java.awt.BorderLayout.PAGE_END);
 
-        openButton.setText("Open");
+        openButton.setText("Open Survey");
         openButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(openButton);
+        buttonsToolbar.add(openButton);
 
 
 
-        saveButton.setText("Save");
+        saveButton.setText("Save Survey");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(saveButton);
+        buttonsToolbar.add(saveButton);
 
-        delButton.setText("Delete");
+        delButton.setText("Delete Question");
         delButton.setEnabled(false);
         delButton.addActionListener(new java.awt.event.ActionListener() {
 
@@ -444,15 +459,42 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
                 delButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(delButton);
+        buttonsToolbar.add(delButton);
 
-        jLabel2.setText("Title:");
-        jPanel1.add(jLabel2);
+        jLabel2.setText("Survey Title:");
+        //buttonsToolbar.add(jLabel2);
 
-        titleField.setPreferredSize(new java.awt.Dimension(150, 21));
-        jPanel1.add(titleField);
+        titleField.setPreferredSize(new java.awt.Dimension(400, 21));
+        //buttonsToolbar.add(titleField);
 
-        questionsPanel.add(jPanel1, java.awt.BorderLayout.PAGE_START);
+        JPanel surveyTitlePanel = new JPanel();
+        surveyTitlePanel.setLayout(new BorderLayout());
+        surveyTitlePanel.add(buttonsToolbar, BorderLayout.NORTH);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(jLabel2);
+        titlePanel.add(titleField);
+        surveyTitlePanel.add(titlePanel, BorderLayout.CENTER);
+        timerField.setFont(new Font("Dialog", 1, 18));
+        timerField.setBorder(BorderFactory.createEtchedBorder());
+
+        pauseButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                if (pauseButton.getText().equals("Pause")) {
+                    paused = true;
+                    pauseButton.setText("Resume");
+                } else {
+                    pauseButton.setText("Pause");
+                    paused = false;
+                }
+            }
+        });
+        JPanel timerPanel = new JPanel();
+        timerPanel.add(timerField);
+        timerPanel.add(pauseButton);
+        surveyTitlePanel.add(timerPanel, BorderLayout.SOUTH);
+        questionsPanel.add(surveyTitlePanel, java.awt.BorderLayout.PAGE_START);
 
         tabbedPane.addTab("Questions", questionsPanel);
 
@@ -538,7 +580,14 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
                     "Title", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         resetAnswers();
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new Timer();
+        pauseButton.setEnabled(true);
+        timer.scheduleAtFixedRate(new SurveyTimer(), 0, 1000);
         base.getTcpClient().sendPacket(new SurveyPackPacket(base.getSessionId(),
                 questions, titleField.getText()));
         startButton.setEnabled(false);
@@ -546,9 +595,12 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
     }
 
     private void endButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        if (timer != null) {
+            timer.cancel();
+        }
         endButton.setEnabled(false);
         startButton.setEnabled(true);
-
+        pauseButton.setEnabled(false);
     }
 
     private void addQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -579,14 +631,14 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
     private void voteStartButtonActionPerformed(java.awt.event.ActionEvent evt) {
         base.getTcpClient().sendPacket(
                 new VotePacket(base.getSessionId(), true, false, !allOpt.isSelected(),
-                base.isSpeakerEnabled(),base.isMicEnabled()));
+                base.isSpeakerEnabled(), base.isMicEnabled()));
         voteStartButton.setEnabled(false);
         voteStopButton.setEnabled(true);
     }
 
     private void voteStopButtonActionPerformed(java.awt.event.ActionEvent evt) {
         base.getTcpClient().sendPacket(
-                new VotePacket(base.getSessionId(), false, false, allOpt.isSelected(),base.isSpeakerEnabled(),base.isMicEnabled()));
+                new VotePacket(base.getSessionId(), false, false, allOpt.isSelected(), base.isSpeakerEnabled(), base.isMicEnabled()));
 
         voteStopButton.setEnabled(false);
         voteResetButton.setEnabled(true);
@@ -630,7 +682,7 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
                 for (int i = 0; i < questions.size(); i++) {
                     Object ob[] = {
                         new Integer(i + 1),
-                        questions.elementAt(i),p
+                        questions.elementAt(i), p
                     };
                     data[i] = ob;
                     answers.add(new Answer(0, 0));
@@ -710,7 +762,6 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
         transient protected ChangeEvent changeEvent = null;
         protected JComponent editorComponent = null;
         protected JComponent container = null;		// Can be tree or table
-
 
         public Component getComponent() {
             return editorComponent;
@@ -809,6 +860,41 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
         }
     } // End of class JComponentCellEditor
 
+    class SurveyTimer extends TimerTask {
+
+        int secs = 0;
+        int mins = 0;
+        int hrs = 0;
+
+        public void run() {
+            if (!paused) {
+                if (secs == 60) {
+                    mins++;
+                    secs = 0;
+                }
+                if (mins == 60) {
+                    hrs++;
+                    mins = 0;
+                }
+
+                String secsVal = "" + secs;
+                String minsVal = "" + mins;
+                String hrsVal = "" + hrs;
+                if (secs < 10) {
+                    secsVal = "0" + secs;
+                }
+                if (mins < 10) {
+                    minsVal = "0" + mins;
+
+                }
+                if (hrs < 10) {
+                    hrsVal = "0" + hrs;
+                }
+                timerField.setText("Survey Duration: " + hrsVal + ":" + minsVal + ":" + secsVal);
+                secs++;
+            }
+        }
+    }
     // Variables declaration - do not modify                     
     private javax.swing.JButton newButton;
     private javax.swing.JRadioButton allOpt;
@@ -821,7 +907,7 @@ public class SurveyManagerFrame extends javax.swing.JFrame {
     private javax.swing.JButton endButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JToolBar buttonsToolbar;
     private javax.swing.JButton openButton;
     private javax.swing.JRadioButton presenterOpt;
     private javax.swing.JPanel questionsPanel;
