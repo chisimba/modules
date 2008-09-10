@@ -204,7 +204,7 @@ public function showClassroom($contextCode){
     $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$supernodePort,$username,$fullnames,$isPresenter,'contextCode');
     $this->setVarByRef('title', $title);
     $this->setVarByRef('desc', $desc);
-    $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/chisimba_classroom.jnlp">Click here to launch realtime classroom</a>');
+    $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Click here to launch realtime classroom</a>');
     return "dump_tpl.php";		
 }
 
