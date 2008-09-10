@@ -3,7 +3,7 @@
 
             public class Version{
 
-                public static float version=200806131828F;
+                public static float version=1.0003f;//200809110035F;
 
                 public static int getVersion(){
 

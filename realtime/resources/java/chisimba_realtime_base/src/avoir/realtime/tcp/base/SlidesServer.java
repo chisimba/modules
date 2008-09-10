@@ -22,7 +22,8 @@ public class SlidesServer {
 
     public static void main(String[] args) {
         if (args.length > 1) {
-            new SlidesServer(args[0], args[1]);
+            int port=Integer.parseInt(args[2]);
+            new SlidesServer(args[0], args[1],port);
         } else {
             new SlidesServer(args[0]);
         }
@@ -34,11 +35,11 @@ public class SlidesServer {
         return slideServerId;
     }
 
-    public SlidesServer(String id, String local) {
+    public SlidesServer(String id, String superNodeHost, int superNodePort) {
 
         client = new TCPClient(this);
-        client.setSuperNodeHost("127.0.0.1");
-        client.setSuperNodePort(22225);
+        client.setSuperNodeHost(superNodeHost);
+        client.setSuperNodePort(superNodePort);
         if (client.connect()) {
             System.out.println("Slide server running ...");
             //publish this user
