@@ -11,7 +11,7 @@
       <homepage href="http://avoir.uwc.ac.za"/>
       <description kind="short">Realtime Virtual Classroom</description>
       <icon href="images/logo.png"/> 
-      <icon kind="splash" href="images/splash.jpg"/> 
+      <icon kind="splash" href="images/splash_realtime.png"/> 
       <offline-allowed/>
    </information>
    <resources>     

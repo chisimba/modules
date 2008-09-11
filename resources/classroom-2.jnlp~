@@ -2,7 +2,7 @@
 <!-- JNLP File for Notepad -->
 
 <jnlp spec="1.0+"
-      codebase="http://172.16.64.32/chisimba_modules/realtime/resources/" 
+      codebase="http://localhost/chisimba_modules/realtime/resources/" 
       href="classroom-2.jnlp">
    <information>
       <title>Realtime Classroom</title>
@@ -11,7 +11,7 @@
       <homepage href="http://avoir.uwc.ac.za"/>
       <description kind="short">Realtime Virtual Classroom</description>
       <icon href="images/logo.png"/> 
-      <icon kind="splash" href="images/splash.jpg"/> 
+      <icon kind="splash" href="images/splash_realtime.png"/> 
       <offline-allowed/>
    </information>
    <resources>     
@@ -20,11 +20,11 @@
 	      href="http://java.sun.com/products/autodl/j2se"/>
    </resources>
    <application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">
-     <argument>172.16.64.32</argument>
+     <argument>localhost</argument>
      <argument>22225</argument>
-<argument>s3</argument>
- <argument>s3</argument>
- <argument>true</argument>
+<argument>s2</argument>
+ <argument>s2</argument>
+ <argument>false</argument>
  <argument>contextCode</argument>
    </application-desc>
 <security>
