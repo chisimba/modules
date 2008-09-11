@@ -2,7 +2,7 @@
 <!-- JNLP File for Notepad -->
 
 <jnlp spec="1.0+"
-      codebase="http://172.16.64.32/chisimba_modules/realtime/resources/" 
+      codebase="http://localhost/chisimba_modules/realtime/resources/" 
       href="classroom-1.jnlp">
    <information>
       <title>Realtime Classroom</title>
@@ -20,7 +20,7 @@
 	      href="http://java.sun.com/products/autodl/j2se"/>
    </resources>
    <application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">
-     <argument>172.16.64.32</argument>
+     <argument>localhost</argument>
      <argument>22225</argument>
 <argument>s2</argument>
  <argument>s2</argument>
