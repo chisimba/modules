@@ -412,7 +412,7 @@ var minVer=PluginDetect.isMinVersion("Java", "1.5");
 
 if(minVer == 1){
 window.open("';
-$jsContent.=$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action='.$appletaction.'&id='.$id.'&agenda='.$agenda.'","_self","fullscreen"); 
+$jsContent.=$this->objConfig->getSiteRoot().'/index.php?module=realtime&action=classroom&id='.$id.'&agenda='.$agenda.'","_self","fullscreen");
 }else{
 window.open("'.$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action=showerror&title='.$title.'&content='.$content.'&desc='.$desc.'","_self","fullscreen");
 }
