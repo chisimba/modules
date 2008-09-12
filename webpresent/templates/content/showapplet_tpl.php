@@ -5,8 +5,9 @@
     } 
 </script>
 <?php
-
-
+echo '<h1>Realtime is currently temporarily under maintenance.</h1>';
+echo '<a href="'.$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action=home">Back to presentations</a>';
+/*
     $userLevel;
     $isLoggedIn='false';
 
@@ -84,5 +85,5 @@
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
     echo '</applet>';
     echo '</center>';
-
+*/
 ?>
