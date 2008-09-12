@@ -51,7 +51,7 @@
         */
         public $objLog;
 
- 
+
         /**
          * @access public
          * @var contexctcode
@@ -75,32 +75,36 @@
          * @var <type>
          */
         public $objLink;
-        
+
         /**
          * JOD doc converter path
          * @var <type>
          */
         public $jodconverterPath;
-    
+
         /**
          * Files object
          * @var <type>
          */
-        public $objFiles;   
-        
+        public $objFiles;
+
         /**
          *  convert obj
          * @var <type>
          */
         public $converter;
-        
+
         /**
          * Upload path
          * @var <type>
          */
         public $uploadPath;
-        
-        
+        /**
+         *For starting the slide server
+         * @var <type>
+         */
+        public  $realtimeManager;
+
         /**
          * Constructor method to instantiate objects and get variables
          */
@@ -109,21 +113,21 @@
             $this->objLink= $this->getObject('link', 'htmlelements');
             //Get configuration class
             $this->objConfig =$this->getObject('config','config');
-                
+
             $this->objAltConfig = $this->getObject('altconfig','config');
-                
+
             //Get language class
             $this->objLanguage = $this->getObject('language', 'language');
-                
+
             //Get the activity logger class
             $this->config = $this->getObject('config','config');
             $this->objLog = $this->getObject('logactivity', 'logger');
-                
+
             //Log this module call
             $this->objLog->log();
-               
+
             $this->objStarter= $this->getObject('realtimestarter');
-                
+            $this->realtimeManager = $this->getObject('realtimemanager','webpresent');
             // classes we need
             $this->objUser = $this->newObject('user', 'security');
             $this->userId = $this->objUser->userId();
@@ -146,7 +150,7 @@
             $this->objContext = $this->getObject('dbcontext', 'context');
             $this->objConfig = $this->getObject('altconfig', 'config');
             $location = "http://" . $_SERVER['HTTP_HOST'];
-            
+
         }
 
         /**
@@ -160,10 +164,13 @@
             switch ($action)
             {
                 case 'classroom' :
-                return $this->showClassRoom($this->contextCode);
+                $id=$this->getParam('id');
+                $title=$this->getParam('agenda');
+                
+                return $this->showClassRoom($id,$title);
 
                 default :
-                return $this->showClassRoom($this->contextCode);
+                return $this->initClassRoom($this->contextCode);
             }
         }
 
@@ -172,54 +179,113 @@
          */
         public function explainRealtime()
         {
-            
-                $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
-                $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
-                $this->setVarByRef('title', $title);
-                $this->setVarByRef('desc', $desc);
-                $this->setVarByRef('content', $desc);
-                //$this->setVar('pageSuppressToolbar', FALSE);
-                //$this->setVar('pageSuppressBanner', FALSE);
-                return "dump_tpl.php";		
-           
-            
+
+            $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
+            $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
+            $this->setVarByRef('title', $title);
+            $this->setVarByRef('desc', $desc);
+            $this->setVarByRef('content', $desc);
+            //$this->setVar('pageSuppressToolbar', FALSE);
+            //$this->setVar('pageSuppressBanner', FALSE);
+            return "dump_tpl.php";
+
+
         }
 
-public function showClassroom($contextCode){
-    $modPath=$this->objAltConfig->getModulePath();
-    $replacewith="";
-    $docRoot=$_SERVER['DOCUMENT_ROOT'];
-    $appletPath=str_replace($docRoot,$replacewith,$modPath);
-    $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
-    $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-    $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
-    $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
-    $username=$this->objUser->userName();
-    $fullnames=$this->objUser->fullname();
-    $userDetails=$fullnames.' '.$username;
-    $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
-    $isPresenter='true';
-    $fileBase=$modPath.'/realtime/resources/';
-    $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
-    $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
+        public function showClassroom($id,$title){
 
-    $content='<div class="roundedcornr_box_888298">
+            $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
+            $this->realtimeManager->startSlidesServer($slideServerId);
+
+            $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
+            $modPath=$this->objAltConfig->getModulePath();
+            $replacewith="";
+            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+            $appletPath=str_replace($docRoot,$replacewith,$modPath);
+            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $username=$this->objUser->userName();
+            $fullnames=$this->objUser->fullname();
+            $userDetails=$fullnames.' '.$username;
+            $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
+            $isLoggedIn =$this->objUser->isLoggedIn();
+            $fileBase=$modPath.'/realtime/resources/';
+            $resourcesPath =$modPath.'/realtime/resources';
+            $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
+            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
+            $presenterimage=$this->newObject('image','htmlelements');
+            $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
+            $presenterimage->width="200";
+            $presenterimage->height="80";
+
+            $joinimage=$this->newObject('image','htmlelements');
+            $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
+            $joinimage->width="200";
+            $joinimage->height="80";
+            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
+            $presentationLink->link=   'Back To Presentation';
+
+            $siteRoot=$this->objAltConfig->getSiteRoot();
+            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
+            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
+
+            $desc='<li>Add Live interactions to your presentation</li>';
+            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
+
+            //generate for presenter
+            $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'true',$id,$title,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId);
+            //generate for participant
+            $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'false',$id,$title,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId);
+
+            $this->setVarByRef('title',  $title);
+            $this->setVarByRef('desc', $desc);
+            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h2>'.$presentationLink->show().'</h2>');
+            return "dump_tpl.php";
+        }
+
+        public function initClassroom($contextCode){
+            $modPath=$this->objAltConfig->getModulePath();
+            $replacewith="";
+            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+            $appletPath=str_replace($docRoot,$replacewith,$modPath);
+            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+            $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $username=$this->objUser->userName();
+            $fullnames=$this->objUser->fullname();
+            $userDetails=$fullnames.' '.$username;
+            $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
+            $isPresenter='true';
+            $fileBase=$modPath.'/realtime/resources/';
+            $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
+            $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
+
+            $content='<div class="roundedcornr_box_888298">
     <div class="roundedcornr_top_888298"><div></div></div>
       <div class="roundedcornr_content_888298">
          <p>
-        <a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Click here to launch realtime classroom</a>
+
          </p>
       </div>
     <div class="roundedcornr_bottom_888298"><div></div></div>
     </div>';
 
-    $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,
-        $supernodePort,$username,$fullnames,$isPresenter,'contextCode',$userDetails,$userImagePath);
-    $this->setVarByRef('title',  $title);
-    $this->setVarByRef('desc', $desc);
-    $this->setVarByRef('content', $content);
-    return "dump_tpl.php";		
-}
+            $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,$isPresenter,'contextCode',$userDetails,$userImagePath);
+            $this->setVarByRef('title',$title);
+            $this->setVarByRef('desc', $desc);
+            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Start Live Presentation</a>');
+            return "dump_tpl.php";
+        }
 
-}
+    }
 ?>
