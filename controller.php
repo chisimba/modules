@@ -122,7 +122,7 @@
             //Log this module call
             $this->objLog->log();
                
-        $this->objStarter= $this->getObject('realtimestarter');
+            $this->objStarter= $this->getObject('realtimestarter');
                 
             // classes we need
             $this->objUser = $this->newObject('user', 'security');
@@ -195,16 +195,29 @@ public function showClassroom($contextCode){
     $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
     $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
     $username=$this->objUser->userName();
-    $fullnames=$this->objUser->userName();
+    $fullnames=$this->objUser->fullname();
+    $userDetails=$fullnames.' '.$username;
+    $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
     $isPresenter='true';
     $fileBase=$modPath.'/realtime/resources/';
     $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
     $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
 
-    $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$supernodePort,$username,$fullnames,$isPresenter,'contextCode');
-    $this->setVarByRef('title', $title);
+    $content='<div class="roundedcornr_box_888298">
+    <div class="roundedcornr_top_888298"><div></div></div>
+      <div class="roundedcornr_content_888298">
+         <p>
+        <a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Click here to launch realtime classroom</a>
+         </p>
+      </div>
+    <div class="roundedcornr_bottom_888298"><div></div></div>
+    </div>';
+
+    $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,
+        $supernodePort,$username,$fullnames,$isPresenter,'contextCode',$userDetails,$userImagePath);
+    $this->setVarByRef('title',  $title);
     $this->setVarByRef('desc', $desc);
-    $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Click here to launch realtime classroom</a>');
+    $this->setVarByRef('content', $content);
     return "dump_tpl.php";		
 }
 

@@ -51,7 +51,18 @@
         }
 
 
-public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNodePort,$username,$fullnames,$isPresenter,$sessionId){
+public function generateJNLP(
+    $fileBase,
+    $appletCodeBase,
+    $supernodeHost,
+    $superNodePort,
+    $username,$fullnames,
+    $isPresenter,
+    $sessionId,
+    $userDetails,
+    $userImagePath){
+
+
   
     $jnlpFile = $fileBase.'/'.$username.'_chisimba_classroom.jnlp';
     $fh = fopen($jnlpFile, 'w') or die("can't open file");
@@ -82,8 +93,9 @@ public function generateJNLP($fileBase,$appletCodeBase,$supernodeHost,$superNode
    fwrite($fh,   ' <argument>'.$fullnames.'</argument>');
    fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
    fwrite($fh,   ' <argument>'.$sessionId.'</argument>');
-
-   fwrite($fh,   '</application-desc>');
+   fwrite($fh,   ' <argument>'.$userDetails.'</argument>');
+   fwrite($fh,   ' <argument>'.$userImagePath.'</argument>');
+    fwrite($fh,   '</application-desc>');
    fwrite($fh,'<security>');
    fwrite($fh,'  <all-permissions/>');
    fwrite($fh,'</security> ');
