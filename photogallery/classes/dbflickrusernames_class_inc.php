@@ -67,7 +67,7 @@ class dbflickrusernames extends dbTable
 	*/
 	public function getFlickrSharedAlbums()
 	{
-	 	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773", "d01ff0f7a912a1e3");
+	 	$this->_objFlickr = new phpFlickr("0b4628c77c757049831c6d873107e533", "e71b890ec35750fb");
 		$bigSet = array();
 		$users = $this->getAll();
 		foreach($users as $user)

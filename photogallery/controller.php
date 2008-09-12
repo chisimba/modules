@@ -47,7 +47,8 @@ class photogallery extends controller
         $this->_objConfig = $this->getObject('altconfig', 'config');
       	$this->_objTags = $this->getObject('dbtags', 'tagging');
       	$this->_objDBFlickrUsernames = $this->getObject('dbflickrusernames', 'photogallery');
-      	
+      	$this->secretCode = "";
+		$this->apiKey = "";
       	
     }
 
@@ -249,11 +250,14 @@ class photogallery extends controller
 		$objProxy = $this->getObject('proxy','utilities');
       	$arrProxy = $objProxy->getProxy();
       	
-      	$this->_objFlickr = new phpFlickr("710e95b3b34ad8669fe36534a8343773", "d01ff0f7a912a1e3");
-    
+      	$this->_objFlickr = new phpFlickr("0b4628c77c757049831c6d873107e533", "e71b890ec35750fb");
+		//var_dump($arrProxy);
+		//0b4628c77c757049831c6d873107e533
 		//setup the proxy to get the flickr images      	
-      	$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport'], $arrProxy['proxyusername'],$arrProxy['proxypassword'] );
-      	
+      	if ($arrProxy['proxyserver'] != "")
+		{
+			$this->_objFlickr->setProxy($arrProxy['proxyserver'], $arrProxy['proxyport'], $arrProxy['proxyusername'],$arrProxy['proxypassword'] );
+		}
       	//file system caching
 		$this->_objFlickr->enableCache("fs", $this->_objConfig->getContentBasePath()."/photogallery");
        
