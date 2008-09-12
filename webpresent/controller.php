@@ -218,8 +218,8 @@ class webpresent extends controller
         $this->setVarByRef('slideServerId',$slideServerId);
         $this->setVarByRef('isPresenter', $isPresenter);
         
-        $this->setVar('pageSuppressBanner', TRUE);
-        $this->setVar('suppressFooter', TRUE);
+       // $this->setVar('pageSuppressBanner', TRUE);
+       // $this->setVar('suppressFooter', TRUE);
 
         return "showapplet_tpl.php";
     }
