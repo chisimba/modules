@@ -33,6 +33,11 @@ $fields = array(
 		'length' => 1,
         'default' => 'Y'
 		),
+    'scorm' => array(
+		'type' => 'text',
+		'length' => 1,
+        'default' => 'N'
+		),
     'creatorid' => array(
 		'type' => 'text',
 		'length' => 25,
