@@ -38,7 +38,7 @@
 	</update>
     	<update>
         	<table>tbl_contextcontent_chaptercontext</table>
-        	<version>1.215</version>
+        	<version>1.220</version>
         	<description>Added a field for scorm</description>
         	<data>
         		<add>
@@ -50,4 +50,5 @@
 			</add>
 		</data>
 	</update>
+
 </updates>
