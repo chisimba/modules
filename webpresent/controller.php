@@ -67,7 +67,7 @@ class webpresent extends controller
          */
     public function requiresLogin($action)
     {
-        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','showaudienceapplet','showpresenterapplet');
+        $required = array('login', 'upload', 'edit', 'updatedetails', 'tempiframe', 'erroriframe', 'uploadiframe', 'doajaxupload', 'ajaxuploadresults', 'delete', 'admindelete', 'deleteslide', 'deleteconfirm', 'regenerate','schedule','willappletrun');
 
         if (in_array($action, $required)) {
             return TRUE;
@@ -159,12 +159,14 @@ class webpresent extends controller
      */
     public function __willappletrun()
     {
+
         $actiontype= $this->getParam('actiontype');
         $id= $this->getParam('id');
         $agenda= $this->getParam('agenda');
         
         $this->setVarByRef('appletaction', $actiontype);
         $this->setVarByRef('id', $id);
+       
         $this->setVarByRef('agenda', $agenda);
   
         return "willappletrun_tpl.php";
