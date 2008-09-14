@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
@@ -24,11 +25,12 @@ import javax.swing.JToolBar;
  *
  * @author developer
  */
-public class ToolbarManager extends JToolBar {
+public class ToolbarManager {
 
     private Version v = new Version();
-    private JToolBar slidesToolBar = new JToolBar();
-    private JToolBar controlToolbar = new JToolBar();
+    private JToolBar slidesNavigationToolBar = new JToolBar();
+    // private JToolBar controlToolbar = new JToolBar();
+    private JToolBar whiteboardToolbar = new JToolBar(JToolBar.VERTICAL);
     private JToolBar generalToolbar = new JToolBar();
     private MButton firstSlideButton,  nextSlideButton,  backSlideButton,  lastSlideButton;
     private TButton sessionButton;
@@ -42,12 +44,13 @@ public class ToolbarManager extends JToolBar {
     private javax.swing.JButton fileTransferButton;
     private javax.swing.ButtonGroup actionsBG;
     private javax.swing.JButton chatButton;
+    private javax.swing.JButton backButton;
     private javax.swing.JToggleButton handButton;
     private RealtimeBase base;
 
     public ToolbarManager(RealtimeBase base) {
         this.base = base;
-
+        initComponents();
 
     }
 
@@ -78,9 +81,8 @@ public class ToolbarManager extends JToolBar {
         return nextSlideButton;
     }
 
-    public JToolBar createToolbar() {
-        initComponents();
-        return this;
+    public JToolBar getWhiteboardToolbar() {
+        return whiteboardToolbar;
     }
 
     /**
@@ -100,7 +102,7 @@ public class ToolbarManager extends JToolBar {
         wbButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                base.showPointerToolBar(wbButton.isSelected());
+                //  base.showPointerToolBar(wbButton.isSelected());
             }
         });
 
@@ -116,9 +118,11 @@ public class ToolbarManager extends JToolBar {
                 if (base.getTcpClient().isNetworkAlive()) {
                     int slideIndex = base.getSessionManager().getSlideIndex();
                     if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
-                        base.recordXml(slideIndex);
+                        // base.recordXml(slideIndex);
                         base.getSessionManager().setSlideIndex(++slideIndex);
-                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
+                                base.getSessionId(), base.getUser().getUserName(),
+                                base.getControl(), base.getSelectedFile(),base.isWebPresent());
                     }
                 } else {
                     base.getTcpClient().setUserOffline();
@@ -134,7 +138,9 @@ public class ToolbarManager extends JToolBar {
                     base.recordXml(slideIndex);
                     if (slideIndex > 0) {
                         base.getSessionManager().setSlideIndex(--slideIndex);
-                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
+                                base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
+                                base.getControl(), base.getSelectedFile(),base.isWebPresent());
 
                     }
                 } else {
@@ -148,7 +154,9 @@ public class ToolbarManager extends JToolBar {
                 if (base.getTcpClient().isNetworkAlive()) {
                     int slideIndex = 0;
                     base.getSessionManager().setSlideIndex(slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
+                            base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
+                            base.getControl(), base.getSelectedFile(),base.isWebPresent());
                     base.recordXml(slideIndex);
                 } else {
                     base.getTcpClient().setUserOffline();
@@ -161,7 +169,9 @@ public class ToolbarManager extends JToolBar {
                 if (base.getTcpClient().isNetworkAlive()) {
                     int slideIndex = base.getSessionManager().getSlideCount() - 1;
                     base.getSessionManager().setSlideIndex(slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(), base.getSessionId(), base.getUser().getUserName(), base.getControl());
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
+                            base.getSessionId(), base.getUser().getUserName(), 
+                            base.getControl(), base.getSelectedFile(),base.isWebPresent());
                     base.recordXml(slideIndex);
                 } else {
                     base.getTcpClient().setUserOffline();
@@ -219,6 +229,16 @@ public class ToolbarManager extends JToolBar {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    private void revertBack() {
+        try {
+
+            URL imagePopupURL = new URL(base.getSiteRoot() + "/index.php?module=webpresent");
+            base.getAppletContext().showDocument(imagePopupURL);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     /** This method is called from within the init() method to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -226,42 +246,44 @@ public class ToolbarManager extends JToolBar {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
+        ButtonGroup bg = new ButtonGroup();
+
+
         firstSlideButton = new MButton(createImageIcon(this, "/icons/first.png"));
-        firstSlideButton.setText("First");
+        //firstSlideButton.setText("First");
         backSlideButton = new MButton(createImageIcon(this, "/icons/back.png"));
-        backSlideButton.setText("Back");
+        //backSlideButton.setText("Back");
         nextSlideButton = new MButton(createImageIcon(this, "/icons/next.png"));
-        nextSlideButton.setText("Next");
+        //nextSlideButton.setText("Next");
         lastSlideButton = new MButton(createImageIcon(this, "/icons/last.png"));
-        lastSlideButton.setText("Last");
+        //lastSlideButton.setText("Last");
 
 
-        slidesToolBar.setBorder(BorderFactory.createEtchedBorder());
-        slidesToolBar.setRollover(true);
-        slidesToolBar.setPreferredSize(new java.awt.Dimension(18, 25));
-        slidesToolBar.add(firstSlideButton);
-        slidesToolBar.add(backSlideButton);
-        slidesToolBar.add(nextSlideButton);
-        slidesToolBar.add(lastSlideButton);
+        slidesNavigationToolBar.setBorder(BorderFactory.createEtchedBorder());
+        slidesNavigationToolBar.setRollover(true);
+        slidesNavigationToolBar.setPreferredSize(new java.awt.Dimension(18, 25));
+        slidesNavigationToolBar.add(firstSlideButton);
+        slidesNavigationToolBar.add(backSlideButton);
+        slidesNavigationToolBar.add(nextSlideButton);
+        slidesNavigationToolBar.add(lastSlideButton);
 
 
-        add(slidesToolBar);
+
 
         actionsBG = new javax.swing.ButtonGroup();
-        slidesToolBar = new javax.swing.JToolBar();
         handButton = new javax.swing.JToggleButton();
         yesButton = new javax.swing.JToggleButton();
         noButton = new javax.swing.JToggleButton();
         chatButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         voiceOptionsButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
         optionsButton = new javax.swing.JButton();
 
-        slidesToolBar.setRollover(true);
-        slidesToolBar.setPreferredSize(new java.awt.Dimension(18, 25));
+
 
         handButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        handButton.setText("Hand");
+        //handButton.setText("Hand");
         handButton.setToolTipText("Raise Hand");
         handButton.setBorderPainted(false);
 
@@ -291,10 +313,9 @@ public class ToolbarManager extends JToolBar {
         handButtonMouseExited(evt);
         }
         });*/
-        controlToolbar.add(handButton);
 
         yesButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        yesButton.setText("Yes");
+        //yesButton.setText("Yes");
         yesButton.setToolTipText("Say Yes");
         yesButton.setBorderPainted(false);
         yesButton.setEnabled(false);
@@ -307,11 +328,10 @@ public class ToolbarManager extends JToolBar {
                 yesButtonActionPerformed(evt);
             }
         });
-        controlToolbar.add(yesButton);
-        controlToolbar.setBorder(BorderFactory.createEtchedBorder());
+
 
         noButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        noButton.setText("No");
+        // noButton.setText("No");
         noButton.setToolTipText("Say No");
         noButton.setBorderPainted(false);
         noButton.setEnabled(false);
@@ -324,13 +344,41 @@ public class ToolbarManager extends JToolBar {
                 noButtonActionPerformed(evt);
             }
         });
-        controlToolbar.add(noButton);
 
-        add(controlToolbar);
+
+
 
         generalToolbar.setRollover(true);
-        generalToolbar.setPreferredSize(new java.awt.Dimension(66, 25));
+        generalToolbar.setPreferredSize(new java.awt.Dimension(380, 40));
 
+
+        backButton.setFont(new java.awt.Font("Dialog", 0, 9));
+        backButton.setText("Home");
+        backButton.setIcon(createImageIcon(this, "/icons/back.png"));
+        backButton.setBorderPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setFocusable(false);
+        backButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        backButton.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                backButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                backButton.setContentAreaFilled(false);
+            }
+        });
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                revertBack();
+            }
+        });
+       
         chatButton.setFont(new java.awt.Font("Dialog", 0, 9));
         chatButton.setText("Chat");
         chatButton.setBorderPainted(false);
@@ -477,7 +525,7 @@ public class ToolbarManager extends JToolBar {
         refreshButton.setIcon(createImageIcon(this, "/icons/refresh.png"));
         optionsButton.setIcon(createImageIcon(this, "/icons/options.png"));
 
-        add(generalToolbar);
+
         surveyButton = new JButton(createImageIcon(this, "/icons/survey.png"));
         surveyButton.setText("Survey");
         surveyButton.setBorderPainted(false);
@@ -501,12 +549,13 @@ public class ToolbarManager extends JToolBar {
                     }
                 });
 
-
-
-        sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
-        sessionButton.setText("Start");
         surveyButton.setToolTipText("Conduct Survey");
 
+
+         sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
+        //sessionButton.setText("Start");
+
+     
         chatButton.setIcon(createImageIcon(this, "/icons/chat.png"));
         handButton.setIcon(createImageIcon(this, "/icons/hand.png"));
         yesButton.setIcon(createImageIcon(this, "/icons/yes.png"));
@@ -514,9 +563,9 @@ public class ToolbarManager extends JToolBar {
         voiceOptionsButton.setIcon(createImageIcon(this, "/icons/voice.png"));
         yesButton.setEnabled(false);
         noButton.setEnabled(false);
-        chatButton.setToolTipText("Chat");
+        chatButton.setToolTipText("Home");
         if (base.isPresenter()) {
-            slidesToolBar.add(sessionButton);
+            //  slidesNavigationToolBar.add(sessionButton);
             generalToolbar.add(surveyButton);
         }
         generalToolbar.addSeparator();
@@ -524,7 +573,7 @@ public class ToolbarManager extends JToolBar {
 
         wbButton = new javax.swing.JToggleButton();
         wbButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        wbButton.setText("Whiteboard");
+        //wbButton.setText("Whiteboard");
         wbButton.setBorderPainted(false);
         //wbButton.setContentAreaFilled(false);
         wbButton.setFocusable(false);
@@ -534,14 +583,24 @@ public class ToolbarManager extends JToolBar {
         wbButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                base.showPointerToolBar(wbButton.isSelected());
+                //  base.showPointerToolBar(wbButton.isSelected());
             }
         });
 
-       // generalToolbar.add(wbButton);
+        // generalToolbar.add(wbButton);
+        generalToolbar.add(noButton);
+        generalToolbar.add(yesButton);
 
         setCustomActions();
     }// </editor-fold>                        
+
+    public JToolBar getGeneralToolbar() {
+        return generalToolbar;
+    }
+
+    public JToolBar getSlidesNavigationToolBar() {
+        return slidesNavigationToolBar;
+    }
 
     private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {
         base.showOptionsFrame();
@@ -643,7 +702,7 @@ public class ToolbarManager extends JToolBar {
             setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 9));
-            setEnabled(false);
+            // setEnabled(false);
             addMouseListener(new MouseAdapter() {
 
                 @Override
@@ -717,7 +776,7 @@ public class ToolbarManager extends JToolBar {
             setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 9));
-            setEnabled(false);
+            //setEnabled(false);
             this.addMouseListener(new MouseAdapter() {
 
                 @Override

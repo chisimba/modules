@@ -6,8 +6,9 @@ package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.base.Version;
+import avoir.realtime.tcp.base.appsharing.AppShareFrame;
 import avoir.realtime.tcp.common.Constants;
-import avoir.realtime.tcp.common.PresentationFileView;
+import avoir.realtime.tcp.common.ImageFilter;
 import avoir.realtime.tcp.common.PresentationFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,31 +39,35 @@ public class MenuManager implements ActionListener {
             "</center>";
     private RealtimeBase base;
     private JFileChooser presentationFC = new JFileChooser();
+    private JFileChooser graphicFC = new JFileChooser();
+    private AppShareFrame appShareFrame;
 
     public MenuManager(RealtimeBase base) {
         this.base = base;
-         presentationFC.addChoosableFileFilter(new PresentationFilter());
+        presentationFC.addChoosableFileFilter(new PresentationFilter());
+        graphicFC.addChoosableFileFilter(new ImageFilter());
         JMenu fileMenu = createMenu("File");
         JMenu insertMenu = createMenu("Insert");
         JMenu toolsMenu = createMenu("Tools");
         JMenu helpMenu = createMenu("Help");
 
-        createMenuItem(toolsMenu, "Audio Setup", "audiosetup", true);
+        createMenuItem(toolsMenu, "Application Sharing", "appshare", true);
         createMenuItem(toolsMenu, "Filters", "filter", true);
+        createMenuItem(toolsMenu, "Audio Setup", "audiosetup", true);
         createMenuItem(toolsMenu, "Options", "options", true);
         createMenuItem(helpMenu, "About", "about", true);
-        if (base.getMODE() == Constants.WEBSTART) {
-            createMenuItem(fileMenu, "New Whiteboard", "newWhiteboard", false);
-            createMenuItem(fileMenu, "New Room", "newRoom", false);
 
-            fileMenu.addSeparator();
-            createMenuItem(fileMenu, "Exit", "exit", true);
-            createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", false);
-            createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", true);
-            createMenuItem(insertMenu, "Insert Flash", "insertFlash", false);
-            menuBar.add(fileMenu);
-            menuBar.add(insertMenu);
-        }
+        createMenuItem(fileMenu, "New Whiteboard", "newWhiteboard", false);
+        createMenuItem(fileMenu, "New Room", "newRoom", false);
+
+        fileMenu.addSeparator();
+        createMenuItem(fileMenu, "Exit", "exit", true);
+        createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", base.getControl());
+        createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", base.getControl());
+        createMenuItem(insertMenu, "Insert Flash", "insertFlash", false);
+        menuBar.add(fileMenu);
+        menuBar.add(insertMenu);
+        //  }
         menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
 
@@ -73,13 +78,34 @@ public class MenuManager implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("insertPresentation")) {
-            if (presentationFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
-              final  File f = presentationFC.getSelectedFile();
+        if (e.getActionCommand().equals("appshare")) {
+            if (appShareFrame == null) {
+                appShareFrame = new AppShareFrame(base);
+            }
+            appShareFrame.setSize(400, 300);
+            appShareFrame.setLocationRelativeTo(null);
+            appShareFrame.setVisible(true);
+        }
+        if (e.getActionCommand().equals("insertGraphic")) {
+            if (graphicFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
+                final File f = graphicFC.getSelectedFile();
                 Thread t = new Thread() {
 
                     public void run() {
-                        base.getFileUploader().transferFile(f.getAbsolutePath());
+                        base.getFileUploader().transferFile(f.getAbsolutePath(), Constants.IMAGE);
+                        base.setSelectedFile(f.getName());
+                    }
+                };
+                t.start();
+            }
+        }
+        if (e.getActionCommand().equals("insertPresentation")) {
+            if (presentationFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
+                final File f = presentationFC.getSelectedFile();
+                Thread t = new Thread() {
+
+                    public void run() {
+                        base.getFileUploader().transferFile(f.getAbsolutePath(), Constants.PRESENTATION);
                         base.setSelectedFile(f.getName());
                     }
                 };
@@ -100,7 +126,7 @@ public class MenuManager implements ActionListener {
         }
         if (e.getActionCommand().equals("about")) {
             JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.1" +
-                    " beta Build " + Version.version + "</center>");
+                    " Build " + Version.version + "</center>");
 
         }
     }

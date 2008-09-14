@@ -53,6 +53,7 @@ public class UserListManager {
     ImageIcon blankIcon = ImageUtil.createImageIcon(this, "/icons/blank.png");
     ImageIcon laughIcon = ImageUtil.createImageIcon(this, "/icons/laugh.jpeg");
     ImageIcon applaudIcon = ImageUtil.createImageIcon(this, "/icons/applaud.jpeg");
+    ImageIcon editWBIcon = ImageUtil.createImageIcon(this, "/icons/editwhiteboard.png");
     ParticipantListingTableModel model;
     int selectedRow = 0;
     int DEFAULT_SIZE = 0;
@@ -157,6 +158,7 @@ public class UserListManager {
                 column = table.getColumnModel().getColumn(i);
                 if (i == 3) {
                     column.setPreferredWidth(300);
+
                 } else {
                     column.setPreferredWidth(10);
                 }
@@ -182,7 +184,6 @@ public class UserListManager {
         return table;
     }
     //TableCellRenderer r = new DefaultTableCellRenderer();
-
     class LRenderer extends DefaultTableCellRenderer {
 
         public LRenderer() {
@@ -255,10 +256,19 @@ public class UserListManager {
 
                     }
                 } else {
+                    /*
                     setFont(new java.awt.Font("Dialog", 3, 10));
                     setForeground(Color.LIGHT_GRAY);
                     this.setText(userObject.getDisplay() + "- Offline");
+                     */
+
+                    setFont(new java.awt.Font("Dialog", 0, 10));
+                    this.setForeground(userObject.getColor());
+                    this.setText(userObject.getDisplay());
                 }
+           
+                setToolTipText(userObject.getUser().getUserDetails());
+
             }
             return this;
         }
@@ -468,6 +478,14 @@ public class UserListManager {
         if (iconType == PresenceConstants.EDIT_ICON) {
             if (show) {
                 icon = editIcon;
+            } else {
+                icon = blankIcon;
+            }
+            model.setValueAt(icon, index, 2);
+        }
+   if (iconType == PresenceConstants.EDIT_WB_ICON) {
+            if (show) {
+                icon = editWBIcon;
             } else {
                 icon = blankIcon;
             }
