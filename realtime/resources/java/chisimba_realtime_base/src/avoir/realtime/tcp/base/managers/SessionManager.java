@@ -5,8 +5,8 @@
 package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.*;
-import avoir.realtime.tcp.common.Constants;
 import java.io.File;
+import java.util.Timer;
 import javax.swing.ImageIcon;
 
 /**
@@ -20,6 +20,7 @@ public class SessionManager {
     private int slideCount = 0;
     private boolean isPresenter = false;
     private boolean privateVote;
+    private Timer timer = new Timer();
 
     public SessionManager(RealtimeBase base) {
         this.base = base;
@@ -27,6 +28,14 @@ public class SessionManager {
 
     public boolean isPrivateVote() {
         return privateVote;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
     }
 
     public void setPrivateVote(boolean privateVote) {
@@ -39,6 +48,9 @@ public class SessionManager {
 
     public void startSession() {
         base.getToolbarManager().enableButtons(true);
+        timer.cancel();
+        timer=new Timer();
+        timer.scheduleAtFixedRate(new SessionTimer(base), 0, 1000);
         //if its a white board, then dont request for slides, rather, load the whiteboard
         if (base.getSessionId().equals("whiteboard")) {
             base.getSurface().setStatusMessage("Welcome to realtime whiteboard. ");
@@ -50,13 +62,15 @@ public class SessionManager {
                 if (base.getRealtimeOptions().useCache()) {
                     slideCount = f.list().length;
                     base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
+                    base.setSelectedFile(base.getSessionTitle());
                     base.getTcpClient().requestNewSlide(base.getSiteRoot(),
                             slideIndex, base.isPresenter(),
-                            base.getSessionId(), base.getUser().getUserName(), base.getControl(),base.getSelectedFile());
+                            base.getSessionId(), base.getUser().getUserName(),
+                            base.getControl(), base.getSelectedFile(), true);
                     return;
                 }
             } else {
-                //  System.out.println("Nothing in cache..requesting for slides");
+                System.out.println("Nothing in cache..requesting for slides");
                 f.mkdirs();
                 base.getTcpClient().requestForSlides(base.getSessionId(), base.getSlideServerId(),
                         base.getSlidesDir(), base.getUser().getUserName());
@@ -88,7 +102,8 @@ public class SessionManager {
         slideIndex = index;
         base.getTcpClient().requestNewSlide(base.getSiteRoot(),
                 slideIndex, base.isPresenter(),
-                base.getSessionId(), base.getUser().getUserName(), base.getControl(),base.getSelectedFile());
+                base.getSessionId(), base.getUser().getUserName(),
+                base.getControl(), base.getSelectedFile(), base.isWebPresent());
 
     }
 
@@ -100,21 +115,16 @@ public class SessionManager {
      */
     public void setCurrentSlide(int slideIndex, boolean fromPresenter, String slidePath) {
         this.slideIndex = slideIndex;
-        System.out.println(slidePath);
+        // System.out.println(slidePath);
         /*if (!base.isPresenter()) {
         base.getAgendaManager().getAgendaTree().setSelectedRow(slideIndex + 1);
         }*/
         try {
             java.awt.Image img = javax.imageio.ImageIO.read(new File(slidePath));
             ImageIcon slide = new ImageIcon(img);
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
-                base.getSurface().setStatusMessage(" ");
-            }else{
-                base.getWhiteboardSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
-                base.getWhiteboardSurface().showMessage("",false);
-                
-            }
+
+            base.getWhiteboardSurface().setCurrentSlide(slide, this.slideIndex + 1, slideCount, fromPresenter);
+            base.getWhiteboardSurface().showMessage("", false);
             base.setText("Slide " + (this.slideIndex + 1) + " of " + slideCount, false);
             base.getToolbarManager().enableButtons(true);
         } catch (Exception ex) {
@@ -127,6 +137,7 @@ public class SessionManager {
      * Connects to the super node
      */
     public void connect() {
+
         Thread t = new Thread() {
 
             @Override
@@ -151,6 +162,7 @@ public class SessionManager {
                         base.setText("Connected", false);
                         base.setConnected(true);
                         base.publish();
+                        base.getTcpClient().setConnected(true);
 
                         startSession();
                         base.initAudio();
