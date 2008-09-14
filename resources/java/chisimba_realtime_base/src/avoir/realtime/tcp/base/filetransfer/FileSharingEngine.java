@@ -1,77 +1,65 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) GNU/GPL AVOIR 2008
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base.filetransfer;
 
 import avoir.realtime.tcp.base.*;
-import avoir.realtime.tcp.common.packet.BinaryFileChunkPacket;
+import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import javax.swing.JOptionPane;
+import java.io.OutputStream;
+import java.util.Vector;
 
 /**
- *
- * @author developer
+ * Use for reading the selected file in small chunks onto the server
+ * @author David Wafula
  */
-public class FileSharingEngine {
+public class FileSharingEngine extends Thread{
 
     RealtimeBase base;
+    String filepath;
+    int index;
+    String recepient;
+    int BUFFER_SIZE = 4096;
+    int MAX_CHUNK_SIZE = 1 * BUFFER_SIZE;
+    int nChunks;
+    final Vector<FileUploadPacket> chunks = new Vector<FileUploadPacket>();
 
-    public FileSharingEngine(RealtimeBase base) {
+    public FileSharingEngine(RealtimeBase base, String filepath, int index, String recepient) {
         this.base = base;
+        this.filepath = filepath;
+        this.index = index;
+        this.recepient = recepient;
     }
 
-    private void delay(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (Exception ex) {
-        }
+    public void run(){
+        readBinaryFile();
     }
+    /**
+     * Read the file in small chunks
+     * @param filepath
+     * @param index
+     * @param recepient
+     */
+    public synchronized void readBinaryFile() {
 
-    private byte[] readFile(String filePath) {
-        File f = new File(filePath);
-        try {
-            if (f.exists()) {
-                FileChannel fc = new FileInputStream(f.getAbsolutePath()).getChannel();
-
-                ByteBuffer buff = ByteBuffer.allocate((int) fc.size());
-                fc.read(buff);
-                if (buff.hasArray()) {
-                    byte[] byteArray = buff.array();
-                    fc.close();
-                    return byteArray;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error reading the file");
-                    return null;
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, filePath + " doesn't exist.");
-                return null;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-    }
-
-    public void readBinaryFile(String filepath, int index, String recepient) {
-        int BUFFER_SIZE = 4096;
-        int MAX_CHUNK_SIZE = 1 * BUFFER_SIZE; //~4.1MB
-        String filename = "unknown";
-        /*
-        byte[] byteArray = readFile(filepath);
-        base.getTcpClient().sendPacket(new BinaryFileChunkPacket(base.getSessionId(), filename, byteArray, rec, false));
-        //notify that this is the last chunk
-        BinaryFileChunkPacket lastChunk = new BinaryFileChunkPacket(base.getSessionId(), filename, new byte[0], rec, true);
-        base.getTcpClient().sendPacket(lastChunk);
-        base.getFileTransferPanel().setProgress(index, "Complete");
-         */
         try {
 
             File file = new File(filepath);
@@ -79,7 +67,7 @@ public class FileSharingEngine {
 
             FileInputStream in = new FileInputStream(file);
 
-            int nChunks = (int) (fileSize / MAX_CHUNK_SIZE);
+            nChunks = (int) (fileSize / MAX_CHUNK_SIZE);
             if (fileSize % MAX_CHUNK_SIZE > 0) {
                 nChunks++;
             }
@@ -100,16 +88,28 @@ public class FileSharingEngine {
                 if (read == -1) {
                     break;
                 } else if (read > 0) {
+                    //System.out.println("Uploading " + i + " to " + recepient);
 
+                    /*synchronized (chunks) {
+                        chunks.addElement(new FileUploadPacket(base.getSessionId(),
+                                base.getSessionId(), buf, i, nChunks, file.getName(),
+                                clientID, recepient, false, base.getUserName(), index));
+                    }*/
                     base.getTcpClient().sendPacket(new FileUploadPacket(base.getSessionId(),
-                            base.getSessionId(), buf, i, nChunks, file.getName(),
-                            clientID, recepient, false, base.getUserName(), index));
-                    //simulate
-                    //delay(1000);
+                                base.getSessionId(), buf, i, nChunks, file.getName(),
+                                clientID, recepient, false, base.getUserName(), index,Constants.ANY));
                 }
 
 
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveChunks(String filename) {
+        try {
+            OutputStream out = new FileOutputStream(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
