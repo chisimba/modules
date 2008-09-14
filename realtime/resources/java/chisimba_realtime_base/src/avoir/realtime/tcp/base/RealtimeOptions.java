@@ -1,6 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 	$Id: ChatRoom.java,v 1.3 2007/02/02 10:59:15 davidwaf Exp $
+ *
+ *  Copyright (C) GNU/GPL AVOIR 2007
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base;
 
@@ -33,6 +48,10 @@ public class RealtimeOptions {
     String libDir = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/lib/";
     String soundsDir = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/sounds/";
 
+    /**
+     * write the options into a file
+     * @param filename
+     */
     private void write(String filename) {
         write(filename, "DirectConnection=true");
         write(filename, "SystemProxy=false");
