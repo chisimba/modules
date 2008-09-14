@@ -1,7 +1,19 @@
 /*
- * FileTransferFrame.java
+ * Copyright (C) GNU/GPL AVOIR 2008
  *
- * Created on 05 June 2008, 07:27
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base.filetransfer;
 
@@ -24,14 +36,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 /**
- *
- * @author  developer
+ * Creates a form from which you  can send the files
+ * @author  David Wafula
  */
 public class FileTransferPanel extends javax.swing.JPanel {
 
     JFileChooser fc = new JFileChooser();
     RealtimeBase base;
-    FileSharingEngine engine;
     private SendFilesTableModel sendFilesModel = new SendFilesTableModel();
     JTable table = new JTable(sendFilesModel);
     Vector<SendFile> sendFiles = new Vector<SendFile>();
@@ -42,7 +53,6 @@ public class FileTransferPanel extends javax.swing.JPanel {
     public FileTransferPanel(RealtimeBase base) {
         initComponents();
         this.base = base;
-        engine = new FileSharingEngine(this.base);
         sendFilesPanel.add(new JScrollPane(table), BorderLayout.CENTER);
         this.base.getTcpClient().setFileTransfer(this);
         table.setGridColor(new Color(238, 238, 238));
@@ -71,6 +81,9 @@ public class FileTransferPanel extends javax.swing.JPanel {
         decorateTable();
     }
 
+    /**
+     * Decorate our table ...ideally resize col sizes
+     */
     private void decorateTable() {
         table.setDefaultRenderer(SendFile.class, new LRenderer());
         TableColumn column = null;
@@ -221,16 +234,22 @@ public class FileTransferPanel extends javax.swing.JPanel {
         decorateTable();
     }
 
-    public void setProgress(int index, String value) {
-        sendFilesModel.setValueAt(value, index, 2);
-        sendFiles.elementAt(index).setProgress(value);
+    public void setProgress(final int index, final String value) {
+        Thread t = new Thread() {
+
+            public void run() {
+                sendFilesModel.setValueAt(value, index, 2);
+                sendFiles.elementAt(index).setProgress(value);
+            }
+        };
+        t.start();
     }
 
     private void sendFile(final String filename, final int index, final String rec) {
         Thread t = new Thread() {
 
             public void run() {
-                engine.readBinaryFile(filename, index, rec);
+                new FileSharingEngine(base, filename, index, rec).readBinaryFile();
             }
         };
         t.start();
@@ -313,6 +332,7 @@ public class FileTransferPanel extends javax.swing.JPanel {
     private void processFileToSend(String filename) {
         base.getTcpClient().sendPacket(new BinaryFileSaveRequestPacket(base.getSessionId(), filename, base.getUser().getFullName(), base.getUser().getUserName(),
                 true));
+        //start caching up the file in memory for distribution
     }
 
     /** This method is called from within the constructor to
