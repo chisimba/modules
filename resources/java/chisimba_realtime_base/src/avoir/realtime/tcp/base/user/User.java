@@ -46,6 +46,8 @@ public class User implements Serializable {
     private String slideServerId;
     private String sessionTitle;
     private boolean speakerOn,  micOn,  handOn,  editOn,  yesOn,  noOn;
+    private String userDetails;
+    private String userImagePath;
 
     public User(int level, String fullname, String userName, String host,
             int port, boolean isPresenter, String sessionId, String sessionTitle, String slidesDir,
@@ -63,6 +65,22 @@ public class User implements Serializable {
         this.slideServerId = slideServerId;
         this.sessionTitle = sessionTitle;
         logger.finest("Created new user object with name " + fullname + " and level " + level);
+    }
+
+    public String getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(String userDetails) {
+        this.userDetails = userDetails;
+    }
+
+    public String getUserImagePath() {
+        return userImagePath;
+    }
+
+    public void setUserImagePath(String userImagePath) {
+        this.userImagePath = userImagePath;
     }
 
     public boolean isOnline() {
