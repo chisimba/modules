@@ -42,6 +42,7 @@ public class Surface extends JPanel implements MouseListener,
     private RealtimeBase base;
     private boolean connecting = false;
     private ImageIcon slide;
+    private ImageIcon image;
     private String statusMessage = " ";
     private boolean showStatusMessage = false;
     private boolean showInfoMessage = false;
@@ -71,6 +72,7 @@ public class Surface extends JPanel implements MouseListener,
     private boolean firstSlide = true;
     int currentX, currentY;
     private boolean drawSelection = false;
+    private Vector<ImageIcon> imgs = new Vector<ImageIcon>();
 
     public Surface(RealtimeBase xbase) {
         this.base = xbase;
@@ -95,7 +97,13 @@ public class Surface extends JPanel implements MouseListener,
 
     }
 
+    public void setImage(ImageIcon image) {
+        imgs.add(image);
+        repaint();
+    }
+
     public void setTotalSlideCount(int totalSlideCount) {
+
         this.totalSlideCount = totalSlideCount;
     }
 
@@ -440,7 +448,7 @@ public class Surface extends JPanel implements MouseListener,
             int xx = (getWidth() - slide.getIconWidth()) / 2;
             int yy = (getHeight() - slide.getIconHeight()) / 2;
             g2.setFont(new Font("Dialog", 1, 10));
-            g2.drawString(base.getSelectedFile()+" - " + (base.getSessionManager().getSlideIndex()+1) + " of " + totalSlideCount, xx, yy - 15);
+            g2.drawString(base.getSelectedFile() + " - " + (base.getSessionManager().getSlideIndex() + 1) + " of " + totalSlideCount, xx, yy - 15);
 
             g2.drawImage(slide.getImage(), xx, yy, slideWidth, slideHeight, this);
             //if (firstSlide) {
@@ -476,7 +484,9 @@ public class Surface extends JPanel implements MouseListener,
         super.paintComponent(g);
         graphics = (Graphics2D) g;
         paintSlides(graphics);
-
+        if (image != null) {
+            graphics.drawImage(image.getImage(), 100, 100, this);
+        }
         if (showInfoMessage) {
             FontMetrics fm = graphics.getFontMetrics(msgFont);
             graphics.setColor(Color.white);
@@ -492,7 +502,7 @@ public class Surface extends JPanel implements MouseListener,
         }
         graphics.setColor(Color.BLACK);
         base.getWhiteboardSurface().drawStroke(graphics);
-        base.getWhiteboardSurface().paintItems(graphics);
+        base.getWhiteboardSurface().repaint();
         if (currentPointer != null) {
             graphics.drawImage(currentPointer.getIcon().getImage(),
                     (int) pointerSurface.x + currentPointer.getPoint().x - 10,

@@ -20,6 +20,8 @@ package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.base.admin.ClientAdmin;
+import avoir.realtime.tcp.base.appsharing.DesktopUtil;
+import avoir.realtime.tcp.base.appsharing.RemoteDesktopViewerFrame;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
@@ -29,8 +31,10 @@ import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
+import avoir.realtime.tcp.common.packet.DesktopPacket;
 import avoir.realtime.tcp.common.packet.FilePacket;
 import avoir.realtime.tcp.common.packet.HeartBeat;
+import avoir.realtime.tcp.common.packet.ImagePacket;
 import avoir.realtime.tcp.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.tcp.common.packet.MsgPacket;
 import avoir.realtime.tcp.common.packet.NewSlideReplyPacket;
@@ -68,10 +72,17 @@ public class TCPConsumer {
     private RealtimeBase base;
     private ClientAdmin clientAdmin;
     private boolean showChatFrame = true;
+    private boolean showAppSharingFrame = true;
+    private RemoteDesktopViewerFrame viewer;
 
     public TCPConsumer(TCPClient tcpClient, RealtimeBase base) {
         this.tcpClient = tcpClient;
         this.base = base;
+    }
+
+    public TCPConsumer(TCPClient tcpClient) {
+        this.tcpClient = tcpClient;
+
     }
 
     public TCPConsumer(TCPClient tcpClient, ClientAdmin clientAdmin) {
@@ -177,11 +188,11 @@ public class TCPConsumer {
             if (!tcpClient.isInitSlideRequest()) {
                 tcpClient.requestNewSlide(base.getSiteRoot(), 0, base.isPresenter(),
                         base.getSessionId(), base.getUser().getUserName(),
-                        base.isPresenter(), packet.getPresentationName());
-                base.getSurface().setConnecting(false);
-                base.getSurface().setConnectingString("");
+                        base.isPresenter(), packet.getPresentationName(), true);
                 base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
                 tcpClient.setInitSlideRequest(true);
+                base.getWhiteboardSurface().setCurrentSlide(new ImageIcon(home + "/img0.jpg"), 0, packet.getMaxValue(), true);
+
             }
             tcpClient.setSlidesDownloaded(true);
         } catch (Exception ex) {
@@ -274,11 +285,9 @@ public class TCPConsumer {
     }
 
     public void processPointerPacket(PointerPacket p) {
-        if (base.getMODE() == Constants.APPLET) {
-            base.getSurface().setCurrentPointer(p.getType(), p.getPoint());
-        } else {
-            base.getWhiteboardSurface().setCurrentPointer(p.getType(), p.getPoint());
-        }
+
+        base.getWhiteboardSurface().setCurrentPointer(p.getType(), p.getPoint());
+
 
     }
 
@@ -341,6 +350,31 @@ public class TCPConsumer {
             base.getUserManager().addNewUser(p.getUser());
         }
 
+    }
+
+    public void processImagePacket(ImagePacket packet) {
+        try {
+            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/" + packet.getSessionId() + "/images/";
+            File homeDir = new File(home);
+            if (!homeDir.exists()) {
+                homeDir.mkdirs();
+            }
+
+            String fn = home + "/" + packet.getFilename();
+            FileChannel fc =
+                    new FileOutputStream(fn).getChannel();
+            byte[] byteArray = packet.getByteArray();
+            fc.write(ByteBuffer.wrap(byteArray));
+            fc.close();
+
+            base.getWhiteboardSurface().setImage(new ImageIcon(fn));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            if (base != null) {
+                base.showMessage("Error writing image " + packet.getFilename(), true, true, MessageCode.ALL);
+            }
+
+        }
     }
 
     /**
@@ -449,14 +483,35 @@ public class TCPConsumer {
         if (base != null) {
             String slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + slideIndex + ".jpg";
 
-            if (base.getMODE() == Constants.WEBSTART) {
+            if (!packet.isWebPresent()) {
                 slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
             }
+
             base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
             if (packet.getMessage() != null) {
                 base.showMessage(packet.getMessage(), false, true, MessageCode.ALL);
             }
         }
+    }
+
+    public void processDesktopPacket(final DesktopPacket packet) {
+        if (showAppSharingFrame) {
+            viewer = new RemoteDesktopViewerFrame();
+            viewer.setSize(500, 400);
+
+            viewer.setVisible(true);
+            showAppSharingFrame = false;
+        }
+
+        Thread t = new Thread() {
+
+            public void run() {
+
+                viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
+                viewer.repaint();
+            }
+        };
+        t.start();
     }
 
     public void processHeartBeat(HeartBeat p) {
