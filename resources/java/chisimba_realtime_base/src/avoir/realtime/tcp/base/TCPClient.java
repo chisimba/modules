@@ -39,9 +39,11 @@ import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearSlidesPacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.ClientPacket;
+import avoir.realtime.tcp.common.packet.DesktopPacket;
 import avoir.realtime.tcp.common.packet.FilePacket;
 import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import avoir.realtime.tcp.common.packet.HeartBeat;
+import avoir.realtime.tcp.common.packet.ImagePacket;
 import avoir.realtime.tcp.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.tcp.common.packet.MsgPacket;
 import avoir.realtime.tcp.common.packet.NewSlideReplyPacket;
@@ -94,27 +96,21 @@ import javax.swing.JOptionPane;
 public class TCPClient {
 
     private static Logger logger = Logger.getLogger(TCPClient.class.getName());
-  
-      private final int INITIAL_HEARBEAT_DELAY = 30;
-       private long HEARTBEAT_DELAY = 10;
+    private final int INITIAL_HEARBEAT_DELAY = 30;
+    private long HEARTBEAT_DELAY = 10;
     private boolean running = true;
     private boolean selectWindowManager = true;
     private boolean ALIVE = true;
-   
-  private boolean slideServerReplying = false;
+    private boolean slideServerReplying = false;
     private boolean NETWORK_ALIVE = true;
     private boolean connected = false;
- 
     private RealtimeBase base;
     private AudioWizardFrame audioHandler;
-    
     private String windowManager = "GNOME";
     protected ObjectInputStream reader;
     protected ObjectOutputStream writer;
-    
     private String SUPERNODE_HOST = "196.21.45.85";
     private int SUPERNODE_PORT = 80;
-   
     private ClientAdmin clientAdmin;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
@@ -125,7 +121,6 @@ public class TCPClient {
     private boolean slidesDownloaded = false;
     private FileTransferPanel fileTransfer;
     private FileOutputStream fileOutputStream;
- 
     private WhiteboardSurface whiteboardSurface;
     int count = 0;
     private Timer monitorTimer = new Timer();
@@ -135,7 +130,7 @@ public class TCPClient {
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
-
+        consumer = new TCPConsumer(this);
     }
 
     public TCPClient(ClientAdmin clientAdmin) {
@@ -403,8 +398,6 @@ public class TCPClient {
         }
     };
 
-   
-
     /**
      * Initial connection
      * @return
@@ -500,7 +493,7 @@ public class TCPClient {
                     packet = reader.readObject();
                     connected = true;
 
-                // logger.info(packet.getClass() + "");
+                   // logger.info(packet.getClass() + "");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     connected = false;
@@ -571,8 +564,11 @@ public class TCPClient {
                     MsgPacket p = (MsgPacket) packet;
                     consumer.processMsgPacket(p);
                 } else if (packet instanceof WhiteboardPacket) {
-                    consumer.processWhiteboardPacket((WhiteboardPacket) packet);
+                    WhiteboardPacket p = (WhiteboardPacket) packet;
+                    /// System.out.println("Recevied "+p.getItem());
+                    consumer.processWhiteboardPacket(p);
                 } else if (packet instanceof PresencePacket) {
+
                     PresencePacket p = (PresencePacket) packet;
                     consumer.processPresencePacket(p);
 
@@ -585,11 +581,19 @@ public class TCPClient {
                 } else if (packet instanceof BinaryFileSaveReplyPacket) {
                     consumer.processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
                 } else if (packet instanceof FileUploadPacket) {
-                    fileReceiverManager.processFileUpload((FileUploadPacket) packet);
+
+                    fileReceiverManager.processFileDownload((FileUploadPacket) packet);
+
                 } else if (packet instanceof UploadMsgPacket) {
                     UploadMsgPacket msg = (UploadMsgPacket) packet;
-                    //   System.out.println("From " + msg.getRecepient() + " " + msg.getMessage());
-                    fileTransfer.setProgress(msg.getRecepientIndex(), msg.getMessage());
+                    if (fileTransfer != null) {
+                        fileTransfer.setProgress(msg.getRecepientIndex(), msg.getMessage());
+                    }
+
+                } else if (packet instanceof ImagePacket) {
+                    consumer.processImagePacket((ImagePacket) packet);
+                }else if(packet instanceof DesktopPacket){
+                    consumer.processDesktopPacket((DesktopPacket)packet);
                 }
             } catch (Exception ex) {
                 //for now, just cut off the listening
@@ -614,7 +618,7 @@ public class TCPClient {
     }
 
     public void sendAudioPacket(byte[] buff) {
-        System.out.println("s: " + buff.length);
+       // System.out.println("s: " + buff.length);
         sendPacket(new AudioPacket(base.getSessionId(), base.getUser().getUserName(), buff));
 
     }
@@ -813,12 +817,12 @@ public class TCPClient {
      */
     public void requestNewSlide(String siteRoot, int slideIndex,
             boolean isPresenter, String sessionId, String userId,
-            boolean hasControl, String presentationName) {
+            boolean hasControl, String presentationName,boolean isWebPresent) {
         NewSlideRequestPacket p = new NewSlideRequestPacket(siteRoot,
                 slideIndex,
                 isPresenter,
                 sessionId,
-                userId, presentationName);
+                userId, presentationName,isWebPresent);
         p.setControl(hasControl);
         p.setSlideServerId(base.getSlideServerId());
         sendPacket(p);
