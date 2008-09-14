@@ -1,6 +1,20 @@
 /*
- * SurveyFrame.java
  *
+ *  Copyright (C) GNU/GPL AVOIR 2008
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * Created on 21 April 2008, 05:43
  */
 package avoir.realtime.tcp.base.survey;
@@ -20,8 +34,8 @@ import javax.swing.*;
 import java.awt.Color;
 
 /**
- *
- * @author  developer
+ * Frame that pops up the survey for the user to answer
+ * @author  David Wafula
  */
 public class SurveyFrame extends javax.swing.JFrame {
 
@@ -191,6 +205,9 @@ public class SurveyFrame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Submits the answered survey
+     */
     private void processSubmit() {
         for (int i = 0; i < model.getRowCount(); i++) {
             JRadioButton yes = (JRadioButton) model.getValueAt(i, 2);
