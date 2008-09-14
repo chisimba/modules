@@ -19,7 +19,7 @@ import java.util.Vector;
  */
 public class ClientAdmin extends javax.swing.JFrame {
 
-     JFileChooser fc = new JFileChooser(".");
+    JFileChooser fc = new JFileChooser(".");
     TCPClient client;
     String selectedFilename;
 
@@ -55,7 +55,7 @@ public class ClientAdmin extends javax.swing.JFrame {
     }
 
     public void restartServer() {
-        //   client.sendRestartServerPacket();
+        client.sendRestartServerPacket();
     }
 
     /** This method is called from within the constructor to
@@ -92,16 +92,18 @@ public class ClientAdmin extends javax.swing.JFrame {
         appletUploadPanel = new javax.swing.JPanel();
         cAppletPanel = new javax.swing.JPanel();
         appletBrowseButton = new javax.swing.JButton();
+        uploadPathField = new javax.swing.JTextField();
         selectedFileField = new javax.swing.JTextField();
         appletUploadButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         hostField = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         appletInfoField = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        titleLabel.setFont(new java.awt.Font("Dialog", 1, 18));
+        titleLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleLabel.setText("Admin Client 0.1");
         getContentPane().add(titleLabel, java.awt.BorderLayout.PAGE_START);
@@ -121,7 +123,7 @@ public class ClientAdmin extends javax.swing.JFrame {
         uploadLabel.setText("Upload system file");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         generalPanel.add(uploadLabel, gridBagConstraints);
 
@@ -133,7 +135,7 @@ public class ClientAdmin extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
         generalPanel.add(fileNameField, gridBagConstraints);
@@ -159,7 +161,7 @@ public class ClientAdmin extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
         generalPanel.add(restartButton, gridBagConstraints);
@@ -168,7 +170,7 @@ public class ClientAdmin extends javax.swing.JFrame {
         restartInfoLabel.setPreferredSize(new java.awt.Dimension(200, 21));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 15;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         generalPanel.add(restartInfoLabel, gridBagConstraints);
@@ -237,7 +239,7 @@ public class ClientAdmin extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         generalPanel.add(connectButton, gridBagConstraints);
 
-        sendFileButton.setText("Send File");
+        sendFileButton.setText("Upload");
         sendFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sendFileButtonActionPerformed(evt);
@@ -245,8 +247,9 @@ public class ClientAdmin extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         generalPanel.add(sendFileButton, gridBagConstraints);
 
         tabbedPane.addTab("Server", generalPanel);
@@ -288,6 +291,14 @@ public class ClientAdmin extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
         cAppletPanel.add(appletBrowseButton, gridBagConstraints);
 
+        uploadPathField.setText("/var/www/app/chisimba_modules/realtime/resources/");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        cAppletPanel.add(uploadPathField, gridBagConstraints);
+
         selectedFileField.setPreferredSize(new java.awt.Dimension(200, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -322,6 +333,13 @@ public class ClientAdmin extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         cAppletPanel.add(hostField, gridBagConstraints);
+
+        jLabel2.setText("Upload Path");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        cAppletPanel.add(jLabel2, gridBagConstraints);
 
         appletUploadPanel.add(cAppletPanel, java.awt.BorderLayout.CENTER);
 
@@ -395,8 +413,9 @@ public class ClientAdmin extends javax.swing.JFrame {
             String host = (String) hostField.getSelectedItem();
             ClientHttpRequest httpclient = new ClientHttpRequest(host);
             File f = new File(selectedFileField.getText());
+            String path=uploadPathField.getText();
             Object[] params = {
-                "contentBasePath", "/var/www/app/chisimba_modules/realtime/resources/",
+                "contentBasePath", path,
                 "File0", f
             };
             InputStream in = httpclient.post(params);
@@ -484,6 +503,7 @@ private void snPortFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JComboBox hostField;
     private javax.swing.JTextArea infoField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel logTab;
     private javax.swing.JButton restartButton;
@@ -500,5 +520,6 @@ private void snPortFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JLabel titleLabel;
     private javax.swing.JPanel topPanel;
     private javax.swing.JLabel uploadLabel;
+    private javax.swing.JTextField uploadPathField;
     // End of variables declaration//GEN-END:variables
 }
