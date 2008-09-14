@@ -1,7 +1,21 @@
-/*
- * FilterFrame.java
+/**
+ * 	$Id: ChatRoom.java,v 1.3 2007/02/02 10:59:15 davidwaf Exp $
  *
- * Created on 02 June 2008, 01:34
+ *  Copyright (C) GNU/GPL AVOIR 2007
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base;
 
@@ -12,8 +26,9 @@ import java.awt.datatransfer.Transferable;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author  developer
+ * This displays the filters generated from a presentation. Filters can be pasted
+ * into other tools - embbeded
+ * @author  david wafula
  */
 public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
 
@@ -156,6 +171,10 @@ public class FilterFrame extends javax.swing.JFrame implements ClipboardOwner {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * closes the fiter frame
+     * @param evt
+     */
 private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
     dispose();// TODO add your handling code here:
 }//GEN-LAST:event_closeButtonActionPerformed

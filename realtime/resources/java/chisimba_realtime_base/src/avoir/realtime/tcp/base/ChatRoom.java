@@ -129,7 +129,7 @@ public class ChatRoom
         splitPane.setBottomComponent(chatInputPanel);
         this.add(splitPane, BorderLayout.CENTER);
         splitPane.setDividerLocation(250);
-        //this.add(chatInputPanel, BorderLayout.SOUTH);
+       
         chatIn.getDocument().addDocumentListener(new DocumentListener() {
 
             public void changedUpdate(DocumentEvent arg0) {
@@ -391,6 +391,6 @@ public class ChatRoom
                 break;
             }
         }//while
-    //  System.out.println(endTime+"- "+startTime+" = "+(endTime - startTime));
+    
     }
 }
