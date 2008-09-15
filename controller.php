@@ -166,7 +166,7 @@
                 case 'classroom' :
                 $id=$this->getParam('id');
                 $title=$this->getParam('agenda');
-                
+
                 return $this->showClassRoom($id,$title);
 
                 default :
@@ -250,8 +250,11 @@
             $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
         }
-
         public function initClassroom($contextCode){
+            $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
+            $this->realtimeManager->startSlidesServer($slideServerId);
+
+            $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
             $modPath=$this->objAltConfig->getModulePath();
             $replacewith="";
             $docRoot=$_SERVER['DOCUMENT_ROOT'];
@@ -264,27 +267,47 @@
             $fullnames=$this->objUser->fullname();
             $userDetails=$fullnames.' '.$username;
             $userImagePath='imagepath';//".'.$this->objUser->getSmallUserImage().'"';
-            $isPresenter='true';
+            $isLoggedIn =$this->objUser->isLoggedIn();
             $fileBase=$modPath.'/realtime/resources/';
-            $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
+            $resourcesPath =$modPath.'/realtime/resources';
             $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
+            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
+            $presenterimage=$this->newObject('image','htmlelements');
+            $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
+            $presenterimage->width="200";
+            $presenterimage->height="80";
+            $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
 
-            $content='<div class="roundedcornr_box_888298">
-    <div class="roundedcornr_top_888298"><div></div></div>
-      <div class="roundedcornr_content_888298">
-         <p>
+            $joinimage=$this->newObject('image','htmlelements');
+            $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
+            $joinimage->width="200";
+            $joinimage->height="80";
+            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
+            $presentationLink->link=   'Back To Presentation';
 
-         </p>
-      </div>
-    <div class="roundedcornr_bottom_888298"><div></div></div>
-    </div>';
+            $siteRoot=$this->objAltConfig->getSiteRoot();
+            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
+            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
 
-            $this->objStarter->generateJNLP($fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,$isPresenter,'contextCode',$userDetails,$userImagePath);
-            $this->setVarByRef('title',$title);
+            $desc='<li>Add Live interactions to your presentation</li>';
+            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
+
+            //generate for presenter
+            $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'true','wb',$title,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId);
+            //generate for participant
+            $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'false','wb',$title,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId);
+
+            $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/'.$username.'_chisimba_classroom.jnlp">Start Live Presentation</a>');
+            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
+
         }
 
     }
