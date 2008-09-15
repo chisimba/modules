@@ -289,8 +289,8 @@
             $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
             $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
 
-            $desc='<li>Add Live interactions to your presentation</li>';
-            $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
+            $desc='<li>'.$this->objLanguage->languageText('mod_realtime_addlivepresentation', 'realtime').'</li>';
+            $desc.='<li>'.$this->objLanguage->languageText('mod_realtime_addaudiovideo', 'realtime').'</li>';
 
             //generate for presenter
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
