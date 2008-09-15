@@ -300,7 +300,7 @@
 
 
 
-            $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda)));
+            $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda),"realtime"));
             $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
             $button->setToSubmit();
 
