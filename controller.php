@@ -225,7 +225,7 @@
             $joinimage->width="200";
             $joinimage->height="80";
             $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
-            $presentationLink->link=   'Back To Presentation';
+            $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
             $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
@@ -244,10 +244,11 @@
                 $supernodePort,$username,$fullnames,'false',$id,$title,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
                 $filePath,$slideServerId);
+            $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
 
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h2>'.$presentationLink->show().'</h2>');
+            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
         }
         public function initClassroom($contextCode){
@@ -283,7 +284,7 @@
             $joinimage->width="200";
             $joinimage->height="80";
             $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
-            $presentationLink->link=   'Back To Presentation';
+            $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
             $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
@@ -302,10 +303,10 @@
                 $supernodePort,$username,$fullnames,'false','wb',$title,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
                 $filePath,$slideServerId);
-
+            $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h2>'.$presentationLink->show().'</h2>');
+            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h3>'.$tip.'</h3><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
 
         }
