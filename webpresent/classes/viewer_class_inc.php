@@ -300,7 +300,7 @@
 
 
 
-            $form = new form ('inviteform', $this->uri(array('action'=>'willappletrun','actiontype'=>'showpresenterapplet', 'id'=>$id,'agenda'=>$agenda)));
+            $form = new form ('inviteform', $this->uri(array('action'=>'classroom','id'=>$id,'agenda'=>$agenda)));
             $button = new button ('submitform', $this->objLanguage->languageText("mod_webpresent_startlivepresentation", "webpresent"));
             $button->setToSubmit();
 
