@@ -25,8 +25,8 @@ $this->objHelp = $this->newObject('helplink','help');
 //context object
 $objContext =& $this->getObject('dbcontext','context');
 //assignment object
-$objAssignment =& $this->getObject('dbassignment','assignment');
-$objAssignmentSubmit =& $this->getObject('dbassignmentsubmit','assignment');
+$objAssignment =& $this->getObject('dbassignment_old','assignment');
+$objAssignmentSubmit =& $this->getObject('dbassignmentsubmit_old','assignment');
 //essay object
 $objEssaytopics =& $this->getObject('dbessay_topics','essay');
 $objEssaybook =& $this->getObject('dbessay_book','essay');

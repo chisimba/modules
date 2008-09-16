@@ -71,9 +71,9 @@ class gradebook extends controller
 
 		//assignment object
 		$objAssignment = 0;
-		$objAssignment =& $this->getObject('dbassignment','assignment');
+		$objAssignment =& $this->getObject('dbassignment_old','assignment');
 		$objAssignmentSubmit = 0;
-		$objAssignmentSubmit =& $this->getObject('dbassignmentsubmit','assignment');
+		$objAssignmentSubmit =& $this->getObject('dbassignmentsubmit_old','assignment');
 		//essay object
 		$objEssaytopics = 0;
 		$objEssaytopics =& $this->getObject('dbessay_topics','essay');
