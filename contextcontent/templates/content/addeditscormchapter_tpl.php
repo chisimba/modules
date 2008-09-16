@@ -74,27 +74,26 @@ $objIcon->setIcon('loader');
                     jQuery.ajax({
                         type: "GET", 
                         url: "index.php", 
-                        data: "module=contextcontent&action=checkcode&code="+code, 
-                        success: function(msg){
-                        
+                        data: "module=scorm&action=checkfolder&code="+code, 
+                        success: function(msg){                        
                             // Check if messages can be updated and code remains the same
                             if (doUpdateMessage == true && currentCode == code) {
                                 
                                 // IF code exists
-                                if (msg == "exists") {
-                                    jQuery("#contextcodemessage").html("That folder does not contain a scorm course.");
-                                    jQuery("#contextcodemessage").addClass("error");
-                                    jQuery("#input_parentfolder").addClass("inputerror");
-                                    jQuery("#contextcodemessage").removeClass("success");
-                                    jQuery("#submitbutton").attr("disabled", "disabled");
-                                    
-                                // Else
-                                } else {
+                                if (msg == "ok") {
                                     jQuery("#contextcodemessage").html("Good! It contains scorm");
                                     jQuery("#contextcodemessage").addClass("success");
                                     jQuery("#contextcodemessage").removeClass("error");
                                     jQuery("#input_parentfolder").removeClass("inputerror");
                                     jQuery("#submitbutton").removeAttr("disabled");
+
+                                // Else
+                                } else {
+                                    jQuery("#contextcodemessage").html("That folder does not contain a scorm course");
+                                    jQuery("#contextcodemessage").addClass("error");
+                                    jQuery("#input_parentfolder").addClass("inputerror");
+                                    jQuery("#contextcodemessage").removeClass("success");
+                                    jQuery("#submitbutton").attr("disabled", "disabled");                                    
                                 }
                                 
                             }
@@ -104,7 +103,6 @@ $objIcon->setIcon('loader');
             }
         }
     </script>');
-
 
 if ($mode == 'edit') {
     $formaction = 'updatescormchapter';
