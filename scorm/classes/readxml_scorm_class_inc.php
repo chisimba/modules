@@ -64,12 +64,12 @@ class readxml_scorm extends object
 public function init()
 {
 	// Get the DB object.
-	$this->_objConfig =& $this->newObject('altconfig','config');
+	$this->objConfig =& $this->newObject('altconfig','config');
 	$this->objUser =& $this->getObject('user', 'security');
  	$this->loadClass('treemenu', 'tree');
  	$this->loadClass('treenode', 'tree');
         $this->loadClass('dhtml','tree');
-
+	$this->loadClass('hiddeninput', 'htmlelements');
         // Initialise icons
         $this->objSkin = $this->getObject( 'skin', 'skin' );
         $this->_treeIcons = 'icons/tree/';
@@ -104,6 +104,12 @@ public function readManifest($rootFolder, $courseFolder=Null){
 	$nodesItem = $books->item(0);
 //	$content = $this->getContent($nodesItem,$resources,$rootFolder);
 	$content = $this->xmlMicroxTree($nodesItem,$resources,$rootFolder,$ident="");
+/*
+$theNextArray = $this->xmlNextPage($pagePath=null,$rootFolder);
+$thePrevArray = $this->xmlPrevPage($pagePath=null,$rootFolder);
+var_dump($theNextArray);
+var_dump($thePrevArray);
+*/
 	//another method
 	//print_r($this->xml2array($books));
 	foreach( $books as $book )
@@ -206,7 +212,9 @@ public function readManifest($rootFolder, $courseFolder=Null){
         //$this->_objTreeMenu =& new treemenu();
 	//$xmlMenu = $this->_objTreeMenu->createFromXML($xmlString);
 	//return $navigation.'<br>'.$staticMenu;
-	return $content;
+	$hiddenInput = new hiddeninput('input_rootFolder', $rootFolder);
+	return $content."<br /><input type='hidden' name='input_rootfolder' id='input_rootfolder' value='".$rootFolder."' />";
+//	return $content."<br /><span id='rootFolder'>".$rootFolder."</span>";
 }
 
 function getContent($nod,$resources,$rootFolder)
@@ -278,6 +286,86 @@ function xmlMicroxTree($nod,$resources,$rootFolder,$ident)
 	}
      }
      return $treeTxt;
+}
+function xmlNextPage($pagePath,$rootFolder)
+{ 
+//$pagePath = 'http://10.2.31.176/chisimba_frameworks/app/usrfiles/users/4733080702/dba203/l1introduction_to_organization_theory.html';
+	$doc = new DOMDocument();
+	$doc->load( 'usrfiles/'.$rootFolder.'/imsmanifest.xml' );
+	//get the kewl_root_path
+	$rootPath = $this->objConfig->getsiteRoot();
+	$books = $doc->getElementsByTagName( "item" );
+	$resources = $doc->getElementsByTagName( "resource" );
+	$nod = $books->item(0);
+	$NodList=$nod->childNodes;	
+	$treeTxt = "";//var to content temp
+	if($arrId==null){
+		$arrId = 0;
+	}
+	foreach( $books as $book )
+	{
+		$nodes = $book->getElementsByTagName( "item" );
+		//Display root node
+	 	$res = $book->getElementsByTagName( "title" );
+	  	$resname = $res->item(0)->nodeValue;
+		/* get attribute */
+		$cid = $book->getAttribute('identifierref'); 
+		foreach ( $resources as $myresources ){
+			if( $myresources->getAttribute('identifier') ==  $cid ){
+				$resourcePath = $myresources->getAttribute('href');
+				$fullPath = $rootPath.'usrfiles/'.$rootFolder.'/'.$resourcePath;
+				$arrPath[$arrId] = $fullPath;
+				$arrId = $arrId + 1;
+			}
+		}
+	}
+	//step through the array and get next page
+	foreach($arrPath as $key=>$myarrPath){
+		if ($myarrPath==$pagePath){
+			$nextPage = $arrPath[$key+1];
+		}
+	}
+     return $nextPage;
+}
+function xmlPrevPage($pagePath,$rootFolder)
+{ 
+//http://10.2.31.176/chisimba_frameworks/app/usrfiles/users/4733080702/dba203/l1introduction_to_organization_theory.html';
+	$doc = new DOMDocument();
+	$doc->load( 'usrfiles/'.$rootFolder.'/imsmanifest.xml' );
+	//get the kewl_root_path
+	$rootPath = $this->objConfig->getsiteRoot();
+	$books = $doc->getElementsByTagName( "item" );
+	$resources = $doc->getElementsByTagName( "resource" );
+	$nod = $books->item(0);
+	$NodList=$nod->childNodes;	
+	$treeTxt = "";//var to content temp
+	if($arrId==null){
+		$arrId = 0;
+	}
+	foreach( $books as $book )
+	{
+		$nodes = $book->getElementsByTagName( "item" );
+		//Display root node
+	 	$res = $book->getElementsByTagName( "title" );
+	  	$resname = $res->item(0)->nodeValue;
+		/* get attribute */
+		$cid = $book->getAttribute('identifierref'); 
+		foreach ( $resources as $myresources ){
+			if( $myresources->getAttribute('identifier') ==  $cid ){
+				$resourcePath = $myresources->getAttribute('href');
+				$fullPath = $rootPath.'usrfiles/'.$rootFolder.'/'.$resourcePath;
+				$arrPath[$arrId] = $fullPath;
+				$arrId = $arrId + 1;
+			}
+		}
+	}
+	//step through the array and get next page
+	foreach($arrPath as $key=>$myarrPath){
+		if ($myarrPath==$pagePath){
+			$nextPage = $arrPath[$key-1];
+		}
+	}
+     return $nextPage;
 }
 
     /**

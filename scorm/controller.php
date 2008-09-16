@@ -71,9 +71,12 @@ class scorm extends controller
             $this->objUser = $this->getObject('user', 'security');
             // Load Scorm Classes
             $this->objReadXml =& $this->getObject('readxml_scorm', 'scorm');
+            $this->objFiles = $this->getObject('dbfile','filemanager');
 	    $this->objFolders = $this->getObject('dbfolder','filemanager');
  	    $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
 	    $this->objTreeNode =& $this->loadClass('treenode', 'tree');
+		//remove this objContext
+        $this->objContext = $this->getObject('dbcontext', 'context');        
 
 
     }
@@ -84,18 +87,131 @@ class scorm extends controller
     */
     public function dispatch($action)
     {
-        switch ($action)
-        {            
-            case 'viewscorm':
-		//$selectedParts=$this->getArrayParam('arrayList');
-		$folderId = $this->getParam('folderId', NULL);
-		$this->setVarByRef('folderId',$folderId);
-                return 'handle_scorm_tpl.php';
-            default:
-		$folderId = $this->getParam('folderId', NULL);
-		$this->setVarByRef('folderId',$folderId);
-                return 'handle_scorm_tpl.php';
-	}
+        // Method to set the layout template for the given action
+        //$this->setLayoutTemplate('scorm_layout.php');
+
+        /*
+        * Convert the action into a method (alternative to
+        * using case selections)
+        */
+        $method = $this->getMethod($action);
+        /*
+        * Return the template determined by the method resulting
+        * from action
+        */
+        return $this->$method();
     }
+    private function __viewscorm()
+    {
+		$folderId = $this->getParam('folderId', NULL);
+		$this->setVarByRef('folderId',$folderId);
+                return 'handle_scorm_tpl.php';
+    }
+    //Ajax function to get the next page
+    private function __getNext()
+    {
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        
+        $page = $this->getParam('page');
+        $folderpath = $this->getParam('folderpath');
+	if(!empty($folderpath)){
+		$myResult = $this->objReadXml->xmlNextPage($page,$folderpath);
+	}
+        if (!empty($myResult)) {
+                echo $myResult;
+        } else {
+                echo 'omega';
+        }
+
+    }
+    //Ajax function to get the next page
+    private function __getPrev()
+    {
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);
+        
+        $page = $this->getParam('page');
+        $folderpath = $this->getParam('folderpath');
+	if(!empty($folderpath)){
+		$myResult = $this->objReadXml->xmlPrevPage($page,$folderpath);
+	}
+        if (!empty($myResult)) {
+                echo $myResult;
+        } else {
+                echo 'alpha';
+        }
+
+    }
+
+    /**
+    *
+    * Method to convert the action parameter into the name of
+    * a method of this class.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return string the name of the method
+    *
+    */
+    private function getMethod(& $action)
+    {
+        if ($this->validAction($action)) {
+            return '__'.$action;
+        } else {
+            return '__home';
+        }
+    }
+
+    /**
+    *
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    *
+    */
+    private function validAction(& $action)
+    {
+        if (method_exists($this, '__'.$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
+     * Ajax function to detect whether a context code has been taken already or not
+     * By Paul Mungai
+     */
+    private function __checkfolder()
+    {
+        $this->setPageTemplate(NULL);
+        $this->setLayoutTemplate(NULL);        
+        $code = $this->getParam('code');
+        
+        switch(strtolower($code))
+        {
+            case NULL:
+                break;
+            case 'root':
+                echo 'reserved';
+                break;
+            default:
+		$filename = 'imsmanifest.xml';
+		$folderPath = $this->objFolders->getFolder($code);
+		$verifyFolder = $this->objFiles->getFileFolder($filename, $folderPath['folderpath']);
+	        if ($verifyFolder[0]['filename']=='imsmanifest.xml') {
+                    echo 'ok';
+                } else {
+                    echo 'notok';
+                }
+        }
+    }
+     
+
 }
 ?>
