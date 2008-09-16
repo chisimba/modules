@@ -26,119 +26,180 @@ class dbassignmentsubmit extends dbtable
     public function init()
     {
         parent::init('tbl_assignment_submit');
-        $this->table = 'tbl_assignment_submit';
-        $this->assignTable = 'tbl_assignment';
     }
-
-    /**
-    * Method to insert a submitted assignment.
-    * @param array $fields The assignment details
-    * @return bool
-    */
-    public function addSubmit($fields, $id=NULL)
+    
+    public function getSubmission($id)
     {
-        if($id){
-            $this->update('id',$id,$fields);
-            return $id;
-        }else{
-            $id = $this->insert($fields);
-            return $id;
+        return $this->getRow('id', $id);
+    }
+    
+    public function getStudentSubmissions($assignmentId, $orderBy = 'firstname, datesubmitted')
+    {
+        $sql = ' SELECT tbl_assignment_submit.*, firstName, surname, staffnumber FROM tbl_assignment_submit
+        INNER JOIN tbl_users ON tbl_assignment_submit.userid = tbl_users.userid  WHERE assignmentid=\''.$assignmentId.'\' ORDER BY '.$orderBy;
+        
+        return $this->getArray($sql);
+    }
+    
+    public function getStudentAssignment($studentId, $assignmentId)
+    {
+        return $this->getAll(" WHERE assignmentid='{$assignmentId}' AND userid='{$studentId}' ");
+    }
+    
+    /**
+     * Method to check how many times a student submitted an assignment
+     */
+    public function numStudentAssignment($studentId, $assignmentId)
+    {
+        return $this->getRecordCount(" WHERE assignmentid='{$assignmentId}' AND userid='{$studentId}' ");
+    }
+    
+    /**
+     * Method to check whether a user is allowed to submit an assignment
+     * @param string $studentId Record Id of User
+     * @param string $assignmentId Assignment Id
+     */
+    public function checkOkToSubmit($studentId, $assignmentId)
+    {
+        $objAssignment = $this->getObject('dbassignment');
+        
+        $assignment = $objAssignment->getAssignment($assignmentId);
+        
+        // If assignment doesn't exist return FALSE;
+        if ($assignment == FALSE) {
+            return FALSE;
         }
-        return FALSE;
-    }
-
-    /**
-    * Method to update a submitted assignment.
-    * A lecturers mark and comment are added to the relevant assignment after marking.
-    * @return
-    */
-    public function updateSubmit($id, $fields)
-    {
-        $this->update('id',$id,$fields);
-    }
-
-    /**
-    * Method to get a submitted assignment
-    * @param string $filter
-    * @param string $fields The required fields. Default = * (all);
-    * @return array $data The submitted assignments
-    */
-    public function getSubmit($filter, $fields='*')
-    {
-        $sql = "SELECT $fields FROM ".$this->table;
-        $sql .= " WHERE $filter";
-
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data;
+        
+        // Check if pass closing date
+        
+        // If multiple submits allowed, return TRUE
+        if ($assignment['resubmit'] == '1') {
+            return TRUE;
         }
-        return FALSE;
-    }
-
-    /**
-    * added by otim samuel, sotim@dicts.mak.ac.ug: 13th Jan 2006
-    * for specific use within the gradebook module
-    * Method to get submitted assignments,
-    * as a percentage of the total year's mark
-    * @param string $filter
-    * @param string $fields The required fields. Default = * (all);
-    * @param string $tables The tables to be queried
-    * @return array $data The submitted assignments
-    */
-    public function getSubmittedAssignments($filter, $fields='*', $tables='tbl_assignment_submit')
-    {
-        $sql = "SELECT $fields FROM ".$tables;
-        $sql .= " WHERE $filter";
-
-        $data = $this->getArray($sql);
-
-        if(!empty($data)){
-            return $data;
+        
+        // Check if student has already submitted
+        $numAssignments = $this->numStudentAssignment($studentId, $assignmentId);
+        
+        if ($numAssignments == 0) {
+            return TRUE;
         } else {
             return FALSE;
         }
     }
-
-    /**
-    * Method to get a list of assignments is the context.
-    * Each assignment shows number of submissions, number marked and closing date.
-    * @param string $context The current context
-    */
-    public function getContextSubmissions($context)
+    
+    public function submitAssignmentUpload($assignmentId, $userId, $fileId)
     {
-        $sql = 'SELECT assign.id, assign.name, assign.closing_date, submit.datesubmitted, submit.mark ';
-        $sql .= 'FROM '.$this->table.' AS submit ';
-        $sql .= 'LEFT JOIN '.$this->assignTable.' as assign ON assign.id = submit.assignmentId ';
-        $sql .= "WHERE context = '$context' ORDER BY assign.id";
-
-        $data = $this->getArray($sql);
-        return $data;
+        if (!$this->checkOkToSubmit($userId, $assignmentId)) {
+            return 'alreadysubmitted';
+        }
+        
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        $filePath = $objFile->getFullFilePath($fileId);
+        
+        if ($filePath == FALSE) {
+            return 'filedoesnotexist';
+        }
+        
+        if (!file_exists($filePath)) {
+            return 'filedoesnotexist';
+        }
+        
+        $submitId = $this->addStudentAssignmentUpload($assignmentId, $userId, $fileId);
+        
+        if ($submitId == FALSE) {
+            return 'unabletosave';
+        } else {
+            return $this->processfile($submitId, $filePath);
+        }
+    }
+    
+    private function addStudentAssignmentUpload($assignmentId, $userId, $fileId)
+    {
+        return $this->insert(array(
+                'assignmentid' => $assignmentId,
+                'userid'=> $userId,
+                'studentfileid' => $fileId,
+                'datesubmitted' => date('Y-m-d H:i:s',time())
+            ));
+    }
+    
+    private function processfile($submitId, $path)
+    {
+        $objConfig = $this->getObject('altconfig', 'config');
+        $savePath = $objConfig->getcontentBasePath().'/assignment/submissions/'.$submitId;
+        
+        $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
+        $savePath = $objCleanUrl->cleanUpUrl($savePath);
+        
+        $objMkdir = $this->getObject('mkdir', 'files');
+        $objMkdir->mkdirs($savePath, 0777);
+        
+        copy($path, $savePath.'/'.basename($path));
+    }
+    
+    public function submitAssignmentOnline($assignmentId, $userId, $text)
+    {
+        if (!$this->checkOkToSubmit($userId, $assignmentId)) {
+            return 'alreadysubmitted';
+        }
+        
+        return $this->addStudentAssignmentOnline($assignmentId, $userId, $text);
+    }
+    
+    private function addStudentAssignmentOnline($assignmentId, $userId, $text)
+    {
+        return $this->insert(array(
+                'assignmentid' => $assignmentId,
+                'userid'=> $userId,
+                'online' => $text,
+                'datesubmitted' => date('Y-m-d H:i:s',time())
+            ));
+    }
+    
+    public function getAssignmentFilename($submissionId, $fileId)
+    {
+        $objFile = $this->getObject('dbfile', 'filemanager');
+        $file = $objFile->getFile($fileId);
+        
+        // Do own search if file not found
+        if ($file == FALSE)
+        {
+            
+        }
+        
+        //var_dump($file);
+        
+        $objConfig = $this->getObject('altconfig', 'config');
+        $filePath = $objConfig->getcontentBasePath().'/assignment/submissions/'.$submissionId.'/'.$file['filename'];
+        
+        $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
+        $filePath = $objCleanUrl->cleanUpUrl($filePath);
+        
+        if (!file_exists($filePath)) {
+            $originalFile = $objConfig->getcontentBasePath().'/'.$file['path'];
+            $originalFile = $objCleanUrl->cleanUpUrl($originalFile);
+            
+            if (file_exists($originalFile)) {
+                
+                $objMkdir = $this->getObject('mkdir', 'files');
+                $objMkdir->mkdirs(dirname($filePath), 0777);
+                
+                copy($originalFile, $filePath);
+            }
+        }
+        
+        return $filePath;
+    }
+    
+    function markAssignment($id, $mark, $commentinfo)
+    {
+        return $this->update('id', $id, array('mark'=>$mark, 'commentinfo'=>$commentinfo, 'updated'=>date('Y-m-d H:i:s',time())));
+    }
+    
+    public function setLecturerMarkFile($id, $fileId)
+    {
+        return $this->update('id', $id, array('lecturerfileid'=>$fileId));
     }
 
-    /**
-    * Method to delete a submitted assignment
-    * @param string $id The id of the assignment to delete
-    */
-    public function deleteSubmit($id)
-    {
-        $this->delete('id', $id);
-    }
-
-    /**
-    * Method to get the name of an uploaded file.
-    * The method accesses the table tbl_assignment_filestore.
-    * @param string $userId The id of the student submitting the assignment.
-    * @param string $fileId The id of the file uploaded
-    * @return string $filename The name of the file uploaded
-    */
-    public function getFileName($userId, $fileId)
-    {
-        $sql = "SELECT filename FROM tbl_assignment_submit ";
-        $sql .= "WHERE fileid='$fileid'";
-
-        $data = $this->getArray($sql);
-        return $data[0]['filename'];
-    }
 }
 ?>
