@@ -64,10 +64,18 @@ if ($this->objUser->isLoggedIn()) {
     //$rightSideColumn .= $this->objblogOps->showBlogsLink(TRUE);
     
 }
-//show the feeds section
-//$leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
-$cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
-$cssLayout->setRightColumnContent($rightSideColumn);
-echo $cssLayout->show();
+
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
+
+if ($layoutToUse == 'elearn') {
+    $this->setLayoutTemplate('blogelearn_layout_tpl.php');
+    echo $middleColumn;
+} else {
+    //show the feeds section
+    //$leftCol .= $this->objblogOps->showFeeds(&$userid, TRUE);
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
+    $cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
+}
 ?>

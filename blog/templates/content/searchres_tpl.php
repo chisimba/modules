@@ -14,21 +14,31 @@ if ($leftCol == NULL || $rightSideColumn == NULL) {
 }
 $middleColumn = NULL;
 $middleColumn.= $this->objblogSearching->displaySearchResults($searchres);
-//dump the cssLayout to screen
-if ($leftCol == NULL) {
-    $leftCol = $rightSideColumn;
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    //$cssLayout->setRightColumnContent($rightSideColumn);
-    echo $cssLayout->show();
-} elseif ($rightSideColumn == NULL) {
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    echo $cssLayout->show();
+
+
+// Added by Tohir - Standard layout for elearn
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
+
+if ($layoutToUse == 'elearn') {
+    $this->setLayoutTemplate('blogelearn_layout_tpl.php');
+    echo $middleColumn;
 } else {
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    $cssLayout->setRightColumnContent($rightSideColumn);
-    echo $cssLayout->show();
+    //dump the cssLayout to screen
+    if ($leftCol == NULL) {
+        $leftCol = $rightSideColumn;
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        //$cssLayout->setRightColumnContent($rightSideColumn);
+        echo $cssLayout->show();
+    } elseif ($rightSideColumn == NULL) {
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        echo $cssLayout->show();
+    } else {
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        $cssLayout->setRightColumnContent($rightSideColumn);
+        echo $cssLayout->show();
+    }
 }
 ?>

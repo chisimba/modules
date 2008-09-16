@@ -17,20 +17,30 @@ $middleColumn = NULL;
 $objFeatureBox = $this->getObject('featurebox', 'navigation');
 //gooi the form with a message and the name thing with email address(es) to send to
 $middleColumn.= $this->objblogMail->sendMail2FriendForm($m2fdata);
-if ($leftCol == NULL) {
-    $leftCol = $rightSideColumn;
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    //$cssLayout->setRightColumnContent($rightSideColumn);
-    echo $cssLayout->show();
-} elseif ($rightSideColumn == NULL) {
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    echo $cssLayout->show();
+
+
+// Added by Tohir - Standard layout for elearn
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
+
+if ($layoutToUse == 'elearn') {
+    $this->setLayoutTemplate('blogelearn_layout_tpl.php');
+    echo $middleColumn;
 } else {
-    $cssLayout->setMiddleColumnContent($middleColumn);
-    $cssLayout->setLeftColumnContent($leftCol);
-    $cssLayout->setRightColumnContent($rightSideColumn);
-    echo $cssLayout->show();
+    if ($leftCol == NULL) {
+        $leftCol = $rightSideColumn;
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        //$cssLayout->setRightColumnContent($rightSideColumn);
+        echo $cssLayout->show();
+    } elseif ($rightSideColumn == NULL) {
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        echo $cssLayout->show();
+    } else {
+        $cssLayout->setMiddleColumnContent($middleColumn);
+        $cssLayout->setLeftColumnContent($leftCol);
+        $cssLayout->setRightColumnContent($rightSideColumn);
+        echo $cssLayout->show();
+    }
 }
 ?>

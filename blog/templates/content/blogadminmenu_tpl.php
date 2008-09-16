@@ -68,8 +68,17 @@ $middleColumn.= $tabpane->show();
 $rightSideColumn.= $this->objblogCategories->quickCats(TRUE);
 $rightSideColumn.= $this->objblogOps->showAdminSection(TRUE);
 $rightSideColumn.= $this->objblogPosts->quickPost($userid, TRUE);
-$cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setLeftColumnContent($leftCol);
-$cssLayout->setRightColumnContent($rightSideColumn);
-echo $cssLayout->show();
+
+
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
+
+if ($layoutToUse == 'elearn') {
+    $this->setLayoutTemplate('blogelearn_layout_tpl.php');
+    echo $middleColumn;
+} else {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    $cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
+}
 ?>

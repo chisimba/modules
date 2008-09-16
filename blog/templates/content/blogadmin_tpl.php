@@ -214,11 +214,18 @@ $bconf = $objBlogUi->doConfig($userid);
 $leftblocks = $bconf[0]['leftblocks'];
 $rightblocks = $bconf[0]['rightblocks'];
 $rb = count($rightblocks);
-?>
 
-<?php
-$cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setLeftColumnContent($leftCol);
-$cssLayout->setRightColumnContent($rightSideColumn);
-echo $cssLayout->show();
+
+// Added by Tohir - Standard layout for elearn
+$layoutToUse = $this->objSysConfig->getValue('blog_layout', 'blog');
+
+if ($layoutToUse == 'elearn') {
+    $this->setLayoutTemplate('blogelearn_layout_tpl.php');
+    echo $middleColumn;
+} else {
+    $cssLayout->setMiddleColumnContent($middleColumn);
+    $cssLayout->setLeftColumnContent($leftCol);
+    $cssLayout->setRightColumnContent($rightSideColumn);
+    echo $cssLayout->show();
+}
 ?>

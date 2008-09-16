@@ -2130,7 +2130,7 @@ class blog extends controller
         public function requiresLogin($action) 
         {
             $actionsRequiringLogin = array(
-                'blogadmin'
+                'blogadmin', 'viewblog'
             );
             if (in_array($action, $actionsRequiringLogin)) {
                 return TRUE;
