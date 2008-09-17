@@ -1294,13 +1294,29 @@ class blog extends controller
                     exit;
                 }
                 $id = $this->getParam('id');
-                $this->objDbBlog->deletePost($id);
-                if ($nextAction = $this->getParam('nextAction')) {
-                    return $this->nextAction($nextAction);   
+                
+                // Changes by Tohir
+                // Allow admin to delete
+                // check user is deleting own post
+                $post = $this->objDbBlog->getPostByPostID($id);
+                if (count($post) == 0) {
+                    return $this->nextAction(NULL);
+                } else {
+                    $post = $post[0];
+                    if ($post['userid'] == $this->objUser->userId() || $this->objUser->isAdmin()) {
+                        $this->objDbBlog->deletePost($id);
+                        if ($nextAction = $this->getParam('nextAction')) {
+                            return $this->nextAction($nextAction);   
+                        }
+                        return $this->nextAction('blogadmin', array(
+                                    'mode' => 'editpost'
+                               ));
+                    } else {
+                        return $this->nextAction(NULL);
+                    }
                 }
-                return $this->nextAction('blogadmin', array(
-                            'mode' => 'editpost'
-                       ));
+                
+                
                 break;
 
             case 'postedit':

@@ -168,7 +168,7 @@ class blogposts extends object
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
                     $icons = '';
-                    if ($post['userid'] == $userid) {
+                    if ($post['userid'] == $userid || $this->objUser->isAdmin()) {
                         $this->objIcon = $this->getObject('geticon', 'htmlelements');
                         $edIcon = $this->objIcon->getEditIcon($this->uri(array(
                             'action' => 'postedit',
