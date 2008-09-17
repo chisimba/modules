@@ -239,7 +239,7 @@ class wikidisplay extends object
         if($this->isLoggedIn){
             // get data
             $hasWiki = $this->objDbwiki->hasPersonalWiki($this->userId);            
-            if(!$hasWiki){
+            //if(!$hasWiki){
                 // create wiki link
                 $objLink = new link($this->uri(array(
                     'action' => 'add_wiki',
@@ -248,7 +248,7 @@ class wikidisplay extends object
                 $objLink->title = $createTitleLabel;
                 $addLink = $objLink->show();
                 $string .= '<li>'.$addLink.'</li>';
-            }
+           // }
             
             $contextExists = $this->getSession('context_exists');
             if($contextExists){
