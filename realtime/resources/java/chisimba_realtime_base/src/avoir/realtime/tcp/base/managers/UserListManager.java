@@ -171,7 +171,7 @@ public class UserListManager {
         userList.clear();
         for (int i = 0; i < list.size(); i++) {
             User usr = list.elementAt(i);
-
+            usr.setOnline(true);
             addUser(usr, i);
         }
         table.setDefaultRenderer(UserObject.class, new LRenderer());
@@ -256,15 +256,13 @@ public class UserListManager {
 
                     }
                 } else {
-                    /*
+                    
                     setFont(new java.awt.Font("Dialog", 3, 10));
                     setForeground(Color.LIGHT_GRAY);
                     this.setText(userObject.getDisplay() + "- Offline");
-                     */
+                    
 
-                    setFont(new java.awt.Font("Dialog", 0, 10));
-                    this.setForeground(userObject.getColor());
-                    this.setText(userObject.getDisplay());
+                    
                 }
            
                 setToolTipText(userObject.getUser().getUserDetails());
@@ -302,10 +300,12 @@ public class UserListManager {
     public void addNewUser(User user) {
         for (int i = 0; i < userList.size(); i++) {
             UserObject usr = (UserObject) userList.elementAt(i);
+
             if (usr.getUser().getUserName().equals(user.getUserName())) {
                 return;
             }
         }
+        user.setOnline(true);
         addUser(user, userList.size());
         model = new ParticipantListingTableModel();
         table.setModel(model);
