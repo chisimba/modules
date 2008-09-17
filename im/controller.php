@@ -100,12 +100,20 @@ class im extends controller
 	{
 		$action = $this->getParam('action');
 		switch ($action) {
-			case null:
+			case 'messageview':
 				// echo "booyakasha!";
 				$msgs = $this->objDbIm->getLast(10);
 				$this->setVarByRef('msgs', $msgs);
 				return 'messageview_tpl.php';
 				break;
+                
+           case 'viewall':
+           case NULL:
+                // echo "booyakasha!";
+                $msgs = $this->objDbIm->getLast(10);
+                $this->setVarByRef('msgs', $msgs);
+                return 'viewall_tpl.php';
+                break;
 
 			case 'sendmessage':
 				$to = 'pscott209@gmail.com';
