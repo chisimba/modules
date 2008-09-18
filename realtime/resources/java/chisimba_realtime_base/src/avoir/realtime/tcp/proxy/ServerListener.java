@@ -85,6 +85,7 @@ public class ServerListener extends Thread {
             //ServerSocket serverSocket = new ServerSocket(port);
             ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
             ServerSocket ssocket = ssocketFactory.createServerSocket(port);
+            ssocket.setReuseAddress(true);
             logger.info("SSL factory started..");
             logger.info("Listening for connections on port " + port);
             while (true) {
