@@ -1109,7 +1109,7 @@ class webpresent extends controller
 
         if (count($results) > 0)
         {
-            $this->loadClass('link', 'htmlelements');
+            
 
             foreach ($results as $file)
             {
@@ -1127,6 +1127,28 @@ class webpresent extends controller
             }
         }
 
+    }
+    
+    /**
+     * Batch script to convert presentations to version 2
+     */
+    private function __converttov2()
+    {
+        $results = $this->objFiles->getAll(' ORDER BY dateuploaded DESC');
+
+        if (count($results) > 0)
+        {
+            $this->loadClass('link', 'htmlelements');
+            
+            foreach ($results as $file)
+            {
+                echo '<hr />'.$file['title'];
+                
+                $ok = $this->objFiles->checkWebPresentVersion2($file['id']);
+                
+                var_dump($ok);
+            }
+        }
     }
 }
 ?>
