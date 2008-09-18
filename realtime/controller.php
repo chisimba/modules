@@ -305,7 +305,8 @@
             $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
             $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
 
-            $desc='<li>Add Live interactions to your presentation</li>';
+            $desc="Beta 1.0.2<br><hr>";
+            $desc.='<li>Add Live interactions to your presentation</li>';
             $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
 
             //generate for presenter
