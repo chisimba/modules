@@ -61,6 +61,7 @@ class pdf2flash extends object
      * Method to indicate whether to use a custom viewport or not
      */
     public $useCustomViewPort = TRUE;
+    public $customViewPort = '';
     public $debug = FALSE;
     
     /**
@@ -74,6 +75,8 @@ class pdf2flash extends object
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
+        
+        $this->customViewPort = $this->getResourcePath('a4final.swf');
     }
     
     /**
@@ -97,7 +100,7 @@ class pdf2flash extends object
         $filepath = $this->objCleanUrl->cleanUpUrl($destination);
         
         // Get full path to viewer. This is the file with the prev/next buttons
-        $viewport = $this->getResourcePath('a4final.swf');
+        $viewport = $this->customViewPort;
         
         // Create Directory
         $this->objMkdir->mkdirs($path, 0777);
