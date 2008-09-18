@@ -269,7 +269,7 @@
         public function showClassroomBeta($id,$title){
 
             $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
-            $this->realtimeManager->startSlidesServer($slideServerId);
+            //$this->realtimeManager->startBetaSlidesServer($slideServerId);
 
             $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
             $modPath=$this->objAltConfig->getModulePath();
@@ -279,7 +279,7 @@
             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
-            $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $supernodePort=22225;//$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
             $userDetails=$fullnames.' '.$username;
