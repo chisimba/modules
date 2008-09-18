@@ -214,7 +214,7 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            @$userRawId = $data[0]['id'];
 
 
             //Preparing a list of USER ID's
@@ -317,7 +317,7 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            @$userRawId = $data[0]['id'];
 
 
 
@@ -537,7 +537,7 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            @$userRawId = $data[0]['id'];
 
 
 
