@@ -648,7 +648,8 @@ class webpresent extends controller
         $objUpload->uploadFolder = $destinationDir.'/';
 
         $result = $objUpload->doUpload(TRUE, $id);
-
+        
+        
         //echo $generatedid;
 
         if ($result['success'] == FALSE) {
@@ -659,11 +660,14 @@ class webpresent extends controller
 
             return $this->nextAction('erroriframe', array('message'=>$result['message'], 'file'=>$filename, 'id'=>$generatedid));
         } else {
+            
+            //var_dump($result);
+            
+            
+            $filename = $result['filename'];
+            $mimetype = $result['mimetype'];
 
-            //$filename = $_FILES['fileupload']['name'];
-            $mimetype = $_FILES['fileupload']['type'];
-
-            $path_parts = pathinfo($_FILES['fileupload']['name']);
+            $path_parts = $result['storedname'];
 
             $ext = $path_parts['extension'];
 
