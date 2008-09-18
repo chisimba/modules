@@ -1142,9 +1142,12 @@ class webpresent extends controller
             
             foreach ($results as $file)
             {
+                log_debug($file['id'].' - '.$file['title']);
+                
                 echo '<hr />'.$file['title'];
                 
                 $ok = $this->objFiles->checkWebPresentVersion2($file['id']);
+                
                 
                 var_dump($ok);
             }
