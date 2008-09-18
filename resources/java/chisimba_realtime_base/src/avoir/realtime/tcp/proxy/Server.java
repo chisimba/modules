@@ -21,15 +21,51 @@ package avoir.realtime.tcp.proxy;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.*;
-
+import org.tanukisoftware.wrapper.WrapperListener;
+import org.tanukisoftware.wrapper.WrapperManager;
 
 /**
  * The server for the Realtime applications.  Serves as the main class for the project
  */
-public class Server {
+public class Server implements WrapperListener {
 
     private static Logger logger = Logger.getLogger(Server.class.getName());
+    private static Thread thr;
+
+    public void controlEvent(int event) {
+        if ((event == WrapperManager.WRAPPER_CTRL_LOGOFF_EVENT) &&
+                (WrapperManager.isLaunchedAsService()
+                )) {
+            // Ignore
+        } else {
+            WrapperManager.stop(0);
+        // Will not get here.
+        }
+
+    }
+
+    public Integer start(String[] argv) {
+        if (argv.length > 1) {
+            throw new IllegalArgumentException("Syntax: Server [<port>]");
+        }
+        logger.info("Realtime Server started...\n");
+
+        int port = argv.length == 0 ? 22225
+                : Integer.parseInt(argv[0]);
+        try {
+            ServerListener listener = new ServerListener(port);
+            thr = new Thread(listener);
+            thr.start();
+        } catch (Exception e) {
+
+            logger.log(Level.SEVERE, "Error spawning listener thread", e);
+        }
+        return null;
+    }
+
+    public int stop(int exitCode) {
+        return exitCode;
+    }
 
     /**
      * Main method for running the whiteboard server.
@@ -40,16 +76,11 @@ public class Server {
         if (argv.length > 1) {
             throw new IllegalArgumentException("Syntax: Server [<port>]");
         }
-        logger.info("Realtime Server started...\n");
-
-        int port = argv.length == 0 ? 22225
-                : Integer.parseInt(argv[0]);
-        try {
-            ServerListener listener = new ServerListener(port);
-            new Thread(listener).start();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error spawning listener thread", e);
-        }
+               // Start the application.  If the JVM was launched from the native
+        //  Wrapper then the application will wait for the native Wrapper to
+        //  call the application's start method.  Otherwise the start method
+        //  will be called immediately.
+        WrapperManager.start( new Server(), argv );
 
     }
 }
