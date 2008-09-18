@@ -342,10 +342,11 @@ class webpresent extends controller
             return $this->nextAction('view', array('id'=>$id, 'message'=>'infoupdated'));
         }
     }
-        /**
-         * Method to view the details of a presentation
-         *
-         */
+    
+    /**
+     * Method to view the details of a presentation
+     *
+     */
     function __view()
     {
         $id = $this->getParam('id');
@@ -355,6 +356,8 @@ class webpresent extends controller
         if ($file == FALSE) {
             return $this->nextAction('home', array('error'=>'norecord'));
         }
+        
+        $this->objFiles->checkWebPresentVersion2($id);
 
         $numSlides = $this->objSlides->getNumSlides($id);
 
@@ -390,6 +393,27 @@ class webpresent extends controller
         $objViewCounter->addView($id);
 
         return 'view_tpl.php';
+    }
+    
+    
+    /**
+     * Method to get the flash file
+     */
+    function __getflash()
+    {
+        $id = $this->getParam('id');
+        
+        $fileExists = $this->objFiles->checkWebPresentVersion2($id);
+        
+        if ($fileExists) {
+            // Return New version
+            $redirect = $this->objConfig->getcontentPath().'webpresent/'.$id.'/'.$id.'_v2.swf';
+        } else {
+            // Return Old version
+            $redirect = $this->objConfig->getcontentPath().'webpresent/'.$id.'/'.$id.'.swf';
+        }
+        
+        header('Location:'.$redirect);
     }
 
         /**
@@ -583,6 +607,8 @@ class webpresent extends controller
 
         $this->setVarByRef('file', $file);
         $this->setVarByRef('tags', $tags);
+        
+        $this->setVar('mode', 'add');
 
         return 'process_tpl.php';
     }

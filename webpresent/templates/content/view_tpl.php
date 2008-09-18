@@ -91,16 +91,23 @@ if (count($slideContent['slideshow']) > 0) {
     }
 
     $heading->type = 1;
-
-    $objIcon->setModuleIcon('blog');
-    $objIcon->title = $this->objLanguage->languageText("mod_webpresent_blogthis", "webpresent");
-    $objIcon->alrt =$this->objLanguage->languageText("mod_webpresent_blogthis", "webpresent");
-
-    // http://localhost/webpresent/index.php?module=blog&action=blogadmin&mode=writepost
-    $blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
-    $blogThisLink->link = $objIcon->show();
-
-    $heading->str .= ' '.$blogThisLink->show();
+    
+    // Check if blog is registered
+    $objModules  = $this->getObject('modules', 'modulecatalogue');
+    $blogRegistered = $objModules->checkIfRegistered('blog');
+    
+    // If registered
+    if ($blogRegistered) {
+        $objIcon->setModuleIcon('blog');
+        $objIcon->title = $this->objLanguage->languageText("mod_webpresent_blogthispresentation", "webpresent");
+        $objIcon->alrt =$this->objLanguage->languageText("mod_webpresent_blogthispresentation", "webpresent");
+    
+        // http://localhost/webpresent/index.php?module=blog&action=blogadmin&mode=writepost
+        $blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
+        $blogThisLink->link = $objIcon->show();
+    
+        $heading->str .= ' '.$blogThisLink->show();
+    }
 
     echo $heading->show();
 
@@ -185,9 +192,15 @@ if (count($slideContent['slideshow']) > 0) {
     $this->loadClass('textinput','htmlelements');
     $filterBox=new textinput('filter');
     $filterBox->size=60;
+    
+    $flashUrl = $this->uri(array('action'=>'getflash', 'id'=>$file['id']));
+    
+    
     $flashUrl =  $this->objConfig->getsiteRoot()
     . $this->objConfig->getcontentPath()
     .'webpresent/'  .$file['id'] .'/'. $file['id'].'.swf';
+    
+    
     $filterText = "[WPRESENT: type=byurl, url=" . $flashUrl . "]";
     $filterBox->setValue($filterText);
     $rightCell  .= "<p><strong>" . $this->objLanguage->languageText("mod_webpresent_filterbyurl", "webpresent")
@@ -293,10 +306,12 @@ if (count($slideContent['slideshow']) > 0) {
 
     }
 
-    $blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
-    $blogThisLink->link = $this->objLanguage->languageText("mod_webpresent_blogthispresentation", "webpresent");
-
-    $bottomLinks[] = $blogThisLink->show();
+    if ($blogRegistered) {
+        $blogThisLink = new link ($this->uri(array('action'=>'blogadmin', 'mode'=>'writepost', 'text'=>'[WPRESENT: id='.$file['id'].']<br /><br />'), 'blog'));
+        $blogThisLink->link = $this->objLanguage->languageText("mod_webpresent_blogthispresentation", "webpresent");
+    
+        $bottomLinks[] = $blogThisLink->show();
+    }
 
 
     echo '<p>';

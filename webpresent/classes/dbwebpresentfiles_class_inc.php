@@ -279,17 +279,19 @@ class dbwebpresentfiles extends dbtable
         $result = $this->convertAlternative($file['id'], $ext);
         $this->setOutOfProcess($file['id']);
 
-        if ($result) {
-            $step = 'flashconversion';
-            $this->setInProcess($file['id'], $step);
-            $result = $this->convertFileFromFormat($file['id'], 'odp', 'swf');
-            $this->setOutOfProcess($file['id']);
-        }
+        
 
         if ($result) {
             $step = 'pdfconversion';
             $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], 'odp', 'pdf');
+            $this->setOutOfProcess($file['id']);
+        }
+        
+        if ($result) {
+            $step = 'flashconversion';
+            $this->setInProcess($file['id'], $step);
+            $result = $this->convertFileFromFormat($file['id'], 'odp', 'swf');
             $this->setOutOfProcess($file['id']);
         }
 
@@ -592,6 +594,33 @@ class dbwebpresentfiles extends dbtable
              return false;
          }
      }
+     
+    
+    
+    /**
+     * Method to check for Version2 of Webpresent Flash file
+     * @param string $id Record Id
+     * @return boolean
+     */
+    public function checkWebPresentVersion2($id)
+    {
+        $presentationFolder = $this->objConfig->getcontentBasePath().'webpresent/'.$id;
+        
+        if (file_exists($presentationFolder.'/'.$id.'_v2.swf')) {
+            return TRUE;
+        } else {
+            
+            $objSWF = $this->getObject('pdf2flash', 'swftools');
+            $objSWF->debug = FALSE;
+            $objSWF->useCustomViewPort = TRUE;
+            $objSWF->customViewPort = $this->getResourcePath('webpresent2.swf');
+            
+            $pdf = $presentationFolder.'/'.$id.'.pdf';
+            $flash2 = $presentationFolder.'/'.$id.'_v2.swf';
+            
+            return $objSWF->convert2SWF($pdf, $flash2);
+        }
+    }
 
 
 }
