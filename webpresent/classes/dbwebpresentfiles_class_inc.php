@@ -306,6 +306,8 @@ class dbwebpresentfiles extends dbtable
                 $step = 'finishedconversion';
             }
         }
+        
+        $this->objFiles->checkWebPresentVersion2($file['id']);
 
         if ($result == TRUE)
         {
