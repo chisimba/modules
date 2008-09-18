@@ -1109,11 +1109,13 @@ class webpresent extends controller
 
         if (count($results) > 0)
         {
+            $this->loadClass('link', 'htmlelements');
             
+            echo '<ol>';
 
             foreach ($results as $file)
             {
-                echo $file['title'];
+                echo '<li>'.$file['title'];
 
                 $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
                 $link->link = 'Flash';
@@ -1123,8 +1125,10 @@ class webpresent extends controller
                 $link = new link ($this->uri(array('action'=>'regenerate', 'type'=>'flash', 'id'=>$file['id'])));
                 $link->link = 'Slides';
 
-                echo ' / '.$link->show().'<br />';
+                echo ' / '.$link->show().'<br />&nbsp;</li>';
             }
+            
+            echo '</ol>';
         }
 
     }
@@ -1138,7 +1142,7 @@ class webpresent extends controller
 
         if (count($results) > 0)
         {
-            $this->loadClass('link', 'htmlelements');
+            
             
             foreach ($results as $file)
             {
