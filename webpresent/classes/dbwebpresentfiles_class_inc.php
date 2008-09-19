@@ -624,6 +624,22 @@ class dbwebpresentfiles extends dbtable
             return $objSWF->convert2SWF($pdf, $flash2);
         }
     }
+    
+    /**
+     * Method to check for Version2 of Webpresent Flash file
+     * @param string $id Record Id
+     * @return boolean
+     */
+    public function onlyCheckWebPresentVersion2($id)
+    {
+        $presentationFolder = $this->objConfig->getcontentBasePath().'webpresent/'.$id;
+        
+        if (file_exists($presentationFolder.'/'.$id.'_v2.swf')) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
 
 }
