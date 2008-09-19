@@ -41,18 +41,11 @@ if (trim($query) != '')
 
     $this->setVar('pageTitle', $this->objConfig->getSiteName().' - Search Results for '.$query);
 
-    $this->search = new Zend_Search_Lucene($this->objConfig->getcontentBasePath().'/webpresentsearch');
-    echo "Searching " . $this->search->count() . " Documents - ";
-    //clean the query
-    $query = $this->getParam('q');
-
-    //$pattern = new Zend_Search_Lucene_Index_Term($query.'*', 'field1');
-    //$newQuery = new Zend_Search_Lucene_Search_Query_Wildcard($pattern);
-
-    //$hits = $this->search->find(strtolower($newQuery));
-    $hits = $this->search->find(strtolower($query).'*');
-    //print_r($hits);
-    $numHits = count($hits);
+    $objSearchResults = $this->getObject('searchresults', 'search');
+    
+    $results = $objSearchResults->getSearchResults($query, 'webpresent');
+    
+    $numHits = count($results);
 
     $resultText = ($numHits == 1) ? 'Result' : 'Results';
 
@@ -70,7 +63,7 @@ if (trim($query) != '')
 
         $table = $this->newObject('htmltable', 'htmlelements');
 
-        foreach($hits as $hit)
+        foreach($results as $hit)
         {
 
 
@@ -111,8 +104,8 @@ if (trim($query) != '')
                 $description = nl2br(htmlentities($objTrim->strTrim($hit->teaser, 200)));
             }
 
-            $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$hit->userid)));
-            $userLink->link = $hit->createdBy;
+            $userLink = new link ($this->uri(array('action'=>'byuser', 'userid'=>$hit->userId)));
+            $userLink->link = $objUser->fullName($hit->userId);
 
             $rightContent .= $description.'<br /><strong>Score:</strong> '.$hit->score.'<br /><strong>Uploaded By:</strong> '.$userLink->show().'<br /><strong>Date Uploaded:</strong> '.$objDateTime->formatDate($hit->date);
 

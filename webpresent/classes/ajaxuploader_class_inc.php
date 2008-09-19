@@ -49,8 +49,8 @@ class ajaxuploader extends object
         $objIframe->id = 'ifra_upload_'.$id;
         $objIframe->name = 'iframe_upload_'.$id;
         $objIframe->frameborder = 1;
-        $objIframe->width = 0;
-        $objIframe->height = 0;
+        $objIframe->width = 600;
+        $objIframe->height = 400;
         $objIframe->extra = ' style="display:none" ';
 
         // Create Loading Icon - Hidden by Default

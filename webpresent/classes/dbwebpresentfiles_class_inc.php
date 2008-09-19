@@ -285,7 +285,14 @@ class dbwebpresentfiles extends dbtable
             $step = 'pdfconversion';
             $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], 'odp', 'pdf');
-            $this->objFiles->checkWebPresentVersion2($file['id']);
+            
+            log_debug('donewithpdf');
+            
+            if ($result) {
+                log_debug('startwithswf2');
+                $swf2 = $this->checkWebPresentVersion2($file['id']);
+                log_debug('endwithswf2');
+            }
             $this->setOutOfProcess($file['id']);
         }
         

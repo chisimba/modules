@@ -58,6 +58,8 @@ class webpresent extends controller
         $this->objSlides = $this->getObject('dbwebpresentslides');
         $this->objSchedules = $this->getObject('dbwebpresentschedules');
         $this->realtimeManager = $this->getObject('realtimemanager');
+        
+        $this->objSearch = $this->getObject('indexdata', 'search');
         //$this->presentManager = $this->getObject('presentmanager');
     }
         /**
@@ -331,7 +333,6 @@ class webpresent extends controller
         $file['tags'] = $tags;
         $file['slides'] = $slides;
 
-        $this->_luceneclearFileIndex($id);
         $this->_prepareDataForSearch($file);
 
         if (count($problems) > 0) {
@@ -834,7 +835,7 @@ class webpresent extends controller
             if ($deletevalue == $this->getSession('delete_'.$id) && $this->getParam('confirm') == 'yes')
             {
                 $this->objFiles->deleteFile($id);
-                $this->_luceneclearFileIndex($id);
+                $this->objSearch->removeIndex('webpresent_'.$id);
                 return $this->nextAction(NULL);
             } else {
                 return $this->nextAction('view', array('id'=>$id, 'message'=>'deletecancelled'));
@@ -922,18 +923,25 @@ class webpresent extends controller
 
         $content .= ($file['description'] == '') ? '' : ', '.$file['description'];
         $content .= ($file['title'] == '') ? '' : ', '.$file['title'];
-
-
+        
+        $tagcontent = ' ';
+        
         if (count($file['tags']) > 0)
         {
             $divider = '';
             foreach ($file['tags'] as $tag)
             {
-                $content .= $divider.$tag;
+                $tagcontent .= $divider.$tag;
                 $divider = ', ';
             }
+            
+            $content .= $tagcontent;
+            
         }
-
+        
+        $file['tags'] = $tagcontent;
+        
+        
         $content .= ', ';
 
         $divider = '';
@@ -950,9 +958,9 @@ class webpresent extends controller
                 $content .= $divider.strip_tags($slide['slidecontent']);
                 $divider = ',';
             }
-
-
         }
+        
+        $file['numslides'] = count($file['slides']);
 
         $file['content'] = $content;
 
@@ -966,127 +974,29 @@ class webpresent extends controller
      */
     private function _luceneIndex($file)
     {
-        //print_r($data); die();
-        $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objUser = $this->getObject('user', 'security');
-        $indexPath = $this->objConfig->getcontentBasePath();
-        if (file_exists($indexPath . 'webpresentsearch/segments')) {
-            @chmod($indexPath . 'webpresentsearch', 0777);
-            //we build onto the previous index
-            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', false);
-
-
-            //echo 'Add to Index';
-        } else {
-            //instantiate the lucene engine and create a new index
-            @mkdir($indexPath . 'webpresentsearch');
-            @chmod($indexPath . 'webpresentsearch', 0777);
-            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', true);
-
-            //echo 'Create New Index';
-        }
-        //hook up the document parser
-        $document = new Zend_Search_Lucene_Document();
-        //change directory to the index path
-        chdir($indexPath);
-        //set the properties that we want to use in our index
-        //id for the index and optimization
-        $document->addField(Zend_Search_Lucene_Field::Text('docid', 'webpresent_'.$file['id']));
-        //date
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('date', $file['dateuploaded']));
-        //url
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('url', $this->uri(array(
-            'module' => 'webpresent',
-            'action' => 'view',
-            'id' => $file['id'],
-                    ))));
-        //createdBy
-        $document->addField(Zend_Search_Lucene_Field::Text('createdBy', $this->objUser->fullName($file['creatorid'])));
-
-        $document->addField(Zend_Search_Lucene_Field::UnIndexed('userid', $file['creatorid']));
-
-        //document teaser
-        $document->addField(Zend_Search_Lucene_Field::Text('teaser', $file['description']));
-
-
-
-        if ($file['title'] == '') {
-            $title = $file['filename'];
-        } else {
-            $title = $file['title'];
-        }
-
-        //doc title
-        $document->addField(Zend_Search_Lucene_Field::Text('title', $title));
-        //doc author
-        $document->addField(Zend_Search_Lucene_Field::Text('author', $this->objUser->fullName($file['creatorid'])));
-        //document body
-        //NOTE: this is not actually put into the index, so as to keep the index nice and small
-        //      only a reference is inserted to the index.
-        $document->addField(Zend_Search_Lucene_Field::UnStored('contents', strtolower($file['content'])));
-        //what else do we need here???
-        //add the document to the index
-        $index->addDocument($document);
-        //commit the index to disc
-        $index->commit();
-        //optimize the thing
-        //$index->optimize();
-
-    }
-    /**
-     * Test deletion
-     */
-    public function __testdelete()
-    {
-        $fileId = $this->getParam('id');
-        $this->_luceneclearFileIndex($fileId);
+        
+        
+        $docId = 'webpresent_'.$file['id'];
+        $docDate = $file['dateuploaded'];
+        $url = $this->uri(array('action'=>'view', 'id'=>$file['id']));
+        $title = $file['title'];
+        $contents = $file['content'];
+        $teaser = $file['description'];
+        $module = 'webpresent';
+        $userId = $file['creatorid'];
+        $tags  = $file['tags'];
+        $license = $file['cclicense'];
+        $context='nocontext';
+        $workgroup='noworkgroup';
+        $permissions = NULL;
+        $dateAvailable = NULL;
+        $dateUnavailable = NULL;
+        $extra = array('numslides'=>$file['numslides'], 'filename'=>$file['filename'], 'filetype'=>$file['filetype'], 'mimetype'=>$file['mimetype']);
+        
+        $this->objSearch->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, $tags, $license, $context, $workgroup, $permissions, $dateAvailable, $dateUnavailable, $extra);
     }
 
-    /**
-     * Used to remove a file from the search index
-     * @param string $fileId
-     */
-    private function _luceneclearFileIndex($fileId)
-    {
-        //print_r($data); die();
-        $this->objConfig = $this->getObject('altconfig', 'config');
-        $this->objUser = $this->getObject('user', 'security');
-        $indexPath = $this->objConfig->getcontentBasePath();
-        if (file_exists($indexPath . 'webpresentsearch/segments')) {
-            @chmod($indexPath . 'webpresentsearch', 0777);
-            //we build onto the previous index
-            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', false);
-
-
-            //echo 'Add to Index';
-        } else {
-            //instantiate the lucene engine and create a new index
-            @mkdir($indexPath . 'webpresentsearch');
-            @chmod($indexPath . 'webpresentsearch', 0777);
-            $index = new Zend_Search_Lucene($indexPath . 'webpresentsearch', true);
-
-            //echo 'Create New Index';
-        }
-
-        $removePath = 'webpresent_'.$fileId;
-
-        $hits = $index->find('docid:'.$removePath);
-
-        if (count($hits) > 0) {
-            foreach($hits as $hit) {
-                if ($hit->docid == $removePath) {
-                    //echo '<br />'.$hit->docid.' - '.$hit->title.' / '.$hit->id.'<br />';
-                    $index->delete($hit->id);
-                }
-            }
-        }
-
-        //commit the index to disc
-        $index->commit();
-        //optimize the thing
-        //$index->optimize();
-
-    }
+    
 
 
     /**
