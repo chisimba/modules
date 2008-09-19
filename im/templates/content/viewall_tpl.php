@@ -8,7 +8,6 @@ $this->loadClass('htmlheading', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
 $this->objImOps = $this->getObject('imops');
-$objImView = $this->getObject('imviewer', 'im');
 
 $middleColumn = NULL;
 $leftColumn = NULL;
@@ -19,7 +18,13 @@ $header->str = $this->objLanguage->languageText('mod_im_recentmessages', 'im');
 $header->type = 1;
 
 $middleColumn .= $header->show();
-$middleColumn .= $objImView->renderOutputForBrowser($msgs);
+
+$objPagination = $this->newObject('pagination', 'navigation');
+$objPagination->module = 'im';
+$objPagination->action = 'viewallajax';
+$objPagination->id = 'im';
+$objPagination->numPageLinks = $pages;
+$middleColumn .= $objPagination->show();
 
 if (!$this->objUser->isLoggedIn()) {
 	$leftColumn.= $this->objImOps->loginBox(TRUE);

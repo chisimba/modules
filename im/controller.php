@@ -102,16 +102,26 @@ class im extends controller
 		switch ($action) {
 			case 'messageview':
 				// echo "booyakasha!";
-				$msgs = $this->objDbIm->getLast(10);
+				$msgs = $this->objDbIm->getRange(0, 10);
 				$this->setVarByRef('msgs', $msgs);
 				return 'messageview_tpl.php';
 				break;
                 
+           case 'viewallajax':
+                $page = intval($this->getParam('page', 0));
+                if ($page < 0) {
+                        $page = 0;
+                }
+                $start = $page * 10;
+                $msgs = $this->objDbIm->getRange($start, 10);
+                $this->setVarByRef('msgs', $msgs);
+                return 'viewall_ajax_tpl.php';
+                break;
            case 'viewall':
            case NULL:
-                // echo "booyakasha!";
-                $msgs = $this->objDbIm->getLast(10);
-                $this->setVarByRef('msgs', $msgs);
+                $count = $this->objDbIm->getRecordCount();
+                $pages = ceil($count / 10);
+                $this->setVarByRef('pages', $pages);
                 return 'viewall_tpl.php';
                 break;
 
