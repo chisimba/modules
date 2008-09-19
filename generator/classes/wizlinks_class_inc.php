@@ -89,7 +89,7 @@ class wizlinks extends object
         $i=0;
         //is_dir($directory . $dir) && 
         foreach ($directories as $dir) {
-            if (($dir!=".") && ($dir!="..") && ($dir!="CVS")) {
+            if (($dir!=".") && ($dir!="..") && ($dir!="CVS") && ($dir!=".svn")) {
                 $ret[$i]=$dir;
                 $i++;
             } #if
