@@ -888,14 +888,14 @@ class webpresent extends controller
     {
         $files = $this->objFiles->getAll();
 
-        $objBackground = $this->newObject('background', 'utilities');
+        //$objBackground = $this->newObject('background', 'utilities');
 
         //check the users connection status,
         //only needs to be done once, then it becomes internal
-        $status = $objBackground->isUserConn();
+        //$status = $objBackground->isUserConn();
 
         //keep the user connection alive, even if browser is closed!
-        $callback = $objBackground->keepAlive();
+        //$callback = $objBackground->keepAlive();
 
         if (count($files) > 0)
         {
@@ -912,7 +912,7 @@ class webpresent extends controller
             }
         }
 
-        $call2 = $objBackground->setCallback("tohir@tohir.co.za","Search rebuild", "The really long running process that you requested is complete!");
+        //$call2 = $objBackground->setCallback("tohir@tohir.co.za","Search rebuild", "The really long running process that you requested is complete!");
 
     }
 
