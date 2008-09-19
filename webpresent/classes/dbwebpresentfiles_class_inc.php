@@ -285,6 +285,7 @@ class dbwebpresentfiles extends dbtable
             $step = 'pdfconversion';
             $this->setInProcess($file['id'], $step);
             $result = $this->convertFileFromFormat($file['id'], 'odp', 'pdf');
+            $this->objFiles->checkWebPresentVersion2($file['id']);
             $this->setOutOfProcess($file['id']);
         }
         
@@ -307,8 +308,8 @@ class dbwebpresentfiles extends dbtable
             }
         }
         
-        $this->objFiles->checkWebPresentVersion2($file['id']);
-
+        
+        
         if ($result == TRUE)
         {
             $objSlides = $this->getObject('dbwebpresentslides');

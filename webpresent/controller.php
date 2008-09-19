@@ -357,7 +357,7 @@ class webpresent extends controller
             return $this->nextAction('home', array('error'=>'norecord'));
         }
         
-        //$this->objFiles->checkWebPresentVersion2($id);
+        $this->objFiles->checkWebPresentVersion2($id);
 
         $numSlides = $this->objSlides->getNumSlides($id);
 
