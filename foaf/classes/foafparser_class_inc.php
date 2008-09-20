@@ -7,7 +7,6 @@ define('FOAF_PERSON', 1);
 define('FOAF_GROUP', 2);
 define('FOAF_ORGANIZATION', 3);
 define('FOAF_AGENT', 4);
-define("RDFAPI_INCLUDE_DIR", "/var/www/chisimba_modules/foaf/lib/rdfapi-php/api/");
 
 /**
  * FOAF Parser
@@ -22,6 +21,13 @@ define("RDFAPI_INCLUDE_DIR", "/var/www/chisimba_modules/foaf/lib/rdfapi-php/api/
  */
 class foafparser extends object
 {
+    /**
+     * The DB config object
+     *
+     * @access private
+     * @var    object
+     */
+    private $_objDbConfig;
     /**
      * @var string Original FOAF file
      */
@@ -51,6 +57,14 @@ class foafparser extends object
      */
     public function init()
     {
+        // Create the database configuration object
+        $this->_objDbConfig = $this->getObject('altconfig', 'config');
+
+        // Determine the location of the RDF API library
+        $rdfapi_include_dir = $this->_objDbConfig->getModulePath() . "foaf/lib/rdfapi-php/api/";
+
+        // Define the constant as this is used throughout the library
+        define("RDFAPI_INCLUDE_DIR", $rdfapi_include_dir);
     }
     public function setup()
     {
