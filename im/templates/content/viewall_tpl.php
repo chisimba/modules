@@ -24,6 +24,7 @@ $objPagination->module = 'im';
 $objPagination->action = 'viewallajax';
 $objPagination->id = 'im';
 $objPagination->numPageLinks = $pages;
+$objPagination->currentPage = $pages - 1;
 $middleColumn .= $objPagination->show();
 
 if (!$this->objUser->isLoggedIn()) {
