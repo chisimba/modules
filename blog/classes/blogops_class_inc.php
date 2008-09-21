@@ -106,13 +106,13 @@ class blogops extends object
      */
     public function loginBox($featurebox = FALSE) 
     {
-        $objLogin = &$this->getObject('logininterface', 'security');
-        $objRegister = $this->getObject('block_register', 'security');
+        $objBlocks = $this->getObject('blocks', 'blocks');
         if ($featurebox == FALSE) {
-            return $objLogin->renderLoginBox('blog') . "<br />" . $objRegister->show();
+            return $objBlocks->showBlock('login', 'security') . "<br />" . $objBlocks->showBlock('register', 'security');
         } else {
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('blog') . "<br />" . $objRegister->show());
+            return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objBlocks->showBlock('login', 'security', 'none')  
+              . "<br />" . $objBlocks->showBlock('register', 'security', 'none') );
         }
     }
     /**
