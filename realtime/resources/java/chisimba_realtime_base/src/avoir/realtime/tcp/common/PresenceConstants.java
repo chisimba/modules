@@ -21,8 +21,8 @@ public class PresenceConstants {
     public static final int LAUGHTER_ICON = 8;
     public static final int APPLAUD_ICON = 9;
     public static final int ONLINE_STATUS_ICON = 10;
-    
-    
+    public static final int EDIT_WB_ICON = 11;
+
     public static final boolean TEXT_AVAILABLE = true;
     public static final boolean NO_TEXT = false;
     public static final boolean HAND_RAISED = true;
@@ -43,4 +43,6 @@ public class PresenceConstants {
     public static final boolean MIC_DISABLED = false;
     public static final boolean ONLINE = true;
     public static final boolean OFFLINE = false;
+    public static final boolean EDITING_WB = true;
+    public static final boolean NOT_EDIING_WB = false;
 }
