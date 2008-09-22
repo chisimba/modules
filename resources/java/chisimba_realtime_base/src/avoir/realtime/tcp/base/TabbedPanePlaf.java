@@ -74,9 +74,9 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
 
                 //shift the close button 3 down from the top of the pane and 20 to the left
 
-                closeButton.setLocation(rect.x + rect.width - 20, rect.y + 5);
+                closeButton.setLocation(rect.x + rect.width - 25, rect.y + 5);
 
-                closeButton.setSize(15, 15);
+                closeButton.setSize(20, 15);
 
                 tabPane.add(closeButton);
 
@@ -101,7 +101,7 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
 
                 super(new CloseButtonAction(index));
                 setToolTipText("Popout");
-                this.setIcon(ImageUtil.createImageIcon(this, "/icons/popout.jpg"));
+                this.setIcon(ImageUtil.createImageIcon(this, "/icons/popout.png"));
 
 
                 //remove the typical padding for the button
@@ -132,7 +132,7 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
 
             public CloseButtonAction(int index) {
 
-                super("Y");
+                super("");
 
 
                 this.index = index;
@@ -143,7 +143,7 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
                 if (index == 0) {
                     final JPanel panel = (JPanel) tabPane.getComponentAt(index);
                     final JPanel agendaPanel = (JPanel) tabPane.getComponentAt(1);
-                    JFrame fr = new JFrame(tabPane.getTitleAt(index));
+                    JFrame fr = new JFrame("Chat - Close to dock");
                     fr.addWindowListener(new WindowAdapter() {
 
                         public void windowClosing(WindowEvent e) {
