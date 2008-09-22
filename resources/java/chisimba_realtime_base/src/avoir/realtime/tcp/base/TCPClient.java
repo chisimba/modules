@@ -22,6 +22,7 @@ import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
 import avoir.realtime.tcp.base.filetransfer.FileUploader;
+import avoir.realtime.tcp.base.protocol.NetworkMonitor;
 import avoir.realtime.tcp.common.packet.AckPacket;
 import avoir.realtime.tcp.common.packet.RealtimePacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
@@ -127,6 +128,7 @@ public class TCPClient {
     private FileUploader fileUploader;
     private FileReceiverManager fileReceiverManager;
     private TCPConsumer consumer;
+    private NetworkMonitor networkMonitor;
 
     public TCPClient(SlidesServer slidesServer) {
         this.slidesServer = slidesServer;
@@ -145,6 +147,7 @@ public class TCPClient {
         this.base = base;
         fileReceiverManager = new FileReceiverManager(base);
         consumer = new TCPConsumer(this, base);
+        networkMonitor = new NetworkMonitor(base);
     }
 
     public void setWhiteboardSurfaceHandler(WhiteboardSurface whiteboardSurface) {
@@ -373,6 +376,10 @@ public class TCPClient {
         return null;
     }
 
+    public NetworkMonitor getNetworkMonitor() {
+        return networkMonitor;
+    }
+
     /**
      * Returns the status of replies from slides server
      * @return
@@ -442,7 +449,7 @@ public class TCPClient {
                 @Override
                 public void run() {
                     if (base != null) {
-                        startHearBeat();
+                        sendPulse();
                     }
                     listen();
                 }
@@ -460,16 +467,11 @@ public class TCPClient {
     /**
      * Start the pulses ..for monitoring n/w status
      */
-    private void startHearBeat() {
+    private void sendPulse() {
         Thread t = new Thread() {
 
             public void run() {
-                Timer timer = new Timer();
-
-                timer.scheduleAtFixedRate(new HeartBeatGenerator(), 0, HEARTBEAT_DELAY * 1000);
-
-                logger.info("Started hearbeat ..");
-
+                networkMonitor.sendPulse();
             }
         };
         t.start();
@@ -493,7 +495,7 @@ public class TCPClient {
                     packet = reader.readObject();
                     connected = true;
 
-                   // logger.info(packet.getClass() + "");
+                // logger.info(packet.getClass() + "");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     connected = false;
@@ -592,8 +594,8 @@ public class TCPClient {
 
                 } else if (packet instanceof ImagePacket) {
                     consumer.processImagePacket((ImagePacket) packet);
-                }else if(packet instanceof DesktopPacket){
-                    consumer.processDesktopPacket((DesktopPacket)packet);
+                } else if (packet instanceof DesktopPacket) {
+                    consumer.processDesktopPacket((DesktopPacket) packet);
                 }
             } catch (Exception ex) {
                 //for now, just cut off the listening
@@ -618,7 +620,7 @@ public class TCPClient {
     }
 
     public void sendAudioPacket(byte[] buff) {
-       // System.out.println("s: " + buff.length);
+        // System.out.println("s: " + buff.length);
         sendPacket(new AudioPacket(base.getSessionId(), base.getUser().getUserName(), buff));
 
     }
@@ -686,9 +688,11 @@ public class TCPClient {
      * @param packet
      */
     private void updateUserList(ClientPacket packet) {
+        
         //update user list..but only if this user is the applet
         if (base != null) {
             Vector<User> users = packet.getUsers();
+
             base.getUserManager().updateUserList(users);
         }
     }
@@ -817,12 +821,12 @@ public class TCPClient {
      */
     public void requestNewSlide(String siteRoot, int slideIndex,
             boolean isPresenter, String sessionId, String userId,
-            boolean hasControl, String presentationName,boolean isWebPresent) {
+            boolean hasControl, String presentationName, boolean isWebPresent) {
         NewSlideRequestPacket p = new NewSlideRequestPacket(siteRoot,
                 slideIndex,
                 isPresenter,
                 sessionId,
-                userId, presentationName,isWebPresent);
+                userId, presentationName, isWebPresent);
         p.setControl(hasControl);
         p.setSlideServerId(base.getSlideServerId());
         sendPacket(p);
@@ -871,76 +875,5 @@ public class TCPClient {
         byte[] byteArray = readFile(filePath);
         SystemFilePacket p = new SystemFilePacket("", "", byteArray, "/usr/lib/chisimba-realtime-server/1.0.1/lib/" + filename, false);
         sendPacket(p);
-    }
-
-    /**
-     * Send a heart beat pulse
-     */
-    private void sendPulse() {
-        /* try {
-        if (writer != null) {
-        writer.writeObject(new HeartBeat(base.getSessionId()));
-        writer.flush();
-        NETWORK_ALIVE = false;
-        monitorPulse();
-        } else {
-        logger.info("Error: writer is null!!!");
-        //JOptionPane.showMessageDialog(null, "Disconnected from server! Refresh browser to reconnect.");
-        }
-        } catch (IOException ex) {
-        base.showMessage("Disconnected from Server", false, true);
-        ALIVE = false;
-        ex.printStackTrace();
-        }*/
-    }
-
-    private void monitorPulse() {
-        //delay for 3 secs , then monitor it after every 1 secs
-
-        monitorTimer = new Timer();
-        monitorTimer.scheduleAtFixedRate(new HeartBeatMonitor(), 3000, 1000);
-
-    }
-
-    private void cancelMonitor() {
-        monitorTimer.cancel();
-    }
-
-    public boolean isNetworkAlive() {
-        return NETWORK_ALIVE;
-    }
-
-    public void setUserOffline() {
-        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-    /* base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-    PresenceConstants.OFFLINE, PresenceConstants.OFFLINE);
-    base.showMessage("Network Error!!! ", false, true);
-     */
-    }
-
-    class HeartBeatMonitor extends TimerTask {
-
-        int monitorCount = 0;
-
-        public void run() {
-            monitorCount++;
-            //System.out.println("count: " + monitorCount);
-            if (monitorCount > 30) {
-                setUserOffline();
-                cancelMonitor();
-
-            }
-        }
-    }
-
-    class HeartBeatGenerator extends TimerTask {
-
-        public void run() {
-            if (ALIVE) {
-                if (NETWORK_ALIVE) {
-                    sendPulse();
-                }
-            }
-        }
     }
 }
