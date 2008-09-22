@@ -1,7 +1,5 @@
 package avoir.realtime.tcp.common.packet;
 
-import avoir.realtime.tcp.common.packet.RealtimePacket;
-
 public class NewSlideRequestPacket implements RealtimePacket {
 
     private String slideDirHost;
@@ -13,6 +11,7 @@ public class NewSlideRequestPacket implements RealtimePacket {
     private String userId;
     private String slideServerId;
     private String presentationName;
+    private boolean webPresent;
 
     public boolean isIsPresenter() {
         return isPresenter;
@@ -62,14 +61,24 @@ public class NewSlideRequestPacket implements RealtimePacket {
         return sessionId;
     }
 
-    public NewSlideRequestPacket(String slideDirHost, int slideIndex, boolean isPresenter, String sessionId, String userId,
-            String presentationName) {
+    public boolean isWebPresent() {
+        return webPresent;
+    }
+
+    public void setWebPresent(boolean webPresent) {
+        this.webPresent = webPresent;
+    }
+
+    public NewSlideRequestPacket(String slideDirHost, int slideIndex,
+            boolean isPresenter, String sessionId, String userId,
+            String presentationName, boolean webPresent) {
         this.slideIndex = slideIndex;
         this.slideDirHost = slideDirHost;
         this.isPresenter = isPresenter;
         this.sessionId = sessionId;
         this.userId = userId;
         this.presentationName = presentationName;
+        this.webPresent = webPresent;
     }
 
     public String getUserId() {
