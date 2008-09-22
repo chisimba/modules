@@ -4,7 +4,6 @@
  */
 package avoir.realtime.tcp.common.packet;
 
-import avoir.realtime.tcp.common.packet.RealtimePacket;
 
 /**
  *
@@ -16,6 +15,7 @@ public class MsgPacket implements RealtimePacket {
     private boolean temp;
     private boolean isErrorMsg = false;
     private String id;
+    private int messageType;
 
     public void setId(String id) {
         this.id = id;
@@ -29,10 +29,19 @@ public class MsgPacket implements RealtimePacket {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public MsgPacket(String msg, boolean temp, boolean isErrorMsg) {
+    public MsgPacket(String msg, boolean temp, boolean isErrorMsg, int messageType) {
         this.msg = msg;
         this.temp = temp;
         this.isErrorMsg = isErrorMsg;
+        this.messageType = messageType;
+    }
+
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
     }
 
     public boolean isErrorMsg() {

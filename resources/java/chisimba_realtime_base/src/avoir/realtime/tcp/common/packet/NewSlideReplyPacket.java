@@ -17,6 +17,8 @@ public class NewSlideReplyPacket implements RealtimePacket {
     private String sessionId;
     private boolean isPresenter;
     private boolean control;
+    private String presentationName;
+    private boolean webPresent;
 
     public boolean isControl() {
         return control;
@@ -36,12 +38,30 @@ public class NewSlideReplyPacket implements RealtimePacket {
     private String userId;
     private String message;
 
-    public NewSlideReplyPacket(int slideIndex, String sessionId, boolean isPresenter, String userId) {
+    public String getPresentationName() {
+        return presentationName;
+    }
 
+    public void setPresentationName(String presentationName) {
+        this.presentationName = presentationName;
+    }
+
+    public NewSlideReplyPacket(int slideIndex, String sessionId,
+            boolean isPresenter, String userId, String presentationName, boolean webPresent) {
+        this.presentationName = presentationName;
         this.slideIndex = slideIndex;
         this.sessionId = sessionId;
         this.isPresenter = isPresenter;
         this.userId = userId;
+        this.webPresent = webPresent;
+    }
+
+    public boolean isWebPresent() {
+        return webPresent;
+    }
+
+    public void setWebPresent(boolean webPresent) {
+        this.webPresent = webPresent;
     }
 
     public String getUserId() {
