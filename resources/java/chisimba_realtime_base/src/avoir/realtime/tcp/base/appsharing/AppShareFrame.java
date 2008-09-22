@@ -56,6 +56,8 @@ public class AppShareFrame extends javax.swing.JFrame {
         stopButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
+        setTitle("Remote Desktop Sharing");
+
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Application Sharing");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
