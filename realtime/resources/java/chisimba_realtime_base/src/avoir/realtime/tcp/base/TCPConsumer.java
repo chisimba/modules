@@ -13,7 +13,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
+ *  along with this program; if notfchat, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base;
@@ -22,6 +22,7 @@ import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.appsharing.DesktopUtil;
 import avoir.realtime.tcp.base.appsharing.RemoteDesktopViewerFrame;
+import avoir.realtime.tcp.base.chat.ChatPopup;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
@@ -53,12 +54,15 @@ import avoir.realtime.tcp.common.packet.WhiteboardItems;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -74,6 +78,8 @@ public class TCPConsumer {
     private boolean showChatFrame = true;
     private boolean showAppSharingFrame = true;
     private RemoteDesktopViewerFrame viewer;
+    private ChatPopup chatPopup = new ChatPopup();
+    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
 
     public TCPConsumer(TCPClient tcpClient, RealtimeBase base) {
         this.tcpClient = tcpClient;
@@ -272,6 +278,7 @@ public class TCPConsumer {
             int userIndex = base.getUserManager().getUserIndex(p.getUserName());
             if (userIndex > -1) {
                 base.getUserManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon(), true);
+
             }
         }
     }
@@ -321,6 +328,12 @@ public class TCPConsumer {
      */
     public void processChatPacket(ChatPacket p) {
         if (base != null) {
+            if (!base.getParentFrame().isActive()) {
+                if (!base.getUserName().equals(p.getUsr())) {
+                    showChatPopup(p.getUsr(), p.getContent());
+                }
+
+            }
             base.updateChat(p);
             if (showChatFrame) {
                 base.showChatRoom();
@@ -334,6 +347,12 @@ public class TCPConsumer {
                 }
             }
         }
+    }
+
+    private void showChatPopup(String user, String message) {
+        chatPopup.setMessage(user, message);
+        chatPopup.setLocation(ss.width - 200, ss.height - chatPopup.getHeight() - 100);
+        chatPopup.setVisible(true);
     }
 
     public void processOutlinePacket(OutlinePacket p) {
@@ -389,10 +408,7 @@ public class TCPConsumer {
                 if (msg.length() > 0) {
                     base.setStatusMessage(msg);
                     return;
-
                 }
-
-
             }
             base.setStatusMessage("");
         }
@@ -460,16 +476,7 @@ public class TCPConsumer {
                 tcpClient.replySlide(filePath, packet.getSessionId(), packet.getUsername(), filename, lastFile, i, slides.length, new File(slidesPath).getName());
             }
         }
-    //then close this socket
 
-    /*      try {
-    //close the client..then close the app, whicever closes first
-    sendPacket(new QuitPacket((packet.getSessionId())));
-    socket.close();
-    } catch (Exception ex) {MessageCode.ALL
-    ex.printStackTrace();
-    }
-     */
     }
 
     /**
@@ -515,13 +522,8 @@ public class TCPConsumer {
     }
 
     public void processHeartBeat(HeartBeat p) {
-        /*
-        cancelMonitor();
-        NETWORK_ALIVE = true;
-        base.showMessage("", false, false, MessageCode.ALL);
-        int userIndex = base.getUserManager().getUserIndex(base.getUser().getUserName());
-        base.getUserManager().setUser(userIndex, PresenceConstants.ONLINE_STATUS_ICON,
-        PresenceConstants.ONLINE, true);
-         */
+        tcpClient.getNetworkMonitor().setServerContacted(true);
+        tcpClient.getNetworkMonitor().sendPulse();
+
     }
 }
