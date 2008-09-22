@@ -1,6 +1,7 @@
 /*
  * WhiteboardSurface.java
  *
+ * 
  * Created on 17 June 2008, 02:56
  */
 package avoir.realtime.tcp.whiteboard;
@@ -11,23 +12,20 @@ import avoir.realtime.tcp.base.TCPClient;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.GenerateUUID;
 
+import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.PointerPacket;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.whiteboard.item.FreeHand;
-import avoir.realtime.tcp.whiteboard.item.Img;
 import avoir.realtime.tcp.whiteboard.item.Item;
 import avoir.realtime.tcp.whiteboard.item.Oval;
 import avoir.realtime.tcp.whiteboard.item.Pen;
 import avoir.realtime.tcp.whiteboard.item.Rect;
 import avoir.realtime.tcp.whiteboard.item.Txt;
 import avoir.realtime.tcp.whiteboard.item.WBLine;
-import java.awt.AWTEvent;
-import java.awt.AWTEventMulticaster;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -36,8 +34,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -48,10 +46,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.font.TextAttribute;
-import java.awt.font.TextLayout;
-import java.awt.geom.Line2D;
-import java.text.AttributedString;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -62,9 +56,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
@@ -89,8 +85,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public static final int BRUSH_TEXT = 6;
     public static final int BRUSH_MOVE = 7;
     public static final int BRUSH_IMAGE = 8;
+    public static final int BRUSH_SELECT = 9;
     private static final String[] brushName = new String[9];
-    private static int brush = BRUSH_PEN;
+    private static int brush = BRUSH_MOVE;
     private static final String COMMAND_PIXEL = "pixel";
     private static final String COMMAND_XOR = "xor";
     private static final String COMMAND_LIVE = "live";
@@ -112,26 +109,23 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private float strokeWidth = 5;
     private RealtimeBase base;
     private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
-    private Color solidBlack = Color.BLACK;
-    private Color alpaBlack = new Color(0, 0, 0, 100);
-    private Color solidGray = Color.GRAY;
-    private Color alphaGray = new Color(255, 255, 255, alpha);
-    private Color solidBlue = Color.BLUE;
     private Rectangle pointerSurface = new Rectangle();
     /*Color.gray, Color.lightGray, Color.white, Color.red, Color.orange, Color.yellow,
     Color.green, Color.cyan, Color.blue, Color.magenta,
-    };*/
-    private ImageIcon penIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/pentool.gif");
-    private ImageIcon moveIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/movearrow.gif");
-    private ImageIcon rectNoFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/rectangle_nofill.gif");
-    private ImageIcon rectFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/rectangle_fill.gif");
+    };*/ private ImageIcon penIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/paintbrush.png");
+    private ImageIcon moveIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/move.png");
+    private ImageIcon rectNoFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/rectangle_nofill.png");
+    private ImageIcon rectFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/roundrect.png");
     private ImageIcon ovalNoFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/oval_nofill.gif");
-    private ImageIcon ovalFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/oval_fill.gif");
-    private ImageIcon textIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/text.gif");
-    private ImageIcon lineIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/line.gif");
+    private ImageIcon ovalFillIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/mini_circle.png");
+    private ImageIcon textIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/text.png");
+    private ImageIcon lineIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/color_line.png");
     private ImageIcon deleteIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/delete.gif");
     private ImageIcon clearIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/clear.gif");
     private ImageIcon undoIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/undo.png");
+    private ImageIcon selectIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/frame_edit.png");
+    private ImageIcon paintBrush = ImageUtil.createImageIcon(this, "/icons/paintbrush.png");
+    private TButton selectButton = new TButton(selectIcon);
     private TButton moveButton = new TButton(moveIcon);
     private TButton penButton = new TButton(penIcon);
     private TButton rectNoFillButton = new TButton(rectNoFillIcon);
@@ -140,14 +134,14 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private TButton ovalFillButton = new TButton(ovalFillIcon);
     private TButton lineButton = new TButton(lineIcon);
     private TButton textButton = new TButton(textIcon);
+    private MButton deleteButton = new MButton(deleteIcon);
+    private MButton clearButton = new MButton(clearIcon);
+    private MButton undoButton = new MButton(undoIcon);
     private TButton handLeftButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand_left.png"));
     private TButton handRightButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand_right.png"));
     private TButton arrowUpButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_up.png"));
     private TButton arrowSideButton = new TButton(ImageUtil.createImageIcon(this, "/icons/arrow_side.png"));
     private JToolBar pointerToolbar = new JToolBar(JToolBar.VERTICAL);
-    private MButton deleteButton = new MButton(deleteIcon);
-    private MButton clearButton = new MButton(clearIcon);
-    private MButton undoButton = new MButton(undoIcon);
     private boolean drawingEnabled = true;
     private Vector<Item> items = new Vector<Item>();
     private JTextField textField = new JTextField();
@@ -155,7 +149,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private JPopupMenu editPopup = new JPopupMenu();
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu deletePopup = new JPopupMenu();
-    private int rect_size = 8;
     private int initH;
     private int initW;
     private int last_w;
@@ -164,18 +157,18 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private int init_y2;
     private int init_x1;
     private int init_y1;
+    private Rectangle ovalRect1;
+    private Rectangle ovalRect2;
+    private Rectangle ovalRect3;
+    private Rectangle ovalRect4;
     private Graphics2D graphics;
     private Vector<WBLine> tempPenVector = new Vector<WBLine>();
     public JComboBox fontSizeField = new JComboBox();
     public JComboBox fontNamesField = new JComboBox();
     public JToggleButton boldButton,  italicButton,  underButton;
-    private PixelButton pixelButton = new PixelButton();
+    private PixelButton pixelButton = new PixelButton(strokeWidth);
     private FontMetrics metrics;
     private Item lastItem = null;
-    private Rectangle ovalRect1;
-    private Rectangle ovalRect2;
-    private Rectangle ovalRect3;
-    private Rectangle ovalRect4;
     private boolean drawStroke = false;
     private JMenuItem deleteMenuItem = new JMenuItem("Delete");
     private AlphaComposite ac =
@@ -188,8 +181,28 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private ImageIcon arrowUp = ImageUtil.createImageIcon(this, "/icons/arrow_up.png");
     private ImageIcon arrowSide = ImageUtil.createImageIcon(this, "/icons/arrow_side.png");
     private ImageIcon blankIcon = ImageUtil.createImageIcon(this, "/icons/transparent.png");
-    private ImageIcon paintBrush = ImageUtil.createImageIcon(this, "/icons/paintbrush.png");
     private Pointer currentPointer = new Pointer(new Point(0, 0), blankIcon);
+    private boolean showStatusMessage = false;
+    private boolean showInfoMessage = false;
+    private String infoMessage = "";
+    private boolean isErrorMsg = false;
+    private Font msgFont = new Font("Dialog", 1, 10);
+    private ImageIcon slide;
+    private int slideIndex = 0;
+    private boolean fromPresenter = false;
+    boolean firstSlide = false;
+    private int totalSlideCount;
+    private int presenterSlideIndex;
+    private JToolBar toolsToolbar = new JToolBar(JToolBar.VERTICAL);
+    private Vector<Item> selectedItems = new Vector<Item>();
+    private Rectangle currentSelectionArea = new Rectangle();
+    int currentX, currentY;
+    private boolean drawSelection = false;
+    private ImageIcon image;
+    private Vector<ImageIcon> imgs = new Vector<ImageIcon>();
+    private WhiteboardManager whiteboardManager;
+    private double magX = 1;
+    private double magY = 1;
 
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(RealtimeBase base) {
@@ -198,12 +211,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         //this.setFocusable(true);
+        whiteboardManager = new WhiteboardManager(base, this);
         addMouseListener(this);
         addKeyListener(this);
         addMouseMotionListener(this);
         setDrawingEnabled(base.getControl() || base.isPresenter());
         ButtonGroup bg = new ButtonGroup();
+
         bg.add(penButton);
+        bg.add(selectButton);
         bg.add(moveButton);
         bg.add(rectFillButton);
         bg.add(rectNoFillButton);
@@ -211,13 +227,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         bg.add(textButton);
         bg.add(lineButton);
         bg.add(ovalNoFillButton);
-
         bg.add(handRightButton);
         bg.add(handLeftButton);
         bg.add(arrowUpButton);
         bg.add(arrowSideButton);
 
-        handRightButton.setSelected(true);
+        pointerToolbar.setPreferredSize(new Dimension(25, 25));
         pointerToolbar.add(handRightButton);
         handRightButton.addActionListener(this);
         handRightButton.setActionCommand("handRight");
@@ -237,64 +252,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         arrowSideButton.addActionListener(this);
         arrowSideButton.setActionCommand("arrowSide");
         arrowSideButton.setToolTipText("Arrow Side");
-        buttonsToolbar.add(moveButton);
-        moveButton.setToolTipText("Used for selecting an item");
-        buttonsToolbar.add(penButton);
-        penButton.setToolTipText("Freehand");
-        buttonsToolbar.add(lineButton);
-        lineButton.setToolTipText("Draw straight lines");
-        buttonsToolbar.add(rectNoFillButton);
-        rectNoFillButton.setToolTipText("Draw a rectangle: Not filled");
-        buttonsToolbar.add(rectFillButton);
-        rectFillButton.setToolTipText("Draw a rectangel: Filled");
-        buttonsToolbar.add(ovalNoFillButton);
-        ovalNoFillButton.setToolTipText("Draw an oval: Not filled");
-        buttonsToolbar.add(ovalFillButton);
-        ovalFillButton.setToolTipText("Draw an oval: Filled");
-        buttonsToolbar.add(textButton);
-        textButton.setToolTipText("Add Text");
-        //buttonsToolbar.add(deleteButton);
-        deleteButton.setToolTipText("Delete selected item");
-        buttonsToolbar.add(clearButton);
-        clearButton.setToolTipText("Clear whiteboard");
-        buttonsToolbar.add(undoButton);
-        undoButton.setToolTipText("Undo last action");
-        penButton.addActionListener(this);
-        penButton.setActionCommand("pen");
-
-        moveButton.addActionListener(this);
-        moveButton.setActionCommand("move");
-
-        rectNoFillButton.addActionListener(this);
-        rectNoFillButton.setActionCommand("rect_nofill");
-
-        rectFillButton.addActionListener(this);
-        rectFillButton.setActionCommand("rect_fill");
-
-        ovalNoFillButton.addActionListener(this);
-        ovalNoFillButton.setActionCommand("oval_nofill");
-
-        ovalFillButton.addActionListener(this);
-        ovalFillButton.setActionCommand("oval_fill");
-
-        textButton.addActionListener(this);
-        textButton.setActionCommand("texttool");
-
-        lineButton.addActionListener(this);
-        lineButton.setActionCommand("line");
-
-        deleteButton.addActionListener(this);
-        deleteButton.setActionCommand("delete");
-
-        clearButton.addActionListener(this);
-        clearButton.setActionCommand("clear");
-
-        undoButton.addActionListener(this);
-        undoButton.setActionCommand("undo");
-
-        penButton.setSelected(true);
         currentColorField.setBackground(colour);
-        createToolBar();
+        //createToolBar();
         popup.setOpaque(false);
         popup.setPopupSize(new Dimension(200, 21));
         popup.add(textField);
@@ -338,7 +297,22 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         deleteMenuItem.setActionCommand("delete");
         deleteMenuItem.addActionListener(this);
         deletePopup.add(deleteMenuItem);
-        pointerSurface = new Rectangle(0, 0, 800, 600);
+        int slideWidth = 530;
+        int slideHeight = 410;
+
+        pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+
+
+    }
+
+    public ImageIcon getImage() {
+        return image;
+    }
+
+    public void setImage(ImageIcon image) {
+        currentSelectionArea = new Rectangle();
+        imgs.add(image);
+        repaint();
     }
 
     public JToolBar getPointerToolbar() {
@@ -350,8 +324,79 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         repaint();
     }
 
-    public JToolBar getButtonsToolbar() {
-        return buttonsToolbar;
+    public Rectangle getCurrentSelectionArea() {
+        return currentSelectionArea;
+    }
+
+    public void setCurrentSelectionArea(Rectangle currentSelectionArea) {
+        this.currentSelectionArea = currentSelectionArea;
+    }
+
+    public JToolBar getToolsToolbar() {
+
+        toolsToolbar.add(moveButton);
+        moveButton.setToolTipText("Used for selecting an item");
+        toolsToolbar.add(selectButton);
+        selectButton.setToolTipText("Draw selection");
+        selectButton.setIcon(selectIcon);
+        toolsToolbar.add(penButton);
+        penButton.setToolTipText("Freehand");
+        toolsToolbar.add(lineButton);
+        lineButton.setToolTipText("Draw straight lines");
+        toolsToolbar.add(rectNoFillButton);
+        rectNoFillButton.setToolTipText("Draw a rectangle: Not filled");
+        toolsToolbar.add(rectFillButton);
+        rectFillButton.setToolTipText("Draw a rectangel: Filled");
+        toolsToolbar.add(ovalNoFillButton);
+        ovalNoFillButton.setToolTipText("Draw an oval: Not filled");
+        toolsToolbar.add(ovalFillButton);
+        ovalFillButton.setToolTipText("Draw an oval: Filled");
+        toolsToolbar.add(textButton);
+        textButton.setToolTipText("Add Text");
+        //toolsToolbar.add(deleteButton);
+        deleteButton.setToolTipText("Delete selected item");
+        toolsToolbar.add(clearButton);
+        clearButton.setToolTipText("Clear whiteboard");
+        toolsToolbar.add(undoButton);
+        undoButton.setToolTipText("Undo last action");
+        penButton.addActionListener(this);
+        penButton.setActionCommand("pen");
+
+        selectButton.addActionListener(this);
+        selectButton.setActionCommand("select");
+
+        moveButton.addActionListener(this);
+        moveButton.setActionCommand("move");
+
+        rectNoFillButton.addActionListener(this);
+        rectNoFillButton.setActionCommand("rect_nofill");
+
+        rectFillButton.addActionListener(this);
+        rectFillButton.setActionCommand("rect_fill");
+
+        ovalNoFillButton.addActionListener(this);
+        ovalNoFillButton.setActionCommand("oval_nofill");
+
+        ovalFillButton.addActionListener(this);
+        ovalFillButton.setActionCommand("oval_fill");
+
+        textButton.addActionListener(base.getWhiteboardSurface());
+        textButton.setActionCommand("texttool");
+
+        lineButton.addActionListener(base.getWhiteboardSurface());
+        lineButton.setActionCommand("line");
+
+        deleteButton.addActionListener(this);
+        deleteButton.setActionCommand("delete");
+
+        clearButton.addActionListener(this);
+        clearButton.setActionCommand("clear");
+
+        undoButton.addActionListener(this);
+        undoButton.setActionCommand("undo");
+
+        //moveButton.setSelected(true);
+        return toolsToolbar;
     }
 
     public TButton getArrowSideButton() {
@@ -375,6 +420,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public JToolBar getMainToolbar() {
+        createToolBar();
         return mainToolbar;
     }
 
@@ -399,16 +445,26 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
      * @param item
      */
     public void addItem(Item item) {
+
         items.addElement(item);
         repaint();
+    }
+
+    public Item getSelectedItem() {
+        return selectedItem;
+    }
+
+    public Vector<Item> getItems() {
+        return items;
     }
 
     public void replaceItem(Item item) {
         for (int i = 0; i < items.size(); i++) {
             Item xt = items.elementAt(i);
-            if (xt.getId().equals(item.getId())) {
-                //    System.out.println("Replace " + xt + " with " + item);
-                items.set(i, item);
+            if (xt != null) {
+                if (xt.getId().equals(item.getId())) {
+                    items.set(i, item);
+                }
             }
         }
         repaint();
@@ -428,6 +484,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     public void clearItems() {
         items.clear();
+        base.getSurface().repaint();
         repaint();
 
     }
@@ -471,6 +528,205 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public void mouseExited(MouseEvent evt) {
     }
 
+    private boolean setSelectedItem(MouseEvent evt, Item tmp, int i) {
+        if (tmp instanceof Txt) {
+            Txt txt = (Txt) tmp;
+
+            if (txt.contains(startX, startY, graphics)) {
+                selected = tmp;
+                selectedItem =
+                        selected;
+                selectedIndex =
+                        i;
+                if (currentSelectionArea.isEmpty()) {
+                    selectedItems.clear();
+                    whiteboardManager.selectItem(tmp, selectedItems);
+                }
+                boldButton.setSelected(false);
+                italicButton.setSelected(false);
+                underButton.setSelected(false);
+
+                underButton.setSelected(txt.isUnderlined());
+
+                Font f = txt.getFont();
+                fontNamesField.setSelectedItem(f.getFamily());
+                fontSizeField.setSelectedItem(f.getSize() + "");
+
+                int style = f.getStyle();
+                if (style == Font.BOLD) {
+                    boldButton.setSelected(true);
+                }
+
+                if (style == Font.ITALIC) {
+                    italicButton.setSelected(true);
+                }
+
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
+
+
+
+                if (evt.getClickCount() == 2) {
+
+
+                    FontMetrics metrics = graphics.getFontMetrics(f);
+
+                    int hgt = metrics.getHeight();
+                    int adv = metrics.stringWidth(txt.getContent());
+                    //popup.setPopupSize(100, hgt);
+
+                    Dimension size = new Dimension(adv + 2, hgt + 2);
+                    editTextField.setText(txt.getContent());
+                    editPopup.setPopupSize(size);
+
+                    if (txt.contains(evt.getX(), evt.getY(), graphics)) {
+//                        if (base.getMODE() == Constants.APPLET) {
+                        //                          editPopup.show(base.getSurface(), evt.getX(), evt.getY() - editTextField.getHeight());
+                        //                    } else {
+                        editPopup.show(this, evt.getX(), evt.getY() - editTextField.getHeight());
+                    //                  }
+
+                    }
+
+                    editTextField.requestFocus();
+                }
+                repaint();
+                return true;
+            }
+
+        } else if (tmp instanceof WBLine) {
+            // System.out.println("**********************" + tmp);
+            WBLine line = (WBLine) tmp;
+            if (line.contains(startX, startY)) {
+                selected = tmp;
+                selectedItem =
+                        selected;
+                selectedIndex =
+                        i;
+                if (currentSelectionArea.isEmpty()) {
+                    selectedItems.clear();
+                    whiteboardManager.selectItem(tmp, selectedItems);
+                }
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
+                //if (tmp instanceof WBLine) {
+                init_x2 =
+                        line.x2;
+                init_y2 =
+                        line.y2;
+                init_x1 =
+                        line.x1;
+                init_y1 =
+                        line.y1;
+
+                Rectangle r1 = new Rectangle(line.x1 - 5,
+                        line.y1 - 5, 10, 10);
+                Rectangle r2 = new Rectangle(line.x2 - 5,
+                        line.y2 - 5, 10, 10);
+
+                if (r1.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+                }
+
+                if (r2.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                }
+                repaint();
+                return true;
+            }
+
+        } else if (tmp instanceof Oval) {
+            Rectangle bounds = tmp.getBounds();
+            if (bounds.contains(startX, startY)) {
+                selected = tmp;
+                selectedItem =
+                        selected;
+                selectedIndex =
+                        i;
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                if (currentSelectionArea.isEmpty() && !drawSelection) {
+                    selectedItems.clear();
+                    whiteboardManager.selectItem(tmp, selectedItems);
+                }
+                Rectangle obounds = selected.getBounds();
+                int xx = obounds.x;
+                int yy = obounds.y;
+                int ww = obounds.width;
+                int hh = obounds.height;
+                Rectangle r1 = new Rectangle(
+                        (xx + ww) - 20, yy, 20, 20);
+                Rectangle r2 = new Rectangle(
+                        (xx + ww) - 20, (yy + hh) - 20, 20,
+                        20);
+
+                last_w = xx + ww;
+                initW = ww;
+                last_h = yy + hh;
+                initH = hh;
+
+
+                if (r1.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+                    last_w = xx + ww;
+                    initW = ww;
+                }
+
+                if (r2.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                }
+                repaint();
+                return true;
+            }
+
+        } else {
+            if (tmp.contains(startX, startY)) {
+                selected = tmp;
+                selectedItem =
+                        selected;
+                selectedIndex =
+                        i;
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                if (currentSelectionArea.isEmpty() && !drawSelection) {
+                    selectedItems.clear();
+                    whiteboardManager.selectItem(tmp, selectedItems);
+                }
+                Rectangle bounds = selected.getBounds();
+                int xx = bounds.x;
+                int yy = bounds.y;
+                int ww = bounds.width;
+                int hh = bounds.height;
+                Rectangle r1 = new Rectangle(
+                        (xx + ww) - 20, yy, 20, 20);
+                Rectangle r2 = new Rectangle(
+                        (xx + ww) - 20, (yy + hh) - 20, 20,
+                        20);
+
+                last_w = xx + ww;
+                initW = ww;
+                last_h = yy + hh;
+                initH = hh;
+
+                //initialWidth = ww;
+                //initialHeight = hh;
+
+                if (r1.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+                    last_w = xx + ww;
+                    initW = ww;
+                }
+
+                if (r2.contains(evt.getPoint())) {
+                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+                }
+                repaint();
+                return true;
+
+            }
+
+        }
+        return false;
+    }
+
     public void processMousePressed(MouseEvent evt) {
 
         int button = evt.getButton();
@@ -480,6 +736,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         if (button == MouseEvent.BUTTON1) {
             if (drawingEnabled) {
+                whiteboardManager.showUserModifyingWhiteboard();
                 prevX = startX = evt.getX();
                 prevY = startY = evt.getY();
 
@@ -491,179 +748,13 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     for (int i = 0; i <
                             items.size(); i++) {
                         Item tmp = items.elementAt(i);
-                        if (tmp instanceof Txt) {
-                            Txt txt = (Txt) tmp;
+                        if (setSelectedItem(evt, tmp, i)) {
 
-                            if (txt.contains(startX, startY, graphics)) {
-                                selected = tmp;
-                                selectedItem =
-                                        selected;
-                                selectedIndex =
-                                        i;
-
-                                boldButton.setSelected(false);
-                                italicButton.setSelected(false);
-                                underButton.setSelected(false);
-
-                                underButton.setSelected(txt.isUnderlined());
-
-                                Font f = txt.getFont();
-                                fontNamesField.setSelectedItem(f.getFamily());
-                                fontSizeField.setSelectedItem(f.getSize() + "");
-
-                                int style = f.getStyle();
-                                if (style == Font.BOLD) {
-                                    boldButton.setSelected(true);
-                                }
-
-                                if (style == Font.ITALIC) {
-                                    italicButton.setSelected(true);
-                                }
-
-                                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
-
-
-
-                                if (evt.getClickCount() == 2) {
-
-
-                                    FontMetrics metrics = graphics.getFontMetrics(f);
-
-                                    int hgt = metrics.getHeight();
-                                    int adv = metrics.stringWidth(txt.getContent());
-                                    //popup.setPopupSize(100, hgt);
-
-                                    Dimension size = new Dimension(adv + 2, hgt + 2);
-                                    editTextField.setText(txt.getContent());
-                                    editPopup.setPopupSize(size);
-
-                                    if (txt.contains(evt.getX(), evt.getY(), graphics)) {
-                                        if (base.getMODE() == Constants.APPLET) {
-                                            editPopup.show(base.getSurface(), evt.getX(), evt.getY() - editTextField.getHeight());
-                                        } else {
-                                            editPopup.show(this, evt.getX(), evt.getY() - editTextField.getHeight());
-                                        }
-
-                                    }
-
-                                    editTextField.requestFocus();
-                                }
-                                repaint();
-                                break;
-                            }
-                            repaint();
-                        //break;
+                            break;
                         }
 
-                        if (tmp.contains(startX, startY)) {
-
-                            selected = tmp;
-                            selectedItem =
-                                    selected;
-                            selectedIndex =
-                                    i;
-
-                            setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
-                            if (selectedItem instanceof WBLine) {
-                                WBLine line = (WBLine) selectedItem;
-                                init_x2 =
-                                        line.x2;
-                                init_y2 =
-                                        line.y2;
-                                init_x1 =
-                                        line.x1;
-                                init_y1 =
-                                        line.y1;
-
-                                Rectangle r1 = new Rectangle(line.x1 - 5,
-                                        line.y1 - 5, 10, 10);
-                                Rectangle r2 = new Rectangle(line.x2 - 5,
-                                        line.y2 - 5, 10, 10);
-
-                                if (r1.contains(evt.getPoint())) {
-                                    setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-                                }
-
-                                if (r2.contains(evt.getPoint())) {
-                                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-                                }
-
-                            } else if (tmp instanceof Oval) {
-                                Rectangle bounds = tmp.getBounds();
-                                if (bounds.contains(startX, startY)) {
-                                    selected = tmp;
-                                    selectedItem =
-                                            selected;
-                                    selectedIndex =
-                                            i;
-                                    setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
-                                    int xx = bounds.x;
-                                    int yy = bounds.y;
-                                    int ww = bounds.width;
-                                    int hh = bounds.height;
-                                    last_w = xx + ww;
-                                    initW = ww;
-                                    last_h = yy + hh;
-                                    initH = hh;
-                                    if (ovalRect1 != null) {
-                                        Rectangle r1 = ovalRect2;//new Rectangle((xx + ww) - 20,
-                                        //yy, 20, 20);
-                                        Rectangle r2 = ovalRect3;// new Rectangle((xx + ww) - 20,
-
-                                        if (r1.contains(evt.getPoint())) {
-                                            setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-                                            last_w = xx + ww;
-                                            initW = ww;
-                                        }
-
-                                        if (r2.contains(evt.getPoint())) {
-                                            setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-                                        }
-                                    }
-                                    repaint();
-                                    break;
-                                }
-
-                            } else {
-                                Rectangle bounds = selected.getBounds();
-                                int xx = bounds.x;
-                                int yy = bounds.y;
-                                int ww = bounds.width;
-                                int hh = bounds.height;
-                                Rectangle r1 = new Rectangle(
-                                        (xx + ww) - 20, yy, 20, 20);
-                                Rectangle r2 = new Rectangle(
-                                        (xx + ww) - 20, (yy + hh) - 20, 20,
-                                        20);
-
-                                last_w = xx + ww;
-                                initW = ww;
-                                last_h = yy + hh;
-                                initH = hh;
-
-                                //initialWidth = ww;
-                                //initialHeight = hh;
-
-                                if (r1.contains(evt.getPoint())) {
-                                    setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
-                                    last_w =
-                                            xx + ww;
-                                    initW =
-                                            ww;
-                                }
-
-                                if (r2.contains(evt.getPoint())) {
-                                    setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-                                }
-
-                                break;
-                            }
-
-                        }
                     }
+
                 } else if (brush == BRUSH_PEN) {
                     penVector = new Vector<WBLine>();
                     tempPenVector =
@@ -672,6 +763,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             startY, colour, strokeWidth));
                     tempPenVector =
                             penVector;
+                    drawTempPen();
 
                 }
 
@@ -689,15 +781,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     //  textField.setForeground(colour);
                     popup.setPopupSize(100, hgt + (int) (hgt * 0.2));
                     //popup.setPreferredSize(new Dimension(100, 50));
-                    if (base.getMODE() == Constants.APPLET) {
-                        popup.show(base.getSurface(), evt.getX(), evt.getY() - textField.getHeight());
-                    } else {
-                        popup.show(this, evt.getX(), evt.getY() - textField.getHeight());
-                    }
+//                    if (base.getMODE() == Constants.APPLET) {
+                    //   popup.show(base.getSurface(), evt.getX(), evt.getY() - textField.getHeight());
+                    //  } else {
+                    popup.show(this, evt.getX(), evt.getY() - textField.getHeight());
+                    // }
 
                     textField.requestFocus();
                 }
 
+            } else {
+                base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
             }
             dragging = true;
         }
@@ -731,24 +825,54 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
                 if (brush == BRUSH_MOVE) {
                     if (selectedItem != null) {
-                        if (base.getMODE() == Constants.APPLET) {
-                            deletePopup.show(base.getSurface(), evt.getX(), evt.getY());
-                        } else {
-                            deletePopup.show(this, evt.getX(), evt.getY());
-                        }
+                        //if (base.getMODE() == Constants.APPLET) {
+                        //    deletePopup.show(base.getSurface(), evt.getX(), evt.getY());
+                        // } else {
+                        deletePopup.show(this, evt.getX(), evt.getY());
+                    //}
                     }
 
                 }
             }
         }
+        //loop t
+        if (!pressAreaContainsSelectedItems()) {
+
+            currentSelectionArea = new Rectangle();
+            selectedItems.clear();
+            if (selectedItem != null) {
+
+                whiteboardManager.selectItem(selectedItem, selectedItems);
+            }
+        }
+        repaint();
+    }
+
+    private boolean pressAreaContainsSelectedItems() {
+
+        for (int i = 0; i < selectedItems.size(); i++) {
+            Item item = selectedItems.elementAt(i);
+            if (item.getBounds().contains(startX, startY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void showMessage(String msg, boolean isErrorMessage) {
+        this.infoMessage = msg;
+        this.isErrorMsg = isErrorMessage;
+        this.showInfoMessage = msg.trim().length() > 0 ? true : false;
         repaint();
     }
 
     public void mousePressed(MouseEvent evt) {
-        setOwnCursor();
-        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
-
-        if (pointerSurface.contains(xpoint)) {
+        if (isDrawingEnabled()) {
+            drawSelection = false;
+            startX = evt.getX();
+            startY = evt.getY();
+            // if (pointerSurface.contains(xpoint)) {
+            // setOwnCursor();
             int xOffset = evt.getX() - (int) pointerSurface.getX();
             int yOffset = evt.getY() - (int) pointerSurface.getY();
             Point point = new Point(xOffset, yOffset);
@@ -788,6 +912,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
             }
+        } else {
+            base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
+        }
+        if (selectedItem == null) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         repaint();
     }
@@ -800,23 +929,22 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         dragging = false;
         if (drawingEnabled) {
+            whiteboardManager.showUserStoppedModifyingWhiteboard();
             if (brush != BRUSH_PEN) {
                 commitStroke(startX, startY, prevX, prevY, true);
-            }
-
-            if (brush == BRUSH_PEN) {
-
+            } else if (brush == BRUSH_PEN) {
+                Pen pen = new Pen(penVector, colour,
+                        strokeWidth);
                 base.getTcpClient().sendPacket(
-                        new WhiteboardPacket(base.getSessionId(), new Pen(penVector, colour,
-                        strokeWidth), Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
-
-                penVector.removeAllElements();
-                tempPenVector.removeAllElements();
-                penVector =
-                        null;
-            }
-
-            if (brush == BRUSH_MOVE) {
+                        new WhiteboardPacket(base.getSessionId(), pen, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                addItem(pen);
+            //     selectedItem = pen;
+  /*              penVector.removeAllElements();
+            tempPenVector.removeAllElements();
+            penVector =
+            null;
+             */
+            } else if (brush == BRUSH_MOVE) {
                 if (selected != null) {
                     if (this.getCursor() == Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)) {
 
@@ -827,6 +955,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             newItem.setIndex(selectedIndex);
                             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                                     newItem, Constants.REPLACE_ITEM, selected.getId()));
+                            replaceItem(newItem);
 
                         }
 
@@ -846,6 +975,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                                         item, Constants.REPLACE_ITEM, selected.getId()));
 
+                                replaceItem(item);
                             //  base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                             //        item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
 
@@ -857,14 +987,30 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             }
         }
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        repaint();
+    }
+
+    private void paintSelection(Graphics2D g2) {
+        /*  if (drawSelection && selectedItem == null) {
+        Rectangle rect = new Rectangle(startX, startY, currentX - startX, currentY - startY);
+        setCurrentSelectionArea(rect);
+        g2.draw(rect);
+        }
+         */
     }
 
     public void mouseReleased(MouseEvent evt) {
-
+        drawSelection = false;
         if (pointer == Constants.WHITEBOARD) {
             processMouseReleased(evt);
             repaint();
         }
+        /*if (selectedItem == null) {
+        java.awt.Point pt = new java.awt.Point(evt.getX(), evt.getY());
+        base.getSurfaceScrollPane().getViewport().setViewPosition(pt);
+        base.getSurfaceScrollPane().repaint();
+        repaint();
+        }*/
         setCursor(DRAW_CURSOR);
     }
 
@@ -886,6 +1032,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         int y = evt.getY();
         if (drawingEnabled) {
             if (brush == BRUSH_PEN) {
+                drawSelection = false;
                 penVector.addElement(new WBLine(prevX, prevY, x, y, colour,
                         strokeWidth));
                 tempPenVector =
@@ -895,37 +1042,47 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 drawTempPen();
 
             } else if (brush == BRUSH_MOVE) {
+
                 if (selected != null) {
                     if (this.getCursor() == Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)) {
-                        if (selectedItem instanceof WBLine) {
-                            WBLine line = (WBLine) selected;
-                            int w = evt.getX() - startX;
-                            int h = evt.getY() - startY;
-                            line.x1 = (init_x1 + w);
-                            line.y1 = (init_y1 + h);
-                            line.x2 = (init_x2 + w);
-                            line.y2 = (init_y2 + h);
-                            Item newItem = line.getTranslated(x - prevX, y - prevY);
-                            selectedItem = newItem;
-                            selectedItem.setIndex(selectedIndex);
+                        for (int i = 0; i < selectedItems.size(); i++) {
+                            selectedItem = selectedItems.elementAt(i);
+                            selected = selectedItem;
+                            if (selectedItem instanceof WBLine) {
+                                WBLine line = (WBLine) selected;
+                                int w = evt.getX() - startX;
+                                int h = evt.getY() - startY;
+                                /*   line.x1 = (init_x1 + w);
+                                line.y1 = (init_y1 + h);
+                                line.x2 = (init_x2 + w);
+                                line.y2 = (init_y2 + h);
+                                 */
+                                Item newItem = line.getTranslated(x - startX, y - startY);
+                                selectedItem = newItem;
+                                selectedItem.setIndex(selectedIndex);
 
-                            base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    selectedItem, Constants.REPLACE_ITEM, selected.getId()));
+                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                                        selectedItem, Constants.REPLACE_ITEM, selected.getId()));
 
-                        } else {
-                            Item newItem = selected.getTranslated(x - startX, y - startY);
-                            selectedItem = newItem;
+                                replaceItem(selectedItem);
 
-                            selectedItem.setIndex(selectedIndex);
-                            //System.out.println("Existing id: " + selected.getId());
-                            base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                                    selectedItem, Constants.REPLACE_ITEM, selected.getId()));
+                            } else {
+                                Item newItem = selected.getTranslated(x - startX, y - startY);
+                                selectedItem = newItem;
+                                selectedItem.setIndex(selectedIndex);
+                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                                        selectedItem, Constants.REPLACE_ITEM, selected.getId()));
 
-
+                                replaceItem(selectedItem);
+                            }
                         }
+                        repaint();
+                        return;
                     }
 
-                    if ((this.getCursor() == Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)) || (this.getCursor() == Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR))) {
+                    if ((this.getCursor() == Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)) ||
+                            (this.getCursor() == Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR))) {
+                        //   drawSelection=false;
                         if (selectedItem instanceof WBLine) {
                             WBLine line = (WBLine) selectedItem;
                             if ((this.getCursor() == Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR))) {
@@ -937,10 +1094,11 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                                 line.y2 = (evt.getY());
 
                                 selectedItem = line;
+                                Item newItem = selectedItem.getTranslated(0, 0);
+                                selectedItem.setIndex(selectedIndex);
+                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                                        newItem, Constants.REPLACE_ITEM, selectedItem.getId()));
 
-                            // selectedItem.setIndex(selectedIndex);
-                            //base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
-                            //      selectedItem, Constants.REPLACE_ITEM, selected.getId()));
                             }
                         } else {
                             int changeW = evt.getX() - last_w;
@@ -949,11 +1107,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                             int newH = initH + changeH;
                             if ((newW > 10) && (newH > 10)) {
                                 selectedItem.setSize(newW, newH);
+                                Item newItem = selectedItem.getTranslated(0, 0);
                                 selectedItem.setIndex(selectedIndex);
+                                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
+                                        newItem, Constants.REPLACE_ITEM, selectedItem.getId()));
+
 
                             }
                         }
                     }
+                } else {
+                    //just draw the selection
                 }
             }
             prevX = x;
@@ -961,6 +1125,19 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
 
         repaint();
+
+
+    }
+
+    private void centerViewPort() {
+        JScrollPane scrollPane = base.getSurfaceScrollPane();
+        JViewport vport = scrollPane.getViewport();
+
+        Dimension size = vport.getExtentSize();
+        int xx = (getWidth() - size.width) / 2;
+        int yy = (getHeight() - size.height) / 2;
+        Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
+        scrollRectToVisible(rect);
     }
 
     private void setOwnCursor() {
@@ -969,38 +1146,56 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         setCursor(curCircle);
     }
 
+    public WhiteboardManager getWhiteboardManager() {
+        return whiteboardManager;
+    }
+
+    public void setWhiteboardManager(WhiteboardManager whiteboardManager) {
+        this.whiteboardManager = whiteboardManager;
+    }
+
     public void mouseDragged(MouseEvent evt) {
-        Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+        if (drawingEnabled) {
+            Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+            currentX = evt.getX();
+            currentY = evt.getY();
 
-        if (pointerSurface.contains(xpoint)) {
-
+            drawSelection = true;
             int xOffset = evt.getX() - pointerSurface.x;
             int yOffset = evt.getY() - pointerSurface.y;
             Point point = new Point(xOffset, yOffset);
             switch (pointer) {
 
                 case Constants.HAND_LEFT: {
-
+                    drawSelection = false;
+                    setOwnCursor();
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_LEFT));
-
+                    setCurrentPointer(Constants.HAND_LEFT, point);
                     break;
                 }
                 case Constants.HAND_RIGHT: {
+                    drawSelection = false;
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.HAND_RIGHT));
-
+                    setCurrentPointer(Constants.HAND_RIGHT, point);
+                    setOwnCursor();
                     break;
                 }
                 case Constants.ARROW_UP: {
+                    drawSelection = false;
+                    setCurrentPointer(Constants.ARROW_UP, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_UP));
-
+                    setOwnCursor();
                     break;
                 }
                 case Constants.ARROW_SIDE: {
+                    drawSelection = false;
+                    setCurrentPointer(Constants.ARROW_SIDE, point);
                     base.getTcpClient().sendPacket(new PointerPacket(base.getSessionId(), point, Constants.ARROW_SIDE));
-
+                    setOwnCursor();
                     break;
                 }
                 case Constants.WHITEBOARD: {
+                    // setCursor(SELECT_CURSOR);
 
                     processMouseDragged(evt);
 
@@ -1008,8 +1203,33 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                     break;
                 }
             }
-
+        } else {
+            base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
         }
+        if (selectedItem == null) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            scrollOnDrag(evt);
+        }
+    }
+
+    public Vector<ImageIcon> getImgs() {
+        return imgs;
+    }
+
+    private void scrollOnDrag(MouseEvent evt) {
+        JScrollPane scrollPane = base.getSurfaceScrollPane();
+        JViewport vport = scrollPane.getViewport();
+        Point viewPos = vport.getViewPosition();
+        Dimension size = vport.getExtentSize();
+        int vportx = viewPos.x;
+        int vporty = viewPos.y;
+        int dx = evt.getX() - startX;
+        int dy = evt.getY() - startY;
+
+        int newvportx = vportx - dx;
+        int newvporty = vporty - dy;
+        Rectangle rect = new Rectangle(newvportx, newvporty, size.width, size.height);
+        scrollRectToVisible(rect);
     }
 
     public void processMouseMoved(MouseEvent evt) {
@@ -1055,6 +1275,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         if (selectedItem != null) {
             base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                     selectedItem, Constants.REMOVE_ITEM, selected.getId()));
+            removeItem(selectedItem);
         }
     }
 
@@ -1062,35 +1283,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(),
                 new FreeHand(), Constants.CLEAR_ITEMS, GenerateUUID.getId()));
+        clearItems();
         selectedItem = null;
+
         repaint();
-    }
-
-    class Pointer {
-
-        Point point;
-        ImageIcon icon;
-
-        public Pointer(Point point, ImageIcon icon) {
-            this.point = point;
-            this.icon = icon;
-        }
-
-        public ImageIcon getIcon() {
-            return icon;
-        }
-
-        public void setIcon(ImageIcon icon) {
-            this.icon = icon;
-        }
-
-        public Point getPoint() {
-            return point;
-        }
-
-        public void setPoint(Point point) {
-            this.point = point;
-        }
     }
 
     public void setCurrentPointer(int type, Point point) {
@@ -1156,66 +1352,39 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void actionPerformed(ActionEvent evt) {
-        if (base.getMODE() == Constants.APPLET) {
-            base.getSurface().setPointer(Constants.WHITEBOARD);
-        } else {
-
-            setPointer(Constants.WHITEBOARD);
-        }
-
+        base.getSurface().setPointer(Constants.WHITEBOARD);
         if (evt.getActionCommand().equals("handLeft")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.HAND_LEFT);
-            } else {
 
-                setPointer(Constants.HAND_LEFT);
-            }
+            setPointer(Constants.HAND_LEFT);
         }
         if (evt.getActionCommand().equals("handRight")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.HAND_RIGHT);
-            } else {
-                setPointer(Constants.HAND_RIGHT);
-            }
+            setPointer(Constants.HAND_RIGHT);
         }
         if (evt.getActionCommand().equals("arrowUp")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.ARROW_UP);
-            } else {
-                setPointer(Constants.ARROW_UP);
-            }
+            setPointer(Constants.ARROW_UP);
         }
         if (evt.getActionCommand().equals("arrowSide")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.ARROW_SIDE);
-            } else {
-                setPointer(Constants.ARROW_SIDE);
-            }
+            setPointer(Constants.ARROW_SIDE);
         }
         if (evt.getActionCommand().equals("paintBrush")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.PAINT_BRUSH);
-            } else {
-                setPointer(Constants.PAINT_BRUSH);
-            }
+            setPointer(Constants.PAINT_BRUSH);
         }
         if (evt.getActionCommand().equals("whiteBoard")) {
-            if (base.getMODE() == Constants.APPLET) {
-                base.getSurface().setPointer(Constants.WHITEBOARD);
-            } else {
-                setPointer(Constants.WHITEBOARD);
-            }
+            setPointer(Constants.WHITEBOARD);
         }
         if (evt.getActionCommand().equals("delete")) {
             deleteSelectedItem();
 
         }
         if (evt.getActionCommand().equals("clear")) {
-            int n = JOptionPane.showConfirmDialog(this, "This action will clear whiteboard items.", "Clear", JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                clearWhiteboard();
+            if (drawingEnabled) {
+                int n = JOptionPane.showConfirmDialog(this, "This action will clear whiteboard items.", "Clear", JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION) {
+                    clearWhiteboard();
+                }
+            } else {
+                base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
             }
-
         }
         if (evt.getActionCommand().equals("undo")) {
             if (lastItem != null) {
@@ -1226,42 +1395,67 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
 
         if (evt.getActionCommand().equals("line")) {
+            colour = new Color(255, 255, 0);
             brush = BRUSH_LINE;
         }
 
-        if (evt.getActionCommand().equals("move")) {
-            brush = BRUSH_TEXT;
-        }
+
 
         if (evt.getActionCommand().equals("move")) {
+            colour = new Color(255, 255, 0);
             brush = BRUSH_MOVE;
+            setPointer(Constants.WHITEBOARD);
+        // base.getSurface().setPointer(Constants.NO_POINTER);
         }
 
+        if (evt.getActionCommand().equals("select")) {
+            brush = BRUSH_SELECT;
+            base.getSurface().setDrawSelection(true);
+            selectedItems.clear();
+            currentSelectionArea = new Rectangle();
+            setPointer(Constants.WHITEBOARD);
+            repaint();
+            base.getSurface().repaint();
+            colour = new Color(255, 255, 0, 80);
+        }
         if (evt.getActionCommand().equals("pen")) {
+            colour = new Color(255, 255, 0);
+            setPointer(Constants.WHITEBOARD);
             brush = BRUSH_PEN;
         }
 
         if (evt.getActionCommand().equals("rect_nofill")) {
+            colour = new Color(255, 255, 0);
+            setPointer(Constants.WHITEBOARD);
             brush = BRUSH_RECT;
         }
 
         if (evt.getActionCommand().equals("rect_fill")) {
+            setPointer(Constants.WHITEBOARD);
+            colour = new Color(255, 255, 0);
             brush = BRUSH_RECT_FILLED;
         }
 
         if (evt.getActionCommand().equals("oval_fill")) {
+            setPointer(Constants.WHITEBOARD);
+            colour = new Color(255, 255, 0);
             brush = BRUSH_OVAL_FILLED;
         }
 
         if (evt.getActionCommand().equals("oval_nofill")) {
+            setPointer(Constants.WHITEBOARD);
+            colour = new Color(255, 255, 0);
             brush = BRUSH_OVAL;
         }
 
         if (evt.getActionCommand().equals("texttool")) {
+            setPointer(Constants.WHITEBOARD);
+            colour = new Color(255, 255, 0);
             brush = BRUSH_TEXT;
         }
 
         if (evt.getActionCommand().equals("text")) {
+
             commitStroke(startX, startY, prevX, prevY, true);
             popup.setVisible(false);
         }
@@ -1298,6 +1492,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             }
         }
 
+    }
+
+    public static int getBrush() {
+        return brush;
     }
 
     public void setGraphics(Graphics2D graphics) {
@@ -1348,39 +1546,58 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         switch (brush) {
             case BRUSH_LINE:
-                WBLine line = new WBLine(x1, y1, x2, y2, colour,
+                WBLine line = new WBLine(x1 - pointerSurface.x, y1 - pointerSurface.y, x2, y2, colour,
                         strokeWidth);
                 base.getTcpClient().sendPacket(
                         new WhiteboardPacket(base.getSessionId(), line, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = line;
+                //selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
             case BRUSH_RECT:
-                Rect rect = new Rect(x, y, w, h, colour, false,
+                Rect rect = new Rect(x - pointerSurface.x, y - pointerSurface.y, w, h, colour, false,
                         strokeWidth);
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), rect, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = rect;
+                // selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
             case BRUSH_OVAL:
-                Oval oval = new Oval(x, y, w, h, colour, false,
+                Oval oval = new Oval(x - pointerSurface.x, y - pointerSurface.y, w, h, colour, false,
                         strokeWidth);
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), oval, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = oval;
+                //  selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
             case BRUSH_RECT_FILLED:
-                Rect filledRect = new Rect(x, y, w, h, colour, true,
+                Rect filledRect = new Rect(x - pointerSurface.x, y - pointerSurface.y, w, h, colour, true,
                         strokeWidth);
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), filledRect, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = filledRect;
+                //selectedItem = lastItem;
+                addItem(lastItem);
+                break;
+
+            case BRUSH_SELECT:
+                Rect selectRect = new Rect(x - pointerSurface.x, y - pointerSurface.y, w, h, colour, true,
+                        strokeWidth);
+                base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), selectRect, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                lastItem = selectRect;
+                //selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
             case BRUSH_OVAL_FILLED:
-                Oval filledOval = new Oval(x, y, w, h, colour, true,
+                Oval filledOval = new Oval(x - pointerSurface.x, y - pointerSurface.y, w, h, colour, true,
                         strokeWidth);
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), filledOval, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = filledOval;
+                // selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
             case BRUSH_TEXT:
@@ -1397,11 +1614,13 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
                 if (boldButton.isSelected() && italicButton.isSelected()) {
                     style = Font.BOLD | Font.ITALIC;
                 }
-                Txt txt = new Txt(x, y, textField.getForeground(), textField.getText(),
+                Txt txt = new Txt(x - pointerSurface.x, y - pointerSurface.y, textField.getForeground(), textField.getText(),
                         new Font((String) fontNamesField.getSelectedItem(), style, size),
                         underButton.isSelected());
                 base.getTcpClient().sendPacket(new WhiteboardPacket(base.getSessionId(), txt, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = txt;
+                //  selectedItem = lastItem;
+                addItem(lastItem);
                 break;
 
         }
@@ -1565,291 +1784,26 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
         }
     }
-//paints the current itme
 
-    private void paintCurrentItem(Graphics2D g2) {
-        Item temp = selectedItem;
-        if (temp instanceof Rect) {
-            Rect r = (Rect) temp;
-            g2.setStroke(new BasicStroke(r.getStroke()));
-            g2.setColor(r.getCol());
+    public double getMagX() {
+        return magX;
+    }
 
-            if (r.isFilled()) {
-                g2.fill(r.getRect());
-            } else {
-                g2.draw(r.getRect());
-            }
+    public void setMagX(double magX) {
+        this.magX = magX;
+        centerViewPort();
+        resized = true;
+    }
 
-        }
-        if (temp instanceof WBLine) {
-            WBLine l = (WBLine) temp;
-            g2.setStroke(new BasicStroke(l.getStroke()));
-            g2.setColor(l.getCol());
-            Line2D line = l.getLine();
-            g2.draw(line);
-        }
-
-        if (temp instanceof Pen) {
-            Pen p = (Pen) temp;
-            g2.setStroke(new BasicStroke(p.getStroke()));
-            g2.setColor(p.getCol());
-            Vector<WBLine> v = p.getPoints();
-            for (int k = 0; k <
-                    v.size(); k++) {
-                WBLine l = v.elementAt(k);
-                g2.drawLine(l.x1, l.y1, l.x2, l.y2);
-            }
-
-        }
-        if (temp instanceof Oval) {
-            Oval o = (Oval) temp;
-            g2.setStroke(new BasicStroke(o.getStroke()));
-            g2.setColor(o.getCol());
-            if (o.isFilled()) {
-                Rectangle r = o.getBounds();
-                g2.fillOval(r.x, r.y, r.width, r.height);
-            } else {
-                Rectangle r = o.getRect();
-                g2.drawOval(r.x, r.y, r.width, r.height);
-            }
-
-        }
-        if (temp instanceof Img) {
-            Img img = (Img) temp;
-            Rectangle bounds = img.getBounds();
-            g2.drawImage(img.getImg().getImage(), bounds.x, bounds.y,
-                    bounds.width, bounds.height, this);
-        }
-
-        if (temp instanceof Txt) {
-            Txt t = (Txt) temp;
-            g2.setColor(t.getCol());
-
-            String txt = t.getContent();
-            Font font = t.getFont();
-            boolean underLine = t.isUnderlined();
-            Point point = t.getPoint();
-
-            if (txt.length() > 0) {
-                AttributedString as = new AttributedString(txt);
-                as.addAttribute(TextAttribute.FONT, font);
-                if (underLine) {
-                    as.addAttribute(TextAttribute.UNDERLINE,
-                            TextAttribute.UNDERLINE_ON);
-                }
-
-                TextLayout tl = new TextLayout(as.getIterator(), g2.getFontRenderContext());
-                tl.draw(g2, point.x, point.y);
-            }
-
-        }
-
+    public double getMagY() {
+        return magY;
 
     }
 
-    private Rectangle getPenRect(Vector<WBLine> vector) {
-        int minX = 0;
-        int minY = 0;
-        int maxX = 0;
-        int maxY = 0;
-        for (int i = 0; i < vector.size(); i++) {
-            WBLine line = vector.elementAt(i);
-            if (i == 0) {
-                minX = line.x1;
-                minY = line.y1;
-            } else {
-                if (line.x1 < minX) {
-                    minX = line.x1;
-                }
-                if (line.y1 < minY) {
-                    minY = line.y1;
-                }
-                if (line.x2 > maxX) {
-                    maxX = line.x2;
-                }
-                if (line.y2 > maxY) {
-                    maxY = line.y2;
-                }
-            }
-        }
-        return new Rectangle(minX, minY, maxX - minX, maxY - minY);
-    }
-
-    public void paintItems(Graphics2D g2) {
-
-        for (int i = 0; i <
-                items.size(); i++) {
-            Item temp = items.elementAt(i);
-            if (temp instanceof Rect) {
-                Rect r = (Rect) temp;
-                g2.setStroke(new BasicStroke(r.getStroke()));
-                g2.setColor(r.getCol());
-
-                if (r.isFilled()) {
-                    g2.fill(r.getRect());
-                } else {
-                    g2.draw(r.getRect());
-                }
-
-
-            }
-
-
-            if (temp instanceof WBLine) {
-                WBLine l = (WBLine) temp;
-                g2.setStroke(new BasicStroke(l.getStroke()));
-                g2.setColor(l.getCol());
-                Line2D line = l.getLine();
-                g2.draw(line);
-            }
-
-            if (temp instanceof Pen) {
-                Pen p = (Pen) temp;
-                g2.setStroke(new BasicStroke(p.getStroke()));
-
-                g2.setColor(p.getCol());
-                Vector<WBLine> v = p.getPoints();
-                for (int k = 0; k <
-                        v.size(); k++) {
-                    WBLine l = v.elementAt(k);
-                    g2.drawLine(l.x1, l.y1, l.x2, l.y2);
-                }
-
-            }
-            if (temp instanceof Oval) {
-                Oval o = (Oval) temp;
-                g2.setStroke(new BasicStroke(o.getStroke()));
-                g2.setColor(o.getCol());
-                if (o.isFilled()) {
-                    Rectangle r = o.getBounds();
-                    g2.fillOval(r.x, r.y, r.width, r.height);
-                } else {
-                    Rectangle r = o.getRect();
-                    g2.drawOval(r.x, r.y, r.width, r.height);
-                }
-
-            }
-            if (temp instanceof Img) {
-                Img img = (Img) temp;
-                Rectangle bounds = img.getBounds();
-                g2.drawImage(img.getImg().getImage(), bounds.x, bounds.y,
-                        bounds.width, bounds.height, this);
-            }
-
-            if (temp instanceof Txt) {
-                Txt t = (Txt) temp;
-                g2.setColor(t.getCol());
-
-                String txt = t.getContent();
-                Font font = t.getFont();
-                boolean underLine = t.isUnderlined();
-                Point point = t.getPoint();
-
-                if (txt.length() > 0) {
-                    AttributedString as = new AttributedString(txt);
-                    as.addAttribute(TextAttribute.FONT, font);
-                    if (underLine) {
-                        as.addAttribute(TextAttribute.UNDERLINE,
-                                TextAttribute.UNDERLINE_ON);
-                    }
-
-                    TextLayout tl = new TextLayout(as.getIterator(), g2.getFontRenderContext());
-                    tl.draw(g2, point.x, point.y);
-                }
-
-            }
-
-
-            g2.setColor(Color.black);
-        }
-
-        g2.setStroke(dashed);
-        g2.setColor(Color.red);
-
-        //draw red rectange around selected item
-        if (selectedItem instanceof Txt) {
-            Txt txt = (Txt) selectedItem;
-            Rectangle r = txt.getRect(g2);
-            g2.fillRect(r.x, r.y, rect_size, rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
-                    rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
-                    rect_size);
-        }
-
-        if (selectedItem instanceof Pen) {
-            Pen pen = (Pen) selectedItem;
-            Rectangle r = getPenRect(pen.getPoints());
-            g2.fillRect(r.x, r.y, rect_size, rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
-                    rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
-                    rect_size);
-            g2.draw(r);
-        }
-        if (selectedItem instanceof Rect) {
-            Rect rr = (Rect) selectedItem;
-            Rectangle r = rr.getRect();
-            g2.fillRect(r.x, r.y, rect_size, rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
-                    rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
-                    rect_size);
-            g2.draw(r);
-        }
-
-        if (selectedItem instanceof Img) {
-            Img img = (Img) selectedItem;
-            Rectangle r = img.getBounds();
-            g2.fillRect(r.x, r.y, rect_size, rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, r.y, rect_size,
-                    rect_size);
-            g2.fillRect((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fillRect(r.x, (r.y + r.height) - rect_size, rect_size,
-                    rect_size);
-        }
-
-        if (selectedItem instanceof Oval) {
-            Oval oo = (Oval) selectedItem;
-            Rectangle r = oo.getRect();
-            ovalRect1 = new Rectangle(r.x, r.y, rect_size, rect_size);
-            g2.fill(ovalRect1);
-            ovalRect2 = new Rectangle((r.x + r.width) - rect_size, r.y, rect_size,
-                    rect_size);
-            g2.fill(ovalRect2);
-            ovalRect3 = new Rectangle((r.x + r.width) - rect_size, (r.y + r.height) - rect_size, rect_size, rect_size);
-            g2.fill(ovalRect3);
-            ovalRect4 = new Rectangle(r.x, (r.y + r.height) - rect_size, rect_size,
-                    rect_size);
-            g2.fill(ovalRect4);
-        }
-
-        if (selectedItem instanceof WBLine) {
-
-            WBLine line = (WBLine) selectedItem;
-            g2.fillRect(line.x1 - (rect_size / 2), line.y1 - (rect_size / 2), rect_size, rect_size);
-            g2.fillRect(line.x2 - (rect_size / 2), line.y2 - (rect_size / 2), rect_size, rect_size);
-
-        }
-
-    /*
-    This is intentionally commented by David Wafula...needs clarification
-    from Nik...this is due to changes made on this method.
-    //note: images will always be drawn on the top layer
-    //would fix by making ClipArt extend Item but it requires
-    //an ImageObserver to paint.
-    drawImages(tmp);
-    if (tooltip) {
-    tooltipIcon.paint(tmp, this);
-    }
-    
-    g.drawImage(backbuffer, 0, 0, this);
-    }
-    
-     */
+    public void setMagY(double magY) {
+        this.magY = magY;
+        centerViewPort();
+        resized = true;
     }
 
     /**
@@ -1857,6 +1811,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
      */
     private void createToolBar() {
         try {
+            mainToolbar.setBorder(BorderFactory.createEtchedBorder());
+
             boldButton = new JToggleButton(ImageUtil.createImageIcon(this,
                     "/icons/whiteboard/text_bold.png"));
             boldButton.setBorderPainted(false);
@@ -1904,282 +1860,149 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             JPanel p = new JPanel();
             p.setLayout(new BorderLayout());
             p.add(fontSizeField, BorderLayout.WEST);
+            p.setPreferredSize(new Dimension(18, 25));
             mainToolbar.add(p);
             mainToolbar.setEnabled(false);
 
-            createPixelOptionFrame();
+            whiteboardManager.createPixelOptionFrame(strokeWidth, pixelButton);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
-    /**
-     * Create an option frame from where one can choose the pixel width of a drawing
-     * tool
-     */
-    private void createPixelOptionFrame() {
-        JPanel p = new JPanel();
-        p.setPreferredSize(new Dimension(100, 100));
-        p.setLayout(new GridLayout(0, 1));
-        PixelButtonOption b = new PixelButtonOption(1);
-        p.setSize(81, 21);
-        p.add(b);
-
-        b =
-                new PixelButtonOption(3);
-        p.setSize(81, 21);
-
-        p.add(b);
-        b =
-                new PixelButtonOption(5);
-        p.setSize(81, 21);
-
-        p.add(b);
-        b =
-                new PixelButtonOption(7);
-        p.setSize(81, 21);
-
-        p.add(b);
-        b =
-                new PixelButtonOption(9);
-        p.setSize(81, 21);
-
-        p.add(b);
-        b =
-                new PixelButtonOption(11);
-        p.setSize(81, 21);
-    //just put the panel on the popup for rendering
-    // popup.add(p);
-    }
-
-    /**
-     *
-     * Create our own custom button that basically shows current pixel selection
-     * Has some basic jbutton methods
-     * */
-    class PixelButton extends Component {
-
-        boolean pressed = false;
-        ActionListener actionListener;
-        String actionCommand;
-
-        PixelButton() {
-
-            // Rather than adding a MouseListener we force all Mouse
-            // button events to be sent to the ProcessEvents()
-            // method with this call to enableEvents with this mask.
-            enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-        }
-
-        public void paint(Graphics g) {
-            int width = getSize().width, height = getSize().height;
-
-            // Use gray for the button sides.
-            g.setColor(Color.GRAY);
-
-            // Use the 3D rectangle drawing methods to create a
-            // button style border around the image.
-            // Redraw with smaller dimensions to make border larger. 
-            // Note that the last argument determines if the rectangle
-            // shading is for raised or lowered bevel.
-            g.draw3DRect(0, 0, width - 1, height - 1, !pressed);
-            g.draw3DRect(1, 1, width - 3, height - 3, !pressed);
-            g.draw3DRect(2, 2, width - 5, height - 5, !pressed);
-
-            // Change back to white for the image background.
-            g.setColor(Color.white);
-
-            // Fill the area inside the last 3D rectangle
-            g.fillRect(3, 3, width - 6, height - 6);
-
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(Color.black);
-            g2.setStroke(new BasicStroke(strokeWidth));
-            g2.drawLine(2, height / 2, width - 2, height / 2);
-
-        }
-
-        // The layout managers call this for a component when they
-        // decide how much space to allow for it.
-        public Dimension getPreferredSize() {
-            return getSize();
-        }
-
-        // We forced all mouse click events to come here
-        // in a manner similar to the old Java 1.0 event
-        // handling style. The event is examined to see
-        // what kind it is.
-        public void processEvent(AWTEvent e) {
-            if (e.getID() == MouseEvent.MOUSE_PRESSED) {
-                // Set the button in the pressed state
-                pressed = true;
-                // and paint it in pressed state.
-                repaint();
-            } else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
-                // Set the button in up state
-                pressed = false;
-                repaint();
-                // and call fireEvent, which will send events
-                // to the listeners to PictureButton.
-                fireEvent();
-            }
-            super.processEvent(e);
-        }
-
-        // A listener or event handling for this button may check
-        // its ActionCommand value to see which button it is.
-        // For a regular Button the ActionCommand value defaults
-        // to the name on the Button. The setActionCommand allows
-        // one to use a different value to test for in the
-        // listener. Here we are making our own button so we
-        // should set the ActionCommand value.
-        public void setActionCommand(String actionCommand) {
-            this.actionCommand = actionCommand;
-        }
-
-        // These three methods are what allow this button to become
-        // an event generator. The AWTEventMulticaster takes care
-        // of most of the work.
-
-        // Here we allow listeners to add themselves to our
-        // listener list. We use the AWTEventMulticaster static add.
-        public void addActionListener(ActionListener l) {
-
-            // NOTE: an AWTEventMulticaster object is returned here.
-            // but since it implements all the listener interfaces
-            // so we can reference it with our actionListener variable.
-            actionListener = AWTEventMulticaster.add(actionListener, l);
-        }
-
-        // Here we allow listeners to remove themselves from our
-        // listener list. We use the AWTEventMulticaster static
-        // remove method.
-        public void removeActionListener(ActionListener l) {
-            actionListener = AWTEventMulticaster.remove(actionListener, l);
-        }
-
-        // This method is called by the processEvent() above
-        // when the mouse button is released over the button .
-        private void fireEvent() {
-
-            if (actionListener != null) {
-                // listener list. We use the AWTEventMulticaster
-                // static add.
-                ActionEvent event = new ActionEvent(this,
-                        ActionEvent.ACTION_PERFORMED, actionCommand);
-
-                // The AWTEventMulticaster object, but referenced
-                // here with our actionListener variable, will call
-                // all the actionListeners with this call to its
-                // actionPerformed.
-                actionListener.actionPerformed(event);
-            }
-        }
-    }
-
-    /**
-     * This is still our own button, with most basic jbutton methods, but
-     * we do our own painting on paint method
-     */
-    class PixelButtonOption extends Component implements ActionListener {
-
-        boolean pressed = false;
-        ActionListener actionListener;
-        String actionCommand;
-        float width;
-        BasicStroke basicStroke;
-
-        PixelButtonOption(float width) {
-            this.width = width;
-            basicStroke = new BasicStroke(width);
-            this.addActionListener(this);
-            enableEvents(AWTEvent.MOUSE_EVENT_MASK);
-        }
-
-        /**
-         * we do our own painting here
-         * @param g Graphics
-         */
-        public void paint(Graphics g) {
-            int width = getSize().width, height = getSize().height;
-            g.setColor(Color.white);
-            g.draw3DRect(1, 1, width - 3, height - 3, !pressed);
-            g.setColor(Color.white);
-            g.fillRect(3, 3, width - 6, height - 6);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(Color.black);
-            g2.setStroke(basicStroke);
-            g2.drawLine(2, height / 2, width - 2, height / 2);
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            strokeWidth = width;
-            pixelButton.repaint();
-        }
-
-        public Dimension getPreferredSize() {
-            return getSize();
-        }
-
-        public void processEvent(AWTEvent event) {
-            if (event.getID() == MouseEvent.MOUSE_PRESSED) {
-                // Set the button in the pressed state
-                pressed = true;
-                // and paint it in pressed state.
-                repaint();
-            } else if (event.getID() == MouseEvent.MOUSE_RELEASED) {
-                // Set the button in up state
-                pressed = false;
-                repaint();
-                // and call fireEvent, which will send events
-                // to the listeners to PictureButton.
-                fireEvent();
-            }
-            super.processEvent(event);
-        }
-
-        public void setActionCommand(String actionCommand) {
-            this.actionCommand = actionCommand;
-        }
-
-        public void addActionListener(ActionListener l) {
-            actionListener = AWTEventMulticaster.add(actionListener, l);
-        }
-
-        public void removeActionListener(ActionListener l) {
-            actionListener = AWTEventMulticaster.remove(actionListener, l);
-        }
-
-        private void fireEvent() {
-            if (actionListener != null) {
-                ActionEvent event = new ActionEvent(this,
-                        ActionEvent.ACTION_PERFORMED, actionCommand);
-                actionListener.actionPerformed(event);
-            }
-        }
-    }
+    boolean resized = false;
+    double prevXMag = magX;
+    double prevYMag = magY;
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2.scale(magX, magY);
         graphics =
                 g2;
         if (XOR) {
             g2.setXORMode(getBackground());
         }
+        int xx = (getWidth() - pointerSurface.width) / 2;
+        int yy = (getHeight() - pointerSurface.height) / 2;
 
+        //    g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
 
+        paintSlides(g2);
         drawStroke(g2);
-        paintItems(g2);
-        //  paintCurrentItem(g2);
+        if (image != null) {
+            graphics.drawImage(image.getImage(), 100, 100, this);
+        }
+        whiteboardManager.paintCurrentItem(g2, selectedItem, imgs);
+        whiteboardManager.paintItems(g2, items, dashed, dragging, selectedItem, pointerSurface, imgs, ovalRect1, ovalRect2, ovalRect3, ovalRect4);
+
+        paintSelection(g2);
+        if (showInfoMessage) {
+            g2.setStroke(new BasicStroke());
+            FontMetrics fm = graphics.getFontMetrics(msgFont);
+            graphics.setColor(Color.white);
+            graphics.fillRect(35, 65, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
+            graphics.setColor(Color.BLACK);
+            graphics.drawRect(35, 65, fm.stringWidth(infoMessage) + 30, fm.getHeight() + 10);
+            graphics.setFont(msgFont);
+
+            if (isErrorMsg) {
+                graphics.drawImage(warnIcon.getImage(), 10, 70, this);
+            }
+            graphics.drawString(infoMessage, 60, 80);
+        }
         if (currentPointer != null) {
             graphics.drawImage(currentPointer.getIcon().getImage(),
                     (int) pointerSurface.x + currentPointer.getPoint().x - 10,
                     (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
         }
+
+        g2.setStroke(new BasicStroke());
+
+        if ((prevXMag < magX || prevYMag < magY) && resized) {
+            int ww = getWidth();
+            int hh = getHeight();
+            int newW = ww + (int) magX * 100;
+            int newH = hh + (int) magY * 100;
+            prevXMag = magX;
+            prevYMag = magY;
+            setPreferredSize(new Dimension(newW, newH));
+            revalidate();
+            resized = false;
+        }
+        if ((prevXMag > magX || prevYMag > magY) && resized) {
+            int ww = getWidth();
+            int hh = getHeight();
+            int newW = ww - (int) magX * 100;
+            int newH = hh - (int) magY * 100;
+            prevXMag = magX;
+            prevYMag = magY;
+            setPreferredSize(new Dimension(newW, newH));
+            revalidate();
+            resized = false;
+        }
+
+    }
+
+    public Vector<Item> getSelectedItems() {
+        return selectedItems;
+    }
+
+    public double getPrevXMag() {
+        return prevXMag;
+    }
+
+    public void setPrevXMag(double prevXMag) {
+        this.prevXMag = prevXMag;
+    }
+
+    public double getPrevYMag() {
+        return prevYMag;
+    }
+
+    public void setPrevYMag(double prevYMag) {
+        this.prevYMag = prevYMag;
+
+    }
+
+    private void paintSlides(Graphics2D g2) {
+        if (slide != null) {
+            int slideWidth = slide.getIconWidth();
+            int slideHeight = slide.getIconHeight();
+            if (slideWidth >= getWidth()) {
+                slideWidth = (int) (slideWidth * 0.9);
+            }
+
+
+            int xx = (getWidth() - slide.getIconWidth()) / 2;
+            int yy = (getHeight() - slide.getIconHeight()) / 2;
+            g2.setFont(new Font("Dialog", 1, 10));
+            g2.drawString(base.getSelectedFile() + " - " + (base.getSessionManager().getSlideIndex() + 1) + " of " + base.getSessionManager().getSlideCount(), xx, yy - 15);
+            g2.drawImage(slide.getImage(), xx, yy, slideWidth, slideHeight, this);
+            //if (firstSlide) {
+
+            Rectangle rect = new Rectangle(xx - 5, yy - 5, slideWidth + 10, slideHeight + 10);
+            //pointerSurface = new Rectangle(xx, yy, slideWidth, slideHeight);
+            // g2.draw(rect);
+            firstSlide = false;
+        }
+    }
+
+    public void setCurrentSlide(ImageIcon slide, int slideIndex, int totalSlideCount, boolean fromPresenter) {
+        this.slide = slide;
+        pointerLocations.clear();
+        this.totalSlideCount = totalSlideCount;
+        this.showStatusMessage = false;
+        if (fromPresenter) {
+            presenterSlideIndex = slideIndex;
+            this.slideIndex = slideIndex;
+        } else {
+            this.slideIndex = slideIndex;
+        }
+        this.fromPresenter = fromPresenter;
+        repaint();
     }
 
     /** This method is called from within the constructor to
@@ -2191,6 +2014,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainToolbar = new javax.swing.JToolBar();
         colorBG = new javax.swing.ButtonGroup();
         buttonsToolbar = new javax.swing.JToolBar();
         colorPanel = new javax.swing.JPanel();
@@ -2208,13 +2032,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         magentaButton = new javax.swing.JToggleButton();
         currentColorField = new javax.swing.JPanel();
         moreColorsButton = new javax.swing.JButton();
-        mainToolbar = new javax.swing.JToolBar();
 
-        setLayout(new java.awt.BorderLayout());
+        mainToolbar.setRollover(true);
 
+        buttonsToolbar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonsToolbar.setOrientation(1);
         buttonsToolbar.setRollover(true);
-        add(buttonsToolbar, java.awt.BorderLayout.LINE_START);
+        buttonsToolbar.setPreferredSize(new java.awt.Dimension(4, 25));
+
+        setLayout(new java.awt.BorderLayout());
 
         colorPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Color Panel"));
 
@@ -2380,15 +2206,15 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         colorPanel.add(moreColorsButton);
 
         add(colorPanel, java.awt.BorderLayout.PAGE_END);
-
-        mainToolbar.setRollover(true);
-        add(mainToolbar, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
 private void blackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blackButtonActionPerformed
     fixPenTransparency();
     //colour = new Color(0, 0, 0, alpha);
-    colour = new Color(0, 0, 0);
+    //if (brush == BRUSH_PEN) {
+    colour =
+            new Color(0, 0, 0);
+    //}
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_blackButtonActionPerformed
@@ -2396,15 +2222,21 @@ private void blackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 private void lightGrayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightGrayButtonActionPerformed
     fixPenTransparency();
     //colour = new Color(192, 192, 192, alpha);
-    colour = new Color(192, 192, 192);
+    //if (brush == BRUSH_PEN) {
+    colour =
+            new Color(192, 192, 192);
+    //}
     textField.setForeground(colour);//GEN-LAST:event_lightGrayButtonActionPerformed
         currentColorField.setBackground(colour);
     }
 
 private void grayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grayButtonActionPerformed
     fixPenTransparency();
-    // colour = new Color(128, 128, 128, alpha);
-    colour = new Color(128, 128, 128);
+    //colour = new Color(128, 128, 128, alpha);
+    //if (brush == BRUSH_PEN) {
+    colour =
+            new Color(128, 128, 128);
+    //}
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_grayButtonActionPerformed
@@ -2412,47 +2244,66 @@ private void grayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 private void whiteButttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_whiteButttonActionPerformed
     fixPenTransparency();
     //colour = new Color(255, 255, 255, alpha);
-    colour = new Color(255, 255, 255);
+    //if (brush == BRUSH_PEN) {
+    colour =
+            new Color(255, 255, 255);
+    //}
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_whiteButttonActionPerformed
 
 private void redButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redButtonActionPerformed
     fixPenTransparency();
-    // colour = new Color(255, 0, 0, 100);
-    colour = new Color(255, 0, 0);
+    //colour = new Color(255, 0, 0, alpha);
+    // if (brush == BRUSH_PEN) {
+    colour =
+            new Color(255, 0, 0);
+    //}
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_redButtonActionPerformed
 
 private void yellowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yellowButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(255, 255, 0, 100);
-    colour = new Color(255, 255, 0);
+    colour = new Color(255, 255, 0, alpha);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(255, 255, 0);
+    }
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_yellowButtonActionPerformed
 
 private void blueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blueButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(0, 0, 255, alpha);
-    colour = new Color(0, 0, 255);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(0, 0, 255);
+    } else {
+        colour = new Color(0, 0, 255, alpha);
+    }
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_blueButtonActionPerformed
 
 private void cyanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cyanButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(0, 255, 255, alpha);
-    colour = new Color(0, 255, 255);
+    colour = new Color(0, 255, 255, alpha);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(0, 255, 255);
+    }
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_cyanButtonActionPerformed
 
 private void greenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_greenButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(0, 255, 0, alpha);
-    colour = new Color(0, 255, 0);
+    colour = new Color(0, 255, 0, alpha);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(0, 255, 0);
+    }
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 
@@ -2460,8 +2311,11 @@ private void greenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
 private void orangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orangeButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(255, 200, 0, alpha);
-    colour = new Color(255, 200, 0);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(255, 200, 0);
+    }
+    colour = new Color(255, 200, 0, alpha);
 
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
@@ -2470,8 +2324,12 @@ private void orangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
 private void magentaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_magentaButtonActionPerformed
     fixPenTransparency();
-    //colour = new Color(255, 0, 255, alpha);
-    colour = new Color(255, 0, 255);
+    if (brush == BRUSH_PEN) {
+        colour =
+                new Color(255, 0, 255);
+    } else {
+        colour = new Color(255, 0, 255, alpha);
+    }
     currentColorField.setBackground(colour);
     textField.setForeground(colour);
 }//GEN-LAST:event_magentaButtonActionPerformed
