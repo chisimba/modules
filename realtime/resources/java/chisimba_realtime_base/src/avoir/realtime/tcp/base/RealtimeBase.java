@@ -19,6 +19,7 @@
  */
 package avoir.realtime.tcp.base;
 
+import avoir.realtime.tcp.base.chat.ChatRoom;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
 import avoir.realtime.tcp.base.filetransfer.FileUploader;
@@ -31,7 +32,6 @@ import avoir.realtime.tcp.base.managers.SessionManager;
 import avoir.realtime.tcp.base.managers.WhiteboardToolbarManager;
 import avoir.realtime.tcp.base.survey.SurveyFrame;
 import avoir.realtime.tcp.base.survey.SurveyManagerFrame;
-import avoir.realtime.tcp.base.tabbedpane.CloseAndMaxTabbedPane;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.base.user.UserLevel;
 import avoir.realtime.tcp.common.Constants;
@@ -46,6 +46,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -53,9 +54,10 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -68,6 +70,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 
 /**
  *
@@ -93,7 +96,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JSplitPane splitPane = new JSplitPane();
     private javax.swing.JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     private javax.swing.JSplitPane leftBottomSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-    private JPanel mediaPanel = new JPanel();
     private JTabbedPane userListTabbedPane = new JTabbedPane();
     private JTabbedPane dockTabbedPane = new JTabbedPane();//true);
     private JLabel logo = new JLabel();
@@ -134,11 +136,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private ImageIcon micOnIcon = ImageUtil.createImageIcon(this, "/icons/mic_on.png");
     private JFrame fileTransferFrame;
     private WhiteboardSurface whiteboardSurface;
-    private JTabbedPane surfaceTabbedPane = new JTabbedPane();
     private JApplet glassPaneHandler;
     private JPanel surfacePanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
-    private JPanel leftCenterPanel = new JPanel();
     private String selectedFile = "Presentation";
     private AppletContext appletContext;
     private JFrame parent;
@@ -146,6 +146,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String userDetails;
     private String userImagePath;
     private boolean webPresent = true;
+    private JDesktopPane desktop = new JDesktopPane();
+    private JInternalFrame surfaceFrame = new JInternalFrame();
+    private JScrollPane surfaceScrollPane = new JScrollPane();
 
     /**
      * Create additional components
@@ -172,17 +175,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         speakerVolumeMeter.setMinimum(0);
         speakerVolumeMeter.setMaximum(128);
-        //speakerVolumeMeter.setPreferredSize(new Dimension(128, 7));
 
         talkButton.setIcon(micOffIcon);
         talkButton.setBorderPainted(false);
         talkButton.setFont(new java.awt.Font("Dialog", 0, 8));
-
-        mediaPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Media Streaming"));
-        mediaPanel.setPreferredSize(new java.awt.Dimension(300, 300));
-        mediaPanel.setLayout(new java.awt.BorderLayout());
-        logo.setIcon(ImageUtil.createImageIcon(this, "/icons/realtime128.png"));
-        mediaPanel.add(logo);
 
         mPanel.setLayout(new BorderLayout());
 
@@ -194,7 +190,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
 
         userListPanel.setLayout(new BorderLayout());
-        userListPanel.setPreferredSize(new Dimension(250, 200));
+        userListPanel.setPreferredSize(new Dimension(250, 180));
         userListPanel.add(sp, BorderLayout.CENTER);
         userListPanel.add(userItemsPanel, BorderLayout.SOUTH);
         userListPanel.setBackground(Color.WHITE);
@@ -227,36 +223,22 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         whiteboardButton.setToolTipText("Use whiteboard on this slide");
 
 
-        //pointerToolbar.add(whiteboardButton);
         userListTabbedPane.addTab("Participants", userListPanel);
-        //userListTabbedPane.addTab("Files", fileTransferPanel);
-        leftPanel.setPreferredSize(new Dimension(250, 300));
+        leftPanel.setPreferredSize(new Dimension(250, 250));
 
-
-
-        audioPanel.setPreferredSize(new Dimension(100, 150));
+        audioPanel.setPreferredSize(new Dimension(100, 100));
         volumeSlide.setPreferredSize(new Dimension(150, 20));
         speakerVolumeMeter.setPreferredSize(new Dimension(150, 7));
-
-
-
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(whiteboardSurface, BorderLayout.CENTER);
 
         agendaPanel.setLayout(new BorderLayout());
         agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
         agendaPanel.setPreferredSize(new Dimension(250, 150));
-        // agendaPanel.add(audioPanel, BorderLayout.NORTH);
-
-
-      
-
 
         leftBottomSplitPane.setTopComponent(audioPanel);
         leftBottomSplitPane.setBottomComponent(dockTabbedPane);
         leftBottomSplitPane.setDividerLocation(150);
 
-        leftSplitPane.setDividerLocation(300);
+        leftSplitPane.setDividerLocation(250);
         leftSplitPane.setTopComponent(userListTabbedPane);
         leftSplitPane.setBottomComponent(leftBottomSplitPane);
         sessionManager.setIsPresenter(isPresenter);
@@ -265,20 +247,37 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         splitPane.setRightComponent(centerPanel);
         JToolBar toolbar = new JToolBar();
         toolbar.add(toolbarManager.getGeneralToolbar());
-
-
         toolbar.add(whiteboardSurface.getMainToolbar());
+        centerPanel.setLayout(new BorderLayout());
+        surfaceScrollPane.setViewportView(whiteboardSurface);
+        whiteboardSurface.setPreferredSize(new Dimension(1200, 1200));
 
+        JViewport vport = surfaceScrollPane.getViewport();
 
-        whiteboardSurface.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
-        whiteboardSurface.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
-        whiteboardSurface.add(whiteboardSurface.getPointerToolbar(), BorderLayout.WEST);
+        Dimension size = vport.getExtentSize();
+        int xx = (parent.getWidth() - size.width) / 2;
+        int yy = (parent.getHeight() - size.height) / 2;
+        Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
+        scrollRectToVisible(rect);
+        centerPanel.add(surfaceScrollPane, BorderLayout.CENTER);
+        centerPanel.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
 
-        surfacePanel.add(surface, BorderLayout.CENTER);
+        centerPanel.add(whiteboardSurface.getPointerToolbar(), BorderLayout.WEST);
+        centerPanel.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
 
 
         mainPanel.add(toolbar, BorderLayout.NORTH);
         mainPanel.add(splitPane, BorderLayout.CENTER);
+
+
+    }
+
+    public JScrollPane getSurfaceScrollPane() {
+        return surfaceScrollPane;
+    }
+
+    public JInternalFrame getSurfaceFrame() {
+        return surfaceFrame;
     }
 
     public BaseManager getBaseManager() {
@@ -446,7 +445,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      */
     public void initChatRoom() {
         chatRoom = new ChatRoom(this, user, chatLogFile, sessionId);
-        chatRoom.setPreferredSize(new Dimension(400,300));
+        chatRoom.setPreferredSize(new Dimension(400, 260));
     }
 
     /**
@@ -747,6 +746,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             public void run() {
                 initTCPCommunication();
 
+
             }
         };
         t.start();
@@ -810,6 +810,10 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         user.setUserDetails(userDetails);
         user.setUserImagePath(userImagePath);
 
+    }
+
+    public JFrame getParentFrame() {
+        return parent;
     }
 
     public String getUserName() {
@@ -1309,7 +1313,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         audioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         audioPanel.setMinimumSize(new java.awt.Dimension(50, 11));
-        audioPanel.setPreferredSize(new java.awt.Dimension(229, 100));
+        audioPanel.setPreferredSize(new java.awt.Dimension(210, 100));
         audioPanel.setLayout(new java.awt.BorderLayout());
 
         mAudioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Speaker"));
