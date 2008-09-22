@@ -31,6 +31,6 @@ public class ImageFilter extends FileFilter {
 
     //The description of this filter
     public String getDescription() {
-        return "mages";
+        return "Images";
     }
 }
