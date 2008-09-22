@@ -4,7 +4,9 @@
  */
 package avoir.realtime.tcp.launcher;
 
+import java.applet.AppletContext;
 import javax.swing.JApplet;
+import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -26,7 +28,12 @@ public interface RealtimePlugin {
             boolean isSlidesHost,
             String siteRoot,
             String slideServerId,
-            String resourcesPath);
+            String resourcesPath,
+            AppletContext appletContext);
+
+    public void setUserDetails(String userDetails);
+
+    public void setUserImagePath(String userImagePath);
 
     public void setSessionTitle(String title);
 
@@ -46,5 +53,14 @@ public interface RealtimePlugin {
 
     public void setMode(int mode);
 
-    public JPanel createClassroomBase(String host,int port,int mode);
+    public JPanel createClassroomBase(String host, int port, int mode, String username,
+            String fullnames,
+            boolean isPresenter,
+            String sessionId,
+            String userLevel,
+            String slidesDir,
+            String siteRoot,
+            String slidesServerId,
+            String resourcesPath,
+            JFrame parent);
 }

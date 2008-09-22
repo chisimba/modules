@@ -46,11 +46,12 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private String internalVer = REALTIME_HOME + "/lib/" + v.version;
     private int MODE = Constants.APPLET;
     int plVer = 0;
+    private String version="1.0.2";
     private String[][] plugins = {
         {"jspeex.jar", "Audio Codec"},
-        {"realtime-base-1.0.1.jar", "Realtime Base",},
-        {"realtime-whiteboard-1.0.1.jar", "Whiteboard",},
-        {"realtime-pluginmanager-1.0.1.jar", "Plugin Manager"},
+        {"realtime-base-"+version+".jar", "Realtime Base",},
+        {"realtime-whiteboard-"+version+".jar", "Whiteboard",},
+        {"realtime-pluginmanager-"+version+".jar", "Plugin Manager"},
     };
     private String[] sounds = {
         "test.wav",
@@ -80,10 +81,13 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private int supernodePort = 80;
     private Timer monitor;
     private JFrame mainFrame = new JFrame("Chisimba Realtime Virtual Classroom");
+    private String userDetails;
+    private String userImagePath;
 
     /** Initializes the applet RealtimeLauncher */
     @Override
     public void init() {
+
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
 
@@ -252,7 +256,6 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
         //the host from which this applet originated
         host = getCodeBase().getHost();
-
         launcher = new Launcher(userName, host, sessionId, sessionTitle, slidesDir, localhost, slideServerId);
         //start the slide server ..
         try {
@@ -267,7 +270,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
 
-            out.println("GET " + "/chisimba/app/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId + " HTTP/1.1");
+            out.println("GET " + "/app/index.php?module=webpresent&action=runslideserver&slideServerId=" + slideServerId + " HTTP/1.1");
             out.println("Host: " + host + ":" + supernodePort + "");
             out.println("Connection: Close");
             out.println();
@@ -287,8 +290,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                 Thread.currentThread().sleep(50);
             }
 
-// display the response to the out console
-            System.out.println(sb.toString());
+            // display the response to the out console
+            //  System.out.println(sb.toString());
             socket.close();
 
 
@@ -350,9 +353,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private void requestForSounds() {
         for (int i = 0; i < sounds.length; i++) {
             String path = "../sounds/" + sounds[i];
-            if (MODE == Constants.APPLET) {
-                path = "/sounds/" + sounds[i];
-            }
+
             requestForResource(path, "sounds");
         }
     }
@@ -364,10 +365,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         for (int i = 0; i < plugins.length; i++) {
             setText("Requesting for " + plugins[i][1] + " ...", false);
             String path = "../lib/" + plugins[i][0];
-            if (MODE == Constants.APPLET) {
 
-                path = plugins[i][0];
-            }
             requestForResource(path, plugins[i][1]);
             //got to monitor this one for 1 full minute.
             if (i == plugins.length - 1) {
@@ -404,9 +402,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private void requestForResource(String filename, String desc) {
 
         String filepath = filename;
-        if (MODE == Constants.APPLET) {
-            filepath = resourcesPath + "/" + filename;
-        }
+
         ModuleFileRequestPacket p =
                 new ModuleFileRequestPacket(null, filename, filepath,
                 slideServerId, userName);
@@ -438,7 +434,33 @@ public class RealtimeLauncher extends javax.swing.JApplet {
      * @param host
      * @param port
      */
-    private void launchAsApplication(String host, int port) {
+    private void launchAsApplication(String host, int port, String username,
+            String fullnames,
+            boolean isPresenter,
+            String sessionId,
+            String sessionTitle,
+            String userDetails,
+            String userImagePath,
+            String isLoggedIn,
+            String siteRoot,
+            String resourcesPath,
+            String userLevel,
+            String chatLogPath,
+            String filePath,
+            String slideServerId) {
+
+        this.userName = username;
+        this.fullName = fullnames;
+        this.isPresenter = isPresenter;
+        this.sessionTitle=sessionTitle;
+        this.sessionId = sessionId;
+        this.userDetails = userDetails;
+        this.userImagePath = userImagePath;
+        this.siteRoot = siteRoot;
+        this.resourcesPath = resourcesPath;
+        this.userLevel = userLevel;
+        this.slidesDir = filePath;
+        this.slideServerId = slideServerId;
         MODE = Constants.WEBSTART;
         supernodeHost = host;
         supernodePort = port;
@@ -463,6 +485,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
      * @param args
      */
     public static void main(String[] args) {
+       
         int port = 80;
         String host = "196.21.45.85";
         try {
@@ -475,7 +498,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             host = "196.21.45.85";
         }
 
-        new RealtimeLauncher().launchAsApplication(host, port);
+        new RealtimeLauncher().launchAsApplication(host, port,
+                args[2], args[3], new Boolean(args[4]), args[5], args[6], args[7],
+                args[8], args[9], args[10], args[11], args[12], args[13], args[14],args[15]);
     }
 
     @Override
@@ -523,9 +548,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
         try {
             String[] xplugins = {
-                "realtime-whiteboard-1.0.1.jar",
-                "realtime-base-1.0.1.jar",
-                "realtime-pluginmanager-1.0.1.jar",
+                "realtime-whiteboard-"+version+".jar",
+                "realtime-base-"+version+".jar",
+                "realtime-pluginmanager-"+version+".jar",
                 "jspeex.jar",
             };
             for (int n = 0; n < xplugins.length; n++) {
@@ -538,7 +563,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
             pl.setSessionTitle(sessionTitle);
             pl.setApplectCodeBase(appletCodeBase);
             pl.setGlassPaneHandler(this);
-
+            pl.setUserDetails(userDetails);
+            pl.setUserImagePath(userImagePath);
             if (MODE == Constants.APPLET) {
                 JPanel basePanel = pl.createBase(
                         userLevel,
@@ -551,7 +577,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                         localhost,
                         siteRoot,
                         slideServerId,
-                        resourcesPath);
+                        resourcesPath, getAppletContext());
                 mainPanel.add(basePanel, BorderLayout.CENTER);
                 JMenuBar menuBar = pl.getMenuBar();
                 setJMenuBar(menuBar);
@@ -559,12 +585,23 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
             } else {
                 Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-                JPanel basePanel = pl.createClassroomBase(supernodeHost,supernodePort, MODE);
+                JPanel basePanel = pl.createClassroomBase(
+                        supernodeHost, supernodePort, MODE, userName,
+                        fullName,
+                        isPresenter,
+                        sessionId,  userLevel,
+                        slidesDir,
+                        siteRoot,
+                        slideServerId,
+                        resourcesPath,
+                        mainFrame);
                 JMenuBar menuBar = pl.getMenuBar();
+
+
                 mainPanel.add(basePanel, BorderLayout.CENTER);
                 mainFrame.setJMenuBar(menuBar);
 
-                mainFrame.setSize((ss.width / 8) * 7, (ss.height / 8) * 7);
+                mainFrame.setSize((ss.width / 8) * 8, (ss.height / 8) * 8);
                 mainFrame.setLocationRelativeTo(null);
             }
 

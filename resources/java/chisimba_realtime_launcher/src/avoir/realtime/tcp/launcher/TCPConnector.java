@@ -306,7 +306,7 @@ public class TCPConnector {
                     ex.printStackTrace();
                 }
                 dfactory = context.getSocketFactory();
-//System.out.println("Connecting to "+SUPERNODE_HOST+": "+SUPERNODE_PORT);
+
                 socket = (SSLSocket) dfactory.createSocket(SUPERNODE_HOST, SUPERNODE_PORT);
                 try {
                     socket.startHandshake();
