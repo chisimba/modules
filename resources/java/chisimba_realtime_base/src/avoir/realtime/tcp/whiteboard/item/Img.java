@@ -21,7 +21,6 @@ package avoir.realtime.tcp.whiteboard.item;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import javax.swing.ImageIcon;
 import java.awt.Rectangle;
 
 /**
@@ -34,9 +33,28 @@ public class Img implements Item {
     private int y;
     private int width;
     private int height;
-    private ImageIcon image;
     private String path;
     private String id;
+    private int index;
+    private int imageIndex;
+
+    public Img(int x, int y, int width, int height, String path, int imageIndex,String id) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.path = path;
+        this.imageIndex=imageIndex;
+        this.id=id;
+    }
+
+    public int getImageIndex() {
+        return imageIndex;
+    }
+
+    public void setImageIndex(int imageIndex) {
+        this.imageIndex = imageIndex;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -45,24 +63,6 @@ public class Img implements Item {
     public String getId() {
         return id;
     }
-
-    /**
-     * Constructs a new Image
-     *
-     * @param ix Horizontal coordinate
-     * @param iy Vertical coordinate
-     * @param iw Width
-     * @param ih Height
-    
-     */
-    public Img(ImageIcon image, int ix, int iy, int iw, int ih) {
-        x = ix;
-        y = iy;
-        width = iw;
-        height = ih;
-        this.image = image;
-    }
-    int index;
 
     public int getIndex() {
         return index;
@@ -90,14 +90,6 @@ public class Img implements Item {
         Rectangle tmp = new Rectangle(this.x, this.y, width, height);
 
         return tmp.contains(x, y);
-    }
-
-    /**
-     * returns the Image of this object
-     * @return ImageIcon
-     */
-    public ImageIcon getImg() {
-        return image;
     }
 
     /**
@@ -160,7 +152,7 @@ public class Img implements Item {
      * @return The Imgangle in its new position
      */
     public Item getTranslated(int dX, int dY) {
-        return new Img(image, x + dX, y + dY, width, height);
+        return new Img(x + dX, y + dY, width, height, path,imageIndex,id);
     }
 
     /**
@@ -168,6 +160,6 @@ public class Img implements Item {
      * @return String of the form "Imgangle",X coord, Y coord, width, height, Color, fill
      */
     public String toString() {
-        return "Image - x:" + x + " y:" + y + " w:" + width + " h:" + height + "\n";
+        return "Image - x:" + x + " y:" + y + " w:" + width + " h:" + height + "indec: "+imageIndex+"\n";
     }
 }
