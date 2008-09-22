@@ -1,4 +1,4 @@
-/**sase
+/**
  *  $Id: ServerThread.java,v 1.13 2007/05/18 10:38:44 davidwaf Exp $
  *
  *  Copyright (C) GNU/GPL AVOIR 2007
@@ -37,6 +37,7 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.sessionmonitor.*;
 
+import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.whiteboard.item.Item;
 import com.artofsolving.jodconverter.DocumentConverter;
@@ -50,7 +51,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.JOptionPane;
+import avoir.realtime.tcp.common.Constants;
 
 /**
  * Handles communications for the server, to and from the clients Processes
@@ -83,8 +84,10 @@ public class ServerThread extends Thread {
     private Vector<SessionMonitor> sessionmonitors;
     private boolean sendSlideServerErrorMessage = false;
     private Vector<Item> whiteboardItems;
-    private boolean waitForSlideServer = false;
     public static final int BUFFER_SIZE = 4096;
+    private FileTransferEngine fileTransferEngine = new FileTransferEngine();
+    private SlideProcessor slideProcessor;
+    private ApplicationSharingProcessor appShareProcessor;
 
     /**
      * Constructor accepts connections
@@ -112,7 +115,8 @@ public class ServerThread extends Thread {
         tName = getName();
         logger.info("Server " + tName + " accepted connection from " + socket.getInetAddress() + "\n");
         this.socket = socket;
-
+        slideProcessor = new SlideProcessor(this, slideServers, clients);
+        appShareProcessor = new ApplicationSharingProcessor(this, clients);
     }
 
     /**
@@ -125,6 +129,7 @@ public class ServerThread extends Thread {
     public void run() {
         try {
             outStream = socket.getOutputStream();
+         outStream.flush();
             objectOutStream = new ObjectOutputStream(
                     new BufferedOutputStream(outStream));
             objectOutStream.flush();
@@ -279,7 +284,7 @@ public class ServerThread extends Thread {
                 presentationLocks.addElement(session);
             }
             broadcastMsg(new MsgPacket(user.getFullName() + " presenting. Started at " +
-                    getDateTime(), false, false), user.getSessionId());
+                    getDateTime(), Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.ALL), user.getSessionId());
         } else {
             presentationLocked = true;
             user.setAsPresenter(false);
@@ -308,38 +313,21 @@ public class ServerThread extends Thread {
     }
 
     /**
-     * Add new slide server. But we dont need duplicates, so take care of those first
-     * @param ss
-     */
-    private void addSlideServer(SlideServer ss) {
-        Vector<Integer> dups = new Vector<Integer>();
-        for (int i = 0; i < slideServers.size(); i++) {
-            if (slideServers.elementAt(i).getId().equals(ss.getId())) {
-                dups.add(i);
-            }
-        }
-        for (int i = 0; i < dups.size(); i++) {
-            slideServers.removeElementAt(i);
-        }
-
-        slideServers.add(ss);
-    }
-
-    /**
      * Listens to clients requests
      * @param objectIn
      * @param objectOut
      */
     private void listen(ObjectInputStream objectIn, final ObjectOutputStream objectOut) {
+
         while (true) {
             try {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-                // logger.info(obj.getClass() + "");
+                //logger.info(obj.getClass() + "");
                 } catch (Exception ex) {
                     logger.info(ex.getLocalizedMessage());
-                    waitForSlideServer = false;
+
                     /* if (thisUser != null) {
                     removeDisconnectedUsers();
                     removeNullLockedPresentations();
@@ -366,6 +354,7 @@ public class ServerThread extends Thread {
                     ModuleFileReplyPacket p = (ModuleFileReplyPacket) obj;
                     processModuleFileReplyPacket(p);
                 }
+
                 if (obj instanceof SessionListingRequestPacket) {
 
                     SessionListingRequestPacket p = (SessionListingRequestPacket) obj;
@@ -393,7 +382,7 @@ public class ServerThread extends Thread {
                 }
                 if (packet != null) {
                     //clean null ones before doing anything
-                    removeNullClients();
+                    // removeNullClients();
                     if (packet instanceof AckPacket) {
                         processAckPacket(packet, objectOut);
                     } else if (packet instanceof SessionStatePacket) {
@@ -401,15 +390,20 @@ public class ServerThread extends Thread {
                         SessionStatePacket p = (SessionStatePacket) packet;
                         processSessionPacket(p);
                     } else if (packet instanceof RemoveMePacket) {
-                        removeSlideServer((RemoveMePacket) packet);
+                        slideProcessor.removeSlideServer((RemoveMePacket) packet);
+                    } else if (packet instanceof UploadMsgPacket) {
+                        processUploadMsgPacket((UploadMsgPacket) packet);
                     } else if (packet instanceof QuitPacket) {
                         broadcastPacket(packet, false);
                     } else if (packet instanceof SurveyAnswerPacket) {
                         broadcastSurveyAnswerPacket(packet, thisUser.getSessionId());
                     } else if (packet instanceof HeartBeat) {
                         processHeartBeat((HeartBeat) packet);
+                    } else if (obj instanceof DesktopPacket) {
+                        appShareProcessor.broadCastDesktopPacket((DesktopPacket) packet);
+
                     } else if (packet instanceof LocalSlideCacheRequestPacket) {
-                        processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
+                        slideProcessor.processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
                     } else if (packet instanceof FilePacket) {
                         processFilePacket((FilePacket) packet);
                     } else if (packet instanceof OutlinePacket) {
@@ -426,8 +420,9 @@ public class ServerThread extends Thread {
                         SurveyPackPacket p = (SurveyPackPacket) packet;
                         broadcastPacket(p, thisUser.getSessionId());
                     } else if (packet instanceof PointerPacket) {
-                        broadcastPacket((PointerPacket) packet, true);
-
+                        broadcastPacket((PointerPacket) packet, thisUser.getSessionId(), thisUser.getUserName());
+                    } else if (packet instanceof ClearSlidesPacket) {
+                        broadcastPacket(packet, thisUser.getSessionId(), thisUser.getUserName());
                     } else if (packet instanceof WhiteboardPacket) {
                         WhiteboardPacket p = (WhiteboardPacket) packet;
                         processWhiteboardPacket(p);
@@ -436,14 +431,16 @@ public class ServerThread extends Thread {
                         updateUserPresenceStatus(p.isShowIcon(), p.getUserName(), p.getPresenceType());
                         broadcastPresencePacket(p, p.getSessionId());
                     } else if (packet instanceof FileUploadPacket) {
-
-                        processFileUpload((FileUploadPacket) packet);
+                        FileUploadPacket f = (FileUploadPacket) packet;
+                        if (f.isServerUpload()) {
+                            processFileUpload(f);
+                        } else {
+                            processBinaryFileChunckPacket(f);
+                        }
                     } else if (packet instanceof BinaryFileSaveRequestPacket) {
                         processBinaryFileSaveRequestPacket((BinaryFileSaveRequestPacket) packet);
                     } else if (packet instanceof BinaryFileSaveReplyPacket) {
                         processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
-                    } else if (packet instanceof BinaryFileChunkPacket) {
-                        processBinaryFileChunckPacket((BinaryFileChunkPacket) packet);
                     } else if (packet instanceof AudioPacket) {
                         AudioPacket p = (AudioPacket) packet;
                         //this is a test....send it back to sender
@@ -458,7 +455,7 @@ public class ServerThread extends Thread {
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket rmup = (RemoveUserPacket) packet;
                         synchronized (clients) {
-                            waitForSlideServer = false;
+
                             clients.removeElement(socket, objectOut, outStream);
                         }
                         updateMonitors();
@@ -468,7 +465,7 @@ public class ServerThread extends Thread {
 
                             removeLock(rmup.getUser().getSessionId(), rmup.getUser().getUserName());
                             //inform members of this action
-                            MsgPacket p = new MsgPacket(rmup.getUser().getFullName() + " has stopped the live presentation.", false, true);
+                            MsgPacket p = new MsgPacket(rmup.getUser().getFullName() + " has stopped the live presentation.", Constants.LONGTERM_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.ALL);
                             broadcastMsg(p, rmup.getUser().getSessionId());
                         }
                         //update members user list
@@ -481,8 +478,8 @@ public class ServerThread extends Thread {
                         }
 
                     } else if (packet instanceof RestartServerPacket) {
-                        //  restartServer();
-                        } else if (packet instanceof ChatPacket) {
+                        restartServer();
+                    } else if (packet instanceof ChatPacket) {
                         // Session session = getSession(thisUser.getSessionId());
                         ChatPacket p = (ChatPacket) packet;
                         synchronized (clients) {
@@ -504,7 +501,7 @@ public class ServerThread extends Thread {
                     } else {
                         //just reply to the whoever requested that there is a problem
                         try {
-                            objectOut.writeObject(new MsgPacket("Server received request it could not understand!", true, true));
+                            objectOut.writeObject(new MsgPacket("Server received request it could not understand!", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.ALL));
                             objectOut.flush();
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -527,7 +524,7 @@ public class ServerThread extends Thread {
         session.setState(p.getState());
         setCurrentSession(session);
         String msg = p.getState() ? session.getFullName() + " presenting. Started at " + session.getTime() : "Session Paused";
-        MsgPacket msgP = new MsgPacket(msg, true, false);
+        MsgPacket msgP = new MsgPacket(msg, Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.ALL);
         broadcastMsg(msgP, thisUser.getSessionId());
     }
 
@@ -543,6 +540,7 @@ public class ServerThread extends Thread {
                 if (xt.getId().equals(item.getId())) {
                     switch (p.getStatus()) {
                         case avoir.realtime.tcp.common.Constants.REPLACE_ITEM: {
+
                             whiteboardItems.set(i, item);
                             break;
                         }
@@ -558,7 +556,7 @@ public class ServerThread extends Thread {
         if (p.getStatus() == avoir.realtime.tcp.common.Constants.CLEAR_ITEMS) {
             whiteboardItems.clear();
         }
-        broadcastPacket(p, thisUser.getSessionId(),thisUser.getUserName());
+        broadcastPacket(p, thisUser.getSessionId(), thisUser.getUserName());
 
     }
 
@@ -572,7 +570,7 @@ public class ServerThread extends Thread {
                 logger.info(thisUser.getUserName() + " registered as slide server");
                 synchronized (slideServers) {
                     //       slideServers.addElement(new SlideServer(thisUser.getUserName(), objectOut, socket));
-                    addSlideServer(new SlideServer(thisUser.getUserName(), objectOut, socket));
+                    slideProcessor.addSlideServer(new SlideServer(thisUser.getUserName(), objectOut, socket));
                 }
             } else {
                 logger.info(thisUser.getFullName() + " already exists ...shutting down!");
@@ -580,6 +578,8 @@ public class ServerThread extends Thread {
                 sendPacket(new QuitPacket(thisUser.getSessionId()), objectOut);
             }
         } else {
+
+
             log("users.txt", getDateTime() + " " + thisUser.getFullName() + "\n");
             if (thisUser.getLevel() == (UserLevel.LECTURER)) {
                 synchronized (clients) {
@@ -613,20 +613,21 @@ public class ServerThread extends Thread {
             //check if there is presenter....tell so
             Session session = getSession(thisUser.getSessionId());
             if (session == null) {
-                MsgPacket p = new MsgPacket("This presentation has no presenter [Is not Live].", false, true);
+                MsgPacket p = new MsgPacket("This presentation has no presenter [Is not Live].", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.ALL);
                 sendPacket(p, objectOut);
             } else {
-                MsgPacket p = new MsgPacket(session.getFullName() + " presenting. Started at " + session.getTime(), false, false);
+                MsgPacket p = new MsgPacket(session.getFullName() + " presenting. Started at " + session.getTime(), Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.ALL);
                 sendPacket(p, objectOut);
                 if (!thisUser.isPresenter()) {
                     OutlinePacket outline = new OutlinePacket(thisUser.getSessionId(), null, 0, session.getOutLine(), 0);
                     sendPacket(outline, objectOut);
                 }
+                //send over any slides that might be available
+                String slidesPath = "../uploads/" + thisUser.getSessionId();
+                populateSessionConvertedDoc(slidesPath);
             }
 
-            //update any monitors too
-            updateMonitors();
-
+        // connectToSlideServer();
         }
     }
 
@@ -674,14 +675,14 @@ public class ServerThread extends Thread {
     }
 
     private void processFileUpload(FileUploadPacket p) {
-
+        new File("../uploads/" + thisUser.getSessionId()).mkdirs();
         int nChunks = p.getTotalChunks();
         int chunk = p.getChunkNo();
         String clientID = p.getClientId();
 
         if (nChunks == -1 || chunk == -1) {
             System.out.println("Missing chunk information");
-            sendPacket(new MsgPacket("Missing chunk information", false, true), objectOutStream);
+            sendPacket(new MsgPacket("Missing chunk information", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
 
         }
 
@@ -693,20 +694,25 @@ public class ServerThread extends Thread {
 
         try {
             if (nChunks == 1) {
-                out = new FileOutputStream("../uploads/" + p.getFilename());
+                out = new FileOutputStream("../uploads/" + thisUser.getSessionId() + "/" + p.getFilename());
             } else {
                 out = new FileOutputStream(getTempFile(clientID), (chunk > 0));
             }
-            sendPacket(new UploadOKPacket(thisUser.getSessionId(), chunk + 1), objectOutStream);
+//            sendPacket(new UploadMsgPacket(thisUser.getSessionId(), chunk + 1), objectOutStream);
             out.write(p.getBuff());
             out.close();
             if (nChunks == 1) {
-                if (jodConvert("../uploads/" + p.getFilename())) {
-                    sendPacket(new MsgPacket("Import appears successfull.", false, false), objectOutStream);
-                    populateConvertedDoc(createSlidesPath("../uploads/" + p.getFilename()), p.getFilename());
-                } else {
-                    sendPacket(new MsgPacket("Conversion Failed: Document cannot be imported.", false, false), objectOutStream);
+                if (p.getFileType() == Constants.PRESENTATION) {
+                    if (jodConvert("../uploads/" + thisUser.getSessionId() + "/" + p.getFilename())) {
+                        sendPacket(new MsgPacket("Import appears successfull.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+                        populateConvertedDoc(createSlidesPath("../uploads/" + thisUser.getSessionId() + "/" + p.getFilename()), p.getFilename());
+                    } else {
+                        sendPacket(new MsgPacket("Conversion Failed: Document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
 
+                    }
+                }
+                if (p.getFileType() == Constants.IMAGE) {
+                    populateImage(p.getFilename());
                 }
                 return;
             }
@@ -715,35 +721,58 @@ public class ServerThread extends Thread {
             ex.printStackTrace();
             System.out.println("Error creating file");
 
-            sendPacket(new MsgPacket("Error creating file", false, true), objectOutStream);
+            sendPacket(new MsgPacket("Error creating file", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
             return;
         }
 
         if (nChunks > 1 && chunk == nChunks - 1) {
 
             File tmpFile = new File(getTempFile(clientID));
-            File destFile = new File("../uploads/" + p.getFilename());
+            File destFile = new File("../uploads/" + thisUser.getSessionId() + "/" + p.getFilename());
             if (destFile.exists()) {
                 destFile.delete();
             }
             if (!tmpFile.renameTo(destFile)) {
-                sendPacket(new MsgPacket("Unable to create file", false, true), objectOutStream);
+                sendPacket(new MsgPacket("Unable to create file", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
             } else {
-                if (jodConvert(destFile.getAbsolutePath())) {
-                    sendPacket(new MsgPacket("Import appears successful.", false, false), objectOutStream);
-                    populateConvertedDoc(createSlidesPath(destFile.getAbsolutePath()), p.getFilename());
-                } else {
-                    sendPacket(new MsgPacket("Conversion Failed, document cannot be imported.", false, true), objectOutStream);
+                if (p.getFileType() == Constants.PRESENTATION) {
+                    if (jodConvert(destFile.getAbsolutePath())) {
+                        sendPacket(new MsgPacket("Import appears successful.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+                        populateConvertedDoc(createSlidesPath(destFile.getAbsolutePath()), p.getFilename());
+                    } else {
+                        sendPacket(new MsgPacket("Conversion Failed, document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+                    }
                 }
-
+                if (p.getFileType() == Constants.IMAGE) {
+                    populateImage(p.getFilename());
+                }
             }
         } else {
             float val = chunk + 1;
             float total = p.getTotalChunks();
             String sval = new DecimalFormat("#.#").format((val / total) * 100) + "%";
-            sendPacket(new MsgPacket("Upload Progress " + sval, false, true), objectOutStream);
+            sendPacket(new MsgPacket("Upload Progress " + sval, Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
         }
 
+    }
+
+    private void populateImage(final String filename) {
+
+        final String filePath = "../uploads/" + thisUser.getSessionId() + "/" + filename;
+        /*
+        
+        byte[] byteArray = readFile(filePath);
+        ImagePacket packet = new ImagePacket(thisUser.getSessionId(), thisUser.getUserName(), byteArray, filename);
+        
+        broadcastPacket(packet, true);
+         */
+        Thread t = new Thread() {
+
+            public void run() {
+                fileTransferEngine.populateBinaryFile(ServerThread.this, filePath);
+            }
+        };
+        t.start();
     }
 
     private void populateConvertedDoc(String slidesPath, String slideName) {
@@ -757,16 +786,16 @@ public class ServerThread extends Thread {
                 boolean lastFile = i == (slides.length - 1) ? true : false;
                 byte[] byteArray = readFile(filePath);
                 /**
-                  public ClassroomSlidePacket(
+                public ClassroomSlidePacket(
                  * String sessionId, 
                  * String username, 
                  * byte[] byteArray, boolean lastFile, int maxValue, int currentValue, String presentationName) {
-   
+                
                  */
                 ClassroomSlidePacket packet = new ClassroomSlidePacket(
                         thisUser.getSessionId(),
                         thisUser.getUserName(),
-                        byteArray, 
+                        byteArray,
                         filename,
                         lastFile,
                         slides.length,
@@ -778,6 +807,36 @@ public class ServerThread extends Thread {
         }
     }
 
+    private void populateSessionConvertedDoc(String slidesPath) {
+        /*String[] slideNames = new File(slidesPath).list();
+        if (slideNames != null) {
+        for (int k = 0; k < slideNames.length; k++) {
+        String slideName = slideNames[k];
+        int slides[] = getImageFileNames(slidesPath);
+        // i hope to use threads here..dont know if it will help
+        if (slides != null) {
+        for (int i = 0; i <
+        slides.length; i++) {
+        String filename = "img" + i + ".jpg";
+        String filePath = slidesPath + "/" + filename;
+        boolean lastFile = i == (slides.length - 1) ? true : false;
+        byte[] byteArray = readFile(filePath);
+        ClassroomSlidePacket packet = new ClassroomSlidePacket(
+        thisUser.getSessionId(),
+        thisUser.getUserName(),
+        byteArray,
+        filename,
+        lastFile,
+        slides.length,
+        i,
+        slideName);
+        sendPacket(packet, objectOutStream);
+        }
+        }
+        }
+        }*/
+    }
+
     private String createSlidesPath(String filename) {
         int dot = filename.lastIndexOf(".");
         String outname = filename.substring(0, dot);
@@ -786,7 +845,7 @@ public class ServerThread extends Thread {
 
     private boolean jodConvert(String filename) {
         try {
-            sendPacket(new MsgPacket("Converting ...", false, true), objectOutStream);
+            sendPacket(new MsgPacket("Converting ...", Constants.LONGTERM_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
             File inputFile = new File(filename);
             int dot = filename.lastIndexOf(".");
             String outname = filename.substring(0, dot);
@@ -819,15 +878,31 @@ public class ServerThread extends Thread {
         }
     }
 
-    private static String getTempFile(String clientID) {
-        return "../uploads/" + clientID + ".tmp";
+    private String getTempFile(String clientID) {
+        return "../uploads/" + thisUser.getSessionId() + "/" + clientID + ".tmp";
     }
 
-    private void processBinaryFileChunckPacket(BinaryFileChunkPacket p) {
+    private void processUploadMsgPacket(UploadMsgPacket p) {
 
         synchronized (clients) {
             for (int i = 0; i < clients.size(); i++) {
-                if (clients.nameAt(i).getUserName().equals(p.getRecepientName())) {
+                if (clients.nameAt(i).getUserName().equals(p.getRecepient())) {
+                    try {
+                        clients.elementAt(i).writeObject(p);
+                        clients.elementAt(i).flush();
+                    } catch (IOException ex) {
+                        logger.info(ex.getLocalizedMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    private void processBinaryFileChunckPacket(FileUploadPacket p) {
+
+        synchronized (clients) {
+            for (int i = 0; i < clients.size(); i++) {
+                if (clients.nameAt(i).getUserName().equals(p.getRecepient())) {
                     try {
                         clients.elementAt(i).writeObject(p);
                         clients.elementAt(i).flush();
@@ -902,7 +977,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void delay(long time) {
+    public void delay(long time) {
         try {
             Thread.sleep(time);
         } catch (Exception ex) {
@@ -953,6 +1028,7 @@ public class ServerThread extends Thread {
                                 session.setOutLine(outline);
                                 setCurrentSession(session);
                             }
+
                             clients.elementAt(i).writeObject(packet);
                             clients.elementAt(i).flush();
 
@@ -1032,75 +1108,55 @@ public class ServerThread extends Thread {
             byte[] byteArray = packet.getByteArray();
             fc.write(ByteBuffer.wrap(byteArray));
             fc.close();
-            sendPacket(new MsgPacket("File Received", false, false), objectOutStream);
+            sendPacket(new MsgPacket("File Received", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.ALL), objectOutStream);
         } catch (IOException ex) {
-            sendPacket(new MsgPacket(ex.getMessage(), false, false), objectOutStream);
+            sendPacket(new MsgPacket(ex.getMessage(), Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.ALL), objectOutStream);
             logger.info(ex.getLocalizedMessage());
         }
     }
 
     private void restartServer() {
-        ProcessBuilder pb = new ProcessBuilder("/usr/lib/realtime/bin/realtime-supernode", "restart");
-
+        logger.info("Restarting server ...");
         try {
-            Process p = pb.start();
+            logger.info("Closing socket ...");
+
+            boolean closed = false;
+            boolean unbound = false;
+            int i = 0;
+            while (!closed && !unbound) {
+                socket.close();
+                closed = socket.isClosed();
+                // socket.
+                delay(1000);
+                System.out.println("retrying " + i++ + " ...");
+                if (i > 10) {
+                    break;
+                }
+            }
+            logger.info("Socket closed.");
+
+            Process p = Runtime.getRuntime().exec("./realtime-server restart");
+
+           // p = Runtime.getRuntime().exec(System.getProperty("user.dir") + "/run-server");
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     p.getInputStream()));
             String s = "";
             while ((s = in.readLine()) != null) {
-                logger.info("myinfo: " + s);
+                System.out.println("myinfo: " + s);
             }
 
             in = new BufferedReader(new InputStreamReader(
                     p.getErrorStream()));
             while ((s = in.readLine()) != null) {
-                logger.info("myerror: " + s);
+                System.out.println("myerror: " + s);
             }
             p.waitFor();
+
             logger.info("Restarting server ...");
+            System.exit(0);
         } catch (Exception ex) {
 
             logger.info(ex.getLocalizedMessage());
-        }
-    }
-
-    private void removeSlideServer(RemoveMePacket p) {
-        synchronized (slideServers) {
-
-            //first, get hold of offenders 
-            for (int i = 0; i < slideServers.size(); i++) {
-                try {
-                    slideServers.elementAt(i).getId().equals(p.getId());
-                    slideServers.remove(i);
-                    break;
-                } catch (Exception ex) {
-                    logger.info(ex.getLocalizedMessage());
-                }
-
-            }
-        }
-    }
-
-    private void removeNullSlideServers() {
-        synchronized (slideServers) {
-            Vector<SlideServer> invalidSlideServers = new Vector<SlideServer>();
-
-            //first, get hold of offenders 
-            for (int i = 0; i < slideServers.size(); i++) {
-                try {
-                    slideServers.elementAt(i).getObjectOutputStream().writeObject(new TestPacket());
-                    slideServers.elementAt(i).getObjectOutputStream().flush();
-                } catch (Exception ex) {
-                    logger.info(ex.getLocalizedMessage());
-                    invalidSlideServers.addElement(slideServers.elementAt(i));
-                }
-
-            }
-            //then purge them
-            for (int i = 0; i < invalidSlideServers.size(); i++) {
-                slideServers.remove(invalidSlideServers.elementAt(i));
-
-            }
         }
     }
 
@@ -1129,7 +1185,7 @@ public class ServerThread extends Thread {
 
     private boolean slideServerExists(String id) {
 
-        removeNullSlideServers();
+        slideProcessor.removeNullSlideServers();
         boolean exists = false;
         synchronized (slideServers) {
             if (slideServers.size() < 1) {
@@ -1318,23 +1374,6 @@ public class ServerThread extends Thread {
         return null;
     }
 
-    private void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
-        //locate the slides server based on the ids
-        boolean slideServerFound = false;
-        removeNullSlideServers();
-        synchronized (slideServers) {
-            for (int i = 0; i < slideServers.size(); i++) {
-                if (slideServers.elementAt(i).getId().equals(packet.getSlidesServerId())) {
-                    sendPacket(packet, slideServers.elementAt(i).getObjectOutputStream());
-                    slideServerFound = true;
-                //notify();
-                }
-            }
-        }
-        if (!slideServerFound) {
-            sendPacket(new MsgPacket("Slide server " + packet.getSlidesServerId() + " not found!", false, true), objectOutStream);
-        }
-    }
     /*
     private void processResetSession(VotePacket p) {
     for (int i = 0; i < clients.size(); i++) {
@@ -1346,7 +1385,6 @@ public class ServerThread extends Thread {
     }
     }
     }*/
-
     /**
      * handle a raised hand/or a prevoiusly raised hand that probably is
      * being put down
@@ -1442,7 +1480,7 @@ public class ServerThread extends Thread {
 
     }
 
-    private void broadcastPacket(RealtimePacket packet, String sessionId) {
+    public void broadcastPacket(RealtimePacket packet, String sessionId) {
         synchronized (clients) {
 
             //send it to all those people logged in on this presentation (session)
@@ -1461,7 +1499,7 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void broadcastClassroomSlidePacket(ClassroomSlidePacket packet, String sessionId) {
+    public void broadcastClassroomSlidePacket(ClassroomSlidePacket packet, String sessionId) {
         synchronized (clients) {
 
             //send it to all those people logged in on this presentation (session)
@@ -1480,7 +1518,13 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void broadcastPacket(RealtimePacket packet, String sessionId, String username) {
+    /**
+     * Send the packet to all but no this user. Pass a null to send to all
+     * @param packet
+     * @param sessionId
+     * @param username
+     */
+    public void broadcastPacket(RealtimePacket packet, String sessionId, String username) {
         synchronized (clients) {
 
             //send it to all those people logged in on this presentation (session)
@@ -1488,10 +1532,10 @@ public class ServerThread extends Thread {
                 if (clients.nameAt(i).getSessionId().equals(sessionId)) {
                     if (!clients.nameAt(i).getUserName().equals(username)) {
                         try {
-                         //   if (!clients.nameAt(i).isPresenter()) {
-                                clients.elementAt(i).writeObject(packet);
-                                clients.elementAt(i).flush();
-                           // }
+                            //   if (!clients.nameAt(i).isPresenter()) {
+                            clients.elementAt(i).writeObject(packet);
+                            clients.elementAt(i).flush();
+                        // }
                         } catch (IOException ex) {
                             logger.info(ex.getLocalizedMessage());
                         }
@@ -1524,7 +1568,11 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void broadcastPacket(RealtimePacket packet, boolean sendToPresenter) {
+    public User getThisUser() {
+        return thisUser;
+    }
+
+    public void broadcastPacket(RealtimePacket packet, boolean sendToPresenter) {
         synchronized (clients) {
 
             //send it to all those people logged in on this presentation (session)
@@ -1665,25 +1713,6 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void broadcastSlide(NewSlideReplyPacket p) {
-        synchronized (clients) {
-
-            //send it to all those people logged in on this presentation (session)
-            for (int i = 0; i < clients.size(); i++) {
-
-                if (clients.nameAt(i).getSessionId().equals(p.getSessionId())) {
-                    try {
-                        clients.elementAt(i).writeObject(p);
-                        clients.elementAt(i).flush();
-                    } catch (IOException ex) {
-                        logger.info(ex.getLocalizedMessage());
-                    }
-                }
-            }
-        }
-
-    }
-
     private void broadcastMsg(MsgPacket p, String sessionId) {
         //send it to all those people logged in on this presentation (session)
         synchronized (clients) {
@@ -1784,7 +1813,7 @@ public class ServerThread extends Thread {
                         session.setSlideIndex(p.getSlideIndex());
                         setCurrentSession(session);
                     }
-                    broadcastSlide(p);
+                    slideProcessor.broadcastSlide(p);
 
                 }
             } else {
@@ -1800,7 +1829,7 @@ public class ServerThread extends Thread {
 
     }
 
-    private void sendPacket(RealtimePacket packet, ObjectOutputStream out) {
+    public void sendPacket(RealtimePacket packet, ObjectOutputStream out) {
 
         try {
             out.writeObject(packet);
@@ -1826,7 +1855,9 @@ public class ServerThread extends Thread {
                 Session session = getSession(packet.getSessionId());
                 if (session != null && (!packet.isPresenter())) {
                     //    System.out.println("ooooo");
-                    NewSlideReplyPacket nsp = new NewSlideReplyPacket(session.getSlideIndex(), session.getSessionId(), true, packet.getSessionId());
+                    NewSlideReplyPacket nsp = new NewSlideReplyPacket(session.getSlideIndex(),
+                            session.getSessionId(), true, packet.getSessionId(),
+                            packet.getPresentationName(), packet.isWebPresent());
                     firstTimeSlideRequest = false;
                     sendPacket(nsp, tout);
                     return;
@@ -1836,7 +1867,7 @@ public class ServerThread extends Thread {
             NewSlideReplyPacket p = new NewSlideReplyPacket(packet.getSlideIndex(),
                     packet.getSessionId(),
                     packet.isPresenter(),
-                    packet.getUserId());
+                    packet.getUserId(), packet.getPresentationName(), packet.isWebPresent());
             p.setControl(packet.isControl());
             processNewSlideReply(p, tout);
 
@@ -1852,7 +1883,7 @@ public class ServerThread extends Thread {
 
     private void sendErrorMsg(String msg, ObjectOutputStream out, boolean temp, boolean wb) {
         try {
-            out.writeObject(new MsgPacket(msg, temp, wb));
+            out.writeObject(new MsgPacket(msg, temp, wb, MessageCode.ALL));
             out.flush();
         } catch (Exception ex) {
             logger.info(ex.getLocalizedMessage());
