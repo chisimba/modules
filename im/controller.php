@@ -42,6 +42,8 @@ class im extends controller
 	public $conn;
 	public $objDbImPres;
 	
+	public $objTwitterLib;
+	
 	public $objSysConfig;
 	public $jserver;
 	public $jport;
@@ -69,6 +71,9 @@ class im extends controller
 			$this->objBack = $this->getObject('background', 'utilities');
 			$this->objDbIm = $this->getObject('dbim');
 			$this->objDbImPres = $this->getObject('dbimpresence');
+
+			// Get other places to upstream content to
+			$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
 			
 			// Get the sysconfig variables for the Jabber user to set up the connection.
 			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -148,6 +153,10 @@ class im extends controller
 								case 'message':
 									// Bang the array into a table to keep a record of it.
 									$this->objDbIm->addRecord($pl);
+									// Update Twitter
+									if ($this->objTwitterLib && $pl['body']) {
+										$this->objTwitterLib->updateStatus($pl['from'] . ': ' . $pl['body']);
+									}
 									// Send a response message
 									if($pl['body'] != "")
 									{
