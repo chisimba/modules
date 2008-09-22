@@ -8,16 +8,23 @@ import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.PresencePacket;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -32,7 +39,7 @@ public class ToolbarManager {
     // private JToolBar controlToolbar = new JToolBar();
     private JToolBar whiteboardToolbar = new JToolBar(JToolBar.VERTICAL);
     private JToolBar generalToolbar = new JToolBar();
-    private MButton firstSlideButton,  nextSlideButton,  backSlideButton,  lastSlideButton;
+    private MButton firstSlideButton,  nextSlideButton,  backSlideButton,  lastSlideButton,  magViewPlus,  magViewMinus;
     private TButton sessionButton;
     private javax.swing.JToggleButton yesButton;
     private javax.swing.JButton surveyButton;
@@ -47,6 +54,8 @@ public class ToolbarManager {
     private javax.swing.JButton backButton;
     private javax.swing.JToggleButton handButton;
     private RealtimeBase base;
+    private double factor = 0.1;
+    JComboBox magsField = new JComboBox();
 
     public ToolbarManager(RealtimeBase base) {
         this.base = base;
@@ -115,67 +124,56 @@ public class ToolbarManager {
         nextSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (base.getTcpClient().isNetworkAlive()) {
-                    int slideIndex = base.getSessionManager().getSlideIndex();
-                    if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
-                        // base.recordXml(slideIndex);
-                        base.getSessionManager().setSlideIndex(++slideIndex);
-                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
-                                base.getSessionId(), base.getUser().getUserName(),
-                                base.getControl(), base.getSelectedFile(),base.isWebPresent());
-                    }
-                } else {
-                    base.getTcpClient().setUserOffline();
+                int slideIndex = base.getSessionManager().getSlideIndex();
+                if (slideIndex < base.getSessionManager().getSlideCount() - 1) {
+                    // base.recordXml(slideIndex);
+                    base.getSessionManager().setSlideIndex(++slideIndex);
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
+                            base.getSessionId(), base.getUser().getUserName(),
+                            base.getControl(), base.getSelectedFile(), base.isWebPresent());
                 }
+
             }
         });
 
         backSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (base.getTcpClient().isNetworkAlive()) {
-                    int slideIndex = base.getSessionManager().getSlideIndex();
-                    base.recordXml(slideIndex);
-                    if (slideIndex > 0) {
-                        base.getSessionManager().setSlideIndex(--slideIndex);
-                        base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
-                                base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
-                                base.getControl(), base.getSelectedFile(),base.isWebPresent());
+                int slideIndex = base.getSessionManager().getSlideIndex();
+                base.recordXml(slideIndex);
+                if (slideIndex > 0) {
+                    base.getSessionManager().setSlideIndex(--slideIndex);
+                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
+                            base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
+                            base.getControl(), base.getSelectedFile(), base.isWebPresent());
 
-                    }
-                } else {
-                    base.getTcpClient().setUserOffline();
                 }
+
             }
         });
         firstSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (base.getTcpClient().isNetworkAlive()) {
-                    int slideIndex = 0;
-                    base.getSessionManager().setSlideIndex(slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
-                            base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
-                            base.getControl(), base.getSelectedFile(),base.isWebPresent());
-                    base.recordXml(slideIndex);
-                } else {
-                    base.getTcpClient().setUserOffline();
-                }
+                int slideIndex = 0;
+                base.getSessionManager().setSlideIndex(slideIndex);
+                base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
+                        base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
+                        base.getControl(), base.getSelectedFile(), base.isWebPresent());
+                base.recordXml(slideIndex);
+
             }
         });
         lastSlideButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (base.getTcpClient().isNetworkAlive()) {
-                    int slideIndex = base.getSessionManager().getSlideCount() - 1;
-                    base.getSessionManager().setSlideIndex(slideIndex);
-                    base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
-                            base.getSessionId(), base.getUser().getUserName(), 
-                            base.getControl(), base.getSelectedFile(),base.isWebPresent());
-                    base.recordXml(slideIndex);
-                } else {
-                    base.getTcpClient().setUserOffline();
-                }
+
+                int slideIndex = base.getSessionManager().getSlideCount() - 1;
+                base.getSessionManager().setSlideIndex(slideIndex);
+                base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex, base.isPresenter(),
+                        base.getSessionId(), base.getUser().getUserName(),
+                        base.getControl(), base.getSelectedFile(), base.isWebPresent());
+                base.recordXml(slideIndex);
+
             }
         });
 
@@ -257,7 +255,8 @@ public class ToolbarManager {
         //nextSlideButton.setText("Next");
         lastSlideButton = new MButton(createImageIcon(this, "/icons/last.png"));
         //lastSlideButton.setText("Last");
-
+        magViewPlus = new MButton(createImageIcon(this, "/icons/viewmag+.png"));
+        magViewMinus = new MButton(createImageIcon(this, "/icons/viewmag-.png"));
 
         slidesNavigationToolBar.setBorder(BorderFactory.createEtchedBorder());
         slidesNavigationToolBar.setRollover(true);
@@ -266,9 +265,17 @@ public class ToolbarManager {
         slidesNavigationToolBar.add(backSlideButton);
         slidesNavigationToolBar.add(nextSlideButton);
         slidesNavigationToolBar.add(lastSlideButton);
+        //   slidesNavigationToolBar.add(new JSeparator(JSeparator.VERTICAL));
+        slidesNavigationToolBar.add(magViewMinus);
+        magsField.setPreferredSize(new Dimension(100, 21));
+        slidesNavigationToolBar.add(magsField);
 
 
-
+        JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
+        p.add(magViewPlus, BorderLayout.WEST);
+        p.setPreferredSize(new Dimension(18, 25));
+        slidesNavigationToolBar.add(p);
 
         actionsBG = new javax.swing.ButtonGroup();
         handButton = new javax.swing.JToggleButton();
@@ -280,7 +287,75 @@ public class ToolbarManager {
         refreshButton = new javax.swing.JButton();
         optionsButton = new javax.swing.JButton();
 
+        magsField.setEditable(true);
+        magsField.addItem("Fit Window");
+        magsField.addItem("Fit Width");
+        magsField.addItem("Fit Height");
 
+        for (int i = 0; i < 21; i++) {
+            magsField.addItem((i * 10) + "%");
+        }
+        magsField.setSelectedItem(100 + "%");
+        magsField.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent arg0) {
+
+                String item = (String) magsField.getSelectedItem();
+                int index = magsField.getSelectedIndex();
+                if (index == 0) {
+                    base.getWhiteboardSurface().setMagX(1);
+                    base.getWhiteboardSurface().setMagY(1);
+                    base.getWhiteboardSurface().repaint();
+                } else if (index == 1) {
+                    base.getWhiteboardSurface().setMagX(1);
+                    base.getWhiteboardSurface().repaint();
+                } else if (index == 2) {
+                    base.getWhiteboardSurface().setMagY(1);
+                    base.getWhiteboardSurface().repaint();
+                } else {
+                    try {
+                        double mag = 1;
+                        int perc = item.indexOf("%");
+                        if (perc > -1) {
+                            mag = Double.parseDouble(item.substring(0, item.indexOf("%")).trim());
+
+                        } else {
+                            mag = Double.parseDouble(item.trim());
+
+                        }
+                        base.getWhiteboardSurface().setMagX(mag / 100);
+                        base.getWhiteboardSurface().setMagY(mag / 100);
+                        base.getWhiteboardSurface().repaint();
+                    } catch (NumberFormatException ex) {
+                        //ignore
+                    }
+                }
+
+            }
+        });
+        magViewPlus.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                double xx = base.getWhiteboardSurface().getMagX();
+                double yy = base.getWhiteboardSurface().getMagY();
+                base.getWhiteboardSurface().setMagX(xx += factor);
+                base.getWhiteboardSurface().setMagY(yy += factor);
+                magsField.setSelectedItem(new DecimalFormat("##.##").format(xx * 100) + "%");
+                base.getWhiteboardSurface().repaint();
+            }
+        });
+
+        magViewMinus.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                double xx = base.getWhiteboardSurface().getMagX();
+                double yy = base.getWhiteboardSurface().getMagY();
+                magsField.setSelectedItem(new DecimalFormat("##.##").format(xx * 100) + "%");
+                base.getWhiteboardSurface().setMagX(xx -= factor);
+                base.getWhiteboardSurface().setMagY(yy -= factor);
+                base.getWhiteboardSurface().repaint();
+            }
+        });
 
         handButton.setFont(new java.awt.Font("Dialog", 0, 9));
         //handButton.setText("Hand");
@@ -299,20 +374,6 @@ public class ToolbarManager {
             }
         });
 
-        /*
-        handButton.addMouseListener(
-        new java.awt.event.MouseAdapter() {
-        
-        @Override
-        public void mouseEntered(java.awt.event.MouseEvent evt) {
-        handButtonMouseEntered(evt);
-        }
-        
-        @Override
-        public void mouseExited(java.awt.event.MouseEvent evt) {
-        handButtonMouseExited(evt);
-        }
-        });*/
 
         yesButton.setFont(new java.awt.Font("Dialog", 0, 9));
         //yesButton.setText("Yes");
@@ -378,7 +439,7 @@ public class ToolbarManager {
                 revertBack();
             }
         });
-       
+
         chatButton.setFont(new java.awt.Font("Dialog", 0, 9));
         chatButton.setText("Chat");
         chatButton.setBorderPainted(false);
@@ -552,10 +613,10 @@ public class ToolbarManager {
         surveyButton.setToolTipText("Conduct Survey");
 
 
-         sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
+        sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
         //sessionButton.setText("Start");
 
-     
+
         chatButton.setIcon(createImageIcon(this, "/icons/chat.png"));
         handButton.setIcon(createImageIcon(this, "/icons/hand.png"));
         yesButton.setIcon(createImageIcon(this, "/icons/yes.png"));

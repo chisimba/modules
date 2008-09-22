@@ -51,7 +51,7 @@ public class MenuManager implements ActionListener {
         JMenu toolsMenu = createMenu("Tools");
         JMenu helpMenu = createMenu("Help");
 
-        createMenuItem(toolsMenu, "Application Sharing", "appshare", true);
+        createMenuItem(toolsMenu, "Application Sharing", "appshare", base.getControl());
         createMenuItem(toolsMenu, "Filters", "filter", true);
         createMenuItem(toolsMenu, "Audio Setup", "audiosetup", true);
         createMenuItem(toolsMenu, "Options", "options", true);
@@ -125,7 +125,7 @@ public class MenuManager implements ActionListener {
             MenuManager.this.base.showAudioWizardFrame();
         }
         if (e.getActionCommand().equals("about")) {
-            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.1" +
+            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.2" +
                     " Build " + Version.version + "</center>");
 
         }

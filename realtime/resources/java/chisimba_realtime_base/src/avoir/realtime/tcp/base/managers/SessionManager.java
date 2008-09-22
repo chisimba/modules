@@ -67,6 +67,7 @@ public class SessionManager {
                             slideIndex, base.isPresenter(),
                             base.getSessionId(), base.getUser().getUserName(),
                             base.getControl(), base.getSelectedFile(), true);
+                   
                     return;
                 }
             } else {
