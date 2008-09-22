@@ -61,7 +61,7 @@ class dbnewsmenu extends dbtable
         $list = $this->getMenuItems();
 
         $str = '<h2>'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>$this->objLanguage->languageText('mod_news_frontpage', 'news', 'Front Page'))).'</h2>';
-        $str = '<h2>'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>'Welcome')).'</h2>';
+        $str = '<h2 id="newswelcome">'.$this->prepareItem_module(array('itemvalue'=>'news', 'itemname'=>'Welcome')).'</h2>';
 
         if (count($list) == 0){
             return $str.'<p class="warning">'.$this->objLanguage->languageText('mod_news_nosectionssetupyet', 'news', 'No Sections setup yet').'.</p>';
