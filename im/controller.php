@@ -52,6 +52,9 @@ class im extends controller
 	public $jclient;
 	public $jdomain;
 	
+	public $objModules;
+	public $objTwitterLib = NULL;
+	
 	/**
     *
     * Standard constructor method to retrieve the action from the
@@ -72,8 +75,11 @@ class im extends controller
 			$this->objDbIm = $this->getObject('dbim');
 			$this->objDbImPres = $this->getObject('dbimpresence');
 
-			// Get other places to upstream content to
-			$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+			if($this->objModules->checkIfRegistered('twitter'))
+			{
+				// Get other places to upstream content to
+				$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+			}
 			
 			// Get the sysconfig variables for the Jabber user to set up the connection.
 			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -151,8 +157,28 @@ class im extends controller
 							$pl = $event[1];
 							switch($event[0]) {
 								case 'message':
-									// Bang the array into a table to keep a record of it.
-									$this->objDbIm->addRecord($pl);
+									// first check the body for system commands...
+									switch ($pl['body'])
+									{
+										case 'quit':
+											$this->conn->disconnect();
+											break;
+										case 'break':
+											$this->conn->send("</end>");
+											break;
+										case 'latestblogs':
+											if($this->objModules->checkIfRegistered('blog'))
+											{
+												$this->blogPosts = $this->getObject('blogposts', 'blog');
+        										$this->display = $this->blogPosts->showLastTenPosts(5);
+        										$this->conn->message($pl['from'], $this->display);
+											}
+											else {
+												$this->conn->message($pl['from'], "Blog is not installed on this server!");
+											}
+										case 'NULL':
+											continue;
+									}
 									// Update Twitter
 									if ($this->objTwitterLib && $pl['body']) {
 										$this->objTwitterLib->updateStatus($pl['from'] . ': ' . $pl['body']);
@@ -160,11 +186,13 @@ class im extends controller
 									// Send a response message
 									if($pl['body'] != "")
 									{
+										// Bang the array into a table to keep a record of it.
+										$this->objDbIm->addRecord($pl);
 										$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im')); 
 									}
 									//.": ".$pl['body'].".", $type=$pl['type']);
-									if($pl['body'] == 'quit') $this->conn->disconnect();
-									if($pl['body'] == 'break') $this->conn->send("</end>");
+									//if($pl['body'] == 'quit') $this->conn->disconnect();
+									//if($pl['body'] == 'break') $this->conn->send("</end>");
 									break;
 								case 'presence':
 									// Update the table presence info
