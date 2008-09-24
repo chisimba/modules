@@ -1,5 +1,5 @@
 <?php
-ini_set('error_reporting', 'E_ALL & ~E_NOTICE');
+//ini_set('error_reporting', 'E_ALL & ~E_NOTICE');
 /**
  * IM controller class
  * 
@@ -73,6 +73,8 @@ class im extends controller
 			$this->objBack = $this->getObject('background', 'utilities');
 			$this->objDbIm = $this->getObject('dbim');
 			$this->objDbImPres = $this->getObject('dbimpresence');
+			
+			$this->objModules = $this->getObject('modules', 'modulecatalogue');
 
 			if($this->objModules->checkIfRegistered('twitter'))
 			{
