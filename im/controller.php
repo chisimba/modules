@@ -42,7 +42,7 @@ class im extends controller
 	public $conn;
 	public $objDbImPres;
 	
-	public $objTwitterLib;
+	public $objTwitterLib = NULL;
 	
 	public $objSysConfig;
 	public $jserver;
@@ -53,7 +53,6 @@ class im extends controller
 	public $jdomain;
 	
 	public $objModules;
-	public $objTwitterLib = NULL;
 	
 	/**
     *
