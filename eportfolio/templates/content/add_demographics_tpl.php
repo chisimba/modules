@@ -52,7 +52,7 @@ echo "<br />";
 	$objTable->addRow($row, NULL);
 		
     	//birth text box
-	$startField = $this->objPopupcal->show('birth', 'yes', 'no', '');
+	$startField = $this->objPopupcal->show('birth', 'no', 'no', Null);
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_birth",'eportfolio').":</b>");
 	$objTable->addRow($row, NULL);	
 	$form->addRule('birth', 'Please enter your birth date','required');	

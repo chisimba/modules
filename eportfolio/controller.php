@@ -54,7 +54,7 @@ class eportfolio extends controller
 	$this->_objGroupAdmin = &$this->newObject('groupadminmodel','groupadmin');
 	$this->_objManageGroups = &$this->newObject('managegroups','contextgroups');
         $this->_objDBContext = &$this->newObject('dbcontext','context');
-        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
+//        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
         $this->_objDBEssay = &$this->newObject('dbessay_book','essay');
 	$this->objFSContext=$this->newObject('fscontext','context');
 //        $this->lectGroupId = $this->_objGroupAdmin->getLeafId( array( $this->_objDBContext->getContextCode(), 'Lecturers' ) );
@@ -80,7 +80,7 @@ class eportfolio extends controller
 	$this->objExport =& $this->getObject('export_eportfolio', 'eportfolio');
 	$this->userId=$this->objUser->userId(); //To pick user userid
 	$this->setVarByRef('userId', $this->userId);
-        $userPid = $this->objUser->PKId($this->objUser->userId());//To pick user id
+        $this->userPid = $this->objUser->PKId($this->objUser->userId());//To pick user id
         $this->setVarByRef('userPid', $this->userPid);
 
         
@@ -121,7 +121,6 @@ class eportfolio extends controller
 
 		//$sectionid = $this->getParam('sectionid');
 		$fullnames = $this->objUser->fullName()."'s ".$this->objLanguage->languageText("mod_eportfolio_wordEportfolio",'eportfolio');
-		$type = $this->getParam('tables', NULL);
 		$myid = $this->objUser->userId();
 		$myPid = $this->objUser->PKId($this->objUser->userId());
 		$address = $this->objGetall->getAddress( $myid );
@@ -1400,6 +1399,7 @@ $text = '<h1>'.$fullnames. "</h1><br></br>\r\n".html_entity_decode($address). "\
 
 	public function getUserContexts()
 	{
+
 		$usercontextcodes = $this->objUserContext->getContextList();
 
 		foreach ($usercontextcodes as $code)

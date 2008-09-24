@@ -55,19 +55,17 @@
 
 
 	$objHeading->type=1;
-	$objHeading->align=center;
+	$objHeading->align='center';
 	$objHeading->str ='<font color="#EC4C00">'.$objLanguage->languageText("mod_eportfolio_maintitle",'eportfolio').'</font>';
 	echo $objHeading->show();
 	echo "</br>";
-
-        //Link to print pdf 
+        //Link to print pdf  
         $iconPdf = $this->getObject('geticon','htmlelements');
 		$iconPdf->setIcon('pdf');	
 		$iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf",'eportfolio');
 		$mngpdflink = new link($this->uri(array(
 		'module'=>'eportfolio',
-		'action'=>'makepdf',
-		'tables'=>$activityLabel
+		'action'=>'makepdf'
 	)));
 	$mngpdflink->link = $iconPdf->show();
 	$linkpdfManage = $mngpdflink->show();     
@@ -75,12 +73,12 @@
 	//echo "</br>";
 
 	$objHeading->type=2;
-	$objHeading->align=center;
+	$objHeading->align='center';
 	$objHeading->str = '<font color="#FF8800">'.$objUser->fullName().' '.$objLanguage->languageText("mod_eportfolio_viewEportfolio",'eportfolio').'    '.$linkpdfManage.'</font>';
 	echo $objHeading->show();
 
 
-	$objHeading->align=left;
+	$objHeading->align='left';
 	$objinfoTitles->type=1;
 	$objaddressTitles->type=1;
 	$objcontactTitles->type=1;
@@ -125,8 +123,7 @@ $link->link = 'View Identification Details';
 		$parentId = $this->_objGroupAdmin->getGroups( $fields = array( "id", "name", "parent_id" ), $filter );
 
 		$myparentId = $parentId[0];
-
-		$ownerId = $this->_objGroupAdmin->getname( $myparentId[parent_id] );		
+		$ownerId = $this->_objGroupAdmin->getname( $myparentId['parent_id'] );		
 		if ( $ownerId !== $myPid ){
 	                $fullname = $this->objUserAdmin->getUserDetails($ownerId);
 			
@@ -148,7 +145,7 @@ $link->link = 'View Identification Details';
 				$textinput = new textinput("groupId",$groupId);
 				$epTable->startRow();
 				$epTable->addCell($linkManage,'','','left','','');
-				$epTable->addCell($fullname[title].' '.$fullname[firstname].' '.$fullname[surname],'','','left','','');
+				$epTable->addCell($fullname['title'].' '.$fullname['firstname'].' '.$fullname[surname],'','','left','','');
 				$epTable->addCell($groupname,'','','left','','');				
 				$epTable->endRow();
 				$groupexists = $groupexists + 1;
@@ -2106,7 +2103,7 @@ $this->objTab = $this->newObject('tabber', 'htmlelements');
 $namesLabel = $userTable->show();
 $addressLabel = $addressTable->show();
 $contactLabel = $contactTable->show();
-$demographicsLabel = $addressTab.$demographicsTable->show();
+$demographicsLabel = $demographicsTable->show();
 $emailLabel = $emailTable->show();
 $activityLabel = $activityTable->show();
 $this->objTab->init();
