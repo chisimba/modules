@@ -171,7 +171,7 @@ class im extends controller
 											if($this->objModules->checkIfRegistered('blog'))
 											{
 												$this->blogPosts = $this->getObject('blogposts', 'blog');
-        										$this->display = $this->blogPosts->showLastTenPosts(5);
+        										$this->display = $this->blogPosts->showLastTenPostsStripped(5, FALSE);
         										$this->conn->message($pl['from'], $this->display);
 											}
 											else {
