@@ -1095,6 +1095,41 @@ class blogposts extends object
             return $ret;
         }
     }
+    
+    public function showLastTenPostsStripped($num = 10, $featurebox = FALSE) 
+    {
+        $objUser = $this->getObject('user', 'security');
+        $this->loadClass('link', 'htmlelements');
+        $data = $this->objDbBlog->getLastPosts($num);
+        $str = '';
+        // Display the posts
+        if (!empty($data)) {
+            foreach($data as $item) {
+                $linkuri = $this->uri(array(
+                    'action' => 'viewsingle',
+                    'postid' => $item['id'],
+                    'userid' => $item['userid']
+                ));
+                //$link = new href($linkuri, stripslashes($item['post_title']));
+                
+                //$str.= $link->show();
+                if ($this->showfullname == 'FALSE') {
+                    $nameshow = $this->objUser->userName($item['userid']);
+                } else {
+                    $nameshow = $this->objUser->fullname($item['userid']);
+                }
+                $str.= $nameshow." ".$item['post_title']." ".$linkuri."\r\n";
+            }
+        }
+        // Display either as a string for the block or in a featurebox
+        if ($featurebox == FALSE) {
+            return $str;
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_blog_block_latestblogs", "blog") , $str);
+            return $ret;
+        }
+    }
     /**
      * Date manipulation method for getting posts by month/date
      *
