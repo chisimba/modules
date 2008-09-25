@@ -172,7 +172,7 @@ case '1':
 	*/
 	// Set activity status - not active if in add mode
 	$objLabel = new label('<b>'.$statusLabel.':</b>', 'input_status');
-	/*
+	
 	if ($mode == 'edit') {
 		$objRadio = new radio('status');
 		$objRadio->addOption('inactive', $notactiveLabel);
@@ -190,7 +190,7 @@ case '1':
 		$objLabel->show() ,
 		$statusShow
 	));
-	*/
+	
 	// set up test type
 	$objRadio = new dropdown('testType');
 	$objRadio->addOption($formativeLabel, $formativeLabel);
