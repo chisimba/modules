@@ -27,19 +27,21 @@
 			'id'=>$id
 	)));
 	$objTable = new htmltable();
-	$objTable->width='30';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());	
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
     	//parent goal label
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_parent",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
-	
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
+
 	//Goals Drop down list
 	$dropdown = new dropdown('parentid');
 	
@@ -61,7 +63,8 @@
 	}
 	
 	$row = array($dropdown->show());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	//end Goals drop down list    	
 	
 	
@@ -83,17 +86,21 @@
 	}
 
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_goalsType",'eportfolio').":</b>");	
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($mydropdown->show());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'bottom','left');
+	$objTable->endRow();	
 
 	//start calendar
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'bottom','right');
 	$startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
 	$form->addRule('start', 'Please enter the start date','required');
 	$row = array($startField);
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
     	//priority drop down list	
 	$dropdown = new dropdown('priority');
@@ -112,41 +119,48 @@
 		$dropdown->addOption('None', "-There are no Types-");	
 	}
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_priority",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($dropdown->show());	
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	//status text field
 	$textinput = new textinput("status",$status);
 	$textinput->size = 60;
 	$form->addRule('status', 'Please enter the status','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_status",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($textinput->show());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'bottom','left');
+	$objTable->endRow();	
 
     	//status date text box
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_statusDate",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'bottom','right');
 	$startField = $this->objPopupcal->show('status_date', 'yes', 'no', $status_date);
 	$form->addRule('status_date', 'Please enter the status date','required');
 	$row = array($startField);
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	//short description text field
-	$textinput = new textinput("shortdescription",$shortdescription);
-	$textinput->size = 60;
+	$textinput = new textarea("shortdescription",$shortdescription);
 	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($textinput->show());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	
     	//Full description text field
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	//Add the WYSWYG editor
 	    $editor = $this->newObject('htmlarea', 'htmlelements');
 	    $editor->name = 'longdescription';
@@ -155,7 +169,8 @@
 	    $editor->setContent($longdescription);
 
 	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//Save button
 	$button = new button("submit",
@@ -173,7 +188,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

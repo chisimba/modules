@@ -20,26 +20,29 @@
 			'id'=>$id
 	)));
 	$objTable = new htmltable();
-	$objTable->width='30';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	//short description text field
-	$textinput = new textinput("shortdescription",$shortdescription);
-	$textinput->size = 60;
+	$textinput = new textarea("shortdescription",$shortdescription);
 	$form->addRule('shortdescription', 'Please enter the short description','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_shortdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($textinput->show());	
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	
     	//Full description text field
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_longdescription",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	//Add the WYSWYG editor
 	    $editor = $this->newObject('htmlarea', 'htmlelements');
 	    $editor->name = 'longdescription';
@@ -48,7 +51,8 @@
 	    $editor->setContent($longdescription);
 
 	$row = array($editor->showFCKEditor());	   
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//Save button
 	$button = new button("submit",
@@ -66,7 +70,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

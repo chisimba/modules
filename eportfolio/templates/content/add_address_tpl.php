@@ -25,14 +25,15 @@
 
 	//set the action parameters
 	$objTable = new htmltable();
-	$objTable->width='40';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);	
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());
-	$objTable->addRow($row, NULL);
-	
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
     	//Type text box	
 	$dropdown = new dropdown('address_type');
 	
@@ -52,9 +53,11 @@
 	$row = array($dropdown->show());
 
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_type",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($dropdown->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 		
     	//Street No text box
 	$street_no = new textinput("street_no","");
@@ -62,9 +65,11 @@
 	$street_no->label='Street No(must be filled out)';
 	$form->addRule('street_no','Please enter the Street No','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_streetno",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($street_no->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
  	//Street name text field
 	$street_name = new textinput("street_name","");
@@ -72,9 +77,11 @@
 	$street_name->label='Street Name(must be filled out)';
 	$form->addRule('street_name','Please enter the Street Name','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_streetname",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($street_name->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	
     	//Locality text field
 	$locality = new textinput("locality","");
@@ -82,9 +89,11 @@
 	$locality->label='Locality(must be filled out)';
 	$form->addRule('locality','Please enter the Locality','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_locality",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($locality->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
 	
 	//City text field
@@ -93,19 +102,22 @@
 	$city->label='City(must be filled out)';
 	$form->addRule('city','Please enter the City','required');
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_city",'eportfolio').":</b>");			
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($city->show());
-	$objTable->addRow($row, NULL);
-			
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	//Post Code select box
 	$postcode = new textinput("postcode","");
 	$postcode->size = 25;
 	$postcode->label='Post Code(must be filled out)';
 	$form->addRule('postcode','Please enter the Post Code','required');
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_postcode",'eportfolio').":</b>");			
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($postcode->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	//Postal Address text box
 	$postal_address = new textinput("postal_address","");
@@ -113,9 +125,11 @@
 	$postal_address->label='Post Address(must be filled out)';
 	$form->addRule('postal_address','Please enter the Post Address','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_postaddress",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($postal_address->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
 	
     	//Save button
@@ -134,7 +148,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 
 	echo $form->show();	

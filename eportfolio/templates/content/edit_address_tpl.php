@@ -20,13 +20,15 @@
 			'id'=>$id
 	)));
 	$objTable = new htmltable();
-	$objTable->width='30';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//type text box	
 	$dropdown = new dropdown('address_type');
@@ -46,66 +48,73 @@
 	
 	$row = array($dropdown->show());
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_type",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($dropdown->show());
-	$objTable->addRow($row, NULL);
-		
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
     	//street_no text box
 	$street_no = new textinput("street_no",$street_no);
 	$street_no->size = 25;
 	$form->addRule('street_no','Please enter the Street No','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_streetno",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($street_no->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	//street_name text field
 	$street_name = new textinput("street_name",$street_name);
 	$street_name->size = 25;
 	$form->addRule('street_name','Please enter the Street Name','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_streetname",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($street_name->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
     	//locality text field
 	$locality = new textinput("locality",$locality);
 	$locality->size = 25;
 	$form->addRule('locality','Please enter the Locality','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_locality",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($locality->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	//city text field
 	$city = new textinput("city",$city);
 	$city->size = 25;
 	$form->addRule('city','Please enter the City','required');
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_city",'eportfolio').":</b>");			
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($city->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 		
  	//postcode select box
 	$postcode = new textinput("postcode",$postcode);
 	$postcode->size = 25;
 	$form->addRule('postcode','Please enter the Post Code','required');
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_postcode",'eportfolio').":</b>");			
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($postcode->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	//postal_address text box
 	$postal_address = new textinput("postal_address",$postal_address);
 	$postal_address->size = 25;
 	$form->addRule('postal_address','Please enter the Post Address','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_postaddress",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($postal_address->show());
-	$objTable->addRow($row, NULL);
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//Save button
 	$button = new button("submit",
@@ -123,7 +132,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

@@ -20,13 +20,15 @@
 	   		'action'=>'adddemographicsconfirm'
 	)));
 	$objTable = new htmltable();
-	$objTable->width='40';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 echo "<br />";	
     	
     	//type drop down list	
@@ -47,26 +49,32 @@ echo "<br />";
 
 
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_demographicstype",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($dropdown->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 		
     	//birth text box
 	$startField = $this->objPopupcal->show('birth', 'no', 'no', Null);
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_birth",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);	
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'bottom','right');
 	$form->addRule('birth', 'Please enter your birth date','required');	
 	$row=array($startField);
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
  	//nationality text field
 	$textinput = new textinput("nationality","");
 	$textinput->size = 30;
 	$form->addRule('nationality', 'Please enter your nationality','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_nationality",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($textinput->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//Save button
 	$button = new button("submit",
@@ -84,7 +92,10 @@ echo "<br />";
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

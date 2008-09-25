@@ -59,7 +59,7 @@
 	$objHeading->str ='<font color="#EC4C00">'.$objLanguage->languageText("mod_eportfolio_maintitle",'eportfolio').'</font>';
 	echo $objHeading->show();
 	echo "</br>";
-        //Link to print pdf  
+        //Link to print pdf 
         $iconPdf = $this->getObject('geticon','htmlelements');
 		$iconPdf->setIcon('pdf');	
 		$iconPdf->alt = $objLanguage->languageText("mod_eportfolio_saveaspdf",'eportfolio');

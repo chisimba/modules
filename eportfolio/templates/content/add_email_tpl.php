@@ -19,13 +19,15 @@
 	   		'action'=>'addemailconfirm'
 	)));
 	$objTable = new htmltable();
-	$objTable->width='40';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
     	//type drop down list	
 	$dropdown = new dropdown('email_type');
@@ -43,25 +45,22 @@
 		$dropdown->addOption('None', "-There are no Types-");	
 	}
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_emailtype",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
-	$row=array($dropdown->show());
-	$objTable->addRow($row, NULL);
- 	
-	// Spacer
 	$objTable->startRow();
-	    $objTable->addCell('&nbsp;');
-	    $objTable->addCell('&nbsp;');
-	    $objTable->addCell('&nbsp;');
-	$objTable->endRow();
-
+	$objTable->addCell($row[0], 140,'top','right');
+	$row=array($dropdown->show());
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
+ 	
 	//email text field
 	$email = new textinput("email","");
 	$email->size = 40;
 	$form->addRule('email', 'Not a valid Email', 'email');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_email",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($email->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
 	// Spacer
 	$objTable->startRow();
@@ -86,7 +85,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

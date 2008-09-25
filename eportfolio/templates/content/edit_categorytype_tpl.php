@@ -31,19 +31,20 @@ if( !$hasAccess ) {
 			'id'=>$id
 	)));
 	$objTable = new htmltable();
-	$objTable->width='30';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());	
-	$objTable->addRow($row, NULL);
-
-
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	
 	//category text box		
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_category",'eportfolio').":</b>");	
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	//Goals Drop down list
 	$dropdown = new dropdown('categoryid');
 	
@@ -61,17 +62,19 @@ if( !$hasAccess ) {
 	}
 	
 	$row = array($dropdown->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
 	//category type text box		
 	$categorytype = new textinput("categorytype",$categorytype);
-	$categorytype->size = 60;
+	$categorytype->size = 30;
 	$form->addRule('categorytype','Please enter the Category Type','required');
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_categoryType",'eportfolio').":</b>");	
-	$objTable->addRow($row, NULL);
-
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($categorytype->show());	
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'bottom','left');
+	$objTable->endRow();	
 
     	//Save button
 	$button = new button("submit",
@@ -89,7 +92,10 @@ if( !$hasAccess ) {
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 }

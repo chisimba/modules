@@ -19,13 +19,15 @@
 	   		'action'=>'addaffiliationconfirm'
 	)));
 	$objTable = new htmltable();
-	$objTable->width='60';
-	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->width='100%';
+	$objTable->attributes=" align='left' border='0'";
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
-	$objTable->addRow($row, NULL);
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row = array($objUser->fullName());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
     	//type drop down list	
 	$mydropdown = new dropdown('affiliation_type');
@@ -44,52 +46,64 @@
 	}
 
 	$row=array("<b>".$label = $objLanguage->languageText("mod_eportfolio_affiliationtype", 'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($mydropdown->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'bottom','left');
+	$objTable->endRow();	
 
     	//classification text box
 	$textinput = new textinput("classification","");
 	$textinput->size = 40;
 	$form->addRule('classification', 'Please enter the classification','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_classification",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($textinput->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'bottom','left');
+	$objTable->endRow();	
 	
  	//role text field
 	$textinput = new textinput("role","");
 	$textinput->size = 40;
 	$form->addRule('role', 'Please enter the role','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_role",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($textinput->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
  	//organisation text box
 	$textinput = new textinput("organisation","");
 	$textinput->size = 40;
 	$form->addRule('organisation', 'Please enter the organisation','required');
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_organisation",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'top','right');
 	$row=array($textinput->show());
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
  	
     	//start text field
 	$row = array("<b>".$label = $objLanguage->languageText("mod_eportfolio_activitystart",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'bottom','right');
 	$startField = $this->objPopupcal->show('start', 'yes', 'no', "");
 	$form->addRule('start', 'Please enter the start date','required');
 	$row = array($startField);
-	$objTable->addRow($row, NULL);
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
 	//finish text field
 	$row = array("<b>".$label = $objLanguage->code2Txt("mod_eportfolio_activityfinish",'eportfolio').":</b>");
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell($row[0], 140,'bottom','right');
 	$startField = $this->objPopupcal->show('finish', 'yes', 'no', "");
 	$form->addRule('finish', 'Please enter the finish date','required');
 	$row = array($startField);
-	$objTable->addRow($row, NULL);		
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 
     	//Save button
 	$button = new button("submit",
@@ -107,7 +121,10 @@
         $objCancel->link = $buttonCancel->show();
         $linkCancel = $objCancel->show();  
 	$row = array($button->show().' / '.$linkCancel);
-	$objTable->addRow($row, NULL);		
+	$objTable->startRow();
+	$objTable->addCell('&nbsp;', 140,'top','right');
+	$objTable->addCell($row[0], Null,'top','left');
+	$objTable->endRow();	
 	$form->addToForm($objTable->show());
 	echo $form->show();
 ?>

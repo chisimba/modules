@@ -36,8 +36,14 @@
         <category>Competency</category>
         <puid>9</puid>
     </tbl_eportfolio_category>
+    <tbl_eportfolio_category>
+        <id>init_4581_1234815437</id>
+        <userid>8893070328</userid>
+        <category>Priority</category>
+        <puid>10</puid>
+    </tbl_eportfolio_category>
   <!-- Table tbl_eportfolio_categorytypes -->
-    <tbl_eportfolio_categorytypes>
+   <tbl_eportfolio_categorytypes>
         <id>init_1284_1203621906</id>
         <categoryid>init_7131_1203445554</categoryid>
         <userid>8893070328</userid>
@@ -149,5 +155,26 @@
         <type>Other</type>
         <puid>18</puid>
     </tbl_eportfolio_categorytypes>
+    <tbl_eportfolio_categorytypes>
+        <id>init_1284_1589537606</id>
+        <categoryid>init_4581_1234815437</categoryid>
+        <userid>8893070328</userid>
+        <type>High</type>
+        <puid>19</puid>
+    </tbl_eportfolio_categorytypes>
+    <tbl_eportfolio_categorytypes>
+        <id>init_1284_1203236458</id>
+        <categoryid>init_4581_1234815437</categoryid>
+        <userid>8893070328</userid>
+        <type>Normal</type>
+        <puid>20</puid>
+    </tbl_eportfolio_categorytypes>
+    <tbl_eportfolio_categorytypes>
+        <id>init_1284_1203299958</id>
+        <categoryid>init_4581_1234815437</categoryid>
+        <userid>8893070328</userid>
+        <type>Low</type>
+        <puid>21</puid>
+    </tbl_eportfolio_categorytypes> 
 </defaultdata>
 
