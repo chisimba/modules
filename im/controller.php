@@ -41,9 +41,9 @@ class im extends controller
 	public $objDbIm;
 	public $conn;
 	public $objDbImPres;
-	
+
 	public $objTwitterLib = NULL;
-	
+
 	public $objSysConfig;
 	public $jserver;
 	public $jport;
@@ -51,9 +51,9 @@ class im extends controller
 	public $jpass;
 	public $jclient;
 	public $jdomain;
-	
+
 	public $objModules;
-	
+
 	/**
     *
     * Standard constructor method to retrieve the action from the
@@ -73,7 +73,7 @@ class im extends controller
 			$this->objBack = $this->getObject('background', 'utilities');
 			$this->objDbIm = $this->getObject('dbim');
 			$this->objDbImPres = $this->getObject('dbimpresence');
-			
+
 			$this->objModules = $this->getObject('modules', 'modulecatalogue');
 
 			if($this->objModules->checkIfRegistered('twitter'))
@@ -81,16 +81,16 @@ class im extends controller
 				// Get other places to upstream content to
 				$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
 			}
-			
+
 			// Get the sysconfig variables for the Jabber user to set up the connection.
 			$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $this->jserver = $this->objSysConfig->getValue('jabberserver', 'im');
-            $this->jport = $this->objSysConfig->getValue('jabberport', 'im');
+			$this->jserver = $this->objSysConfig->getValue('jabberserver', 'im');
+			$this->jport = $this->objSysConfig->getValue('jabberport', 'im');
 			$this->juser = $this->objSysConfig->getValue('jabberuser', 'im');
 			$this->jpass = $this->objSysConfig->getValue('jabberpass', 'im');
 			$this->jclient = $this->objSysConfig->getValue('jabberclient', 'im');
 			$this->jdomain = $this->objSysConfig->getValue('jabberdomain', 'im');
-			
+
 			$this->conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
 		catch (customException $e)
@@ -118,24 +118,24 @@ class im extends controller
 				$this->setVarByRef('msgs', $msgs);
 				return 'messageview_tpl.php';
 				break;
-                
-           case 'viewallajax':
-                $page = intval($this->getParam('page', 0));
-                if ($page < 0) {
-                        $page = 0;
-                }
-                $start = $page * 10;
-                $msgs = $this->objDbIm->getRange($start, 10);
-                $this->setVarByRef('msgs', $msgs);
-                return 'viewall_ajax_tpl.php';
-                break;
-           case 'viewall':
-           case NULL:
-                $count = $this->objDbIm->getRecordCount();
-                $pages = ceil($count / 10);
-                $this->setVarByRef('pages', $pages);
-                return 'viewall_tpl.php';
-                break;
+
+			case 'viewallajax':
+				$page = intval($this->getParam('page', 0));
+				if ($page < 0) {
+					$page = 0;
+				}
+				$start = $page * 10;
+				$msgs = $this->objDbIm->getRange($start, 10);
+				$this->setVarByRef('msgs', $msgs);
+				return 'viewall_ajax_tpl.php';
+				break;
+			case 'viewall':
+			case NULL:
+				$count = $this->objDbIm->getRecordCount();
+				$pages = ceil($count / 10);
+				$this->setVarByRef('pages', $pages);
+				return 'viewall_tpl.php';
+				break;
 
 			case 'sendmessage':
 				$to = 'pscott209@gmail.com';
@@ -145,10 +145,10 @@ class im extends controller
 			case 'messagehandler':
 				// This is a looooong running task... Lets use the background class to handle it
 				//check the connection status
- 				$status = $this->objBack->isUserConn();
+				$status = $this->objBack->isUserConn();
 				//keep the user connection alive even if the browser is closed
 				$callback = $this->objBack->keepAlive();
- 				// Now the code is backrounded and cannot be aborted! Be careful now...
+				// Now the code is backrounded and cannot be aborted! Be careful now...
 				$this->conn->autoSubscribe();
 				try {
 					$this->conn->connect();
@@ -158,7 +158,7 @@ class im extends controller
 							$pl = $event[1];
 							switch($event[0]) {
 								case 'message':
-									// first check the body for system commands...
+									//$this->objImOps->parseSysMessages($pl);
 									switch ($pl['body'])
 									{
 										case 'quit':
@@ -171,12 +171,14 @@ class im extends controller
 											if($this->objModules->checkIfRegistered('blog'))
 											{
 												$this->blogPosts = $this->getObject('blogposts', 'blog');
-        										$this->display = $this->blogPosts->showLastTenPostsStripped(5, FALSE);
-        										$this->conn->message($pl['from'], $this->display);
+												$this->display = $this->blogPosts->showLastTenPostsStripped(5, FALSE);
+												// send the results back
+												$this->conn->message($pl['from'], $this->display);
 											}
 											else {
 												$this->conn->message($pl['from'], "Blog is not installed on this server!");
 											}
+											break;
 										case 'NULL':
 											continue;
 									}
@@ -189,12 +191,10 @@ class im extends controller
 									{
 										// Bang the array into a table to keep a record of it.
 										$this->objDbIm->addRecord($pl);
-										$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im')); 
+										$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
 									}
-									//.": ".$pl['body'].".", $type=$pl['type']);
-									//if($pl['body'] == 'quit') $this->conn->disconnect();
-									//if($pl['body'] == 'break') $this->conn->send("</end>");
 									break;
+
 								case 'presence':
 									// Update the table presence info
 									$this->objDbImPres->updatePresence($pl);
