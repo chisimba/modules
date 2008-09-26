@@ -24,12 +24,15 @@ import avoir.realtime.tcp.base.appsharing.DesktopUtil;
 import avoir.realtime.tcp.base.appsharing.RemoteDesktopViewerFrame;
 import avoir.realtime.tcp.base.chat.ChatPopup;
 import avoir.realtime.tcp.common.MessageCode;
+import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.common.packet.AudioPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveReplyPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
+import avoir.realtime.tcp.common.packet.ClassroomFile;
+import avoir.realtime.tcp.common.packet.ClassroomFileLog;
 import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.DesktopPacket;
@@ -46,23 +49,29 @@ import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.common.packet.QuitPacket;
 import avoir.realtime.tcp.common.packet.RemoveUserPacket;
 import avoir.realtime.tcp.common.packet.ServerLogReplyPacket;
+import avoir.realtime.tcp.common.packet.SessionImg;
+import avoir.realtime.tcp.common.packet.SessionImgPacket;
 import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
+import avoir.realtime.tcp.common.packet.UpdateUserNetworkStatusPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardItems;
 import avoir.realtime.tcp.common.packet.WhiteboardPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
+import avoir.realtime.tcp.whiteboard.item.Img;
+import avoir.realtime.tcp.whiteboard.item.Item;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -172,6 +181,27 @@ public class TCPConsumer {
 
     }
 
+    public void processClassromFilesLog(ClassroomFileLog packet) {
+        /**
+         * 1. Check if the files exist on local cache
+         * 2. request for missing ones
+         */
+        Vector<ClassroomFile> log = packet.getLog();
+        for (int i = 0; i < log.size(); i++) {
+            ClassroomFile p = log.elementAt(i);
+            String filePath = "";
+            if (p.isPresentation()) {
+                filePath = Constants.getRealtimeHome() + "/classroom/presentations/" + base.getSessionId() + "/" + p.getPath();
+
+            }
+
+            if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
+
+                tcpClient.sendPacket(p);
+            }
+        }
+    }
+
     public void processFilePacket(FilePacket packet) {
         try {
             String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
@@ -218,7 +248,8 @@ public class TCPConsumer {
                 dir = packet.getPresentationName().substring(0, dot);
             }
 
-            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides/" + dir;
+            String home = avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides/" + base.getSessionId() + "/" + dir;
+
             File homeDir = new File(home);
             if (!homeDir.exists()) {
                 homeDir.mkdirs();
@@ -289,6 +320,22 @@ public class TCPConsumer {
 
     public void processWhiteboardItems(WhiteboardItems p) {
         base.getWhiteboardSurface().setItems(p.getWhiteboardItems());
+        Vector<Item> items = p.getWhiteboardItems();
+
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.elementAt(i);
+            if (item instanceof Img) {
+                Img img = (Img) item;
+                String filePath = Constants.getRealtimeHome() + "/classroom/images/" + base.getSessionId() + "/" + img.getImagePath();
+                if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
+                    tcpClient.sendPacket(new SessionImg(filePath, img));
+                } else {
+
+                    base.getBaseManager().loadCachedImage(img, filePath);
+
+                }
+            }
+        }
     }
 
     public void processPointerPacket(PointerPacket p) {
@@ -335,17 +382,19 @@ public class TCPConsumer {
 
             }
             base.updateChat(p);
-            if (showChatFrame) {
-                base.showChatRoom();
-                showChatFrame = false;
-            } else {
-                if (!base.getChatFrame().isActive()) {
-                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_off.png").getImage());
-                } else {
-                    base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_on.png").getImage());
-                    base.getChatFrame().toFront();
-                }
-            }
+            base.getDockTabbedPane().setBackgroundAt(0, Color.ORANGE);
+
+        /* if (showChatFrame) {
+        base.showChatRoom();
+        showChatFrame = false;
+        } else {
+        if (!base.getChatFrame().isActive()) {
+        base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_off.png").getImage());
+        } else {
+        base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_on.png").getImage());
+        base.getChatFrame().toFront();
+        }
+        }*/
         }
     }
 
@@ -367,6 +416,22 @@ public class TCPConsumer {
     public void processNewUserPacket(NewUserPacket p) {
         if (base != null) {
             base.getUserManager().addNewUser(p.getUser());
+        }
+
+    }
+
+    public void processUpdateUserPacket(UpdateUserNetworkStatusPacket p) {
+        if (base != null) {
+
+            boolean status = PresenceConstants.OFFLINE;
+            if (p.isOnline()) {
+                status = PresenceConstants.ONLINE;
+            }
+
+            int index = base.getUserManager().getUserIndex(p.getUser().getUserName());
+            base.getUserManager().setUser(index, PresenceConstants.ONLINE_STATUS_ICON,
+                    true, status);
+
         }
 
     }
@@ -491,7 +556,7 @@ public class TCPConsumer {
             String slidePath = Constants.getRealtimeHome() + "/presentations/" + base.getSessionId() + "/img" + slideIndex + ".jpg";
 
             if (!packet.isWebPresent()) {
-                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
+                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + base.getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
             }
 
             base.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
@@ -510,11 +575,20 @@ public class TCPConsumer {
             showAppSharingFrame = false;
         }
 
-        Thread t = new Thread() {
+        Thread t = new
 
-            public void run() {
+              Thread() {
 
-                viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
+
+
+
+
+
+
+
+    public  void run( ) {
+
+        viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
                 viewer.repaint();
             }
         };
@@ -523,7 +597,7 @@ public class TCPConsumer {
 
     public void processHeartBeat(HeartBeat p) {
         tcpClient.getNetworkMonitor().setServerContacted(true);
-        tcpClient.getNetworkMonitor().sendPulse();
+    //  tcpClient.getNetworkMonitor().sendPulse();
 
     }
 }
