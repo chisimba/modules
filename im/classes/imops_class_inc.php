@@ -53,6 +53,7 @@ class imops extends object
 			$this->jpass = $this->objSysConfig->getValue('jabberpass', 'im');
 			$this->jclient = $this->objSysConfig->getValue('jabberclient', 'im');
 			$this->jdomain = $this->objSysConfig->getValue('jabberdomain', 'im');
+			$this->objModules = $this->getObject('modules', 'modulecatalogue');
 			
 			$this->conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 		}
@@ -94,6 +95,13 @@ class imops extends object
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
             return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('im') . "<br />" . $objRegister->show());
         }
+    }
+    
+    public function parseSysMessages($pl)
+    {
+    	// first check the body for system commands...
+    	log_debug($pl['body']);
+    	
     }
 }
 ?>
