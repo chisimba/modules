@@ -4,7 +4,7 @@
  */
 package avoir.realtime.tcp.base;
 
-import java.awt.BorderLayout;
+import avoir.realtime.tcp.common.ImageUtil;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Insets;
@@ -13,16 +13,23 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.plaf.basic.BasicTabbedPaneUI.TabbedPaneLayout;
 
 public class TabbedPanePlaf extends BasicTabbedPaneUI {
+
+    private RealtimeBase base;
+
+    public RealtimeBase getBase() {
+        return base;
+    }
+
+    public void setBase(RealtimeBase base) {
+        this.base = base;
+    }
+
     //override to return our layoutmanager
     protected LayoutManager createLayoutManager() {
 
@@ -141,25 +148,7 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
 
             public void actionPerformed(ActionEvent e) {
                 if (index == 0) {
-                    final JPanel panel = (JPanel) tabPane.getComponentAt(index);
-                    final JPanel agendaPanel = (JPanel) tabPane.getComponentAt(1);
-                    JFrame fr = new JFrame("Chat - Close to dock");
-                    fr.addWindowListener(new WindowAdapter() {
-
-                        public void windowClosing(WindowEvent e) {
-                            tabPane.removeAll();
-                            tabPane.add(panel, "Chat");
-                            tabPane.add(agendaPanel, "Agenda");
-                        }
-                    });
-                    fr.setLayout(new BorderLayout());
-                    fr.setAlwaysOnTop(true);
-                    fr.add(panel, BorderLayout.CENTER);
-                    fr.setSize(400, 300);
-                    fr.setLocationRelativeTo(null);
-                    fr.setVisible(true);
-                    tabPane.remove(index);
-                    tabPane.add(agendaPanel, "Agenda");
+                    base.showChatRoom();
                 }
             }
         }
