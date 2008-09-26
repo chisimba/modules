@@ -5,7 +5,7 @@
  */
 package avoir.realtime.tcp.base.survey;
 
-import avoir.realtime.tcp.base.ImageUtil;
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
