@@ -5,6 +5,7 @@
 package avoir.realtime.tcp.whiteboard;
 
 import avoir.realtime.tcp.base.RealtimeBase;
+import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
@@ -45,6 +46,17 @@ public class WhiteboardManager {
         this.whiteBoardSurface = whiteBoardSurface;
     }
 
+    public boolean isPointerInUser() {
+        boolean state = false;
+        if (whiteBoardSurface.getPointer() == Constants.HAND_LEFT ||
+                whiteBoardSurface.getPointer() == Constants.HAND_RIGHT ||
+                whiteBoardSurface.getPointer() == Constants.ARROW_SIDE ||
+                whiteBoardSurface.getPointer() == Constants.ARROW_UP) {
+            state = true;
+        }
+        return state;
+    }
+
     /**
      * this sends an edit icon to show that the user has entered some text
      */
@@ -62,8 +74,6 @@ public class WhiteboardManager {
                 PresenceConstants.EDIT_WB_ICON, PresenceConstants.NOT_EDIING_WB,
                 base.getUserName()));
     }
-
-   
 
     /**
      * Create an option frame from where one can choose the pixel width of a drawing
