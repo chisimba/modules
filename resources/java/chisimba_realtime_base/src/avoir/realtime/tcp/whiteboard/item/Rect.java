@@ -71,7 +71,15 @@ public class Rect implements Item {
     public int getIndex() {
         return index;
     }
+    private String sessionId;
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
     public void setIndex(int index) {
         this.index = index;
     }

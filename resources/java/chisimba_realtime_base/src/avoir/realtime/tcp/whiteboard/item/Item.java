@@ -40,6 +40,10 @@ public interface Item extends java.io.Serializable {
 
     public String getId();
 
+    public String getSessionId();
+
+    public void setSessionId(String sessionId);
+
     /**
      * Returns whether an object contains the specified coordinates
      * @param x horizontal coordinate

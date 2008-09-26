@@ -79,7 +79,15 @@ public class Txt implements Item {
     public void setIndex(int index) {
         this.index = index;
     }
+    private String sessionId;
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
     /**
      * Sets the size of the object
      * @param width int

@@ -76,7 +76,15 @@ public class Oval implements Item {
     public void setIndex(int index) {
         this.index = index;
     }
+    private String sessionId;
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
     /**
      * Constructs a new Oval with a the default value of 1 for stroke.
      *
