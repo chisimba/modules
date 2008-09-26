@@ -1,6 +1,4 @@
 /**
- * 
- *
  *  Copyright (C) GNU/GPL AVOIR 2008
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,6 +17,7 @@
  */
 package avoir.realtime.tcp.base;
 
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.chat.ChatRoom;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
@@ -49,7 +48,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -60,7 +60,6 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -118,7 +117,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private boolean hasControl = false;
     private ChatRoom chatRoom;
     private String chatLogFile = "ChatLog.txt";
-    private boolean chatFrameShowing = false;
+  
     private JFrame chatFrame = new JFrame();
     private boolean connected = false;
     private boolean speakerEnabled,  micEnabled;
@@ -149,12 +148,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JDesktopPane desktop = new JDesktopPane();
     private JInternalFrame surfaceFrame = new JInternalFrame();
     private JScrollPane surfaceScrollPane = new JScrollPane();
+    private TabbedPanePlaf tabbedPane = new TabbedPanePlaf();
 
     /**
      * Create additional components
      */
     private void initCustomComponents() {
-        dockTabbedPane.setUI(new TabbedPanePlaf());
+        dockTabbedPane.setUI(tabbedPane);
+        tabbedPane.setBase(this);
         baseManager = new BaseManager(this);
         whiteboardSurface = new WhiteboardSurface(this);
         userManager = new UserListManager(this);
@@ -245,20 +246,24 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         splitPane.setLeftComponent(leftSplitPane);
         splitPane.setRightComponent(centerPanel);
+        splitPane.setDividerLocation(300);
+        audioPanel.setMinimumSize(new Dimension(300,120));
         JToolBar toolbar = new JToolBar();
         toolbar.add(toolbarManager.getGeneralToolbar());
         toolbar.add(whiteboardSurface.getMainToolbar());
         centerPanel.setLayout(new BorderLayout());
         surfaceScrollPane.setViewportView(whiteboardSurface);
-        whiteboardSurface.setPreferredSize(new Dimension(1200, 1200));
+        whiteboardSurface.setSize(new Dimension(1200, 1200));
+        whiteboardSurface.setPreferredSize(new Dimension(500, 400));
 
         JViewport vport = surfaceScrollPane.getViewport();
 
-        Dimension size = vport.getExtentSize();
-        int xx = (parent.getWidth() - size.width) / 2;
-        int yy = (parent.getHeight() - size.height) / 2;
+        Dimension size = vport.getViewSize();
+        int xx = (whiteboardSurface.getWidth() - size.width) / 2;
+        int yy = (whiteboardSurface.getHeight() - size.height) / 2;
+      
         Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
-        scrollRectToVisible(rect);
+        whiteboardSurface.scrollRectToVisible(rect);
         centerPanel.add(surfaceScrollPane, BorderLayout.CENTER);
         centerPanel.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
 
@@ -789,27 +794,12 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             @Override
             public void run() {
                 initTCPCommunication();
-                loadCachedDocuments();
+                baseManager.loadCachedSlides();
             }
         };
         t.start();
 
         return this;
-    }
-
-    private void initClassroomUser() {
-        //if not logged in, then assign random number
-        if (userName == null || userName.startsWith("Language")) { //not logging on through KEWL for dev, so give random user name
-
-            userName = "Guest" + new java.util.Random().nextInt(200);
-            fullName = userName;
-        }
-        int xuserLevel = UserLevel.GUEST;
-        user = new User(xuserLevel, userName, userName, "localhost", 22225, isPresenter,
-                sessionId, sessionTitle, slidesDir, false, siteRoot, slideServerId);
-        user.setUserDetails(userDetails);
-        user.setUserImagePath(userImagePath);
-
     }
 
     public JFrame getParentFrame() {
@@ -974,82 +964,20 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return siteRoot;
     }
 
-    /**
-     * Display the filter frame
-     */
-    public void showFilterFrame() {
-        //($id,$agenda,$resourcesPath,$appletCodeBase,$slidesDir,$username,$fullnames,$userLevel,$slideServerId)
-        //  String filterNames = JOptionPane.showInputDialog("Please enter your full names  separated by space.\n" +
-        //        "This will be  used to create a filter to be used in live presentation");
-
-        String filterNames = "Guest" + new java.util.Random().nextInt(200) + " " + "RL" + new java.util.Random().nextInt(200);
-
-        if (filterNames != null) {
-            if (filterNames.trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Empty spaces are not allowed. Please enter your fullname");
-                return;
-            }
-            String[] names = filterNames.trim().split(" ");
-            for (int i = 0; i < names.length; i++) {
-                System.out.println(i + " " + names[i]);
-            }
-            if (names.length < 2) {
-                JOptionPane.showMessageDialog(null, "Atleast 2 names required");
-                return;
-            }
-            String filter = "[REALTIME: " +
-                    "id=\"" + sessionId + "\" \n" +
-                    "agenda=\"" + sessionTitle + "\" \n" +
-                    "resourcesPath=\"" + resourcesPath + "\" \n" +
-                    "appletCodeBase=\"" + appletCodeBase + "\" \n" +
-                    "slidesDir=\"" + slidesDir + "\" \n" +
-                    "username=\"" + names[0] + "\" \n" +
-                    "fullnames=\"" + filterNames + "\" \n" +
-                    "userLevel=\"admin\" \n" +
-                    "slideServerId=\"" + slideServerId + "\" \n" +
-                    "siteRoot=\"" + siteRoot + "\" /]";
-            FilterFrame fr = new FilterFrame(filter, createEmbbedStr(names[0], filterNames));
-            fr.setSize(500, 300);
-            fr.setLocationRelativeTo(null);
-            fr.setAlwaysOnTop(true);
-            fr.setVisible(true);
-        }
-
+    public String getResourcesPath() {
+        return resourcesPath;
     }
 
-    /**
-     * this creates an embbed string than can be pasted into any container that supports html
-     * then the realtime session will be played
-     * @param userName
-     * @param fullName
-     * @return
-     */
-    private String createEmbbedStr(String userName, String fullName) {
-        String url = "<center>\n";
-        url += "<applet codebase=\"" + appletCodeBase + "\"\n";
-        url += "code=\"avoir.realtime.tcp.launcher.RealtimeLauncher\" name =\"Chisimba Realtime Applet\"\n";
+    public void setResourcesPath(String resourcesPath) {
+        this.resourcesPath = resourcesPath;
+    }
 
-        url += "archive=\"realtime-launcher-0.1.jar\" width=\"100%\" height=\"600\">\n";
-        url += "<param name=userName value=\"" + userName + "\" >\n";
+    public String getUserLevel() {
+        return userLevel;
+    }
 
-        url += "<param name=isLocalhost value=\"false\">\n";
-        url += "<param name=fullname value=\"" + fullName + "\">\n";
-        url += "<param name=userLevel value=\"" + userLevel + "\">\n";
-        url += "<param name=uploadURL value=\"uploadURL\">\n";
-        url += "<param name=chatLogPath value=\"chatLogPath\">\n";
-        url += "<param name=siteRoot value=\"" + siteRoot + "\">\n";
-        url += "<param name=isWebPresent value=\"true\">\n";
-        url += "<param name=slidesDir value=\"" + slidesDir + "\">\n";
-        url += "<param name=uploadPath value=\"uploadPath\">\n";
-        url += "<param name=resourcesPath value=\"" + resourcesPath + "\">\n";
-        url += "<param name=sessionId value=\"" + sessionId + "\">\n";
-        url += "<param name=sessionTitle value=\"" + sessionTitle + "\">\n";
-        url += "<param name=slideServerId value=\"" + slideServerId + "\">\n";
-
-        url += "<param name=isSessionPresenter value=\"false\">\n";
-        url += "</applet>\n";
-        url += "</center>\n";
-        return url;
+    public void setUserLevel(String userLevel) {
+        this.userLevel = userLevel;
     }
 
     /**
@@ -1070,18 +998,25 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
      * Diplays the chat room (frame)
      */
     public void showChatRoom() {
-        /*chatFrame.setTitle(user.getFullName() + ": Chat Session: " + user.getSessionTitle());
-        chatFrame.setAlwaysOnTop(true);
-        chatFrame.add(chatRoom);
-        chatFrame.setSize(400, 400);
-        chatFrame.setLocationRelativeTo(null);
-        chatFrame.setVisible(true);
-        chatFrame.addWindowListener(new WindowAdapter() {
+        final JPanel panel = (JPanel) dockTabbedPane.getComponentAt(0);
+        final JPanel agendaPanel = (JPanel) dockTabbedPane.getComponentAt(1);
+        JFrame fr = new JFrame("Chat - Close to dock");
+        fr.addWindowListener(new WindowAdapter() {
 
-        public void windowClosing(WindowEvent e) {
-        dockTabbedPane.add(chatRoom, "Chat");
-        }
-        });*/
+            public void windowClosing(WindowEvent e) {
+                dockTabbedPane.removeAll();
+                dockTabbedPane.add(panel, "Chat");
+                dockTabbedPane.add(agendaPanel, "Agenda");
+            }
+        });
+        fr.setLayout(new BorderLayout());
+        fr.setAlwaysOnTop(true);
+        fr.add(panel, BorderLayout.CENTER);
+        fr.setSize(400, 300);
+        fr.setLocationRelativeTo(null);
+        fr.setVisible(true);
+        dockTabbedPane.remove(0);
+        dockTabbedPane.add(agendaPanel, "Agenda");
     }
 
     /**
@@ -1211,7 +1146,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         }
         if (!connected) {
-            showMessage("Connection to server failed. Refresh your browser page to reconnect. If the applet hangls, you will need to restart the browser.", false, true, MessageCode.ALL);
+            showMessage("Connection to server failed. Contact your system administrator.", false, true, MessageCode.ALL);
 
         }
     }
@@ -1265,25 +1200,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
     public JProgressBar getSpeakerVolumeMeter() {
         return speakerVolumeMeter;
-    }
-
-    private void loadCachedDocuments() {
-        agendaManager.addAgenda(new String[0], "Whiteboard");
-        File cacheHome = new File(avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/slides");
-        if (!cacheHome.exists()) {
-            return;
-        }
-        String[] slides = cacheHome.list();
-
-        if (slides != null) {
-            for (int i = 0; i < slides.length; i++) {
-                String presentation = cacheHome.getAbsolutePath() + "/" + slides[i];
-
-                int[] slidesList = tcpClient.getImageFileNames(presentation);
-
-                agendaManager.addAgenda(tcpClient.createSlideNames(slidesList), new File(presentation).getName());
-            }
-        }
     }
 
     /** This method is called from within the init() method to
