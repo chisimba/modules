@@ -53,7 +53,15 @@ public class Pen implements Item {
         Colour = c;
         this.stroke = stroke;
     }
+    private String sessionId;
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
     /**
      * return the size of this object
      * @return Dimension

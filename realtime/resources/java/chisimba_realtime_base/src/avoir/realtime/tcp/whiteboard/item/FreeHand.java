@@ -23,6 +23,15 @@ public class FreeHand implements Item {
     public String getId() {
         return id;
     }
+    private String sessionId;
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public boolean contains(int x, int y) {
         throw new UnsupportedOperationException("Not supported yet.");

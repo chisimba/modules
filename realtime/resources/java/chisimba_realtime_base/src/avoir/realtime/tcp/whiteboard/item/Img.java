@@ -59,7 +59,15 @@ public class Img implements Item {
     public void setId(String id) {
         this.id = id;
     }
+    private String sessionId;
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
     public String getId() {
         return id;
     }
@@ -160,6 +168,6 @@ public class Img implements Item {
      * @return String of the form "Imgangle",X coord, Y coord, width, height, Color, fill
      */
     public String toString() {
-        return "Image - x:" + x + " y:" + y + " w:" + width + " h:" + height + "indec: "+imageIndex+"\n";
+        return "Image - x:" + x + " y:" + y + " w:" + width + " h:" + height + " path: "+path+"\n";
     }
 }
