@@ -4,6 +4,7 @@
  */
 package avoir.realtime.tcp.base.managers;
 
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.*;
 
 import avoir.realtime.tcp.base.user.User;
@@ -255,15 +256,15 @@ public class UserListManager {
 
                     }
                 } else {
-                    
+
                     setFont(new java.awt.Font("Dialog", 3, 10));
                     setForeground(Color.LIGHT_GRAY);
                     this.setText(userObject.getDisplay() + "- Offline");
-                    
 
-                    
+
+
                 }
-           
+
                 setToolTipText(userObject.getUser().getUserDetails());
 
             }
@@ -422,6 +423,28 @@ public class UserListManager {
         }
     }
 
+    public void updateUser(User usr) {
+
+        for (int i = 0; i < userList.size(); i++) {
+            UserObject userObject = userList.elementAt(i);
+            if (userObject.getUser().getUserName().equals(usr.getUserName())) {
+                userObject.setUser(usr);
+                userList.set(i, userObject);
+            }
+        }
+    }
+
+    public void setAllUsersOnline(boolean state) {
+
+        for (int i = 0; i < userList.size(); i++) {
+            UserObject userObject = userList.elementAt(i);
+
+            userObject.setOnline(state);
+            model.setValueAt(userObject, i, 3);
+            userList.set(i, decorateUser(userObject, userObject.getUser()));
+        }
+    }
+
     public int getUserIndex(String username) {
         for (int i = 0; i < userList.size(); i++) {
             UserObject userObject = userList.elementAt(i);
@@ -482,7 +505,7 @@ public class UserListManager {
             }
             model.setValueAt(icon, index, 2);
         }
-   if (iconType == PresenceConstants.EDIT_WB_ICON) {
+        if (iconType == PresenceConstants.EDIT_WB_ICON) {
             if (show) {
                 icon = editWBIcon;
             } else {
