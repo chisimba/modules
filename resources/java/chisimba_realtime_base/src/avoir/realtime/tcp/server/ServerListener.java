@@ -19,8 +19,8 @@
  */
 package avoir.realtime.tcp.server;
 
+import avoir.realtime.tcp.common.packet.ClassroomFile;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,9 +31,8 @@ import avoir.realtime.tcp.common.packet.AttentionPacket;
 import avoir.realtime.tcp.whiteboard.item.Item;
 import java.util.LinkedList;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.util.Stack;
-import javax.net.ServerSocketFactory;
-import javax.net.ssl.SSLServerSocketFactory;
 
 /**
  * Sets up the ServerSocket and ServerThread
@@ -51,7 +50,7 @@ public class ServerListener extends Thread {
     private Vector<SessionMonitor> sessionmonitors = new Stack<SessionMonitor>();
     private String[] unwantedHosts = {"192.102.9.73"};
     private Vector<Item> whiteboardItems = new Vector<Item>();
-
+    private Vector<ClassroomFile> documentsAndFiles = new Vector<ClassroomFile>();
     /**
      * The port number
      * @param port port number
@@ -82,10 +81,13 @@ public class ServerListener extends Thread {
     @Override
     public void run() {
         try {
-            //ServerSocket serverSocket = new ServerSocket(port);
-            ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
-            ServerSocket ssocket = ssocketFactory.createServerSocket(port);
+            ServerSocket ssocket = new ServerSocket(port);
+          /*  ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
+            SSLServerSocket ssocket = (SSLServerSocket) ssocketFactory.createServerSocket(port);
+            final String[] enabledCipherSuites = {"SSL_DH_anon_WITH_RC4_128_MD5"};
+            ssocket.setEnabledCipherSuites(enabledCipherSuites);
             ssocket.setReuseAddress(true);
+            */
             logger.info("SSL factory started..");
             logger.info("Listening for connections on port " + port);
             while (true) {
@@ -101,7 +103,8 @@ public class ServerListener extends Thread {
                                 raisedHands, new Vector(),
                                 launchers,
                                 sessionmonitors,
-                                whiteboardItems);
+                                whiteboardItems,
+                                documentsAndFiles);
                         new Thread(server).start();
                     }
                 } catch (Exception e) {
