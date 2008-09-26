@@ -22,7 +22,7 @@ import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
 import avoir.realtime.tcp.base.filetransfer.FileUploader;
-import avoir.realtime.tcp.base.protocol.NetworkMonitor;
+import avoir.realtime.tcp.base.NetworkMonitor;
 import avoir.realtime.tcp.common.packet.AckPacket;
 import avoir.realtime.tcp.common.packet.RealtimePacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
@@ -36,6 +36,7 @@ import avoir.realtime.tcp.common.packet.BinaryFileSaveReplyPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
+import avoir.realtime.tcp.common.packet.ClassroomFileLog;
 import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearSlidesPacket;
 import avoir.realtime.tcp.common.packet.ClearVotePacket;
@@ -59,10 +60,12 @@ import avoir.realtime.tcp.common.packet.RemoveUserPacket;
 import avoir.realtime.tcp.common.packet.RestartServerPacket;
 import avoir.realtime.tcp.common.packet.ServerLogReplyPacket;
 import avoir.realtime.tcp.common.packet.ServerLogRequestPacket;
+import avoir.realtime.tcp.common.packet.SessionImgPacket;
 import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
 import avoir.realtime.tcp.common.packet.SystemFilePacket;
+import avoir.realtime.tcp.common.packet.UpdateUserNetworkStatusPacket;
 import avoir.realtime.tcp.common.packet.UploadMsgPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardItems;
@@ -82,8 +85,6 @@ import java.nio.channels.FileChannel;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -97,13 +98,9 @@ import javax.swing.JOptionPane;
 public class TCPClient {
 
     private static Logger logger = Logger.getLogger(TCPClient.class.getName());
-    private final int INITIAL_HEARBEAT_DELAY = 30;
-    private long HEARTBEAT_DELAY = 10;
     private boolean running = true;
     private boolean selectWindowManager = true;
-    private boolean ALIVE = true;
     private boolean slideServerReplying = false;
-    private boolean NETWORK_ALIVE = true;
     private boolean connected = false;
     private RealtimeBase base;
     private AudioWizardFrame audioHandler;
@@ -115,7 +112,8 @@ public class TCPClient {
     private ClientAdmin clientAdmin;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
-    private SSLSocket socket;
+    //private SSLSocket socket;
+    private Socket socket;
     private SlidesServer slidesServer;
     private boolean initSlideRequest = false;
     private Timer slidesMonitor = new Timer();
@@ -418,18 +416,19 @@ public class TCPClient {
 
                     System.out.println("Using direct connection...");
                 }
-                SSLContext context = null;
+                /* SSLContext context = null;
                 try {
-                    context = SSLContext.getInstance("SSL");
-                    context.init(null, trustAllCerts, new java.security.SecureRandom());
+                context = SSLContext.getInstance("SSL");
+                context.init(null, trustAllCerts, new java.security.SecureRandom());
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                ex.printStackTrace();
                 }
                 dfactory = context.getSocketFactory();
                 socket = (SSLSocket) dfactory.createSocket(SUPERNODE_HOST, SUPERNODE_PORT);
                 socket.startHandshake();
                 //  socket.setKeepAlive(true);
-
+                 */
+                socket = new Socket(SUPERNODE_HOST, SUPERNODE_PORT);
                 result = true;
                 connected = true;
             } catch (UnknownHostException ex) {
@@ -439,7 +438,12 @@ public class TCPClient {
                 ex.printStackTrace();
                 return false;
             }
-            writer = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            OutputStream out = socket.getOutputStream();
+            out.write("avoirdesktopclient".getBytes());
+            out.flush();
+            out.write('\n');
+            out.flush();
+            writer = new ObjectOutputStream(new BufferedOutputStream(out));
             writer.flush();
             reader = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             result = true;
@@ -449,7 +453,7 @@ public class TCPClient {
                 @Override
                 public void run() {
                     if (base != null) {
-                        sendPulse();
+                        networkMonitor.startHeartBeat();
                     }
                     listen();
                 }
@@ -462,19 +466,6 @@ public class TCPClient {
             ex.printStackTrace();
         }
         return result;
-    }
-
-    /**
-     * Start the pulses ..for monitoring n/w status
-     */
-    private void sendPulse() {
-        Thread t = new Thread() {
-
-            public void run() {
-                networkMonitor.sendPulse();
-            }
-        };
-        t.start();
     }
 
     private void delay(long duration) {
@@ -547,6 +538,9 @@ public class TCPClient {
                 } else if (packet instanceof NewUserPacket) {
                     NewUserPacket p = (NewUserPacket) packet;
                     consumer.processNewUserPacket(p);
+                } else if (packet instanceof UpdateUserNetworkStatusPacket) {
+                    UpdateUserNetworkStatusPacket p = (UpdateUserNetworkStatusPacket) packet;
+                    consumer.processUpdateUserPacket(p);
                 } else if (packet instanceof PointerPacket) {
                     consumer.processPointerPacket((PointerPacket) packet);
                 } else if (packet instanceof OutlinePacket) {
@@ -554,6 +548,9 @@ public class TCPClient {
                 } else if (packet instanceof ChatPacket) {
                     ChatPacket p = (ChatPacket) packet;
                     consumer.processChatPacket(p);
+                }else if (packet instanceof ClassroomFileLog) {
+                    ClassroomFileLog p = (ClassroomFileLog) packet;
+                    consumer.processClassromFilesLog(p);
                 } else if (packet instanceof AttentionPacket) {
                     AttentionPacket p = (AttentionPacket) packet;
                     consumer.processAttentionPacket(p);
@@ -577,6 +574,9 @@ public class TCPClient {
                 } else if (packet instanceof QuitPacket) {
                     QuitPacket p = (QuitPacket) packet;
                     consumer.processQuitPacket(p);
+                }    else if (packet instanceof SessionImgPacket) {
+                    SessionImgPacket p = (SessionImgPacket) packet;
+                   fileReceiverManager.processSessionImageFileDownload(p);
                 } else if (packet instanceof ModuleFileRequestPacket) {
                     ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
                     consumer.processModuleFileRequestPacket(p);
@@ -638,41 +638,10 @@ public class TCPClient {
      * is broken. Inform the user
      */
     private void displayDisconnectionMsg() {
-
+        base.getSessionManager().getTimer().cancel();
+        base.getUserManager().setAllUsersOnline(false);
         base.refreshConnection();
-    /*
-    int noOfTries = 0;
-    int maxTries = 60;
-    
-    while (noOfTries < maxTries) {
-    if (connected) {
-    break;
-    }
-    if (base != null) {
-    
-    base.getWhiteboardSurface().setSelectedItem(null);
-    base.showMessage("Disconnected from server. Retrying..." + noOfTries+" of "+maxTries, false, true);
-    
-    base.refreshConnection();
-    }
-    if (slidesServer != null) {
-    //if for the slide server..try to reconnect
-    slidesServer.reconnect();
-    }
-    noOfTries++;
-    delay(1000);
-    }
-    
-    if (!connected && base != null) {
-    int n = JOptionPane.showConfirmDialog(null, "Disconnected from server. Reconnect?", "Disconnected", JOptionPane.YES_NO_OPTION);
-    if (n == JOptionPane.YES_OPTION) {
-    //try to auto reconnect
-    base.initTCPCommunication();
-    } else {
-    base.showMessage("Disconnected From Server", false, true);
-    }
-    }
-     */
+
     }
 
     /**
@@ -688,7 +657,7 @@ public class TCPClient {
      * @param packet
      */
     private void updateUserList(ClientPacket packet) {
-        
+
         //update user list..but only if this user is the applet
         if (base != null) {
             Vector<User> users = packet.getUsers();
