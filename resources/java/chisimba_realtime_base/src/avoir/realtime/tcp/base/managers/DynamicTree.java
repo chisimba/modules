@@ -89,7 +89,7 @@ public class DynamicTree extends JPanel {
                                 base.getSessionManager().setCurrentSlide(index, base.isPresenter(), slidePath);
                             } else {
                                 base.getSessionManager().setSlideCount(selectedNode.getSlideCount());
-                                slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + presentationName + "/img" + index + ".jpg";
+                                slidePath = Constants.getRealtimeHome() + "/classroom/slides/"+base.getSessionId()+"/" + presentationName + "/img" + index + ".jpg";
                                 base.getSessionManager().setCurrentSlide(index, base.isPresenter(), slidePath);
                             }
                             base.setWebPresent(selectedNode.isWebPresent());
