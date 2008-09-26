@@ -6,7 +6,7 @@
  */
 package avoir.realtime.tcp.whiteboard;
 
-import avoir.realtime.tcp.base.ImageUtil;
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.base.TCPClient;
 import avoir.realtime.tcp.common.Constants;
@@ -35,7 +35,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -915,7 +914,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         } else {
             base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
         }
-        if (selectedItem == null) {
+        if (selectedItem == null && !whiteboardManager.isPointerInUser()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         repaint();
@@ -1206,7 +1205,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         } else {
             base.showMessage("You dont have privileges to modify the whiteboard", true, true, MessageCode.ALL);
         }
-        if (selectedItem == null) {
+        if (selectedItem == null && !whiteboardManager.isPointerInUser()) {
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             scrollOnDrag(evt);
         }
@@ -1319,6 +1318,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         pointer = type;
         pointerLocations.clear();
         setCurrentPointer(pointer);
+    }
+
+    public int getPointer() {
+        return pointer;
     }
 
     private void setCurrentPointer(int type) {
@@ -1888,7 +1891,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         int xx = (getWidth() - pointerSurface.width) / 2;
         int yy = (getHeight() - pointerSurface.height) / 2;
 
-        //    g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
+           g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
 
         paintSlides(g2);
         drawStroke(g2);
@@ -1985,7 +1988,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
             Rectangle rect = new Rectangle(xx - 5, yy - 5, slideWidth + 10, slideHeight + 10);
             //pointerSurface = new Rectangle(xx, yy, slideWidth, slideHeight);
-            // g2.draw(rect);
+             //g2.draw(rect);
             firstSlide = false;
         }
     }
