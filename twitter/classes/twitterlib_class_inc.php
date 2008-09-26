@@ -22,10 +22,10 @@
  *
  * @category  Chisimba
  * @package   twitter
- * @author    Charl van Niekerk _EMAIL
+ * @author    Charl van Niekerk <charlvn@charlvn.za.net>
  * @copyright 2008 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: twitterremote_class_inc.php 10510 2008-09-09 14:03:12Z charlvn $
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  */
 
