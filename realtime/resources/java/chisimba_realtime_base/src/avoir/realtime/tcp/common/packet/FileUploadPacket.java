@@ -19,9 +19,10 @@ public class FileUploadPacket implements RealtimePacket {
     private String clientId;
     private String recepient;
     boolean serverUpload;
-    String sender;
+    private String sender;
     private int recepientIndex;
     private int fileType;
+    private int index;
 
     public FileUploadPacket(
             String sessionId,
@@ -48,10 +49,20 @@ public class FileUploadPacket implements RealtimePacket {
         this.sender = sender;
         this.recepientIndex = recepientIndex;
         this.fileType = fileType;
+        
     }
+
 
     public void setFileType(int fileType) {
         this.fileType = fileType;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public int getFileType() {
