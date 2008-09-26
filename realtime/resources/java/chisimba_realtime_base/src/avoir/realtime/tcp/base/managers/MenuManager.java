@@ -1,6 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *  Copyright (C) GNU/GPL AVOIR 2008
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.base.managers;
 
@@ -10,6 +23,7 @@ import avoir.realtime.tcp.base.appsharing.AppShareFrame;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.ImageFilter;
 import avoir.realtime.tcp.common.PresentationFilter;
+import avoir.realtime.tcp.flashplayer.FlashPlayer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,8 +34,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author developer
+ * This managers the menu system
+ * @author David Wafula
  */
 public class MenuManager implements ActionListener {
 
@@ -40,6 +54,8 @@ public class MenuManager implements ActionListener {
     private RealtimeBase base;
     private JFileChooser presentationFC = new JFileChooser();
     private JFileChooser graphicFC = new JFileChooser();
+    private JFileChooser flashFC = new JFileChooser();
+
     private AppShareFrame appShareFrame;
 
     public MenuManager(RealtimeBase base) {
@@ -64,7 +80,7 @@ public class MenuManager implements ActionListener {
         createMenuItem(fileMenu, "Exit", "exit", true);
         createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", base.getControl());
         createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", base.getControl());
-        createMenuItem(insertMenu, "Insert Flash", "insertFlash", false);
+        createMenuItem(insertMenu, "Insert Flash", "insertFlash", base.getControl());
         menuBar.add(fileMenu);
         menuBar.add(insertMenu);
         //  }
@@ -78,6 +94,7 @@ public class MenuManager implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+
         if (e.getActionCommand().equals("appshare")) {
             if (appShareFrame == null) {
                 appShareFrame = new AppShareFrame(base);
@@ -99,6 +116,19 @@ public class MenuManager implements ActionListener {
                 t.start();
             }
         }
+        if (e.getActionCommand().equals("insertFlash")) {
+            if (flashFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
+                final File f = flashFC.getSelectedFile();
+                Thread t = new Thread() {
+
+                    public void run() {
+                        new FlashPlayer("file://"+f.getAbsolutePath());
+                    }
+                };
+                t.start();
+            }
+        }
+
         if (e.getActionCommand().equals("insertPresentation")) {
             if (presentationFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
                 final File f = presentationFC.getSelectedFile();
@@ -119,7 +149,7 @@ public class MenuManager implements ActionListener {
             base.showOptionsFrame();
         }
         if (e.getActionCommand().equals("filter")) {
-            base.showFilterFrame();
+            base.getBaseManager().showFilterFrame();
         }
         if (e.getActionCommand().equals("audiosetup")) {
             MenuManager.this.base.showAudioWizardFrame();
