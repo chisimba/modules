@@ -18,6 +18,7 @@
 package avoir.realtime.tcp.base.filetransfer;
 
 import avoir.realtime.tcp.base.RealtimeBase;
+import avoir.realtime.tcp.common.GenerateUUID;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import java.io.File;
@@ -39,7 +40,7 @@ public class FileUploader {
         this.base = base;
     }
 
-    public void transferFile(String fileName,int type) {
+    public void transferFile(String fileName, int type) {
         try {
 
             File file = new File(fileName);
@@ -51,10 +52,7 @@ public class FileUploader {
             if (fileSize % MAX_CHUNK_SIZE > 0) {
                 nChunks++;
             }
-            //progressMonitor = new ProgressMonitor(base,
-            //      "Uploading File",
-            //    "", 0, nChunks);
-
+       
 
             long bytesRemaining = fileSize;
 
@@ -74,10 +72,12 @@ public class FileUploader {
                     break;
                 } else if (read > 0) {
 
-                    base.getTcpClient().sendPacket(new FileUploadPacket(
+                    FileUploadPacket pk = new FileUploadPacket(
                             base.getSessionId(),
-                            base.getSessionId(), buf, i, nChunks, file.getName(),
-                            clientID, base.getSessionId(), true, base.getUserName(), -1,type));
+                            GenerateUUID.getId(), buf, i, nChunks, file.getName(),
+                            clientID, base.getSessionId(), true, base.getUserName(), -1, type);
+                    pk.setIndex(base.getWhiteboardSurface().getImgs().size());
+                    base.getTcpClient().sendPacket(pk);
                 }
 
 
