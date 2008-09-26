@@ -19,6 +19,7 @@
  */
 package avoir.realtime.tcp.base.chat;
 
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.common.PresenceConstants;
