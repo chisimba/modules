@@ -90,7 +90,7 @@
             fwrite($fh,    ' <offline-allowed/>');
             fwrite($fh,   '</information>');
             fwrite($fh, '<resources>     ');
-            fwrite($fh,  	'<jar href="realtime-launcher-1.0.1.jar"/>   ');
+            fwrite($fh,  	'<jar href="realtime-launcher-1.0.2.jar"/>   ');
             fwrite($fh,	'<j2se version="1.5+"');
             fwrite($fh,	 '     href="http://java.sun.com/products/autodl/j2se"/>');
             fwrite($fh,   '</resources>');
