@@ -225,7 +225,7 @@ class realtimemanager extends Object
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-survey-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-user-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-launcher-1.0.2.jar  avoir.realtime.tcp.base.SlidesServer ".$slideServerId." ".$supernodeHost." ".$supernodePort." >/dev/null &";
-       echo $cmd;
+       //echo $cmd;
         system($cmd,$return_value);
     }
 
