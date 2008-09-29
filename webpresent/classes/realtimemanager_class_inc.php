@@ -210,19 +210,13 @@ class realtimemanager extends Object
         $minMemory=$objSysConfig->getValue('MIN_MEMORY', 'realtime');
         $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
         $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
-        
+
         $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
         //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
         $this->objConfig = $this->getObject('altconfig', 'config');
         $cmd = "java -Xms32m -Xmx64m -cp ";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-common-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-base-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-appsharing-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-audio-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-chat-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-filetransfer-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-managers-1.0.2.jar:";
-        $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-survey-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-user-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-launcher-1.0.2.jar  avoir.realtime.tcp.base.SlidesServer ".$slideServerId." ".$supernodeHost." ".$supernodePort." >/dev/null &";
        //echo $cmd;
