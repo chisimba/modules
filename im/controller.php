@@ -142,6 +142,22 @@ class im extends controller
 				$this->objImOps->sendMessage($to, 'Hope this works!');
 				break;
 
+			case 'massmessage':
+				$counter = 0;
+				$time_start = microtime(true);
+				while($counter < 5)
+				{
+					$to = 'pscott209@gmail.com';
+					$this->objImOps->sendMessage($to, 'Test: '.$counter);
+					$counter++;
+					echo $counter;
+				}
+				$time_end = microtime(true);
+				$time = $time_end - $time_start;
+				$to = 'pscott209@gmail.com';
+				$this->objImOps->sendMessage($to, 'Test took: '.$time).' seconds';
+				break;
+				
 			case 'messagehandler':
 				// This is a looooong running task... Lets use the background class to handle it
 				//check the connection status
