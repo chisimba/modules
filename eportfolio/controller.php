@@ -94,7 +94,7 @@ class eportfolio extends controller
             );
         $this->_arrSubGroups = array();
         $this->_arrSubGroups['Owner']['id'] = NULL;
-        $this->_arrSubGroups['Owner']['members'] = array($userPid);
+        $this->_arrSubGroups['Owner']['members'] = array($this->userPid);
 
         $this->_arrSubGroups['Guest']['id'] = NULL;
         $this->_arrSubGroups['Guest']['members'] = array();
