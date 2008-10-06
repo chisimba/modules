@@ -3,12 +3,12 @@
 // File name   : example_013.php
 // Begin       : 2008-03-04
 // Last Update : 2008-05-28
-// 
+//
 // Description : Example 013 for TCPDF class
 //               Graphic Transformations
-// 
+//
 // Author: Nicola Asuni
-// 
+//
 // (c) Copyright:
 //               Nicola Asuni
 //               Tecnick.com s.r.l.
@@ -29,44 +29,32 @@
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * @since 2008-03-04
  */
-
-require_once('../config/lang/eng.php');
-require_once('../tcpdf.php');
-
+require_once ('../config/lang/eng.php');
+require_once ('../tcpdf.php');
 // create new PDF document
-$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true); 
-
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true);
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor("Nicola Asuni");
 $pdf->SetTitle("TCPDF Example 013");
 $pdf->SetSubject("TCPDF Tutorial");
 $pdf->SetKeywords("TCPDF, PDF, example, test, guide");
-
 // disable header and footer
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
-
 //set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
 //set image scale factor
-$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); 
-
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 //set some language-dependent strings
-$pdf->setLanguageArray($l); 
-
+$pdf->setLanguageArray($l);
 //initialize document
 $pdf->AliasNbPages();
-
 // add a page
 $pdf->AddPage();
-
 // ---------------------------------------------------------
-
 // set font
 $pdf->SetFont("dejavusans", "", 10);
 //Scaling
@@ -84,7 +72,6 @@ $pdf->Rect(50, 20, 40, 10, 'D');
 $pdf->Text(50, 19, 'Scale');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Translation
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -100,7 +87,6 @@ $pdf->Rect(125, 20, 40, 10, 'D');
 $pdf->Text(125, 19, 'Translate');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Rotation
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -116,7 +102,6 @@ $pdf->Rect(50, 50, 40, 10, 'D');
 $pdf->Text(50, 49, 'Rotate');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Skewing
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -132,7 +117,6 @@ $pdf->Rect(125, 50, 40, 10, 'D');
 $pdf->Text(125, 49, 'Skew');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Mirroring horizontally
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -148,7 +132,6 @@ $pdf->Rect(50, 80, 40, 10, 'D');
 $pdf->Text(50, 79, 'MirrorH');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Mirroring vertically
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -164,7 +147,6 @@ $pdf->Rect(125, 80, 40, 10, 'D');
 $pdf->Text(125, 79, 'MirrorV');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Point reflection
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
@@ -175,27 +157,23 @@ $pdf->SetTextColor(0);
 //Start Transformation
 $pdf->StartTransform();
 //point reflection at the lower left point of rectangle
-$pdf->MirrorP(50,120);
+$pdf->MirrorP(50, 120);
 $pdf->Rect(50, 110, 40, 10, 'D');
 $pdf->Text(50, 109, 'MirrorP');
 //Stop Transformation
 $pdf->StopTransform();
-
 //Mirroring against a straigth line described by a point (120, 120) and an angle -20°
-$angle=-20;
-$px=120;
-$py=120;
-
+$angle = -20;
+$px = 120;
+$py = 120;
 //just vor visualisation: the straight line to mirror against
-
 $pdf->SetDrawColor(200);
-$pdf->Line($px-1,$py-1,$px+1,$py+1);
-$pdf->Line($px-1,$py+1,$px+1,$py-1);
+$pdf->Line($px-1, $py-1, $px+1, $py+1);
+$pdf->Line($px-1, $py+1, $px+1, $py-1);
 $pdf->StartTransform();
 $pdf->Rotate($angle, $px, $py);
 $pdf->Line($px-5, $py, $px+60, $py);
 $pdf->StopTransform();
-
 $pdf->SetDrawColor(200);
 $pdf->SetTextColor(200);
 $pdf->Rect(125, 110, 40, 10, 'D');
@@ -210,13 +188,11 @@ $pdf->Rect(125, 110, 40, 10, 'D');
 $pdf->Text(125, 109, 'MirrorL');
 //Stop Transformation
 $pdf->StopTransform();
-
 // ---------------------------------------------------------
-
 //Close and output PDF document
 $pdf->Output("example_013.pdf", "I");
+//============================================================+
+// END OF FILE
+//============================================================+
 
-//============================================================+
-// END OF FILE                                                 
-//============================================================+
 ?>
