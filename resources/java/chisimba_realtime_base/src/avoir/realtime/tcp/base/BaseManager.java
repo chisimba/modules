@@ -20,14 +20,19 @@ package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.base.appsharing.DesktopUtil;
 import avoir.realtime.tcp.base.user.User;
+import avoir.realtime.tcp.common.Flash;
 import avoir.realtime.tcp.common.packet.DesktopPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
+import chrriis.dj.nativeswing.swtimpl.components.JFlashPlayer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 /**
  * Contains utility classes that are used by RealtimeBase
@@ -40,6 +45,7 @@ public class BaseManager {
     private DesktopUtil desktopUtil;
     private boolean screenCapture;
     private boolean paused = false;
+    private Timer tabTimer = new Timer();
 
     public BaseManager(RealtimeBase base) {
         this.base = base;
@@ -74,6 +80,26 @@ public class BaseManager {
 
     public void setScreenCapture(boolean screenCapture) {
         this.screenCapture = screenCapture;
+    }
+
+    public void showFlashPlayer(final String filepath, final String id, final String sessionId) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+
+                JFlashPlayer flashPlayer = new JFlashPlayer();
+                flashPlayer.setControlBarVisible(true);
+
+                flashPlayer.load(filepath);
+                flashPlayer.pause();
+                String filename = new File(filepath).getName();
+                base.getFlashFiles().add(new Flash(filename, id, sessionId));
+                base.getMainTabbedPane().add(flashPlayer, filename);
+                int count = base.getMainTabbedPane().getTabCount();
+                base.getMainTabbedPane().setSelectedIndex(count - 1);
+            }
+        });
     }
 
     /**
@@ -121,14 +147,27 @@ public class BaseManager {
      * Here the session is on, and so reload the images in case you broke off before the session
      * ended
      */
-    public void loadCachedImage(Img img,String path) {
+    public void loadCachedImage(Img img, String path) {
 
         File cacheHome = new File(avoir.realtime.tcp.common.Constants.getRealtimeHome() + "/classroom/images/" + base.getSessionId());
         if (!cacheHome.exists()) {
             return;
         }
-             base.getWhiteboardSurface().setImage(new ImageIcon(path));
-     
+        base.getWhiteboardSurface().setImage(new ImageIcon(path));
+
+    }
+
+    public Timer getTabTimer() {
+        return tabTimer;
+    }
+
+    public void animateTabTitle(JTabbedPane tab, int index) {
+        if (tabTimer != null) {
+            tabTimer.cancel();
+        }
+
+        tabTimer = new Timer();
+        tabTimer.scheduleAtFixedRate(new TabTitleAnimator(index, tab, tab.getBackground()), 0, 1000);
     }
 
     /**
