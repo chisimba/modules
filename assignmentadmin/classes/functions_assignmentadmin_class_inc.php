@@ -273,7 +273,7 @@ class functions_assignmentadmin extends object
         $fields['description'] = $clean_text;
         $fields['userId'] = $this->userId;
         $fields['context'] = $this->contextCode;
-        $fields['last_modified'] = date('Y-m-d H:i',time());
+        $fields['last_modified'] = date('Y-m-d H:i:s',time());
 	
         $id = $this->dbAssignment->addAssignment($fields, $id);
 	
