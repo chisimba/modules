@@ -44,18 +44,17 @@ if ($mode == 'edit' && !empty($answer)) {
     //$aOrder = $data['count']+1;
 }
 
+$objWashout = $this->getObject('washout', 'utilities');
+
 //print_r($data['count']);
 
 $num = 1;
 // Display test info
-$str = '<br /><font size="4"><b>'.$questionLabel.':</b>&nbsp;&nbsp;'.$data['question'].'</font>';
+echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($data['question']);
 
 	$objTable = new htmltable();
 	$objTable->cellpadding = 5;
 	$objTable->width = '99%';
-	$objTable->startRow();
-	$objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
-	$objTable->endRow();
 	
 if($truefalse == true){
 	$tf = array();
@@ -68,14 +67,40 @@ if($truefalse == true){
 	}
 }
 $j = 1;
-if(empty($answers))
-{
+
+
+//if(empty($answers))
+//{
 	for($i=0; $i < $qNum; $i++) {
 		$j = $i+1;
 		$objRadio = new radio('correctans');
 	    $objRadio->addOption($j, '');
+        
+        // Setting default answer
+        if(empty($answers)) {
+            // If none, set first to be default answer
+            $objRadio->setSelected(1);
+        } else {
+            // If reducing number of options, and not default selected, set to 1
+            if ($correctAnswerNum > $qNum) {
+                $objRadio->setSelected(1);
+            } else {
+                // Else set to existing correct answer
+                $objRadio->setSelected($correctAnswerNum);
+            }
+            
+        }
+        
 		$objText = new textarea('answer'.$j,$tf[$i], 2, 80);
+        
+        if (isset($answers[$i])) {
+            $objText->value = $answers[$i]['answer'];
+        }
+        
 		$objTable->startRow();
+        $objTable->addCell('<b>'.$answerLabel.' '.$num++.':</b>', '', '', '', '', 'colspan="3"');
+        $objTable->endRow();
+        $objTable->startRow();
 		$objTable->addCell($objRadio->show());
 		$objTable->addCell($objText->show() , '', '', '', '', 'colspan="2"');
 		$objTable->endRow();
@@ -90,6 +115,8 @@ if(empty($answers))
 		$objTable->addCell('', '', '', '', '', 'colspan="3"');
 		$objTable->endRow();
 	}
+
+/*
 }else{
 	foreach($answers as $answer) {
 		$objRadio = new radio('correctans');
@@ -115,6 +142,7 @@ if(empty($answers))
 		$j++;
 	}
 }
+*/
 
 // hidden elements
 $objInput = new textinput('testId', $data['testid']);
@@ -126,11 +154,14 @@ $hidden.= $objInput->show();
 $objInput = new textinput('qNum', $qNum);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
+
+/*
 if ($mode == 'edit') {
     $objInput = new textinput('answerId', $answer['id']);
     $objInput->fldType = 'hidden';
     $hidden.= $objInput->show();
-}
+}*/
+
 // Save and exit buttons
 $objButton = new button('save', $saveLabel);
 $objButton->setToSubmit();
@@ -142,11 +173,11 @@ $objTable->startRow();
 $objTable->addCell($hidden);
 $objTable->addCell($btn, '', '', '', '', 'colspan="2"');
 $objTable->endRow();
+
 // Create form and add the table
-$objForm = new form('addanswer', $this->uri(array(
-    'action' => 'applyaddanswer'
-)));
+$objForm = new form('addanswer', $this->uri(array('action' => 'applyaddanswer')));
 $objForm->addToForm($objTable->show());
-$str.= $objForm->show();
-echo $str;
+
+echo $objForm->show();
+
 ?>

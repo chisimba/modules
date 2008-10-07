@@ -31,6 +31,7 @@ class dbquestions extends dbtable
         parent::init('tbl_test_questions');
         $this->table = 'tbl_test_questions';
         $this->dbAnswers = &$this->newObject('dbanswers');
+        $this->objWashout = $this->getObject('washout', 'utilities');
     }
 
     /**
@@ -231,6 +232,34 @@ class dbquestions extends dbtable
             }
         }
         return FALSE;
+    }
+    
+    public function getTotalMarks($testId)
+    {
+        $mark = 0;
+        $questions = $this->getQuestions($testId);
+        
+        //var_dump($questions);
+        
+        if (count($questions) > 0 && $questions != FALSE) {
+            foreach ($questions as $question)
+            {
+                $mark += $question['mark'];
+            }
+        }
+        
+        return $mark;
+    }
+    
+    /**
+     * Method to get the preview of a question
+     * @param array $question Array containing details of the question
+     * @return string Preview of Question
+     */
+    public function previewQuestion($question)
+    {
+        //var_dump($question);
+        return $this->objWashout->parseText($question['question']);
     }
 } // end of class
 ?>

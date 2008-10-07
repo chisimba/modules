@@ -1,4 +1,9 @@
 <?php
+
+
+//var_dump($data);
+//var_dump($_SESSION);
+
 /**
  * Template displaying a list of tests in context to students.
  * @package mcqtests
@@ -76,7 +81,12 @@ if (!empty($data)) {
             // Calculate mark as a percentage for display
             if ($line['mark'] != 'none') {
                 if ($line['testtype'] != 'Summative') {
-                    $mark = round($line['mark']/$line['totalmark']*100);
+                    if ($line['mark'] == 0) {
+                        $mark = 0;
+                    } else {
+                        $mark = round($line['mark']/$line['totalmark']*100);
+                    }
+                    
                 } else {
                     $mark = $completedLabel;
                 }

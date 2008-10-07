@@ -1,4 +1,8 @@
 <?php
+
+//var_dump($_COOKIE);
+//var_dump($_SESSION);
+
 /**
  * @package mcqtests
  * Layout template for the mcqtests module

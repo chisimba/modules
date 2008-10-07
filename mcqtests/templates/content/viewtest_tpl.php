@@ -18,6 +18,9 @@
 	$objConfirm = $this->loadClass('confirm', 'utilities');
 	$objMsg = $this->newObject('timeoutmessage', 'htmlelements');
 	$this->loadClass('textinput', 'htmlelements');
+	$this->loadClass('radio', 'htmlelements');
+	$this->loadClass('hiddeninput', 'htmlelements');
+	$this->loadClass('button', 'htmlelements');
 
 // set up language items
 	$testdetailsLabel = $this->objLanguage->languageText('mod_mcqtests_testdetailsLabel', 'mcqtests');
@@ -66,7 +69,6 @@
 	$mode = $this->getParam('mode');
 
 	$answers_tab = $this->newObject('tabbedbox', 'htmlelements');
-	$questions_tab = $this->newObject('tabbedbox', 'htmlelements');
 
 	$tabcontent = $this->newObject('tabcontent', 'htmlelements');
 
@@ -182,12 +184,9 @@
 	$objTable->endRow();
 
 // Show Table
-	$contentTable = $objTable->show();
+	echo $objTable->show();
 
-	$objLayer = new layer();
-	$objLayer->cssClass = 'even';
-	$objLayer->str = $contentTable;
-	$str = $objLayer->show();
+	
 
 	$count = count($questions);
 	if (empty($questions)) {
@@ -205,9 +204,6 @@
 
 
 
-
-	$questions_tab->addBoxContent($str);
-	$questions_tab->addTabLabel("Details");
 
 
 
@@ -323,13 +319,25 @@ if (!empty($questions)) {
         }
         $objLink = new link($editUrl);
         $objLink->link = $strQuestion;
+        
+        
+        $objTable->startRow();
+        $objTable->addCell($i.'.');
+        $objTable->addCell($this->dbQuestions->previewQuestion($line));
+        //$objTable->addCell($objLink->show());
+        $objTable->addCell($line['mark']);
+        $objTable->addCell($iconsUD);
+        $objTable->addCell($icons);
+        $objTable->endRow();
+        /*
         $tableRow = array();
         $tableRow[] = $i;
-        $tableRow[] = $objLink->show();
+        $tableRow[] = ;
         $tableRow[] = $line['mark'];
         $tableRow[] = $iconsUD;
         $tableRow[] = $icons;
         $objTable->addRow($tableRow, $class);
+        */
     }
     $str.= $objTable->show();
 } else {
@@ -350,21 +358,52 @@ $objLayer->align = 'center';
 $objLayer->str = $homeLink;
 $back = $objLayer->show();
 $str.= $back;
+
+/*
 //echo $str;
 if(isset($qNum)){
 	$objInput = new textinput('questionId', $questId);
 	$objInput->fldType = 'hidden';
 	$topStr.= $objInput->show();
 }
+*/
 
 
-	$answers_tab->addBoxContent($str);
-	$answers_tab->addTabLabel($addqestionslabel);
-	$tabcontent->addTab($addqestionslabel,$answers_tab->show());
-	$tabcontent->addTab($testdetailsLabel,$questions_tab->show());
+$objHeading = new htmlheading();
+$objHeading->type = 1;
+$objHeading->str = $addqestionslabel;
 
+echo $objHeading->show();
 
-//==========Adding the new boxes here
-	$tabcontent->width = '90%';
-	echo  $tabcontent->show();
+echo $str;
+
+$objHeading = new htmlheading();
+$objHeading->type = 1;
+$objHeading->str = $this->objLanguage->languageText('mod_mcqtests_activatetest', 'mcqtests', 'Activate Test');
+
+echo $objHeading->show();
+
+$form = new form ('activatetest', $this->uri(array('action'=>'activatetest')));
+
+$radio = new radio ('status');
+$radio->addOption('inactive', $this->objLanguage->languageText('mod_mcqtests_inactive', 'mcqtests', 'Not Active'));
+$radio->addOption('open', $this->objLanguage->languageText('mod_mcqtests_openforentry', 'mcqtests', 'Open For Entry'));
+$radio->setBreakSpace(' - ');
+
+if ($data['status'] == 'open') {
+    $radio->setSelected('open');
+} else {
+    $radio->setSelected('inactive');
+}
+
+$hiddeninput = new hiddeninput('id', $data['id']);
+
+$form->addToForm($hiddeninput->show().'<p>'.$radio->show().'</p>');
+
+$button = new button ('update', $this->objLanguage->languageText('mod_mcqtests_updatestatus', 'mcqtests', 'Update Status'));
+
+$form->addToForm($button->show());
+
+echo $form->show();
+
 ?>

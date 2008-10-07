@@ -104,29 +104,15 @@ class mcqtests extends controller
      */
     public function dispatch($action)
     {
+        if ($this->contextCode == '') {
+            return $this->nextAction(NULL, NULL, '_default');
+        }
+        
         // Now the main switch for $action
-        switch ($action) {
-                // display template to add a new test.
-
-
-             // Display template to add a new question
-
-            /*case 'addquestion':
-                $id = $this->getParam('id', NULL);
-                $count = $this->getParam('count');
-                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
-                
-                // Get the total number of questions if this isn't the first
-                if ($count > 1) {
-                    $count = $this->dbQuestions->countQuestions($id);
-                }
-                $test[0]['count'] = $count;
-                $this->setVarByRef('test', $test[0]);
-                $this->setVar('mode', 'add');
-                return 'addquestion_tpl.php';*/
-                
+        switch ($action)
+        {
             case 'addquestion':
-            	$id = $this->getParam('id', NULL);
+                $id = $this->getParam('id', NULL);
                 $count = $this->getParam('count');
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $id);
                 
@@ -139,30 +125,7 @@ class mcqtests extends controller
                 $this->setVar('mode', 'add');
                 return 'addquestion_tpl.php';
                 break;
-			// add the question to the database
-           /* case 'applyaddquestion':
-                $postSave = $this->getParam('save');
-                $id = $this->getParam('id', '');
-                if ($postSave == $this->objLanguage->languageText('word_cancel')) {
-                    return $this->nextAction('view', array(
-                        'id' => $id
-                    ));
-                }
-                $this->addQuestion();
-                if ($postSave == $this->objLanguage->languageText('mod_mcqtests_saveaddanotherquestion')) {
-                    return $this->nextAction('addquestion', array(
-                        'id' => $id,
-                        'count' => $this->getParam('qOrder')
-                    ));
-                }
-                $msg = $this->objLanguage->languageText('mod_mcqtests_confirmaddquestion', 'mcqtests');
-                $this->setSession('confirm', $msg);
-                return $this->nextAction('view', array(
-                    'id' => $id,
-                    'confirm' => 'yes'
-                ));
-			*/
-           
+            // add the question to the database
             case 'applyaddquestion':
                 $postSave = $this->getParam('save');
                 $id = $this->getParam('testId', '');
@@ -172,115 +135,125 @@ class mcqtests extends controller
                     ));
                 }
                 if ($postSave == $this->objLanguage->languageText('word_save')) {
-			        $imgConfirm = $this->getParam('imageconfirm', '');
-			        $hintConfirm = $this->getParam('enablehint', '');
-			        $postMark = $this->getParam('mark', 0);
-			        $mark = 0;
-			        $qType = $this->getParam('type');
-			        $fields = array();
-			        $fields['testid'] = $id;
-			        $fields['question'] = $this->getParam('question', '');
-			        $hint = $this->getParam('hint', '');
-			        if ($hintConfirm == 'no') {
-			            $hint = '';
-			        }
-			        $fields['hint'] = $hint;
-			        $fields['mark'] = $postMark;
-			        $fields['questionorder'] = $this->getParam('qOrder', '');
-			        $fields['questiontype'] = $qType;
-			        $qId = $this->getParam('questionId', '');
+                    $imgConfirm = $this->getParam('imageconfirm', '');
+                    $hintConfirm = $this->getParam('enablehint', '');
+                    $postMark = $this->getParam('mark', 0);
+                    
+                    $qType = $this->getParam('type');
+                    $fields = array();
+                    $fields['testid'] = $id;
+                    $fields['question'] = $this->getParam('question', '');
+                    $hint = $this->getParam('hint', '');
+                    if ($hintConfirm == 'no') {
+                        $hint = '';
+                    }
+                    $fields['hint'] = $hint;
+                    $fields['mark'] = $postMark;
+                    $fields['questionorder'] = $this->getParam('qOrder', '');
+                    $fields['questiontype'] = $qType;
+                    $qId = $this->getParam('questionId', '');
 
-			        // Add to database and set the total mark for the test
-			        $qId = $this->dbQuestions->addQuestion($fields, $qId);
-			        $this->dbTestadmin->setTotal($id, $mark);
-			        
-			        if ($qType == 'mcq') {
-			        	return $this->nextAction('addanswers', array(
-	                        'questionId' => $qId,
-	                        'testId' => $id,
-	                        'count' => $this->getParam('qOrder'),
-	                        'qNum' => $this->getParam('options')
-                    	));
-			        }else{
-	        	        return $this->nextAction('addanswers', array(
-	                        'questionId' => $qId,
-	                        'testId' => $id,
-	                        'count' => $this->getParam('qOrder'),
-	                        'qNum' => 2,
-	                        'truefalse' => true
-                    	));
-			        }
+                    // Add to database and set the total mark for the test
+                    $qId = $this->dbQuestions->addQuestion($fields, $qId);
+                    $this->dbTestadmin->setTotal($id, $this->dbQuestions->getTotalMarks($id));
+                    
+                    if ($qType == 'mcq') {
+                        return $this->nextAction('addanswers', array(
+                            'questionId' => $qId,
+                            'testId' => $id,
+                            'count' => $this->getParam('qOrder'),
+                            'qNum' => $this->getParam('options')
+                        ));
+                    }else{
+                        return $this->nextAction('addanswers', array(
+                            'questionId' => $qId,
+                            'testId' => $id,
+                            'count' => $this->getParam('qOrder'),
+                            'qNum' => 2,
+                            'truefalse' => true
+                        ));
+                    }
                 }
-           		break;
-           		
-			case 'addstep':
-			return 'addstep_tpl.php';
-	
-			case 'savestep':
-			$currentstep = $this->getParam('currentstep');
-			if($currentstep=='1'){
-			return 'addstep_tpl.php';
-			}else if($currentstep=='2'){
-					$StepMenuArr = array();
-					$StepMenuArr['status'] = $this->getParam('status');
-					$StepMenuArr['name'] = $this->getParam('name');
-					$StepMenuArr['description'] = $this->getParam('description');
-					$StepMenuArr['testType'] = $this->getParam('testType');
-					$StepMenuArr['qSequence'] = $this->getParam('qSequence');
-					$StepMenuArr['aSequence'] = $this->getParam('aSequence');
-					$StepMenuArr['save'] = $this->getParam('save');
-					
-					$this->setSession('stepmenu1', null);
-					$this->setSession('stepmenu1', $StepMenuArr);
-					$StepMenuArr = null;
-					return 'addstep_tpl.php';
-	
-			}else if($currentstep=='3'){
-	
-	
-					$StepMenuArr2 = array();
-					$StepMenuArr2['percent'] = $this->getParam('percent');
-					$StepMenuArr2['decimal'] = $this->getParam('decimal');
-					$StepMenuArr2['setequal'] = $this->getParam('setequal');
-					$StepMenuArr2['start'] = $this->getParam('start');
-					$StepMenuArr2['close'] = $this->getParam('close');
-					$StepMenuArr2['timed'] = $this->getParam('timed');
-					$StepMenuArr2['hour'] = $this->getParam('start');
-					$StepMenuArr2['min'] = $this->getParam('close');
-					$StepMenuArr2['save'] = $this->getParam('save');
-					$this->setSession('stepmenu2', null);
-					$this->setSession('stepmenu2', $StepMenuArr2);
-					$StepMenuArr = null;
-					return 'addstep_tpl.php';
-			}else{
-					$step_data1 = $this->getSession('stepmenu1');
-					$step_data2 = $this->getSession('stepmenu2');
-					//merge 2 arrays 	
-					$fields = array();
-					$fields['status'] = $step_data1['status'];
-					$fields['name'] = $step_data1['name'];
-					$fields['description'] = $step_data1['description'];
-					$fields['testType'] =$step_data1['testType'];
-					$fields['qSequence'] = $step_data1['qSequence'];
-					$fields['aSequence'] = $step_data1['aSequence'];
-					$fields['percent'] = $step_data2['percent'];
-					$fields['decimal'] = $step_data2['decimal'];
-					$fields['setequal'] = $step_data2['setequal'];
-					$fields['start'] = $step_data2['start'];
-					$fields['close'] = $step_data2['close'];
-					$fields['timed'] = $step_data2['timed'];
-					$fields['hour'] = $step_data2['hour'];
-					$fields['min'] = $step_data2['min'];
-					$fields['comLab'] = $this->getParam('comLab');
-					//saving the step data
-					
-	                $id = $this->StepAddTest($fields);
-	                return $this->nextAction('view', array(
-	                    'id' => $id
-	                ));
-			}
-
-
+                break;
+                
+            case 'addstep':
+                $this->setVar('mode', 'add');
+                return 'addstep_tpl.php';
+    
+            case 'savestep':
+                $currentstep = $this->getParam('currentstep');
+                
+                switch ($currentstep)
+                {
+                    case '1':
+                        $this->setVar('mode', 'edit');
+                        return 'addstep_tpl.php';
+                        break;
+                    case '2':
+                        $StepMenuArr = array();
+                        $StepMenuArr['status'] = $this->getParam('status');
+                        $StepMenuArr['name'] = $this->getParam('name');
+                        $StepMenuArr['description'] = $this->getParam('description');
+                        $StepMenuArr['testType'] = $this->getParam('testType');
+                        $StepMenuArr['qSequence'] = $this->getParam('qSequence');
+                        $StepMenuArr['aSequence'] = $this->getParam('aSequence');
+                        $StepMenuArr['save'] = $this->getParam('save');
+                        
+                        $this->setSession('stepmenu1', null);
+                        $this->setSession('stepmenu1', $StepMenuArr);
+                        $StepMenuArr = null;
+                        
+                        return $this->nextAction('savestep', array('currentstep'=>'2a'));
+                        
+                    case '2a':
+                        return 'addstep_tpl.php';
+                        break;
+                    case '3':
+                        $StepMenuArr2 = array();
+                        $StepMenuArr2['percent'] = $this->getParam('percent');
+                        $StepMenuArr2['decimal'] = $this->getParam('decimal');
+                        $StepMenuArr2['setequal'] = $this->getParam('setequal');
+                        $StepMenuArr2['start'] = $this->getParam('start');
+                        $StepMenuArr2['close'] = $this->getParam('close');
+                        $StepMenuArr2['timed'] = $this->getParam('timed');
+                        $StepMenuArr2['hour'] = $this->getParam('hour');
+                        $StepMenuArr2['min'] = $this->getParam('min');
+                        $StepMenuArr2['save'] = $this->getParam('save');
+                        $this->setSession('stepmenu2', null);
+                        $this->setSession('stepmenu2', $StepMenuArr2);
+                        $StepMenuArr = null;
+                        return $this->nextAction('savestep', array('currentstep'=>'3a'));
+                        break;
+                    case '3a':
+                        return 'addstep_tpl.php';
+                        break;
+                    default:
+                        $step_data1 = $this->getSession('stepmenu1');
+                        $step_data2 = $this->getSession('stepmenu2');
+                        //merge 2 arrays 	
+                        $fields = array();
+                        $fields['status'] = $step_data1['status'];
+                        $fields['name'] = $step_data1['name'];
+                        $fields['description'] = $step_data1['description'];
+                        $fields['testType'] =$step_data1['testType'];
+                        $fields['qSequence'] = $step_data1['qSequence'];
+                        $fields['aSequence'] = $step_data1['aSequence'];
+                        $fields['percent'] = $step_data2['percent'];
+                        $fields['decimal'] = $step_data2['decimal'];
+                        $fields['setequal'] = $step_data2['setequal'];
+                        $fields['start'] = $step_data2['start'];
+                        $fields['close'] = $step_data2['close'];
+                        $fields['timed'] = $step_data2['timed'];
+                        $fields['hour'] = $step_data2['hour'];
+                        $fields['min'] = $step_data2['min'];
+                        $fields['comLab'] = $this->getParam('comLab');
+                        //saving the step data
+                        
+                        $id = $this->StepAddTest($fields);
+                        return $this->nextAction('view', array('id' => $id));
+                        break;
+                }
+                
             case 'addtest':
                 return $this->addTest();
                 // add a test to the database
@@ -313,37 +286,30 @@ class mcqtests extends controller
                 // display template showing the test and questions
 
 
-			case 'viewteststep':
+            case 'viewteststep':
                 return 'viewteststep_tpl.php';
 
             case 'view':
                 return $this->viewTest();
                 // Display template to edit a question
-
-
-            /*case 'editquestion':
-                $data = $this->dbQuestions->getQuestion($this->getParam('questionId'));
-                $answers = $this->dbAnswers->getAnswers($this->getParam('questionId'));
-                $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $data[0]['testid']);
-                $this->setVarByRef('test', $test[0]);
-                $this->setVarByRef('data', $data[0]);
-                $this->setVarByRef('answers', $answers);
-                $this->setVar('mode', 'edit');
-                return 'addquestion_tpl.php';
-            */
             case 'editquestion':
                 $data = $this->dbQuestions->getQuestion($this->getParam('questionId'));
                 $test = $this->dbTestadmin->getTests($this->contextCode, 'id,name,totalmark', $data[0]['testid']);
                 $this->setVarByRef('test', $test[0]);
                 $this->setVarByRef('data', $data[0]);
+                
+                $numAnswers = $this->dbAnswers->countAnswers($this->getParam('questionId'));
+                $this->setVarByRef('numAnswers', $numAnswers);
+                
                 $this->setVar('mode', 'edit');
                 return 'addquestion_tpl.php';
-            	break;
-            	
+                break;
+                
             // delete a question
             case 'deletequestion':
                 $this->dbQuestions->deleteQuestion($this->getParam('questionId'));
-                $this->dbTestadmin->setTotal($this->getParam('id') , -$this->getParam('mark'));
+                //$this->dbTestadmin->setTotal($this->getParam('id') , -$this->getParam('mark'));
+                $this->dbTestadmin->setTotal($this->getParam('id'), $this->dbQuestions->getTotalMarks($this->getParam('id')));
                 return $this->nextAction('view', array(
                     'id' => $this->getParam('id')
                 ));
@@ -358,19 +324,8 @@ class mcqtests extends controller
                     'id' => $this->getParam('id')
                 ));
                 // save the question to the database and call next action to add answers
-
-            /*case 'addanswer':
-               // $questionId = $this->addQuestion();
-                //var_dump($this->getParam('questionId'));
-                $questionId = $this->getParam('questionId', '');
-                return $this->nextAction('addanswers', array(
-                    'questionId' => $questionId,
-                    'count' => $this->getParam('count')
-                ));
-                // display the template to add answers to a question
-			*/
             case 'addanswers':
-            	$questionId = $this->getParam('questionId');
+                $questionId = $this->getParam('questionId');
                 $testId = $this->getParam('testId');
                 $qNum = $this->getParam('qNum');
                 $data[0]['count'] = $this->getParam('count');
@@ -384,28 +339,31 @@ class mcqtests extends controller
                 $this->setVarByRef('answers', $answers);
                 $this->setVarByRef('truefalse', $truefalse);
                 
+                $correctAnswerNum = $this->dbAnswers->getCorrectAnswer($questionId);
+                $this->setVarByRef('correctAnswerNum', $correctAnswerNum);
+                
                 if($answers == null){
-                	$this->setVar('mode', 'add');
+                    $this->setVar('mode', 'add');
                 }else{
-                	$this->setVar('mode', 'edit');
+                    $this->setVar('mode', 'edit');
                 }
                 return 'addanswer_tpl.php';
                 // save answers to the database
                 
             case 'saveanswer':
-            	$postAns = $this->getParam('correctans', NULL);
-		        $postCorId = $this->getParam('correctId', NULL);
-		        if (!$postAns) {
-		            $postAns = $this->getParam('firstans', '');
-		        }
-		        if (!$postCorId) {
-		            $this->dbAnswers->setCorrect($postAns, 1);
-		        } else if ($postAns != $postCorId) {
-		            $this->dbAnswers->setCorrect($postAns, 1);
-		            $this->dbAnswers->setCorrect($postCorId, 0);
-		        }
-		       // var_dump($postAns);
-		       // var_dump($postCorId);
+                $postAns = $this->getParam('correctans', NULL);
+                $postCorId = $this->getParam('correctId', NULL);
+                if (!$postAns) {
+                    $postAns = $this->getParam('firstans', '');
+                }
+                if (!$postCorId) {
+                    $this->dbAnswers->setCorrect($postAns, 1);
+                } else if ($postAns != $postCorId) {
+                    $this->dbAnswers->setCorrect($postAns, 1);
+                    $this->dbAnswers->setCorrect($postCorId, 0);
+                }
+               // var_dump($postAns);
+               // var_dump($postCorId);
 
             case 'applyaddanswer':
                 $postSave = $this->getParam('save', '');
@@ -579,6 +537,8 @@ class mcqtests extends controller
             case 'answertest':
                 $testId = $this->getParam('id');
                 $check = $this->getSession('taketest', NULL);
+                
+                
                 if ($check != 'open') {
                     $this->unsetSession('qData');
                     $resultId = $this->closeTest($testId);
@@ -609,6 +569,10 @@ class mcqtests extends controller
                 $this->setVar('test', NULL);
                 $this->setVar('data', NULL);
                 return 'answertest_tpl.php';
+            case 'marktest2':
+                echo $this->markTest($this->getParam('resultId', NULL));
+                
+                break;
             case 'showstudenttest':
                 return $this->showStudentTest();
             default:
@@ -679,8 +643,7 @@ class mcqtests extends controller
      */
     private function StepAddTest($data)
     {
-
- $id = $this->getParam('id', '');
+        $id = $this->getParam('id', '');
         $fields = array();
         $fields['name'] = $data['name'];
         $fields['context'] = $this->contextCode;
@@ -732,6 +695,7 @@ class mcqtests extends controller
      */
     private function applyAddTest()
     {
+        
         $id = $this->getParam('id', '');
         $fields = array();
         $fields['name'] = $this->getParam('name', '');
@@ -830,56 +794,6 @@ class mcqtests extends controller
     }
 
     /**
-     * Method to save a question and set the correct answer.
-     *
-     * @access private
-     * @return string $id The id of the inserted or updated question
-     */
- /*   private function addQuestion()
-    {
-        $qId = $this->getParam('questionId', '');
-        $imgConfirm = $this->getParam('imageconfirm', '');
-        $hintConfirm = $this->getParam('enablehint', '');
-        $postMark = $this->getParam('mark', 0);
-        $mark = 0;
-        $fields = array();
-        $fields['testid'] = $this->getParam('id', '');
-        $fields['question'] = $this->getParam('question', '');
-        $hint = $this->getParam('hint', '');
-        if ($hintConfirm == 'no') {
-            $hint = '';
-        }
-        $fields['hint'] = $hint;
-        $fields['mark'] = $postMark;
-        $fields['questionorder'] = $this->getParam('qOrder', '');
-        if (!empty($qId)) {
-            $postOrigMark = $this->getParam('total', 0);
-            if ($postOrigMark != $postMark) {
-                $mark = $postMark-$postOrigMark;
-            }
-        } else {
-            $mark = $postMark;
-        }
-        // Add to database and set the total mark for the test
-        $qId = $this->dbQuestions->addQuestion($fields, $qId);
-        $id = $this->getParam('id', '');
-        $this->dbTestadmin->setTotal($id, $mark);
-        // set the correct answer if it has changed
-        $postAns = $this->getParam('correctans', NULL);
-        $postCorId = $this->getParam('correctId', NULL);
-        if (!$postAns) {
-            $postAns = $this->getParam('firstans', '');
-        }
-        if (!$postCorId) {
-            $this->dbAnswers->setCorrect($postAns, 1);
-        } else if ($postAns != $postCorId) {
-            $this->dbAnswers->setCorrect($postAns, 1);
-            $this->dbAnswers->setCorrect($postCorId, 0);
-        }
-        return $qId;
-    }
-*/
-    /**
      * Method to add a set of answers to a question.
      * The method checks for an id and then updates the specified answer.
      * If there is no id then new answers are created.
@@ -905,6 +819,10 @@ class mcqtests extends controller
         
         $i = 1;
         $order = 1;
+        
+        // Remove Existing Answers
+        $this->dbAnswers->removeAnswers($questionId);
+        
         while ($i <= $num) {
             $fields = array();
             $fields['testid'] = $testId;
@@ -914,15 +832,15 @@ class mcqtests extends controller
             $fields['answerorder'] = $order++;
            // var_dump($answers['correctans']);
             if($answers['correctans'] == $i){
-            	$fields['correct'] = 1;
-        	}else{
-        		$fields['correct'] = 2;
-        	}
-        	//var_dump($fields['correct']);
-            if($answerId == ''){
-            	$this->dbAnswers->addAnswers($fields);
+                $fields['correct'] = 1;
             }else{
-            	$this->dbAnswers->addAnswers($fields,$answerId);
+                $fields['correct'] = 0;
+            }
+            //var_dump($fields['correct']);
+            if($answerId == ''){
+                $this->dbAnswers->addAnswers($fields);
+            }else{
+                $this->dbAnswers->addAnswers($fields,$answerId);
             }
 
             $i++;
@@ -1144,6 +1062,9 @@ class mcqtests extends controller
         }
         $this->setVarByRef('test', $test[0]);
         $this->setVarByRef('data', $data);
+        
+        $this->setVar('suppressFooter', TRUE);
+        
         return 'answertest_tpl.php';
     }
 
@@ -1190,17 +1111,20 @@ class mcqtests extends controller
     {
         $total = 0;
         $testId = $this->getParam('id', '');
+        
         if (!empty($testId)) {
             $data = $this->dbMarked->getCorrectAnswers($this->userId, $testId);
             if (!empty($data)) {
                 foreach($data as $item) {
-                    if ($item['correct']) {
+                    if ($item['correct'] == 1) {
                         $total = $total+$item['mark'];
                     }
                 }
             }
         }
         $this->dbResults->addMark($resultId, $total);
+        
+        return $total;
     }
 
     /**

@@ -1,4 +1,7 @@
 <?php
+
+//var_dump($_SESSION);
+
 /**
  * Template for adding a new test or editing an existing one.
  * @package mcqtests
@@ -10,6 +13,7 @@
 
 // set up html elements
 	$objTable = $this->loadClass('htmltable', 'htmlelements');
+	$this->loadClass('htmlheading', 'htmlelements');
 	$objForm = $this->loadClass('form', 'htmlelements');
 	$objInput = $this->loadClass('textinput', 'htmlelements');
 	$objText = $this->loadClass('textarea', 'htmlelements');
@@ -23,6 +27,14 @@
 	$objIcon = $this->newObject('geticon', 'htmlelements');
 	$objPopupcal = $this->newObject('datepickajax', 'popupcalendar');
 	$this->objStepMenu = $this->newObject('stepmenu', 'navigation');
+
+// header
+
+$header = new htmlheading();
+$header->type = 1;
+$header->str = $this->objLanguage->languageText('mod_mcqtests_addtest', 'mcqtests', 'Add a New Test');
+
+echo $header->show();
 
 // set up language items
 	$stepmenudescription = $this->objLanguage->languageText('mod_mcqtests_stepmenudescription', 'mcqtests');
@@ -259,7 +271,7 @@ break;
 //=================================================BUTTONS==============================================================================
 
 
-case '2':
+case '2a':
 // Set percentage of final mark
 	$objLabel = new label('<b>% '.$percentLabel.':</b>', 'input_percent');
 	$objDropDown = new dropdown('percent');
@@ -361,7 +373,7 @@ case '2':
 				//echo $objForm->show();
 break;
 //=================================================BUTTONS==============================================================================
-case '3':
+case '3a':
 // set up restricted computer laboratory
 	$objDrop = new dropdown('comLab');
 	$objDrop->addOption(NULL, $anyLabLabel);
@@ -405,42 +417,8 @@ break;
 
 }//end of switch#
 
-				$objLayer = new layer();
-				$objLayer->str = $this->objStepMenu->show();
-				$objLayer->padding = "auto";
-				$objLayer->cssClass = 'odd';
-				echo $objLayer->show();
-				echo $objForm->show();
-/*
-// submit buttons
-$objButton = new button('save', $saveLabel);
-$objButton->setToSubmit();
-$btnSave = $objButton->show();
-$objButton = new button('save', $exitLabel);
-$objButton->setOnClick('javascript:document.getElementById(\'form_exit\').submit()');
-$btnExit = $objButton->show();
-$objTable->startRow();
-$objTable->addCell($btnSave, '30%', '', 'right');
-$objTable->addCell($btnExit, '70%', '', 'left');
-$objTable->endRow();
-$objForm = new form('savetest', $this->uri(array(
-    'action' => 'applyaddtest'
-)));
-$objForm->addToForm($objTable->show());
-$objForm->addRule('name', $errName, 'required');
-//$objForm->addRule(array('close','start'),$errDates,'greaterthan');
 
-$objLayer = new layer();
-$objLayer->str = $objForm->show();
-$objLayer->cssClass = 'odd';
-echo $objLayer->show();
-$objForm = new form('exit', $this->uri(array(
-    'action' => 'applyaddtest'
-)));
-$objInput = new textinput('save', $exitLabel);
-$objInput->fldType = 'hidden';
-$hidden.= $objInput->show();
-$objForm->addToForm($hidden);
-echo $objForm->show();
-*/
+				echo $this->objStepMenu->show().'<br />';
+				echo $objForm->show();
+
 ?>

@@ -68,7 +68,7 @@ class dbtestadmin extends dbtable
         } else {
             $sql.= " WHERE context='$context'";
         }
-        $sql.= ' ORDER BY closingdate, name';
+        $sql.= ' ORDER BY closingdate DESC, name';
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;
@@ -194,12 +194,7 @@ class dbtestadmin extends dbtable
      */
     public function setTotal($id, $total)
     {
-        $sql = "SELECT totalmark FROM ".$this->table." WHERE id='$id'";
-        $data = $this->getArray($sql);
-        $total = $total+$data[0]['totalmark'];
-        $this->update('id', $id, array(
-            'totalmark' => $total
-        ));
+        return $this->update('id', $id, array('totalmark' => $total));
     }
 
     /**

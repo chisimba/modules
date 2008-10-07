@@ -47,7 +47,7 @@ $questionLabel = $this->objLanguage->languageText('mod_mcqtests_question', 'mcqt
 $hintLabel = $this->objLanguage->languageText('mod_mcqtests_hint', 'mcqtests');
 $markLabel = $this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
 $selectLabel = $this->objLanguage->languageText('mod_mcqtests_selectcorrect', 'mcqtests');
-$submitLabel = $this->objLanguage->languageText('word_submit');
+$submitLabel = $this->objLanguage->languageText('word_submit', 'system', 'Submit');
 $continueLabel = $this->objLanguage->languageText('mod_mcqtests_continue', 'mcqtests');
 $durationLabel = $this->objLanguage->languageText('mod_mcqtests_timeleft', 'mcqtests');
 $gotoLabel = $this->objLanguage->languageText('mod_mcqtests_gotoquestions', 'mcqtests');
@@ -254,10 +254,12 @@ $objMathML = &$this->newObject('parse4mathml', 'filters');
 if (!empty($data)) {
     $i = $data[0]['questionorder'];
     $count = count($data) +$i-1;
+    $questionCounter = 1;
     $qnum = $i;
+    $qnum = count($data);
     foreach($data as $line) {
         $row = array();
-        $row[] = '<nobr><b>'.$questionLabel.' '.$line['questionorder'].':</b></nobr>';
+        $row[] = '<nobr><b>'.$questionLabel.' '.$questionCounter.':</b></nobr>';
         $parsed = stripslashes($line['question']);
         $parsed = $objMathML->parseAll($parsed);
         $row[] = '<b>'.$parsed.'</b>';
@@ -284,11 +286,12 @@ if (!empty($data)) {
             $objTable->addRow($row, 'odd');
         }
         // hidden elements for the question
-        $objInput = new textinput('questionId'.$line['questionorder'], $line['id']);
+        $objInput = new textinput('questionId'.$questionCounter, $line['id']);
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
-        $objRadio = new radio('ans'.$line['questionorder']);
+        $objRadio = new radio('ans'.$questionCounter);
+        //$objRadio = new radio('ans'.$line['id']);
         $objRadio->setBreakSpace('<br />');
         // Display answers
         if (!empty($line['answers'])) {
@@ -307,7 +310,8 @@ if (!empty($data)) {
         $row[] = $hidden;
         $row[] = $objRadio->show();
         $objTable->addRow($row, 'even');
-        $qnum = $line['questionorder'];
+        //$qnum = $line['questionorder'];
+        $questionCounter++;
     }
     // hidden element for the first question displayed
     $objInput = new textinput('first', $i);
@@ -398,4 +402,5 @@ $objLayer->padding = '10px';
 $objLayer->str = $str;
 $pageLayer = $objLayer->show();
 echo $pageLayer;
+
 ?>

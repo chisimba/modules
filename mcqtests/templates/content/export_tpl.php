@@ -29,7 +29,7 @@ $exportLabel = $this->objLanguage->languageText('mod_mcqtests_export', 'mcqtests
 $selectLabel = $this->objLanguage->languageText('mod_mcqtests_selectexport', 'mcqtests');
 $answerLabel = $this->objLanguage->languageText('mod_mcqtests_exportanswers', 'mcqtests');
 $resultsLabel = $this->objLanguage->languageText('mod_mcqtests_exportresults', 'mcqtests');
-$submitLabel = $this->objLanguage->languageText('word_submit');
+$submitLabel = $this->objLanguage->languageText('word_submit', 'system', 'Submit');
 $errorLabel = $this->objLanguage->languageText('mod_mcqtests_errorselect', 'mcqtests');
 $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
 echo $objHighlightLabels->show();

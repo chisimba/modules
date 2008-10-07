@@ -88,7 +88,7 @@ if (!empty($data)) {
     $questId = $data['id'];
 } else {
     $question = '';
-    $mark = 0;
+    $mark = 1;
     $hint = '';
     $num = $test['count']+1;
     $typeQ = '';
@@ -115,7 +115,12 @@ $objDropNum->addOption(6, $this->objLanguage->languageText('mod_mcqtests_six', '
 
 
 if($mode == 'edit'){
-	$objDropNum->setSelected(4);
+    if ($numAnswers == 0) {
+        $objDropNum->setSelected(4);
+    } else {
+        $objDropNum->setSelected($numAnswers);
+    }
+	
 }else{
 	$objDropNum->setSelected(4);
 }
@@ -159,7 +164,10 @@ if($type == 'plaintext'){
 	
 	$objLink = new link("javascript:document.getElementById('form_addquestion').action.value = 'changeeditor';document.getElementById('form_addquestion').submit();");
 	$objLink->link = $lnPlain;
-	$topStr .= '<br />'.$objLink->show().$objInput->show().'<br /><br />';
+    
+    // Hide link to plain text
+	//$topStr .= '<br />'.$objLink->show().$objInput->show().'<br /><br />';
+	$topStr .= '<br />'.$objInput->show().'<br /><br />';
 }
 
 $objInput = new textinput('mark', $mark);
@@ -180,7 +188,7 @@ $objInput = new textinput('hint', $hint);
 $objInput->size = 83;
 $topStr.= $objInput->show() .'<p>&nbsp;</p>';
 
-
+/*
 // Image Section - upload image for question / remove image
 $topStr .= '<p><b>'.$addImageLabel.':</b></p>';
 
@@ -224,9 +232,11 @@ $objInput->size = 5;
 $imageStr .= $objInput->show();
 }
 
-$topStr .= '<p>'.$objRadio->show().'</p>';
-$topStr .= '<p>'.$imageBtn.'</p>';
-$topStr .= $imageStr.'<br />';
+//$topStr .= '<p>'.$objRadio->show().'</p>';
+//$topStr .= '<p>'.$imageBtn.'</p>';
+//$topStr .= $imageStr.'<br />';
+*/
+
 
 // Save and exit buttons
 $objButton = new button('save', $saveLabel);

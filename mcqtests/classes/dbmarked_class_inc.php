@@ -120,6 +120,7 @@ class dbmarked extends dbtable
         $sql.= " AND marked.questionid = quest.id";
         $sql.= " AND marked.studentid = '$studentId'";
         $sql.= " AND marked.testid = '$testId'";
+        
         $data = $this->getArray($sql);
         if (!empty($data)) {
             return $data;

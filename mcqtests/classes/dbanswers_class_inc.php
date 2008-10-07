@@ -110,5 +110,28 @@ class dbanswers extends dbtable
         return $answers;
     }
     
+    /**
+     * Method to remove existing answers
+     *
+     * @access public
+     * @param string $questionId The id of the specified question.
+     * @return int $array The answers associated with the question.
+     */
+    public function removeAnswers($questionId)
+    {
+        return $this->delete('questionid', $questionId);
+    }
+    
+    public function getCorrectAnswer($questionId)
+    {
+        $answers = $this->getAll("WHERE questionid = '$questionId' AND correct='1' ORDER BY answerorder");
+        
+        if (count($answers) == 0) {
+            return 0;
+        } else {
+            return $answers[0]['answerorder'];
+        }
+    }
+    
 } // end of class
 ?>

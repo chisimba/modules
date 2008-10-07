@@ -17,7 +17,7 @@ $objForm = &$this->loadClass('form', 'htmlelements');
 
 // set up language items
 $addHeading = $this->objLanguage->languageText('mod_mcqtests_addlab', 'mcqtests');
-$submitLabel = $this->objLanguage->languageText('word_submit');
+$submitLabel = $this->objLanguage->languageText('word_submit', 'system', 'Submit');
 $requiredLabel = $this->objLanguage->languageText('mod_mcqtests_labrequired', 'mcqtests');
 $helpLabel = $this->objLanguage->languageText('mod_mcqtests_labfile', 'mcqtests');
 
