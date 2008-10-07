@@ -70,13 +70,17 @@ $table->endRow();
 
 echo $table->show();
 
-$htmlHeader = new htmlHeading();
-$htmlHeader->type = 1;
-$htmlHeader->str = $this->objLanguage->languageText('mod_assignment_submittedassignments', 'assignment', 'Submitted Assignments');
-echo '<hr />'.$htmlHeader->show();
+
 
 // If Lecturer, show list of assignments
 if ($this->isValid('markassignments')) {
+    
+    
+    $htmlHeader = new htmlHeading();
+    $htmlHeader->type = 1;
+    $htmlHeader->str = $this->objLanguage->languageText('mod_assignment_submittedassignments', 'assignment', 'Submitted Assignments');
+    echo '<hr />'.$htmlHeader->show();
+
     $submissions = $this->objAssignmentSubmit->getStudentSubmissions($assignment['id']);
     
     
@@ -131,6 +135,11 @@ if ($this->isValid('markassignments')) {
     } else if (count($submissions) == 0) {
     } else {
         
+        $htmlHeader = new htmlHeading();
+        $htmlHeader->type = 1;
+        $htmlHeader->str = $this->objLanguage->languageText('mod_assignment_submittedassignments', 'assignment', 'Submitted Assignments');
+        echo '<hr />'.$htmlHeader->show();
+
         $table = $this->newObject('htmltable', 'htmlelements');
         $table->startHeaderRow();
         $table->addHeaderCell($this->objLanguage->languageText('mod_assignment_submissions', 'assignment', 'Submissions'));

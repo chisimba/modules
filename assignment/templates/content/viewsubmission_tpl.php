@@ -9,6 +9,7 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 $this->loadClass('textarea', 'htmlelements');
+$this->loadClass('dropdown', 'htmlelements');
 
 $header = new htmlHeading();
 $header->str = $assignment['name'];
@@ -218,12 +219,16 @@ if ($assignment['format'] == 1) {
         echo '<hr />'.$header->show();
         
         $table = $this->newObject('htmltable', 'htmlelements');
-        $objMark->value = $submission['mark'];
+        
+        $perc = round(($submission['mark']/$assignment['mark']*100), 1);
+        
+        $objMark->value = $perc;
+        $objMark->percentage = TRUE;
         
         $table->startRow();
         $table->addCell($objMark->show(), 120);
         
-        $content = '<p><strong>'.$this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark').': '.$submission['mark'].'/'.$assignment['mark'].'</strong></p>';
+        $content = '<p><strong>'.$this->objLanguage->languageText('mod_assignment_mark', 'assignment', 'Mark').': '.round($submission['mark'], 1).'/'.$assignment['mark'].'</strong></p>';
         
         $content .= '<p>'.nl2br($submission['commentinfo']).'</p>';
         
@@ -250,9 +255,26 @@ if ($assignment['format'] == 1) {
         $button = new button('savemark', $this->objLanguage->languageText('mod_assignment_markassgn', 'assignment', 'Mark Assignment'));
         $button->setToSubmit();
         
-        $slider = $this->newObject('slider', 'htmlelements');
-        $slider->value = $submission['mark'];
-        $slider->maxValue = $assignment['mark'];
+        // Normal Slider
+        //$slider = $this->newObject('slider', 'htmlelements');
+        //$slider->value = $submission['mark'];
+        //$slider->maxValue = $assignment['mark'];
+        
+        // Drop down
+        $slider = new dropdown('slider');
+        
+        // Loop with half marks
+        for ($i=0; $i<$assignment['mark']; $i++) {
+            $slider->addOption($i, $i);
+            $slider->addOption($i.'.5', $i.'.5');
+        }
+        
+        // Add final mark
+        $slider->addOption($assignment['mark'], $assignment['mark']);
+        
+        // Set default
+        $slider->setSelected(round($submission['mark'], 1));
+        
         
         $table = $this->newObject('htmltable', 'htmlelements');
         

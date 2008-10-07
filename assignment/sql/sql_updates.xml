@@ -11,4 +11,18 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_assignment_submit</table>
+        <version>0.314</version>
+        <description>Change mark to cater for decimals - currently integer</description>
+        <data>
+            <change>
+                <mark>
+                    <definition>
+                        <type>decimal</type>
+                    </definition>
+                </mark>
+            </change>
+        </data>
+    </update>
 </updates>
