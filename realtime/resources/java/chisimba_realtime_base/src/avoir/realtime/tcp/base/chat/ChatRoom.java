@@ -51,13 +51,22 @@ import java.awt.Font;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -74,23 +83,14 @@ public class ChatRoom
     private JScrollPane chatScroll;
     private JPanel chatInputPanel;
     private User usr;
-    private int chatSize = 0;
-    private LineBreakMeasurer lineMeasurer;
-    private MessagePanel messagePanel = new MessagePanel();
-    // index of the first character in the paragraph.
-    private int paragraphStart;
     private String chatLogFile;
     // index of the first character after the end of the paragraph.
     int yValue = 10;
-    private int paragraphEnd;
     private String sessionId;
-    private Font font = new Font("Dialog", 1, 12);
     private LinkedList<ChatPacket> chatLog = new LinkedList<ChatPacket>();
-    private int xValue = 10;
     private RealtimeBase base;
     private javax.swing.JLabel titleLabel = new javax.swing.JLabel("Use" +
             " SHIFT+ENTER to move to next line", javax.swing.JLabel.LEADING);
-    private JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     private JTextPane textPane = new JTextPane();
     private AbstractDocument doc;
     private SimpleAttributeSet st = new SimpleAttributeSet();
@@ -104,6 +104,14 @@ public class ChatRoom
         new Emot(yesIcon, "(y)"),
         new Emot(noIcon, "(n)")
     };
+    private static final String COMMIT_ACTION = "commit";
+
+    private static enum Mode {
+
+        INSERT, COMPLETION
+    };
+    private final List<String> words;
+    private Mode mode = Mode.INSERT;
 
     /**
      * Constructor
@@ -123,7 +131,8 @@ public class ChatRoom
         chatInputPanel = new JPanel();
 
         chatIn.setEditable(true);
-        //  chatIn.setColumns(20);
+        chatIn.setLineWrap(true);
+
 
         chatSubmit.addActionListener(new ActionListener() {
 
@@ -138,10 +147,9 @@ public class ChatRoom
 
         } else {
             System.err.println("Text pane's document isn't an AbstractDocument!");
-        // System.exit(-1);
+
         }
         chatScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        messagePanel.setPreferredSize(new Dimension(getWidth(), 100));
         chatScroll.setViewportView(textPane);
 
         chatInputPanel.setLayout(new BorderLayout());
@@ -151,13 +159,11 @@ public class ChatRoom
         JPanel p = new JPanel();
         p.add(chatSubmit);
         chatInputPanel.add(p, BorderLayout.EAST);
-
-        this.setLayout(new BorderLayout());// new java.awt.GridLayout(2, 0));
-        splitPane.setTopComponent(chatScroll);
-        splitPane.setBottomComponent(chatInputPanel);
-        this.add(splitPane, BorderLayout.CENTER);
-        splitPane.setDividerLocation(100);
-
+        chatIn.setWrapStyleWord(true);
+        this.setLayout(new BorderLayout());
+        this.add(chatScroll, BorderLayout.CENTER);
+        this.add(chatInputPanel, BorderLayout.SOUTH);
+        chatIn.setPreferredSize(new Dimension(100, 50));
         chatIn.getDocument().addDocumentListener(new DocumentListener() {
 
             public void changedUpdate(DocumentEvent arg0) {
@@ -167,8 +173,9 @@ public class ChatRoom
                 showUserEnteredText();
             }
 
-            public void removeUpdate(DocumentEvent arg0) {
+            public void removeUpdate(DocumentEvent evt) {
                 if (chatIn.getText().trim().equals("")) {
+                    monitorTyping(evt);
                     showUserRemovedText();
                 }
             }
@@ -187,6 +194,95 @@ public class ChatRoom
                 }
             }
         });
+
+        InputMap im = chatIn.getInputMap();
+        ActionMap am = chatIn.getActionMap();
+        im.put(KeyStroke.getKeyStroke("ENTER"), COMMIT_ACTION);
+        am.put(COMMIT_ACTION, new CommitAction());
+
+        words = new ArrayList<String>(5);
+        words.add("spark");
+        words.add("special");
+        words.add("spectacles");
+        words.add("spectacular");
+        words.add("swing");
+
+    }
+
+    private void monitorTyping(DocumentEvent ev) {
+        if (ev.getLength() != 1) {
+            return;
+        }
+
+        int pos = ev.getOffset();
+        String content = null;
+        try {
+            content = chatIn.getText(0, pos + 1);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+
+        // Find where the word starts
+        int w;
+        for (w = pos; w >= 0; w--) {
+            if (!Character.isLetter(content.charAt(w))) {
+                break;
+            }
+        }
+        if (pos - w < 2) {
+            // Too few chars
+            return;
+        }
+
+        String prefix = content.substring(w + 1).toLowerCase();
+        int n = Collections.binarySearch(words, prefix);
+        if (n < 0 && -n <= words.size()) {
+            String match = words.get(-n - 1);
+            if (match.startsWith(prefix)) {
+                // A completion is found
+                String completion = match.substring(pos - w);
+                // We cannot modify Document from within notification,
+                // so we submit a task that does the change later
+                SwingUtilities.invokeLater(
+                        new CompletionTask(completion, pos + 1));
+            }
+        } else {
+            // Nothing found
+            mode = Mode.INSERT;
+        }
+
+    }
+
+    private class CompletionTask implements Runnable {
+
+        String completion;
+        int position;
+
+        CompletionTask(String completion, int position) {
+            this.completion = completion;
+            this.position = position;
+        }
+
+        public void run() {
+            chatIn.insert(completion, position);
+            chatIn.setCaretPosition(position + completion.length());
+            chatIn.moveCaretPosition(position);
+            mode = Mode.COMPLETION;
+        }
+    }
+
+    private class CommitAction extends AbstractAction {
+
+        public void actionPerformed(ActionEvent ev) {
+            if (mode == Mode.COMPLETION) {
+                int pos = chatIn.getSelectionEnd();
+                chatIn.insert(" ", pos);
+                chatIn.setCaretPosition(pos + 1);
+                mode = Mode.INSERT;
+            } else {
+                chatIn.replaceSelection("\n");
+            }
+        }
     }
 
     class Emot {
@@ -238,12 +334,11 @@ public class ChatRoom
      * sends the chat packet
      */
     private void sendChat() {
-        // if (chatIn.getText().trim().length() > 0) {
         ChatPacket p = new ChatPacket(ChatRoom.this.usr.getFullName(), chatIn.getText() + "\n",
                 getTime(), ChatRoom.this.chatLogFile, ChatRoom.this.sessionId);
         ChatRoom.this.base.getTcpClient().addChat(p);
         chatIn.setText("");
-    // }
+   
     }
 
     /**
@@ -279,9 +374,7 @@ public class ChatRoom
      */
     public void update(ChatLogPacket chatLogPacket) {
         this.chatLog = chatLogPacket.getList();
-        //movePanel(0, 1, yValue);
-        //   messagePanel.repaint();
-
+   
         try {
             for (int i = 0; i < chatLog.size(); i++) {
                 ChatPacket chatPacket = chatLog.get(i);
@@ -412,148 +505,6 @@ public class ChatRoom
         java.awt.Point pt = new java.awt.Point(0, size * 30);
         chatScroll.getViewport().setViewPosition(pt);
         chatScroll.repaint();
-        messagePanel.repaint();
-    }
-
-    /**
-     * Use this class to display the messages
-     * */
-    class MessagePanel
-            extends JPanel {
-
-        public MessagePanel() {
-            setBackground(Color.white);
-
-        }
-
-        /**
-         * Do actual painting here
-         * @param g Graphics
-         */
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            int diff = chatLog.size() - chatSize;
-
-            Graphics2D g2 = (Graphics2D) g;
-            yValue = 10;
-            for (int i = 0; i < chatLog.size(); i++) {
-                ChatPacket p = (ChatPacket) chatLog.get(i);
-                font = new Font("Dialog", 1, 12);
-                AttributedString timeAS = new AttributedString("[" + p.getTime() + "]");
-                timeAS.addAttribute(TextAttribute.FONT, font);
-                timeAS.addAttribute(TextAttribute.FOREGROUND, Color.GRAY);
-                drawText(g2, timeAS, 3, true);
-
-                AttributedString userAS = new AttributedString("<" + p.getUsr() + "> ");
-                userAS.addAttribute(TextAttribute.FONT, font);
-                userAS.addAttribute(TextAttribute.FOREGROUND, new Color(0, 131, 0));
-
-                FontMetrics fm = g2.getFontMetrics(font);
-
-                int timeStrLength = fm.stringWidth("[" + p.getTime() + "]");
-                drawText(g2, userAS, timeStrLength + 3, true);
-
-                font = new Font("Dialog", 0, 12);
-                String content = p.getContent();
-                String[] lines = content.split("\n");
-                for (int j = 0; j < lines.length; j++) {
-                    AttributedString txtAS = new AttributedString(lines[j]);
-                    txtAS.addAttribute(TextAttribute.FONT, font);
-                    txtAS.addAttribute(TextAttribute.FOREGROUND, Color.BLACK);
-
-                    int timeUserStrLen = fm.stringWidth("[" + p.getTime() + "]" + "<" + p.getUsr() + ">");
-                    drawText(g2, txtAS, timeUserStrLen + 3, false);
-                }
-                diff--;
-            }
-            chatSize = chatLog.size();
-
-            this.setPreferredSize(new Dimension(250, yValue + 30));
-            this.revalidate();
-        }
-    }
-
-    /**
-     * draws multiple lines of text
-     * @param g2d
-     * @param mText
-     */
-    private void drawText(Graphics2D g2d, AttributedString mText, int margin, boolean strictOneLine) {
-        // Create a new LineBreakMeasurer from the paragraph.
-        AttributedCharacterIterator paragraph = mText.getIterator();
-        paragraphStart = paragraph.getBeginIndex();
-        paragraphEnd = paragraph.getEndIndex();
-
-        FontRenderContext frc = g2d.getFontRenderContext();
-        lineMeasurer = new LineBreakMeasurer(paragraph, frc);
-        // Set break width 
-        float breakWidth = 0;
-        int lines = 0;
-
-
-        float drawPosY = 0;
-        // Set position to the index of the first character in the paragraph.
-        lineMeasurer.setPosition(paragraphStart);
-
-        // Get lines until the entire paragraph has been displayed.
-
-        long startTime = System.currentTimeMillis();
-        while (lineMeasurer.getPosition() < paragraphEnd) {
-            long endTime = System.currentTimeMillis();
-            //some deadlock: no idea why, so if differrence is greater just
-            //warn the user and break
-            if (endTime - startTime > 2) {
-
-                g2d.setColor(Color.RED);
-                g2d.drawString(" ** oops, broken line, press ENTER to fix this **", 3, yValue);
-                g2d.setColor(Color.BLACK);
-                yValue += 20;
-                break;
-            }
-            if (lines < 1) {
-                breakWidth = (float) ((getSize().width - margin + 10) * 0.9);
-            } else {
-                breakWidth = (float) (getSize().width * 0.9);
-
-            }
-            try {
-                // Retrieve next layout. A cleverer program would also cache
-                // these layouts until the component is re-sized.
-                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
-                // Compute pen x position. If the paragraph is right-to-left we
-                // will align the TextLayouts to the right edge of the panel.
-                // Note: this won't occur for the English text in this sample.
-                // Note: drawPosX is always where the LEFT of the text is placed.
-                if (layout != null) {
-                    float drawPosX = layout.isLeftToRight()
-                            ? xValue : 3;// breakWidth - layout.getAdvance();
-
-                    drawPosX += margin;
-                    if (lines > 0 && !strictOneLine) {
-                        drawPosX = 3;
-                    }
-                    // Move y-coordinate by the ascent of the layout.
-                    drawPosY += layout.getAscent();
-
-                    // Draw the TextLayout at (drawPosX, drawPosY).
-
-                    layout.draw(g2d, drawPosX, yValue);//drawPosY);
-                    // Move y-coordinate in preparation for next layout.
-                    drawPosY += layout.getDescent() + layout.getLeading();
-                    if (!strictOneLine) {
-                        yValue += 20;
-                    }
-                    lines++;
-
-                }
-
-            } catch (Exception ex) {
-                // ex.printStackTrace();
-                break;
-            }
-        }//while
 
     }
 }
