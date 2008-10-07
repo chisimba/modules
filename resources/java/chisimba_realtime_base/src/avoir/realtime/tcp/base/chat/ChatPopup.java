@@ -15,6 +15,7 @@ import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 
@@ -36,9 +37,10 @@ public class ChatPopup extends JWindow {
 
     public ChatPopup() {
         setSize(100, windowHeight);
+
         setLayout(new BorderLayout());
         setAlwaysOnTop(true);
-
+        mpanel.setBorder(BorderFactory.createEtchedBorder());
         add(mpanel, BorderLayout.CENTER);
     }
 
@@ -46,7 +48,7 @@ public class ChatPopup extends JWindow {
         return message;
     }
 
-    public void setMessage( final String xsender,final String xmessage) {
+    public void setMessage(final String xsender, final String xmessage) {
         Thread t = new Thread() {
 
             public void run() {
@@ -78,7 +80,7 @@ public class ChatPopup extends JWindow {
             g2.drawString("Chisimba Realtime:", 10, 10);
 
             g2.setColor(Color.BLACK);
-            g2.drawString(sender+" says:", 10, 20);
+            g2.drawString(sender + " says:", 10, 20);
             //g2.drawLine(10, 15, 180, 15);
             g2.setColor(Color.BLACK);
             windowHeight = 10;
@@ -86,12 +88,12 @@ public class ChatPopup extends JWindow {
                 if (message.trim().length() > 0) {
                     AttributedString mas = new AttributedString(message);
                     mas.addAttribute(TextAttribute.FONT, new Font("dialog", 0, 10));
-                   
-                    drawText(g2,  mas);
+
+                    drawText(g2, mas);
                 }
             }
             g2.setColor(new Color(255, 255, 0, 40));
-            g2.fillRect(3, 1, 180, windowHeight + 20);
+            g2.fillRect(3, 1, getWidth(), windowHeight + 20);
             g2.setColor(Color.BLACK);
         // g2.drawRect(3, 1, 180, windowHeight +20);
 
