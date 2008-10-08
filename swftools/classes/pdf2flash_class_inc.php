@@ -76,7 +76,34 @@ class pdf2flash extends object
         $this->objMkdir = $this->getObject('mkdir', 'files');
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         
+        $this->objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->convertLocation = $this->objSysconfig->getValue('CONVERTLOCATION', 'documentconverter');
+        
         $this->customViewPort = $this->getResourcePath('a4final.swf');
+    }
+    
+    /**
+     * Method to convert a PDF to Flash
+     * @param string $pdfFilePath Full Path to PDF File
+     * @param string $destination Destination + filename.swf
+     *      It will automatically append usrfiles/ to the destination
+     *      Has to end in .swf
+     *
+     * This function intercepts and will either do the conversion
+     * locally or remotely
+     *      
+     * @return boolean Whether file has been created or not
+     */
+    
+    public function convert2SWF($inputFilename, $destination)
+    {
+        if ($this->convertLocation == 'remote') {
+            $objRemote = $this->getObject('remoteconversion', 'documentconverter');
+            
+            return $objRemote->convert($inputFilename, $destination, 'swftools');
+        } else {
+            return $this->localConvert2SWF($inputFilename, $destination);
+        }
     }
     
     /**
@@ -87,7 +114,7 @@ class pdf2flash extends object
      *      Has to end in .swf
      * @return boolean Whether file has been created or not
      */
-    public function convert2SWF($pdfFilePath, $destination)
+    public function localConvert2SWF($pdfFilePath, $destination)
     {
         // Create var for destination directory
         $path = dirname('/'.$destination);
