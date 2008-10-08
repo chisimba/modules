@@ -71,6 +71,27 @@ echo '<br />'.$header->show();
 $objMark = $this->getObject('markimage', 'utilities');
 
 
+// Normal Slider
+//$slider = $this->newObject('slider', 'htmlelements');
+//$slider->value = $submission['mark'];
+//$slider->maxValue = $assignment['mark'];
+
+// Drop down
+$slider = new dropdown('slider');
+
+// Loop with half marks
+for ($i=0; $i<$assignment['mark']; $i++) {
+    $slider->addOption($i, $i);
+    $slider->addOption($i.'.5', $i.'.5');
+}
+
+// Add final mark
+$slider->addOption($assignment['mark'], $assignment['mark']);
+
+// Set default
+$slider->setSelected(round($submission['mark'], 1));
+
+
 if ($assignment['format'] == 1) {
     $objFile = $this->getObject('dbfile', 'filemanager');
     $fileName = $objFile->getFileName($submission['studentfileid']);
@@ -104,6 +125,12 @@ if ($assignment['format'] == 1) {
             $contents =  file_get_contents($destination1);
             
             $contents = '<?php if (isset($permission) && $permission) { ?>'.$contents.'<?php } ?>';
+            
+            $localPath = $this->objConfig->getcontentPath().'/assignment/submissions/'.$submission['id'].'/';
+            $objCleanUrl = $this->getObject('cleanurl', 'filemanager');
+            $localPath = $objCleanUrl->cleanUpUrl($localPath);
+            
+            $contents = str_replace('<IMG SRC="', '<IMG SRC="'.$localPath, $contents);
             
             //var_dump(chmod($destination1, 0777));
             
@@ -174,9 +201,6 @@ if ($assignment['format'] == 1) {
         $button = new button('savemark', $this->objLanguage->languageText('mod_assignment_markassgn', 'assignment', 'Mark Assignment'));
         $button->setToSubmit();
         
-        $slider = $this->newObject('slider', 'htmlelements');
-        $slider->value = $submission['mark'];
-        $slider->maxValue = $assignment['mark'];
         
         $table = $this->newObject('htmltable', 'htmlelements');
         
@@ -255,25 +279,7 @@ if ($assignment['format'] == 1) {
         $button = new button('savemark', $this->objLanguage->languageText('mod_assignment_markassgn', 'assignment', 'Mark Assignment'));
         $button->setToSubmit();
         
-        // Normal Slider
-        //$slider = $this->newObject('slider', 'htmlelements');
-        //$slider->value = $submission['mark'];
-        //$slider->maxValue = $assignment['mark'];
         
-        // Drop down
-        $slider = new dropdown('slider');
-        
-        // Loop with half marks
-        for ($i=0; $i<$assignment['mark']; $i++) {
-            $slider->addOption($i, $i);
-            $slider->addOption($i.'.5', $i.'.5');
-        }
-        
-        // Add final mark
-        $slider->addOption($assignment['mark'], $assignment['mark']);
-        
-        // Set default
-        $slider->setSelected(round($submission['mark'], 1));
         
         
         $table = $this->newObject('htmltable', 'htmlelements');
