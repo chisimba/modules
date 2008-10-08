@@ -31,13 +31,14 @@ class remoteconversion extends object
     * Method to convert a document from one format to the other
     * @param string $inputFilename Absolute Path to the file
     * @param string $destination Absolute Path of the destination
+    * @param string $type Type of conversion either openoffice or swftools
     *
     * Extension of destination file determines the type of conversions
     * For the list of supported formats, see: http://www.artofsolving.com/node/17
     *
     * Destination directory exists
     */
-    public function convert($inputFilename, $destination)
+    public function convert($inputFilename, $destination, $type='openoffice')
     {
         if (!file_exists($inputFilename)) {
             return FALSE;
@@ -53,9 +54,11 @@ class remoteconversion extends object
         @$params = array(new XML_RPC_Value(basename($remotePassword), 'string'),new XML_RPC_Value(basename($inputFilename), 'string'), new XML_RPC_Value($filetosend, 'string'), new XML_RPC_Value(basename($destination), 'string'), new XML_RPC_Value("var4", 'string'));
         
         // Construct the method call (message).
-        //$msg = new XML_RPC_Message('presentation.getTagCloud', $params);
-        $msg = new XML_RPC_Message('document.convertFile', $params);
-        
+        if ($type == 'swftools') {
+            $msg = new XML_RPC_Message('document.convertPDF2SWF', $params);
+        } else {
+            $msg = new XML_RPC_Message('document.convertFile', $params);
+        }
         
         $remoteServer = $this->objSysconfig->getValue('REMOTESERVER', 'documentconverter');
         $remoteAPIScript = $this->objSysconfig->getValue('REMOTESERVERAPISCRIPT', 'documentconverter');

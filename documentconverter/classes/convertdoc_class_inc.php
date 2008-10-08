@@ -25,9 +25,16 @@ class convertdoc extends object
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
         
-        $this->convertLocation = $this->objSysconfig->getValue('CONVERTLOCATION', 'documentconverter');;
+        $this->convertLocation = $this->objSysconfig->getValue('CONVERTLOCATION', 'documentconverter');
     }
     
+    /**
+    * Method to convert a document from one format to the other
+    * @param string $inputFilename Absolute Path to the file
+    * @param string $destination Absolute Path of the destination
+    *
+    * This function intercepts and will either do the conversion locally or remotely
+    */
     public function convert($inputFilename, $destination)
     {
         if ($this->convertLocation == 'remote') {
