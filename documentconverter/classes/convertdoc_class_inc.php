@@ -23,6 +23,20 @@ class convertdoc extends object
     {
         //system('soffice -headless -accept="socket,port=8100;urp;"');
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysconfig = $this->getObject('dbsysconfig', 'sysconfig');
+        
+        $this->convertLocation = $this->objSysconfig->getValue('CONVERTLOCATION', 'documentconverter');;
+    }
+    
+    public function convert($inputFilename, $destination)
+    {
+        if ($this->convertLocation == 'remote') {
+            $objRemote = $this->getObject('remoteconversion');
+            
+            return $objRemote->convert($inputFilename, $destination);
+        } else {
+            return $this->localConvert($inputFilename, $destination);
+        }
     }
     
     /**
@@ -35,16 +49,11 @@ class convertdoc extends object
     *
     * Destination directory exists
     */
-    public function convert($inputFilename, $destination)
+    public function localConvert($inputFilename, $destination)
     {
         if (!file_exists($inputFilename)) {
             return 'inputfiledoesnotexist';
         }
-        
-        $objMkDir = $this->getObject('mkdir', 'files');
-        $tempDir = $flashFile = $this->objConfig->getcontentPath().'filemanager_tempfiles/';
-        
-        $objMkDir->mkdirs($tempDir);
         
         // At the moment, only the java version is supported
         // Todo: Make it configurable to do it via python
