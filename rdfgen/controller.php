@@ -136,7 +136,7 @@ class rdfgen extends controller
 				                );
 				
 				$message = $this->objRdf->generateDC($params);
-				$this->appendArrayVar('headerParams', $message);
+				$this->appendArrayVar('headerParams', "<!--".$message."-->");
 				$this->setVarByRef('message', $message);
 				return 'view_tpl.php';
 				break;
