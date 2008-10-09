@@ -65,6 +65,8 @@ class rdfgen extends controller
 	 * @var unknown_type
 	 */
 	public $objUser;
+	
+	public $objRdf;
 
 	/**
      * Constructor method to instantiate objects and get variables
@@ -75,6 +77,7 @@ class rdfgen extends controller
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objConfig = $this->getObject('altconfig', 'config');
 			$this->objUser = $this->getObject('user', 'security');
+			$this->objRdf = $this->getObject('rdf');
 
 			// Define the paths we will be needing
 			define("RDFAPI_INCLUDE_DIR", $this->getResourcePath('api/'));
@@ -112,7 +115,30 @@ class rdfgen extends controller
 				return 'view_tpl.php';
 				break;
 				
-			case 'donothing':
+			case 'test':
+				$params = array('url' => 'http://www.example.com/somepage.html',
+				                'creator' => "Paul Scott", 
+				                'date' => date('r'), 
+				                'contributor' => 'some dude', 
+				                'coverage' => '', 
+				                'description' => 'A test document',
+				                'example data', 
+				                'format', 
+				                'identifier', 
+				                'language',
+				                'publisher', 
+				                'relation', 
+				                'rights', 
+				                'source',
+				                'subject', 
+				                'title', 
+				                'type',
+				                );
+				
+				$message = $this->objRdf->generateDC($params);
+				$this->appendArrayVar('headerParams', $message);
+				$this->setVarByRef('message', $message);
+				return 'view_tpl.php';
 				break;
 		}
 	}
