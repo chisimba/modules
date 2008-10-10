@@ -65,6 +65,8 @@ class rdf extends object
 	 */
 	public $objUser;
 	
+	public $cachePath;
+	
 	public function init()
 	{
 		try {
@@ -76,6 +78,12 @@ class rdf extends object
 			define("RDFAPI_INCLUDE_DIR", $this->getResourcePath('api/'));
 			include(RDFAPI_INCLUDE_DIR . "RdfAPI.php");
 			include(RDFAPI_INCLUDE_DIR . "syntax/RdfSerializer.php");
+			
+			$this->cachePath = $this->objConfig->getContentBasePath()."rdfcache/";
+			if(!file_exists($this->cachePath))
+			{
+				mkdir($this->cachePath, 0777);
+			}
 		}
 		catch(customException $e) {
 			echo customException::cleanUp();
@@ -175,7 +183,8 @@ class rdf extends object
 			/*$ser = new RDFSerializer();
 			$data =& $ser->serialize($model1);
 			return $data;*/
-			
+			$params['filename'] = 'test_gensrv123'.time();
+			$model1->saveAs($this->cachePath.$params['filename'].".rdf", $type ='rdf');
 			return $model1->writeRdfToString();
 		}
 	}
