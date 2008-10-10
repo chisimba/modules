@@ -397,8 +397,13 @@ class dbuserparamsadmin extends object
 			//Now onto the directive node
 			//check to see if one of them isset to search by
 			$this->SettingsDirective = $Settings->getItem("directive", "{$pname}");
-			$this->SettingsDirective->setContent($pvalue);
-			$result =$this->objConf->writeConfig();
+			if ($this->SettingsDirective) {
+				$this->SettingsDirective->setContent($pvalue);
+				$result = $this->objConf->writeConfig();
+			} else {
+				$this->insert = array($pname => $pvalue);
+				$result = $this->writeConfig($this->insert);
+			}
 			return $result;
 		} catch (Exception $e) {
 			customException::cleanUp();
