@@ -108,7 +108,7 @@ $this->select=$this->objLangu->languageText('mod_happybirthday_select','happybir
 echo "$greet<br><br>";
 echo "<b>$this->select </b><BR>";
 echo "1. <a href='$this->siteRoot?module=happybirthday&page=edata'>".$this->enter."</a><br>";
-echo "2. <a href='javascript:if(confirm(\"Are sure you want to remove your birthdate?\")){ window.location(\"$this->siteRoot?module=happybirthday&page=rdata\"); }'>".$this->remove."</a><br>";
+echo "2. <a href='javascript:if(confirm(\"Are sure you want to remove your birthdate?\")){ window.location.href=\"$this->siteRoot?module=happybirthday&page=rdata\"; }'>".$this->remove."</a><br>";
 //echo "2. <a href='$this->siteRoot?module=happybirthday&page=rdata'>".$this->remove."</a><br>";
 echo "3. <a href='$this->siteRoot?module=happybirthday&page=view_users'>".$this->view."</a><br>";
 
@@ -123,6 +123,7 @@ public function display_main_menu($welcome)
       <td style=\"text-align: center; width: 201px;\"></td>
       <td
  style=\"width: 532px; text-align: justify; vertical-align: top;);\">";
+//calling a function to display module menus
  $this->_display_main_menu($welcome);
  echo "</td>
       <td style=\"width: 141px;\"></td>
