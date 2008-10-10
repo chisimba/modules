@@ -124,10 +124,9 @@ class dbuserparamsadmin extends object
 		$this->file = $this->getObject('mkdir','files');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objLanguage = $this->getObject('language', 'language');
-        $this->objUser = & $this->getObject("user", "security");
-		$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-        $this->uid = $this->objUser->userId();
 		$this->objUser = $this->getObject('user', 'security');
+		$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+		$this->uid = $this->objUser->userId();
 		$this->readConfig();
 	}
 
