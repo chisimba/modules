@@ -185,7 +185,7 @@ class rdf extends object
 			return $data;*/
 			$params['filename'] = 'test_gensrv123'.time();
 			$model1->saveAs($this->cachePath.$params['filename'].".rdf", $type ='rdf');
-			return $model1->writeRdfToString();
+			return $this->cachePath.$params['filename'].".rdf"; // $model1->writeRdfToString();
 		}
 	}
 }
