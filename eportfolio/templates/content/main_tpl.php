@@ -61,11 +61,21 @@ $mngpdflink = new link($this->uri(array(
 )));
 $mngpdflink->link = $iconPdf->show();
 $linkpdfManage = $mngpdflink->show();
+//Link to view eportfolio
+$iconView = $this->getObject('geticon', 'htmlelements');
+$iconView->setIcon('bookopen');
+$iconView->alt = $objLanguage->languageText("mod_eportfolio_view", 'eportfolio');
+$mngviewlink = new link($this->uri(array(
+    'module' => 'eportfolio',
+    'action' => 'myview'
+)));
+$mngviewlink->link = $iconView->show();
+$linkviewManage = $mngviewlink->show();
 //echo '<div align="center">'.$linkpdfManage.'</div>';
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage . '</font>';
+$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage. '    ' . $linkviewManage  . '</font>';
 echo $objHeading->show();
 $objHeading->align = 'left';
 $objinfoTitles->type = 1;

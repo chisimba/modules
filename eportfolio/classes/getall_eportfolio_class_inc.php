@@ -41,6 +41,42 @@ class getall_Eportfolio extends object
         //$objLanguage =& $this->getObject('language','language');
         $this->objLanguage = &$this->getObject('language', 'language');
     }
+    //Function to get user firstname & surname (two columns) with image
+    public function getViewIdentification($userId) 
+    {
+        // Create a heading for emails
+        //$objLanguage =& $this->getObject('language','language');
+        $idnFname = $this->objUser->getFirstname($userId);
+        $idnSname = $this->objUser->getSurname($userId);
+        $hasImage = $this->objUser->hasCustomImage($userId);
+	//if($hasImage==True){
+	        $myPhoto = $this->objUser->getUserImage($userId, $forceRefresh=FALSE, $alt=NULL);
+	//}else{
+		//$myPhoto = Null;
+	//}
+        $idnobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $idnobjHeading->type = 2;
+        $idnobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordInformation", 'eportfolio');
+        //echo $emailobjHeading->show();
+        // Create a table object for emails
+        $idnTable = &$this->newObject("htmltable", "htmlelements");
+        $idnTable->border = 1;
+        $idnTable->attributes = "rules=none frame=box";
+        $idnTable->cellspacing = '3';
+        $idnTable->width = "100%";
+        // Add the table heading.
+        $idnTable->startRow();
+        $idnTable->addHeaderCell($idnobjHeading->show(), $width=null, $valign="top", $align='left',$class='odd', $attrib='colspan="2"');
+        $idnTable->endRow();
+        // Display surname, firstname & usr image
+        $idnTable->startRow();
+        $idnTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_firstName", 'eportfolio') . " : </b>".$idnFname."<p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_surName", 'eportfolio') . " : </b>".$idnSname."</p>", 180, 'top', 'left');
+        $idnTable->addCell($myPhoto, Null, 'top', 'center');
+        $idnTable->endRow();
+
+        $idnTbl = $idnTable->show() . '<br></br>';
+        return $idnTbl;
+    } //end function
     public function getAddress($userId) 
     {
         $objaddressTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -96,6 +132,54 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
+    //get user addresses for view  (one column)
+    public function getViewAddress($userId) 
+    {
+        $objaddressTitles = &$this->getObject('htmlheading', 'htmlelements');
+        $objaddressTitles->type = 2;
+        //$objLanguage =& $this->getObject('language','language');
+        $addressList = $this->objDbAddressList->getByItem($userId);
+        if (!empty($addressList)) {
+            // Create a table object
+            $addressTable = &$this->newObject("htmltable", "htmlelements");
+            $addressTable->border = 1;
+            $addressTable->attributes = "rules=none frame=box";
+            $addressTable->cellspacing = '2';
+            $addressTable->width = "100%";
+            $objaddressTitles->str = $this->objLanguage->languageText("mod_eportfolio_wordAddress", 'eportfolio');
+            // Add the table heading.
+            $addressTable->startRow();
+            $addressTable->addHeaderCell($objaddressTitles->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $addressTable->endRow();
+            // Step through the list of addresses.
+            if (!empty($addressList)) {
+                $addressNo = 1;
+                foreach($addressList as $addressItem) {
+                    // Display each field for addresses
+		    if (!empty($addressItem['street_no'])){
+	            	$strtNo = "<p><b>" . $this->objLanguage->languageText("mod_eportfolio_streetno", 'eportfolio')." : </b>".$addressItem['street_no']."</p>";
+		    }else{
+			$strtNo = Null;
+		    }
+                    $cattype = $this->objDbCategorytypeList->listSingle($addressItem['type']);
+                    $addressTable->startRow();
+	            $addressTable->addCell("<li>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio')." : " . "</b>".$cattype[0]['type']."<p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_streetname", 'eportfolio')." : " . "</b>".$addressItem['street_name']."</p>".$strtNo."<p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_locality", 'eportfolio')." : "  . "</b>".$addressItem['locality']."</p>"."<p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_city", 'eportfolio')." : "  . "</b>".$addressItem['city']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_postcode", 'eportfolio')." : "  . "</b>".$addressItem['postcode']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_postaddress", 'eportfolio')." : "  . "</b>".$addressItem['postal_address']."</p></li>", 180, 'top', 'left');
+                    $addressTable->endRow();
+                   $addressNo = $addressNo+1;
+                }
+                unset($addressItem);
+            } else {
+                $addressTable->startRow();
+                $addressTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', '');
+                $addressTable->endRow();
+            }
+
+            $addressLabel = $addressTable->show() . '<br></br>';
+            return $addressLabel;
+        } //end if
+        
+    } //end function
+
     public function getContacts($userId) 
     {
         //$objLanguage =& $this->getObject('language','language');
@@ -153,6 +237,50 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
+    public function getViewContacts($userId) 
+    {
+        //$objLanguage =& $this->getObject('language','language');
+        // Show the heading
+        $objcontactTitles = &$this->getObject('htmlheading', 'htmlelements');
+        $objcontactTitles->type = 2;
+        $objcontactTitles->str = $this->objLanguage->languageText("mod_eportfolio_wordContact", 'eportfolio');
+        $contactList = $this->objDbContactList->getByItem($userId);
+        if (!empty($contactList)) {
+            //$emailList = $this->objDbEmailList->getByItem($userId);
+            // Create a table object
+            $contactTable = &$this->newObject("htmltable", "htmlelements");
+            $contactTable->border = 1;
+            $contactTable->attributes = "rules=none frame=box";
+            $contactTable->cellspacing = '3';
+            $contactTable->width = "100%";
+            // Add the table heading.
+            $contactTable->startRow();
+            $contactTable->addHeaderCell($objcontactTitles->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $contactTable->endRow();
+            // Step through the list of contacts
+            if (!empty($contactList)) {
+                $contactNo = 1;
+                foreach($contactList as $contactItem) {
+                    // Display each field for contacts
+                    $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
+                    $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
+                    $contactTable->startRow();
+                    $contactTable->addCell("<li><b>".$modetype[0]['type'] ." ( ". $cattype[0]['type'] . " ) : </b>".$contactItem['id_number']."<p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_countrycode", 'eportfolio') . " : </b>".$contactItem['country_code']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_areacode", 'eportfolio') . " : </b>".$contactItem['area_code']."</p></li>", "", NULL, NULL, NULL, '');
+                    $contactTable->endRow();
+                    $contactNo = $contactNo+1;
+                }
+                unset($contactItem);
+            } else {
+                $contactTable->startRow();
+                $contactTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', '');
+                $contactTable->endRow();
+            }
+            //echo $contactTable->show();
+            $contacts = $contactTable->show() . '<br></br>';
+            return $contacts;
+        } //end if
+        
+    } //end function
     public function getEmail($userId) 
     {
         // Create a heading for emails
@@ -198,6 +326,50 @@ class getall_Eportfolio extends object
             $emailTable->startRow();
             $emailTable->addCell('', '', '', '', 'noRecordsMessage', 'colspan="2"');
             $emailTable->endRow();
+            $emailtbl = $emailTable->show() . '<br></br>';
+            return $emailtbl;
+        } //end if
+        
+    } //end function
+    //Function to get user email addresses (one column)
+    public function getViewEmail($userId) 
+    {
+        // Create a heading for emails
+        //$objLanguage =& $this->getObject('language','language');
+        $emailList = $this->objDbEmailList->getByItem($userId);
+        if (!empty($emailList)) {
+            $emailobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+            $emailobjHeading->type = 2;
+            $emailobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordEmail", 'eportfolio');
+            //echo $emailobjHeading->show();
+            // Create a table object for emails
+            $emailTable = &$this->newObject("htmltable", "htmlelements");
+            $emailTable->border = 1;
+            $emailTable->attributes = "rules=none frame=box";
+            $emailTable->cellspacing = '3';
+            $emailTable->width = "100%";
+            // Add the table heading.
+            $emailTable->startRow();
+            $emailTable->addHeaderCell($emailobjHeading->show(), $width=null, $valign="top", $align='left',$class='odd', $attrib=Null);
+            $emailTable->endRow();
+            // Step through the list of emails.
+            $class = 'even';
+            if (!empty($emailList)) {
+                $emailNo = 1;
+                foreach($emailList as $emailItem) {
+                    // Display each field for emails
+                    $cattype = $this->objDbCategorytypeList->listSingle($emailItem['type']);
+                    $emailTable->startRow();
+                    $emailTable->addCell("<li>".$cattype[0]['type']." : ".$emailItem['email']."</li>", "", NULL, NULL, NULL, '');
+                    $emailTable->endRow();
+                    $emailNo = $emailNo+1;
+                }
+                unset($emailItem);
+            } else {
+                $emailTable->startRow();
+                $emailTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', '');
+                $emailTable->endRow();
+            }
             $emailtbl = $emailTable->show() . '<br></br>';
             return $emailtbl;
         } //end if
@@ -250,6 +422,55 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
+    //Get demographics for user view (one column)
+    public function getViewDemographics($userId) 
+    {
+        //Demographics view
+        //$objLanguage =& $this->getObject('language','language');
+        $demographicsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $demographicsobjHeading->type = 2;
+        $demographicsList = $this->objDbDemographicsList->getByItem($userId);
+        if (!empty($demographicsList)) {
+            // Create a table object
+            $demographicsTable = &$this->newObject("htmltable", "htmlelements");
+            $demographicsTable->border = 1;
+            $demographicsTable->attributes = "rules=none frame=box";
+            $demographicsTable->cellspacing = '3';
+            $demographicsTable->width = "100%";
+            // Show the heading
+            $demographicsobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
+            $demographicsTable->startRow();
+            $demographicsTable->addHeaderCell($demographicsobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $demographicsTable->endRow();
+            // Step through the list of Demographics.
+            if (!empty($demographicsList)) {
+                $demNo = 1;
+                foreach($demographicsList as $demographicsItem) {
+                    // Display each field for Demographics
+                    $cattype = $this->objDbCategorytypeList->listSingle($demographicsItem['type']);
+                    $demographicsTable->startRow();
+                    $demographicsTable->addCell("<b>".$this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . '&nbsp;:&nbsp;&nbsp;</b>' . $cattype[0]['type'], "", NULL, NULL, NULL, '');
+                    $demographicsTable->endRow();
+	            $demographicsTable->startRow();
+                    $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_birth", 'eportfolio') . " : </b>".$this->objDate->formatDate($demographicsItem['birth']) , "", NULL, NULL, NULL, '');
+	            $demographicsTable->endRow();
+	            $demographicsTable->startRow();
+                    $demographicsTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_nationality", 'eportfolio') . " : </b>".$demographicsItem['nationality'], "", NULL, NULL, NULL, '');
+	            $demographicsTable->endRow();
+                    $demNo = $demNo+1;
+                }
+                unset($demographicsItem);
+            } else {
+                $demographicsTable->startRow();
+                $demographicsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', '');
+                $demographicsTable->endRow();
+            }
+            $demographicstbl = $demographicsTable->show() . '<br></br>';
+            return $demographicstbl;
+        } //end if
+        
+    } //end function
+
     public function getActivity($userId) 
     {
         //Language Items
@@ -355,7 +576,62 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
-    public function getAffiliation($userId) 
+    //Function to Get user activities (one column)
+    public function getViewActivity($userId) 
+    {
+        //Language Items
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        // Show the heading
+        $activityobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $activityobjHeading->type = 2;
+        $activityobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordActivity", 'eportfolio');
+        $activitylist = $this->objDbActivityList->getByItem($userId);
+        if (!empty($activitylist)) {
+            // Create a table object
+            $activityTable = &$this->newObject("htmltable", "htmlelements");
+            $activityTable->border = 1;
+            $activityTable->attributes = "rules=none frame=box";
+            $activityTable->cellspacing = '3';
+            $activityTable->width = "100%";
+            // Add the table heading.
+            $activityTable->startRow();
+            $activityTable->addHeaderCell($activityobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $activityTable->endRow();
+            // Step through the list of activities
+            $class = NULL;
+            if (!empty($activitylist)) {
+                $i = 0;
+                $actyNo = 1;
+                foreach($activitylist as $item) {
+                    //Get context title
+                    $objDbContext = &$this->getObject('dbcontext', 'context');
+                    $mycontextRecord = $objDbContext->getContextDetails($item['contextid']);
+                    if (!empty($mycontextRecord)) {
+                        $mycontextTitle = $mycontextRecord['title'];
+			$myCourse = "<p>"."<b>".$this->objLanguage->languageText("mod_eportfolio_contexttitle", 'eportfolio') . " : </b></p>".$mycontextTitle;
+                    } else {
+                        $mycontextTitle = $item['contextid'];
+			$myCourse = Null;
+                    }
+                    // Display each field for activities
+                    $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
+                    $activityTable->startRow();
+                    $activityTable->addCell("<li><p>".$item['shortdescription']." : </p><p>".$item['longdescription']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_activitytype", 'eportfolio') . " : </b>".$cattype[0]['type']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . " : </b>".$this->objDate->formatDate($item['start'])."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . " : </b>".$this->objDate->formatDate($item['finish']) ."</p>".$myCourse."</li>");
+                    $activityTable->endRow();
+                    $actyNo = $actyNo+1;
+                }
+                unset($item);
+            } else {
+                $activityTable->startRow();
+                $activityTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
+                $activityTable->endRow();
+            }
+            $activitytbl = $activityTable->show() . '<br></br>';
+            return $activitytbl;
+        } //end if
+        
+    } //end function 
+   public function getViewAffiliation($userId) 
     {
         //Language Items
         $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -367,21 +643,13 @@ class getall_Eportfolio extends object
         if (!empty($affiliationList)) {
             // Create a table object
             $affiliationTable = &$this->newObject("htmltable", "htmlelements");
-            $affiliationTable->border = 0;
+            $affiliationTable->border = 1;
+            $affiliationTable->attributes = "rules=none frame=box";
             $affiliationTable->cellspacing = '3';
-            $affiliationTable->width = "30%";
+            $affiliationTable->width = "100%";
             // Add the table heading.
             $affiliationTable->startRow();
-            //addCell($str, $width=null, $valign="top", $align=null, $class=null, $attrib=Null,$border = '0')
-            $affiliationTable->addCell($affiliationobjHeading->show() , '', '', '', '', 'colspan="6"', Null);
-            $affiliationTable->endRow();
-            $affiliationTable->startRow();
-            $affiliationTable->addCell("<b>&nbsp;&nbsp;&nbsp;" . $this->objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . "</b>");
-            $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . "</b>");
-            $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_roleView", 'eportfolio') . "</b>");
-            $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . "</b>");
-            $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . "</b>");
-            $affiliationTable->addCell("<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . "</b>");
+            $affiliationTable->addHeaderCell($affiliationobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
             $affiliationTable->endRow();
             // Step through the list of affiliations
             $class = NULL;
@@ -392,12 +660,7 @@ class getall_Eportfolio extends object
                     // Display each field for affiliations
                     $cattype = $this->objDbCategorytypeList->listSingle($affiliationItem['type']);
                     $affiliationTable->startRow();
-                    $affiliationTable->addCell($affNo . ')&nbsp;&nbsp;&nbsp;' . $cattype[0]['type'], "", NULL, NULL, Null, '');
-                    $affiliationTable->addCell($affiliationItem['classification'], "", NULL, NULL, NULL, '');
-                    $affiliationTable->addCell($affiliationItem['role'], "", NULL, NULL, NULL, '');
-                    $affiliationTable->addCell($affiliationItem['organisation'], "", NULL, NULL, NULL, '');
-                    $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['start']) , "", NULL, NULL, NULL, '');
-                    $affiliationTable->addCell($this->objDate->formatDate($affiliationItem['finish']) , "", NULL, NULL, NULL, '');
+                    $affiliationTable->addCell("<li>"."<b>". $affiliationItem['organisation']." ( ".$cattype[0]['type']." ) "."</b><p>" ."<b>" . $this->objLanguage->languageText("mod_eportfolio_classificationView", 'eportfolio') . " : </b>".$affiliationItem['classification']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_roleView", 'eportfolio') . " : </b>".$affiliationItem['role']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_activitystart", 'eportfolio') . " : </b>".$this->objDate->formatDate($affiliationItem['start'])."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_activityfinish", 'eportfolio') . " : </b>".$this->objDate->formatDate($affiliationItem['finish'])."</p></li>", "", NULL, NULL, Null, '');
                     $affiliationTable->endRow();
                     $affNo = $affNo+1;
                 }
@@ -407,7 +670,7 @@ class getall_Eportfolio extends object
                 $affiliationTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
                 $affiliationTable->endRow();
             }
-            $affiliationtbl = $affiliationTable->show();
+            $affiliationtbl = $affiliationTable->show() . '<br></br>';
             return $affiliationtbl;
         } //end if
         
@@ -474,6 +737,50 @@ class getall_Eportfolio extends object
                 $transcriptTable->endRow();
             }
             $transcripttbl = $transcriptTable->show();
+            return $transcripttbl;
+        } //end if
+        
+    } //end function
+    //Function to Get user transcripts (one column)
+    public function getViewTranscripts($userId) 
+    {
+        //Language Items
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        // Show the heading
+        $transcriptobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $transcriptobjHeading->type = 2;
+        $transcriptobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordTranscripts", 'eportfolio');
+        // echo $transcriptobjHeading->show();
+        $transcriptlist = $this->objDbTranscriptList->getByItem($userId);
+        if (!empty($transcriptlist)) {
+            // Create a table object
+            $transcriptTable = &$this->newObject("htmltable", "htmlelements");
+            $transcriptTable->border = 1;
+            $transcriptTable->attributes = "rules=none frame=box";
+            $transcriptTable->cellspacing = '3';
+            $transcriptTable->width = "100%";
+            // Add the table heading.
+            $transcriptTable->startRow();
+            $transcriptTable->addHeaderCell($transcriptobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $transcriptTable->endRow();
+            // Step through the list of transcripts.
+            $class = NULL;
+            if (!empty($transcriptlist)) {
+                $transNo = 1;
+                foreach($transcriptlist as $item) {
+                    // Display each field for transcripts
+                    $transcriptTable->startRow();
+                    $transcriptTable->addCell("<li>".$item['shortdescription']."<p>".$item['longdescription']."</p></li>", "", NULL, NULL, $class, '');
+                    $transcriptTable->endRow();
+                    $transNo = $transNo+1;
+                }
+                unset($item);
+            } else {
+                $transcriptTable->startRow();
+                $transcriptTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
+                $transcriptTable->endRow();
+            }
+            $transcripttbl = $transcriptTable->show() . '<br></br>';
             return $transcripttbl;
         } //end if
         
@@ -599,6 +906,50 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
+    //User View qcl (one column)
+    public function getViewQualification($userId) 
+    {
+        //Language Items
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        // Show the heading
+        $qclobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $qclobjHeading->type = 2;
+        $qclobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordQualification", 'eportfolio');
+        //echo $qclobjHeading->show();
+        $qclList = $this->objDbQclList->getByItem($userId);
+        if (!empty($qclList)) {
+            // Create a table object
+            $qclTable = &$this->newObject("htmltable", "htmlelements");
+            $qclTable->border = 1;
+            $qclTable->attributes = "rules=none frame=box";
+            $qclTable->cellspacing = '3';
+            $qclTable->width = "100%";
+            // Add the table heading.
+            $qclTable->startRow();
+            $qclTable->addHeaderCell($qclobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $qclTable->endRow();
+            // Step through the list of qcl.
+            $class = NULL;
+            if (!empty($qclList)) {
+                $qclNo = 1;
+                foreach($qclList as $qclItem) {
+                    // Display each field for qcl
+                    $cattype = $this->objDbCategorytypeList->listSingle($qclItem['qcl_type']);
+                    $qclTable->startRow();
+                    $qclTable->addCell("<li><b>" .$qclItem['qcl_title']." ( " .$cattype[0]['type']." )". "</b><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_organisation", 'eportfolio') . " : </b>".$qclItem['organisation']."</p><p><b>" . $this->objLanguage->languageText("mod_eportfolio_level", 'eportfolio') . " : </b>".$qclItem['qcl_level']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . " : </b>".$this->objDate->formatDate($qclItem['award_date'])."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . " : </b>".$qclItem['shortdescription']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . " : </b>".$qclItem['longdescription']."</p></li>");
+                    $qclNo = $qclNo+1;
+                }
+                unset($qclItem);
+            } else {
+                $qclTable->startRow();
+                $qclTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
+                $qclTable->endRow();
+            }
+            $qcltbl = $qclTable->show() . '<br></br>';
+            return $qcltbl;
+        } //end if
+        
+    } //end function
     public function getGoals($userId) 
     {
         //Language Items
@@ -661,6 +1012,49 @@ class getall_Eportfolio extends object
                 $goalsTable->endRow();
             }
             $goalstbl = $goalsTable->show();
+            return $goalstbl;
+        } //end if
+        
+    } //end function
+    public function getViewGoals($userId) 
+    {
+        //Language Items
+        $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
+        // Show the heading
+        $goalsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $goalsobjHeading->type = 2;
+        $goalsobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordGoals", 'eportfolio');
+        $goalsList = $this->objDbGoalsList->getByItem($userId);
+        if (!empty($goalsList)) {
+            // Create a table object
+            $goalsTable = &$this->newObject("htmltable", "htmlelements");
+            $goalsTable->border = 1;
+            $goalsTable->attributes = "rules=none frame=box";
+            $goalsTable->cellspacing = '3';
+            $goalsTable->width = "100%";
+            // Add the table heading.
+            $goalsTable->startRow();
+            $goalsTable->addHeaderCell($goalsobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $goalsTable->endRow();
+            // Step through the list of goals.
+            $class = NULL;
+            if (!empty($goalsList)) {
+                $i = 0;
+                $goalNo = 1;
+                foreach($goalsList as $item) {
+                    // Display each field for goals
+                    $goalsTable->startRow();
+                    $goalsTable->addCell("<li>" . $item['shortdescription'] . "</ br>" . $item['longdescription'] ."</li>", "", NULL, NULL, $class, '');
+                    $goalsTable->endRow();
+                    $goalNo = $goalNo+1;
+                }
+                unset($item);
+            } else {
+                $goalsTable->startRow();
+                $goalsTable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', Null);
+                $goalsTable->endRow();
+            }
+            $goalstbl = $goalsTable->show() . '<br></br>';
             return $goalstbl;
         } //end if
         
@@ -744,6 +1138,44 @@ class getall_Eportfolio extends object
                 }
                 unset($item);
                 $competencytbl = $competencyTable->show();
+                return $competencytbl;
+            }
+        } //end if
+        
+    } //end function
+    //Function to view user Competency (One column)
+    public function getViewCompetency($userId) 
+    {
+        // Show the heading
+        $competencyobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $competencyobjHeading->type = 2;
+        $competencyobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordCompetency", 'eportfolio');
+        $competencyList = $this->objDbCompetencyList->getByItem($userId);
+        if (!empty($competencyList)) {
+            // Create a table object
+            $competencyTable = &$this->newObject("htmltable", "htmlelements");
+            $competencyTable->border = 1;
+            $competencyTable->attributes = "rules=none frame=box";
+            $competencyTable->cellspacing = '3';
+            $competencyTable->width = "100%";
+            // Add the table heading.
+            $competencyTable->startRow();
+            $competencyTable->addHeaderCell($competencyobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $competencyTable->endRow();
+            // Step through the list of competencies.
+            $class = NULL;
+            if (!empty($competencyList)) {
+                $compNo = 1;
+                foreach($competencyList as $item) {
+                    // Display each field for competencies
+                    $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
+                    $competencyTable->startRow();
+                    $competencyTable->addCell("<li><b>" .$item['shortdescription']. " ( ". $cattype[0]['type'] . ") </b><p>".$item['longdescription']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_qclawarddate", 'eportfolio') . " : </b>".$this->objDate->formatDate($item['award_date'])."</p></li>", "", NULL, NULL, $class, '');
+                    $competencyTable->endRow();
+                    $compNo = $compNo+1;
+                }
+                unset($item);
+                $competencytbl = $competencyTable->show() . '<br></br>';
                 return $competencytbl;
             }
         } //end if
@@ -837,6 +1269,44 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
+    public function getViewInterests($userId) 
+    {
+        // Show the heading
+        $interestobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $interestobjHeading->type = 2;
+        $interestobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordInterests", 'eportfolio');
+        //echo $interestobjHeading->show();
+        $interestList = $this->objDbInterestList->getByItem($userId);
+        if (!empty($interestList)) {
+            // Create a table object
+            $interestTable = &$this->newObject("htmltable", "htmlelements");
+            $interestTable->border = 1;
+            $interestTable->attributes = "rules=none frame=box";
+            $interestTable->cellspacing = '3';
+            $interestTable->width = "100%";
+            // Add the table heading.
+            $interestTable->startRow();
+            $interestTable->addHeaderCell($interestobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $interestTable->endRow();
+            // Step through the list of interests.
+            $class = NULL;
+            if (!empty($interestList)) {
+                $intNo = 1;
+                foreach($interestList as $item) {
+                    // Display each field for interests
+                    $cattype = $this->objDbCategorytypeList->listSingle($item['type']);
+                    $interestTable->startRow();
+                    $interestTable->addCell("<li><b>" . $item['shortdescription'] ." ( ".$cattype[0]['type']." ) ". "</b></ br>".$item['longdescription']."</ br> <b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . " : </b>".$this->objDate->formatDate($item['creation_date'])."</li>");
+                    $interestTable->endRow();
+                    $intNo = $intNo+1;
+                }
+                unset($item);
+                $interesttbl = $interestTable->show() . '<br></br>';
+                return $interesttbl;
+            }
+        } //end if
+        
+    } //end function
     public function getReflections($userId) 
     {
         // Show the heading
@@ -917,6 +1387,44 @@ class getall_Eportfolio extends object
                 unset($item);
             }
             $reflectiontbl = $reflectionTable->show();
+            return $reflectiontbl;
+        } //end if
+        
+    } //end function
+    //Function to get user reflections (one column)
+    public function getViewReflections($userId) 
+    {
+        // Show the heading
+        $reflectionobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $reflectionobjHeading->type = 2;
+        $reflectionobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordReflections", 'eportfolio');
+        //echo $reflectionobjHeading->show();
+        $reflectionList = $this->objDbReflectionList->getByItem($userId);
+        if (!empty($reflectionList)) {
+            // Create a table object
+            $reflectionTable = &$this->newObject("htmltable", "htmlelements");
+            $reflectionTable->border = 1;
+            $reflectionTable->attributes = "rules=none frame=box";
+            $reflectionTable->cellspacing = '3';
+            $reflectionTable->width = "100%";
+            // Add the table heading.
+            $reflectionTable->startRow();
+            $reflectionTable->addHeaderCell($reflectionobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $reflectionTable->endRow();
+            // Step through the list of reflections.
+            $class = NULL;
+            if (!empty($reflectionList)) {
+                $refNo = 1;
+                foreach($reflectionList as $item) {
+                    // Display each field for reflections
+                    $reflectionTable->startRow();
+                    $reflectionTable->addCell("<li>".$item['shortdescription']."<p>".$item['longdescription']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio'). " : </b>" .$item['rationale']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . " : </b>".$this->objDate->formatDate($item['creation_date'])."</p></li>");
+                    $reflectionTable->endRow();
+                    $refNo = $refNo+1;
+                }
+                unset($item);
+            }
+            $reflectiontbl = $reflectionTable->show() . '<br></br>';
             return $reflectiontbl;
         } //end if
         
@@ -1012,6 +1520,53 @@ class getall_Eportfolio extends object
         } //end if
         
     } //end function
-    
+    //Function to get user Assertions (one column)
+    public function getViewAssertions($userPid) 
+    {
+        // Show the heading
+        $assertionsobjHeading = &$this->getObject('htmlheading', 'htmlelements');
+        $assertionsobjHeading->type = 2;
+        $assertionsobjHeading->str = $this->objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio');
+        $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+        if (!empty($Id)) {
+            // Create a table object
+            $assertionstable = &$this->newObject("htmltable", "htmlelements");
+            $assertionstable->border = 1;
+            $assertionstable->attributes = "rules=none frame=box";
+            $assertionstable->cellspacing = '3';
+            $assertionstable->width = "100%";
+            // Add the table heading.
+            $assertionstable->startRow();
+            $assertionstable->addHeaderCell($assertionsobjHeading->show(), $width=null, $valign="top", $align='left', $class='odd', $attrib=Null);
+            $assertionstable->endRow();
+            // Step through the list of assertions.
+            $class = NULL;
+            if (!empty($Id)) {
+                //$assertNo = 1;
+                foreach($Id as $groupId) {
+                    //Get the group parent_id
+                    $parentId = $this->_objGroupAdmin->getParent($groupId);
+                    $newParentId = array_unique($parentId);
+                    foreach($newParentId as $myparentId) {
+                        //Get the name from group table
+                        $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
+                        $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
+                        if (!empty($assertionslist)) {
+                            // Display each field for assertions
+                            $assertionstable->startRow();
+                            $assertionstable->addCell("<li>".$assertionslist[0]['shortdescription']."<p>".$assertionslist[0]['longdescription']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_rationaleTitle", 'eportfolio') . ": </b>".$assertionslist[0]['rationale']."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_lecturer", 'eportfolio') . ": </b>".$this->objUser->fullName($assertionslist[0]['userid'])."</p><p>"."<b>" . $this->objLanguage->languageText("mod_eportfolio_creationDate", 'eportfolio') . ": </b>".$this->objDate->formatDate($assertionslist[0]['creation_date'])."</p></li>", "", NULL, NULL, $class, '');
+                            $assertionstable->endRow();
+                        }
+                        unset($myparentId);
+                    }
+                    //$assertNo = $assertNo + 1;
+                    unset($groupId);
+                }
+            }
+            $assertionstbl = $assertionstable->show() . '<br></br>';
+            return $assertionstbl;
+        } //end if
+        
+    } //end function    
 }
 ?>
