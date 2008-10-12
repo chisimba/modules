@@ -51,6 +51,8 @@ public class ServerListener extends Thread {
     private String[] unwantedHosts = {"192.102.9.73"};
     private Vector<Item> whiteboardItems = new Vector<Item>();
     private Vector<ClassroomFile> documentsAndFiles = new Vector<ClassroomFile>();
+    private Vector<MobileUser> mobileUsers = new Vector<MobileUser>();
+
     /**
      * The port number
      * @param port port number
@@ -82,12 +84,12 @@ public class ServerListener extends Thread {
     public void run() {
         try {
             ServerSocket ssocket = new ServerSocket(port);
-          /*  ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
+            /*  ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
             SSLServerSocket ssocket = (SSLServerSocket) ssocketFactory.createServerSocket(port);
             final String[] enabledCipherSuites = {"SSL_DH_anon_WITH_RC4_128_MD5"};
             ssocket.setEnabledCipherSuites(enabledCipherSuites);
             ssocket.setReuseAddress(true);
-            */
+             */
             logger.info("SSL factory started..");
             logger.info("Listening for connections on port " + port);
             while (true) {
@@ -104,7 +106,8 @@ public class ServerListener extends Thread {
                                 launchers,
                                 sessionmonitors,
                                 whiteboardItems,
-                                documentsAndFiles);
+                                documentsAndFiles,
+                                mobileUsers);
                         new Thread(server).start();
                     }
                 } catch (Exception e) {
