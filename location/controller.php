@@ -32,6 +32,7 @@
 
 class location extends controller
 {
+	protected $objLocationOps;
 	protected $objJson;
 	protected $objSysConfig;
 	protected $feKey;
@@ -41,16 +42,13 @@ class location extends controller
 	protected $feTokenSecret;
 
 	/**
-	 *
-	 * Standard constructor method to retrieve the action from the
-	 * querystring, and instantiate the user and lanaguage objects
-	 *
+	 * Standard constructor to load the necessary resources
+	 * and populate the new object's instance variables
 	 */
 	public function init()
 	{
-		// Load resources
-		include $this->getResourcePath('oauth/OAuth.php', 'utilities');
-		include $this->getResourcePath('fireeagle/fireeagle.php');
+		// Load the location library
+		$this->objLocationOps = $this->getObject('locationops', 'location');
 
 		// Create the JSON object for later use in the Fire Eagle library
 		$this->json = $this->getObject('json', 'utilities');
@@ -97,8 +95,7 @@ class location extends controller
 				break;
 			default:
 				if ($this->feToken && $this->feTokenSecret) {
-					$fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret, $this->json);
-					$location = $fireeagle->user();
+					$location = $this->objLocationOps->getFireEagleUser();
 					header('Content-Type: text/plain');
 					print_r($location);
 				} else {
