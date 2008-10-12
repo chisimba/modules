@@ -48,6 +48,7 @@ class location extends controller
 	public function init()
 	{
 		// Load resources
+		include $this->getResourcePath('oauth/OAuth.php', 'utilities');
 		include $this->getResourcePath('fireeagle/fireeagle.php');
 
 		// Set the json global for use in fireeagle.php

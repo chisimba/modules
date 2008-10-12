@@ -27,7 +27,7 @@ NOTES:
 */
 
 // Requires OAuth.php from http://oauth.googlecode.com/svn/code/php/OAuth.php
-require_once(dirname(__FILE__)."/OAuth.php");
+//require_once(dirname(__FILE__)."/OAuth.php");
 
 if (!function_exists("hash_hmac")) {
   // Earlier versions of PHP5 are missing hash_hmac().  Here's a
