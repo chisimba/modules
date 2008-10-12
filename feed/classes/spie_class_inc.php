@@ -6,6 +6,7 @@
 * developed by Derek Keats on his birthday in 2006. For 
 * further information about the class being wrapped, see
 * the SimplePie documentation.
+* @version $Id$
 *
 */
 class spie extends object
@@ -78,10 +79,10 @@ class spie extends object
     * 
     * @param string $url The URL of the feed
     * @return TRUE
-    * @access private
+    * @access public
     *  
     */
-    private function startPie($url)
+    public function startPie($url)
     {
         if (!$this->useProxy) {
             $this->setFeedUrl($url);
@@ -728,7 +729,7 @@ class spie extends object
     * get_itemsmethod.
     *
     */
-    public function get_items($start,$end)
+    public function get_items($start=0, $end=0)
     {
         return $this->objSimplePieWrapper->get_items($start,$end);
     }
