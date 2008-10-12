@@ -71,6 +71,10 @@ public class User implements Serializable {
         return userDetails;
     }
 
+    public boolean isIsSlidesHost() {
+        return isSlidesHost;
+    }
+
     public void setUserDetails(String userDetails) {
         this.userDetails = userDetails;
     }
