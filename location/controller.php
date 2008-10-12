@@ -44,6 +44,7 @@ class location extends controller
 	/**
 	 * Standard constructor to load the necessary resources
 	 * and populate the new object's instance variables
+         * @access public
 	 */
 	public function init()
 	{
@@ -65,13 +66,9 @@ class location extends controller
 	}
 
 	/**
-	 * Standard dispatch method to handle adding and saving
-	 * of comments
-	 *
+	 * Standard dispatch method to handle the various possible actions
 	 * @access public
-	 * @param void
-	 * @return void
-	*/
+	 */
 	public function dispatch()
 	{
 		$action = $this->getParam('action');
