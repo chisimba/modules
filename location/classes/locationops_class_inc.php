@@ -18,6 +18,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @copyright GNU/GPL, AVOIR
  * @package   location
  * @access    public
+ * @version   $Id$
  */
 class locationops extends object
 {
@@ -30,9 +31,9 @@ class locationops extends object
 	protected $feTokenSecret;
 
 	/**
-         * Standard constructor to load the necessary resources
-         * and populate the new object's instance variables
-         */
+	 * Standard constructor to load the necessary resources
+	 * and populate the new object's instance variables
+	 */
 	public function init()
 	{
 		// Load resources
