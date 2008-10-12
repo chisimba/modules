@@ -22,13 +22,12 @@ public class SlidesServer {
 
     public static void main(String[] args) {
         if (args.length > 1) {
-            int port=Integer.parseInt(args[2]);
-            new SlidesServer(args[0], args[1],port);
-        } else {
-            new SlidesServer(args[0]);
+            int port = Integer.parseInt(args[2]);
+            new SlidesServer(args[0], args[1], port);
         }
     }
-    TCPClient client;
+    //TCPClient client;
+    SlidesConsumer client;
     String slideServerId;
 
     public String getSlideServerId() {
@@ -36,10 +35,7 @@ public class SlidesServer {
     }
 
     public SlidesServer(String id, String superNodeHost, int superNodePort) {
-
-        client = new TCPClient(this);
-        client.setSuperNodeHost(superNodeHost);
-        client.setSuperNodePort(superNodePort);
+        client = new SlidesConsumer(superNodeHost, superNodePort);
         if (client.connect()) {
             System.out.println("Slide server running ...");
             //publish this user
@@ -55,28 +51,14 @@ public class SlidesServer {
         System.exit(0);
     }
 
-    public SlidesServer(String id) {
-        client = new TCPClient(this);
-
-        if (client.connect()) {
-            System.out.println("Slide server running ...");
-            //publish this user
-            client.publish(createUser(id));
-            //hold on for 5 mins, then quit
-            timer.schedule(new SlidesServerMonitor(), DURATION);
-        //   monitor();
-        } else {
-            //nothing else, just go off
-            System.exit(0);
-        }
-    }
-
     class SlidesServerMonitor extends TimerTask {
 
         public void run() {
             //first, request for remove
             client.removeMe(slideServerId);
             timer.cancel(); //Terminate the thread
+            System.out.println("Dying ...");
+
             //then quit
             System.exit(0);
         }
@@ -100,7 +82,8 @@ public class SlidesServer {
      */
     private User createUser(String id) {
         slideServerId = id;
-        return new User(UserLevel.ADMIN, "slide-server",
+        User user=new User(UserLevel.ADMIN, "slide-server",
                 id, "xxxx", 22224, false, "", "", "", true, "", "");
+        return user;
     }
 }

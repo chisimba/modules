@@ -4,6 +4,7 @@
  */
 package avoir.realtime.tcp.base;
 
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.packet.PointerPacket;

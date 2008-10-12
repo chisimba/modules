@@ -5,6 +5,8 @@ package avoir.realtime.tcp.base;
  * and open the template in the editor.
  */
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.Random;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -19,8 +21,8 @@ public class Simulator {
     private static Logger logger = Logger.getLogger(Simulator.class.getName());
     Random random = new Random();
     String userLevel = "admin";
-    String fullname = "sim1";
-    String userName = "sim1";
+    String fullname = "sim";
+    String userName = "sim";
     String host = "localhost";
     int port = 22225;
     boolean isPresenter = true;
@@ -47,27 +49,53 @@ public class Simulator {
                 fullname = userName;
                 isPresenter = false;
                 b.setSessionTitle("Simulator 1");
-                b.init(userLevel, fullname, userName, host, port, isPresenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost,null);
+                Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+                JFrame mainFrame = new JFrame("Simulator 1.0");
+                mainFrame.setJMenuBar(b.getMenuMananger());
 
+                mainFrame.setSize((ss.width / 8) * 8, (ss.height / 8) * 8);
+                mainFrame.setLocationRelativeTo(null);
+                // b.init(userLevel, fullname, userName, host, port, isPresenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost,null);
+                b.initAsClassroom(host, port, userName, fullname, isPresenter,
+                        sessionId, userLevel, slidesDir, siteRoot, slideServerId,
+                        resourcesPath, mainFrame);
+                mainFrame.setVisible(true);
             }
         };
         t.start();
     }
 
-   
-
-
     public Simulator(String username, boolean presenter) {
+        this.userName = username;
+        this.isPresenter = presenter;
+        init();
+    }
 
+    public void init() {
+        Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
         logger.info("Simulator 0.1 started ...");
         RealtimeBase base = new RealtimeBase();
-        JPanel p = base.init(userLevel, username, username, host, port, presenter, sessionId, slidesDir, isSlidesHost, siteRoot, slideServerId, resourcesPath, localhost,null);
-        JFrame fr = new JFrame(username);
+        JFrame fr = new JFrame(fullname);
+
+        JPanel p = base.initAsClassroom(host, port, userName, fullname, isPresenter,
+                sessionId, userLevel, slidesDir, siteRoot, slideServerId,
+                resourcesPath, fr);
+        fr.setJMenuBar(base.getMenuMananger());
+        fr.setSize(ss);//(ss.width / 8) * 5, (ss.height / 8) * 5);
         fr.setBackground(Color.WHITE);
         p.setBackground(Color.WHITE);
         fr.getContentPane().add(p);
-        fr.setSize(800, 600);
+
         fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.setVisible(true);
+    }
+
+    public Simulator(String username, boolean presenter, String host, int port) {
+        this.userName = username;
+        this.fullname=username;
+        this.isPresenter = presenter;
+        this.host = host;
+        this.port = port;
+        init();
     }
 }
