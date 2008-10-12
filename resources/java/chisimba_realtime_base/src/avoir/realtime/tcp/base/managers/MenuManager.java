@@ -18,12 +18,12 @@
 package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.RealtimeBase;
-import avoir.realtime.tcp.base.Version;
 import avoir.realtime.tcp.base.appsharing.AppShareFrame;
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.FlashFilter;
 import avoir.realtime.tcp.common.ImageFilter;
 import avoir.realtime.tcp.common.PresentationFilter;
-import avoir.realtime.tcp.flashplayer.FlashPlayer;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -55,19 +55,21 @@ public class MenuManager implements ActionListener {
     private JFileChooser presentationFC = new JFileChooser();
     private JFileChooser graphicFC = new JFileChooser();
     private JFileChooser flashFC = new JFileChooser();
-
     private AppShareFrame appShareFrame;
 
     public MenuManager(RealtimeBase base) {
         this.base = base;
         presentationFC.addChoosableFileFilter(new PresentationFilter());
         graphicFC.addChoosableFileFilter(new ImageFilter());
+        flashFC.addChoosableFileFilter(new FlashFilter());
         JMenu fileMenu = createMenu("File");
         JMenu insertMenu = createMenu("Insert");
         JMenu toolsMenu = createMenu("Tools");
         JMenu helpMenu = createMenu("Help");
 
-        createMenuItem(toolsMenu, "Application Sharing", "appshare", base.getControl());
+        createMenuItem(toolsMenu, "Application Sharing", "appshare", false);//base.getControl());
+        createMenuItem(toolsMenu, "File Sharing", "fileSharing", base.getControl());
+        createMenuItem(toolsMenu, "Survey", "survey", base.getControl());
         createMenuItem(toolsMenu, "Filters", "filter", true);
         createMenuItem(toolsMenu, "Audio Setup", "audiosetup", true);
         createMenuItem(toolsMenu, "Options", "options", true);
@@ -78,12 +80,14 @@ public class MenuManager implements ActionListener {
 
         fileMenu.addSeparator();
         createMenuItem(fileMenu, "Exit", "exit", true);
+        createMenuItem(insertMenu, "Insert Webpage", "insertWebpage", base.getControl());
+
         createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", base.getControl());
         createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", base.getControl());
         createMenuItem(insertMenu, "Insert Flash", "insertFlash", base.getControl());
         menuBar.add(fileMenu);
         menuBar.add(insertMenu);
-        //  }
+
         menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
 
@@ -94,7 +98,20 @@ public class MenuManager implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("fileSharing")) {
+            base.showFileTransferFrame();
+        }
+        if (e.getActionCommand().equals("survey")) {
+            base.showSurveyManagerFrame();
+        }
+        if (e.getActionCommand().equals("insertWebpage")) {
+            new Thread() {
 
+                public void run() {
+                    base.getBaseManager().showWebpage();
+                }
+            }.start();
+        }
         if (e.getActionCommand().equals("appshare")) {
             if (appShareFrame == null) {
                 appShareFrame = new AppShareFrame(base);
@@ -109,8 +126,13 @@ public class MenuManager implements ActionListener {
                 Thread t = new Thread() {
 
                     public void run() {
+                        if (base.getMainTabbedPane().getSelectedIndex() != 0) {
+                            base.getBaseManager().animateTabTitle(base.getMainTabbedPane(), 0);
+                        }
                         base.getFileUploader().transferFile(f.getAbsolutePath(), Constants.IMAGE);
                         base.setSelectedFile(f.getName());
+
+
                     }
                 };
                 t.start();
@@ -118,14 +140,18 @@ public class MenuManager implements ActionListener {
         }
         if (e.getActionCommand().equals("insertFlash")) {
             if (flashFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {
+
                 final File f = flashFC.getSelectedFile();
                 Thread t = new Thread() {
 
                     public void run() {
-                        new FlashPlayer("file://"+f.getAbsolutePath());
+
+                        base.getFileUploader().transferFile(f.getAbsolutePath(), Constants.FLASH);
+                        base.setSelectedFile(f.getName());
                     }
                 };
                 t.start();
+
             }
         }
 
@@ -135,8 +161,14 @@ public class MenuManager implements ActionListener {
                 Thread t = new Thread() {
 
                     public void run() {
+
+                        if (base.getMainTabbedPane().getSelectedIndex() != 0) {
+                            base.getBaseManager().animateTabTitle(base.getMainTabbedPane(), 0);
+                        }
+
                         base.getFileUploader().transferFile(f.getAbsolutePath(), Constants.PRESENTATION);
                         base.setSelectedFile(f.getName());
+
                     }
                 };
                 t.start();
@@ -155,19 +187,22 @@ public class MenuManager implements ActionListener {
             MenuManager.this.base.showAudioWizardFrame();
         }
         if (e.getActionCommand().equals("about")) {
-            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.2" +
-                    " Build " + Version.version + "</center>");
+            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Beta Version 1.0.2</center>");
 
         }
     }
 
     private JMenu createMenu(String txt) {
         JMenu menu = new JMenu(txt);
+        menu.setFont(new Font("Dialog", 0, 11));
+
         return menu;
     }
 
     private void createMenuItem(JMenu menu, String txt, String action, boolean enabled) {
         JMenuItem item = new JMenuItem(txt);
+        item.setFont(new Font("Dialog", 0, 11));
+
         item.setEnabled(enabled);
         item.addActionListener(this);
         item.setActionCommand(action);

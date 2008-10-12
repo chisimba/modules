@@ -19,6 +19,7 @@ package avoir.realtime.tcp.base.managers;
 
 import avoir.realtime.tcp.base.*;
 import avoir.realtime.tcp.base.user.User;
+import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.common.PresenceConstants;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import java.awt.BorderLayout;
@@ -29,10 +30,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -260,18 +259,20 @@ public class ToolbarManager {
         ButtonGroup bg = new ButtonGroup();
 
 
-        firstSlideButton = new MButton(createImageIcon(this, "/icons/first.png"));
+        firstSlideButton = new MButton(ImageUtil.createImageIcon(this, "/icons/first.png"));
         //firstSlideButton.setText("First");
-        backSlideButton = new MButton(createImageIcon(this, "/icons/back.png"));
+        backSlideButton = new MButton(ImageUtil.createImageIcon(this, "/icons/back.png"));
         //backSlideButton.setText("Back");
-        nextSlideButton = new MButton(createImageIcon(this, "/icons/next.png"));
+        nextSlideButton = new MButton(ImageUtil.createImageIcon(this, "/icons/next.png"));
         //nextSlideButton.setText("Next");
-        lastSlideButton = new MButton(createImageIcon(this, "/icons/last.png"));
+        lastSlideButton = new MButton(ImageUtil.createImageIcon(this, "/icons/last.png"));
         //lastSlideButton.setText("Last");
-        magViewPlus = new MButton(createImageIcon(this, "/icons/viewmag+.png"));
-        magViewMinus = new MButton(createImageIcon(this, "/icons/viewmag-.png"));
-
-        slidesNavigationToolBar.setBorder(BorderFactory.createEtchedBorder());
+        magViewPlus = new MButton(ImageUtil.createImageIcon(this, "/icons/viewmag+.png"));
+        magViewPlus.setEnabled(false);//!base.getControl());
+        magViewMinus = new MButton(ImageUtil.createImageIcon(this, "/icons/viewmag-.png"));
+        magsField.setEnabled(false);//!base.getControl());
+        magViewMinus.setEnabled(false);//!base.getControl());
+        //  slidesNavigationToolBar.setBorder(BorderFactory.createEtchedBorder());
         slidesNavigationToolBar.setRollover(true);
         slidesNavigationToolBar.setPreferredSize(new java.awt.Dimension(18, 25));
         slidesNavigationToolBar.add(firstSlideButton);
@@ -389,9 +390,10 @@ public class ToolbarManager {
 
 
         yesButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        //yesButton.setText("Yes");
+        //  yesButton.setText("Yes");
         yesButton.setToolTipText("Say Yes");
         yesButton.setBorderPainted(false);
+        yesButton.setContentAreaFilled(false);
         yesButton.setEnabled(false);
         yesButton.setFocusable(false);
         yesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -402,12 +404,24 @@ public class ToolbarManager {
                 yesButtonActionPerformed(evt);
             }
         });
+        yesButton.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                yesButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                yesButton.setContentAreaFilled(false);
+            }
+        });
 
         noButton.setFont(new java.awt.Font("Dialog", 0, 9));
-        // noButton.setText("No");
+        //noButton.setText("No");
         noButton.setToolTipText("Say No");
         noButton.setBorderPainted(false);
+        noButton.setContentAreaFilled(false);
         noButton.setEnabled(false);
         noButton.setFocusable(false);
         noButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -418,7 +432,18 @@ public class ToolbarManager {
                 noButtonActionPerformed(evt);
             }
         });
+        noButton.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                noButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                noButton.setContentAreaFilled(false);
+            }
+        });
 
 
 
@@ -428,7 +453,7 @@ public class ToolbarManager {
 
         backButton.setFont(new java.awt.Font("Dialog", 0, 9));
         backButton.setText("Home");
-        backButton.setIcon(createImageIcon(this, "/icons/back.png"));
+        backButton.setIcon(ImageUtil.createImageIcon(this, "/icons/back.png"));
         backButton.setBorderPainted(false);
         backButton.setContentAreaFilled(false);
         backButton.setFocusable(false);
@@ -595,19 +620,19 @@ public class ToolbarManager {
                 });
         generalToolbar.add(optionsButton);
 
-        fileTransferButton.setIcon(createImageIcon(this, "/icons/filetransfer.gif"));
-        refreshButton.setIcon(createImageIcon(this, "/icons/refresh.png"));
-        optionsButton.setIcon(createImageIcon(this, "/icons/options.png"));
+        fileTransferButton.setIcon(ImageUtil.createImageIcon(this, "/icons/filetransfer.gif"));
+        refreshButton.setIcon(ImageUtil.createImageIcon(this, "/icons/refresh.png"));
+        optionsButton.setIcon(ImageUtil.createImageIcon(this, "/icons/options.png"));
 
 
-        surveyButton = new JButton(createImageIcon(this, "/icons/survey.png"));
+        surveyButton = new JButton(ImageUtil.createImageIcon(this, "/icons/survey.png"));
         surveyButton.setText("Survey");
         surveyButton.setBorderPainted(false);
         surveyButton.setContentAreaFilled(false);
         surveyButton.setFocusable(false);
         surveyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         surveyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        surveyButton.setIcon(createImageIcon(this, "/icons/survey.png"));
+        surveyButton.setIcon(ImageUtil.createImageIcon(this, "/icons/survey.png"));
         surveyButton.setFont(new java.awt.Font("Dialog", 0, 9));
         surveyButton.addMouseListener(
                 new java.awt.event.MouseAdapter() {
@@ -626,15 +651,15 @@ public class ToolbarManager {
         surveyButton.setToolTipText("Conduct Survey");
 
 
-        sessionButton = new TButton(createImageIcon(this, "/icons/session_off.png"));
+        sessionButton = new TButton(ImageUtil.createImageIcon(this, "/icons/session_off.png"));
         //sessionButton.setText("Start");
 
 
-        chatButton.setIcon(createImageIcon(this, "/icons/chat.png"));
-        handButton.setIcon(createImageIcon(this, "/icons/hand.png"));
-        yesButton.setIcon(createImageIcon(this, "/icons/yes.png"));
-        noButton.setIcon(createImageIcon(this, "/icons/no.png"));
-        voiceOptionsButton.setIcon(createImageIcon(this, "/icons/voice.png"));
+        chatButton.setIcon(ImageUtil.createImageIcon(this, "/icons/chat.png"));
+        handButton.setIcon(ImageUtil.createImageIcon(this, "/icons/hand.png"));
+        yesButton.setIcon(ImageUtil.createImageIcon(this, "/icons/yes.png"));
+        noButton.setIcon(ImageUtil.createImageIcon(this, "/icons/no.png"));
+        voiceOptionsButton.setIcon(ImageUtil.createImageIcon(this, "/icons/voice.png"));
         yesButton.setEnabled(false);
         noButton.setEnabled(false);
         chatButton.setToolTipText("Home");
@@ -643,7 +668,7 @@ public class ToolbarManager {
             generalToolbar.add(surveyButton);
         }
         generalToolbar.addSeparator();
-        generalToolbar.setBorder(BorderFactory.createEtchedBorder());
+//        generalToolbar.setBorder(BorderFactory.createEtchedBorder());
 
         wbButton = new javax.swing.JToggleButton();
         wbButton.setFont(new java.awt.Font("Dialog", 0, 9));
@@ -653,7 +678,7 @@ public class ToolbarManager {
         wbButton.setFocusable(false);
         wbButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         wbButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        wbButton.setIcon(createImageIcon(this, "/icons/wb_icon.png"));
+        wbButton.setIcon(ImageUtil.createImageIcon(this, "/icons/wb_icon.png"));
         wbButton.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -662,8 +687,8 @@ public class ToolbarManager {
         });
 
         // generalToolbar.add(wbButton);
-        generalToolbar.add(noButton);
-        generalToolbar.add(yesButton);
+        // generalToolbar.add(noButton);
+        // generalToolbar.add(yesButton);
 
         setCustomActions();
     }// </editor-fold>                        
@@ -773,6 +798,7 @@ public class ToolbarManager {
         public MButton(ImageIcon icon) {
             super(icon);
             setBorderPainted(false);
+            setContentAreaFilled(false);
             setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 9));
@@ -790,52 +816,6 @@ public class ToolbarManager {
                 }
             });
         }
-    }
-
-    /**
-     * Creates an ImageIcon, retrieving the Image from the system classpath.
-     *
-     * @param path String location of the image file
-     * @return Returns and ImageIcon object with the supplied image
-     * @throws FileNotFoundException File can't be found
-     */
-    public static ImageIcon createImageIcon(String path) {
-        try {
-            URL imageURL = ClassLoader.getSystemResource(path);
-            if (imageURL != null) {
-                return new ImageIcon(imageURL);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Creates an ImageIcon, retrieving the image from the classes' classpath or 
-     * the system classpath (searched in that order).
-     *
-     * @param classToLoadFrom Class to use to search classpath for image.
-     * @param path String location of the image file
-     * @return Returns and ImageIcon object with the supplied image
-     * @throws FileNotFoundException File can't be found
-     */
-    public static ImageIcon createImageIcon(Object classToLoadFrom, String path) {
-        try {
-            URL imageURL = classToLoadFrom.getClass().getResource(path);
-            if (imageURL == null) {
-                imageURL = classToLoadFrom.getClass().getClassLoader().getResource(
-                        path);
-            }
-            if (imageURL == null) {
-                return createImageIcon(path);
-            } else {
-                return new ImageIcon(imageURL);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     /**
@@ -861,6 +841,9 @@ public class ToolbarManager {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     setContentAreaFilled(false);
+                    if (isSelected()) {
+                        setContentAreaFilled(true);
+                    }
                 }
             });
         }
