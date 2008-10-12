@@ -44,7 +44,7 @@ class location extends controller
 	/**
 	 * Standard constructor to load the necessary resources
 	 * and populate the new object's instance variables
-         * @access public
+	 * @access public
 	 */
 	public function init()
 	{
