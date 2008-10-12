@@ -25,11 +25,13 @@ import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import avoir.realtime.tcp.common.packet.SessionImgPacket;
 import avoir.realtime.tcp.common.packet.UploadMsgPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
+import chrriis.dj.nativeswing.swtimpl.components.JFlashPlayer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 /**
  * This class contains method for receiving/downloading a file that has been sent
@@ -64,8 +66,15 @@ public class FileReceiverManager {
     public void processFileDownload(FileUploadPacket p) {
         new File(base.getUserName()).mkdirs();
         new File(Constants.getRealtimeHome() + "/classroom/images/" + base.getSessionId()).mkdirs();
+        new File(Constants.getRealtimeHome() + "/classroom/flash/" + base.getSessionId()).mkdirs();
+
         if (p.getFileType() == Constants.IMAGE) {
             filename = Constants.getRealtimeHome() + "/classroom/images/" + base.getSessionId() + "/" + p.getFilename();
+        }
+
+
+        if (p.getFileType() == Constants.FLASH) {
+            filename = Constants.getRealtimeHome() + "/classroom/flash/" + base.getSessionId() + "/" + p.getFilename();
         }
         int nChunks = p.getTotalChunks();
         int chunk = p.getChunkNo();
@@ -106,6 +115,9 @@ public class FileReceiverManager {
                     ImageIcon image = new ImageIcon(filename);
                     base.getWhiteboardSurface().setImage(image);
                 }
+                if (p.getFileType() == Constants.FLASH) {
+                    processFlash(filename,p.getId(),p.getSessionId());
+                }
                 return;
             }
 
@@ -137,6 +149,9 @@ public class FileReceiverManager {
                     base.getWhiteboardSurface().addItem(new Img(100, 100, 150, 150, p.getFilename(), base.getWhiteboardSurface().getImgs().size(), p.getId()));
                     base.getWhiteboardSurface().setImage(image);
                 }
+                if (p.getFileType() == Constants.FLASH) {
+                    processFlash(filename,p.getId(),p.getSessionId());
+                }
             }
         } else {
             float val = chunk + 1;
@@ -147,6 +162,16 @@ public class FileReceiverManager {
 
         }
 
+    }
+
+    private void processFlash(final String filepath,final String id,final String sessionId) {
+        Thread t = new Thread() {
+
+            public void run() {
+                base.getBaseManager().showFlashPlayer("file://" + filepath,id,sessionId);
+            }
+        };
+        t.start();
     }
 
     public void processSessionImageFileDownload(SessionImgPacket p) {
