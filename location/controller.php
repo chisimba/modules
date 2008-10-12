@@ -39,6 +39,12 @@ class location extends controller
 	protected $feToken;
 	protected $feTokenSecret;
 
+	/**
+	 *
+	 * Standard constructor method to retrieve the action from the
+	 * querystring, and instantiate the user and lanaguage objects
+	 *
+	 */
 	public function init()
 	{
 		// Load resources
@@ -58,6 +64,14 @@ class location extends controller
 		$this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
 	}
 
+	/**
+	 * Standard dispatch method to handle adding and saving
+	 * of comments
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	*/
 	public function dispatch()
 	{
 		$action = $this->getParam('action');
