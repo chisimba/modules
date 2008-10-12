@@ -22,7 +22,7 @@ import avoir.realtime.tcp.base.admin.ClientAdmin;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
 import avoir.realtime.tcp.base.filetransfer.FileTransferPanel;
 import avoir.realtime.tcp.base.filetransfer.FileUploader;
-import avoir.realtime.tcp.base.NetworkMonitor;
+
 import avoir.realtime.tcp.common.packet.AckPacket;
 import avoir.realtime.tcp.common.packet.RealtimePacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
@@ -36,6 +36,7 @@ import avoir.realtime.tcp.common.packet.BinaryFileSaveReplyPacket;
 import avoir.realtime.tcp.common.packet.BinaryFileSaveRequestPacket;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
+import avoir.realtime.tcp.common.packet.ClassroomFile;
 import avoir.realtime.tcp.common.packet.ClassroomFileLog;
 import avoir.realtime.tcp.common.packet.ClassroomSlidePacket;
 import avoir.realtime.tcp.common.packet.ClearSlidesPacket;
@@ -55,6 +56,7 @@ import avoir.realtime.tcp.common.packet.OutlinePacket;
 import avoir.realtime.tcp.common.packet.PointerPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.common.packet.QuitPacket;
+import avoir.realtime.tcp.common.packet.RemoveDocumentPacket;
 import avoir.realtime.tcp.common.packet.RemoveMePacket;
 import avoir.realtime.tcp.common.packet.RemoveUserPacket;
 import avoir.realtime.tcp.common.packet.RestartServerPacket;
@@ -64,6 +66,7 @@ import avoir.realtime.tcp.common.packet.SessionImgPacket;
 import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
+import avoir.realtime.tcp.common.packet.SwitchTabPacket;
 import avoir.realtime.tcp.common.packet.SystemFilePacket;
 import avoir.realtime.tcp.common.packet.UpdateUserNetworkStatusPacket;
 import avoir.realtime.tcp.common.packet.UploadMsgPacket;
@@ -448,6 +451,7 @@ public class TCPClient {
             reader = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             result = true;
             running = true;
+
             Thread t = new Thread() {
 
                 @Override
@@ -455,10 +459,12 @@ public class TCPClient {
                     if (base != null) {
                         networkMonitor.startHeartBeat();
                     }
+
                     listen();
                 }
             };
             t.start();
+
         } catch (IOException ex) {
             if (base != null) {
                 base.setText("Connection Error: " + ex.getMessage(), true);
@@ -472,6 +478,12 @@ public class TCPClient {
         try {
             Thread.sleep(duration);
         } catch (Exception ex) {
+        }
+    }
+
+    private void animateTab() {
+        if (base.getMainTabbedPane().getSelectedIndex() != 0) {
+            base.getBaseManager().animateTabTitle(base.getMainTabbedPane(), 0);
         }
     }
 
@@ -524,6 +536,8 @@ public class TCPClient {
                 } else if (packet instanceof ClearVotePacket) {
                     ClearVotePacket p = (ClearVotePacket) packet;
                     consumer.processClearVotePacket(p);
+                } else if (packet instanceof SwitchTabPacket) {
+                    consumer.processSwitchTabPacket((SwitchTabPacket) packet);
                 } else if (packet instanceof BinaryFileSaveRequestPacket) {
                     consumer.processBinaryFileSaveRequestPacket((BinaryFileSaveRequestPacket) packet);
                 } else if (packet instanceof VotePacket) {
@@ -548,7 +562,12 @@ public class TCPClient {
                 } else if (packet instanceof ChatPacket) {
                     ChatPacket p = (ChatPacket) packet;
                     consumer.processChatPacket(p);
-                }else if (packet instanceof ClassroomFileLog) {
+                } else if (packet instanceof ClassroomFile) {
+                    ClassroomFile p = (ClassroomFile) packet;
+                    consumer.processClassroomFile(p);
+                }else if(packet instanceof RemoveDocumentPacket){
+                    consumer.processRemoveDocumentPacket((RemoveDocumentPacket)packet);
+                } else if (packet instanceof ClassroomFileLog) {
                     ClassroomFileLog p = (ClassroomFileLog) packet;
                     consumer.processClassromFilesLog(p);
                 } else if (packet instanceof AttentionPacket) {
@@ -564,6 +583,7 @@ public class TCPClient {
                     consumer.processMsgPacket(p);
                 } else if (packet instanceof WhiteboardPacket) {
                     WhiteboardPacket p = (WhiteboardPacket) packet;
+                    animateTab();
                     /// System.out.println("Recevied "+p.getItem());
                     consumer.processWhiteboardPacket(p);
                 } else if (packet instanceof PresencePacket) {
@@ -574,16 +594,16 @@ public class TCPClient {
                 } else if (packet instanceof QuitPacket) {
                     QuitPacket p = (QuitPacket) packet;
                     consumer.processQuitPacket(p);
-                }    else if (packet instanceof SessionImgPacket) {
+                } else if (packet instanceof SessionImgPacket) {
                     SessionImgPacket p = (SessionImgPacket) packet;
-                   fileReceiverManager.processSessionImageFileDownload(p);
+                    fileReceiverManager.processSessionImageFileDownload(p);
                 } else if (packet instanceof ModuleFileRequestPacket) {
                     ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
                     consumer.processModuleFileRequestPacket(p);
                 } else if (packet instanceof BinaryFileSaveReplyPacket) {
                     consumer.processBinaryFileSaveReplyPacket((BinaryFileSaveReplyPacket) packet);
                 } else if (packet instanceof FileUploadPacket) {
-
+                    animateTab();
                     fileReceiverManager.processFileDownload((FileUploadPacket) packet);
 
                 } else if (packet instanceof UploadMsgPacket) {
@@ -593,6 +613,8 @@ public class TCPClient {
                     }
 
                 } else if (packet instanceof ImagePacket) {
+
+                    animateTab();
                     consumer.processImagePacket((ImagePacket) packet);
                 } else if (packet instanceof DesktopPacket) {
                     consumer.processDesktopPacket((DesktopPacket) packet);
@@ -747,6 +769,10 @@ public class TCPClient {
             names[i] = "Slide" + (i + 1);
         }
         return names;
+    }
+
+    public TCPConsumer getConsumer() {
+        return consumer;
     }
 
     /**

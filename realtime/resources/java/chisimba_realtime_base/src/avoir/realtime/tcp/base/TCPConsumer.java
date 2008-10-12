@@ -47,13 +47,14 @@ import avoir.realtime.tcp.common.packet.OutlinePacket;
 import avoir.realtime.tcp.common.packet.PointerPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
 import avoir.realtime.tcp.common.packet.QuitPacket;
+import avoir.realtime.tcp.common.packet.RemoveDocumentPacket;
 import avoir.realtime.tcp.common.packet.RemoveUserPacket;
 import avoir.realtime.tcp.common.packet.ServerLogReplyPacket;
 import avoir.realtime.tcp.common.packet.SessionImg;
-import avoir.realtime.tcp.common.packet.SessionImgPacket;
 import avoir.realtime.tcp.common.packet.SlideNotFoundPacket;
 import avoir.realtime.tcp.common.packet.SurveyAnswerPacket;
 import avoir.realtime.tcp.common.packet.SurveyPackPacket;
+import avoir.realtime.tcp.common.packet.SwitchTabPacket;
 import avoir.realtime.tcp.common.packet.UpdateUserNetworkStatusPacket;
 import avoir.realtime.tcp.common.packet.VotePacket;
 import avoir.realtime.tcp.common.packet.WhiteboardItems;
@@ -62,7 +63,6 @@ import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
 import avoir.realtime.tcp.whiteboard.item.Item;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -89,6 +89,8 @@ public class TCPConsumer {
     private RemoteDesktopViewerFrame viewer;
     private ChatPopup chatPopup = new ChatPopup();
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private boolean showTitle;
+    private int prevIndex = 0;
 
     public TCPConsumer(TCPClient tcpClient, RealtimeBase base) {
         this.tcpClient = tcpClient;
@@ -181,6 +183,16 @@ public class TCPConsumer {
 
     }
 
+    public void processClassroomFile(ClassroomFile p) {
+        if (p.getType() == Constants.WEBPAGE) {
+            if(p.isNewFile())
+            base.getBaseManager().showWebpage(p.getPath(), p.getId(),p.isNewFile());
+            else
+            base.getBaseManager().showWebpage(p.getPath(), p.getOldId(),p.isNewFile());
+
+        }
+    }
+
     public void processClassromFilesLog(ClassroomFileLog packet) {
         /**
          * 1. Check if the files exist on local cache
@@ -189,15 +201,56 @@ public class TCPConsumer {
         Vector<ClassroomFile> log = packet.getLog();
         for (int i = 0; i < log.size(); i++) {
             ClassroomFile p = log.elementAt(i);
-            String filePath = "";
-            if (p.isPresentation()) {
-                filePath = Constants.getRealtimeHome() + "/classroom/presentations/" + base.getSessionId() + "/" + p.getPath();
+            if (p.getType() == Constants.PRESENTATION) {
+                String filePath = Constants.getRealtimeHome() + "/classroom/presentations/" + base.getSessionId() + "/" + p.getPath();
+                processFile(filePath, p);
 
             }
+            if (p.getType() == Constants.FLASH) {
+                String filePath = Constants.getRealtimeHome() + "/classroom/flash/" + base.getSessionId() + "/" + p.getPath();
+                processFile(filePath, p);
 
-            if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
+            }
+            if (p.getType() == Constants.WEBPAGE) {
+                base.getBaseManager().showWebpage(p.getPath(), p.getId(),true);//a log is always treated as new
+            }
+        }
+    }
 
-                tcpClient.sendPacket(p);
+    private void removeTab(String name) {
+        for (int i = 1; i < base.getMainTabbedPane().getTabCount(); i++) {
+     
+            if (base.getMainTabbedPane().getToolTipTextAt(i).equals(name)) {
+                base.getMainTabbedPane().remove(i);
+            }
+        }
+    }
+
+    public void processRemoveDocumentPacket(RemoveDocumentPacket p) {
+                ;
+        if (p.getType() == Constants.FLASH) {
+            for (int i = 0; i < base.getFlashFiles().size(); i++) {
+                if (base.getFlashFiles().elementAt(i).getId().equals(p.getId())) {
+                    removeTab(base.getFlashFiles().elementAt(i).getFilename());
+                }
+            }
+        }
+        if (p.getType() == Constants.WEBPAGE) {
+            for (int i = 0; i < base.getWebPages().size(); i++) {
+     
+                if (base.getWebPages().elementAt(i).getId().equals(p.getId())) {
+                    removeTab(base.getWebPages().elementAt(i).getUrl());
+                }
+            }
+        }
+    }
+
+    private void processFile(String filePath, ClassroomFile p) {
+        if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
+            tcpClient.sendPacket(p);
+        } else {
+            if (p.getType() == Constants.FLASH) {
+                base.getBaseManager().showFlashPlayer(filePath, p.getId(), p.getSessionId());
             }
         }
     }
@@ -335,6 +388,30 @@ public class TCPConsumer {
 
                 }
             }
+
+            if (item instanceof Img) {
+                Img img = (Img) item;
+                String filePath = Constants.getRealtimeHome() + "/classroom/images/" + base.getSessionId() + "/" + img.getImagePath();
+                if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
+                    tcpClient.sendPacket(new SessionImg(filePath, img));
+                } else {
+
+                    base.getBaseManager().loadCachedImage(img, filePath);
+
+                }
+            }
+        }
+    }
+
+    public void processSwitchTabPacket(SwitchTabPacket packet) {
+        SwitchTabPacket p = (SwitchTabPacket) packet;
+        int currentSelectedIndex = base.getMainTabbedPane().getSelectedIndex();
+        if (currentSelectedIndex != p.getTabIndex()) {
+            base.getBaseManager().animateTabTitle(base.getMainTabbedPane(), p.getTabIndex());
+            prevIndex = p.getTabIndex();
+        } else {
+            base.getBaseManager().getTabTimer().cancel();
+            base.getMainTabbedPane().setBackgroundAt(prevIndex, base.getDockTabbedPane().getBackgroundAt(1));
         }
     }
 
@@ -382,19 +459,9 @@ public class TCPConsumer {
 
             }
             base.updateChat(p);
-            base.getDockTabbedPane().setBackgroundAt(0, Color.ORANGE);
+        //     base.getDockTabbedPane().setBackgroundAt(0, Color.ORANGE);
 
-        /* if (showChatFrame) {
-        base.showChatRoom();
-        showChatFrame = false;
-        } else {
-        if (!base.getChatFrame().isActive()) {
-        base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_off.png").getImage());
-        } else {
-        base.getChatFrame().setIconImage(ImageUtil.createImageIcon(this, "/icons/session_on.png").getImage());
-        base.getChatFrame().toFront();
-        }
-        }*/
+
         }
     }
 
@@ -575,20 +642,11 @@ public class TCPConsumer {
             showAppSharingFrame = false;
         }
 
-        Thread t = new
+        Thread t = new Thread() {
 
-              Thread() {
+            public void run() {
 
-
-
-
-
-
-
-
-    public  void run( ) {
-
-        viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
+                viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
                 viewer.repaint();
             }
         };
