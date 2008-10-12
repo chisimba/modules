@@ -11,17 +11,39 @@ package avoir.realtime.tcp.common.packet;
 public class ClassroomFile implements RealtimePacket {
 
     private String path;
-    boolean image;
-    boolean presentation;
+    private int type;
     private String sessionId;
     private String id;
+    private boolean newFile;
+    private String oldId;
 
-    public ClassroomFile(String path, boolean image, boolean presentation, String sessionId,String id) {
+    public ClassroomFile(String path, int type, String sessionId, String id, boolean newFile, String oldId) {
         this.path = path;
-        this.image = image;
-        this.presentation = presentation;
         this.sessionId = sessionId;
-        this.id=id;
+        this.id = id;
+        this.type = type;
+        this.newFile = newFile;
+        this.oldId = oldId;
+    }
+
+    public String getOldId() {
+        return oldId;
+    }
+
+    public void setOldId(String oldId) {
+        this.oldId = oldId;
+    }
+
+    public boolean isNewFile() {
+        return newFile;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getId() {
@@ -40,27 +62,11 @@ public class ClassroomFile implements RealtimePacket {
         this.sessionId = sessionId;
     }
 
-    public boolean isImage() {
-        return image;
-    }
-
-    public void setImage(boolean image) {
-        this.image = image;
-    }
-
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public boolean isPresentation() {
-        return presentation;
-    }
-
-    public void setPresentation(boolean presentation) {
-        this.presentation = presentation;
     }
 }
