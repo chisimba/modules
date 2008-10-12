@@ -31,23 +31,33 @@ import avoir.realtime.tcp.base.managers.SessionManager;
 import avoir.realtime.tcp.base.managers.WhiteboardToolbarManager;
 import avoir.realtime.tcp.base.survey.SurveyFrame;
 import avoir.realtime.tcp.base.survey.SurveyManagerFrame;
+
 import avoir.realtime.tcp.base.user.User;
 import avoir.realtime.tcp.base.user.UserLevel;
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.Flash;
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.PresenceConstants;
+import avoir.realtime.tcp.common.WebPage;
 import avoir.realtime.tcp.common.packet.ChatLogPacket;
 import avoir.realtime.tcp.common.packet.ChatPacket;
 import avoir.realtime.tcp.common.packet.PresencePacket;
+import avoir.realtime.tcp.common.packet.SwitchTabPacket;
 import avoir.realtime.tcp.whiteboard.WhiteboardSurface;
+import chrriis.common.UIUtils;
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
@@ -70,6 +80,8 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -94,7 +106,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private boolean localhost;
     private javax.swing.JSplitPane splitPane = new JSplitPane();
     private javax.swing.JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-    private javax.swing.JSplitPane leftBottomSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    // private javax.swing.JSplitPane leftBottomSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    private JPanel leftBottomPanel = new JPanel(new BorderLayout());
     private JTabbedPane userListTabbedPane = new JTabbedPane();
     private JTabbedPane dockTabbedPane = new JTabbedPane();//true);
     private JLabel logo = new JLabel();
@@ -117,7 +130,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private boolean hasControl = false;
     private ChatRoom chatRoom;
     private String chatLogFile = "ChatLog.txt";
-  
     private JFrame chatFrame = new JFrame();
     private boolean connected = false;
     private boolean speakerEnabled,  micEnabled;
@@ -126,13 +138,17 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private JPanel userListPanel = new JPanel();
     private JPanel agendaPanel = new JPanel();
     private JToolBar userItemsPanel = new JToolBar();
-    private TButton stepOutButton = new TButton(ImageUtil.createImageIcon(this, "/icons/stepout.jpeg"));
+    private TButton stepOutButton = new TButton(new ImageIcon(Constants.getRealtimeHome() + "/icons/stepout.jpeg"));//new TButton(ImageUtil.createImageIcon(this, "/icons/stepout.jpeg"));
     private TButton handButton = new TButton(ImageUtil.createImageIcon(this, "/icons/hand.png"));
     private TButton laughterButton = new TButton(ImageUtil.createImageIcon(this, "/icons/laugh.jpeg"));
     private TButton applaudButton = new TButton(ImageUtil.createImageIcon(this, "/icons/applaud.jpeg"));
     private TButton whiteboardButton = new TButton(ImageUtil.createImageIcon(this, "/icons/wb_icon.png"));
     private ImageIcon micOffIcon = ImageUtil.createImageIcon(this, "/icons/mic_off.png");
     private ImageIcon micOnIcon = ImageUtil.createImageIcon(this, "/icons/mic_on.png");
+    private ImageIcon muteOffIcon = ImageUtil.createImageIcon(this, "/icons/mute_off.png");
+    private ImageIcon muteOnIcon = ImageUtil.createImageIcon(this, "/icons/mute_on.png");
+    private TButton spkrButton = new TButton(muteOffIcon);
+    private TButton micButton = new TButton(micOnIcon);
     private JFrame fileTransferFrame;
     private WhiteboardSurface whiteboardSurface;
     private JApplet glassPaneHandler;
@@ -145,17 +161,29 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private String userDetails;
     private String userImagePath;
     private boolean webPresent = true;
-    private JDesktopPane desktop = new JDesktopPane();
+    private static JDesktopPane desktop = new JDesktopPane();
     private JInternalFrame surfaceFrame = new JInternalFrame();
     private JScrollPane surfaceScrollPane = new JScrollPane();
-    private TabbedPanePlaf tabbedPane = new TabbedPanePlaf();
+    private TabbedPanePlaf docTabbedPaneUI = new TabbedPanePlaf();
+    private TabbedPanePlaf surfaceTabbedPaneUI = new TabbedPanePlaf();
+    private static Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private CloseableTabbedPane mainTabbedPane = new CloseableTabbedPane();
+    private Vector<Flash> flashFiles = new Vector<Flash>();
+    private Vector<WebPage> webPages = new Vector<WebPage>();
+    private JToolBar soundPanel = new JToolBar();
 
     /**
      * Create additional components
      */
     private void initCustomComponents() {
-        dockTabbedPane.setUI(tabbedPane);
-        tabbedPane.setBase(this);
+
+        dockTabbedPane.setUI(docTabbedPaneUI);
+        docTabbedPaneUI.setBase(this, "/icons/popout.png", "Chat", "Popout");
+        dockTabbedPane.setFont(new Font("Dialog", 0, 11));
+
+        //mainTabbedPane.setUI(surfaceTabbedPaneUI);
+        surfaceTabbedPaneUI.setBase(this, "/icons/delete_edit.gif", "Surface", "Close");
+        mainTabbedPane.setFont(new Font("Dialog", 0, 11));
         baseManager = new BaseManager(this);
         whiteboardSurface = new WhiteboardSurface(this);
         userManager = new UserListManager(this);
@@ -174,8 +202,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         micVolumeMeter.setMinimum(0);
         micVolumeMeter.setMaximum(128);
 
-        speakerVolumeMeter.setMinimum(0);
-        speakerVolumeMeter.setMaximum(128);
+//        speakerVolumeMeter.setMinimum(0);
+        //      speakerVolumeMeter.setMaximum(128);
 
         talkButton.setIcon(micOffIcon);
         talkButton.setBorderPainted(false);
@@ -186,31 +214,34 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         leftPanel.setLayout(new BorderLayout());
         JTable table = userManager.getUserList();
         JScrollPane sp = new JScrollPane(table);
-        sp.setBackground(Color.WHITE);
+        sp.getViewport().setBackground(Color.WHITE);
+        table.setShowGrid(false);
         table.setBackground(Color.WHITE);
+        table.setOpaque(true);
 
 
         userListPanel.setLayout(new BorderLayout());
-        userListPanel.setPreferredSize(new Dimension(250, 180));
+        userListPanel.setPreferredSize(new Dimension(250, 200));
         userListPanel.add(sp, BorderLayout.CENTER);
         userListPanel.add(userItemsPanel, BorderLayout.SOUTH);
         userListPanel.setBackground(Color.WHITE);
 
-        stepOutButton.setText("Step Out");
+        //   stepOutButton.setText("Step Out");
         stepOutButton.setActionCommand("stepout");
         stepOutButton.addActionListener(this);
 
-        userItemsPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
+        userItemsPanel.setBorder(BorderFactory.createTitledBorder("Interact"));
+        userItemsPanel.setFont(new Font("Dialog", 0, 11));
 
-        laughterButton.setText("Laugh");
+        // laughterButton.setText("Laugh");
         laughterButton.addActionListener(this);
         laughterButton.setActionCommand("laughter");
 
-        applaudButton.setText("Applaud");
+        //applaudButton.setText("Applaud");
         applaudButton.addActionListener(this);
         applaudButton.setActionCommand("applaud");
 
-        handButton.setText("Hand");
+        //handButton.setText("Hand");
         handButton.addActionListener(this);
         handButton.setActionCommand("hand");
 
@@ -218,6 +249,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         userItemsPanel.add(handButton);
         userItemsPanel.add(laughterButton);
         userItemsPanel.add(applaudButton);
+        userItemsPanel.add(toolbarManager.getYesButton());
+        userItemsPanel.add(toolbarManager.getNoButton());
+
 
         whiteboardButton.addActionListener(this);
         whiteboardButton.setActionCommand("whiteBoard");
@@ -225,32 +259,38 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
 
         userListTabbedPane.addTab("Participants", userListPanel);
+
         leftPanel.setPreferredSize(new Dimension(250, 250));
 
-        audioPanel.setPreferredSize(new Dimension(100, 100));
+        // audioPanel.setPreferredSize(new Dimension(100, 100));
         volumeSlide.setPreferredSize(new Dimension(150, 20));
-        speakerVolumeMeter.setPreferredSize(new Dimension(150, 7));
+//        speakerVolumeMeter.setPreferredSize(new Dimension(150, 7));
 
         agendaPanel.setLayout(new BorderLayout());
         agendaPanel.add(agendaManager.getAgendaTree(), BorderLayout.CENTER);
         agendaPanel.setPreferredSize(new Dimension(250, 150));
 
-        leftBottomSplitPane.setTopComponent(audioPanel);
-        leftBottomSplitPane.setBottomComponent(dockTabbedPane);
-        leftBottomSplitPane.setDividerLocation(150);
+        leftBottomPanel.add(dockTabbedPane, BorderLayout.CENTER);
+        soundPanel.setBorder(BorderFactory.createTitledBorder("Audio"));
+        soundPanel.setFont(new Font("dialog", 0, 11));
+        soundPanel.add(micButton);
+        soundPanel.add(spkrButton);
+        soundPanel.add(volumeSlide);
+        leftBottomPanel.add(soundPanel, BorderLayout.SOUTH);
+        userListTabbedPane.setFont(new Font("Dialog", 0, 11));
 
         leftSplitPane.setDividerLocation(250);
         leftSplitPane.setTopComponent(userListTabbedPane);
-        leftSplitPane.setBottomComponent(leftBottomSplitPane);
+        leftSplitPane.setBottomComponent(leftBottomPanel);
         sessionManager.setIsPresenter(isPresenter);
 
         splitPane.setLeftComponent(leftSplitPane);
-        splitPane.setRightComponent(centerPanel);
+        splitPane.setRightComponent(mainTabbedPane);
         splitPane.setDividerLocation(300);
-        audioPanel.setMinimumSize(new Dimension(300,120));
+        //   audioPanel.setMinimumSize(new Dimension(300, 120));
         JToolBar toolbar = new JToolBar();
         toolbar.add(toolbarManager.getGeneralToolbar());
-        toolbar.add(whiteboardSurface.getMainToolbar());
+        //toolbar.add(whiteboardSurface.getMainToolbar());
         centerPanel.setLayout(new BorderLayout());
         surfaceScrollPane.setViewportView(whiteboardSurface);
         whiteboardSurface.setSize(new Dimension(1200, 1200));
@@ -261,20 +301,81 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         Dimension size = vport.getViewSize();
         int xx = (whiteboardSurface.getWidth() - size.width) / 2;
         int yy = (whiteboardSurface.getHeight() - size.height) / 2;
-      
+
         Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
         whiteboardSurface.scrollRectToVisible(rect);
-        centerPanel.add(surfaceScrollPane, BorderLayout.CENTER);
-        centerPanel.add(toolbarManager.getSlidesNavigationToolBar(), BorderLayout.NORTH);
+        /*JInternalFrame whiteboard = new JInternalFrame();
+        whiteboard.setContentPane(surfaceScrollPane);
+        whiteboard.setSize(new Dimension((ss.width / 8) * 5, (ss.height / 8) * 5));
+        whiteboard.setVisible(true);
+        addFrame(whiteboard, 10);
+         */
 
-        centerPanel.add(whiteboardSurface.getPointerToolbar(), BorderLayout.WEST);
+        desktop.setLayout(new BorderLayout());
+        // desktop.add(surfaceScrollPane, BorderLayout.CENTER);
+        mainTabbedPane.add(centerPanel, "Default");
+        centerPanel.add(surfaceScrollPane, BorderLayout.CENTER);
+
+        JToolBar whiteboardDefaultToolbar = new JToolBar();
+        whiteboardDefaultToolbar.add(toolbarManager.getFirstSlideButton());
+        whiteboardDefaultToolbar.add(toolbarManager.getBackSlideButton());
+        whiteboardDefaultToolbar.add(toolbarManager.getNextSlideButton());
+        whiteboardDefaultToolbar.add(toolbarManager.getLastSlideButton());
+
+        whiteboardSurface.createToolBar();
+        whiteboardDefaultToolbar.add(whiteboardSurface.getBoldButton());
+        whiteboardDefaultToolbar.add(whiteboardSurface.getItalicButton());
+        whiteboardDefaultToolbar.add(whiteboardSurface.getUnderButton());
+        whiteboardDefaultToolbar.add(whiteboardSurface.getFontNamesField());
+
+
+        JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
+        p.add(whiteboardSurface.getFontSizeField(), BorderLayout.WEST);
+        whiteboardDefaultToolbar.add(p);
+        // whiteboardDefaultToolbar.add(whiteboardSurface.getBoldButton());
+
+        // whiteboardDefaultToolbar.add(toolbarManager.getSlidesNavigationToolBar());
+        // whiteboardDefaultToolbar.add(whiteboardSurface.getMainToolbar());
+        centerPanel.add(whiteboardDefaultToolbar, BorderLayout.NORTH);
+
+        //JToolBar westToolbar = new JToolBar(JToolBar.VERTICAL);
+        //westToolbar.add(whiteboardSurface.getPointerToolbar());
+        //westToolbar.add(whiteboardSurface.getColorToolbar());
+
         centerPanel.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
 
 
-        mainPanel.add(toolbar, BorderLayout.NORTH);
         mainPanel.add(splitPane, BorderLayout.CENTER);
+        mainTabbedPane.addChangeListener(new ChangeListener() {
 
+            public void stateChanged(ChangeEvent arg0) {
+                tcpClient.sendPacket(new SwitchTabPacket(sessionId, mainTabbedPane.getSelectedIndex()));
+            }
+        });
 
+    }
+
+    public Vector<WebPage> getWebPages() {
+        return webPages;
+    }
+
+    public Vector<Flash> getFlashFiles() {
+        return flashFiles;
+    }
+
+    public JTabbedPane getMainTabbedPane() {
+        return mainTabbedPane;
+    }
+
+    public static void addFrame(JInternalFrame fr, int h) {
+        try {
+            // fr.setLocation((ss.width - fr.getWidth()) / 2, h);
+            desktop.add(fr);
+            fr.setSelected(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public JScrollPane getSurfaceScrollPane() {
@@ -359,7 +460,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("stepout")) {
             if (stepOutButton.isSelected()) {
-                stepOutButton.setText("Resume");
+                // stepOutButton.setText("Resume");
                 tcpClient.sendPacket(new PresencePacket(sessionId,
                         PresenceConstants.STEP_OUT_ICON, true,
                         userName));
@@ -367,7 +468,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 applaudButton.setSelected(false);
                 handButton.setSelected(false);
             } else {
-                stepOutButton.setText("Step Out");
+                //   stepOutButton.setText("Step Out");
                 tcpClient.sendPacket(new PresencePacket(sessionId,
                         PresenceConstants.STEP_OUT_ICON, false,
                         userName));
@@ -405,6 +506,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             }
         }
 
+    }
+
+    public TButton getMicButton() {
+        return micButton;
+    }
+
+    public TButton getSpkrButton() {
+        return spkrButton;
     }
 
     /**
@@ -570,6 +679,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     public void setMicEnabled(boolean micEnabled) {
         this.micEnabled = micEnabled;
         talkButton.setEnabled(micEnabled);
+        micButton.setIcon(micEnabled ? micOnIcon : micOffIcon);
+        micButton.setEnabled(micEnabled);
         tcpClient.sendPacket(new PresencePacket(sessionId,
                 PresenceConstants.MIC_ICON, micEnabled,
                 userName));
@@ -592,6 +703,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         this.speakerEnabled = speakerEnabled;
         muteOpt.setEnabled(speakerEnabled);
         volumeSlide.setEnabled(speakerEnabled);
+        spkrButton.setIcon(speakerEnabled ? muteOffIcon : muteOnIcon);
         tcpClient.sendPacket(new PresencePacket(sessionId,
                 PresenceConstants.SPEAKER_ICON, speakerEnabled,
                 userName));
@@ -750,8 +862,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             @Override
             public void run() {
                 initTCPCommunication();
-
-
             }
         };
         t.start();
@@ -793,6 +903,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
             @Override
             public void run() {
+                UIUtils.setPreferredLookAndFeel();
+                NativeInterface.open();
                 initTCPCommunication();
                 baseManager.loadCachedSlides();
             }
@@ -844,9 +956,18 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         tcpClient.setSuperNodeHost(host);
         tcpClient.setSuperNodePort(port);
         tcpClient.setFileTransfer(fileTransferPanel);
+
+        mainTabbedPane.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent arg0) {
+                baseManager.getTabTimer().cancel();
+                mainTabbedPane.setBackgroundAt(mainTabbedPane.getSelectedIndex(), dockTabbedPane.getBackgroundAt(1));
+            }
+        });
+
         whiteboardSurface.setTCPClient(tcpClient);
         baseManager.setApplicationClosedOperation(parent, user);
-        //audioModel = new AudioModel(tcpClient);
+
         initChatRoom();
         dockTabbedPane.addTab("Chat", chatRoom);
         dockTabbedPane.addTab("Agenda", agendaPanel);
@@ -1198,10 +1319,6 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         return micVolumeMeter;
     }
 
-    public JProgressBar getSpeakerVolumeMeter() {
-        return speakerVolumeMeter;
-    }
-
     /** This method is called from within the init() method to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -1210,17 +1327,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         audioPanel = new javax.swing.JPanel();
-        mAudioPanel = new javax.swing.JPanel();
-        audioControlPanel = new javax.swing.JPanel();
-        volumeSlide = new javax.swing.JSlider();
-        muteOpt = new javax.swing.JCheckBox();
-        audioMonitorPanel = new javax.swing.JPanel();
-        speakerVolumeMeter = new javax.swing.JProgressBar();
         cPanel = new javax.swing.JPanel();
         talkButton = new javax.swing.JToggleButton();
         micVolumeMeter = new javax.swing.JProgressBar();
+        volumeSlide = new javax.swing.JSlider();
+        muteOpt = new javax.swing.JCheckBox();
         mainPanel = new javax.swing.JPanel();
         footerPanel = new javax.swing.JPanel();
         statusBar = new javax.swing.JLabel();
@@ -1232,8 +1346,19 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         audioPanel.setPreferredSize(new java.awt.Dimension(210, 100));
         audioPanel.setLayout(new java.awt.BorderLayout());
 
-        mAudioPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Speaker"));
-        mAudioPanel.setLayout(new java.awt.BorderLayout());
+        cPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Audio"));
+        cPanel.setLayout(new java.awt.GridBagLayout());
+
+        talkButton.setText("Talk");
+        talkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                talkButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        cPanel.add(talkButton, gridBagConstraints);
+        cPanel.add(micVolumeMeter, new java.awt.GridBagConstraints());
 
         volumeSlide.setEnabled(false);
         volumeSlide.setMinimumSize(new java.awt.Dimension(50, 40));
@@ -1243,7 +1368,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 volumeSlideStateChanged(evt);
             }
         });
-        audioControlPanel.add(volumeSlide);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        cPanel.add(volumeSlide, gridBagConstraints);
 
         muteOpt.setText("Mute");
         muteOpt.setEnabled(false);
@@ -1252,28 +1381,11 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
                 muteOptActionPerformed(evt);
             }
         });
-        audioControlPanel.add(muteOpt);
-
-        mAudioPanel.add(audioControlPanel, java.awt.BorderLayout.PAGE_START);
-
-        audioMonitorPanel.setLayout(new java.awt.BorderLayout());
-        audioMonitorPanel.add(speakerVolumeMeter, java.awt.BorderLayout.CENTER);
-
-        mAudioPanel.add(audioMonitorPanel, java.awt.BorderLayout.PAGE_END);
-
-        audioPanel.add(mAudioPanel, java.awt.BorderLayout.CENTER);
-
-        cPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Microphone"));
-        cPanel.setLayout(new java.awt.GridBagLayout());
-
-        talkButton.setText("Talk");
-        talkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                talkButtonActionPerformed(evt);
-            }
-        });
-        cPanel.add(talkButton, new java.awt.GridBagConstraints());
-        cPanel.add(micVolumeMeter, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        cPanel.add(muteOpt, gridBagConstraints);
 
         audioPanel.add(cPanel, java.awt.BorderLayout.PAGE_END);
 
@@ -1376,22 +1488,28 @@ private void muteOptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
         public TButton(ImageIcon icon) {
             super(icon);
+
             setBorderPainted(false);
+            setContentAreaFilled(false);
             setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
             setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
             setFont(new java.awt.Font("Dialog", 0, 8));
-        /*this.addMouseListener(new MouseAdapter() {
-        
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        setContentAreaFilled(true);
-        }
-        
-        @Override
-        public void mouseExited(MouseEvent e) {
-        setContentAreaFilled(false);
-        }
-        });*/
+            this.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    setContentAreaFilled(true);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    setContentAreaFilled(false);
+                    if (isSelected()) {
+                        setContentAreaFilled(true);
+                    }
+
+                }
+            });
         }
     }
 private void volumeSlideStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_volumeSlideStateChanged
@@ -1400,17 +1518,13 @@ private void volumeSlideStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-F
     }
 }//GEN-LAST:event_volumeSlideStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel audioControlPanel;
-    private javax.swing.JPanel audioMonitorPanel;
     private javax.swing.JPanel audioPanel;
     private javax.swing.JPanel cPanel;
     private javax.swing.JPanel footerPanel;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JPanel mAudioPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JProgressBar micVolumeMeter;
     private javax.swing.JCheckBox muteOpt;
-    private javax.swing.JProgressBar speakerVolumeMeter;
     private javax.swing.JLabel statusBar;
     private javax.swing.JToggleButton talkButton;
     private javax.swing.JLabel timerField;

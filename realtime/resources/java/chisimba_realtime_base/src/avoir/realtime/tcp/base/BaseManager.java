@@ -20,13 +20,22 @@ package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.base.appsharing.DesktopUtil;
 import avoir.realtime.tcp.base.user.User;
+import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.common.GenerateUUID;
+import avoir.realtime.tcp.common.WebPage;
+import avoir.realtime.tcp.common.packet.ClassroomFile;
 import avoir.realtime.tcp.common.Flash;
 import avoir.realtime.tcp.common.packet.DesktopPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
+import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
+import chrriis.dj.nativeswing.swtimpl.components.WebBrowserAdapter;
+import chrriis.dj.nativeswing.swtimpl.components.WebBrowserEvent;
+import chrriis.dj.nativeswing.swtimpl.components.WebBrowserNavigationEvent;
 import chrriis.dj.nativeswing.swtimpl.components.JFlashPlayer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.net.URL;
 import java.util.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -46,6 +55,8 @@ public class BaseManager {
     private boolean screenCapture;
     private boolean paused = false;
     private Timer tabTimer = new Timer();
+    private boolean newTab = false;
+    private String oldID = "";
 
     public BaseManager(RealtimeBase base) {
         this.base = base;
@@ -82,11 +93,164 @@ public class BaseManager {
         this.screenCapture = screenCapture;
     }
 
-    public void showFlashPlayer(final String filepath, final String id, final String sessionId) {
-
+    public void showWebpage() {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
+                newTab = true;
+                final JWebBrowser webBrowser = new JWebBrowser();
+                webBrowser.setMenuBarVisible(false);
+
+                base.getMainTabbedPane().add(webBrowser, "Web Browser " + (base.getWebPages().size() + 1));
+                webBrowser.addWebBrowserListener(new WebBrowserAdapter() {
+
+                    public void locationChanging(WebBrowserNavigationEvent evt) {
+                        int count = base.getMainTabbedPane().getTabCount();
+                        base.getMainTabbedPane().setTitleAt(count - 1, "Loading ...");
+
+                    }
+
+                    public void locationChanged(WebBrowserNavigationEvent evt) {
+                        //send same to rest of the clients
+                        String url = webBrowser.getResourceLocation();
+
+                        int count = base.getMainTabbedPane().getTabCount();
+                        base.getMainTabbedPane().setToolTipTextAt(count - 1, url);
+                        String title = formatTitle(url);
+                        base.getMainTabbedPane().setTitleAt(count - 1, title);
+                        String id = GenerateUUID.getId();
+                        base.getWebPages().add(new WebPage(id, url, count - 1));
+                        if (base.getControl()) {
+                            base.getTcpClient().sendPacket(new ClassroomFile(url,
+                                    Constants.WEBPAGE, base.getSessionId(), id, newTab, oldID));
+                        }
+                        newTab = false;
+                        oldID = id;
+
+                    }
+
+                    public void statusChanged(WebBrowserEvent evt) {
+                    }
+                });
+                int count = base.getMainTabbedPane().getTabCount();
+                base.getMainTabbedPane().setSelectedIndex(count - 1);
+
+            }
+        });
+    }
+
+    private String formatTitle(String url) {
+        try {
+            URL r = new URL(url);
+            if (url.length() > 12) {
+
+                return r.getHost().substring(0, 10) + "...";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        //return url.substring(0, 12);
+
+        return url;
+    }
+
+    private void updateWebPageUrl(String id, String url) {
+        for (int i = 0; i < base.getWebPages().size(); i++) {
+            if (base.getWebPages().elementAt(i).getId().equals(id)) {
+                WebPage p = base.getWebPages().elementAt(i);
+
+                p.setUrl(url);
+                base.getWebPages().set(i, p);
+            }
+        }
+
+    }
+
+    private int getWebPageTabIndex(String url) {
+        for (int i = 0; i < base.getWebPages().size(); i++) {
+            String debug = base.getWebPages().elementAt(i).getUrl() + " against " + url;
+//            JOptionPane.showMessageDialog(null, debug);
+
+            if (base.getWebPages().elementAt(i).getUrl().equals(url)) {
+                                return base.getWebPages().elementAt(i).getIndex();
+            }
+        }
+        return -1;
+    }
+
+    public void showWebpage(final String url, final String id, final boolean xnewTab) {
+        SwingUtilities.invokeLater(new
+
+              Runnable() {
+
+
+
+                    public
+                    void run() {
+                if (xnewTab) {
+                    newTab = xnewTab;
+                    final JWebBrowser webBrowser = new JWebBrowser();
+
+                    webBrowser.setMenuBarVisible(false);
+                    webBrowser.navigate(url);
+                    String title = formatTitle(url);
+                    base.getMainTabbedPane().add(webBrowser, title);
+                    int count = base.getMainTabbedPane().getTabCount();
+                    base.getMainTabbedPane().setSelectedIndex(count - 1);
+                    base.getMainTabbedPane().setToolTipTextAt(count - 1, url);
+                    base.getWebPages().add(new WebPage(id, url, count - 1));
+                    webBrowser.addWebBrowserListener(new WebBrowserAdapter() {
+
+                        public void locationChanging(WebBrowserNavigationEvent evt) {
+                            int count = base.getMainTabbedPane().getTabCount();
+                            base.getMainTabbedPane().setTitleAt(count - 1, "Loading ...");
+
+                        }
+
+                        public void locationChanged(WebBrowserNavigationEvent evt) {
+                            //send same to rest of the clients
+                            String url = webBrowser.getResourceLocation();
+
+                            int count = base.getMainTabbedPane().getTabCount();
+                            base.getMainTabbedPane().setToolTipTextAt(count - 1, url);
+                            String title = formatTitle(url);
+                            base.getMainTabbedPane().setTitleAt(count - 1, title);
+                            newTab = false;
+
+                            updateWebPageUrl(id, url);
+                            if (base.getControl()) {
+                                base.getTcpClient().sendPacket(new ClassroomFile(url,
+                                        Constants.WEBPAGE, base.getSessionId(), id, newTab, oldID));
+                            }
+                            oldID = id;
+                            newTab = false;
+                        }
+
+                        public void statusChanged(WebBrowserEvent evt) {
+                        }
+                    });
+
+                } else {
+
+                    updateWebPageUrl(id, url);
+                    int index = getWebPageTabIndex(url);
+                    if (index > 0) {
+                        JWebBrowser webBrowser = (JWebBrowser) base.getMainTabbedPane().getComponentAt(index);
+                        webBrowser.navigate(url);
+                    }
+                }
+            }
+        });
+    }
+
+    public void showFlashPlayer(final String filepath, final String id, final String sessionId) {
+
+        SwingUtilities.invokeLater(new
+
+              Runnable() {
+
+
+                public void run() {
 
                 JFlashPlayer flashPlayer = new JFlashPlayer();
                 flashPlayer.setControlBarVisible(true);
@@ -95,7 +259,7 @@ public class BaseManager {
                 flashPlayer.pause();
                 String filename = new File(filepath).getName();
                 base.getFlashFiles().add(new Flash(filename, id, sessionId));
-                base.getMainTabbedPane().add(flashPlayer, filename);
+                base.getMainTabbedPane().add(flashPlayer, "Flash: " + filename);
                 int count = base.getMainTabbedPane().getTabCount();
                 base.getMainTabbedPane().setSelectedIndex(count - 1);
             }
@@ -109,9 +273,12 @@ public class BaseManager {
      */
     public void setApplicationClosedOperation(JFrame frame, final User user) {
         if (frame != null) {
-            frame.addWindowListener(new WindowAdapter() {
+            frame.addWindowListener(new
 
-                @Override
+                  WindowAdapter( ) {
+
+
+                      @Override
                 public void windowClosing(WindowEvent e) {
                     base.getTcpClient().removeUser(user);
 
