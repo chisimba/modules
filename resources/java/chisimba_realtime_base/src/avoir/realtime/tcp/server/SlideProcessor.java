@@ -88,16 +88,15 @@ public class SlideProcessor {
         int nooftries = 0;
         int sleep = 1 * 1000;
         waitForSlideServer = true;
-
-        removeNullSlideServers();
+       removeNullSlideServers();
         while (!slideServerFound) {
             synchronized (slideServers) {
                 if (slideServers.size() == 0) {
                     break;
                 }
                 for (int i = 0; i < slideServers.size(); i++) {
-                    System.out.print("Testing Slide server : " + nooftries + " ..");
-                    if (slideServers.elementAt(i).getId().equals(packet.getSlidesServerId())) {
+                   // System.out.print("Testing Slide server "+slideServers.elementAt(i).getId()+" against "+packet.getSlidesServerId()+": " + nooftries + " ..");
+                    if (slideServers.elementAt(i).getId().trim().equals(packet.getSlidesServerId().trim())) {
                         serverThread.sendPacket(packet, slideServers.elementAt(i).getObjectOutputStream());
                         slideServerFound = true;
                         waitForSlideServer = false;

@@ -14,7 +14,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
+ *  along with this pro1gram; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package avoir.realtime.tcp.server;
@@ -35,7 +35,7 @@ import avoir.realtime.tcp.common.packet.*;
 import avoir.realtime.tcp.launcher.packet.LauncherAckPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
-import avoir.realtime.sessionmonitor.*;
+
 
 import avoir.realtime.tcp.common.MessageCode;
 import avoir.realtime.tcp.common.PresenceConstants;
@@ -53,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.whiteboard.item.Img;
+import javax.swing.JOptionPane;
 
 /**
  * Handles communications for the server, to and from the clients Processes
@@ -91,7 +92,9 @@ public class ServerThread extends Thread {
     private ApplicationSharingProcessor appShareProcessor;
     private NetworkMonitor networkMonitor;
     private J2MEServer j2meServer;
-    private Vector<ClassroomFile> documentsAndFiles;
+    private final Vector<ClassroomFile> documentsAndFiles;
+    private final Vector<MobileUser> mobileUsers;
+    boolean desktopClient = true;
 
     /**
      * Constructor accepts connections
@@ -107,7 +110,8 @@ public class ServerThread extends Thread {
             Vector mediaInputStreams, Vector<LauncherClient> launchers,
             Vector<SessionMonitor> sessionmonitors,
             Vector<Item> whiteboardItems,
-            Vector<ClassroomFile> documentsAndFiles) {
+            Vector<ClassroomFile> documentsAndFiles,
+            Vector<MobileUser> mobileUsers) {
         this.launchers = launchers;
         this.sessionmonitors = sessionmonitors;
         this.presentationLocks = presentationLocks;
@@ -118,6 +122,7 @@ public class ServerThread extends Thread {
         this.whiteboardItems = whiteboardItems;
         this.mediaInputStreams = mediaInputStreams;
         this.documentsAndFiles = documentsAndFiles;
+        this.mobileUsers = mobileUsers;
         tName = getName();
         logger.info("Server " + tName + " accepted connection from " + socket.getInetAddress() + "\n");
         this.socket = socket;
@@ -143,7 +148,6 @@ public class ServerThread extends Thread {
             j2meServer.setOutStream(outStream);
             inStream = socket.getInputStream();
             j2meServer.setInStream(inStream);
-            boolean desktopClient = true;
 
             //just establish quickly if its from desktop client of j2me
             //note: j2me doesnt yet support ObjectInputStrean..so
@@ -169,6 +173,7 @@ public class ServerThread extends Thread {
 
             if (identity.toString().equals("avoirdesktopclient")) {
                 desktopClient = true;
+                System.out.println("FROM DESKTOP");
             }
 
 
@@ -188,6 +193,12 @@ public class ServerThread extends Thread {
             logger.log(Level.SEVERE, "Error in Server " + tName, e);
         } finally {
             logger.info("Server " + tName + " disconnected from " + socket.getInetAddress() + "\n");
+            synchronized (clients) {
+                clients.removeUser(thisUser);
+            }
+            if (!desktopClient) {
+                j2meServer.removeMeFromList();
+            }
             try {
                 socket.close();
             } catch (IOException e) {
@@ -210,6 +221,10 @@ public class ServerThread extends Thread {
      */
     protected static String randomString() {
         return Long.toString(random.nextLong(), 36);
+    }
+
+    public Vector<MobileUser> getMobileUsers() {
+        return mobileUsers;
     }
 
     /**
@@ -437,26 +452,6 @@ public class ServerThread extends Thread {
                     processModuleFileReplyPacket(p);
                 }
 
-                if (obj instanceof SessionListingRequestPacket) {
-
-                    SessionListingRequestPacket p = (SessionListingRequestPacket) obj;
-                    synchronized (sessionmonitors) {
-                        sessionmonitors.add(new SessionMonitor(objectOut, p.getSessionId()));
-                    }
-                    processSessionListingRequest();
-                }
-                if (obj instanceof RemoveSessionMonitorPacket) {
-                    RemoveSessionMonitorPacket p = (RemoveSessionMonitorPacket) obj;
-                    synchronized (sessionmonitors) {
-                        for (int i = 0; i < sessionmonitors.size(); i++) {
-                            if (sessionmonitors.elementAt(i).getMonitorId().equals(p.getSessionId())) {
-                                sessionmonitors.remove(i);
-                            }
-                        }
-                    }
-
-                }
-
                 RealtimePacket packet = null;
 
                 if (obj instanceof RealtimePacket) {
@@ -494,7 +489,9 @@ public class ServerThread extends Thread {
                         broadcastClearVotePacket(packet, thisUser.getSessionId());
                     } else if (packet instanceof SessionImg) {
                         processSessionImg((SessionImg) packet);
-
+                    } else if (packet instanceof RemoveDocumentPacket) {
+                        RemoveDocumentPacket p = (RemoveDocumentPacket) packet;
+                        processRemoveDocumentPacket(p);
                     } else if (packet instanceof SystemFilePacket) {
                         processSystemFile((SystemFilePacket) packet);
                     } else if (packet instanceof VotePacket) {
@@ -516,6 +513,9 @@ public class ServerThread extends Thread {
                     } else if (packet instanceof WhiteboardPacket) {
                         WhiteboardPacket p = (WhiteboardPacket) packet;
                         processWhiteboardPacket(p);
+                    } else if (packet instanceof SwitchTabPacket) {
+                        broadcastPacket(packet, false);
+
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
                         updateUserPresenceStatus(p.isShowIcon(), p.getUserName(), p.getPresenceType());
@@ -548,7 +548,7 @@ public class ServerThread extends Thread {
 
                             clients.removeElement(socket, objectOut, outStream);
                         }
-                        updateMonitors();
+
                         //   removeStream(thisUser.getSessionId());
                         //if presenter..clear the presentation...
                         if (rmup.getUser().isPresenter()) {
@@ -572,12 +572,12 @@ public class ServerThread extends Thread {
                     } else if (packet instanceof ChatPacket) {
                         // Session session = getSession(thisUser.getSessionId());
                         ChatPacket p = (ChatPacket) packet;
-                        synchronized (clients) {
+                        synchronized (chats) {
 
                             chats.addLast(p);
                         }
                         log("ChatLog.txt", "[" + p.getTime() + "] <" + p.getUsr() + "> " + p.getContent());
-                        synchronized (clients) {
+                        synchronized (chats) {
 
                             if (chats.size() > MAX_CHAT_SIZE) {
                                 chats.removeFirst();
@@ -610,9 +610,34 @@ public class ServerThread extends Thread {
         }
     }
 
+    private void updateWebPage(ClassroomFile p) {
+        for (int i = 0; i < documentsAndFiles.size(); i++) {
+            ClassroomFile f = documentsAndFiles.elementAt(i);
+            if (f.getType() == Constants.WEBPAGE) {
+                if (f.getId().equals(p.getOldId())) {
+                    documentsAndFiles.set(i, p);
+                }
+            }
+        }
+    }
+
     private void processClassroomFile(ClassroomFile p) {
         String filePath = "../uploads/" + thisUser.getSessionId() + "/" + p.getPath();
-        populateSessionConvertedDoc(createSlidesPath(filePath), p.getPath());
+        if (p.getType() == Constants.PRESENTATION) {
+            populateSessionConvertedDoc(createSlidesPath(filePath), p.getPath());
+        }
+        if (p.getType() == Constants.FLASH) {
+            populateFile(filePath, p.getId(), Constants.FLASH, true);
+        }
+        if (p.getType() == Constants.WEBPAGE) {
+            if (p.isNewFile()) {
+                documentsAndFiles.add(p);
+            } else {
+                updateWebPage(p);
+            }
+            broadcastPacket(p, thisUser.getSessionId(), thisUser.getUserName());
+
+        }
 
     }
 
@@ -752,6 +777,21 @@ public class ServerThread extends Thread {
         }
     }
 
+    private void processRemoveDocumentPacket(RemoveDocumentPacket p) {
+
+        synchronized (documentsAndFiles) {
+            for (int i = 0; i < documentsAndFiles.size(); i++) {
+                ClassroomFile f = documentsAndFiles.elementAt(i);
+                if (f.getType() == Constants.FLASH || f.getType() == Constants.WEBPAGE) {
+                    if (p.getId().equals(p.getId()) && p.getSessionId().equals(p.getSessionId())) {
+                        documentsAndFiles.remove(i);
+                    }
+                }
+            }
+        }
+        broadcastPacket(p, thisUser.getSessionId(), thisUser.getUserName());
+    }
+
     private void processHeartBeat(HeartBeat p) {
         try {
 
@@ -813,7 +853,10 @@ public class ServerThread extends Thread {
                     String filePath = "../uploads/" + thisUser.getSessionId() + "/" + p.getFilename();
                     if (jodConvert(filePath)) {
                         sendPacket(new MsgPacket("Import appears successfull.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
-                        documentsAndFiles.add(new ClassroomFile(uploadedFileName, false, true, thisUser.getSessionId(), p.getId()));
+
+                        synchronized (documentsAndFiles) {
+                            documentsAndFiles.add(new ClassroomFile(uploadedFileName, Constants.PRESENTATION, thisUser.getSessionId(), p.getId(), true, ""));
+                        }
                         populateConvertedDoc(createSlidesPath(filePath), p.getFilename());
                     } else {
                         sendPacket(new MsgPacket("Conversion Failed: Document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
@@ -821,12 +864,22 @@ public class ServerThread extends Thread {
                     }
                 }
                 if (p.getFileType() == Constants.IMAGE) {
-                    populateImage(p.getFilename(), p.getId());
+                    populateFile(p.getFilename(), p.getId(), Constants.IMAGE, false);
                     // documentsAndFiles.add(new ClassroomFile("../uploads/" + thisUser.getSessionId() + "/" + p.getFilename(), true, false,
                     //       thisUser.getSessionId(), p.getId()));
                     Img img = new Img(100, 100, 150, 150, uploadedFileName, p.getIndex(), p.getId());
                     img.setSessionId(thisUser.getSessionId());
+                    j2meServer.populateGraphic(p.getBuff());
                     whiteboardItems.add(img);
+                }
+
+                if (p.getFileType() == Constants.FLASH) {
+                    synchronized (documentsAndFiles) {
+                        documentsAndFiles.add(new ClassroomFile(
+                                uploadedFileName, Constants.FLASH,
+                                thisUser.getSessionId(), p.getId(), true, ""));
+                    }
+                    populateFile(p.getFilename(), p.getId(), Constants.FLASH, false);
                 }
                 return;
             }
@@ -853,19 +906,27 @@ public class ServerThread extends Thread {
                     if (jodConvert(destFile.getAbsolutePath())) {
                         sendPacket(new MsgPacket("Import appears successful.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
                         populateConvertedDoc(createSlidesPath(destFile.getAbsolutePath()), p.getFilename());
-                        documentsAndFiles.add(new ClassroomFile(uploadedFileName,
-                                false, true, thisUser.getSessionId(), p.getId()));
+                        synchronized (documentsAndFiles) {
+                            documentsAndFiles.add(new ClassroomFile(uploadedFileName,
+                                    Constants.PRESENTATION,
+                                    thisUser.getSessionId(), p.getId(), true, ""));
+                        }
                     } else {
                         sendPacket(new MsgPacket("Conversion Failed, document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
                     }
                 }
                 if (p.getFileType() == Constants.IMAGE) {
-                    populateImage(p.getFilename(), p.getId());
-                    // documentsAndFiles.add(new ClassroomFile("../uploads/" +
-                    //       thisUser.getSessionId() + "/" + p.getFilename(), true, false, thisUser.getSessionId(), p.getId()));
+                    populateFile(p.getFilename(), p.getId(), Constants.IMAGE, false);
                     Img img = new Img(100, 100, 150, 150, uploadedFileName, p.getIndex(), p.getId());
                     img.setSessionId(thisUser.getSessionId());
                     whiteboardItems.add(img);
+                }
+                if (p.getFileType() == Constants.FLASH) {
+                    populateFile(p.getFilename(), p.getId(), Constants.FLASH, false);
+                    synchronized (documentsAndFiles) {
+                        documentsAndFiles.add(new ClassroomFile(uploadedFileName, Constants.FLASH,
+                                thisUser.getSessionId(), p.getId(), true, ""));
+                    }
                 }
             }
         } else {
@@ -877,20 +938,14 @@ public class ServerThread extends Thread {
 
     }
 
-    private void populateImage(final String filename, final String id) {
+    private void populateFile(final String filename, final String id, final int type, final boolean sessionUpdate) {
 
         final String filePath = "../uploads/" + thisUser.getSessionId() + "/" + filename;
-        /*
-        
-        byte[] byteArray = readFile(filePath);
-        ImagePacket packet = new ImagePacket(thisUser.getSessionId(), thisUser.getUserName(), byteArray, filename);
-        
-        broadcastPacket(packet, true);
-         */
         Thread t = new Thread() {
 
             public void run() {
-                fileTransferEngine.populateBinaryFile(ServerThread.this, filePath, id);
+
+                fileTransferEngine.populateBinaryFile(ServerThread.this, filePath, id, type, sessionUpdate);
             }
         };
         t.start();
@@ -1024,19 +1079,6 @@ public class ServerThread extends Thread {
         }
     }
 
-    private void updateMonitors() {
-        synchronized (sessionmonitors) {
-            for (int i = 0; i < sessionmonitors.size(); i++) {
-                try {
-                    sessionmonitors.elementAt(i).getStream().writeObject(new SessionListingReplyPacket(getParticipants(), getPresenters()));
-                    sessionmonitors.elementAt(i).getStream().flush();
-                } catch (IOException ex) {
-                    sessionmonitors.remove(i);
-                }
-            }
-        }
-    }
-
     private void processOutlinePacket(OutlinePacket p) {
         Session session = getSession(p.getSessionId());
         String[] outline = session.getOutLine();
@@ -1049,42 +1091,6 @@ public class ServerThread extends Thread {
         setCurrentSession(session);
         p.setOutlines(outline);
         broadcastPacket(p, false);
-    }
-
-    private Vector<SessionPresenter> getPresenters() {
-        Vector<SessionPresenter> presenters = new Vector<SessionPresenter>();
-        synchronized (presentationLocks) {
-            for (int i = 0; i < presentationLocks.size(); i++) {
-                Session session = presentationLocks.elementAt(i);
-                presenters.addElement(new SessionPresenter(session.getSessionId(), session.getSessionName(),
-                        session.getSlideIndex(), session.getTime(), session.getFullName(),
-                        session.getOutLine(), session.getState(), session.isSessionHasPresenter(),
-                        session.getUserId()));
-            }
-        }
-        return presenters;
-    }
-
-    private Vector<SessionParticipant> getParticipants() {
-        Vector<SessionParticipant> participants = new Vector<SessionParticipant>();
-        synchronized (clients) {
-
-            for (int i = 0; i < clients.size(); i++) {
-                User user = clients.nameAt(i);
-                participants.addElement(new SessionParticipant(user.getUserName(),
-                        user.getSessionId(), user.getSessionTitle(), user.getFullName()));
-            }
-        }
-        return participants;
-    }
-
-    private void processSessionListingRequest() {
-        try {
-            objectOutStream.writeObject(new SessionListingReplyPacket(getParticipants(), getPresenters()));
-            objectOutStream.flush();
-        } catch (Exception ex) {
-            logger.info(ex.getLocalizedMessage());
-        }
     }
 
     public void delay(long time) {
@@ -1340,8 +1346,8 @@ public class ServerThread extends Thread {
      */
     private byte[] readFile(String filePath) {
         File f = new File(filePath);
-        File parentFile = f.getParentFile();
-        String filename = parentFile.getName() + "/" + f.getName();//either bin or lib
+      //  File parentFile = f.getParentFile();
+//        String filename = parentFile.getName() + "/" + f.getName();//either bin or lib
 
         try {
             if (f.exists()) {
