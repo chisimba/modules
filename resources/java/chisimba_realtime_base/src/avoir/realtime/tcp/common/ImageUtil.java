@@ -19,8 +19,10 @@
 package avoir.realtime.tcp.common;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -38,11 +40,13 @@ public class ImageUtil {
         try {
             URL imageURL = ClassLoader.getSystemResource(path);
             if (imageURL != null) {
+                  
                 return new ImageIcon(imageURL);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+          
         return null;
     }
 
@@ -56,7 +60,7 @@ public class ImageUtil {
      * @throws FileNotFoundException File can't be found
      */
     public static ImageIcon createImageIcon(Object classToLoadFrom, String path) {
-        try {
+       /* try {
             URL imageURL = classToLoadFrom.getClass().getResource(path);
             if (imageURL == null) {
                 imageURL = classToLoadFrom.getClass().getClassLoader().getResource(
@@ -65,12 +69,25 @@ public class ImageUtil {
             if (imageURL == null) {
                 return createImageIcon(path);
             } else {
+                
                 return new ImageIcon(imageURL);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;*/
+        return new ImageIcon(Constants.getRealtimeHome()+"/"+path);
+    }
+   public static InputStream createImageIconAsStream(Object classToLoadFrom, String path) {
+        try {
+            InputStream imageURL = classToLoadFrom.getClass().getResourceAsStream(path);
+            if (imageURL == null) {
+                imageURL = classToLoadFrom.getClass().getClassLoader().getResourceAsStream(path);
+            }
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
-
 }

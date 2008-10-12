@@ -15,16 +15,10 @@ import java.util.Date;
 public class Constants {
 
     private static DateFormat dateFormat = new SimpleDateFormat("yyy-MM-ddd-H-mm-ss");
-    public static final String WIN_REALTIME_HOME = "c:\\avoir-realtime-1.0.2\\";
     public static final String REALTIME_HOME = System.getProperty("user.home") + "/avoir-realtime-1.0.2";
 
     public static String getRealtimeHome() {
-      /*  if (System.getProperty("os.name").toUpperCase().startsWith("WINDOWS")) {
-            return WIN_REALTIME_HOME;
-        } else {
-            return REALTIME_HOME;
-        }*/
-    return REALTIME_HOME;
+             return REALTIME_HOME;
     }
     public static final int ADD_NEW_ITEM = 1;
     public static final int REMOVE_ITEM = 2;
@@ -39,7 +33,10 @@ public class Constants {
     public static final int NO_POINTER = 16;
     public static final int PRESENTATION = 17;
     public static final int IMAGE = 18;
-    public static final int ANY=19;
+    public static final int ANY = 19;
+    public static final int FLASH = 20;
+    public static final int WEBPAGE = 21;
+
     public static final boolean TEMPORARY_MESSAGE = true;
     public static final boolean LONGTERM_MESSAGE = false;
     public static final boolean INFORMATION_MESSAGE = false;
