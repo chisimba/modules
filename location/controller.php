@@ -32,6 +32,7 @@
 
 class location extends controller
 {
+	protected $objJson;
 	protected $objSysConfig;
 	protected $feKey;
 	protected $feSecret;
@@ -51,8 +52,8 @@ class location extends controller
 		include $this->getResourcePath('oauth/OAuth.php', 'utilities');
 		include $this->getResourcePath('fireeagle/fireeagle.php');
 
-		// Set the json global for use in fireeagle.php
-		$GLOBALS['json'] = $this->getObject('json', 'utilities');
+		// Create the JSON object for later use in the Fire Eagle library
+		$this->json = $this->getObject('json', 'utilities');
 
 		// Read system configuration
 		$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -78,7 +79,7 @@ class location extends controller
 		$action = $this->getParam('action');
 		switch ($action) {
 			case 'start':
-				$fireeagle = new FireEagle($this->feKey, $this->feSecret);
+				$fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
 				$token = $fireeagle->getRequestToken();
 				$_SESSION['request_token'] = $token['oauth_token'];
 				$_SESSION['request_secret'] = $token['oauth_token_secret'];
@@ -88,7 +89,7 @@ class location extends controller
 				if ($_GET['oauth_token'] != $_SESSION['request_token']) {
 					die('Token mismatch');
 				}
-				$fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret']);
+				$fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret'], $this->json);
 				$token = $fireeagle->getAccessToken();
 				$this->objUserParams->setItem('Fire Eagle Token', $token['oauth_token']);
 				$this->objUserParams->setItem('Fire Eagle Token Secret', $token['oauth_token_secret']);
@@ -96,7 +97,7 @@ class location extends controller
 				break;
 			default:
 				if ($this->feToken && $this->feTokenSecret) {
-					$fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret);
+					$fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret, $this->json);
 					$location = $fireeagle->user();
 					header('Content-Type: text/plain');
 					print_r($location);

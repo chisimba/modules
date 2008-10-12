@@ -121,7 +121,8 @@ class FireEagle {
   function __construct($consumerKey,
 		       $consumerSecret, 
 		       $oAuthToken = null, 
-		       $oAuthTokenSecret = null)  {
+		       $oAuthTokenSecret = null,
+		       $json = null)  {
     $this->sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuthConsumer($consumerKey, $consumerSecret, NULL);
     if (!empty($oAuthToken) && !empty($oAuthTokenSecret)) {
@@ -129,6 +130,7 @@ class FireEagle {
     } else {
       $this->token = NULL;
     }
+    $this->json = $json;
   }
 
   // read consumer key and secret, and optionally fireeagle auth and api urls, from a .fireeaglerc file
@@ -306,7 +308,7 @@ class FireEagle {
   // --- Internal bits and pieces ---
 
   protected function parseJSON($json) {
-    $r = $GLOBALS['json']->decode($json);
+    $r = $this->json->decode($json);
     if (empty($r)) throw new FireEagleException("Empty JSON response", FireEagleException::REQUEST_FAILED);
     if (isset($r->rsp) && $r->rsp->stat != 'ok') {
       throw new FireEagleException($r->rsp->code.": ".$r->rsp->message, FireEagleException::REMOTE_ERROR, $r->rsp);
@@ -343,7 +345,7 @@ class FireEagle {
       $k = $this->consumer->secret . "&";
       if ($this->token) $k .= $this->token->secret;
       self::dump("---\n\nOAUTH REQUEST TO $url");
-      if (!empty($args)) self::dump(" WITH PARAMS ".$GLOBALS['json']->encode($args));
+      if (!empty($args)) self::dump(" WITH PARAMS ".$this->json->encode($args));
       self::dump("\n\nBase string: ".$req->base_string."\nSignature string: $k\n");
     }
     switch ($method) {
@@ -385,7 +387,7 @@ class FireEagle {
     if (!$status) throw new FireEagleException("Connection to $url failed", FireEagleException::CONNECT_FAILED);
     if ($status != 200) {
       if ($ct == "application/json") {
-	$r = $GLOBALS['json']->decode($response);
+	$r = $this->json->decode($response);
 	if ($r && isset($r->rsp) && $r->rsp->stat != 'ok') {
 	  throw new FireEagleException($r->rsp->code.": ".$r->rsp->message, FireEagleException::REMOTE_ERROR, $r->rsp);
 	}
