@@ -1,6 +1,6 @@
 <?php
 
-
+$objFile = $this->getObject('dbfile', 'filemanager');
 
 $addLink = new link ($this->uri(array('action'=>'addpage', 'id'=>$page['id'], 'context'=>$this->contextCode, 'chapter'=>$page['chapterid'])));
 $addLink->link = $this->objLanguage->languageText('mod_contextcontent_addcontextpages','contextcontent');
@@ -87,14 +87,33 @@ $this->loadClass('link', 'htmlelements');
 $this->setVar('pageTitle', htmlentities($this->objContext->getTitle().' - '.$page['menutitle']));
 
 if (trim($page['headerscripts']) != '') {
-
-/*
-    $header = '
-<![CDATA[
-'.$page['headerscripts'].'
-]]>
-';*/
-    $this->appendArrayVar('headerParams', $page['headerscripts']);
+    
+    // Explode into array
+    $scripts = explode(',', $page['headerscripts']);
+    
+    // Loop through array
+    foreach ($scripts as $script)
+    {
+        // Check if valid
+        if (trim($script) != '') {
+            
+            // Get Path
+            $fileInfo = $objFile->getFilePath($script);
+            
+            // If Valid
+            if ($fileInfo != FALSE) {
+                
+                // Check if Script or CSS, and display
+                if (substr($fileInfo, -2, 2) == 'js') {
+                    $this->appendArrayVar('headerParams', '<script type="text/javascript" src="'.$fileInfo.'"></script>');
+                } else {
+                    $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$fileInfo.'"');
+                }
+            }
+        }
+    }
+    
+    //$this->appendArrayVar('headerParams', $page['headerscripts']);
 
 
 }

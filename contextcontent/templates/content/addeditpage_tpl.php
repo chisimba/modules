@@ -62,12 +62,24 @@ $formTable->addCell($label->show());
 $formTable->addCell($htmlarea->showFCKEditor());
 $formTable->endRow();
 
+$headerScripts = $this->newObject('multifileselect', 'filemanager');
+$headerScripts->name = 'headerscripts';
+$headerScripts->restrictFileList = array('js', 'css');
+$headerScripts->context = TRUE;
+if ($mode=='edit') {
+    $headerScripts->setDefaultFiles($page['headerscripts']);
+}
+
+/*
 $textarea = new textarea('headerscripts');
 $textarea->extra = ' style="width: 100%"';
 $textarea->rows = 10;
 if ($mode=='edit') {
     $textarea->value = htmlentities($page['headerscripts']);
 }
+*/
+
+
 $label = new label ('<strong>'.$this->objLanguage->languageText('mod_contextcontent_metatags_javascript','contextcontent').'</strong>', 'input_headerscripts');
 
 $jsForHeader = $this->objLanguage->languageText('mod_contextcontent_enterjavascriptmetatags','contextcontent', 'Enter any JavaScript or Meta Tags that you need to be loaded into the [-HEAD-] tags');
@@ -76,7 +88,7 @@ $jsForHeader = str_replace('[-HEAD-]', '&lt;head&gt;', $jsForHeader);
 
 $formTable->startRow();
 $formTable->addCell($label->show().'<p>'.$jsForHeader.'</p>', '240');
-$formTable->addCell($textarea->show());
+$formTable->addCell($headerScripts->show());
 $formTable->endRow();
 
 // $languageList = new dropdown('language');
