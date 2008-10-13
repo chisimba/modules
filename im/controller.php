@@ -35,6 +35,8 @@ class im extends controller
 
 	public $objImOps;
 	public $objUser;
+	public $objUserParams;
+	public $userJid;
 	public $objLanguage;
 	public $objBack;
 
@@ -68,6 +70,8 @@ class im extends controller
 			include($this->getResourcePath('XMPPHP/XMPPHP_Log.php'));
 			$this->objImOps = $this->getObject('imops');
 			$this->objUser =  $this->getObject("user", "security");
+			$this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
+			$this->userJid = $this->objUserParams->getValue('Jabber ID');
 			//Create an instance of the language object
 			$this->objLanguage = $this->getObject("language", "language");
 			$this->objBack = $this->getObject('background', 'utilities');
@@ -138,8 +142,9 @@ class im extends controller
 				break;
 
 			case 'sendmessage':
-				$to = 'pscott209@gmail.com';
-				$this->objImOps->sendMessage($to, 'Hope this works!');
+				if ($this->userJid) {
+					$this->objImOps->sendMessage($this->userJid, 'Hope this works!');
+				}
 				break;
 
 			case 'massmessage':
