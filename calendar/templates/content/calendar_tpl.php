@@ -54,13 +54,18 @@ $addIcon->title = $this->objLanguage->languageText('mod_calendarbase_addevent', 
 $addEventLink = new link($this->uri(array('action' => 'add', 'month'=>$month, 'year'=>$year)));
 $addEventLink->link = $addIcon->show();
 
+$ical = new link($this->uri(array('action' => 'icalexport')));
+$ical->link = '<img src="'. $this->getResourceUri('icalCalendar.png', 'calendar') .'" >';
+
+
 $title = $this->objLanguage->languageText('mod_calendarbase_someonescalendar', 'calendarbase');
 
 $heading = new htmlheading();
-$heading->str = str_replace('[someone]', $fullname, $title).' '.$addEventLink->show();
+$heading->str = str_replace('[someone]', $fullname, $title).' '.$addEventLink->show().'  '.$ical->show();
 $heading->type = 1;
 
 echo $heading->show();
+
 
 
 $checkboxes = array();

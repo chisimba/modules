@@ -26,7 +26,7 @@ class calendar extends controller
         //$this->objCalendar =& $this->getObject('dbcalendar', 'calendarbase');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->dateFunctions = $this->getObject('dateandtime', 'utilities');
-        
+        $this->objICal = $this->getObject('ical');
         $this->objCalendarInterface = $this->getObject('calendarinterface');
 
         // User Details
@@ -144,6 +144,9 @@ class calendar extends controller
             case 'deleteattachment':
                 return $this->deleteAttachment($this->getParam('id'), $this->getParam('mode'), $this->getParam('filename'));
 
+			case 'icalexport':
+				$this->objICal->export();
+				break;
             default:
                 return $this->showEvents();
         }
