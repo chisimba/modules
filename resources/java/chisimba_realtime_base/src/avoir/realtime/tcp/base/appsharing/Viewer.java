@@ -5,10 +5,13 @@
  */
 package avoir.realtime.tcp.base.appsharing;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import javax.swing.JFrame;
+import java.awt.Rectangle;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 /**
  *
@@ -17,12 +20,27 @@ import javax.swing.JFrame;
 public class Viewer extends javax.swing.JPanel {
 
     private Image image;
-    private JFrame fr; 
+    private RemoteDesktopViewerFrame fr;
+    private double factor = 1;
+    private double magX = 1;
+    private double magY = 1;
+    private double prevXMag = 1;
+    private double prevYMag = 1;
+    private boolean resized = false;
 
     /** Creates new form Viewer */
-    public Viewer(JFrame fr) {
-        this.fr=fr;
+    public Viewer(RemoteDesktopViewerFrame fr) {
+        this.fr = fr;
         initComponents();
+
+    }
+
+    public void setFactor(double factor) {
+        this.factor = factor;
+    }
+
+    public double getFactor() {
+        return factor;
     }
 
     public Image getImage() {
@@ -33,13 +51,87 @@ public class Viewer extends javax.swing.JPanel {
         this.image = image;
     }
 
+    public double getMagX() {
+        return magX;
+    }
+
+    public void setMagX(double magX) {
+        this.magX = magX;
+        centerViewPort();
+        resized = true;
+    }
+
+    public double getMagY() {
+        return magY;
+    }
+
+    public void setMagY(double magY) {
+        this.magY = magY;
+        centerViewPort();
+        resized = true;
+    }
+
+    public void setResized(boolean resized) {
+        this.resized = resized;
+    }
+
+    public double getPrevXMag() {
+        return prevXMag;
+    }
+
+    public void setPrevXMag(double prevXMag) {
+        this.prevXMag = prevXMag;
+    }
+
+    public double getPrevYMag() {
+        return prevYMag;
+    }
+
+    public void setPrevYMag(double prevYMag) {
+        this.prevYMag = prevYMag;
+    }
+
+    private void centerViewPort() {
+        JScrollPane scrollPane = fr.getScrollPane();
+        JViewport vport = scrollPane.getViewport();
+
+        Dimension size = vport.getExtentSize();
+        int xx = (getWidth() - size.width) / 2;
+        int yy = (getHeight() - size.height) / 2;
+        Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
+        scrollRectToVisible(rect);
+    }
 
     @Override
     protected void paintComponent(Graphics arg0) {
         super.paintComponent(arg0);
         Graphics2D g = (Graphics2D) arg0;
         if (image != null && fr != null) {
-            g.drawImage(image, 0,0,fr.getWidth(), fr.getHeight(), this);
+            g.scale(factor, factor);
+            g.drawImage(image, 0, 0, fr.getWidth(), fr.getHeight(), this);
+        }
+
+        if ((prevXMag < magX || prevYMag < magY) && resized) {
+            int ww = getWidth();
+            int hh = getHeight();
+            int newW = ww + (int) magX * 100;
+            int newH = hh + (int) magY * 100;
+            prevXMag = magX;
+            prevYMag = magY;
+            setPreferredSize(new Dimension(newW, newH));
+            revalidate();
+            resized = false;
+        }
+        if ((prevXMag > magX || prevYMag > magY) && resized) {
+            int ww = getWidth();
+            int hh = getHeight();
+            int newW = ww - (int) magX * 100;
+            int newH = hh - (int) magY * 100;
+            prevXMag = magX;
+            prevYMag = magY;
+            setPreferredSize(new Dimension(newW, newH));
+            revalidate();
+            resized = false;
         }
     }
 
@@ -51,6 +143,8 @@ public class Viewer extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
