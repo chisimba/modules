@@ -220,6 +220,7 @@ class etdresource extends object
                 if($check !== FALSE || $check2 !== FALSE){
                     $metaName = str_replace('_', '.', $key);
                     $metaContent = htmlentities($item);
+                    $metaContent=str_replace('&amp;amp;','&amp;',$metaContent); // remove double-coding.
                     $str .= "<meta name='{$metaName}' content=\"{$metaContent}\" />\n";
                 }
             }
