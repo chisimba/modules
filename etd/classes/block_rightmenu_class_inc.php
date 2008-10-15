@@ -79,7 +79,7 @@ class block_rightmenu extends object
     public function show()
 	{
         $home = $this->objLanguage->languageText('word_home');
-        $browse = $this->objLanguage->languageText('word_browse');
+        $browse = $this->objLanguage->languageText('word_browse','etd');
         $faculties = $this->objLanguage->languageText('word_faculties');
         $departments = $this->objLanguage->languageText('word_departments');
         $degrees = $this->objLanguage->languageText('word_degrees');
