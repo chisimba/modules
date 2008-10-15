@@ -125,6 +125,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private ImageIcon undoIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/undo.png");
     private ImageIcon selectIcon = ImageUtil.createImageIcon(this, "/icons/whiteboard/frame_edit.png");
     private ImageIcon chisimbaBanner = ImageUtil.createImageIcon(this, "/icons/chisbanner.png");
+    private ImageIcon colorChooserIcon = ImageUtil.createImageIcon(this, "/icons/colors-chooser.png");
     private TButton selectButton = new TButton(selectIcon);
     private TButton moveButton = new TButton(moveIcon);
     private TButton penButton = new TButton(penIcon);
@@ -134,6 +135,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private TButton ovalFillButton = new TButton(ovalFillIcon);
     private TButton lineButton = new TButton(lineIcon);
     private TButton textButton = new TButton(textIcon);
+    private MButton colorChooserButton = new MButton(colorChooserIcon);
     private MButton deleteButton = new MButton(deleteIcon);
     private MButton clearButton = new MButton(clearIcon);
     private MButton undoButton = new MButton(undoIcon);
@@ -238,7 +240,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         handRightButton.setActionCommand("handRight");
         handRightButton.setToolTipText("Point right");
 
-
+        colorChooserButton.addActionListener(this);
+        colorChooserButton.setActionCommand("color-chooser");
         pointerToolbar.add(handLeftButton);
         handLeftButton.addActionListener(this);
         handLeftButton.setActionCommand("handLeft");
@@ -306,7 +309,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public void showBanner() {
         String id = GenerateUUID.getId();
         imgs.add(chisimbaBanner);
-     addItem(new Img(120, 120, 200, 51, "", 0, id));
+        addItem(new Img(120, 120, 200, 51, "", 0, id));
 
     }
 
@@ -348,6 +351,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         toolsToolbar.add(selectButton);
         selectButton.setToolTipText("Draw selection");
         selectButton.setIcon(selectIcon);
+        colorChooserButton.setToolTipText("Color Chooser");
+        toolsToolbar.add(colorChooserButton);
         toolsToolbar.add(penButton);
         penButton.setToolTipText("Freehand");
         toolsToolbar.add(lineButton);
@@ -1382,8 +1387,19 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         repaint();
     }
 
+    public Color getColour() {
+        return colour;
+    }
+
+    public void setColour(Color colour) {
+        this.colour = colour;
+    }
+
     public void actionPerformed(ActionEvent evt) {
         base.getSurface().setPointer(Constants.WHITEBOARD);
+        if (evt.getActionCommand().equals("color-chooser")) {
+            WBColorChooser.createAndShowGUI(this);
+        }
         if (evt.getActionCommand().equals("handLeft")) {
 
             setPointer(Constants.HAND_LEFT);
@@ -2034,6 +2050,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
         this.fromPresenter = fromPresenter;
         repaint();
+    }
+
+    public void setTextColor(Color color) {
+        textField.setForeground(color);
     }
 
     /** This method is called from within the constructor to
