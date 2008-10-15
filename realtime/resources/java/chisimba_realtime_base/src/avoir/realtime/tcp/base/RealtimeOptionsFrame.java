@@ -35,6 +35,8 @@ public class RealtimeOptionsFrame extends javax.swing.JFrame {
         buttonGroup1.add(manualOpt);
         buttonGroup1.add(systemOpt);
         proxyPortField.setText(applet.getRealtimeOptions().getProxyPort());
+        boolean browserUsingProxy=applet.getRealtimeOptions().isBrowserUsingProxy();
+//       browserDirectOpt.setSelected(browserUsingProxy);
         updateVoiceServiceTextStatus();
     }
 
