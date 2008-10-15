@@ -26,7 +26,8 @@ import java.io.FileOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileWriter;
- 
+import java.util.Map;
+
 /**
  *
  * @author developer
@@ -38,6 +39,11 @@ public class RealtimeOptions {
         init();
 
         loadProperties();
+        if (isBrowserUsingProxy()) {
+            System.setProperty("network.proxy_host", getBrowserProxyHost());
+            System.setProperty("network.proxy_port", getBrowserProxyPort() + "");
+        
+        }
     }
     Properties props;
     //user can install the app in any folder..so use the System class to figure out where
@@ -60,6 +66,9 @@ public class RealtimeOptions {
         write(filename, "ProxyPort=0");
         write(filename, "UseOnlineSuperNodes=true");
         write(filename, "UseCache=true");
+        write(filename, "BrowserConnection=Direct");
+        write(filename, "BrowserProxyHost=");
+        write(filename, "BrowserProxyPort=");
     }
 
     public void init() {
@@ -122,6 +131,33 @@ public class RealtimeOptions {
      */
     public boolean useDirectConnection() {
         return new Boolean(getProperty("DirectConnection")).booleanValue();
+    }
+
+    public boolean isBrowserUsingProxy() {
+        String type = getProperty("BrowserConnection");
+        if (type == null) {
+            return false;
+        }
+        return type.equalsIgnoreCase("Direct") ? false : true;
+    }
+
+    public String getBrowserProxyHost() {
+        return getProperty("BrowserProxyHost");
+    }
+
+    public int getBrowserProxyPort() {
+        String port = getProperty("BrowserProxyPort");
+        if (port == null) {
+            return 0;
+        }
+        int x = 0;
+        try {
+            x = Integer.parseInt(port.trim());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return x;
     }
 
     /**
