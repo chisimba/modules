@@ -6,6 +6,10 @@
 package avoir.realtime.tcp.base.appsharing;
 
 import avoir.realtime.tcp.base.RealtimeBase;
+import avoir.realtime.tcp.common.packet.StopScreenSharing;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,10 +19,20 @@ import javax.swing.JOptionPane;
 public class AppShareFrame extends javax.swing.JFrame {
 
     private RealtimeBase base;
+    private Java2ScreenScraper ss;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
     public AppShareFrame(RealtimeBase base) {
         this();
         this.base = base;
+        try {
+            ss = new Java2ScreenScraper(base);
+            base.setScreenScraper(ss);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error occurred cannot startappsharing");
+            ex.printStackTrace();
+        }
     }
 
     /** Creates new form AppShareFrame */
@@ -30,7 +44,11 @@ public class AppShareFrame extends javax.swing.JFrame {
         if (base.getBaseManager().isScreenCapture()) {
             int n = JOptionPane.showConfirmDialog(this, "This will stop application sharing", "Stop", JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.YES_OPTION) {
-                base.getBaseManager().stopApplicationSharing();
+                if (ss != null) {
+                    ss.stopScraping();
+                    base.getBaseManager().setScreenCapture(false);
+                    base.getTcpClient().sendPacket(new StopScreenSharing());
+                }
                 dispose();
             }
         } else {
@@ -105,14 +123,23 @@ public class AppShareFrame extends javax.swing.JFrame {
 private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
     stopButton.setEnabled(true);
     startButton.setEnabled(false);
-    base.getBaseManager().startApplicationSharing();
+    //  base.getBaseManager().startApplicationSharing();
+    ss.startScraping();
+    base.getParentFrame().setState(JFrame.ICONIFIED);
+    setState(JFrame.ICONIFIED);
 }//GEN-LAST:event_startButtonActionPerformed
 
 private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
     startButton.setEnabled(true);
     stopButton.setEnabled(false);
-    base.getBaseManager().stopApplicationSharing();
-}//GEN-LAST:event_stopButtonActionPerformed
+//    base.getBaseManager().stopApplicationSharing();
+
+    if (ss != null) {//GEN-LAST:event_stopButtonActionPerformed
+            ss.stopScraping();
+            base.getBaseManager().setScreenCapture(false);
+            base.getTcpClient().sendPacket(new StopScreenSharing());
+        }
+    }
 
 private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
     close();

@@ -31,7 +31,7 @@ public class DesktopUtil {
         
         try {
             robot = new Robot();
-            screenSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+            screenSize = new Rectangle(0,0,100,100);//Toolkit.getDefaultToolkit().getScreenSize());
         } catch (Exception e) {
             e.printStackTrace();
             
