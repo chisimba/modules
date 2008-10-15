@@ -57,6 +57,7 @@ public class BaseManager {
     private Timer tabTimer = new Timer();
     private boolean newTab = false;
     private String oldID = "";
+    int c=0;
 
     public BaseManager(RealtimeBase base) {
         this.base = base;
@@ -64,22 +65,7 @@ public class BaseManager {
 
     }
 
-    /**
-     * This initiates application sharing
-     */
-    public void startApplicationSharing() {
-        screenCapture = true;
-        Thread t = new Thread() {
-
-            public void run() {
-                while (screenCapture) {
-                    base.getTcpClient().sendPacket(
-                            new DesktopPacket(desktopUtil.getScreenShot(), base.getSessionId()));
-                }
-            }
-        };
-        t.start();
-    }
+   
 
     public boolean isScreenCapture() {
         return screenCapture;
@@ -97,11 +83,12 @@ public class BaseManager {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
+
                 newTab = true;
                 final JWebBrowser webBrowser = new JWebBrowser();
                 webBrowser.setMenuBarVisible(false);
 
-                base.getMainTabbedPane().add(webBrowser, "Web Browser " + (base.getWebPages().size() + 1));
+                base.getMainTabbedPane().add(webBrowser, "Web Browser " + ((base.getWebPages().size() + 1)+c++));
                 webBrowser.addWebBrowserListener(new WebBrowserAdapter() {
 
                     public void locationChanging(WebBrowserNavigationEvent evt) {
