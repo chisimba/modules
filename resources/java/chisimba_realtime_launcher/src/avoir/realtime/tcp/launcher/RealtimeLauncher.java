@@ -15,6 +15,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -27,8 +29,11 @@ import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permissions;
 import java.security.Policy;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -41,17 +46,37 @@ import javax.swing.JProgressBar;
  */
 public class RealtimeLauncher extends javax.swing.JApplet {
 
+    private static String versionPropsFilename = "version.properties";
     private Version v = new Version();
     private String REALTIME_HOME = avoir.realtime.tcp.launcher.Constants.getRealtimeHome();
-    private String internalVer = REALTIME_HOME + "/lib/" + v.version;
+    private String internalVer = REALTIME_HOME + "/lib/realtime_" + v.version;
     private int MODE = Constants.APPLET;
     int plVer = 0;
-    private String version="1.0.2";
-    private String[][] plugins = {
+    private String version = "1.0.2";
+    private String swt = getPlatformSpecificSWT();
+    private Vector<String> staticPluginsRequired = new Vector<String>();
+    private String[][] staticPlugins = {
         {"jspeex.jar", "Audio Codec"},
-        {"realtime-base-"+version+".jar", "Realtime Base",},
-        {"realtime-whiteboard-"+version+".jar", "Whiteboard",},
-        {"realtime-pluginmanager-"+version+".jar", "Plugin Manager"},
+        {"jna.jar", "JNA",},
+        {"DJNativeSwing-" + version + ".jar", "Native Swing",},
+        {swt, "SWT",},
+    };
+    private String[][] corePlugins = {
+        {"realtime-base-" + version + ".jar", "Realtime Base",},
+        {"realtime-whiteboard-" + version + ".jar", "Whiteboard",},
+        {"realtime-flashplayer-" + version + ".jar", "Flash Player",},
+        {"realtime-filetransfer-" + version + ".jar", "File Transfer",},
+        {"realtime-appsharing-" + version + ".jar", "Application Sharing",},
+        {"realtime-audio-" + version + ".jar", "Audio",},
+        {"realtime-chat-" + version + ".jar", "Chat",},
+        {"realtime-survey-" + version + ".jar", "Survey",},
+        {"realtime-common-" + version + ".jar", "Common",},
+        {"realtime-admin-" + version + ".jar", "Admin",},
+        {"realtime-managers-" + version + ".jar", "Managers",},
+        {"realtime-standalone-" + version + ".jar", "Standalone",},
+        {"realtime-user-" + version + ".jar", "User",},
+        {"realtime-images.jar", "Images",},
+        {"realtime-pluginmanager-" + version + ".jar", "Plugin Manager"},
     };
     private String[] sounds = {
         "test.wav",
@@ -83,6 +108,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private JFrame mainFrame = new JFrame("Chisimba Realtime Virtual Classroom");
     private String userDetails;
     private String userImagePath;
+    private static Properties props;
 
     /** Initializes the applet RealtimeLauncher */
     @Override
@@ -107,11 +133,28 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     /**
-     * How many plugins do we need?
+     * Relying on swt for flash player, embedded web, media player etc. But they
+     * are platform specific. Need to get hold of the one for MAC
      * @return
      */
-    public int getPluginsNumber() {
-        return plugins.length;
+    private String getPlatformSpecificSWT() {
+        String filename = "swt.jar";
+        String osName = System.getProperty("os.name");
+        if (osName.toUpperCase().startsWith("LINUX")) {
+            filename = "swt-linux.jar";
+        }
+        if (osName.toUpperCase().startsWith("WINDOWS")) {
+            filename = "swt-3.5M1-win32-win32-x86.jar";
+        }
+        return filename;
+    }
+
+    /**
+     * How many core plugins do we need?
+     * @return
+     */
+    public int getCorePluginsNumber() {
+        return corePlugins.length;
     }
 
     /**
@@ -159,22 +202,36 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         Thread t = new Thread() {
 
             public void run() {
-                forceUpgrade();
+                checkIfUpgradeNeeded();
                 loadSystem();
             }
         };
         t.start();
     }
 
+    private static void write(String filename, String txt) {
+        try {
+            FileWriter outFile = new FileWriter(filename, true);
+            PrintWriter printWriter = new PrintWriter(outFile);
+            printWriter.println(txt);
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Check if an upgrade available, or some files are missing. If so force
      * upgrade of everything
      */
-    private void forceUpgrade() {
+    private void checkIfUpgradeNeeded() {
 
         if (!new File(internalVer).exists()) {
             System.out.println(internalVer + " does not exist..requesting package downloads");
-            clearLocalLib();
+            clearCoreLib();
+        // loadSystem();
+        } else {
+            loadSystem();
         }
     }
 
@@ -301,6 +358,31 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     /**
+     * Need to use the application properties, so initilize them
+     */
+    public static void loadProperties() {
+        try {
+
+            // create and load default properties
+            Properties defaultProps = new Properties();
+            FileInputStream in = new FileInputStream(versionPropsFilename);
+            defaultProps.load(in);
+            in.close();
+
+            // create program properties with default
+            props = new Properties(defaultProps);
+
+            // now load properties from last invocation
+            in = new FileInputStream(versionPropsFilename);
+            props.load(in);
+            in.close();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Are we local host? For debugging purposes
      * @return
      */
@@ -321,16 +403,29 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                 break;
             }
         }
-        for (int i = 0; i < plugins.length; i++) {
-            File f = new File(REALTIME_HOME + "/lib/" + plugins[i][0]);
+        for (int i = 0; i < corePlugins.length; i++) {
+            File f = new File(REALTIME_HOME + "/lib/" + corePlugins[i][0]);
             if (!f.exists()) {
                 pluginsOK = false;
                 break;
             }
         }
+
+        for (int i = 0; i < staticPlugins.length; i++) {
+            File f = new File(REALTIME_HOME + "/lib/" + staticPlugins[i][0]);
+            if (!f.exists()) {
+                staticPluginsRequired.add(staticPlugins[i][0]);
+
+
+            }
+        }
         if (!pluginsOK) {
+            for (int i = 0; i < staticPluginsRequired.size(); i++) {
+                System.out.println(staticPluginsRequired.elementAt(i) + " not found. Requesting for donwload ...");
+                requestForResource("../lib/" + staticPluginsRequired.elementAt(i), staticPluginsRequired.elementAt(i));
+            }
             System.out.println("One of plugins missing, requesting for download");
-            requestForPlugins();
+            requestForCorePlugins();
         } else {
             loadAllPlugins();
 
@@ -358,19 +453,23 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    public int getStaticPluginsNo() {
+        return staticPluginsRequired.size();
+    }
+
     /**
      * Request for the plugins. These are basically jar files
      */
-    private void requestForPlugins() {
-        for (int i = 0; i < plugins.length; i++) {
-            setText("Requesting for " + plugins[i][1] + " ...", false);
-            String path = "../lib/" + plugins[i][0];
+    private void requestForCorePlugins() {
+        for (int i = 0; i < corePlugins.length; i++) {
+            setText("Requesting for " + corePlugins[i][1] + " ...", false);
+            String path = "../lib/" + corePlugins[i][0];
 
-            requestForResource(path, plugins[i][1]);
+            requestForResource(path, corePlugins[i][1]);
             //got to monitor this one for 1 full minute.
-            if (i == plugins.length - 1) {
+            if (i == corePlugins.length - 1) {
                 try {
-                    pluginMonitor.schedule(new PluginRequestMonitor(), 60 * 1000);
+                    pluginMonitor.schedule(new PluginRequestMonitor(), 60 * 1000 * 30);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -452,7 +551,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         this.userName = username;
         this.fullName = fullnames;
         this.isPresenter = isPresenter;
-        this.sessionTitle=sessionTitle;
+        this.sessionTitle = sessionTitle;
         this.sessionId = sessionId;
         this.userDetails = userDetails;
         this.userImagePath = userImagePath;
@@ -485,7 +584,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
      * @param args
      */
     public static void main(String[] args) {
-       
+        //JFrame.setDefaultLookAndFeelDecorated(true);
+        //JDialog.setDefaultLookAndFeelDecorated(true);
+
         int port = 80;
         String host = "196.21.45.85";
         try {
@@ -500,7 +601,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
         new RealtimeLauncher().launchAsApplication(host, port,
                 args[2], args[3], new Boolean(args[4]), args[5], args[6], args[7],
-                args[8], args[9], args[10], args[11], args[12], args[13], args[14],args[15]);
+                args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);
     }
 
     @Override
@@ -548,9 +649,24 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
         try {
             String[] xplugins = {
-                "realtime-whiteboard-"+version+".jar",
-                "realtime-base-"+version+".jar",
-                "realtime-pluginmanager-"+version+".jar",
+                "realtime-images.jar",
+                "jna.jar",
+                "DJNativeSwing-" + version + ".jar",
+                swt,
+                "realtime-admin-" + version + ".jar",
+                "realtime-managers-" + version + ".jar",
+                "realtime-standalone-" + version + ".jar",
+                "realtime-flashplayer-" + version + ".jar",
+                "realtime-user-" + version + ".jar",
+                "realtime-common-" + version + ".jar",
+                "realtime-survey-" + version + ".jar",
+                "realtime-chat-" + version + ".jar",
+                "realtime-audio-" + version + ".jar",
+                "realtime-appsharing-" + version + ".jar",
+                "realtime-filetransfer-" + version + ".jar",
+                "realtime-whiteboard-" + version + ".jar",
+                "realtime-base-" + version + ".jar",
+                "realtime-pluginmanager-" + version + ".jar",
                 "jspeex.jar",
             };
             for (int n = 0; n < xplugins.length; n++) {
@@ -589,7 +705,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                         supernodeHost, supernodePort, MODE, userName,
                         fullName,
                         isPresenter,
-                        sessionId,  userLevel,
+                        sessionId, userLevel,
                         slidesDir,
                         siteRoot,
                         slideServerId,
@@ -649,23 +765,26 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     /**
      * Ideally delete the files in the local cache
      */
-    private void clearLocalLib() {
+    private void clearCoreLib() {
         String cache = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/lib/";
         java.io.File f = new java.io.File(cache);
         String[] list = f.list();
         if (list != null) {
-            //loop through files and delete everything in it
+            //loop through files and delete everything in it that is core
             for (int i = 0; i < list.length; i++) {
                 try {
-                    java.io.File session = new java.io.File(cache + "/" + list[i]);
-                    String[] imgs = session.list();
+                    java.io.File libFile = new java.io.File(cache + "/" + list[i]);
+                    String[] imgs = libFile.list();
                     if (imgs != null) {
                         for (int j = 0; j < imgs.length; j++) {
-                            java.io.File img = new java.io.File(session.getAbsolutePath() + "/" + imgs[j]);
+                            java.io.File img = new java.io.File(libFile.getAbsolutePath() + "/" + imgs[j]);
                             img.delete();
                         }
                     }
-                    session.delete();
+                    if (libFile.getName().startsWith("realtime")) {
+                        libFile.delete();
+
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
