@@ -13,6 +13,13 @@ $greet variable is already defined in the controller class
 */
 $this->objEnterdate=$this->getObject('enterdate','happybirthday');
 $this->objEnterdate->display_main_menu($greet);
+/*
+*This is an object of a block module
+*/
+$this->ObjBlock=$this->getObject('blocks','blocks');
+echo $this->ObjBlock->showBlock('viewbirthdates','happybirthday');
+
+
+
+
 ?> 
-
-
