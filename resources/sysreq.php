@@ -597,10 +597,10 @@
           <td width="40"  class="column3">
             <script type="text/javascript">
               if (myTestWin != null) {
-                document.write("Supported");//'<img src="img/pass.gif"/>');
+                document.write("Supported");
               }
               else {
-                document.write("The Java version in use is not supported. Please use Sun 1.5.0_04 to 1.5.0_11 or java 1.6.0 ");
+                document.write("Enable popus");
               }             
             </script>                                                   
           </td>
