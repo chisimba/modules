@@ -9,21 +9,29 @@
 */
 class block_viewbirthdates extends object
 {
+    public $ObjLanguage;
+    public $blockContent;
    function nit()
    {
+         /*
+        *Initialising the language object
+        */
+        $this->ObjLanguage=$this->getObject('language','language');
            /*
            *
             *This is the title of the block
-            *Will be converted into language item soon
+            *
             */
-        $this->title='Happy birthday module';
+        $this->title=$this->ObjLanguage->languageText('mod_happybirthday_blocktitle','happybirthday');
+        $this->blockContent=$this->ObjLanguage->languageText('mod_happybirthday_blockcontent','happybirthday');
+       
       }
       public function show()
       {
           /*
-          *returning a string, will be converted into language item soon
+          *Returning the object content string
           */
-         return 'practise on blocks';
+         return "A test text".$this->blockContent ;
          }      
          
    }
