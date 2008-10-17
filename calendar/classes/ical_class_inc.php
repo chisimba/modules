@@ -63,9 +63,9 @@ class ical extends dbTable
         $this->addEvents($userEvents);
         $googleCal = "http://www.google.com/calendar/ical/a8irhvtgo7tnc7qfrk5pu3gf14@group.calendar.google.com/public/basic.ics";
         //$this->calendar->setConfig( 'url', $googleCal);
-        //$this->calendar->returnCalendar();
+        $this->calendar->returnCalendar();
         //print '<pre>';
-        print $this->calendar->createCalendar();
+        //print $this->calendar->createCalendar();
     }
     
     
