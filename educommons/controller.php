@@ -32,6 +32,8 @@
 class educommons extends controller
 {
 	protected $objSpie;
+	protected $objChapters;
+	protected $objChapterContent;
 
 	/**
 	 * Standard constructor to load the necessary resources
@@ -41,6 +43,8 @@ class educommons extends controller
 	public function init()
 	{
 		$this->objSpie = $this->getObject('spie', 'feed');
+		$this->objChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
+		$this->objChapterContent = $this->getObject('db_contextcontent_chaptercontent', 'contextcontent');
 	}
 
 	/**
@@ -52,15 +56,14 @@ class educommons extends controller
 		$action = $this->getParam('action');
 		switch ($action) {
 			default:
-				$objContextContentChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
-				$objContextContentChapters->addChapter('', 'Test', 'Hello');
-				break;
 				$this->objSpie->startPie('http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS');
 				$items = $this->objSpie->get_items();
 				foreach ($items as $item) {
-					echo $item->get_title();
-					echo $item->get_link();
-					echo $item->get_content();
+					$title = $item->get_title();
+					$intro = $item->get_content();
+					if (!$this->objChapterContent->checkChapterTitleExists($title, 'en')) {
+						$this->objChapters->addChapter('', $title, $intro, 'en');
+					}
 				}
 		}
 	}
