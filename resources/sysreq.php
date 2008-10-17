@@ -600,7 +600,7 @@
                 document.write("Supported");
               }
               else {
-                document.write("Enable popus");
+                document.write("Enable pop-ups");
               }             
             </script>                                                   
           </td>
