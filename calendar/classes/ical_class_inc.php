@@ -103,8 +103,8 @@ class ical extends dbTable
             //if ($events['location']){
             //    $vevent->setProperty( 'LOCATION', 'Central Placa' ); // property name - case independent
             //}
-            $vevent->setProperty( 'summary', $event['eventtitle'] );
-            $vevent->setProperty( 'description', $event['eventdetails'] );
+            $vevent->setProperty( 'summary', htmlentities($event['eventtitle']) );
+            $vevent->setProperty( 'description', htmlentities($event['eventdetails']) );
             //$vevent->setProperty( 'comment', 'This is a comment' );
             //$vevent->setProperty( 'attendee', 'attendee1@icaldomain.net' );
             $this->calendar->setComponent ( $vevent ); // add event to calendar            
