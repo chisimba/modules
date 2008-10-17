@@ -106,6 +106,11 @@
         public  $realtimeManager;
 
         /**
+         * link to requirements test
+         * @var String
+         */
+        public $reqTest;
+        /**
          * Constructor method to instantiate objects and get variables
          */
         function init()
@@ -209,6 +214,8 @@
             $docRoot=$_SERVER['DOCUMENT_ROOT'];
             $appletPath=str_replace($docRoot,$replacewith,$modPath);
             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+
+            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
@@ -222,20 +229,20 @@
             $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
             $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
             $presenterimage=$this->newObject('image','htmlelements');
-            $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
+            $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
             $presenterimage->width="200";
             $presenterimage->height="80";
 
             $joinimage=$this->newObject('image','htmlelements');
-            $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
+            $joinimage->src='skins/_common/icons/webpresent/btn_JOIN.jpg';
             $joinimage->width="200";
             $joinimage->height="80";
             $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
             $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
-            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
-            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
+            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
+            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_JOIN.jpg" width="200" height="80">';
 
             $desc='<li>Add Live interactions to your presentation</li>';
             $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
@@ -255,7 +262,7 @@
 
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+            $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
         }
 
@@ -277,6 +284,8 @@
             $docRoot=$_SERVER['DOCUMENT_ROOT'];
             $appletPath=str_replace($docRoot,$replacewith,$modPath);
             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
+
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=22225;//$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
@@ -290,20 +299,20 @@
             $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
             $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
             $presenterimage=$this->newObject('image','htmlelements');
-            $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
+            $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
             $presenterimage->width="200";
             $presenterimage->height="80";
 
             $joinimage=$this->newObject('image','htmlelements');
-            $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
+            $joinimage->src='skins/_common/icons/webpresent/btn_JOIN.jpg';
             $joinimage->width="200";
             $joinimage->height="80";
             $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
             $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
-            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
-            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
+            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
+            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_JOIN.jpg" width="200" height="80">';
 
             $desc="Beta 1.0.2<br><hr>";
             $desc.='<li>Add Live interactions to your presentation</li>';
@@ -324,7 +333,7 @@
 
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
+            $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
         }
 
@@ -338,6 +347,8 @@
             $docRoot=$_SERVER['DOCUMENT_ROOT'];
             $appletPath=str_replace($docRoot,$replacewith,$modPath);
             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
+
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
@@ -351,21 +362,21 @@
             $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
             $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
             $presenterimage=$this->newObject('image','htmlelements');
-            $presenterimage->src='skins/_common/icons/webpresent/startpresentation.png';
+            $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
             $presenterimage->width="200";
             $presenterimage->height="80";
             $title=$this->objLanguage->languageText('mod_realtime_title', 'realtime');
 
             $joinimage=$this->newObject('image','htmlelements');
-            $joinimage->src='skins/_common/icons/webpresent/joinpresent.png';
+            $joinimage->src='skins/_common/icons/webpresent/btn_JOIN.jpg';
             $joinimage->width="200";
             $joinimage->height="80";
             $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
             $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
-            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/startpresentation.png" width="200" height="80">';
-            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/joinpresent.png" width="200" height="80">';
+            $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
+            $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_JOIN.jpg" width="200" height="80">';
 
             $desc='<li>'.$this->objLanguage->languageText('mod_realtime_addlivepresentation', 'realtime').'</li>';
             $desc.='<li>'.$this->objLanguage->languageText('mod_realtime_addaudiovideo', 'realtime').'</li>';
@@ -383,7 +394,7 @@
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
-            $this->setVarByRef('content', '<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h3>'.$tip.'</h3><br><br><h2>'.$presentationLink->show().'</h2>');
+            $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h3>'.$tip.'</h3><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
 
         }
