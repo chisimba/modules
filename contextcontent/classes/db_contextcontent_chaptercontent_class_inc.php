@@ -48,6 +48,13 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class db_contextcontent_chaptercontent extends dbtable
 {
+    /**
+     * The db object
+     *
+     * @access private
+     * @var object
+     */
+    private $_db;
 
     /**
     * Constructor
@@ -56,6 +63,7 @@ class db_contextcontent_chaptercontent extends dbtable
     {
         parent::init('tbl_contextcontent_chaptercontent');
         $this->objUser =& $this->getObject('user', 'security');
+        $this->_db = $this->objEngine->getDbObj();
     }
     
     /**
@@ -130,7 +138,9 @@ class db_contextcontent_chaptercontent extends dbtable
      * @return boolean
      */
     public function checkChapterTitleExists($chapterTitle, $language) {
-        return (boolean) $this->getRecordCount('WHERE chaptertitle=\''.$chapterTitle.'\' AND language=\''.$language.'\'');
+        $quotedChapterTitle = $this->_db->quote($chapterTitle);
+        $quotedLanguage = $this->_db->quote($language);
+        return (boolean) $this->getRecordCount("WHERE chaptertitle = $quotedChapterTitle AND language = $quotedLanguage");
     }
     
     /**
