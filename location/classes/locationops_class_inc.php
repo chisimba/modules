@@ -60,7 +60,11 @@ class locationops extends object
 	 */
 	public function getFireEagleUser()
 	{
-		$fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret, $this->json);
-		return $fireeagle->user();
+		if ($this->feKey && $this->feSecret && $this->feToken && $this->feTokenSecret) {
+			$fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret, $this->json);
+			return $fireeagle->user();
+		} else {
+			return false;
+		}
 	}
 }
