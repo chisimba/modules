@@ -121,6 +121,17 @@ class db_contextcontent_chaptercontent extends dbtable
             return TRUE;
         }
     }
+
+    /**
+     * Method to check whether a chapter title exists
+     *
+     * @param string $chapterTitle The chapter title to check
+     * @param string $language The language of the title
+     * @return boolean
+     */
+    public function checkChapterTitleExists($chapterTitle, $language) {
+        return (boolean) $this->getRecordCount('WHERE chaptertitle=\''.$chapterTitle.'\' AND language=\''.$language.'\'');
+    }
     
     /**
     * Method to Update the Content of a Page
