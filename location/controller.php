@@ -34,12 +34,18 @@ class location extends controller
 {
 	protected $objLocationOps;
 	protected $objJson;
+	protected $objTwitterLib;
+	protected $objModules;
+	protected $objUser;
+	protected $userName;
 	protected $objSysConfig;
 	protected $feKey;
 	protected $feSecret;
 	protected $objUserParams;
 	protected $feToken;
 	protected $feTokenSecret;
+	protected $twitterUpdates;
+	protected $currentLocationName;
 
 	/**
 	 * Standard constructor to load the necessary resources
@@ -54,6 +60,18 @@ class location extends controller
 		// Create the JSON object for later use in the Fire Eagle library
 		$this->json = $this->getObject('json', 'utilities');
 
+		// Get module catalogue for checking if optional modules exist
+		$this->objModules = $this->getObject('modules', 'modulecatalogue');
+
+		// Load the Twitter library if available
+		if ($this->objModules->checkIfRegistered('twitter')) {
+			$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+		}
+
+		// Get the user object and name
+		$this->objUser = $this->getObject('user', 'security');
+		$this->userName = $this->objUser->userName();
+
 		// Read system configuration
 		$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
 		$this->feKey = $this->objSysConfig->getValue('fireeaglekey', 'location');
@@ -63,6 +81,8 @@ class location extends controller
 		$this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
 		$this->feToken = $this->objUserParams->getValue('Fire Eagle Token');
 		$this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
+		$this->twitterUpdates = $this->objUserParams->getValue('Twitter Location Updates');
+		$this->currentLocationName = base64_decode($this->objUserParams->getValue('Current Location Name'));
 	}
 
 	/**
@@ -93,6 +113,14 @@ class location extends controller
 			default:
 				if ($this->feToken && $this->feTokenSecret) {
 					$location = $this->objLocationOps->getFireEagleUser();
+					$name = $location['user']['location_hierarchy'][0]['name'];
+					if ($name != $this->currentLocationName) {
+						$this->objUserParams->setItem('Current Location Name', base64_encode($name));
+						if ($this->twitterUpdates && $this->objTwitterLib) {
+							$this->objTwitterLib->setUid($this->userName);
+							$this->objTwitterLib->updateStatus('Current Location: ' . $name);
+						}
+					}
 					header('Content-Type: text/plain');
 					print_r($location);
 				} else {
