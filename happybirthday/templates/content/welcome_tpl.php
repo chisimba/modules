@@ -16,10 +16,6 @@ $this->objEnterdate->display_main_menu($greet);
 /*
 *This is an object of a block module
 */
-$this->ObjBlock=$this->getObject('blocks','blocks');
-echo $this->ObjBlock->showBlock('viewbirthdates','happybirthday');
-
-
 
 
 ?> 

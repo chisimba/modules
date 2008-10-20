@@ -9,29 +9,31 @@
 */
 class block_viewbirthdates extends object
 {
-    public $ObjLanguage;
+    public $objLanguage;
     public $blockContent;
-   function nit()
+    public $objDbhappybirthday;
+   function init()
    {
          /*
         *Initialising the language object
         */
-        $this->ObjLanguage=$this->getObject('language','language');
+        $this->objLanguage=$this->getObject('language','language');
            /*
            *
             *This is the title of the block
             *
             */
-        $this->title=$this->ObjLanguage->languageText('mod_happybirthday_blocktitle','happybirthday');
-        $this->blockContent=$this->ObjLanguage->languageText('mod_happybirthday_blockcontent','happybirthday');
+        $this->title=$this->objLanguage->languageText('mod_happybirthday_blocktitle','happybirthday');
+     
+        $this->objDbhappybirthday=$this->getObject('dbhappybirthday','happybirthday');
        
       }
       public function show()
       {
           /*
-          *Returning the object content string
+          *Returning the names of user names
           */
-         return "A test text".$this->blockContent ;
+         return $this->objDbhappybirthday->userFullname() ;
          }      
          
    }

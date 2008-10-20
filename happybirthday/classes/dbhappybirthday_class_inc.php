@@ -28,7 +28,7 @@ class dbhappybirthday extends dbtable
 //variable decleration for the username(retriving the user's logging name
 public $username;
 public $objUser;
-
+public $objLanguage;
       
 
  public function init()
@@ -41,6 +41,10 @@ public $objUser;
   $this->username=$this->objUser->userName();
 
   //Set the table in the parent class
+  /*
+  *Initialising the language object
+  */
+  $this->objLanguage=$this->getObject('language','language');
   parent::init('tbl_birthdates');
 }
 
@@ -175,5 +179,42 @@ public $objUser;
      //Returning day of a week
      return date("l",$dateInseconds);
    }
+   /**
+   *This function returns the full name  of users celebrating their birthdates today or a message if no users
+   */
+   public function userFullname()
+       {
+           /**
+           *Variable user_name concanates the names of users celebrating their birthdates
+           */
+            $user_names="";
+            $sq='select * from tbl_birthdates';
+            $rs=$this->getArray($sq);
+            $current_date=date('Y-m-d');
+           //Create an instance of the table object
+           
+          
+             foreach($rs as $names)
+             {
+              $fullname=$names['firstname'];
+              $birthdate=$names['birthdate'];
+             //Checking for the birthdate
+             $status=$this->ifTheSameDayMonth($current_date,$birthdate);
+             if($status=='TRUE')
+                 {
+                     /**
+                     *Concanating the users celebrating their birthdays
+                     */
+                     $user_names=$user_names.$fullname."<br>";
+                 }  
+       }
+        if($user_names=="")
+                     {
+                         return $this->objLanguage->languageText('mod_happybirthday_nousermsg','happybirthday');
+                     } else
+                     {
+                         return $user_names;
+                     }
+}
 }
 ?>
