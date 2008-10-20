@@ -50,19 +50,19 @@ class dbim extends dbTable
      */
     public function addRecord($pl)
     {
-    	$times = $this->now();
-    	$recarr['datesent'] = $times;
-    	$recarr['msgtype'] = $pl['type'];
-    	$recarr['msgfrom'] = $pl['from'];
-    	$recarr['msgbody'] = $pl['body'];
-    	// Check for empty messages
-    	if($recarr['msgbody'] == "")
-    	{
-    		return;
-    	}
-    	else {
-    		return $this->insert($recarr, 'tbl_im');
-    	}
+        $times = $this->now();
+        $recarr['datesent'] = $times;
+        $recarr['msgtype'] = $pl['type'];
+        $recarr['msgfrom'] = $pl['from'];
+        $recarr['msgbody'] = $pl['body'];
+        // Check for empty messages
+        if($recarr['msgbody'] == "")
+        {
+            return;
+        }
+        else {
+            return $this->insert($recarr, 'tbl_im');
+        }
     }
 
     public function getRange($start, $num)

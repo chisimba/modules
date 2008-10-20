@@ -43,24 +43,24 @@ class dbimpresence extends dbTable
     
     public function updatePresence($userarr)
     {
-    	//log_debug($userarr);
-    	// check if user exists in msg table
-    	$status = $this->userExists($userarr['from']);
-    	$times = $this->now();
-    	$insarr['datesent'] = $times;
-    	$insarr['person'] = $userarr['from'];
-    	$person = $insarr['person'];
-    	$insarr['status'] = $userarr['type'];
-    	$insarr['presshow'] = $userarr['show'];
-    	
-    	if($status == FALSE)
-    	{	
-    		$this->addRecord($insarr);
-    	}
-    	else {
-    		// update the presence info for this user
-    		$this->update('id', $status[0]['id'], $insarr, 'tbl_im_presence');
-    	}
+        //log_debug($userarr);
+        // check if user exists in msg table
+        $status = $this->userExists($userarr['from']);
+        $times = $this->now();
+        $insarr['datesent'] = $times;
+        $insarr['person'] = $userarr['from'];
+        $person = $insarr['person'];
+        $insarr['status'] = $userarr['type'];
+        $insarr['presshow'] = $userarr['show'];
+        
+        if($status == FALSE)
+        {    
+            $this->addRecord($insarr);
+        }
+        else {
+            // update the presence info for this user
+            $this->update('id', $status[0]['id'], $insarr, 'tbl_im_presence');
+        }
     }
     
     /**
@@ -73,26 +73,26 @@ class dbimpresence extends dbTable
      */
     private function addRecord($insarr)
     {
-    	
-    	return $this->insert($insarr, 'tbl_im_presence');
+        
+        return $this->insert($insarr, 'tbl_im_presence');
     }
 
     public function userExists($user)
     {
-    	$count = $this->getRecordCount("WHERE person = '$user'");	
-    	if($count > 0)
-    	{
-    		return $this->getAll("WHERE person = '$user'");
-    	}
-    	else {
-    		return FALSE;
-    	}
+        $count = $this->getRecordCount("WHERE person = '$user'");    
+        if($count > 0)
+        {
+            return $this->getAll("WHERE person = '$user'");
+        }
+        else {
+            return FALSE;
+        }
     }
     
     public function getPresence($jid)
     {
-    	$res = $this->getAll("WHERE person = '$jid'");
-    	return $res[0]['presshow'];
+        $res = $this->getAll("WHERE person = '$jid'");
+        return $res[0]['presshow'];
     }
     
 }

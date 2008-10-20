@@ -7,24 +7,24 @@ $options = array('comment' => 'table to hold IM messages from users', 'collate' 
 
 // Fields
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'msgtype' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'msgfrom' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'msgbody' => array(
-		'type' => 'clob',
-		),
-	'datesent' => array(
-		'type' => 'timestamp',
-		),
-	);
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'msgtype' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'msgfrom' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'msgbody' => array(
+        'type' => 'clob',
+        ),
+    'datesent' => array(
+        'type' => 'timestamp',
+        ),
+    );
 
 ?>

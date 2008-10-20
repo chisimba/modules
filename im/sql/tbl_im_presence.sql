@@ -7,25 +7,25 @@ $options = array('comment' => 'table to hold IM presence information', 'collate'
 
 // Fields
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'person' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'status' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'presshow' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'datesent' => array(
-		'type' => 'timestamp',
-		),
-	);
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'person' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'status' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'presshow' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'datesent' => array(
+        'type' => 'timestamp',
+        ),
+    );
 
 ?>

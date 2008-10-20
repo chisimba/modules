@@ -28,9 +28,9 @@ $objPagination->currentPage = $pages - 1;
 $middleColumn .= $objPagination->show();
 
 if (!$this->objUser->isLoggedIn()) {
-	$leftColumn.= $this->objImOps->loginBox(TRUE);
+    $leftColumn.= $this->objImOps->loginBox(TRUE);
 } else {
-	$leftColumn .= $this->leftMenu->show();
+    $leftColumn .= $this->leftMenu->show();
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);
