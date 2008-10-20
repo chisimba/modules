@@ -32,102 +32,102 @@
 
 class location extends controller
 {
-	protected $objLocationOps;
-	protected $objJson;
-	protected $objTwitterLib;
-	protected $objModules;
-	protected $objUser;
-	protected $userName;
-	protected $objSysConfig;
-	protected $feKey;
-	protected $feSecret;
-	protected $objUserParams;
-	protected $feToken;
-	protected $feTokenSecret;
-	protected $twitterUpdates;
-	protected $currentLocationName;
+    protected $objLocationOps;
+    protected $objJson;
+    protected $objTwitterLib;
+    protected $objModules;
+    protected $objUser;
+    protected $userName;
+    protected $objSysConfig;
+    protected $feKey;
+    protected $feSecret;
+    protected $objUserParams;
+    protected $feToken;
+    protected $feTokenSecret;
+    protected $twitterUpdates;
+    protected $currentLocationName;
 
-	/**
-	 * Standard constructor to load the necessary resources
-	 * and populate the new object's instance variables
-	 * @access public
-	 */
-	public function init()
-	{
-		// Load the location library
-		$this->objLocationOps = $this->getObject('locationops', 'location');
+    /**
+     * Standard constructor to load the necessary resources
+     * and populate the new object's instance variables
+     * @access public
+     */
+    public function init()
+    {
+        // Load the location library
+        $this->objLocationOps = $this->getObject('locationops', 'location');
 
-		// Create the JSON object for later use in the Fire Eagle library
-		$this->json = $this->getObject('json', 'utilities');
+        // Create the JSON object for later use in the Fire Eagle library
+        $this->json = $this->getObject('json', 'utilities');
 
-		// Get module catalogue for checking if optional modules exist
-		$this->objModules = $this->getObject('modules', 'modulecatalogue');
+        // Get module catalogue for checking if optional modules exist
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
 
-		// Load the Twitter library if available
-		if ($this->objModules->checkIfRegistered('twitter')) {
-			$this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
-		}
+        // Load the Twitter library if available
+        if ($this->objModules->checkIfRegistered('twitter')) {
+            $this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+        }
 
-		// Get the user object and name
-		$this->objUser = $this->getObject('user', 'security');
-		$this->userName = $this->objUser->userName();
+        // Get the user object and name
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userName = $this->objUser->userName();
 
-		// Read system configuration
-		$this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-		$this->feKey = $this->objSysConfig->getValue('fireeaglekey', 'location');
-		$this->feSecret = $this->objSysConfig->getValue('fireeaglesecret', 'location');
+        // Read system configuration
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->feKey = $this->objSysConfig->getValue('fireeaglekey', 'location');
+        $this->feSecret = $this->objSysConfig->getValue('fireeaglesecret', 'location');
 
-		// Read user configuration
-		$this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
-		$this->feToken = $this->objUserParams->getValue('Fire Eagle Token');
-		$this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
-		$this->twitterUpdates = $this->objUserParams->getValue('Twitter Location Updates');
-		$this->currentLocationName = base64_decode($this->objUserParams->getValue('Current Location Name'));
-	}
+        // Read user configuration
+        $this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
+        $this->feToken = $this->objUserParams->getValue('Fire Eagle Token');
+        $this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
+        $this->twitterUpdates = $this->objUserParams->getValue('Twitter Location Updates');
+        $this->currentLocationName = base64_decode($this->objUserParams->getValue('Current Location Name'));
+    }
 
-	/**
-	 * Standard dispatch method to handle the various possible actions
-	 * @access public
-	 */
-	public function dispatch()
-	{
-		$action = $this->getParam('action');
-		switch ($action) {
-			case 'start':
-				$fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
-				$token = $fireeagle->getRequestToken();
-				$_SESSION['request_token'] = $token['oauth_token'];
-				$_SESSION['request_secret'] = $token['oauth_token_secret'];
-				header('Location: ' . $fireeagle->getAuthorizeURL($token['oauth_token']));
-				exit;
-			case 'callback':
-				if ($_GET['oauth_token'] != $_SESSION['request_token']) {
-					die('Token mismatch');
-				}
-				$fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret'], $this->json);
-				$token = $fireeagle->getAccessToken();
-				$this->objUserParams->setItem('Fire Eagle Token', $token['oauth_token']);
-				$this->objUserParams->setItem('Fire Eagle Token Secret', $token['oauth_token_secret']);
-				$this->nextAction(null, null, 'location');
-				break;
-			default:
-				if ($this->feToken && $this->feTokenSecret) {
-					$location = $this->objLocationOps->getFireEagleUser();
-					$name = $location['user']['location_hierarchy'][0]['name'];
-					if ($name != $this->currentLocationName) {
-						$this->objUserParams->setItem('Current Location Name', base64_encode($name));
-						if ($this->twitterUpdates && $this->objTwitterLib) {
-							$this->objTwitterLib->setUid($this->userName);
-							$this->objTwitterLib->updateStatus('Current Location: ' . $name);
-						}
-					}
-					header('Content-Type: text/plain');
-					print_r($location);
-				} else {
-					$this->nextAction('start', null, 'location');
-				}
-		}
-	}
+    /**
+     * Standard dispatch method to handle the various possible actions
+     * @access public
+     */
+    public function dispatch()
+    {
+        $action = $this->getParam('action');
+        switch ($action) {
+            case 'start':
+                $fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
+                $token = $fireeagle->getRequestToken();
+                $_SESSION['request_token'] = $token['oauth_token'];
+                $_SESSION['request_secret'] = $token['oauth_token_secret'];
+                header('Location: ' . $fireeagle->getAuthorizeURL($token['oauth_token']));
+                exit;
+            case 'callback':
+                if ($_GET['oauth_token'] != $_SESSION['request_token']) {
+                    die('Token mismatch');
+                }
+                $fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret'], $this->json);
+                $token = $fireeagle->getAccessToken();
+                $this->objUserParams->setItem('Fire Eagle Token', $token['oauth_token']);
+                $this->objUserParams->setItem('Fire Eagle Token Secret', $token['oauth_token_secret']);
+                $this->nextAction(null, null, 'location');
+                break;
+            default:
+                if ($this->feToken && $this->feTokenSecret) {
+                    $location = $this->objLocationOps->getFireEagleUser();
+                    $name = $location['user']['location_hierarchy'][0]['name'];
+                    if ($name != $this->currentLocationName) {
+                        $this->objUserParams->setItem('Current Location Name', base64_encode($name));
+                        if ($this->twitterUpdates && $this->objTwitterLib) {
+                            $this->objTwitterLib->setUid($this->userName);
+                            $this->objTwitterLib->updateStatus('Current Location: ' . $name);
+                        }
+                    }
+                    header('Content-Type: text/plain');
+                    print_r($location);
+                } else {
+                    $this->nextAction('start', null, 'location');
+                }
+        }
+    }
 }
 
 ?>
