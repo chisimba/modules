@@ -8,10 +8,11 @@
 	
   Set tabs to 4 for best viewing.
  
-*/
+ */
 
 // security - hide paths
-if (!defined('ADODB_DIR')) die();
+if (! defined ( 'ADODB_DIR' ))
+	die ();
 
 class ADODB2_mysql extends ADODB_DataDict {
 	var $databaseType = 'mysql';
@@ -19,102 +20,130 @@ class ADODB2_mysql extends ADODB_DataDict {
 	var $alterTableAddIndex = true;
 	var $dropTable = 'DROP TABLE IF EXISTS %s'; // requires mysql 3.22 or later
 	
+
 	var $dropIndex = 'DROP INDEX %s ON %s';
-	var $renameColumn = 'ALTER TABLE %s CHANGE COLUMN %s %s %s';	// needs column-definition!
+	var $renameColumn = 'ALTER TABLE %s CHANGE COLUMN %s %s %s'; // needs column-definition!
 	
-	function MetaType($t,$len=-1,$fieldobj=false)
-	{
-		if (is_object($t)) {
+
+	function MetaType($t, $len = -1, $fieldobj = false) {
+		if (is_object ( $t )) {
 			$fieldobj = $t;
 			$t = $fieldobj->type;
 			$len = $fieldobj->max_length;
 		}
-		$is_serial = is_object($fieldobj) && $fieldobj->primary_key && $fieldobj->auto_increment;
+		$is_serial = is_object ( $fieldobj ) && $fieldobj->primary_key && $fieldobj->auto_increment;
 		
-		$len = -1; // mysql max_length is not accurate
-		switch (strtoupper($t)) {
-		case 'STRING': 
-		case 'CHAR':
-		case 'VARCHAR': 
-		case 'TINYBLOB': 
-		case 'TINYTEXT': 
-		case 'ENUM': 
-		case 'SET':
-			if ($len <= $this->blobSize) return 'C';
+		$len = - 1; // mysql max_length is not accurate
+		switch (strtoupper ( $t )) {
+			case 'STRING' :
+			case 'CHAR' :
+			case 'VARCHAR' :
+			case 'TINYBLOB' :
+			case 'TINYTEXT' :
+			case 'ENUM' :
+			case 'SET' :
+				if ($len <= $this->blobSize)
+					return 'C';
 			
-		case 'TEXT':
-		case 'LONGTEXT': 
-		case 'MEDIUMTEXT':
-			return 'X';
+			case 'TEXT' :
+			case 'LONGTEXT' :
+			case 'MEDIUMTEXT' :
+				return 'X';
 			
-		// php_mysql extension always returns 'blob' even if 'text'
-		// so we have to check whether binary...
-		case 'IMAGE':
-		case 'LONGBLOB': 
-		case 'BLOB':
-		case 'MEDIUMBLOB':
-			return !empty($fieldobj->binary) ? 'B' : 'X';
+			// php_mysql extension always returns 'blob' even if 'text'
+			// so we have to check whether binary...
+			case 'IMAGE' :
+			case 'LONGBLOB' :
+			case 'BLOB' :
+			case 'MEDIUMBLOB' :
+				return ! empty ( $fieldobj->binary ) ? 'B' : 'X';
 			
-		case 'YEAR':
-		case 'DATE': return 'D';
-		
-		case 'TIME':
-		case 'DATETIME':
-		case 'TIMESTAMP': return 'T';
-		
-		case 'FLOAT':
-		case 'DOUBLE':
-			return 'F';
+			case 'YEAR' :
+			case 'DATE' :
+				return 'D';
 			
-		case 'INT': 
-		case 'INTEGER': return $is_serial ? 'R' : 'I';
-		case 'TINYINT': return $is_serial ? 'R' : 'I1';
-		case 'SMALLINT': return $is_serial ? 'R' : 'I2';
-		case 'MEDIUMINT': return $is_serial ? 'R' : 'I4';
-		case 'BIGINT':  return $is_serial ? 'R' : 'I8';
-		default: return 'N';
+			case 'TIME' :
+			case 'DATETIME' :
+			case 'TIMESTAMP' :
+				return 'T';
+			
+			case 'FLOAT' :
+			case 'DOUBLE' :
+				return 'F';
+			
+			case 'INT' :
+			case 'INTEGER' :
+				return $is_serial ? 'R' : 'I';
+			case 'TINYINT' :
+				return $is_serial ? 'R' : 'I1';
+			case 'SMALLINT' :
+				return $is_serial ? 'R' : 'I2';
+			case 'MEDIUMINT' :
+				return $is_serial ? 'R' : 'I4';
+			case 'BIGINT' :
+				return $is_serial ? 'R' : 'I8';
+			default :
+				return 'N';
 		}
 	}
-
-	function ActualType($meta)
-	{
-		switch(strtoupper($meta)) {
-		case 'C': return 'VARCHAR';
-		case 'XL':return 'LONGTEXT';
-		case 'X': return 'TEXT';
-		
-		case 'C2': return 'VARCHAR';
-		case 'X2': return 'LONGTEXT';
-		
-		case 'B': return 'LONGBLOB';
+	
+	function ActualType($meta) {
+		switch (strtoupper ( $meta )) {
+			case 'C' :
+				return 'VARCHAR';
+			case 'XL' :
+				return 'LONGTEXT';
+			case 'X' :
+				return 'TEXT';
 			
-		case 'D': return 'DATE';
-		case 'T': return 'DATETIME';
-		case 'L': return 'TINYINT';
-		
-		case 'R':
-		case 'I4':
-		case 'I': return 'INTEGER';
-		case 'I1': return 'TINYINT';
-		case 'I2': return 'SMALLINT';
-		case 'I8': return 'BIGINT';
-		
-		case 'F': return 'DOUBLE';
-		case 'N': return 'NUMERIC';
-		default:
-			return $meta;
+			case 'C2' :
+				return 'VARCHAR';
+			case 'X2' :
+				return 'LONGTEXT';
+			
+			case 'B' :
+				return 'LONGBLOB';
+			
+			case 'D' :
+				return 'DATE';
+			case 'T' :
+				return 'DATETIME';
+			case 'L' :
+				return 'TINYINT';
+			
+			case 'R' :
+			case 'I4' :
+			case 'I' :
+				return 'INTEGER';
+			case 'I1' :
+				return 'TINYINT';
+			case 'I2' :
+				return 'SMALLINT';
+			case 'I8' :
+				return 'BIGINT';
+			
+			case 'F' :
+				return 'DOUBLE';
+			case 'N' :
+				return 'NUMERIC';
+			default :
+				return $meta;
 		}
 	}
 	
 	// return string must begin with space
-	function _CreateSuffix($fname,$ftype,$fnotnull,$fdefault,$fautoinc,$fconstraint,$funsigned)
-	{	
+	function _CreateSuffix($fname, $ftype, $fnotnull, $fdefault, $fautoinc, $fconstraint, $funsigned) {
 		$suffix = '';
-		if ($funsigned) $suffix .= ' UNSIGNED';
-		if ($fnotnull) $suffix .= ' NOT NULL';
-		if (strlen($fdefault)) $suffix .= " DEFAULT $fdefault";
-		if ($fautoinc) $suffix .= ' AUTO_INCREMENT';
-		if ($fconstraint) $suffix .= ' '.$fconstraint;
+		if ($funsigned)
+			$suffix .= ' UNSIGNED';
+		if ($fnotnull)
+			$suffix .= ' NOT NULL';
+		if (strlen ( $fdefault ))
+			$suffix .= " DEFAULT $fdefault";
+		if ($fautoinc)
+			$suffix .= ' AUTO_INCREMENT';
+		if ($fconstraint)
+			$suffix .= ' ' . $fconstraint;
 		return $suffix;
 	}
 	
@@ -139,41 +168,45 @@ class ADODB2_mysql extends ADODB_DataDict {
 		ON tbl_name (col_name[(length)],... )
 	*/
 	
-	function _IndexSQL($idxname, $tabname, $flds, $idxoptions)
-	{
-		$sql = array();
+	function _IndexSQL($idxname, $tabname, $flds, $idxoptions) {
+		$sql = array ();
 		
-		if ( isset($idxoptions['REPLACE']) || isset($idxoptions['DROP']) ) {
-			if ($this->alterTableAddIndex) $sql[] = "ALTER TABLE $tabname DROP INDEX $idxname";
-			else $sql[] = sprintf($this->dropIndex, $idxname, $tabname);
-
-			if ( isset($idxoptions['DROP']) )
+		if (isset ( $idxoptions ['REPLACE'] ) || isset ( $idxoptions ['DROP'] )) {
+			if ($this->alterTableAddIndex)
+				$sql [] = "ALTER TABLE $tabname DROP INDEX $idxname";
+			else
+				$sql [] = sprintf ( $this->dropIndex, $idxname, $tabname );
+			
+			if (isset ( $idxoptions ['DROP'] ))
 				return $sql;
 		}
 		
-		if ( empty ($flds) ) {
+		if (empty ( $flds )) {
 			return $sql;
 		}
 		
-		if (isset($idxoptions['FULLTEXT'])) {
+		if (isset ( $idxoptions ['FULLTEXT'] )) {
 			$unique = ' FULLTEXT';
-		} elseif (isset($idxoptions['UNIQUE'])) {
+		} elseif (isset ( $idxoptions ['UNIQUE'] )) {
 			$unique = ' UNIQUE';
 		} else {
 			$unique = '';
 		}
 		
-		if ( is_array($flds) ) $flds = implode(', ',$flds);
+		if (is_array ( $flds ))
+			$flds = implode ( ', ', $flds );
 		
-		if ($this->alterTableAddIndex) $s = "ALTER TABLE $tabname ADD $unique INDEX $idxname ";
-		else $s = 'CREATE' . $unique . ' INDEX ' . $idxname . ' ON ' . $tabname;
+		if ($this->alterTableAddIndex)
+			$s = "ALTER TABLE $tabname ADD $unique INDEX $idxname ";
+		else
+			$s = 'CREATE' . $unique . ' INDEX ' . $idxname . ' ON ' . $tabname;
 		
 		$s .= ' (' . $flds . ')';
 		
-		if ( isset($idxoptions[$this->upperName]) )
-			$s .= $idxoptions[$this->upperName];
+		if (isset ( $idxoptions [$this->upperName] ))
+			$s .= $idxoptions [$this->upperName];
 		
-		$sql[] = $s;
+		$sql [] = $s;
 		
 		return $sql;
 	}

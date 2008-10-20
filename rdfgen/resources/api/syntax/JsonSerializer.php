@@ -19,80 +19,78 @@ class JsonSerializer extends Object {
 		
 		// create the root json object (root object)
 		$jsonString = '{';
-		$subjects = array();
+		$subjects = array ();
 		
 		// sort triples by subject
-		foreach ($model->triples as $triple) {
-			$subjects[$triple->toStringSubject()][] = $triple;
+		foreach ( $model->triples as $triple ) {
+			$subjects [$triple->toStringSubject ()] [] = $triple;
 		}
 		
 		// sort alphabetically
-		ksort($subjects);
-			
+		ksort ( $subjects );
+		
 		// triples are sorted by subject now, each key is a subject uri, containing all triples with this subject uri
 		$i = 0;
-		foreach ($subjects as $predicatesArray) {
-			$predicates = array();
+		foreach ( $subjects as $predicatesArray ) {
+			$predicates = array ();
 			
 			if ($i > 0) {
 				$jsonString .= ',';
 			}
-			$i++;
+			$i ++;
 			
-			$subj = $predicatesArray[0]->getSubject();
+			$subj = $predicatesArray [0]->getSubject ();
 			
 			// add special _: sequence for blank node only
 			if ($subj instanceof BlankNode) {
-				$jsonString .= '"_:' . $this->_escapeValue($subj->getLabel()) . '":';
+				$jsonString .= '"_:' . $this->_escapeValue ( $subj->getLabel () ) . '":';
 			} else {
-				$jsonString .= '"' . $this->_escapeValue($subj->getLabel()) . '":';
+				$jsonString .= '"' . $this->_escapeValue ( $subj->getLabel () ) . '":';
 			}
-			
-			
 			
 			// create a json object for each subject (subject object)
 			$jsonString .= '{';
 			
 			// sort triples with current subject by predicate
-			foreach ($predicatesArray as $triple) {	
-				$predicates[$triple->toStringPredicate()][] = $triple;
+			foreach ( $predicatesArray as $triple ) {
+				$predicates [$triple->toStringPredicate ()] [] = $triple;
 			}
 			
 			// sort alphabetically
-			ksort($predicates);
+			ksort ( $predicates );
 			
 			$j = 0;
-			foreach ($predicates as $valueArray) {
+			foreach ( $predicates as $valueArray ) {
 				
 				if ($j > 0) {
 					$jsonString .= ',';
 				}
-				$j++;
+				$j ++;
 				
-				$jsonString .= '"' . $this->_escapeValue($valueArray[0]->getLabelPredicate()) . '":';
+				$jsonString .= '"' . $this->_escapeValue ( $valueArray [0]->getLabelPredicate () ) . '":';
 				
 				// create a json array (value array) 
 				$jsonString .= '[';
 				
 				$k = 0;
-				foreach ($valueArray as $triple) {
+				foreach ( $valueArray as $triple ) {
 					if ($k > 0) {
 						$jsonString .= ',';
 					}
-					$k++;
+					$k ++;
 					
 					// create json value object (value object)
 					$jsonString .= '{';
 					
-					$obj = $triple->getObject();
+					$obj = $triple->getObject ();
 					
 					// add special _: sequence for blank nodes only
 					if ($obj instanceof BlankNode) {
-						$jsonString .= '"value":"_:' . $this->_escapeValue($obj->getLabel()) . '",';
+						$jsonString .= '"value":"_:' . $this->_escapeValue ( $obj->getLabel () ) . '",';
 					} else if ($obj instanceof Literal) {
-						$jsonString .= '"value":"' . $this->_escapeValue($obj->getLabel()) . '",';
+						$jsonString .= '"value":"' . $this->_escapeValue ( $obj->getLabel () ) . '",';
 					} else {
-						$jsonString .= '"value":"' . $this->_escapeValue($obj->getLabel()) . '",';
+						$jsonString .= '"value":"' . $this->_escapeValue ( $obj->getLabel () ) . '",';
 					}
 					
 					// add type of object
@@ -105,13 +103,13 @@ class JsonSerializer extends Object {
 					}
 					
 					if ($obj instanceof Literal) {
-						if ($obj->getLanguage() != '') {
-							$jsonString .= ',"lang":"' . $this->_escapeValue($obj->getLanguage()) . '"';
+						if ($obj->getLanguage () != '') {
+							$jsonString .= ',"lang":"' . $this->_escapeValue ( $obj->getLanguage () ) . '"';
 						}
-						if ($obj->getDatatype() != '') {
-							$jsonString .= ',"datatype":"' . $this->_escapeValue($obj->getDatatype()) . '"';
+						if ($obj->getDatatype () != '') {
+							$jsonString .= ',"datatype":"' . $this->_escapeValue ( $obj->getDatatype () ) . '"';
 						}
-						
+					
 					}
 					
 					// close value object
@@ -147,15 +145,14 @@ class JsonSerializer extends Object {
 	 */
 	protected function _escapeValue($value) {
 		
-		
-		$value = str_replace("\\", '\\\\', $value);
+		$value = str_replace ( "\\", '\\\\', $value );
 		#$value = str_replace("/", '\/', $value);
-		$value = str_replace("\n", '\\n', $value);
-		$value = str_replace("\t", '\\t', $value);
-		$value = str_replace("\r", '\\r', $value);
-		$value = str_replace("\b", '\\b', $value);
-		$value = str_replace("\f", '\\f', $value);
-		$value = str_replace('"', '\"', $value);
+		$value = str_replace ( "\n", '\\n', $value );
+		$value = str_replace ( "\t", '\\t', $value );
+		$value = str_replace ( "\r", '\\r', $value );
+		$value = str_replace ( "\b", '\\b', $value );
+		$value = str_replace ( "\f", '\\f', $value );
+		$value = str_replace ( '"', '\"', $value );
 		
 		return $value;
 	}

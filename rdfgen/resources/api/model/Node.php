@@ -5,6 +5,7 @@ require_once RDFAPI_INCLUDE_DIR . '/util/Object.php';
 // Class: Node
 // ----------------------------------------------------------------------------------
 
+
 /**
  * An abstract RDF node.
  * Can either be resource, literal or blank node.
@@ -18,8 +19,8 @@ require_once RDFAPI_INCLUDE_DIR . '/util/Object.php';
  * @abstract
  *
  */
- class Node extends Object {
- } // end:RDFNode
+class Node extends Object {
+} // end:RDFNode
 
 
 ?>

@@ -19,6 +19,6 @@ $leftCol .= $objSideBar->show();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
-$cssLayout->setRightColumnContent($rightSideColumn);
+// $cssLayout->setRightColumnContent($rightSideColumn);
 echo $cssLayout->show();
 ?>

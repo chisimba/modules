@@ -17,35 +17,35 @@ class JsonParser extends Object {
 	 */
 	public function generateModelFromString($jsonString, $model) {
 		
-		$jsonModel = array();
-		$jsonModel = json_decode($jsonString, true);
+		$jsonModel = array ();
+		$jsonModel = json_decode ( $jsonString, true );
 		
 		// throws an excpetion if json model was corrupt
-		if (!is_array($jsonModel)) {
-			throw new Exception('error in json string');
+		if (! is_array ( $jsonModel )) {
+			throw new Exception ( 'error in json string' );
 		}
 		
-		foreach ($jsonModel as $subject=>$remain) {
-			foreach ($remain as $predicate=>$object) {
-				$s = (strpos($subject, '_') === 0) ? new BlankNode(substr($subject, 2)) : new Resource($subject);
-				$p = new Resource($predicate);
+		foreach ( $jsonModel as $subject => $remain ) {
+			foreach ( $remain as $predicate => $object ) {
+				$s = (strpos ( $subject, '_' ) === 0) ? new BlankNode ( substr ( $subject, 2 ) ) : new Resource ( $subject );
+				$p = new Resource ( $predicate );
 				
-				foreach ($object as $obj) {
-					if ($obj['type'] === 'uri') {
-						$o = new Resource($obj['value']);
-					} else if ($obj['type'] === 'bnode') {
-						$o = new BlankNode(substr($obj['value'], 2));
+				foreach ( $object as $obj ) {
+					if ($obj ['type'] === 'uri') {
+						$o = new Resource ( $obj ['value'] );
+					} else if ($obj ['type'] === 'bnode') {
+						$o = new BlankNode ( substr ( $obj ['value'], 2 ) );
 					} else {
-						$dtype = (isset($obj['datatype'])) ? $obj['datatype'] : '';
-						$lang = (isset($obj['lang'])) ? $obj['lang'] : '';
-
-						$oVal = $obj['value'];
-
-						$o = new Literal($oVal, $lang);
-						$o->setDatatype($dtype);
+						$dtype = (isset ( $obj ['datatype'] )) ? $obj ['datatype'] : '';
+						$lang = (isset ( $obj ['lang'] )) ? $obj ['lang'] : '';
+						
+						$oVal = $obj ['value'];
+						
+						$o = new Literal ( $oVal, $lang );
+						$o->setDatatype ( $dtype );
 					}
 					
-					$model->add(new Statement($s, $p, $o));
+					$model->add ( new Statement ( $s, $p, $o ) );
 				}
 			}
 		}
