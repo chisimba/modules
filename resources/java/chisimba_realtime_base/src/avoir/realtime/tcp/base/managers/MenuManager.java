@@ -17,6 +17,7 @@
  */
 package avoir.realtime.tcp.base.managers;
 
+import avoir.realtime.tcp.base.BrowserSettingsFrame;
 import avoir.realtime.tcp.base.RealtimeBase;
 import avoir.realtime.tcp.base.appsharing.AppShareFrame;
 import avoir.realtime.tcp.common.Constants;
@@ -67,12 +68,13 @@ public class MenuManager implements ActionListener {
         JMenu toolsMenu = createMenu("Tools");
         JMenu helpMenu = createMenu("Help");
 
-        createMenuItem(toolsMenu, "Application Sharing", "appshare", false);//base.getControl());
+        createMenuItem(toolsMenu, "Application Sharing", "appshare", true);
         createMenuItem(toolsMenu, "File Sharing", "fileSharing", base.getControl());
         createMenuItem(toolsMenu, "Survey", "survey", base.getControl());
         createMenuItem(toolsMenu, "Filters", "filter", true);
         createMenuItem(toolsMenu, "Audio Setup", "audiosetup", true);
         createMenuItem(toolsMenu, "Options", "options", true);
+        createMenuItem(toolsMenu, "Web Browser Settings", "webBrowserSettings", true);
         createMenuItem(helpMenu, "About", "about", true);
 
         createMenuItem(fileMenu, "New Whiteboard", "newWhiteboard", false);
@@ -98,6 +100,11 @@ public class MenuManager implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("webBrowserSettings")) {
+            BrowserSettingsFrame fr = new BrowserSettingsFrame(base.getRealtimeOptions());
+            fr.setLocationRelativeTo(null);
+            fr.setVisible(true);
+        }
         if (e.getActionCommand().equals("fileSharing")) {
             base.showFileTransferFrame();
         }
@@ -113,12 +120,16 @@ public class MenuManager implements ActionListener {
             }.start();
         }
         if (e.getActionCommand().equals("appshare")) {
-            if (appShareFrame == null) {
-                appShareFrame = new AppShareFrame(base);
+            if (base.getControl()) {
+                if (appShareFrame == null) {
+                    appShareFrame = new AppShareFrame(base);
+                }
+                appShareFrame.setSize(400, 300);
+                appShareFrame.setLocationRelativeTo(null);
+                appShareFrame.setVisible(true);
+            } else {
+                base.getTcpClient().getTCPConsumer().showRemoteDesktop();
             }
-            appShareFrame.setSize(400, 300);
-            appShareFrame.setLocationRelativeTo(null);
-            appShareFrame.setVisible(true);
         }
         if (e.getActionCommand().equals("insertGraphic")) {
             if (graphicFC.showOpenDialog(base) == JFileChooser.APPROVE_OPTION) {

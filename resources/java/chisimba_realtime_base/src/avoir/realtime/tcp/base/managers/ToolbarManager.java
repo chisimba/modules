@@ -168,6 +168,7 @@ public class ToolbarManager {
             public void actionPerformed(ActionEvent e) {
                 int slideIndex = 0;
                 base.getSessionManager().setSlideIndex(slideIndex);
+             //   base.setSelectedFile(presentationName);
                 base.getTcpClient().requestNewSlide(base.getSiteRoot(), slideIndex,
                         base.isPresenter(), base.getSessionId(), base.getUser().getUserName(),
                         base.getControl(), base.getSelectedFile(), base.isWebPresent());

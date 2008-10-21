@@ -30,28 +30,28 @@ public class AgendaManager {
         if (title.trim().equals("")) {
             title = "";
         }
-         addAgenda(new String[0], "Whiteboard");
-        DefaultMutableTreeNode p = agendaTree.addObject(null, new Slide(-1, "",title,0,true));
+        addAgenda(new String[0], "Whiteboard");
+        DefaultMutableTreeNode p = agendaTree.addObject(null, new Slide(-1, "", title, 0, true));
+        base.setSelectedFile(title);
         for (int i = 0; i < base.getSessionManager().getSlideCount(); i++) {
-            agendaTree.addObject(p,new Slide(i, "Item " + (i + 1),title,base.getSessionManager().getSlideCount(),true), false);
-        }
-        
-    }
 
-    
+            agendaTree.addObject(p, new Slide(i, "Item " + (i + 1), title, base.getSessionManager().getSlideCount(), true), false);
+        }
+
+    }
 
     public void addAgenda(String[] outline, String title) {
 
         if (outline == null) {
             return;
         }
-        DefaultMutableTreeNode p = agendaTree.addObject(null,new Slide(-1,"", title,0,false));
-
+        DefaultMutableTreeNode p = agendaTree.addObject(null, new Slide(-1, "", title, 0, false));
+        base.setSelectedFile(title);
         for (int i = 0; i < outline.length; i++) {
             if (outline[i] == null) {
-                agendaTree.addObject(p,new Slide(i+1, "Item"+(1+1),title,outline.length,false), false);
+                agendaTree.addObject(p, new Slide(i + 1, "Item" + (1 + 1), title, outline.length, false), false);
             } else {
-                agendaTree.addObject(p,new Slide(i, outline[i],title,outline.length,false)  , false);
+                agendaTree.addObject(p, new Slide(i, outline[i], title, outline.length, false), false);
 
             }
         }
