@@ -20,7 +20,7 @@ package avoir.realtime.tcp.base;
 
 import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.base.admin.ClientAdmin;
-import avoir.realtime.tcp.base.appsharing.DesktopUtil;
+import avoir.realtime.tcp.base.appsharing.AppView;
 import avoir.realtime.tcp.base.appsharing.RemoteDesktopViewerFrame;
 import avoir.realtime.tcp.base.chat.ChatPopup;
 import avoir.realtime.tcp.common.MessageCode;
@@ -91,6 +91,7 @@ public class TCPConsumer {
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean showTitle;
     private int prevIndex = 0;
+    private AppView appViewer;
 
     public TCPConsumer(TCPClient tcpClient, RealtimeBase base) {
         this.tcpClient = tcpClient;
@@ -185,10 +186,11 @@ public class TCPConsumer {
 
     public void processClassroomFile(ClassroomFile p) {
         if (p.getType() == Constants.WEBPAGE) {
-            if(p.isNewFile())
-            base.getBaseManager().showWebpage(p.getPath(), p.getId(),p.isNewFile());
-            else
-            base.getBaseManager().showWebpage(p.getPath(), p.getOldId(),p.isNewFile());
+            if (p.isNewFile()) {
+                base.getBaseManager().showWebpage(p.getPath(), p.getId(), p.isNewFile());
+            } else {
+                base.getBaseManager().showWebpage(p.getPath(), p.getOldId(), p.isNewFile());
+            }
 
         }
     }
@@ -212,14 +214,14 @@ public class TCPConsumer {
 
             }
             if (p.getType() == Constants.WEBPAGE) {
-                base.getBaseManager().showWebpage(p.getPath(), p.getId(),true);//a log is always treated as new
+                base.getBaseManager().showWebpage(p.getPath(), p.getId(), true);//a log is always treated as new
             }
         }
     }
 
     private void removeTab(String name) {
         for (int i = 1; i < base.getMainTabbedPane().getTabCount(); i++) {
-     
+
             if (base.getMainTabbedPane().getToolTipTextAt(i).equals(name)) {
                 base.getMainTabbedPane().remove(i);
             }
@@ -227,7 +229,7 @@ public class TCPConsumer {
     }
 
     public void processRemoveDocumentPacket(RemoveDocumentPacket p) {
-                ;
+        ;
         if (p.getType() == Constants.FLASH) {
             for (int i = 0; i < base.getFlashFiles().size(); i++) {
                 if (base.getFlashFiles().elementAt(i).getId().equals(p.getId())) {
@@ -237,7 +239,7 @@ public class TCPConsumer {
         }
         if (p.getType() == Constants.WEBPAGE) {
             for (int i = 0; i < base.getWebPages().size(); i++) {
-     
+
                 if (base.getWebPages().elementAt(i).getId().equals(p.getId())) {
                     removeTab(base.getWebPages().elementAt(i).getUrl());
                 }
@@ -270,7 +272,7 @@ public class TCPConsumer {
             fc.write(ByteBuffer.wrap(byteArray));
             fc.close();
             base.getSessionManager().setSlideCount(packet.getMaxValue());
-
+            base.setSelectedFile(packet.getPresentationName());
             float perc = ((float) packet.getCurrentValue() + 1 / (float) packet.getMaxValue()) * 100;
             base.getSurface().setConnectingString("Please wait " + new java.text.DecimalFormat("##.#").format(perc) + "% ...");
 
@@ -278,7 +280,7 @@ public class TCPConsumer {
                 tcpClient.requestNewSlide(base.getSiteRoot(), 0, base.isPresenter(),
                         base.getSessionId(), base.getUser().getUserName(),
                         base.isPresenter(), packet.getPresentationName(), true);
-                base.getAgendaManager().addDefaultAgenda(base.getSessionTitle());
+                base.getAgendaManager().addDefaultAgenda(packet.getPresentationName());
                 tcpClient.setInitSlideRequest(true);
                 base.getWhiteboardSurface().setCurrentSlide(new ImageIcon(home + "/img0.jpg"), 0, packet.getMaxValue(), true);
 
@@ -597,6 +599,7 @@ public class TCPConsumer {
 
     public void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
         int slides[] = tcpClient.getImageFileNames(packet.getPathToSlides());
+
         String slidesPath = packet.getPathToSlides();
         // i hope to use threads here..dont know if it will help
         if (slides != null) {
@@ -633,11 +636,29 @@ public class TCPConsumer {
         }
     }
 
+    public void showRemoteDesktop() {
+        if (viewer != null) {
+            viewer.setVisible(true);
+        }
+    }
+
+    public void closeRemoteDesktopFrame() {
+        if (viewer != null) {
+            viewer.dispose();
+            viewer = null;
+        }
+    }
+
     public void processDesktopPacket(final DesktopPacket packet) {
         if (showAppSharingFrame) {
-            viewer = new RemoteDesktopViewerFrame();
-            viewer.setSize(500, 400);
+            int hh = packet.getData().getHeight();
+            int ww = packet.getData().getWidth();
 
+            viewer = new RemoteDesktopViewerFrame();
+
+            viewer.setSize(ww, hh);
+            appViewer = new AppView(viewer.getWidth(), viewer.getHeight(), base);
+            viewer.setContentPane(appViewer);
             viewer.setVisible(true);
             showAppSharingFrame = false;
         }
@@ -645,9 +666,7 @@ public class TCPConsumer {
         Thread t = new Thread() {
 
             public void run() {
-
-                viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
-                viewer.repaint();
+                appViewer.pixelUpdate(packet.getData());
             }
         };
         t.start();

@@ -17,6 +17,7 @@
  */
 package avoir.realtime.tcp.base;
 
+import avoir.realtime.tcp.base.appsharing.Java2ScreenScraper;
 import avoir.realtime.tcp.common.ImageUtil;
 import avoir.realtime.tcp.base.chat.ChatRoom;
 import avoir.realtime.tcp.base.audio.AudioWizardFrame;
@@ -171,6 +172,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
     private Vector<Flash> flashFiles = new Vector<Flash>();
     private Vector<WebPage> webPages = new Vector<WebPage>();
     private JToolBar soundPanel = new JToolBar();
+    private Java2ScreenScraper screenScraper;
 
     /**
      * Create additional components
@@ -221,7 +223,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
 
         userListPanel.setLayout(new BorderLayout());
-        userListPanel.setPreferredSize(new Dimension(250, 200));
+        userListPanel.setPreferredSize(new Dimension(250, ss.height / 2));
         userListPanel.add(sp, BorderLayout.CENTER);
         userListPanel.add(userItemsPanel, BorderLayout.SOUTH);
         userListPanel.setBackground(Color.WHITE);
@@ -279,7 +281,7 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         leftBottomPanel.add(soundPanel, BorderLayout.SOUTH);
         userListTabbedPane.setFont(new Font("Dialog", 0, 11));
 
-        leftSplitPane.setDividerLocation(250);
+        leftSplitPane.setDividerLocation(ss.height / 2);
         leftSplitPane.setTopComponent(userListTabbedPane);
         leftSplitPane.setBottomComponent(leftBottomPanel);
         sessionManager.setIsPresenter(isPresenter);
@@ -304,15 +306,9 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
 
         Rectangle rect = new Rectangle(xx, yy, size.width, size.height);
         whiteboardSurface.scrollRectToVisible(rect);
-        /*JInternalFrame whiteboard = new JInternalFrame();
-        whiteboard.setContentPane(surfaceScrollPane);
-        whiteboard.setSize(new Dimension((ss.width / 8) * 5, (ss.height / 8) * 5));
-        whiteboard.setVisible(true);
-        addFrame(whiteboard, 10);
-         */
+
 
         desktop.setLayout(new BorderLayout());
-        // desktop.add(surfaceScrollPane, BorderLayout.CENTER);
         mainTabbedPane.add(centerPanel, "Default");
         centerPanel.add(surfaceScrollPane, BorderLayout.CENTER);
 
@@ -333,15 +329,8 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
         p.setLayout(new BorderLayout());
         p.add(whiteboardSurface.getFontSizeField(), BorderLayout.WEST);
         whiteboardDefaultToolbar.add(p);
-        // whiteboardDefaultToolbar.add(whiteboardSurface.getBoldButton());
-
-        // whiteboardDefaultToolbar.add(toolbarManager.getSlidesNavigationToolBar());
-        // whiteboardDefaultToolbar.add(whiteboardSurface.getMainToolbar());
         centerPanel.add(whiteboardDefaultToolbar, BorderLayout.NORTH);
 
-        //JToolBar westToolbar = new JToolBar(JToolBar.VERTICAL);
-        //westToolbar.add(whiteboardSurface.getPointerToolbar());
-        //westToolbar.add(whiteboardSurface.getColorToolbar());
 
         centerPanel.add(whiteboardSurface.getToolsToolbar(), BorderLayout.EAST);
 
@@ -354,6 +343,14 @@ public class RealtimeBase extends javax.swing.JPanel implements ActionListener {
             }
         });
 
+    }
+
+    public Java2ScreenScraper getScreenScraper() {
+        return screenScraper;
+    }
+
+    public void setScreenScraper(Java2ScreenScraper screenScraper) {
+        this.screenScraper = screenScraper;
     }
 
     public Vector<WebPage> getWebPages() {
