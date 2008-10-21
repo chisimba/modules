@@ -9,6 +9,7 @@ package avoir.realtime.tcp.launcher;
 
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.launcher.Launcher;
+import avoir.realtime.tcp.launcher.packet.VersionRequestPacket;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,11 +30,14 @@ import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permissions;
 import java.security.Policy;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import javax.swing.JDialog;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -46,6 +50,7 @@ import javax.swing.JProgressBar;
  */
 public class RealtimeLauncher extends javax.swing.JApplet {
 
+    private Map<String, Integer> currentVersions;
     private static String versionPropsFilename = "version.properties";
     private Version v = new Version();
     private String REALTIME_HOME = avoir.realtime.tcp.launcher.Constants.getRealtimeHome();
@@ -54,7 +59,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     int plVer = 0;
     private String version = "1.0.2";
     private String swt = getPlatformSpecificSWT();
-    private Vector<String> staticPluginsRequired = new Vector<String>();
+    private Vector<Plugin> staticPluginsRequired = new Vector<Plugin>();
+    private Vector<Plugin> corePluginsRequired = new Vector<Plugin>();
     private String[][] staticPlugins = {
         {"jspeex.jar", "Audio Codec"},
         {"jna.jar", "JNA",},
@@ -122,7 +128,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                     initSecurity();
                     initComponents();
                     initCustomComponents();
-                    pb.setIndeterminate(true);
+                    mainPb.setIndeterminate(true);
                     initSystemLoad();
 
                 }
@@ -130,6 +136,19 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String[][] getCorePlugins() {
+        return corePlugins;
+    }
+
+    public Map<String, Integer> getCurrentVersions() {
+        return currentVersions;
+    }
+
+    public void setCurrentVersions(Map<String, Integer> currentVersions) {
+        this.currentVersions = currentVersions;
+        checkPluginsAndResources();
     }
 
     /**
@@ -157,6 +176,42 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         return corePlugins.length;
     }
 
+    public JProgressBar getMinorPb() {
+        return minorPb;
+    }
+
+    public String getREALTIME_HOME() {
+        return REALTIME_HOME;
+    }
+
+    public int getJarVersionNo(String jarFileName) {
+        try {
+
+            JarFile jar = new JarFile(jarFileName);
+
+            final Manifest manifest = jar.getManifest();
+            final Attributes mattr = manifest.getMainAttributes();
+            String verAttr = mattr.getValue("JarVersion");
+
+            if (verAttr != null) {
+                String[] toks = verAttr.split(",");
+                int v = 0;
+                for (int i = 0; i < toks.length; i++) {
+                    int c = Integer.parseInt(toks[i]);
+                    if (i > 0) {
+                        c = c * 100;
+                    }
+                    v += c;
+                }
+                return v;
+            }
+        } catch (Exception ex) {
+            //igonre this, means we must request for new one anyway
+            //ex.printStackTrace();
+        }
+        return -1;
+    }
+
     /**
      * Even though this applet is signed, it is not the main application. we need to
      * set security permissions so that when it invokes the main application
@@ -166,9 +221,13 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         Policy.setPolicy(new Policy() {
 
             @Override
-            public Permissions getPermissions(CodeSource codesource) {
+            public Permissions getPermissions(
+                    CodeSource codesource) {
                 Permissions perms = new Permissions();
-                perms.add(new AllPermission());
+
+
+                perms.add(
+                        new AllPermission());
                 return perms;
             }
 
@@ -202,8 +261,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         Thread t = new Thread() {
 
             public void run() {
-                checkIfUpgradeNeeded();
                 loadSystem();
+
             }
         };
         t.start();
@@ -221,28 +280,15 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     }
 
     /**
-     * Check if an upgrade available, or some files are missing. If so force
-     * upgrade of everything
-     */
-    private void checkIfUpgradeNeeded() {
-
-        if (!new File(internalVer).exists()) {
-            System.out.println(internalVer + " does not exist..requesting package downloads");
-            clearCoreLib();
-        // loadSystem();
-        } else {
-            loadSystem();
-        }
-    }
-
-    /**
      * Load the actual system, the system is basically made of the 
      * components
      */
     private void loadSystem() {
-        RealtimeOptions.init();
+
         try {
-            new File(internalVer).createNewFile();
+            for (int i = 0; i < corePlugins.length; i++) {
+                write(internalVer, corePlugins[i] + "=" + v);
+            }
         } catch (Exception ignore) {
         }
         if (MODE == Constants.APPLET) {
@@ -266,13 +312,13 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
         //for non proxy connections...just connect direct
         if (RealtimeOptions.useDirectConnection()) {
-            pb.setIndeterminate(true);
+            mainPb.setIndeterminate(true);
             if (tcpConnector.connect()) {
 
                 setText("Connected...initializing system load...", false);
                 tcpConnector.publish(launcher);
-                checkPluginsAndResources();
-
+                //request for latest versions of the core plugins
+                tcpConnector.sendPacket(new VersionRequestPacket(corePlugins));
             } else {
                 setText("Error connecting to server.", true);
             }
@@ -357,6 +403,33 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         }
     }
 
+    class Plugin {
+
+        private String filename;
+        private String desc;
+
+        public Plugin(String filename, String desc) {
+            this.filename = filename;
+            this.desc = desc;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
+    }
+
     /**
      * Need to use the application properties, so initilize them
      */
@@ -395,7 +468,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
      * resources. And if the versions are up to date
      */
     public void checkPluginsAndResources() {
-        boolean pluginsOK = true;
+        boolean corePluginsOK = true;
         for (int i = 0; i < sounds.length; i++) {
             File f = new File(REALTIME_HOME + "/sounds/" + sounds[i]);
             if (!f.exists()) {
@@ -403,32 +476,35 @@ public class RealtimeLauncher extends javax.swing.JApplet {
                 break;
             }
         }
-        for (int i = 0; i < corePlugins.length; i++) {
-            File f = new File(REALTIME_HOME + "/lib/" + corePlugins[i][0]);
-            if (!f.exists()) {
-                pluginsOK = false;
-                break;
+        for (int i = 0; i < currentVersions.size(); i++) {
+
+
+            int prevVer = getJarVersionNo(REALTIME_HOME + "/lib/" + corePlugins[i][0]);
+            int currVer = currentVersions.get(corePlugins[i][0]).intValue();
+            if (prevVer < currVer || currVer == -1) {
+                corePluginsOK = false;
+                System.out.println(corePlugins[i][0] + ": curr version: " + prevVer + " new ver: " + currVer);
+                System.out.println("Update required");
+                corePluginsRequired.add(new Plugin(corePlugins[i][0], corePlugins[i][1]));
             }
         }
 
         for (int i = 0; i < staticPlugins.length; i++) {
             File f = new File(REALTIME_HOME + "/lib/" + staticPlugins[i][0]);
             if (!f.exists()) {
-                staticPluginsRequired.add(staticPlugins[i][0]);
-
-
+                staticPluginsRequired.add(new Plugin(staticPlugins[i][0], staticPlugins[i][1]));
             }
         }
-        if (!pluginsOK) {
-            for (int i = 0; i < staticPluginsRequired.size(); i++) {
-                System.out.println(staticPluginsRequired.elementAt(i) + " not found. Requesting for donwload ...");
-                requestForResource("../lib/" + staticPluginsRequired.elementAt(i), staticPluginsRequired.elementAt(i));
-            }
-            System.out.println("One of plugins missing, requesting for download");
-            requestForCorePlugins();
-        } else {
-            loadAllPlugins();
 
+        for (int i = 0; i < staticPluginsRequired.size(); i++) {
+            System.out.println(staticPluginsRequired.elementAt(i) + " not found. Requesting for donwload ...");
+            requestForResource("../lib/" + staticPluginsRequired.elementAt(i).getFilename(), staticPluginsRequired.elementAt(i).getDesc());
+        }
+
+        if (corePluginsOK) {
+            loadAllPlugins();
+        }else{
+            requestForCorePlugins();
         }
 
 
@@ -439,7 +515,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
      * @return
      */
     public JProgressBar getPb() {
-        return pb;
+        return mainPb;
     }
 
     /**
@@ -457,15 +533,21 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         return staticPluginsRequired.size();
     }
 
+    public int getCorePluginsNo() {
+        return corePluginsRequired.size();
+    }
+
     /**
      * Request for the plugins. These are basically jar files
      */
     private void requestForCorePlugins() {
-        for (int i = 0; i < corePlugins.length; i++) {
-            setText("Requesting for " + corePlugins[i][1] + " ...", false);
-            String path = "../lib/" + corePlugins[i][0];
 
-            requestForResource(path, corePlugins[i][1]);
+
+        for (int i = 0; i < corePluginsRequired.size(); i++) {
+            setText("Requesting for " + corePluginsRequired.elementAt(i).getDesc() + " ...", false);
+            String path = "../lib/" + corePluginsRequired.elementAt(i).getFilename();
+            System.out.println(i + " of " + corePluginsRequired.size() + " Requesting for " + corePluginsRequired.elementAt(i).getDesc() + " ...");
+            requestForResource(path, corePluginsRequired.elementAt(i).getDesc());
             //got to monitor this one for 1 full minute.
             if (i == corePlugins.length - 1) {
                 try {
@@ -563,6 +645,8 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         MODE = Constants.WEBSTART;
         supernodeHost = host;
         supernodePort = port;
+        RealtimeOptions.init(corePlugins, staticPlugins, v.getVersion());
+
         initSecurity();
         initComponents();
         initCustomComponents();
@@ -574,7 +658,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
 
-        pb.setIndeterminate(true);
+        mainPb.setIndeterminate(true);
         initSystemLoad();
 
     }
@@ -586,7 +670,6 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     public static void main(String[] args) {
         //JFrame.setDefaultLookAndFeelDecorated(true);
         //JDialog.setDefaultLookAndFeelDecorated(true);
-
         int port = 80;
         String host = "196.21.45.85";
         try {
@@ -746,10 +829,11 @@ public class RealtimeLauncher extends javax.swing.JApplet {
     private void showOptionsReconnectPanel() {
         retryButton.setEnabled(true);
         optionsButton.setEnabled(true);
-        pb.setIndeterminate(false);
+        mainPb.setIndeterminate(false);
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
+
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         introPanel.add(retryPanel, gridBagConstraints);
     }
@@ -818,7 +902,9 @@ public class RealtimeLauncher extends javax.swing.JApplet {
         mainPanel = new javax.swing.JPanel();
         introPanel = new javax.swing.JPanel();
         infoField = new javax.swing.JLabel();
-        pb = new javax.swing.JProgressBar();
+        mainPb = new javax.swing.JProgressBar();
+        minorPb = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
 
         retryButton.setText("Retry");
         retryButton.addActionListener(new java.awt.event.ActionListener() {
@@ -843,15 +929,32 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 
         infoField.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         infoField.setText("Loading...Please wait");
-        introPanel.add(infoField, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        introPanel.add(infoField, gridBagConstraints);
 
-        pb.setBackground(new java.awt.Color(255, 255, 255));
-        pb.setIndeterminate(true);
+        mainPb.setBackground(new java.awt.Color(255, 255, 255));
+        mainPb.setIndeterminate(true);
+        mainPb.setPreferredSize(new java.awt.Dimension(148, 15));
+        mainPb.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        introPanel.add(pb, gridBagConstraints);
+        introPanel.add(mainPb, gridBagConstraints);
+
+        minorPb.setPreferredSize(new java.awt.Dimension(248, 15));
+        minorPb.setStringPainted(true);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 0);
+        introPanel.add(minorPb, gridBagConstraints);
+
+        jLabel1.setText("Overall Progress");
+        introPanel.add(jLabel1, new java.awt.GridBagConstraints());
 
         mainPanel.add(introPanel, java.awt.BorderLayout.CENTER);
 
@@ -861,7 +964,7 @@ public class RealtimeLauncher extends javax.swing.JApplet {
 private void retryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retryButtonActionPerformed
     retryButton.setEnabled(false);
     optionsButton.setEnabled(false);
-    pb.setIndeterminate(true);
+    mainPb.setIndeterminate(true);
     initSystemLoad();
 }//GEN-LAST:event_retryButtonActionPerformed
 
@@ -872,9 +975,11 @@ private void optionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel infoField;
     private javax.swing.JPanel introPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JProgressBar mainPb;
+    private javax.swing.JProgressBar minorPb;
     private javax.swing.JButton optionsButton;
-    private javax.swing.JProgressBar pb;
     private javax.swing.JButton retryButton;
     private javax.swing.JPanel retryPanel;
     // End of variables declaration//GEN-END:variables
