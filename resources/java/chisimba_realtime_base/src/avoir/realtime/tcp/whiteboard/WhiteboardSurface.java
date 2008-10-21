@@ -205,6 +205,8 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private WhiteboardManager whiteboardManager;
     private double magX = 1;
     private double magY = 1;
+    private boolean gotSize = false;
+    int slideWidth, slideHeight;
 
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(RealtimeBase base) {
@@ -299,10 +301,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         deleteMenuItem.setActionCommand("delete");
         deleteMenuItem.addActionListener(this);
         deletePopup.add(deleteMenuItem);
-        int slideWidth = 530;
-        int slideHeight = 410;
 
         pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+
 
     }
 
@@ -1927,8 +1928,17 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.scale(magX, magY);
+        if (!gotSize) {
+            slideWidth = (int) (this.getSize().getWidth() * 0.8);
+            slideHeight = (int) (this.getSize().getHeight() * 0.8);
+            if (slideHeight > 0 && slideHeight > 0) {
+                gotSize = false;
+                pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+            }
+        }
         graphics =
                 g2;
+
         if (XOR) {
             g2.setXORMode(getBackground());
         }
@@ -2016,18 +2026,18 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     private void paintSlides(Graphics2D g2) {
         if (slide != null) {
-            int slideWidth = slide.getIconWidth();
+             int slideWidth = slide.getIconWidth();
             int slideHeight = slide.getIconHeight();
             if (slideWidth >= getWidth()) {
-                slideWidth = (int) (slideWidth * 0.9);
+            slideWidth = (int) (slideWidth * 0.9);
             }
+             
 
-
-            int xx = (getWidth() - slide.getIconWidth()) / 2;
-            int yy = (getHeight() - slide.getIconHeight()) / 2;
+            int xx = ((int)(getWidth() * 1) - slide.getIconWidth()) / 2;
+            int yy = ((int)(getHeight() * 1) - slide.getIconHeight()) / 2;
             g2.setFont(new Font("Dialog", 1, 10));
             g2.drawString(base.getSelectedFile() + " - " + (base.getSessionManager().getSlideIndex() + 1) + " of " + base.getSessionManager().getSlideCount(), xx, yy - 15);
-            g2.drawImage(slide.getImage(), xx, yy, slideWidth, slideHeight, this);
+            g2.drawImage(slide.getImage(), xx, yy, (int) (slideWidth ), (int) (slideHeight), this);
             //if (firstSlide) {
 
             Rectangle rect = new Rectangle(xx - 5, yy - 5, slideWidth + 10, slideHeight + 10);
