@@ -21,16 +21,15 @@ public class RealtimeOptions {
     static Properties props;
     //user can install the app in any folder..so use the System class to figure out where
     static String fileName = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/conf/realtime.properties";
-     static String defaultFileName = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/conf/default.properties";
+    static String defaultFileName = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/conf/default.properties";
     static String confDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/conf/";
     static String binDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/bin/";
     static String libDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/lib/";
     static String soundsDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/sounds/";
-    
-
-    static {
-        init();
-    }
+    static String iconsDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/icons/";
+    static String iconsManDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/icons/MANIFEST";
+    static String iconsEmotDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/icons/emoticons";
+    static String iconsWBDir = avoir.realtime.tcp.launcher.Constants.getRealtimeHome() + "/icons/whiteboard/";
 
     private static void write(String filename) {
         write(filename, "DirectConnection=true");
@@ -40,9 +39,10 @@ public class RealtimeOptions {
         write(filename, "ProxyPort=0");
         write(filename, "UseOnlineSuperNodes=true");
         write(filename, "UseCache=true");
+
     }
 
-    public static void init() {
+    public static void init(String[][] corePlugins, String[][] staticPlugins, int ver) {
         File confFile = new File(confDir);
         File defaultFile = new File(defaultFileName);
         File file = new File(fileName);
@@ -69,7 +69,37 @@ public class RealtimeOptions {
         if (!soundsFile.exists()) {
             soundsFile.mkdirs();
         }
+        File iconsFile = new File(iconsDir);
+        if (!iconsFile.exists()) {
+            iconsFile.mkdirs();
+
+        }
+        iconsFile = new File(iconsManDir);
+        if (!iconsFile.exists()) {
+            iconsFile.mkdirs();
+
+        }
+        iconsFile = new File(iconsEmotDir);
+        if (!iconsFile.exists()) {
+            iconsFile.mkdirs();
+
+        }
+        iconsFile = new File(iconsWBDir);
+        if (!iconsFile.exists()) {
+            iconsFile.mkdirs();
+
+        }
         loadProperties();
+        for (int i = 0; i < corePlugins.length; i++) {
+            if (getProperty(corePlugins[i][0]) == null) {
+                saveProperty(corePlugins[i][0], "-1");
+            }
+        }
+        for (int i = 0; i < staticPlugins.length; i++) {
+            if (getProperty(staticPlugins[i][0]) == null) {
+                saveProperty(staticPlugins[i][0],"-1");
+            }
+        }
     }
 
     private static void write(String filename, String txt) {
@@ -81,8 +111,6 @@ public class RealtimeOptions {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static void saveProperty(String prop, String value) {
