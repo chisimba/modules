@@ -52,8 +52,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import avoir.realtime.tcp.common.Constants;
+import avoir.realtime.tcp.launcher.packet.LauncherPacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
-import javax.swing.JOptionPane;
+import avoir.realtime.tcp.launcher.packet.VersionRequestPacket;
 
 /**
  * Handles communications for the server, to and from the clients Processes
@@ -184,6 +185,7 @@ public class ServerThread extends Thread {
 
                 //as long as we get a new user..clean up disconnected ones
                 removeNullClients();
+                releasePresentationIfLocked();
                 listen(in, objectOutStream);
             } else {
                 j2meServer.listen();
@@ -194,7 +196,9 @@ public class ServerThread extends Thread {
         } finally {
             logger.info("Server " + tName + " disconnected from " + socket.getInetAddress() + "\n");
             synchronized (clients) {
+                removeNullLockedPresentations();
                 clients.removeUser(thisUser);
+
             }
             if (!desktopClient) {
                 j2meServer.removeMeFromList();
@@ -256,6 +260,27 @@ public class ServerThread extends Thread {
         }
     }
 
+    private synchronized void releasePresentationIfLocked() {
+        synchronized (presentationLocks) {
+            Vector<Session> invalidSessions = new Vector<Session>();
+            for (int i = 0; i < presentationLocks.size(); i++) {
+                try {
+                    if (presentationLocks.elementAt(i).getUserId().equals(thisUser.getUserName())) {
+                        invalidSessions.addElement(presentationLocks.elementAt(i));
+                    }
+                } catch (Exception ex) {
+                    invalidSessions.addElement(presentationLocks.elementAt(i));
+
+                    ex.printStackTrace();
+                }
+            }
+            //purge them
+            for (int i = 0; i < invalidSessions.size(); i++) {
+                presentationLocks.remove(i);//invalidSessions.elementAt(i));
+            }
+        }
+    }
+
     private void removeNullLockedPresentations() {
         synchronized (presentationLocks) {
             Vector<Session> invalidSessions = new Vector<Session>();
@@ -272,17 +297,13 @@ public class ServerThread extends Thread {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     logger.info(ex.getLocalizedMessage());
-                    try {
-                        invalidSessions.addElement(presentationLocks.elementAt(i));
-                    } catch (Exception ex2) {
-                        logger.info(ex2.getLocalizedMessage());
-                    }
+                    invalidSessions.addElement(presentationLocks.elementAt(i));
+
                 }
             }
             //purge them
             for (int i = 0; i < invalidSessions.size(); i++) {
-
-                presentationLocks.remove(invalidSessions.elementAt(i));
+                presentationLocks.remove(i);//invalidSessions.elementAt(i));
             }
         }
     }
@@ -441,6 +462,11 @@ public class ServerThread extends Thread {
                         addLauncherClient(new LauncherClient(lack.getUser().getUserName(), objectOutStream));
                     }
                 }
+                if (obj instanceof VersionRequestPacket) {
+                    VersionRequestPacket p = (VersionRequestPacket) obj;
+                    new VersionManager(p.getCorePlugins(),this).processVersioning();
+                }
+
                 if (obj instanceof ModuleFileRequestPacket) {
 
                     ModuleFileRequestPacket p = (ModuleFileRequestPacket) obj;
@@ -478,6 +504,9 @@ public class ServerThread extends Thread {
                         processHeartBeat((HeartBeat) packet);
                     } else if (obj instanceof DesktopPacket) {
                         appShareProcessor.broadCastDesktopPacket((DesktopPacket) packet);
+                        sendPacket(new RequestScrape(), objectOut);
+                    } else if (obj instanceof StopScreenSharing) {
+                        broadcastPacket(packet, thisUser.getSessionId(), thisUser.getUserName());
 
                     } else if (packet instanceof LocalSlideCacheRequestPacket) {
                         slideProcessor.processLocalSlideCacheRequest((LocalSlideCacheRequestPacket) packet);
@@ -869,6 +898,7 @@ public class ServerThread extends Thread {
                     //       thisUser.getSessionId(), p.getId()));
                     Img img = new Img(100, 100, 150, 150, uploadedFileName, p.getIndex(), p.getId());
                     img.setSessionId(thisUser.getSessionId());
+                    System.out.println("populating j2me server ...");
                     j2meServer.populateGraphic(p.getBuff());
                     whiteboardItems.add(img);
                 }
@@ -1346,7 +1376,7 @@ public class ServerThread extends Thread {
      */
     private byte[] readFile(String filePath) {
         File f = new File(filePath);
-      //  File parentFile = f.getParentFile();
+        //  File parentFile = f.getParentFile();
 //        String filename = parentFile.getName() + "/" + f.getName();//either bin or lib
 
         try {
@@ -1379,18 +1409,20 @@ public class ServerThread extends Thread {
      * @param packet
      */
     private void processModuleFilePacketRequest(ModuleFileRequestPacket packet) {
-        byte[] byteArray = readFile(packet.getFilePath());
+        fileTransferEngine.populateModuleFilePacket(this, packet.getFilePath(), packet.getDesc());
 
-        ModuleFileReplyPacket rep = new ModuleFileReplyPacket(byteArray,
-                packet.getFilename(), packet.getFilePath(), packet.getUsername());
-        rep.setDesc(packet.getDesc());
-        try {
-            objectOutStream.writeObject(rep);
-            objectOutStream.flush();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
 
+    /*byte[] byteArray = readFile(packet.getFilePath());
+
+    ModuleFileReplyPacket rep = new ModuleFileReplyPacket(byteArray,
+    packet.getFilename(), packet.getFilePath(), packet.getUsername());
+    rep.setDesc(packet.getDesc());
+    try {
+    objectOutStream.writeObject(rep);
+    objectOutStream.flush();
+    } catch (IOException ex) {
+    ex.printStackTrace();
+    }*/
     //locate the slides server based on the ids
     /*    boolean slideServerFound = false;
     int MAX_TRIES = 120;
@@ -1951,6 +1983,18 @@ public class ServerThread extends Thread {
             sendPacket(p, out);
         }
 
+
+    }
+
+    public void sendPacket(LauncherPacket packet, ObjectOutputStream out) {
+
+        try {
+            out.writeObject(packet);
+            out.flush();
+
+        } catch (IOException ex) {
+            logger.info(ex.getLocalizedMessage());
+        }
 
     }
 
