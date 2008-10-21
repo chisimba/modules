@@ -18,12 +18,15 @@
  */
 package avoir.realtime.tcp.launcher;
 
+import avoir.realtime.tcp.launcher.packet.ModuleFilePacket;
 import avoir.realtime.tcp.launcher.packet.LauncherAckPacket;
 import avoir.realtime.tcp.launcher.packet.LauncherMsgPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileReplyPacket;
 import avoir.realtime.tcp.launcher.packet.ModuleFileRequestPacket;
 import avoir.realtime.tcp.launcher.packet.LauncherPacket;
 
+import avoir.realtime.tcp.launcher.packet.VersionReplyPacket;
+import avoir.realtime.tcp.launcher.packet.VersionRequestPacket;
 import java.io.*;
 import java.net.*;
 
@@ -34,12 +37,12 @@ import java.nio.channels.FileChannel;
 
 
 
+import java.text.DecimalFormat;
 import java.util.logging.Logger;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -72,7 +75,8 @@ public class TCPConnector {
     // private int SUPERNODE_PORT = 22225;
     //everything is encrypted here
     private SSLSocketFactory dfactory;
-    private SSLSocket socket;
+    //   private SSLSocket socket;
+    private Socket socket;
     private boolean binRequestReplied = false;
 
     public TCPConnector() {
@@ -92,6 +96,137 @@ public class TCPConnector {
 
     public void setObjectOutputStream(ObjectOutputStream out) {
         writer = out;
+    }
+
+    private String getTempFile(String clientID) {
+        return clientID + ".tmp";
+    }
+
+    public void processFileDownload(ModuleFilePacket p) {
+        base.setText("Downloading " + p.getDesc() + "...", false);
+        System.out.println("Downloading " + p.getFilename());
+        int nChunks = p.getTotalChunks();
+        int chunk = p.getChunkNo();
+        String clientID = p.getClientId();
+
+        if (value == 0) {
+            base.getPb().setIndeterminate(false);
+            base.getPb().setMaximum(base.getCorePluginsNumber() + base.getStaticPluginsNo());
+            base.getPb().setMinimum(0);
+
+        }
+
+        if (nChunks == -1 || chunk == -1) {
+            System.out.println("Missing chunk information");
+            base.setText("Error downloading file", true);
+
+        }
+
+        if (chunk == 0) {
+            // check permission to create file here
+        }
+
+        OutputStream out = null;
+
+        try {
+            if (nChunks == 1) {
+                out = new FileOutputStream(determineFilePath(p.getFilename()));
+            } else {
+                out = new FileOutputStream(getTempFile(clientID), (chunk > 0));
+            }
+
+            out.write(p.getBuff());
+            out.close();
+            if (nChunks == 1) {
+                base.getMinorPb().setMinimum(0);
+                base.getMinorPb().setMaximum(1);
+
+                //update version no
+                int currVer = base.getJarVersionNo(base.getREALTIME_HOME() + "/lib/" + p.getFilename());
+                RealtimeOptions.saveProperty(p.getFilename(), currVer + "");
+                //last in order..means all others are downloaded..hopefull
+                //so load all of them
+                if (p.getFilename().equals("realtime-pluginmanager-1.0.2.jar")) {
+                    if (base != null) {
+                        base.setPluginDownloaded(true);
+                        System.out.println("Loading plugins...");
+                        base.setText("Loading system ...", false);
+                        base.loadAllPlugins();
+                        System.out.println("Done");
+                    }
+                }
+                if (p.getFilename().equals("realtime-images.jar")) {
+                    String[] args = {determineFilePath(p.getFilename())};
+                    try {
+                        avoir.realtime.tcp.launcher.UnZip.main(args);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                base.getMinorPb().setValue(1);
+                base.getPb().setValue(++value);
+                return;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Error creating file");
+            base.setText("Error saving file.", true);
+            return;
+        }
+
+        if (nChunks > 1 && chunk == nChunks - 1) {
+            //update version no
+            int currVer = base.getJarVersionNo(base.getREALTIME_HOME() + "/lib/" + p.getFilename());
+            RealtimeOptions.saveProperty(p.getFilename(), currVer + "");
+
+            File tmpFile = new File(getTempFile(clientID));
+            File destFile = new File(determineFilePath(p.getFilename()));
+            if (destFile.exists()) {
+                destFile.delete();
+            }
+            if (!tmpFile.renameTo(destFile)) {
+                base.setText("Error renaming file.", true);
+            } else {
+                if (p.getFilename().equals("realtime-pluginmanager-1.0.2.jar")) {
+                    if (base != null) {
+                        base.setPluginDownloaded(true);
+                        System.out.println("Loading plugins...");
+                        base.setText("Loading system ...", false);
+                        base.loadAllPlugins();
+                        System.out.println("Done");
+                    }
+                }
+                if (p.getFilename().equals("realtime-images.jar")) {
+                    String[] args = {determineFilePath(p.getFilename())};
+                    try {
+                        avoir.realtime.tcp.launcher.UnZip.main(args);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                base.getPb().setValue(++value);
+
+
+            }
+        } else {
+            base.getMinorPb().setMinimum(0);
+            base.getMinorPb().setMaximum(p.getTotalChunks());
+            base.getMinorPb().setValue(p.getChunkNo() + 1);
+        }
+
+    }
+
+    private String determineFilePath(String filename) {
+        String dest = ".";
+        if (filename.endsWith(".jar")) {
+            dest = REALTIME_HOME + "/lib/" + filename;
+        }
+
+        if (filename.endsWith(".wav")) {
+            dest = REALTIME_HOME + "/sounds/" + filename;
+        }
+        return dest;
     }
 
     /**
@@ -146,40 +281,40 @@ public class TCPConnector {
      * @param packet
      */
     /*public void sendBinPacket(LauncherPacket xpacket) {
-        try {
-            if (writer != null) {
-                writer.writeObject(xpacket);
-                writer.flush();
+    try {
+    if (writer != null) {
+    writer.writeObject(xpacket);
+    writer.flush();
 
-                //block and wait for reply..but only for a few seconds
-                try {
-                    Object packet = reader.readObject();
-                    if (packet instanceof ModuleFileReplyPacket) {
-                        ModuleFileReplyPacket p = (ModuleFileReplyPacket) packet;
-                        processModuleFileReplyPacket(p);
-                    } else if (packet instanceof ModuleFileRequestPacket) {
-                        ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
-                        processModuleFileRequestPacket(p);
-                    } else if (packet instanceof LauncherMsgPacket) {
-                        LauncherMsgPacket p = (LauncherMsgPacket) packet;
-                        JOptionPane.showMessageDialog(null, p.getMessage());
-                        base.setText("Server connection error.", true);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    if (base != null) {
-                        base.setText("Disconnected from server.", true);
-                    }
-                    running = false;
-                }
-
-            } else {
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    //block and wait for reply..but only for a few seconds
+    try {
+    Object packet = reader.readObject();
+    if (packet instanceof ModuleFileReplyPacket) {
+    ModuleFileReplyPacket p = (ModuleFileReplyPacket) packet;
+    processModuleFileReplyPacket(p);
+    } else if (packet instanceof ModuleFileRequestPacket) {
+    ModuleFileRequestPacket p = (ModuleFileRequestPacket) packet;
+    processModuleFileRequestPacket(p);
+    } else if (packet instanceof LauncherMsgPacket) {
+    LauncherMsgPacket p = (LauncherMsgPacket) packet;
+    JOptionPane.showMessageDialog(null, p.getMessage());
+    base.setText("Server connection error.", true);
     }
-*/
+    } catch (Exception ex) {
+    ex.printStackTrace();
+    if (base != null) {
+    base.setText("Disconnected from server.", true);
+    }
+    running = false;
+    }
+
+    } else {
+    }
+    } catch (IOException ex) {
+    ex.printStackTrace();
+    }
+    }
+     */
     public boolean isBinRequestReplied() {
         return binRequestReplied;
     }
@@ -298,23 +433,26 @@ public class TCPConnector {
 
                 }
 
-                SSLContext context = null;
+                /*  SSLContext context = null;
                 try {
-                    context = SSLContext.getInstance("SSL");
-                    context.init(null, trustAllCerts, new java.security.SecureRandom());
+                context = SSLContext.getInstance("SSL");
+                context.init(null, trustAllCerts, new java.security.SecureRandom());
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                ex.printStackTrace();
                 }
                 dfactory = context.getSocketFactory();
 
                 socket = (SSLSocket) dfactory.createSocket(SUPERNODE_HOST, SUPERNODE_PORT);
+
+
                 try {
-                    socket.startHandshake();
+                socket.startHandshake();
                 } catch (Exception ex) {
-                    base.setText("Connection Error: Cannot connect to server", true);
-                    ex.printStackTrace();
+                base.setText("Connection Error: Cannot connect to server", true);
+                ex.printStackTrace();
                 }
-                result = true;
+                result = true;*/
+                socket = new Socket(SUPERNODE_HOST, SUPERNODE_PORT);
             } catch (UnknownHostException ex) {
                 if (base != null) {
                     base.setText("Connection Error: Cannot connect to server", true);
@@ -322,12 +460,18 @@ public class TCPConnector {
                 ex.printStackTrace();
                 return false;
             }
+            OutputStream out = socket.getOutputStream();
+            out.write("avoirdesktopclient".getBytes());
+            out.flush();
+            out.write('\n');
+            out.flush();
             writer = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             writer.flush();
             reader = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             result = true;
             running = true;
             startListen();
+            sendPacket(new VersionRequestPacket(base.getCorePlugins()));
         } catch (IOException ex) {
             if (base != null) {
                 base.setText("Connection Error: " + ex.getMessage(), true);
@@ -350,7 +494,7 @@ public class TCPConnector {
 
             @Override
             public void run() {
-                 listen();
+                listen();
             }
         };
         t.start();
@@ -372,7 +516,10 @@ public class TCPConnector {
                     }
                     running = false;
                 }
-
+                if (packet instanceof VersionReplyPacket) {
+                    VersionReplyPacket p = (VersionReplyPacket) packet;
+                    processVersionReplyPacket(p);
+                }
                 if (packet instanceof ModuleFileReplyPacket) {
                     ModuleFileReplyPacket p = (ModuleFileReplyPacket) packet;
                     processModuleFileReplyPacket(p);
@@ -382,7 +529,9 @@ public class TCPConnector {
                 } else if (packet instanceof LauncherMsgPacket) {
                     LauncherMsgPacket p = (LauncherMsgPacket) packet;
                     JOptionPane.showMessageDialog(null, p.getMessage());
-                    base.setText("Error. Click on 'home', then revisit this presentation again to resolve.", true);
+                // base.setText("Error. Click on 'home', then revisit this presentation again to resolve.", true);
+                } else if (packet instanceof ModuleFilePacket) {
+                    processFileDownload((ModuleFilePacket) packet);
                 }
             } catch (Exception ex) {
                 //for now, just cut off the listening
@@ -437,6 +586,10 @@ public class TCPConnector {
 
     }
 
+    private void processVersionReplyPacket(VersionReplyPacket p) {
+        base.setCurrentVersions(p.getEntries());
+    }
+
     private void checkIfWritable(File f, String filename) {
         String path = new File(System.getProperty("java.home") +
                 "/lib/").getAbsolutePath();
@@ -457,17 +610,25 @@ public class TCPConnector {
     private void processModuleFileReplyPacket(ModuleFileReplyPacket p) {
         String filename = p.getFilename();
         File f = new File(filename);
-        base.setText("Processing " + p.getDesc() + "...", false);
+        base.setText("Downloading " + p.getDesc() + "...", false);
         System.out.println("Downloading " + f.getName() + "... ");
         String dest = ".";
         if (filename.endsWith(".jar")) {
 
             dest = REALTIME_HOME + "/lib/" + f.getName();
             writeFile(dest, p.getByteArray(), false);
-
+            //unzip images..webstart on some windows is not loading images from jars
+            if (f.getName().equals("realtime-images.jar")) {
+                String[] args = {dest};
+                try {
+                    avoir.realtime.tcp.launcher.UnZip.main(args);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
             if (value == 0) {
                 base.getPb().setIndeterminate(false);
-                base.getPb().setMaximum(base.getPluginsNumber());
+                base.getPb().setMaximum(base.getCorePluginsNumber() + base.getStaticPluginsNo());
                 base.getPb().setMinimum(0);
 
             }
