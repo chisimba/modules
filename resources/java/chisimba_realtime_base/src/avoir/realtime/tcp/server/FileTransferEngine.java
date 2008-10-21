@@ -17,17 +17,17 @@
  */
 package avoir.realtime.tcp.server;
 
-import avoir.realtime.tcp.common.Constants;
 import avoir.realtime.tcp.common.GenerateUUID;
 import avoir.realtime.tcp.common.packet.FileUploadPacket;
 import avoir.realtime.tcp.common.packet.SessionImgPacket;
+import avoir.realtime.tcp.launcher.packet.ModuleFilePacket;
 import avoir.realtime.tcp.whiteboard.item.Img;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * Use for reading the selected file in small chunks onto the server
+ * Used for sending a file possibly in small chunks to clients
  * @author David Wafula
  */
 public class FileTransferEngine {
@@ -35,16 +35,10 @@ public class FileTransferEngine {
     int index;
     String recepient = "";
     int BUFFER_SIZE = 4096;
-    int MAX_CHUNK_SIZE = 1 * BUFFER_SIZE;
+    int MAX_CHUNK_SIZE = 10 * BUFFER_SIZE;
     int nChunks;
 
-    /**
-     * Read the file in small chunks
-     * @param filepath
-     * @param index
-     * @param recepient
-     */
-    public synchronized void populateBinaryFile(ServerThread server, String filepath,String id) {
+    public synchronized void populateBinaryFile(ServerThread server, String filepath, String id, int type, boolean sessionUpdate) {
 
         try {
 
@@ -77,9 +71,15 @@ public class FileTransferEngine {
 
                     FileUploadPacket packet = new FileUploadPacket(server.getThisUser().getSessionId(),
                             server.getThisUser().getSessionId(), buf, i, nChunks, file.getName(),
-                            clientID, recepient, false, server.getThisUser().getUserName(), index, Constants.IMAGE);
+                            clientID, recepient, false, server.getThisUser().getUserName(), index, type);
                     packet.setId(id);
-                    server.broadcastPacket(packet, true);
+                    if (!sessionUpdate) {
+                        server.broadcastPacket(packet, true);
+                    } else {
+                        packet.setId(GenerateUUID.getId());
+                        server.sendPacket(packet, server.getObjectOutStream());
+
+                    }
 
                 }
 
@@ -96,10 +96,9 @@ public class FileTransferEngine {
      * @param index
      * @param recepient
      */
-    public synchronized void sendSessionPresentation(ServerThread server, String filepath) {
+    public synchronized void populateModuleFilePacket(ServerThread server, String filepath, String desc) {
 
         try {
-
             File file = new File(filepath);
             long fileSize = file.length();
 
@@ -126,10 +125,10 @@ public class FileTransferEngine {
                 if (read == -1) {
                     break;
                 } else if (read > 0) {
+                    ModuleFilePacket packet = new ModuleFilePacket("",
+                            "", buf, i, nChunks, file.getName(),
+                            clientID, desc);
 
-                    FileUploadPacket packet = new FileUploadPacket(server.getThisUser().getSessionId(),
-                            server.getThisUser().getSessionId(), buf, i, nChunks, file.getName(),
-                            clientID, recepient, false, server.getThisUser().getUserName(), index, Constants.IMAGE);
                     packet.setId(GenerateUUID.getId());
                     server.sendPacket(packet, server.getObjectOutStream());
 
@@ -148,7 +147,59 @@ public class FileTransferEngine {
      * @param index
      * @param recepient
      */
-    public synchronized void sendSessionImg(ServerThread server, String filepath,Img img) {
+    public synchronized void sendSessionPresentation(ServerThread server, String filepath, int type) {
+
+        try {
+
+            File file = new File(filepath);
+            long fileSize = file.length();
+
+            FileInputStream in = new FileInputStream(file);
+
+            nChunks = (int) (fileSize / MAX_CHUNK_SIZE);
+            if (fileSize % MAX_CHUNK_SIZE > 0) {
+                nChunks++;
+            }
+
+
+            long bytesRemaining = fileSize;
+
+            String clientID = String.valueOf((long) (Long.MIN_VALUE *
+                    Math.random()));
+
+            for (int i = 0; i < nChunks; i++) {
+
+                int chunkSize = (int) ((bytesRemaining > MAX_CHUNK_SIZE) ? MAX_CHUNK_SIZE : bytesRemaining);
+                bytesRemaining -= chunkSize;
+                byte[] buf = new byte[chunkSize];
+
+                int read = in.read(buf);
+                if (read == -1) {
+                    break;
+                } else if (read > 0) {
+
+                    FileUploadPacket packet = new FileUploadPacket(server.getThisUser().getSessionId(),
+                            server.getThisUser().getSessionId(), buf, i, nChunks, file.getName(),
+                            clientID, recepient, false, server.getThisUser().getUserName(), index, type);
+                    packet.setId(GenerateUUID.getId());
+                    server.sendPacket(packet, server.getObjectOutStream());
+
+                }
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Read the file in small chunks
+     * @param filepath
+     * @param index
+     * @param recepient
+     */
+    public synchronized void sendSessionImg(ServerThread server, String filepath, Img img) {
 
         try {
 
@@ -180,7 +231,7 @@ public class FileTransferEngine {
                 } else if (read > 0) {
 
                     SessionImgPacket pk = new SessionImgPacket(clientID, GenerateUUID.getId(),
-                            buf, i, nChunks, filepath,clientID,img);
+                            buf, i, nChunks, filepath, clientID, img);
                     server.sendPacket(pk, server.getObjectOutStream());
 
                 }
