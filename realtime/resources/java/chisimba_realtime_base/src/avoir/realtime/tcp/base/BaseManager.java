@@ -129,7 +129,7 @@ public class BaseManager {
     private String formatTitle(String url) {
         try {
             URL r = new URL(url);
-            if (url.length() > 12) {
+            if (url.length() > 10) {
 
                 return r.getHost().substring(0, 10) + "...";
             }

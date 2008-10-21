@@ -198,10 +198,10 @@ public class TCPProcessor {
 
             }
             if (!new File(filePath).exists()) { //request, because it means the session is on and we need this
-               tcpClient.sendPacket(p);
-            }else{
-                if(p.getType() == Constants.FLASH){
-                    base.getBaseManager().showFlashPlayer(filePath,p.getId(),p.getSessionId());
+                tcpClient.sendPacket(p);
+            } else {
+                if (p.getType() == Constants.FLASH) {
+                    base.getBaseManager().showFlashPlayer(filePath, p.getId(), p.getSessionId());
                 }
             }
         }
@@ -592,21 +592,9 @@ public class TCPProcessor {
             showAppSharingFrame = false;
         }
 
-        Thread t = new
+        Thread t = new Thread() {
 
-              Thread() {
-
-
-
-
-
-
-
-
-    public  void run( ) {
-
-        viewer.getViewer().setImage(new ImageIcon(DesktopUtil.undoCompression(packet.getData())).getImage());
-                viewer.repaint();
+            public void run() {
             }
         };
         t.start();

@@ -121,7 +121,7 @@ public class TabbedPanePlaf extends BasicTabbedPaneUI {
                 this.setIcon(ImageUtil.createImageIcon(this, icon));
                 this.setBorderPainted(false);
                 this.setContentAreaFilled(false);
-                this.setEnabled(base.getControl());
+               // this.setEnabled(base.getControl());
                 //remove the typical padding for the button
 
                 setMargin(new Insets(0, 0, 0, 0));
