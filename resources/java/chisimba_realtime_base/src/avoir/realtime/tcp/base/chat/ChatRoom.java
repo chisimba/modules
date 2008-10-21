@@ -204,7 +204,8 @@ public class ChatRoom
         emotButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent evt) {
-                emotPopup.show(emotButton, emotButton.getX(), emotButton.getY());
+                JOptionPane.showMessageDialog(null, "h: "+emotPopup.getPreferredSize());
+                emotPopup.show(emotButton, emotButton.getX(), emotButton.getY()-emotPopup.getHeight());
             }
         });
         titlePanel.add(emotButton);
