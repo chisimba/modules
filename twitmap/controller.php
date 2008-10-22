@@ -126,7 +126,11 @@ class twitmap extends controller
     {
         switch ($action) {
             default:
-            	// simply load the cached XML into a variable and send to the template
+            	$this->nextAction('showkml', array('time' => time()));
+            	break;
+
+            case 'showkml':
+                // simply load the cached XML into a variable and send to the template
                 $dataarr = $this->objOps->grabXML();
                 $this->setVarByRef('data', $dataarr);
 
@@ -135,7 +139,6 @@ class twitmap extends controller
                 header('Content-type: text/xml');
                 echo $kml;
                 //return 'view_tpl.php';
-            	break;
        }
 
    }
