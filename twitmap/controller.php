@@ -139,5 +139,19 @@ class twitmap extends controller
        }
 
    }
+
+/**
+         * Overide the login object in the parent class
+         *
+         * @param  void
+         * @return bool
+         * @access public
+         */
+        public function requiresLogin()
+        {
+
+           return FALSE;
+
+        }
 }
 ?>
