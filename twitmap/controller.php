@@ -132,7 +132,7 @@ class twitmap extends controller
 
                 $kml = $this->objOps->makeMap($dataarr);
                 $this->setVarByRef('kml', $kml);
-
+                header('Content-type: text/xml');
                 echo $kml;
                 //return 'view_tpl.php';
             	break;
