@@ -82,7 +82,7 @@ class dblocation extends dbTable
         $this->latitude = $latitude;
     }
 
-    public function getName($name)
+    public function getName()
     {
         return $this->name;
     }

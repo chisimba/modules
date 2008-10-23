@@ -26,9 +26,10 @@ class locationops extends object
     protected $objSysConfig;
     protected $feKey;
     protected $feSecret;
-    protected $objUserParams;
+    protected $objDbLocation;
     protected $feToken;
     protected $feTokenSecret;
+    protected $feUser;
 
     /**
      * Standard constructor to load the necessary resources
@@ -49,9 +50,9 @@ class locationops extends object
         $this->feSecret = $this->objSysConfig->getValue('fireeaglesecret', 'location');
 
         // Read user configuration
-        $this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
-        $this->feToken = $this->objUserParams->getValue('Fire Eagle Token');
-        $this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
+        $this->objDbLocation = $this->getObject('dblocation', 'location');
+        $this->feToken = $this->objDbLocation->getFireEagleToken();
+        $this->feTokenSecret = $this->objDbLocation->getFireEagleSecret();
     }
 
     /**
@@ -60,11 +61,75 @@ class locationops extends object
      */
     public function getFireEagleUser()
     {
-        if ($this->feKey && $this->feSecret && $this->feToken && $this->feTokenSecret) {
+        if ($this->feKey && $this->feSecret && $this->feToken && $this->feTokenSecret && !$this->feUser) {
             $fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feToken, $this->feTokenSecret, $this->json);
-            return $fireeagle->user();
-        } else {
-            return false;
+            $this->feUser = $fireeagle->user();
         }
+        return $this->feUser;
+    }
+
+    /**
+     * Initialises Fire Eagle OAuth authentication handshake
+     */
+    public function initFireEagleHandshake()
+    {
+        $fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
+        $token = $fireeagle->getRequestToken();
+        $_SESSION['request_token'] = $token['oauth_token'];
+        $_SESSION['request_secret'] = $token['oauth_token_secret'];
+        header('Location: ' . $fireeagle->getAuthorizeURL($token['oauth_token']));
+        exit;
+    }
+
+    /**
+     * Handles the Fire Eagle authentication handshake callback
+     */
+    public function handleFireEagleCallback()
+    {
+        if ($_GET['oauth_token'] != $_SESSION['request_token']) {
+            die('Token mismatch');
+        }
+        $fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret'], $this->json);
+        $token = $fireeagle->getAccessToken();
+        $this->feToken = $token['oauth_token'];
+        $this->feTokenSecret = $token['oauth_token_secret'];
+        $this->objDbLocation->setFireEagleToken($token['oauth_token']);
+        $this->objDbLocation->setFireEagleSecret($token['oauth_token_secret']);
+        $this->objDbLocation->put();
+   }
+
+    /**
+     * Updates the local database with the latest data from Fire Eagle
+     */
+    function update()
+    {
+        $oldLongitude = $this->objDbLocation->getLongitude();
+        $oldLatitude = $this->objDbLocation->getLatitude();
+        $oldName = $this->objDbLocation->getName();
+
+        $location = $this->getFireEagleUser();
+        $name = $location['user']['location_hierarchy'][0]['name'];
+        $longitude = $location['user']['location_hierarchy'][0]['geometry']['coordinates'][0][0][0];
+        $latitude = $location['user']['location_hierarchy'][0]['geometry']['coordinates'][0][0][1];
+
+        if ($oldLongitude != $longitude || $oldLatitude != $latitude || $oldName != $name) {
+            $this->objDbLocation->setLongitude($longitude);
+            $this->objDbLocation->setLatitude($latitude);
+            $this->objDbLocation->setName($name);
+            $this->objDbLocation->put();
+            /*if ($this->twitterUpdates && $this->objTwitterLib) {
+                $this->objTwitterLib->setUid($this->userName);
+                $this->objTwitterLib->updateStatus('Current Location: ' . $name);
+            }*/
+        }
+    }
+
+    /**
+     * Has the current user already been authenticated?
+     * @return boolean
+     */
+    function isFireEagleAuthenticated()
+    {
+        return $this->feToken && $this->feTokenSecret;
     }
 }
