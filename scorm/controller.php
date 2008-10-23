@@ -2,24 +2,24 @@
 
 /**
  * Scorm controller
- * 
+ *
  * Controller class for the Scorm Module in Chisimba
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  Chisimba
  * @package   scorm
  * @author    Paul Mungai <pwando@uonbi.ac.ke>
@@ -43,9 +43,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * scorm controller
- * 
+ *
  * Controller class for the Context Content Module in Chisimba
- * 
+ *
  * @category  Chisimba
  * @package   contextcontent
  * @author    Paul Mungai <pwando@uonbi.ac.ke>
@@ -76,7 +76,7 @@ class scorm extends controller
  	    $this->objTreeMenu =& $this->getObject('treemenu', 'tree');
 	    $this->objTreeNode =& $this->loadClass('treenode', 'tree');
 		//remove this objContext
-        $this->objContext = $this->getObject('dbcontext', 'context');        
+        $this->objContext = $this->getObject('dbcontext', 'context');
 
 
     }
@@ -112,7 +112,7 @@ class scorm extends controller
     {
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
-        
+
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
 	if(!empty($folderpath)){
@@ -130,7 +130,7 @@ class scorm extends controller
     {
         $this->setPageTemplate(NULL);
         $this->setLayoutTemplate(NULL);
-        
+
         $page = $this->getParam('page');
         $folderpath = $this->getParam('folderpath');
 	if(!empty($folderpath)){
@@ -159,7 +159,7 @@ class scorm extends controller
         if ($this->validAction($action)) {
             return '__'.$action;
         } else {
-            return '__home';
+            return '__viewscorm';
         }
     }
 
@@ -190,9 +190,9 @@ class scorm extends controller
     private function __checkfolder()
     {
         $this->setPageTemplate(NULL);
-        $this->setLayoutTemplate(NULL);        
+        $this->setLayoutTemplate(NULL);
         $code = $this->getParam('code');
-        
+
         switch(strtolower($code))
         {
             case NULL:
@@ -211,7 +211,7 @@ class scorm extends controller
                 }
         }
     }
-     
+
 
 }
 ?>
