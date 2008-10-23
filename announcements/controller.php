@@ -1,15 +1,41 @@
 <?php
+// security check - must be included in all scripts
+if (!
+/**
+ * Description for $GLOBALS
+ * @global unknown $GLOBALS['kewl_entry_point_run']
+ * @name   $kewl_entry_point_run
+ */
+$GLOBALS['kewl_entry_point_run']) {
+    die("You cannot view this page directly");
+}
+// end security check
 
 /**
-*
-*
-*/
+ * Controller class for blog module
+ *
+ * @category  Chisimba
+ * @package   announcements
+ * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright 2007 Administrative User
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   CVS: $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       References to other sections (if any)...
+ */
 class announcements extends controller
 {
 
-
+    /**
+     * @var array $userContext List of Contexts a user belongs to
+     * @access private
+     */
     private $userContext;
     
+    /**
+     * @var array $lecturerContext List of Contexts a user is a lecturer in
+     * @access private
+     */
     private $lecturerContext;
     
     /**
@@ -106,6 +132,41 @@ class announcements extends controller
             return FALSE;
         }
     }
+    
+    
+    /**
+     * Method to check whether a user has update permissions for an announcement
+     * @param string $item Record Id of the announcement
+     * @return boolean
+     */
+    protected function checkPermission($item)
+    {
+        if (!is_array($item)) {
+            $item = $this->objAnnouncements->getMessage($item);
+        }
+        
+        if ($item == FALSE) {
+            return FALSE;
+        }
+        
+        if ($item['contextid'] == 'site' && $this->isAdmin) {
+            return TRUE;
+        }
+        
+        
+        if ($item['contextid'] == 'context' && count($this->lecturerContext) > 0) {
+            // See if some items match
+            $diff = array_intersect($this->lecturerContext, $this->objAnnouncements->getMessageContexts($item['id']));
+            
+            // If yes, user can edit or delete
+            if (count($diff) > 0) {
+                return TRUE;
+            }
+        }
+        
+        // Else
+        return FALSE;
+    }
 
 
     // Beginning of Functions Relating to Actions in the Controller //
@@ -113,8 +174,7 @@ class announcements extends controller
 
 
     /**
-    *
-    *
+    * Method to display the template to show the list of announcements
     */
     private function __home()
     {
@@ -124,6 +184,9 @@ class announcements extends controller
         return 'home_tpl.php';
     }
     
+    /**
+     * Method to add an announcement
+     */
     private function __add()
     {
         $this->setVar('mode', 'add');
@@ -131,7 +194,9 @@ class announcements extends controller
         return 'addedit_tpl.php';
     }
     
-    
+    /**
+     * Method to save an announcement
+     */
     private function __save()
     {
         $title = $this->getParam('title');
@@ -152,15 +217,14 @@ class announcements extends controller
             
             $result = $this->objAnnouncements->addAnnouncement($title, $message, $recipienttarget, $contexts, $email);
             
-            if ($result == FALSE) {
-                
-            } else {
-                return $this->nextAction('view', array('id'=>$result));
-            }
+            return $this->nextAction('view', array('id'=>$result));
             
         }
     }
     
+    /**
+     * Method to view an announcement
+     */
     private function __view()
     {
         $id = $this->getParam('id');
@@ -176,6 +240,9 @@ class announcements extends controller
         }
     }
     
+    /**
+     * Method to respond via ajax for a listing of all announcements
+     */
     private function __getajax()
     {
         $page = $this->getParam('page', 0);
@@ -183,12 +250,15 @@ class announcements extends controller
         $announcements = $this->objAnnouncements->getAllAnnouncements($this->userContext, $this->itemsPerPage, $page);
         
         if (count($announcements) == 0) {
-            echo '<div class="noRecordsMessage">There are no announcements</div>';
+            echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_announcements_noannouncements', 'announcements', 'There are no announcements').'</div>';
         } else {
             return $this->generateAjaxResponse($announcements);
         }
     }
     
+    /**
+     * Method to respond via ajax for a listing of the current context announcements
+     */
     private function __getcontextajax()
     {
         $page = $this->getParam('page', 0);
@@ -196,12 +266,15 @@ class announcements extends controller
         $announcements = $this->objAnnouncements->getContextAnnouncements($this->objContext->getContextCode(), $this->itemsPerPage, $page);
         
         if (count($announcements) == 0) {
-            echo '<div class="noRecordsMessage">There are no announcements</div>';
+            echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_announcements_noannouncements', 'announcements', 'There are no announcements').'</div>';
         } else {
             return $this->generateAjaxResponse($announcements);
         }
     }
     
+    /**
+     * Method to convert db results into a table before responding via ajax
+     */
     private function generateAjaxResponse($announcements)
     {
         $this->loadClass('link', 'htmlelements');
@@ -211,19 +284,12 @@ class announcements extends controller
             
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->startHeaderRow();
-            $table->addHeaderCell('Date');
-            $table->addHeaderCell('Title');
-            $table->addHeaderCell('By');
-            $table->addHeaderCell('Type');
+            $table->addHeaderCell($this->objLanguage->languageText('word_date', 'system', 'Date'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_title', 'system', 'Title'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_by', 'system', 'By'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'));
             $table->endHeaderRow();
             
-            /*
-            $table->startRow();
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');
-            $table->addCell('&nbsp;');
-            $table->endRow();*/
             
             foreach ($announcements as $announcement)
             {
@@ -236,25 +302,83 @@ class announcements extends controller
                 $table->addCell($this->objUser->fullName($announcement['createdby']), 200);
                 
                 if ($announcement['contextid'] == 'site') {
-                    $type = 'Site';
+                    $type = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements', 'Site');
                 } else {
-                    $type = 'Course';
+                    $type = ucwords($this->objLanguage->code2Txt('mod_context_context', 'context', NULL, '[-context-]'));
                 }
                 
                 $table->addCell($type, 200);
                 $table->endRow();
                 
-                /*
-                $table->startRow();
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->addCell('&nbsp;');
-                $table->endRow();
-                */
             }
             
             echo $table->show();
+    }
+    
+    /**
+     * Method to show the form to edit an announcement
+     */
+    private function __edit()
+    {
+        $id = $this->getParam('id');
+        
+        $announcement = $this->objAnnouncements->getMessage($id);
+        
+        if ($announcement == FALSE) {
+            return $this->nextAction(NULL, array('error'=>'unknownannouncement'));
+        } else if (!$this->checkPermission($announcement['id'])) {
+            return $this->nextAction(NULL, array('error'=>'nopermission'));
+        } else {
+            $this->setVarByRef('announcement', $announcement);
+            
+            $contextAnnouncementList = $this->objAnnouncements->getMessageContexts($id);
+            $this->setVarByRef('contextAnnouncementList', $contextAnnouncementList);
+            
+            $this->setVar('mode', 'edit');
+            
+            return 'addedit_tpl.php';
+        }
+    }
+    
+    /**
+     * Method to update an announcement
+     *
+     */
+    private function __update()
+    {
+        
+        $id = $this->getParam('id');
+        $title = $this->getParam('title');
+        $message = $this->getParam('message');
+        $email = $this->getParam('email');
+        $mode = $this->getParam('mode');
+        $recipienttarget = $this->getParam('recipienttarget');
+        $contexts = $this->getParam('contexts');
+        
+        $email = ($email == 'Y') ? TRUE : FALSE;
+        
+        if (!$this->checkPermission($id)) {
+            return $this->nextAction(NULL, array('error'=>'nopermission'));
+        } else {
+            $this->objAnnouncements->updateAnnouncement($id, $title, $message, $recipienttarget, $contexts, $email);
+            
+            return $this->nextAction('view', array('id'=>$id));
+        }
+    }
+    
+    /**
+     * Method to delete an announcement
+     */
+    private function __delete()
+    {
+        $id = $this->getParam('id');
+        
+        if (!$this->checkPermission($id)) {
+            return $this->nextAction(NULL, array('error'=>'nopermission'));
+        } else {
+            $announcement = $this->objAnnouncements->deleteAnnouncement($id);
+            return $this->nextAction(NULL);
+        }
     }
 }
 

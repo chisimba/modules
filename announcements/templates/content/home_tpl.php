@@ -14,7 +14,7 @@ if ($this->objContext->getContextCode() != '') {
     
     $header = new htmlHeading();
     $header->type = 1;
-    $header->str = 'Course Announcements - '.$this->objContext->getTitle($this->objContext->getContextCode()).' ('.$numContextAnnouncements.')';
+    $header->str = ucwords($this->objLanguage->code2Txt('mod_announcements_contextannouncements', 'announcements', NULL, '[-context-] Announcements')).' - '.$this->objContext->getTitle($this->objContext->getContextCode()).' ('.$numContextAnnouncements.')';
     
     if ($isAdmin || count($lecturerContext) > 0) {
         $header->str .= ' '.$addLink->show();
@@ -42,7 +42,7 @@ if ($this->objContext->getContextCode() != '') {
 
 $header = new htmlHeading();
 $header->type = 1;
-$header->str = 'All My Announcements ('.$numAnnouncements.')';
+$header->str = $this->objLanguage->languageText('mod_announcements_myannouncements', 'announcements', 'All My Announcements').' ('.$numAnnouncements.')';
 
 if ($isAdmin || count($lecturerContext) > 0) {
     $header->str .= ' '.$addLink->show();
@@ -65,8 +65,10 @@ $objPagination->numPageLinks = $itemsPerPage;
 echo $objPagination->show();
 
 $addLink = new link ($this->uri(array('action'=>'add')));
-$addLink->link = 'Post New Announcement';
+$addLink->link = $this->objLanguage->languageText('mod_announcements_postnewannouncement', 'announcements', 'Post New Announcement');
 
-echo $addLink->show();
+if ($isAdmin || count($lecturerContext) > 0) {
+    echo $addLink->show();
+}
 
 ?>
