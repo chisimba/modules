@@ -46,6 +46,7 @@ class location extends controller
     protected $feTokenSecret;
     protected $twitterUpdates;
     protected $currentLocationName;
+    protected $objDbLocation;
 
     /**
      * Standard constructor to load the necessary resources
@@ -83,6 +84,8 @@ class location extends controller
         $this->feTokenSecret = $this->objUserParams->getValue('Fire Eagle Token Secret');
         $this->twitterUpdates = $this->objUserParams->getValue('Twitter Location Updates');
         $this->currentLocationName = base64_decode($this->objUserParams->getValue('Current Location Name'));
+
+        $this->objDbLocation = $this->getObject('dblocation', 'location');
     }
 
     /**
@@ -106,6 +109,9 @@ class location extends controller
                 }
                 $fireeagle = new FireEagle($this->feKey, $this->feSecret, $_SESSION['request_token'], $_SESSION['request_secret'], $this->json);
                 $token = $fireeagle->getAccessToken();
+                $this->objDbLocation->setFireEagleToken($token['oauth_token']);
+                $this->objDbLocation->setFireEagleSecret($token['oauth_token_secret']);
+                $this->objDbLocation->put();
                 $this->objUserParams->setItem('Fire Eagle Token', $token['oauth_token']);
                 $this->objUserParams->setItem('Fire Eagle Token Secret', $token['oauth_token_secret']);
                 $this->nextAction(null, null, 'location');
@@ -114,6 +120,12 @@ class location extends controller
                 if ($this->feToken && $this->feTokenSecret) {
                     $location = $this->objLocationOps->getFireEagleUser();
                     $name = $location['user']['location_hierarchy'][0]['name'];
+                    $longitude = $location['user']['location_hierarchy'][0]['geometry']['coordinates'][0][0][0];
+                    $latitude = $location['user']['location_hierarchy'][0]['geometry']['coordinates'][0][0][1];
+                    $this->objDbLocation->setLongitude($longitude);
+                    $this->objDbLocation->setLatitude($latitude);
+                    $this->objDbLocation->setName($name);
+                    $this->objDbLocation->put();
                     if ($name != $this->currentLocationName) {
                         $this->objUserParams->setItem('Current Location Name', base64_encode($name));
                         if ($this->twitterUpdates && $this->objTwitterLib) {

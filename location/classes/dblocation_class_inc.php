@@ -30,7 +30,16 @@
  */
 class dblocation extends dbTable 
 {
-    
+    protected $objUser;
+    protected $userId;
+
+    private $id;
+    private $longitude;
+    private $latitude;
+    private $name;
+    private $fireEagleToken;
+    private $fireEagleSecret;
+
     /**
      * Constructor
      *
@@ -38,6 +47,86 @@ class dblocation extends dbTable
     public function init()
     {
         parent::init('tbl_location');
+
+        $this->objUser = $this->getObject('user', 'security');
+        $this->userId = $this->objUser->userId();
+
+        $row = $this->getRow('userid', $this->userId);
+        if ($row) {
+            $this->id = $row['id'];
+            $this->longitude = $row['longitude'];
+            $this->latitude = $row['latitude'];
+            $this->name = $row['name'];
+            $this->fireEagleToken = $row['fireeagle_token'];
+            $this->fireEagleSecret = $row['fireeagle_secret'];
+        }
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    }
+
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
+
+    public function getName($name)
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getFireEagleToken()
+    {
+        return $this->fireEagleToken;
+    }
+
+    public function setFireEagleToken($fireEagleToken)
+    {
+        $this->fireEagleToken = $fireEagleToken;
+    }
+
+    public function getFireEagleSecret()
+    {
+        return $this->fireEagleSecret;
+    }
+
+    public function setFireEagleSecret($fireEagleSecret)
+    {
+        $this->fireEagleSecret = $fireEagleSecret;
+    }
+
+    public function put()
+    {
+        $row = array();
+        $row['userid'] = $this->userId;
+        $row['longitude'] = $this->longitude;
+        $row['latitude'] = $this->latitude;
+        $row['name'] = $this->name;
+        $row['fireeagle_token'] = $this->fireEagleToken;
+        $row['fireeagle_secret'] = $this->fireEagleSecret;
+        if ($this->id) {
+            $this->update('id', $this->id, $row);
+        } else {
+            $this->insert($row);
+        }
     }
 }
+
 ?>
