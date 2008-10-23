@@ -48,7 +48,9 @@ class announcements extends controller
         $this->objDate = $this->newObject('dateandtime', 'utilities');
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        
+        //feed creator subsystem
+        $this->objFeedCreator = $this->getObject('feeder', 'feed');
+
         $this->objAnnouncements = $this->getObject('dbannouncements');
         
         $this->userId = $this->objUser->userId();
@@ -133,7 +135,70 @@ class announcements extends controller
         }
     }
     
-    
+    /**
+     *Method to generate a rss feed
+     *@param null
+     *@return an xml string
+     *@access public
+     */
+    public function __feed()
+    {
+        //get ther username
+        $username = $this->getParam("username");
+        $username = "admin";
+        //get all the announcements for this user which
+        //will include all announcements for all the courses that he
+        //registered in
+        $objManageGroups = $this->getObject("managegroups", "contextgroups");
+        $userId = $this->objUser->userId($username);
+        $posts = $this->objAnnouncements->getAllAnnouncements($objManageGroups->usercontextcodes($userId));
+        //var_dump($posts);
+        //create the feed with the post
+        //title of the feed - Site Name Announcements
+        $feedtitle = htmlentities("Announcements");
+
+        //description
+        $feedDescription = "Some description";
+        
+        //link back to the blog
+        $feedLink = $this->objConfig->getSiteRoot() . "index.php?module=announcements&action=home&userid=" . $userid;
+        //sanitize the link
+        $feedLink = htmlentities($feedLink);
+        //set up the url
+        $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=announcements&userid=" . $userid . "action=feed&format=" . $format;
+        //print_r($feedURL);
+        $feedURL = htmlentities($feedURL);
+        //set up the feed
+        $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
+
+        //
+        foreach($posts as $feeditems) {
+            //use the post title as the feed item title
+            $itemTitle = $feeditems['title'];
+            $itemLink = $this->uri(array(
+                'action' => 'view',
+                'id' => $feeditems['id']               
+            )); //todo - add this to the posts table!
+            //description
+            $itemDescription = $feeditems['message'];
+            //where are we getting this from
+            $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=announcements&userid=" . $userid;
+            //feed author
+            $itemAuthor = htmlentities($this->objUser->userName($feeditems['createdby'])."<".$this->objUser->email($feeditems['createdby']).">");
+            //item date
+            $DT = split(" ",$feeditems['createdon']);
+            $date = split("-", $DT[0]);
+            $time = split(":", $DT[1]);
+            //var_dump($date); die;
+            $itemDate = mkTime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
+            //add this item to the feed
+            $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor, $itemDate);
+        }
+        $feed = $this->objFeedCreator->output();
+       // echo htmlentities($feed);
+
+    }
+
     /**
      * Method to check whether a user has update permissions for an announcement
      * @param string $item Record Id of the announcement
