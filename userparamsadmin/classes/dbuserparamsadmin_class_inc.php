@@ -133,7 +133,7 @@ class dbuserparamsadmin extends object
     /**
      *
      * Change the userId based on the username passed in
-     * @param string $un THe username
+     * @param string $un The username
      * @return VOID
      * @access public
      *
@@ -143,7 +143,7 @@ class dbuserparamsadmin extends object
         $this->uid = $this->objUser->getUserId($un);
     }
 
-	/**
+    /**
      * Method to create initial IniFile config elements. This method will create
      * blank ini params.
      * @example
