@@ -2,7 +2,7 @@
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
-	die("You cannot view this page directly");
+    die("You cannot view this page directly");
 }
 // end security check
 
@@ -32,7 +32,7 @@ class block_followers extends object
     * Method to output a followers block
     */
     function show()
-	{
+    {
         $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         //This enables the thing to work as a blog plugin
         $objGuess = $this->getObject('bestguess', 'utilities');

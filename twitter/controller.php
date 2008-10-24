@@ -142,8 +142,8 @@ class twitter extends controller
 
     private function __testupdate()
     {
-    	$str="<h1>Version 2: update successful on Thursday Feb 14, 2008</h1>";
-    	$this->setVarByRef('str', $str);
+        $str="<h1>Version 2: update successful on Thursday Feb 14, 2008</h1>";
+        $this->setVarByRef('str', $str);
         return "dump_tpl.php";
     }
 
@@ -171,7 +171,7 @@ class twitter extends controller
                 $str .= "Tweety was muted.";
             }
         } else {
-        	$str .= $this->objLanguage->languageText("mod_twitter_unpwnull", "twitter");
+            $str .= $this->objLanguage->languageText("mod_twitter_unpwnull", "twitter");
         }
         $this->setVarByRef('str', $str);
         return "dump_tpl.php";
@@ -181,12 +181,12 @@ class twitter extends controller
     {
         $objBox = $this->getObject("tweetbox", "twitter");
         $str = $objBox->show();
-    	return "tweet_tpl.php";
+        return "tweet_tpl.php";
     }
 
     private function __sendtweet()
     {
-    	$objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
+        $objUserParams = $this->getObject("dbuserparamsadmin","userparamsadmin");
         $objUserParams->readConfig();
         $userName = $objUserParams->getValue("twittername");
         $password = $objUserParams->getValue("twitterpassword");

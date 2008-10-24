@@ -85,7 +85,7 @@ class tweetbox extends object
     */
     public function show()
     {
-    	return $this->getLimitBox(140, "tweet");
+        return $this->getLimitBox(140, "tweet");
     }
 
     /**
@@ -115,7 +115,7 @@ class tweetbox extends object
     */
     public function addLimitHeaderScript()
     {
-    	$js = "<script language=\"javascript\">
+        $js = "<script language=\"javascript\">
             function limitChars(textid, limit, infodiv)
             {
                 var text = jQuery('#'+textid).val();
