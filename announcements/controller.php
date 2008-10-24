@@ -147,10 +147,10 @@ class announcements extends controller
      */
     public function __feed()
     {
-        $this->requiresLogin();
+        
         //get ther username
         $username = $this->getParam("username");
-        $username = "admin";
+        //$username = "admin";
         //get all the announcements for this user which
         //will include all announcements for all the courses that he
         //registered in
@@ -203,7 +203,7 @@ class announcements extends controller
             //var_dump($date); die;
             $itemDate = mkTime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
             //add this item to the feed
-            $itemLink = $this->objConfig->getSiteRoot() . "index.php?module=announcements&id=" . $feeditems['id'];;
+            $itemLink = $this->objConfig->getSiteRoot() . "index.php?module=announcements&action=view&id=" . $feeditems['id'];;
             $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor, $itemDate);
         }
         $feed = $this->objFeedCreator->output();
