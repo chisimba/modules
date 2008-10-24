@@ -29,6 +29,8 @@ class locationops extends object
     protected $objSysConfig;
     protected $feKey;
     protected $feSecret;
+    protected $feGeneralToken;
+    protected $feGeneralSecret;
     protected $objDbLocation;
     protected $feToken;
     protected $feTokenSecret;
@@ -62,6 +64,8 @@ class locationops extends object
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->feKey = $this->objSysConfig->getValue('fireeaglekey', 'location');
         $this->feSecret = $this->objSysConfig->getValue('fireeaglesecret', 'location');
+        $this->feGeneralToken = $this->objSysConfig->getValue('fireeagletoken', 'location');
+        $this->feGeneralSecret = $this->objSysConfig->getValue('fireeagletokensecret', 'location');
 
         // Read user configuration
         $this->objDbLocation = $this->getObject('dblocation', 'location');
@@ -115,7 +119,7 @@ class locationops extends object
     /**
      * Updates the local database with the latest data from Fire Eagle
      */
-    function update()
+    public function update()
     {
         $oldLongitude = $this->objDbLocation->getLongitude();
         $oldLatitude = $this->objDbLocation->getLatitude();
@@ -142,8 +146,20 @@ class locationops extends object
      * Has the current user already been authenticated?
      * @return boolean
      */
-    function isFireEagleAuthenticated()
+    public function isFireEagleAuthenticated()
     {
         return $this->feToken && $this->feTokenSecret;
+    }
+
+    /**
+     * Synchronise local database with Fire Eagle across all users
+     */
+    public function synchroniseFireEagle()
+    {
+        if ($this->feKey && $this->feSecret) {
+            $fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feGeneralToken, $this->feGeneralSecret, $this->json);
+            $recent = $fireeagle->recent();
+            var_dump($recent);
+        }
     }
 }

@@ -57,6 +57,9 @@ class location extends controller
                 $this->objLocationOps->handleFireEagleCallback();
                 $this->nextAction(null);
                 break;
+            case 'synchronise':
+                $this->objLocationOps->synchroniseFireEagle();
+                break;
             default:
                 if ($this->objLocationOps->isFireEagleAuthenticated()) {
                     $this->objLocationOps->update();
