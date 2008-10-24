@@ -135,6 +135,10 @@ class announcements extends controller
         }
     }
     
+    public function requiresLogin()
+    {
+        return false;
+    }
     /**
      *Method to generate a rss feed
      *@param null
@@ -143,6 +147,7 @@ class announcements extends controller
      */
     public function __feed()
     {
+        
         //get ther username
         $username = $this->getParam("username");
         $username = "admin";
@@ -150,9 +155,10 @@ class announcements extends controller
         //will include all announcements for all the courses that he
         //registered in
         $objManageGroups = $this->getObject("managegroups", "contextgroups");
-        $userId = $this->objUser->userId($username);
+        $userId = $this->objUser->getUserId($username);
+        //print $userId;
         $posts = $this->objAnnouncements->getAllAnnouncements($objManageGroups->usercontextcodes($userId));
-        //var_dump($posts);
+       // var_dump($posts);
         //create the feed with the post
         //title of the feed - Site Name Announcements
         $feedtitle = htmlentities("Announcements");
@@ -168,6 +174,11 @@ class announcements extends controller
         $feedURL = $this->objConfig->getSiteRoot() . "index.php?module=announcements&userid=" . $userid . "action=feed&format=" . $format;
         //print_r($feedURL);
         $feedURL = htmlentities($feedURL);
+        //setup image
+        $objIcon = $this->newObject('geticon', 'htmlelements');
+        $objIcon->setModuleIcon('announcements');
+        $iconURL = $this->objConfig->getSiteRoot().$objIcon->iconfolder.$objIcon->name. "." . $objIcon->type;
+        $this->objFeedCreator->setrssImage($feedtitle, $iconURL, $feedLink, $feedDescription);
         //set up the feed
         $this->objFeedCreator->setupFeed(TRUE, $feedtitle, $feedDescription, $feedLink, $feedURL);
 
@@ -184,7 +195,7 @@ class announcements extends controller
             //where are we getting this from
             $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=announcements&userid=" . $userid;
             //feed author
-            $itemAuthor = htmlentities($this->objUser->userName($feeditems['createdby'])."<".$this->objUser->email($feeditems['createdby']).">");
+            $itemAuthor = $this->objUser->userName($feeditems['createdby'])."<".$this->objUser->email($feeditems['createdby']).">";
             //item date
             $DT = split(" ",$feeditems['createdon']);
             $date = split("-", $DT[0]);
@@ -192,6 +203,7 @@ class announcements extends controller
             //var_dump($date); die;
             $itemDate = mkTime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
             //add this item to the feed
+            $itemLink = $this->objConfig->getSiteRoot() . "index.php?module=announcements&id=" . $feeditems['id'];;
             $this->objFeedCreator->addItem($itemTitle, $itemLink, $itemDescription, $itemSource, $itemAuthor, $itemDate);
         }
         $feed = $this->objFeedCreator->output();
@@ -199,6 +211,10 @@ class announcements extends controller
 
     }
 
+    public function cData($data)
+    {
+        return  "<![CDATA[".$data."]]>";
+    }
     /**
      * Method to check whether a user has update permissions for an announcement
      * @param string $item Record Id of the announcement
