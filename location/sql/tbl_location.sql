@@ -32,6 +32,9 @@ $fields = array(
     'fireeagle_secret' => array(
         'type' => 'text',
         'length' => 255
+        ),
+    'twitter' => array(
+        'type' => 'boolean'
         )
     );
 

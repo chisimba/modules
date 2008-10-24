@@ -33,8 +33,6 @@
 class location extends controller
 {
     protected $objLocationOps;
-    protected $objTwitterLib;
-    protected $objModules;
 
     /**
      * Standard constructor to load the necessary resources
@@ -45,14 +43,6 @@ class location extends controller
     {
         // Load the location library
         $this->objLocationOps = $this->getObject('locationops', 'location');
-
-        // Get module catalogue for checking if optional modules exist
-        $this->objModules = $this->getObject('modules', 'modulecatalogue');
-
-        // Load the Twitter library if available
-        if ($this->objModules->checkIfRegistered('twitter')) {
-            $this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
-        }
     }
 
     /**

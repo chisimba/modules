@@ -39,6 +39,7 @@ class dblocation extends dbTable
     private $name;
     private $fireEagleToken;
     private $fireEagleSecret;
+    private $twitter;
 
     /**
      * Constructor
@@ -59,6 +60,7 @@ class dblocation extends dbTable
             $this->name = $row['name'];
             $this->fireEagleToken = $row['fireeagle_token'];
             $this->fireEagleSecret = $row['fireeagle_secret'];
+            $this->twitter = (bool) $row['twitter'];
         }
     }
 
@@ -112,6 +114,16 @@ class dblocation extends dbTable
         $this->fireEagleSecret = $fireEagleSecret;
     }
 
+    public function getTwitter()
+    {
+        return $this->twitter;
+    }
+
+    public function setTwitter($twitter)
+    {
+        $this->twitter = $twitter;
+    }
+
     public function put()
     {
         $row = array();
@@ -121,6 +133,7 @@ class dblocation extends dbTable
         $row['name'] = $this->name;
         $row['fireeagle_token'] = $this->fireEagleToken;
         $row['fireeagle_secret'] = $this->fireEagleSecret;
+        $row['twitter'] = (int) $this->twitter;
         if ($this->id) {
             $this->update('id', $this->id, $row);
         } else {

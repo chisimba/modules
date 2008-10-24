@@ -23,6 +23,9 @@ $GLOBALS['kewl_entry_point_run']) {
 class locationops extends object
 {
     protected $objJson;
+    protected $objModules;
+    protected $objTwitterLib;
+    protected $objUser;
     protected $objSysConfig;
     protected $feKey;
     protected $feSecret;
@@ -43,6 +46,17 @@ class locationops extends object
 
         // Create the JSON object for later use in the Fire Eagle library
         $this->json = $this->getObject('json', 'utilities');
+
+        // Get module catalogue for checking if optional modules exist
+        $this->objModules = $this->getObject('modules', 'modulecatalogue');
+
+        // Load the Twitter library if available
+        if ($this->objModules->checkIfRegistered('twitter')) {
+            $this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+        }
+
+        // Load the user object
+        $this->objUser = $this->getObject('user', 'security');
 
         // Read system configuration
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -117,10 +131,10 @@ class locationops extends object
             $this->objDbLocation->setLatitude($latitude);
             $this->objDbLocation->setName($name);
             $this->objDbLocation->put();
-            /*if ($this->twitterUpdates && $this->objTwitterLib) {
-                $this->objTwitterLib->setUid($this->userName);
-                $this->objTwitterLib->updateStatus('Current Location: ' . $name);
-            }*/
+            if ($this->objDbLocation->getTwitter() && $this->objTwitterLib) {
+                $this->objTwitterLib->setUid($this->objUser->userName());
+                $this->objTwitterLib->updateStatus("Current Location: $name");
+            }
         }
     }
 
