@@ -254,9 +254,8 @@ $objMathML = &$this->newObject('parse4mathml', 'filters');
 if (!empty($data)) {
     $i = $data[0]['questionorder'];
     $count = count($data) +$i-1;
-    $questionCounter = 1;
+    $questionCounter = $i;
     $qnum = $i;
-    $qnum = count($data);
     foreach($data as $line) {
         $row = array();
         $row[] = '<nobr><b>'.$questionLabel.' '.$questionCounter.':</b></nobr>';
@@ -264,17 +263,6 @@ if (!empty($data)) {
         $parsed = $objMathML->parseAll($parsed);
         $row[] = '<b>'.$parsed.'</b>';
         $objTable->addRow($row, 'odd" valign="top');
-        //         if(!empty($line['imageName'])){
-        //             $row = array();
-        //             $row[] = '';
-        //
-        //             $objImage = new image();
-        //             $objImage->src = $this->uri(array('action'=>'viewimage', 'fileid'=>$line['imageId']));
-        //
-        //             $row[] = $objImage->show();
-        //
-        //             $objTable->addRow($row, 'odd');
-        //         }
         $row = array();
         $row[] = '<b>'.$markLabel.':</b>';
         $row[] = '<b>'.$line['mark'].'</b>';
@@ -310,9 +298,9 @@ if (!empty($data)) {
         $row[] = $hidden;
         $row[] = $objRadio->show();
         $objTable->addRow($row, 'even');
-        //$qnum = $line['questionorder'];
         $questionCounter++;
     }
+      $qnum=--$questionCounter;
     // hidden element for the first question displayed
     $objInput = new textinput('first', $i);
     $objInput->fldType = 'hidden';
@@ -339,13 +327,12 @@ $objInput = new textinput('resultId', $resultId);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
 // Submit buttons
-	if ($data[0]['count'] > $qnum) {
+	if ($questionCounter<$data[0]['count']) {
 	    $objButton = new button('savebutton', $continueLabel);
 // after the onclick
 //document.getElementById(\'input_savebutton\').disabled=true;
 
 	    $objButton->extra = ' ondblclick="javascript:return false" onclick="document.getElementById(\'form_submittest\').submit();"';
-	    //   $objButton->setToSubmit();
 	    $action = 'continuetest';
 
 	} else{
@@ -362,21 +349,13 @@ if ($action == 'continuetest') {
     $objTable->startRow();
     $objTable->addCell($hidden.$objButton->show() , '', '', 'left', '', '');
     $objTable->endRow();
-    //    $row = array();
-    //    $row[] = $hidden;
-    //    $row[] = $objButton->show();
-    //    $objTable->addRow($row);
-
+    
 } else {
     $objTable->startRow();
     $objTable->addCell($hidden, '', '', 'right', '', '');
     $objTable->addCell($objButton->show() , '', '', 'right', '', '');
     $objTable->endRow();
-    //    $row = array();
-    //    $row[] = $hidden;
-    //    $row[] = $objButton->show();
-    //    $objTable->addRow($row);
-
+ 
 }
 // form to submit the test
 $objForm = new form('submittest', $this->uri(''));

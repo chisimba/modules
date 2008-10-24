@@ -468,7 +468,7 @@ class mcqtests extends controller
                         foreach($usersResultList as $user) {
                             $line = $user['studentid'].",";
                             $line.= $this->objUser->fullname($user['studentid']) .",";
-                            $line.= $user['mark'].",";
+                           @ $line.= $user['mark'].",";
                             $line.= (round(($user['mark']/$testData[0]['totalmark']) , 4) *100) ."%,";
                             fwrite($outputFile, $line."\n");
                         }
