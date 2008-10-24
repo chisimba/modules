@@ -147,7 +147,7 @@ class announcements extends controller
      */
     public function __feed()
     {
-        
+        $this->requiresLogin();
         //get ther username
         $username = $this->getParam("username");
         $username = "admin";
