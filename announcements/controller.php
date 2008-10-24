@@ -137,7 +137,7 @@ class announcements extends controller
     
     public function requiresLogin()
     {
-        return false;
+        return False;
     }
     /**
      *Method to generate a rss feed
