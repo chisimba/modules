@@ -14,7 +14,7 @@
  * @author    Administrative User <pscott@uwc.ac.za>
  * @copyright 2007 Administrative User
  * @license   gpl
- * @version   CVS: $Id: controller.php 7800 2008-01-17 12:53:42Z paulscott $
+ * @version   $Id: controller.php 7800 2008-01-17 12:53:42Z paulscott $
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
