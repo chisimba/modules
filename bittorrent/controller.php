@@ -14,7 +14,7 @@
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2007 Paul Scott
  * @license   gpl
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
