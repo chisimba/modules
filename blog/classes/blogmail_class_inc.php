@@ -19,7 +19,7 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @version    CVS: $Id$
+ * @version    $Id$
  * @package    blog
  * @subpackage blogops
  * @author     Paul Scott <pscott@uwc.ac.za>
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2007 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */

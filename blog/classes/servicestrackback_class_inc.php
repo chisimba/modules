@@ -19,7 +19,7 @@
  * @author    Paul Scott - bug fixes
  * @copyright 2005-2006 The PHP Group
  * @license   http://www.php.net/license/3_0.txt PHP License 3.0
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://pear.php.net/package/Services_Trackback
  * @since     File available since Release 0.1.0
  */
