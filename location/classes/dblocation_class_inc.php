@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Location IM dbtable derived class
  * 
@@ -52,8 +53,14 @@ class dblocation extends dbTable
         $this->objUser = $this->getObject('user', 'security');
         $this->userId = $this->objUser->userId();
 
-        $row = $this->getRow('userid', $this->userId);
-        if ($row) {
+        if ($this->userId) {
+            $row = $this->getRow('userid', $this->userId);
+            $this->populate($row);
+        }
+    }
+
+    private function populate($row) {
+        if ($row && is_array($row) && count($row)) {
             $this->id = $row['id'];
             $this->longitude = $row['longitude'];
             $this->latitude = $row['latitude'];
@@ -122,6 +129,12 @@ class dblocation extends dbTable
     public function setTwitter($twitter)
     {
         $this->twitter = $twitter;
+    }
+
+    public function loadByFireEagleToken($token)
+    {
+        $row = $this->getRow('fireeagle_token', $token);
+        $this->populate($row);
     }
 
     public function put()

@@ -71,6 +71,20 @@ class location extends controller
                 }
         }
     }
+
+    /**
+     * Overide the login object in the parent class
+     *
+     * @param  string $action The name of the action
+     * @return bool
+     * @access public
+     */
+    public function requiresLogin($action)
+    {
+        $publicActions = array('synchronise');
+
+        return !in_array($action, $publicActions);
+    }
 }
 
 ?>

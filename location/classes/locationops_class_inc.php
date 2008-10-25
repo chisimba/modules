@@ -1,4 +1,5 @@
 <?php
+
 // security check - must be included in all scripts
 if (!
 /**
@@ -67,14 +68,33 @@ class locationops extends object
         $this->feGeneralToken = $this->objSysConfig->getValue('fireeagletoken', 'location');
         $this->feGeneralSecret = $this->objSysConfig->getValue('fireeagletokensecret', 'location');
 
-        // Read user configuration
+        // Load the database location object for setting and retrieving information about users
         $this->objDbLocation = $this->getObject('dblocation', 'location');
+
+        // Retrieve the Fire Eagle user-specific tokens if a user is currently logged in
+        if ($this->objUser->userId()) {
+            $this->loadUserConfiguration();
+        }
+    }
+
+    /**
+     * Load user-specific tokens and set object properties accordingly
+     *
+     * @param string $token The Fire Eagle token of the user
+     */
+    private function loadUserConfiguration($token=null)
+    {
+        if ($token !== null) {
+            $this->objDbLocation->loadByFireEagleToken($token);
+        }
+
         $this->feToken = $this->objDbLocation->getFireEagleToken();
         $this->feTokenSecret = $this->objDbLocation->getFireEagleSecret();
     }
 
     /**
      * Returns the Fire Eagle user location array
+     *
      * @return array User location information
      */
     public function getFireEagleUser()
@@ -159,7 +179,14 @@ class locationops extends object
         if ($this->feKey && $this->feSecret) {
             $fireeagle = new FireEagle($this->feKey, $this->feSecret, $this->feGeneralToken, $this->feGeneralSecret, $this->json);
             $recent = $fireeagle->recent();
-            var_dump($recent);
+            if (isset($recent['users']) && is_array($recent['users'])) {
+                foreach ($recent['users'] as $user) {
+                    $this->loadUserConfiguration($user['token']);
+                    $this->update();
+                }
+            }
         }
     }
 }
+
+?>
