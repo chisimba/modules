@@ -18,7 +18,7 @@
  * @link     http://pear.php.net/package/PHP_Beautifier
  * @link     http://beautifyphp.sourceforge.net
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id$
+ * @version    $Id$
  */
 /**
  * Require PEAR_Config
@@ -54,7 +54,7 @@ require_once ('PEAR/Config.php');
  * @link     http://beautifyphp.sourceforge.net
  * @link http://pear.php.net/manual/en/standards.php
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id$
+ * @version    $Id$
  */
 class PHP_Beautifier_Filter_Pear extends PHP_Beautifier_Filter
 {

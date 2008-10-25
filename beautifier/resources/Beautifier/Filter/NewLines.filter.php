@@ -19,7 +19,7 @@
  * @link     http://beautifyphp.sourceforge.net
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @since      File available since Release 0.1.2
- * @version    CVS: $Id$
+ * @version    $Id$
  */
 /**
  * New Lines: Add new lines after o before specific contents

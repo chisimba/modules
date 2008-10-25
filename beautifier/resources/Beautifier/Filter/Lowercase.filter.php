@@ -19,7 +19,7 @@
  * @link     http://php.apsique.com/PHP_Beautifier
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
  * @since      File available since Release 0.1.9
- * @version    CVS: $Id$
+ * @version    $Id$
  */
 /**
  * Lowercase: lowercase all control structures.
