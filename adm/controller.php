@@ -14,7 +14,7 @@
  * @author    Administrative User <pscott@uwc.ac.za>
  * @copyright 2007 Administrative User
  * @license   gpl
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
