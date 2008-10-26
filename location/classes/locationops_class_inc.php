@@ -211,8 +211,10 @@ class locationops extends object
 
     /**
      * Adds all the necessary information to the GMapApi so that a map can be rendered.
+     *
+     * @param bool $allUsers Add markers for all users or only the current one
      */
-    public function setupMap()
+    public function setupMap($allUsers=false)
     {
         if ($this->objSimpleBuildMap && $this->objGMapApi) {
             $key = $this->objSimpleBuildMap->getApiKey();
@@ -227,10 +229,17 @@ class locationops extends object
             $this->objGMapApi->GoogleMapAPI('locationmap');
             $this->setVar('objGMapApi', $this->objGMapApi);
 
-            $locations = $this->objDbLocation->getAll();
-            foreach ($locations as $location) {
-                $fullname = $this->objUser->fullname($location['userid']);
-                $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+            if ($allUsers) {
+                $locations = $this->objDbLocation->getAll();
+                foreach ($locations as $location) {
+                    $fullname = $this->objUser->fullname($location['userid']);
+                    $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+                }
+            } else {
+                $longitude = $this->objDbLocation->getLongitude();
+                $latitude = $this->objDbLocation->getLatitude();
+                $fullname = $this->objUser->fullname();
+                $this->objGMapApi->addMarkerByCoords($longitude, $latitude, $fullname);
             }
         }
     }

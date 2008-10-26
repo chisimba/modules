@@ -92,7 +92,7 @@ class location extends controller
      */
     private function actionMap()
     {
-        $this->objLocationOps->setupMap();
+        $this->objLocationOps->setupMap(true);
 
         return 'map_tpl.php';
     }
@@ -104,18 +104,42 @@ class location extends controller
      */
     private function actionDefault()
     {
-        if ($this->objLocationOps->isFireEagleAuthenticated()) {
-            $this->objLocationOps->update();
-            $this->objLocationOps->setTemplateVars();
-            return 'default_tpl.php';
-        } else {
+        $this->checkFireEagle();
+        $this->objLocationOps->setupMap();
+        $this->objLocationOps->setTemplateVars();
+
+        return 'default_tpl.php';
+    }
+
+    /**
+     * Checks if the user is authenticated with Fire Eagle, otherwise redirects to get authenticated
+     *
+     * @access private
+     */
+    private function checkFireEagle()
+    {
+        if (!$this->objLocationOps->isFireEagleAuthenticated()) {
             $url = $this->objLocationOps->getFireEagleAuthoriseUrl();
             header("Location: $url");
+            exit;
         }
     }
 
     /**
+     * Checks Fire Eagle for updates to the user's location
+     *
+     * @access private
+     */
+    private function actionUpdate()
+    {
+        $this->objLocationOps->update();
+        $this->nextAction(null);
+    }
+
+    /**
      * Enables Twitter integration for the current user
+     *
+     * @access private
      */
     private function actionEnabletwitter()
     {
@@ -125,6 +149,8 @@ class location extends controller
 
     /**
      * Disables Twitter integration for the current user
+     *
+     * @access private
      */
     private function actionDisabletwitter()
     {

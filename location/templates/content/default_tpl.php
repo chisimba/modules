@@ -22,6 +22,14 @@ $header->str = $objLanguage->languageText('mod_location_currentlocation', 'locat
 $header->type = 1;
 $middleColumn = $header->show();
 
+$objGMapApi = $this->getVar('objGMapApi');
+
+if (is_object($objGMapApi)) {
+    $middleColumn .= $objGMapApi->getMapJS();
+    $middleColumn .= $objGMapApi->getMap();
+    $middleColumn .= $objGMapApi->getSidebar();
+}
+
 // Get user location language strings
 $nameLabel = $objLanguage->languageText('mod_location_locationname', 'location');
 $longitudeLabel = $objLanguage->languageText('mod_location_longitude', 'location');
@@ -38,6 +46,13 @@ $middleColumn .= "<li>$nameLabel: $nameValue</li>";
 $middleColumn .= "<li>$longitudeLabel: $longitudeValue</li>";
 $middleColumn .= "<li>$latitudeLabel: $latitudeValue</li>";
 $middleColumn .= '</ul>';
+
+// Add update link to the middle column
+$linkUri = $this->uri(array('module'=>'location','action'=>'update'));
+$linkText = $objLanguage->languageText('mod_location_update', 'location');
+$linkHref = new href($linkUri, $linkText);
+$link = $linkHref->show();
+$middleColumn .= "<p>$link</p>";
 
 // Add twitter information and controls to middle column
 if ($this->getVar('locationTwitter')) {
