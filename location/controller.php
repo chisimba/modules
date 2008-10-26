@@ -106,9 +106,8 @@ class location extends controller
     {
         if ($this->objLocationOps->isFireEagleAuthenticated()) {
             $this->objLocationOps->update();
-            $location = $this->objLocationOps->getFireEagleUser();
-            header('Content-Type: text/plain');
-            print_r($location);
+            $this->objLocationOps->setTemplateVars();
+            return 'default_tpl.php';
         } else {
             $url = $this->objLocationOps->getFireEagleAuthoriseUrl();
             header("Location: $url");

@@ -252,6 +252,21 @@ class locationops extends object
         $this->objDbLocation->setTwitter(false);
         $this->objDbLocation->put();
     }
+
+    /**
+     * Set the location data as template vars
+     */
+    public function setTemplateVars()
+    {
+        $longitude = $this->objDbLocation->getLongitude();
+        $latitude = $this->objDbLocation->getLatitude();
+        $name = $this->objDbLocation->getName();
+        $twitter = $this->objDbLocation->getTwitter();
+        $this->setVar('locationLongitude', $longitude);
+        $this->setVar('locationLatitude', $latitude);
+        $this->setVar('locationName', $name);
+        $this->setVar('locationTwitter', $twitter);
+    }
 }
 
 ?>
