@@ -58,45 +58,25 @@ class location extends controller
     public function dispatch()
     {
         $action = $this->getParam('action');
-        switch ($action) {
-            case 'callback':
-                $this->objLocationOps->handleFireEagleCallback();
-                $this->nextAction(null);
-                break;
-            case 'synchronise':
-                $this->objLocationOps->synchroniseFireEagle();
-                break;
-            case 'map':
-                // TODO: Handle all actions like this
-                $method = $this->getMethod($action);
-                return $this->$method();
-            default:
-                if ($this->objLocationOps->isFireEagleAuthenticated()) {
-                    $this->objLocationOps->update();
-                    $location = $this->objLocationOps->getFireEagleUser();
-                    header('Content-Type: text/plain');
-                    print_r($location);
-                } else {
-                    $this->objLocationOps->initFireEagleHandshake();
-                }
+        $method = 'action' . ucfirst($action);
+
+        if (!method_exists($this, $method)) {
+            $method = 'actionDefault';
         }
+
+        return $this->$method();
     }
 
-    /**
-     * Overide the login object in the parent class
-     *
-     * @param  string $action The name of the action
-     * @return bool
-     * @access public
-     */
-    public function requiresLogin($action)
-    {
-        $publicActions = array('synchronise');
-
-        return !in_array($action, $publicActions);
+    private function actionCallback() {
+        $this->objLocationOps->handleFireEagleCallback();
+        $this->nextAction(null);
     }
 
-    private function __map()
+    private function actionSynchronise() {
+        $this->objLocationOps->synchroniseFireEagle();
+    }
+
+    private function actionMap()
     {
         $bodyParams = 'onload="onLoad()" onunload="GUnload()"';
         $this->setVarByRef('bodyParams', $bodyParams);
@@ -117,44 +97,30 @@ class location extends controller
         return 'map_tpl.php';
     }
 
-    /**
-    *
-    * Method to convert the action parameter into the name of
-    * a method of this class.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return string the name of the method
-    *
-    */
-    function getMethod(& $action)
+    private function actionDefault()
     {
-        if ($this->validAction($action)) {
-            return '__'.$action;
+        if ($this->objLocationOps->isFireEagleAuthenticated()) {
+            $this->objLocationOps->update();
+            $location = $this->objLocationOps->getFireEagleUser();
+            header('Content-Type: text/plain');
+            print_r($location);
         } else {
-            return '__home';
+            $this->objLocationOps->initFireEagleHandshake();
         }
     }
 
     /**
-    *
-    * Method to check if a given action is a valid method
-    * of this class preceded by double underscore (__). If it __action
-    * is not a valid method it returns FALSE, if it is a valid method
-    * of this class it returns TRUE.
-    *
-    * @access private
-    * @param string $action The action parameter passed byref
-    * @return boolean TRUE|FALSE
-    *
-    */
-    function validAction(& $action)
+     * Overide the login object in the parent class
+     *
+     * @param  string $action The name of the action
+     * @return bool
+     * @access public
+     */
+    public function requiresLogin($action)
     {
-        if (method_exists($this, '__'.$action)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        $publicActions = array('synchronise');
+
+        return !in_array($action, $publicActions);
     }
 }
 
