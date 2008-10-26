@@ -233,13 +233,17 @@ class locationops extends object
                 $locations = $this->objDbLocation->getAll();
                 foreach ($locations as $location) {
                     $fullname = $this->objUser->fullname($location['userid']);
-                    $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+                    if ($location['longitude'] && $location['latitude']) {
+                        $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+                    }
                 }
             } else {
                 $longitude = $this->objDbLocation->getLongitude();
                 $latitude = $this->objDbLocation->getLatitude();
                 $fullname = $this->objUser->fullname();
-                $this->objGMapApi->addMarkerByCoords($longitude, $latitude, $fullname);
+                if ($longitude && $latitude) {
+                    $this->objGMapApi->addMarkerByCoords($longitude, $latitude, $fullname);
+                }
             }
         }
     }

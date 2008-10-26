@@ -71,6 +71,7 @@ class location extends controller
     private function actionCallback()
     {
         $this->objLocationOps->handleFireEagleCallback();
+        $this->objLocationOps->update();
         $this->nextAction(null);
     }
 

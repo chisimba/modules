@@ -150,7 +150,7 @@ class dblocation extends dbTable
         if ($this->id) {
             $this->update('id', $this->id, $row);
         } else {
-            $this->insert($row);
+            $this->id = $this->insert($row);
         }
     }
 }
