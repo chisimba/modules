@@ -33,9 +33,6 @@
 class location extends controller
 {
     protected $objLocationOps;
-    protected $objSimpleBuildMap;
-    protected $objGMapApi;
-    protected $objUser;
 
     /**
      * Standard constructor to load the necessary resources
@@ -46,9 +43,6 @@ class location extends controller
     {
         // Load the location library
         $this->objLocationOps = $this->getObject('locationops', 'location');
-        $this->objSimpleBuildMap = $this->getObject('simplebuildmap', 'simplemap');
-        $this->objGMapApi = $this->getObject('gmapapi', 'gmaps');
-        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -78,21 +72,7 @@ class location extends controller
 
     private function actionMap()
     {
-        $bodyParams = 'onload="onLoad()" onunload="GUnload()"';
-        $this->setVarByRef('bodyParams', $bodyParams);
-
-        $key = $this->objSimpleBuildMap->getApiKey();
-        $this->objGMapApi->setAPIKey($key);
-        $headerParams = $this->objGMapApi->getHeaderJS();
-        $this->appendArrayVar('headerParams', $headerParams);
-
-        $this->objGMapApi->GoogleMapAPI('map');
-
-        $locations = $this->objLocationOps->getAll();
-        foreach ($locations as $location) {
-            $fullname = $this->objUser->fullname($location['userid']);
-            $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
-        }
+        $this->objLocationOps->setupMap();
 
         return 'map_tpl.php';
     }

@@ -26,6 +26,8 @@ class locationops extends object
     protected $objJson;
     protected $objModules;
     protected $objTwitterLib;
+    protected $objSimpleBuildMap;
+    protected $objGMapApi;
     protected $objUser;
     protected $objSysConfig;
     protected $feKey;
@@ -56,6 +58,16 @@ class locationops extends object
         // Load the Twitter library if available
         if ($this->objModules->checkIfRegistered('twitter')) {
             $this->objTwitterLib = $this->getObject('twitterlib', 'twitter');
+        }
+
+        // Load the simplemap build class if available
+        if ($this->objModules->checkIfRegistered('simplemap')) {
+            $this->objSimpleBuildMap = $this->getObject('simplebuildmap', 'simplemap');
+        }
+
+        // Load the gmaps api class if available
+        if ($this->objModules->checkIfRegistered('gmaps')) {
+            $this->objGMapApi = $this->getObject('gmapapi', 'gmaps');
         }
 
         // Load the user object
@@ -188,10 +200,27 @@ class locationops extends object
         }
     }
 
-    // TODO: Remove this function
-    public function getAll()
+    public function setupMap()
     {
-        return $this->objDbLocation->getAll();
+        if ($this->objSimpleBuildMap && $this->objGMapApi) {
+            $key = $this->objSimpleBuildMap->getApiKey();
+            $this->objGMapApi->setAPIKey($key);
+
+            $headerParams = $this->objGMapApi->getHeaderJS();
+            $this->appendArrayVar('headerParams', $headerParams);
+
+            $bodyParams = 'onload="onLoad()" onunload="GUnload()"';
+            $this->setVar('bodyParams', $bodyParams);
+
+            $this->objGMapApi->GoogleMapAPI('locationmap');
+            $this->setVar('objGMapApi', $this->objGMapApi);
+
+            $locations = $this->objDbLocation->getAll();
+            foreach ($locations as $location) {
+                $fullname = $this->objUser->fullname($location['userid']);
+                $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+            }
+        }
     }
 }
 

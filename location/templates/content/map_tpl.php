@@ -1,5 +1,9 @@
 <?php
 
-$this->objGMapApi->printMapJS();
-$this->objGMapApi->printMap();
-$this->objGMapApi->printSidebar();
+$objGMapApi = $this->getVar('objGMapApi');
+
+if (is_object($objGMapApi)) {
+    $objGMapApi->printMapJS();
+    $objGMapApi->printMap();
+    $objGMapApi->printSidebar();
+}
