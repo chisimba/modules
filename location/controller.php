@@ -110,7 +110,8 @@ class location extends controller
             header('Content-Type: text/plain');
             print_r($location);
         } else {
-            $this->objLocationOps->initFireEagleHandshake();
+            $url = $this->objLocationOps->getFireEagleAuthoriseUrl();
+            header("Location: $url");
         }
     }
 

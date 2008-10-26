@@ -119,16 +119,25 @@ class locationops extends object
     }
 
     /**
-     * Initialises Fire Eagle OAuth authentication handshake
+     * Retrieves the authorisation URL to initialise the Fire Eagle OAuth handshake
+     * and sets some session variables to be used on callback
+     *
+     * @return string The URL
      */
-    public function initFireEagleHandshake()
+    public function getFireEagleAuthoriseUrl()
     {
+        // Perform an API call to Fire Eagle in order to retrieve the OAuth token
         $fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
         $token = $fireeagle->getRequestToken();
+
+        // Set session variables to be used on callback
         $_SESSION['request_token'] = $token['oauth_token'];
         $_SESSION['request_secret'] = $token['oauth_token_secret'];
-        header('Location: ' . $fireeagle->getAuthorizeURL($token['oauth_token']));
-        exit;
+
+        // Retrieve the authorise URL
+        $url = $fireeagle->getAuthorizeURL($token['oauth_token']);
+
+        return $url;
     }
 
     /**
