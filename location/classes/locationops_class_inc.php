@@ -178,7 +178,7 @@ class locationops extends object
             $this->objDbLocation->put();
             if ($this->objDbLocation->getTwitter() && $this->objTwitterLib) {
                 $this->objTwitterLib->setUid($this->objUser->userName());
-                $this->objTwitterLib->updateStatus("Current Location: $name");
+                $this->objTwitterLib->updateStatus("Current Location: $name #geo:lat=$latitude #geo:lon=$longitude");
             }
         }
     }

@@ -16,10 +16,10 @@ $fields = array(
         'length' => 25
         ),
     'latitude' => array(
-        'type' => 'decimal'
+        'type' => 'float'
         ),
     'longitude' => array(
-        'type' => 'decimal'
+        'type' => 'float'
         ),
     'name' => array(
         'type' => 'text',
