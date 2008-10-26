@@ -187,6 +187,12 @@ class locationops extends object
             }
         }
     }
+
+    // TODO: Remove this function
+    public function getAll()
+    {
+        return $this->objDbLocation->getAll();
+    }
 }
 
 ?>

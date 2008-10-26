@@ -33,6 +33,9 @@
 class location extends controller
 {
     protected $objLocationOps;
+    protected $objSimpleBuildMap;
+    protected $objGMapApi;
+    protected $objUser;
 
     /**
      * Standard constructor to load the necessary resources
@@ -43,6 +46,9 @@ class location extends controller
     {
         // Load the location library
         $this->objLocationOps = $this->getObject('locationops', 'location');
+        $this->objSimpleBuildMap = $this->getObject('simplebuildmap', 'simplemap');
+        $this->objGMapApi = $this->getObject('gmapapi', 'gmaps');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -60,6 +66,10 @@ class location extends controller
             case 'synchronise':
                 $this->objLocationOps->synchroniseFireEagle();
                 break;
+            case 'map':
+                // TODO: Handle all actions like this
+                $method = $this->getMethod($action);
+                return $this->$method();
             default:
                 if ($this->objLocationOps->isFireEagleAuthenticated()) {
                     $this->objLocationOps->update();
@@ -84,6 +94,67 @@ class location extends controller
         $publicActions = array('synchronise');
 
         return !in_array($action, $publicActions);
+    }
+
+    private function __map()
+    {
+        $bodyParams = 'onload="onLoad()" onunload="GUnload()"';
+        $this->setVarByRef('bodyParams', $bodyParams);
+
+        $key = $this->objSimpleBuildMap->getApiKey();
+        $this->objGMapApi->setAPIKey($key);
+        $headerParams = $this->objGMapApi->getHeaderJS();
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $this->objGMapApi->GoogleMapAPI('map');
+
+        $locations = $this->objLocationOps->getAll();
+        foreach ($locations as $location) {
+            $fullname = $this->objUser->fullname($location['userid']);
+            $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
+        }
+
+        return 'map_tpl.php';
+    }
+
+    /**
+    *
+    * Method to convert the action parameter into the name of
+    * a method of this class.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return string the name of the method
+    *
+    */
+    function getMethod(& $action)
+    {
+        if ($this->validAction($action)) {
+            return '__'.$action;
+        } else {
+            return '__home';
+        }
+    }
+
+    /**
+    *
+    * Method to check if a given action is a valid method
+    * of this class preceded by double underscore (__). If it __action
+    * is not a valid method it returns FALSE, if it is a valid method
+    * of this class it returns TRUE.
+    *
+    * @access private
+    * @param string $action The action parameter passed byref
+    * @return boolean TRUE|FALSE
+    *
+    */
+    function validAction(& $action)
+    {
+        if (method_exists($this, '__'.$action)) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
 
