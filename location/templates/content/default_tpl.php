@@ -1,5 +1,9 @@
 <?php
 
+// Load the necessary HTML helper classes
+$this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('href', 'htmlelements');
+
 // Set up the CSS layout
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(2);
@@ -9,23 +13,26 @@ $userMenu = $this->newObject('usermenu', 'toolbar');
 $leftColumn = $userMenu->show();
 $cssLayout->setLeftColumnContent($leftColumn);
 
-$this->loadClass('htmlheading', 'htmlelements');
-
 // Set up the heading
 $header = new htmlHeading();
-$header->str = 'Test';//$this->objLanguage->languageText('mod_im_recentmessages', 'im');
+$header->str = 'Current Location';//$this->objLanguage->languageText('mod_im_recentmessages', 'im');
 $header->type = 1;
-
 $middleColumn = $header->show();
 
-$middleColumn .= $this->getVar('locationName');
-$middleColumn .= $this->getVar('locationLongitude');
-$middleColumn .= $this->getVar('locationLatitude');
+$middleColumn .= '<ul>';
+$middleColumn .= '<li>' . $this->getVar('locationName') . '</li>';
+$middleColumn .= '<li>' . $this->getVar('locationLongitude') . '</li>';
+$middleColumn .= '<li>' . $this->getVar('locationLatitude') . '</li>';
+$middleColumn .= '</ul>';
 
 if ($this->getVar('locationTwitter')) {
-    $middleColumn .= 'Twitter is currently enabled.';
+    $uri = $this->uri(array('module'=>'location', 'action'=>'disabletwitter'));
+    $href = new href($uri, 'Disable');
+    $middleColumn .= '<p>Twitter is currently enabled. '.$href->show().'</p>';
 } else {
-    $middleColumn .= 'Twitter is currently disabled.';
+    $uri = $this->uri(array('module'=>'location', 'action'=>'enabletwitter'));
+    $href = new href($uri, 'Enable');
+    $middleColumn .= '<p>Twitter is currently disabled. '.$href->show().'</p>';
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);
