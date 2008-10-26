@@ -37,6 +37,7 @@ class location extends controller
     /**
      * Standard constructor to load the necessary resources
      * and populate the new object's instance variables
+     *
      * @access public
      */
     public function init()
@@ -47,6 +48,7 @@ class location extends controller
 
     /**
      * Standard dispatch method to handle the various possible actions
+     *
      * @access public
      */
     public function dispatch()
@@ -61,15 +63,33 @@ class location extends controller
         return $this->$method();
     }
 
-    private function actionCallback() {
+    /**
+     * The callback action for the callback from Fire Eagle
+     *
+     * @access private
+     */
+    private function actionCallback()
+    {
         $this->objLocationOps->handleFireEagleCallback();
         $this->nextAction(null);
     }
 
-    private function actionSynchronise() {
+    /**
+     * The synchronise action for refreshing the location info cache
+     *
+     * @access private
+     */
+    private function actionSynchronise()
+    {
         $this->objLocationOps->synchroniseFireEagle();
     }
 
+    /**
+     * The map action for displaying a map of the location module users
+     *
+     * @access private
+     * @return string Template name
+     */
     private function actionMap()
     {
         $this->objLocationOps->setupMap();
@@ -77,6 +97,11 @@ class location extends controller
         return 'map_tpl.php';
     }
 
+    /**
+     * The default action to be performed when no valid action is specified
+     *
+     * @access private
+     */
     private function actionDefault()
     {
         if ($this->objLocationOps->isFireEagleAuthenticated()) {
@@ -92,9 +117,9 @@ class location extends controller
     /**
      * Overide the login object in the parent class
      *
+     * @access public
      * @param  string $action The name of the action
      * @return bool
-     * @access public
      */
     public function requiresLogin($action)
     {
