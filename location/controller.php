@@ -116,6 +116,24 @@ class location extends controller
     }
 
     /**
+     * Enables Twitter integration for the current user
+     */
+    private function actionEnabletwitter()
+    {
+        $this->objLocationOps->enableTwitter();
+        $this->nextAction(null);
+    }
+
+    /**
+     * Disables Twitter integration for the current user
+     */
+    private function actionDisabletwitter()
+    {
+        $this->objLocationOps->disableTwitter();
+        $this->nextAction(null);
+    }
+
+    /**
      * Overide the login object in the parent class
      *
      * @access public

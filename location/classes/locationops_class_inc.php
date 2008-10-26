@@ -209,6 +209,9 @@ class locationops extends object
         }
     }
 
+    /**
+     * Adds all the necessary information to the GMapApi so that a map can be rendered.
+     */
     public function setupMap()
     {
         if ($this->objSimpleBuildMap && $this->objGMapApi) {
@@ -230,6 +233,24 @@ class locationops extends object
                 $this->objGMapApi->addMarkerByCoords($location['longitude'], $location['latitude'], $fullname);
             }
         }
+    }
+
+    /**
+     * Enable Twitter integration for current user
+     */
+    public function enableTwitter()
+    {
+        $this->objDbLocation->setTwitter(true);
+        $this->objDbLocation->put();
+    }
+
+    /**
+     * Disable Twitter integration for current user
+     */
+    public function disableTwitter()
+    {
+        $this->objDbLocation->setTwitter(false);
+        $this->objDbLocation->put();
     }
 }
 
