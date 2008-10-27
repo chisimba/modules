@@ -1,9 +1,9 @@
 <?php
 
 /**
- * eduCommons controller class
+ * educommons import
  * 
- * Class to control the eduCommons module
+ * eduCommons Import class for Chisimba
  * 
  * PHP version 5
  * 
@@ -20,7 +20,7 @@
  * Free Software Foundation, Inc., 
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
- * @category  chisimba
+ * @category  Chisimba
  * @package   educommons
  * @author    Charl van Niekerk <charlvn@charlvn.za.net>
  * @copyright 2008 Charl van Niekerk
@@ -42,10 +42,10 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * eduCommons controller class
- *
- * Class to control the eduCommons module
- *
+ * educommons import
+ * 
+ * eduCommons Import class for Chisimba
+ * 
  * @category  Chisimba
  * @package   educommons
  * @author    Charl van Niekerk <charlvn@charlvn.za.net>
@@ -55,34 +55,49 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  */
 
-class educommons extends controller
+class educommonsimport extends object
 {
-    protected $objImport;
+    protected $objSpie;
+    protected $objChapters;
+    protected $objChapterContent;
 
     /**
      * Standard constructor to load the necessary resources
      * and populate the new object's instance variables
-     *
-     * @access public
      */
     public function init()
     {
-        $this->objImport = $this->getObject('educommonsimport', 'educommons');
+        // SimplePie feed reader object for importing form RSS
+        $this->objSpie = $this->getObject('spie', 'feed');
+
+        // Contextcontent chapter objects for importing chapters
+        $this->objChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
+        $this->objChapterContent = $this->getObject('db_contextcontent_chaptercontent', 'contextcontent');
     }
 
     /**
-     * Standard dispatch method to handle the various possible actions
+     * Import chapters from RSS feed
      *
-     * @access public
+     * @param string $uri The URI of the RSS feed
      */
-    public function dispatch()
+    public function doRssChapters($uri)
     {
-        $action = $this->getParam('action');
-        switch ($action) {
-            default:
-                $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
-                $this->objImport->doRssChapters($uri);
+        $this->objSpie->startPie($uri);
+        $items = $this->objSpie->get_items();
+        foreach ($items as $item) {
+            $title = $item->get_title();
+            $intro = $item->get_content();
+            if (!$this->objChapterContent->checkChapterTitleExists($title, 'en')) {
+                $this->objChapters->addChapter('', $title, $intro, 'en');
+            }
         }
+    }
+
+    /**
+     * Import chapters from MySQL
+     */
+    public function doMysqlChapters()
+    {
     }
 }
 
