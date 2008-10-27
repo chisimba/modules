@@ -232,6 +232,7 @@ class emailfiles extends dbTable
      * @access public
      * @param string $emailId The id of the email
      * @return
+     *
      */
     public function createAttachments($emailId)
     {
@@ -274,6 +275,7 @@ class emailfiles extends dbTable
             $ext = array_pop($fileArray);
             $sessionData['mimetype'] = $ext;
         }
+
         if ($filename != NULL) {
             rename($file, $this->tempPath.$filename);
             $sessionData['filename'] = $filename;
