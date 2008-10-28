@@ -35,8 +35,8 @@ class imops extends object
     /**
      * Standard init function called by the constructor call of Object
      *
-     * @param  void  
-     * @return void  
+     * @param  void
+     * @return void
      * @access public
      */
     public function init()
@@ -54,7 +54,7 @@ class imops extends object
             $this->jclient = $this->objSysConfig->getValue('jabberclient', 'im');
             $this->jdomain = $this->objSysConfig->getValue('jabberdomain', 'im');
             $this->objModules = $this->getObject('modules', 'modulecatalogue');
-            
+
             $this->conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
         }
         catch(customException $e) {
@@ -66,13 +66,13 @@ class imops extends object
     public function sendMessage($to, $message)
     {
         try {
-            $this->conn->connect();
-            $this->conn->processUntil('session_start');
-            $this->conn->presence();
+            //$this->conn->connect();
+            //$this->conn->processUntil('session_start');
+            //$this->conn->presence();
             // send the message
             $this->conn->message($to, $message);
             // disconnect
-            $this->conn->disconnect();
+            //$this->conn->disconnect();
         } catch(customException $e) {
             customException::cleanUp();
             exit;
@@ -85,7 +85,7 @@ class imops extends object
      * @param  bool   $featurebox
      * @return string
      */
-    public function loginBox($featurebox = FALSE) 
+    public function loginBox($featurebox = FALSE)
     {
         $objLogin = $this->getObject('logininterface', 'security');
         $objRegister = $this->getObject('block_register', 'security');
@@ -96,12 +96,12 @@ class imops extends object
             return $objFeatureBox->show($this->objLanguage->languageText("word_login", "system") , $objLogin->renderLoginBox('im') . "<br />" . $objRegister->show());
         }
     }
-    
+
     public function parseSysMessages($pl)
     {
         // first check the body for system commands...
         log_debug($pl['body']);
-        
+
     }
 }
 ?>
