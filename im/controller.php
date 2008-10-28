@@ -152,15 +152,15 @@ class im extends controller
                 $replymessage = 'testing';//$this->getParam('myparam');
                 $contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
                 //reply
-                if(!$this->conn->isDisconnected())
-                {
-                    $this->conn->message($contactName, $replymessage);
-                }
+                //if(!$this->conn->isDisconnected())
+                //{
+                //    $this->conn->message($contactName, $replymessage);
+                //}
                 //add to database
                 //$this->objDbIm->saveReply($msgId, $replymessage);
 
-                //$this->setPageTemplate('');
-			    //$this->setLayoutTemplate('');
+                $this->setPageTemplate('');
+			    $this->setLayoutTemplate('');
 		    
                 echo $replymessage;
                 break;
