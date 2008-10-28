@@ -198,7 +198,7 @@ class im extends controller
                 try {
                     $this->conn->connect();
                     while(!$this->conn->isDisconnected()) {
-                        $payloads = $this->conn->processUntil(array('message', 'presence', 'end_stream', 'session_start'));
+                        $payloads = $this->conn->processUntil(array('message', 'presence', 'end_stream', 'session_start', 'reply'));
                         foreach($payloads as $event) {
                             $pl = $event[1];
                             switch($event[0]) {
