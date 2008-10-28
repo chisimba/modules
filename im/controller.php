@@ -150,14 +150,14 @@ class im extends controller
             case 'massmessage':
                 $counter = 0;
                 $time_start = microtime(true);
-                while($counter < 5)
-                {
-                    $to = 'pscott209@gmail.com';
-                    $this->conn->message($to, 'Test: '.$counter);
+                //while($counter < 5)
+                //{
+                  //  $to = 'pscott209@gmail.com';
+                   // $this->conn->message($to, 'Test: '.$counter);
                     // $this->objImOps->sendMessage($to, 'Test: '.$counter);
-                    $counter++;
-                    echo $counter;
-                }
+                   // $counter++;
+                   // echo $counter;
+                //}
                 $time_end = microtime(true);
                 $time = $time_end - $time_start;
                 $to = 'pscott209@gmail.com';
