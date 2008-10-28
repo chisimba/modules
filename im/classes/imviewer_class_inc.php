@@ -93,7 +93,7 @@ class imviewer extends object
             $fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
             $ret .= '<div class="im_default">'
               . '<p class="im_source"><b>' . $fromuser."</b>: ".$from[0]
-              . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." $presence </p>"
+              . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." ($presence) </p>"
               . '<p class="im_message">' . $objWashout->parseText(htmlentities($msg['msgbody']))
               . '</p></div>';
 
