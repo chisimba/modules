@@ -148,6 +148,8 @@ class im extends controller
                 break;
 
             case 'massmessage':
+            $this->conn->connect();
+            while(!$this->conn->isDisconnected()) {
                 $counter = 0;
                 $time_start = microtime(true);
                 //while($counter < 5)
@@ -163,6 +165,7 @@ class im extends controller
                 $to = 'pscott209@gmail.com';
                 $this->conn->message($to, 'Test took: '.$time.' seconds');
                 //$this->objImOps->sendMessage($to, 'Test took: '.$time.' seconds');
+            }
                 break;
 
             case 'messagehandler':
