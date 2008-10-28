@@ -148,16 +148,16 @@ class im extends controller
                 break;
             
             case 'reply':
-                $msgId = $this->getParam('messageid');
-                $replymessage = $this->getParam('myparam');
-                $contactName = $this->getParam('contactname');
+                //$msgId = $this->getParam('messageid');
+                $replymessage = 'testing';//$this->getParam('myparam');
+                $contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
                 //reply
                 $this->conn->message($contactName, $replymessage);
                 //add to database
                 //$this->objDbIm->saveReply($msgId, $replymessage);
 
-                $this->setPageTemplate('');
-			    $this->setLayoutTemplate('');
+                //$this->setPageTemplate('');
+			    //$this->setLayoutTemplate('');
 		    
                 echo $replymessage;
                 break;
