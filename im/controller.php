@@ -154,7 +154,7 @@ class im extends controller
                 //reply
                 $this->conn->message($contactName, $replymessage);
                 //add to database
-                $this->objDbIm->saveReply($msgId, $replymessage);
+                //$this->objDbIm->saveReply($msgId, $replymessage);
 
                 $this->setPageTemplate('');
 			    $this->setLayoutTemplate('');
@@ -232,7 +232,7 @@ class im extends controller
                                     {
                                         // Bang the array into a table to keep a record of it.
                                         $this->objDbIm->addRecord($pl);
-                                        $this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
+                                        //$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
                                     }
                                     break;
 
