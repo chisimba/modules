@@ -83,7 +83,10 @@ class imviewer extends object
         $ret ="";
         foreach($msgs as $msg)
         {
-
+        $ajax = "<span class=\"subdued\" id=\"replydiv\">[REPLY]</span>
+						<script>						
+							new Ajax.InPlaceEditor('replydiv', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&messsageid=".$msg['id']."&myparam=' + escape(value) }})
+						</script>";
             // whip out a content featurebox and plak the messages in
             $from = explode('/', $msg['msgfrom']);
             // get the presence info if it exists
@@ -95,7 +98,7 @@ class imviewer extends object
               . '<p class="im_source"><b>' . $fromuser."</b>: ".$from[0]
               . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." ($presence) </p>"
               . '<p class="im_message">' . $objWashout->parseText(htmlentities($msg['msgbody']))
-              . '</p></div>';
+              . '</p><p>'.$ajax.'</p></div>';
 
         }
         return $ret;
