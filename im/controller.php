@@ -149,33 +149,15 @@ class im extends controller
 
             case 'reply':
 
-                $conn = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
-				$conn->connect();
-                $conn->processUntil('session_start');
-                $conn->message('pscott209@gmail.com', 'This is a test message!');
-                $conn->disconnect();
+                $conn2 = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
+				$conn2->connect();
 
+				$conn2->processUntil('session_start');
+                $conn2->message($this->getParam('contactname'), $this->getParam('myparam'));
+                $conn2->disconnect();
 
-
-
-                //$conn->connect();
-                //$conn->processUntil('session_start');
-                //$this->conn->message('wesleynitsckie@gmail.com', 'This is a test message!');
-                //$conn->disconnect();
-
-
-                //$msgId = $this->getParam('messageid');
-                $replymessage = 'testing from jabber';//$this->getParam('myparam');
-                //$contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
-
-                //add to database
-                //$this->objDbIm->saveReply($msgId, $replymessage);
-
-                //$this->setPageTemplate('');
-			    //$this->setLayoutTemplate('');
-
-                echo $replymessage;
-                //break;
+                echo $this->objLanguage->languageText('mod_im_msgsent', 'im', 'Message Sent!');
+                break;
 
             case 'massmessage':
             $this->conn->connect();

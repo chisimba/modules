@@ -3,22 +3,22 @@
  * XMPPHP: The PHP XMPP Library
  * Copyright (C) 2008  Nathanael C. Fritz
  * This file is part of SleekXMPP.
- * 
+ *
  * XMPPHP is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * XMPPHP is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with XMPPHP; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * @category   xmpphp 
+ * @category   xmpphp
  * @package	XMPPHP
  * @author	 Nathanael C. Fritz <JID: fritzy@netflint.net>
  * @author	 Stephan Wentz <JID: stephan@jabber.wentz.it>
@@ -36,8 +36,8 @@ require_once 'XMLObj.php';
 
 /**
  * XMPPHP XML Stream
- * 
- * @category   xmpphp 
+ *
+ * @category   xmpphp
  * @package	XMPPHP
  * @author	 Nathanael C. Fritz <JID: fritzy@netflint.net>
  * @author	 Stephan Wentz <JID: stephan@jabber.wentz.it>
@@ -177,7 +177,7 @@ class XMPPHP_XMLStream {
 			$this->disconnect();
 		}
 	}
-	
+
 	/**
 	 * Return the log instance
 	 *
@@ -186,7 +186,7 @@ class XMPPHP_XMLStream {
 	public function getLog() {
 		return $this->log;
 	}
-	
+
 	/**
 	 * Get next ID
 	 *
@@ -256,7 +256,7 @@ class XMPPHP_XMLStream {
 		if(!$this->socket) {
 			$this->log->log("Could not connect.",  XMPPHP_Log::LEVEL_ERROR);
 			$this->disconnected = true;
-			
+
 			throw new XMPPHP_Exception('Could not connect.');
 		}
 		stream_set_blocking($this->socket, 1);
@@ -302,7 +302,7 @@ class XMPPHP_XMLStream {
 		$updated = @stream_select($read, $write, $except, 1);
 		if ($updated > 0) {
 			$buff = @fread($this->socket, 1024);
-			if(!$buff) { 
+			if(!$buff) {
 				if($this->reconnect) {
 					$this->doReconnect();
 				} else {
@@ -314,7 +314,7 @@ class XMPPHP_XMLStream {
 			xml_parse($this->parser, $buff, false);
 		}
 	}
-	
+
 	/**
 	 * Process
 	 *
@@ -377,7 +377,7 @@ class XMPPHP_XMLStream {
 
 	/**
 	 * XML start callback
-	 * 
+	 *
 	 * @see xml_set_element_handler
 	 *
 	 * @param resource $parser
@@ -418,7 +418,7 @@ class XMPPHP_XMLStream {
 
 	/**
 	 * XML end callback
-	 * 
+	 *
 	 * @see xml_set_element_handler
 	 *
 	 * @param resource $parser
@@ -524,7 +524,7 @@ class XMPPHP_XMLStream {
 	 */
 	public function read() {
 		$buff = @fread($this->socket, 1024);
-		if(!$buff) { 
+		if(!$buff) {
 			if($this->reconnect) {
 				$this->doReconnect();
 			} else {
@@ -543,7 +543,7 @@ class XMPPHP_XMLStream {
 	 */
 	public function send($msg, $rec=false) {
 		if($this->time() - $this->last_send < .1) {
-			usleep(100000);
+			usleep(1);
 		}
 		$wait = true;
 		while($wait) {
