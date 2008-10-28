@@ -64,12 +64,38 @@ class dbim extends dbTable
             return $this->insert($recarr, 'tbl_im');
         }
     }
+    
+    public function updateReply($msgId)
+    {
+        return $this->update('id', $msgId, array('msg_returned' => '1'));
+    }
 
     public function getRange($start, $num)
     {
         $range = $this->getAll("ORDER BY datesent ASC LIMIT {$start}, {$num}");
         return array_reverse($range);
     }
+    
+    /**
+     *Method to get the a user post
+     *@param  int $start
+     *@param int $max
+     *@access public
+     *@return array
+     */
+    public function getContactMessages($start, $max)
+    {
+        
+    }
+    
+    
+    public function saveReply($msgId, $replytext)
+    {
+        //update the original message to show that a reply was sent
+        
+        return;
+    }
+    
     
 }
 ?>
