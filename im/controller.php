@@ -146,9 +146,10 @@ class im extends controller
                     $this->objImOps->sendMessage($this->userJid, 'Hope this works!');
                 }
                 break;
+            
             case 'reply':
                 $msgId = $this->getParam('messageid');
-                $replymessage = $this->getParam('myparam')
+                $replymessage = $this->getParam('myparam');
                 $contactName = $this->getParam('contactname');
                 //reply
                 $this->conn->message($contactName, $replymessage);
