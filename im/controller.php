@@ -148,6 +148,18 @@ class im extends controller
                 break;
             
             case 'reply2':
+                
+                
+                 try {
+                    $this->conn->connect();
+                    $payloads = $this->conn->processUntil(array('reply'));
+                    
+                    var_dump($payloads);
+                    } catch(customException $e) {
+                    customException::cleanUp();
+                    exit;
+                }
+                    
                 //$msgId = $this->getParam('messageid');
                 $replymessage = 'testing from jabber';//$this->getParam('myparam');
                 $contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
