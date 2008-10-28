@@ -148,12 +148,14 @@ class im extends controller
                 break;
 
             case 'reply':
+                $msg = $this->getParam('myparam');
+                $user2send = $this->getParam('fromuser');
 
                 $conn2 = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 				$conn2->connect();
 
 				$conn2->processUntil('session_start');
-                $conn2->message($this->getParam('contactname'), $this->getParam('myparam'));
+                $conn2->message($user2send, $msg);
                 $conn2->disconnect();
 
                 echo $this->objLanguage->languageText('mod_im_msgsent', 'im', 'Message Sent!');
