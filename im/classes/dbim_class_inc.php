@@ -1,24 +1,24 @@
 <?php
 /**
  * message IM dbtable derived class
- * 
+ *
  * Class to interact with the database for the popularity contest module
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  chisimba
  * @package   im
  * @author    Paul Scott <pscott@uwc.ac.za>
@@ -28,9 +28,9 @@
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbim extends dbTable 
+class dbim extends dbTable
 {
-    
+
     /**
      * Constructor
      *
@@ -39,11 +39,11 @@ class dbim extends dbTable
     {
         parent::init('tbl_im');
     }
-    
+
     /**
      * Public method to insert a record to the popularity contest table as a log.
-     * 
-     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis. 
+     *
+     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis.
      *
      * @param array $recarr
      * @return string $id
@@ -64,7 +64,7 @@ class dbim extends dbTable
             return $this->insert($recarr, 'tbl_im');
         }
     }
-    
+
     public function updateReply($msgId)
     {
         return $this->update('id', $msgId, array('msg_returned' => '1'));
@@ -75,7 +75,7 @@ class dbim extends dbTable
         $range = $this->getAll("ORDER BY datesent ASC LIMIT {$start}, {$num}");
         return array_reverse($range);
     }
-    
+
     /**
      *Method to get the a user post
      *@param  int $start
@@ -85,17 +85,22 @@ class dbim extends dbTable
      */
     public function getContactMessages($start, $max)
     {
-        
+
     }
-    
-    
+
+
     public function saveReply($msgId, $replytext)
     {
-        //update the original message to show that a reply was sent
-        
+        $rec = $this->getAll("where id = '$msgId'");
+        $rec = $rec[0];
+        $old = $rec['msgbody'];
+        $new = $old."\r\n".$replytext;
+        $fields = array('msgtype' => $rec['msgtype'], 'msgfrom' => $rec['msgfrom'], 'msgbody' => $new, 'msg_returned' => 'TRUE', 'datesent' => $this->now());
+
+        $this->update('id', $msgId, $fields);
         return;
     }
-    
-    
+
+
 }
 ?>

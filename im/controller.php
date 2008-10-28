@@ -150,6 +150,7 @@ class im extends controller
             case 'reply':
                 $msg = $this->getParam('myparam');
                 $user2send = $this->getParam('fromuser');
+                $msgid = $this->getParam('msgid');
 
                 $conn2 = new XMPPHP_XMPP($this->jserver, intval($this->jport), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog=FALSE, $loglevel=XMPPHP_Log::LEVEL_ERROR );
 				$conn2->connect();
@@ -157,6 +158,9 @@ class im extends controller
 				$conn2->processUntil('session_start');
                 $conn2->message($user2send, $msg);
                 $conn2->disconnect();
+
+                // update the message now with the reply for bookkeeping purposes
+                $this->objDbIm->saveReply($msgid, $msg);
 
                 echo $this->objLanguage->languageText('mod_im_msgsent', 'im', 'Message Sent!');
                 break;
