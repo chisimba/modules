@@ -149,26 +149,16 @@ class im extends controller
             
             case 'reply2':
                 
+                //$conn->connect();
+                //$conn->processUntil('session_start');
+                $this->conn->message('wesleynitsckie@gmail.com', 'This is a test message!');
+                //$conn->disconnect();
                 
-                 try {
-                    $this->conn->connect();
-                    $payloads = $this->conn->processUntil(array('reply'));
-                    
-                    var_dump($payloads);
-                    } catch(customException $e) {
-                    customException::cleanUp();
-                    exit;
-                }
                     
                 //$msgId = $this->getParam('messageid');
                 $replymessage = 'testing from jabber';//$this->getParam('myparam');
                 $contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
-                //reply
-                if(!$this->conn->isDisconnected())
-                {
-                //    $this->conn->message($contactName, $body=$replymessage);
-                    
-                } 
+                
                 //add to database
                 //$this->objDbIm->saveReply($msgId, $replymessage);
 
