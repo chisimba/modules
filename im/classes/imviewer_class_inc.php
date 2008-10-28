@@ -85,7 +85,7 @@ class imviewer extends object
         {
         $ajax = "<span class=\"subdued\" id=\"replydiv".$msg['id']."\">[REPLY]</span>
 						<script>						
-							new Ajax.InPlaceEditor('replydiv'.$msg['id'], 'index.php', { callback: function(form, value) { return 'module=im&action=reply&messsageid=".$msg['id']."&myparam=' + escape(value) }})
+							new Ajax.InPlaceEditor('replydiv'".$msg['id'].", 'index.php', { callback: function(form, value) { return 'module=im&action=reply&messsageid=".$msg['id']."&myparam=' + escape(value) }})
 						</script>";
             // whip out a content featurebox and plak the messages in
             $from = explode('/', $msg['msgfrom']);
