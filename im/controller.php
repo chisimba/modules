@@ -2,24 +2,24 @@
 //ini_set('error_reporting', 'E_ALL & ~E_NOTICE');
 /**
  * IM controller class
- * 
+ *
  * Class to control the IM module
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  chisimba
  * @package   im
  * @author    Paul Scott <pscott@uwc.ac.za>
@@ -153,16 +153,18 @@ class im extends controller
                 while($counter < 5)
                 {
                     $to = 'pscott209@gmail.com';
-                    $this->objImOps->sendMessage($to, 'Test: '.$counter);
+                    $this->conn->message($to, 'Test: '.$counter);
+                    // $this->objImOps->sendMessage($to, 'Test: '.$counter);
                     $counter++;
                     echo $counter;
                 }
                 $time_end = microtime(true);
                 $time = $time_end - $time_start;
                 $to = 'pscott209@gmail.com';
-                $this->objImOps->sendMessage($to, 'Test took: '.$time).' seconds';
+                $this->conn->message($to, 'Test took: '.$time.' seconds');
+                //$this->objImOps->sendMessage($to, 'Test took: '.$time.' seconds');
                 break;
-                
+
             case 'messagehandler':
                 // This is a looooong running task... Lets use the background class to handle it
                 //check the connection status
