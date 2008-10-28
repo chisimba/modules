@@ -1,0 +1,14 @@
+<updates>
+    <update>
+        <table>tbl_im</table>
+        <version>0.008</version>
+        <description>Added a messagereturned field</description>
+        <data>
+        	<add>
+    			<name>msg_returned</name>
+		    	<type>text</type>
+    			<length>60</length>
+			</add>
+		</data>
+	</update>
+</updates>

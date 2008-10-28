@@ -22,6 +22,10 @@ $fields = array(
     'msgbody' => array(
         'type' => 'clob',
         ),
+    'msg_returned' =>array(
+        'type' => 'text',
+        'length' => 60,
+      ),
     'datesent' => array(
         'type' => 'timestamp',
         ),
