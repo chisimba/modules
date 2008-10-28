@@ -83,12 +83,14 @@ class imviewer extends object
         $ret ="";
         foreach($msgs as $msg)
         {
-        $ajax = "<span class=\"subdued\" id=\"replydiv".$msg['id']."\">[REPLY]</span>
-						<script>						
-							new Ajax.InPlaceEditor('replydiv".$msg['id']."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&messsageid=".$msg['id']."&myparam=' + escape(value) }})
-						</script>";
+            //log_debug($msg);
             // whip out a content featurebox and plak the messages in
             $from = explode('/', $msg['msgfrom']);
+            $fuser = $from[0];
+            $ajax = "<span class=\"subdued\" id=\"replydiv".$msg['id']."\">[REPLY]</span>
+						<script>
+							new Ajax.InPlaceEditor('replydiv".$msg['id']."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&fromuser=".$fuser."&myparam=' + escape(value) }})
+						</script>";
             // get the presence info if it exists
             $objPres = $this->getObject('dbimpresence');
             $presence = $objPres->getPresence($msg['msgfrom']);
