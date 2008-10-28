@@ -56,6 +56,18 @@ class examdisplay extends object
     public $isExamAdmin;
 
     /**
+    * @var string $filePath: The path to the subject files
+    * @access public
+    */
+    public $filePath;
+
+    /**
+    * @var string $fileLink: The link to the subject files
+    * @access public
+    */
+    public $fileLink;
+
+    /**
     * Method to construct the class
     *
     * @access public
@@ -94,6 +106,14 @@ class examdisplay extends object
         $objConfig = $this->getObject('altconfig', 'config');     
         $css = '<link id="calender_css" type="text/css" rel="stylesheet" href="'.$objConfig->getModuleURI().$this->getParam('module').'/resources/examiners.css" />';
         $this->appendArrayVar('headerParams', $css);
+
+        $contentBasePath = $objConfig->getcontentBasePath();
+        $this->filePath = $contentBasePath.'modules/examiners/';
+        
+        //$objConfig = $this->getObject('dbsysconfig', 'sysconfig');     
+        $siteRoot = $objConfig->getsiteRoot();
+        $contentPath = $objConfig->getcontentPath();
+        $this->fileLink = $siteRoot.$contentPath.'modules/examiners/';
     }
     
 	/**
@@ -284,7 +304,7 @@ class examdisplay extends object
         $this->objForm->addRule('email', $lblEmailRequired, 'required');        
         $frmSubmit = $this->objForm->show();
     
-        $this->objForm=new form('frmCancel',$this->uri(array(
+        $this->objForm = new form('frmCancel',$this->uri(array(
             'action' => 'examiners',
             'd' => $depId,
         ), 'examiners'));
@@ -322,7 +342,7 @@ class examdisplay extends object
         
         // get data
         $department = $this->objExamDb->getDepartmentById($depId);
-        $users = $this->objExamDb->getUsersByDepartment($depId);
+        $users = $this->objExamDb->getExaminersByDepartment($depId);
 
         // set up text elements
         $lblList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
@@ -389,6 +409,7 @@ class examdisplay extends object
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'examiner',
+                    'd' => $depId,
                     'u' => $user['id'],
                 ), 'examiners'));
                 
@@ -431,35 +452,35 @@ class examdisplay extends object
     }
 
 	/**
-	* Method to display the add/edit department page
+	* Method to display the add/edit faculty page
 	*
 	* @access public
-	* @param string $depId: The id of the department
+	* @param string $facId: The id of the faculty
 	* @return string $str: The output string
 	*/
-	public function showAddEditDepartment($depId)
+	public function showAddEditFaculty($facId)
 	{
         // get data
-        $department = $this->objExamDb->getDepartmentById($depId);
-        if($department == FALSE){
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        if($faculty == FALSE){
             $id = '';
             $name = '';
         }else{
-            $id = $department['id'];
-            $name = $department['department_name'];
+            $id = $faculty['id'];
+            $name = $faculty['faculty_name'];
         }
         
         // set up text elements
         $lblSave = $this->objLanguage->languageText('word_save');
         $lblCancel = $this->objLanguage->languageText('word_cancel');        
         $lblName = $this->objLanguage->languageText('word_name');        
-        $lblAdd = $this->objLanguage->languageText('mod_examiners_adddepartment', 'examiners');        
-        $lblEdit = $this->objLanguage->languageText('mod_examiners_editdepartment', 'examiners');        
-        $lblNameRequired = $this->objLanguage->languageText('mod_examiners_requireddepartmentname', 'examiners');        
-        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
+        $lblAdd = $this->objLanguage->languageText('mod_examiners_addfaculty', 'examiners');        
+        $lblEdit = $this->objLanguage->languageText('mod_examiners_editfaculty', 'examiners');        
+        $lblNameRequired = $this->objLanguage->languageText('mod_examiners_requiredfacultyname', 'examiners');        
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
         
         // set up page heading
-        $lblHeading = $department ? $lblEdit : $lblAdd;
+        $lblHeading = $faculty ? $lblEdit : $lblAdd;
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
         $this->objHeading->type = 1;
@@ -488,9 +509,9 @@ class examdisplay extends object
         $tblDisplay = $this->objTable->show();
         
         // set up forms
-        $this->objForm = new form('frmDepartments',$this->uri(array(
-            'action' => 'save_department',
-            'd' => $id,
+        $this->objForm = new form('frmFaculties',$this->uri(array(
+            'action' => 'save_faculty',
+            'f' => $id,
         ), 'examiners'));
         $this->objForm->addToForm($tblDisplay);
         $this->objForm->addToForm('<br />'.$btnSubmit.'&#160;'.$btnCancel);
@@ -498,13 +519,13 @@ class examdisplay extends object
         $frmSubmit = $this->objForm->show();
     
         $this->objForm=new form('frmCancel',$this->uri(array(
-            'action' => 'departments',
+            'action' => 'faculties',
         ), 'examiners'));
         $frmCancel = $this->objForm->show();
         
         // set up return link
         $this->objLink = new link($this->uri(array(
-            'action' => 'departments',
+            'action' => 'faculties',
         ),'examiners'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
@@ -519,19 +540,212 @@ class examdisplay extends object
     }
 
 	/**
-	* Method to display a list of departments
+	* Method to display the add/edit department page
+	*
+	* @access public
+	* @param string $facId: The id of the faculty
+	* @param string $depId: The id of the department
+	* @return string $str: The output string
+	*/
+	public function showAddEditDepartment($facId, $depId)
+	{
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $department = $this->objExamDb->getDepartmentById($depId);
+        if($department == FALSE){
+            $id = '';
+            $name = '';
+        }else{
+            $id = $department['id'];
+            $name = $department['department_name'];
+        }
+        
+        // set up text elements
+        $lblSave = $this->objLanguage->languageText('word_save');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblAdd = $this->objLanguage->languageText('mod_examiners_adddepartment', 'examiners');        
+        $lblEdit = $this->objLanguage->languageText('mod_examiners_editdepartment', 'examiners');        
+        $lblNameRequired = $this->objLanguage->languageText('mod_examiners_requireddepartmentname', 'examiners');        
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
+        
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 1;
+        $heading = $this->objHeading->show();
+
+        $lblHeading = $department ? $lblEdit : $lblAdd;
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+                
+        // set up htmlelements
+        $this->objInput = new textinput('name', $name, 'text', '66');
+        $inpName = $this->objInput->show();
+
+        $this->objButton=new button('submit',$lblSave);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpading = '5';        
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblName.'&#160;&#58;</b>', '', '', '', '', '');
+        $this->objTable->addCell($inpName, '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm = new form('frmDepartments',$this->uri(array(
+            'action' => 'save_department',
+            'f' => $facId,
+            'd' => $id,
+        ), 'examiners'));
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm('<br />'.$btnSubmit.'&#160;'.$btnCancel);
+        $this->objForm->addRule('name', $lblNameRequired, 'required');
+        $frmSubmit = $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $heading;
+        $str .= $frmSubmit;
+        $str .= $frmCancel;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+
+	/**
+	* Method to display a list of faculties
 	*
 	* @access public
 	* @return string $str: The output string
 	*/
-	public function showDepartments()
+	public function showFaculties()
 	{
         // append javascript
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
         
         // get data
-        $departments = $this->objExamDb->getAllDepartments();
+        $faculties = $this->objExamDb->getAllFaculties();
+
+        // set up text elements
+        $lblExaminerList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
+        $lblList = $this->objLanguage->languageText('mod_examiners_facultylist', 'examiners');        
+        $lblAdd = $this->objLanguage->languageText('mod_examiners_addfacultytitle', 'examiners');        
+        $lblEdit = $this->objLanguage->languageText('mod_examiners_editfacultytitle', 'examiners');        
+        $lblDelete = $this->objLanguage->languageText('mod_examiners_deletefacultytitle', 'examiners');        
+        $lblConfirm = $this->objLanguage->languageText('mod_examiners_facultyconfirm', 'examiners');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nofaculties', 'examiners');
+        
+                
+        // set up add examiner icon
+        $this->objIcon->title = $lblAdd;
+        $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
+            'action' => 'faculty',
+        ), 'examiners'));
+
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        $this->objHeading->type = 1;
+        $heading = $this->objHeading->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "facultyList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell('', '', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($faculties == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="2"');
+            $this->objTable->endRow();
+        }else{
+            foreach($faculties as $faculty){
+                // set up edit icon
+                $this->objIcon->title = $lblEdit;
+                $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
+                    'action' => 'faculty',
+                    'f' => $faculty['id'],
+                ), 'examiners'));
+                
+                // set up delete icon
+                $deleteArray = array(
+                    'action' => 'delete_faculty',
+                    'f' => $faculty['id'],
+                );
+                $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
+                
+                // set up department link
+                $this->objLink = new link($this->uri(array(
+                    'action' => 'departments',
+                    'f' => $faculty['id'],
+                ),'examiners'));
+                $this->objLink->link = $faculty['faculty_name'];
+                $lnkName = $this->objLink->show();
+
+                $this->objTable->startRow();
+                $this->objTable->addCell($lnkName, '', 'top', '', '', '');
+                $this->objTable->addCell($icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+                
+        // set up page
+        $str = $heading;
+        $str .= $tblDisplay;
+        //$str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+
+	/**
+	* Method to display a list of departments
+	*
+	* @access public
+	* @param string $facId: The id of the faculty
+	* @return string $str: The output string
+	*/
+	public function showDepartments($facId)
+	{
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+        
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $departments = $this->objExamDb->getAllDepartmentsPerFaculty($facId);
 
         // set up text elements
         $lblExaminerList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
@@ -541,21 +755,26 @@ class examdisplay extends object
         $lblDelete = $this->objLanguage->languageText('mod_examiners_deletedepartmenttitle', 'examiners');        
         $lblConfirm = $this->objLanguage->languageText('mod_examiners_departmentconfirm', 'examiners');        
         $lblName = $this->objLanguage->languageText('word_name');        
-        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
         $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartments', 'examiners');
-        
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
                 
         // set up add examiner icon
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
             'action' => 'department',
+            'f' => $facId,
         ), 'examiners'));
 
         // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        $this->objHeading->str = $faculty['faculty_name'];
         $this->objHeading->type = 1;
         $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
         
         // set up display table
         $this->objTable = new htmltable();
@@ -577,12 +796,14 @@ class examdisplay extends object
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'department',
+                    'f' => $facId,
                     'd' => $department['id'],
                 ), 'examiners'));
                 
                 // set up delete icon
                 $deleteArray = array(
                     'action' => 'delete_department',
+                    'f' => $facId,
                     'd' => $department['id'],
                 );
                 $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
@@ -590,6 +811,7 @@ class examdisplay extends object
                 // set up subject link
                 $this->objLink = new link($this->uri(array(
                     'action' => 'subjects',
+                    'f' => $facId,
                     'd' => $department['id'],
                 ),'examiners'));
                 $this->objLink->link = $department['department_name'];
@@ -600,6 +822,7 @@ class examdisplay extends object
                 $this->objIcon->extra = '';
                 $icoExaminers = $this->objIcon->getLinkedIcon($this->uri(array(
                     'action' => 'examiners',
+                    'f' => $facId,
                     'd' => $department['id'],
                 )), 'customerdetails');
 
@@ -611,10 +834,17 @@ class examdisplay extends object
         }
         $tblDisplay = $this->objTable->show();
                 
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'faculties',
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
         // set up page
         $str = $heading;
         $str .= $tblDisplay;
-        //$str .= '<br />'.$lnkReturn;
+        $str .= '<br />'.$lnkReturn;
                
         return $str;        
     }
@@ -623,13 +853,15 @@ class examdisplay extends object
 	* Method to display the add/edit subject page
 	*
 	* @access public
+	* @param string $facId: The id of the faculty
 	* @param string $depId: The id of the department
 	* @param string $subjId: The id of the subject
 	* @return string $str: The output string
 	*/
-	public function showAddEditSubject($depId, $subjId)
+	public function showAddEditSubject($facId, $depId, $subjId)
 	{
         // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
         $subject = $this->objExamDb->getSubjectById($subjId);
         $department = $this->objExamDb->getDepartmentById($depId);
         if($subject == FALSE){
@@ -663,19 +895,25 @@ class examdisplay extends object
         $lblNameRequired = $this->objLanguage->languageText('mod_examiners_requiredsubjectname', 'examiners');        
         $lblCodeRequired = $this->objLanguage->languageText('mod_examiners_requiredsubjectcode', 'examiners');        
         $lblReturn = $this->objLanguage->languageText('mod_examiners_returnsubject', 'examiners');
+        $lblFile = $this->objLanguage->languageText('word_file');
         
         // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 1;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 1;
+        $heading .= $this->objHeading->show();
+
         $lblHeading = $subject ? $lblEdit : $lblAdd;
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
-        $this->objHeading->type = 1;
-        $heading = $this->objHeading->show();
-                
-        $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $department['department_name'];
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
-
+                
         // set up htmlelements
         $this->objInput = new textinput('code', $code, 'text', '');
         $inpCode = $this->objInput->show();
@@ -696,6 +934,9 @@ class examdisplay extends object
         $this->objDrop->addOption('2', $lblInactive.'&#160;');
         $this->objDrop->setSelected($status);
         $drpStatus = $this->objDrop->show();
+        
+        $this->objInput = new textinput('file', '', 'file', '66');
+        $inpFile = $this->objInput->show();
         
         $this->objButton=new button('submit',$lblSave);
         $this->objButton->setToSubmit();
@@ -725,22 +966,28 @@ class examdisplay extends object
         $this->objTable->addCell('<b>'.$lblStatus.'&#160;&#58;</b>', '', '', '', '', '');
         $this->objTable->addCell($drpStatus, '', '', '', '', '');
         $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell('<b>'.$lblFile.'&#160;&#58;</b>', '', '', '', '', '');
+        $this->objTable->addCell($inpFile, '', '', '', '', '');
+        $this->objTable->endRow();
         $tblDisplay = $this->objTable->show();
         
         // set up forms
         $this->objForm = new form('frmSubjects',$this->uri(array(
             'action' => 'save_subject',
+            'f' => $facId,
             's' => $id,
             'd' => $depId,
         ), 'examiners'));
+        $this->objForm->extra = ' enctype="multipart/form-data"';    
         $this->objForm->addToForm($tblDisplay);
         $this->objForm->addToForm('<br />'.$btnSubmit.'&#160;'.$btnCancel);
         $this->objForm->addRule('code', $lblCodeRequired, 'required');
         $this->objForm->addRule('name', $lblNameRequired, 'required');
         $frmSubmit = $this->objForm->show();
-    
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'subjects',
+            'f' => $facId,
             'd' => $depId,
         ), 'examiners'));
         $frmCancel = $this->objForm->show();
@@ -748,6 +995,7 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'subjects',
+            'f' => $facId,
             'd' => $depId,
         ),'examiners'));
         $this->objLink->link = $lblReturn;
@@ -766,10 +1014,11 @@ class examdisplay extends object
 	* Method to display a list of departments
 	*
 	* @access public
+	* @param string $facId: The id of the faculty
 	* @param string $depId: The id of the department
 	* @return string $str: The output string
 	*/
-	public function showSubjects($depId)
+	public function showSubjects($facId, $depId)
 	{
         // append javascript
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
@@ -778,7 +1027,8 @@ class examdisplay extends object
         // get data
         $subjects = $this->objExamDb->getSubjectsByDepartment($depId);
         $department = $this->objExamDb->getDepartmentById($depId);
-
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        
         // set up text elements
         $lblList = $this->objLanguage->languageText('mod_examiners_subjectlist', 'examiners');        
         $lblAdd = $this->objLanguage->languageText('mod_examiners_addsubjecttitle', 'examiners');        
@@ -802,18 +1052,25 @@ class examdisplay extends object
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
             'action' => 'subject',
+            'f' => $facId,
             'd' => $depId,
         ), 'examiners'));
 
         // set up page heading
+        // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        $this->objHeading->str = $faculty['faculty_name'];
         $this->objHeading->type = 1;
         $heading = $this->objHeading->show();
         
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 1;
+        $heading .= $this->objHeading->show();
+        
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
         
@@ -836,10 +1093,21 @@ class examdisplay extends object
             $this->objTable->endRow();
         }else{
             foreach($subjects as $subject){
+                // get file
+                $file = glob($this->filePath.$subject['course_code'].'.*');
+                if(!empty($file)){
+                    $this->objLink = new link($this->fileLink.basename($file[0]));
+                    $this->objLink->link = $subject['course_code'];
+                    $code = $this->objLink->show();
+                }else{
+                    $code = $subject['course_code'];
+                }
+                
                 // set up edit icon
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'subject',
+                    'f' => $facId,
                     's' => $subject['id'],
                     'd' => $subject['dep_id'],
                 ), 'examiners'));
@@ -847,6 +1115,7 @@ class examdisplay extends object
                 // set up delete icon
                 $deleteArray = array(
                     'action' => 'delete_subject',
+                    'f' => $facId,
                     's' => $subject['id'],
                     'd' => $subject['dep_id'],
                 );
@@ -855,6 +1124,7 @@ class examdisplay extends object
                 // set up examiners link
                 $this->objLink = new link($this->uri(array(
                     'action' => 'matrix',
+                    'f' => $facId,
                     'd' => $department['id'],
                     's' => $subject['id'],
                 ),'examiners'));
@@ -875,7 +1145,7 @@ class examdisplay extends object
                 }
 
                 $this->objTable->startRow();
-                $this->objTable->addCell($subject['course_code'], '', 'top', '', '', '');
+                $this->objTable->addCell($code, '', 'top', '', '', '');
                 $this->objTable->addCell($lnkName, '', 'top', '', '', '');
                 $this->objTable->addCell($level, '', 'top', '', '', '');
                 $this->objTable->addCell($status, '', 'top', '', '', '');
@@ -888,6 +1158,7 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'departments',
+            'f' => $facId,
         ),'examiners'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();

@@ -39,6 +39,12 @@ class examiners extends controller {
     public $isLoggedIn;
 
     /**
+    * @var object $filePath: The file path to module description files
+    * @access public
+    */
+    public $filePath;
+
+    /**
     * Method to initialise the controller
     * 
     * @access public
@@ -49,15 +55,27 @@ class examiners extends controller {
         $this->objExamDisplay = $this->newObject('examdisplay', 'examiners');
         $this->objExamDb = $this->newObject('dbexams', 'examiners');        
         $objGroup = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroup->getId('Exam Admin', 'name');
+        $groupId = $objGroup->getId('Faculty managers', 'name');
         if(!isset($groupId)){
-            $groupId = $objGroup->addGroup('Exam Admin', 'The group for Examiners Administrators');
+            $groupId = $objGroup->addGroup('Faculty managers', 'The group for Faculty managers');
+        }
+        $groupId = $objGroup->getId('Department managers', 'name');
+        if(!isset($groupId)){
+            $groupId = $objGroup->addGroup('Department managers', 'The group for Faculty managers');
         }
         $objUser = $this->getObject('user', 'security');
         $userId = $objUser->userId();
         $pkId = $objUser->PKId($userId);
         $this->isBookAdmin = $objGroup->isGroupMember($pkId, $groupId);
         $this->isLoggedIn = $objUser->isLoggedIn();
+        
+        $objConfig = $this->newObject('altconfig', 'config');
+        $contentBasePath = $objConfig->getcontentBasePath();
+        $this->filePath = $contentBasePath.'modules/examiners/';
+        if(!is_dir($this->filePath)){
+            mkdir($contentBasePath.'modules/', 0777);
+            mkdir($contentBasePath.'modules/examiners', 0777);
+        }
     }
     
     /**
@@ -76,73 +94,128 @@ class examiners extends controller {
          		return 'template_tpl.php';
          		break;
                 
+             case 'faculties':
+                $templateContent = $this->objExamDisplay->showFaculties();
+         		$this->setVarByRef('templateContent', $templateContent);
+         		return 'template_tpl.php';
+         		break;
+                
+            case 'faculty':
+                $facId = $this->getParam('f');
+                $templateContent = $this->objExamDisplay->showAddEditFaculty($facId);
+         		$this->setVarByRef('templateContent', $templateContent);
+         		return 'template_tpl.php';
+         		break;
+                
+            case 'save_faculty':                
+                $facId = $this->getParam('f');
+                $name = $this->getParam('name');
+                if($facId == ''){
+                    $this->objExamDb->addFaculty($name);
+                }else{
+                    $this->objExamDb->editFaculty($facId, $name);
+                }
+                return $this->nextAction('faculties', array(), 'examiners');
+                break;
+                
+            case 'delete_faculty':
+                $facId = $this->getParam('f');
+                $this->objExamDb->deleteFaculty($facId);
+                return $this->nextAction('faculties', array(), 'examiners');
+                break;
+
             case 'departments':
-                $templateContent = $this->objExamDisplay->showDepartments();
+                $facId = $this->getParam('f');
+                $templateContent = $this->objExamDisplay->showDepartments($facId);
          		$this->setVarByRef('templateContent', $templateContent);
          		return 'template_tpl.php';
          		break;
                 
             case 'department':
+                $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
-                $templateContent = $this->objExamDisplay->showAddEditDepartment($depId);
+                $templateContent = $this->objExamDisplay->showAddEditDepartment($facId, $depId);
          		$this->setVarByRef('templateContent', $templateContent);
          		return 'template_tpl.php';
          		break;
                 
-            case 'save_department':                
+            case 'save_department':
+                $facId = $this->getParam('f');                
                 $depId = $this->getParam('d');
                 $name = $this->getParam('name');
                 if($depId == ''){
-                    $this->objExamDb->addDepartment($name);
+                    $this->objExamDb->addDepartment($facId, $name);
                 }else{
                     $this->objExamDb->editDepartment($depId, $name);
                 }
-                return $this->nextAction('departments', array(), 'examiners');
+                return $this->nextAction('departments', array(
+                    'f' => $facId,
+                ), 'examiners');
                 break;
                 
             case 'delete_department':
+                $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $this->objExamDb->deleteDepartment($depId);
-                return $this->nextAction('departments', array(), 'examiners');
+                return $this->nextAction('departments', array(
+                    'f' => $facId,
+                ), 'examiners');
                 break;
 
             case 'subjects':
+                $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
-                $templateContent = $this->objExamDisplay->showSubjects($depId);
+                $templateContent = $this->objExamDisplay->showSubjects($facId, $depId);
          		$this->setVarByRef('templateContent', $templateContent);
          		return 'template_tpl.php';
          		break;
                 
             case 'subject':
+                $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $subjId = $this->getParam('s');
-                $templateContent = $this->objExamDisplay->showAddEditSubject($depId, $subjId);
+                $templateContent = $this->objExamDisplay->showAddEditSubject($facId, $depId, $subjId);
          		$this->setVarByRef('templateContent', $templateContent);
          		return 'template_tpl.php';
          		break;
                 
             case 'save_subject':                
+                $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $subjId = $this->getParam('s');
                 $code = $this->getParam('code');
                 $name = $this->getParam('name');
                 $level = $this->getParam('level');
                 $status = $this->getParam('status');
+                $file = $_FILES;
                 if($subjId == ''){
-                    $this->objExamDb->addSubject($depId, $code, $name, $level);
+                    $subjId = $this->objExamDb->addSubject($facId, $depId, $code, $name, $level);
                 }else{
                     $this->objExamDb->editSubject($subjId, $code, $name, $level, $status);
                 }
+                if(is_uploaded_file($file['file']['tmp_name']) && $file['file']['error'] == 0){
+                    $filename = explode('.', basename($file['file']['name']));
+                    $ext = array_pop($filename);
+                    move_uploaded_file($file['file']['tmp_name'], $this->filePath.$code.'.'.$ext);
+                }
                 return $this->nextAction('subjects', array(
+                    'f' => $facId,
                     'd' => $depId,
                 ), 'examiners');
                 break;
                 
             case 'delete_subject':
+                $facId = $this->getParam('f');
                 $subjId = $this->getParam('s');
                 $depId = $this->getParam('d');
-                $this->objExamDb->deleteDepartment($subjId);
-                return $this->nextAction('subjects', array(
+                $subject = $this->objExamDb->getSubjectById($subjId);
+                $this->objExamDb->deleteSubject($subjId);
+                $file = glob($this->filePath.$subject['course_code'].'.*');
+                if(!empty($file)){
+                    unlink($this->filePath.basename($file[0]));               
+                }
+                 return $this->nextAction('subjects', array(
+                    'f' => $facId,
                     'd' => $depId,
                 ), 'examiners');
                 break;
@@ -260,7 +333,7 @@ class examiners extends controller {
                 break;
 
  			default:
-                return $this->nextAction('departments', array(), 'examiners');
+                return $this->nextAction('faculties', array(), 'examiners');
                 break;
         }
     }

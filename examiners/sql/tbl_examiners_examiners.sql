@@ -1,13 +1,17 @@
 <?php
 // Table Name
-$tablename = 'tbl_examiners_users';
+$tablename = 'tbl_examiners_examiners';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Table to hold the examiners per department.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Table to hold the examiners per faculty.', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
 	'id' => array(
+		'type' => 'text',
+		'length' => '32',
+	),
+	'fac_id' => array(
 		'type' => 'text',
 		'length' => '32',
 	),

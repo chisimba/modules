@@ -78,18 +78,29 @@ class dbexams extends dbTable
 	}
 	
 	/**
-	* Method to set the examiners users table
+	* Method to set the faculties table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
 	*/
-	private function _setUsers()
+	private function _setFaculties()
 	{
-        return $this->_changeTable('tbl_examiners_users');
+        return $this->_changeTable('tbl_examiners_faculties');
     }
 
 	/**
-	* Method to set the examiners department table
+	* Method to set the examiners table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setExaminers()
+	{
+        return $this->_changeTable('tbl_examiners_examiners');
+    }
+
+	/**
+	* Method to set the department table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -100,7 +111,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners subjects table
+	* Method to set the subjects table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -111,7 +122,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners first table
+	* Method to set the first examiners table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -122,7 +133,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners second table
+	* Method to set the second examiners table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -133,7 +144,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners moderate table
+	* Method to set the moderating examiners table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -144,7 +155,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners alternate table
+	* Method to set the alternate examiners table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -155,7 +166,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners remark table
+	* Method to set the remarking examiners table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -166,7 +177,7 @@ class dbexams extends dbTable
     }
 
 	/**
-	* Method to set the examiners audit table
+	* Method to set the audit table
 	*
 	* @access private
 	* @return boolean: TRUE on success FALSE on failure
@@ -176,24 +187,36 @@ class dbexams extends dbTable
         return $this->_changeTable('tbl_examiners_audit');
     }
 
+	/**
+	* Method to set the blacklisted examiners table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setBlacklisting()
+	{
+        return $this->_changeTable('tbl_examiners_blacklisting');
+    }
+
 /* ----- Cross-table functions ----- */
 
     /**
     * Method to return the examiner matrix for a subject for a year
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year of the matrix
     * @return array|bool $data: The matrix data on success | FALSE on failure
     */
-    public function getMatrixByYear($depId, $subjId, $year)
+    public function getMatrixByYear($facId, $depId, $subjId, $year)
     {
-        $first = $this->getFirstByYear($depId, $subjId, $year);
-        $second = $this->getSecondByYear($depId, $subjId, $year);
-        $moderate = $this->getModerateByYear($depId, $subjId, $year);
-        $alternate = $this->getAlternateByYear($depId, $subjId, $year);
-        $remarking = $this->getRemarkingByYear($depId, $subjId, $year);
+        $first = $this->getFirstByYear($facId, $depId, $subjId, $year);
+        $second = $this->getSecondByYear($facId, $depId, $subjId, $year);
+        $moderate = $this->getModerateByYear($facId, $depId, $subjId, $year);
+        $alternate = $this->getAlternateByYear($facId, $depId, $subjId, $year);
+        $remarking = $this->getRemarkingByYear($facId, $depId, $subjId, $year);
         
         if($first == FALSE && $second == FALSE && $moderate == FALSE && $alternate == FALSE && $remarking == FALSE){
             return FALSE;
@@ -212,18 +235,19 @@ class dbexams extends dbTable
     * Method to delete a matrix
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year to delete
     * @return bool $success: TRUE on success | FALSE on failure
     */
-    public function deleteMatrix($depId, $subjId, $year)
+    public function deleteMatrix($facId, $depId, $subjId, $year)
     {
-        $first = $this->deleteFirst($depId, $subjId, $year);
-        $second = $this->deleteSecond($depId, $subjId, $year);
-        $moderate = $this->deleteModerate($depId, $subjId, $year);
-        $alternate = $this->deleteAlternate($depId, $subjId, $year);
-        $remarking = $this->deleteRemarking($depId, $subjId, $year);
+        $first = $this->deleteFirst($facId, $depId, $subjId, $year);
+        $second = $this->deleteSecond($facId, $depId, $subjId, $year);
+        $moderate = $this->deleteModerate($facId, $depId, $subjId, $year);
+        $alternate = $this->deleteAlternate($facId, $depId, $subjId, $year);
+        $remarking = $this->deleteRemarking($facId, $depId, $subjId, $year);
         
         if($first != FALSE && $second != FALSE && $moderate != FALSE && $alternate != FALSE && $remarking != FALSE){
             return TRUE;
@@ -265,13 +289,13 @@ class dbexams extends dbTable
         return $auditId;
     }
     
-/* ----- Functions for tbl_examiners_users ----- */
+/* ----- Functions for tbl_examiners_examiners ----- */
 
     /**
-    * Method to add an examinating user
+    * Method to add an examiner
     *
     * @access public
-    * @param string $depId: The id of the department
+    * @param string $facId: The id of the faculty
     * @param string $title: The title of the examiner
     * @param string $name: The name of the examiner
     * @param string $surname: The surname of the examiner
@@ -281,15 +305,15 @@ class dbexams extends dbTable
     * @param string $ext: The telephone extension of the examiner
     * @param string $cell: The cell phone number of the examiner
     * @param string $address: The address of the examiner
-    * @return string|bool $userId: The user id on success | FALSE on failure
+    * @return string|bool $examId: The examiner id on success | FALSE on failure
     */
-    public function addUser($depId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
+    public function addExaminer($facId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         $table = $this->table;
         
         $fields = array();
-        $fields['dep_id'] = $depId;
+        $fields['fac_id'] = $facId;
         $fields['title'] = $title;
         $fields['first_name'] = $name;
         $fields['surname'] = $surname;
@@ -301,42 +325,42 @@ class dbexams extends dbTable
         $fields['address'] = $address;
         $fields['deleted'] = 0;
         $fields['updated'] = date('Y-m-d H:i:s');
-        $userId = $this->insert($fields);
-        if($userId != FALSE){
+        $examId = $this->insert($fields);
+        if($examId != FALSE){
          	$comment = $this->objLanguage->languageText('word_add');
             foreach($fields as $key=>$value){
-                $this->_addAuditRecord($table, $userId, $key, NULL, $value, $comment);
+                $this->_addAuditRecord($table, $examId, $key, NULL, $value, $comment);
             }
-	        return $userId;
+	        return $examId;
 		}
 		return FALSE;
     }
     
     /**
-    * Method to delete a user
+    * Method to delete an examiner
     *
     * @access public
-    * @param string $userId: The id of the examining user
-    * @return string|bool $userId: The user id on success | FALSE on failure
+    * @param string $examId: The id of the examining user
+    * @return string|bool $examId: The examiner user id on success | FALSE on failure
     */
-    public function deleteUser($userId)
+    public function deleteExaminer($examId)
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         $table = $this->table;
         
-        $data = $this->getUserById($userId);
+        $data = $this->getExaminerById($examId);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $userId, $fields);
+            $updated = $this->update('id', $examId, $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $userId, $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $examId, $key, $data[$key], $value, $comment);
                 }
-	            return $userId;
+	            return $examId;
 		    }
 		    return FALSE;
 		}
@@ -344,15 +368,15 @@ class dbexams extends dbTable
     }
     
     /**
-    * Method to get users by department
+    * Method to get examiners by department
     *
     * @access public
     * @param string $depId: The id of the department
-    * @return array|bool $data: The user data on success | FALSE on failure
+    * @return array|bool $data: The examiner data on success | FALSE on failure
     */
-    public function getUsersByDepartment($depId)
+    public function getExaminersByDepartment($depId)
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         
         $sql = "SELECT * FROM ".$this->table;
         $sql .= " WHERE dep_id='".$depId."'";
@@ -366,18 +390,40 @@ class dbexams extends dbTable
     }
 
     /**
-    * Method to get a user by Id
+    * Method to get examiners by faculty
     *
     * @access public
-    * @param string $userId: The id of the user to get
+    * @param string $facId: The id of the faculty
     * @return array|bool $data: The user data on success | FALSE on failure
     */
-    public function getUserById($userId)
+    public function getExaminersByFaculty($facId)
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         
         $sql = "SELECT * FROM ".$this->table;
-        $sql .= " WHERE id='".$userId."'";
+        $sql .= " WHERE fac_id='".$facId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to get an examining user by Id
+    *
+    * @access public
+    * @param string $examId: The id of the examining user to get
+    * @return array|bool $data: The user data on success | FALSE on failure
+    */
+    public function getExaminerById($examId)
+    {
+        $this->_setExaminers();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE id='".$examId."'";
         $sql .= " AND deleted='0'";
         
         $data = $this->getArray($sql);
@@ -388,14 +434,14 @@ class dbexams extends dbTable
     }
 
     /**
-    * Method to list all users
+    * Method to list all examiners
     *
     * @access public
     * @return array|bool $data: The user data on success | FALSE on failure
     */
-    public function getAllUsers()
+    public function getAllExaminers()
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         
         $sql = "SELECT * FROM ".$this->table;
         $sql .= " WHERE deleted='0'";
@@ -408,10 +454,10 @@ class dbexams extends dbTable
     }
 
     /**
-    * Method to edit a user
+    * Method to edit an examiner
     *
     * @access public
-    * @param string $userId: The id of the examining user
+    * @param string $examId: The id of the examining user
     * @param string $title: The title of the examiner
     * @param string $name: The name of the examiner
     * @param string $surname: The surname of the examiner
@@ -423,12 +469,12 @@ class dbexams extends dbTable
     * @param string $address: The address of the examiner
     * @return string|bool $userId: The user id on success | FALSE on failure
     */
-    public function editUser($userId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
+    public function editExaminer($examId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
     {
-        $this->_setUsers();
+        $this->_setExaminers();
         $table = $this->table;
         
-        $data = $this->getUserById($userId);
+        $data = $this->getExaminerById($examId);
         if($data != FALSE){        
             $fields = array();
             $fields['title'] = $title;
@@ -441,16 +487,153 @@ class dbexams extends dbTable
             $fields['cell_no'] = $cell;
             $fields['address'] = $address;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $userId, $fields);
+            $updated = $this->update('id', $examId, $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $userId, $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $examId, $key, $data[$key], $value, $comment);
                     }
                 }
-	            return $userId;
+	            return $examId;
+		    }
+		    return FALSE;
+		}
+		return FALSE;
+    }    
+
+/* ----- Functions for tbl_examiners_faculties ----- */
+
+    /**
+    * Method to add a faculty
+    *
+    * @access public
+    * @param string $name: The name of the faculty
+    * @return string|bool $facId: The faculty id on success | FALSE on failure
+    */
+    public function addFaculty($name)
+    {
+        $this->_setFaculties();
+        $table = $this->table;
+        
+        $fields = array();
+        $fields['faculty_name'] = $name;
+        $fields['deleted'] = 0;
+        $fields['updated'] = date('Y-m-d H:i:s');
+        $facId = $this->insert($fields);
+        
+        if($facId != FALSE){
+         	$comment = $this->objLanguage->languageText('word_add');
+            foreach($fields as $key=>$value){
+                $this->_addAuditRecord($table, $facId, $key, NULL, $value, $comment);
+            }
+	        return $facId;
+		}
+		return FALSE;
+    }
+    
+    /**
+    * Method to delete a faculty
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @return string|bool $depId: The faculty id on success | FALSE on failure
+    */
+    public function deleteFaculty($facId)
+    {
+        $this->_setFaculties();
+        $table = $this->table;
+        
+        $data = $this->getFacultyById($facId);
+        if($data != FALSE){        
+            $fields = array();
+            $fields['deleted'] = 1;
+            $fields['updated'] = date('Y-m-d H:i:s');
+            $updated = $this->update('id', $facId, $fields);
+            
+            if($updated != FALSE){
+                $comment = $this->objLanguage->languageText('word_delete');
+                foreach($fields as $key=>$value){
+                    $this->_addAuditRecord($table, $facId, $key, $data[$key], $value, $comment);
+                }
+	            return $facId;
+		    }
+		    return FALSE;
+		}
+		return FALSE;
+    }
+    
+    /**
+    * Method to list all faculties
+    *
+    * @access public
+    * @return array|bool $data: The faculty data on success | FALSE on failure
+    */
+    public function getAllFaculties()
+    {
+        $this->_setFaculties();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data;
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to get a faculty by Id
+    *
+    * @access public
+    * @param string $facId: The id of the faculty to get
+    * @return array|bool $data: The faculty data on success | FALSE on failure
+    */
+    public function getFacultyById($facId)
+    {
+        $this->_setFaculties();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE id='".$facId."'";
+        $sql .= " AND deleted='0'";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data[0];
+        }
+        return FALSE;
+    }
+
+    /**
+    * Method to edit a faculty
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $name: The name of the faculty
+    * @return string|bool $facId: The faculty id on success | FALSE on failure
+    */
+    public function editFaculty($facId, $name)
+    {
+        $this->_setFaculties();
+        $table = $this->table;
+        
+        $data = $this->getFacultyById($facId);
+        if($data != FALSE){        
+            $fields = array();
+            $fields['faculty_name'] = $name;
+            $fields['updated'] = date('Y-m-d H:i:s');
+            $updated = $this->update('id', $facId, $fields);
+            
+            if($updated != FALSE){
+                $comment = $this->objLanguage->languageText('word_edit');
+                foreach($fields as $key=>$value){
+                    if($data[$key] != $value){
+                        $this->_addAuditRecord($table, $facId, $key, $data[$key], $value, $comment);
+                    }
+                }
+	            return $facId;
 		    }
 		    return FALSE;
 		}
@@ -463,15 +646,17 @@ class dbexams extends dbTable
     * Method to add a department
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $name: The name of the department
     * @return string|bool $depId: The department id on success | FALSE on failure
     */
-    public function addDepartment($name)
+    public function addDepartment($facId, $name)
     {
         $this->_setDepartments();
         $table = $this->table;
         
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['department_name'] = $name;
         $fields['deleted'] = 0;
         $fields['updated'] = date('Y-m-d H:i:s');
@@ -522,14 +707,16 @@ class dbexams extends dbTable
     * Method to list all departments
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @return array|bool $data: The department data on success | FALSE on failure
     */
-    public function getAllDepartments()
+    public function getAllDepartmentsPerFaculty($facId)
     {
         $this->_setDepartments();
         
         $sql = "SELECT * FROM ".$this->table;
-        $sql .= " WHERE deleted='0'";
+        $sql .= " WHERE fac_id='".$facId."'";
+        $sql .= " AND deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -600,18 +787,20 @@ class dbexams extends dbTable
     * Method to add a subject
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $code: The code of the course
     * @param string $name: The name of the course
     * @param string $level: The level of the course
     * @return string|bool $subjId: The subject id on success | FALSE on failure
     */
-    public function addSubject($depId, $code, $name, $level)
+    public function addSubject($facId, $depId, $code, $name, $level)
     {
         $this->_setSubjects();
         $table = $this->table;
         
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['course_code'] = $code;
         $fields['course_name'] = $name;
@@ -752,6 +941,7 @@ class dbexams extends dbTable
     * Method to add a first examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $examId: The id of the examiner
@@ -759,14 +949,15 @@ class dbexams extends dbTable
     * @param string $comment: Any comments
     * @return string|bool $firstId: The first examiner id on success | FALSE on failure
     */
-    public function updateFirst($depId, $subjId, $year, $examId, $comment)
+    public function updateFirst($facId, $depId, $subjId, $year, $examId, $comment)
     {
-        $data = $this->getFirstByYear($depId, $subjId, $year);
+        $data = $this->getFirstByYear($facId, $depId, $subjId, $year);
 
         $this->_setFirst();
         $table = $this->table;
                 
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['subj_id'] = $subjId;
         $fields['exam_id'] = $examId;
@@ -786,15 +977,15 @@ class dbexams extends dbTable
             }
             return FALSE;
         }else{
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['f_id'], $fields);
             if($updated != FALSE){
-                 $comment = $this->objLanguage->languageText('word_edit');
+                $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $data['f_id'], $key, $data[$key], $value, $comment);
                     }
                 }
-	            return $data['eid'];
+	            return $data['f_id'];
 		    }
 		    return FALSE;
         }
@@ -805,29 +996,30 @@ class dbexams extends dbTable
     * Method to delete first examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year
-    * @return string|bool $first: The first examiner id on success | FALSE on failure
+    * @return string|bool $firstId: The first examiner id on success | FALSE on failure
     */
-    public function deleteFirst($depId, $subjId, $year)
+    public function deleteFirst($facId, $depId, $subjId, $year)
     {
         $this->_setFirst();
         $table = $this->table;
         
-        $data = $this->getFirstByYear($depId, $subjId, $year);
+        $data = $this->getFirstByYear($facId, $depId, $subjId, $year);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['f_id'], $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $data['f_id'], $key, $data[$key], $value, $comment);
                 }
-	            return $data['eid'];
+	            return $data['f_id'];
 		    }
 		    return FALSE;
 		}
@@ -838,22 +1030,24 @@ class dbexams extends dbTable
     * Method to get examiners by year
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year of the matrix
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getFirstByYear($depId, $subjId, $year)
+    public function getFirstByYear($facId, $depId, $subjId, $year)
     {
         $this->_setFirst();
         
-        $sql = "SELECT *, examiner.id AS eid FROM ".$this->table." AS examiner";
-        $sql .= " LEFT JOIN tbl_examiners_users AS users";
-        $sql .= " ON examiner.exam_id=users.id";
-        $sql .= " WHERE examiner.dep_id='".$depId."'";
-        $sql .= " AND examiner.subj_id='".$subjId."'";
+        $sql = "SELECT *, first.id AS f_id FROM ".$this->table." AS first";
+        $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
+        $sql .= " ON first.exam_id=examiners.id";
+        $sql .= " WHERE first.fac_id='".$facId."'";
+        $sql .= " AND first.dep_id='".$depId."'";
+        $sql .= " AND first.subj_id='".$subjId."'";
         $sql .= " AND year='".$year."'";
-        $sql .= " AND examiner.deleted='0'";
+        $sql .= " AND first.deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -868,6 +1062,7 @@ class dbexams extends dbTable
     * Method to add a second examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $examId: The id of the examiner
@@ -875,14 +1070,15 @@ class dbexams extends dbTable
     * @param string $comment: Any comments
     * @return string|bool $secondId: The second examiner id on success | FALSE on failure
     */
-    public function updateSecond($depId, $subjId, $year, $examId, $comment)
+    public function updateSecond($facId, $depId, $subjId, $year, $examId, $comment)
     {
-        $data = $this->getSecondByYear($depId, $subjId, $year);
+        $data = $this->getSecondByYear($facId, $depId, $subjId, $year);
 
         $this->_setSecond();
         $table = $this->table;
                 
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['subj_id'] = $subjId;
         $fields['exam_id'] = $examId;
@@ -902,15 +1098,15 @@ class dbexams extends dbTable
             }
             return FALSE;
         }else{
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['s_id'], $fields);
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $data['s_id'], $key, $data[$key], $value, $comment);
                     }
                 }
-    	            return $data['eid'];
+    	            return $data['s_id'];
 		    }
 		    return FALSE;
         }
@@ -921,29 +1117,30 @@ class dbexams extends dbTable
     * Method to delete second examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year
-    * @return string|bool $first: The first examiner id on success | FALSE on failure
+    * @return string|bool $secondId: The second examiner id on success | FALSE on failure
     */
-    public function deleteSecond($depId, $subjId, $year)
+    public function deleteSecond($facId, $depId, $subjId, $year)
     {
         $this->_setSecond();
         $table = $this->table;
         
-        $data = $this->getSecondByYear($depId, $subjId, $year);
+        $data = $this->getSecondByYear($facId, $depId, $subjId, $year);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['s_id'], $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $data['s_id'], $key, $data[$key], $value, $comment);
                 }
-	            return $data['eid'];
+	            return $data['s_id'];
 		    }
 		    return FALSE;
 		}
@@ -954,22 +1151,24 @@ class dbexams extends dbTable
     * Method to get examiners by year
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year of the matrix
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getSecondByYear($depId, $subjId, $year)
+    public function getSecondByYear($facId, $depId, $subjId, $year)
     {
         $this->_setSecond();
         
-        $sql = "SELECT *, examiner.id AS eid FROM ".$this->table." AS examiner";
-        $sql .= " LEFT JOIN tbl_examiners_users AS users";
-        $sql .= " ON examiner.exam_id=users.id";
-        $sql .= " WHERE examiner.dep_id='".$depId."'";
-        $sql .= " AND examiner.subj_id='".$subjId."'";
+        $sql = "SELECT *, second.id AS s_id FROM ".$this->table." AS second";
+        $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
+        $sql .= " ON second.exam_id=examiners.id";
+        $sql .= " WHERE second.fac_id='".$facId."'";
+        $sql .= " AND second.dep_id='".$depId."'";
+        $sql .= " AND second.subj_id='".$subjId."'";
         $sql .= " AND year='".$year."'";
-        $sql .= " AND examiner.deleted='0'";
+        $sql .= " AND second.deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -984,6 +1183,7 @@ class dbexams extends dbTable
     * Method to add a moderation examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $examId: The id of the examiner
@@ -991,14 +1191,15 @@ class dbexams extends dbTable
     * @param string $comment: Any comments
     * @return string|bool $modId: The moderating examiner id on success | FALSE on failure
     */
-    public function updateModerate($depId, $subjId, $year, $examId, $comment)
+    public function updateModerate($facId, $depId, $subjId, $year, $examId, $comment)
     {
-        $data = $this->getModerateByYear($depId, $subjId, $year);
+        $data = $this->getModerateByYear($facId, $depId, $subjId, $year);
 
         $this->_setModerate();
         $table = $this->table;
                 
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['subj_id'] = $subjId;
         $fields['exam_id'] = $examId;
@@ -1018,15 +1219,15 @@ class dbexams extends dbTable
             }
             return FALSE;
         }else{
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['m_id'], $fields);
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $data['m_id'], $key, $data[$key], $value, $comment);
                     }
                 }
-	            return $data['eid'];
+	            return $data['m_id'];
 		    }
 		    return FALSE;
         }
@@ -1037,17 +1238,18 @@ class dbexams extends dbTable
     * Method to delete moderation examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year
-    * @return string|bool $first: The first examiner id on success | FALSE on failure
+    * @return string|bool $modId: The moderating examiner id on success | FALSE on failure
     */
-    public function deleteModerate($depId, $subjId, $year)
+    public function deleteModerate($facId, $depId, $subjId, $year)
     {
         $this->_setModerate();
         $table = $this->table;
         
-        $data = $this->getModerateByYear($depId, $subjId, $year);
+        $data = $this->getModerateByYear($facId, $depId, $subjId, $year);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
@@ -1057,9 +1259,9 @@ class dbexams extends dbTable
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $data['m_id'], $key, $data[$key], $value, $comment);
                 }
-	            return $data['eid'];
+	            return $data['m_id'];
 		    }
 		    return FALSE;
 		}
@@ -1070,22 +1272,24 @@ class dbexams extends dbTable
     * Method to get examiners by year
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year of the matrix
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getModerateByYear($depId, $subjId, $year)
+    public function getModerateByYear($facId, $depId, $subjId, $year)
     {
         $this->_setModerate();
         
-        $sql = "SELECT *, examiner.id AS eid FROM ".$this->table." AS examiner";
-        $sql .= " LEFT JOIN tbl_examiners_users AS users";
-        $sql .= " ON examiner.exam_id=users.id";
-        $sql .= " WHERE examiner.dep_id='".$depId."'";
-        $sql .= " AND examiner.subj_id='".$subjId."'";
+        $sql = "SELECT *, moderate.id AS m_id FROM ".$this->table." AS moderate";
+        $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
+        $sql .= " ON moderate.exam_id=examiners.id";
+        $sql .= " WHERE moderate.fac_id='".$facId."'";
+        $sql .= " AND moderate.dep_id='".$depId."'";
+        $sql .= " AND moderate.subj_id='".$subjId."'";
         $sql .= " AND year='".$year."'";
-        $sql .= " AND examiner.deleted='0'";
+        $sql .= " AND moderate.deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -1100,6 +1304,7 @@ class dbexams extends dbTable
     * Method to add a alternate examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $examId: The id of the examiner
@@ -1107,14 +1312,15 @@ class dbexams extends dbTable
     * @param string $comment: Any comments
     * @return string|bool $altId: The alternate examiner id on success | FALSE on failure
     */
-    public function updateAlternate($depId, $subjId, $year, $examId, $comment)
+    public function updateAlternate($facId, $depId, $subjId, $year, $examId, $comment)
     {
-        $data = $this->getAlternateByYear($depId, $subjId, $year);
+        $data = $this->getAlternateByYear($facId, $depId, $subjId, $year);
 
         $this->_setAlternate();
         $table = $this->table;
                 
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['subj_id'] = $subjId;
         $fields['exam_id'] = $examId;
@@ -1134,15 +1340,15 @@ class dbexams extends dbTable
             }
             return FALSE;
         }else{
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['a_id'], $fields);
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $data['a_id'], $key, $data[$key], $value, $comment);
                     }
                 }
-	            return $data['eid'];
+	            return $data['a_id'];
 		    }
 		    return FALSE;
         }
@@ -1153,29 +1359,30 @@ class dbexams extends dbTable
     * Method to delete alternate examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year
-    * @return string|bool $first: The first examiner id on success | FALSE on failure
+    * @return string|bool $altId: The alternate examiner id on success | FALSE on failure
     */
-    public function deleteAlternate($depId, $subjId, $year)
+    public function deleteAlternate($facId, $depId, $subjId, $year)
     {
         $this->_setAlternate();
         $table = $this->table;
         
-        $data = $this->getAlternateByYear($depId, $subjId, $year);
+        $data = $this->getAlternateByYear($facId, $depId, $subjId, $year);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['a_id'], $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $data['a_id'], $key, $data[$key], $value, $comment);
                 }
-	            return $data['eid'];
+	            return $data['a_id'];
 		    }
 		    return FALSE;
 		}
@@ -1195,13 +1402,14 @@ class dbexams extends dbTable
     {
         $this->_setAlternate();
         
-        $sql = "SELECT *, examiner.id AS eid FROM ".$this->table." AS examiner";
-        $sql .= " LEFT JOIN tbl_examiners_users AS users";
-        $sql .= " ON examiner.exam_id=users.id";
-        $sql .= " WHERE examiner.dep_id='".$depId."'";
-        $sql .= " AND examiner.subj_id='".$subjId."'";
+        $sql = "SELECT *, alternate.id AS a_id FROM ".$this->table." AS alternate";
+        $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
+        $sql .= " ON alternate.exam_id=exainers.id";
+        $sql .= " WHERE alternate.fac_id='".$facId."'";
+        $sql .= " AND alternate.dep_id='".$depId."'";
+        $sql .= " AND alternate.subj_id='".$subjId."'";
         $sql .= " AND year='".$year."'";
-        $sql .= " AND examiner.deleted='0'";
+        $sql .= " AND alternate.deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -1216,6 +1424,7 @@ class dbexams extends dbTable
     * Method to add a remarking examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $examId: The id of the examiner
@@ -1223,14 +1432,15 @@ class dbexams extends dbTable
     * @param string $comment: Any comments
     * @return string|bool $remId: The remarking examiner id on success | FALSE on failure
     */
-    public function updateRemarking($depId, $subjId, $year, $examId, $comment)
+    public function updateRemarking($facId, $depId, $subjId, $year, $examId, $comment)
     {
-        $data = $this->getRemarkingByYear($depId, $subjId, $year);
+        $data = $this->getRemarkingByYear($facId, $depId, $subjId, $year);
 
         $this->_setRemarking();
         $table = $this->table;
                 
         $fields = array();
+        $fields['fac_id'] = $facId;
         $fields['dep_id'] = $depId;
         $fields['subj_id'] = $subjId;
         $fields['exam_id'] = $examId;
@@ -1250,15 +1460,15 @@ class dbexams extends dbTable
             }
             return FALSE;
         }else{
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['r_id'], $fields);
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_edit');
                 foreach($fields as $key=>$value){
                     if($data[$key] != $value){
-                        $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                        $this->_addAuditRecord($table, $data['r_id'], $key, $data[$key], $value, $comment);
                     }
                 }
-	            return $data['eid'];
+	            return $data['r_id'];
 		    }
 		    return FALSE;
         }
@@ -1269,17 +1479,19 @@ class dbexams extends dbTable
     * Method to delete remarking examiner
     *
     * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year
-    * @return string|bool $first: The first examiner id on success | FALSE on failure
+    * @return string|bool $remId: The remarking examiner id on success | FALSE on failure
     */
-    public function deleteRemarking($depId, $subjId, $year)
+    public function deleteRemarking($facId, $depId, $subjId, $year)
     {
         $this->_setRemarking();
         $table = $this->table;
         
-        $data = $this->getRemarkingByYear($depId, $subjId, $year);
+        $data = $this->getRemarkingByYear($facId, $depId, $subjId, $year);
         if($data != FALSE){        
             $fields = array();
             $fields['deleted'] = 1;
@@ -1289,9 +1501,9 @@ class dbexams extends dbTable
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');
                 foreach($fields as $key=>$value){
-                    $this->_addAuditRecord($table, $data['eid'], $key, $data[$key], $value, $comment);
+                    $this->_addAuditRecord($table, $data['r_id'], $key, $data[$key], $value, $comment);
                 }
-	            return $data['eid'];
+	            return $data['r_id'];
 		    }
 		    return FALSE;
 		}
@@ -1302,22 +1514,24 @@ class dbexams extends dbTable
     * Method to get examiners by year
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
     * @param string $year: The year of the matrix
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getRemarkingByYear($depId, $subjId, $year)
+    public function getRemarkingByYear($facId, $depId, $subjId, $year)
     {
         $this->_setRemarking();
         
-        $sql = "SELECT *, examiner.id AS eid FROM ".$this->table." AS examiner";
-        $sql .= " LEFT JOIN tbl_examiners_users AS users";
-        $sql .= " ON examiner.exam_id=users.id";
-        $sql .= " WHERE examiner.dep_id='".$depId."'";
-        $sql .= " AND examiner.subj_id='".$subjId."'";
+        $sql = "SELECT *, remarking.id AS r_id FROM ".$this->table." AS remarking";
+        $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
+        $sql .= " ON remarking.exam_id=examiners.id";
+        $sql .= " WHERE remarking.fac_id='".$facId."'";
+        $sql .= " AND remarking.dep_id='".$depId."'";
+        $sql .= " AND remarking.subj_id='".$subjId."'";
         $sql .= " AND year='".$year."'";
-        $sql .= " AND examiner.deleted='0'";
+        $sql .= " AND remarking.deleted='0'";
         
         $data = $this->getArray($sql);
         if($data != FALSE){

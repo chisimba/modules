@@ -11,6 +11,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => '32',
 	),
+	'fac_id' => array(
+	   'type' => 'text',
+	   'length' => '32',
+    ),
 	'dep_id' => array(
 	   'type' => 'text',
 	   'length' => '32',
