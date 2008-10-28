@@ -147,14 +147,14 @@ class im extends controller
                 }
                 break;
             
-            case 'reply':
+            case 'reply2':
                 //$msgId = $this->getParam('messageid');
                 $replymessage = 'testing from jabber';//$this->getParam('myparam');
                 $contactName = 'wesleynitsckie@gmail.com';//$this->getParam('contactname');
                 //reply
                 if(!$this->conn->isDisconnected())
                 {
-                    $this->conn->message($contactName, $body=$replymessage);
+                //    $this->conn->message($contactName, $body=$replymessage);
                     
                 } 
                 //add to database
@@ -248,6 +248,8 @@ class im extends controller
                                     $this->conn->getRoster();
                                     $this->conn->presence($status=$this->objLanguage->languageText('mod_im_presgreeting', 'im'));
                                     break;
+                                case 'reply'
+                                    $this->conn->message('wesleynitsckie@gmail.com', $body='som etxtee');
                             }
                         }
                     }
