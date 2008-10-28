@@ -248,7 +248,7 @@ class im extends controller
                                     $this->conn->getRoster();
                                     $this->conn->presence($status=$this->objLanguage->languageText('mod_im_presgreeting', 'im'));
                                     break;
-                                case 'reply'
+                                case 'reply':
                                     $this->conn->message('wesleynitsckie@gmail.com', $body='som etxtee');
                             }
                         }
