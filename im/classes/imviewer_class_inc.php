@@ -28,8 +28,7 @@
  */
 
 // security check - must be included in all scripts
-if (!
-/**
+if (! /**
  * The $GLOBALS is an array used to control access to certain constants.
  * Here it is used to check if the file is opening in engine, if not it
  * stops the file from running.
@@ -38,114 +37,98 @@ if (!
  * @name   $kewl_entry_point_run
  *
  */
-$GLOBALS['kewl_entry_point_run'])
-{
-        die("You cannot view this page directly");
+$GLOBALS ['kewl_entry_point_run']) {
+    die ( "You cannot view this page directly" );
 }
 // end security check
 
+
 /**
-*
-* Viewer class for rendering an array of messages to the browser
-*
-* @author Derek Keats
-* @package IM
-*
-*/
-class imviewer extends object
-{
+ *
+ * Viewer class for rendering an array of messages to the browser
+ *
+ * @author Derek Keats
+ * @package IM
+ *
+ */
+class imviewer extends object {
 
     /**
-    *
-    * @var string $objLanguage String object property for holding the
-    * language object
-    * @access public
-    *
-    */
+     *
+     * @var string $objLanguage String object property for holding the
+     * language object
+     * @access public
+     *
+     */
     public $objLanguage;
 
     /**
-    *
-    * Constructor
+     *
+     * Constructor
 
-    * @access public
-    *
-    */
-    public function init()
-    {
-        $this->objLanguage = $this->getObject('language', 'language');
-        $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
-        $this->objIcon = $this->getObject('geticon','htmlelements');
-        
-        $this->objIcon->setIcon('green_bullet');
+     * @access public
+     *
+     */
+    public function init() {
+        $this->objLanguage = $this->getObject ( 'language', 'language' );
+        $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
+        $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
+
+        $this->objIcon->setIcon ( 'green_bullet' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
-        $this->activeIcon = $this->objIcon->show();
-        $this->objIcon->setIcon('grey_bullet');
-        $this->inactiveIcon = $this->objIcon->show();
+        $this->activeIcon = $this->objIcon->show ();
+        $this->objIcon->setIcon ( 'grey_bullet' );
+        $this->inactiveIcon = $this->objIcon->show ();
     }
 
-    public function renderOutputForBrowser($msgs)
-    {
-        $objWashout = $this->getObject('washout', 'utilities');
-        $ret ="<tr>";
-        
-        $max = 4;
-        foreach($msgs as $msg)
-        {
-                $box = "";
+    public function renderOutputForBrowser($msgs) {
+        $objWashout = $this->getObject ( 'washout', 'utilities' );
+        $ret = "<tr>";
+
+        $max = 1;
+        $rownum = 0;
+        foreach ( $msgs as $msg ) {
+            $box = "";
             //log_debug($msg);
             // whip out a content featurebox and plak the messages in
-            $from = explode('/', $msg['msgfrom']);
-            $fuser = $from['person'];
-            $msgid = $msg['id'];
-            
+            //$from = explode('/', $msg['person']);
+            $fuser = $msg ['person'];
+            $msgid = $msg ['id'];
+
             // get the presence info if it exists
-            $objPres = $this->getObject('dbimpresence');
-            if($objPres->getPresence($msg['person']) == "available")
-            {
+            $objPres = $this->getObject ( 'dbimpresence' );
+            if ($objPres->getPresence ( $msg ['person'] ) == "available") {
                 $presence = $this->activeIcon;
+            } else {
+                $presence = $this->inactiveIcon;
             }
-            else
-            {
-               $presence = $this->inactiveIcon;
-            }
-                
-            $sentat = $this->objLanguage->languageText('mod_im_sentat', 'im');
-            $fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
+
+            $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
+            $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
             $prevmessages = "";
-            foreach ($msg['messages'] as $prevmess)
-            {
-                $prevmessages .= $objWashout->parseText(nl2br(htmlentities($prevmess['msgbody']))).' <br/>';
-                $lastmsgId = $prevmess['id'];
+            foreach ( $msg ['messages'] as $prevmess ) {
+                $prevmessages .= $objWashout->parseText ( nl2br ( htmlentities ( $prevmess ['msgbody'] ) ) ) . ' <br/>';
+                $lastmsgId = $prevmess ['id'];
             }
-            
-            $ajax = "<span class=\"subdued\" id=\"replydiv".$lastmsgId."\">[REPLY]</span>
+
+            $ajax = "<span class=\"subdued\" id=\"replydiv" . $lastmsgId . "\">[REPLY]</span>
 						<script>
-							new Ajax.InPlaceEditor('replydiv".$lastmsgId."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=".$lastmsgId."&fromuser=".$msg['person']."&myparam=' + escape(value) }})
+							new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
 						</script>";
-                   
-              
-             
-            $box .= '<td><div class="im_default" >'
-              . '<p class="im_source">'.$presence.' <b>' . $fromuser."</b>: ".$msg['person']
-              . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ."</p>"
-              . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages
-              . '</p><p>'.$ajax.'</p></div></td>';
-              
-              //try to put 4 conversations in a row
-              $rownum++;
-              if ($rownum == $max)
-              {                
-               $box .=  "</tr><tr>";
-               $rownum =0;
-              }
-              
-              
-              
-              $ret .= $box;
+
+            $box .= '<td><div class="im_default" >' . '<p class="im_source">' . $presence . ' <b>' . $fromuser . "</b>: " . $msg ['person'] . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'] . "</p>" . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
+
+            //try to put 4 conversations in a row
+            $rownum ++;
+            if ($rownum == $max) {
+                $box .= "</tr><tr>";
+                $rownum = 0;
+            }
+
+            $ret .= $box;
 
         }
-        return "<table>".$ret."</table>";
+        return "<table>" . $ret . "</table>";
     }
 }
 ?>
