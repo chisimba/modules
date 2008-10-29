@@ -116,14 +116,17 @@ class im extends controller
     {
         $action = $this->getParam('action');
         switch ($action) {
+            
             case 'messageview':
                 // echo "booyakasha!";
-                $msgs = $this->objDbIm->getRange(0, 10);
+                $msgs = $this->objDbIm->getMessagesByActiveUser();
+                var_dump($msgs); //getRange(0, 10);
                 $this->setVarByRef('msgs', $msgs);
                 return 'messageview_tpl.php';
                 break;
 
             case 'viewallajax':
+                //var_dump($this->objDbIm->getMessagesByActiveUser());
                 $page = intval($this->getParam('page', 0));
                 if ($page < 0) {
                     $page = 0;
@@ -247,8 +250,7 @@ class im extends controller
                                     $this->conn->getRoster();
                                     $this->conn->presence($status=$this->objLanguage->languageText('mod_im_presgreeting', 'im'));
                                     break;
-                                case 'reply':
-                                    $this->conn->message('wesleynitsckie@gmail.com', $body='som etxtee');
+                                
                             }
                         }
                     }

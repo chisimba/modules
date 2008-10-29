@@ -38,6 +38,7 @@ class dbim extends dbTable
     public function init()
     {
         parent::init('tbl_im');
+        $this->objPresence = $this->getObject('dbimpresence');
     }
 
     /**
@@ -50,10 +51,11 @@ class dbim extends dbTable
      */
     public function addRecord($pl)
     {
+        $userSplit = explode("/", $pl['from']);
         $times = $this->now();
         $recarr['datesent'] = $times;
         $recarr['msgtype'] = $pl['type'];
-        $recarr['msgfrom'] = $pl['from'];
+        $recarr['msgfrom'] = $userSplit[0];
         $recarr['msgbody'] = $pl['body'];
         // Check for empty messages
         if($recarr['msgbody'] == "")
@@ -83,12 +85,29 @@ class dbim extends dbTable
      *@access public
      *@return array
      */
-    public function getContactMessages($start, $max)
+    public function getMessagesByActiveUser()
     {
-
+        $bigArr = array();
+        foreach($this->objPresence->getAllActiveUsers() as $activeUser)
+        {
+            //get all messages for the user
+            $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
+            array_push($bigArr, $activeUser);
+        }
+        return $bigArr;
     }
 
-
+    /**
+     *Method to get all the users messages
+     *@param string $person
+     *@return array
+     */
+    public function getPersonMessages($person)
+    {
+        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent ASC");    
+        
+    }
+    
     public function saveReply($msgId, $replytext)
     {
         $rec = $this->getAll("where id = '$msgId'");

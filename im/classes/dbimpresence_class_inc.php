@@ -47,7 +47,7 @@ class dbimpresence extends dbTable
         
         
         //split user and user agent
-        $userSplit = split("/", $userarr['from']);
+        $userSplit = explode("/", $userarr['from']);
         
         // check if user exists in msg table
         $status = $this->userExists($userSplit[0]);
@@ -98,7 +98,8 @@ class dbimpresence extends dbTable
     
     public function getPresence($jid)
     {
-        $res = $this->getAll("WHERE person = '$jid'");
+        $userSplit = explode("/", $jid);
+        $res = $this->getAll("WHERE person = '$userSplit[0]'");
         return $res[0]['presshow'];
     }
     
