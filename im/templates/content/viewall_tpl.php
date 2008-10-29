@@ -28,9 +28,13 @@ $objPagination->currentPage = $pages - 1;
 $middleColumn .= $objPagination->show();
 
 if (!$this->objUser->isLoggedIn()) {
-    $leftColumn.= $this->objImOps->loginBox(TRUE);
+    $leftColumn .= $this->objImOps->loginBox(TRUE);
 } else {
     $leftColumn .= $this->leftMenu->show();
+    if($this->objUser->inAdminGroup($this->objUser->userId()))
+    {
+       $leftColumn .= $this->objImOps->showMassMessageBox(TRUE);
+    }
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);

@@ -97,6 +97,16 @@ class imops extends object
         }
     }
 
+    public function showMassMessageBox($featurebox = FALSE)
+    {
+        if ($featurebox == FALSE) {
+            return 'Massmessage box';
+        } else {
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+            return $objFeatureBox->show($this->objLanguage->languageText("mod_im_massmsg", "im") , "Mass message box");
+        }
+    }
+
     public function parseSysMessages($pl)
     {
         // first check the body for system commands...
