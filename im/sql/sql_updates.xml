@@ -11,4 +11,16 @@
 			</add>
 		</data>
 	</update>
+	<update>
+        <table>tbl_im_presence</table>
+        <version>0.010</version>
+        <description>Split JID field into user and agent</description>
+        <data>
+        	<add>
+    			<name>useragent</name>
+		    	<type>text</type>
+    			<length>60</length>
+			</add>
+		</data>
+	</update>
 </updates>
