@@ -75,6 +75,13 @@ class imviewer extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $this->objIcon = $this->getObject('geticon','htmlelements');
+        
+        $this->objIcon->setIcon('green_bullet');
+        //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
+        $this->activeIcon = $this->objIcon->show();
+        $this->objIcon->setIcon('grey_bullet');
+        $this->inactiveIcon = $this->objIcon->show();
     }
 
     public function renderOutputForBrowser($msgs)
@@ -88,23 +95,35 @@ class imviewer extends object
             $from = explode('/', $msg['msgfrom']);
             $fuser = $from['person'];
             $msgid = $msg['id'];
-            $ajax = "<span class=\"subdued\" id=\"replydiv".$msg['id']."\">[REPLY]</span>
-						<script>
-							new Ajax.InPlaceEditor('replydiv".$msg['id']."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=".$msgid."&fromuser=".$fuser."&myparam=' + escape(value) }})
-						</script>";
+            
             // get the presence info if it exists
             $objPres = $this->getObject('dbimpresence');
-            $presence = $objPres->getPresence($msg['msgfrom']);
+            if($objPres->getPresence($msg['person']) == "available")
+            {
+                $presence = $this->activeIcon;
+            }
+            else
+            {
+               $presence = $this->inactiveIcon;
+            }
+                
             $sentat = $this->objLanguage->languageText('mod_im_sentat', 'im');
             $fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
             $prevmessages = "";
             foreach ($msg['messages'] as $prevmess)
             {
                 $prevmessages .= $objWashout->parseText(nl2br(htmlentities($prevmess['msgbody']))).' <br/>';
+                $lastmsgId = $prevmess['id'];
             }
+            
+            $ajax = "<span class=\"subdued\" id=\"replydiv".$lastmsgId."\">[REPLY]</span>
+						<script>
+							new Ajax.InPlaceEditor('replydiv".$lastmsgId."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=".$lastmsgId."&fromuser=".$msg['person']."&myparam=' + escape(value) }})
+						</script>";
+                        
             $ret .= '<div class="im_default">'
-              . '<p class="im_source"><b>' . $fromuser."</b>: ".$msg['person']
-              . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." ($presence) </p>"
+              . '<p class="im_source">'.$presence.' <b>' . $fromuser."</b>: ".$msg['person']
+              . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ."</p>"
               . '<p class="im_message">' . $prevmessages
               . '</p><p>'.$ajax.'</p></div>';
 

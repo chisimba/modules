@@ -120,7 +120,7 @@ class im extends controller
             case 'messageview':
                 // echo "booyakasha!";
                 $msgs = $this->objDbIm->getMessagesByActiveUser();
-                var_dump($msgs); //getRange(0, 10);
+                
                 $this->setVarByRef('msgs', $msgs);
                 return 'messageview_tpl.php';
                 break;
