@@ -132,7 +132,8 @@ class im extends controller
                     $page = 0;
                 }
                 $start = $page * 10;
-                $msgs = $this->objDbIm->getRange($start, 10);
+                $msgs = $this->objDbIm->getMessagesByActiveUser(); //$this->objDbIm->getRange($start, 10);
+               
                 $this->setVarByRef('msgs', $msgs);
                 return 'viewall_ajax_tpl.php';
                 break;

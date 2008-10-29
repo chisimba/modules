@@ -86,7 +86,7 @@ class imviewer extends object
             //log_debug($msg);
             // whip out a content featurebox and plak the messages in
             $from = explode('/', $msg['msgfrom']);
-            $fuser = $from[0];
+            $fuser = $from['person'];
             $msgid = $msg['id'];
             $ajax = "<span class=\"subdued\" id=\"replydiv".$msg['id']."\">[REPLY]</span>
 						<script>
@@ -97,10 +97,15 @@ class imviewer extends object
             $presence = $objPres->getPresence($msg['msgfrom']);
             $sentat = $this->objLanguage->languageText('mod_im_sentat', 'im');
             $fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
+            $prevmessages = "";
+            foreach ($msg['messages'] as $prevmess)
+            {
+                $prevmessages .= $objWashout->parseText(nl2br(htmlentities($prevmess['msgbody']))).' <br/>';
+            }
             $ret .= '<div class="im_default">'
-              . '<p class="im_source"><b>' . $fromuser."</b>: ".$from[0]
+              . '<p class="im_source"><b>' . $fromuser."</b>: ".$msg['person']
               . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." ($presence) </p>"
-              . '<p class="im_message">' . $objWashout->parseText(nl2br(htmlentities($msg['msgbody'])))
+              . '<p class="im_message">' . $prevmessages
               . '</p><p>'.$ajax.'</p></div>';
 
         }

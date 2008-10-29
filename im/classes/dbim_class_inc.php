@@ -51,13 +51,15 @@ class dbim extends dbTable
      */
     public function addRecord($pl)
     {
-        $userSplit = explode("/", $pl['from']);
+        $userSplit = explode('/', $pl['from']);
+        $userSplit2 = explode("/", $userSplit[0]);
         $times = $this->now();
         $recarr['datesent'] = $times;
         $recarr['msgtype'] = $pl['type'];
-        $recarr['msgfrom'] = $userSplit[0];
+        $recarr['msgfrom'] = $userSplit2[0];
         $recarr['msgbody'] = $pl['body'];
         // Check for empty messages
+        //var_dump($rearr);
         if($recarr['msgbody'] == "")
         {
             return;
@@ -92,7 +94,11 @@ class dbim extends dbTable
         {
             //get all messages for the user
             $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
-            array_push($bigArr, $activeUser);
+            //var_dump($activeUser['messages']);
+            if(count($activeUser['messages']) > 0)
+            {
+                array_push($bigArr, $activeUser);
+            }
         }
         return $bigArr;
     }
