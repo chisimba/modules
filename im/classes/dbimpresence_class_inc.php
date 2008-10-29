@@ -1,24 +1,24 @@
 <?php
 /**
  * Presence IM dbtable derived class
- * 
+ *
  * Class to interact with the database for the popularity contest module
- * 
+ *
  * PHP version 5
- * 
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or 
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the 
- * Free Software Foundation, Inc., 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- * 
+ *
  * @category  chisimba
  * @package   im
  * @author    Paul Scott <pscott@uwc.ac.za>
@@ -28,9 +28,9 @@
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbimpresence extends dbTable 
+class dbimpresence extends dbTable
 {
-    
+
     /**
      * Constructor
      *
@@ -39,16 +39,16 @@ class dbimpresence extends dbTable
     {
         parent::init('tbl_im_presence');
     }
-    
-    
+
+
     public function updatePresence($userarr)
     {
         log_debug($userarr);
-        
-        
+
+
         //split user and user agent
         $userSplit = explode("/", $userarr['from']);
-        
+
         // check if user exists in msg table
         $status = $this->userExists($userSplit[0]);
         $times = $this->now();
@@ -58,10 +58,10 @@ class dbimpresence extends dbTable
         $insarr['status'] = $userarr['type'];
         $insarr['presshow'] = $userarr['show'];
         $insarr['useragent'] = $userSplit[1];
-        
-        
+
+
         if($status == FALSE)
-        {    
+        {
             $this->addRecord($insarr);
         }
         else {
@@ -69,24 +69,24 @@ class dbimpresence extends dbTable
             $this->update('id', $status[0]['id'], $insarr, 'tbl_im_presence');
         }
     }
-    
+
     /**
      * Private method to insert a record to the popularity contest table as a log.
-     * 
-     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis. 
+     *
+     * This method takes the IP and module_name and inserts the record with a timestamp for temporal analysis.
      *
      * @param array $recarr
      * @return string $id
      */
     private function addRecord($insarr)
     {
-        
+
         return $this->insert($insarr, 'tbl_im_presence');
     }
 
     public function userExists($user)
     {
-        $count = $this->getRecordCount("WHERE person = '$user'");    
+        $count = $this->getRecordCount("WHERE person = '$user'");
         if($count > 0)
         {
             return $this->getAll("WHERE person = '$user'");
@@ -95,14 +95,20 @@ class dbimpresence extends dbTable
             return FALSE;
         }
     }
-    
+
     public function getPresence($jid)
     {
         $userSplit = explode("/", $jid);
         $res = $this->getAll("WHERE person = '$userSplit[0]'");
-        return $res[0]['presshow'];
+        if(!empty($res))
+        {
+        	return $res[0]['presshow'];
+        }
+        else {
+            return NULL;
+        }
     }
-    
+
     /**
      *Method to get all the active users
      *@return array
@@ -110,9 +116,9 @@ class dbimpresence extends dbTable
      */
     public function getAllActiveUsers()
     {
-        
+
         return $this->getAll("WHERE status = 'available' ORDER BY datesent");
     }
-    
+
 }
 ?>
