@@ -137,13 +137,15 @@ class imops extends object {
             //echo "start";
             $comm = $this->getObject ( 'htmlarea', 'htmlelements' );
             $comm->setName ( 'msg' );
-            //$comm->height = 400;
+            $comm->height = 200;
             $comm->width = '100%';
             $comm->setBasicToolBar ();
             $ctbl->addCell ( $comm->showFCKEditor () );
         } else {
             $comm = new textarea ( );
             $comm->setName ( 'msg' );
+            $comm->height = 200;
+            $comm->width = '100%';
             $ctbl->addCell ( $comm->show () );
         }
         $ctbl->endRow ();

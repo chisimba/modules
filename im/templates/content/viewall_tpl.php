@@ -33,7 +33,7 @@ if (!$this->objUser->isLoggedIn()) {
     $leftColumn .= $this->leftMenu->show();
     if($this->objUser->inAdminGroup($this->objUser->userId()))
     {
-       $leftColumn .= $this->objImOps->showMassMessageBox(TRUE);
+       $leftColumn .= $this->objImOps->showMassMessageBox(TRUE, TRUE);
     }
 }
 
