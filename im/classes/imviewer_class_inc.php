@@ -100,7 +100,7 @@ class imviewer extends object
             $ret .= '<div class="im_default">'
               . '<p class="im_source"><b>' . $fromuser."</b>: ".$from[0]
               . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ." ($presence) </p>"
-              . '<p class="im_message">' . $objWashout->parseText(htmlentities(nl2br($msg['msgbody'])))
+              . '<p class="im_message">' . $objWashout->parseText(nl2br(htmlentities($msg['msgbody'])))
               . '</p><p>'.$ajax.'</p></div>';
 
         }
