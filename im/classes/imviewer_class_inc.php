@@ -87,9 +87,12 @@ class imviewer extends object
     public function renderOutputForBrowser($msgs)
     {
         $objWashout = $this->getObject('washout', 'utilities');
-        $ret ="";
+        $ret ="<tr>";
+        
+        $max = 4;
         foreach($msgs as $msg)
         {
+                $box = "";
             //log_debug($msg);
             // whip out a content featurebox and plak the messages in
             $from = explode('/', $msg['msgfrom']);
@@ -120,15 +123,29 @@ class imviewer extends object
 						<script>
 							new Ajax.InPlaceEditor('replydiv".$lastmsgId."', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=".$lastmsgId."&fromuser=".$msg['person']."&myparam=' + escape(value) }})
 						</script>";
-                        
-            $ret .= '<div class="im_default">'
+                   
+              
+             
+            $box .= '<td><div class="im_default" >'
               . '<p class="im_source">'.$presence.' <b>' . $fromuser."</b>: ".$msg['person']
               . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg['datesent'] ."</p>"
-              . '<p class="im_message">' . $prevmessages
-              . '</p><p>'.$ajax.'</p></div>';
+              . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages
+              . '</p><p>'.$ajax.'</p></div></td>';
+              
+              //try to put 4 conversations in a row
+              $rownum++;
+              if ($rownum == $max)
+              {                
+               $box .=  "</tr><tr>";
+               $rownum =0;
+              }
+              
+              
+              
+              $ret .= $box;
 
         }
-        return $ret;
+        return "<table>".$ret."</table>";
     }
 }
 ?>

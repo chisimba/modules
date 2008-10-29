@@ -110,7 +110,7 @@ class dbim extends dbTable
      */
     public function getPersonMessages($person)
     {
-        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent ASC");    
+        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 15");    
         
     }
     
@@ -119,7 +119,7 @@ class dbim extends dbTable
         $rec = $this->getAll("where id = '$msgId'");
         $rec = $rec[0];
         $old = $rec['msgbody'];
-        $new = $old."\r\n\r\n".$replytext;
+        $new = $old."\r\nMe:".$replytext;
         $fields = array('msgtype' => $rec['msgtype'], 'msgfrom' => $rec['msgfrom'], 'msgbody' => $new, 'msg_returned' => 'TRUE', 'datesent' => $this->now());
 
         $this->update('id', $msgId, $fields);
