@@ -129,7 +129,9 @@ class educommonsimport extends object
             // Define the resource data array and populate from the DOM nodes.
             $resourceData = array();
             $resourceData['title'] = $this->getLangStrings($resource->metadata->lom->general->title);
-            $resourceData['description'] = $this->getLangStrings($resource->metadata->lom->general->description);
+            if ($resource->metadata->lom->general->description) {
+                $resourceData['description'] = $this->getLangStrings($resource->metadata->lom->general->description);
+            }
             $resourceData['language'] = trim($resource->metadata->lom->general->language);
             $resourceData['href'] = trim($resource->file['href']);
 
