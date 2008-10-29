@@ -15,6 +15,10 @@ $fields = array(
         'type' => 'text',
         'length' => 255,
         ),
+    'useragent' => array(
+        'type' => 'text',
+        'length' => 60,
+    ),
     'status' => array(
         'type' => 'text',
         'length' => 255,
