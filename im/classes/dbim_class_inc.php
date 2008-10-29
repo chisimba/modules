@@ -94,7 +94,7 @@ class dbim extends dbTable
         $rec = $this->getAll("where id = '$msgId'");
         $rec = $rec[0];
         $old = $rec['msgbody'];
-        $new = $old."\r\n".$replytext;
+        $new = $old."\r\n\r\n".$replytext;
         $fields = array('msgtype' => $rec['msgtype'], 'msgfrom' => $rec['msgfrom'], 'msgbody' => $new, 'msg_returned' => 'TRUE', 'datesent' => $this->now());
 
         $this->update('id', $msgId, $fields);
