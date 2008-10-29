@@ -13,7 +13,7 @@
 	</update>
 	<update>
         <table>tbl_im_presence</table>
-        <version>0.010</version>
+        <version>0.011</version>
         <description>Split JID field into user and agent</description>
         <data>
         	<add>
