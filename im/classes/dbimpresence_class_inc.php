@@ -43,15 +43,22 @@ class dbimpresence extends dbTable
     
     public function updatePresence($userarr)
     {
-        //log_debug($userarr);
+        log_debug($userarr);
+        
+        
+        //split user and user agent
+        $userSplit = split("/", $userarr['from']);
+        
         // check if user exists in msg table
-        $status = $this->userExists($userarr['from']);
+        $status = $this->userExists($userSplit[0]);
         $times = $this->now();
         $insarr['datesent'] = $times;
-        $insarr['person'] = $userarr['from'];
+        $insarr['person'] = $userSplit[0];
         $person = $insarr['person'];
         $insarr['status'] = $userarr['type'];
         $insarr['presshow'] = $userarr['show'];
+        $insarr['useragent'] = $userSplit[1];
+        
         
         if($status == FALSE)
         {    
@@ -93,6 +100,17 @@ class dbimpresence extends dbTable
     {
         $res = $this->getAll("WHERE person = '$jid'");
         return $res[0]['presshow'];
+    }
+    
+    /**
+     *Method to get all the active users
+     *@return array
+     *@access public
+     */
+    public function getAllActiveUsers()
+    {
+        
+        return $this->getAll("WHERE status = 'available' ORDER BY datesent");
     }
     
 }
