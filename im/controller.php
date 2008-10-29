@@ -165,7 +165,7 @@ class im extends controller {
                 break;
 
             case 'massmessage' :
-                $msg = $this->getParam('massmessage');
+                $msg = $this->getParam('msg');
 
                 $conn2 = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
                 $conn2->connect ();
