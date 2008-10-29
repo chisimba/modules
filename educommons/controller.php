@@ -61,7 +61,7 @@ class educommons extends controller
 
     /**
      * Standard constructor to load the necessary resources
-     * and populate the new object's instance variables
+     * and populate the new object's instance variables.
      *
      * @access public
      */
@@ -71,7 +71,7 @@ class educommons extends controller
     }
 
     /**
-     * Standard dispatch method to handle the various possible actions
+     * Standard dispatch method to handle the various possible actions.
      *
      * @access public
      */
@@ -79,9 +79,15 @@ class educommons extends controller
     {
         $action = $this->getParam('action');
         switch ($action) {
-            default:
+            case 'rss':
                 $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
                 $this->objImport->doRssChapters($uri);
+                break;
+            default:
+                // Temporary handling for development purposes
+                $data = $this->objImport->parseIms();
+                header('Content-Type: text/plain; charset=UTF-8');
+                print_r($data);
         }
     }
 }

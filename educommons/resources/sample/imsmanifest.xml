@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest identifier="MANf47ca7cffabfb95b99fc2d6a18777357" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:eduCommons="http://cosl.usu.edu/xsd/eduCommonsv1.1" xmlns:imsmd="http://www.imsglobal.org/xsd/imsmd_v1p2" xmlns:version="2006-08-17 11:14:59" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p2.xsd http://www.imsglobal.org/xsd/imsmd_v1p2 imsmd_v1p2p4.xsd http://cosl.usu.edu/xsd/eduCommonsv1.1 eduCommonsv1.1.xsd">
+	<metadata>
+		<schema>
+			IMS CONTENT
+		</schema>
+		<schemaversion>
+			1.2
+		</schemaversion>
+	</metadata>
+	<organizations default="ORGf47ca7cffabfb95b99fc2d6a18777357">
+		<organization identifier="ORGf47ca7cffabfb95b99fc2d6a18777357">
+			<item identifier="ITM58d1703d0e6a9f642977b274f6612896" identifierref="RES58d1703d0e6a9f642977b274f6612896" isvisible="true">
+				<title>
+					Sample Page
+				</title>
+			</item>
+			<item identifier="ITMf47ca7cffabfb95b99fc2d6a18777357" identifierref="RESf47ca7cffabfb95b99fc2d6a18777357" isvisible="true">
+				<title>
+					IMS Sample Course
+				</title>
+			</item>
+			<item identifier="ITM03d02c36f2533d9d966ef62be3ec311a" identifierref="RES03d02c36f2533d9d966ef62be3ec311a" isvisible="true">
+				<title>
+					Sample File
+				</title>
+			</item>
+			<item identifier="ITMd0a770f8d3818a1ee1e99b3387279b80" identifierref="RESd0a770f8d3818a1ee1e99b3387279b80" isvisible="true">
+				<title>
+					Sample Page in Folder
+				</title>
+			</item>
+		</organization>
+	</organizations>
+	<resources>
+		<resource href="http://localhost:8294/eduCommons/department/course/sample-page" identifier="RES58d1703d0e6a9f642977b274f6612896" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sample-page
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sample Page
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is a sample page for IMS Packaging
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Ray, David
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:17
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:17
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://localhost:8294/eduCommons,postmaster@localhost
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sample-page
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							48
+						</size>
+						<location>
+							http://localhost:8294/eduCommons/department/course/sample-page
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="course/sample-page"/>
+		</resource>
+		<resource href="http://localhost:8294/eduCommons/department/course/sample-folder/sample-page-in-folder" identifier="RESd0a770f8d3818a1ee1e99b3387279b80" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sample-page-in-folder
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sample Page in Folder
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is a sample page for IMS Packaging
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:21:09
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://localhost:8294/eduCommons,postmaster@localhost
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sample-page-in-folder
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							44
+						</size>
+						<location>
+							http://localhost:8294/eduCommons/department/course/sample-folder/sample-page-in-folder
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="course/sample-folder/sample-page-in-folder"/>
+		</resource>
+		<resource href="http://localhost:8294/eduCommons/department/course/" identifier="RESf47ca7cffabfb95b99fc2d6a18777357" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							course
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								IMS Sample Course
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is the description for the IMS Sample Course
+							</langstring>
+						</description>
+						<keyword>
+							<langstring xml:lang="en">
+								Sample
+							</langstring>
+							<langstring xml:lang="en">
+								IMS
+							</langstring>
+							<langstring xml:lang="en">
+								Package
+							</langstring>
+						</keyword>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Ray, David
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:14:59
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										unknown
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Lambert, Brent
+END:VCARD
+								</vcard>
+							</centity>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Jon Thomas
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:14:59
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:14:59
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										Instructor
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:John Doe, PhD
+EMAIL;INTERNET:john@doe.com
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:14:59
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://localhost:8294/eduCommons,postmaster@localhost
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									course
+								</langstring>
+							</entry>
+						</catalogentry>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										creator
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Lambert, Brent
+END:VCARD
+								</vcard>
+							</centity>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Jon Thomas
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:14:59
+								</datetime>
+							</date>
+						</contribute>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							1
+						</size>
+						<location>
+							http://localhost:8294/eduCommons/department/course/
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+					<objectType>
+						Course
+					</objectType>
+					<license category="Creative Commons License">
+						<licenseName>
+							Attribution 2.5 
+						</licenseName>
+						<licenseUrl>
+							http://creativecommons.org/licenses/by/2.5/
+						</licenseUrl>
+						<licenseIconUrl>
+							http://creativecommons.org/images/public/somerights20.png
+						</licenseIconUrl>
+					</license>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+					<courseId>
+						COID
+					</courseId>
+					<term>
+						Fall 2006
+					</term>
+					<displayInstructorEmail>
+						true
+					</displayInstructorEmail>
+				</eduCommons>
+			</metadata>
+			<file href="course.html"/>
+		</resource>
+		<resource href="http://localhost:8294/eduCommons/department/course/samplefile.txt" identifier="RES03d02c36f2533d9d966ef62be3ec311a" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							samplefile.txt
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sample File
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is a sample file for IMS Packaging.
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Ray, David
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:21:54
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:21:54
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://localhost:8294/eduCommons,postmaster@localhost
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									samplefile.txt
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/plain
+						</format>
+						<size>
+							59
+						</size>
+						<location>
+							http://localhost:8294/eduCommons/department/course/samplefile.txt
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+					<objectType>
+						File
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="course/samplefile.txt"/>
+		</resource>
+		<resource href="http://localhost:8294/eduCommons/department/course/sampleimage.gif" identifier="RES2ce8a0f9f47118eaa90658680ac8e0f6" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sampleimage.gif
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sample Image
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is a sample image for IMS Packaging.
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Ray, David
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:06
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										unknown
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Jon Thomas
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:06
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.1
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:06
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://localhost:8294/eduCommons,postmaster@localhost
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sampleimage.gif
+								</langstring>
+							</entry>
+						</catalogentry>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										creator
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:Jon Thomas
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2006-08-17 11:22:06
+								</datetime>
+							</date>
+						</contribute>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/gif
+						</format>
+						<size>
+							4429
+						</size>
+						<location>
+							http://localhost:8294/eduCommons/department/course/sampleimage.gif
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="course/sampleimage.gif"/>
+		</resource>
+	</resources>
+</manifest>
