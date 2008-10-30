@@ -93,7 +93,7 @@ class dbim extends dbTable
         foreach($this->objPresence->getAllActiveUsers() as $activeUser)
         {
             //get all messages for the user
-            $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
+            $activeUser['messages'] = array_reverse($this->getPersonMessages($activeUser['person']));
             //var_dump($activeUser['messages']);
             if(count($activeUser['messages']) > 0)
             {

@@ -75,7 +75,7 @@ class im extends controller {
             $this->objBack = $this->getObject ( 'background', 'utilities' );
             $this->objDbIm = $this->getObject ( 'dbim' );
             $this->objDbImPres = $this->getObject ( 'dbimpresence' );
-
+            $this->objIMUsers = $this->getObject ( 'dbimusers' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
@@ -113,6 +113,12 @@ class im extends controller {
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
                 return 'counsilors_tpl.php';
+            case 'addcounsilor':
+                $this->objIMUsers->addCounsilor($this->getParam('userid'));
+                return $this->nextAction('viewcounsilors');
+            case 'removecounsilor':
+                $this->objIMUsers->removeCounsilor($this->getParam('userid'));
+                return $this->nextAction('viewcounsilors');
             case 'messageview' :
                 // echo "booyakasha!";
                 $msgs = $this->objDbIm->getMessagesByActiveUser ();

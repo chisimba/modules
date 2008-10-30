@@ -20,15 +20,15 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  chisimba
- * @package   im
- * @author    Paul Scott <pscott@uwc.ac.za>
+ * @package   imusers
+ * @author    Wesley Nitsckie
  * @copyright 2008 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: $
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbim extends dbTable
+class dbimusers extends dbTable
 {
 
     /**
@@ -37,7 +37,7 @@ class dbim extends dbTable
      */
     public function init()
     {
-        parent::init('tbl_im');
+        parent::init('tbl_im_users');
         $this->objPresence = $this->getObject('dbimpresence');
     }
 	
@@ -49,5 +49,38 @@ class dbim extends dbTable
 	public function isCounsilor($userId)
 	{
 		return $this->valueExists('userid', $userId);
+	}
+	
+	/**
+	 *Method to add a counsilor
+	 *@param string $userId
+	 */
+	public function addCounsilor($userId)
+	{
+		if (!$this->isCounsilor($userId))
+		{
+			return $this->insert(array('userid' => $userId));
+		}
+	}
+	
+	/**
+	 *Method to remove a counsilor
+	 *@param string $userId
+	 */
+	public function removeCounsilor($userId)
+	{
+		if (!$this->isCounsilor($userId))
+		{
+			return $this->delete(array('userid' => $userId));
+		}
+	}
+	
+	public function assignUserToCounsilor($person)
+	{
+		
+		$users = $this->getAll("ORDER BY patients ASC");
+		$user = $user[0];
+		$this->update('id',$user['id'], array('patients' => $user['patients'] + 1));
+		return $user['id'];
 	}
 }

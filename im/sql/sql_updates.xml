@@ -35,5 +35,30 @@
 			</add>
 		</data>
 	</update>
+      <update>
+        <table>tbl_im_users</table>
+        <version>0.016</version>
+        <description>Added patients field</description>
+        <data>
+        	<add>
+    			<name>patients</name>
+		    	<type>integer</type>    			
+			</add>
+		</data>
+	</update>
+      <update>
+        <table>tbl_im_presence</table>
+        <version>0.018</version>
+        <description>Added counsilorid field</description>
+        <data>
+        	<add>
+    			<name>counsilor</name>
+		    	<type>text</type>    	
+			<length>32</length>		
+			</add>
+		</data>
+	</update>
+
+
 
 </updates>
