@@ -58,6 +58,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class educommonsimport extends object
 {
     protected $objSpie;
+    protected $objContext;
     protected $objChapters;
     protected $objChapterContent;
     protected $objTitles;
@@ -72,6 +73,9 @@ class educommonsimport extends object
     {
         // SimplePie feed reader object for importing form RSS.
         $this->objSpie = $this->getObject('spie', 'feed');
+
+        // Context object for importing courses.
+        $this->objContext = $this->getObject('dbcontext', 'context');
 
         // Contextcontent chapter objects for importing chapters.
         $this->objChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
@@ -132,6 +136,7 @@ class educommonsimport extends object
         foreach ($xml->resources->resource as $resource) {
             // Define the resource data array and populate from the DOM nodes.
             $resourceData = array();
+            $resourceData['id'] = trim($resource['identifier']);
             $resourceData['title'] = $this->getLangStrings($resource->metadata->lom->general->title);
             if ($resource->metadata->lom->general->description) {
                 $resourceData['description'] = $this->getLangStrings($resource->metadata->lom->general->description);
@@ -154,6 +159,26 @@ class educommonsimport extends object
         }
 
         return $data;
+    }
+
+    /**
+     * Inserts IMS courses into database as contexts.
+     *
+     * @access public
+     * @param  array $data The IMS data
+     */
+    function addCourses($data)
+    {
+        foreach ($data['courses'] as $course) {
+            $id = $course['id'];
+            $language = $course['language'];
+            $title = $course['title'][$language];
+            if ($this->objContext->contextExists($id)) {
+                $this->objContext->updateContext($id, $title);
+            } else {
+                $this->objContext->createContext($id, $title);
+            }
+        }
     }
 
     /**
