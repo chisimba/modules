@@ -87,10 +87,10 @@ class dbim extends dbTable
      *@access public
      *@return array
      */
-    public function getMessagesByActiveUser()
+    public function getMessagesByActiveUser($userId = null)
     {
         $bigArr = array();
-        foreach($this->objPresence->getAllActiveUsers() as $activeUser)
+        foreach($this->objPresence->getAllActiveUsers($userId) as $activeUser)
         {
             //get all messages for the user
             $activeUser['messages'] = array_reverse($this->getPersonMessages($activeUser['person']));
