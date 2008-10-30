@@ -26,7 +26,7 @@ foreach($msgs as $msg)
     $from = explode('/', $msg['msgfrom']);
     $sentat = $this->objLanguage->languageText('mod_im_sentat', 'im');
     $fromuser = $this->objLanguage->languageText('mod_im_sentfrom', 'im');
-    $middleColumn .= $this->objFeatureBox->show($fromuser.": ".$from[0].", ".$sentat.": ".$msg['datesent'], $objWashout->parseText(htmlentities($msg['msgbody'])));
+    $middleColumn .= $this->objFeatureBox->showContent($fromuser.": ".$from[0].", ".$sentat.": ".$msg['datesent'], $objWashout->parseText(htmlentities($msg['msgbody'])));
 }
 
 if (!$this->objUser->isLoggedIn()) {
