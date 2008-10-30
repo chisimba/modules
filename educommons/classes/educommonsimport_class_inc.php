@@ -60,6 +60,7 @@ class educommonsimport extends object
     protected $objSpie;
     protected $objChapters;
     protected $objChapterContent;
+    protected $objTitles;
 
     /**
      * Standard constructor to load the necessary resources
@@ -75,13 +76,16 @@ class educommonsimport extends object
         // Contextcontent chapter objects for importing chapters.
         $this->objChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
         $this->objChapterContent = $this->getObject('db_contextcontent_chaptercontent', 'contextcontent');
+
+        // Contextcontent title object for importing pages.
+        $this->objTitles = $this->getObject('db_contextcontent_titles', 'contextcontent');
     }
 
     /**
      * Import chapters from RSS feed.
      *
      * @access public
-     * @param string $uri The URI of the RSS feed.
+     * @param  string $uri The URI of the RSS feed.
      */
     public function doRssChapters($uri)
     {
@@ -153,11 +157,28 @@ class educommonsimport extends object
     }
 
     /**
+     * Inserts IMS documents into database as contextcontent pages.
+     *
+     * @access public
+     * @param  array $data The IMS data
+     */
+    public function addPages($data)
+    {
+        foreach ($data['documents'] as $document) {
+            $language = $document['language'];
+            $title = $document['title'][$language];
+            $content = 'test'; //TODO Need to fetch file contents
+            // TODO Need to check for duplicates
+            $this->objTitles->addTitle('', $title, $content, $language, '');
+        }
+    }
+
+    /**
      * Convert a set of IMS langstring elements to a PHP associative array.
      * The keys in the returned array are the languages and the values are the text contents.
      *
      * @access protected
-     * @param object $element The SimpleXMLElement object to be converted.
+     * @param  object $element The SimpleXMLElement object to be converted.
      * @return array The associative array of languages and their values.
      */
     protected function getLangStrings($element)
