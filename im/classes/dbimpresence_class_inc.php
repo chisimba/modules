@@ -119,7 +119,7 @@ class dbimpresence extends dbTable
         $where = "";
         if($userId != NULL)
         {
-            $where = " counsilor = '$userId' ";
+            $where = " WHERE counsilor = '$userId' ";
         }
         return $this->getAll($where." ORDER BY datesent");
     }
