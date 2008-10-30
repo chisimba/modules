@@ -117,7 +117,7 @@ class dbimpresence extends dbTable
     public function getAllActiveUsers()
     {
 
-        return $this->getAll("WHERE status = 'available' ORDER BY datesent");
+        return $this->getAll("ORDER BY datesent");
     }
 
 }
