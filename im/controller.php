@@ -140,7 +140,14 @@ class im extends controller {
                     $page = 0;
                 }
                 $start = $page * 10;
-                $msgs = $this->objDbIm->getMessagesByActiveUser (); //$this->objDbIm->getRange($start, 10);
+                if(!$this->objUser->isAdmin($this->objUser->userId()))
+                {
+                    $cid = $this->objUser->userId();
+                }else{
+                    $cid = null;
+                }
+
+                $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
 
 
                 $this->setVarByRef ( 'msgs', $msgs );
