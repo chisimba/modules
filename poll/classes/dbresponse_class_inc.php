@@ -32,6 +32,7 @@ class dbresponse extends dbtable
             $this->objLanguage = $this->getObject('language', 'language');
             
             $this->userId = $this->objUser->userId();
+            $this->dbAnswers = $this->getObject('dbanswers', 'poll');
         } catch (Exception $e) {
             throw customException($e->getMessage());
             exit();
@@ -46,18 +47,66 @@ class dbresponse extends dbtable
     */
     public function addResponse()
     {
-        $type = $this->getParam('questionType');
-        
         $fields = array();
         $fields['question_id'] = $this->getParam('questionId');
-        $fields['date_created'] = $this->now();
-        
-        if($type == 'bool' || $type == 'yes'){
-            $fields['answer_id'] = $this->getParam('answer');
+        $fields['user_id'] = $this->userId;
+	$qnId = $this->getParam('questionId');
+	$answer = $this->getParam('answer');
+        $myResult = $this->dbAnswers->getCurrentAnswer($qnId, $answer);
+	$answerId = $myResult[0]['id'];
+
+        $type = $this->getParam('questionType');        
+        if($type == 'bool' || $type == 'yes' || $type == 'open'){
+            $fields['answer_id'] = $answerId;
         }
-        
-        $id = $this->insert($fields);
+
+	$qnId = $this->getParam('questionId');
+        $sql = "SELECT * FROM {$this->table}
+            WHERE user_id = '{$this->userId}' and question_id = '{$qnId}'";
+            
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            $id = $data[0]['id'];
+	    $fields['date_modified'] = $this->now();
+            $this->update('id', $id, $fields);
+        }else{
+	    $fields['date_created'] = $this->now();
+	    $id = $this->insert($fields);
+	}
         return $id;
     }
+    /**
+    * Method to get poll responses
+    *
+    * @access public
+    * @param string $pollId
+    * @return array $data
+    */
+    public function getPollResponses($qnId)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE question_id = '{$qnId}'";            
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return array();
+    }
+    /**
+    * Method to get poll answer responses
+    *
+    * @access public
+    * @param string $pollId
+    * @return array $data
+    */
+    public function getAnswerResponses($qnId, $answer)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE question_id = '{$qnId}' AND answer_id = '{$answer}'";            
+        $data = $this->getArray($sql);
+        if(!empty($data)){
+            return $data;
+        }
+        return array();
+    }
+
 }
 ?>

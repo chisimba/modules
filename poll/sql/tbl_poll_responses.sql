@@ -19,7 +19,14 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'user_id' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'date_created' => array(
+		'type' => 'timestamp'
+		),
+	'date_modified' => array(
 		'type' => 'timestamp'
 		),
 	);

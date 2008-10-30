@@ -59,9 +59,10 @@ class dbpoll extends dbtable
         $data = $this->getArray($sql);
         if(!empty($data)){
             return $data[0]['id'];
-        }
+        }else{
         $id = $this->createDefaultPoll($contextCode);
         return $id;
+	}
     }
     
     /**

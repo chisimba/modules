@@ -36,6 +36,8 @@ class dbquestions extends dbtable
             
             $this->objUser = $this->getObject('user', 'security');
             $this->objLanguage = $this->getObject('language', 'language');
+            $this->dbAnswers = $this->getObject('dbanswers', 'poll');
+            $this->dbPoll = $this->getObject('dbpoll', 'poll');
             
             $this->userId = $this->objUser->userId();
         } catch (Exception $e) {
@@ -64,7 +66,7 @@ class dbquestions extends dbtable
     }
     
     /**
-    * Method to get the questions for the current poll / context
+    * Method to get the questions for the current poll
     *
     * @access public
     * @param string $pollId
@@ -74,6 +76,22 @@ class dbquestions extends dbtable
     {
         $sql = "SELECT * FROM {$this->table}
             WHERE poll_id = '{$pollId}' ";
+            
+        $data = $this->getArray($sql);
+        return $data;
+    }
+    /**
+    * Method to get the questions for the current poll with a given visiblility state
+    *
+    * @access public
+    * @param string $pollId
+    * @param string $access
+    * @return array $data
+    */
+    public function getQuestionsAccess($pollId, $visible)
+    {
+        $sql = "SELECT * FROM {$this->table}
+            WHERE poll_id = '{$pollId}' and is_visible = '{$visible}'";
             
         $data = $this->getArray($sql);
         return $data;
@@ -127,6 +145,88 @@ class dbquestions extends dbtable
             
             $id = $this->insert($fields);
         }
+        return $id;
+    }
+    /**
+    * Method to save a question where answer type is open
+    *
+    * @access public
+    * @param string $pollId
+    * @return array $data
+    */
+    public function saveQnTypeOpen($pollId, $id = NULL)
+    {
+        $fields = array();
+        $fields['poll_id'] = $pollId;
+        $fields['question'] = $this->getParam('question');
+        $fields['question_type'] = $this->getParam('type');
+        $fields['is_visible'] = $this->getParam('visible');
+        $fields['updated'] = $this->now();
+        
+        if(isset($id) && !empty($id)){
+            $fields['modifier_id'] = $this->userId;
+            
+            $this->update('id', $id, $fields);
+        }else{
+            $order = $this->getLastOrder($pollId) + 1;
+        
+            $fields['order_num'] = $order;
+            $fields['creator_id'] = $this->userId;
+            $fields['date_created'] = $this->now();
+            
+            $id = $this->insert($fields);
+        }
+	//Save the answers now
+        $qnType = $this->getParam('type');
+	//Remove any previous (Boolean or True False Only) answers
+	$del = $this->dbAnswers->delAnswersBoolTf($id);
+        return $id;
+    }
+    /**
+    * Method to save a question and answers
+    *
+    * @access public
+    * @param string $pollId
+    * @return array $data
+    */
+    public function saveQnandAnswers($pollId, $id = NULL)
+    {
+        $fields = array();
+        $fields['poll_id'] = $pollId;
+        $fields['question'] = $this->getParam('question');
+        $fields['question_type'] = $this->getParam('type');
+        $fields['is_visible'] = $this->getParam('visible');
+        $fields['updated'] = $this->now();
+        
+        if(isset($id) && !empty($id)){
+            $fields['modifier_id'] = $this->userId;
+            
+            $this->update('id', $id, $fields);
+        }else{
+            $order = $this->getLastOrder($pollId) + 1;
+        
+            $fields['order_num'] = $order;
+            $fields['creator_id'] = $this->userId;
+            $fields['date_created'] = $this->now();
+            
+            $id = $this->insert($fields);
+        }
+	//Save the answers now
+        $qnType = $this->getParam('type');
+	//Remove any previous answers
+	$del = $this->dbAnswers->getAnswersDelete($id);
+	//Add the answers
+	$yes = 'Yes';
+	$no = 'No';
+	$true = 'True';
+	$false = 'False';
+	if($qnType=='yes'){
+	     $first = $this->dbAnswers->saveAnswer($id,$yes, null);
+	     $second = $this->dbAnswers->saveAnswer($id,$no, null);
+	}else{
+	     $first = $this->dbAnswers->saveAnswer($id,$true, null);
+	     $second = $this->dbAnswers->saveAnswer($id,$false, null);
+	}
         return $id;
     }
     
