@@ -94,6 +94,15 @@ $cssLayout->setLeftColumnContent($content);
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();
-
-
+if ($this->getParam('message')==Null) {
+    $alertBox = $this->getObject('alertbox', 'htmlelements');
+    $alertBox->putJs();
+    echo "<script>
+ jQuery.facebox(function() {
+  jQuery.get('".str_replace('&amp;', '&', $this->uri(array('action'=>'happyeval'), 'poll'))."', function(data) {
+    jQuery.facebox(data);
+  })
+})
+</script>";
+}
 ?>
