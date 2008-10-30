@@ -20,13 +20,14 @@ $header->type = 1;
 
 $middleColumn .= $header->show();
 
-$objPagination = $this->newObject('pagination', 'navigation');
+/*$objPagination = $this->newObject('pagination', 'navigation');
 $objPagination->module = 'im';
 $objPagination->action = 'viewallajax';
 $objPagination->id = 'im';
 $objPagination->numPageLinks = $pages;
 $objPagination->currentPage = $pages - 1;
-$middleColumn .= $objPagination->show();
+$middleColumn .= $objPagination->show();*/
+$middleColumn .= $msgs = $this->objDbIm->getMessagesByActiveUser ();
 
 if (!$this->objUser->isLoggedIn()) {
     $leftColumn .= $this->objImOps->loginBox(TRUE);
