@@ -128,6 +128,7 @@ class imviewer extends object {
             $ret .= $box;
 
         }
+        header("Content-Type: text/html;charset=utf-8");
         return "<table>" . $ret . "</table>";
     }
 }
