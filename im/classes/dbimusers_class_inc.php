@@ -72,6 +72,8 @@ class dbimusers extends dbTable
 		if (!$this->isCounsilor($userId))
 		{
 			return $this->delete(array('userid' => $userId));
+		}else{
+			return FALSE;
 		}
 	}
 	
@@ -79,8 +81,10 @@ class dbimusers extends dbTable
 	{
 		
 		$users = $this->getAll("ORDER BY patients ASC");
-		$user = $user[0];
-		$this->update('id',$user['id'], array('patients' => $user['patients'] + 1));
-		return $user['id'];
+		$user = $users[0];
+		$this->update('id',$user['id'], array('person'=> $person, 'patients' => intval($user['patients']) + 1));
+		return $user['userid'];
 	}
+	
+	
 }

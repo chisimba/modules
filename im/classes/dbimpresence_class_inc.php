@@ -127,12 +127,25 @@ class dbimpresence extends dbTable
      */
     public function assignUserToCounsilor($person)
 	{
+        
+       // $objDBIMUser = $this->getObect('dbimusers','im');
+       // return $objDBIMUser->assignUserToCounsilor($person);
+    
 		parent::init('tbl_im_users');
+        
+        //get the counsilor with the lowest number of patients
 		$users = $this->getAll("ORDER BY patients ASC" );
-		$user = $user[0];
-		$this->update('id',$user['id'], array('patients' => $user['patients'] + 1));
+		$user = $users[0];
+        
+        //assign the patient to the counsilor
+        $fields = array('person'=> $person,
+                        'patients' => intval($user['patients']) + 1
+                        );
+		$this->update('id',$user['id'], $fields, 'tbl_im_users');
+        
         parent::init('tbl_im_presence');
-		return $user['id'];
+		
+        return $user['userid'];
 	}
 }
 ?>
