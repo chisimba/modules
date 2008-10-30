@@ -280,7 +280,7 @@ class im extends controller {
      * @param  void
      * @return bool
      * @access public
-     */
+
     public function requiresLogin($action) {
         $actionsRequiringLogin = array ('sendmessage' );
         if (in_array ( $action, $actionsRequiringLogin )) {
@@ -289,5 +289,6 @@ class im extends controller {
             return FALSE;
         }
     }
+*/
 
 }
