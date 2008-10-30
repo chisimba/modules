@@ -58,7 +58,7 @@ class dbimpresence extends dbTable
         $insarr['status'] = $userarr['type'];
         $insarr['presshow'] = $userarr['show'];
         $insarr['useragent'] = $userSplit[1];
-
+        $insarr['counsilor'] = $this->assignUserToCounsilor($person);
 
         if($status == FALSE)
         {
@@ -120,5 +120,19 @@ class dbimpresence extends dbTable
         return $this->getAll("ORDER BY datesent");
     }
 
+    /**
+     *MEthod to update eh patient coujnt and to assign
+     *a counsilor to a patient
+     *@param string $person
+     */
+    public function assignUserToCounsilor($person)
+	{
+		parent::init('tbl_im_users');
+		$users = $this->getAll("ORDER BY patients ASC" );
+		$user = $user[0];
+		$this->update('id',$user['id'], array('patients' => $user['patients'] + 1));
+        parent::init('tbl_im_presence');
+		return $user['id'];
+	}
 }
 ?>
