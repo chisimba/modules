@@ -110,7 +110,9 @@ class im extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-
+            case 'viewcounsilors':
+                $this->setVar('users', $this->objUser->getAll());
+                return 'counsilors_tpl.php';
             case 'messageview' :
                 // echo "booyakasha!";
                 $msgs = $this->objDbIm->getMessagesByActiveUser ();

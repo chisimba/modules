@@ -110,21 +110,52 @@ class dbim extends dbTable
      */
     public function getPersonMessages($person)
     {
-        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 15");    
+        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent ASC");    
         
     }
     
+    /**
+     *Method save a reply message
+     *@param string msgId
+     *@param string $rplytext
+     *
+     */
     public function saveReply($msgId, $replytext)
     {
         $rec = $this->getAll("where id = '$msgId'");
         $rec = $rec[0];
-        $old = $rec['msgbody'];
+        /*$old = $rec['msgbody'];
         $new = $old."\r\nMe:".$replytext;
         $fields = array('msgtype' => $rec['msgtype'], 'msgfrom' => $rec['msgfrom'], 'msgbody' => $new, 'msg_returned' => 'TRUE', 'datesent' => $this->now());
 
         $this->update('id', $msgId, $fields);
         return;
+        */
+        $fields = array('msgtype' => $rec['msgtype'],
+                        'msgfrom' => $rec['msgfrom'],
+                        'parentid' =>  $msgId,
+                        'msgbody' => $replytext,
+                        'msg_returned' => 'TRUE',
+                        'datesent' => $this->now());
+        return $this->insert($fields, 'tbl_im');
     }
+    
+    /**
+     *Method to get a reply message
+     *@param string $msgId
+     *@return array
+     */
+    public function getReplies($msgId)
+    {
+        if($this->valueExists('parentid', $msgId))
+        {
+            return FALSE;
+        } else {
+            return $this->getAll("WHERE parentid = '$msgId'");
+        }
+    }
+    
+    
 
 
 }

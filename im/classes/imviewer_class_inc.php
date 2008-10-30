@@ -73,7 +73,8 @@ class imviewer extends object {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
-
+        $this->objDBIM = $this->getObject('dbim');
+        
         $this->objIcon->setIcon ( 'green_bullet' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
         $this->activeIcon = $this->objIcon->show ();
@@ -107,7 +108,19 @@ class imviewer extends object {
             $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
             $prevmessages = "";
             foreach ( $msg ['messages'] as $prevmess ) {
-                $prevmessages .= $objWashout->parseText ( nl2br ( htmlentities ( $prevmess ['msgbody'] ) ) ) . ' <br/>';
+                //get the message
+                if($prevmess['parentid'] != "")
+                {
+                        $fromwho = "Counsilor";
+                        $cssclass = "subdued";
+                }else{
+                        $fromwho = "User";
+                        $cssclass = "";
+                }
+                $prevmessages .= '<span class="'.$cssclass.'">'.$objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
+                //get the reply(s) if there was any
+                $replies = $this->objDBIM->getReplies($prevmess['id']);
+                
                 $lastmsgId = $prevmess ['id'];
             }
 
