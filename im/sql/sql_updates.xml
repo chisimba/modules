@@ -23,4 +23,17 @@
 			</add>
 		</data>
 	</update>
+      <update>
+        <table>tbl_im</table>
+        <version>0.015</version>
+        <description>Added a parentid field</description>
+        <data>
+        	<add>
+    			<name>parentid</name>
+		    	<type>text</type>
+    			<length>32</length>
+			</add>
+		</data>
+	</update>
+
 </updates>

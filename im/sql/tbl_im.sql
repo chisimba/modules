@@ -11,6 +11,11 @@ $fields = array(
         'type' => 'text',
         'length' => 32
         ),
+    'parentid' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+
     'msgtype' => array(
         'type' => 'text',
         'length' => 255,
