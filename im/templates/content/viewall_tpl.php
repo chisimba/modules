@@ -27,7 +27,14 @@ $objPagination->id = 'im';
 $objPagination->numPageLinks = $pages;
 $objPagination->currentPage = $pages - 1;
 $middleColumn .= $objPagination->show();*/
-$msgs = $this->objDbIm->getMessagesByActiveUser ();
+if(!$this->objUser->isAdmin($this->objUser->userId()))
+{
+    $cid = $this->objUser->userId();
+}else{
+    $cid = null;
+}
+$msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
+//var_dump($msgs);
 $objImView = $this->getObject('imviewer', 'im');
 $middleColumn .= $objImView->renderOutputForBrowser($msgs);
 

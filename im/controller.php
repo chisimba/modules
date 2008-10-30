@@ -93,10 +93,13 @@ class im extends controller {
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
 
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
-            if(!$this->objIMUsers->isCounsilor($this->objUser->userId()) && !$this->objUser->inAdminGroup($this->objUser->userId()))
+            if ($this->getParam('action') != 'messagehandler')
             {
-                //var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
-                die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
+                if(!$this->objIMUsers->isCounsilor($this->objUser->userId()) && !$this->objUser->inAdminGroup($this->objUser->userId()))
+                {
+                    //var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
+                    die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
+                }
             }
         } catch ( customException $e ) {
             customException::cleanUp ();
@@ -142,13 +145,13 @@ class im extends controller {
                 $start = $page * 10;
                 if(!$this->objUser->isAdmin($this->objUser->userId()))
                 {
-                    $cid = $this->objUser->userId();
+                    $cid = null;//$this->objUser->userId();
                 }else{
                     $cid = null;
                 }
 
                 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
-
+                
 
                 $this->setVarByRef ( 'msgs', $msgs );
                 header("Content-Type: text/html;charset=utf-8");
@@ -292,15 +295,15 @@ class im extends controller {
      * @param  void
      * @return bool
      * @access public
-
+     */
     public function requiresLogin($action) {
-        $actionsRequiringLogin = array ('sendmessage' );
+        $actionsRequiringLogin = array ('messagehandler' );
         if (in_array ( $action, $actionsRequiringLogin )) {
-            return TRUE;
-        } else {
             return FALSE;
+        } else {
+            return TRUE;
         }
     }
-*/
+
 
 }
