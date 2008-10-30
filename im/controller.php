@@ -116,6 +116,7 @@ class im extends controller {
                 $msgs = $this->objDbIm->getMessagesByActiveUser ();
 
                 $this->setVarByRef ( 'msgs', $msgs );
+                header("Content-Type: text/html;charset=utf-8");
                 return 'messageview_tpl.php';
                 break;
 
@@ -130,6 +131,7 @@ class im extends controller {
 
 
                 $this->setVarByRef ( 'msgs', $msgs );
+                header("Content-Type: text/html;charset=utf-8");
                 return 'viewall_ajax_tpl.php';
                 break;
             case 'viewall' :

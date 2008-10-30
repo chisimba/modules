@@ -3,6 +3,7 @@ $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $cssLayout->setNumColumns(2);
 
 // get the sidebar object
+header("Content-Type: text/html;charset=utf-8");
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
