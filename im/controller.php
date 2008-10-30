@@ -139,6 +139,7 @@ class im extends controller {
                 $count = $this->objDbIm->getRecordCount ();
                 $pages = ceil ( $count / 10 );
                 $this->setVarByRef ( 'pages', $pages );
+                header("Content-Type: text/html;charset=utf-8");
                 return 'viewall_tpl.php';
                 break;
 
