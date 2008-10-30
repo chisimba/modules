@@ -48,7 +48,13 @@ class dbimusers extends dbTable
 	 */
 	public function isCounsilor($userId)
 	{
-		return $this->valueExists('userid', $userId);
+		if($this->valueExists('userid', $userId))
+		{
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+		
 	}
 	
 	/**
@@ -72,8 +78,6 @@ class dbimusers extends dbTable
 		if (!$this->isCounsilor($userId))
 		{
 			return $this->delete(array('userid' => $userId));
-		}else{
-			return FALSE;
 		}
 	}
 	
