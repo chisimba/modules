@@ -112,7 +112,7 @@ class imviewer extends object {
             }
 
             $ajax = "<span class=\"subdued\" id=\"replydiv" . $lastmsgId . "\">[REPLY]</span>
-						<script>
+						<script charset='utf-8'>
 							new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
 						</script>";
 
