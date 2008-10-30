@@ -40,7 +40,7 @@ class dbimusers extends dbTable
         parent::init('tbl_im_users');
         $this->objPresence = $this->getObject('dbimpresence');
     }
-	
+
 	/**
 	 *Method to check if a user is a counsilor
 	 *@param string userId
@@ -48,15 +48,17 @@ class dbimusers extends dbTable
 	 */
 	public function isCounsilor($userId)
 	{
-		if($this->valueExists('userid', $userId))
+	//var_dump($this->valueExists('userid', $userId));
+
+	if($this->valueExists('userid', $userId))
 		{
 			return TRUE;
 		}else{
 			return FALSE;
 		}
-		
+
 	}
-	
+
 	/**
 	 *Method to add a counsilor
 	 *@param string $userId
@@ -68,7 +70,7 @@ class dbimusers extends dbTable
 			return $this->insert(array('userid' => $userId));
 		}
 	}
-	
+
 	/**
 	 *Method to remove a counsilor
 	 *@param string $userId
@@ -80,15 +82,15 @@ class dbimusers extends dbTable
 			return $this->delete(array('userid' => $userId));
 		}
 	}
-	
+
 	public function assignUserToCounsilor($person)
 	{
-		
+
 		$users = $this->getAll("ORDER BY patients ASC");
 		$user = $users[0];
 		$this->update('id',$user['id'], array('person'=> $person, 'patients' => intval($user['patients']) + 1));
 		return $user['userid'];
 	}
-	
-	
+
+
 }
