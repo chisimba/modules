@@ -540,7 +540,6 @@ class portalimporter extends controller
 						$hrefs = $matches[2];	
 
 						//Cleaning up the captured hrefs Goal is to grab ONLY the filename and filter for supported types
-						//TODO : build support for relative and absolute pathing HERE as mentioned above	
 						$clean_hrefs = array();
 						foreach ($hrefs as $href){
 								$href = stripslashes($href);
@@ -562,7 +561,7 @@ class portalimporter extends controller
 						}
 
 						//if($count > 1){
-						if ($content_id == 'gen11Srv53Nme12_5768_1208260400') {
+						//if ($content_id == 'gen11Srv53Nme12_5768_1208260400') {
 								//The new link should look lik:
 								//http://localhost/svn/index.php?module=cms&action=showfulltext&id=gen11Srv53Nme12_6472_1207831625&sectionid=gen11Srv53Nme12_2996_1207831625
 								//var_dump($hrefs);	
@@ -595,8 +594,8 @@ class portalimporter extends controller
 								$this->objContent->updateContentBody($content_id, $body);
 								//echo "$body<br/>";
 								//echo "Updated ContentID : $content_id <br/>";
-								exit;
-						}
+						//		exit;
+						//}
 
 
 				}
@@ -615,6 +614,70 @@ class portalimporter extends controller
 
 
 
+
+				/**
+				 *	Will iterate through content items to find STATIC Document Refs and replace them with refs
+				 *	to imported content items.
+				 *
+				 *  This fix is fixed to the UWC Portal Data and will simply replace items that linked to
+				 *  the /downloads and with the imported path
+				 *
+				 * @author Charl Mert
+				 */
+
+				public function __fixStaticRef()
+				{
+						//echo "Updating Page References to point to CMS content items now.<br/>";
+						$time_start = microtime(true);
+
+						//Only the following file types will be considered
+						$file_types = array(
+										'doc',
+										'odt',
+										'ods',
+										'xls',
+										'ppt',
+										'pdf',
+										'jpg',
+										'png',
+										'gif',
+										'jpeg',
+										'mp3',
+										'mp4',
+										'wav',
+										'ogg',
+										'pdf',
+										'zip',
+										'gz',
+										'tar'
+										);
+
+						//Getting a list of content records that contain href= attributes
+						$content_records = $this->objContent->getHrefContentRecords();
+
+						$count = 0;
+						foreach ($content_records as $content){
+
+								$count++; // for debug purposes
+
+								$content_id = $content['id'];
+								$section_id = $content['sectionid'];
+								$body = $content['body'];
+								$body = stripslashes($body);
+
+								$pattern = '/\<(a|img).*(href|src).*\=.*\".*(^\/ |)downloads/i';
+						}
+
+						//Updating the content_item with a tyt body
+						$this->objContent->updateContentBody($content_id, $body);
+						//echo "$body<br/>";
+						//echo "Updated ContentID : $content_id <br/>";
+						$time_end = microtime(true);
+						$time = $time_end - $time_start;
+
+						echo "Fixed Page References in $time Seconds.";
+
+				}
 
 
 
@@ -640,8 +703,9 @@ class portalimporter extends controller
 				 *
 				 * 	Currently only supports hrefs that reference documents in the same folder
 				 *	TODO : building support for 
-				 *			1. "../../relative/file.html" relative to current path
+				 *			1. "../../relative/file.html" relative to current path : DONE
 				 *			2. "/public/.../file.htm" absolute from root
+				 *			3. http://...../path/file
 				 *
 				 *	e.g. pages that referenced other pages within the same directory will now be made 
 				 * 	to reference the content item of it's imported equivalent.
@@ -691,13 +755,22 @@ class portalimporter extends controller
 								$hrefs = $matches[2];	
 
 								//Cleaning up the captured hrefs Goal is to grab ONLY the filename and filter for supported types
-								//TODO : build support for relative and absolute pathing HERE as mentioned above	
 								$clean_hrefs = array();
 								foreach ($hrefs as $href){
 										$href = stripslashes($href);
 										$href = trim($href);
 
 										$file_ext = end(explode('.', $href));
+										//var_dump($file_ext);
+										//checking for # refs
+
+										$pos = strpos($file_ext, '#');
+										if ($pos){
+											
+											$ext_parts = explode('#', $file_ext);
+											$file_ext = $ext_parts[0];	
+											//var_dump($file_ext);
+										}
 										//Filtering supported types
 										$pass_type = false;
 										foreach ($file_types as $type){
@@ -712,53 +785,166 @@ class portalimporter extends controller
 
 								}
 
+								$found_context_match = false;
+								$used_relative_path = false;
 								//Find the corresponding contentid if this href points to a file that was imported
 								$content_href = array();
 								foreach ($clean_hrefs as $href){
-
+										//TODO: Adjusting the path for relative referencing	(../../)								
+										$pos = preg_match('/\.\.\//', $href);
+										if ($pos){
+											//Determining how many times to go back in the dir struct
+											$back_count = preg_match_all('/\.\.\//', $href, $matches);
+											//var_dump($back_count.' '.$href);
+										}
+										//var_dump($back_count.' | '.$href);
 										//Getting a list of possible content matches for the current section
 										$href_content_id = array();
-										$href_content_id = $this->objLog->getContentFileMatch($href, $href_section_id);
 
-										$found_context_match = false;
+										$file_compare = end(explode('/', $href));	
+										//Including # refs here									
+										$file_compare = preg_replace('/#.*/', '', $file_compare);							
+										//var_dump($file_compare);
+
+
+										//var_dump($file_compare);
+										$href_content_id = $this->objLog->getContentFileMatch($file_compare, $href_section_id);
+										//var_dump($href_content_id);
+		
+										//var_dump($href_content_id);
 										foreach ($href_content_id as $log){
-												//Try context sensitive match based on the current content item's section_id
+																					//Try context sensitive match based on the current content item's section_id
+												$path_compare = $log['filepath'];
+												if ($back_count > 0){
+													$path_parts = explode('/', $path_compare);
+													$path_parts_count = count($path_parts);
+					
+													$new_path = '';
+													//Getting the left part of the path according to the import log
+													for ($i = 0; $i < $path_parts_count - ($back_count + 1); $i++){
+														$new_path .= $path_parts[$i].'/';
+													}	
+													
+													//Getting the right part of the path+filename according to the import href
+													$right_path_parts = explode('/', $href);
+                                                    $right_path_parts_count = count($right_path_parts);
+													for ($i = $back_count; $i < $right_path_parts_count; $i++){
+														$new_path .= $right_path_parts[$i].'/';
+													}	
+													$new_path = substr($new_path, 0, strlen($new_path)-1);
+													//$new_path = rtrim($new_path,'/ ');
+													$path_compare = $new_path;
+												//	var_dump($href.' | '.$new_path);
+													$used_relative_path = true;
+												}
+
+												//var_dump($path_compare);
 												//Determining the href pages intended sectionid based on the path (for context sensitivity)
-												$href_section_ids = $this->objLog->getSectionPathMatch($log['filepath']);
+												$href_section_ids = $this->objLog->getSectionPathMatch($path_compare);
+		
+												/*
+												if ($path_compare == '/var/www/static_content/faculty_department/afrikaans/index.htm'){
+													var_dump($href_section_ids);	
+
+												}*/
 
 												//var_dump('looking for '.$href);
-												//var_dump($href_section_ids); exit;
 
-												foreach ($href_section_ids as $secid){
-														if ($section_id == $href_secid){
+												//var_dump($log[filepath]);
+												//var_dump($href_section_ids);
+												//var_dump($section_id);
+
+												//Match current context
+												
+												if (!$used_relative_path){
+													foreach ($href_section_ids as $secid){
+														if ($section_id == $secid[section_id]){
+																//var_dump('Found Current Match');	
+																//var_dump($secid);
 																$found_context_match = true;
 																$href_section_id = $section_id;
+																$href_content_id = $log;
 																break; //break on first match
 														}
+													}
+												}
+												else {
+												//Matching relative context
+													//var_dump($href_section_ids);
+													if ($path_compare == $log[filepath]){
+														//var_dump($log[filepath].$path_compare);
+														$href_content_id = $log;
+													}
+													/*
+													foreach ($log as $log_entry){
+														if ($path_compare == $log_entry[filepath]){
+															$href_content_id = $log;
+															$href_section_id = $href_section_ids[0][section_id];
+															$found_context_match = true;
+															var_dump('Found Relative Match');
+															var_dump($href_content_id);	
+															//$href_section_id = $href_section_ids[0];
+															break;
+														}
+													}
+													*/
 												}
 										}
 
+										//var_dump($href_content_id);	
 										//If not then do a non context sensitive search
+										/*
 										if (!$found_context_match){
-												//Setting the href to the first found content item but can't be 100% sure so must be logged for review
-												if (isset($href_content_id[0])){
-														$href_content_id = $href_content_id[0]; 
+												
+												//Report Broken Link
+												
+												if (!isset($href_content_id[0])){
+													//Checking for the actual ref in the db
+													//if doesnt exsist flag in the content with a broken icon that points to the edit page
+													
+													$href_content_id = ""; 
 												}
 
-												if ($href_content_id == ''){
-													//Logging this as error to be flagged for manual review
-													log_debug("FixPageRef Failed : Couldn't find matching content_id for page $href in body of $content_id");
-												}
+											//Logging this as error to be flagged for manual review
+											log_debug("FixPageRef Failed : Couldn't find matching content_id for page $href in body of $content_id");
+										} else {
+											if (!$used_relative_path){
+												$href_content_id = $href_content_id[0];
+											} else {
+
+											}
 										}
+										*/
 
+										//if (!$used_relative_path){
+										//	$href_content_id = $href_content_id[0];
+										//}
 										//echo "Using : ".$href." | ContentID : $href_content_id<br/>";
 
 										//var_dump($href_content_id);
 
-										if ($href_content_id != ''){
-												$item = array($href_content_id['content_id'], $href_content_id['section_id'], $href);
-												array_push($content_href, $item);
-										}
+										//var_dump($href);
+
+										//if ($href_content_id != ''){
+												
+										//var_dump($href_content_id);
+
+										if ($href_content_id['content_id'] != NULL){
+                                                $h_content_id = $href_content_id['content_id'];
+                                        } else {
+                                                $h_content_id = $href_content_id[0]['content_id'];
+                                        }
+
+                                        if ($href_content_id['section_id'] != NULL){
+                                                $h_section_id = $href_content_id['section_id'];
+                                        } else {
+                                                $h_section_id = $href_content_id[0]['section_id'];
+                                        }
+
+                                        $item = array($h_content_id, $h_section_id, $href);
+                                        array_push($content_href, $item);
+										//var_dump($item);
+										//}
 								}
 
 								//if($count > 1){
@@ -769,6 +955,7 @@ class portalimporter extends controller
 										//var_dump($content_href);
 										//exit;
 
+										$hasBrokenLinks = false;
 										//Have the matching content id's will replace the current body with the correct link	
 										foreach ($content_href as $href){
 												$cid = $href[0];
@@ -776,15 +963,46 @@ class portalimporter extends controller
 												$fname = end(explode('/', $href[2]));
 
 												//Constructing the link
-												$link = "?module=cms&amp;action=showfulltext&amp;id=$cid&amp;sectionid=$sid";
-												$pattern = "/(\"|\')(.*?)".addslashes($fname)."(.*?)(\"|\')/i";
-												if (!($body = preg_replace($pattern, $link, $body))){
+												if ($cid != ''){
+													$link = "?module=cms&amp;action=showfulltext&amp;id=$cid&amp;sectionid=$sid";
+													
+													//Replacing the link
+													/*	
+													if (!$used_relative_path){
+														
+														$pattern = "/(\"|\')(.*?)".addslashes($fname)."(.*?)(\"|\')/i";
+                                        			} else {
+														$pattern = "/(\"|\')(.*?)".addslashes($href[2])."(.*?)(\"|\')/i";
+														var_dump($pattern);
+													}
+                                               		if (!($body = preg_replace($pattern, $link, $body))){
+                                                        log_debug("FixPageRef Failed : Bad Regex Pattern $pattern");
+                                                        //exit;
+                                                	}
+													*/
+													$body = str_replace($href[2], $link, $body);	
+												} else {
+													//Generating the editcontent link to be placed with a description as a message to
+													//correct this content
+													//module=cmsadmin&action=addcontent&id=theid
+													//$link = "?module=cms&amp;action=showfulltext&amp;id=$cid&amp;sectionid=$sid";
+													/*
+													$pattern = "/(\"|\')(.*?)".addslashes($fname)."(.*?)(\"|\')/i";
+													if (!($body = preg_replace($pattern, $link, $body))){
 														log_debug("FixPageRef Failed : Bad Regex Pattern $pattern");
 														//exit;
-												}
-												//var_dump($link);
-										}
+													}*/
+													log_debug("FixPageRef Failed : Bad Page Ref $href[2]");
+													//var_dump("FixPageRef Failed : Bad Page Ref $href[2]");
 
+													$hasBrokenLinks = true;
+												}
+																								//var_dump($link);
+										}
+										
+										if ($hasBrokenLinks){
+											//$body = '<div class=\'error\'>Please correct the broken links on this page</div>'.$body;
+										}
 										//Updating the content_item with a tyt body
 										$this->objContent->updateContentBody($content_id, $body);
 									

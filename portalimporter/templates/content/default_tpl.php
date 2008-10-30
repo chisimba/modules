@@ -12,9 +12,22 @@ $xmlReadLink = $this->uri(
   ), "portalimporter"
 );
 
+$dtaFixPageRef = $this->uri(
+  array(
+    "action"=>"fixPageRef"
+  ), "portalimporter"
+);
+
+
+$dtaFixDocRef = $this->uri(
+  array(
+    "action"=>"fixDocumentRef"
+  ), "portalimporter"
+);
+
 $dtaStoreLink = $this->uri(
   array(
-    "action"=>"storedata"
+    "action"=>"goportal"
   ), "portalimporter"
 );
 
@@ -124,15 +137,23 @@ $showOnlyLegacy = $this->uri(
     <ul>
       <li><a href="<?php echo $dtaStoreLink;?>">Read portal content and store in database</a></li>
     </ul>
-    <h4>Digital assets (images, documents, media)</h4>
+     <h4>This will do the following : (images, documents, media)</h4>
+    <ol>
+      <li>Move image assets to repository</li>
+      <li>Move Adobe Flash assets to repository</li>
+      <li>Move PDF assets to repository</li>
+      <li>Move other document assets to repository</li>
+      <li>Move media assets (sound, video) to repository</li>
+    </ol>
+   
     <ul>
-      <li><a href="<?php echo $imagemove;?>">Move image assets to repository</a></li>
-      <li><a href="<?php echo $flashmove;?>">Move Adobe Flash assets to repository</a></li>
-      <li><a href="<?php echo $pdfmove;?>">Move PDF assets to repository</a></li>
-      <li><a href="<?php echo $docmove;?>">Move other document assets to repository</a></li>
-      <li><a href="<?php echo $mediamove;?>">Move media assets (sound, video) to repository</a></li>
+      <li><a href="<?php echo $dtaFixPageRef;?>">Fix anchors to reference imported content</a></li>
     </ul>
-  </td>
+   
+    <ul>
+      <li><a href="<?php echo $dtaFixDocRef;?>">Fix anchors that reference Documents and Media to point to imported resources</a></li>
+    </ul>
+ </td>
   <td valign="top">
     <h4>Content and raw data</h4>
     <ul>

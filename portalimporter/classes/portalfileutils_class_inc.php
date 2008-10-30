@@ -1169,6 +1169,9 @@ class portalfileutils extends object
 						die ("TIDY is not available");
 					}
 					$body = $tidy;
+
+
+
 					$imgs = $this->objRegex->get_images($body);
 					$images = $imgs[3];
 					//var_dump($imgs);
@@ -1178,12 +1181,18 @@ class portalfileutils extends object
 						$ifile = explode("/", $img);
 						$ifile = end($ifile);
 						$ref = $this->objConfig->getSiteRoot()."usrfiles/importcms/".$csecid."/".$ifile;
-						$replacement = "<img src=\"$ref\" />";
+						//$replacement = "<img src=\"$ref\" />";
+						$replacement = $ref;
 						// move the files to the repo
-						$body = str_replace($imgs[0][$counter], $replacement, $body);
+						//var_dump($imgs);
+						//var_dump($replacement);
+						//$body = str_replace($imgs[3][$counter], $replacement, $body);
+						//$body = preg_replace('/'.addslashes(str_replace('.', '\.', $imgs[3][$counter])).'/i', $replacement, $body);
+						$body = str_replace($imgs[3][$counter], $replacement, $body);
 						//var_dump($replacement);
 						$counter++;
 					}
+
 					// case for the public folder - i.e frontpage
 					if($secname == 'Public')
 					{
@@ -1234,11 +1243,11 @@ class portalfileutils extends object
 	
 					} else {
 							if (!$must_add_title){
-						 	log_debug("Failed : Missing Title $csecid $content_path");
+						 	log_debug("Failed : AddContent Missing Title $csecid $content_path");
 						} else if (!$must_add_content) {
-						 	log_debug("Failed : Missing Content to $csecid $content_path");
+						 	log_debug("Failed : AddContent Content to $csecid $content_path");
 						} else {
-							log_debug("Unknown Error");
+							log_debug("Failed : AddContent Unknown Error");
 						}
 					}
 					//var_dump($contents);
@@ -1337,7 +1346,7 @@ class portalfileutils extends object
 					// change the links in the pages to the assets to point to the correct ones.
 					
 					// change the anchors as well?
-					
+					// changing anchors must be done after import
 					// clean up the bad code
 					$options = array(
 					"clean" => true,
