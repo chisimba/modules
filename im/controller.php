@@ -95,6 +95,7 @@ class im extends controller {
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
             if($this->objIMUsers->isCounsilor($this->objUser->userId()) == FALSE || !$this->objUser->isAdmin($this->objUser->userId()))
             {
+                var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
                 die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
             }
         } catch ( customException $e ) {
