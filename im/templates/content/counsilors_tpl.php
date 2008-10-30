@@ -6,7 +6,7 @@ foreach ($users as $user)
 {
 	
 	$name = $user['firstname']." ".$user['surname'];
-	if($objDBIMUser->isCounsilor($user['id']))
+	if($objDBIMUser->isCounsilor($user['userid']))
 	{
 		$objLink->href = $this->uri(array("action" => "removecounsilor", "userid" => $user['userid']));
 		$objLink->link = "remove";
