@@ -85,6 +85,9 @@ class contextcontent extends controller
             $this->objContentOrder = $this->getObject('db_contextcontent_order');
             $this->objContentTitles = $this->getObject('db_contextcontent_titles');
             $this->objContentInvolvement = $this->getObject('db_contextcontent_involvement');
+
+	    //Load Module Catalogue Class
+            $this->objModuleCatalogue = $this->getObject('modules', 'modulecatalogue');
             
             // Load Context Object
             $this->objContext = $this->getObject('dbcontext', 'context');
