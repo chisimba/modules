@@ -121,7 +121,7 @@ class FileMaker_Command
      *
      * @return FileMaker_Result A result object.
      */
-    function &execute()
+    function execute()
     {
         return $this->_impl->execute();
     }
