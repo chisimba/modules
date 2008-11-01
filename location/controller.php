@@ -168,7 +168,7 @@ class location extends controller
      */
     public function requiresLogin($action)
     {
-        $publicActions = array('synchronise');
+        $publicActions = array('synchronise', 'map');
 
         return !in_array($action, $publicActions);
     }
