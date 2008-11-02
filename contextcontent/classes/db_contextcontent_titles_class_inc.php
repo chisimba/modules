@@ -95,6 +95,16 @@ class db_contextcontent_titles extends dbtable
     }
 
     /**
+     * Checks if translation group id exists.
+     *
+     * @return boolean
+     */
+    function idExists($id)
+    {
+        return $this->valueExists('id', $id);
+    }
+
+    /**
      * Method to manually create a translation group index.
      *
      * @return Record ID
@@ -116,10 +126,11 @@ class db_contextcontent_titles extends dbtable
      */
     private function autoCreateTitle()
     {
-        return $this->insert(array(
-                'creatorid' => $this->objUser->userId(),
-                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
-            ));
+        $row = array();
+        $row['creatorid'] = $this->objUser->userId();
+        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+
+        return $this->insert($row);
     }
     
     /**
