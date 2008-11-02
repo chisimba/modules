@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Class the controls the list of pages available
+ * Class the controls the list of pages available.
  *
  * It doesn't contain the content of pages, just the index to track which pages
  * are translations of each other.
@@ -20,13 +21,16 @@
  * Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @version    $Id$
- * @package    contextcontent
- * @author     Tohir Solomons <tsolomons@uwc.ac.za>
- * @copyright  2006-2007 AVOIR
- * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @link       http://avoir.uwc.ac.za
+ * @category  Chisimba
+ * @package   contextcontent
+ * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright 2006-2008 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   $Id$
+ * @link      http://avoir.uwc.ac.za
+ * @see       core
  */
+
 // security check - must be included in all scripts
 if (!
 /**
@@ -40,14 +44,21 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 /**
- * Class the controls the list of pages available
+ * Class the controls the list of pages available.
  *
  * It doesn't contain the content of pages, just the index to track which pages
  * are translations of each other.
  *
- * @author Tohir Solomons
- *
+ * @category  Chisimba
+ * @package   contextcontent
+ * @author    Tohir Solomons <tsolomons@uwc.ac.za>
+ * @copyright 2006-2008 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   Release: @package_version@
+ * @link      http://avoir.uwc.ac.za
+ * @see       core
  */
+
 class db_contextcontent_titles extends dbtable
 {
 
