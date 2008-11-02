@@ -7,64 +7,64 @@ $tablename = 'tbl_contextcontent_pages';
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
+    'id' => array(
+        'type' => 'text',
+        'length' => 32,
         'notnull' => TRUE
-		),
+        ),
     'titleid' => array(
-		'type' => 'text',
-		'length' => 32,
+        'type' => 'text',
+        'length' => 32,
         'notnull' => TRUE
-		),
+        ),
     'menutitle' => array(
-		'type' => 'text',
-		'length' => 255,
+        'type' => 'text',
+        'length' => 255,
         'notnull' => TRUE
-		),
+        ),
     'pagecontent' => array(
-		'type' => 'text'
-		),
+        'type' => 'text'
+        ),
     'headerscripts' => array(
-		'type' => 'text'
-		),
+        'type' => 'text'
+        ),
     'license' => array(
-		'type' => 'text',
-		'length' => 32
-		),
+        'type' => 'text',
+        'length' => 32
+        ),
     'language' => array(
-		'type' => 'text',
-		'length' => 3,
+        'type' => 'text',
+        'length' => 3,
         'notnull' => TRUE,
         'default' => 'en'
-		),
+        ),
     'original' => array(
-		'type' => 'text',
-		'length' => 1,
+        'type' => 'text',
+        'length' => 1,
         'notnull' => TRUE,
         'default' => 'N'
-		),
+        ),
     'lockuser' => array(
-		'type' => 'text',
-		'length' => 25
-		),
+        'type' => 'text',
+        'length' => 25
+        ),
     'creatorid' => array(
-		'type' => 'text',
-		'length' => 25,
+        'type' => 'text',
+        'length' => 25,
         'notnull' => TRUE
-		),
+        ),
     'datecreated' => array(
-		'type' => 'timestamp',
+        'type' => 'timestamp',
         'notnull' => TRUE
-		),
+        ),
     'modifierid' => array(
-		'type' => 'text',
-		'length' => 25
-		),
+        'type' => 'text',
+        'length' => 25
+        ),
     'datemodified' => array(
-		'type' => 'timestamp'
-		)
-	);
+        'type' => 'timestamp'
+        )
+    );
     
 //create other indexes here...
 
@@ -72,10 +72,10 @@ $name = 'tbl_contextcontent_pages_idx';
 
 $indexes = array(
                 'fields' => array(
-                	'titleid' => array(),
-                	'menutitle' => array(),
-                	'license' => array(),
-                	'language' => array(),
+                    'titleid' => array(),
+                    'menutitle' => array(),
+                    'license' => array(),
+                    'language' => array(),
                     'creatorid' => array(),
                     'modifierid' => array()
                 )

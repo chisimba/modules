@@ -7,28 +7,28 @@ $tablename = 'tbl_contextcontent_titles';
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
+    'id' => array(
+        'type' => 'text',
+        'length' => 32,
         'notnull' => TRUE
-		),
+        ),
     'creatorid' => array(
-		'type' => 'text',
-		'length' => 25,
+        'type' => 'text',
+        'length' => 25,
         'notnull' => TRUE
-		),
+        ),
     'datecreated' => array(
-		'type' => 'timestamp',
+        'type' => 'timestamp',
         'notnull' => TRUE
-		),
+        ),
     'modifierid' => array(
-		'type' => 'text',
-		'length' => 25
-		),
+        'type' => 'text',
+        'length' => 25
+        ),
     'datemodified' => array(
-		'type' => 'timestamp'
-		)
-	);
+        'type' => 'timestamp'
+        )
+    );
     
 
 ?>
