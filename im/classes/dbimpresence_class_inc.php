@@ -114,7 +114,7 @@ class dbimpresence extends dbTable
      *@return array
      *@access public
      */
-    public function getAllActiveUsers($userId = null)
+    public function getAllActiveUsers($userId = NULL)
     {
         $where = "";
         if($userId != NULL)
