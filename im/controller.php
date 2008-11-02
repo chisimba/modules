@@ -145,9 +145,9 @@ class im extends controller {
                 $start = $page * 10;
                 if(!$this->objUser->isAdmin($this->objUser->userId()))
                 {
-                    $cid = null;//$this->objUser->userId();
+                    $cid = NULL;//$this->objUser->userId();
                 }else{
-                    $cid = null;
+                    $cid = NULL;
                 }
 
                 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
@@ -198,12 +198,12 @@ class im extends controller {
                 $conn2->connect ();
                 $conn2->processUntil ( 'session_start' );
 
-                $time_start = microtime ( true );
+                $time_start = microtime ( TRUE );
                 $users = $this->objDbImPres->getAllActiveUsers ();
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
-                $time_end = microtime ( true );
+                $time_end = microtime ( TRUE );
                 $time = $time_end - $time_start;
                 //$to = 'pscott209@gmail.com';
                 //$conn2->message ( $to, 'Test took: ' . $time . ' seconds' );
