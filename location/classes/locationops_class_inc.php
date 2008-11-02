@@ -94,9 +94,9 @@ class locationops extends object
      *
      * @param string $token The Fire Eagle token of the user
      */
-    private function loadUserConfiguration($token=null)
+    private function loadUserConfiguration($token=NULL)
     {
-        if ($token !== null) {
+        if ($token !== NULL) {
             $this->objDbLocation->loadByFireEagleToken($token);
         }
 
@@ -127,7 +127,7 @@ class locationops extends object
     public function getFireEagleAuthoriseUrl()
     {
         // Perform an API call to Fire Eagle in order to retrieve the OAuth token
-        $fireeagle = new FireEagle($this->feKey, $this->feSecret, null, null, $this->json);
+        $fireeagle = new FireEagle($this->feKey, $this->feSecret, NULL, NULL, $this->json);
         $token = $fireeagle->getRequestToken();
 
         // Set session variables to be used on callback
@@ -214,7 +214,7 @@ class locationops extends object
      *
      * @param bool $allUsers Add markers for all users or only the current one
      */
-    public function setupMap($allUsers=false)
+    public function setupMap($allUsers=FALSE)
     {
         if ($this->objSimpleBuildMap && $this->objGMapApi) {
             $key = $this->objSimpleBuildMap->getApiKey();
@@ -253,7 +253,7 @@ class locationops extends object
      */
     public function enableTwitter()
     {
-        $this->objDbLocation->setTwitter(true);
+        $this->objDbLocation->setTwitter(TRUE);
         $this->objDbLocation->put();
     }
 
@@ -262,7 +262,7 @@ class locationops extends object
      */
     public function disableTwitter()
     {
-        $this->objDbLocation->setTwitter(false);
+        $this->objDbLocation->setTwitter(FALSE);
         $this->objDbLocation->put();
     }
 

@@ -72,7 +72,7 @@ class location extends controller
     {
         $this->objLocationOps->handleFireEagleCallback();
         $this->objLocationOps->update();
-        $this->nextAction(null);
+        $this->nextAction(NULL);
     }
 
     /**
@@ -93,7 +93,7 @@ class location extends controller
      */
     private function actionMap()
     {
-        $this->objLocationOps->setupMap(true);
+        $this->objLocationOps->setupMap(TRUE);
 
         return 'map_tpl.php';
     }
@@ -134,7 +134,7 @@ class location extends controller
     private function actionUpdate()
     {
         $this->objLocationOps->update();
-        $this->nextAction(null);
+        $this->nextAction(NULL);
     }
 
     /**
@@ -145,7 +145,7 @@ class location extends controller
     private function actionEnabletwitter()
     {
         $this->objLocationOps->enableTwitter();
-        $this->nextAction(null);
+        $this->nextAction(NULL);
     }
 
     /**
@@ -156,7 +156,7 @@ class location extends controller
     private function actionDisabletwitter()
     {
         $this->objLocationOps->disableTwitter();
-        $this->nextAction(null);
+        $this->nextAction(NULL);
     }
 
     /**
