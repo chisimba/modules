@@ -194,8 +194,10 @@ class educommonsimport extends object
             $language = $document['language'];
             $title = $document['title'][$language];
             $content = 'test'; //TODO Need to fetch file contents
-            // TODO Need to check for duplicates
-            $this->objTitles->addTitle($id, $title, $content, $language, '');
+            if ($this->objTitles->idExists($id)) {
+            } else {
+                $this->objTitles->addTitle($id, $title, $content, $language, '');
+            }
         }
     }
 
