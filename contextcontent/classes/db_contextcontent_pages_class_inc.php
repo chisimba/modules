@@ -119,8 +119,8 @@ class db_contextcontent_pages extends dbtable
     public function updatePage($id, $title=false, $content=false, $headerScripts=false)
     {
         $row = array();
-        $row['creatorid'] = $this->objUser->userId();
-        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        $row['modifierid'] = $this->objUser->userId();
+        $row['datemodified'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
 
         if ($title !== false) {
             $row['menutitle'] = stripslashes($title);
