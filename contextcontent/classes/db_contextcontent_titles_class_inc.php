@@ -85,16 +85,34 @@ class db_contextcontent_titles extends dbtable
     {
         if ($titleId == '') {
             $titleId = $this->autoCreateTitle();
-            
-            $pageId = $this->objContentPages->addPage($titleId, $menutitle, $content, $language, $headerScript);
+        } else {
+            $this->createTitle($titleId);
         }
+
+        $pageId = $this->objContentPages->addPage($titleId, $menutitle, $content, $language, $headerScript);
         
         return $titleId;
     }
+
+    /**
+     * Method to manually create a translation group index.
+     *
+     * @return Record ID
+     */
+    private function createTitle($title)
+    {
+        $row = array();
+        $row['id'] = $title;
+        $row['creatorid'] = $this->objUser->userId();
+        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+
+        return $this->insert($row);
+    }
     
     /**
-     * Method to auto create a translation group index
-     * @return record Id
+     * Method to auto create a translation group index.
+     *
+     * @return Record ID
      */
     private function autoCreateTitle()
     {
