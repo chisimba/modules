@@ -60,6 +60,25 @@ class db_contextcontent_pages extends dbtable
         parent::init('tbl_contextcontent_pages');
         $this->objUser =& $this->getObject('user', 'security');
     }
+
+    /**
+     * Method to retrieve a page id according to a title id and language.
+     *
+     * @access public
+     * @param string $titleId Title ID
+     * @param string $language Language Code
+     * @return string Page ID
+     */
+    public function getPage($titleId, $language)
+    {
+        $where = "WHERE titleid = '$titleId' AND language = '$language'";
+        $results = $this->getAll($where);
+        if (isset($results[0]['id'])) {
+            return $results[0]['id'];
+        } else {
+            return FALSE;
+        }
+    }
     
     /**
      * Method to add a Page
