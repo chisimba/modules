@@ -102,7 +102,7 @@ class dbimpresence extends dbTable
         $res = $this->getAll("WHERE person = '$userSplit[0]'");
         if(!empty($res))
         {
-        	return $res[0]['presshow'];
+            return $res[0]['presshow'];
         }
         else {
             return NULL;
@@ -130,26 +130,26 @@ class dbimpresence extends dbTable
      *@param string $person
      */
     public function assignUserToCounsilor($person)
-	{
+    {
         
        // $objDBIMUser = $this->getObect('dbimusers','im');
        // return $objDBIMUser->assignUserToCounsilor($person);
     
-		parent::init('tbl_im_users');
+        parent::init('tbl_im_users');
         
         //get the counsilor with the lowest number of patients
-		$users = $this->getAll("ORDER BY patients ASC" );
-		$user = $users[0];
+        $users = $this->getAll("ORDER BY patients ASC" );
+        $user = $users[0];
         
         //assign the patient to the counsilor
         $fields = array('person'=> $person,
                         'patients' => intval($user['patients']) + 1
                         );
-		$this->update('id',$user['id'], $fields, 'tbl_im_users');
+        $this->update('id',$user['id'], $fields, 'tbl_im_users');
         
         parent::init('tbl_im_presence');
-		
+        
         return $user['userid'];
-	}
+    }
 }
 ?>

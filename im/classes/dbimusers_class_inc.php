@@ -41,56 +41,56 @@ class dbimusers extends dbTable
         $this->objPresence = $this->getObject('dbimpresence');
     }
 
-	/**
-	 *Method to check if a user is a counsilor
-	 *@param string userId
-	 *@return boolean
-	 */
-	public function isCounsilor($userId)
-	{
-	//var_dump($this->valueExists('userid', $userId));
+    /**
+     *Method to check if a user is a counsilor
+     *@param string userId
+     *@return boolean
+     */
+    public function isCounsilor($userId)
+    {
+    //var_dump($this->valueExists('userid', $userId));
 
-	if($this->valueExists('userid', $userId))
-		{
-			return TRUE;
-		}else{
-			return FALSE;
-		}
+    if($this->valueExists('userid', $userId))
+        {
+            return TRUE;
+        }else{
+            return FALSE;
+        }
 
-	}
+    }
 
-	/**
-	 *Method to add a counsilor
-	 *@param string $userId
-	 */
-	public function addCounsilor($userId)
-	{
-		if (!$this->isCounsilor($userId))
-		{
-			return $this->insert(array('userid' => $userId));
-		}
-	}
+    /**
+     *Method to add a counsilor
+     *@param string $userId
+     */
+    public function addCounsilor($userId)
+    {
+        if (!$this->isCounsilor($userId))
+        {
+            return $this->insert(array('userid' => $userId));
+        }
+    }
 
-	/**
-	 *Method to remove a counsilor
-	 *@param string $userId
-	 */
-	public function removeCounsilor($userId)
-	{
-		if (!$this->isCounsilor($userId))
-		{
-			return $this->delete(array('userid' => $userId));
-		}
-	}
+    /**
+     *Method to remove a counsilor
+     *@param string $userId
+     */
+    public function removeCounsilor($userId)
+    {
+        if (!$this->isCounsilor($userId))
+        {
+            return $this->delete(array('userid' => $userId));
+        }
+    }
 
-	public function assignUserToCounsilor($person)
-	{
+    public function assignUserToCounsilor($person)
+    {
 
-		$users = $this->getAll("ORDER BY patients ASC");
-		$user = $users[0];
-		$this->update('id',$user['id'], array('person'=> $person, 'patients' => intval($user['patients']) + 1));
-		return $user['userid'];
-	}
+        $users = $this->getAll("ORDER BY patients ASC");
+        $user = $users[0];
+        $this->update('id',$user['id'], array('person'=> $person, 'patients' => intval($user['patients']) + 1));
+        return $user['userid'];
+    }
 
 
 }
