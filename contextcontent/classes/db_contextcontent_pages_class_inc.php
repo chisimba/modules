@@ -116,14 +116,21 @@ class db_contextcontent_pages extends dbtable
      * @param string $headerScript Header JS of the Page
      * @return boolean
      */
-    public function updatePage($id, $title, $content, $headerScripts)
+    public function updatePage($id, $title=false, $content=false, $headerScripts=false)
     {
         $row = array();
-        $row['menutitle'] = stripslashes($title);
-        $row['pagecontent'] = stripslashes($content);
-        $row['headerscripts'] = stripslashes($headerScripts);
         $row['creatorid'] = $this->objUser->userId();
         $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+
+        if ($title !== false) {
+            $row['menutitle'] = stripslashes($title);
+        }
+        if ($content !== false) {
+            $row['pagecontent'] = stripslashes($content);
+        }
+        if ($headerScripts !== false) {
+            $row['headerscripts'] = stripslashes($headerScripts);
+        }
 
         return $this->update('id', $id, $row);
     }
