@@ -118,13 +118,14 @@ class db_contextcontent_pages extends dbtable
      */
     public function updatePage($id, $title, $content, $headerScripts)
     {
-        return $this->update('id', $id, array(
-                'menutitle'=>(stripslashes($title)), 
-                'pagecontent'=>(stripslashes($content)), 
-                'headerscripts'=>(stripslashes($headerScripts)),
-                'creatorid' => $this->objUser->userId(),
-                'datecreated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
-            ));
+        $row = array();
+        $row['menutitle'] = stripslashes($title);
+        $row['pagecontent'] = stripslashes($content);
+        $row['headerscripts'] = stripslashes($headerScripts);
+        $row['creatorid'] = $this->objUser->userId();
+        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+
+        return $this->update('id', $id, $row);
     }
 
 }
