@@ -81,7 +81,7 @@ class db_contextcontent_titles extends dbtable
      * @param string $headerScript Any Script to go in the header
      * @return Record Id
      */
-    public function addTitle($titleId='', $menutitle, $content, $language, $headerScript)
+    public function addTitle($titleId='', $menutitle, $content, $language, $headerScript=null)
     {
         if ($titleId == '') {
             $titleId = $this->autoCreateTitle();

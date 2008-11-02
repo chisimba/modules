@@ -68,7 +68,7 @@ class db_contextcontent_pages extends dbtable
     * @param string $headerScript Header JS of the Page
     * @return boolean Result of Insert
     */
-    public function addPage($titleId, $menutitle, $content, $language, $headerScript)
+    public function addPage($titleId, $menutitle, $content, $language, $headerScript=null)
     {
         if (!$this->checkPageExists($titleId, $language)) {
             return $this->insert(array(
