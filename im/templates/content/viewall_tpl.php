@@ -31,7 +31,7 @@ if(!$this->objUser->isAdmin($this->objUser->userId()))
 {
     $cid = $this->objUser->userId();
 }else{
-    $cid = null;
+    $cid = NULL;
 }
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 //var_dump($msgs);
