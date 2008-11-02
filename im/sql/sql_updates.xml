@@ -4,60 +4,60 @@
         <version>0.008</version>
         <description>Added a messagereturned field</description>
         <data>
-        	<add>
-    			<name>msg_returned</name>
-		    	<type>text</type>
-    			<length>60</length>
-			</add>
-		</data>
-	</update>
-	<update>
+            <add>
+                <name>msg_returned</name>
+                <type>text</type>
+                <length>60</length>
+            </add>
+        </data>
+    </update>
+    <update>
         <table>tbl_im_presence</table>
         <version>0.011</version>
         <description>Split JID field into user and agent</description>
         <data>
-        	<add>
-    			<name>useragent</name>
-		    	<type>text</type>
-    			<length>60</length>
-			</add>
-		</data>
-	</update>
+            <add>
+                <name>useragent</name>
+                <type>text</type>
+                <length>60</length>
+            </add>
+        </data>
+    </update>
       <update>
         <table>tbl_im</table>
         <version>0.015</version>
         <description>Added a parentid field</description>
         <data>
-        	<add>
-    			<name>parentid</name>
-		    	<type>text</type>
-    			<length>32</length>
-			</add>
-		</data>
-	</update>
+            <add>
+                <name>parentid</name>
+                <type>text</type>
+                <length>32</length>
+            </add>
+        </data>
+    </update>
       <update>
         <table>tbl_im_users</table>
         <version>0.016</version>
         <description>Added patients field</description>
         <data>
-        	<add>
-    			<name>patients</name>
-		    	<type>integer</type>    			
-			</add>
-		</data>
-	</update>
+            <add>
+                <name>patients</name>
+                <type>integer</type>                
+            </add>
+        </data>
+    </update>
       <update>
         <table>tbl_im_presence</table>
         <version>0.018</version>
         <description>Added counsilorid field</description>
         <data>
-        	<add>
-    			<name>counsilor</name>
-		    	<type>text</type>    	
-			<length>32</length>		
-			</add>
-		</data>
-	</update>
+            <add>
+                <name>counsilor</name>
+                <type>text</type>        
+            <length>32</length>        
+            </add>
+        </data>
+    </update>
 
 
 
