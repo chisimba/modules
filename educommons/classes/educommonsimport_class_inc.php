@@ -198,7 +198,11 @@ class educommonsimport extends object
             $content = 'test'; //TODO Need to fetch file contents
             if ($this->objTitles->idExists($id)) {
                 $pageId = $this->objPages->getPage($id, $language);
-                $this->objPages->updatePage($pageId, $title, $content);
+                if ($pageId !== FALSE) {
+                    $this->objPages->updatePage($pageId, $title, $content);
+                } else {
+                    $this->objPages->addPage($id, $title, $content, $language);
+                }
             } else {
                 $this->objTitles->addTitle($id, $title, $content, $language);
             }
