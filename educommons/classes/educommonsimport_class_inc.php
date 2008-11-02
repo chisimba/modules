@@ -170,7 +170,7 @@ class educommonsimport extends object
     function addCourses($data)
     {
         foreach ($data['courses'] as $course) {
-            $id = $course['id'];
+            $id = substr($course['id'], 3);
             $language = $course['language'];
             $title = $course['title'][$language];
             if ($this->objContext->contextExists($id)) {
@@ -190,11 +190,12 @@ class educommonsimport extends object
     public function addPages($data)
     {
         foreach ($data['documents'] as $document) {
+            $id = substr($document['id'], 3);
             $language = $document['language'];
             $title = $document['title'][$language];
             $content = 'test'; //TODO Need to fetch file contents
             // TODO Need to check for duplicates
-            $this->objTitles->addTitle('', $title, $content, $language, '');
+            $this->objTitles->addTitle($id, $title, $content, $language, '');
         }
     }
 
