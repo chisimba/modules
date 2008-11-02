@@ -1,9 +1,8 @@
-<?
+<?php
 
-//5ive definition
 $tablename = 'tbl_contextcontent_involvement';
 
-//Options line for comments, encoding and character set
+// Options line for comments, encoding and character set
 $options = array('collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
@@ -24,15 +23,13 @@ $fields = array(
         )
     );
     
-//create other indexes here...
-
 $name = 'tbl_contextcontent_involvement_idx';
 
 $indexes = array(
-                'fields' => array(
-                    'titleid' => array(),
-                    'userid' => array()
-                )
-        );
-        
+    'fields' => array(
+        'titleid' => array(),
+        'userid' => array()
+        )
+    );
+
 ?>
