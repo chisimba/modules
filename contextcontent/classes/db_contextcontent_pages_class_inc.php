@@ -1,4 +1,5 @@
 <?php
+
 /**
  * class that contains the content of pages in the contextcontent module
  *
@@ -26,6 +27,7 @@
  * @license    http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @link       http://avoir.uwc.ac.za
  */
+
 // security check - must be included in all scripts
 if (!
 /**
@@ -46,12 +48,13 @@ $GLOBALS['kewl_entry_point_run']) {
  * @author Tohir Solomons
  *
  */
+
 class db_contextcontent_pages extends dbtable
 {
 
     /**
-    * Constructor
-    */
+     * Constructor
+     */
     public function init()
     {
         parent::init('tbl_contextcontent_pages');
@@ -59,15 +62,15 @@ class db_contextcontent_pages extends dbtable
     }
     
     /**
-    * Method to add a Page
-    *
-    * @param string $titleId Record Id of the Title
-    * @param string $menutitle Title of the Page
-    * @param string $content Content of the Page
-    * @param string $language Language of the Page
-    * @param string $headerScript Header JS of the Page
-    * @return boolean Result of Insert
-    */
+     * Method to add a Page
+     *
+     * @param string $titleId Record Id of the Title
+     * @param string $menutitle Title of the Page
+     * @param string $content Content of the Page
+     * @param string $language Language of the Page
+     * @param string $headerScript Header JS of the Page
+     * @return boolean Result of Insert
+     */
     public function addPage($titleId, $menutitle, $content, $language, $headerScript=null)
     {
         if (!$this->checkPageExists($titleId, $language)) {
@@ -87,12 +90,12 @@ class db_contextcontent_pages extends dbtable
     }
     
     /**
-    * Method to Check whether a Page exists for a title
-    *
-    * @param string $titleId Record Id of the Title
-    * @param string $language Requested language
-    * @return boolean
-    */
+     * Method to Check whether a Page exists for a title
+     *
+     * @param string $titleId Record Id of the Title
+     * @param string $language Requested language
+     * @return boolean
+     */
     public function checkPageExists($titleId, $language)
     {
         $recordCount = $this->getRecordCount('WHERE titleid=\''.$titleId.'\' AND language=\''.$language.'\'');
@@ -105,13 +108,13 @@ class db_contextcontent_pages extends dbtable
     }
     
     /**
-    * Method to Update the Content of a Page
-    *
-    * @param string id Record Id of the Page
-    * @param string $menutitle Title of the Page
-    * @param string $content Content of the Page
-    * @param string $headerScript Header JS of the Page
-    * @return boolean
+     * Method to Update the Content of a Page
+     *
+     * @param string id Record Id of the Page
+     * @param string $menutitle Title of the Page
+     * @param string $content Content of the Page
+     * @param string $headerScript Header JS of the Page
+     * @return boolean
      */
     public function updatePage($id, $title, $content, $headerScripts)
     {
@@ -125,6 +128,5 @@ class db_contextcontent_pages extends dbtable
     }
 
 }
-
 
 ?>
