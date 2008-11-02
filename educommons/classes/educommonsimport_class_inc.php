@@ -62,6 +62,7 @@ class educommonsimport extends object
     protected $objChapters;
     protected $objChapterContent;
     protected $objTitles;
+    protected $objPages;
 
     /**
      * Standard constructor to load the necessary resources
@@ -83,6 +84,7 @@ class educommonsimport extends object
 
         // Contextcontent title object for importing pages.
         $this->objTitles = $this->getObject('db_contextcontent_titles', 'contextcontent');
+        $this->objPages = $this->getObject('db_contextcontent_pages', 'contextcontent');
     }
 
     /**
@@ -195,6 +197,7 @@ class educommonsimport extends object
             $title = $document['title'][$language];
             $content = 'test'; //TODO Need to fetch file contents
             if ($this->objTitles->idExists($id)) {
+                $this->objPages->updatePage($id, $title, $content, '');
             } else {
                 $this->objTitles->addTitle($id, $title, $content, $language, '');
             }
