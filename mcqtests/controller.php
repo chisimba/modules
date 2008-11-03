@@ -1159,6 +1159,7 @@ class mcqtests extends controller
         }
         $this->setVarByRef('data', $data);
         $this->setVarByRef('result', $result);
+        //return 'showtest_tpl.php';
         return 'show_test_tpl.php';
     }
 

@@ -20,6 +20,7 @@ $objIcon = &$this->newObject('geticon', 'htmlelements');
 $objMathML = &$this->newObject('parse4mathml', 'filters');
 
 // set up language items
+$studentLabel = ucfirst($this->objLanguage->languageText('mod_context_readonly', 'context'));
 $heading = $this->objLanguage->languageText('mod_mcqtests_testresults', 'mcqtests');
 $testLabel = $this->objLanguage->languageText('mod_mcqtests_test', 'mcqtests');
 $totalLabel = $this->objLanguage->languageText('mod_mcqtests_totalmarks', 'mcqtests');
@@ -126,12 +127,17 @@ if ($qNum < $data[0]['count']) {
     $objLink = new link($this->uri(array(
         'action' => 'showtest',
         'id' => $result['testid'],
-        'qnum' => $qNum
+        'qnum' => $qNum,
+        'studentId' => $result['studentid']
     )));
     $objLink->link = $nextLabel;
     $links = $objLink->show() .'&nbsp;&nbsp;|&nbsp;&nbsp;';
 }
-$objLink = new link($this->uri(''));
+
+$objLink = new link($this->uri(array(
+    'action' => 'liststudents',
+    'id' => $result['testid']
+)));
 $objLink->link = $exitLabel;
 $links.= $objLink->show();
 
