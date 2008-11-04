@@ -114,14 +114,14 @@ class dbimpresence extends dbTable
      *@return array
      *@access public
      */
-    public function getAllActiveUsers($userId = NULL)
+    public function getAllActiveUsers($userId = "")
     {
         $where = "";
-        if($userId != NULL)
+        if($userId != "")
         {
             $where = " WHERE counsilor = '$userId' ";
         }
-        return $this->getAll($where." ORDER BY datesent DESC LIMIT 50");
+        return $this->getAll($where." ORDER BY datesent DESC LIMIT 20");
     }
 
     /**
