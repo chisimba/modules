@@ -90,10 +90,12 @@ class dbim extends dbTable
     public function getMessagesByActiveUser($userId = NULL)
     {
         $bigArr = array();
-        foreach($this->objPresence->getAllActiveUsers($userId) as $activeUser)
+        $usersArr = $this->objPresence->getAllActiveUsers($userId);
+
+        foreach($usersArr as $activeUser)
         {
             //get all messages for the user
-            $activeUser['messages'] = array_reverse($this->getPersonMessages($activeUser['person']));
+            $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
             //var_dump($activeUser['messages']);
             if(count($activeUser['messages']) > 0)
             {
@@ -110,10 +112,10 @@ class dbim extends dbTable
      */
     public function getPersonMessages($person)
     {
-        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent ASC");    
-        
+        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 10");
+
     }
-    
+
     /**
      *Method save a reply message
      *@param string msgId
@@ -139,7 +141,7 @@ class dbim extends dbTable
                         'datesent' => $this->now());
         return $this->insert($fields, 'tbl_im');
     }
-    
+
     /**
      *Method to get a reply message
      *@param string $msgId
@@ -154,8 +156,7 @@ class dbim extends dbTable
             return $this->getAll("WHERE parentid = '$msgId'");
         }
     }
-    
-    
+
 
 
 }

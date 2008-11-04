@@ -121,7 +121,7 @@ class dbimpresence extends dbTable
         {
             $where = " WHERE counsilor = '$userId' ";
         }
-        return $this->getAll($where." ORDER BY datesent LIMIT 20");
+        return $this->getAll($where." ORDER BY datesent DESC LIMIT 20");
     }
 
     /**
@@ -131,25 +131,41 @@ class dbimpresence extends dbTable
      */
     public function assignUserToCounsilor($person)
     {
-        
+
        // $objDBIMUser = $this->getObect('dbimusers','im');
        // return $objDBIMUser->assignUserToCounsilor($person);
-    
+
         parent::init('tbl_im_users');
-        
+
         //get the counsilor with the lowest number of patients
-        $users = $this->getAll("ORDER BY patients ASC" );
+        $users = $this->getAll("ORDER BY patients ASC LIMIT 1" );
         $user = $users[0];
-        
+
         //assign the patient to the counsilor
         $fields = array('person'=> $person,
                         'patients' => intval($user['patients']) + 1
                         );
         $this->update('id',$user['id'], $fields, 'tbl_im_users');
-        
+
         parent::init('tbl_im_presence');
-        
+
         return $user['userid'];
     }
+
+
+    /**
+    *
+    * Method to get the number of users assigned to a counsilor
+    * @param string $userId
+    * @return array
+    *
+    */
+    public function getUsers($userId)
+    {
+        return $this->getAll("WHERE counsilor = '$userId'");
+
+    }
+
+
 }
 ?>

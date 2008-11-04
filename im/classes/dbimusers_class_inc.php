@@ -77,9 +77,12 @@ class dbimusers extends dbTable
      */
     public function removeCounsilor($userId)
     {
-        if (!$this->isCounsilor($userId))
+        if ($this->isCounsilor($userId))
         {
-            return $this->delete(array('userid' => $userId));
+            //remove from users table as well
+            $this->delete("userid", $userId);
+
+            return $this->update('counsilor', $userId, array('counsilor' => null), 'tbl_im_presence');
         }
     }
 
