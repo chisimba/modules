@@ -2,10 +2,15 @@
 
 $objDBIMUser = $this->getObject('dbimusers', 'im');
 $objLink = $this->getObject('link','htmlelements');
+$numCounsilors = count($users);
+$numUsers = $this->objDbImPres->getRecordCount();
+
+echo "Number of Counsilors: $numCounsilors<br/>";
+echo "Number of Users: $numUsers <br/><br/>";
 foreach ($users as $user)
 {
     $cnt = 0;
-    $name = $user['id'].' '.$user['firstname']." ".$user['surname'];
+    $name = $user['firstname']." ".$user['surname'];
     if($objDBIMUser->isCounsilor($user['userid']))
     {
         $objLink->href = $this->uri(array("action" => "removecounsilor", "userid" => $user['userid']));
