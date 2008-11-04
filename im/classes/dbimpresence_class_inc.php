@@ -121,7 +121,7 @@ class dbimpresence extends dbTable
         {
             $where = " WHERE counsilor = '$userId' ";
         }
-        return $this->getAll($where." ORDER BY datesent DESC LIMIT 5");
+        return $this->getAll($where." ORDER BY datesent DESC LIMIT 50");
     }
 
     /**
