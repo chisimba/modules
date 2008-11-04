@@ -138,7 +138,7 @@ class dbimpresence extends dbTable
         parent::init('tbl_im_users');
 
         //get the counsilor with the lowest number of patients
-        $users = $this->getAll("ORDER BY patients ASC LIMIT 1" );
+        $users = $this->getAll("ORDER BY patients ASC LIMIT 5" );
         $user = $users[0];
 
         //assign the patient to the counsilor
