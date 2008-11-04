@@ -224,7 +224,7 @@ class im extends controller {
                 try {
                     $this->conn->connect ();
                     while ( ! $this->conn->isDisconnected () ) {
-                        $payloads = $this->conn->processUntil ( array ('message', 'presence', 'end_stream', 'session_start', 'reply' ) );
+                        $payloads = $this->conn->processUntil ( array ('presence', 'end_stream', 'session_start' ) ); //array ('message', 'presence', 'end_stream', 'session_start', 'reply' )
                         foreach ( $payloads as $event ) {
                             $pl = $event [1];
                             switch ($event [0]) {
@@ -266,11 +266,11 @@ class im extends controller {
                                     // Update the table presence info
                                     $this->objDbImPres->updatePresence ( $pl );
                                     break;
-  /*                              case 'session_start' :
+                                case 'session_start' :
                                     $this->conn->getRoster ();
                                     $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
                                     break;
-*/
+
                             }
                         }
                     }
