@@ -151,7 +151,7 @@ class im extends controller {
                 }
 
                 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
-                
+
 
                 $this->setVarByRef ( 'msgs', $msgs );
                 header("Content-Type: text/html;charset=utf-8");
@@ -228,7 +228,7 @@ class im extends controller {
                         foreach ( $payloads as $event ) {
                             $pl = $event [1];
                             switch ($event [0]) {
-                                case 'message' :
+                                /*case 'message' :
                                     //$this->objImOps->parseSysMessages($pl);
                                     switch ($pl ['body']) {
                                         case 'quit' :
@@ -261,16 +261,16 @@ class im extends controller {
                                         //$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
                                     }
                                     break;
-
+*/
                                 case 'presence' :
                                     // Update the table presence info
                                     $this->objDbImPres->updatePresence ( $pl );
                                     break;
-                                case 'session_start' :
+  /*                              case 'session_start' :
                                     $this->conn->getRoster ();
                                     $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
                                     break;
-
+*/
                             }
                         }
                     }
