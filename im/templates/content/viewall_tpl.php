@@ -36,12 +36,16 @@ $middleColumn .= $objPagination->show();*/
 if($this->objUser->inAdminGroup($this->objUser->userId()))
 {
     $cid = null;
+    $outof = null;
 }else{
     $cid = $this->objUser->userId();
+    $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
+
 }
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
+
 $num = count($msgs);
-$str = "Currently counsilling $num users";
+$str = "Currently counsilling $num$outof users";
 $objImView = $this->getObject('imviewer', 'im');
 
 $middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$str;

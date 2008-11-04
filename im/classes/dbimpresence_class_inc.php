@@ -166,6 +166,11 @@ class dbimpresence extends dbTable
 
     }
 
+    public function numOfUserAssigned($userId)
+    {
+        $sql = "WHERE counsilor = '$userId'";
+        return $this->getRecordCount($sql);
+    }
 
 }
 ?>
