@@ -1,12 +1,31 @@
 <?php
 /**
-* Assignment admin class extends controller
-* @author Megan Watson
-* @copyright (c) 2004 UWC
-* @package assignmentadmin
-* @version 1
-* @filesource
-*/
+ *
+ * Assignments
+ *
+ *
+ * PHP version 5
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the
+ * Free Software Foundation, Inc.,
+ * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @category  Chisimba
+ * @package   assignment2
+ * @copyright 2007 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   $Id$
+ * @link      http://avoir.uwc.ac.za
+ */
 
     // security check - must be included in all scripts
     if (!$GLOBALS['kewl_entry_point_run']) {
@@ -25,39 +44,16 @@
     class assignmentadmin extends controller
     {
 
-        public $contextCode;
-    /**
-    * Initialise objects used in the module.
-    */
+     public $contextCode;
+     /**
+      * Initialise objects used in the module.
+      */
         public function init()
         {
-            // Check if the module is registered and redirect if not.
-            // Check if the assignment module is registered and can be linked to.
-        /*$this->objModules = $this->newObject('modulesadmin','modulelist');
-        if(!$this->objModules->checkIfRegistered('Assignment Management', 'assignmentadmin')){
-            return $this->nextAction('notregistered',array('modname'=>'assignment'), 'redirect');
-        }
-        */
             $this->test = FALSE;
-        /*if($this->objModules->checkIfRegistered('Online Tests','testadmin')){
-            $this->test = TRUE;
-        }
-        */
             $this->essay = FALSE;
-        /*if($this->objModules->checkIfRegistered('Essay Management','essay')){
-            $this->essay = TRUE;
-        }
-        */
             $this->ws = FALSE;
-        /*if($this->objModules->checkIfRegistered('Worksheets','worksheet')){
-            $this->ws = TRUE;
-        }
-        */
             $this->rubric = FALSE;
-        /*if($this->objModules->checkIfRegistered('Rubrics','rubric')){
-            $this->rubric = TRUE;
-        }
-        */
             $this->dbAssignment = $this->getObject('dbassignment', 'assignment');
             $this->dbSubmit = $this->getObject('dbassignmentsubmit', 'assignment');
 
@@ -92,16 +88,6 @@
                 $this->contextCode=$this->objContext->getContextCode();
                 $this->context=$this->objContext->getTitle();
             }
-
-
-
-            // Log this call if registered
-        /*if(!$this->objModules->checkIfRegistered('logger', 'logger')){
-            //Get the activity logger class
-            $this->objLog=$this->getObject('logactivity', 'logger');
-            //Log this module call
-            $this->objLog->log();
-        }*/
         }
 
     /**
