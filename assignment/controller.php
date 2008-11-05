@@ -227,14 +227,21 @@ class assignment extends controller
         return 'assignment_home_tpl.php';
     }
     
-    
+    /**
+     * Allow adding or editing an assignment
+     * @return <type>
+     */
     private function __add()
     {
         $this->setVar('mode', 'add');
         
         return 'addedit_assignment_tpl.php';
     }
-    
+
+    /**
+     * Save an assignment
+     * @return <type>
+     */
     private function __saveassignment()
     {
         $name = $this->getParam('name');
@@ -256,7 +263,10 @@ class assignment extends controller
             return $this->nextAction('view', array('id'=>$result));
         }
     }
-    
+    /**
+     * View the assigment
+     * @return <type>
+     */
     private function __view()
     {
         $id = $this->getParam('id');
@@ -275,7 +285,10 @@ class assignment extends controller
         
         return 'viewassignment_tpl.php';
     }
-    
+    /**
+     * Edit a specific assignment
+     * @return <type>
+     */
     function __edit()
     {
         $id = $this->getParam('id');
@@ -296,7 +309,10 @@ class assignment extends controller
         return 'addedit_assignment_tpl.php';
     }
     
-    
+    /**
+     * Update an assignment
+     * @return <type>
+     */
     function __updateassignment()
     {
         $id = $this->getParam('id');
@@ -317,7 +333,10 @@ class assignment extends controller
         
         return $this->nextAction('view', array('id'=>$id, 'update'=>$result));
     }
-    
+    /**
+     *Uplaad an offline assignment
+     * @return <type>
+     */
     function __uploadassignment()
     {
         $objFileUpload = $this->getObject('uploadinput', 'filemanager');
@@ -341,7 +360,11 @@ class assignment extends controller
         }
     }
     
-    
+    /**
+     * Allows assignment submission
+     * @param <type> $fileId
+     * @return <type>
+     */
     function __submitassignment($fileId=null)
     {
         if ($fileId == NULL) {
@@ -352,7 +375,11 @@ class assignment extends controller
         
         return $this->nextAction('view', array('id'=>$this->getParam('id'), 'message'=>'assignmentsubmitted'));
     }
-    
+
+    /**
+     * Submit an online assignment
+     * @return <type>
+     */
     function __submitonlineassignment()
     {
         $result = $this->objAssignmentSubmit->submitAssignmentOnline($this->getParam('id'), $this->objUser->userId(), $this->getParam('text'));
@@ -360,7 +387,10 @@ class assignment extends controller
         return $this->nextAction('view', array('id'=>$this->getParam('id'), 'message'=>'assignmentsubmitted'));
     }
     
-    
+    /**
+     * View the submission
+     * @return <type>
+     */
     function __viewsubmission()
     {
         $id = $this->getParam('id');
@@ -386,7 +416,10 @@ class assignment extends controller
         
         return 'viewsubmission_tpl.php';
     }
-    
+
+    /**
+     * file download
+     */
     function __downloadfile()
     {
         $id = $this->getParam('id');
@@ -429,7 +462,10 @@ class assignment extends controller
         
         
     }
-    
+    /**
+     *Save upload mark
+     * @return <type>
+     */
     function __saveuploadmark()
     {
         $id = $this->getParam('id');
@@ -467,7 +503,10 @@ class assignment extends controller
         return $this->nextAction('view', array('id'=>$submission['assignmentid'], 'message'=>'assignmentmarked', 'assignment'=>$id));
     }
     
-    
+    /**
+     *Save online mark
+     * @return <type>
+     */
     function __saveonlinemark()
     {
         $id = $this->getParam('id');
@@ -480,7 +519,9 @@ class assignment extends controller
         
         return $this->nextAction('view', array('id'=>$submission['assignmentid'], 'message'=>'assignmentmarked', 'assignment'=>$id));
     }
-    
+    /**
+     * View html submission
+     */
     function __viewhtmlsubmission()
     {
         $id = $this->getParam('id');
@@ -494,7 +535,10 @@ class assignment extends controller
         
         include($filePath);
     }
-    
+    /**
+     *Delete an assignment
+     * @return <type>
+     */
     function __delete()
     {
         $id = $this->getParam('id');
@@ -519,7 +563,10 @@ class assignment extends controller
         
         return 'deleteassignment_tpl.php';
     }
-    
+    /**
+     * confirm deletion
+     * @return <type>
+     */
     function __deleteconfirm()
     {
         $id = $this->getParam('id');

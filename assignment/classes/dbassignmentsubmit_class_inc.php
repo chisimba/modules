@@ -28,11 +28,22 @@ class dbassignmentsubmit extends dbtable
         parent::init('tbl_assignment_submit');
     }
 
+    /**
+     * gets the submission
+     * @param <type> $id
+     * @return <type>
+     */
     public function getSubmission($id)
     {
         return $this->getRow('id', $id);
     }
 
+    /**
+     * this gets student submissions
+     * @param <type> $assignmentId
+     * @param <type> $orderBy
+     * @return <type>
+     */
     public function getStudentSubmissions($assignmentId, $orderBy = 'firstname, datesubmitted')
     {
         $sql = ' SELECT tbl_assignment_submit.*, firstName, surname, staffnumber FROM tbl_assignment_submit
@@ -41,6 +52,12 @@ class dbassignmentsubmit extends dbtable
         return $this->getArray($sql);
     }
 
+    /**
+     * get assigment for a spfic student
+     * @param <type> $studentId
+     * @param <type> $assignmentId
+     * @return <type>
+     */
     public function getStudentAssignment($studentId, $assignmentId)
     {
         return $this->getAll(" WHERE assignmentid='{$assignmentId}' AND userid='{$studentId}' ");
@@ -86,7 +103,13 @@ class dbassignmentsubmit extends dbtable
             return FALSE;
         }
     }
-
+/**
+ *submit assignment upload
+ * @param <type> $assignmentId
+ * @param <type> $userId
+ * @param <type> $fileId
+ * @return <type>
+ */
     public function submitAssignmentUpload($assignmentId, $userId, $fileId)
     {
         if (!$this->checkOkToSubmit($userId, $assignmentId)) {
@@ -112,7 +135,13 @@ class dbassignmentsubmit extends dbtable
             return $this->processfile($submitId, $filePath);
         }
     }
-
+/**
+ * Save assignemnt uploaded by a student
+ * @param <type> $assignmentId
+ * @param <type> $userId
+ * @param <type> $fileId
+ * @return <type>
+ */
     private function addStudentAssignmentUpload($assignmentId, $userId, $fileId)
     {
         return $this->insert(array(
@@ -122,7 +151,11 @@ class dbassignmentsubmit extends dbtable
                 'datesubmitted' => date('Y-m-d H:i:s',time())
             ));
     }
-
+/**
+ *File processing util
+ * @param <type> $submitId
+ * @param <type> $path
+ */
     private function processfile($submitId, $path)
     {
         $objConfig = $this->getObject('altconfig', 'config');
@@ -136,7 +169,13 @@ class dbassignmentsubmit extends dbtable
 
         copy($path, $savePath.'/'.basename($path));
     }
-
+/**
+ * Submit online assignment, but check if submited or not
+ * @param <type> $assignmentId
+ * @param <type> $userId
+ * @param <type> $text
+ * @return <type>
+ */
     public function submitAssignmentOnline($assignmentId, $userId, $text)
     {
         if (!$this->checkOkToSubmit($userId, $assignmentId)) {
@@ -145,7 +184,13 @@ class dbassignmentsubmit extends dbtable
 
         return $this->addStudentAssignmentOnline($assignmentId, $userId, $text);
     }
-
+/**
+ *save the student online assignment
+ * @param <type> $assignmentId
+ * @param <type> $userId
+ * @param <type> $text
+ * @return <type>
+ */
     private function addStudentAssignmentOnline($assignmentId, $userId, $text)
     {
         return $this->insert(array(
@@ -155,7 +200,12 @@ class dbassignmentsubmit extends dbtable
                 'datesubmitted' => date('Y-m-d H:i:s',time())
             ));
     }
-
+/**
+ *get assignment filename
+ * @param <type> $submissionId
+ * @param <type> $fileId
+ * @return <type>
+ */
     public function getAssignmentFilename($submissionId, $fileId)
     {
         $objFile = $this->getObject('dbfile', 'filemanager');
@@ -191,11 +241,20 @@ class dbassignmentsubmit extends dbtable
         return $filePath;
     }
 
+    /**
+     * set assignment as marked
+     */
     function markAssignment($id, $mark, $commentinfo)
     {
         return $this->update('id', $id, array('mark'=>$mark, 'commentinfo'=>$commentinfo, 'updated'=>date('Y-m-d H:i:s',time())));
     }
 
+    /**
+     * set lecturer mark file
+     * @param <type> $id
+     * @param <type> $fileId
+     * @return <type>
+     */
     public function setLecturerMarkFile($id, $fileId)
     {
         return $this->update('id', $id, array('lecturerfileid'=>$fileId));
