@@ -29,8 +29,8 @@
  * @link      http://avoir.uwc.ac.za
  */
 
-// security check - must be included in all scripts
-if (!
+    // security check - must be included in all scripts
+    if (!
 /**
  * The $GLOBALS is an array used to control access to certain constants.
  * Here it is used to check if the file is opening in engine, if not it
@@ -40,11 +40,11 @@ if (!
  * @name   $kewl_entry_point_run
  *
  */
-$GLOBALS['kewl_entry_point_run'])
-{
+        $GLOBALS['kewl_entry_point_run'])
+    {
         die("You cannot view this page directly");
-}
-// end security check
+    }
+    // end security check
 
 /**
 *
@@ -54,8 +54,8 @@ $GLOBALS['kewl_entry_point_run'])
 * @package assignment
 *
 */
-class dbassignment extends dbtable
-{
+    class dbassignment extends dbtable
+    {
 
     /**
     *
@@ -63,39 +63,59 @@ class dbassignment extends dbtable
     * @access public
     *
     */
-    public function init()
-    {
-        //Set the parent table here
-        parent::init('tbl_assignment');
-        $this->objUser = $this->getObject('user','security');
-    }
-    
-    public function getAssignment($id)
-    {
-        return $this->getRow('id', $id);
-    }
-    
-    /**
-    * Method to get an assignment from the database.
-    * @param string $context The current context.
-    * @param string $filter
-    * @return array $data List of assignments
-    */
-    public function getAssignments($context, $filter=NULL)
-    {
-        $sql = " WHERE context='".$context."'";
-
-        if($filter){
-            $sql .= ' AND '.$filter;
+        public function init()
+        {
+            //Set the parent table here
+            parent::init('tbl_assignment');
+            $this->objUser = $this->getObject('user','security');
         }
-        $sql .= ' ORDER BY closing_date DESC';
-        
-        return $this->getAll($sql);
-    }
-    
-    public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date)
+
+        public function getAssignment($id)
+        {
+            return $this->getRow('id', $id);
+        }
+    /**
+    * Method to search assignments and return the results.
+    * @param string $field The table field in which to search.
+    * @param string $value The value to search for.
+    * @param string $context The current context.
+    * @return array $data The results of the search.
+    */
+    public function search($field, $value, $context)
     {
-        return $this->insert(array(
+        $sql = "SELECT * FROM tbl_assignment";
+        $sql .= " WHERE $field LIKE '$value%'";
+        $sql .= " AND context='$context'";
+        $sql .= ' ORDER BY closing_date';
+
+        $data = $this->getArray($sql);
+
+        if($data){
+            return $data;
+        }
+        return FALSE;
+    }
+    /**
+        * Method to get an assignment from the database.
+        * @param string $context The current context.
+        * @param string $filter
+        * @return array $data List of assignments
+    */
+        public function getAssignments($context, $filter=NULL)
+        {
+            $sql = " WHERE context='".$context."'";
+
+            if($filter){
+                $sql .= ' AND '.$filter;
+            }
+            $sql .= ' ORDER BY closing_date DESC';
+
+            return $this->getAll($sql);
+        }
+
+        public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date)
+        {
+            return $this->insert(array(
                 'name' => $name,
                 'context' => $context,
                 'description' => $description,
@@ -108,12 +128,12 @@ class dbassignment extends dbtable
                 'userid' => $this->objUser->userId(),
                 'last_modified' => date('Y-m-d H:i:s',time()),
                 'updated' => date('Y-m-d H:i:s',time())
-            ));
-    }
-    
-    public function updateAssignment($id, $name, $description, $resubmit, $mark, $percentage, $opening_date, $closing_date)
-    {
-        return $this->update('id', $id, array(
+                ));
+        }
+
+        public function updateAssignment($id, $name, $description, $resubmit, $mark, $percentage, $opening_date, $closing_date)
+        {
+            return $this->update('id', $id, array(
                 'name' => $name,
                 'description' => $description,
                 'resubmit' => $resubmit,
@@ -124,15 +144,15 @@ class dbassignment extends dbtable
                 'userid' => $this->objUser->userId(),
                 'last_modified' => date('Y-m-d H:i:s',time()),
                 'updated' => date('Y-m-d H:i:s',time())
-            ));
-    }
-    
-    public function deleteAssignment($id)
-    {
-        $result = $this->delete('id', $id);
-        
-        return $result;
-    }
+                ));
+        }
 
-}
+        public function deleteAssignment($id)
+        {
+            $result = $this->delete('id', $id);
+
+            return $result;
+        }
+
+    }
 ?>
