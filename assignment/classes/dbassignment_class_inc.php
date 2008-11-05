@@ -3,7 +3,6 @@
  *
  * Assignments
  *
- * Assignments enable students to view a list of booked assignments. The status is displayed indicating whether it is open, closed or if the student has submitted. The mark is shown once it has been marked.A new assignment can be opened for answering. Students can complete the assignment if its online and submit it. An uploadable or offline assignment can be completed and then loaded into the database. A marked assignment can be opened and the lecturer's comment can be viewed.
  *
  * PHP version 5
  *
@@ -22,7 +21,6 @@
  *
  * @category  Chisimba
  * @package   assignment2
- * @author    Tohir Solomons _EMAIL
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id$
