@@ -44,16 +44,16 @@ class examdisplay extends object
     public $objEditor;
 
     /**
-    * @var string $isLoggedIn: The login status of the user
+    * @var object $objUser: The user class in the security module
     * @access public
     */
-    public $isLoggedIn;
+    public $objUser;
 
     /**
-    * @var bool $isExamAdmin: TRUE if the user is in the Examiners Admin group FALSE if not
+    * @var object $objGroup: The groupadminmodel class in the groupadmin module
     * @access public
     */
-    public $isExamAdmin;
+    public $objGroup;
 
     /**
     * @var string $filePath: The path to the subject files
@@ -66,6 +66,18 @@ class examdisplay extends object
     * @access public
     */
     public $fileLink;
+
+    /**
+    * @var string $pkId: The of the users record on the users table (NOT USERID)
+    * @access public
+    */
+    public $pkId;
+
+    /**
+    * @var bool $isAdmin: TRUE if the user is in the Admin group FALSE if not
+    * @access public
+    */
+    public $isAdmin;
 
     /**
     * Method to construct the class
@@ -85,6 +97,7 @@ class examdisplay extends object
         $this->loadClass('button', 'htmlelements');
         $this->loadClass('form', 'htmlelements');
         $this->loadClass('layer', 'htmlelements');
+        $this->loadClass('radio', 'htmlelements');
 		
         // system classes
         $this->objLanguage = $this->getObject('language', 'language');
@@ -96,12 +109,10 @@ class examdisplay extends object
 
         $objUser = $this->getObject('user', 'security');
         $userId = $objUser->userId();
-        $pkId = $objUser->PKId($userId);
-        $this->isLoggedIn = $objUser->isLoggedIn();
+        $this->pkId = $objUser->PKId($userId);
+        $this->isAdmin = $objUser->inAdminGroup($userId);
 
-        $objGroup = $this->getObject('groupadminmodel', 'groupadmin');
-        $groupId = $objGroup->getId('Exam Admin');
-        $this->isBookAdmin = $objGroup->isGroupMember($pkId, $groupId);
+        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
 
         $objConfig = $this->getObject('altconfig', 'config');     
         $css = '<link id="calender_css" type="text/css" rel="stylesheet" href="'.$objConfig->getModuleURI().$this->getParam('module').'/resources/examiners.css" />';
@@ -123,23 +134,26 @@ class examdisplay extends object
 	* @return string $str: The output string
 	*/
 	public function showHome()
-	{            
+	{
+        return 'you are not part of faculty administation';            
     }
 
 	/**
 	* Method to display the add/edit examiner page
 	*
 	* @access public
+	* @param string $facId: The id of the faculty
 	* @param string $depId: The id of the department
 	* @param string $userId: The user id of the examiner
 	* @return string $str: The output string
 	*/
-	public function showAddEditExaminer($depId, $userId)
+	public function showAddEditExaminer($facId, $depId, $userId)
 	{
         // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
         $department = $this->objExamDb->getDepartmentById($depId);
-        $user = $this->objExamDb->getUserById($userId);
-        if($user == FALSE){
+        $examiner = $this->objExamDb->getExaminerById($userId);
+        if($examiner == FALSE){
             $id = '';
             $title = '';
             $name = '';
@@ -192,17 +206,22 @@ class examdisplay extends object
         $lblReturn = $this->objLanguage->languageText('mod_examiners_returnexaminers', 'examiners');
         
         // set up page heading
-        $lblHeading = $user ? $lblEdit : $lblAdd;
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblHeading;
-        $this->objHeading->type = 1;
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
-                
+
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
 
+        $lblHeading = $examiner ? $lblEdit : $lblAdd;
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblHeading;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+                
         // set up htmlelements
         $this->objDrop = new dropdown('title');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
@@ -294,6 +313,7 @@ class examdisplay extends object
         // set up forms
         $this->objForm = new form('frmExaminers',$this->uri(array(
             'action' => 'save_examiner',
+            'f' => $facId,
             'd' => $depId,
             'u' => $id,
         ), 'examiners'));
@@ -306,6 +326,7 @@ class examdisplay extends object
     
         $this->objForm = new form('frmCancel',$this->uri(array(
             'action' => 'examiners',
+            'f' => $facId,
             'd' => $depId,
         ), 'examiners'));
         $frmCancel = $this->objForm->show();
@@ -313,6 +334,7 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'examiners',
+            'f' => $facId,
             'd' => $depId,
         ),'examiners'));
         $this->objLink->link = $lblReturn;
@@ -331,18 +353,20 @@ class examdisplay extends object
 	* Method to display a list of examiners
 	*
 	* @access public
+	* @param string $facId: The id of the faculty
 	* @param string $depId: The id of the department
 	* @return string $str: The output string
 	*/
-	public function showExaminers($depId)
+	public function showExaminers($facId, $depId)
 	{
         // append javascript
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
         $this->appendArrayVar('headerParams', $headerParams);
         
         // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
         $department = $this->objExamDb->getDepartmentById($depId);
-        $users = $this->objExamDb->getExaminersByDepartment($depId);
+        $examiners = $this->objExamDb->getExaminersByDepartment($depId);
 
         // set up text elements
         $lblList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
@@ -367,17 +391,23 @@ class examdisplay extends object
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
             'action' => 'examiner',
+            'f' => $facId,
             'd' => $depId,
         ), 'examiners'));
 
         // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
-        $this->objHeading->type = 1;
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
         
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
         
@@ -399,37 +429,38 @@ class examdisplay extends object
         $this->objTable->addCell($lblAddress, '', '', '', 'header', '');
         $this->objTable->addCell('', '', '', '', 'header', '');
         $this->objTable->endRow();
-        if($users == FALSE){
+        if($examiners == FALSE){
             $this->objTable->startRow();
             $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="10"');
             $this->objTable->endRow();
         }else{
-            foreach($users as $user){
+            foreach($examiners as $examiner){
                 // set up edit icon
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
                     'action' => 'examiner',
+                    'f' => $facId,
                     'd' => $depId,
-                    'u' => $user['id'],
+                    'u' => $examiner['id'],
                 ), 'examiners'));
                 
                 // set up delete icon
                 $deleteArray = array(
                     'action' => 'delete_examiner',
-                    'u' => $user['id'],
+                    'u' => $examiner['id'],
                 );
                 $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
                 
                 $this->objTable->startRow();
-                $this->objTable->addCell($user['title'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['first_name'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['surname'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['organisation'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['email_address'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['tel_no'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['extension'], '', 'top', '', '', '');
-                $this->objTable->addCell($user['cell_no'], '', 'top', '', '', '');
-                $this->objTable->addCell(nl2br($user['address']), '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['title'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['first_name'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['organisation'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['email_address'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['tel_no'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['extension'], '', 'top', '', '', '');
+                $this->objTable->addCell($examiner['cell_no'], '', 'top', '', '', '');
+                $this->objTable->addCell(nl2br($examiner['address']), '', 'top', '', '', '');
                 $this->objTable->addCell($icoEdit.$icoDelete, '', '', '', '', '');
                 $this->objTable->endRow();
             }
@@ -439,6 +470,8 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'departments',
+            'f' => $facId,
+            'd' => $depId,
         ),'examiners'));
         $this->objLink->link = $lblReturn;
         $lnkReturn = $this->objLink->show();
@@ -483,7 +516,7 @@ class examdisplay extends object
         $lblHeading = $faculty ? $lblEdit : $lblAdd;
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $lblHeading;
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
                 
         // set up htmlelements
@@ -572,7 +605,7 @@ class examdisplay extends object
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $faculty['faculty_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
 
         $lblHeading = $department ? $lblEdit : $lblAdd;
@@ -661,8 +694,8 @@ class examdisplay extends object
         $lblConfirm = $this->objLanguage->languageText('mod_examiners_facultyconfirm', 'examiners');        
         $lblName = $this->objLanguage->languageText('word_name');        
         $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
-        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nofaculties', 'examiners');
-        
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nofaculties', 'examiners');       
+        $lblHeads = $this->objLanguage->languageText('mod_examiners_facultyheadlist', 'examiners');
                 
         // set up add examiner icon
         $this->objIcon->title = $lblAdd;
@@ -672,8 +705,12 @@ class examdisplay extends object
 
         // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
-        $this->objHeading->type = 1;
+        if($this->isAdmin){
+            $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        }else{
+            $this->objHeading->str = $lblList;
+        }
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
         
         // set up display table
@@ -684,7 +721,7 @@ class examdisplay extends object
         $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
         $this->objTable->startRow();
         $this->objTable->addCell($lblName, '', '', '', 'header', '');
-        $this->objTable->addCell('', '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
         $this->objTable->endRow();
         if($faculties == FALSE){
             $this->objTable->startRow();
@@ -692,6 +729,15 @@ class examdisplay extends object
             $this->objTable->endRow();
         }else{
             foreach($faculties as $faculty){
+                $userLevel = $this->userLevel($faculty['id']);
+                
+                // set up groups icon
+                $this->objIcon->title = $lblHeads;
+                $icoGroups = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'fac_heads',
+                    'f' => $faculty['id'],
+                ), 'examiners'), 'groups');
+                
                 // set up edit icon
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
@@ -706,17 +752,25 @@ class examdisplay extends object
                 );
                 $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
                 
-                // set up department link
-                $this->objLink = new link($this->uri(array(
-                    'action' => 'departments',
-                    'f' => $faculty['id'],
-                ),'examiners'));
-                $this->objLink->link = $faculty['faculty_name'];
-                $lnkName = $this->objLink->show();
+                if($userLevel != FALSE or $this->isAdmin){
+                    // set up department link
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'departments',
+                        'f' => $faculty['id'],
+                    ),'examiners'));
+                    $this->objLink->link = $faculty['faculty_name'];
+                    $lnkName = $this->objLink->show();
+                }else{
+                    $lnkName = $faculty['faculty_name'];
+                }
 
                 $this->objTable->startRow();
                 $this->objTable->addCell($lnkName, '', 'top', '', '', '');
-                $this->objTable->addCell($icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                if($this->isAdmin){
+                    $this->objTable->addCell($icoGroups.'&#160;'.$icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                }else{
+                    $this->objTable->addCell('', '', '', '', '', '');
+                }
                 $this->objTable->endRow();
             }
         }
@@ -746,6 +800,7 @@ class examdisplay extends object
         // get data
         $faculty = $this->objExamDb->getFacultyById($facId);
         $departments = $this->objExamDb->getAllDepartmentsPerFaculty($facId);
+        $userLevel = $this->userLevel($facId);
 
         // set up text elements
         $lblExaminerList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
@@ -757,7 +812,10 @@ class examdisplay extends object
         $lblName = $this->objLanguage->languageText('word_name');        
         $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartments', 'examiners');
         $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
-                
+        $lblFaculty = $this->objLanguage->languageText('word_faculty');
+        $lblHeads = $this->objLanguage->languageText('mod_examiners_departmentheadlist', 'examiners');
+        $lblAdmin = $this->objLanguage->languageText('mod_examiners_adminlist', 'examiners');
+           
         // set up add examiner icon
         $this->objIcon->title = $lblAdd;
         $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
@@ -768,11 +826,15 @@ class examdisplay extends object
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $faculty['faculty_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
 
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        if($this->isAdmin or $userLevel == 'facHead'){
+            $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        }else{
+            $this->objHeading->str = $lblList;
+        }
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
         
@@ -784,7 +846,7 @@ class examdisplay extends object
         $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
         $this->objTable->startRow();
         $this->objTable->addCell($lblName, '', '', '', 'header', '');
-        $this->objTable->addCell('', '', '', '', 'header', '');
+        $this->objTable->addCell('', '15%', '', '', 'header', '');
         $this->objTable->endRow();
         if($departments == FALSE){
             $this->objTable->startRow();
@@ -792,6 +854,24 @@ class examdisplay extends object
             $this->objTable->endRow();
         }else{
             foreach($departments as $department){
+                $userLevel = $this->userLevel($facId, $department['id']);
+
+                // set up groups icon
+                $this->objIcon->title = $lblHeads;
+                $icoGroups = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'dep_heads',
+                    'f' => $facId,
+                    'd' => $department['id'],
+                ), 'examiners'), 'groups');
+                
+                // set up groups icon
+                $this->objIcon->title = $lblAdmin;
+                $icoAdmin = $this->objIcon->getLinkedIcon($this->uri(array(
+                    'action' => 'dep_admin',
+                    'f' => $facId,
+                    'd' => $department['id'],
+                ), 'examiners'), 'managing_users');
+                
                 // set up edit icon
                 $this->objIcon->title = $lblEdit;
                 $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
@@ -808,14 +888,18 @@ class examdisplay extends object
                 );
                 $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
                 
-                // set up subject link
-                $this->objLink = new link($this->uri(array(
-                    'action' => 'subjects',
-                    'f' => $facId,
-                    'd' => $department['id'],
-                ),'examiners'));
-                $this->objLink->link = $department['department_name'];
-                $lnkName = $this->objLink->show();
+                if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead' or $userLevel == 'depAdmin'){
+                    // set up subject link
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'subjects',
+                        'f' => $facId,
+                        'd' => $department['id'],
+                    ),'examiners'));
+                    $this->objLink->link = $department['department_name'];
+                    $lnkName = $this->objLink->show();
+                }else{
+                    $lnkName = $department['department_name'];
+                }
 
                 // set up examiners icon
                 $this->objIcon->title = $lblExaminerList;
@@ -828,7 +912,15 @@ class examdisplay extends object
 
                 $this->objTable->startRow();
                 $this->objTable->addCell($lnkName, '', 'top', '', '', '');
-                $this->objTable->addCell($icoExaminers.'&#160;'.$icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                if($this->isAdmin or $userLevel == 'facHead'){
+                    $this->objTable->addCell($icoGroups.'&#160;'.$icoAdmin.'&#160;'.$icoExaminers.'&#160;'.$icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                }elseif($userLevel == 'depHead'){
+                    $this->objTable->addCell($icoAdmin.'&#160;'.$icoExaminers, '', '', '', '', '');
+                }elseif($userLevel != FALSE){
+                    $this->objTable->addCell($icoExaminers, '', '', '', '', '');
+                }else{
+                    $this->objTable->addCell('', '', '', '', '', '');
+                }
                 $this->objTable->endRow();
             }
         }
@@ -900,12 +992,12 @@ class examdisplay extends object
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $faculty['faculty_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
 
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
 
         $lblHeading = $subject ? $lblEdit : $lblAdd;
@@ -1028,6 +1120,7 @@ class examdisplay extends object
         $subjects = $this->objExamDb->getSubjectsByDepartment($depId);
         $department = $this->objExamDb->getDepartmentById($depId);
         $faculty = $this->objExamDb->getFacultyById($facId);
+        $userLevel = $this->userLevel($facId, $depId);
         
         // set up text elements
         $lblList = $this->objLanguage->languageText('mod_examiners_subjectlist', 'examiners');        
@@ -1060,17 +1153,21 @@ class examdisplay extends object
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $faculty['faculty_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
         
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
-        $this->objHeading->type = 1;
+        $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
         
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+            $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+        }else{
+            $this->objHeading->str = $lblList;            
+        }
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
         
@@ -1085,7 +1182,7 @@ class examdisplay extends object
         $this->objTable->addCell($lblName, '', '', '', 'header', '');
         $this->objTable->addCell($lblLevel, '', '', '', 'header', '');
         $this->objTable->addCell($lblStatus, '', '', '', 'header', '');
-        $this->objTable->addCell('', '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
         $this->objTable->endRow();
         if($subjects == FALSE){
             $this->objTable->startRow();
@@ -1131,7 +1228,6 @@ class examdisplay extends object
                 $this->objLink->link = $subject['course_name'];
                 $lnkName = $this->objLink->show();
 
-
                 if($subject['course_level'] == 1){
                     $level = $lblUndergraduate;
                 }else{
@@ -1149,7 +1245,11 @@ class examdisplay extends object
                 $this->objTable->addCell($lnkName, '', 'top', '', '', '');
                 $this->objTable->addCell($level, '', 'top', '', '', '');
                 $this->objTable->addCell($status, '', 'top', '', '', '');
-                $this->objTable->addCell($icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+                    $this->objTable->addCell($icoEdit.'&#160;'.$icoDelete, '', '', '', '', '');
+                }else{
+                    $this->objTable->addCell('', '', '', '', '', '');                    
+                }
                 $this->objTable->endRow();
             }
         }
@@ -1175,17 +1275,19 @@ class examdisplay extends object
     * Method to show the examiner matrix
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
 	* @return string $str: The output string
 	*/
-	public function showMatrix($depId, $subjId, $year)
+	public function showMatrix($facId, $depId, $subjId, $year)
 	{
         // get data
-        $year = (isset($year) && !empty($year)) ? $year : date('Y');   
+        $year = (isset($year) && !empty($year)) ? $year : date('Y') + 1;   
+        $faculty = $this->objExamDb->getFacultyById($facId);
         $department = $this->objExamDb->getDepartmentById($depId);
         $subject = $this->objExamDb->getSubjectById($subjId);
-        $matrix = $this->objExamDb->getMatrixByYear($depId, $subjId, $year);
+        $matrix = $this->objExamDb->getMatrixByYear($facId, $depId, $subjId, $year);
 
         // set up text elements
         $lblMatrix = $this->objLanguage->languageText('mod_examiners_matrix', 'examiners');        
@@ -1197,14 +1299,26 @@ class examdisplay extends object
         $lblModerate = $this->objLanguage->languageText('mod_examiners_moderator', 'examiners');
         $lblAlternate = $this->objLanguage->languageText('mod_examiners_alternate', 'examiners');
         $lblRemark = $this->objLanguage->languageText('mod_examiners_remark', 'examiners');
+        $lblAdd = $this->objLanguage->languageText('mod_examiners_addmatrixtitle', 'examiners');        
         $lblEdit = $this->objLanguage->languageText('mod_examiners_editmatrixtitle', 'examiners');        
         $lblDelete = $this->objLanguage->languageText('mod_examiners_deletematrixtitle', 'examiners');        
         $lblConfirm = $this->objLanguage->languageText('mod_examiners_matrixconfirm', 'examiners');        
+
+        // set up add add icon
+        $this->objIcon->title = $lblAdd;
+        $icoAdd = $this->objIcon->getAddIcon($this->uri(array(
+            'action' => 'edit_matrix',
+            'f' => $facId,
+            'd' => $depId,
+            's' => $subjId,
+            'y' => $year,
+        ), 'examiners'));
 
         // set up edit icon
         $this->objIcon->title = $lblEdit;
         $icoEdit = $this->objIcon->getEditIcon($this->uri(array(
             'action' => 'edit_matrix',
+            'f' => $facId,
             'd' => $depId,
             's' => $subjId,
             'y' => $year,
@@ -1213,21 +1327,19 @@ class examdisplay extends object
         // set up delete icon
         $deleteArray = array(
             'action' => 'delete_matrix',
+            'f' => $facId,
             'd' => $depId,
             's' => $subjId,
             'y' => $year,
         );
         $icoDelete = $this->objIcon->getDeleteIconWithConfirm('', $deleteArray, 'examiners', $lblConfirm);
-        if($matrix == FALSE){
-            $icoDelete = '';
-        }
                 
         // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblMatrix.'&#160;'.$icoEdit.'&#160;'.$icoDelete;
-        $this->objHeading->type = 1;
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
-
+                
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $department['department_name'];
         $this->objHeading->type = 3;
@@ -1238,9 +1350,18 @@ class examdisplay extends object
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
 
+        $this->objHeading = new htmlHeading();
+        if($matrix == FALSE){
+            $this->objHeading->str = $lblMatrix.'&#160;'.$icoAdd;            
+        }else{
+            $this->objHeading->str = $lblMatrix.'&#160;'.$icoEdit.'&#160;'.$icoDelete;
+        }
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
         // set up htmlelements
         $this->objDrop = new dropdown('y');
-        for($loop = date('Y'); $loop >= 2006; $loop--){
+        for($loop = date('Y') + 1; $loop >= 2006; $loop--){
             $this->objDrop->addOption($loop, $loop.'&#160;');
         }
         $this->objDrop->setSelected($year);
@@ -1250,6 +1371,7 @@ class examdisplay extends object
         // set up form
         $this->objForm = new form('frmMatrix',$this->uri(array(
             'action' => 'matrix',
+            'f' => $facId,
             'd' => $depId,
             's' => $subjId,
         ), 'examiners'));
@@ -1299,6 +1421,7 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'subjects',
+            'f' => $facId,
             'd' => $depId,
         ),'examiners'));
         $this->objLink->link = $lblReturn;
@@ -1317,17 +1440,19 @@ class examdisplay extends object
     * Method to show the examiner matrix
     *
     * @access public
+    * @param string $facId: The id of the faculty
     * @param string $depId: The id of the department
     * @param string $subjId: The id of the subject
 	* @return string $str: The output string
 	*/
-	public function showEditMatrix($depId, $subjId, $year)
+	public function showEditMatrix($facId, $depId, $subjId, $year)
 	{
         // get data
         $year = (isset($year) && !empty($year)) ? $year : date('Y');   
+        $faculty = $this->objExamDb->getFacultyById($facId);
         $department = $this->objExamDb->getDepartmentById($depId);
         $subject = $this->objExamDb->getSubjectById($subjId);
-        $matrix = $this->objExamDb->getMatrixByYear($depId, $subjId, $year);
+        $matrix = $this->objExamDb->getMatrixByYear($facId, $depId, $subjId, $year);
         $first = '';
         $firstText = '';
         $second = '';
@@ -1360,7 +1485,7 @@ class examdisplay extends object
                 $remarkingText = $matrix[4]['remarks'];
             }
         }
-        $users = $this->objExamDb->getUsersByDepartment($depId);
+        $examiners = $this->objExamDb->getExaminersByDepartment($depId);
 
         // set up text elements
         $lblEdit = $this->objLanguage->languageText('word_edit');
@@ -1379,8 +1504,8 @@ class examdisplay extends object
 
         // set up page heading
         $this->objHeading = new htmlHeading();
-        $this->objHeading->str = $lblEdit.'&#160;'.strtolower($lblMatrix);
-        $this->objHeading->type = 1;
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
         $heading = $this->objHeading->show();
 
         $this->objHeading = new htmlHeading();
@@ -1394,6 +1519,11 @@ class examdisplay extends object
         $heading .= $this->objHeading->show();
 
         $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblEdit.'&#160;'.strtolower($lblMatrix);
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
         $this->objHeading->str = $year;
         $this->objHeading->type = 3;
         $heading .= $this->objHeading->show();
@@ -1401,10 +1531,10 @@ class examdisplay extends object
         // set up htmlelements
         $this->objDrop = new dropdown('first');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
-        if($users != FALSE){
-            foreach($users as $user){
-                $name = $user['title'].'&#160;'.$user['first_name'].'&#160;'.$user['surname'].'&#160;';
-                $this->objDrop->addOption($user['id'], $name);
+        if($examiners != FALSE){
+            foreach($examiners as $examiner){
+                $name = $examiner['title'].'&#160;'.$examiner['first_name'].'&#160;'.$examiner['surname'].'&#160;';
+                $this->objDrop->addOption($examiner['id'], $name);
             }
         }
         $this->objDrop->setSelected($first);
@@ -1415,10 +1545,10 @@ class examdisplay extends object
 
         $this->objDrop = new dropdown('second');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
-        if($users != FALSE){
-            foreach($users as $user){
-                $name = $user['title'].'&#160;'.$user['first_name'].'&#160;'.$user['surname'].'&#160;';
-                $this->objDrop->addOption($user['id'], $name);
+        if($examiners != FALSE){
+            foreach($examiners as $examiner){
+                $name = $examiner['title'].'&#160;'.$examiner['first_name'].'&#160;'.$examiner['surname'].'&#160;';
+                $this->objDrop->addOption($examiner['id'], $name);
             }
         }
         $this->objDrop->setSelected($second);
@@ -1429,10 +1559,10 @@ class examdisplay extends object
 
         $this->objDrop = new dropdown('moderate');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
-        if($users != FALSE){
-            foreach($users as $user){
-                $name = $user['title'].'&#160;'.$user['first_name'].'&#160;'.$user['surname'].'&#160;';
-                $this->objDrop->addOption($user['id'], $name);
+        if($examiners != FALSE){
+            foreach($examiners as $examiner){
+                $name = $examiner['title'].'&#160;'.$examiner['first_name'].'&#160;'.$examiner['surname'].'&#160;';
+                $this->objDrop->addOption($examiner['id'], $name);
             }
         }
         $this->objDrop->setSelected($moderate);
@@ -1443,10 +1573,10 @@ class examdisplay extends object
 
         $this->objDrop = new dropdown('alternate');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
-        if($users != FALSE){
-            foreach($users as $user){
-                $name = $user['title'].'&#160;'.$user['first_name'].'&#160;'.$user['surname'].'&#160;';
-                $this->objDrop->addOption($user['id'], $name);
+        if($examiners != FALSE){
+            foreach($examiners as $examiner){
+                $name = $examiner['title'].'&#160;'.$examiner['first_name'].'&#160;'.$examiner['surname'].'&#160;';
+                $this->objDrop->addOption($examiner['id'], $name);
             }
         }
         $this->objDrop->setSelected($alternate);
@@ -1457,10 +1587,10 @@ class examdisplay extends object
 
         $this->objDrop = new dropdown('remarking');
         $this->objDrop->addOption('', $lblSelect.'&#160;');
-        if($users != FALSE){
-            foreach($users as $user){
-                $name = $user['title'].'&#160;'.$user['first_name'].'&#160;'.$user['surname'].'&#160;';
-                $this->objDrop->addOption($user['id'], $name);
+        if($examiners != FALSE){
+            foreach($examiners as $examiner){
+                $name = $examiner['title'].'&#160;'.$examiner['first_name'].'&#160;'.$examiner['surname'].'&#160;';
+                $this->objDrop->addOption($examiner['id'], $name);
             }
         }
         $this->objDrop->setSelected($remarking);
@@ -1508,6 +1638,7 @@ class examdisplay extends object
         // set up forms
         $this->objForm = new form('frmSubjects',$this->uri(array(
             'action' => 'save_matrix',
+            'f' => $facId,
             's' => $subjId,
             'd' => $depId,
             'y' => $year,
@@ -1518,6 +1649,7 @@ class examdisplay extends object
     
         $this->objForm=new form('frmCancel',$this->uri(array(
             'action' => 'matrix',
+            'f' => $facId,
             's' => $subjId,
             'd' => $depId,
             'y' => $year,
@@ -1527,6 +1659,7 @@ class examdisplay extends object
         // set up return link
         $this->objLink = new link($this->uri(array(
             'action' => 'matrix',
+            'f' => $facId,
             's' => $subjId,
             'd' => $depId,
             'y' => $year,
@@ -1538,6 +1671,1577 @@ class examdisplay extends object
         $str = $heading;
         $str .= $frmSubmit;
         $str .= $frmCancel;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to create the faculty security groups
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $name: The name of the faculty
+    * @return VOID
+    */
+    public function createFacultyGroups($facId, $name)
+    {
+        $groupId = $this->objGroup->addGroup($name, $facId);
+    }    
+    
+    /**
+    * Method to edit the faculty security groups name
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $name: The name of the faculty
+    * @return VOID
+    */
+    public function editFacultyGroups($facId, $name)
+    {
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $this->objGroup->setName($groupId, $name);
+    }    
+
+    /**
+    * Method to delete the faculty security groups
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @return VOID
+    */
+    public function deleteFacultyGroups($facId)
+    {
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $this->objGroup->deleteGroup($groupId);
+    }
+    
+    /**
+    * Method to create the department security groups
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @param string $name: The name of the department
+    * @return VOID
+    */
+    public function createDepartmentGroups($facId, $depId, $name)
+    {
+        $lblDepartment = $this->objLanguage->languageText('word_department');
+        $lblAdmin = $this->objLanguage->languageText('word_administrator');
+
+        $facGroupId = $this->objGroup->getId($facId, 'description');
+        $depGroupId = $this->objGroup->addGroup($name, $depId, $facGroupId);
+        $this->objGroup->addGroup($lblDepartment.' '.$lblAdmin, $lblDepartment.' '.$lblAdmin, $depGroupId);        
+    }    
+    
+    /**
+    * Method to edit the department security groups name
+    *
+    * @access public
+    * @param string $depId: The id of the department
+    * @param string $name: The name of the department
+    * @return VOID
+    */
+    public function editDepartmentGroups($depId, $name)
+    {
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $this->objGroup->setName($groupId, $name);
+    }    
+
+    /**
+    * Method to delete the department security groups
+    *
+    * @access public
+    * @param string $depId: The id of the department
+    * @return VOID
+    */
+    public function deleteDepartmentGroups($depId)
+    {
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $this->objGroup->deleteGroup($groupId);
+    }
+    
+    /**
+    * Method to return the users status within a faculty
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $status: The status of the user with in the faculty | FALSE if not in faculty    
+    */
+    public function userLevel($facId, $depId = NULL)
+    {
+        $facHead = $this->_isFacHead($facId);
+        if($facHead){
+            return 'facHead';
+        }
+        if($depId != NULL){
+            $depHead = $this->_isDepHead($depId);
+            if($depHead){
+                return 'depHead';
+            }
+            $depAdmin = $this->_isDepAdmin($depId);
+            if($depAdmin){
+                return 'depAdmin';
+            }
+        }
+        if($depId == NULL){
+            $isMember = $this->_isMember($facId);
+            if($isMember){
+                return 'isMember';
+            }
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to determine if the user is a faculty head
+    *
+    * @access private
+    * @param string $facId: The id of the faculty
+    * @return string|bool $status: TRUE if faculty head| FALSE if not faculty head   
+    */
+    private function _isFacHead($facId)
+    {
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $facHead = $this->objGroup->isGroupMember($this->pkId, $groupId);
+        if($facHead){
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to determine if the user is a department head
+    *
+    * @access private
+    * @param string $depId: The id of the department
+    * @return string|bool $status: TRUE if department head| FALSE if not department head   
+    */
+    private function _isDepHead($depId)
+    {
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $depHead = $this->objGroup->isGroupMember($this->pkId, $groupId);
+        if($depHead){
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to determine if the user is a department administrator
+    *
+    * @access private
+    * @param string $depId: The id of the department
+    * @return string|bool $status: TRUE if department administrator| FALSE if not department administrator
+    */
+    private function _isDepAdmin($depId)
+    {
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $groups = $this->objGroup->getSubgroups($groupId);
+        $depAdmin = $this->objGroup->isGroupMember($this->pkId, $groups[1]);
+        if($depAdmin){
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to determine if the user is a member of the faculty
+    *
+    * @access private
+    * @param string $facId: The id of the faculty
+    * @return string|bool $status: TRUE if member of the faculty| FALSE if not member of the faculty
+    */
+    private function _isMember($facId)
+    {
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $isMember = $this->objGroup->isSubGroupMember($this->pkId, $groupId);
+        if($isMember){
+            return TRUE;
+        }
+        return FALSE;
+    }
+    
+    /**
+    * Method to display the faculty heads page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @return string $str: The output string
+    */
+    public function showFacultyHeads($facId)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $groupUsers = $this->objGroup->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+              
+        // set up text elements
+        $lblFacHeadList = $this->objLanguage->languageText('mod_examiners_facultyheadlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nofacultyheads', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfaculty', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_facmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nonfacmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblFacHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "facultyList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($groupUsers == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($groupUsers as $groupUser){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($groupUser['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                $this->objRadio->setSelected('member');
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($groupUser['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_fac_heads',
+            'f' => $facId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'fac_heads',
+            'f' => $facId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', '', 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'fac_users',
+            'f' => $facId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'faculties',
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $heading;
+        $str .= $frmUpdate.$frmCancel;
+        $str .= $string.$frmSearch;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to display the search for users page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @return string $str: The output string
+    */
+    public function showFacSearch($facId, $field, $criteria, $count, $page)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $field = empty($field) ? 'surname' : $field;
+        $faculty = $this->objExamDb->getFacultyById($facId);        
+        $allUsers = $this->objExamDb->getUsers($field, $criteria);
+        $pageUsers = array_chunk($allUsers, $count);
+        $users = $pageUsers[$page - 1];
+        $groupId = $this->objGroup->getId($facId, 'description');
+        $groupUsers = $this->objGroup->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+
+        // set up text elements
+        $lblFacHeadList = $this->objLanguage->languageText('mod_examiners_facultyheadlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nofacultyheads', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnfacultyhead', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_facmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nonfacmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblPage = $this->objLanguage->languageText('word_page');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblFacHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up page links
+        $links = '';
+        for($i = 1; $i <= count($pageUsers); $i++){
+            $this->objLink = new link($this->uri(array(
+                'action' => 'fac_users',
+                'f' => $facId,
+                'field' => $field,
+                'criteria' => $criteria,
+                'count' => $count,
+                'page' => $i,
+            )), 'examiners');
+            $this->objLink->link = $lblPage.'&#160;'.$i;
+            $lnkPage = $this->objLink->show();
+            if($i < count($pageUsers)){
+                $links .= $lnkPage.'&#160;|&#160;';
+            }elseif(count($pageUsers) == 1){
+                $links = '';
+            }else{
+               $links .= $lnkPage;
+            }        
+        }
+    
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "facultyList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($users == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($users as $user){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($user['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                foreach($groupUsers as $groupUser){
+                    if($groupUser['userid'] == $user['userid']){
+                        $this->objRadio->setSelected('member');
+                        break;
+                    }else{
+                        $this->objRadio->setSelected('nonmember');
+                    }
+                }
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($user['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_fac_heads',
+            'f' => $facId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'fac_heads',
+            'f' => $facId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $this->objDrop->setSelected($field);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $this->objDrop->setSelected($count);
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', $criteria, 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'fac_users',
+            'f' => $facId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'fac_heads',
+            'f' => $facId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $string.$frmSearch;
+        $str .= $heading.$links;
+        $str .= $frmUpdate.$frmCancel;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to display the department heads page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $str: The output string
+    */
+    public function showDepartmentHeads($facId, $depId)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $department = $this->objExamDb->getDepartmentById($depId);
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $groupUsers = $this->objGroup->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+              
+        // set up text elements
+        $lblDepHeadList = $this->objLanguage->languageText('mod_examiners_departmentheadlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartmentheads', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_depmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nondepmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblDepHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "departmentList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($groupUsers == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($groupUsers as $groupUser){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($groupUser['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                $this->objRadio->setSelected('member');
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($groupUser['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_dep_heads',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'dep_heads',
+            'f' => $facId,
+            'd' => $depId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', '', 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'dep_users',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $heading;
+        $str .= $frmUpdate.$frmCancel;
+        $str .= $string.$frmSearch;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to display the search for users page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $str: The output string
+    */
+    public function showDepSearch($facId, $depId, $field, $criteria, $count, $page)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $field = empty($field) ? 'surname' : $field;
+        $faculty = $this->objExamDb->getFacultyById($facId);        
+        $department = $this->objExamDb->getDepartmentById($depId);        
+        $allUsers = $this->objExamDb->getUsers($field, $criteria);
+        $pageUsers = array_chunk($allUsers, $count);
+        $users = $pageUsers[$page - 1];
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $groupUsers = $this->objGroup->getGroupUsers($groupId, array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+
+        // set up text elements
+        $lblFacHeadList = $this->objLanguage->languageText('mod_examiners_departmentheadlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartmentheads', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartmenthead', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_depmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nondepmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblPage = $this->objLanguage->languageText('word_page');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblFacHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up page links
+        $links = '';
+        for($i = 1; $i <= count($pageUsers); $i++){
+            $this->objLink = new link($this->uri(array(
+                'action' => 'dep_users',
+                'f' => $facId,
+                'd' => $depId,
+                'field' => $field,
+                'criteria' => $criteria,
+                'count' => $count,
+                'page' => $i,
+            )), 'examiners');
+            $this->objLink->link = $lblPage.'&#160;'.$i;
+            $lnkPage = $this->objLink->show();
+            if($i < count($pageUsers)){
+                $links .= $lnkPage.'&#160;|&#160;';
+            }elseif(count($pageUsers) == 1){
+                $links = '';
+            }else{
+               $links .= $lnkPage;
+            }        
+        }
+    
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "facultyList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($users == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($users as $user){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($user['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                foreach($groupUsers as $groupUser){
+                    if($groupUser['userid'] == $user['userid']){
+                        $this->objRadio->setSelected('member');
+                        break;
+                    }else{
+                        $this->objRadio->setSelected('nonmember');
+                    }
+                }
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($user['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_dep_heads',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'dep_heads',
+            'f' => $facId,
+            'd' => $depId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $this->objDrop->setSelected($field);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $this->objDrop->setSelected($count);
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', $criteria, 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'dep_users',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'dep_heads',
+            'f' => $facId,
+            'd' => $depId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $string.$frmSearch;
+        $str .= $heading.$links;
+        $str .= $frmUpdate.$frmCancel;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+
+    /**
+    * Method to display the department admin page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $str: The output string
+    */
+    public function showDepartmentAdmin($facId, $depId)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $department = $this->objExamDb->getDepartmentById($depId);
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $groups = $this->objGroup->getSubgroups($groupId);
+        $groupUsers = $this->objGroup->getGroupUsers($groups[1], array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+              
+        // set up text elements
+        $lblDepHeadList = $this->objLanguage->languageText('mod_examiners_adminlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartmentadmin', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_adminmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nonadminmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblDepHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "adminList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($groupUsers == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($groupUsers as $groupUser){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($groupUser['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                $this->objRadio->setSelected('member');
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($groupUser['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($groupUser['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_dep_admin',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'dep_admin',
+            'f' => $facId,
+            'd' => $depId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', '', 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'admin_users',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $heading;
+        $str .= $frmUpdate.$frmCancel;
+        $str .= $string.$frmSearch;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to display the search for users page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $str: The output string
+    */
+    public function showAdminSearch($facId, $depId, $field, $criteria, $count, $page)
+    {
+        // append javascript
+        $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
+        $this->appendArrayVar('headerParams', $headerParams);
+
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $field = empty($field) ? 'surname' : $field;
+        $faculty = $this->objExamDb->getFacultyById($facId);        
+        $department = $this->objExamDb->getDepartmentById($depId);        
+        $allUsers = $this->objExamDb->getUsers($field, $criteria);
+        $pageUsers = array_chunk($allUsers, $count);
+        $users = $pageUsers[$page - 1];
+        $groupId = $this->objGroup->getId($depId, 'description');
+        $groups = $this->objGroup->getSubgroups($groupId);
+        $groupUsers = $this->objGroup->getGroupUsers($groups[1], array(
+            'userid',
+            'firstname',
+            'surname',
+        ));
+
+        // set up text elements
+        $lblFacHeadList = $this->objLanguage->languageText('mod_examiners_adminlist', 'examiners');        
+        $lblSearch = $this->objLanguage->languageText('word_search');        
+        $lblBy = $this->objLanguage->languageText('word_by');        
+        $lblName = $this->objLanguage->languageText('word_name');        
+        $lblSurname = $this->objLanguage->languageText('word_surname');
+        $lblUserId = $this->objLanguage->languageText('phrase_userid');
+        $lblNoRecords = $this->objLanguage->languageText('mod_examiners_nodepartmentadmin', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returnadmin', 'examiners');
+        $lblMember = $this->objLanguage->languageText('mod_examiners_adminmembertitle', 'examiners');
+        $lblNonMember = $this->objLanguage->languageText('mod_examiners_nonadminmembertitle', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblUpdate = $this->objLanguage->languageText('mod_examiners_update', 'examiners');
+        $lblShow = $this->objLanguage->languageText('word_show');
+        $lblUsers = $this->objLanguage->languageText('mod_examiners_usersperpage', 'examiners');
+        $lblPage = $this->objLanguage->languageText('word_page');
+        $lblCriteria = $this->objLanguage->languageText('word_criteria');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $department['department_name'];
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblFacHeadList;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up page links
+        $links = '';
+        for($i = 1; $i <= count($pageUsers); $i++){
+            $this->objLink = new link($this->uri(array(
+                'action' => 'admin_users',
+                'f' => $facId,
+                'd' => $depId,
+                'field' => $field,
+                'criteria' => $criteria,
+                'count' => $count,
+                'page' => $i,
+            )), 'examiners');
+            $this->objLink->link = $lblPage.'&#160;'.$i;
+            $lnkPage = $this->objLink->show();
+            if($i < count($pageUsers)){
+                $links .= $lnkPage.'&#160;|&#160;';
+            }elseif(count($pageUsers) == 1){
+                $links = '';
+            }else{
+               $links .= $lnkPage;
+            }        
+        }
+    
+        // set up htmlelements
+        $this->objInput = new textinput('members', '', 'hidden', '');
+        $inpHidden = $this->objInput->show();
+
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->id = "facultyList";
+        $this->objTable->css_class = "sorttable";
+        $this->objTable->cellpadding = '5';        
+        $this->objTable->row_attributes = 'onmouseover="this.className=\'ruler\';" onmouseout="this.className=\'\';" name="row_'.$this->objTable->id.'"';
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblUserId, '', '', '', 'header', '');
+        $this->objTable->addCell($lblName, '', '', '', 'header', '');
+        $this->objTable->addCell($lblSurname, '', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->addCell('', '10%', '', '', 'header', '');
+        $this->objTable->endRow();
+        if($users == FALSE){
+            $this->objTable->startRow();
+            $this->objTable->addCell($lblNoRecords, '', '', '', 'noRecordsMessage', 'colspan="5"');
+            $this->objTable->endRow();
+        }else{
+            foreach($users as $user){
+                // set up member icon
+                $this->objIcon->title = $lblMember;
+                $icoGroups = $this->objIcon->setIcon('user');
+                $icoUser = $this->objIcon->show();
+                
+                $this->objIcon->title = $lblNonMember;
+                $icoGroups = $this->objIcon->setIcon('not_applicable');
+                $icoNotApp = $this->objIcon->show();
+
+                // set up radios
+                $this->objRadio = new radio($this->objUser->PKId($user['userid']));
+                $this->objRadio->addOption('member', $icoUser);
+                $this->objRadio->addOption('nonmember', $icoNotApp);
+                foreach($groupUsers as $groupUser){
+                    if($groupUser['userid'] == $user['userid']){
+                        $this->objRadio->setSelected('member');
+                        break;
+                    }else{
+                        $this->objRadio->setSelected('nonmember');
+                    }
+                }
+                $this->objRadio->setBreakSpace('&#160;&#160;');
+                $radUser = $this->objRadio->show();
+                
+                $this->objTable->startRow();
+                $this->objTable->addCell($user['userid'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['firstname'], '', 'top', '', '', '');
+                $this->objTable->addCell($user['surname'], '', 'top', '', '', '');
+                $this->objTable->addCell($radUser, '', 'top', '', '', '');
+                $this->objTable->addCell('', '', 'top', '', '', '');
+                $this->objTable->endRow();
+            }
+        }
+        $tblDisplay = $this->objTable->show();
+        
+        //set up buttons
+        $this->objButton = new button('update', $lblUpdate);
+        $this->objButton->extra = 'onclick="javascript:
+            var myMembers = $(\'input_members\');
+            var myForm = $(\'form_frmUpdate\');
+            var myRadios = myForm.getInputs(\'radio\');
+            for(i=0;i<myRadios.length;i++){
+                if(myRadios[i].checked == true){
+                    if(myRadios[i].value == \'member\'){
+                        myMembers.value = myMembers.value + \'|\' + myRadios[i].name;
+                    }
+                }
+            }
+            $(\'form_frmUpdate\').submit();"';
+        $btnUpdate = $this->objButton->show();
+        
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmUpdate', $this->uri(array(
+            'action' => 'save_dep_admin',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm($inpHidden.$btnUpdate.'&#160;'.$btnCancel);
+        $frmUpdate = $this->objForm->show();
+                
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'dep_admin',
+            'f' => $facId,
+            'd' => $depId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up search area
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblSearch;
+        $this->objHeading->type = 3;
+        $string = $this->objHeading->show();
+        
+        $this->objDrop = new dropdown('field');
+        $this->objDrop->addOption(NULL, $lblSearch);
+        $this->objDrop->addOption('firstname', $lblName);
+        $this->objDrop->addOption('surname', $lblSurname);
+        $this->objDrop->setSelected($field);
+        $drpSearch = $this->objDrop->show();
+        
+        $this->objDrop = new dropdown('count');
+        for($i = 25; $i <= 100; $i = $i + 25){
+            $this->objDrop->addOption($i, $i);           
+        }
+        $this->objDrop->setSelected($count);
+        $drpUsers = $this->objDrop->show();
+        
+        // set up htmlelements
+        $this->objInput = new textinput('criteria', $criteria, 'text', '');
+        $inpSearch = $this->objInput->show();
+
+        $this->objTable = new htmltable();
+        $this->objTable->cellpadding = '5';
+                
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblSearch.'&#160;'.strtolower($lblBy).'&#160;'.$drpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblCriteria.'&#160;'.$inpSearch, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblShow.'&#160;'.$drpUsers.'&#160;'.strtolower($lblUsers), '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblSearch = $this->objTable->show();
+        
+        $this->objButton = new button('search', $lblSearch);
+        $this->objButton->setToSubmit();
+        $btnSearch = $this->objButton->show();
+        
+        // set up form
+        $this->objForm = new form('frmSearch', $this->uri(array(
+            'action' => 'admin_users',
+            'f' => $facId,
+            'd' => $depId,
+        )), 'examoners');
+        $this->objForm->addToForm($tblSearch);
+        $this->objForm->addToForm($btnSearch);
+        $frmSearch = $this->objForm->show();
+                
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'dep_admin',
+            'f' => $facId,
+            'd' => $depId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $string.$frmSearch;
+        $str .= $heading.$links;
+        $str .= $frmUpdate.$frmCancel;
         $str .= '<br />'.$lnkReturn;
                
         return $str;        

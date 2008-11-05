@@ -198,6 +198,17 @@ class dbexams extends dbTable
         return $this->_changeTable('tbl_examiners_blacklisting');
     }
 
+	/**
+	* Method to set the users table
+	*
+	* @access private
+	* @return boolean: TRUE on success FALSE on failure
+	*/
+	private function _setUsers()
+	{
+        return $this->_changeTable('tbl_users');
+    }
+
 /* ----- Cross-table functions ----- */
 
     /**
@@ -1398,13 +1409,13 @@ class dbexams extends dbTable
     * @param string $year: The year of the matrix
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getAlternateByYear($depId, $subjId, $year)
+    public function getAlternateByYear($facId, $depId, $subjId, $year)
     {
         $this->_setAlternate();
         
         $sql = "SELECT *, alternate.id AS a_id FROM ".$this->table." AS alternate";
         $sql .= " LEFT JOIN tbl_examiners_examiners AS examiners";
-        $sql .= " ON alternate.exam_id=exainers.id";
+        $sql .= " ON alternate.exam_id=examiners.id";
         $sql .= " WHERE alternate.fac_id='".$facId."'";
         $sql .= " AND alternate.dep_id='".$depId."'";
         $sql .= " AND alternate.subj_id='".$subjId."'";
@@ -1539,5 +1550,31 @@ class dbexams extends dbTable
         }
         return FALSE;
     }
+
+/* ----- Functions for tbl_examiners_remarking ----- */
+    
+    /**
+    * Method to get users
+    *
+    * @access public
+    * @param string $field: The field to seach
+    * @param string $criteria: The search criteria
+    * @return array|bool $data: The subject data on success | FALSE on failure
+    */
+    public function getUsers($field, $criteria)
+    {
+        $this->_setUsers();
+        
+        $sql = "SELECT * FROM ".$this->table;
+        $sql .= " WHERE ".$field." LIKE '%".$criteria."'";
+        $sql .= " ORDER BY surname ASC, firstname ASC";
+        
+        $data = $this->getArray($sql);
+        if($data != FALSE){
+            return $data;
+        }
+        return FALSE;
+    }
+
 }
 ?>
