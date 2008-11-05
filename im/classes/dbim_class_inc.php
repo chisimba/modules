@@ -139,6 +139,8 @@ class dbim extends dbTable
                         'msgbody' => $replytext,
                         'msg_returned' => 'TRUE',
                         'datesent' => $this->now());
+        //update presence table
+        $this->update('person',$rec['msgfrom'] , array('datesent' => $this->now()), 'tbl_im_presence');
         return $this->insert($fields, 'tbl_im');
     }
 
