@@ -26,30 +26,16 @@ $refreshLink->link = $refreshIcon->show();
 
 
 
-/*$objPagination = $this->newObject('pagination', 'navigation');
+$objPagination = $this->newObject('pagination', 'navigation');
 $objPagination->module = 'im';
 $objPagination->action = 'viewallajax';
 $objPagination->id = 'im';
 $objPagination->numPageLinks = $pages;
 $objPagination->currentPage = $pages - 1;
-$middleColumn .= $objPagination->show();*/
-if($this->objUser->inAdminGroup($this->objUser->userId()))
-{
-    $cid = null;
-    $outof = null;
-}else{
-    $cid = $this->objUser->userId();
-    $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 
-}
-$msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
-$num = count($msgs);
-$str = "Currently counsilling $num$outof users";
-$objImView = $this->getObject('imviewer', 'im');
-
-$middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$str;
-$middleColumn .= $objImView->renderOutputForBrowser($msgs);
+$middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$objPagination->show();
+//$middleColumn .= $objImView->renderOutputForBrowser($msgs);
 
 
 if (!$this->objUser->isLoggedIn()) {

@@ -118,15 +118,7 @@ class im extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
-            case 'viewcounsilors':
-                $this->setVar('users', $this->objUser->getAll());
-                return 'counsilors_tpl.php';
-            case 'addcounsilor':
-                $this->objIMUsers->addCounsilor($this->getParam('userid'));
-                return $this->nextAction('viewcounsilors');
-            case 'removecounsilor':
-                $this->objIMUsers->removeCounsilor($this->getParam('userid'));
-                return $this->nextAction('viewcounsilors');
+
             case 'messageview' :
                 // echo "booyakasha!";
                 $msgs = $this->objDbIm->getMessagesByActiveUser ();
@@ -143,20 +135,12 @@ class im extends controller {
                     $page = 0;
                 }
                 $start = $page * 10;
-                if(!$this->objUser->isAdmin($this->objUser->userId()))
-                {
-                    $cid = NULL;//$this->objUser->userId();
-                }else{
-                    $cid = NULL;
-                }
-
-                $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
-
-
+                $msgs = $this->objDbIm->getRange($start, 10);
                 $this->setVarByRef ( 'msgs', $msgs );
                 header("Content-Type: text/html;charset=utf-8");
                 return 'viewall_ajax_tpl.php';
                 break;
+
             case 'viewall' :
             case NULL :
                 $count = $this->objDbIm->getRecordCount ();
@@ -228,7 +212,7 @@ class im extends controller {
                         foreach ( $payloads as $event ) {
                             $pl = $event [1];
                             switch ($event [0]) {
-                                /*case 'message' :
+                                case 'message' :
                                     //$this->objImOps->parseSysMessages($pl);
                                     switch ($pl ['body']) {
                                         case 'quit' :
@@ -261,7 +245,7 @@ class im extends controller {
                                         //$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
                                     }
                                     break;
-*/
+
                                 case 'presence' :
                                     // Update the table presence info
                                     $this->objDbImPres->updatePresence ( $pl );

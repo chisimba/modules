@@ -93,12 +93,12 @@ class imviewer extends object {
             //log_debug($msg);
             // whip out a content featurebox and plak the messages in
             //$from = explode('/', $msg['person']);
-            $fuser = $msg ['person'];
+            $fuser = $msg ['msgfrom'];
             $msgid = $msg ['id'];
 
             // get the presence info if it exists
             $objPres = $this->getObject ( 'dbimpresence' );
-            if ($objPres->getPresence ( $msg ['person'] ) == "available") {
+            if ($objPres->getPresence ( $msg ['msgfrom'] ) == "available") {
                 $presence = $this->activeIcon;
             } else {
                 $presence = $this->inactiveIcon;
@@ -107,7 +107,7 @@ class imviewer extends object {
             $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
             $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
             $prevmessages = "";
-            foreach ( $msg ['messages'] as $prevmess ) {
+            /*foreach ( $msg ['messages'] as $prevmess ) {
                 //get the message
                 if($prevmess['parentid'] != "")
                 {
@@ -129,14 +129,16 @@ class imviewer extends object {
                             new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
                         </script>";
 
-            $box .= '<td><div class="im_default" >' . '<p class="im_source">' . $presence . ' <b>' . $fromuser . "</b>: " . $msg ['person'] . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'] . "</p>" . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
-            //$box = $this->objFeatureBox->showContent($presence." <b>".$fromuser."</b>: ".$msgp['person'].', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'], $prevmessages ."<br />".$ajax);
+            $box .= '<td><div class="im_default" >' . '<p class="im_source">' . $presence . ' <b>' . $fromuser . "</b>: " . $msg ['msgfrom'] . ', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'] . "</p>" . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
+*/
+            //var_dump($msg);
+            $box = $this->objFeatureBox->showContent($presence." <b>".$fromuser."</b>: ".$msg['msgfrom'].', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'], $objWashout->parseText ( nl2br ( htmlentities ($msg['msgbody']))) ."<br />");
             //try to put 4 conversations in a row
-            $rownum ++;
+           /* $rownum ++;
             if ($rownum == $max) {
                 $box .= "</tr><tr>";
                 $rownum = 0;
-            }
+            }*/
 
             $ret .= $box;
 
