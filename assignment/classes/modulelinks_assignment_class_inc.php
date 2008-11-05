@@ -31,7 +31,10 @@ class modulelinks_assignment extends object
             $this->context=$this->objContext->getTitle();
         }
     }
-    
+    /**
+     *Do the display
+     * @return <type>
+     */
      public function show()
     {
         // Link to Module itself - First Level
