@@ -119,7 +119,7 @@ class dbimpresence extends dbTable
         $where = "";
         if($userId != "")
         {
-            $where = " WHERE counsilor = '$userId' ";
+            $where = " WHERE counsilor = '$userId' and presshow='available'";
         }
         return $this->getAll($where." ORDER BY datesent ASC LIMIT 5");
     }
@@ -166,11 +166,23 @@ class dbimpresence extends dbTable
 
     }
 
+    /**
+    * Method to get the number of users assigned
+    * @return array
+    */
     public function numOfUserAssigned($userId)
     {
         $sql = "WHERE counsilor = '$userId'";
         return $this->getRecordCount($sql);
     }
 
+    /**
+    * Method to truncate the presence table
+    */
+    public function resetCounsillors()
+    {
+        $sql = "TRUNCATE TABLE tbl_im_presence";
+        $this->query($sql);
+    }
 }
 ?>
