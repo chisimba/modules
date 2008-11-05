@@ -69,7 +69,7 @@ class blogposts extends object
      * @access public
      * @return NULL
      */
-    public function init() 
+    public function init()
     {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
@@ -93,7 +93,7 @@ class blogposts extends object
      * @param  array  $posts
      * @return string
      */
-    public function showPosts($posts, $showsticky = FALSE) 
+    public function showPosts($posts, $showsticky = FALSE)
     {
         $mm = $this->getObject('parse4mindmap', 'filters');
         $this->objComments = $this->getObject('commentapi', 'blogcomments');
@@ -168,7 +168,7 @@ class blogposts extends object
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
                     $icons = '';
-                    if ($post['userid'] == $userid || $this->objUser->isAdmin()) {
+                    if ($post['userid'] == $userid || $this->objUser->isAdmin() || $this->objUser->inAdminGroup($this->objUser->userId() )) {
                         $this->objIcon = $this->getObject('geticon', 'htmlelements');
                         $edIcon = $this->objIcon->getEditIcon($this->uri(array(
                             'action' => 'postedit',
@@ -180,7 +180,7 @@ class blogposts extends object
                     }
                     $head = $headLink->show() . " $icons<br />" . $dt . "<br />";
                     // .'<script src="http:// digg.com/tools/diggthis.js" type="text/javascript"></script>';
-                    
+
                 }
                 // dump in the post content and voila! you have it...
                 // build the post content plus comment count and stats???
@@ -198,7 +198,7 @@ class blogposts extends object
                 if (isset($bloggerprofile['blog_name'])) {
                     $blog_name = $bloggerprofile['blog_name'];
                     // $this->getParam('blog_name');
-                    
+
                 } else {
                     if ($this->showfullname == 'FALSE') {
                         $blog_name = $this->objUser->userName($userid);
@@ -242,7 +242,7 @@ class blogposts extends object
                 if (isset($bloggerprofile['blog_name'])) {
                     $blog_name = $bloggerprofile['blog_name'];
                     // $this->getParam('blog_name');
-                    
+
                 } else {
                     if ($this->showfullname == 'FALSE') {
                         $blog_name = $this->objUser->userName($userid);
@@ -311,7 +311,7 @@ class blogposts extends object
                 // edit icon in a table 1 row x however number of things to do
                 if ($post['userid'] == $userid) {
                     $tburl = $tburl . "<br />" . $numtb . "<br />" . $sendtblink;
-                    
+
                     // Set the table name
                     $tbl = $this->newObject('htmltable', 'htmlelements');
                     $tbl->cellpadding = 3;
@@ -329,7 +329,7 @@ class blogposts extends object
                         $tbl->addHeaderCell('');
                         // $this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
                         // comments
-                        
+
                     }
                     $tbl->addHeaderCell('');
                     // $this->objLanguage->languageText("mod_blog_trackbackurl", "blog"));
@@ -349,7 +349,7 @@ class blogposts extends object
                         $tbl->addCell($this->setComments($post, FALSE) . " " . $commentCount);
                         // $commentLink);
                         // comment link(s)
-                        
+
                     }
                     $tbl->addCell($tburl);
                     // trackback URL
@@ -414,7 +414,7 @@ class blogposts extends object
                     if ($post['comment_status'] == 'Y' || $post['comment_status'] == 'on') {
                         $tblnl->addHeaderCell('');
                         // $this->objLanguage->languageText("mod_blog_leavecomment", "blog"));
-                        
+
                     }
                     $tblnl->addHeaderCell('');
                     // $this->objLanguage->languageText("mod_blog_cclic", "blog"));
@@ -471,15 +471,15 @@ class blogposts extends object
                     }
                     $ret.= $objFeatureBox->showContent($head, /*$this->cleaner->cleanHtml(*/
                     $post['post_content']) . "<center>" . $tblnl->show() . "</center>" /*)*/;
-                    
+
                 }
             }
         } else {
             $ret = FALSE;
             // "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_noposts", "blog") . "</center></em></h1>";
-            
+
         }
-        
+
         return $ret;
     }
     /**
@@ -489,7 +489,7 @@ class blogposts extends object
      * @param array   $postarr
      * @param string  $mode
      */
-    public function quickPostAdd($userid, $postarr, $mode = NULL) 
+    public function quickPostAdd($userid, $postarr, $mode = NULL)
     {
         // check the sysconfig as to whether we should enable the google ping
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
@@ -513,7 +513,7 @@ class blogposts extends object
      * @param  string $defaultText Default Text to be populated in the Editor
      * @return boolean
      */
-    public function postEditor($userid, $editid = NULL, $defaultText = NULL) 
+    public function postEditor($userid, $editid = NULL, $defaultText = NULL)
     {
         $this->loadClass('label', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
@@ -599,7 +599,7 @@ class blogposts extends object
         	$psDrop->setSelected(1);
         } else {
        		$psDrop->setSelected(0);
-        }        
+        }
         $ptable->addCell($pslabel->show());
         $ptable->addCell($psDrop->show());
         $ptable->endRow();
@@ -644,7 +644,7 @@ class blogposts extends object
         if (isset($editparams['post_excerpt'])) {
             $pexcerpt->setcontent(stripslashes($editparams['post_excerpt']));
             // nl2br - htmmlentittes +
-            
+
         }
         $ptable->addCell($pexcerptlabel->show());
         $ptable->addCell($pexcerpt->show());
@@ -691,7 +691,7 @@ class blogposts extends object
         }
         $ptable->addCell($lic->show());
         $ptable->endRow();
-        
+
         // geoTagging map part
         // only show this is simplemap module is installed - we need the gmaps api key stored there
         $this->objModules = $this->getObject('modules', 'modulecatalogue');
@@ -723,24 +723,24 @@ class blogposts extends object
             g = new OpenLayers.Format.GeoRSS();
             map = new OpenLayers.Map( 'map' , { controls: [] , 'numZoomLevels':20 });
             var hybrid = new OpenLayers.Layer.Google( \"Google Hybrid Map\" , {type: G_HYBRID_MAP, 'maxZoomLevel':18} );
-            var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\", 
-                \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'}); 
-            
+            var wmsLayer = new OpenLayers.Layer.WMS( \"Public WMS\",
+                \"http://labs.metacarta.com/wms/vmap0?\", {layers: 'basic'});
+
             map.addLayers([wmsLayer, hybrid]);
-      
+
             map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl( new OpenLayers.Control.MouseDefaults() );
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
             map.addControl( new OpenLayers.Control.PanZoomBar() );
-            
+
             map.setCenter(new OpenLayers.LonLat(0,0), 2);
-            
-            map.events.register(\"click\", map, function(e) { 
+
+            map.events.register(\"click\", map, function(e) {
                 var lonlat = map.getLonLatFromViewPortPx(e.xy);
                 OpenLayers.Util.getElement(\"input_geotag\").value = lonlat.lat + \",  \" +
                                           + lonlat.lon
             });
-            
+
         }
     </script>";
 
@@ -765,7 +765,7 @@ class blogposts extends object
         	$ptable->addCell($gtags.$geotags->show());
         	$ptable->endRow();
         }
-        
+
         $ts = new textinput('post_ts', NULL, 'hidden', NULL);
         // $ts->extra = "hidden";
         if (isset($editparams['post_ts'])) {
@@ -809,7 +809,7 @@ class blogposts extends object
      * @return array
      * @access private
      */
-    private function _archiveArr($userid) 
+    private function _archiveArr($userid)
     {
         // add in a foreach for each year
         $allposts = $this->objDbBlog->getAbsAllPosts($userid);
@@ -850,7 +850,7 @@ class blogposts extends object
      * @param  objetc $featurebox
      * @return string
      */
-    public function archiveBox($userid, $featurebox = FALSE, $showOrHide = 'none') 
+    public function archiveBox($userid, $featurebox = FALSE, $showOrHide = 'none')
     {
         // get the posts for each month
         $posts = $this->_archiveArr($userid);
@@ -900,7 +900,7 @@ class blogposts extends object
      * @param  integer $userid
      * @return string
      */
-    public function managePosts($userid, $month = NULL, $year = NULL) 
+    public function managePosts($userid, $month = NULL, $year = NULL)
     {
         // create a table with the months posts, plus a dropdown of all months to edit
         // put the edit icon at the end of each row, with text linked to the postEditor() method
@@ -922,7 +922,7 @@ class blogposts extends object
             }
             $posts = $this->objDbBlog->getAbsAllPosts($userid);
         }
-        $count = count($posts);	
+        $count = count($posts);
         // print_r($posts);
         // add in a table header...
         $edtable->startHeaderRow();
@@ -990,8 +990,8 @@ class blogposts extends object
         $editform->addToForm($edtable->show());
         $editform->addToForm($this->objdelButton->show());
         $editform = $editform->show();
-        
-        
+
+
         return $editform;
     }
     /**
@@ -1001,7 +1001,7 @@ class blogposts extends object
      * @param  bool    $featurebox
      * @return mixed
      */
-    public function quickPost($userid, $featurebox = FALSE) 
+    public function quickPost($userid, $featurebox = FALSE)
     {
         // form for the quick poster blocklet
         $this->loadClass('textarea', 'htmlelements');
@@ -1058,7 +1058,7 @@ class blogposts extends object
      * @param  bool    $featurebox Return the posts as a string or formatted in a featurebox. Default = false, return as a string
      * @return string  html
      */
-    public function showLastTenPosts($num = 10, $featurebox = FALSE) 
+    public function showLastTenPosts($num = 10, $featurebox = FALSE)
     {
         $objUser = $this->getObject('user', 'security');
         $this->loadClass('link', 'htmlelements');
@@ -1095,8 +1095,8 @@ class blogposts extends object
             return $ret;
         }
     }
-    
-    public function showLastTenPostsStripped($num = 10, $featurebox = FALSE) 
+
+    public function showLastTenPostsStripped($num = 10, $featurebox = FALSE)
     {
         $objUser = $this->getObject('user', 'security');
         $this->loadClass('link', 'htmlelements');
@@ -1111,7 +1111,7 @@ class blogposts extends object
                     'userid' => $item['userid']
                 ));
                 //$link = new href($linkuri, stripslashes($item['post_title']));
-                
+
                 //$str.= $link->show();
                 if ($this->showfullname == 'FALSE') {
                     $nameshow = $this->objUser->userName($item['userid']);
@@ -1136,7 +1136,7 @@ class blogposts extends object
      * @param  mixed selected date $sel_date
      * @return array
      */
-    public function retDates($sel_date = NULL) 
+    public function retDates($sel_date = NULL)
     {
         if ($sel_date == NULL) {
             $sel_date = mktime(0, 0, 0, date("m", time()) , 1, date("y", time()));
@@ -1162,7 +1162,7 @@ class blogposts extends object
      * @param  string $userid
      * @return array
      */
-    public function blogTagCloud($userid, $showOrHide = 'none') 
+    public function blogTagCloud($userid, $showOrHide = 'none')
     {
         $this->objTC = $this->getObject('tagcloud', 'utilities');
         // get all the tags
@@ -1201,7 +1201,7 @@ class blogposts extends object
      * Function addCommentForm
      *
      */
-    public function addCommentForm($postid, $userid, $captcha = FALSE, $comment = NULL, $useremail = NULL) 
+    public function addCommentForm($postid, $userid, $captcha = FALSE, $comment = NULL, $useremail = NULL)
     {
         $this->objComApi = $this->getObject('commentapi', 'blogcomments');
         return $this->objComApi->commentAddForm($postid, 'blog', 'tbl_blog_posts', $userid, TRUE, TRUE, FALSE, $captcha, $comment, $useremail);
@@ -1209,7 +1209,7 @@ class blogposts extends object
     /**
      *
      */
-    public function setComments($post, $icon = TRUE) 
+    public function setComments($post, $icon = TRUE)
     {
         // COMMENTS
         if ($icon == TRUE) {
@@ -1243,7 +1243,7 @@ class blogposts extends object
      * @return void
      * @access public
      */
-    public function pingGoogle($userid) 
+    public function pingGoogle($userid)
     {
         $objBk = $this->getObject('background', 'utilities');
         $status = $objBk->isUserConn();
@@ -1305,7 +1305,7 @@ class blogposts extends object
                 break;
         }
     }
-    
+
     public function showGeoTagMap($userid)
     {
     	$this->objConfig = $this->getObject('altconfig', 'config');
@@ -1327,7 +1327,7 @@ class blogposts extends object
     		$data .= "$lat,$lon\t$title\t$desc\n";
     	}
     	file_put_contents($tfile, $data);
-    	
+
     	//ok now parse the text file and display the map.
     	$css = "<style type=\"text/css\">
         #map {
@@ -1336,38 +1336,38 @@ class blogposts extends object
             border: 1px solid black;
         }
     </style>";
-    	
+
         	$olsrc = $this->getJavascriptFile('lib/OpenLayers.js','georss');
         	$js = "<script type=\"text/javascript\">
         	var map, layer;
 
         function init(){
-            
+
             map = new OpenLayers.Map('map', { controls: [] });
-            layer = new OpenLayers.Layer.WMS( \"Public WMS\", 
+            layer = new OpenLayers.Layer.WMS( \"Public WMS\",
                 \"http://labs.metacarta.com/wms/vmap0\", {layers: 'basic'} );
-               
-            map.addControl(new OpenLayers.Control.MousePosition()); 
+
+            map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl( new OpenLayers.Control.MouseDefaults() );
             map.addControl( new OpenLayers.Control.LayerSwitcher() );
             map.addControl( new OpenLayers.Control.PanZoomBar() );
-            
+
             map.addLayer(layer);
             map.setCenter(new OpenLayers.LonLat(0, 0), 0);
 
             var newl = new OpenLayers.Layer.Text( \"text\", { location:\"".$jstfile."\"} );
             map.addLayer(newl);
 
-            
+
 
             var size = new OpenLayers.Size(10,17);
             var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
             var icon = new OpenLayers.Icon('http://boston.openguides.org/markers/AQUA.png',size,offset);
-       
+
             marker = new OpenLayers.Marker(new OpenLayers.LonLat(90,10),icon.clone());
             marker.events.register('mousedown', marker, function(evt) { alert(this.icon.url); OpenLayers.Event.stop(evt); });
-          
-            
+
+
             map.zoomToMaxExtent();
 
         }
