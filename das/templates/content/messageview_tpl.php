@@ -8,7 +8,7 @@ $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
-$this->objImOps = $this->getObject('imops');
+$this->objImOps = $this->getObject('imops', 'im');
 
 $middleColumn = NULL;
 $leftColumn = NULL;

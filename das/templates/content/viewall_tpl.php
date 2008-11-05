@@ -10,7 +10,7 @@ $refreshLink = $this->getObject('link', 'htmlelements');
 $refreshIcon = $this->getObject('geticon', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
-$this->objImOps = $this->getObject('imops');
+$this->objImOps = $this->getObject('imops', 'im');
 
 $middleColumn = NULL;
 $leftColumn = NULL;
