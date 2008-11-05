@@ -118,6 +118,15 @@ class das extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
+            case 'resetcounsillors':
+                $this->objDbImPres->resetCounsillors();
+                $this->nextAction('viewcounsilors');
+                break;
+            case 'startsession':
+                break;
+            case 'endsession':
+                break;
+
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
                 return 'counsilors_tpl.php';
