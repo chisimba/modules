@@ -91,7 +91,7 @@ class dbim extends dbTable
     {
         $bigArr = array();
         $usersArr = $this->objPresence->getAllActiveUsers($userId);
-
+var_dump($usersArr);
         foreach($usersArr as $activeUser)
         {
             //get all messages for the user
