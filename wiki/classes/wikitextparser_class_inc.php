@@ -58,10 +58,10 @@ class wikiTextParser extends object
     * @return string $xhtml The transformed text (XHTML)
     */
 
-    public function transform($text)
+    public function transform($text, $format = 'Xhtml', $encodeEntities = true)
     {
         // Transform the wiki text into XHTML
-        $xhtml = $this->objWiki->transform($text, 'Xhtml');
+        $xhtml = $this->objWiki->transform($text, $format, $encodeEntities);
         return $xhtml;
     }
 

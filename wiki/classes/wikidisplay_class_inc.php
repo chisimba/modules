@@ -458,7 +458,11 @@ class wikidisplay extends object
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
-        $text = $this->objWiki->transform($data['page_content']);
+
+        //Stopping htmlentities in output here:
+        //$this->objWiki->setRenderConf('Xhtml', 'translate', null);
+
+        $text = $this->objWiki->transform($data['page_content'], 'Xhtml', false);
         $wikiText = $this->objWash->parseText($text);
         $array = array(
             'date' => $this->objDate->formatDate($data['date_created']),
