@@ -458,10 +458,7 @@ class wikidisplay extends object
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
-
-        //$text = $this->objWiki->transform($data['page_content']);
-        $text = $data['page_content'];
-
+        $text = $this->objWiki->transform($data['page_content']);
         $wikiText = $this->objWash->parseText($text);
         $array = array(
             'date' => $this->objDate->formatDate($data['date_created']),
@@ -1256,9 +1253,7 @@ class wikidisplay extends object
             $heading = $objHeader->show();
             $str = $heading;
         
-            //$text = $this->objWiki->transform($content);
-            $text = $content;
-
+            $text = $this->objWiki->transform($content);
             $str .= $this->objWash->parseText($text);
         }else{
             $str = '<ul><li>'.$noPreviewLabel.'</li></ul>';
@@ -1306,9 +1301,7 @@ class wikidisplay extends object
             foreach($data as $line){
                 $name = $line['page_name'];
                 $pageTitle = $this->objWiki->renderTitle($name);
-
-                //$summary = $this->objWiki->transform($line['page_summary']);
-                $summary = $line['page_summary'];
+                $summary = $this->objWiki->transform($line['page_summary']);
 
                 // page name link
                 $objLink = new link($this->uri(array(
@@ -1721,9 +1714,8 @@ You can create tables using pairs of vertical bars:
 |||||| but perhaps an example is the easiest way to see ||';
 
         // parse formatting string
-        //$string = $this->objWiki->transform($formattingRules);
-        $string = $formattingRules;
-
+        $string = $this->objWiki->transform($formattingRules);
+        
         // create feature box
         $formatFeature = $this->objFeature->show($formatLabel, $string);
         
@@ -2045,8 +2037,7 @@ You can create tables using pairs of vertical bars:
         $pageId = $data['id'];
         $name = $data['page_name'];
         $pageTitle = $this->objWiki->renderTitle($name);    
-        //$wikiText = $this->objWiki->transform($data['page_content']);
-        $wikiText = $data['page_content'];
+        $wikiText = $this->objWiki->transform($data['page_content']);
         $array = array(
             'date' => $this->objDate->formatDate($data['date_created']),
         );
@@ -2935,9 +2926,8 @@ You can create tables using pairs of vertical bars:
                         $link = $objLink->show();
                     }
                 
-                    //$content = $this->objWiki->transform($line['post_content']);
-                    $content = $line['post_content'];
-
+                    $content = $this->objWiki->transform($line['post_content']);
+                
                     // edit post link
                     $objButton = new button('submit', $editLabel);
                     $editButton = $objButton->show();
@@ -3385,8 +3375,7 @@ You can create tables using pairs of vertical bars:
             $string .= $objHeader->show();
         }
         if(!empty($content)){
-            //$string .= $this->objWiki->transform($content);
-            $string .= $content;
+            $string .= $this->objWiki->transform($content);
         }
         if(empty($name) && empty($content)){
             $string .= '<ul><li><b>'.$noPreviewLabel.'</b></li></ul>';
@@ -3434,10 +3423,7 @@ You can create tables using pairs of vertical bars:
             $heading = $objHeader->show();
             
             $str = $heading;                        
-
-            //$str .= $this->objWiki->transform($data['page_content']);            
-            $str .= $data['page_content'];
-
+            $str .= $this->objWiki->transform($data['page_content']);            
             $str .= '<hr />'.$modifiedLabel;           
             return $str;            
         }else{
