@@ -20,7 +20,7 @@ $header = new htmlHeading();
 $header->str = $this->objLanguage->languageText('mod_im_recentmessages', 'im');
 $header->type = 1;
 
-$refreshLink->href = $this->uri(null, 'im');
+$refreshLink->href = $this->uri(null, 'das');
 $refreshIcon->setIcon('refresh');
 $refreshLink->link = $refreshIcon->show();
 
@@ -46,7 +46,7 @@ $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
 $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
-$objImView = $this->getObject('imviewer', 'das');
+$objImView = $this->getObject('imviewer', 'im');
 
 $middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$str;
 $middleColumn .= $objImView->renderOutputForBrowser($msgs);
