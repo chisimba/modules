@@ -114,14 +114,18 @@ class dbimpresence extends dbTable
      *@return array
      *@access public
      */
-    public function getAllActiveUsers($userId = "")
+    public function getAllActiveUsers($userId)
     {
         $where = "";
-        if($userId != "")
-        {
-            $where = " WHERE counsilor = '$userId' ";
-        }
-        return $this->getAll($where." ORDER BY datesent ASC LIMIT 5");
+        //if($userId != "")
+        //{
+         //   $where = " WHERE counsilor = '$userId' ";
+        //}
+        //$sql = "SELECT DISTINCT(person), * from ".$where." ORDER BY datesent ASC LIMIT 5";
+        $sql = "select distinct(person),id, datesent, counsilor, presshow from tbl_im_presence where counsilor='$userId' ORDER BY datesent ASC LIMIT 5";
+        return $this->query($sql);
+        print $sql;
+        return $this->getAll($sql);
     }
 
     /**
