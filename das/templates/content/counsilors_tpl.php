@@ -37,7 +37,7 @@ foreach ($users as $user)
     $bullet = $objIcon->show();
 
     $arr[] = array($name, $cnt, $bullet, $objLink->show());
-    echo $name."   ".$objLink->show().'  ('.$cnt.' users assigned) <br/>';
+    //echo $name."   ".$objLink->show().'  ('.$cnt.' users assigned) <br/>';
 
 }
 $objTable->width = "50%";
