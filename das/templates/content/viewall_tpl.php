@@ -42,9 +42,9 @@ if($this->objUser->inAdminGroup($this->objUser->userId()))
     $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 
 }
-print $cid;
+
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
-var_dump($msgs);
+
 $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
 $objImView = $this->getObject('imviewer', 'im');
