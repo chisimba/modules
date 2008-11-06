@@ -188,6 +188,9 @@ class dbimpresence extends dbTable
         $sql = "TRUNCATE TABLE tbl_im_presence";
         $this->query($sql);
 
+        $sql = "update tbl_im_users set patients=0";
+        $this->query($sql);
+
         $sql = "TRUNCATE TABLE tbl_im";
         $this->query($sql);
     }
