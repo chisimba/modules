@@ -116,7 +116,7 @@ class educommonsimport extends object
     public function parseIms()
     {
         // Determine the path to the file.
-        $file = $this->getResourcePath('sample/imsmanifest.xml', 'educommons');
+        $file = $this->getResourcePath('sample/imsmanifest.xml');
 
         // Read the contents of the file.
         $contents = file_get_contents($file);
@@ -195,7 +195,8 @@ class educommonsimport extends object
             $id = substr($document['id'], 3);
             $language = $document['language'];
             $title = $document['title'][$language];
-            $content = 'test'; //TODO Need to fetch file contents
+            $href = $this->getResourcePath('sample/' . $document['href']);
+            $content = file_get_contents($href);
             if ($this->objTitles->idExists($id)) {
                 $pageId = $this->objPages->getPage($id, $language);
                 if ($pageId !== FALSE) {
