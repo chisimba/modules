@@ -58,13 +58,15 @@ class dbimpresence extends dbTable
         $insarr['status'] = $userarr['type'];
         $insarr['presshow'] = $userarr['show'];
         $insarr['useragent'] = $userSplit[1];
-        $insarr['counsilor'] = $this->assignUserToCounsilor($person);
+
 
         if($status == FALSE)
         {
+            $insarr['counsilor'] = $this->assignUserToCounsilor($person);
             $this->addRecord($insarr);
         }
         else {
+
             // update the presence info for this user
             $this->update('id', $status[0]['id'], $insarr, 'tbl_im_presence');
         }
