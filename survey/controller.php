@@ -444,8 +444,14 @@ class survey extends controller
                 $update=$this->getParam('update');
                 $mode=$this->getParam('mode');
                 $this->moveQuestionData();
-                $this->moveRowData($update);
-                $this->moveColumnData($update);
+                $arrRowIdData=$this->getParam('arrRowId',array('','',''));
+                $arrRowNoData=$this->getParam('arrRowNo',array('','',''));
+                $arrRowTextData=$this->getParam('arrRowText',array('','',''));
+                $this->moveRowData($update,$arrRowIdData,$arrRowNoData,$arrRowTextData);
+                $arrColumnIdData=$this->getParam('arrColumnId',array('','',''));
+                $arrColumnNoData=$this->getParam('arrColumnNo',array('','',''));
+                $arrColumnTextData=$this->getParam('arrColumnText',array('','',''));
+                $this->moveColumnData($update,$arrColumnIdData,$arrColumnNoData,$arrColumnTextData);
                 if($update!='save'){
                     if($mode=='add'){
                         return $this->nextAction('addquestion',array('update'=>$update,'survey_id'=>$surveyId));
@@ -986,13 +992,13 @@ class survey extends controller
     * Method to move the question row data to the session variable
     *
     * @param string $update A variable indicating what action is to be performed
+    * @param array $arrRowIdData
+    * @param array $arrRowNoData
+    * @param array $arrRowTextData
     * @return NULL
     */
-    function moveRowData($update)
+    function moveRowData($update,$arrRowIdData,$arrRowNoData,$arrRowTextData)
     {
-        $arrRowIdData=$this->getParam('arrRowId',array('','',''));
-        $arrRowNoData=$this->getParam('arrRowNo');
-        $arrRowTextData=$this->getParam('arrRowText');
         $arrRowData=array();
         foreach($arrRowIdData as $key=>$id){
             $arrRowData[]=array('id'=>$id,'row_order'=>$arrRowNoData[$key],'row_text'=>$arrRowTextData[$key]);
@@ -1018,13 +1024,13 @@ class survey extends controller
     * Method to move the question column data to the session variable
     *
     * @param string $update A variable indicating what action is to be performed
+    * @param array $arrColumnIdData
+    * @param array $arrColumnIdData
+    * @param array $arrColumnIdData
     * @return NULL
     */
-    function moveColumnData($update)
+    function moveColumnData($update,$arrColumnIdData,$arrColumnNoData,$arrColumnTextData)
     {
-        $arrColumnIdData=$this->getParam('arrColumnId',array('','',''));
-        $arrColumnNoData=$this->getParam('arrColumnNo');
-        $arrColumnTextData=$this->getParam('arrColumnText');
         $arrColumnData=array();
         foreach($arrColumnIdData as $key=>$id){
             $arrColumnData[]=array('id'=>$id,'column_order'=>$arrColumnNoData[$key],'column_text'=>$arrColumnTextData[$key]);
