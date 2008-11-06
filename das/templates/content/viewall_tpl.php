@@ -35,7 +35,7 @@ $objPagination->currentPage = $pages - 1;
 $middleColumn .= $objPagination->show();*/
 if($this->objUser->inAdminGroup($this->objUser->userId()))
 {
-    $cid = null;
+    $cid = $this->objUser->userId();
     $outof = null;
 }else{
     $cid = $this->objUser->userId();
@@ -43,7 +43,7 @@ if($this->objUser->inAdminGroup($this->objUser->userId()))
 
 }
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
-
+var_dump($msgs);
 $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
 $objImView = $this->getObject('imviewer', 'im');
