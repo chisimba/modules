@@ -124,8 +124,8 @@ class dbimpresence extends dbTable
         //$sql = "SELECT DISTINCT(person), * from ".$where." ORDER BY datesent ASC LIMIT 5";
         $sql = "select distinct(person),id, datesent, counsilor, presshow from tbl_im_presence where counsilor='$userId' ORDER BY datesent ASC LIMIT 5";
         return $this->query($sql);
-        print $sql;
-        return $this->getAll($sql);
+        //print $sql;
+        //return $this->getAll($sql);
     }
 
     /**
