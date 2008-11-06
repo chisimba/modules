@@ -46,7 +46,7 @@ $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
 $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
-$objImView = $this->getObject('imviewer', 'im');
+$objImView = $this->getObject('imviewer', 'das');
 
 $middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$str;
 $middleColumn .= $objImView->renderOutputForBrowser($msgs);
