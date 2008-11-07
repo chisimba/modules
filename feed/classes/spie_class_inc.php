@@ -165,21 +165,61 @@ class spie extends object
         
     }
     
+    /**
+    * 
+    * Method to provice a div tag that goes above each feed. 
+    * This can be used to provide a tab above each feed
+    * for example.
+    * 
+    * @return string The div tag above each item
+    * @access private
+    * 
+    */
     private function getFeedTop()
     {
         return '<div class="feed_render_feedtop"></div>';
     }
     
+    /**
+    * 
+    * Method to provice a div tag that goes blow each feed. 
+    * This can be used to provide a tab above each feed
+    * for example.
+    * 
+    * @return string The div tag below each item
+    * @access private
+    * 
+    */
     private function getFeedBottom()
     {
         return '<div class="feed_render_feedbottom"></div>';
     }
     
+    /**
+    * 
+    * Method to provice a div tag that goes above each item in
+    * a feed. This can be used to provide a tab above each item
+    * for example.
+    * 
+    * @return string The div tag above each item
+    * @access private
+    * 
+    */
     private function getItemTop()
     {
         return '<div class="feed_render_top"></div>';
     }
     
+    /**
+    * 
+    * Method to provice a div tag that goes bllow each item in
+    * a feed. This can be used to provide a tab below each item
+    * for example.
+    * 
+    * @return string The div tag above each item
+    * @access private
+    * 
+    */
     private function getItemBottom()
     {
         return '<div class="feed_render_bottom"></div>';
@@ -302,22 +342,31 @@ class spie extends object
     {
         $ret = $this->getTitleWithLogo();
         $counter=0;
+        $avatar = "";
         foreach ($this->objSimplePieWrapper->get_items() as $item) {
             $counter++;
             $author = $item->get_author();
             $name = $author->get_name();
+            //$lns = $item->get_links();
             $ln = $author->get_link();
+            if ($avatars = $item->get_links('image') ) {
+                $avatar = $avatars[0];
+                $avatar =  '<img src="' . $avatar . '">&nbsp;';
+            }
             $nickAr = explode(" (", $name);
             $nick = "<a href=\"" . $ln . "\">" . $nickAr[0] . "</a>:&nbsp;&nbsp;";
             $description = $item->get_description();
-            $info = $nick . " " . $description;
+            $info = '<table><tr><td>' . $avatar
+              . '</td><td>' . $nick . " " 
+              . $description . '</td></tr></table>';
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
               . '<p class="feed_render_description">' . $info 
               . '<br /><span class="feed_render_date">' 
               .  $item->get_date('j F Y | g:i a') 
               . '</span></p>'
-              . '</div>' . $this->getItemBottom();;
+              . '</div>' . $this->getItemBottom();
+              
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
