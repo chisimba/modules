@@ -97,9 +97,11 @@ class db_contextcontent_titles extends dbtable
     /**
      * Checks if translation group id exists.
      *
+     * @access public
+     * @param string $id The translation group id.
      * @return boolean
      */
-    function idExists($id)
+    public function idExists($id)
     {
         return $this->valueExists('id', $id);
     }
