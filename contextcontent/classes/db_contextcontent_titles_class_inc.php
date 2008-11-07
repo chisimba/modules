@@ -73,13 +73,15 @@ class db_contextcontent_titles extends dbtable
     }
     
     /**
-     * Method to add a title
+     * Method to add a title.
+     *
+     * @access public
      * @param string $titleId Record controlling translation group index
      * @param string $menutitle Menu title of the page
      * @param string $content Content of the Page
      * @param string $language Language of the Page
      * @param string $headerScript Any Script to go in the header
-     * @return Record Id
+     * @return string The title id.
      */
     public function addTitle($titleId='', $menutitle, $content, $language, $headerScript=null)
     {
@@ -98,7 +100,7 @@ class db_contextcontent_titles extends dbtable
      * Checks if translation group id exists.
      *
      * @access public
-     * @param string $id The translation group id.
+     * @param string $id The title id.
      * @return boolean
      */
     public function idExists($id)
@@ -109,12 +111,14 @@ class db_contextcontent_titles extends dbtable
     /**
      * Method to manually create a translation group index.
      *
-     * @return Record ID
+     * @access private
+     * @param string $id The title id.
+     * @return string The title id.
      */
-    private function createTitle($title)
+    private function createTitle($id)
     {
         $row = array();
-        $row['id'] = $title;
+        $row['id'] = $id;
         $row['creatorid'] = $this->objUser->userId();
         $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
 
@@ -124,7 +128,8 @@ class db_contextcontent_titles extends dbtable
     /**
      * Method to auto create a translation group index.
      *
-     * @return Record ID
+     * @access private
+     * @return The title id.
      */
     private function autoCreateTitle()
     {
@@ -138,7 +143,8 @@ class db_contextcontent_titles extends dbtable
     /**
      * Method to delete a title. It also deletes all translations of the page.
      *
-     * @param $id Title Id
+     * @access public
+     * @param string $id The title id.
      */
     public function deleteTitle($id)
     {
