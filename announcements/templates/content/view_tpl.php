@@ -18,8 +18,8 @@ if ($this->checkPermission($announcement['id'])) {
     
     $editLink = new link ($this->uri(array('action'=>'edit', 'id'=>$announcement['id'])));
     $editLink->link = $objIcon->show();
-    
-    $header->str .= ' '.$editLink->show();
+    //Removed by Wesley Nitscke .. cannot edit an announcement once it has been sent out.. post a new one rather
+   // $header->str .= ' '.$editLink->show();
     
     $deleteArray = array('action'=>'delete', 'id'=>$announcement['id']);
     
