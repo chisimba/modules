@@ -264,6 +264,7 @@ class pbrender extends dbTable
             if (count($ar) > 0) {
                 $objDate =  $this->getObject("dateandtime", "utilities");
                 $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+                $rowcount=0;
                 foreach ($ar as $line) {
                     $oddOrEven = ($rowcount == 0) ? "odd" : "even";
                     $id = $line['id'];

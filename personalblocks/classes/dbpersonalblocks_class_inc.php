@@ -79,6 +79,8 @@ class dbpersonalblocks extends dbTable
             }
             // If we are doing an add then use the insert method.
             if ($mode=="add") {
+                
+                #die($blocktype . " --- " . $context);
                 $this->insert(array(
                 'location' => $location,
                 'blockname' => $blockname,
