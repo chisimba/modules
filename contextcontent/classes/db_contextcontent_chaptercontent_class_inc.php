@@ -111,6 +111,26 @@ class db_contextcontent_chaptercontent extends dbtable
             return FALSE;
         }
     }
+
+    /**
+     * Method to retrieve a chapter content id according to a chapter id.
+     *
+     * @access public
+     * @param string $chapterId The chapter id.
+     * @param string $language The language code.
+     * @return string The chapter content id.
+     */
+    public function getChapterContentId($chapterId, $language)
+    {
+        $where = "WHERE chapterid = '$chapterId' AND language = '$language'";
+        $results = $this->getAll($where);
+        if (isset($results[0]['id'])) {
+            return $results[0]['id'];
+        } else {
+            return FALSE;
+        }
+    }
+
     
     /**
     * Method to Check whether a Chapter exists for a title
