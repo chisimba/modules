@@ -118,16 +118,10 @@ class dbimpresence extends dbTable
      */
     public function getAllActiveUsers($userId)
     {
-        $where = "";
-        //if($userId != "")
-        //{
-         //   $where = " WHERE counsilor = '$userId' ";
-        //}
-        //$sql = "SELECT DISTINCT(person), * from ".$where." ORDER BY datesent ASC LIMIT 5";
-        $sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' and presshow='available' ORDER BY datesent ASC LIMIT 10";
-        return $this->query($sql);
-        //print $sql;
-        //return $this->getAll($sql);
+        $sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' ORDER BY datesent ASC";
+        $ret = $this->query($sql);
+
+	return $ret;
     }
 
     /**
@@ -137,9 +131,6 @@ class dbimpresence extends dbTable
      */
     public function assignUserToCounsilor($person)
     {
-
-       // $objDBIMUser = $this->getObect('dbimusers','im');
-       // return $objDBIMUser->assignUserToCounsilor($person);
 
         parent::init('tbl_im_users');
 

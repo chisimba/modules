@@ -18,6 +18,9 @@ $fields = array(
     'person' => array(
         'type' => 'text',
         'length' => 255,
+        ), 
+    'patients' => array(
+        'type' => 'integer',        
         ),    
     'dateoflastcontact' => array(
         'type' => 'timestamp',

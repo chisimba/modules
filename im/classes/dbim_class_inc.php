@@ -96,12 +96,13 @@ class dbim extends dbTable
         {
             //get all messages for the user
             $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
-            //var_dump($activeUser['messages']);
+            //add only if the user has messages
             if(count($activeUser['messages']) > 0)
             {
                 array_push($bigArr, $activeUser);
             }
         }
+
         return $bigArr;
     }
 
@@ -112,7 +113,9 @@ class dbim extends dbTable
      */
     public function getPersonMessages($person)
     {
-        return $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 10");
+        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 10");
+	
+	return $ret;
 
     }
 
@@ -126,13 +129,7 @@ class dbim extends dbTable
     {
         $rec = $this->getAll("where id = '$msgId'");
         $rec = $rec[0];
-        /*$old = $rec['msgbody'];
-        $new = $old."\r\nMe:".$replytext;
-        $fields = array('msgtype' => $rec['msgtype'], 'msgfrom' => $rec['msgfrom'], 'msgbody' => $new, 'msg_returned' => 'TRUE', 'datesent' => $this->now());
-
-        $this->update('id', $msgId, $fields);
-        return;
-        */
+        
         $fields = array('msgtype' => $rec['msgtype'],
                         'msgfrom' => $rec['msgfrom'],
                         'parentid' =>  $msgId,

@@ -30,6 +30,10 @@ $fields = array(
     'datesent' => array(
         'type' => 'timestamp',
         ),
+    'counsilor' => array(
+        'type' => 'text',
+	'length' => 32,
+        ),
     );
 
 ?>
