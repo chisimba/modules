@@ -92,10 +92,10 @@ class contextcontent extends controller
             // Load Context Object
             $this->objContext = $this->getObject('dbcontext', 'context');
 
- 	    //Load the Logger
-	    $this->objLog = $this->getObject('logactivity','logger');
-	    //Load this module call
-	    $this->objLog->log();
+            //Load the Logger
+            $this->objLog = $this->getObject('logactivity','logger');
+            //Load this module call
+            $this->objLog->log();
             
             // Store Context Code
             $this->contextCode = $this->objContext->getContextCode();
