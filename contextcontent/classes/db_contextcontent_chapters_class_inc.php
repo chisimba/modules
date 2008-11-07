@@ -86,6 +86,18 @@ class db_contextcontent_chapters extends dbtable
     }
 
     /**
+     * Method to check if a given chapter id exists.
+     *
+     * @access public
+     * @param string $id The chapter id.
+     * @return boolean
+     */
+    public function idExists($id)
+    {
+        return $this->valueExists('id', $id);
+    }
+
+    /**
      * Method to manually create a new chapter.
      *
      * @access private
