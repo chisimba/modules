@@ -76,11 +76,30 @@ class db_contextcontent_chapters extends dbtable
     {
         if ($chapterId == '') {
             $chapterId = $this->autoCreateChapter();
-            
-            $pageId = $this->objChapterContent->addChapter($chapterId, $title, $intro, $language);
+        } else {
+            $this->createChapter($chapterId);
         }
-        
+
+        $pageId = $this->objChapterContent->addChapter($chapterId, $title, $intro, $language);
+
         return $chapterId;
+    }
+
+    /**
+     * Method to manually create a new chapter.
+     *
+     * @access private
+     * @param string $id Id of the new chapter.
+     * @return string Record Id of Chapter
+     */
+    private function createChapter($id)
+    {
+        $row = array();
+        $row['id'] = $id;
+        $row['creatorid'] = $this->objUser->userId();
+        $row['datecreated'] = strftime('%Y-%m-%d %H:%M:%S', mktime());
+
+        return $this->insert($row);
     }
     
     /**
