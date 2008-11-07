@@ -175,10 +175,15 @@ class educommonsimport extends object
             $id = substr($course['id'], 3);
             $language = $course['language'];
             $title = $course['title'][$language];
-            if ($this->objContext->contextExists($id)) {
-                $this->objContext->updateContext($id, $title);
+            if ($this->objChapters->idExists($id)) {
+                $chapterContentId = $this->objChapterContent->getChapterContentId($id, $language);
+                if ($chapterContentId === FALSE) {
+                     $this->objChapterContent->addChapter($id, $title, '', $language);
+                } else {
+                     $this->objChapterContent->updateChapter($chapterContentId, $title, '');
+                }
             } else {
-                $this->objContext->createContext($id, $title);
+                $this->objChapters->addChapter($id, $title, '', $language);
             }
         }
     }
