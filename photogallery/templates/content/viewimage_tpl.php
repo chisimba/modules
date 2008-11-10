@@ -45,7 +45,7 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 
-<?
+<?php
 }
 // Get image display size - no need to resize it its small anyway
 $info=getimagesize($this->_objFileMan->getFullFilePath($image['file_id']));
