@@ -61,6 +61,7 @@ class educommonsimport extends object
     protected $objContext;
     protected $objChapters;
     protected $objChapterContent;
+    protected $objContextChapter;
     protected $objTitles;
     protected $objPages;
     protected $objOrder;
@@ -82,6 +83,7 @@ class educommonsimport extends object
         // Contextcontent chapter objects for importing chapters.
         $this->objChapters = $this->getObject('db_contextcontent_chapters', 'contextcontent');
         $this->objChapterContent = $this->getObject('db_contextcontent_chaptercontent', 'contextcontent');
+        $this->objContextChapter = $this->getObject('db_contextcontent_contextchapter', 'contextcontent');
 
         // Contextcontent title object for importing pages.
         $this->objTitles = $this->getObject('db_contextcontent_titles', 'contextcontent');
@@ -169,9 +171,10 @@ class educommonsimport extends object
      * Inserts IMS courses into database as contexts.
      *
      * @access public
-     * @param  array $data The IMS data
+     * @param  array  $data    The IMS data.
+     * @param  string $context The id of the context to add the chapters to.
      */
-    function addCourses($data)
+    function addCourses($data, $context)
     {
         foreach ($data['courses'] as $course) {
             $id = substr($course['id'], 3);
@@ -186,6 +189,7 @@ class educommonsimport extends object
                 }
             } else {
                 $this->objChapters->addChapter($id, $title, '', $language);
+                $this->objContextChapter->addChapterToContext($id, $context);
             }
         }
     }
