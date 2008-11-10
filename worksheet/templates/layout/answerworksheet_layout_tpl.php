@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template layout for worksheet module
 * @package worksheet

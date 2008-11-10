@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template for viewing a marked worksheet.
 * @package worksheet
