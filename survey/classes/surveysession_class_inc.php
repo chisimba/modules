@@ -167,5 +167,115 @@ class surveysession extends object
             $this->unsetSession($session);
         }
     }
+    
+    
+    /**
+     * Method to move the question row data to the session variable
+     *
+     * @param string $update A variable indicating what action is to be performed
+     * @param array $arrRowIdData
+     * @param array $arrRowNoData
+     * @param array $arrRowTextData
+     * @return NULL
+     */
+    function moveRowData($update, $arrRowIdData, $arrRowNoData, $arrRowTextData) {
+        $arrRowData = array ();
+        foreach ( $arrRowIdData as $key => $id ) {
+            $arrRowData [] = array ('id' => $id, 'row_order' => $arrRowNoData [$key], 'row_text' => $arrRowTextData [$key] );
+        }
+        if ($update == 'addrow') {
+            $arrRowData [] = array ('id' => '', 'row_order' => '', 'row_text' => '' );
+        }
+        $temp = explode ( "_", $update );
+        if ($temp ['0'] == 'deleterow') {
+            if (isset ( $temp ['1'] )) {
+                $rowId = $arrRowData [$temp ['1']] ['id'];
+                if ($rowId != '') {
+                    $this->addDeletedRowId ( $rowId );
+                }
+                unset ( $arrRowData [$temp ['1']] );
+            }
+        }
+        $arrRowData = array_merge ( $arrRowData );
+        $this->addRowData ( $arrRowData );
+    }
+    
+    /**
+     * Method to move the question column data to the session variable
+     *
+     * @param string $update A variable indicating what action is to be performed
+     * @param array $arrColumnIdData
+     * @param array $arrColumnIdData
+     * @param array $arrColumnIdData
+     * @return NULL
+     */
+    function moveColumnData($update, $arrColumnIdData, $arrColumnNoData, $arrColumnTextData) {
+        $arrColumnData = array ();
+        foreach ( $arrColumnIdData as $key => $id ) {
+            $arrColumnData [] = array ('id' => $id, 'column_order' => $arrColumnNoData [$key], 'column_text' => $arrColumnTextData [$key] );
+        }
+        if ($update == 'addcolumn') {
+            $arrColumnData [] = array ('id' => '', 'column_order' => '', 'column_text' => '' );
+        }
+        $temp = explode ( "_", $update );
+        if ($temp ['0'] == 'deletecolumn') {
+            if (isset ( $temp ['1'] )) {
+                $columnId = $arrColumnData [$temp ['1']] ['id'];
+                if ($columnId != '') {
+                    $this->addDeletedColumnId ( $columnId );
+                }
+                unset ( $arrColumnData [$temp ['1']] );
+            }
+        }
+        $arrColumnData = array_merge ( $arrColumnData );
+        $this->addColumnData ( $arrColumnData );
+    }
+
+    /**
+     * Method to move the survey page data to the session variable
+     *
+     * @param string $update A variable indicating what action is to be performed
+     * @return NULL
+     */
+    function movePageData($update, $arrPageIdData, $arrPageOrderData, $arrPageLabelData, $arrPageTextData) 
+    {
+        $arrPageData = array ();
+        foreach ( $arrPageIdData as $key => $id ) {
+            $arrPageData [] = array ('id' => $id, 'page_order' => $arrPageOrderData [$key], 'page_label' =>$arrPageLabelData [$key], 'page_text' => $arrPageTextData [$key] );
+        }
+        if ($update == 'addpage') {
+            $arrPageData [] = array ('id' => '', 'page_order' => '', 'page_label' => '', 'page_text' => '' );
+        }
+        $temp = explode ( "_", $update );
+        if ($temp ['0'] == 'deletepage') {
+            if (isset ( $temp ['1'] )) {
+                $pageId = $arrPageData [$temp ['1']] ['id'];
+                if ($pageId != '') {
+                    $this->addDeletedPageId ( $pageId );
+                }
+                unset ( $arrPageData [$temp ['1']] );
+            }
+        }
+        if ($temp ['0'] == 'movepage') {
+            if ($temp ['2'] == 'down') {
+                $firstPage = $arrPageData [$temp ['1']];
+                $secondPage = $arrPageData [($temp ['1'] + 1)];
+                $arrPageData [$temp ['1']] = $secondPage;
+                $arrPageData [($temp ['1'] + 1)] = $firstPage;
+            } else {
+                $firstPage = $arrPageData [$temp ['1']];
+                $secondPage = $arrPageData [($temp ['1'] - 1)];
+                $arrPageData [$temp ['1']] = $secondPage;
+                $arrPageData [($temp ['1'] - 1)] = $firstPage;
+            }
+        }
+        $arrPageData = array_merge ( $arrPageData );
+        $this->addPageData ( $arrPageData );
+        if ($temp ['0'] == 'movepage') {
+            $this->dbPages = $this->newObject ('dbpages');
+            $this->dbPages->editPages ();
+        }
+    }
+
 }
 ?>

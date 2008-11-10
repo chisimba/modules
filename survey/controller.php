@@ -51,39 +51,39 @@ class survey extends controller {
      */
     public function init() {
         // system objects
-        $this->objUser = &$this->newObject ( 'user', 'security' );
+        $this->objUser = $this->newObject ( 'user', 'security' );
         $this->userId = $this->objUser->userId ();
         $this->name = $this->objUser->fullname ( $this->userId );
         $this->email = $this->objUser->email ( $this->userId );
         $this->isAdmin = $this->objUser->inAdminGroup ( $this->userId, $group = 'Site Admin' );
 
-        $this->objLanguage = &$this->newObject ( 'language', 'language' );
-        $this->objGroupAdmin = &$this->newObject ( 'groupadminmodel', 'groupadmin' );
-        $this->objDate = &$this->newObject ( 'dateandtime', 'utilities' );
-        $this->objComment = &$this->newObject ( 'commentinterface', 'comment' );
+        $this->objLanguage = $this->newObject ( 'language', 'language' );
+        $this->objGroupAdmin = $this->newObject ( 'groupadminmodel', 'groupadmin' );
+        $this->objDate = $this->newObject ( 'dateandtime', 'utilities' );
+        $this->objComment = $this->newObject ( 'commentinterface', 'comment' );
 
         $this->objMailer = $this->newObject ( 'email', 'mail' );
         $this->objMailer->setValue ( 'from', $this->email );
         $this->objMailer->setValue ( 'fromName', $this->name );
 
         //db objects
-        $this->dbSurvey = &$this->newObject ( 'dbsurvey' );
-        $this->dbType = &$this->newObject ( 'dbtype' );
-        $this->dbQuestion = &$this->newObject ( 'dbquestion' );
-        $this->dbRows = &$this->newObject ( 'dbquestionrow' );
-        $this->dbColumns = &$this->newObject ( 'dbquestioncol' );
-        $this->dbResponse = &$this->newObject ( 'dbresponse' );
-        $this->dbAnswer = &$this->newObject ( 'dbanswer' );
-        $this->dbItems = &$this->newObject ( 'dbitem' );
-        $this->dbComment = &$this->newObject ( 'dbcomments' );
-        $this->dbPages = &$this->newObject ( 'dbpages' );
-        $this->dbPageQuestions = &$this->newObject ( 'dbpagequestions' );
+        $this->dbSurvey = $this->newObject ( 'dbsurvey' );
+        $this->dbType = $this->newObject ( 'dbtype' );
+        $this->dbQuestion = $this->newObject ( 'dbquestion' );
+        $this->dbRows = $this->newObject ( 'dbquestionrow' );
+        $this->dbColumns = $this->newObject ( 'dbquestioncol' );
+        $this->dbResponse = $this->newObject ( 'dbresponse' );
+        $this->dbAnswer = $this->newObject ( 'dbanswer' );
+        $this->dbItems = $this->newObject ( 'dbitem' );
+        $this->dbComment = $this->newObject ( 'dbcomments' );
+        $this->dbPages = $this->newObject ( 'dbpages' );
+        $this->dbPageQuestions = $this->newObject ( 'dbpagequestions' );
 
         //survey objects
-        $this->groups = &$this->newObject ( 'groups' );
-        $this->session = &$this->newObject ( 'surveysession' );
-        $this->validate = &$this->newObject ( 'validate' );
-        $this->questions = &$this->newObject ( 'questions' );
+        $this->groups = $this->newObject ( 'groups' );
+        $this->session = $this->newObject ( 'surveysession' );
+        $this->validate = $this->newObject ( 'validate' );
+        $this->questions = $this->newObject ( 'questions' );
 
         //Get the activity logger class
         $this->objLog = $this->getObject ( 'logactivity', 'logger' );
@@ -445,11 +445,11 @@ class survey extends controller {
                 $arrRowIdData = $this->getParam ( 'arrRowId', array ('', '', '' ) );
                 $arrRowNoData = $this->getParam ( 'arrRowNo', array ('', '', '' ) );
                 $arrRowTextData = $this->getParam ( 'arrRowText', array ('', '', '' ) );
-                $this->moveRowData ( $update, $arrRowIdData, $arrRowNoData, $arrRowTextData );
+                $this->session->moveRowData ( $update, $arrRowIdData, $arrRowNoData, $arrRowTextData );
                 $arrColumnIdData = $this->getParam ( 'arrColumnId', array ('', '', '' ) );
                 $arrColumnNoData = $this->getParam ( 'arrColumnNo', array ('', '', '' ) );
                 $arrColumnTextData = $this->getParam ( 'arrColumnText', array ('', '', '' ) );
-                $this->moveColumnData ( $update, $arrColumnIdData, $arrColumnNoData, $arrColumnTextData );
+                $this->session->moveColumnData ( $update, $arrColumnIdData, $arrColumnNoData, $arrColumnTextData );
                 if ($update != 'save') {
                     if ($mode == 'add') {
                         return $this->nextAction ( 'addquestion', array ('update' => $update, 'survey_id' => $surveyId ) );
@@ -803,7 +803,11 @@ class survey extends controller {
                 // calls the  savepages action
                 $surveyId = $this->getParam ( 'survey_id' );
                 $update = $this->getParam ( 'update' );
-                $this->movePageData ( $update );
+                $arrPageIdData = $this->getParam ( 'arrPageId', array ('', '', '' ) );
+                $arrPageOrderData = $this->getParam ( 'arrPageOrder', array ('', '', '' ) );
+                $arrPageLabelData = $this->getParam ( 'arrPageLabel', array ('', '', '' ) );
+                $arrPageTextData = $this->getParam ( 'arrPageText', array ('', '', '' ) );
+                $this->session->movePageData ( $update, $arrPageIdData, $arrPageOrderData, $arrPageLabelData, $arrPageTextData);
                 if ($update == 'deleteall') {
                     $this->dbPages->deleteAllPages ( $surveyId );
                     return $this->nextAction ( 'listquestions', array ('survey_id' => $surveyId ) );
@@ -984,115 +988,9 @@ class survey extends controller {
         $this->session->addQuestionData ( $arrQuestionData );
     }
 
-    /**
-     * Method to move the question row data to the session variable
-     *
-     * @param string $update A variable indicating what action is to be performed
-     * @param array $arrRowIdData
-     * @param array $arrRowNoData
-     * @param array $arrRowTextData
-     * @return NULL
-     */
-    function moveRowData($update, $arrRowIdData, $arrRowNoData, $arrRowTextData) {
-        $arrRowData = array ();
-        foreach ( $arrRowIdData as $key => $id ) {
-            $arrRowData [] = array ('id' => $id, 'row_order' => $arrRowNoData [$key], 'row_text' => $arrRowTextData [$key] );
-        }
-        if ($update == 'addrow') {
-            $arrRowData [] = array ('id' => '', 'row_order' => '', 'row_text' => '' );
-        }
-        $temp = explode ( "_", $update );
-        if ($temp ['0'] == 'deleterow') {
-            if (isset ( $temp ['1'] )) {
-                $rowId = $arrRowData [$temp ['1']] ['id'];
-                if ($rowId != '') {
-                    $this->session->addDeletedRowId ( $rowId );
-                }
-                unset ( $arrRowData [$temp ['1']] );
-            }
-        }
-        $arrRowData = array_merge ( $arrRowData );
-        $this->session->addRowData ( $arrRowData );
-    }
 
-    /**
-     * Method to move the question column data to the session variable
-     *
-     * @param string $update A variable indicating what action is to be performed
-     * @param array $arrColumnIdData
-     * @param array $arrColumnIdData
-     * @param array $arrColumnIdData
-     * @return NULL
-     */
-    function moveColumnData($update, $arrColumnIdData, $arrColumnNoData, $arrColumnTextData) {
-        $arrColumnData = array ();
-        foreach ( $arrColumnIdData as $key => $id ) {
-            $arrColumnData [] = array ('id' => $id, 'column_order' => $arrColumnNoData [$key], 'column_text' => $arrColumnTextData [$key] );
-        }
-        if ($update == 'addcolumn') {
-            $arrColumnData [] = array ('id' => '', 'column_order' => '', 'column_text' => '' );
-        }
-        $temp = explode ( "_", $update );
-        if ($temp ['0'] == 'deletecolumn') {
-            if (isset ( $temp ['1'] )) {
-                $columnId = $arrColumnData [$temp ['1']] ['id'];
-                if ($columnId != '') {
-                    $this->session->addDeletedColumnId ( $columnId );
-                }
-                unset ( $arrColumnData [$temp ['1']] );
-            }
-        }
-        $arrColumnData = array_merge ( $arrColumnData );
-        $this->session->addColumnData ( $arrColumnData );
-    }
 
-    /**
-     * Method to move the survey page data to the session variable
-     *
-     * @param string $update A variable indicating what action is to be performed
-     * @return NULL
-     */
-    function movePageData($update) {
-        $arrPageIdData = $this->getParam ( 'arrPageId', array ('', '', '' ) );
-        $arrPageOrderData = $this->getParam ( 'arrPageOrder' );
-        $arrPageLabelData = $this->getParam ( 'arrPageLabel' );
-        $arrPageTextData = $this->getParam ( 'arrPageText' );
-        $arrPageData = array ();
-        foreach ( $arrPageIdData as $key => $id ) {
-            $arrPageData [] = array ('id' => $id, 'page_order' => $arrPageOrderData [$key], 'page_label' => $arrPageLabelData [$key], 'page_text' => $arrPageTextData [$key] );
-        }
-        if ($update == 'addpage') {
-            $arrPageData [] = array ('id' => '', 'page_order' => '', 'page_label' => '', 'page_text' => '' );
-        }
-        $temp = explode ( "_", $update );
-        if ($temp ['0'] == 'deletepage') {
-            if (isset ( $temp ['1'] )) {
-                $pageId = $arrPageData [$temp ['1']] ['id'];
-                if ($pageId != '') {
-                    $this->session->addDeletedPageId ( $pageId );
-                }
-                unset ( $arrPageData [$temp ['1']] );
-            }
-        }
-        if ($temp ['0'] == 'movepage') {
-            if ($temp ['2'] == 'down') {
-                $firstPage = $arrPageData [$temp ['1']];
-                $secondPage = $arrPageData [($temp ['1'] + 1)];
-                $arrPageData [$temp ['1']] = $secondPage;
-                $arrPageData [($temp ['1'] + 1)] = $firstPage;
-            } else {
-                $firstPage = $arrPageData [$temp ['1']];
-                $secondPage = $arrPageData [($temp ['1'] - 1)];
-                $arrPageData [$temp ['1']] = $secondPage;
-                $arrPageData [($temp ['1'] - 1)] = $firstPage;
-            }
-        }
-        $arrPageData = array_merge ( $arrPageData );
-        $this->session->addPageData ( $arrPageData );
-        if ($temp ['0'] == 'movepage') {
-            $this->dbPages->editPages ();
-        }
-    }
+
 
     /**
      * Method to format a date
