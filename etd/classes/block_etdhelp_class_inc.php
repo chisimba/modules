@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Block for the help on the right menu 
 *
