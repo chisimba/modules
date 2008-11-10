@@ -625,7 +625,7 @@
               }                
      </script>
 <br><br>
-<?
+<?php
   // <a href="#">Back</a>
     $ref = getenv("HTTP_REFERER");
     echo '<a href="'.$ref.'">Back</a>';

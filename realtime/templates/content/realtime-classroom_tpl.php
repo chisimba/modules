@@ -58,7 +58,7 @@
 </div>
 
 <!-- END FILE MANAGER FILE CHOOSER CODE-->
-<?
+<?php
     $modPath=$this->objAltConfig->getModulePath();
     $replacewith="";
     $docRoot=$_SERVER['DOCUMENT_ROOT'];
