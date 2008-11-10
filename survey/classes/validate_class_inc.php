@@ -735,7 +735,7 @@ class validate extends object
     public function checkPageData($surveyId)
     {
         // set up error messages
-        $titleLabel=$this->objLanguage->languageText('mod_survey_pagetitle');
+        $titleLabel=$this->objLanguage->languageText('mod_survey_pagetitle', 'survey');
         $pages=$this->objLanguage->languageText('mod_survey_numberpages');
         $questions=$this->objLanguage->languageText('mod_survey_numberquestions');
 
