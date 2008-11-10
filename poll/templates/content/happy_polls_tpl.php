@@ -27,14 +27,14 @@ $objIcon->setIcon('loader');
     $this->appendArrayVar('headerParams', '
 <script type="text/javascript">
 //handle the radio buttons
+var id, code, option, question, inputVisible, myanswer, qnId, ansId, theAnsId, theQnId, myAnsId, myQnId;
 function onClickRadio()
 {
       jQuery("#question_options").html(" ");		
-
        id = jQuery("#input_id").attr(\'value\');
 	if (id==null)
 	{
-		id=0;
+		id="0";
 	}
       //document.getElementById("onfinish").click();
       code = jQuery("#input_contextcode").attr(\'value\');
@@ -45,7 +45,7 @@ function onClickRadio()
 	if(question == null){
                 jQuery("#question_options").removeClass("success");	
                 jQuery("#question_options").addClass("error");
-	      jQuery("#question_options").html("'.$lbTypeOption.'");		
+	      jQuery("#question_options").html("'.$lbRetype.'");		
 	      //make the 1st one checked
 	      jQuery("input[@name=\'qntype\']:nth(1)").attr("checked","checked");
 	}else{

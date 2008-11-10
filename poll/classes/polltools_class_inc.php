@@ -209,7 +209,7 @@ class polltools extends object
 	}
         
         $objHead = new htmlheading();
-        $objHead->str = $hdAdd." - ".$contextCode;
+        $objHead->str = $hdAdd;
         $objHead->type = 1;
         $str = $objHead->show();
         
