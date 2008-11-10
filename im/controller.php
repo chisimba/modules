@@ -183,7 +183,7 @@ class im extends controller {
                 $conn2->processUntil ( 'session_start' );
 
                 $time_start = microtime ( TRUE );
-                $users = $this->objDbImPres->getAllActiveUsers ();
+                $users = $this->objDbImPres->getAll ();
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
