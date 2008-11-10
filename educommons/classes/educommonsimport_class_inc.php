@@ -63,6 +63,7 @@ class educommonsimport extends object
     protected $objChapterContent;
     protected $objTitles;
     protected $objPages;
+    protected $objOrder;
 
     /**
      * Standard constructor to load the necessary resources
@@ -85,6 +86,7 @@ class educommonsimport extends object
         // Contextcontent title object for importing pages.
         $this->objTitles = $this->getObject('db_contextcontent_titles', 'contextcontent');
         $this->objPages = $this->getObject('db_contextcontent_pages', 'contextcontent');
+        $this->objOrder = $this->getOBject('db_contextcontent_order', 'contextcontent');
     }
 
     /**
@@ -192,10 +194,12 @@ class educommonsimport extends object
      * Inserts IMS documents into database as contextcontent pages.
      *
      * @access public
-     * @param  array $data The IMS data
+     * @param  array  $data    The IMS data
+     * @param  string $context The id of the context to add the pages to
      */
-    public function addPages($data)
+    public function addPages($data, $context)
     {
+        $course = substr($data['courses'][0]['id'], 3);
         foreach ($data['documents'] as $document) {
             $id = substr($document['id'], 3);
             $language = $document['language'];
@@ -211,6 +215,7 @@ class educommonsimport extends object
                 }
             } else {
                 $this->objTitles->addTitle($id, $title, $content, $language);
+                $this->objOrder->addPageToContext($id, '', $context, $course);
             }
         }
     }
