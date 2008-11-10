@@ -93,7 +93,7 @@ class imops extends object {
         }
     }
 
-    public function showMassMessageBox($featurebox = FALSE, $editor = FALSE) {
+    public function showMassMessageBox($featurebox = FALSE, $editor = FALSE, $module="im") {
         if ($editor == FALSE) {
             $form = $this->massmessageform ( FALSE );
         } else {
@@ -122,7 +122,8 @@ class imops extends object {
             exit ();
         }
         $required = '<span class="warning"> * ' . $this->objLanguage->languageText ( 'word_required', 'system', 'Required' ) . '</span>';
-        $cform = new form ( 'massmsg', $this->uri ( array ('module' => 'im', 'action' => 'massmessage' ) ) );
+        $cform = new form ( 'massmsg');
+	$cform->action = $this->uri ( array ('action' => 'massmessage' ,'module' => 'das') ) ;
         $cfieldset = $this->getObject ( 'fieldset', 'htmlelements' );
         $ctbl = $this->newObject ( 'htmltable', 'htmlelements' );
         $ctbl->cellpadding = 5;

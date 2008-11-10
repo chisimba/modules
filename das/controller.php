@@ -208,7 +208,7 @@ class das extends controller {
                 $conn2->processUntil ( 'session_start' );
 
                 $time_start = microtime ( TRUE );
-                $users = $this->objDbImPres->getAllActiveUsers ();
+                $users = $this->objDbImPres->getAll();
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
@@ -222,7 +222,7 @@ class das extends controller {
 
                 break;
 
-            case 'messagehandler' :
+            /*case 'messagehandler' :
                 // This is a looooong running task... Lets use the background class to handle it
                 //check the connection status
                 $status = $this->objBack->isUserConn ();
@@ -270,7 +270,7 @@ class das extends controller {
                                         //$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
                                     }
                                     break;
-*/
+
                                 case 'presence' :
                                     // Update the table presence info
                                     $this->objDbImPres->updatePresence ( $pl );
@@ -282,6 +282,7 @@ class das extends controller {
 
                             }
                         }
+
                     }
                 } catch ( customException $e ) {
                     customException::cleanUp ();
@@ -291,7 +292,7 @@ class das extends controller {
                 $email = $this->objConfig->getsiteEmail ();
                 $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
                 break;
-
+		*/
             default :
                 die ( "unknown action" );
                 break;

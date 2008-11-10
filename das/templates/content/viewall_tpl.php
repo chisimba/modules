@@ -56,7 +56,9 @@ $middleColumn .= $objImView->renderOutputForBrowser($msgs);
 if (!$this->objUser->isLoggedIn()) {
     $leftColumn .= $this->objImOps->loginBox(TRUE);
 } else {
-    $leftColumn .= $this->leftMenu->show();
+   
+    $leftColumn .= $objImView->renderLinkList($msgs);
+	$leftColumn .= $this->leftMenu->show();
     if($this->objUser->inAdminGroup($this->objUser->userId()))
     {
        $leftColumn .= $this->objImOps->showMassMessageBox(TRUE, TRUE);
