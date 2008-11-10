@@ -1,4 +1,4 @@
-<?
+<?php
 // $sqldata[]="CREATE TABLE `tbl_calendar_temp_attachment` (
   // `id` varchar(32) NOT NULL default '',
   // `temp_id` varchar(64) NOT NULL default '',
