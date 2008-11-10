@@ -1,4 +1,4 @@
-<?
+<?php
 
 //table definition for tbl_podcast_context
 //author: Mohamed Yusuf
