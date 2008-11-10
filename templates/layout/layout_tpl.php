@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template layout for realtime module
 * @package realtime
