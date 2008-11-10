@@ -1,4 +1,4 @@
-<?
+<?php
     $objTable=$this->newObject('htmltable','htmlelements');
     $objTable->width=null;
     $objTable->border='0';
