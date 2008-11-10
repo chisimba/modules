@@ -1,4 +1,4 @@
-<?
+<?php
 // Table Name
 $tablename = 'tbl_importusers';
 //Options line for comments, encoding and character set
