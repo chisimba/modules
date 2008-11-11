@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * This class retrieves a list of files of a workgroup (fileshare)
 * @author Tohir Solomons

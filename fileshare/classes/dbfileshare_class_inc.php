@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Manage workgroup files.
 * @copyright (C) 2004,2005,2006 UWC
