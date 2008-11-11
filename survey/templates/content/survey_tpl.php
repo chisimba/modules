@@ -454,7 +454,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['columnText'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
