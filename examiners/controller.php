@@ -623,6 +623,18 @@ class examiners extends controller {
                 }
          		break;
                 
+            case 'download':
+                $facId = $this->getParam('f');
+                $depId = $this->getParam('d');
+                $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
+                if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+                    $this->setPageTemplate('filedownload_page_tpl.php');
+                    return 'filedownload_tpl.php';
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+
  			default:
                 return $this->nextAction('faculties', array(), 'examiners');
                 break;

@@ -1165,6 +1165,7 @@ class examdisplay extends object
         $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
         $lblExaminerList = $this->objLanguage->languageText('mod_examiners_examinerlist', 'examiners');        
         $lblExport = $this->objLanguage->languageText('mod_examiners_exporttitle', 'examiners');        
+        $lblDownload = $this->objLanguage->languageText('mod_examiners_downloadtitle', 'examiners');        
                 
         // set up add examiner icon
         $this->objIcon->title = $lblAdd;
@@ -1174,7 +1175,7 @@ class examdisplay extends object
             'd' => $depId,
         ), 'examiners'));
 
-        // set up groups icon
+        // set up export icon
         if($subjects == FALSE){
             $icoExport = '';
         }else{
@@ -1186,6 +1187,28 @@ class examdisplay extends object
             ), 'examiners'), 'exportcvs');
         }
                 
+        // set up download icon
+        if($download == 'FALSE'){
+            $link = '';
+        }else{
+            $this->objIcon->title = $lblDownload;
+            $this->objIcon->setIcon('download');
+            $icoDownload = $this->objIcon->show();
+
+            $file = glob($this->filePath.$depId.'.csv');
+            if(!empty($file)){
+                $this->objLink = new link($this->uri(array(
+                    'action' => 'download',
+                    'f' => $facId,
+                    'd' => $depId,
+                ), 'examiners'));
+                $this->objLink->link = $icoDownload;
+                $link = $this->objLink->show();
+            }else{
+                $link = '';
+            }
+        }
+
         // set up page heading
         $this->objHeading = new htmlHeading();
         $this->objHeading->str = $faculty['faculty_name'];
@@ -1200,7 +1223,7 @@ class examdisplay extends object
         
         $this->objHeading = new htmlHeading();
         if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
-            $this->objHeading->str = $lblList.'&#160;'.$icoAdd.'&#160;'.$icoExport;
+            $this->objHeading->str = $lblList.'&#160;'.$icoAdd.'&#160;'.$icoExport.'&#160;'.$link;
         }else{
             $this->objHeading->str = $lblList;            
         }
@@ -3436,7 +3459,7 @@ class examdisplay extends object
         $lblCode = $this->objLanguage->languageText('word_code');
         $lblSubject = $this->objLanguage->languageText('word_subject');
         
-        $file = $this->filePath.'/'.$facId.'.csv';
+        $file = $this->filePath.'/'.$depId.'.csv';
         $outputFile = fopen($file, 'wb');
         $str = '"'.$faculty['faculty_name'].'"'."\n";
         fwrite($outputFile, $str);
@@ -3479,6 +3502,8 @@ class examdisplay extends object
                             $line .= $examiner['remarks']."\n";
                         }
                         $line .= '"';
+                    }else{
+                        $line .= ',""';
                     }
                 }
             }
