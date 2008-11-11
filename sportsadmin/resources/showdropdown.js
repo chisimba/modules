@@ -1,5 +1,5 @@
 function showdetails(fieldname) {
-<?
+<?php
     
 ?>
 	if(fieldname!="") {
