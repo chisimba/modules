@@ -1,7 +1,4 @@
 function showdetails(fieldname) {
-<?php
-    
-?>
 	if(fieldname!="") {
 		alert('good');
 		var Content;
