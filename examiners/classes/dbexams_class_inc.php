@@ -307,6 +307,7 @@ class dbexams extends dbTable
     *
     * @access public
     * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
     * @param string $title: The title of the examiner
     * @param string $name: The name of the examiner
     * @param string $surname: The surname of the examiner
@@ -318,13 +319,14 @@ class dbexams extends dbTable
     * @param string $address: The address of the examiner
     * @return string|bool $examId: The examiner id on success | FALSE on failure
     */
-    public function addExaminer($facId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
+    public function addExaminer($facId, $depId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address)
     {
         $this->_setExaminers();
         $table = $this->table;
         
         $fields = array();
         $fields['fac_id'] = $facId;
+        $fields['dep_id'] = $depId;
         $fields['title'] = $title;
         $fields['first_name'] = $name;
         $fields['surname'] = $surname;
@@ -392,6 +394,7 @@ class dbexams extends dbTable
         $sql = "SELECT * FROM ".$this->table;
         $sql .= " WHERE dep_id='".$depId."'";
         $sql .= " AND deleted='0'";
+        $sql .= " ORDER BY surname ASC, first_name ASC";
         
         $data = $this->getArray($sql);
         if($data != FALSE){
@@ -803,9 +806,11 @@ class dbexams extends dbTable
     * @param string $code: The code of the course
     * @param string $name: The name of the course
     * @param string $level: The level of the course
+    * @param string $status: The status of the course
+    * @param string $year: The year the subject was last active
     * @return string|bool $subjId: The subject id on success | FALSE on failure
     */
-    public function addSubject($facId, $depId, $code, $name, $level)
+    public function addSubject($facId, $depId, $code, $name, $level, $status, $year)
     {
         $this->_setSubjects();
         $table = $this->table;
@@ -816,7 +821,8 @@ class dbexams extends dbTable
         $fields['course_code'] = $code;
         $fields['course_name'] = $name;
         $fields['course_level'] = $level;
-        $fields['course_status'] = 0;
+        $fields['course_status'] = $status;
+        $fields['last_active_year'] = $year;
         $fields['deleted'] = 0;
         $fields['updated'] = date('Y-m-d H:i:s');
         $subjId = $this->insert($fields);
@@ -889,14 +895,20 @@ class dbexams extends dbTable
     *
     * @access public
     * @param string $depId: The id of the department
+    * @param string $option: The level of the subject
     * @return array|bool $data: The subject data on success | FALSE on failure
     */
-    public function getSubjectsByDepartment($depId)
+    public function getSubjectsByDepartment($depId, $option = NULL)
     {
         $this->_setSubjects();
         
         $sql = "SELECT * FROM ".$this->table;
         $sql .= " WHERE dep_id='".$depId."'";
+        if(isset($option) and $option == '1'){
+            $sql .= " AND course_level='1'";
+        }elseif(isset($option) and $option == '2'){
+            $sql .= " AND course_level='2'";
+        }
         $sql .= " AND deleted='0'";
         
         $data = $this->getArray($sql);
@@ -915,9 +927,10 @@ class dbexams extends dbTable
     * @param string $name: The name of the course
     * @param string $level: The level of the course
     * @param string $status: The status of the course
+    * @param string $year: The year the course was last active
     * @return string|bool: The subject id on success | FALSE on failure
     */
-    public function editSubject($subjId, $code, $name, $level, $status)
+    public function editSubject($subjId, $code, $name, $level, $status, $year)
     {
         $this->_setSubjects();
         $table = $this->table;
@@ -929,6 +942,7 @@ class dbexams extends dbTable
             $fields['course_name'] = $name;
             $fields['course_level'] = $level;
             $fields['course_status'] = $status;
+            $fields['last_active_year'] = $year;
             $fields['updated'] = date('Y-m-d H:i:s');
             $updated = $this->update('id', $subjId, $fields);
             
@@ -1507,7 +1521,7 @@ class dbexams extends dbTable
             $fields = array();
             $fields['deleted'] = 1;
             $fields['updated'] = date('Y-m-d H:i:s');
-            $updated = $this->update('id', $data['eid'], $fields);
+            $updated = $this->update('id', $data['r_id'], $fields);
             
             if($updated != FALSE){
                 $comment = $this->objLanguage->languageText('word_delete');

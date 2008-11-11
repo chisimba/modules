@@ -35,6 +35,10 @@ $fields = array(
 		'type' => 'integer',
 		'length' => '1',
 	),
+	'last_active_year' => array(
+		'type' => 'integer',
+		'length' => '4',
+	),
 	'deleted' => array(
 		'type' => 'integer',
 		'length' => '1',

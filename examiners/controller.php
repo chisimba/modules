@@ -362,7 +362,8 @@ class examiners extends controller {
             case 'subjects':
                 $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
-                $templateContent = $this->objExamDisplay->showSubjects($facId, $depId);
+                $download = $this->getParam('download', 'FALSE');
+                $templateContent = $this->objExamDisplay->showSubjects($facId, $depId, $download);
              	$this->setVarByRef('templateContent', $templateContent);
              	return 'template_tpl.php';
          		break;
@@ -391,11 +392,16 @@ class examiners extends controller {
                     $name = $this->getParam('name');
                     $level = $this->getParam('level');
                     $status = $this->getParam('status');
+                    if($status == '2'){
+                        $year = $this->getParam('year');                    
+                    }else{
+                        $year = NULL;
+                    }
                     $file = $_FILES;
                     if($subjId == ''){
-                        $subjId = $this->objExamDb->addSubject($facId, $depId, $code, $name, $level);
+                        $subjId = $this->objExamDb->addSubject($facId, $depId, $code, $name, $level, $status, $year);
                     }else{
-                        $this->objExamDb->editSubject($subjId, $code, $name, $level, $status);
+                        $this->objExamDb->editSubject($subjId, $code, $name, $level, $status, $year);
                     }
                     if(is_uploaded_file($file['file']['tmp_name']) && $file['file']['error'] == 0){
                         $filename = explode('.', basename($file['file']['name']));
@@ -471,9 +477,9 @@ class examiners extends controller {
                     $cell = $this->getParam('cell');
                     $address = $this->getParam('address');
                     if($userId == ''){
-                        $this->objExamDb->addUser($facId, $depId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address);
+                        $this->objExamDb->addExaminer($facId, $depId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address);
                     }else{
-                        $this->objExamDb->editUser($userId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address);
+                        $this->objExamDb->editExaminer($userId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address);
                    }
                     return $this->nextAction('examiners', array(
                         'f' => $facId,
@@ -489,7 +495,7 @@ class examiners extends controller {
                 $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
                 if($this->isAdmin or $userLevel != FALSE){
                     $userId = $this->getParam('u');
-                    $this->objExamDb->deleteUser($userId);
+                    $this->objExamDb->deleteExaminer($userId);
                     return $this->nextAction('examiners', array(
                         'f' => $facId,
                         'd' => $depId,
@@ -544,19 +550,19 @@ class examiners extends controller {
                     $alternateRemark = $this->getParam('text_alternate');
                     $remarkingRemark = $this->getParam('text_remarking');
                     if($first != ''){
-                        $this->objExamDb->updateFirst($depId, $subjId, $year, $first, $firstRemark);
+                        $this->objExamDb->updateFirst($facId, $depId, $subjId, $year, $first, $firstRemark);
                     }
                     if($second != ''){
-                        $this->objExamDb->updateSecond($depId, $subjId, $year, $second, $secondRemark);
+                        $this->objExamDb->updateSecond($facId, $depId, $subjId, $year, $second, $secondRemark);
                     }
                     if($moderate != ''){
-                        $this->objExamDb->updateModerate($depId, $subjId, $year, $moderate, $moderateRemark);
+                        $this->objExamDb->updateModerate($facId, $depId, $subjId, $year, $moderate, $moderateRemark);
                     }
                     if($alternate != ''){
-                        $this->objExamDb->updateAlternate($depId, $subjId, $year, $alternate, $alternateRemark);
+                        $this->objExamDb->updateAlternate($facId, $depId, $subjId, $year, $alternate, $alternateRemark);
                     }
                     if($remark != ''){
-                        $this->objExamDb->updateRemarking($depId, $subjId, $year, $remark, $remarkingRemark);
+                        $this->objExamDb->updateRemarking($facId, $depId, $subjId, $year, $remark, $remarkingRemark);
                     }
                     return $this->nextAction('matrix', array(
                         'f' => $facId,
@@ -575,7 +581,7 @@ class examiners extends controller {
                 if($this->isAdmin or $userLevel != FALSE){
                     $subjId = $this->getParam('s');
                     $year = $this->getParam('y');
-                    $this->objExamDb->deleteMatrix($depId, $subjId, $year);
+                    $this->objExamDb->deleteMatrix($facId, $depId, $subjId, $year);
                     return $this->nextAction('matrix', array(
                         'f' => $facId,
                         'd' => $depId,
@@ -586,6 +592,37 @@ class examiners extends controller {
                 return $this->nextAction('faculties', array(), 'examiners');
                 break;
 
+            case 'export':
+                $facId = $this->getParam('f');
+                $depId = $this->getParam('d');
+                $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
+                if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+                    $templateContent = $this->objExamDisplay->showExport($facId, $depId);
+                    $this->setVarByRef('templateContent', $templateContent);
+         		    return 'template_tpl.php';
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+         		
+            case 'do_export':
+                $facId = $this->getParam('f');
+                $depId = $this->getParam('d');
+                $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
+                if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+                    $option = $this->getParam('option');
+                    $year = $this->getParam('y');
+                    $download = $this->objExamDisplay->doExport($facId, $depId, $option, $year);
+                    return $this->nextAction('subjects', array(
+                        'f' => $facId,
+                        'd' => $depId,
+                        'download' => $download,
+                    ), 'examiners');
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+                
  			default:
                 return $this->nextAction('faculties', array(), 'examiners');
                 break;
