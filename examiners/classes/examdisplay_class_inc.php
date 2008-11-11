@@ -789,9 +789,10 @@ class examdisplay extends object
 	*
 	* @access public
 	* @param string $facId: The id of the faculty
+	* @param bool $download: TRUE if a download is available | FALSE if not
 	* @return string $str: The output string
 	*/
-	public function showDepartments($facId)
+	public function showDepartments($facId, $download = 'FALSE')
 	{
         // append javascript
         $headerParams = $this->getJavascriptFile('new_sorttable.js', 'htmlelements');
@@ -815,6 +816,8 @@ class examdisplay extends object
         $lblFaculty = $this->objLanguage->languageText('word_faculty');
         $lblHeads = $this->objLanguage->languageText('mod_examiners_departmentheadlist', 'examiners');
         $lblAdmin = $this->objLanguage->languageText('mod_examiners_adminlist', 'examiners');
+        $lblExport = $this->objLanguage->languageText('mod_examiners_exporttitle', 'examiners');        
+        $lblDownload = $this->objLanguage->languageText('mod_examiners_downloadtitle', 'examiners');        
            
         // set up add examiner icon
         $this->objIcon->title = $lblAdd;
@@ -822,6 +825,38 @@ class examdisplay extends object
             'action' => 'department',
             'f' => $facId,
         ), 'examiners'));
+
+        // set up export icon
+        if($departments == FALSE){
+            $icoExport = '';
+        }else{
+            $this->objIcon->title = $lblExport;
+            $icoExport = $this->objIcon->getLinkedIcon($this->uri(array(
+                'action' => 'fac_export',
+                'f' => $facId,
+            ), 'examiners'), 'exportcvs');
+        }
+                
+        // set up download icon
+        if($download == 'FALSE'){
+            $link = '';
+        }else{
+            $this->objIcon->title = $lblDownload;
+            $this->objIcon->setIcon('download');
+            $icoDownload = $this->objIcon->show();
+
+            $file = glob($this->filePath.$facId.'.csv');
+            if(!empty($file)){
+                $this->objLink = new link($this->uri(array(
+                    'action' => 'fac_download',
+                    'f' => $facId,
+                ), 'examiners'));
+                $this->objLink->link = $icoDownload;
+                $link = $this->objLink->show();
+            }else{
+                $link = '';
+            }
+        }
 
         // set up page heading
         $this->objHeading = new htmlHeading();
@@ -831,7 +866,7 @@ class examdisplay extends object
 
         $this->objHeading = new htmlHeading();
         if($this->isAdmin or $userLevel == 'facHead'){
-            $this->objHeading->str = $lblList.'&#160;'.$icoAdd;
+            $this->objHeading->str = $lblList.'&#160;'.$icoAdd.'&#160;'.$icoExport.'&#160;'.$link;
         }else{
             $this->objHeading->str = $lblList;
         }
@@ -1181,7 +1216,7 @@ class examdisplay extends object
         }else{
             $this->objIcon->title = $lblExport;
             $icoExport = $this->objIcon->getLinkedIcon($this->uri(array(
-                'action' => 'export',
+                'action' => 'dep_export',
                 'f' => $facId,
                 'd' => $depId,
             ), 'examiners'), 'exportcvs');
@@ -1198,7 +1233,7 @@ class examdisplay extends object
             $file = glob($this->filePath.$depId.'.csv');
             if(!empty($file)){
                 $this->objLink = new link($this->uri(array(
-                    'action' => 'download',
+                    'action' => 'dep_download',
                     'f' => $facId,
                     'd' => $depId,
                 ), 'examiners'));
@@ -3314,7 +3349,7 @@ class examdisplay extends object
     * @param string $depId: The id of the department
     * @return string $str: The output string
     */
-    public function showExport($facId, $depId)
+    public function showExportForDep($facId, $depId)
     {
         $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
         echo $objHighlightLabels->show();
@@ -3387,7 +3422,7 @@ class examdisplay extends object
         
         // set up forms
         $this->objForm = new form('frmExport',$this->uri(array(
-            'action' => 'do_export',
+            'action' => 'dep_do_export',
             'f' => $facId,
             'd' => $depId,
         ), 'examiners'));
@@ -3430,7 +3465,7 @@ class examdisplay extends object
     * @param string $year: The year for which the export must be done
     * @return bool $result: TRUE if the file was created | FALSE if not
     */
-    public function doExport($facId, $depId, $option, $year)
+    public function doDepExport($facId, $depId, $option, $year)
     {
         // get data
         $faculty = $this->objExamDb->getFacultyById($facId);
@@ -3512,6 +3547,213 @@ class examdisplay extends object
         }
         fclose($outputFile);
         return 'TRUE';
+    }
+
+    /**
+    * Method to show the export page
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @return string $str: The output string
+    */
+    public function showExportForFac($facId)
+    {
+        $objHighlightLabels = $this->newObject('highlightlabels', 'htmlelements');
+        echo $objHighlightLabels->show();
+
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);        
+
+        // set up text elements
+        $lblExportHead = $this->objLanguage->languageText('mod_examiners_export', 'examiners');        
+        $lblYear = $this->objLanguage->languageText('word_year');        
+        $lblUndergrad = $this->objLanguage->languageText('mod_examiners_undergraduate', 'examiners');
+        $lblPostgrad = $this->objLanguage->languageText('mod_examiners_postgraduate', 'examiners');
+        $lblSubject = $this->objLanguage->languageText('mod_examiners_subjects', 'examiners');
+        $lblReturn = $this->objLanguage->languageText('mod_examiners_returndepartment', 'examiners');
+        $lblCancel = $this->objLanguage->languageText('word_cancel');
+        $lblExport = $this->objLanguage->languageText('word_export');
+                
+        // set up page heading
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $faculty['faculty_name'];
+        $this->objHeading->type = 3;
+        $heading = $this->objHeading->show();
+
+        $this->objHeading = new htmlHeading();
+        $this->objHeading->str = $lblExportHead;
+        $this->objHeading->type = 3;
+        $heading .= $this->objHeading->show();
+        
+        // set up html elements
+        $this->objRadio = new radio('option');
+        $this->objRadio->addOption('', '  '.$lblSubject);
+        $this->objRadio->addOption('1', '  '. $lblUndergrad);
+        $this->objRadio->addOption('2', '  '.$lblPostgrad);
+        $this->objRadio->setSelected('');
+        $this->objRadio->setBreakSpace('<br />');
+        $radOption = $this->objRadio->show();
+        
+        $this->objDrop = new dropdown('y');
+        for($loop = date('Y') + 1; $loop >= 2006; $loop--){
+            $this->objDrop->addOption($loop, $loop.'&#160;');
+        }
+        $this->objDrop->setSelected(date('Y') + 1);
+        $drpYear = $this->objDrop->show();
+        
+        $this->objButton=new button('submit',$lblExport);
+        $this->objButton->setToSubmit();
+        $btnSubmit = $this->objButton->show();
+
+        $this->objButton=new button('cancel',$lblCancel);
+        $this->objButton->extra = 'onclick="$(\'form_frmCancel\').submit();"';
+        $btnCancel = $this->objButton->show();
+        
+        // set up display table
+        $this->objTable = new htmltable();
+        $this->objTable->cellspacing = '2';
+        $this->objTable->cellpading = '5';        
+        $this->objTable->startRow();
+        $this->objTable->addCell($radOption, '', '', '', '', '');
+        $this->objTable->endRow();
+        $this->objTable->startRow();
+        $this->objTable->addCell($lblYear.'&#058;'.$drpYear, '', '', '', '', '');
+        $this->objTable->endRow();
+        $tblDisplay = $this->objTable->show();
+        
+        // set up forms
+        $this->objForm = new form('frmExport',$this->uri(array(
+            'action' => 'fac_do_export',
+            'f' => $facId,
+        ), 'examiners'));
+        $this->objForm->addToForm($tblDisplay);
+        $this->objForm->addToForm('<br />'.$btnSubmit.'&#160;'.$btnCancel);
+        $frmSubmit = $this->objForm->show();
+    
+        $this->objForm=new form('frmCancel',$this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ), 'examiners'));
+        $frmCancel = $this->objForm->show();
+        
+        // set up return link
+        $this->objLink = new link($this->uri(array(
+            'action' => 'departments',
+            'f' => $facId,
+        ),'examiners'));
+        $this->objLink->link = $lblReturn;
+        $lnkReturn = $this->objLink->show();
+
+        // set up page
+        $str = $heading.'<br />';
+        $str .= $frmSubmit;
+        $str .= $frmCancel;
+        $str .= '<br />'.$lnkReturn;
+               
+        return $str;        
+    }
+    
+    /**
+    * Method to do the export of the matrix
+    *
+    * @access public
+    * @param string $facId: The id of the faculty
+    * @param string $depId: The id of the department
+    * @param string $option: The type of export that should be done
+    * @param string $year: The year for which the export must be done
+    * @return bool $result: TRUE if the file was created | FALSE if not
+    */
+    public function doFacExport($facId, $option, $year)
+    {
+        // set up text elements
+        $lblFirst = $this->objLanguage->languageText('mod_examiners_first', 'examiners');
+        $lblSecond = $this->objLanguage->languageText('mod_examiners_second', 'examiners');
+        $lblModerate = $this->objLanguage->languageText('mod_examiners_moderator', 'examiners');
+        $lblAlternate = $this->objLanguage->languageText('mod_examiners_alternate', 'examiners');
+        $lblRemark = $this->objLanguage->languageText('mod_examiners_remark', 'examiners');
+        $lblCode = $this->objLanguage->languageText('word_code');
+        $lblSubject = $this->objLanguage->languageText('word_subject');
+        
+        // get data
+        $faculty = $this->objExamDb->getFacultyById($facId);
+        $departments = $this->objExamDb->getAllDepartmentsPerFaculty($facId);
+        if($departments == FALSE){
+            return 'FALSE';
+        }else{
+            $file = $this->filePath.'/'.$facId.'.csv';
+            $outputFile = fopen($file, 'wb');
+            $str = '"'.$faculty['faculty_name'].'"'."\n";
+            fwrite($outputFile, $str);
+
+            foreach($departments as $department){
+                $str = '"'.$department['department_name'].' - '.$year.'"'."\n";
+                fwrite($outputFile, $str);
+
+                $subjects = $this->objExamDb->getSubjectsByDepartment($department['id'], $option);
+                if($subjects != FALSE){
+                    foreach($subjects as $subject){
+                        $examiners = $this->objExamDb->getMatrixByYear($facId, $department['id'], $subject['id'], $year);
+                        if($examiners != FALSE){
+                            $subject['examiners'] = $examiners;
+                            $matrix[] = $subject;
+                        }else{
+                            $matrix[] = $subject;
+                        }
+                    }       
+                }else{
+                    return 'FALSE';
+                }
+
+                $str = '"'.$lblCode.'"';
+                $str .= ',"'.$lblSubject.'"';
+                $str .= ',"'.$lblFirst.'"';
+                $str .= ',"'.$lblSecond.'"';
+                $str .= ',"'.$lblModerate.'"';
+                $str .= ',"'.$lblAlternate.'"';
+                $str .= ',"'.$lblRemark.'"'."\n";
+                fwrite($outputFile, $str);
+        
+                foreach($matrix as $data){
+                    $line = '"'.$data['course_code'].'"';   
+                    $line .= ',"'.$data['course_name'].'"';
+                    if(isset($data['examiners'])){
+                        foreach($data['examiners'] as $examiner){
+                            if($examiner != FALSE){
+                                $line .= ',"';
+                                $line .= $examiner['title'].' '.$examiner['first_name'].' '.$examiner['surname']."\n";
+                                $line .= $examiner['organisation']."\n";
+                                $line .= $examiner['email_address']."\n";
+                                if(!empty($examiner['tel_no'])){
+                                    $line .= $examiner['tel_no']."\n";
+                                }
+                                if(!empty($examiner['extension'])){
+                                    $line .= $examiner['extension']."\n";
+                                }
+                                if(!empty($examiner['cell_no'])){
+                                    $line .= $examiner['cell_no']."\n";
+                                }
+                                if(!empty($examiner['address'])){
+                                    $line .= $examiner['address']."\n";
+                                }
+                                if(!empty($examiner['remarks'])){
+                                    $line .= $examiner['remarks']."\n";
+                                }
+                                $line .= '"';
+                            }else{
+                                $line .= ',""';
+                            }
+                        }
+                    }
+                    $line .= "\n";
+                    fwrite($outputFile, $line);
+                }
+                $line .= "\n";
+                fwrite($outputFile, $line);
+            }
+            fclose($outputFile);
+            return 'TRUE';
+        }
     }
 }
 ?>

@@ -187,7 +187,8 @@ class examiners extends controller {
                 $facId = $this->getParam('f');
                 $userLevel = $this->objExamDisplay->userLevel($facId);
                 if($userLevel != FALSE or $this->isAdmin){
-                    $templateContent = $this->objExamDisplay->showDepartments($facId);
+                    $download = $this->getParam('download', 'FALSE');
+                    $templateContent = $this->objExamDisplay->showDepartments($facId, $download);
              		$this->setVarByRef('templateContent', $templateContent);
              		return 'template_tpl.php';
          	    }
@@ -592,12 +593,12 @@ class examiners extends controller {
                 return $this->nextAction('faculties', array(), 'examiners');
                 break;
 
-            case 'export':
+            case 'dep_export':
                 $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
                 if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
-                    $templateContent = $this->objExamDisplay->showExport($facId, $depId);
+                    $templateContent = $this->objExamDisplay->showExportForDep($facId, $depId);
                     $this->setVarByRef('templateContent', $templateContent);
          		    return 'template_tpl.php';
                 }else{
@@ -605,14 +606,14 @@ class examiners extends controller {
                 }
          		break;
          		
-            case 'do_export':
+            case 'dep_do_export':
                 $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
                 if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
                     $option = $this->getParam('option');
                     $year = $this->getParam('y');
-                    $download = $this->objExamDisplay->doExport($facId, $depId, $option, $year);
+                    $download = $this->objExamDisplay->doDepExport($facId, $depId, $option, $year);
                     return $this->nextAction('subjects', array(
                         'f' => $facId,
                         'd' => $depId,
@@ -623,11 +624,52 @@ class examiners extends controller {
                 }
          		break;
                 
-            case 'download':
+            case 'dep_download':
                 $facId = $this->getParam('f');
                 $depId = $this->getParam('d');
                 $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
                 if($this->isAdmin or $userLevel == 'facHead' or $userLevel == 'depHead'){
+                    $this->setVarByRef('id', $depId);
+                    $this->setPageTemplate('filedownload_page_tpl.php');
+                    return 'filedownload_tpl.php';
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+
+            case 'fac_export':
+                $facId = $this->getParam('f');
+                $userLevel = $this->objExamDisplay->userLevel($facId);
+                if($this->isAdmin or $userLevel == 'facHead'){
+                    $templateContent = $this->objExamDisplay->showExportForFac($facId);
+                    $this->setVarByRef('templateContent', $templateContent);
+         		    return 'template_tpl.php';
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+         		
+            case 'fac_do_export':
+                $facId = $this->getParam('f');
+                $userLevel = $this->objExamDisplay->userLevel($facId);
+                if($this->isAdmin or $userLevel == 'facHead'){
+                    $option = $this->getParam('option');
+                    $year = $this->getParam('y');
+                    $download = $this->objExamDisplay->doFacExport($facId, $option, $year);
+                    return $this->nextAction('departments', array(
+                        'f' => $facId,
+                        'download' => $download,
+                    ), 'examiners');
+                }else{
+                    return $this->nextAction('faculties', array(), 'examiners');
+                }
+         		break;
+                
+            case 'fac_download':
+                $facId = $this->getParam('f');
+                $userLevel = $this->objExamDisplay->userLevel($facId);
+                if($this->isAdmin or $userLevel == 'facHead'){
+                    $this->setVarByRef('id', $facId);
                     $this->setPageTemplate('filedownload_page_tpl.php');
                     return 'filedownload_tpl.php';
                 }else{
