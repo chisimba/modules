@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Block for the block_topiclist
 *
