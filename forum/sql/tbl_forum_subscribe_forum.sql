@@ -1,4 +1,4 @@
-<?
+<?php
 //5ive definition
 $tablename = 'tbl_forum_subscribe_forum';
 

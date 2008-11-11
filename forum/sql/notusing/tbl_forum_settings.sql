@@ -1,4 +1,4 @@
-<?
+<?php
 $sqldata[]="CREATE TABLE `tbl_forum_settings` (
   `id` varchar(32) NOT NULL default '',
   `item` varchar(5) NOT NULL default '',

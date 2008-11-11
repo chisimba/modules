@@ -1,4 +1,4 @@
-<?
+<?php
 $sqldata[]="CREATE TABLE `tbl_forum_attachments` (
   `id` varchar(32) NOT NULL default '',
   `forum_id` varchar(32) NOT NULL default '',

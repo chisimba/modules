@@ -1,4 +1,4 @@
-<?
+<?php
 $this->setVar('pageSuppressXML',true);
 
 $style = '<style type="text/css">

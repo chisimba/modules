@@ -1,4 +1,4 @@
-<?
+<?php
 // Load HTML Classes as Needed
 $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('link', 'htmlelements');
