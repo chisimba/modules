@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * This file was contributed (in part or whole) by a third party, and is
  * released under a BSD-compatible free software license.  Please see the
