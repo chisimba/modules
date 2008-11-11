@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Template layout for assignment management module
 * @package assignmentadmin
