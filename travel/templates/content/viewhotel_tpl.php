@@ -1,4 +1,4 @@
-<?
+<?php
 
 $hotel = $this->objHotels->getRow('id',$id);
 $image = $this->objHotelImages->getImage($hotel['id']);
