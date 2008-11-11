@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Class to Render online buddies from buddies module
 *

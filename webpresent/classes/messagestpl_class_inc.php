@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Class to Render latest messages from email module
 *

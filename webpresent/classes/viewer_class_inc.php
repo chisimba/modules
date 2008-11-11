@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Class to provier reusable view logic to the webpresent module
 *
