@@ -1,4 +1,4 @@
-<?
+<?php
 $size=strlen($display);
 $type='ASCII';
 
