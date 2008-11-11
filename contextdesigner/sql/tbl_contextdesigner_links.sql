@@ -1,4 +1,4 @@
-<?
+<?php
 
 $tablename = 'tbl_contextdesigner_links';
 
