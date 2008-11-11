@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 *Table structure for table `tbl_glossary`
 *

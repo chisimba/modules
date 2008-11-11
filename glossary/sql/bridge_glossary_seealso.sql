@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 *Table structure for table `bridge_glossary_seealso`
 *
