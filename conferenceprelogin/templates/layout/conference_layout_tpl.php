@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Layout template for the conferenceprelogin module
 * @package conferenceprelogin
