@@ -6,8 +6,10 @@ $cssLayout->setNumColumns(2);
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
-$refreshLink = $this->getObject('link', 'htmlelements');
-$refreshIcon = $this->getObject('geticon', 'htmlelements');
+$refreshLink = $this->newObject('link', 'htmlelements');
+$refreshIcon = $this->newObject('geticon', 'htmlelements');
+$configLink = $this->newObject('link', 'htmlelements');
+$configIcon = $this->newObject('geticon', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
 $this->objImOps = $this->getObject('imops', 'im');
@@ -37,10 +39,14 @@ if($this->objUser->inAdminGroup($this->objUser->userId()))
 {
     $cid = $this->objUser->userId();
     $outof = null;
+	$configIcon->setIcon('admin');
+	$configLink->href = $this->uri(array('action' => 'viewcounsilors', 'das'));
+	$configLink->link = $configIcon->show();
+	$config = $configLink->show();
 }else{
     $cid = $this->objUser->userId();
     $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
-
+	$config = "";
 }
 
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
@@ -49,7 +55,7 @@ $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
 $objImView = $this->getObject('imviewer', 'im');
 
-$middleColumn .= $header->show().'<br/>'.$refreshLink->show().'<br/>'.$str;
+$middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
 $middleColumn .= $objImView->renderOutputForBrowser($msgs);
 
 
