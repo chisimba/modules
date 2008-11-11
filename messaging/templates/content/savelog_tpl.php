@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 ** This is simply a placeholder file. To avoid RAM overload use to buffering, the output takes place in the page file
 header("Content-type: $type");
