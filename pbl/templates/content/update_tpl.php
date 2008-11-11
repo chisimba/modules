@@ -44,7 +44,7 @@ $path2=$this->uri(array('action'=>'showtasks'));
 
     </script>
 <body onload='flash()'>
-<?
+<?php
     $colour = $this->getSession('color');
     $colour2 = $this->getSession('color2');
     

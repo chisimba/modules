@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 * PBL index Page.
 * @package pbl

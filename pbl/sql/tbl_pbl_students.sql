@@ -1,4 +1,4 @@
-<?
+<?php
 $sqldata[] = "CREATE TABLE tbl_pbl_students( 
     id VARCHAR(32) NOT NULL, 
     name varchar(30), 

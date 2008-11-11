@@ -36,7 +36,7 @@ $this->setVarByRef('bodyParams',$bodyParams);
         // -->
     </script>
 <body onLoad="window.setTimeout('RefreshChat();',30000);">
-<?
+<?php
     // get chat and output to screen
     $chatText = $this->dbchat->broadCast();
     
