@@ -571,17 +571,28 @@ class survey extends controller {
                     $arrFirstQuestionData = $arrFirstQuestionData ['0'];
                     $surveyId = $arrFirstQuestionData ['survey_id'];
                     $firstQuestionOrder = $arrFirstQuestionData ['question_order'];
+
                     if ($direction == 'down') {
                         $questionOrder = $firstQuestionOrder + 1;
+
                     } else {
-                        $questionOrder = $firstQuestionOrder - 1;
+                        if($firstQuestionOrder == 1)
+                        {
+                            $questionOrder = $firstQuestionOrder;
+                        }
+                        else {
+                            $questionOrder = $firstQuestionOrder - 1;
+                        }
                     }
+
                     $arrSecondQuestionData = $this->dbQuestion->getQuestionByQuestionOrder ( $surveyId, $questionOrder );
+                    //var_dump($arrSecondQuestionData);
                     $arrSecondQuestionData = $arrSecondQuestionData ['0'];
                     $secondQuestionId = $arrSecondQuestionData ['id'];
                     $secondQuestionOrder = $arrSecondQuestionData ['question_order'];
-                    $this->dbQuestion->editQuestionField ( $firstQuestionId, 'question_order', $secondQuestionOrder );
-                    $this->dbQuestion->editQuestionField ( $secondQuestionId, 'question_order', $firstQuestionOrder );
+                   	$this->dbQuestion->editQuestionField ( $firstQuestionId, 'question_order', $secondQuestionOrder );
+                   	$this->dbQuestion->editQuestionField ( $secondQuestionId, 'question_order', $firstQuestionOrder );
+
                     return $this->nextAction ( 'listquestions', array ('survey_id' => $surveyId ) );
                 } else {
                     return $this->nextAction ( '' );

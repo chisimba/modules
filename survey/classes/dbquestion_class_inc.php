@@ -198,12 +198,13 @@ class dbquestion extends dbTable
     * @param string $questionOrder The order number of the question
     * @return array $data  All question information.
     */
-    public function getQuestionByQuestionOrder($surveyId,$questionOrder)
+    public function getQuestionByQuestionOrder($surveyId, $questionOrder)
     {
         $sql="SELECT * FROM ".$this->table;
         $sql.=" WHERE survey_id='$surveyId'";
         $sql.=" AND question_order='$questionOrder'";
         $data=$this->getArray($sql);
+
         return $data;
     }
 
