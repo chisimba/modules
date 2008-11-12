@@ -217,7 +217,7 @@
 
             $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodeHost=$_SERVER['HTTP_HOST'];//$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
@@ -350,7 +350,7 @@
             $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
 
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
-            $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
+            $supernodeHost=$_SERVER['HTTP_HOST'];//$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
