@@ -189,7 +189,7 @@ class educommonsimport extends object
                 }
             } else {
                 $this->objChapters->addChapter($id, $title, '', $language);
-                $this->objContextChapter->addChapterToContext($id, $context);
+                $this->objContextChapter->addChapterToContext($id, $context, 'Y');
             }
         }
     }
