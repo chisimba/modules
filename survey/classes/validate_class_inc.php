@@ -691,13 +691,14 @@ class validate extends object
                     }
                     break;
 
-                case 'init_7':
+                case 'init_8':
+                    // var_dump($arrAnswerData);
                     if($arrAnswerData[$key]['area']!=''){
                         $answered=TRUE;
                     }
                     break;
 
-                case 'init_8':
+                case 'init_7':
                     foreach($arrRowList as $rowKey=>$row){
                         $temp="text_".($rowKey+1);
                         $data=$arrAnswerData[$key][$temp];
