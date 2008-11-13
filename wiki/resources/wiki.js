@@ -82,9 +82,10 @@ function validateUpdatePage(err_summary, err_content, err_comment)
     }
  
     if(comment_input.value == ""){
-        alert(err_comment);
-        comment_input.focus
-        return false;
+        if(confirm(err_comment)){
+            comment_input.focus();
+            return false;
+        }
     }
    var temp = document.getElementById('form_update');
    temp.submit();
