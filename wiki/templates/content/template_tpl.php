@@ -18,12 +18,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 if(isset($popup) || isset($iframe)){
     $this->setVar('pageSuppressBanner', TRUE);
-    $this->setVar('pageSuppressContainer', TRUE);
+    //$this->setVar('pageSuppressContainer', TRUE);
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
     $this->setVar('suppressFooter', TRUE);    
 }else{
-   $this->setLayoutTemplate('layout_tpl.php');
+    $this->setLayoutTemplate('layout_tpl.php');
 }
 $this->setVar('pageSuppressXML', TRUE);
 echo $templateContent;
