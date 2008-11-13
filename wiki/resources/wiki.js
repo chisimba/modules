@@ -77,15 +77,14 @@ function validateUpdatePage(err_summary, err_content, err_comment)
     }
     if(content_input[0].value == ""){
         alert(err_content);
-        content_input[0].focus
+        content_input[0].focus();
         return false;
     }
  
     if(comment_input.value == ""){
-        if(confirm(err_comment)){
-            comment_input.focus();
-            return false;
-        }
+        alert(err_comment);
+        comment_input.focus();
+        return false;
     }
    var temp = document.getElementById('form_update');
    temp.submit();
