@@ -1,0 +1,6 @@
+ver	0	7
+get	.
+seg	all	cabl0000.aas	0	4187
+# HTML_PARAMS: WIDTH=512 HEIGHT=342 BGCOLOR=6633FF
+opt	all	BypassSecurityDialog=TRUE
+opt	all	UniqueID=338619669
