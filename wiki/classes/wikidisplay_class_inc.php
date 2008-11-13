@@ -3387,11 +3387,13 @@ You can create tables using pairs of vertical bars:
         
         $objLayer = new layer();
         $objLayer->id = 'contentDiv';
+        $objLayer->padding = '10px';
         $objLayer->addToStr($string);
         $contentLayer = $objLayer->show();
         
         $objLayer = new layer();
         $objLayer->id = 'iframeDiv';
+        $objLayer->padding = '10px';
         $objLayer->cssClass = 'featurebox';
         $objLayer->addToStr($refreshLink.$loadingLayer.$formLayer.$contentLayer);
         $frameLayer = $objLayer->show();
