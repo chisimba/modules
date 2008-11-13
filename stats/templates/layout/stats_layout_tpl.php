@@ -1,6 +1,6 @@
 <?php
 /**
- * Stats tests and tutorials Chisimba
+ * Stats tutorials on Chisimba
  * 
  * Layout template for stats module
  * 
@@ -31,11 +31,7 @@
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $leftMenu = $this->getObject('contextsidebar', 'context');
 
-$objHead = $this->newObject('htmlheading', 'htmlelements');
-$objHead->str = $objLanguage->languageText('mod_stats_heading', 'stats');
-$objHead->type = 2;
-
 $cssLayout->setLeftColumnContent($leftMenu->show());
-$cssLayout->setMiddleColumnContent($objHead->show().$this->getContent());
+$cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>

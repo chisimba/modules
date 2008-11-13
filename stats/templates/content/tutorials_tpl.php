@@ -2,7 +2,7 @@
 /**
  * Stats tutorials on Chisimba
  * 
- * Deafult view template for stats module
+ * Tutorial template which loads the authorware modules for taking a tutorial
  * 
  * PHP version 5
  * 
@@ -32,38 +32,21 @@ $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objHead->str = $objLanguage->languageText('mod_stats_heading', 'stats');
 $objHead->type = 2;
 
-$note = "Before you can start with tutorial 1,  you must download the Web Player.
-    It is only necessary to do this once.";
-
-$objPop = $this->getObject('windowpop','htmlelements');
-$objPop->set('location',$this->getResourceURI("cabload.html"));
-$objPop->set('linktext','Click here');
-$objPop->set('width','550');
-$objPop->set('height','350');
-$objPop->putJs();
+$note = "This section is for practicing tutorials.<br />
+The online tutorials consist of sixteen tests based on different sections of the syllabus.<br />
+Login below to access the tutorials. When you have finished writing a tutorial, you immediately will get your mark
+for the specific tutorial you have completed. The mark will be saved to a database on the server.
+You may complete the same tutorial more than once to improve your mark.
+All attempts will be saved and your time will be recorded.<br /><br />";
 
 $link = $this->getObject('link','htmlelements');
 
-$link->link($this->uri(array('action'=>'tutorials')));
-$link->link = "Click here to access the online tutorials";
-$tutLink = $link->show();
+$link->link($this->uri(array('action'=>'home')));
+$link->link = "Back";
+$backLink = "<div style='float:left'>Good luck.</div><div style='float:right'>".$link->show()."</div>";
 
-if ($this->objUser->isLecturer()) {
-    $link->link($this->uri(array('action'=>'admin')));
-    $link->link = "Click here for lecturer options";
-    $marksLink = $link->show();
-} else {
-    $link->link($this->uri(array('action'=>'marks')));
-    $link->link = "Click here to view your marks";
-    $marksLink = $link->show();
+$aam = $this->getResourceURI('login.aam');
+$iFrame = "<iframe width='100%' height='400' frameborder='0' scrolling='no' src='$aam'></iframe>";
 
-}
-
-
-$install = $objPop->show()." to install the player. Please note this will only work with Internet Explorer.";
-$options = "<ul>
-                <li>$tutLink</li>
-                <li>$marksLink</li>
-            </ul>";
-echo $objHead->show()."$note<br />$install<br /><br />$options<br />";
+echo $objHead->show()."$note$backLink<br /><br />$iFrame";
 ?>
