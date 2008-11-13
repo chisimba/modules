@@ -1,6 +1,6 @@
 <?php
 /**
- * Stats tests and tutorials Chisimba
+ * Stats tutorials on Chisimba
  * 
  * Statistics module to load authorware tests and tutorials within Chisimba framework
  * 
@@ -74,6 +74,20 @@ class stats extends controller {
      * @access public
      */
     public $objLogger;
+    
+    /**
+     * User Id
+     * @var string The id of the current user
+     * @access public
+     */
+    public $userId;
+    
+    /**
+     * Questionnaire model object
+     * @var object used to model the tbl_questionnaire table
+     * @access public
+     */
+    public $objQuestionnaire;
 
     /**
     * Init method
@@ -86,11 +100,13 @@ class stats extends controller {
     public function init() {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language','language');
+        $this->objQuestionnaire = $this->getObject('dbquestionnaire','stats');
         
         //Log this module call
         $this->objLog = $this->newObject('logactivity', 'logger');
         $this->objLog->log();
         
+        $this->userId = $this->objUser->userId();
         $this->setLayoutTemplate('stats_layout_tpl.php');
     }
     
@@ -104,7 +120,17 @@ class stats extends controller {
     */
     public function dispatch($action) {
         switch ($action) {
-
+        case "isemp":
+            //$user = $this->getParam('user');
+            //$pword = $this->getParam('password');
+            // check user exists and has completed the questionnaire
+            echo $this->objQuestionnaire->checkStudent($this->userId);
+            break;
+        
+        case "tutorials":
+            return "tutorials_tpl.php";
+        
+        case "home":
         default:
             return "default_tpl.php";
         }
@@ -119,8 +145,15 @@ class stats extends controller {
     * @access public
     */
     public function requiresLogin() {
-        
-        return TRUE;
+        $action = $this->getParam('action');
+        switch ($action) {
+            
+            case "isemp":
+                return FALSE;
+            
+            default:
+                return TRUE;
+        }
     }
     
 }
