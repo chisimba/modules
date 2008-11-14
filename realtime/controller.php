@@ -423,12 +423,12 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
             $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
             //generate for presenter
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'true','wb',$this->sessionTitle,$userDetails,$userImagePath,
+                $supernodePort,$username,$fullnames,'true','wbb',$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
                 $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
             //generate for participant
             $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'false','wb',$this->sessionTitle,$userDetails,$userImagePath,
+                $supernodePort,$username,$fullnames,'false','wbb',$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
                 $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
