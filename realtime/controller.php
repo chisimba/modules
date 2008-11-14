@@ -415,12 +415,14 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
 
             $desc='<li>'.$this->objLanguage->languageText('mod_realtime_addlivepresentation', 'realtime').'</li>';
             $desc.='<li>'.$this->objLanguage->languageText('mod_realtime_addaudiovideo', 'realtime').'</li>';
-
+            $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
+            $audioMICPort=$objSysConfig->getValue('AUDIO_MIC_PORT', 'realtime');
+            $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
             //generate for presenter
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'true',$this->contextCode,$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
             //generate for participant
             $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'false',$this->contextCode,$this->sessionTitle,$userDetails,$userImagePath,
