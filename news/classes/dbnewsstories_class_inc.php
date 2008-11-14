@@ -14,6 +14,7 @@ class dbnewsstories extends dbtable
         parent::init('tbl_news_stories');
 
         $this->objKeywords = $this->getObject('dbnewskeywords');
+        $this->objConfig = $this->getObject('altconfig', 'config');
 
         $this->objUser = $this->getObject('user', 'security');
         $this->objDateTime = $this->getObject('dateandtime', 'utilities');
