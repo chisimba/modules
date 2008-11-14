@@ -1,5 +1,27 @@
 
 <?php
+    $siteRoot=$this->objAltConfig->getSiteRoot();
+
+    $ss= "<script type=\"text/javascript\">
+
+          function showResponse(data){
+            //alert('Response: ' + data.responseText);
+          }
+
+          function startSlideServer() {
+
+          var myAjax = new Ajax.Request( '";
+    
+    $ss.=$siteRoot;
+    $ss.="index.php?module=realtime&action=startSlideServer";
+    $ss.="&id=".$sessionId."&agenda=".$sessionTitle."";
+    $ss.="', {method: 'get', onComplete: showResponse} );
+          }
+
+     </script>";
+  
+    $this->appendArrayVar('headerParams', $ss);
+
 
     // set up html elements
     $this->objLanguage =& $this->getObject('language','language');
@@ -18,7 +40,7 @@
 
 
     $objHead->type=2;
-    $objHead->str=$title;
+    $objHead->str=$sessionTitle;;
 
     //Set the content of the left side column
     $leftSideColumn = $desc;
@@ -27,10 +49,10 @@
     $rightSideColumn = "<div align=\"left\">" . $objHead->show() . "</div>";
 
 
-        
+
     $table->startRow();
     $table->addCell($content);
-        
+
     $table->endRow();
 
     $this->objLink = new link($this->uri(array('action'=>'default')));

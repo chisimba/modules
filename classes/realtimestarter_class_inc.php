@@ -19,7 +19,8 @@
          * @param <type> $agenda
          * @return <type>
          */
-        public function generateURL($id,$agenda,$resourcesPath,$appletCodeBase,$slidesDir,$username,$fullnames,$userLevel,$slideServerId){
+        public function generateURL($id,$agenda,$resourcesPath,$appletCodeBase,$slidesDir,$username,$fullnames,$userLevel,$slideServerId
+        ){
             $url='<center>';
             $url.='<applet codebase="'.$appletCodeBase.'"';
             $url.='code="avoir.realtime.tcp.launcher.RealtimeLauncher" name ="Avoir Realtime Applet"';
@@ -69,8 +70,11 @@
             $userLevel,
             $chatLogPath,
             $filePath,
-            $slideServerId){
-
+            $slideServerId,
+            $mediaServerHost,
+            $audioMICPort,
+            $audioSpeakerPort
+           ){
 
             $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_chisimba_classroom.jnlp';
             $fh = fopen($jnlpFile, 'w') or die("can't open file");
@@ -111,6 +115,10 @@
             fwrite($fh,   ' <argument>'.$chatLogPath.'</argument>');
             fwrite($fh,   ' <argument>'.$filePath.'</argument>');
             fwrite($fh,   ' <argument>'.$slideServerId.'</argument>');
+            fwrite($fh,   ' <argument>'.$mediaServerHost.'</argument>');
+            fwrite($fh,   ' <argument>'.$audioMICPort.'</argument>');
+            fwrite($fh,   ' <argument>'.$audioSpeakerPort.'</argument>');
+
             fwrite($fh,   '</application-desc>');
             fwrite($fh,'<security>');
             fwrite($fh,'  <all-permissions/>');
