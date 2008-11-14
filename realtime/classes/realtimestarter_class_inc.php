@@ -77,6 +77,7 @@
            ){
 
             $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_chisimba_classroom.jnlp';
+            //
             $fh = fopen($jnlpFile, 'w') or die("can't open file");
 
             fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
