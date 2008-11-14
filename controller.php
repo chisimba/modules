@@ -110,7 +110,7 @@
          * @var String
          */
         public $reqTest;
-        
+
         /**
          *unique session id
          * @var String
@@ -165,6 +165,8 @@
             $this->objConfig = $this->getObject('altconfig', 'config');
             $location = "http://" . $_SERVER['HTTP_HOST'];
 
+            $this->sessionId="wb";
+            $this->sessionTitle="Default Classroom";
         }
 
         /**
@@ -196,6 +198,7 @@
 
 
                 default :
+
                 return $this->initClassRoom($this->contextCode);
             }
         }
@@ -290,7 +293,7 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
             $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
 
-           
+
             $this->setVarByRef('desc', $desc);
             $this->setVarByRef('sessionId', $this->sessionId);
             $this->setVarByRef('sessionTitle', $this->sessionTitle);
