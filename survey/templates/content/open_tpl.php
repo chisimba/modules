@@ -151,6 +151,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
         default:
             $i=0;
+            $total=count($arrItemsList);
             foreach($arrItemsList as $key=>$item){
                 $class=(($i++%2)==0)?'odd':'even';
                 $itemValue=$item['item_value'];
@@ -166,7 +167,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 }
 
                 if($recordedResponses!='1'){
-                    $respondent=$respondentLabel.'&nbsp;#'.$item['respondent_number'];
+                    $respondent=str_replace('[-number-]',$item['respondent_number'],$respondentLabel);
+                    $respondent=str_replace('[-total-]',$total,$respondent);
                 }else{
                     $respondent=$this->objUser->fullName($item['creator_id']);
                 }
