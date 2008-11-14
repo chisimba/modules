@@ -110,9 +110,18 @@
          * @var String
          */
         public $reqTest;
+        
         /**
-         * Constructor method to instantiate objects and get variables
+         *unique session id
+         * @var String
          */
+        public $sessionId;
+
+        /**
+         * This is the session title
+         * @var String
+         */
+        public $sessionTitle;
         function init()
         {
             $this->objLink= $this->getObject('link', 'htmlelements');
@@ -168,11 +177,17 @@
             $this->contextCode = $this->objContext->getContextCode();
             switch ($action)
             {
-                case 'classroom' :
-                $id=$this->getParam('id');
-                $title=$this->getParam('agenda');
+                case 'startSlideServer':
+                 $this->sessionId=$this->getParam('id');
+                $this->sessionTitle=$this->getParam('agenda');
 
-                return $this->showClassRoom($id,$title);
+                $this->startSlideServer("popopopo",$this->getParam('agenda'));
+                return "";
+                case 'classroom' :
+                $this->sessionId=$this->getParam('id');
+                $this->sessionTitle=$this->getParam('agenda');
+
+                return $this->showClassRoom();
                 case 'classroombeta' :
                 $id=$this->getParam('id');
                 $title=$this->getParam('agenda');
@@ -202,23 +217,26 @@
 
 
         }
-
-        public function showClassroom($id,$title){
-
+        /**
+         *This starts a slide server
+         * @return String
+         */
+        public function startSlideServer($xsessionId,$xsessionTitle){
             $slideServerId=$this->realtimeManager->randomString(32);//'gen19Srv8Nme50';
             $this->realtimeManager->startSlidesServer($slideServerId);
-
             $chatLogPath = $filePath.'/chat/'.date("Y-m-d-H-i");
             $modPath=$this->objAltConfig->getModulePath();
             $replacewith="";
             $docRoot=$_SERVER['DOCUMENT_ROOT'];
             $appletPath=str_replace($docRoot,$replacewith,$modPath);
             $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
-
-            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+            $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
+            $audioMICPort=$objSysConfig->getValue('AUDIO_MIC_PORT', 'realtime');
+            $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
+$siteRoot=$this->objAltConfig->getSiteRoot();
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
             $userDetails=$fullnames.' '.$username;
@@ -227,7 +245,30 @@
             $fileBase=$modPath.'/realtime/resources/';
             $resourcesPath =$modPath.'/realtime/resources';
             $desc= $this->objLanguage->code2Txt('mod_realtime_aboutrealtime', 'realtime');
-            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$id;
+            $filePath=$this->objConfig->getContentBasePath().'/webpresent/'.$this->sessionId;
+
+            //generate for presenter
+
+            $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'true',$xsessionId,$xsessionTitle,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+            //generate for participant
+            $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
+                $supernodePort,$username,$fullnames,'false',$xsessionId,$xsessionTitle,$userDetails,$userImagePath,
+                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+
+        }
+        public function showClassroom(){
+            $this->startSlideServer($this->sessionId, $this->sessionTitle);
+            $username=$this->objUser->userName();
+            $modPath=$this->objAltConfig->getModulePath();
+            $replacewith="";
+            $docRoot=$_SERVER['DOCUMENT_ROOT'];
+            $appletPath=str_replace($docRoot,$replacewith,$modPath);
+            $appletCodeBase="http://" . $_SERVER['HTTP_HOST']."/".$appletPath.'/realtime/resources/';
+
             $presenterimage=$this->newObject('image','htmlelements');
             $presenterimage->src='skins/_common/icons/webpresent/btn_START.jpg';
             $presenterimage->width="200";
@@ -237,31 +278,22 @@
             $joinimage->src='skins/_common/icons/webpresent/btn_JOIN.jpg';
             $joinimage->width="200";
             $joinimage->height="80";
-            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$id),"webpresent"));
+            $presentationLink = new link ($this->uri(array('action'=>'view', 'id'=>$this->sessionId),"webpresent"));
             $presentationLink->link=   $this->objLanguage->languageText('mod_realtime_backtopresentation', 'realtime');
 
             $siteRoot=$this->objAltConfig->getSiteRoot();
             $presenterLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_START.jpg" width="200" height="80">';
             $joinLink='<img src="'.$siteRoot.'skins/_common/icons/webpresent/btn_JOIN.jpg" width="200" height="80">';
 
+            $this->reqTest= 'Verify that your system meets the <a href="'.$appletCodeBase.'/sysreq.php">minimum requirements</a><br><br>';
             $desc='<li>Add Live interactions to your presentation</li>';
             $desc.='<li>Communicate in realtime through audio/video conferencing.</li>';
-
-            //generate for presenter
-
-            $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'true',$id,$title,$userDetails,$userImagePath,
-                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
-            //generate for participant
-            $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'false',$id,$title,$userDetails,$userImagePath,
-                $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
 
-            $this->setVarByRef('title',  $title);
+           
             $this->setVarByRef('desc', $desc);
+            $this->setVarByRef('sessionId', $this->sessionId);
+            $this->setVarByRef('sessionTitle', $this->sessionTitle);
             $this->setVarByRef('content', $this->reqTest.'<a href="'.$appletCodeBase.'/presenter_'.$username.'_chisimba_classroom.jnlp">'.$presenterLink.'</a>-----<a href="'.$appletCodeBase.'/audience_'.$username.'_chisimba_classroom.jnlp">'.$joinLink.'</a> <br><br><h4>'.$tip.'</h4><br><br><h2>'.$presentationLink->show().'</h2>');
             return "dump_tpl.php";
         }
@@ -352,6 +384,9 @@
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
+                        $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
+            $audioMICPort=$objSysConfig->getValue('AUDIO_MIC_PORT', 'realtime');
+            $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
             $userDetails=$fullnames.' '.$username;
@@ -383,14 +418,14 @@
 
             //generate for presenter
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'true','wb',$title,$userDetails,$userImagePath,
+                $supernodePort,$username,$fullnames,'true',$this->contextCode,$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
                 $filePath,$slideServerId);
             //generate for participant
             $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
-                $supernodePort,$username,$fullnames,'false','wb',$title,$userDetails,$userImagePath,
+                $supernodePort,$username,$fullnames,'false',$this->contextCode,$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
