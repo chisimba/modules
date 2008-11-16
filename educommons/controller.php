@@ -78,6 +78,7 @@ class educommons extends controller
     public function dispatch()
     {
         $action = $this->getParam('action');
+        $context = $this->getParam('context');
         switch ($action) {
             case 'rss':
                 $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
@@ -85,7 +86,10 @@ class educommons extends controller
                 break;
             default:
                 // Temporary handling for development purposes
+                set_time_limit(900);
                 $data = $this->objImport->parseIms();
+                $this->objImport->addCourses($data, $context);
+                $this->objImport->addPages($data, $context);
                 header('Content-Type: text/plain; charset=UTF-8');
                 print_r($data);
         }
