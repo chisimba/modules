@@ -73,7 +73,8 @@
             $slideServerId,
             $mediaServerHost,
             $audioMICPort,
-            $audioSpeakerPort
+            $audioSpeakerPort,
+            $isWebPresent
            ){
 
             $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_chisimba_classroom.jnlp';
@@ -119,7 +120,7 @@
             fwrite($fh,   ' <argument>'.$mediaServerHost.'</argument>');
             fwrite($fh,   ' <argument>'.$audioMICPort.'</argument>');
             fwrite($fh,   ' <argument>'.$audioSpeakerPort.'</argument>');
-
+            fwrite($fh,   ' <argument>'.$isWebPresent.'</argument>');
             fwrite($fh,   '</application-desc>');
             fwrite($fh,'<security>');
             fwrite($fh,'  <all-permissions/>');

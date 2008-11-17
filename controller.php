@@ -239,7 +239,7 @@
             $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
             $audioMICPort=$objSysConfig->getValue('AUDIO_MIC_PORT', 'realtime');
             $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
-$siteRoot=$this->objAltConfig->getSiteRoot();
+            $siteRoot=$this->objAltConfig->getSiteRoot();
             $username=$this->objUser->userName();
             $fullnames=$this->objUser->fullname();
             $userDetails=$fullnames.' '.$username;
@@ -255,12 +255,12 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'true',$xsessionId,$xsessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort,'true');
             //generate for participant
             $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'false',$xsessionId,$xsessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort,'true');
 
         }
         public function showClassroom(){
@@ -358,12 +358,12 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
             $this->objStarter->generateJNLP1_0_2Beta('presenter',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'true',$id,$title,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
+                $filePath,$slideServerId,'true');
             //generate for participant
             $this->objStarter->generateJNLP1_0_2Beta('audience',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'false',$id,$title,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId);
+                $filePath,$slideServerId,'true');
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
 
             $this->setVarByRef('title',  $title);
@@ -425,12 +425,12 @@ $siteRoot=$this->objAltConfig->getSiteRoot();
             $this->objStarter->generateJNLP('presenter',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'true','wbb',$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort,'false');
             //generate for participant
             $this->objStarter->generateJNLP('audience',$fileBase,$appletCodeBase,$supernodeHost,
                 $supernodePort,$username,$fullnames,'false','wbb',$this->sessionTitle,$userDetails,$userImagePath,
                 $isLoggedIn,$siteRoot,$resourcesPath,$this->userLevel,$chatLogPath,
-                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort);
+                $filePath,$slideServerId,$mediaServerHost,$audioMICPort,$audioSpeakerPort,'false');
             $tip=$this->objLanguage->languageText('mod_realtime_openwith', 'realtime');
             $this->setVarByRef('title',  $title);
             $this->setVarByRef('desc', $desc);
