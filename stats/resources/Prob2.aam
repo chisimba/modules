@@ -1,0 +1,9 @@
+ver	0	7
+get	.
+put	DOWNLOAD
+seg	all	p20000.aas	0	16975
+seg	all	p20001.aas	16975	15395
+seg	all	p20002.aas	32370	7657
+# HTML_PARAMS: WIDTH=489 HEIGHT=338 BGCOLOR=FFFFFF
+opt	all	BypassSecurityDialog=FALSE
+opt	all	UniqueID=22642797

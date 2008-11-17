@@ -8,12 +8,12 @@ $fields = array(
     'id' => array(
         'type' => 'text',
         'length' => 32,
-        'notnull' => true;
+        'notnull' => true
         ),
     'studentno' => array(
         'type' => 'text',
         'length' => 32,
-        'notnull' => true;
+        'notnull' => true
         ),
     'q1' => array(
         'type' => 'text',

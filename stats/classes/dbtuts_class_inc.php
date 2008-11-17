@@ -2,7 +2,7 @@
 /**
  * Stats tutorials on Chisimba
  * 
- * database model class for stats module
+ * database model class for stats module tutorials
  * 
  * PHP version 5
  * 
@@ -39,9 +39,9 @@ $GLOBALS['kewl_entry_point_run']) {
 }
                                                                                                                                              
 /**
- * dbquestionnaire class
+ * dbtuts class
  * 
- * Class to connnect to tbl_stats_questionnaire
+ * Class to connnect to tbl_stats_tuts
  * 
  * @category  Chisimba
  * @package   stats
@@ -52,7 +52,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  */
 
-class dbquestionnaire extends dbtable {
+class dbtuts extends dbtable {
 
     /**
      * User object 
@@ -60,6 +60,13 @@ class dbquestionnaire extends dbtable {
      * @access public
      */
     public $objUser;
+    
+    /**
+     * Config object 
+     * @var object manipulate system configuration
+     * @access public
+     */
+    public $objConfig;
     
 
     /**
@@ -71,23 +78,60 @@ class dbquestionnaire extends dbtable {
     * @access public
     */
     public function init() {
-        parent::init("tbl_stats_questionnaire");
+        parent::init("tbl_stats_tuts");
         $this->objUser = $this->getObject('user','security');
+        $this->objConfig = $this->getObject('altconfig','config');
     }
     
     /**
-     * Method to check if a student has completed the questionnaire
+     * Method to save the result of a students tutorial
      *
      * @param string $userId The userId of the student
-     * @return string 1|0 whether or not the student has completed it,
-     *                preceded by the word true iff the user is authenticated,
+     * @param string $password The sha-1 hash of the password
+     * @param string $test The test (tutorial) number
+     * @param string $mark The students mark, as a percentage
+     * @param string $time The time taken
      * @access public
      */
-    public function checkStudent($userId, $password) {
+    public function saveMark($userId, $password, $test, $mark, $time) {
         $user = $this->objUser->getUserDetails($userId);
-        $response = ($password == $user['pass'])? "true" : "";
-        $response .= ($this->valueExists('studentno',$userId))? "1" : "0";       
-        return $response;
+        if ($password == $user['pass']) {
+            $this->insert(array('studentno'=>$userId, 'testno'=>$test, 'mark'=>$mark, 'time'=>$time));
+        }
+    }
+    
+    /**
+     * Method to create a nonce and save it so that the framework
+     * can be sure the user actually took the tutorial and did
+     * not attempt to inject the mark
+     *
+     * @param string $user the userid
+     * @return string the nonce
+     * @access public
+     */
+    public function createNonce($user) {
+        $nonce = sha1(mt_rand(1000000000000,999999999999));
+        $fname = $this->objConfig->getModulePath()."/stats/resources/sec/.".sha1($user);
+        $fp = fopen($fname,"wb");
+        fwrite($fp,$nonce);
+        fclose($fp);
+        chmod($fname,"0700");
+        return $nonce;
+    }
+    
+    /**
+     * Method for the framework to read the nonce
+     *
+     * @param string $user the userid
+     * @return string the nonce
+     * @access public
+     */
+    public function readNonce($user) {
+        $filename = $this->objConfig->getModulePath()."/stats/resources/sec/.".sha1($user);
+        chmod($filename,"0400");
+        $nonce = file_get_contents($filename);
+        chmod($filename,"0700");
+        return $nonce;
     }
     
 }

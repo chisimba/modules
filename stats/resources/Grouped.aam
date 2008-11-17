@@ -1,0 +1,9 @@
+ver	0	7
+get	.
+put	DOWNLOAD
+seg	all	grou0000.aas	0	15576
+seg	all	grou0001.aas	15576	15740
+seg	all	grou0002.aas	31316	8314
+# HTML_PARAMS: WIDTH=492 HEIGHT=339 BGCOLOR=FFFFFF
+opt	all	BypassSecurityDialog=FALSE
+opt	all	UniqueID=22462001

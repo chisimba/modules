@@ -76,18 +76,26 @@ class stats extends controller {
     public $objLogger;
     
     /**
-     * User Id
-     * @var string The id of the current user
-     * @access public
-     */
-    public $userId;
-    
-    /**
      * Questionnaire model object
-     * @var object used to model the tbl_questionnaire table
+     * @var object used to model the tbl_stats_questionnaire table
      * @access public
      */
     public $objQuestionnaire;
+
+    /**
+     * Tuts model object
+     * @var object used to model the tbl_stats_tuts table
+     * @access public
+     */
+    public $objTuts;
+
+    /**
+     * Nonce
+     * @var string used to ensure the student actually
+     *             takes the test and doesnt inject a result
+     * @access private
+     */
+    private $nonce;
 
     /**
     * Init method
@@ -101,12 +109,12 @@ class stats extends controller {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language','language');
         $this->objQuestionnaire = $this->getObject('dbquestionnaire','stats');
+        $this->objTuts = $this->getObject('dbtuts','stats');
         
         //Log this module call
         $this->objLog = $this->newObject('logactivity', 'logger');
         $this->objLog->log();
         
-        $this->userId = $this->objUser->userId();
         $this->setLayoutTemplate('stats_layout_tpl.php');
     }
     
@@ -121,12 +129,29 @@ class stats extends controller {
     public function dispatch($action) {
         switch ($action) {
         case "isemp":
-            //$user = $this->getParam('user');
-            //$pword = $this->getParam('password');
+            $user = $this->getParam('user');
+            $pword = $this->getParam('pword');
+            //create nonce for security purposes
+            $this->nonce = $this->objTuts->createNonce($user);
             // check user exists and has completed the questionnaire
-            echo $this->objQuestionnaire->checkStudent($this->userId);
+            echo $this->objQuestionnaire->checkStudent($user,$pword);
             break;
         
+        case "testwrite":
+            $user = $this->getParam('user');
+            $pword = $this->getParam('passwd');
+            $test = $this->getParam('test');
+            $mark = $this->getParam('mark');
+            $time = $this->getParam('time');
+            $this->nonce = $this->objTuts->readNonce($user);
+            $nonce = $this->getParam('nonce');
+            if ($nonce != $this->nonce) {
+                echo "no cheating!";
+                break;
+            }
+            $this->objTuts->saveMark($user, $pword, $test, $mark, $time);
+            break;
+            
         case "tutorials":
             return "tutorials_tpl.php";
         
@@ -149,6 +174,7 @@ class stats extends controller {
         switch ($action) {
             
             case "isemp":
+            case "testwrite":
                 return FALSE;
             
             default:
