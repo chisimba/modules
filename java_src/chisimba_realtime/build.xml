@@ -1,0 +1,385 @@
+
+<project name="chisimba_realtime_base" default="dist" basedir=".">
+    <description>Chisimba Realtime Tools</description>
+    <!-- set global properties for this build -->
+    <!-- set global properties for this build -->
+    <property name="major.minor" 	value="1.0" />
+    <property name="release" 		value="2" />
+    <property name="version" 		value="${major.minor}.${release}" />
+    <property name="depends" 		value="sun-java5-jre (>= 1.5.0) | sun-java6-jre (>= 1.6.0)" />
+    <property name="postinst" 		value="dist/${version}/bin/realtime-server restart" />
+    <property name="package.name" 	value="chisimba-realtime-server" />
+    <property file="build.properties" />
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="."/>
+    <property name="realtime.classroom.base.filename" value="lib/realtime-classroom-base-${version}.jar" />
+    <property name="realtime.instructor.filename" value="lib/realtime-instructor-${version}.jar" />
+    <property name="realtime.server.filename" value="lib/realtime-server-${version}.jar" />
+    <property name="realtime.filetransfer.filename" value="lib/realtime-filetransfer-${version}.jar" />
+    <property name="realtime.appsharing.filename" value="lib/realtime-appsharing-${version}.jar" />
+    <property name="realtime.audio.filename" value="lib/realtime-audio-${version}.jar" />
+    <property name="realtime.chat.filename" value="lib/realtime-chat-${version}.jar" />
+    <property name="realtime.survey.filename" value="lib/realtime-survey-${version}.jar" />
+    <property name="realtime.common.filename" value="lib/realtime-common-${version}.jar" />
+    <property name="realtime.images.filename" value="lib/realtime-images.jar" />
+    <property name="realtime.images.classroom.filename" value="lib/realtime-images-classroom.jar" />
+
+  
+    <property name="realtime.security.dir" value="bin/security" />
+    <property name="icons.dir" value="icons" />
+
+    <taskdef name="p200ant"
+             classname="de.matthiasmann.p200ant.P200AntTask"
+             classpath="lib/P200Ant.jar"/>
+    <taskdef resource="ant_deb_task.properties" classpath="${basedir}/lib/ant-deb.jar"/>
+    <path id="classpath.base">
+    </path>
+    <path id="classpath.lib">
+        <pathelement location="lib/realtime-usermanager-${version}.jar" />
+        <pathelement location="lib/realtime-launcher-${version}.jar" />
+        <pathelement location="lib/realtime-sessionmonitor-${version}.jar" />
+        <pathelement location="lib/commons-cli-1.0.jar" />
+        <pathelement location="lib/commons-io-1.3.1.jar" />
+        <pathelement location="lib/jodconverter-2.2.0.jarjspeex.jar" />
+        <pathelement location="lib/jodconverter-cli-2.2.0.jar" />
+        <pathelement location="lib/juh-2.2.0.jar" />
+        <pathelement location="lib/jurt-2.2.0.jar" />
+        <pathelement location="lib/ridl-2.2.0.jar" />
+        <pathelement location="lib/slf4j-api-1.4.0.jar" />
+        <pathelement location="lib/slf4j-jdk14-1.4.0.jar" />
+        <pathelement location="lib/jspeex.jar" />
+        <pathelement location="lib/wrapper.jar" />
+        <pathelement location="lib/DJNativeSwing.jar" />
+
+    </path>
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp>
+            <format property="build.year" pattern="yyyy"/>
+            <format property="build.month" pattern="MM"/>
+            <format property="build.day" pattern="dd"/>
+            <format property="build.hour" pattern="HH"/>
+            <format property="build.minute" pattern="mm"/>
+            <format property="build.second" pattern="ss"/>
+        </tstamp>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/dist/"/>
+        <mkdir dir="${build}/dist/${version}"/>
+        <echo>Generating Version.java...</echo>
+        <echo file="src/avoir/realtime/Version.java">
+            package avoir.realtime;${line.separator}
+            public class Version{${line.separator}
+                public static float version=1.0000f;//${build.year}${build.month}${build.day}${build.hour}${build.minute}F;${line.separator}
+                public static int getVersion(){${line.separator}
+            return (int)version;${line.separator}
+            }${line.separator}
+            }
+        </echo>
+    </target>
+    <target name="compile" depends="init" description="compile the source ">
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}" debug="true" source="1.5" debuglevel="lines,vars,source">
+            <classpath refid="classpath.lib" />
+        </javac>
+    </target>
+    <target name="dist-whiteboard" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.tcp.whiteboard.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/whiteboard/**/*.class" />
+                <include name="avoir/realtime/tcp/whiteboard/item/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.tcp.whiteboard.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.tcp.whiteboard.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+
+   
+    <target name="dist-images" depends="compile" description="generate images for the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.images.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <zipfileset dir="${icons.dir}" prefix="icons" includes="*.gif,*.png,*.jpg,*.jpeg,emoticons/*.png,whiteboard/*.gif,whiteboard/*.png,whiteboard/*.jpg,whiteboard/*.jpeg" />
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.images.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.images.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+    <target name="dist-images-classroom" depends="compile" description="generate images for the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.images.classroom.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <zipfileset dir="${icons.dir}" prefix="icons" includes="mic_fail.png, speaker_fail.png,popout.png,
+            edit.png,micro_selected.png,micro.png,speaker_selected.png,speaker.png,volAdj.png,emoticons/*.png" />
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.images..classroom.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.images.classroom.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+    <target name="dist-server" depends="compile" description="generate the distribution">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.server.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/server/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.server.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="dist-filetransfer" depends="compile" description="file transfer module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.filetransfer.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/filetransfer/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.filetransfer.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.filetransfer.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+ 
+   
+    <target name="dist-appsharing" depends="compile" description="appsharing module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.appsharing.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+                <attribute name="Main-Class" value="avoir.realtime.appsharing.LoginFrame"/>
+                <attribute name="Class-Path" value="${realtime.common.filename} ${realtime.tcp.user.filename}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/appsharing/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.appsharing.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+    </target>
+    <target name="dist-common" depends="compile" description="commons module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.common.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/common/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.common.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.common.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.common.filename}" todir="${realtime.chisimba.realtime.pluginmanager.dir}" overwrite="true" />
+    </target>
+    <target name="dist-classroom-base" depends="dist-images-classroom" description="classroom base module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.classroom.base.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/classroom/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.classroom.base.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.classroom.base.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.classroom.base.filename}" todir="${realtime.chisimba.realtime.pluginmanager.dir}" overwrite="true" />
+    </target>
+    <target name="dist-instructor" depends="compile" description="instructor module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.instructor.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/instructor/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.instructor.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.instructor.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.instructor.filename}" todir="${realtime.chisimba.realtime.pluginmanager.dir}" overwrite="true" />
+    </target>
+    <target name="dist-audio" depends="compile" description="audio module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.audio.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/audio/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.audio.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.audio.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+    <target name="dist-chat" depends="compile" description="chat module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.chat.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/chat/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.chat.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.chat.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+    <target name="dist-survey" depends="compile" description="survey module">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}/lib"/>
+        <jar destfile="${realtime.survey.filename}">
+            <manifest>
+                <attribute name="JarVersion" value="${build.year},${build.month},${build.day},${build.hour},${build.minute},${build.second}"/>
+            </manifest>
+            <fileset dir="${build}">
+                <include name="avoir/realtime/tcp/base/survey/**/*.class" />
+            </fileset>
+        </jar>
+        <fileset id="jars2pack" dir=".">
+            <include name="${realtime.survey.filename}"/>
+        </fileset>
+        <p200ant repack="true">
+            <fileset refid="jars2pack"/>
+        </p200ant>
+        <copy file="${realtime.survey.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+    </target>
+    <target name="sign-jar" description="Signs the client applet jar file"
+    depends="dist-instructor,dist-classroom-base,dist-common,dist-images,dist-filetransfer,dist-appsharing,dist-audio,dist-chat,dist-survey,dist-server">
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.tcp.base.filename}" alias="realtime" storepass="exitwounds" />
+        <signjar keystore="${realtime.security.dir}/keystore" jar="${realtime.tcp.whiteboard.filename}" alias="realtime" storepass="exitwounds" />
+    </target>
+    <target name="deploy" depends="sign-jar" description="Deploys the jar files to the web modules folder">
+        <copy file="${realtime.server.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.filetransfer.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.appsharing.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.audio.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.chat.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.survey.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+        <copy file="${realtime.common.filename}" todir="${realtime.chisimba.dir}" overwrite="true" />
+   </target>
+    <target name="deploy-rpm" depends="deploy">
+        <mkdir dir="${dist}/rpm/RPMS" />
+        <mkdir dir="${dist}/rpm/SPECS" />
+        <mkdir dir="${dist}/rpm/SOURCES" />
+        <mkdir dir="${dist}/rpm/BUILD" />
+        <mkdir dir="${dist}/rpm/SRPMS" />
+        <mkdir dir="${dist}/rpm/INSTALL" />
+        <copy todir="${dist}/rpm/SPECS" file="chisimba_realtime_server.spec" />
+        <copy todir="${dist}/rpm/INSTALL/usr/lib/chisimba-realtime-server/${version}/bin" >
+            <fileset dir="${dist}/dist/${version}/bin" />
+        </copy>
+        <copy todir="${dist}/rpm/INSTALL/usr/lib/chisimba-realtime-server/${version}/lib" >
+            <fileset dir="${dist}/dist/${version}/lib" />
+        </copy>
+        <copy todir="${dist}/rpm/INSTALL/usr/lib/chisimba-realtime-server/${version}/conf" >
+            <fileset dir="${dist}/dist/${version}/conf" />
+        </copy>
+        <copy todir="${dist}/rpm/INSTALL/usr/lib/chisimba-realtime-server/${version}/sounds" >
+            <fileset dir="${dist}/dist/${version}/sounds" />
+        </copy>
+        <copy todir="${dist}/rpm/INSTALL/usr/lib/chisimba-realtime-server/${version}/uploads" >
+            <fileset dir="${dist}/dist/${version}/uploads" />
+        </copy>
+        <rpm specfile="chisimba_realtime_server.spec" topDir="${dist}/rpm" command="--bb --buildroot=${dist}/rpm/INSTALL" cleanbuilddir="true" removesource="true" removespec="true"/>
+        <copy todir="${dist}/dist/" file="${dist}/rpm/RPMS/noarch/${package.name}-${major.minor}.${release}-${release}.noarch.rpm" />
+    </target>
+    <target name="deploy-deb"  depends="deploy" description="build the deb file">
+        <deb  todir="dist"   package="${package.name}"  depends="${depends}"       postinst="${postinst}">
+            <version upstream="${major.minor}" debian="${release}"/>
+            <maintainer name="David Wafula" email="davidwaf@gmail.com"/>
+            <description synopsis="The Chisimba Realtime Server">
+              This is a realtime server for realtime communication tools in Chisimba
+            </description>
+            <tarfileset dir="dist/${version}/bin" prefix="usr/lib/${package.name}/${version}/bin/">
+                <include name="realtime-server"/>
+                <include name="security/*"/>
+                <include name="wrapper"/>
+            </tarfileset>
+            <tarfileset dir="dist/${version}/conf" prefix="usr/lib/${package.name}/${version}/conf">
+                <include name="wrapper.conf"/>
+            </tarfileset>
+            <tarfileset dir="dist/${version}/lib" prefix="usr/lib/${package.name}/${version}/lib">
+                <include name="*.jar"/>
+            </tarfileset>
+            <tarfileset dir="dist/${version}/sounds" prefix="usr/lib/${package.name}/${version}/sounds">
+                <include name="*.*"/>
+            </tarfileset>
+            <tarfileset dir="dist/${version}/uploads" prefix="usr/lib/${package.name}/${version}/uploads">
+                <include name="*.*"/>
+            </tarfileset>
+        </deb>
+    </target>
+</project>

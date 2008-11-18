@@ -1,0 +1,1 @@
+java -cp realtime-slideserver-1.0.1.jar avoir.realtime.tcp.slideserver.SlideServer 22224 &
