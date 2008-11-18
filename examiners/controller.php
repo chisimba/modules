@@ -407,7 +407,7 @@ class examiners extends controller {
                     if(is_uploaded_file($file['file']['tmp_name']) && $file['file']['error'] == 0){
                         $filename = explode('.', basename($file['file']['name']));
                         $ext = array_pop($filename);
-                        move_uploaded_file($file['file']['tmp_name'], $this->filePath.$code.'.'.$ext);
+                        move_uploaded_file($file['file']['tmp_name'], $this->filePath.$subjId.'.'.$ext);
                     }
                     return $this->nextAction('subjects', array(
                         'f' => $facId,
@@ -476,7 +476,7 @@ class examiners extends controller {
                     $tel = $this->getParam('tel');
                     $ext = $this->getParam('ext');
                     $cell = $this->getParam('cell');
-                    $address = $this->getParam('address');
+                    $address = str_replace(',', "\n", $this->getParam('address'));
                     if($userId == ''){
                         $this->objExamDb->addExaminer($facId, $depId, $title, $name, $surname, $org, $email, $tel, $ext, $cell, $address);
                     }else{
@@ -601,9 +601,8 @@ class examiners extends controller {
                     $templateContent = $this->objExamDisplay->showExportForDep($facId, $depId);
                     $this->setVarByRef('templateContent', $templateContent);
          		    return 'template_tpl.php';
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
          		
             case 'dep_do_export':
@@ -619,9 +618,8 @@ class examiners extends controller {
                         'd' => $depId,
                         'download' => $download,
                     ), 'examiners');
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
                 
             case 'dep_download':
@@ -632,9 +630,8 @@ class examiners extends controller {
                     $this->setVarByRef('id', $depId);
                     $this->setPageTemplate('filedownload_page_tpl.php');
                     return 'filedownload_tpl.php';
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
 
             case 'fac_export':
@@ -644,9 +641,8 @@ class examiners extends controller {
                     $templateContent = $this->objExamDisplay->showExportForFac($facId);
                     $this->setVarByRef('templateContent', $templateContent);
          		    return 'template_tpl.php';
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
          		
             case 'fac_do_export':
@@ -660,9 +656,8 @@ class examiners extends controller {
                         'f' => $facId,
                         'download' => $download,
                     ), 'examiners');
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
                 
             case 'fac_download':
@@ -672,10 +667,23 @@ class examiners extends controller {
                     $this->setVarByRef('id', $facId);
                     $this->setPageTemplate('filedownload_page_tpl.php');
                     return 'filedownload_tpl.php';
-                }else{
-                    return $this->nextAction('faculties', array(), 'examiners');
                 }
+                return $this->nextAction('faculties', array(), 'examiners');
          		break;
+         		
+            case 'download':
+                $facId = $this->getParam('f');
+                $depId = $this->getParam('d');
+                $userLevel = $this->objExamDisplay->userLevel($facId, $depId);
+                if($this->isAdmin or $userLevel != FALSE){
+                    $file = $this->getParam('file');
+                    $this->setVarByRef('file', $file);
+                    $this->setVarByRef('type', 'download');
+                    $this->setPageTemplate('filedownload_page_tpl.php');
+                    return 'filedownload_tpl.php';
+                }
+                return $this->nextAction('faculties', array(), 'examiners');
+                break;
 
  			default:
                 return $this->nextAction('faculties', array(), 'examiners');

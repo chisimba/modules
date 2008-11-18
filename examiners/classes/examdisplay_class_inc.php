@@ -1285,9 +1285,14 @@ class examdisplay extends object
         }else{
             foreach($subjects as $subject){
                 // get file
-                $file = glob($this->filePath.$subject['course_code'].'.*');
+                $file = glob($this->filePath.$subject['id'].'.*');
                 if(!empty($file)){
-                    $this->objLink = new link($this->fileLink.basename($file[0]));
+                    $this->objLink = new link($this->uri(array(
+                        'action' => 'download',
+                        'f' => $facId,
+                        'd' => $depId,
+                        'file' => basename($file[0]),
+                    ), 'examiners'));
                     $this->objLink->link = $subject['course_code'];
                     $code = $this->objLink->show();
                 }else{
