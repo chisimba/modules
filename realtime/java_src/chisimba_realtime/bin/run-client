@@ -1,0 +1,1 @@
+java -cp ../lib/jspeex.jar:../lib/realtime-launcher-1.0.2.jar:../lib/realtime-base-1.0.2.jar:../lib/realtime-whiteboard-1.0.2.jar:../lib/realtime-images.jar:../lib/realtime-filetransfer-1.0.2.jar:../lib/realtime-appsharing-1.0.2.jar:../lib/realtime-audio-1.0.2.jar:../lib/realtime-chat-1.0.2.jar:../lib/realtime-survey-1.0.2.jar avoir.realtime.tcp.base.Simulator $1 $2

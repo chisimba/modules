@@ -1,0 +1,158 @@
+/*
+ * 
+ * Copyright (C) GNU/GPL AVOIR 2008
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+package avoir.realtime.audio;
+
+import java.io.InputStream;
+import javax.sound.sampled.*;
+import static avoir.realtime.audio.Constants.*;
+
+public class AudioUtils {
+
+    // quick look-up tables
+    private static final float[] netFrameSize = {
+        1, // nothing
+        2, // CD
+        2, // FM
+        1, // Telephone
+        33.0f // GSM
+    };
+    private static final float[] netSampleRate = {
+        1.0f, // nothing
+        44100.0f, // CD
+        22050.0f, // FM
+        8000.0f, // Telephone
+        8000.0f   // GSM
+    };
+    private static final float[] netFrameRate = {
+        1.0f, // nothing
+        44100.0f, // CD
+        22050.0f, // FM
+        8000.0f, // Telephone
+        50.0f   // GSM
+    };
+
+    public static long bytes2millis(long bytes, AudioFormat format) {
+        return (long) (bytes / format.getFrameRate() * 1000 / format.getFrameSize());
+    }
+
+    public static long millis2bytes(long ms, AudioFormat format) {
+        return (long) (ms * format.getFrameRate() / 1000 * format.getFrameSize());
+    }
+
+    public static AudioFormat getLineAudioFormat(int formatCode) {
+        return getLineAudioFormat(netSampleRate[formatCode]);
+    }
+
+    public static AudioFormat getLineAudioFormat(float sampleRate) {
+        return new AudioFormat(
+                AudioFormat.Encoding.PCM_SIGNED,
+                sampleRate, // sampleRate
+                16, // sampleSizeInBits
+                1, // channels
+                2, // frameSize
+                sampleRate, // frameRate
+                false);        // bigEndian
+    }
+
+    public static AudioFormat getNetAudioFormat(int formatCode) throws UnsupportedAudioFileException {
+        if (formatCode == FORMAT_CODE_CD) {
+            return new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    44100.0f, // sampleRate
+                    16, // sampleSizeInBits
+                    1, // channels
+                    2, // frameSize
+                    44100.0f, // frameRate
+                    true);         // bigEndian
+        } else if (formatCode == FORMAT_CODE_FM) {
+            return new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    22050.0f, // sampleRate
+                    16, // sampleSizeInBits
+                    1, // channels
+                    2, // frameSize
+                    22050.0f, // frameRate
+                    true);         // bigEndian
+        } else if (formatCode == FORMAT_CODE_TELEPHONE) {
+            return new AudioFormat(
+                    AudioFormat.Encoding.ULAW,
+                    8000.0f, // sampleRate
+                    8, // sampleSizeInBits
+                    1, // channels
+                    1, // frameSize
+                    8000.0f, // frameRate
+                    false);        // bigEndian
+        } else if (formatCode == FORMAT_CODE_GSM) {
+            /*
+            try {
+            Class.forName("org.tritonus.share.sampled.Encodings");
+            } catch (ClassNotFoundException cnfe) {
+            throw new RuntimeException("Tritonus shared classes not properly installed!");
+            }
+            return new AudioFormat(
+            org.tritonus.share.sampled.Encodings.getEncoding("GSM0610"),
+            8000.0F,        // sampleRate
+            -1,             // sampleSizeInBits
+            1,              // channels
+            33,             // frameSize
+            50.0F,          // frameRate
+            false);         // bigEndian
+             */
+            return new AudioFormat(
+                    new AudioFormat.Encoding("GSM0610"),
+                    8000.0F, // sampleRate
+                    -1, // sampleSizeInBits
+                    1, // channels
+                    33, // frameSize
+                    50.0F, // frameRate
+                    false);         // bigEndian
+        }
+        throw new RuntimeException("Wrong format code!");
+    }
+
+    public static AudioInputStream createNetAudioInputStream(
+            int formatCode, InputStream stream) {
+        try {
+            AudioFormat format = getNetAudioFormat(formatCode);
+            return new AudioInputStream(stream, format, AudioSystem.NOT_SPECIFIED);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static int getFormatCode(AudioFormat format) {
+        AudioFormat.Encoding encoding = format.getEncoding();
+        // very simple check...
+        if (encoding.equals(AudioFormat.Encoding.PCM_SIGNED)) {
+            if (format.getSampleRate() == 44100.0f) {
+                return FORMAT_CODE_CD;
+            } else {
+                return FORMAT_CODE_FM;
+            }
+        }
+        if (encoding.equals(AudioFormat.Encoding.ULAW)) {
+            return FORMAT_CODE_TELEPHONE;
+        }
+        if (encoding.toString().equals("GSM0610")) {
+            return FORMAT_CODE_GSM;
+        }
+        throw new RuntimeException("Wrong Format");
+    }
+}
+
