@@ -59,7 +59,6 @@ if ($this->objUser->isLecturer()) {
 
 }
 
-
 $install = $objPop->show()." to install the player. Please note this will only work with Internet Explorer.";
 $options = "<ul>
                 <li>$tutLink</li>

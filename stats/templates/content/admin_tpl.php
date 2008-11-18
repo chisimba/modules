@@ -2,7 +2,7 @@
 /**
  * Stats tutorials on Chisimba
  * 
- * Tutorial template which loads the authorware modules for taking a tutorial
+ * Admin template for stats module
  * 
  * PHP version 5
  * 
@@ -29,24 +29,26 @@
  */
 
 $objHead = $this->newObject('htmlheading', 'htmlelements');
-$objHead->str = $objLanguage->languageText('mod_stats_heading', 'stats');
+$objHead->str = $objLanguage->languageText('mod_stats_adminheading', 'stats');
 $objHead->type = 2;
-
-$note = "This section is for practicing tutorials.<br />
-The online tutorials consist of sixteen tests based on different sections of the syllabus.<br />
-Login below to access the tutorials. When you have finished writing a tutorial, you immediately will get your mark
-for the specific tutorial you have completed. The mark will be saved to a database on the server.
-You may complete the same tutorial more than once to improve your mark.
-All attempts will be saved and your time will be recorded.<br /><br />";
 
 $link = $this->getObject('link','htmlelements');
 
+$objTable = $this->newObject('htmltable','htmlelements');
+$objTable->addHeader(array($this->objLanguage->languageText("mod_stats_studentlist",'stats')),null,"align='left'");
+
+foreach ($students as $student) {
+    $link->link($this->uri(array('action'=>'marks','studentno'=>$student['studentno'], 'back'=>'admin')));
+    $link->link = "{$student['studentno']} - ".$this->objUser->fullName($student['studentno']);
+    $objTable->startRow();
+    $objTable->addCell($link->show());
+    $objTable->endRow();
+}
+
+
 $link->link($this->uri(array('action'=>'home')));
-$link->link = $this->objLanguage->languageText("word_back");
-$backLink = "<div style='float:left'>Good luck.</div><div style='float:right'>".$link->show()."</div>";
+$link->link = $this->objLanguage->languageText('word_back');
+$backLink =  "<div style='float:right'>".$link->show()."</div>";
 
-$aam = $this->getResourceURI('login.aam');
-$iFrame = "<iframe width='100%' height='400' frameborder='0' scrolling='no' src='$aam'></iframe>";
-
-echo $objHead->show()."$note$backLink<br /><br />$iFrame";
+echo $objHead->show()."<br />".$objTable->show()."$backLink<br /><br />";
 ?>

@@ -155,6 +155,30 @@ class stats extends controller {
         case "tutorials":
             return "tutorials_tpl.php";
         
+        case "marks":
+            $user = $this->getParam('studentno');
+            $back = $this->getParam('back', 'home');
+            $showAll = $this->getParam('showAll', false);
+            if ($this->objUser->isLecturer() && isset($user)) {
+                $userId = $user;
+            } else {
+                $userId = $this->objUser->userId();
+            }
+            $student = "$userId - ".$this->objUser->fullName($userId);
+            $this->setVar('userId', $userId);
+            $this->setVar('tutorials', $this->objTuts->getMarks($userId, $showAll));
+            $this->setVar('student', $student);
+            $this->setVar('back', $back);
+            $this->setVar('showAll',$showAll);
+            return "marks_tpl.php";
+        
+        case "admin":
+            if (!$this->objUser->isLecturer()) {
+                return $this->nextAction('home');
+            }
+            $this->setVar('students', $this->objTuts->getStudents());
+            return "admin_tpl.php";
+        
         case "home":
         default:
             return "default_tpl.php";

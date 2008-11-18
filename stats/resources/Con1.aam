@@ -1,0 +1,9 @@
+ver	0	7
+get	.
+put	DOWNLOAD
+seg	all	con10000.aas	0	15787
+seg	all	con10001.aas	15787	16812
+seg	all	con10002.aas	32599	8728
+# HTML_PARAMS: WIDTH=392 HEIGHT=310 BGCOLOR=FFFFFF
+opt	all	BypassSecurityDialog=FALSE
+opt	all	UniqueID=22392661

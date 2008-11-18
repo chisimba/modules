@@ -68,11 +68,32 @@ class dbtuts extends dbtable {
      */
     public $objConfig;
     
+    /**
+     * Array of test names
+     * @var array The list of test names
+     * @access public
+     */
+    public $testName = array(
+                        1 => "Frequency Distributions",
+                        2 => "Ungrouped Data",
+                        3 => "Grouped Data",
+                        4 => "Pobability Section 1",
+                        5 => "Pobability Section 2",
+                        6 => "Pobability Section 3",
+                        7 => "Pobability Section 4",
+                        8 => "Binomial Distribution",
+                        9 => "Normal Distribution",
+                        10 => "Confidence Intervals 1",
+                        11 => "Confidence Intervals 2",
+                        12 => "Hypothesis Testing",
+                        13 => "Regression Analysis",
+                        14 => "Index Numbers",
+                        15 => "Time Series Analysis 1",
+                        16 => "Time Series Analysis 2"                        
+    );
 
     /**
-    * Init method
-    * 
-    * Standard Chisimba Init() method
+    * Standard Chisimba Init method
     * 
     * @return void  
     * @access public
@@ -134,6 +155,38 @@ class dbtuts extends dbtable {
         return $nonce;
     }
     
+    /**
+     * Method to return the best marks for each tut for a
+     * particular student
+     *
+     * @param string $userId the userid (studentno) of the student
+     * @return array The array of results
+     * @access public
+     */
+    public function getMarks($userId, $showAll=false) {
+        if (!$showAll) {
+            $sql = "SELECT testno, MAX(mark) AS best, time
+                    FROM tbl_stats_tuts
+                    WHERE studentno = '$userId'
+                    GROUP BY testno
+                    ORDER BY testno";
+        } else {
+            $sql = "SELECT testno, mark AS best, time
+                    FROM tbl_stats_tuts
+                    WHERE studentno = '$userId'
+                    ORDER BY testno, best";
+                
+        }
+        return $this->getArray($sql);
+    }
+    
+    public function getStudents() {
+        $sql = "SELECT DISTINCT studentno
+                FROM tbl_stats_tuts
+                ORDER BY studentno";
+                
+        return $this->getArray($sql);
+    }
 }
 
 ?>

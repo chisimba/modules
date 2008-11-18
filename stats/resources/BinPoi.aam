@@ -1,0 +1,9 @@
+ver	0	7
+get	.
+put	DOWNLOAD
+seg	all	binp0000.aas	0	15890
+seg	all	binp0001.aas	15890	14685
+seg	all	binp0002.aas	30575	11672
+# HTML_PARAMS: WIDTH=406 HEIGHT=318 BGCOLOR=FFFFFF
+opt	all	BypassSecurityDialog=FALSE
+opt	all	UniqueID=22359231
