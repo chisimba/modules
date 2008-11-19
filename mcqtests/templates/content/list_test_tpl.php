@@ -46,7 +46,7 @@ if (!empty($data)) {
         if ($test['totalmark'] != 0) {
             $mark = round($line['mark']/$test['totalmark']*100) .'%';
         } else {
-            $mark = $line['mark'].'%';
+            $mark = $line['mark'];
         }
         if (isset($line['starttime']) && !empty($line['starttime'])) {
             $start = $this->formatDate($line['starttime']);
