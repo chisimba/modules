@@ -83,6 +83,13 @@ class stats extends controller {
     public $objQuestionnaire;
 
     /**
+     * PostQuestionnaire model object
+     * @var object used to model the tbl_stats_postquestionnaire table
+     * @access public
+     */
+    public $objPostQuestionnaire;
+
+    /**
      * Tuts model object
      * @var object used to model the tbl_stats_tuts table
      * @access public
@@ -109,6 +116,7 @@ class stats extends controller {
         $this->objUser = $this->getObject('user', 'security');
         $this->objLanguage = $this->getObject('language','language');
         $this->objQuestionnaire = $this->getObject('dbquestionnaire','stats');
+        $this->objPostQuestionnaire = $this->getObject('dbpostquestionnaire','stats');
         $this->objTuts = $this->getObject('dbtuts','stats');
         
         //Log this module call
@@ -151,6 +159,92 @@ class stats extends controller {
             }
             $this->objTuts->saveMark($user, $pword, $test, $mark, $time);
             break;
+        
+        case "questionnaire":
+            $json = $this->getParam('json');
+            $params = json_decode($json);
+            $qArray = array('studentno'=>$params->StudentNommer,
+                            'contactno'=>$params->Kontaknommer,
+                            'q1'=>$params->Vraag1,
+                            'q2'=>$params->Vraag2,
+                            'q3'=>$params->Vraag3,
+                            'q4'=>$params->Vraag4,
+                            'q5'=>$params->Vraag5,
+                            'q6'=>$params->Vraag6,
+                            'q7'=>$params->Vraag7,
+                            'q8'=>$params->Vraag8,
+                            'q9'=>$params->Vraag9,
+                            'q10'=>$params->Vraag10,
+                            'q11'=>$params->Vraag11,
+                            'q12'=>$params->Vraag12,
+                            'q13'=>$params->Vraag13,
+                            'q14'=>$params->Vraag14,
+                            'q15'=>$params->Vraag15,
+                            'q16'=>$params->Vraag16,
+                            'q17'=>$params->Vraag17,
+                            'q18'=>$params->Vraag18,
+                            'q19'=>$params->Vraag19,
+                            'q20'=>$params->Vraag20,
+                            'q21'=>$params->Vraag21,
+                            'q22'=>$params->Vraag22,
+                            'q23'=>$params->Vraag23,
+                            'q24'=>$params->Vraag24,
+                            'q25'=>$params->Vraag25,
+                            'q26'=>$params->Vraag26,
+                            'q27'=>$params->Vraag27,
+                            'q28'=>$params->Vraag28,
+                            'q29'=>$params->Vraag29,
+                            'q30'=>$params->Vraag30,
+                            'q31'=>$params->Vraag31,
+                            'q32'=>$params->Vraag32,
+                            'q33'=>$params->Vraag33,
+                            'q34'=>$params->Vraag34,
+                            'q35'=>$params->Vraag35,
+                            'q36'=>$params->Vraag36,
+                            'q37'=>$params->Vraag37,
+                            'q38'=>$params->Vraag38,
+                            'q39'=>$params->Vraag39,
+                            'q40'=>$params->Vraag40,
+                            'q41'=>$params->Vraag41,
+                            'q42'=>$params->Vraag42,
+                            'q43'=>$params->Vraag43,
+                            'q44'=>$params->Vraag44,
+                            'q45'=>$params->Vraag45,
+                            'q46'=>$params->Vraag46,
+                            'q47'=>$params->Vraag47,
+                            'q48'=>$params->Vraag_48,
+                            );
+            $this->objQuestionnaire->insert($qArray);
+            break;            
+         
+        case "postquestionnaire":
+            $json = $this->getParam('json');
+            $params = json_decode($json);
+            $pqArray = array('studentno'=>$params->StudentNommer,
+                             'contactno'=>$params->Kontaknommer,
+                             'q1'=>$params->Vraag1,
+                             'q2'=>$params->Vraag2,
+                             'q3'=>$params->Vraag3,
+                             'q4'=>$params->Vraag4,
+                             'q5'=>$params->Vraag5,
+                             'q6'=>$params->Vraag6,
+                             'q7'=>$params->Vraag7,
+                             'q8'=>$params->Vraag8,
+                             'q9'=>$params->Vraag9,
+                             'q10'=>$params->Vraag10,
+                             'q11'=>$params->Vraag11,
+                             'q12'=>$params->Vraag12,
+                             'q13'=>$params->Vraag13,
+                             'q14'=>$params->Vraag14,
+                             'q15'=>$params->Vraag15,
+                             'q16'=>$params->Vraag16,
+                             'q17'=>$params->Vraag17,
+                             'q18'=>$params->Vraag18,
+                             'q19'=>$params->Vraag19,
+                             'q20'=>$params->Vraag20
+                             );
+            $this->objPostQuestionnaire->insert($pqArray);
+            break;            
             
         case "tutorials":
             return "tutorials_tpl.php";
@@ -199,6 +293,8 @@ class stats extends controller {
             
             case "isemp":
             case "testwrite":
+            case "questionnaire":
+            case "postquestionnaire":
                 return FALSE;
             
             default:

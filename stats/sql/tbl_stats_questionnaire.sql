@@ -2,7 +2,7 @@
 $tablename = 'tbl_stats_questionnaire';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'Table to store users answers to the questionnaires', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'Table to store users answers to the questionnaire', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 $fields = array(
     'id' => array(
@@ -14,6 +14,10 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         'notnull' => true
+        ),
+    'contactno' => array(
+        'type' => 'text',
+        'length' => 32
         ),
     'q1' => array(
         'type' => 'text',

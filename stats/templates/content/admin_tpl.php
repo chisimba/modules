@@ -32,23 +32,37 @@ $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objHead->str = $objLanguage->languageText('mod_stats_adminheading', 'stats');
 $objHead->type = 2;
 
+$listHead = $this->newObject('htmlheading','htmlelements');
+$listHead->str = $this->objLanguage->languageText("mod_stats_studentlist",'stats');
+$listHead->type = 4;
+
 $link = $this->getObject('link','htmlelements');
 
 $objTable = $this->newObject('htmltable','htmlelements');
-$objTable->addHeader(array($this->objLanguage->languageText("mod_stats_studentlist",'stats')),null,"align='left'");
+$objTable->addHeader(array($this->objLanguage->languageText("mod_stats_studentno","stats"),
+                           $this->objLanguage->languageText("mod_stats_studentname","stats")),
+                     null,"align='left'");
+$objTable->cellpadding = $objTable->cellspacing = 2;
+$class = 'odd';
 
 foreach ($students as $student) {
     $link->link($this->uri(array('action'=>'marks','studentno'=>$student['studentno'], 'back'=>'admin')));
-    $link->link = "{$student['studentno']} - ".$this->objUser->fullName($student['studentno']);
-    $objTable->startRow();
+    $link->link = $student['studentno'];
+    $objTable->startRow($class);
+    $objTable->addCell($link->show());
+    $link->link = $this->objUser->fullName($student['studentno']);
     $objTable->addCell($link->show());
     $objTable->endRow();
+    $class = ($class == 'odd')? "even" : "odd";
 }
 
+$leftContent = $listHead->show().$objTable->show();
+$rightContent = "This is the right column";
+$subContent = "<div style='float:left; width: 50%;'>$leftContent</div><div style='float:right; width: 50%;'>$rightContent</div>";
 
 $link->link($this->uri(array('action'=>'home')));
 $link->link = $this->objLanguage->languageText('word_back');
-$backLink =  "<div style='float:right'>".$link->show()."</div>";
+$backLink =  "<div style='clear:both; float:right;'>".$link->show()."</div>";
 
-echo $objHead->show()."<br />".$objTable->show()."$backLink<br /><br />";
+echo $objHead->show()."<br />".$subContent."$backLink<br /><br />";
 ?>
