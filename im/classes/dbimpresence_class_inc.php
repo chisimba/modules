@@ -118,9 +118,14 @@ class dbimpresence extends dbTable
      */
     public function getAllActiveUsers($userId)
     {
-        $sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' ORDER BY datesent ASC";
-        $ret = $this->query($sql);
+        //$sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' and status != 'unavailable' ORDER BY datesent ASC";
+        $interval = "2";
+		$sql="SELECT distinct(person) as person from tbl_im_presence WHERE counsilor='$userId' and 
+				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
 
+
+		$ret = $this->query($sql);
+		
 	return $ret;
     }
 
