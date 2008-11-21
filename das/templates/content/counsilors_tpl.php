@@ -8,7 +8,7 @@ $objLoggedIn = $this->getObject('loggedinusers', 'security');
 
 $numCounsilors = count($users);
 $numUsers = $this->objDbImPres->getRecordCount();
-
+var_dump($this->objImOps->isScriptRunning($this->juser));
 echo "Number of Counsilors: $numCounsilors<br/>";
 echo "Number of Users: $numUsers <br/><br/>";
 $arr = array();
@@ -56,7 +56,7 @@ $objLink->link = "Start Session (under construction)";
 echo "<br/><br/>".$objLink->show();
 
 
-$objLink->href = $this->uri(array('action' => 'stopsession'));
+$objLink->href = $this->uri(array('action' => 'endsession'));
 $objLink->link = "Stop Session (under construction)";
 
 echo "<br/><br/>".$objLink->show();

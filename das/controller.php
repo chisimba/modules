@@ -123,9 +123,11 @@ class das extends controller {
                 $this->nextAction('viewcounsilors');
                 break;
             case 'startsession':
-                break;
+				$this->objImOps->startSession(array('username'=> $this->juser.'@'.$this->jdomain, 'password' => $this->jpass));
+                return $this->nextAction('viewcounsilors');
             case 'endsession':
-                break;
+				$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
+               return $this->nextAction('viewcounsilors');
 
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
@@ -208,7 +210,7 @@ class das extends controller {
                 $conn2->processUntil ( 'session_start' );
 
                 $time_start = microtime ( TRUE );
-                $users = $this->objDbImPres->getAll();
+                $users = $this->objDbImPres->getAll(); 
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
@@ -314,6 +316,7 @@ class das extends controller {
             return TRUE;
         }
     }
+	
 
 
 }
