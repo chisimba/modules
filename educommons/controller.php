@@ -57,8 +57,10 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class educommons extends controller
 {
+    protected $objFolder;
     protected $objImport;
     protected $objUpload;
+    protected $objZip;
 
     /**
      * Standard constructor to load the necessary resources
@@ -68,8 +70,11 @@ class educommons extends controller
      */
     public function init()
     {
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objFolder = $this->getObject('dbfolder', 'filemanager');
         $this->objImport = $this->getObject('educommonsimport', 'educommons');
         $this->objUpload = $this->getObject('uploadinput', 'filemanager');
+        $this->objZip = $this->getObject('wzip', 'utilities');
     }
 
     /**
@@ -96,8 +101,13 @@ class educommons extends controller
                 print_r($data);
                 break;
             case 'upload':
-                $details = $this->objUpload->handleUpload();
-                print_r($details);
+                $upload = $this->objUpload->handleUpload();
+                $parentFolder = $this->getParam('parentfolder');
+                $basePath = $this->objConfig->getcontentBasePath();
+                $uploadPath = $this->objFolder->getFolderPath($parentFolder);
+                $from = $basePath . $uploadPath . DIRECTORY_SEPARATOR . $upload['name'];
+                $to = $basePath . $uploadPath;
+                $this->objZip->unZipArchive($from, $to);
                 break;
             default:
                return 'upload_tpl.php';

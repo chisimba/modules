@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest identifier="MANf47ca7cffabfb95b99fc2d6a18777357" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:eduCommons="http://cosl.usu.edu/xsd/eduCommonsv1.1" xmlns:imsmd="http://www.imsglobal.org/xsd/imsmd_v1p2" xmlns:version="2006-08-17 11:14:59" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p2.xsd http://www.imsglobal.org/xsd/imsmd_v1p2 imsmd_v1p2p4.xsd http://cosl.usu.edu/xsd/eduCommonsv1.1 eduCommonsv1.1.xsd">
+<manifest identifier="MANf42194270ebe64522c507c06174fe160" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" xmlns:eduCommons="http://cosl.usu.edu/xsd/eduCommonsv1.2" xmlns:imsmd="http://www.imsglobal.org/xsd/imsmd_v1p2" xmlns:version="2008-09-03 16:57:07" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p2.xsd http://www.imsglobal.org/xsd/imsmd_v1p2 imsmd_v1p2p4.xsd http://cosl.usu.edu/xsd/eduCommonsv1.2 eduCommonsv1.2.xsd">
 	<metadata>
 		<schema>
 			IMS CONTENT
@@ -8,51 +8,66 @@
 			1.2
 		</schemaversion>
 	</metadata>
-	<organizations default="ORGf47ca7cffabfb95b99fc2d6a18777357">
-		<organization identifier="ORGf47ca7cffabfb95b99fc2d6a18777357">
-			<item identifier="ITM58d1703d0e6a9f642977b274f6612896" identifierref="RES58d1703d0e6a9f642977b274f6612896" isvisible="true">
+	<organizations default="ORGf42194270ebe64522c507c06174fe160">
+		<organization identifier="ORGf42194270ebe64522c507c06174fe160">
+			<item identifier="ITMd747fd83f9ba9d3a284df3addb858feb" identifierref="RESd747fd83f9ba9d3a284df3addb858feb" isvisible="true">
 				<title>
-					Sample Page
+					4. Threats to biological diversity: Exotic species
 				</title>
 			</item>
-			<item identifier="ITMf47ca7cffabfb95b99fc2d6a18777357" identifierref="RESf47ca7cffabfb95b99fc2d6a18777357" isvisible="true">
+			<item identifier="ITM3a858f0b252d161d60df902409feb57a" identifierref="RES3a858f0b252d161d60df902409feb57a" isvisible="true">
 				<title>
-					IMS Sample Course
+					Syllabus
 				</title>
 			</item>
-			<item identifier="ITM03d02c36f2533d9d966ef62be3ec311a" identifierref="RES03d02c36f2533d9d966ef62be3ec311a" isvisible="true">
+			<item identifier="ITM97201648c0e91d8dc21fbf2fda272d1f" identifierref="RES97201648c0e91d8dc21fbf2fda272d1f" isvisible="true">
 				<title>
-					Sample File
+					1. What is Conservation biology?
 				</title>
 			</item>
-			<item identifier="ITMd0a770f8d3818a1ee1e99b3387279b80" identifierref="RESd0a770f8d3818a1ee1e99b3387279b80" isvisible="true">
+			<item identifier="ITM91a469bd36ef7c981acb4760ce2406a3" identifierref="RES91a469bd36ef7c981acb4760ce2406a3" isvisible="true">
 				<title>
-					Sample Page in Folder
+					Assignments
+				</title>
+			</item>
+			<item identifier="ITMbbbcd0330d877755630aff5c27c68d0a" identifierref="RESbbbcd0330d877755630aff5c27c68d0a" isvisible="true">
+				<title>
+					3. Threats to biological diversity: What causes overexploitation?
+				</title>
+			</item>
+			<item identifier="ITMc36fd4dcbd6aedf79881ad90f71f3167" identifierref="RESc36fd4dcbd6aedf79881ad90f71f3167" isvisible="true">
+				<title>
+					5.Threats to biological diversity: Environmental factors
+				</title>
+			</item>
+			<item identifier="ITM00738c90bcbb56bc6478c3f07d34f16e" identifierref="RES00738c90bcbb56bc6478c3f07d34f16e" isvisible="true">
+				<title>
+					Breakdown of the Marks and Assignments
+				</title>
+			</item>
+			<item identifier="ITM63b2a4391287894a99e4804dbcbed9b7" identifierref="RES63b2a4391287894a99e4804dbcbed9b7" isvisible="true">
+				<title>
+					2.Threats to biological diversity: What is habitat loss and fragmentation?
 				</title>
 			</item>
 		</organization>
 	</organizations>
 	<resources>
-		<resource href="http://localhost:8294/eduCommons/department/course/sample-page" identifier="RES58d1703d0e6a9f642977b274f6612896" type="webcontent">
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-1-populating-the-planet" identifier="RES3f90e20bf65ce89bc4c2108d123e3ff3" type="webcontent">
 			<metadata>
 				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
 					<general>
 						<identifier>
-							sample-page
+							assignment-1-populating-the-planet
 						</identifier>
 						<title>
 							<langstring xml:lang="en">
-								Sample Page
+								Assignment 1: Populating the planet
 							</langstring>
 						</title>
 						<language>
 							en
 						</language>
-						<description>
-							<langstring xml:lang="en">
-								This is a sample page for IMS Packaging
-							</langstring>
-						</description>
 					</general>
 					<lifecycle>
 						<contribute>
@@ -71,13 +86,13 @@
 							<centity>
 								<vcard>
 									BEGIN:VCARD
-FN:Ray, David
+FN:philipp
 END:VCARD
 								</vcard>
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:22:17
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
@@ -85,7 +100,7 @@ END:VCARD
 							<role>
 								<source>
 									<langstring xml:lang="x-none">
-										eduCommonsv1.1
+										eduCommonsv1.2
 									</langstring>
 								</source>
 								<value>
@@ -103,7 +118,7 @@ END:VCARD
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:22:17
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
@@ -111,11 +126,11 @@ END:VCARD
 					<metametadata>
 						<catalogentry>
 							<catalog>
-								http://localhost:8294/eduCommons,postmaster@localhost
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
 							</catalog>
 							<entry>
 								<langstring xml:lang="x-none">
-									sample-page
+									assignment-1-populating-the-planet
 								</langstring>
 							</entry>
 						</catalogentry>
@@ -131,10 +146,10 @@ END:VCARD
 							text/html
 						</format>
 						<size>
-							48
+							10185
 						</size>
 						<location>
-							http://localhost:8294/eduCommons/department/course/sample-page
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-1-populating-the-planet
 						</location>
 					</technical>
 					<rights>
@@ -155,7 +170,7 @@ END:VCARD
 						</description>
 					</rights>
 				</lom>
-				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
 					<objectType>
 						Document
 					</objectType>
@@ -165,35 +180,56 @@ END:VCARD
 					</clearedCopyright>
 				</eduCommons>
 			</metadata>
-			<file href="course/sample-page"/>
+			<file href="conservation-biology/assignment-1-populating-the-planet"/>
 		</resource>
-		<resource href="http://localhost:8294/eduCommons/department/course/sample-folder/sample-page-in-folder" identifier="RESd0a770f8d3818a1ee1e99b3387279b80" type="webcontent">
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/the-journey-of-man-from-south-east-asia-to-australia" identifier="RES9328b7265b5363d2cccee0ee2fcfab04" type="webcontent">
 			<metadata>
 				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
 					<general>
 						<identifier>
-							sample-page-in-folder
+							the-journey-of-man-from-south-east-asia-to-australia
 						</identifier>
 						<title>
 							<langstring xml:lang="en">
-								Sample Page in Folder
+								The Journey of Man from South East Asia to Australia
 							</langstring>
 						</title>
 						<language>
 							en
 						</language>
-						<description>
-							<langstring xml:lang="en">
-								This is a sample page for IMS Packaging
-							</langstring>
-						</description>
 					</general>
 					<lifecycle>
 						<contribute>
 							<role>
 								<source>
 									<langstring xml:lang="x-none">
-										eduCommonsv1.1
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
 									</langstring>
 								</source>
 								<value>
@@ -211,7 +247,7 @@ END:VCARD
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:21:09
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
@@ -219,11 +255,11 @@ END:VCARD
 					<metametadata>
 						<catalogentry>
 							<catalog>
-								http://localhost:8294/eduCommons,postmaster@localhost
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
 							</catalog>
 							<entry>
 								<langstring xml:lang="x-none">
-									sample-page-in-folder
+									the-journey-of-man-from-south-east-asia-to-australia
 								</langstring>
 							</entry>
 						</catalogentry>
@@ -239,10 +275,10 @@ END:VCARD
 							text/html
 						</format>
 						<size>
-							44
+							17794
 						</size>
 						<location>
-							http://localhost:8294/eduCommons/department/course/sample-folder/sample-page-in-folder
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/the-journey-of-man-from-south-east-asia-to-australia
 						</location>
 					</technical>
 					<rights>
@@ -263,7 +299,7 @@ END:VCARD
 						</description>
 					</rights>
 				</lom>
-				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
 					<objectType>
 						Document
 					</objectType>
@@ -273,39 +309,23 @@ END:VCARD
 					</clearedCopyright>
 				</eduCommons>
 			</metadata>
-			<file href="course/sample-folder/sample-page-in-folder"/>
+			<file href="conservation-biology/the-journey-of-man-from-south-east-asia-to-australia"/>
 		</resource>
-		<resource href="http://localhost:8294/eduCommons/department/course/" identifier="RESf47ca7cffabfb95b99fc2d6a18777357" type="webcontent">
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-3" identifier="RES4253066b0999767a929ad5b8758acf15" type="webcontent">
 			<metadata>
 				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
 					<general>
 						<identifier>
-							course
+							cartogram-3
 						</identifier>
 						<title>
 							<langstring xml:lang="en">
-								IMS Sample Course
+								cartogram 3
 							</langstring>
 						</title>
 						<language>
 							en
 						</language>
-						<description>
-							<langstring xml:lang="en">
-								This is the description for the IMS Sample Course
-							</langstring>
-						</description>
-						<keyword>
-							<langstring xml:lang="en">
-								Sample
-							</langstring>
-							<langstring xml:lang="en">
-								IMS
-							</langstring>
-							<langstring xml:lang="en">
-								Package
-							</langstring>
-						</keyword>
 					</general>
 					<lifecycle>
 						<contribute>
@@ -324,13 +344,13 @@ END:VCARD
 							<centity>
 								<vcard>
 									BEGIN:VCARD
-FN:Ray, David
+FN:nondumiso
 END:VCARD
 								</vcard>
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:14:59
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
@@ -338,40 +358,7 @@ END:VCARD
 							<role>
 								<source>
 									<langstring xml:lang="x-none">
-										LOMv1.0
-									</langstring>
-								</source>
-								<value>
-									<langstring xml:lang="x-none">
-										unknown
-									</langstring>
-								</value>
-							</role>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:Lambert, Brent
-END:VCARD
-								</vcard>
-							</centity>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:Jon Thomas
-END:VCARD
-								</vcard>
-							</centity>
-							<date>
-								<datetime>
-									2006-08-17 11:14:59
-								</datetime>
-							</date>
-						</contribute>
-						<contribute>
-							<role>
-								<source>
-									<langstring xml:lang="x-none">
-										eduCommonsv1.1
+										eduCommonsv1.2
 									</langstring>
 								</source>
 								<value>
@@ -389,34 +376,7 @@ END:VCARD
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:14:59
-								</datetime>
-							</date>
-						</contribute>
-						<contribute>
-							<role>
-								<source>
-									<langstring xml:lang="x-none">
-										eduCommonsv1.1
-									</langstring>
-								</source>
-								<value>
-									<langstring xml:lang="x-none">
-										Instructor
-									</langstring>
-								</value>
-							</role>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:John Doe, PhD
-EMAIL;INTERNET:john@doe.com
-END:VCARD
-								</vcard>
-							</centity>
-							<date>
-								<datetime>
-									2006-08-17 11:14:59
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
@@ -424,14 +384,79 @@ END:VCARD
 					<metametadata>
 						<catalogentry>
 							<catalog>
-								http://localhost:8294/eduCommons,postmaster@localhost
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
 							</catalog>
 							<entry>
 								<langstring xml:lang="x-none">
-									course
+									cartogram-3
 								</langstring>
 							</entry>
 						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							30583
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-3
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-3"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/fragmentation-video" identifier="RESbc36e95e5437107f278e7286b6f1773a" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							fragmentation-video
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignment 2: Podcast
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
 						<contribute>
 							<role>
 								<source>
@@ -441,30 +466,5781 @@ END:VCARD
 								</source>
 								<value>
 									<langstring xml:lang="x-none">
-										creator
+										author
 									</langstring>
 								</value>
 							</role>
 							<centity>
 								<vcard>
 									BEGIN:VCARD
-FN:Lambert, Brent
-END:VCARD
-								</vcard>
-							</centity>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:Jon Thomas
+FN:philipp
 END:VCARD
 								</vcard>
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:14:59
+									2008-05-14 00:32:50
 								</datetime>
 							</date>
 						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									fragmentation-video
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							22004
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/fragmentation-video
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/fragmentation-video"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/veni-vidi-vici-2" identifier="RES50973d5685168679cc31bc00db7ac07c" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							veni-vidi-vici-2
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Veni, vidi, Vici
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								Romen conquest in Britain
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									veni-vidi-vici-2
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							13448
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/veni-vidi-vici-2
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/veni-vidi-vici-2"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-5" identifier="RES674a4be8f0e86f10127dc674bda09a51" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-5
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 5
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-5
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							40705
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-5
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-5"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sediqas-avatar-sid-systematic-conservation-planning" identifier="RES5754396b79ce8e9ff11b514590932c7e" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sediqas-avatar-sid-systematic-conservation-planning
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								 Assignment 10: Sediqa's avatar Sid: Systematic Conservation Planning
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								Systematic conservation planning
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sediqas-avatar-sid-systematic-conservation-planning
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							11457
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sediqas-avatar-sid-systematic-conservation-planning
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/sediqas-avatar-sid-systematic-conservation-planning"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/human-origins-alas-poor-yorick" identifier="RESa76727479ce57795c4b2ada08877efb5" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							human-origins-alas-poor-yorick
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Human Origins: Alas, poor Yorick
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									human-origins-alas-poor-yorick
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							4773
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/human-origins-alas-poor-yorick
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/human-origins-alas-poor-yorick"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/did-ancient-civilizations-practice-sustainable-development" identifier="REScdcf59a0ea6466e3979a97460d1479e4" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							did-ancient-civilizations-practice-sustainable-development
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignment 4: Develop a wiki article for submitting to wiki
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									did-ancient-civilizations-practice-sustainable-development
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							22041
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/did-ancient-civilizations-practice-sustainable-development
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/did-ancient-civilizations-practice-sustainable-development"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-6" identifier="RES7a596df348b4e636d0571c84c4d0ac7c" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-6
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 6
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-6
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							46714
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-6
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-6"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-showing-forest-depletions-greenhouse-emmisions-and-total-red-list-species" identifier="RES4da42fed833cd896dae8f08ab0193417" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartograms-showing-forest-depletions-greenhouse-emmisions-and-total-red-list-species
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Cartograms showing forest depletions, greenhouse emmisions and total red list species
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartograms-showing-forest-depletions-greenhouse-emmisions-and-total-red-list-species
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9074
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-showing-forest-depletions-greenhouse-emmisions-and-total-red-list-species
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartograms-showing-forest-depletions-greenhouse-emmisions-and-total-red-list-species"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-map-1" identifier="RES79c8ac16f140fd1a0a0a572b0170630c" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartograms-map-1
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartograms map 1
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								The continuous cartogram showing the total forest depletions that was derived from the World Mapper.
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:philipp
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartograms-map-1
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							30382
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-map-1
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartograms-map-1"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-map-2" identifier="RES43362134da84d0922dcc6908bf3ae480" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartograms-map-2
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartograms map 2
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:philipp
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartograms-map-2
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							39143
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartograms-map-2
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartograms-map-2"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/peter-evelyn-research-proposal" identifier="RES291d7073db8c18ee1ac641260ae2d834" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							peter-evelyn-research-proposal
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Peter &amp; Evelyn: Research Proposal
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									peter-evelyn-research-proposal
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9666
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/peter-evelyn-research-proposal
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/peter-evelyn-research-proposal"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/dianah-and-puli-research-proposal" identifier="RESa7e44913ba4566f6ac0eb1c27a11c47b" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							dianah-and-puli-research-proposal
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Dianah and Puli Research Proposal
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								NAMES: D Nangammbi AND R Nkoana 
+REASEARCH PROPOSAL: AIM – TO SEE IF TYPE THREE ANIMALS PREFER NATURAL WATER BODIES OR ARTIFICIAL 
+WATER BODIES 
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									dianah-and-puli-research-proposal
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9577
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/dianah-and-puli-research-proposal
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/dianah-and-puli-research-proposal"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-7" identifier="RES7f67685cb35e22c1b4981c40a57c1aae" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-7
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 7
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-7
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							23639
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-7
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-7"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/spencer-wells-in-vanity-fair" identifier="RES483385eb5001dffee92d8c42fa641846" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							spencer-wells-in-vanity-fair
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Spencer Wells in Vanity Fair
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								Spencer Wells, author of The Journey of Man (and star of the documentary of the same name) and Deep Ancestry, has a write up of The Genographic Project and what it means to have come “Out of Africa” in Vanity Fair.
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									spencer-wells-in-vanity-fair
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							3558
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/spencer-wells-in-vanity-fair
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/spencer-wells-in-vanity-fair"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-8" identifier="REScbcbf0d2e2e40e66cbb6df6753817f6a" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-8
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 8
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-8
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							23123
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-8
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-8"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-4" identifier="RES33fd489573e18c2cd51435c00febe044" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-4
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 4
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-4
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							33227
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-4
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-4"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-9" identifier="RES62599ad51c4b4f95fe5687ddb0cb203f" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-9
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 9
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-9
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							24827
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-9
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-9"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-10" identifier="RESb99c5a520acd95f3be02787c0ee924fc" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-10
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 10
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-10
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							28585
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-10
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-10"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-11" identifier="RES9e53bac8714addcde528a24560e93458" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-11
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 11
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-11
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							22360
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-11
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-11"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/neandertharl-and-archaic-humans-a-brief-review" identifier="RES8eede32c00f60cf89a4b666d83965ced" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							neandertharl-and-archaic-humans-a-brief-review
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Neandertharl and Archaic Humans: A Brief Review
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									neandertharl-and-archaic-humans-a-brief-review
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							23200
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/neandertharl-and-archaic-humans-a-brief-review
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/neandertharl-and-archaic-humans-a-brief-review"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid" identifier="RES9d2af0e5564aae39429c762274878c03" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sid
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sid - Cartograms illustrating Sulphur dioxides emissions, human poverty index and the IUCNs threat
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sid
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9646
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/sid"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/bcb706-chapter-4-threats-to-biological-diversity3-exotic-species" identifier="RESd747fd83f9ba9d3a284df3addb858feb" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							bcb706-chapter-4-threats-to-biological-diversity3-exotic-species
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								4. Threats to biological diversity: Exotic species
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								This is the text for the fourth chapter of the Conservation Biology Course.
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									bcb706-chapter-4-threats-to-biological-diversity3-exotic-species
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							15626
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/bcb706-chapter-4-threats-to-biological-diversity3-exotic-species
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/bcb706-chapter-4-threats-to-biological-diversity3-exotic-species"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-concerning-selected-sociatal-and-conservation-issues" identifier="RES622f900467cfbda3bfb8ffbde1b6c733" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-concerning-selected-sociatal-and-conservation-issues
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Cartogram concerning selected sociatal and conservation issues 
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:50
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-concerning-selected-sociatal-and-conservation-issues
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9618
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-concerning-selected-sociatal-and-conservation-issues
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-concerning-selected-sociatal-and-conservation-issues"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-12" identifier="RES906c4802614e3dd6f3f8d28d8fb97e54" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-12
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 12
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-12
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							23770
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-12
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-12"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/syllabus" identifier="RES3a858f0b252d161d60df902409feb57a" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							syllabus
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Syllabus
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+						<description>
+							<langstring xml:lang="en">
+								General description of section
+							</langstring>
+						</description>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									syllabus
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9374
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/syllabus
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/syllabus"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-13" identifier="RES84a9d4db06fa41712f7152fbcb73d297" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-13
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 13
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-13
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							22067
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-13
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-13"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/bcb706-chapter-1-what-is-conservation-biology" identifier="RES97201648c0e91d8dc21fbf2fda272d1f" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							bcb706-chapter-1-what-is-conservation-biology
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								1. What is Conservation biology?
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									bcb706-chapter-1-what-is-conservation-biology
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							26470
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/bcb706-chapter-1-what-is-conservation-biology
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/bcb706-chapter-1-what-is-conservation-biology"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-14" identifier="RES1df4b63c1d2f1685694c819d7b17c867" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							cartogram-14
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								cartogram 14
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									cartogram-14
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							20390
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/cartogram-14
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/cartogram-14"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-5-hotspot" identifier="RES838ad36a5468d37ca0b3e70d93223a37" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assignment-5-hotspot
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignment 5:Hotspot
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assignment-5-hotspot
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							12758
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-5-hotspot
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assignment-5-hotspot"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignments" identifier="RES91a469bd36ef7c981acb4760ce2406a3" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assignments
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignments
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-08-08 13:34:00
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-08-08 13:34:00
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assignments
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							742
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignments
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="GNU Free Document License">
+						<licenseName>
+							GNU Free Document License
+						</licenseName>
+						<licenseUrl>
+							http://www.gnu.org/licenses/fdl.txt
+						</licenseUrl>
+					</license>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assignments"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-3-cartograms" identifier="RES33427f2b2891a50c49682b1637eefd9c" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assignment-3-cartograms
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignment 3: Cartograms
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assignment-3-cartograms
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							6727
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-3-cartograms
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assignment-3-cartograms"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-1-student-comments" identifier="RES744d68bacbe938d237dde1468bf67212" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assign-1-student-comments
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Past student's submissions for assignment 1
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assign-1-student-comments
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							496
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-1-student-comments
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assign-1-student-comments"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-6-interview-with-a-corporation" identifier="RES586536e8bb16e6ff99b56ddfff472cd0" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assignment-6-interview-with-a-corporation
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assignment 6: Interview with a corporation
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assignment-6-interview-with-a-corporation
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							9001
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assignment-6-interview-with-a-corporation
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assignment-6-interview-with-a-corporation"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-3-students-comments" identifier="RES99580f16690897efa25b291b0fe7e101" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assign-3-students-comments
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assign 3 : Student's Comments
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assign-3-students-comments
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							754
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-3-students-comments
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assign-3-students-comments"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid-the-arrival-of-modern-humans-in-malaysia" identifier="RES665a30d15d0d9bce5afca16090d8852a" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sid-the-arrival-of-modern-humans-in-malaysia
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sid: The arrival of Modern Humans in Malaysia
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sid-the-arrival-of-modern-humans-in-malaysia
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							15340
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid-the-arrival-of-modern-humans-in-malaysia
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/sid-the-arrival-of-modern-humans-in-malaysia"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-4-students-comments" identifier="RES4c4022f4d4e041302ce3f0b962377708" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assign-4-students-comments
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assign 4: Student's Comments
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assign-4-students-comments
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							378
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-4-students-comments
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assign-4-students-comments"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid-systematic-conservation-planning" identifier="RES034aaa2f978286b8feb862a68c866c81" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							sid-systematic-conservation-planning
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Sid: Systematic Conservation Planning
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									sid-systematic-conservation-planning
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							14633
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/sid-systematic-conservation-planning
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/sid-systematic-conservation-planning"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/rankless-taxonomy" identifier="RESe9ac70efcf399b5a18774259b4e0ac02" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							rankless-taxonomy
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Rankless taxonomy
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									rankless-taxonomy
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							23038
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/rankless-taxonomy
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/rankless-taxonomy"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/james-principal-component-analysis" identifier="RES906bcfa2e0f9650ab7dc4ebfa13d881f" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							james-principal-component-analysis
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								James: Principal Component Analysis
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									james-principal-component-analysis
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							6974
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/james-principal-component-analysis
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/james-principal-component-analysis"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/faghrie-2-the-youtube-video-for-century-for-century-city-transcript" identifier="RESaf378698d220d289dc3689c7df26f510" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							faghrie-2-the-youtube-video-for-century-for-century-city-transcript
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Faghrie 2: The YouTube video for century for Century City Transcript
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									faghrie-2-the-youtube-video-for-century-for-century-city-transcript
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							7179
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/faghrie-2-the-youtube-video-for-century-for-century-city-transcript
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/faghrie-2-the-youtube-video-for-century-for-century-city-transcript"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-1-student-comments-1" identifier="RES76b4b36063b09a69c29e931ee7bcc235" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							assign-1-student-comments-1
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Assign 2: Student comments
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									assign-1-student-comments-1
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							533
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/assign-1-student-comments-1
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/assign-1-student-comments-1"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/faghrie-1-the-youtube-video-for-century-city" identifier="RES6a34c775260f964cc88e41edf2bf5fbb" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							faghrie-1-the-youtube-video-for-century-city
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Faghrie 1:The youTube video for century city
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									faghrie-1-the-youtube-video-for-century-city
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							11564
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/faghrie-1-the-youtube-video-for-century-city
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/faghrie-1-the-youtube-video-for-century-city"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/using-ogc-web-servises-in-your-blog" identifier="RESab49d2b7538f701fdefdafc881acaffc" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							using-ogc-web-servises-in-your-blog
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								using OGC Web Servises in your BLOG
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									using-ogc-web-servises-in-your-blog
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							7506
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/using-ogc-web-servises-in-your-blog
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/using-ogc-web-servises-in-your-blog"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/fishbiodiversity" identifier="RES5dd888d9e5cdd30fb801874018ab2e97" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							fishbiodiversity
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Fishbiodiversity
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-05-14 00:32:51
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									fishbiodiversity
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							image/jpeg
+						</format>
+						<size>
+							36411
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/fishbiodiversity
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Image
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/fishbiodiversity"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/" identifier="RESf42194270ebe64522c507c06174fe160" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							conservation-biology
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Conservation Biology
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:philipp
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-09-03 16:57:07
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-09-03 16:57:07
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									conservation-biology
+								</langstring>
+							</entry>
+						</catalogentry>
 						<metadatascheme>
 							LOMv1.0
 						</metadatascheme>
@@ -480,7 +6256,7 @@ END:VCARD
 							1
 						</size>
 						<location>
-							http://localhost:8294/eduCommons/department/course/
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/
 						</location>
 					</technical>
 					<rights>
@@ -501,47 +6277,37 @@ END:VCARD
 						</description>
 					</rights>
 				</lom>
-				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
 					<objectType>
 						Course
 					</objectType>
-					<license category="Creative Commons License">
-						<licenseName>
-							Attribution 2.5 
-						</licenseName>
-						<licenseUrl>
-							http://creativecommons.org/licenses/by/2.5/
-						</licenseUrl>
-						<licenseIconUrl>
-							http://creativecommons.org/images/public/somerights20.png
-						</licenseIconUrl>
-					</license>
+					<license category="Site Default"/>
 					<clearedCopyright>
 						true
 					</clearedCopyright>
 					<courseId>
-						COID
+						BCB706
 					</courseId>
-					<term>
-						Fall 2006
-					</term>
-					<displayInstructorEmail>
-						true
-					</displayInstructorEmail>
+					<displayInstEmail>
+						false
+					</displayInstEmail>
+					<instructorAsCreator>
+						false
+					</instructorAsCreator>
 				</eduCommons>
 			</metadata>
-			<file href="course.html"/>
+			<file href="conservation-biology.html"/>
 		</resource>
-		<resource href="http://localhost:8294/eduCommons/department/course/samplefile.txt" identifier="RES03d02c36f2533d9d966ef62be3ec311a" type="webcontent">
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/3.-threats-to-biological-diversity-what-causes" identifier="RESbbbcd0330d877755630aff5c27c68d0a" type="webcontent">
 			<metadata>
 				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
 					<general>
 						<identifier>
-							samplefile.txt
+							3.-threats-to-biological-diversity-what-causes
 						</identifier>
 						<title>
 							<langstring xml:lang="en">
-								Sample File
+								3. Threats to biological diversity: What causes overexploitation?
 							</langstring>
 						</title>
 						<language>
@@ -549,7 +6315,7 @@ END:VCARD
 						</language>
 						<description>
 							<langstring xml:lang="en">
-								This is a sample file for IMS Packaging.
+								This is the text for the third chapter of the Conservation Biology Course.
 							</langstring>
 						</description>
 					</general>
@@ -570,13 +6336,13 @@ END:VCARD
 							<centity>
 								<vcard>
 									BEGIN:VCARD
-FN:Ray, David
+FN:nondumiso
 END:VCARD
 								</vcard>
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:21:54
+									2008-08-04 14:48:11
 								</datetime>
 							</date>
 						</contribute>
@@ -584,7 +6350,7 @@ END:VCARD
 							<role>
 								<source>
 									<langstring xml:lang="x-none">
-										eduCommonsv1.1
+										eduCommonsv1.2
 									</langstring>
 								</source>
 								<value>
@@ -602,7 +6368,7 @@ END:VCARD
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:21:54
+									2008-08-04 14:48:11
 								</datetime>
 							</date>
 						</contribute>
@@ -610,11 +6376,11 @@ END:VCARD
 					<metametadata>
 						<catalogentry>
 							<catalog>
-								http://localhost:8294/eduCommons,postmaster@localhost
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
 							</catalog>
 							<entry>
 								<langstring xml:lang="x-none">
-									samplefile.txt
+									3.-threats-to-biological-diversity-what-causes
 								</langstring>
 							</entry>
 						</catalogentry>
@@ -627,13 +6393,13 @@ END:VCARD
 					</metametadata>
 					<technical>
 						<format>
-							text/plain
+							text/html
 						</format>
 						<size>
-							59
+							12951
 						</size>
 						<location>
-							http://localhost:8294/eduCommons/department/course/samplefile.txt
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/3.-threats-to-biological-diversity-what-causes
 						</location>
 					</technical>
 					<rights>
@@ -654,9 +6420,9 @@ END:VCARD
 						</description>
 					</rights>
 				</lom>
-				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
 					<objectType>
-						File
+						Document
 					</objectType>
 					<license category="Site Default"/>
 					<clearedCopyright>
@@ -664,18 +6430,405 @@ END:VCARD
 					</clearedCopyright>
 				</eduCommons>
 			</metadata>
-			<file href="course/samplefile.txt"/>
+			<file href="conservation-biology/3.-threats-to-biological-diversity-what-causes"/>
 		</resource>
-		<resource href="http://localhost:8294/eduCommons/department/course/sampleimage.gif" identifier="RES2ce8a0f9f47118eaa90658680ac8e0f6" type="webcontent">
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/5.threats-to-biological-diversity-environmental" identifier="RESc36fd4dcbd6aedf79881ad90f71f3167" type="webcontent">
 			<metadata>
 				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
 					<general>
 						<identifier>
-							sampleimage.gif
+							5.threats-to-biological-diversity-environmental
 						</identifier>
 						<title>
 							<langstring xml:lang="en">
-								Sample Image
+								5.Threats to biological diversity: Environmental factors
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-08-04 15:45:09
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-08-04 15:45:09
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									5.threats-to-biological-diversity-environmental
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							20687
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/5.threats-to-biological-diversity-environmental
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/5.threats-to-biological-diversity-environmental"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/breakdown-of-the-marks-and-assignments" identifier="RES00738c90bcbb56bc6478c3f07d34f16e" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							breakdown-of-the-marks-and-assignments
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Breakdown of the Marks and Assignments
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:nondumiso
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-07-25 13:35:30
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-07-25 13:35:30
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									breakdown-of-the-marks-and-assignments
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							14571
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/breakdown-of-the-marks-and-assignments
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/breakdown-of-the-marks-and-assignments"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/modern-humans-occupation-of-europe" identifier="RES7a465d841d0acd14a36320539d9fca42" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							modern-humans-occupation-of-europe
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								Modern human's occupation of Europe
+							</langstring>
+						</title>
+						<language>
+							en
+						</language>
+					</general>
+					<lifecycle>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										LOMv1.0
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										author
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:philipp
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-06-19 13:00:20
+								</datetime>
+							</date>
+						</contribute>
+						<contribute>
+							<role>
+								<source>
+									<langstring xml:lang="x-none">
+										eduCommonsv1.2
+									</langstring>
+								</source>
+								<value>
+									<langstring xml:lang="x-none">
+										rights holder
+									</langstring>
+								</value>
+							</role>
+							<centity>
+								<vcard>
+									BEGIN:VCARD
+FN:(site default)
+END:VCARD
+								</vcard>
+							</centity>
+							<date>
+								<datetime>
+									2008-06-19 13:00:20
+								</datetime>
+							</date>
+						</contribute>
+					</lifecycle>
+					<metametadata>
+						<catalogentry>
+							<catalog>
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
+							</catalog>
+							<entry>
+								<langstring xml:lang="x-none">
+									modern-humans-occupation-of-europe
+								</langstring>
+							</entry>
+						</catalogentry>
+						<metadatascheme>
+							LOMv1.0
+						</metadatascheme>
+						<language>
+							en
+						</language>
+					</metametadata>
+					<technical>
+						<format>
+							text/html
+						</format>
+						<size>
+							10306
+						</size>
+						<location>
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/modern-humans-occupation-of-europe
+						</location>
+					</technical>
+					<rights>
+						<copyrightandotherrestrictions>
+							<source>
+								<langstring xml:lang="x-none">
+									LOMv1.0
+								</langstring>
+							</source>
+							<value>
+								<langstring xml:lang="x-none">
+									yes
+								</langstring>
+							</value>
+						</copyrightandotherrestrictions>
+						<description>
+							<langstring xml:lang="x-none"/>
+						</description>
+					</rights>
+				</lom>
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
+					<objectType>
+						Document
+					</objectType>
+					<license category="Site Default"/>
+					<clearedCopyright>
+						true
+					</clearedCopyright>
+				</eduCommons>
+			</metadata>
+			<file href="conservation-biology/modern-humans-occupation-of-europe"/>
+		</resource>
+		<resource href="http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/2.threats-to-biological-diversity-what-is-habitat" identifier="RES63b2a4391287894a99e4804dbcbed9b7" type="webcontent">
+			<metadata>
+				<lom xmlns="http://www.imsglobal.org/xsd/imsmd_v1p2">
+					<general>
+						<identifier>
+							2.threats-to-biological-diversity-what-is-habitat
+						</identifier>
+						<title>
+							<langstring xml:lang="en">
+								2.Threats to biological diversity: What is habitat loss and fragmentation?
 							</langstring>
 						</title>
 						<language>
@@ -683,7 +6836,7 @@ END:VCARD
 						</language>
 						<description>
 							<langstring xml:lang="en">
-								This is a sample image for IMS Packaging.
+								This is the text for the second chapter of the Conservation Biology Course.
 							</langstring>
 						</description>
 					</general>
@@ -704,13 +6857,13 @@ END:VCARD
 							<centity>
 								<vcard>
 									BEGIN:VCARD
-FN:Ray, David
+FN:nondumiso
 END:VCARD
 								</vcard>
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:22:06
+									2008-08-27 15:14:24
 								</datetime>
 							</date>
 						</contribute>
@@ -718,33 +6871,7 @@ END:VCARD
 							<role>
 								<source>
 									<langstring xml:lang="x-none">
-										LOMv1.0
-									</langstring>
-								</source>
-								<value>
-									<langstring xml:lang="x-none">
-										unknown
-									</langstring>
-								</value>
-							</role>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:Jon Thomas
-END:VCARD
-								</vcard>
-							</centity>
-							<date>
-								<datetime>
-									2006-08-17 11:22:06
-								</datetime>
-							</date>
-						</contribute>
-						<contribute>
-							<role>
-								<source>
-									<langstring xml:lang="x-none">
-										eduCommonsv1.1
+										eduCommonsv1.2
 									</langstring>
 								</source>
 								<value>
@@ -762,7 +6889,7 @@ END:VCARD
 							</centity>
 							<date>
 								<datetime>
-									2006-08-17 11:22:06
+									2008-08-27 15:14:24
 								</datetime>
 							</date>
 						</contribute>
@@ -770,40 +6897,14 @@ END:VCARD
 					<metametadata>
 						<catalogentry>
 							<catalog>
-								http://localhost:8294/eduCommons,postmaster@localhost
+								http://freecourseware.uwc.ac.za/freecourseware,phi.schmidt@gmail.com
 							</catalog>
 							<entry>
 								<langstring xml:lang="x-none">
-									sampleimage.gif
+									2.threats-to-biological-diversity-what-is-habitat
 								</langstring>
 							</entry>
 						</catalogentry>
-						<contribute>
-							<role>
-								<source>
-									<langstring xml:lang="x-none">
-										LOMv1.0
-									</langstring>
-								</source>
-								<value>
-									<langstring xml:lang="x-none">
-										creator
-									</langstring>
-								</value>
-							</role>
-							<centity>
-								<vcard>
-									BEGIN:VCARD
-FN:Jon Thomas
-END:VCARD
-								</vcard>
-							</centity>
-							<date>
-								<datetime>
-									2006-08-17 11:22:06
-								</datetime>
-							</date>
-						</contribute>
 						<metadatascheme>
 							LOMv1.0
 						</metadatascheme>
@@ -813,13 +6914,13 @@ END:VCARD
 					</metametadata>
 					<technical>
 						<format>
-							image/gif
+							text/html
 						</format>
 						<size>
-							4429
+							12683
 						</size>
 						<location>
-							http://localhost:8294/eduCommons/department/course/sampleimage.gif
+							http://freecourseware.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/2.threats-to-biological-diversity-what-is-habitat
 						</location>
 					</technical>
 					<rights>
@@ -840,9 +6941,9 @@ END:VCARD
 						</description>
 					</rights>
 				</lom>
-				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.1">
+				<eduCommons xmlns="http://cosl.usu.edu/xsd/eduCommonsv1.2">
 					<objectType>
-						Image
+						Document
 					</objectType>
 					<license category="Site Default"/>
 					<clearedCopyright>
@@ -850,7 +6951,7 @@ END:VCARD
 					</clearedCopyright>
 				</eduCommons>
 			</metadata>
-			<file href="course/sampleimage.gif"/>
+			<file href="conservation-biology/2.threats-to-biological-diversity-what-is-habitat"/>
 		</resource>
 	</resources>
 </manifest>
