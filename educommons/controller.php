@@ -58,6 +58,7 @@ $GLOBALS['kewl_entry_point_run']) {
 class educommons extends controller
 {
     protected $objImport;
+    protected $objUpload;
 
     /**
      * Standard constructor to load the necessary resources
@@ -68,6 +69,7 @@ class educommons extends controller
     public function init()
     {
         $this->objImport = $this->getObject('educommonsimport', 'educommons');
+        $this->objUpload = $this->getObject('uploadinput', 'filemanager');
     }
 
     /**
@@ -84,7 +86,7 @@ class educommons extends controller
                 $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
                 $this->objImport->doRssChapters($uri);
                 break;
-            default:
+            case 'import':
                 // Temporary handling for development purposes
                 set_time_limit(900);
                 $data = $this->objImport->parseIms();
@@ -92,6 +94,13 @@ class educommons extends controller
                 $this->objImport->addPages($data, $context);
                 header('Content-Type: text/plain; charset=UTF-8');
                 print_r($data);
+                break;
+            case 'upload':
+                $details = $this->objUpload->handleUpload();
+                print_r($details);
+                break;
+            default:
+               return 'upload_tpl.php';
         }
     }
 }
