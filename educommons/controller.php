@@ -91,15 +91,6 @@ class educommons extends controller
                 $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
                 $this->objImport->doRssChapters($uri);
                 break;
-            case 'import':
-                // Temporary handling for development purposes
-                set_time_limit(900);
-                $data = $this->objImport->parseIms();
-                $this->objImport->addCourses($data, $context);
-                $this->objImport->addPages($data, $context);
-                header('Content-Type: text/plain; charset=UTF-8');
-                print_r($data);
-                break;
             case 'upload':
                 $upload = $this->objUpload->handleUpload();
                 $parentFolder = $this->getParam('parentfolder');
@@ -108,6 +99,12 @@ class educommons extends controller
                 $from = $basePath . $uploadPath . DIRECTORY_SEPARATOR . $upload['name'];
                 $to = $basePath . $uploadPath;
                 $this->objZip->unZipArchive($from, $to);
+                $directory = substr($upload['name'], 0, strlen($upload['name']) - 4);
+                $manifest = $to . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . 'imsmanifest.xml';
+                set_time_limit(900);
+                $data = $this->objImport->parseIms($manifest);
+                $this->objImport->addCourses($data, $context);
+                $this->objImport->addPages($data, $context);
                 break;
             default:
                return 'upload_tpl.php';
