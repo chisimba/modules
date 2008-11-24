@@ -115,13 +115,11 @@ class educommonsimport extends object
      * TODO: Remove SimpleXMLElement and start using proper XML-DOM parsing.
      *
      * @access public
+     * @param string $file Path to the IMS Manifest XML file.
      * @return array The data
      */
-    public function parseIms()
+    public function parseIms($file)
     {
-        // Determine the path to the file.
-        $file = $this->getResourcePath('sample/imsmanifest.xml');
-
         // Read the contents of the file.
         $contents = file_get_contents($file);
 
