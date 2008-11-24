@@ -196,17 +196,18 @@ class educommonsimport extends object
      * Inserts IMS documents into database as contextcontent pages.
      *
      * @access public
-     * @param  array  $data    The IMS data
-     * @param  string $context The id of the context to add the pages to
+     * @param  array  $data    The IMS data.
+     * @param  string $base    The base of the inflated IMS package.
+     * @param  string $context The id of the context to add the pages to.
      */
-    public function addPages($data, $context)
+    public function addPages($data, $base, $context)
     {
         $course = substr($data['courses'][0]['id'], 3);
         foreach ($data['documents'] as $document) {
             $id = substr($document['id'], 3);
             $language = $document['language'];
             $title = $document['title'][$language];
-            $href = $this->getResourcePath('sample/' . $document['href']);
+            $href = $base . DIRECTORY_SEPARATOR . $document['href'];
             $content = file_get_contents($href);
             if ($this->objTitles->idExists($id)) {
                 $pageId = $this->objPages->getPage($id, $language);

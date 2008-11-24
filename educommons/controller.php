@@ -100,12 +100,12 @@ class educommons extends controller
                 $from = $basePath . $uploadPath . DIRECTORY_SEPARATOR . $upload['name'];
                 $to = $basePath . $uploadPath;
                 $this->objZip->unZipArchive($from, $to);
-                $directory = substr($upload['name'], 0, strlen($upload['name']) - 4);
-                $manifest = $to . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . 'imsmanifest.xml';
+                $directory = $to . DIRECTORY_SEPARATOR . substr($upload['name'], 0, strlen($upload['name']) - 4);
+                $manifest = $directory . DIRECTORY_SEPARATOR . 'imsmanifest.xml';
                 set_time_limit(900);
                 $data = $this->objImport->parseIms($manifest);
                 $this->objImport->addCourses($data, $context);
-                $this->objImport->addPages($data, $context);
+                $this->objImport->addPages($data, $directory, $context);
                 break;
             default:
                 $contexts = $this->objContext->getListOfContext();
