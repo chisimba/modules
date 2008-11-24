@@ -71,6 +71,7 @@ class educommons extends controller
     public function init()
     {
         $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objFolder = $this->getObject('dbfolder', 'filemanager');
         $this->objImport = $this->getObject('educommonsimport', 'educommons');
         $this->objUpload = $this->getObject('uploadinput', 'filemanager');
@@ -107,7 +108,9 @@ class educommons extends controller
                 $this->objImport->addPages($data, $context);
                 break;
             default:
-               return 'upload_tpl.php';
+                $contexts = $this->objContext->getListOfContext();
+                $this->setVarByRef('contexts', $contexts);
+                return 'upload_tpl.php';
         }
     }
 }
