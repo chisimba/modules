@@ -120,8 +120,10 @@ class cms extends controller
         public function init()
         {
             try {
+                $this->_objPreview = $this->getObject('dbcontentpreview', 'cmsadmin');
                 // instantiate the database object for sections
                 $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+
                 $this->_objSimpleTree = $this->getObject('simplecontenttree', 'cmsadmin');
 
                 $this->objLayout = $this->getObject('cmslayouts', 'cms');
@@ -257,7 +259,35 @@ class cms extends controller
 
 
 
-
+        /**
+         * A method that corresponds to the previewcontent action parameter
+         * from the querystring. It returns the formatted full page of content
+         * text for a particular content item for preview purposes.
+         *
+         * @access private
+         * @return string The populated cms_content_tpl.php template
+         *
+         */
+        private function _previewcontent()
+        {
+                $this->setLayoutTemplate('cms_layout_tpl.php');
+                $fromadmin = $this->getParam('fromadmin', FALSE);
+                $sectionId = $this->getParam('sectionid', NULL);
+                $rss = $this->rss->getUserRss($sectionId);
+                $this->setVarByRef('rss', $rss);
+                $this->setVarByRef('sectionId', $sectionId);
+                $this->setVarByRef('fromadmin', $fromadmin);
+                //$page = $this->_objPreview->getContentPageFiltered($this->getParam('id'));
+                //$siteTitle = $page['title'];
+                $siteTitle = $this->getParam('title');
+                $this->setVarByRef('pageTitle', $siteTitle);
+                $this->bbcode = $this->getObject('washout', 'utilities');
+                $content = $this->objLayout->showBody(true);
+                $content = $this->bbcode->parseText($content);
+                var_dump($content); exit;
+                $this->setVarByRef('content',$content);
+                return 'cms_content_tpl.php';
+        }
 
 
         /**
@@ -393,6 +423,7 @@ class cms extends controller
 
         	}
         }
+
         /**
          * A method that corresponds to the showfulltext action parameter
          * from the querystring. It returns the formatted full page of content

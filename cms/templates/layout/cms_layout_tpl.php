@@ -21,6 +21,8 @@ if(!isset($rss)){
 }
 $leftSide = $this->objLayout->getLeftMenu($currentNode, $rss);
 
+$leftSide .= '<div id="cmsleftblockscontainer">';
+
 // Add blocks
 $currentAction = $this->getParam('action', NULL);
 
@@ -56,6 +58,7 @@ if(!empty($leftPageBlocks)) {
     }
 }
 
+$leftSide .= '</div>';
 /***************** END OF LEFT SIDE *******************************/
 
 if(!$this->getParam('query') == ''){

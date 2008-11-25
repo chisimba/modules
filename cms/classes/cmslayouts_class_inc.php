@@ -117,9 +117,12 @@ class cmslayouts extends object
                 break;
 
             case 'tree':
+                $menu = $this->showSuperFishMenu($currentNode);
+
             default:
-                $menu = $this->showTreeMenu($currentNode);
-               //$menu = $this->showSimpleTreeMenu($currentNode);
+                $menu = $this->showSuperFishMenu($currentNode);
+                //$menu = $this->showTreeMenu($currentNode);
+                //$menu = $this->showSimpleTreeMenu($currentNode);
         }
         return $menu;
     }
@@ -143,6 +146,65 @@ class cmslayouts extends object
     }
 
 
+
+
+    /**
+    * Method to display the jQuery Super Fish menu
+    * 
+    * @access private
+    * @param string $currentNode The id of the selected node
+    * @return string html
+	* @author Charl Mert
+    */
+    private function showSuperFishMenu()
+    {
+        // bust out a featurebox for consistency
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $objTreeMenu = $this->newObject('superfishtree', 'cmsadmin');
+         
+        $currentNode = $this->getParam('sectionid');
+
+
+//jQuery SuperFish Menu
+$jQuery = $this->newObject('jquery', 'htmlelements');
+
+//Testing jQuery 1.2.6 SuperFish Menu
+$jQuery->loadSuperFishMenuPlugin();
+
+ob_start();
+?>
+
+	<script type="text/javascript"> 
+	// initialise Superfish 
+	jQuery(document).ready(function(){ 
+		jQuery("ul.sf-menu").superfish({ 
+		animation: {opacity:'show'},   // slide-down effect without fade-in 
+		width: 300,
+		delay:     0,               // 1.2 second delay on mouseout 
+		speed: 'fast',
+		dropShadows: false
+		}); 
+	}); 
+	
+	</script>
+
+
+<?PHP
+$script = ob_get_contents();
+ob_end_clean();
+
+$this->appendArrayVar('headerParams',$script);
+
+
+        $head = $this->objLanguage->languageText("mod_cms_navigation", "cms");
+              
+        $objLayer = new layer();
+        $objLayer->str = $objTreeMenu->getCMSTree($currentNode);
+        $objLayer->id = 'cmsnavigation';
+        return $objLayer->show();
+       	//$display = $objTreeMenu->getSimpleCMSTree($currentNode);
+        //return $display;
+    }
 
 
 
@@ -469,25 +531,35 @@ jQuery(document).ready(function(){
 
     		// Page heading - hide if set
     		if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                //Display edit link even when hiding the title
     			$pageStr = '';
-			$this->objHead->type = '2';
-	                $this->objHead->str = $this->getEditLink($arrFrontPages[0]['content_id']);
-	                $pageStr = $this->objHead->show();
+    			$this->objHead->type = '2';
+	            $this->objHead->str = $this->getEditLink($arrFrontPages[0]['content_id']);
+	            $pageStr = $this->objHead->show();
 
     		}else{
+                //Display edit link and title
     			$this->objHead->type = '2';
     			$this->objHead->str = $page['title'].$this->getEditLink($arrFrontPages[0]['content_id']);
     			$pageStr = $this->objHead->show();
+            }
 
-    			$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+            //Adding Written By
+            if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+            }
 
-    			if(isset($page['created']) && !empty($page['created'])){
-    				$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-    			}
-    			$pageStr .= '</p>';
-    			$pageStr .= stripslashes($page['introtext']);
-    			$pageStr .= '<p />';
-    		}
+            //Adding Date
+            if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                if(isset($page['created']) && !empty($page['created'])){
+                    $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                }
+            }
+
+            $pageStr .= '</p>';
+            $pageStr .= stripslashes($page['introtext']);
+            $pageStr .= '<p />';
+
     		$pageStr .= $page['body'];
     		$objLayer = new layer();
     		$objLayer->str = $pageStr;
@@ -529,25 +601,33 @@ jQuery(document).ready(function(){
     					$this->objHead->str = $page['title'].$this->getEditLink($page['id']);
 
     					$pageStr = $this->objHead->show();
-    					
-    					if($show_content){
-    					    $pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
-
-                            if(isset($page['created']) && !empty($page['created'])){
-                 				$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-                 			}
-                 			$pageStr .= '</p>';
-                 			$pageStr .= stripslashes($page['introtext']);
-                 			$pageStr .= '<p />';
-    					}
     				}
+
+                    if($show_content){
+                        // Adding Written By
+                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                            $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+
+                        }
+
+                        // Adding Date
+                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                            if(isset($page['created']) && !empty($page['created'])){
+                                $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                            }
+                        }
+
+                        $pageStr .= '</p>';
+                        $pageStr .= stripslashes($page['introtext']);
+                        $pageStr .= '<p />';
+                    }
 
                     if($show_content){
                         $pageStr .= $page['body'];
                         $str .= $pageStr;
                     }else{
         				// Read more link
-        				$moreLink = $this->uri(array('displayId' => $frontPage['content_id'], 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
+        				$moreLink = $this->uri(array('action' => 'showfulltext', 'id' => $page['id'], 'sectionid' => $page['sectionid']), 'cms');
         				//array('action' => 'showfulltext', 'sectionid' => $page['sectionid'], 'id' => $page['id']), 'cms');
         				$readMoreLink = new link($moreLink);
         				$readMoreLink->link = $lbRead.'...';
@@ -555,10 +635,18 @@ jQuery(document).ready(function(){
         				$readMoreLink->cssClass = 'morelink';
     
         				// Display the page title and introduction
-        				$pageStr .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
-        				if(isset($page['created']) && !empty($page['created'])){
-        					$pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-        				}
+                        // Adding Written By
+                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                            $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
+                        }
+
+                        // Adding Date
+                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                            if(isset($page['created']) && !empty($page['created'])){
+                                $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                            }
+                        }
+
         				$pageStr .= '</p>';
         				$pageStr .= stripslashes($page['introtext']).'<br />'.$readMoreLink->show();
         				$pageStr .= '<p />';
@@ -785,11 +873,16 @@ jQuery(document).ready(function(){
                         $pageStr .= $this->objHead->show();
                        
                         $pageStr .= '<p>';
-                        if (isset($page['created_by'])) {
-                            $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+
+                        // Adding Written By
+                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                            if (isset($page['created_by'])) {
+                                $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+                            }
                         }
                         
-                        if($showDate){
+                        // Adding Written By
+                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
                             $creationDate = $this->objDate->formatDate($page['created']);
                             $pageStr .= '<span class="date">'.$creationDate.'</span>';
                         }
@@ -1025,22 +1118,30 @@ jQuery(document).ready(function(){
          * @access public
          * @return string The page content to be displayed
          */
-        public function showBody()
+        public function showBody($isPreview = false)
 
-        {
+        {   
             $objFeatureBox = $this->newObject('featurebox', 'navigation');
             $contentId = $this->getParam('id');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
             $page = $this->_objContent->getContentPageFiltered($contentId);
             
+            //Load content from get vars
+            if ($isPreview) {
+                $page['title'] = $this->getParam('title');
+                $page['body'] = $this->getParam('body');
+                $page['hide_user'] = $this->getParam('hide_user');
+                $page['hide_date'] = $this->getParam('hide_date');
+                $page['hide_title'] = $this->getParam('hide_title');
+            }
+
             if ($page == ''){
                 $objLayer = new layer();
                 $objLayer->str = '';
                 $objLayer->id = 'cmscontent';
                 return $objLayer->show();
             }
-                
-            
+
             $sectionId = $page['sectionid'];
             $section = $this->_objSections->getSection($sectionId);
 
@@ -1054,35 +1155,35 @@ jQuery(document).ready(function(){
                     'sectionid' => $sectionId
                 ));
              //pdf url
-              $pdfurl = $this->uri(array(
-                    'action' => 'makepdf',
-                    'sectionid' => $sectionId,
-                    'module' => 'cms',
-                    'id' => $page['id']
-                ));
-                $bmurl = urlencode($bmurl);
-                $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
-                $bmtext = '<img src="http://www.addme.com/images/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
-                $bookmark = new href($bmlink, $bmtext, NULL);
-                //do the cc licence part
-                $cclic = $page['post_lic'];
+            $pdfurl = $this->uri(array(
+                'action' => 'makepdf',
+                'sectionid' => $sectionId,
+                'module' => 'cms',
+                'id' => $page['id']
+            ));
+            $bmurl = urlencode($bmurl);
+            $bmlink = "http://www.addthis.com/bookmark.php?pub=&amp;url=".$bmurl."&amp;title=".urlencode(addslashes($page['title']));
+            $bmtext = '<img src="core_modules/utilities/resources/socialbookmarking/button1-bm.gif" width="125" height="16" border="0" alt="'.$this->objLanguage->languageText("mod_cms_bookmarkarticle", "cms").'"/>';
+            $bookmark = new href($bmlink, $bmtext, NULL);
+            //do the cc licence part
+            $cclic = $page['post_lic'];
 
-                //get the lic that matches from the db
-                $this->objCC = $this->getObject('displaylicense', 'creativecommons');
-                if ($cclic == '') {
-                	$cclic = 'copyright';
-                }
-                $iconList = $this->objCC->show($cclic);
+            //get the lic that matches from the db
+            $this->objCC = $this->getObject('displaylicense', 'creativecommons');
+            if ($cclic == '') {
+                $cclic = 'copyright';
+            }
+            $iconList = $this->objCC->show($cclic);
 
-                //table of non logged in options
-                //Set the table name
-                $tblnl = $this->newObject('htmltable', 'htmlelements');
-                $tblnl->cellpadding = 3;
-                $tblnl->width = "100%";
-                $tblnl->align = "center";
-                $tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
-                $tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');               
-                $tblnl->addCell($iconList); //cc licence
+            //table of non logged in options
+            //Set the table name
+            $tblnl = $this->newObject('htmltable', 'htmlelements');
+            $tblnl->cellpadding = 3;
+            $tblnl->width = "100%";
+            $tblnl->align = "center";
+            $tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
+            $tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');               
+            $tblnl->addCell($iconList); //cc licence
                     
             // Print & pdf icons
             $this->objIcon->setIcon('pdf', 'png', 'icons/cms/');
@@ -1115,7 +1216,14 @@ jQuery(document).ready(function(){
             $pdfimg = $pdficon->show();
 			$pdflink = null;
             $pdflink = new href($pdfurl, $pdfimg, NULL);
-			$this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+
+            // Adding Written By
+            if(isset($page['hide_title']) && $page['hide_title'] != 1){
+			    $this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+            } else {
+                $this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+            }
+
             $this->objHead->type = 2;
 			$tblh->startRow();
             $tblh->addCell($this->objHead->show());
@@ -1123,11 +1231,20 @@ jQuery(document).ready(function(){
             $tblh->endRow();
             
             $strBody = null;
-            $strBody .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
 
-            $strBody .= '</p>';
-            $strBody .=  '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-            $strBody .= '<br /></em><hr />';
+            // Adding Written By
+            if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                $strBody .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+                $strBody .= '</p>';
+            }
+
+            // Adding Date
+            if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                $strBody .=  '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+                $strBody .= '<br /></em>';
+            }
+
+            $strBody .= '<hr />';
             //parse for mindmaps
             $page['body'] = $objMindMap->parse($page['body']);
             //parse for mathml as well
