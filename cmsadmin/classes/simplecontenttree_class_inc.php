@@ -71,16 +71,23 @@ class simplecontenttree extends object
 
 
 
-		/**
+        /**
         * Method to get the simple jquery tree to display on the CMS Admin module
         * @return string
         */
         public function getSimpleCMSAdminTree($current)
         {
-            return $this->show($current,TRUE,'cmsadmin','viewsection','viewcontent');
+            return $this->show($current,TRUE,'cmsadmin','viewsection','addcontent');
         }
 
-
+        /**
+        * Method to get the simple jquery tree to display on the CMS Admin module
+        * @return string
+        */
+        public function getCMSAdminTree($current)
+        {
+            return $this->show($current,TRUE,'cmsadmin','viewsection','viewcontent');
+        }
 
 
 		/**
@@ -95,7 +102,7 @@ class simplecontenttree extends object
 			//$htmlLevel .= "<li>".$link."\n";
 			$contentAction = 'showfulltext';
         	$item .= $this->addNextAjaxContent($sectionid, 'cms', $contentAction, $admin);
-			//$htmlLevel .= $this->buildLevelPart($sectionid, $sectionid, FALSE, 'cms', 'showsection', 'showfulltext');
+			//$htmlLevel .= $this->buildLevelPart($sectionid, $sectionid, FALSE, 'cms', 'viewsection', 'showfulltext');
         	//$htmlLevel .= $item.'</li>' ."\n";
 
 			$htmlLevel = $item;
@@ -110,7 +117,7 @@ class simplecontenttree extends object
         * @return string
         * @access public
         */
-        public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function show($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent')
         {
             //$html = $this->buildTree($currentNode, $admin, $module, $sectionAction, $contentAction);
             $html = $this->buildTreePart($currentNode, $admin, $module, $sectionAction, $contentAction);
@@ -127,19 +134,19 @@ class simplecontenttree extends object
          * @return string
          * @access public
          */
-        public function buildTreePart($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function buildTreePart($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent')
         {
             //check if there are any root nodes
             if ($this->getChildNodeCount(0) > 0) {
             	$html = "<div id=\"tree1\" class=\"tree\">\n
-                		 <ul>\n";
+                		 <ul class='simpleTree'>\n";
                 // build the home link
                 $nodeUri = $this->uri(array(),'cms');
                 $text = $this->objLanguage->languageText('word_home');
                 $link = '<a href="'.$nodeUri.'">'.$text.'</a>'."\n";
                 
             	//start the tree building
-                $html .= "<li class='root'>$link <ul>\n";
+                $html .= "<li class='root'><span>$link</span><ul>\n";
                 $html .= $this->buildLevelPart(0, $currentNode, $admin, $module, $sectionAction, $contentAction);
                 $html .= '</ul> </li>'."\n".'</ul></div><!-- end: simple tree div -->';
             } else {
@@ -212,7 +219,7 @@ class simplecontenttree extends object
 
 
                     //if ($this->getChildNodes($node['id'], $admin)) {
-                    	$htmlLevel .= "<li>".$link."\n";
+                    	$htmlLevel .= "<li><span>".$link."</span>\n";
 						
 						//if ($node['parentid'] != '0'){
 							//$item = $this->addNextAjaxContent($node['id'], $module, $contentAction, $admin);
@@ -258,7 +265,7 @@ class simplecontenttree extends object
          * @return string
          * @access public
          */
-        public function buildTree($currentNode, $admin, $module = 'cms', $sectionAction = 'showsection', $contentAction = 'showcontent')
+        public function buildTree($currentNode, $admin, $module = 'cms', $sectionAction = 'viewsection', $contentAction = 'addcontent')
         {
             //check if there are any root nodes
 				
@@ -413,7 +420,7 @@ class simplecontenttree extends object
 					}
 
 					if ($this->hasChildNodes($contentNode[id], $admin)){
-						$action = 'showsection';
+						$action = 'viewsection';
 					} else {
 						$action = 'showfulltext';
 					}
@@ -424,7 +431,7 @@ class simplecontenttree extends object
                         $link = $contentTitle;
                     } 
              
-                    $htmlContent .='<li>'.$link.'</li>'."\n";
+                    $htmlContent .='<li><span>'.$link.'</span></li>'."\n";
                    
                 }
                  if ($this->getChildNodes($id, $admin)) {
@@ -475,9 +482,9 @@ class simplecontenttree extends object
 
 					//TODO: Check why the hasChildren function isnt working!!
 					if ($this->hasChildNodes($contentNode[id], $admin)){
-						$action = 'showsection';
+						$action = 'viewsection';
 					} else {
-						$action = 'showsection';
+						$action = 'viewsection';
 					}
 
 
@@ -488,7 +495,7 @@ class simplecontenttree extends object
                         $link = $contentTitle;
                     } 
              
-                    $htmlContent .='<li>'.$link.'</li>'."\n";
+                    $htmlContent .='<li><span>'.$link.'</span></li>'."\n";
                    
                 }
 			
@@ -532,7 +539,7 @@ class simplecontenttree extends object
                         $link = $contentNode['title'];
                     } 
              
-                    $htmlContent .='<li>'.$link.'</li>'."\n";
+                    $htmlContent .='<li><span>'.$link.'</span></li>'."\n";
                    
                 }
                  if ($this->getChildNodes($id, $admin)) {
@@ -575,9 +582,9 @@ class simplecontenttree extends object
                     }
 				//TODO: Check why the hasChildren function isnt working!!
                     if ($this->hasChildNodes($contentNode[id], $admin)){
-                        $action = 'showsection';
+                        $action = 'viewsection';
                     } else {
-                        $action = 'showsection';
+                        $action = 'viewsection';
                     }
 	
 					//var_dump($contentTitle);
@@ -590,12 +597,12 @@ class simplecontenttree extends object
 
                     
 					if ($this->hasChildNodes($id, $admin)){
-						$ajax_link = $this->uri(array('action' => 'getmenuchildnodes', 'id' => $node['id']), 'cms');
+						$ajax_link = $this->uri(array('action' => 'getmenuchildnodes', 'id' => $node['id']), 'cmsadmin');
 						
-						$htmlContent .= "<li> $link <ul class='ajax'><li> {$ajax_link} </li></ul></li>";
+						$htmlContent .= "<li><span>$link</span><ul class='ajax'><li> {$ajax_link} </li></ul></li>";
 					} else {
                  	 
-                   		$htmlContent .= "<li>".$link."\n";
+                   		$htmlContent .= "<li><span>".$link."</span>\n";
 					}
                 }
                        

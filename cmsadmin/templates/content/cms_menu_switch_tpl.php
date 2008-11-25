@@ -6,7 +6,6 @@
 $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
-$objRound = $this->newObject('roundcorners','htmlelements');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -35,7 +34,12 @@ $objLayer->str = '';
 $objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $navStr = $objLayer->show();
 
-$str = $objRound->show($headStr.$navStr);
+$objLayer->str = '&nbsp;';
+$objLayer->id = 'cmsheaderspacer';
+$vspacer = $objLayer->show();
+
+
+$str = $headStr.$navStr.$vspacer;
 
 /* ** page content ** */
 

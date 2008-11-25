@@ -665,12 +665,12 @@
         }        
         
         
-                /**
-                * Method to get tree count for use with Security module when adding content
-                * @param string $module Calling Module for which to set the link to
-                * @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
-                * @param boolean $useLinks Flag whether to generate a URI or pass the ID only
-                */
+        /**
+        * Method to get tree count for use with Security module when adding content
+        * @param string $module Calling Module for which to set the link to
+        * @param boolean $includeRoot Flag to add --Root-- to menu. For CMS, this is the front page
+        * @param boolean $useLinks Flag whether to generate a URI or pass the ID only
+        */
         public function getTreeCount($module='cmsadmin', $includeRoot=FALSE, $useLinks=TRUE)
         {
                         
@@ -860,15 +860,19 @@
                         $nodesArray[$section['id']] =& $node;
                                                 
                         if ($includeRoot && $module == 'cmsadmin') {
-                            $rootNode->addItem($node);
+                            //$rootNode->addItem($node);
+                            $menu->addItem($node);
                         } else {
                             $menu->addItem($node);
                         }
                     } else {
+                        $menu->addItem($node);
+                        /*
                         if (array_key_exists($section['parentid'], $nodesArray)) {
                             $nodesArray[$section['id']] =& $node;
                             $nodesArray[$section['parentid']]->addItem($node);
                         }
+                        */
                     }
                 }
             }

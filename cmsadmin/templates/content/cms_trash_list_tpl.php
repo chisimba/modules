@@ -10,7 +10,6 @@ $objHead = $this->newObject('htmlheading', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objEditIcon = $this->newObject('geticon', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
-$objRound = $this->newObject('roundcorners','htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
@@ -54,7 +53,11 @@ $objLayer->str = '';
 $objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $navStr = $objLayer->show();
 
-$str = $objRound->show($headStr.$navStr);
+$objLayer->id = 'cmsvspacer';
+$objLayer->str = '&nbsp;';
+$vspacer = $objLayer->show();
+
+$str = $headStr.$navStr.$vspacer;
 
 // Filters
 

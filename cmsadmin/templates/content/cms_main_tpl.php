@@ -8,7 +8,7 @@ $tbl->align = "left";
 $link = & $this->newObject('link', 'htmlelements');
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objH = &$this->newObject('htmlheading', 'htmlelements');
-$objRound =&$this->newObject('roundcorners','htmlelements');
+//$objRound =&$this->newObject('roundcorners','htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
 
 $objIcon->setIcon('control_panel','png', 'icons/cms/');
@@ -27,7 +27,11 @@ $objLayer->str = '';
 $objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $headShow = $objLayer->show();
 
-echo $objRound->show($header.$headShow);//$tbl->show());
+$objLayer->str = $header.$headShow;
+$objLayer->id = 'cms_main';
+
+//echo $objRound->show($header.$headShow);//$tbl->show());
+echo $objLayer->show();
 echo '<hr />';
 echo  $cpanel;
 

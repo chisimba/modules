@@ -139,6 +139,8 @@
                 $creatorid = $this->_objUser->userId();
             }
             $hide_title = $this->getParam('hide_title','0');
+            $hide_user = $this->getParam('hide_user','0');
+            $hide_date = $this->getParam('hide_date','0');
            
             $access = $this->getParam('access');
             $created_by = $this->getParam('title_alias',null);
@@ -157,6 +159,8 @@
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
                           'hide_title' => $hide_title,
+                          'hide_user' => $hide_user,
+                          'hide_date' => $hide_date,
                           'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -272,11 +276,13 @@
             $access = $this->getParam('access');
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
             $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+
             $override_date = $this->getParam('overide_date',null);
             $start_publish = $this->getParam('publish_date',null);
             if($published == 1 && empty($start_publish)){
                 $start_publish = $this->now();
             }
+
             $end_publish = $this->getParam('end_date',null);
             if ($override_date!=null) {
                 $override_date =  $this->now();
@@ -285,13 +291,13 @@
             $access = $this->getParam('access');
             $modifiedBy = $this->_objUser->userId();
             $modifiedDate = $this->now();
-                        
-            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+            
             $metakey = $this->getParam('keyword',null);
             $metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
             $hide_title = $this->getParam('hide_title','0');
+            $hide_user = $this->getParam('hide_title','1');
+            $hide_date = $this->getParam('hide_title','0');
 
             $newArr = array(
                           'title' => $title ,
@@ -303,6 +309,8 @@
                           'modified_by' => $modifiedBy,
                           'published' => $published,
                           'hide_title' => $hide_title,
+                          'hide_user' => $hide_user,
+                          'hide_date' => $hide_date,
                           'post_lic' => $ccLicence,
                           'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),
@@ -318,7 +326,7 @@
                 $newArr['created_by'] = $creatorid;
             }
             
-            //process the forntpage
+            //process the frontpage
             $isFrontPage = $this->getParam('frontpage');
             //$this->luceneIndex($newArr);
             if ($isFrontPage == '1') {

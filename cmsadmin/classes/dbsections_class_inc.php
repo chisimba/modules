@@ -95,13 +95,13 @@ class dbsections extends dbTable
            // }
         }
 		
-	/**
-         * Method to get a filtered list of sections
-         *
-         * @author Megan Watson
-         * @access public
-         * @return array An array of associative arrays of the sections
-         */
+	   /**
+        * Method to get a filtered list of sections
+        *
+        * @author Megan Watson
+        * @access public
+        * @return array An array of associative arrays of the sections
+        */
         public function getFilteredSections($text = '', $publish = FALSE)
         {
             $sql = "SELECT * FROM {$this->table} ";
@@ -486,7 +486,7 @@ class dbsections extends dbTable
                              'link' => $this->getParam('imagesrc'),
                              'published' => $published);
             $result = $this->update('id', $id, $arrFields);
-        
+    
             if ($result != FALSE) {
                 $arrFields['id'] = $id;
                 $this->luceneIndex($arrFields);
@@ -578,15 +578,72 @@ class dbsections extends dbTable
          */
         public function hasNodes($id)
         {
-            $nodes = $this->getAll("WHERE parentid = '$id' AND trash = 0");
-
+			//Checking for child sections
+            $nodes = $this->getAll("WHERE id = '$id' AND trash = 0");
             if (count($nodes) > 0) {
                 $hasNodes = True;
             } else {
                 $hasNodes = False;
+				//Checking for child content items
+				$this->_tableName = 'tbl_cms_content';
+        	    $nodes = $this->getAll("WHERE sectionid = '$id' AND trash = 0");
+				$this->_tableName = 'tbl_cms_sections';
+
+	            if (count($nodes) > 0) {
+	                $hasNodes = True;
+	            } else {
+	                $hasNodes = False;
+				}
             }
+
             return $hasNodes;
         }
+
+        /**
+         * Method to check if a section has child content
+         *
+         * @param string $id The id(pk) of the section
+         * @return bool True if has nodes else False
+         * @access public
+         */
+        public function hasChildContent($id)
+        {
+
+            $hasNodes = false;
+            //Checking for child content items
+            $this->_tableName = 'tbl_cms_content';
+            $nodes = $this->getAll("WHERE sectionid = '$id' AND trash = 0");
+
+            if (count($nodes) > 0) {
+                $hasNodes = true;
+            } else {
+                $hasNodes = false;
+            }
+
+            $this->_tableName = 'tbl_cms_sections';
+            return $hasNodes;
+        }
+
+        /**
+         * Method to check if a section has child sections
+         *
+         * @param string $id The id(pk) of the section
+         * @return bool True if has nodes else False
+         * @access public
+         */
+        public function hasChildSections($id)
+        {
+
+            $hasNodes = false;
+            //Checking for child sections
+            $nodes = $this->getAll("WHERE parentid = '$id' AND trash = 0");
+            if (count($nodes) > 0) {
+                $hasNodes = true;
+            }
+
+            return $hasNodes;
+        }
+
 
         /**
          * Method to return the count value of a section
@@ -648,29 +705,30 @@ class dbsections extends dbTable
          */
         public function getSubSectionsInSection($sectionId, $order = 'ASC', $isPublished = FALSE)
         {
-	    $this->_tableName = 'tbl_cms_sections';
+	        $this->_tableName = 'tbl_cms_sections';
 			//echo "Section ID Get SubSections : ".$sectionId;
             if ($isPublished) {
                 //return all subsections
-		$secureSections = array();
-		$sections = $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
+		        $secureSections = array();
+		        $sections = $this->getAll("WHERE published = 1 AND parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
 	
-		foreach ($sections as $sec){
-			if ($this->_objSecurity->canUserReadSection($sec['id'])){
-				array_push($secureSections, $sec);
-			}
-		}
-
-		return $secureSections;
+		        foreach ($sections as $sec){
+			        if ($this->_objSecurity->canUserReadSection($sec['id'])){
+				        array_push($secureSections, $sec);
+			        }
+		        }
+    
+                return $secureSections;
             } else {
-		$secureSections = array();
+        		$secureSections = array();
                 $sections = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0 ORDER BY ordering $order");
                 foreach ($sections as $sec){
                         if ($this->_objSecurity->canUserReadSection($sec['id'])){
                                 array_push($secureSections, $sec);
                         }
                 }
-		return $secureSections;
+
+		        return $secureSections;
             }
         }
 
@@ -723,9 +781,9 @@ class dbsections extends dbTable
          */
         public function getNumSubSections($sectionId)
         {
-	    $this->_tableName = 'tbl_cms_sections';
+	        $this->_tableName = 'tbl_cms_sections';
             $subSecs = $this->getAll("WHERE parentid = '$sectionId' AND trash = 0");
-	    $noSubSecs = count($subSecs);
+	        $noSubSecs = count($subSecs);
             return $noSubSecs;
         }
 
@@ -1133,7 +1191,38 @@ class dbsections extends dbTable
         }
         
         
+        /**
+         * Method to get the JSON list of child sections for use as input to the jQuery jqGrid control
+         *
+         * The list returned is a list of child sections with fields pertaining to 
+         * Sections Manager display
+         *
+         * @param string $sectionid The Section Id
+         * @return string
+         * @access public
+         * @author Charl Mert
+         * 
+         */
+        public function getJSONSectionChildren($sectionid = 0)
+        {
+            //Getting ASC ordered list of sections
+            $sections = getSubSectionsInSection($sectionid);
+            
+            //Output 1 row -> {id:'cjm_8774_1221818255',cell:['cjm_8774_1221818255','Sub Mofo Mofo','1','1','2008-09-19 11:59:22']},
+            $json = '{';
+            foreach ($sections as $section){
 
+                //Setting up the fields for display
+                $folderName = $section['title'];
+                $sectionName = $section['menutext'];
+                $pages = $this->_objContent->getNumberOfPagesInSection($section['id']);
+                $layout = $this->_objLayouts->getLayoutDescription($section['layout']);
+                $order = $this->_objSections->getOrderingLink($section['id']);//$this->_objSections->getPageOrderType($section['ordertype']);
+
+
+                $json .= "id:'$section[id]',cell:['$section[title]','$section[menutext]','$section[menutext]']";
+            }
+        }
 
 }
 ?>

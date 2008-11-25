@@ -6,6 +6,7 @@
  * Dialog supports the submission of form data through XMLHttpRequest, through a normal form submission, or through a manual script-based response 
  * (where the script reads and responds to the form values and the form is never actually submitted to the server).
 */
+/*
 $script ='
 <script type="text/javascript">
 //<![CDATA[
@@ -63,35 +64,67 @@ YAHOO.util.Event.onDOMReady(init);
 //]]>
 </script>
 ';
-$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("button/assets/skins/sam/button.css", 'yahoolib').'" />';
-$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("container/assets/skins/sam/container.css", 'yahoolib').'" />';
-$this->appendArrayVar('headerParams', $css);
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('utilities/utilities.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('button/button-beta.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
-$this->appendArrayVar('headerParams', $script);
+
+*/
+//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("button/assets/skins/sam/button.css", 'yahoolib').'" />';
+//$css .= '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("container/assets/skins/sam/container.css", 'yahoolib').'" />';
+//$this->appendArrayVar('headerParams', $css);
+//$this->appendArrayVar('headerParams', $this->getJavascriptFile('utilities/utilities.js', 'yahoolib'));
+//$this->appendArrayVar('headerParams', $this->getJavascriptFile('button/button-beta.js', 'yahoolib'));
+//$this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
+//$this->appendArrayVar('headerParams', $script);
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $tbl = $this->newObject('htmltable', 'htmlelements');
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 //$Icon = $this->newObject('geticon', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 //$Icon->setIcon('loading_circles_big');
-$objRound =$this->newObject('roundcorners','htmlelements');
 $objIcon->setIcon('add_article', 'png', 'icons/cms/');
+
+
+$pageId = $id;
+$sectionId = $section;
+
+//Get blocks icon
+$objBlockIcon = $this->newObject('geticon', 'htmlelements');
+$objBlockIcon->setIcon('modules/blocks');
+$objBlockIcon->title = $this->objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+$blockIcon = $objBlockIcon->show();
+
+//Check if blocks module is registered
+$this->objModule = &$this->newObject('modules', 'modulecatalogue');
+$isRegistered = $this->objModule->checkIfRegistered('blocks');
+
+// set up link to view block form
+$objBlocksLink = new link('#');
+$objBlocksLink->link = $blockIcon;
+$objBlocksLink->extra = "onclick = \"javascript:window.open('" . $this->uri(array('action' => 'positionblock', 'sectionid' => $sectionId, 'pageid' => $pageId, 'blockcat' => 'content')) . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars')\"";
+
+if ($this->_objSecurity->canUserWriteContent($pageId)){
+    $objBlocksLinkDisplay = '&nbsp;&nbsp;'.$objBlocksLink->show();
+} else {
+    $objBlocksLinkDisplay = '';
+}
+
+if (!$isRegistered) {
+    $objBlocksLinkDisplay = '';
+}
+
 if(isset($id))
 {
-	$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsadmin_editcontentitem', 'cmsadmin');	
+	$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsadmin_editcontentitem', 'cmsadmin').$objBlocksLinkDisplay;	
 }
 else {
 	$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_cmsadmin_contentitem', 'cmsadmin').':'.'&nbsp;'.$this->objLanguage->languageText('word_new');
 }
 
+$objLayer->id = 'cmsaddcontenttopnavheading';
 $objLayer->str = $h3->show();
-$objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
+$objLayer->id = 'cmsaddcontenttopnavbuttons';
 $objLayer->str = $topNav;
-$objLayer->border = '; float:right; align:right; margin:0px; padding:0px;';
 $header .= $objLayer->show();
 
 $objLayer->str = '';

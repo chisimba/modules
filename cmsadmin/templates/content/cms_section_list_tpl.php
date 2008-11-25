@@ -27,7 +27,7 @@ $tbl->cellpadding = 3;
 $tbl->align = "left";
 
 //create a heading
-$objH->type = '1';
+$objH->type = '3';
 
 
 //Create the filter form
@@ -79,7 +79,7 @@ $objH->type = '1';
 //counter for records
 $cnt = 1;
 //Heading box
-$objIcon->setIcon('section', 'png', 'icons/cms/');
+$objIcon->setIcon('section_small', 'png', 'icons/cms/');
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
 $objH->str =  $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
 $tbl->startRow();
@@ -100,9 +100,13 @@ $objLayer->str = '';
 $objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $headShow = $objLayer->show();
 
+$objLayer->str = $header.$headShow;
+$objLayer->id = 'cms_main';
+
 //Get Selectall js
 print $this->getJavascriptFile('selectall.js');
-echo $objRound->show($header.$headShow);//$tbl->show());
+//echo $objRound->show($header.$headShow);//$tbl->show());
+echo $objLayer->show();//$tbl->show());
 //get the sections
 
 //Get cms type
@@ -205,9 +209,9 @@ if (is_array($arrSections)) {
 	    $tableRow[] = $this->_objSections->getOrderingLink($section['id']);//$this->_objSections->getPageOrderType($section['ordertype']);
 
 	    if (!$this->_objSecurity->canUserWriteSection($section['id'])){
-		$editIcon = '';
-		$deleteIcon = '';
-		$visibleLink = '';
+		    $editIcon = '';
+		    $deleteIcon = '';
+		    $visibleLink = '';
 	    }
 
 	    $tableRow[] = $visibleLink;

@@ -84,7 +84,7 @@
        <id>init_1</id>
        <menu_style>tree</menu_style>
        <root_nodes>0</root_nodes>
-       <is_active>1</is_active>
+       <is_active>0</is_active>
        <editable>0</editable>
 	   
    </tbl_cms_menustyles>
@@ -103,5 +103,111 @@
        <is_active>0</is_active>
        <editable>1</editable>
    </tbl_cms_menustyles>
- 
+
+   <tbl_cms_menustyles>
+       <id>init_4</id>
+       <menu_style>superfish</menu_style>
+       <root_nodes>0</root_nodes>
+       <is_active>1</is_active>
+       <editable>0</editable>
+   </tbl_cms_menustyles>
+
+   <!-- tbl_cms_templates -->
+   <tbl_cms_templates>
+     <id>init_1</id>
+     <title>Image and Title</title>
+     <image>template1.gif</image>
+     <body><![CDATA[
+                    <img style="MARGIN-RIGHT: 10px" height="100" alt="" width="100" align="left"/>
+                    <h3>Type the title here</h3>
+                    Type the text here
+            ]]></body>
+     <published>1</published>
+     <trash>0</trash>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_templates>
+   
+   
+   <tbl_cms_templates>
+     <id>init_1</id>
+     <title>Image and Title</title>
+     <image>template1.gif</image>
+     <description>One main image with a title and text that surround the image.</description>
+     <body><![CDATA[
+                    <img style="MARGIN-RIGHT: 10px" height="100" alt="" width="100" align="left"/>
+                    <h3>Type the title here</h3>
+                    Type the text here
+            ]]></body>
+     <published>1</published>
+     <trash>0</trash>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_templates>
+   
+   <tbl_cms_templates>
+     <id>init_2</id>
+     <title>Strange Template</title>
+     <image>template2.gif</image>
+     <description>A template that defines two colums, each one with a title, and some text.</description>
+     <body><![CDATA[
+                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                      <tbody>
+                        <tr>
+                          <td width="50%">
+                            <h3>Title 1</h3>
+                          </td>
+                          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                          <td width="50%">
+                            <h3>Title 2</h3>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Text 1</td>
+                          <td>&nbsp;</td>
+                          <td>Text 2</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    More text goes here.
+            ]]></body>
+    <published>1</published>
+    <trash>0</trash>
+    <created>now()</created>
+    <created_by>init_1</created_by>
+   </tbl_cms_templates>
+
+   <tbl_cms_templates>
+     <id>init_3</id>
+     <title>Text and Table</title>
+     <image>template3.gif</image>
+     <description>A template that defines two colums, each one with a title, and some text.</description>
+     <body><![CDATA[
+                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                      <tbody>
+                        <tr>
+                          <td width="50%">
+                            <h3>Title 1</h3>
+                          </td>
+                          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                          <td width="50%">
+                            <h3>Title 2</h3>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Text 1</td>
+                          <td>&nbsp;</td>
+                          <td>Text 2</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    More text goes here.
+                    ]]></body>
+     <published>1</published>
+     <trash>0</trash>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_templates>
+   
+   
 </defaultdata>

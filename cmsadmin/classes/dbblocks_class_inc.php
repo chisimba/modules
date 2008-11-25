@@ -74,6 +74,8 @@ class dbblocks extends dbTable
          */
         public function add($pageId=NULL, $sectionId=NULL, $blockId = '', $blockCat = 'frontpage', $left = 0)
         {
+            //echo 'Adding : pageId->' . $pageId . ' | sectionId->' . $sectionId . ' | blockCat->' . $blockCat . ' | left->' . $left. '<br/>';
+
             if ($blockCat == 'frontpage') {
                 //Get ordering
                 $ordering = $this->getOrdering(NULL, NULL, 'frontpage');
@@ -110,6 +112,76 @@ class dbblocks extends dbTable
             }
 
             $newId = $this->insert($newArr);
+
+            return $newId;
+        }
+
+
+        /**
+         * Method to edit a record if it exists AND add if it doesn't exist.
+         *
+         * @param string $pageId The id of the page
+         * @param string $sectionId The id of the Section
+         * @param string $blockId The id of the block
+         * @param string $blockCat Category of Block. Either 'frontpage', 'content' or 'section'
+         * @access public
+         * @return bool
+         */
+        public function editPosition($pageId=NULL, $sectionId=NULL, $blockId = '', $blockCat = 'frontpage', $left = 0)
+        {
+            //echo 'Adding : pageId->' . $pageId . ' | sectionId->' . $sectionId . ' | blockCat->' . $blockCat . ' | left->' . $left. '<br/>';
+
+            if ($blockCat == 'frontpage') {
+                //Get ordering
+                $ordering = $this->getOrdering(NULL, NULL, 'frontpage');
+                $newArr = array(
+                              'pageid' => $pageId ,
+                              'blockid' => $blockId,
+                              'sectionid' => $sectionId,
+                              'frontpage_block' => 1,
+                              'leftside_blocks' => $left,
+                              'ordering' => $ordering
+                          );
+            } else if ($blockCat == 'content') {
+                //Get ordering
+                $ordering = $this->getOrdering($pageId, NULL, 'content');
+                $newArr = array(
+                              'pageid' => $pageId ,
+                              'blockid' => $blockId,
+                              'sectionid' => NULL,
+                              'frontpage_block' => 0,
+                              'leftside_blocks' => $left,
+                              'ordering' => $ordering
+                          );
+            } else {
+                //Get ordering
+                $ordering = $this->getOrdering(NULL, $sectionId, 'section');
+                $newArr = array(
+                              'pageid' => NULL,
+                              'blockid' => $blockId,
+                              'sectionid' => $sectionId,
+                              'frontpage_block' => 0,
+                              'leftside_blocks' => $left,
+                              'ordering' => $ordering
+                          );
+            }
+
+            if ($sectionId != '' ) {
+                $idField = $sectionId;
+            } else {
+                $idField = $pageId;
+            }
+
+            $block = $this->getCmsBlock($blockId);
+            //var_dump($block['blockid'] . ' == ' . $blockId);
+            if ($blockId == $block['id']){
+                //echo "updating block " . $blockId . '<br/>';
+                $this->update('id', $idField, $newArr);
+            } else {
+                //echo "inserting block " . $newArr['blockid'] . '<br/>';
+                $this->insert($newArr);
+            }
+
 
             return $newId;
         }
@@ -184,6 +256,73 @@ class dbblocks extends dbTable
                 return $this->delete('id', $id);
             }
         }
+
+
+       /**
+        * Method to delete a block without an expensive check
+        *
+        * @param string $pageId The id of the page
+        * @param string $blockId The id of the block
+        * @return boolean
+        * @access public
+        */
+        public function deleteBlockExplicit($pageId, $sectionId, $blockId, $blockCat)
+        {
+            
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $block = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' AND blockid = \''.$blockId.'\'');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
+            } else {
+                //Get last in order
+                $block = $this->getAll('WHERE sectionid = \''.$sectionId.'\' AND blockid = \''.$blockId.'\'');
+            }
+            
+            if(!empty($block)) {
+                $id = $block['0']['id'];
+                return $this->delete('id', $id);
+            }
+                
+            return false;
+        }
+
+       /**
+        * Method to delete a block without an expensive check
+        *
+        * @param string $pageId The id of the page
+        * @param string $blockId The id of the block
+        * @return boolean
+        * @access public
+        */
+        public function deleteAllBlocks($pageId, $sectionId, $blockId, $blockCat)
+        {
+            
+            if ($blockCat == 'frontpage') {
+                //Get last in order
+                $frontPage = 1;
+                $block = $this->getAll('WHERE frontpage_block = \''.$frontPage.'\' AND blockid = \''.$blockId.'\'');
+            } else if ($blockCat == 'content') {
+                //Get last in order
+                $block = $this->getAll('WHERE pageid = \''.$pageId.'\' AND blockid = \''.$blockId.'\'');
+            } else {
+                //Get last in order
+                $block = $this->getAll('WHERE sectionid = \''.$sectionId.'\' AND blockid = \''.$blockId.'\'');
+            }
+            
+            if(!empty($block)) {
+                foreach ($block as $b){
+                    $id = $b['id'];
+                    $this->delete('id', $id);
+                }
+                return true;
+            }
+                
+            return false;
+        }
+
         
         /**
         * Method to delete a block using the row id
@@ -223,6 +362,32 @@ class dbblocks extends dbTable
         }
 
         /**
+         * Method to get all blocks attached to a page
+         *
+         * @param string $pageId The id of the page content
+         * @access public
+         * @return array $pageBlocks An array of associative arrays of all blocks on the page
+         */
+        public function getPositionBlocksForPage($pageId, $sectionId = NULL)
+        {
+            //$left = (isset($left) && !empty($left)) ? $left : 0;
+            
+            $sql = "SELECT cb.*, cb.id as cb_id, mb.moduleid, mb.blockname 
+                FROM tbl_cms_blocks AS cb, tbl_module_blocks AS mb
+                WHERE (cb.blockid = mb.id) AND frontpage_block = 0 
+                AND (pageid = '{$pageId}'";
+                
+            if(!empty($sectionId)){
+                $sql .= " OR sectionid = '{$sectionId}' ";
+            }
+                
+            $sql .= ')' /*GROUP BY cb.blockid*/.' ORDER BY cb.ordering';
+            
+            return $this->getArray($sql);
+        }
+
+
+        /**
          * Method to get all blocks attached to a section
          *
          * @param string $sectionId The id of the section
@@ -236,6 +401,25 @@ class dbblocks extends dbTable
             $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
                 WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' 
                 AND frontpage_block = 0  AND leftside_blocks = '{$left}' 
+                "/*GROUP BY blockid*/." ORDER BY ordering";
+            
+            return $this->getArray($sql);
+        }
+
+        /**
+         * Method to get all blocks attached to a section (removed the left check)
+         *
+         * @param string $sectionId The id of the section
+         * @access public
+         * @return array $pageBlocks An array of associative arrays of all blocks in the section
+         */
+        public function getPositionBlocksForSection($sectionId)
+        {   
+            $left = (isset($left) && !empty($left)) ? $left : 0;
+            
+            $sql = "SELECT tbl_cms_blocks.*, moduleid, blockname FROM tbl_cms_blocks, tbl_module_blocks 
+                WHERE (blockid = tbl_module_blocks.id) AND sectionid = '{$sectionId}' 
+                AND frontpage_block = 0
                 "/*GROUP BY blockid*/." ORDER BY ordering";
             
             return $this->getArray($sql);
@@ -263,6 +447,27 @@ class dbblocks extends dbTable
             return $this->getArray($sql);
         }
         
+
+        /**
+         * Method to get all blocks attached to the front page
+         *
+         * @access public
+         * @return array $pageBlocks An array of associative arrays of all blocks on the front page
+         */
+        public function getPositionBlocksForFrontPage()
+        {
+            //$left = (isset($left) && !empty($left)) ? $left : 0;
+            
+            $sql = "SELECT tbl_cms_blocks.id, tbl_cms_blocks.pageid, tbl_cms_blocks.blockid, tbl_cms_blocks.sectionid,
+                        tbl_cms_blocks.frontpage_block, tbl_cms_blocks.leftside_blocks, tbl_cms_blocks.ordering,
+                        tbl_module_blocks.moduleid, tbl_module_blocks.blockname 
+                    FROM tbl_cms_blocks, tbl_module_blocks 
+                    WHERE (tbl_cms_blocks.blockid = tbl_module_blocks.id) 
+                        AND tbl_cms_blocks.frontpage_block = '1' 
+                    "/*GROUP BY tbl_cms_blocks.blockid*/." ORDER BY tbl_cms_blocks.ordering";
+            
+            return $this->getArray($sql);
+        }
         	
  
         /**
@@ -549,6 +754,178 @@ class dbblocks extends dbTable
             return $middleColumnContent;
         }
 
+
+
+
+        /**
+         * Method to return the form that allows you to add blocks to pages with ordering and position
+         *
+         * @param string $pageid The id(pk) of the page the block is attached to
+         * @param string $sectionid The id(pk) of the section the block is attached to
+         * @param string $blockCat Whether to add the block to a 'section', 'content' page or the 'frontpage'
+         * @return string $middleColumnContent The form to add remove blocks from a page
+         * @access public
+         * @author Warren Windvogel, Charl Mert
+          */
+        public function getPositionBlockForm($pageid, $sectionid, $blockCat)
+        {
+            //Load the checkbox class
+            $this->loadClass('checkbox', 'htmlelements');
+
+            //Create heading
+            $objH =& $this->newObject('htmlheading', 'htmlelements');
+            $objH->type = '3';
+
+            //Create the form
+            $objForm =& $this->newObject('form', 'htmlelements');
+            $objForm->name = 'addblockform';
+            $objForm->id = 'addblockform';
+
+            if ($blockCat == 'frontpage') {
+                //Set heading
+                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforfrontpage', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'blockcat' => $blockCat), 'cmsadmin'));
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getPositionBlocksForFrontPage();
+            } else if ($blockCat == 'content') {
+                //Set heading
+                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforcontent', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'pageid' => $pageid, 'blockcat' => $blockCat), 'cmsadmin'));
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getPositionBlocksForPage($pageid);
+            } else {
+                //Set heading
+                //$objH->str = $this->_objLanguage->languageText('mod_cmsadmin_blocksforsection', 'cmsadmin');
+                //Set form action
+                $objForm->setAction($this->uri(array('action' => 'saveblock', 'sectionid' => $sectionid, 'blockcat' => $blockCat), 'cmsadmin'));
+
+                $hidden = new hiddeninput('sectionId', $sectionid);
+                $objForm->addToForm($hidden);
+
+                $hidden = new hiddeninput('blockcat', $blockCat);
+                $objForm->addToForm($hidden);
+
+                //Get blocks currently attached to item
+                $currentBlocks = $this->getPositionBlocksForSection($sectionid);
+            }
+    
+            /*
+            //Create table to store form elements
+            $objTable =& $this->newObject('htmltable', 'htmlelements');
+            $objTable->cellspacing = '2';
+            $objTable->cellpadding = '2';
+            $objTable->border = '1';
+            $objTable->width = '70%';
+            //Create header cell
+            $objTable->startHeaderRow();
+            $objTable->addHeaderCell($this->_objLanguage->languageText('phrase_blockname'));
+            $objTable->addHeaderCell($this->_objLanguage->languageText('word_order'));
+            $objTable->endHeaderRow();
+
+            //Get current blocks on page
+            
+
+            if(!empty($currentBlocks)) {
+                foreach($currentBlocks as $tbk) {
+                    $tb = $this->getBlock($tbk['blockid']);
+                    //Add entry to table for changing order
+                    $objTable->startRow();
+                    $objTable->addCell($tb['blockname']);
+                    $objTable->addCell($this->getOrderingLink($tbk['id'], $blockCat));
+                    $objTable->endRow();
+                }
+            }
+            */
+
+            //Create table to store form elements
+            $tbl_blocks =& $this->newObject('htmltable', 'htmlelements');
+            $tbl_blocks->cellspacing = '2';
+            $tbl_blocks->cellpadding = '2';
+            $tbl_blocks->border = '1';
+            $tbl_blocks->width = '70%';
+
+            $boxes = "";
+
+            //Get all entries in blocks table
+            $blocks = $this->getBlockEntries();
+            foreach($blocks as $block) {
+                $blockName = $block['blockname'];
+                $blockId = $block['id'];
+
+                $checked = FALSE;
+                if(!empty($currentBlocks)) {
+                    foreach($currentBlocks as $blk) {
+                        if($blk['blockid'] == $blockId) {
+                            $checked = TRUE;
+                        }
+                    }
+                }
+                $checkbox = new checkbox($blockId, $blockName, $checked);
+
+                $position = new dropdown('position_'.$blockId);
+                $position->addOption('0', $this->_objLanguage->languageText('word_right'));
+                $position->addOption('1', $this->_objLanguage->languageText('word_left'));
+
+                //Setting the Default Option
+                foreach ($currentBlocks as $active) {
+                    if (isset($active['blockid'])){
+                        $activeId = $active['blockid'];
+                    }
+
+                    if (isset($active['leftside_blocks'])){
+                        $activePosition = $active['leftside_blocks'];
+                    }
+
+                    if ($activeId == $blockId){
+                        $position->setSelected($activePosition);
+                    }
+                }
+
+                $tbl_blocks->startRow();
+                $tbl_blocks->addCell($checkbox->show());
+                $tbl_blocks->addCell($blockName);
+
+                if ($blockCat == 'frontpage') {
+                    $tbl_blocks->addCell($position->show());
+
+                } else if ($blockCat == 'content') {
+                    //Using Default Left block because content renders in 2 column layout
+                } else {
+                    //Using Default Left block because content renders in 2 column layout
+                }
+
+                $tbl_blocks->endRow();
+            }
+
+            //Create submit button
+            $objButton =& $this->newObject('button', 'htmlelements');
+            $objButton->setToSubmit();
+            $objButton->value = $this->_objLanguage->languageText('word_save');
+            $objButton->id = 'submit';
+            $objButton->name = 'submit';
+
+            $hidden = new hiddeninput('loadposition', '1');
+
+            $objForm->addToForm($tbl_blocks->show());
+            $objForm->addToForm($hidden->show());
+            $objForm->addToForm('<br/>'.'&nbsp;'.'<br/>'.$objButton->show());
+
+            $middleColumnContent = "";
+            $middleColumnContent .= $objH->show();
+            //$middleColumnContent .= $objTable->show();
+            $middleColumnContent .= '<br/>'.'&nbsp;'.'<br/>';
+            $objH->str = $this->_objLanguage->languageText('mod_cmsadmin_addremoveblocks', 'cmsadmin');
+            $middleColumnContent .= $objH->show();
+            $middleColumnContent .= $objForm->show();
+
+            return $middleColumnContent;
+        }
+
+
+
+
         /************************ tbl_module_block methods *************************/
 
         /**
@@ -579,6 +956,22 @@ class dbblocks extends dbTable
 
             return $entry;
         }
+
+        /**
+         * Method to return entries from the tbl_cms_blocks table
+         *
+         * @param string $blockId The id of the block
+         * @return array $entry An associative array of the blocks details
+         * @access public
+         */
+        public function getCmsBlock($blockId)
+        {
+            $entry = $this->getArray('SELECT * FROM tbl_cms_blocks WHERE blockid = \''.$blockId.'\'');
+            $entry = $entry['0'];
+
+            return $entry;
+        }
+
         
         /**
          * Method to return an entries in blocks table

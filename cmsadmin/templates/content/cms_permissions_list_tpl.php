@@ -9,7 +9,6 @@
     $link =  $this->newObject('link', 'htmlelements');
     $objIcon =  $this->newObject('geticon', 'htmlelements');
     $this->loadClass('form', 'htmlelements');
-    $objRound =$this->newObject('roundcorners','htmlelements');
     $objLayer =$this->newObject('layer','htmlelements');
     $this->loadClass('dropdown', 'htmlelements');
     $this->loadClass('textinput', 'htmlelements');
@@ -82,7 +81,7 @@
     //counter for records
     $cnt = 1;
     //Heading box
-    $objIcon->setIcon('section', 'png', 'icons/cms/');
+    $objIcon->setIcon('permissions_small', 'png', 'icons/cms/');
     $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
     $objH->str =  $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin')."<br/><h3>Sections List</h3>";
     $tbl->startRow();
@@ -103,9 +102,13 @@
     $objLayer->border = '; clear:both; margin:0px; padding:0px;';
     $headShow = $objLayer->show();
 
+    $objLayer->str = '&nbsp;';
+    $objLayer->id = 'cmsvspacer';
+    $vspacer = $objLayer->show();
+
     //Get Selectall js
     print $this->getJavascriptFile('selectall.js');
-    echo $objRound->show($header.$headShow);//$tbl->show());
+    echo $header.$headShow.$vspacer;//$tbl->show());
     //get the permissions
 
     //Get cms type

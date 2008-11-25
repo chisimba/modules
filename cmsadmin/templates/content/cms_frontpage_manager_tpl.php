@@ -13,6 +13,8 @@
  * Dialog supports the submission of form data through XMLHttpRequest, through a normal form submission, or through a manual script-based response 
  * (where the script reads and responds to the form values and the form is never actually submitted to the server).
 */
+
+/*
 $script ='
 <script type="text/javascript">
 //<![CDATA[
@@ -78,6 +80,9 @@ $this->appendArrayVar('headerParams', $this->getJavascriptFile('dragdrop/dragdro
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('container/container.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $this->getJavascriptFile('connection/connection.js', 'yahoolib'));
 $this->appendArrayVar('headerParams', $script);
+*/
+
+
 //initiate objects
 //$table =  $this->newObject('htmltable', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
@@ -86,7 +91,6 @@ $this->loadClass('link', 'htmlelements');
 $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $objIcon =  $this->newObject('geticon', 'htmlelements');
-$objRound =$this->newObject('roundcorners','htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 //create link to add blocks to the front page
@@ -100,13 +104,13 @@ $this->objModule = $this->newObject('modules', 'modulecatalogue');
 $isRegistered = $this->objModule->checkIfRegistered('blocks');
 
 //Create link
-$url = $this->uri(array('action' => 'addblock', 'blockcat' => 'frontpage'));
+$url = $this->uri(array('action' => 'positionblock', 'blockcat' => 'frontpage'));
 $objBlocksLink = new link('#');
 $objBlocksLink -> link = $blockIcon;
 $objBlocksLink -> extra = "onclick = \"javascript:window.open('" . $url . "', 'branch', 'width=500, height=350, top=50, left=50, scrollbars');\"";
 
 //Heading box
-$objIcon->setIcon('frontpage', 'png', 'icons/cms/');
+$objIcon->setIcon('frontpage_small', 'png', 'icons/cms/');
 $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
 //$objH->str =  $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_sectionmanager', 'cmsadmin');
 
@@ -133,7 +137,7 @@ $headShow = $objLayer->show();
 //Get Selectall js
 echo $this->getJavascriptFile('selectall.js');
 
-$header = $objRound->show($header.$headShow);//$tbl->show());
+$header = $header.$headShow;//$tbl->show());
 
 //counter for records
 $cnt = 1;
@@ -231,9 +235,9 @@ if (empty($files)) {
     $middleColumnContent .= '<div class="noRecordsMessage" >'.$this->objLanguage->languageText('mod_cmsadmin_nopagesonfrontpage', 'cmsadmin').'</div>';
 }
 
-echo '<br />';
-echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks').'</h2>';
+//echo '<br />';
+//echo '<h2>'.$this->objLanguage->languageText('mod_cmsadmin_frontpageblocks', 'cmsadmin', 'Front Page Blocks').'</h2>';
 
-echo $this->_objUtils->showFrontBlocksForm();
+//echo $this->_objUtils->showFrontBlocksForm();
 
 ?>

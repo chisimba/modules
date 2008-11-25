@@ -20,36 +20,36 @@
 
     class cmsadmin extends controller
     {
-                /**
-                 * The contextcore  object
-                 *
-                 * @access private
-                 * @var object
-                 */
+       /**
+        * The contextcore  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objContextCore;
 
-                /**
-                 * The sections  object
-                 *
-                 * @access private
-                 * @var object
-                 */
+       /**
+        * The sections  object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objSections;
 
-                /**
-                 * The Content object
-                 *
-                 * @access private
-                 * @var object
-                 */
+       /**
+        * The Content object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objContent;
 
-                /**
-                 * The FrontPage object
-                 *
-                 * @access private
-                 * @var object
-                 */
+       /**
+        * The FrontPage object
+        *
+        * @access private
+        * @var object
+        */
         protected $_objFrontPage;
 
                 /**
@@ -130,6 +130,9 @@
         {
             try {       
                 // instantiate object
+                $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+                $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
+                $this->_objPreview =  $this->newObject('dbcontentpreview', 'cmsadmin');
                 $this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
                 $this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
                 $this->_objTree =  $this->newObject('cmstree', 'cmsadmin');
@@ -171,19 +174,25 @@
                 $objLog = $this->getObject('logactivity', 'logger');
                 $objLog->log();
 
+                //Loading CMSAdmin Common Styles
+                $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common.css'.'">'));
+
+                //jQuery pngFix behaves wierdly in ies4linux but works on windows machines
+                $this->_objJQuery->loadPngFixPlugin();
+
             } catch (customException $e){
                 throw customException($e->getMessage());
                 exit();
             }	    
         }
 
-                /**
-                 * Method to handle actions from templates
-                 * 
-                 * @access public
-                 * @param string $action Action to be performed
-                 * @return mixed Name of template to be viewed or function to call
-                 */
+       /**
+        * Method to handle actions from templates
+        * 
+        * @access public
+        * @param string $action Action to be performed
+        * @return mixed Name of template to be viewed or function to call
+        */
         public function dispatch()
         {
             $action = $this->getParam('action');
@@ -192,11 +201,11 @@
             $myid = $this->_objUser->userId();
 
             //The security class handles this now
-                                /*
-                                if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
-                                                return 'cms_nopermissions_tpl.php';
-                                }
-                                */
+            /*
+            if (!($this->_objUser->inAdminGroup($myid,'CMSAuthors')) && !($this->_objUser->inAdminGroup($myid,'Site Admin'))) {
+                            return 'cms_nopermissions_tpl.php';
+            }
+            */
 
             switch ($action) {
 
@@ -209,9 +218,91 @@
                 $cpanel =  $this->_objUtils->getControlPanel();
                 $this->setVarByRef('topNav',$topNav);
                 $this->setVarByRef('cpanel',$cpanel);
+	
+		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
 
-                                                                /* ** Trash manager section ** */
+                case 'previewcontent':
+                    //var_dump('HERE'); exit;
+                    $previewId = $this->_objPreview->add();
+                return $this->nextAction('previewcontent', array('id' => $previewId), 'cms');
+
+                case 'edittemplate':
+                $templateId = $this->getParam('id', null);
+                $this->_objTemplate->edit();
+                return $this->nextAction('templates', array('id' => $templateId), 'cmsadmin');
+
+                break;
+
+                case 'deletetemplate':
+                $this->_objTemplate->deleteTemplate($this->getParam('id'));
+                return $this->nextAction('templates', array(NULL), 'cmsadmin');
+
+                case 'templatepublish':
+                $id = $this->getParam('id');
+                $mode = $this->getParam('mode');
+                $this->_objTemplate->publish($id, $mode);
+
+                return $this->nextAction('templates');
+
+                case 'templates':
+                    $topNav = $this->_objUtils->topNav('viewtemplates');
+                    $arrTemplates = $this->_objTemplate->getTemplatePages();
+
+                    $this->setVarByRef('topNav',$topNav);
+                    $this->setVarByRef('arrTemplates', $arrTemplates);
+                return 'cms_templates_list_tpl.php';
+
+                case 'addtemplate':
+                $templateid = $this->getParam('id');
+
+                if ($templateid != ''){      
+                    //TODO: Enable Template Security
+                    //Security Check for Write Access
+                    //if(!$this->_objSecurity->canUserWriteTemplate($templateid)){
+                    //    $this->setVarByRef('securityType', 'no_write');
+                    //    return 'cms_template_no_permissions_tpl.php';
+                    //}
+                }
+
+                //Checking weather user has any sections to write to
+                $treeCount = $this->_objTree->getTreeCount();
+
+                if ($treeCount == 0){
+                    $this->setVarByRef('securityType', 'no_sections');
+                    return 'cms_template_no_permissions_tpl.php';
+                }
+
+                $parentid = $this->getParam('parent', NULL);
+                //Get top navigation
+                $topNav = $this->_objUtils->topNav('createtemplate');
+                $this->setVarByRef('topNav',$topNav);
+                $templateForm = $this->_objUtils->getAddEditTemplateForm($templateid, $parentid,$this->getParam('frommodule'),$this->getParam('fromaction'),$this->getParam('s_param'));
+                $this->setVarByRef('templateForm', $templateForm);
+                $this->setVarByRef('id', $this->getParam('id'));
+                return 'cms_template_add_tpl.php';
+
+                case 'createtemplate':
+                //Save the content page
+                $templateId = $this->_objTemplate->add();
+                return $this->nextAction('templates', array('id' => $templateId), 'cmsadmin');
+
+                case 'getmenuchildnodes':
+
+                $this->setContentType('text/html');
+                //Retrieve the section id from the querystring
+                $id = $this->getParam('id');
+                //var_dump($id);
+                $objSimpleTree = $this->getObject('simplecontenttree', 'cmsadmin');
+                $content = $objSimpleTree->getMenuChildNodes($id,TRUE);
+                //var_dump($content);
+    
+                $this->setVar('content', $content);
+    
+                return "menu_child_node_tpl.php";
+
+
+                /* ** Trash manager section ** */
                 case 'trashmanager':
                 $text = $this->getParam('txtfilter');
                 $data = $this->_objContent->getArchivePages($text); // Get trashed content data
@@ -328,6 +419,17 @@
                 case 'sections':
                 $this->getsections();
                 return 'cms_section_list_tpl.php';
+                //return 'cms_section_grid_tpl.php'; //New Grid Based Layout
+
+                //Returning JSON grid for sections manager
+                case 'jsonsectiongrid':
+
+                //$this->setPageTemplate('');
+                //$this->setLayoutTemplate('');
+                //$this->setContentType('application/x-json');
+                $this->setContentType('text/html');
+                return 'cms_section_json_tpl.php';
+
 
                 // Simpler view of the sections list with permissions management at the core
                 case 'permissions':
@@ -366,6 +468,12 @@
                 $this->viewsections();
                 return 'cms_section_view_tpl.php';
 
+                case 'ajaxviewsection':
+                $this->viewsections(); //Hiding the left nav
+                $this->setContentType('text/html'); //Hiding the template
+                $this->setVarByRef('hideLeftColumn', true);
+                return 'cms_section_view_tpl.php';
+
                 case 'changesectionorder':
                 //Get the sections details
                 $id = $this->getParam('id');
@@ -381,7 +489,14 @@
                 }
 
                 case 'addsection':
-                $this->addEditsection();
+	    	        if (!isset($sectionid) ) {
+    	    	        $sectionid = $this->getParam('id');
+	    	        }
+	    	        if (!isset($parentid)) {
+		                $parentid = $this->getParam('sectionid');
+	            	}
+
+                	$this->addEditsection($sectionid, $parentid);
                 return 'cms_section_add_tpl.php';
 
                 case 'addpermissions':
@@ -593,7 +708,7 @@
 
                 //----------------------- content section
 
-                case 'addcontent':
+                case 'ajaxaddcontent':
                 $contentid = $this->getParam('id');
 
                 if ($contentid != ''){		
@@ -620,7 +735,42 @@
                 $this->setVarByRef('addEditForm', $addEditForm);
                 $this->setVarByRef('section', $parentid);
                 $this->setVarByRef('id', $this->getParam('id'));
+
+                $this->setContentType('text/html');
+                $this->setLayoutTemplate('cms_ajax_layout_tpl.php');
+
+                $this->setVarByRef('hideLeftColumn', true);
                 return 'cms_content_add_tpl.php';
+
+                case 'addcontent':
+                $contentid = $this->getParam('id');
+
+                if ($contentid != ''){      
+                    //Security Check for Write Access
+                    if(!$this->_objSecurity->canUserWriteContent($contentid)){
+                        $this->setVarByRef('securityType', 'no_write');
+                        return 'cms_content_no_permissions_tpl.php';
+                    }
+                }
+
+                //Checking weather user has any sections to write to
+                $treeCount = $this->_objTree->getTreeCount();
+
+                if ($treeCount == 0){
+                    $this->setVarByRef('securityType', 'no_sections');
+                    return 'cms_content_no_permissions_tpl.php';
+                }
+
+                $parentid = $this->getParam('parent', NULL);
+                //Get top navigation
+                $topNav = $this->_objUtils->topNav('createcontent');
+                $this->setVarByRef('topNav',$topNav);
+                $addEditForm = $this->_objUtils->getAddEditContentForm($contentid, $parentid,$this->getParam('frommodule'),$this->getParam('fromaction'),$this->getParam('s_param'));
+                $this->setVarByRef('addEditForm', $addEditForm);
+                $this->setVarByRef('section', $parentid);
+                $this->setVarByRef('id', $this->getParam('id'));
+                return 'cms_content_add_tpl.php';
+
 
                 case 'createcontent':
                 //Save the content page
@@ -741,6 +891,31 @@
                 $this->setVarByRef('blockForm', $blockForm);
                 return 'cms_blocks_tpl.php';
 
+                case 'positionblock':
+                $blockCat = $this->getParam('blockcat', FALSE);
+                $sectionId = $this->getParam('sectionid', NULL);
+                $pageId = $this->getParam('pageid', NULL);
+                $closePage = $this->getParam('closePage', FALSE);
+                switch ($blockCat) {
+
+                    case 'frontpage':
+                    $blockForm  = $this->_objBlocks->getPositionBlockForm(NULL, NULL, 'frontpage');
+                    break;
+
+                    case 'section':
+                    $blockForm  = $this->_objBlocks->getPositionBlockForm(NULL, $sectionId, 'section');
+                    break;    
+
+                    case 'content':
+                    $blockForm  = $this->_objBlocks->getPositionBlockForm($pageId, NULL, 'content');
+                    break;
+
+                }
+                $this->setVarByRef('closePage', $closePage);
+                $this->setVarByRef('blockForm', $blockForm);
+                return 'cms_blocks_tpl.php';
+
+
                 case 'saveblock':
                 $blockCat = $this->getParam('blockcat', NULL);
                 //Get the page id of the page to add the block to
@@ -766,6 +941,10 @@
                     $exists = FALSE;
                     $blockName = $block['blockname'];
                     $blockId = $block['id'];
+
+                    //Charl Mert : Added Positioning
+                    $position = $this->getParam('position_'.$blockId, '1');
+
                     if(!empty($currentBlocks)) {
                         foreach($currentBlocks as $cb) {
                             if($cb['blockid'] == $blockId) {
@@ -773,27 +952,42 @@
                             }
                         }
                     }
+                    //var_dump($blockId . ' check: [' . $this->getParam($blockId) . '] <br/>');
+                    //Deleting all blocks that match the given category
+                    $this->_objBlocks->deleteAllBlocks($pageId, $sectionId, $blockId, $blockCat);
+
                     //Get all blocks to be added
-                    if($this->getParam($blockId)) {
+                    if($this->getParam($blockId) == 'on') {
                         //Check if it already exists before adding it
-                        if(!$exists) {
-                            $this->_objBlocks->add($pageId, $sectionId, $blockId, $blockCat);
-                        }
+                        //if(!$exists) {
+                            $this->_objBlocks->editPosition($pageId, $sectionId, $blockId, $blockCat, $position);
+                        //}
                         //If block isn't in list to be added check if it exists and delete it    
                     } else {
-                        if($exists) {
-                            $this->_objBlocks->deleteBlock($pageId, $sectionId, $blockId, $blockCat);
-                        }
+                    //var_dump('deleting pageId[' . $pageId . '] => blockId[' . $blockId . '] => blockCat[' . $blockCat . '] => check: [' . $this->getParam($blockId) . '] <br/>');
+
+                        //if($this->getParam($blockId) != 'on') {
+                            //$this->_objBlocks->deleteBlockExplicit($pageId, $sectionId, $blockId, $blockCat);
+                        //}
                     }
                 }
+
+                $loadPosition = $this->getParam('loadposition', '');
+
+                if ($loadPosition = '1'){
+                    $action = 'positionblock';
+                } else {
+                    $action = 'addblock';
+                }
+
                 if ($blockCat == 'frontpage') {
-                    return $this->nextAction('addblock', array('blockcat' => 'frontpage'), 'cmsadmin');
+                    return $this->nextAction($action, array('blockcat' => 'frontpage'), 'cmsadmin');
                 } else if ($blockCat == 'content') {
                     //Get all blocks already on the page
-                    return $this->nextAction('addblock', array('blockcat' => 'content', 'pageid' => $pageId), 'cmsadmin');
+                    return $this->nextAction($action, array('blockcat' => 'content', 'pageid' => $pageId), 'cmsadmin');
                 } else {
                     //Get all blocks already on the section
-                    return $this->nextAction('addblock', array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
+                    return $this->nextAction($action, array('blockcat' => 'section', 'sectionid' => $sectionId), 'cmsadmin');
                 }
 
 
@@ -1280,15 +1474,15 @@
             return true;
         } 
 
-                /**
-                 * Method to query for sections
-                 * This method can be used for queries related to sections
-                 *
-                 * @param string $contextcode
-                 * @param string $rootType: this can be 'all' or 'root' depending what 
-                 * type of results you want
-                 * @return array of sections
-                 */
+       /**
+        * Method to query for sections
+        * This method can be used for queries related to sections
+        *
+        * @param string $contextcode
+        * @param string $rootType: this can be 'all' or 'root' depending what 
+        * type of results you want
+        * @return array of sections
+        */
 
         public function getsections($contextcode=null,$rootType=null, $topNav='sections'){
             //Check whether the contextcode is set 
@@ -1314,17 +1508,36 @@
 
             return $arrSections;
         }
-                /**
-                 * This method accepts a section id and
-                 * returns an array of sections.For cms purposes
-                 * it sets by reference subsections as well for 
-                 * the cms display template
-                 *
-                 * @param int $sectionid
-                 * @param int $subsectionid same as the section id
-                 * @return array sections
-                 */
-        public function viewsections($sectionid=null,$subsectionid=null)
+
+       /**
+        * Method to query for sections for use with Grid layout
+        * This method can be used for queries related to sections
+        *
+        * @param string $contextcode
+        * @param string $rootType: this can be 'all' or 'root' depending what 
+        * type of results you want
+        * @return array of sections
+        */
+
+        public function getGridSections($sortId = 'title', $sortOrder = 'ASC', $page = '1', $rows = '100'){
+            //$arrSections = $this->_objUtils->getSectionLinks(TRUE,''/*$this->contextCode*/);
+            $arrSections = $this->_objUtils->getGridSectionLinks($sortId, $sortOrder);
+            $this->setVarByRef('arrSections', $arrSections);
+
+            return $arrSections;
+        }
+
+      /**
+        * This method accepts a section id and
+        * returns an array of sections.For cms purposes
+        * it sets by reference subsections as well for 
+        * the cms display template
+        *
+        * @param int $sectionid
+        * @param int $subsectionid same as the section id
+        * @return array sections
+        */
+        public function viewsections($sectionid=null,$subsectionid=null, $showLeftNav = true)
         {
 
             if (isset($sectionid) && ($this->inContextMode == FALSE)) {
@@ -1352,6 +1565,8 @@
             $topNav = $this->_objUtils->topNav('viewsection');
             $this->setVarByRef('topNav',$topNav);
             $this->setVarByRef('pages', $pages);
+            $this->setVarByRef('showLeftNav', $showLeftNav);
+            
             return $section;
         }
 
@@ -1488,16 +1703,16 @@
         }
 
 
-                /**
-                 * Method to return the sections form. The form comes with
-                 * ajax attached so no need to get that as well.
-                 * The method accepts two params that of the parent
-                 * and section ids. This is so you can have (n)levels
-                 *
-                 * @param int $sectionid
-                 * @param int $parentid
-                 * @return string form
-                 */
+       /**
+        * Method to return the sections form. The form comes with
+        * ajax attached so no need to get that as well.
+        * The method accepts two params that of the parent
+        * and section ids. This is so you can have (n)levels
+        *
+        * @param int $sectionid
+        * @param int $parentid
+        * @return string form
+        */
         public function addEditsection($sectionid=null,$parentid=null){
             // Generation of Ajax Scripts
             //$ajax = $this->getObject('xajax', 'ajaxwrapper');
@@ -1524,16 +1739,16 @@
         }
 
 
-                /**
-                 * Method to return the PERMISSIONS form. The form comes with
-                 * ajax attached so no need to get that as well.
-                 * The method accepts two params that of the parent
-                 * and permissions ids. This is so you can have (n)levels
-                 *
-                 * @param int $permissionsid
-                 * @param int $parentid
-                 * @return string form
-                 */
+       /**
+        * Method to return the PERMISSIONS form. The form comes with
+        * ajax attached so no need to get that as well.
+        * The method accepts two params that of the parent
+        * and permissions ids. This is so you can have (n)levels
+        *
+        * @param int $permissionsid
+        * @param int $parentid
+        * @return string form
+        */
         public function addEditSectionPermissions($sectionid=null, $returnSubView = 0){
             // Generation of Ajax Scripts
             //$ajax = $this->getObject('xajax', 'ajaxwrapper');
@@ -1829,15 +2044,14 @@
             return $objLayer->show();
         }
 
-                /**
-                 * Method to get the menu for the cms admin
-                 *
-                 * @access public
-                 * @return string The html to produce the navigation
-                 */
+       /**
+        * Method to get the menu for the cms admin
+        *
+        * @access public
+        * @return string The html to produce the navigation
+        */
         public function getCMSMenu()
         {
-
             return $this->_objUtils->getNav();
         }
 

@@ -25,9 +25,8 @@
     //Setup Header Navigation objects
 
     $objLayer =$this->newObject('layer','htmlelements');
-    $objRound =$this->newObject('roundcorners','htmlelements');
     $headIcon = $this->newObject('geticon', 'htmlelements');
-    $headIcon->setIcon('section','png');
+    $headIcon->setIcon('permissions_small','png', 'icons/cms');
     $this->loadClass('htmltable', 'htmlelements');
 
     //Get blocks icon
@@ -470,7 +469,11 @@ $tblDetails = $objDetailsTable->show();
     $objLayer->border = '; clear:both; margin:0px; padding:0px;';
     $headShow = $objLayer->show();
 
-    $middleColumnContent .= $objRound->show($header.$headShow);//$tbl->show());
+    $objLayer->str = '&nbsp;';
+    $objLayer->id = 'cmsvspacer';
+    $vspacer = $objLayer->show();
+
+    $middleColumnContent .= $header.$headShow.$vspacer;//$tbl->show());
 
     //Display layout info
     $middleColumnContent .= $tblDetails;
