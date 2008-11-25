@@ -57,7 +57,26 @@ foreach ($students as $student) {
 }
 
 $leftContent = $listHead->show().$objTable->show();
-$rightContent = "This is the right column";
+
+$listHead->str = $this->objLanguage->languageText("mod_stats_adminfunc",'stats');
+$listHead->type = 4;
+
+$link->link($this->uri(array('action'=>'download', 'type' => '1')));
+$link->link = $this->objLanguage->languageText("mod_stats_downloadpreq","stats");
+$list = "<ul><li>".$link->show();
+$link->link($this->uri(array('action'=>'download', 'type' => '2')));
+$link->link = $this->objLanguage->languageText("mod_stats_downloadpostq","stats");
+$list .= "</li><li>".$link->show();
+
+$clearLink = $this->newObject('link','htmlelements');
+$clearLink->link("#");
+$clearLink->link = $this->objLanguage->languageText("mod_stats_clearall","stats");
+$confirm = $this->objLanguage->languageText("mod_stats_clearconfirm","stats");
+$location = $this->uri(array('action'=>'admin_clearall'));
+$clearLink->extra = "onclick = 'if (confirm(\"$confirm\")) { window.location = \"$location\"; }'";
+$list .= "</li><li>".$clearLink->show();
+$list .= "</li></ul>";
+$rightContent = $listHead->show().$list;
 $subContent = "<div style='float:left; width: 50%;'>$leftContent</div><div style='float:right; width: 50%;'>$rightContent</div>";
 
 $link->link($this->uri(array('action'=>'home')));

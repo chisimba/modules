@@ -180,12 +180,34 @@ class dbtuts extends dbtable {
         return $this->getArray($sql);
     }
     
+    /**
+     * Method to get a list of distinct students with entries
+     * in the table
+     *
+     * @return array an array of student numbers
+     * @access public
+     */
     public function getStudents() {
         $sql = "SELECT DISTINCT studentno
                 FROM tbl_stats_tuts
                 ORDER BY studentno";
                 
         return $this->getArray($sql);
+    }
+    
+    /**
+     * Method to remove all data from the table, done at
+     * the start of a new year
+     *
+     * @return void
+     * @access public
+     */
+    public function removeAll() {
+        $all = $this->getAll();
+        foreach ($all as $each) {
+            $this->delete('id',$each['id']);
+        }
+        
     }
 }
 

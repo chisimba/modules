@@ -273,6 +273,32 @@ class stats extends controller {
             $this->setVar('students', $this->objTuts->getStudents());
             return "admin_tpl.php";
         
+        case "admin_clearall":
+            if (!$this->objUser->isLecturer()) {
+                return $this->nextAction('home');
+            }
+            $this->objQuestionnaire->removeAll();
+            $this->objPostQuestionnaire->removeAll();
+            $this->objTuts->removeAll();
+            return $this->nextAction('admin');
+        
+        case "download":
+            if (!$this->objUser->isLecturer()) {
+                return $this->nextAction('home');
+            }
+            $this->setLayoutTemplate(null);
+            $this->setPageTemplate(null);
+		    if ($this->getParam('type') == '1') {
+                $data = $this->objQuestionnaire->export();
+                $name = "pre_questionnaires.csv";
+            } else {
+                $data = $this->objPostQuestionnaire->export();
+                $name = "post_questionnaires.csv";
+            }
+            $this->setVar('fileName', $name);
+            $this->setVar('data', $data);
+            return "download_tpl.php";            
+        
         case "home":
         default:
             return "default_tpl.php";

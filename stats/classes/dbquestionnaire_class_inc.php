@@ -90,6 +90,52 @@ class dbquestionnaire extends dbtable {
         return $response;
     }
     
+    /**
+     * Method to remove all data from the table, done at
+     * the start of a new year
+     *
+     * @return void
+     * @access public
+     */
+    public function removeAll() {
+        $all = $this->getAll();
+        foreach ($all as $each) {
+            $this->delete('id',$each['id']);
+        }
+        
+    }
+    
+    /**
+     * Method to export the table contents to csv
+     * for viewing in spreadsheet software
+     *
+     * @return string csv formatted table contents
+     * @access public
+     */
+    public function export() {
+        $all = $this->getAll("ORDER BY studentno");
+        $first = current($all);
+        $data = 'Full Name';
+        
+        foreach ($first as $key => $value) {
+            if ($key != 'id' && $key != 'puid') {
+                $data .= ",$key";
+            }
+        }
+        $data .= "\n";
+        
+        foreach ($all as $one) {
+            $line = $this->objUser->fullName($one['studentno']);
+            foreach ($one as $key => $field) {
+                if ($key != 'id' && $key != 'puid') {
+                    $line .= ",".$field;
+                }
+            }
+            $data .= "$line\n";
+        }
+        return $data;
+    }
+    
 }
 
 ?>
