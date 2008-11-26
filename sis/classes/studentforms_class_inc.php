@@ -13,6 +13,7 @@ class studentforms extends object
         $this->tabBox= $this->newObject('tabbedbox', 'htmlelements');
         $this->tabPanel=$this->newObject('tabcontent', 'htmlelements');
         $this->loadClass('textinput', 'htmlelements');
+        $this->loadClass('button', 'htmlelements');
         $this->objLanguage=$this->getObject('language','language');
 
     }
@@ -70,11 +71,21 @@ class studentforms extends object
       $table->addCell($inputObjects['ethnicity']->show());
       $table->endRow();
       
-      $html=$table->show();
+
+      $formObj=new form();
+      $formObj->addToForm($table->show());
+
+      $button= new button()
+      $html=$formObj->show();
       return $html;
      
     }
 
+    public function userinfo($data=array())
+    {
+     // code to go here
+
+    }
 
 }
 
