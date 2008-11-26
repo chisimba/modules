@@ -53,6 +53,7 @@ class pbrender extends dbTable
         $this->objLanguage = $this->getObject("language", "language");
         $this->loadClass("htmltable", "htmlelements");
         $this->objDb = $this->getObject("dbpersonalblocks", "personalblocks");
+ 		$this->objWashout = $this->getObject("washout", "utilities");
     }
 
     /**
@@ -135,7 +136,7 @@ class pbrender extends dbTable
                     if ($showName) {
                         $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
-                    $blockcontent = $blockname . $line['blockcontent'];
+                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
                     $ret .= "<br />" . $blockcontent . "<br />";
                 }
             } else {
@@ -173,7 +174,7 @@ class pbrender extends dbTable
                     if ($showName) {
                     	$blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
-                    $blockcontent = $blockname . $line['blockcontent'];
+                    $blockcontent = $blockname .$this->objWashout->parseText($line['blockcontent']);
                     $ret .= "<br />" . $blockcontent . "<br />";
                 }
             } else {
@@ -211,7 +212,7 @@ class pbrender extends dbTable
                     if ($showName) {
                         $blockname = "-- <span class=\"error\">" . $line['blockname'] . "</span> --<br />";
                     }
-                    $blockcontent = $blockname . $line['blockcontent'];
+                    $blockcontent = $blockname . $this->objWashout->parseText($line['blockcontent']);
                     $ret .= "<br />" . $blockcontent . "<br />";
                 }
             } else {
