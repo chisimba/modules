@@ -192,16 +192,16 @@ class imops extends object {
 	*/
 	public function endSession($username)
 	{
+
+		//return exec("killall python");
 		$pids = $this->getPID($username);
 		if(count($pids) > 0)
 		{
 			foreach($pids as $pid)
-			{
-print 'killing .. '.$pid;
-				print exec("kill ".$pid[0]);
+			{			
+				return exec("kill ".$pid);
 			}
 		}
-die;
 	}
 
 	/**
@@ -243,6 +243,8 @@ die;
 		 }
 		 return $r2;
 	}
+
+	
 
 }
 ?>
