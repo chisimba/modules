@@ -41,6 +41,24 @@ $fields = array(
         'notnull' => TRUE,
         'default' => '0'
         ),
+    'hide_pdf' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+    'hide_mail' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+    'hide_print' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
 	'trash' => array(
 		'type' => 'integer',
         'length' => 1,
