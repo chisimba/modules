@@ -38,17 +38,17 @@ $middleColumn .= $objPagination->show();*/
 if($this->objUser->inAdminGroup($this->objUser->userId()))
 {
     $cid = $this->objUser->userId();
-    $outof = null;
+    
 	$configIcon->setIcon('admin');
 	$configLink->href = $this->uri(array('action' => 'viewcounsilors', 'das'));
 	$configLink->link = $configIcon->show();
 	$config = $configLink->show();
 }else{
     $cid = $this->objUser->userId();
-    $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
+    
 	$config = "";
 }
-
+$outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
 $num = count($msgs);

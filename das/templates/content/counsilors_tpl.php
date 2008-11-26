@@ -8,7 +8,9 @@ $objLoggedIn = $this->getObject('loggedinusers', 'security');
 
 $numCounsilors = count($users);
 $numUsers = $this->objDbImPres->getRecordCount();
-var_dump($this->objImOps->isScriptRunning($this->juser));
+$online = False;
+echo "IM User: <b>".$this->juser.'</b><br/>';
+echo "Status: <span class=\"highlight\">".$online.'</span><br/>';
 echo "Number of Counsilors: $numCounsilors<br/>";
 echo "Number of Users: $numUsers <br/><br/>";
 $arr = array();
@@ -40,6 +42,18 @@ foreach ($users as $user)
     //echo $name."   ".$objLink->show().'  ('.$cnt.' users assigned) <br/>';
 
 }
+
+$objLink->href = $this->uri(array('action' => 'startsession'));
+$objLink->link = "Start Session";
+
+echo "".$objLink->show();
+
+
+$objLink->href = $this->uri(array('action' => 'endsession'));
+$objLink->link = "Stop Session";
+
+echo "<br/>".$objLink->show();
+
 $objTable->width = "50%";
 $objTable->addHeader(array("Name", "No. of people assigned", "Logged In", " "));
 $objTable->arrayToTable($arr);
@@ -47,19 +61,10 @@ echo $objTable->show();
 $objLink->href = $this->uri(array('action' => 'resetcounsillors'));
 $objLink->link = "Reset Counsillors";
 
-echo "<br/><br/>".$objLink->show();
+echo "<br/>".$objLink->show();
 
 
-$objLink->href = $this->uri(array('action' => 'startsession'));
-$objLink->link = "Start Session (under construction)";
 
-echo "<br/><br/>".$objLink->show();
-
-
-$objLink->href = $this->uri(array('action' => 'endsession'));
-$objLink->link = "Stop Session (under construction)";
-
-echo "<br/><br/>".$objLink->show();
 //button to manage the session
 
 ?>
