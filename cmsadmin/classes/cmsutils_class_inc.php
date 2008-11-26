@@ -199,6 +199,9 @@
         */
         public function getYesNoRadion($name, $selected = '1', $showIcon = true)
         {
+            $visibleIcon = '';
+            $notVisibleIcon = '';
+
             if ($showIcon) {
                 //Get visible not visible icons
                 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -521,7 +524,8 @@
             $icon_publish = $this->newObject('geticon', 'htmlelements');
 
             $iconList = '';
-            
+            $extra = '';
+
             // Semi Global FCK Preview Function
             // Also global preview binding to any div id'd 'btn_preview_content' for showing the preview 
             // of any FCK instance with id of 'body'
@@ -1211,10 +1215,10 @@
         */
         public function getConfigTabs($arrContent=NULL){
 
-        /**
-        * Defining Basic items to be displayed for 
-        * First Tab
-        */
+            /**
+            * Defining Basic items to be displayed for 
+            * First Tab
+            */
             //var_dump($arrContent);
             //$tabs =$this->newObject('tabcontent','htmlelements');
 
@@ -1347,6 +1351,7 @@
                 $contentId = '';
                 $arrContent = null;
 
+                $is_front = false;
                 if ( $this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
                     $is_front = TRUE;
@@ -1375,7 +1380,7 @@
                     $creator->setSelected($this->_objUser->userId());
                 }
                 $lbl_creator = new label($this->objLanguage->languageText('mod_cmsadmin_change_author','cmsadmin'),'creator');
-*/
+        */
 
                 //Change Created Date
                 $lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
@@ -1460,7 +1465,8 @@
             $tbl_basic->addCell($lbl_author->show());
             $tbl_basic->addCell($author->show());
             $tbl_basic->endRow();
-    /*
+
+        /*
             $tbl_basic->startRow();
             $tbl_basic->addCell($lbl_creator->show());
             $tbl_basic->addCell($creator->show());
@@ -1486,43 +1492,26 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-                                /**
-                                 * Defining Items to be added to Advanced Tab
-                                 */
+           /**
+            * Defining Items to be added to Advanced Tab
+            */
             if (is_array($arrContent)) {
-                $opt_author = new dropdown('show_auth');
-                $opt_author->addOption('g',"-Global-Option-");
-                $opt_author->addOption('y','yes');
-                $opt_author->addOption('n','no');
-                $opt_author->setSelected('g');
-                $lbl_author_names = new label($this->objLanguage->languageText('mod_cmsadmin_show_author','cmsadmin'),'show_auth');
                 //pdf option
-                $opt_pdf = new dropdown('show_pdf');
+                $opt_pdf = new dropdown('hide_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
                 $opt_pdf->addOption("y",'yes');
                 $opt_pdf->addOption("n",'no');
                 $opt_pdf->setSelected('g');
                 $lbl_pdf = new label($this->objLanguage->languageText('mod_cmsadmin_show_pdf','cmsadmin'),'show_pdf');
                 //email option
-                $opt_email = new dropdown('show_email');
+                $opt_email = new dropdown('hide_email');
                 $opt_email->addOption('g',"-Global-Option-");
                 $opt_email->addOption('y','yes');
                 $opt_email->addOption('n','no');
                 $opt_email->setSelected('g');
                 $lbl_email = new label($this->objLanguage->languageText('mod_cmsadmin_show_email','cmsadmin'),'show_email');
                 //Print
-                $opt_print = new dropdown('show_print');
+                $opt_print = new dropdown('hide_print');
                 $opt_print->addOption('g',"-Global-Option-");
                 $opt_print->addOption('y','yes');
                 $opt_print->addOption('n','no');
@@ -1530,28 +1519,22 @@
                 $lbl_print = new label($this->objLanguage->languageText('mod_cmsadmin_show_print','cmsadmin'),'show_print');
 
             }else{
-                $opt_author = new dropdown('show_auth');
-                $opt_author->addOption('g',"-Global-Option-");
-                $opt_author->addOption('y','yes');
-                $opt_author->addOption('n','no');
-                $opt_author->setSelected('g');
-                $lbl_author_names = new label($this->objLanguage->languageText('mod_cmsadmin_show_author','cmsadmin'),'show_auth');
                 //pdf option
-                $opt_pdf = new dropdown('show_pdf');
+                $opt_pdf = new dropdown('hide_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
                 $opt_pdf->addOption("y",'yes');
                 $opt_pdf->addOption("n",'no');
                 $opt_pdf->setSelected('g');
                 $lbl_pdf = new label($this->objLanguage->languageText('mod_cmsadmin_show_pdf','cmsadmin'),'show_pdf');
                 //email option
-                $opt_email = new dropdown('show_email');
+                $opt_email = new dropdown('hide_email');
                 $opt_email->addOption('g',"-Global-Option-");
                 $opt_email->addOption('y','yes');
                 $opt_email->addOption('n','no');
                 $opt_email->setSelected('g');
                 $lbl_email = new label($this->objLanguage->languageText('mod_cmsadmin_show_email','cmsadmin'),'show_email');
                 //Print
-                $opt_print = new dropdown('show_print');
+                $opt_print = new dropdown('hide_print');
                 $opt_print->addOption('g',"-Global-Option-");
                 $opt_print->addOption('y','yes');
                 $opt_print->addOption('n','no');
@@ -1560,10 +1543,6 @@
             }
             //add items to tables for good layout
 
-            $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_author_names->show());
-            $tbl_advanced->addCell($opt_author->show());
-            $tbl_advanced->endRow();
             $tbl_advanced->startRow();
             $tbl_advanced->addCell($lbl_pdf->show());
             $tbl_advanced->addCell($opt_pdf->show());
@@ -1577,9 +1556,9 @@
             $tbl_advanced->addCell($opt_print->show());
             $tbl_advanced->endRow();
 
-                                /**
-                                 * Defining Items for Metadata
-                                 */
+           /**
+            * Defining Items for Metadata
+            */
             if (is_array($arrContent)) {
                 $keyword = new textarea('keyword',$arrContent['metakey'],6);
                 $lbl_keyword = new label($this->objLanguage->languageText('mod_cmsadmin_keyword','cmsadmin'),'keyword');
@@ -1611,26 +1590,23 @@
             }
 
 
-            //Moved this section outside of the tabs due to slow load issue
-                                /*
-                                   if (isset($arrContent['body'])) {
-                                   $bodyInputValue = stripslashes($arrContent['body']);
-                                   }else{
-                                   $bodyInputValue = null;
-                                   }
-                                   $bodyInput = $this->newObject('htmlarea', 'htmlelements');
-                                   $bodyInput->init('body', $bodyInputValue);
-                                   $bodyInput->setContent($bodyInputValue);
-                                   $bodyInput->setDefaultToolBarSet();
-                                   $bodyInput->height = '400px';
-                                 */
-
+            //Moved outside of the tabs due to slow load issue
+            /*
+            if (isset($arrContent['body'])) {
+            $bodyInputValue = stripslashes($arrContent['body']);
+            }else{
+            $bodyInputValue = null;
+            }
+            $bodyInput = $this->newObject('htmlarea', 'htmlelements');
+            $bodyInput->init('body', $bodyInputValue);
+            $bodyInput->setContent($bodyInputValue);
+            $bodyInput->setDefaultToolBarSet();
+            $bodyInput->height = '400px';
+            */
 
             //$bodyInput->width = '50%';
             $tbl_meta->endRow();
             //Add items to tabs
-
-
 
             //Lets do the CC Licence
             $objModulesInfo = $this->getObject('modules', 'modulecatalogue');
@@ -1743,14 +1719,16 @@
         }
 
 
-                /**
-                 * Method to generate the navigation
-                 *
-                 * @access public
-                 * @return string The html for the side bar link / navigation
-                 */
+       /**
+        * Method to generate the navigation
+        *
+        * @access public
+        * @return string The html for the side bar link / navigation
+        */
         public function getNav($hideCmsMenu = false)
         {
+            $cmsAdminMenu = '';
+
             $lbSection = $this->objLanguage->languageText('mod_cmsadmin_sectionnotvisible', 'cmsadmin');
             $lbOrange = $this->objLanguage->languageText('mod_cmsadmin_sectionsetnotvisible', 'cmsadmin');
             $lbWhite = $this->objLanguage->languageText('mod_cmsadmin_sectionnocontent', 'cmsadmin');
