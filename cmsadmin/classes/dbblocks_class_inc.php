@@ -844,7 +844,7 @@ class dbblocks extends dbTable
             $tbl_blocks->cellspacing = '2';
             $tbl_blocks->cellpadding = '2';
             $tbl_blocks->border = '1';
-            $tbl_blocks->width = '70%';
+            $tbl_blocks->width = '480px';
 
             $boxes = "";
 
