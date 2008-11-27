@@ -167,7 +167,7 @@ class fmpro extends object {
             $rec = $this->fm->getRecordById($layoutName, $recid);
             $userinfo = array();
             $userinfo['username']  = $rec->getField('UserName');
-            $userinfo['surname']   = $rec->getField('Surname');
+            $userinfo['surname']   = $rec->getField('LastName');
             $userinfo['firstname'] = $rec->getField('FirstName');
 
 
