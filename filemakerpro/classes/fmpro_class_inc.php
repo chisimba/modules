@@ -150,4 +150,34 @@ class fmpro extends object {
     public function personRecords() {
 
     }
+
+    public function authenticatePerson($username, $password) {
+        $layoutName = 'Form: Person';
+        $findCommand = $this->fm->newFindCommand($layoutName);
+        $findCommand->addFindCriterion('UserName', $username);
+        $findCommand->addFindCriterion('Password', $password);
+        $result = $findCommand->execute();
+        $record = $result->getFirstRecord();
+        if (FileMaker::isError($result)) {
+            return NULL;
+        }
+        else {
+            // get the users info
+            $recid = $record->getRecordId();
+            $rec = $this->fm->getRecordById($layoutName, $recid);
+            $userinfo = array();
+            $userinfo['username']  = $rec->getField('UserName');
+            $userinfo['surname']   = $rec->getField('Surname');
+            $userinfo['firstname'] = $rec->getField('FirstName');
+
+
+            return $userinfo;
+        }
+    }
+
+    public function getChildrenOf($parent) {
+        // This depends on the portal in the current layout
+        return $parent->getRelatedSet('Child');
+    }
+
 }
