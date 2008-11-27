@@ -1127,6 +1127,7 @@ jQuery(document).ready(function(){
             $page = $this->_objContent->getContentPageFiltered($contentId);
             
             //Load content from get vars
+            //TODO: Implement Full Page Preview (Currently only previewing FCK Contents)
             if ($isPreview) {
                 $page['title'] = $this->getParam('title');
                 $page['body'] = $this->getParam('body');
@@ -1200,14 +1201,7 @@ jQuery(document).ready(function(){
 
             $mtflink = new href($this->uri(array('action' => 'mail2friend', 'sectionid' => $page['sectionid'], 'id' => $page['id'])), $mtfimg, NULL);
          
-            //Create heading
-            //Lets format the header information for the page
-            $tblh = $this->newObject('htmltable', 'htmlelements');
-            $tblh->cellpadding = 3;
-            $tblh->width = "100%";
-            $tblh->align = "center";
-            
-            //PDF link into header
+            //PDF Icon
             $pdficon = $this->newObject('geticon', 'htmlelements');
             $pdficon->setIcon('filetypes/pdf');
             $lblView = $this->objLanguage->languageText("mod_cms_saveaspdf", "cms");
@@ -1217,6 +1211,45 @@ jQuery(document).ready(function(){
 			$pdflink = null;
             $pdflink = new href($pdfurl, $pdfimg, NULL);
 
+            //Print Icon
+            $printicon = $this->newObject('geticon', 'htmlelements');
+            $printicon->setIcon('print', 'gif', 'icons/cms');
+            $printlink = new href('javascript:void(0)', $printicon->show(), 'onclick="javascript:window.print();"');
+
+            //Checking to display pdf icon
+            if(isset($page['hide_pdf'])) {
+                if ($page['hide_pdf'] == 'g'){
+                    //Checking the global sys config
+                    $pdflink = new href('', '', NULL);
+                }
+                if ($page['hide_pdf'] == 'y'){
+                    $pdflink = new href('', '', NULL);  
+                }
+            }
+
+            //Checking to display mail 2 friend icon
+            if(isset($page['hide_email'])) {
+                if ($page['hide_email'] == 'g'){
+                    //Checking the global sys config
+                    $mtflink = new href('', '', NULL);
+                }
+                if ($page['hide_email'] == 'y'){
+                    $mtflink = new href('', '', NULL);  
+                }
+            }
+
+            //Checking to display print icon
+            if(isset($page['hide_print'])) {
+                if ($page['hide_print'] == 'g'){
+                    //Checking the global sys config
+                    $printlink = new href('', '', NULL);
+                }
+                if ($page['hide_print'] == 'y'){
+                    $printlink = new href('', '', NULL);  
+                }
+            }
+
+
             // Adding Written By
             if(isset($page['hide_title']) && $page['hide_title'] != 1){
 			    $this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
@@ -1224,10 +1257,17 @@ jQuery(document).ready(function(){
                 $this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
             }
 
+            //Create heading
+            //Lets format the header information for the page
+            $tblh = $this->newObject('htmltable', 'htmlelements');
+            $tblh->cellpadding = 3;
+            $tblh->width = "100%";
+            $tblh->align = "center";
+
             $this->objHead->type = 2;
 			$tblh->startRow();
             $tblh->addCell($this->objHead->show());
-            //$tblh->addCell($pdflink->show() . $mtflink->show(),null,null,'center'); //pdf icon
+            $tblh->addCell($pdflink->show() . $mtflink->show() . $printlink->show(),null,null,'right', 'printpdfmailicons'); //pdf icon
             $tblh->endRow();
             
             $strBody = null;
