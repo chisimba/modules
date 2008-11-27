@@ -1815,10 +1815,11 @@
             //$nav .= $viewCmsLink.'<br /><br />';
             $nav .= $objFeatureBox->showContent('Navigation Links',
                                         $cmsAdminLink.'<br />
-                                        &nbsp;&nbsp;'.$createRss.'<br />
-                                        &nbsp;&nbsp;'.$menuMangement.'<br />
-                                        &nbsp;&nbsp;'.$filemanager.'<br />
-                                        <div style="clear: both;">&nbsp;</div>
+                                        <div id="cmsleftcontrolpanel">
+                                        '.$createRss.'<br />
+                                        '.$menuMangement.'<br />
+                                        '.$filemanager.'<br />
+                                        </div>
                                         ');
             $nav .= '<br />';
 			$nav .= "</div>";
