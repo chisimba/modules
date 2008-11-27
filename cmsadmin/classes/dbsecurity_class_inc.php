@@ -214,7 +214,9 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            if (isset($data[0])) {
+                $userRawId = $data[0]['id'];
+            }
 
 
             //Preparing a list of USER ID's
@@ -317,7 +319,9 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            if (isset($data[0])) {
+                $userRawId = $data[0]['id'];
+            }
 
 
 
@@ -439,7 +443,9 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
+            if (isset($data[0])) {
+                $userRawId = $data[0]['id'];
+            }
 
             //Preparing a list of USER ID's
             $usersList = $this->getAssignedSectionUsers($sectionid);
@@ -537,8 +543,9 @@
             //id column of the tbl_groupadmin_group_users table and NOT the uaerid column		
             $sql = "SELECT id from tbl_users WHERE userId = '$userid'";
             $data = $this->getArray($sql);
-            $userRawId = $data[0]['id'];
-
+            if (isset($data[0])) {
+                $userRawId = $data[0]['id'];
+            }
 
 
             //Preparing a list of USER ID's
@@ -653,7 +660,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){		
-                $id = $data[0]['id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['id'];
+                }
                 $this->update('id', $id, $fields);
             } else {
                 //section user mapping not found
@@ -685,7 +694,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){
-                $id = $data[0]['id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['id'];
+                }
                 $this->update('id', $id, $fields);
             } else {
                 //section user mapping not found
@@ -1152,7 +1163,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){		
-                $id = $data[0]['id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['id'];
+                }
                 $this->update('id', $id, $fields);
             } else {
                 //content user mapping not found
@@ -1181,7 +1194,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){
-                $id = $data[0]['id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['id'];
+                }
                 $this->update('id', $id, $fields);
             } else {
                 //content user mapping not found
@@ -1740,7 +1755,9 @@
                                             WHERE  content_id = '$contentid'
                                             AND user_id = '$userid' ";
             $data = $this->getArray($qry);
-            $content_user_id = $data[0]['id'];
+            if (isset($data[0])) {
+                $content_user_id = $data[0]['id'];
+            }
 
             //Deleting a single user id for the given content
             //tbl_cms_content_user
@@ -1818,7 +1835,9 @@
                                             AND group_id = '$groupid' ";
 
             $data = $this->getArray($qry);
-            $content_group_id = $data[0]['id'];
+            if (isset($data[0])) {
+                $content_group_id = $data[0]['id'];
+            }
 
             //Deleting a single user id for the given content
             //tbl_cms_content_user
@@ -1894,7 +1913,9 @@
                                             WHERE  section_id = '$sectionid'
                                             AND user_id = '$userid' ";
             $data = $this->getArray($qry);
-            $section_user_id = $data[0]['id'];
+            if (isset($data[0])) {
+                $section_user_id = $data[0]['id'];
+            }
 
             //Deleting a single user id for the given section
             //tbl_cms_section_user
@@ -1969,7 +1990,9 @@
                                             AND group_id = '$groupid' ";
 
             $data = $this->getArray($qry);
-            $section_group_id = $data[0]['id'];
+            if (isset($data[0])) {
+                $section_group_id = $data[0]['id'];
+            }
 
             //Deleting a single user id for the given section
             //tbl_cms_section_user
@@ -2232,7 +2255,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){		
-                $id = $data[0]['id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['id'];
+                }
                 $this->update('id', $id, $fields);
             } else {
                 //no section by that id
@@ -2266,7 +2291,9 @@
             $data = $this->getArray($sql);
 
             if (count($data) > 0){
-                $id = $data[0]['content_id'];
+                if (isset($data[0])) {
+                    $id = $data[0]['content_id'];
+                }
                 $this->update('content_id', $id, $fields);
             } else {
                 //no content item by that id
