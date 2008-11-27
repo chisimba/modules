@@ -1495,27 +1495,42 @@
            /**
             * Defining Items to be added to Advanced Tab
             */
+            $show_pdf = '';
+            $show_email = '';
+            $show_print = '';
             if (is_array($arrContent)) {
+                if ($arrContent['hide_pdf'] != 'g'){
+                    $show_pdf = ($arrContent['hide_pdf'] == 'y')? 'n':'y';
+                }
+
+                if ($arrContent['hide_email'] != 'g'){
+                    $show_email = ($arrContent['hide_email'] == 'y')? 'n':'y';
+                }
+
+                if ($arrContent['hide_print'] != 'g'){
+                    $show_print = ($arrContent['hide_print'] == 'y')? 'n':'y';
+                }
+
                 //pdf option
                 $opt_pdf = new dropdown('hide_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
                 $opt_pdf->addOption("y",'yes');
                 $opt_pdf->addOption("n",'no');
-                $opt_pdf->setSelected('g');
+                $opt_pdf->setSelected($show_pdf);
                 $lbl_pdf = new label($this->objLanguage->languageText('mod_cmsadmin_show_pdf','cmsadmin'),'show_pdf');
                 //email option
                 $opt_email = new dropdown('hide_email');
                 $opt_email->addOption('g',"-Global-Option-");
                 $opt_email->addOption('y','yes');
                 $opt_email->addOption('n','no');
-                $opt_email->setSelected('g');
+                $opt_email->setSelected($show_email);
                 $lbl_email = new label($this->objLanguage->languageText('mod_cmsadmin_show_email','cmsadmin'),'show_email');
                 //Print
                 $opt_print = new dropdown('hide_print');
                 $opt_print->addOption('g',"-Global-Option-");
                 $opt_print->addOption('y','yes');
                 $opt_print->addOption('n','no');
-                $opt_print->setSelected('g');
+                $opt_print->setSelected($show_print);
                 $lbl_print = new label($this->objLanguage->languageText('mod_cmsadmin_show_print','cmsadmin'),'show_print');
 
             }else{

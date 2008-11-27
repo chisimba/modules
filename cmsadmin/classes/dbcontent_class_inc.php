@@ -138,10 +138,36 @@
             if ($creatorid==NUll) {
                 $creatorid = $this->_objUser->userId();
             }
+            
+            //TODO: Change these to show instead of hide
             $hide_title = $this->getParam('hide_title','0');
             $hide_user = $this->getParam('hide_user','0');
             $hide_date = $this->getParam('hide_date','0');
-           
+
+            
+            $hide_pdf = $this->getParam('hide_pdf','g');
+            $hide_email = $this->getParam('hide_email','g');
+            $hide_print = $this->getParam('hide_print','g');
+
+            //Comming through as show from ui so reversing here
+            if ($hide_pdf == 'y') {
+                $hide_pdf = 'n';
+            } else if ($hide_pdf == 'n') {
+                $hide_pdf = 'y';
+            }
+
+            if ($hide_email == 'y') {
+                $hide_email = 'n';
+            } else if ($hide_email == 'n') { 
+                $hide_email = 'y';
+            }
+
+            if ($hide_print == 'y') {
+                $hide_print = 'n';
+            } else if ($hide_print == 'n') {
+                $hide_print = 'y';
+            }
+
             $access = $this->getParam('access');
             $created_by = $this->getParam('title_alias',null);
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
@@ -161,6 +187,9 @@
                           'hide_title' => $hide_title,
                           'hide_user' => $hide_user,
                           'hide_date' => $hide_date,
+                          'hide_pdf' => $hide_pdf,
+                          'hide_email' => $hide_email,
+                          'hide_print' => $hide_print,
                           'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -299,6 +328,29 @@
             $hide_user = $this->getParam('hide_title','1');
             $hide_date = $this->getParam('hide_title','0');
 
+            $hide_pdf = $this->getParam('hide_pdf','g');
+            $hide_email = $this->getParam('hide_email','g');
+            $hide_print = $this->getParam('hide_print','g');
+
+            //Comming through as show from ui so reversing here
+            if ($hide_pdf == 'y') {
+                $hide_pdf = 'n';
+            } else if ($hide_pdf == 'n') {
+                $hide_pdf = 'y';
+            }
+
+            if ($hide_email == 'y') {
+                $hide_email = 'n';
+            } else if ($hide_email == 'n') { 
+                $hide_email = 'y';
+            }
+
+            if ($hide_print == 'y') {
+                $hide_print = 'n';
+            } else if ($hide_print == 'n') {
+                $hide_print = 'y';
+            }
+
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
@@ -311,6 +363,9 @@
                           'hide_title' => $hide_title,
                           'hide_user' => $hide_user,
                           'hide_date' => $hide_date,
+                          'hide_pdf' => $hide_pdf,
+                          'hide_email' => $hide_email,
+                          'hide_print' => $hide_print,
                           'post_lic' => $ccLicence,
                           'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),
@@ -319,7 +374,6 @@
                           'start_publish'=>$start_publish,
                           'end_publish'=>$end_publish
             );
-
             
             $creatorid = $this->getParam('creator',null);
             if(!empty($creatorid)){
@@ -334,15 +388,13 @@
             } else {
                 $this->_objFrontPage->removeIfExists($id);
             }
-
+            
             $result = $this->update('id', $id, $newArr);
             
             if ($result != FALSE) {
                 $newArr['id'] = $id;
                 $this->luceneIndex($newArr);
             }
-            
-            
             
             return $result;
         }
@@ -992,6 +1044,8 @@
          */
         public function luceneIndex($data)
         {
+            //Disabling Lucene
+            return false;
             $objLucene = $this->getObject('indexdata', 'search');
         
             $docId = 'cms_page_'.$data['id'];

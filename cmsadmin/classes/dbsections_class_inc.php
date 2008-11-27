@@ -1226,3 +1226,4 @@ class dbsections extends dbTable
 
 }
 ?>
+/var/tmp/dbsections_class_inc.php
