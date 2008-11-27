@@ -849,4 +849,3 @@ class simplecontenttree extends object
 }
 
 ?>
-/var/tmp/simplecontenttree_class_inc.php
