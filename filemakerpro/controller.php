@@ -40,6 +40,7 @@ class filemakerpro extends controller {
     public $scripts;
     public $layouts;
     public $databases;
+    public $obbbjFMPro;
 
     /**
      *
@@ -49,16 +50,17 @@ class filemakerpro extends controller {
      */
     public function init() {
         try {
-            // Include the needed libs from resources
-            include ($this->getResourcePath ( 'FileMaker.php' ));
             // Get the security object
             $this->objUser = $this->getObject ( "user", "security" );
             //Create an instance of the language object
             $this->objLanguage = $this->getObject ( "language", "language" );
             // Get the sysconfig variables for the FMP user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+            // Get the FM abstraction object
+            $this->objFMPro = $this->getObject('fmpro');
+
             // create an instance and connect to FMP
-            $this->connFMP ();
+            $this->objFMPro->connFMP ();
 
         } catch ( customException $e ) {
             // Bail gracefully
@@ -79,12 +81,12 @@ class filemakerpro extends controller {
 
         switch ($action) {
             case 'getstudentlist' :
-                $newPerformScript = $this->fm->newPerformScriptCommand ( $this->layouts [3], $this->scripts [3] );
-                $result = $newPerformScript->execute ();
+                //$newPerformScript = $this->fm->newPerformScriptCommand ( $this->layouts [3], $this->scripts [3] );
+                //$result = $newPerformScript->execute ();
 
-                foreach ( $result->_impl->_records as $kid ) {
-                    var_dump ( $kid->_impl->_fields );
-                }
+                //foreach ( $result->_impl->_records as $kid ) {
+                //    var_dump ( $kid->_impl->_fields );
+                //}
 
                 //var_dump($result->_impl->_records[0]->_impl->_fields);
 
@@ -116,6 +118,8 @@ class filemakerpro extends controller {
                 break;
 
             case NULL :
+                var_dump($this->objFMPro->scripts);
+                var_dump($this->objFMPro->layouts);
                 die ( "nothing to see here" );
                 break;
 
@@ -123,21 +127,6 @@ class filemakerpro extends controller {
                 die ( "unknown action" );
                 break;
         }
-    }
-
-    private function connFMP() {
-        $this->fm = new FileMaker ( );
-        // Get the values we need from sysconfig
-        $this->fm->setProperty ( 'database', $this->objSysConfig->getValue('fmdb', 'filemakerpro') );
-        $this->fm->setProperty ( 'hostspec', $this->objSysConfig->getValue('fmhost', 'filemakerpro') );
-        $this->fm->setProperty ( 'username', $this->objSysConfig->getValue('fmuser', 'filemakerpro') );
-        $this->fm->setProperty ( 'password', $this->objSysConfig->getValue('fmpass', 'filemakerpro') );
-
-        $this->scripts = $this->fm->listScripts ();
-        $this->layouts = $this->fm->listLayouts ();
-        $this->databases = $this->fm->listDatabases ();
-
-        return;
     }
 }
 ?>
