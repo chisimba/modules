@@ -1073,7 +1073,7 @@
             $this->appendArrayVar('headerParams', $script);
 
             $show_content = '0';
-
+            $is_front = FALSE;
             //date controls
             if (is_array($arrContent)) {
 
@@ -1351,7 +1351,10 @@
                 $contentId = '';
                 $arrContent = null;
 
-                $is_front = false;
+                if (!isset($is_front)) {
+                    $is_front = false;
+                }
+
                 if ( $this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
                     $is_front = TRUE;
@@ -1827,13 +1830,16 @@
                 $nav .="<div id='cmsnavigation'>".$cmsAdminMenu."</div>\n"; 
                 $nav .= '<br/>'.'&nbsp;'.'<br /><br/><br/>';
             }
+
+            $objFeatureBox = $this->getObject('featurebox', 'navigation');
+
             //$nav .= $viewCmsLink.'<br /><br />';
             $nav .= $objFeatureBox->showContent('Navigation Links',
                                         $cmsAdminLink.'<br />
                                         <div id="cmsleftcontrolpanel">
-                                        '.$createRss.'<br />
-                                        '.$menuMangement.'<br />
-                                        '.$filemanager.'<br />
+                                        '.$createRss.'
+                                        '.$menuMangement.'
+                                        '.$filemanager.'
                                         </div>
                                         ');
             $nav .= '<br />';
@@ -2831,6 +2837,18 @@
             }
 
             //Add form elements to the table
+
+            $h3->str = $this->objLanguage->languageText('mod_cmsadmin_section_maintext', 'cmsadmin');
+            $h3->type = 3;
+
+            $table->startRow();
+            $table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
+            $table->endRow();
+
+            $table->startRow();
+            $table->addCell('', '100px', 'top', null, 'cmsvspacer');
+            $table->endRow();
+
             if (!$editmode) {
                 $table->startRow();
                 $table->addCell($this->objLanguage->languageText('mod_cmsadmin_parentfolder', 'cmsadmin'));
@@ -2857,18 +2875,6 @@
                 $table->addCell($objParentId->show().$objRootId->show().$objCount->show().$objOrdering->show(),'','','','',"colspan='2'");
                 $table->endRow();
             }
-
-
-            $h3->str = $this->objLanguage->languageText('mod_cmsadmin_section_maintext', 'cmsadmin');
-            $h3->type = 3;
-
-            $table->startRow();
-            $table->addCell($h3->show(), null, 'top', null, null, 'colspan="2"');
-            $table->endRow();
-
-            $table->startRow();
-            $table->addCell('', null, 'top', null, 'cmsvspacer');
-            $table->endRow();
 
             $table->startRow();
             $table->addCell('&nbsp;');
@@ -2958,6 +2964,10 @@
             //Check if blocks module is registered
             $this->objModule = &$this->newObject('modules', 'modulecatalogue');
             $isRegistered = $this->objModule->checkIfRegistered('blocks');
+
+            if (!isset($pageId)) {
+                $pageId = '';
+            }
 
             // set up link to view block form
             $objBlocksLink = new link('#');
@@ -3338,6 +3348,10 @@
                 $hide_date = '1';
                 $contentId = '';
                 $arrSection = null;
+
+                if (!isset($is_front)) {
+                    $is_front = false;
+                }
 
                 if ( $this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
@@ -4913,6 +4927,9 @@
                 $titleInputValue = $arrContent['title'];
 
                 //var_dump($this->getParam('frontpage')); exit;
+                if (!isset($is_front)) {
+                    $is_front = false;
+                }
                 if ($this->getParam('frontpage') == 'true') {
                     $frontPage->setChecked(TRUE);
                     $is_front = TRUE;
