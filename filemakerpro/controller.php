@@ -118,7 +118,7 @@ class filemakerpro extends controller {
                 break;
 
             case NULL :
-                var_dump($this->objFMPro->authenticatePerson('john.tangney', 'paulrox'));
+
                 break;
 
             default :

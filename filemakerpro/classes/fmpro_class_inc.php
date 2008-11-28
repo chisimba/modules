@@ -67,7 +67,9 @@ class fmpro extends object {
     public $displayTimeFormat = '%I:%M %P';
     public $displayDateTimeFormat = '%m/%d/%Y %I:%M %P';
     public $submitDateOrder = 'mdy';
-
+    public $username;
+    public $password;
+    public $record;
 
     /**
      * Standard constructor
@@ -132,7 +134,6 @@ class fmpro extends object {
         $this->displayDateTimeFormat = '%m/%d/%Y %I:%M %P';
         $this->submitDateOrder = 'mdy';
 
-
         return;
     }
 
@@ -147,29 +148,49 @@ class fmpro extends object {
         return $this->fm->getLayout ( $layoutName );
     }
 
-    public function personRecords() {
+    public function simpleAuth($username, $password) {
+        $layoutName = 'Form: Person';
+        $findCommand = $this->fm->newFindCommand ( $layoutName );
+        $findCommand->addFindCriterion ( 'UserName', $username );
+        $findCommand->addFindCriterion ( 'Password', $password );
+        $result = $findCommand->execute ();
 
+        if (FileMaker::isError ( $result )) {
+            return FALSE;
+        } else {
+            $this->username = $username;
+            $this->password = $password;
+            $record = $result->getFirstRecord ();
+            $this->record = $record;
+            return TRUE;
+        }
     }
 
     public function authenticatePerson($username, $password) {
         $layoutName = 'Form: Person';
-        $findCommand = $this->fm->newFindCommand($layoutName);
-        $findCommand->addFindCriterion('UserName', $username);
-        $findCommand->addFindCriterion('Password', $password);
-        $result = $findCommand->execute();
-        $record = $result->getFirstRecord();
-        if (FileMaker::isError($result)) {
-            return NULL;
-        }
-        else {
+        $findCommand = $this->fm->newFindCommand ( $layoutName );
+        $findCommand->addFindCriterion ( 'UserName', $username );
+        $findCommand->addFindCriterion ( 'Password', $password );
+        $result = $findCommand->execute ();
+        if (FileMaker::isError ( $result )) {
+            return FALSE;
+        } else {
+            $this->username = $username;
+            $this->password = $password;
+            $record = $result->getFirstRecord ();
+            $this->record = $record;
             // get the users info
-            $recid = $record->getRecordId();
-            $rec = $this->fm->getRecordById($layoutName, $recid);
-            $userinfo = array();
-            $userinfo['username']  = $rec->getField('UserName');
-            $userinfo['surname']   = $rec->getField('LastName');
-            $userinfo['firstname'] = $rec->getField('FirstName');
-
+            $recid = $record->getRecordId ();
+            $rec = $this->fm->getRecordById ( $layoutName, $recid );
+            $userinfo = array ();
+            $userinfo ['username'] = $rec->getField ( 'UserName' );
+            $userinfo ['surname'] = $rec->getField ( 'LastName' );
+            $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
+            $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
+            $userinfo ['userid'] = $recid;
+            $userinfo ['title'] = '';
+            $userinfo ['logins'] = '0';
+            $userinfo ['password'] = '--FMP--';
 
             return $userinfo;
         }
@@ -177,7 +198,52 @@ class fmpro extends object {
 
     public function getChildrenOf($parent) {
         // This depends on the portal in the current layout
-        return $parent->getRelatedSet('Child');
+        //var_dump($parent->_impl->relatedSets);
+        $layoutName = 'Form: Person';
+        $layout = $this->grabLayout($layoutName);
+        $relatedsets = $layout->listRelatedSets($layout);
+        var_dump($relatedsets); die();
+        return $parent->getRelatedSet ( 'Child' );
     }
 
+    public function getUserInfo() {
+        $layoutName = 'Form: Person';
+        $recid = $this->record->getRecordId ();
+        $rec = $this->fm->getRecordById ( $layoutName, $recid );
+        $userinfo = array ();
+        $userinfo ['username'] = $rec->getField ( 'UserName' );
+        $userinfo ['surname'] = $rec->getField ( 'LastName' );
+        $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
+        $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
+        $userinfo ['userid'] = $recid;
+        $userinfo ['title'] = '';
+        $userinfo ['logins'] = '0';
+        $userinfo ['password'] = '--FMP--';
+
+        return $userinfo;
+    }
+
+    public function getUserProfile() {
+        $layoutName = 'Form: Person';
+        //$layout = $this->grabLayout($layoutName);
+        //$relatedsets = $layout->listRelatedSets($layout);
+        $findCommand = $this->fm->newFindCommand ( $layoutName );
+        $findCommand->addFindCriterion ( 'UserName', $this->username );
+        $findCommand->addFindCriterion ( 'Password', $this->password );
+        $result = $findCommand->execute ();
+        if (FileMaker::isError ( $result )) {
+            return FALSE;
+        } else {
+            $parentRecord = $result->getFirstRecord();
+            $parentRecordLayout = $parentRecord->getLayout();
+            $parentRecordPortals = $parentRecordLayout->getRelatedSets();
+            $portalName = array_shift($parentRecordPortals)->getName();
+            //$parentID = $parentRecord->getRecordID();
+
+            //var_dump($portalName); die();
+
+            $kids = $parentRecord->getRelatedSet($portalName);
+            return array($parentRecord, $kids);
+        }
+    }
 }
