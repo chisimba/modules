@@ -383,6 +383,39 @@
     </data>
   </update>        
   
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.596</version>
+    <description>Add optional fields for pdf/mail/print</description>
+    <data>
+      <add>
+        <name>hide_pdf</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    <data>
+      <add>
+        <name>hide_mail</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    <data>
+      <add>
+        <name>hide_print</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+  </update>       
+  
 </updates>
 
 

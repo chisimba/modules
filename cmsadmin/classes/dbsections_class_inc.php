@@ -270,7 +270,14 @@ class dbsections extends dbTable
                 $showintroduction = $this->getParam('showintro');
                 $user = $this->_objUser->userId();
 
-		if($this->getParam('pagenum') == 'custom') {
+                //Preventing Duplicates (title as key)
+                $checkData = $this->getSection($id);
+                if (is_array($checkData)) {
+                    return false;
+                }
+
+
+        		if($this->getParam('pagenum') == 'custom') {
                 	$numpagedisplay = $this->getParam('customnumber');
                 } else {
                 	$numpagedisplay = $this->getParam('pagenum');
@@ -1141,9 +1148,15 @@ class dbsections extends dbTable
             $objLucene = $this->getObject('indexdata', 'search');
             $docId = 'cms_section_'.$data['id'];
             $url = $this->uri(array('action' => 'showsection', 'id' => $data['id']), 'cms');
-            if (!isset($data['creation'])){
-                $data['creation'] = '';
+
+            //Removing Notices
+            $fields = array('creation', 'title', 'body', 'description', 'userid');
+            foreach ($fields as $field){
+                if (!isset($data[$field])){
+                    $data[$field] = '';
+                }
             }
+
             $objLucene->luceneIndex($docId, $data['creation'], $url, $data['title'], $data['title'].$data['body'], $data['description'], 'cms', $data['userid']);
         }
         
