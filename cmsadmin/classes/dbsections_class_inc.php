@@ -1141,7 +1141,9 @@ class dbsections extends dbTable
             $objLucene = $this->getObject('indexdata', 'search');
             $docId = 'cms_section_'.$data['id'];
             $url = $this->uri(array('action' => 'showsection', 'id' => $data['id']), 'cms');
-            
+            if (!isset($data['creation'])){
+                $data['creation'] = '';
+            }
             $objLucene->luceneIndex($docId, $data['creation'], $url, $data['title'], $data['title'].$data['body'], $data['description'], 'cms', $data['userid']);
         }
         
