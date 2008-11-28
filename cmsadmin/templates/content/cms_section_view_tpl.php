@@ -8,6 +8,9 @@
 
 //Set layout template
 //Equipping to handle loading via ajax
+if (!isset($hideLeftColumn)) {
+    $hideLeftColumn = '';
+}
 if (!$hideLeftColumn) {
     $this->setLayoutTemplate('cms_layout_tpl.php');
 } else {
