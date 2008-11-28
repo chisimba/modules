@@ -1125,6 +1125,10 @@ jQuery(document).ready(function(){
             $contentId = $this->getParam('id');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
             $page = $this->_objContent->getContentPageFiltered($contentId);
+
+            //Including Meta Tags Here
+            $this->appendArrayVar('metaKeywords', $page['metakey']);
+            $this->appendArrayVar('metaDescriptions', $page['metadesc']);
             
             //Load content from get vars
             //TODO: Implement Full Page Preview (Currently only previewing FCK Contents)
