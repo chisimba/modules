@@ -57,7 +57,7 @@ class filemakerpro extends controller {
             // Get the sysconfig variables for the FMP user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             // Get the FM abstraction object
-            $this->objFMPro = $this->getObject('fmpro');
+            $this->objFMPro = $this->getObject ( 'fmpro' );
 
             // create an instance and connect to FMP
             $this->objFMPro->connFMP ();
@@ -84,9 +84,11 @@ class filemakerpro extends controller {
                 //$newPerformScript = $this->fm->newPerformScriptCommand ( $this->layouts [3], $this->scripts [3] );
                 //$result = $newPerformScript->execute ();
 
+
                 //foreach ( $result->_impl->_records as $kid ) {
                 //    var_dump ( $kid->_impl->_fields );
                 //}
+
 
                 //var_dump($result->_impl->_records[0]->_impl->_fields);
 
