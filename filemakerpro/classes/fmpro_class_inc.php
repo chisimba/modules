@@ -200,9 +200,10 @@ class fmpro extends object {
         // This depends on the portal in the current layout
         //var_dump($parent->_impl->relatedSets);
         $layoutName = 'Form: Person';
-        $layout = $this->grabLayout($layoutName);
-        $relatedsets = $layout->listRelatedSets($layout);
-        var_dump($relatedsets); die();
+        $layout = $this->grabLayout ( $layoutName );
+        $relatedsets = $layout->listRelatedSets ( $layout );
+        var_dump ( $relatedsets );
+        die ();
         return $parent->getRelatedSet ( 'Child' );
     }
 
@@ -234,16 +235,18 @@ class fmpro extends object {
         if (FileMaker::isError ( $result )) {
             return FALSE;
         } else {
-            $parentRecord = $result->getFirstRecord();
-            $parentRecordLayout = $parentRecord->getLayout();
-            $parentRecordPortals = $parentRecordLayout->getRelatedSets();
-            $portalName = array_shift($parentRecordPortals)->getName();
+            $parentRecord = $result->getFirstRecord ();
+            $parentRecordLayout = $parentRecord->getLayout ();
+            $parentRecordPortals = $parentRecordLayout->getRelatedSets ();
+            $portalName = array_shift ( $parentRecordPortals )->getName ();
             //$parentID = $parentRecord->getRecordID();
+
 
             //var_dump($portalName); die();
 
-            $kids = $parentRecord->getRelatedSet($portalName);
-            return array($parentRecord, $kids);
+
+            $kids = $parentRecord->getRelatedSet ( $portalName );
+            return array ($parentRecord, $kids );
         }
     }
 }
