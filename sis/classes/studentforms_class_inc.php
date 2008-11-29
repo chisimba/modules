@@ -41,11 +41,11 @@ class studentforms extends object
       $gender->addOption('female',$this->objLanguage->languageText('mod_sis_female','sis'));
       if (isset($data['gender'])){
           $gender->setSelected($data['gender']);
-      } 
+      }
       $inputNames['gender']=$this->objLanguage->languageText('mod_sis_gender','sis');
       $inputObjects['gender']=$gender;
 
-      
+
       $table = $this->newObject('htmltable', 'htmlelements');
       $table->startRow();
       $table->addCell($inputNames['surname']);
@@ -64,21 +64,21 @@ class studentforms extends object
       $table->addCell($inputNames['gender']);
       $table->addCell($inputNames['ethnicity']);
       $table->endRow();
-      
+
       $table->startRow();
       $table->addCell($inputObjects['birthdate']->show());
       $table->addCell($inputObjects['gender']->show());
       $table->addCell($inputObjects['ethnicity']->show());
       $table->endRow();
-      
+
 
       $formObj=new form();
       $formObj->addToForm($table->show());
 
-      $button= new button()
+      $button= new button();
       $html=$formObj->show();
       return $html;
-     
+
     }
 
     public function userinfo($data=array())

@@ -1,6 +1,6 @@
 <?php
 /* -------------------- sis class extends controller ----------------*/
-                                                                                                                                             
+
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
@@ -14,7 +14,7 @@ class sis extends controller
     public $objConfig;
     public $objLanguage;
     public $objSISforms;
-    
+
     /**
     * ye olde standard init()
     */
@@ -23,13 +23,14 @@ class sis extends controller
         $this->objConfig = $this->getObject('altconfig','config');
         $this->objLanguage = $this->getObject('language','language');
         $this->objSISforms = $this->getObject('studentforms','sis');
+        $this->objFMPro = $this->getObject('fmpro', 'filemakerpro');
     }
 
     /**
-    * 
+    *
     *
     */
-    public function dispatch($action) 
+    public function dispatch($action)
     {
         switch ($action)
         {
@@ -45,25 +46,25 @@ class sis extends controller
                 return $this->showDefault();
         }
     }
-    
+
 
     /**
     * Default action
     * @returns string $template
     */
     public function showDefault()
-    { 
+    {
        return "default_tpl.php";
     }
 
     /**
-    
+
     /**
     * Calls classes to get form info
     * @returns string $template
     */
     public function showStudent()
-    { 
+    {
        $this->string=$this->objSISforms->studentInput();
        return "default_tpl.php";
     }
@@ -80,10 +81,17 @@ class sis extends controller
        {
           $paramvals[$line]=$this->getParam($line);
        }
-    
+
        return "default_tpl.php";
     }
-    
+
+    private function myProfile() {
+        $profile = $this->objFMPro->getUserProfile();
+        //var_dump($profile[0]->_impl->_relatedSets);
+        $this->setVarByRef('profile', $profile);
+        var_dump($profile);
+    }
+
 
 
 }
