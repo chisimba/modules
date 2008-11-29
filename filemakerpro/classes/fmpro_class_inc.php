@@ -249,4 +249,18 @@ class fmpro extends object {
             return array ($parentRecord, $kids );
         }
     }
+
+    public function makeNewFindCommand ( $layoutName ) {
+        return $this->fm->newFindCommand( $layoutName);
+    }
+
+    public function editRecord( $layoutName, $recid, $values ) {
+        $edit = $this->fm->newEditCommand( $layoutName, $recid, $values );
+        $result = $edit->execute();
+        if (FileMaker::isError ( $result )) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 }
