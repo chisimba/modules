@@ -13,7 +13,7 @@ $rightSideColumn = $objSF->parentMenu(TRUE);
 $leftCol .= $objSideBar->show();
 
 
-$middleColumn = $objSF->listKids();
+$middleColumn = $objSF->profileForm('123', FALSE);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

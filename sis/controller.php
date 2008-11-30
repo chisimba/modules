@@ -21,6 +21,7 @@ class sis extends controller {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objSISforms = $this->getObject ( 'studentforms', 'sis' );
         $this->objFMPro = $this->getObject ( 'fmpro', 'filemakerpro' );
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -29,10 +30,38 @@ class sis extends controller {
      */
     public function dispatch($action) {
         switch ($action) {
-            case "myprofile" :
+            case "showprofile" :
                 return $this->myProfile ();
-            case "saveprofile" :
-                return $this->saveProfile ();
+            case "updateprofile" :
+                $ln = $this->getParam('lastname', '');
+                $fn = $this->getParam('firstname', '');
+                $mn = $this->getParam('midname', '');
+                $oc = $this->getParam('occupation', '');
+                $em = $this->getParam('employer', '');
+                $un = $this->getParam('username');
+                // address details
+                $street = $this->getParam('street', '');
+                $city = $this->getParam('city');
+                $state = $this->getParam('street');
+                $zip = $this->getParam('zip', '');
+                // email details
+                $email = $this->getParam('email');
+                $emailpriv = $this->getParam('emailpriv');
+                // phone details
+                $hphone = $this->getParam('hphone');
+                $cphone = $this->getParam('cphone');
+                $cellpriv = $this->getParam('cellpriv');
+                $wphone = $this->getParam('wphone');
+                // record id
+                $recid = $this->getParam('recid');
+                // check that the user doing the update has rights to do so
+                // First lets get the correct users info
+                var_dump($this->objFMPro->getFullPrf($un));
+                echo $this->objUser->userId();
+                //var_dump($this->objFMPro->getUserProfile ()); die();
+
+
+                return $this->updateProfile ();
             case 'newstudent' :
                 return $this->showStudent ();
             case 'savestudent' :
@@ -79,7 +108,13 @@ class sis extends controller {
         $profile = $this->objFMPro->getUserProfile ();
         //var_dump($profile[0]->_impl->_relatedSets);
         $this->setVarByRef ( 'profile', $profile );
-        var_dump ( $profile );
+        //var_dump ( $profile );
+        return "profile_tpl.php";
+    }
+
+    private function updateprofile() {
+        // update the profile by catching all the details then sending to FMP in this case
+
     }
 
 }

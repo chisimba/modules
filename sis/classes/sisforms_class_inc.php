@@ -80,6 +80,7 @@ class sisforms extends object {
             $this->loadClass ( 'checkbox', 'htmlelements' );
             $this->loadClass ( 'dropdown', 'htmlelements' );
             $this->loadClass ( 'label', 'htmlelements' );
+            $this->loadClass ( 'href', 'htmlelements' );
             $objCaptcha = $this->getObject ( 'captcha', 'utilities' );
             $this->required = '<span class="warning"> * ' . $this->objLanguage->languageText ( 'word_required', 'system', 'Required' ) . '</span>';
         } catch ( customException $e ) {
@@ -89,6 +90,17 @@ class sisforms extends object {
 
     }
 
+    /**
+     * Method to edit a profile.
+     *
+     * This function simply builds a form for the edit and then submits the form back to
+     * the controller
+     *
+     * @todo put in some validation!
+     * @access public
+     * @param recid
+     * @param optional featurebox
+     */
     public function profileForm($recid, $featurebox = FALSE) {
         $prform = new form ( 'updateprofile', $this->uri ( array ('module' => 'sis', 'action' => 'updateprofile', 'recid' => $recid ) ) );
         $prfieldset = $this->getObject ( 'fieldset', 'htmlelements' );
@@ -110,7 +122,7 @@ class sisforms extends object {
         $fnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_firstname", "sis" ) . ':', 'comm_input_fn' );
 
         // Middle name
-        $mn = new textinput ( 'firstname' );
+        $mn = new textinput ( 'midname' );
         $mnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_middlename", "sis" ) . ':', 'comm_input_mn' );
 
         // Occupation
@@ -123,6 +135,7 @@ class sisforms extends object {
 
         // Username (required)
         $un = new textinput ( 'username' );
+        $un->extra = 'READONLY';
         $unlabel = new label ( $this->objLanguage->languageText ( "mod_sis_username", "sis" ) . ':', 'comm_input_un' );
 
         // Nested table for the personal details fieldset
@@ -297,6 +310,31 @@ class sisforms extends object {
             return $objFeaturebox->showContent ( $this->objLanguage->languageText ( "mod_sis_prformheader", "sis" ), $prform->show () );
         } else {
             return $prform->show ();
+        }
+    }
+
+    public function listKids() {
+         $kids = NULL;
+         return "<h1> This is a list of kids associated with this profile...</h1>";
+    }
+    /**
+     * Method to display the parent menu
+     *
+     * @access public
+     */
+    public function parentMenu($featurebox = FALSE) {
+        // Add some links to the other bits and doodads
+        $profile = new href ( $this->uri ( array ('action' => 'showprofile' ) ), $this->objLanguage->languageText ( "mod_sis_editprofile", "sis" ) );
+
+        // Add the links to the linklist
+        $linklist = $profile->show() . "<br />";
+
+        // return the link list for display
+        if ($featurebox == TRUE) {
+            $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
+            return $objFeaturebox->show ( $this->objLanguage->languageText ( "mod_sis_parentmenu", "sis" ), $linklist, 'pmenu' );
+        } else {
+            return $linklist;
         }
     }
 
