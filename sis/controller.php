@@ -56,7 +56,8 @@ class sis extends controller {
                 $recid = $this->getParam('recid');
                 // check that the user doing the update has rights to do so
                 // First lets get the correct users info
-                var_dump($this->objFMPro->getFullPrf($un));
+                echo $recid;
+                var_dump($this->objFMPro->getUsersIdByUsername($un));
                 echo $this->objUser->userId();
                 //var_dump($this->objFMPro->getUserProfile ()); die();
 

@@ -71,7 +71,7 @@ class sisforms extends object {
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objUser = $this->getObject ( "user", "security" );
             $this->sysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
-
+            $this->objFMPro = $this->getObject('fmpro', 'filemakerpro');
             // Load up the HTML elemnts we may need
             $this->loadClass ( 'form', 'htmlelements' );
             $this->loadClass ( 'textinput', 'htmlelements' );
@@ -101,8 +101,11 @@ class sisforms extends object {
      * @param recid
      * @param optional featurebox
      */
-    public function profileForm($recid, $featurebox = FALSE) {
-        $prform = new form ( 'updateprofile', $this->uri ( array ('module' => 'sis', 'action' => 'updateprofile', 'recid' => $recid ) ) );
+    public function profileForm($username, $featurebox = FALSE) {
+        // get the record id of the person editing the form
+        $details = $this->objFMPro->getDetailsById($this->objFMPro->getUsersIdByUsername($username));
+        //var_dump($details);
+        $prform = new form ( 'updateprofile', $this->uri ( array ('module' => 'sis', 'action' => 'updateprofile' ) ) );
         $prfieldset = $this->getObject ( 'fieldset', 'htmlelements' );
         $prfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updateprofile', 'sis' ) );
 
@@ -115,27 +118,45 @@ class sisforms extends object {
 
         // textinput for last name (required)
         $ln = new textinput ( 'lastname' );
+        if(isset($details['surname'])) {
+            $ln->setValue($details['surname']);
+        }
         $lnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_lastname", "sis" ) . ':', 'comm_input_ln' );
 
         // First name
         $fn = new textinput ( 'firstname' );
+        if(isset($details['firstname'])) {
+            $fn->setValue($details['firstname']);
+        }
         $fnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_firstname", "sis" ) . ':', 'comm_input_fn' );
 
         // Middle name
         $mn = new textinput ( 'midname' );
+        if(isset($details['middlename'])) {
+            $mn->setValue($details['middlename']);
+        }
         $mnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_middlename", "sis" ) . ':', 'comm_input_mn' );
 
         // Occupation
         $oc = new textinput ( 'occupation' );
+        if(isset($details['occupation'])) {
+            $oc->setValue($details['occupation']);
+        }
         $oclabel = new label ( $this->objLanguage->languageText ( "mod_sis_occupation", "sis" ) . ':', 'comm_input_oc' );
 
         // Employer
         $em = new textinput ( 'employer' );
+        if(isset($details['employer'])) {
+            $em->setValue($details['employer']);
+        }
         $emlabel = new label ( $this->objLanguage->languageText ( "mod_sis_employer", "sis" ) . ':', 'comm_input_em' );
 
         // Username (required)
         $un = new textinput ( 'username' );
         $un->extra = 'READONLY';
+        if(isset($details['username'])) {
+            $un->setValue($details['username']);
+        }
         $unlabel = new label ( $this->objLanguage->languageText ( "mod_sis_username", "sis" ) . ':', 'comm_input_un' );
 
         // Nested table for the personal details fieldset
@@ -174,20 +195,32 @@ class sisforms extends object {
         $addfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_address', 'sis' ) );
 
         $str = new textinput ( 'street' );
+        if(isset($details['street'])) {
+            $str->setValue($details['street']);
+        }
         $strlabel = new label ( $this->objLanguage->languageText ( "mod_sis_street", "sis" ) . ':', 'comm_input_str' );
 
         // City
         $city = new textinput ( 'city' );
+        if(isset($details['city'])) {
+            $city->setValue($details['city']);
+        }
         $citylabel = new label ( $this->objLanguage->languageText ( "mod_sis_city", "sis" ) . ':', 'comm_input_city' );
 
         // State
         $state = new textinput ( 'state' );
+        if(isset($details['state'])) {
+            $state->setValue($details['state']);
+        }
         $statelabel = new label ( $this->objLanguage->languageText ( "mod_sis_state", "sis" ) . ':', 'comm_input_state' );
         $state->maxlength = 2;
         $state->size = 2;
 
         // Zip
         $zip = new textinput ( 'zip' );
+        if(isset($details['zip'])) {
+            $zip->setValue($details['zip']);
+        }
         $ziplabel = new label ( $this->objLanguage->languageText ( "mod_sis_zip", "sis" ) . ':', 'comm_input_zip' );
         $state->maxlength = 5;
 
@@ -225,8 +258,14 @@ class sisforms extends object {
 
         // Now we need the email address info also (required)
         $email = new textinput ( 'email' );
+        if(isset($details['emailaddress'])) {
+            $email->setValue($details['emailaddress']);
+        }
         $emaillabel = new label ( $this->objLanguage->languageText ( "mod_sis_emailaddress", "sis" ) . ':', 'comm_input_email' );
         $primail = new checkbox ( 'emailpriv' );
+        if(isset($details['emailpriv'])) {
+            $primail->checked = TRUE;  // setValue($details['emailaddress']);
+        }
         $primaillabel = new label ( $this->objLanguage->languageText ( "mod_sis_private", "sis" ) . ':', 'comm_check_email' );
 
         // add the email stuff to the next cell
@@ -255,16 +294,28 @@ class sisforms extends object {
         // Now we need the phone info (required)
         // home phone (required)
         $hphone = new textinput ( 'hphone' );
+        if(isset($details['homephone'])) {
+            $hphone->setValue($details['homephone']);
+        }
         $hphonelabel = new label ( $this->objLanguage->languageText ( "mod_sis_homephone", "sis" ) . ':', 'comm_input_hphone' );
 
         // cell phone
         $cellpriv = new checkbox ( 'cellpriv' );
+        if(isset($details['cellpriv'])) {
+            $cellpriv->checked = TRUE;
+        }
         $cellprivlabel = new label ( $this->objLanguage->languageText ( "mod_sis_private", "sis" ) . ':', 'comm_check_cell' );
         $cphone = new textinput ( 'cphone' );
+        if(isset($details['cellphone'])) {
+            $cphone->setValue($details['cellphone']);
+        }
         $cphonelabel = new label ( $this->objLanguage->languageText ( "mod_sis_cellphone", "sis" ) . ':', 'comm_input_cphone' );
 
         // work phone (required)
         $wphone = new textinput ( 'wphone' );
+        if(isset($details['workphone'])) {
+            $wphone->setValue($details['workphone']);
+        }
         $wphonelabel = new label ( $this->objLanguage->languageText ( "mod_sis_workphone", "sis" ) . ':', 'comm_input_wphone' );
 
         // add the phone fieldset
@@ -291,9 +342,18 @@ class sisforms extends object {
         // stick the phone content into the table
         $phonefieldset->addContent ( $phtbl->show () );
 
+        $recid = new textinput ( 'recid' );
+        //$recid->type = "hidden";
+        $recid->extra = 'READONLY';
+        if(isset($details['recid'])) {
+            $recid->setValue($details['recid']);
+        }
+
         $prtbl->startRow ();
-        $prtbl->addCell ( $phonefieldset->show () );
+        $prtbl->addCell ( $phonefieldset->show ().$recid->show() );
         $prtbl->endRow ();
+
+
 
         //end off the form and add the buttons
         $this->objPrButton = new button ( $this->objLanguage->languageText ( 'word_save', 'system' ) );
