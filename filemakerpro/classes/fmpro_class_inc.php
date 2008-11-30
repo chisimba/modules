@@ -250,8 +250,46 @@ class fmpro extends object {
         }
     }
 
+    public function getUsersIdByUsername($username) {
+        $layoutName = 'Form: Person';
+        $findCommand = $this->fm->newFindCommand ( $layoutName );
+        $findCommand->addFindCriterion ( 'UserName', $username );
+        $result = $findCommand->execute ();
+        if (FileMaker::isError ( $result )) {
+            return FALSE;
+        } else {
+            $parentRecord = $result->getFirstRecord ();
+            $id = $parentRecord->getRecordId();
+            return $id;
+        }
+    }
+
     public function makeNewFindCommand($layoutName) {
         return $this->fm->newFindCommand ( $layoutName );
+    }
+
+    public function getDetailsById($id) {
+        $layoutName = 'Form: Person';
+        $rec = $this->fm->getRecordById ( $layoutName, $id );
+        $userinfo = array ();
+        $userinfo['recid'] = $rec->getField ( 'Id' );
+        $userinfo ['username'] = $rec->getField ( 'UserName' );
+        $userinfo ['surname'] = $rec->getField ( 'LastName' );
+        $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
+        $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
+        $userinfo ['emailpriv'] = $rec->getField ( 'isEmailPrivate' );
+        $userinfo ['street'] = $rec->getField ( 'Address' );
+        $userinfo ['cellphone'] = $rec->getField ( 'Cell' );
+        $userinfo ['city'] = $rec->getField ( 'City' );
+        $userinfo ['employer'] = $rec->getField ( 'Employer' );
+        $userinfo ['occupation'] = $rec->getField ( 'Occupation' );
+        $userinfo ['state'] = $rec->getField ( 'State' );
+        $userinfo ['zip'] = $rec->getField ( 'Zip' );
+        $userinfo ['homephone'] = $rec->getField ( 'HomePhone' );
+        $userinfo ['workphone'] = $rec->getField ( 'WorkPhone' );
+        $userinfo ['cellpriv'] = $rec->getField ( 'IsCellPrivate' );
+
+        return $userinfo;
     }
 
     public function editRecord($layoutName, $recid, $values) {
