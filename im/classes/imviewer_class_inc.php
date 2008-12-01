@@ -73,6 +73,7 @@ class imviewer extends object {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
+		$this->objLink = $this->getObject ( 'link', 'htmlelements' );
         $this->objDBIM = $this->getObject('dbim');
 
         $this->objIcon->setIcon ( 'green_bullet' );
@@ -84,6 +85,8 @@ class imviewer extends object {
 
     public function renderOutputForBrowser($msgs) {
         $objWashout = $this->getObject ( 'washout', 'utilities' );
+	$this->objIcon->setIcon('reassign','png');
+	$reassignIcon = $this->objIcon->show();
         $ret = "<tr>";
 
         $max = 1;
@@ -104,7 +107,10 @@ class imviewer extends object {
             } else {
                 $presence = $this->inactiveIcon;
             }
-
+		
+	    	$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
+	    	$this->objLink->link = $reassignIcon;
+			$resassignLink = $this->objLink->show();
             $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
             $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
             $prevmessages = "";
@@ -126,12 +132,14 @@ class imviewer extends object {
                 $lastmsgId = $prevmess ['id'];
             }
 
-            $ajax = "<span class=\"subdued\" id=\"replydiv" . $lastmsgId . "\">[REPLY]</span>
-                        <script charset=\"utf-8\">
+            $ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">[REPLY]</p>
+                       <p class=\"im_source\">
+			 <script charset=\"utf-8\">
                             new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
-                        </script>";
+                        </script>
+			</p><p class=\"im_reassign\">&nbsp;".$resassignLink.'</p>';
 			
-            $box .= '<td><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . "</b></p>" . '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
+            $box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . '</b></p><p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
 
             //var_dump($msg);
             //$box2 = $this->objFeatureBox->showContent($presence." <b>".$fromuser."</b>: ".$msg['person'].', &nbsp;&nbsp;<b>' . $sentat . '</b>: ' . $msg ['datesent'], $box ."<br />");

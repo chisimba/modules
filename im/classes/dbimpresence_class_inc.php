@@ -192,5 +192,20 @@ class dbimpresence extends dbTable
         $sql = "TRUNCATE TABLE tbl_im";
         $this->query($sql);
     }
+
+	/**
+	* Method to reassign a conversation to someone else
+	* @param string $patient
+	* @param string $newCounsellor
+	*/
+	public function reAssignCounsellor($patient, $newCounsellor)
+	{
+		//die($patient.$newCounsellor);
+		if(empty($patient) || empty($newCounsellor))
+		{
+			return false;
+		}
+		return $this->update('person',$patient,array('counsilor' => $newCounsellor)); 
+	} 
 }
 ?>
