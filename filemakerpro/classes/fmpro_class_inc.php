@@ -156,7 +156,8 @@ class fmpro extends object {
         $result = $findCommand->execute ();
 
         if (FileMaker::isError ( $result )) {
-            return FALSE;
+            throw new customException("Something went wrong with talking to FMP!");
+            // return FALSE;
         } else {
             $this->username = $username;
             $this->password = $password;
