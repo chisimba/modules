@@ -174,7 +174,8 @@ class fmpro extends object {
         $findCommand->addFindCriterion ( 'Password', $password );
         $result = $findCommand->execute ();
         if (FileMaker::isError ( $result )) {
-            return FALSE;
+            throw new customException ( $result->getMessage () . ' (error ' . $result->code . ')' );
+            // return FALSE;
         } else {
             $this->username = $username;
             $this->password = $password;
