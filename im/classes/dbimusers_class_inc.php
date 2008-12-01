@@ -81,11 +81,34 @@ class dbimusers extends dbTable
         {
             //remove from users table as well
             $this->delete("userid", $userId);
-
-            return $this->update('counsilor', $userId, array('counsilor' => null), 'tbl_im_presence');
+			
+            $this->update('counsilor', $userId, array('counsilor' => null), 'tbl_im_presence');
+			
         }
+
+		//re assign all this counsellors patients
+		$this->redistributePatients();
     }
 
+	/**
+	* Method to redistribute a counsellors patients to the other 
+	* counsellors
+	*/
+	public function redistributePatients()
+	{
+		$patients = $this->objPresence->getAll("WHERE isNull(counsilor)");
+	
+		foreach($patients as $patient)
+		{
+			$counsellorId = $this->assignUserToCounsilor($patient['person']);
+			$this->update('person', $patient['person'], array('counsilor' => $counsellorId), 'tbl_im_presence');
+		}
+	}
+
+	/**
+	* Method to assign a user to a counsellor
+	* @param string $person
+	*/
     public function assignUserToCounsilor($person)
     {
 
