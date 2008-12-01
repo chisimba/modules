@@ -156,7 +156,7 @@ class fmpro extends object {
         $result = $findCommand->execute ();
 
         if (FileMaker::isError ( $result )) {
-            throw new customException("Something went wrong with talking to FMP!");
+            throw new customException ( $result->getMessage () . ' (error ' . $result->code . ')' );
             // return FALSE;
         } else {
             $this->username = $username;
@@ -260,7 +260,7 @@ class fmpro extends object {
             return FALSE;
         } else {
             $parentRecord = $result->getFirstRecord ();
-            $id = $parentRecord->getRecordId();
+            $id = $parentRecord->getRecordId ();
             return $id;
         }
     }
@@ -273,7 +273,7 @@ class fmpro extends object {
         $layoutName = 'Form: Person';
         $rec = $this->fm->getRecordById ( $layoutName, $id );
         $userinfo = array ();
-        $userinfo['recid'] = $rec->getField ( 'Id' );
+        $userinfo ['recid'] = $rec->getField ( 'Id' );
         $userinfo ['username'] = $rec->getField ( 'UserName' );
         $userinfo ['surname'] = $rec->getField ( 'LastName' );
         $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
