@@ -118,6 +118,14 @@ class das extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
+
+	   		case 'viewreassign':
+				return 'view_reassign_tpl.php';
+				break;
+			case 'reassign':
+				//print $this->getParam('counsellorbox');
+				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
+				return $this->nextAction('viewall');
             case 'resetcounsillors':
                 $this->objDbImPres->resetCounsillors();
                 $this->nextAction('viewcounsilors');
