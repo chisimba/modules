@@ -90,7 +90,12 @@ class dbpagemenu extends dbTable
 				$body = stripslashes($pageMenu[0]['body']);
 			}
 
-			return $body;	
+            //Removing Notice
+            if (!isset($body)) {
+                $body = '';
+            }
+
+			return $body;
 		}
 
 
