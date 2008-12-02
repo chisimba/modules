@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(2);
+$cssLayout->setNumColumns(3);
 
 // get the sidebar object
 $this->leftMenu = $this->newObject('usermenu', 'toolbar');
@@ -10,17 +10,19 @@ $refreshLink = $this->newObject('link', 'htmlelements');
 $refreshIcon = $this->newObject('geticon', 'htmlelements');
 $configLink = $this->newObject('link', 'htmlelements');
 $configIcon = $this->newObject('geticon', 'htmlelements');
+$loadIcon = $this->newObject('geticon', 'htmlelements');
 $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
-$this->objImOps = $this->getObject('imops', 'im');
-
+$this->objImOps = $this->getObject('dasops', 'das');
+$objImView = $this->getObject('viewrender', 'das');
 $middleColumn = NULL;
 $leftColumn = NULL;
+$rightColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_im_recentmessages', 'im');
-$header->type = 1;
+$header->str = 'My Conversations' ;$this->objLanguage->languageText('mod_im_recentmessages', 'im');
+$header->type = 3;
 
 $refreshLink->href = $this->uri(null, 'das');
 $refreshIcon->setIcon('refresh');
@@ -53,7 +55,7 @@ $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
 $num = count($msgs);
 $str = "Currently counsilling $num$outof users";
-$objImView = $this->getObject('imviewer', 'im');
+
 
 $middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
 $middleColumn .= $objImView->renderOutputForBrowser($msgs);
@@ -63,14 +65,19 @@ if (!$this->objUser->isLoggedIn()) {
     $leftColumn .= $this->objImOps->loginBox(TRUE);
 } else {
    
-    $leftColumn .= $objImView->renderLinkList($msgs);
+    $rightColumn .= $objImView->renderLinkList($msgs);
+	$rightColumn .= $objImView->getStatsBox();
 	$leftColumn .= $this->leftMenu->show();
     if($this->objUser->inAdminGroup($this->objUser->userId()))
     {
-       $leftColumn .= $this->objImOps->showMassMessageBox(TRUE, TRUE);
+       $leftColumn .= $this->objImOps->massMessage();//(TRUE, TRUE);
     }
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
+$cssLayout->setRightColumnContent($rightColumn);
 echo $cssLayout->show();
+
+?>
+

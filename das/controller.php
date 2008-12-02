@@ -77,7 +77,7 @@ class das extends controller {
             $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
             $this->objIMUsers = $this->getObject ( 'dbimusers', 'im' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
-
+			$this->objConfig = $this->getObject ( 'altconfig', 'config' );
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
@@ -91,7 +91,7 @@ class das extends controller {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
-
+			$this->timeLimit = 10;
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
             if ($this->getParam('action') != 'messagehandler')
             {
@@ -118,10 +118,17 @@ class das extends controller {
     public function dispatch() {
         $action = $this->getParam ( 'action' );
         switch ($action) {
+			case 'viewall' :
+
+            case NULL :
+                header("Content-Type: text/html;charset=utf-8");
+                return 'viewall_tpl.php';
+                break;
 
 	   		case 'viewreassign':
 				return 'view_reassign_tpl.php';
 				break;
+
 			case 'reassign':
 				//print $this->getParam('counsellorbox');
 				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
@@ -154,44 +161,10 @@ class das extends controller {
                 header("Content-Type: text/html;charset=utf-8");
                 return 'messageview_tpl.php';
                 break;
-
-            case 'viewallajax' :
-                //var_dump($this->objDbIm->getMessagesByActiveUser());
-                $page = intval ( $this->getParam ( 'page', 0 ) );
-                if ($page < 0) {
-                    $page = 0;
-                }
-                $start = $page * 10;
-                if(!$this->objUser->isAdmin($this->objUser->userId()))
-                {
-                    $cid = NULL;//$this->objUser->userId();
-                }else{
-                    $cid = NULL;
-                }
-
-                $msgs = $this->objDbIm->getMessagesByActiveUser ($cid); //$this->objDbIm->getRange($start, 10);
-
-
-                $this->setVarByRef ( 'msgs', $msgs );
-                header("Content-Type: text/html;charset=utf-8");
-                return 'viewall_ajax_tpl.php';
-                break;
-            case 'viewall' :
-            case NULL :
-                $count = $this->objDbIm->getRecordCount ();
-                $pages = ceil ( $count / 10 );
-                $this->setVarByRef ( 'pages', $pages );
-                header("Content-Type: text/html;charset=utf-8");
-                return 'viewall_tpl.php';
-                break;
-
-            case 'sendmessage' :
-                if ($this->userJid) {
-                    $this->objImOps->sendMessage ( $this->userJid, 'Hope this works!' );
-                }
-                break;
+            
 
             case 'reply' :
+				//reply via ajax
                 $msg = $this->getParam ( 'myparam' );
                 $user2send = $this->getParam ( 'fromuser' );
                 $msgid = $this->getParam ( 'msgid' );
@@ -218,91 +191,20 @@ class das extends controller {
                 $conn2->processUntil ( 'session_start' );
 
                 $time_start = microtime ( TRUE );
-                $users = $this->objDbImPres->getAll(); 
+
+				//get all the users that was active in the last x minutes
+                $users = $this->objDbImPres->getAllActiveUsers(); 
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
                 $time_end = microtime ( TRUE );
                 $time = $time_end - $time_start;
-                //$to = 'pscott209@gmail.com';
-                //$conn2->message ( $to, 'Test took: ' . $time . ' seconds' );
                 $conn2->disconnect ();
 
-                $this->nextAction ( NULL );
+                echo "Messages were sent to ".count($users)." users";
 
                 break;
-
-            /*case 'messagehandler' :
-                // This is a looooong running task... Lets use the background class to handle it
-                //check the connection status
-                $status = $this->objBack->isUserConn ();
-                //keep the user connection alive even if the browser is closed
-                $callback = $this->objBack->keepAlive ();
-                // Now the code is backrounded and cannot be aborted! Be careful now...
-                $this->conn->autoSubscribe ();
-                try {
-                    $this->conn->connect ();
-                    while ( ! $this->conn->isDisconnected () ) {
-                        $payloads = $this->conn->processUntil ( array ('presence', 'end_stream', 'session_start' ) ); //array ('message', 'presence', 'end_stream', 'session_start', 'reply' )
-                        foreach ( $payloads as $event ) {
-                            $pl = $event [1];
-                            switch ($event [0]) {
-                                /*case 'message' :
-                                    //$this->objImOps->parseSysMessages($pl);
-                                    switch ($pl ['body']) {
-                                        case 'quit' :
-                                            $this->conn->disconnect ();
-                                            break;
-                                        case 'break' :
-                                            $this->conn->send ( "</end>" );
-                                            break;
-                                        case 'latestblogs' :
-                                            if ($this->objModules->checkIfRegistered ( 'blog' )) {
-                                                $this->blogPosts = $this->getObject ( 'blogposts', 'blog' );
-                                                $this->display = $this->blogPosts->showLastTenPostsStripped ( 5, FALSE );
-                                                // send the results back
-                                                $this->conn->message ( $pl ['from'], $this->display );
-                                            } else {
-                                                $this->conn->message ( $pl ['from'], "Blog is not installed on this server!" );
-                                            }
-                                            break;
-                                        case 'NULL' :
-                                            continue;
-                                    }
-                                    // Update Twitter
-                                    if ($this->objTwitterLib && $pl ['body']) {
-                                        $this->objTwitterLib->updateStatus ( $pl ['from'] . ': ' . $pl ['body'] );
-                                    }
-                                    // Send a response message
-                                    if ($pl ['body'] != "") {
-                                        // Bang the array into a table to keep a record of it.
-                                        $this->objDbIm->addRecord ( $pl );
-                                        //$this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_im_msgadded', 'im'));
-                                    }
-                                    break;
-
-                                case 'presence' :
-                                    // Update the table presence info
-                                    $this->objDbImPres->updatePresence ( $pl );
-                                    break;
-                                case 'session_start' :
-                                    $this->conn->getRoster ();
-                                    $this->conn->presence ( $status = $this->objLanguage->languageText ( 'mod_im_presgreeting', 'im' ) );
-                                    break;
-
-                            }
-                        }
-
-                    }
-                } catch ( customException $e ) {
-                    customException::cleanUp ();
-                    exit ();
-                }
-                // OK something went wrong, make sure the sysadmin knows about it!
-                $email = $this->objConfig->getsiteEmail ();
-                $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
-                break;
-		*/
+          
             default :
                 die ( "unknown action" );
                 break;
