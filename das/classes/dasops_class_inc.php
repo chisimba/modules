@@ -116,7 +116,7 @@ class dasops extends object {
 		 $ajax = "<p class=\"im_source\" id=\"massdiv\">Ready...</p>
             
 			 <script charset=\"utf-8\">
-                            new Ajax.InPlaceEditor('massdiv', 'index.php', {rows:10,cols:20, callback: function(form, value) { return 'module=das&action=massmessage&msg=' + escape(value) }})
+                            new Ajax.InPlaceEditor('massdiv', 'index.php', {rows:10,cols:13, callback: function(form, value) { return 'module=das&action=massmessage&msg=' + escape(value) }})
                         </script>
 			";
 
