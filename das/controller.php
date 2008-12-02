@@ -193,7 +193,7 @@ class das extends controller {
                 $time_start = microtime ( TRUE );
 
 				//get all the users that was active in the last x minutes
-                $users = $this->objDbImPres->getAllActiveUsers(); 
+                $users = $this->objDbImPres->getAll();//ActiveUsers(); 
                 foreach ( $users as $user ) {
                     $conn2->message ( $user ['person'], $msg );
                 }
@@ -218,14 +218,14 @@ class das extends controller {
      * @return bool
      * @access public
      */
-    public function requiresLogin($action) {
+    /*public function requiresLogin($action) {
         $actionsRequiringLogin = array ('messagehandler' );
         if (in_array ( $action, $actionsRequiringLogin )) {
             return FALSE;
         } else {
             return TRUE;
         }
-    }
+    }*/
 	
 
 
