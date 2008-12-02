@@ -23,37 +23,37 @@ $fields = array(
         'notnull' => TRUE,
         'default' => '0'
 		),
-    'hide_title' => array(
-        'type' => 'integer',
-        'length' => 1,
-        'notnull' => TRUE,
-        'default' => '0'
-        ),
-    'hide_user' => array(
-        'type' => 'integer',
-        'length' => 1,
-        'notnull' => TRUE,
-        'default' => '0'
-        ),
-    'hide_date' => array(
-        'type' => 'integer',
-        'length' => 1,
-        'notnull' => TRUE,
-        'default' => '0'
-        ),
-    'hide_pdf' => array(
+    'show_title' => array(
         'type' => 'text',
         'length' => 1,
         'notnull' => TRUE,
         'default' => 'g'
         ),
-    'hide_mail' => array(
+    'show_author' => array(
         'type' => 'text',
         'length' => 1,
         'notnull' => TRUE,
         'default' => 'g'
         ),
-    'hide_print' => array(
+    'show_date' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+    'show_pdf' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+    'show_mail' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
+    'show_print' => array(
         'type' => 'text',
         'length' => 1,
         'notnull' => TRUE,

@@ -19,7 +19,7 @@ $lbRootOnly = $this->objLanguage->languageText('mod_cmsadmin_rootnodesonly', 'cm
 $btnUpdate = $this->objLanguage->languageText('mod_cmsadmin_updatemenustyle', 'cmsadmin');
 
 /* ** page heading ** */
-$objIcon->setIcon('menu', 'png', 'icons/cms/');
+$objIcon->setIcon('menu2_small', 'png', 'icons/cms/');
 
 $objHead->str = $objIcon->show().'&nbsp;'.$head;
 $objHead->type = 1;

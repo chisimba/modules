@@ -53,12 +53,12 @@
         */
         protected $_objBlocks;
 
-           /**
-            * Class Constructor
-            *
-            * @access public
-            * @return void
-            */
+       /**
+        * Class Constructor
+        *
+        * @access public
+        * @return void
+        */
         public function init()
         {
             try {
@@ -77,7 +77,7 @@
         }
 
 
-            /**
+        /**
          * Method to return the current and next levels child content
          *
          * @access public
@@ -139,35 +139,14 @@
                 $creatorid = $this->_objUser->userId();
             }
             
-            //TODO: Change these to show instead of hide
-            $hide_title = $this->getParam('hide_title','0');
-            $hide_user = $this->getParam('hide_user','0');
-            $hide_date = $this->getParam('hide_date','0');
-
+            $show_title = $this->getParam('show_title','g');
+            $show_author = $this->getParam('show_author','g');
+            $show_date = $this->getParam('show_date','g');
             
-            $hide_pdf = $this->getParam('hide_pdf','g');
-            $hide_email = $this->getParam('hide_email','g');
-            $hide_print = $this->getParam('hide_print','g');
-
-            //Comming through as show from ui so reversing here
-            if ($hide_pdf == 'y') {
-                $hide_pdf = 'n';
-            } else if ($hide_pdf == 'n') {
-                $hide_pdf = 'y';
-            }
-
-            if ($hide_email == 'y') {
-                $hide_email = 'n';
-            } else if ($hide_email == 'n') { 
-                $hide_email = 'y';
-            }
-
-            if ($hide_print == 'y') {
-                $hide_print = 'n';
-            } else if ($hide_print == 'n') {
-                $hide_print = 'y';
-            }
-
+            $show_pdf = $this->getParam('show_pdf','g');
+            $show_email = $this->getParam('show_email','g');
+            $show_print = $this->getParam('show_print','g');
+            
             $access = $this->getParam('access');
             $created_by = $this->getParam('title_alias',null);
             $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
@@ -184,12 +163,12 @@
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
-                          'hide_title' => $hide_title,
-                          'hide_user' => $hide_user,
-                          'hide_date' => $hide_date,
-                          'hide_pdf' => $hide_pdf,
-                          'hide_email' => $hide_email,
-                          'hide_print' => $hide_print,
+                          'show_title' => $show_title,
+                          'show_author' => $show_author,
+                          'show_date' => $show_date,
+                          'show_pdf' => $show_pdf,
+                          'show_email' => $show_email,
+                          'show_print' => $show_print,
                           'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -266,7 +245,12 @@
                           'access' => $access,
                           'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
-                          'hide_title' => $hide_title,
+                          'show_title' => $show_title,
+                          'show_author' => $show_author,
+                          'show_date' => $show_date,
+                          'show_pdf' => $show_pdf,
+                          'show_email' => $show_email,
+                          'show_print' => $show_print,
                           'created' =>  $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
@@ -324,32 +308,14 @@
             $metakey = $this->getParam('keyword',null);
             $metadesc = $this->getParam('description',null);
             $ccLicence = $this->getParam('creativecommons');
-            $hide_title = $this->getParam('hide_title','0');
-            $hide_user = $this->getParam('hide_title','1');
-            $hide_date = $this->getParam('hide_title','0');
 
-            $hide_pdf = $this->getParam('hide_pdf','g');
-            $hide_email = $this->getParam('hide_email','g');
-            $hide_print = $this->getParam('hide_print','g');
+            $show_title = $this->getParam('show_title','g');
+            $show_author = $this->getParam('show_title','g');
+            $show_date = $this->getParam('show_title','g');
 
-            //Comming through as show from ui so reversing here
-            if ($hide_pdf == 'y') {
-                $hide_pdf = 'n';
-            } else if ($hide_pdf == 'n') {
-                $hide_pdf = 'y';
-            }
-
-            if ($hide_email == 'y') {
-                $hide_email = 'n';
-            } else if ($hide_email == 'n') { 
-                $hide_email = 'y';
-            }
-
-            if ($hide_print == 'y') {
-                $hide_print = 'n';
-            } else if ($hide_print == 'n') {
-                $hide_print = 'y';
-            }
+            $show_pdf = $this->getParam('show_pdf','g');
+            $show_email = $this->getParam('show_email','g');
+            $show_print = $this->getParam('show_print','g');
 
             $newArr = array(
                           'title' => $title ,
@@ -360,12 +326,12 @@
                           'modified' => $modifiedDate,
                           'modified_by' => $modifiedBy,
                           'published' => $published,
-                          'hide_title' => $hide_title,
-                          'hide_user' => $hide_user,
-                          'hide_date' => $hide_date,
-                          'hide_pdf' => $hide_pdf,
-                          'hide_email' => $hide_email,
-                          'hide_print' => $hide_print,
+                          'show_title' => $show_title,
+                          'show_author' => $show_author,
+                          'show_date' => $show_date,
+                          'show_pdf' => $show_pdf,
+                          'show_email' => $show_email,
+                          'show_print' => $show_print,
                           'post_lic' => $ccLicence,
                           'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),

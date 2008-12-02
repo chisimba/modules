@@ -416,6 +416,73 @@
     </data>
   </update>       
   
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.598</version>
+    <description>Added global options</description>
+    
+    <data>
+      <add>
+        <name>show_title</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_author</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_date</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_pdf</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_email</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_print</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+    
+  </update>       
+  
 </updates>
 
 

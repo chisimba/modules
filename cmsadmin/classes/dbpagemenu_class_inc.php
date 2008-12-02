@@ -734,7 +734,16 @@ class dbpagemenu extends dbTable
 	public function luceneIndex($data)
     {
         $objLucene = $this->getObject('indexdata', 'search');
+
+        //Removing Notices
+        $checkIndex = array('id', 'sectionid', 'created', 'title', 'body', 'introtext', 'created_by');
+        foreach ($checkIndex as $index){
+            if (!isset($data[$index])) {
+                $data[$index] = '';
+            }
+        }
         
+
         $docId = 'cms_page_'.$data['id'];
         
         $url = $this->uri(array

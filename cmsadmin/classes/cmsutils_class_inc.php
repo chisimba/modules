@@ -477,6 +477,12 @@
             $url = '?module=shorturl&ref=cmsadmin';
             $icnShortURL = $objIcon->getCleanBlockIcon($url, 'shorturl60x60', $link, 'png', 'icons/cms/');
 
+            //Configuration link
+            $link = $this->objLanguage->languageText('mod_cmsadmin_config', 'cmsadmin'); 
+            $url = '?module=sysconfig&action=step2&pmodule_id=cmsadmin';
+            $icnConfig = $objIcon->getCleanBlockIcon($url, 'config', $link, 'png', 'icons/cms/');
+
+
             $tbl->startRow();
             $tbl->addCell($icnContent);
             $tbl->addCell($icnSection);
@@ -491,6 +497,10 @@
             $tbl->addCell($icnFiles);
             $tbl->addCell($icnPermissions);
             $tbl->addCell($icnShortURL);
+            $tbl->endRow();
+
+            $tbl->startRow();
+            $tbl->addCell($icnConfig);
             $tbl->endRow();
 
             $tbl->startRow();
@@ -1292,9 +1302,6 @@
                 $frontPage->setChecked($is_front);
                 $published->setChecked($arrContent['published']);
                 $visible = $arrContent['published'];
-                $hide_title = $arrContent['hide_title'];
-                $hide_user = $arrContent['hide_user'];;
-                $hide_date = $arrContent['hide_date'];
 
                 //Set licence option
                 if(isset($arrContent['post_lic'])){
@@ -1319,10 +1326,10 @@
                 $end_pub = $publishing_end->show('end_date', 'yes', 'no', $end_pub);
                 //Author Alias
                 $author = new textinput('author_alias',$arrContent['created_by_alias'],null,20);
-                $lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
+                $lbl_author_alias = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
                 //Pre-populated dropdown
 
-        /*
+                /*
                 $creator = new dropdown('creator');
                 $users = $this->_objUserModel->getUsers('surname', 'listall');
 
@@ -1372,7 +1379,7 @@
 
 
                 //Pre-populated dropdown
-        /*
+                /*
                 $creator = new dropdown('creator');
                 $users = $this->_objUserModel->getUsers('surname', 'listall');
 
@@ -1383,7 +1390,7 @@
                     $creator->setSelected($this->_objUser->userId());
                 }
                 $lbl_creator = new label($this->objLanguage->languageText('mod_cmsadmin_change_author','cmsadmin'),'creator');
-        */
+                */
 
                 //Change Created Date
                 $lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
@@ -1397,7 +1404,86 @@
             //$tbl_basic->addCell($published->show());
             $tbl_basic->endRow();
 
+
+            if (is_array($arrContent)) {
+                $show_title = 'g';
+                if (isset($arrContent['show_title'])) {
+                    $show_title = $arrContent['show_title'];
+                }
+    
+                $show_author = 'g';
+                if (isset($arrContent['show_author'])) {
+                    $show_author = $arrContent['show_author'];
+                }
+    
+                $show_date = 'g';
+                if (isset($arrContent['show_date'])) {
+                    $show_date = $arrContent['show_date'];
+                }
+
+                //title option
+                $opt_title = new dropdown('show_title');
+                $opt_title->addOption('g',"-Global-Option-");
+                $opt_title->addOption("y",'yes');
+                $opt_title->addOption("n",'no');
+                $opt_title->setSelected($show_title);
+                $lbl_title = new label($this->objLanguage->languageText('mod_cmsadmin_show_title','cmsadmin'),'show_title');
+                //author option
+                $opt_author = new dropdown('show_author');
+                $opt_author->addOption('g',"-Global-Option-");
+                $opt_author->addOption('y','yes');
+                $opt_author->addOption('n','no');
+                $opt_author->setSelected($show_author);
+                $lbl_author = new label($this->objLanguage->languageText('mod_cmsadmin_show_author','cmsadmin'),'show_author');
+                //date option
+                $opt_date = new dropdown('show_date');
+                $opt_date->addOption('g',"-Global-Option-");
+                $opt_date->addOption('y','yes');
+                $opt_date->addOption('n','no');
+                $opt_date->setSelected($show_date);
+                $lbl_date = new label($this->objLanguage->languageText('mod_cmsadmin_show_date','cmsadmin'),'show_date');
+
+            }else{
+                //title option
+                $opt_title = new dropdown('show_title');
+                $opt_title->addOption('g',"-Global-Option-");
+                $opt_title->addOption("y",'yes');
+                $opt_title->addOption("n",'no');
+                $opt_title->setSelected('g');
+                $lbl_title = new label($this->objLanguage->languageText('mod_cmsadmin_show_title','cmsadmin'),'show_title');
+                //author option
+                $opt_author = new dropdown('show_author');
+                $opt_author->addOption('g',"-Global-Option-");
+                $opt_author->addOption('y','yes');
+                $opt_author->addOption('n','no');
+                $opt_author->setSelected('g');
+                $lbl_author = new label($this->objLanguage->languageText('mod_cmsadmin_show_author','cmsadmin'),'show_author');
+                //date option
+                $opt_date = new dropdown('show_date');
+                $opt_date->addOption('g',"-Global-Option-");
+                $opt_date->addOption('y','yes');
+                $opt_date->addOption('n','no');
+                $opt_date->setSelected('g');
+                $lbl_date = new label($this->objLanguage->languageText('mod_cmsadmin_show_date','cmsadmin'),'show_date');
+            }
+            //add items to tables for good layout
+
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_title->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_title->show());
+            $tbl_basic->endRow();
+
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_author->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_author->show());
+            $tbl_basic->endRow();
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_date->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_date->show());
+            $tbl_basic->endRow();
+
             //Hide Title
+            /*
             $lbNo = $this->objLanguage->languageText('word_no');
             $lbYes = $this->objLanguage->languageText('word_yes');
 
@@ -1435,7 +1521,7 @@
             $tbl_basic->addCell($this->objLanguage->languageText('phrase_hidedate').': &nbsp; ');
             $tbl_basic->addCell($objRadio->show());
             $tbl_basic->endRow();
-
+            */
 
 
             // Radio button to display the full content or only the summary on the front page
@@ -1465,7 +1551,7 @@
             $tbl_basic->endRow();
 
             $tbl_basic->startRow();
-            $tbl_basic->addCell($lbl_author->show());
+            $tbl_basic->addCell($lbl_author_alias->show());
             $tbl_basic->addCell($author->show());
             $tbl_basic->endRow();
 
@@ -1498,38 +1584,39 @@
            /**
             * Defining Items to be added to Advanced Tab
             */
-            $show_pdf = '';
-            $show_email = '';
-            $show_print = '';
+            $show_pdf = 'g';
+            $show_email = 'g';
+            $show_print = 'g';
             if (is_array($arrContent)) {
-                if ($arrContent['hide_pdf'] != 'g'){
-                    $show_pdf = ($arrContent['hide_pdf'] == 'y')? 'n':'y';
+
+                if (isset($arrContent['show_pdf'])) {
+                    $show_pdf = $arrContent['show_pdf'];
                 }
 
-                if ($arrContent['hide_email'] != 'g'){
-                    $show_email = ($arrContent['hide_email'] == 'y')? 'n':'y';
+                if (isset($arrContent['show_email'])) {
+                    $show_email = $arrContent['show_email'];
                 }
 
-                if ($arrContent['hide_print'] != 'g'){
-                    $show_print = ($arrContent['hide_print'] == 'y')? 'n':'y';
+                if (isset($arrContent['show_print'])) {
+                    $show_print = $arrContent['show_print'];
                 }
 
                 //pdf option
-                $opt_pdf = new dropdown('hide_pdf');
+                $opt_pdf = new dropdown('show_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
                 $opt_pdf->addOption("y",'yes');
                 $opt_pdf->addOption("n",'no');
                 $opt_pdf->setSelected($show_pdf);
                 $lbl_pdf = new label($this->objLanguage->languageText('mod_cmsadmin_show_pdf','cmsadmin'),'show_pdf');
                 //email option
-                $opt_email = new dropdown('hide_email');
+                $opt_email = new dropdown('show_email');
                 $opt_email->addOption('g',"-Global-Option-");
                 $opt_email->addOption('y','yes');
                 $opt_email->addOption('n','no');
                 $opt_email->setSelected($show_email);
                 $lbl_email = new label($this->objLanguage->languageText('mod_cmsadmin_show_email','cmsadmin'),'show_email');
                 //Print
-                $opt_print = new dropdown('hide_print');
+                $opt_print = new dropdown('show_print');
                 $opt_print->addOption('g',"-Global-Option-");
                 $opt_print->addOption('y','yes');
                 $opt_print->addOption('n','no');
@@ -1538,21 +1625,21 @@
 
             }else{
                 //pdf option
-                $opt_pdf = new dropdown('hide_pdf');
+                $opt_pdf = new dropdown('show_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
                 $opt_pdf->addOption("y",'yes');
                 $opt_pdf->addOption("n",'no');
                 $opt_pdf->setSelected('g');
                 $lbl_pdf = new label($this->objLanguage->languageText('mod_cmsadmin_show_pdf','cmsadmin'),'show_pdf');
                 //email option
-                $opt_email = new dropdown('hide_email');
+                $opt_email = new dropdown('show_email');
                 $opt_email->addOption('g',"-Global-Option-");
                 $opt_email->addOption('y','yes');
                 $opt_email->addOption('n','no');
                 $opt_email->setSelected('g');
                 $lbl_email = new label($this->objLanguage->languageText('mod_cmsadmin_show_email','cmsadmin'),'show_email');
                 //Print
-                $opt_print = new dropdown('hide_print');
+                $opt_print = new dropdown('show_print');
                 $opt_print->addOption('g',"-Global-Option-");
                 $opt_print->addOption('y','yes');
                 $opt_print->addOption('n','no');
@@ -1562,15 +1649,15 @@
             //add items to tables for good layout
 
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_pdf->show());
+            $tbl_advanced->addCell($lbl_pdf->show(), null, 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_pdf->show());
             $tbl_advanced->endRow();
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_email->show());
+            $tbl_advanced->addCell($lbl_email->show(), null, 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_email->show());
             $tbl_advanced->endRow();
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_print->show());
+            $tbl_advanced->addCell($lbl_print->show(), null, 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_print->show());
             $tbl_advanced->endRow();
 
