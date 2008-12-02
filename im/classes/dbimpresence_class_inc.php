@@ -116,17 +116,39 @@ class dbimpresence extends dbTable
      *@return array
      *@access public
      */
-    public function getAllActiveUsers($userId)
+    public function getAllActiveUsers($userId = NULL)
     {
         //$sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' and status != 'unavailable' ORDER BY datesent ASC";
         $interval = "10";
-		$sql="SELECT distinct(person) as person from tbl_im_presence WHERE counsilor='$userId' and 
+		$user = (empty($userId)) ? "" : " counsilor='$userId' and ";
+		$sql="SELECT distinct(person) as person from tbl_im_presence WHERE 
+				$user
 				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
 
 
 		$ret = $this->query($sql);
 		
-	return $ret;
+		return $ret;
+    }
+
+
+ /**
+     *Method to get all the active users
+     *@return array
+     *@access public
+     */
+    public function countActiveUsers($userId = NULL)
+    {
+        
+        $interval = "10";
+		$user = (empty($userId)) ? "" : " counsilor='$userId' and ";
+		$sql="SELECT count(person) as counter from tbl_im_presence WHERE 
+				$user
+				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
+
+		$ret = $this->query($sql);
+		
+		return $ret[0]['counter'];
     }
 
     /**
@@ -207,5 +229,17 @@ class dbimpresence extends dbTable
 		}
 		return $this->update('person',$patient,array('counsilor' => $newCounsellor)); 
 	} 
+
+
+	/**
+	* Method to count the number of live conversations
+	*/
+	public function countMessages()
+	{
+
+		$sql = 'SELECT count(id) as count FROM tbl_im';
+		$ret = $this->query($sql);
+		return $ret[0]['count'];
+	}
 }
 ?>
