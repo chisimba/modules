@@ -27,6 +27,7 @@ class cmslayouts extends object
     {
         try{
             $this->objConfig = $this->getObject('altconfig', 'config');
+            $this->_objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
             $this->_objContent =$this->newObject('dbcontent', 'cmsadmin');
@@ -530,7 +531,7 @@ jQuery(document).ready(function(){
     		$page = $this->_objContent->getContentPage($arrFrontPages[0]['content_id']);
 
     		// Page heading - hide if set
-    		if(isset($page['hide_title']) && $page['hide_title'] == 1){
+    		if(isset($page['show_title']) && $page['show_title'] == 1){
                 //Display edit link even when hiding the title
     			$pageStr = '';
     			$this->objHead->type = '2';
@@ -545,12 +546,12 @@ jQuery(document).ready(function(){
             }
 
             //Adding Written By
-            if(isset($page['hide_user']) && $page['hide_user'] != 1){
+            if(isset($page['show_author']) && $page['show_author'] != 1){
                 $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
             }
 
             //Adding Date
-            if(isset($page['hide_date']) && $page['hide_date'] != 1){
+            if(isset($page['show_date']) && $page['show_date'] != 1){
                 if(isset($page['created']) && !empty($page['created'])){
                     $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
                 }
@@ -594,7 +595,7 @@ jQuery(document).ready(function(){
     				$cnt++;
 
     				// Page heading - hide if set
-    				if(isset($page['hide_title']) && $page['hide_title'] == 1){
+    				if(isset($page['show_title']) && $page['show_title'] == 1){
     					$pageStr = $this->getEditLink($page['id']);
     				}else{
     					$this->objHead->type = '2';
@@ -605,13 +606,13 @@ jQuery(document).ready(function(){
 
                     if($show_content){
                         // Adding Written By
-                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                        if(isset($page['show_author']) && $page['show_author'] != 1){
                             $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
 
                         }
 
                         // Adding Date
-                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                        if(isset($page['show_date']) && $page['show_date'] != 1){
                             if(isset($page['created']) && !empty($page['created'])){
                                 $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
                             }
@@ -636,12 +637,12 @@ jQuery(document).ready(function(){
     
         				// Display the page title and introduction
                         // Adding Written By
-                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                        if(isset($page['show_author']) && $page['show_author'] != 1){
                             $pageStr .= '<p><span class="user">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span><br />';
                         }
 
                         // Adding Date
-                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                        if(isset($page['show_date']) && $page['show_date'] != 1){
                             if(isset($page['created']) && !empty($page['created'])){
                                 $pageStr .= '<span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
                             }
@@ -770,7 +771,7 @@ jQuery(document).ready(function(){
     
                     if ($pageId == $page['id']) {
                         // hide the title if set
-                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                        if(isset($page['show_title']) && $page['show_title'] == 1){
                             $strBody = '';
                         }else{
                             $this->objHead->str = $page['title'];
@@ -865,7 +866,7 @@ jQuery(document).ready(function(){
                 foreach ($arrPages as $page) {
                     $pageStr = '';
                     
-                    if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                    if(isset($page['show_title']) && $page['show_title'] == 1){
                         $pageStr = '';
                     }else{
                         $this->objHead->type = '4';
@@ -875,14 +876,14 @@ jQuery(document).ready(function(){
                         $pageStr .= '<p>';
 
                         // Adding Written By
-                        if(isset($page['hide_user']) && $page['hide_user'] != 1){
+                        if(isset($page['show_author']) && $page['show_author'] != 1){
                             if (isset($page['created_by'])) {
                                 $pageStr .= '<span class="minute">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
                             }
                         }
                         
                         // Adding Written By
-                        if(isset($page['hide_date']) && $page['hide_date'] != 1){
+                        if(isset($page['show_date']) && $page['show_date'] != 1){
                             $creationDate = $this->objDate->formatDate($page['created']);
                             $pageStr .= '<span class="date">'.$creationDate.'</span>';
                         }
@@ -980,7 +981,7 @@ jQuery(document).ready(function(){
                 $pgCnt = count($arrPages);
                 foreach ($arrPages as $page) {
                     if ($pageId == $page['id']) {
-                        if(isset($page['hide_title']) && $page['hide_title'] == 1){
+                        if(isset($page['show_title']) && $page['show_title'] == 1){
                             $pageStr = '';
                         }else{
                             $this->objHead->type = 2;
@@ -1135,9 +1136,9 @@ jQuery(document).ready(function(){
             if ($isPreview) {
                 $page['title'] = $this->getParam('title');
                 $page['body'] = $this->getParam('body');
-                $page['hide_user'] = $this->getParam('hide_user');
-                $page['hide_date'] = $this->getParam('hide_date');
-                $page['hide_title'] = $this->getParam('hide_title');
+                $page['show_author'] = $this->getParam('show_author');
+                $page['show_date'] = $this->getParam('show_date');
+                $page['show_title'] = $this->getParam('show_title');
             }
 
             if ($page == ''){
@@ -1221,53 +1222,71 @@ jQuery(document).ready(function(){
             $printlink = new href('javascript:void(0)', $printicon->show(), 'onclick="javascript:window.print();"');
 
             //Checking to display pdf icon
-            if(isset($page['hide_pdf'])) {
-                if ($page['hide_pdf'] == 'g'){
+            if(isset($page['show_pdf'])) {
+                if ($page['show_pdf'] == 'g'){
                     //Checking the global sys config
-                    $pdflink = new href('', '', NULL);
+                    $globalShowPdf = $this->_objSysConfig->getValue('SHOW_PDF', 'cmsadmin');
+                    if ($globalShowPdf == 'n') {
+                        $pdflink = new href('', '', NULL);
+                    }
                 }
-                if ($page['hide_pdf'] == 'y'){
-                    $pdflink = new href('', '', NULL);  
+                if ($page['show_pdf'] == 'n'){
+                    $pdflink = new href('', '', NULL);
                 }
             }
 
             //Checking to display mail 2 friend icon
-            if(isset($page['hide_email'])) {
-                if ($page['hide_email'] == 'g'){
+            if(isset($page['show_email'])) {
+                if ($page['show_email'] == 'g'){
                     //Checking the global sys config
-                    $mtflink = new href('', '', NULL);
+                    $globalShowMtf = $this->_objSysConfig->getValue('SHOW_MAIL', 'cmsadmin');
+                    if ($globalShowMtf == 'n') {
+                        $mtflink = new href('', '', NULL);
+                    }
                 }
-                if ($page['hide_email'] == 'y'){
+                if ($page['show_email'] == 'n'){
                     $mtflink = new href('', '', NULL);  
                 }
             }
 
             //Checking to display print icon
-            if(isset($page['hide_print'])) {
-                if ($page['hide_print'] == 'g'){
+            if(isset($page['show_print'])) {
+                if ($page['show_print'] == 'g'){
                     //Checking the global sys config
-                    $printlink = new href('', '', NULL);
+                    $globalShowPrint = $this->_objSysConfig->getValue('SHOW_PRINT', 'cmsadmin');
+                    if ($globalShowPrint == 'n') {
+                        $printlink = new href('', '', NULL);
+                    }
                 }
-                if ($page['hide_print'] == 'y'){
+                if ($page['show_print'] == 'n'){
                     $printlink = new href('', '', NULL);  
                 }
             }
 
-
-            // Adding Written By
-            if(isset($page['hide_title']) && $page['hide_title'] != 1){
-			    $this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
-            } else {
-                $this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+            // Adding Title
+            $this->objHead->str = $page['title'].$this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+            if(isset($page['show_title'])) {
+                if ($page['show_title'] == 'g'){
+                    //Checking the global sys config
+                    $globalShowTitle = $this->_objSysConfig->getValue('SHOW_TITLE', 'cmsadmin');
+                    if ($globalShowTitle == 'n') {
+                        //Only showing edit button
+                        $this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+                    }
+                }
+                if ($page['show_title'] == 'n'){
+                    //Only showing edit button
+                    $this->objHead->str = $this->getEditLink($page['id'],array('sectionid'=>$sectionId,'id'=>$page['id']));
+                }
             }
-
+            
             //Create heading
             //Lets format the header information for the page
             $tblh = $this->newObject('htmltable', 'htmlelements');
             $tblh->cellpadding = 3;
             $tblh->width = "100%";
             $tblh->align = "center";
-
+            
             $this->objHead->type = 2;
 			$tblh->startRow();
             $tblh->addCell($this->objHead->show());
@@ -1275,18 +1294,45 @@ jQuery(document).ready(function(){
             $tblh->endRow();
             
             $strBody = null;
+            
+            // Adding Author
+            $showAuthorText = '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
+            $showAuthorText .= '</p>';
 
-            // Adding Written By
-            if(isset($page['hide_user']) && $page['hide_user'] != 1){
-                $strBody .= '<p><span class="date">'.$lbWritten.'&nbsp;'.$this->objUser->fullname($page['created_by']).'</span>';
-                $strBody .= '</p>';
+            if(isset($page['show_author'])) {
+                if ($page['show_author'] == 'g'){
+                    //Checking the global sys config
+                    $globalShowAuthor = $this->_objSysConfig->getValue('SHOW_AUTHOR', 'cmsadmin');
+                    if ($globalShowAuthor == 'n') {
+                        $showAuthorText = '';
+                    }
+                }
+                if ($page['show_author'] == 'n'){
+                    $showAuthorText = '';
+                }
             }
 
+            $strBody .= $showAuthorText;
+
+            
             // Adding Date
-            if(isset($page['hide_date']) && $page['hide_date'] != 1){
-                $strBody .=  '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
-                $strBody .= '<br /></em>';
+            $showDateText = '<em><span class="date">'.$this->objDate->formatDate($page['created']).'</span>';
+            $showDateText .= '<br /></em>';
+
+            if(isset($page['show_date'])) {
+                if ($page['show_date'] == 'g'){
+                    //Checking the global sys config
+                    $globalShowDate = $this->_objSysConfig->getValue('SHOW_DATE', 'cmsadmin');
+                    if ($globalShowDate == 'n') {
+                        $showDateText = '';
+                    }
+                }
+                if ($page['show_date'] == 'n'){
+                    $showDateText = '';
+                }
             }
+
+            $strBody .= $showDateText;
 
             $strBody .= '<hr />';
             //parse for mindmaps
