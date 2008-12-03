@@ -21,7 +21,7 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 *NOTE:
 *In the removeXXXX methods the following lines are found
 *$sql = "DELETE FROM tbl_foaf_xxxx WHERE xxxx IS NULL";
-*       $this->getArray($sql);			
+*       $this->getArray($sql);            
 *This happens because there was a bug that added new rows in the table
 *everytime I delete an entry.
 *
@@ -80,10 +80,10 @@ class dbfoaf extends dbtable
     {
         $this->_changeTable($table);
         $sql = "WHERE userid = '$userId'";
-	if($filter != null)
-	{
-	  $sql.= $filter;
-	}
+    if($filter != null)
+    {
+      $sql.= $filter;
+    }
         return $this->getAll($sql);
     }
     /**
@@ -166,7 +166,7 @@ class dbfoaf extends dbtable
         //print_r($friend);
        $this->delete('id' , $friend);
        $sql = "DELETE FROM tbl_foaf_friends WHERE fuserid is NULL";
-       $this->getArray($sql);			
+       $this->getArray($sql);            
 
     }
     /**
@@ -202,7 +202,7 @@ class dbfoaf extends dbtable
         //print_r($ret);
         if(empty($ret))
         {
-        	return NULL;
+            return NULL;
         }
         foreach($ret as $returns) {
             $retarr[] = array(
@@ -221,8 +221,8 @@ class dbfoaf extends dbtable
     public function removeOrg($orgid) 
     {
         $this->_changeTable('tbl_foaf_organization');
-	 $sql = "DELETE FROM tbl_foaf_organization WHERE homepage IS NULL";
-        $this->getArray($sql);			
+     $sql = "DELETE FROM tbl_foaf_organization WHERE homepage IS NULL";
+        $this->getArray($sql);            
         return $this->delete('id', $orgid);
         
     }
@@ -243,13 +243,13 @@ class dbfoaf extends dbtable
      public function getFunders()
      {
           $this->_changeTable('tbl_foaf_fundedby');
-      	   $sql = "WHERE userid='".$this->objUser->userId()."'";									
-	 
+             $sql = "WHERE userid='".$this->objUser->userId()."'";                                    
+     
           return $this->getAll($sql);
-	}
-	   
-	
-	/**
+    }
+       
+    
+    /**
      * Method to insert a funder
      * 
      *
@@ -258,15 +258,15 @@ class dbfoaf extends dbtable
      */
 
 
-	
+    
 
-	public function insertFunder($url) 
+    public function insertFunder($url) 
       {
         $this->_changeTable('tbl_foaf_fundedby');
 
         $values = array(
             'userid' => $this->objUser->userId(),
-            'funderurl' => $url		
+            'funderurl' => $url        
         );
         return $this->insert($values);
       }
@@ -277,18 +277,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing funders
-	   *@param string funderId => id of the funder to be removed
-	**/
-				
+    /**
+       *Method for removing funders
+       *@param string funderId => id of the funder to be removed
+    **/
+                
 
-	  public function removeFunder($funderId) 
+      public function removeFunder($funderId) 
     {
         $this->_changeTable('tbl_foaf_fundedby');
         $this->delete('id', $funderId);
-	$sql = "DELETE FROM tbl_foaf_fundedby WHERE funderurl is NULL";
-        $this->getArray($sql);			
+    $sql = "DELETE FROM tbl_foaf_fundedby WHERE funderurl is NULL";
+        $this->getArray($sql);            
     }
 
 
@@ -306,12 +306,12 @@ class dbfoaf extends dbtable
      public function getInterests()
      {
            $this->_changeTable('tbl_foaf_interests');
-           $sql = "WHERE userid='".$this->objUser->userId()."' ORDER BY interesturl";									
-	    return $this->getAll($sql);
-	}
-	   
-	
-	/**
+           $sql = "WHERE userid='".$this->objUser->userId()."' ORDER BY interesturl";                                    
+        return $this->getAll($sql);
+    }
+       
+    
+    /**
      * Method to insert a interest
      * 
      *
@@ -319,16 +319,16 @@ class dbfoaf extends dbtable
      * @return array => the interests related to this userId
      */
 
-	
-	
+    
+    
 
-	public function insertInterest($url) 
+    public function insertInterest($url) 
       {
         $this->_changeTable('tbl_foaf_interests');
 
         $values = array(
             'userid' => $this->objUser->userId(),
-            'interesturl' => $url		
+            'interesturl' => $url        
         );
         return $this->insert($values);
       }
@@ -337,18 +337,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing interests
-	   *@param string interestId => id of the funder to be removed
-	**/
-				
+    /**
+       *Method for removing interests
+       *@param string interestId => id of the funder to be removed
+    **/
+                
 
-	  public function removeInterest($interestId) 
+      public function removeInterest($interestId) 
     {
          $this->_changeTable('tbl_foaf_interests');
          $this->delete('id', $interestId);
-	  $sql = "DELETE FROM tbl_foaf_interests WHERE interesturl is NULL";
-         $this->getArray($sql);			
+      $sql = "DELETE FROM tbl_foaf_interests WHERE interesturl is NULL";
+         $this->getArray($sql);            
      
     }
 
@@ -367,9 +367,9 @@ class dbfoaf extends dbtable
      public function getDepictions()
      {
           $this->_changeTable('tbl_foaf_depiction');
-	   $sql = "WHERE userid='".$this->objUser->userId()."'";									
-	   return $this->getAll($sql);
-	}
+       $sql = "WHERE userid='".$this->objUser->userId()."'";                                    
+       return $this->getAll($sql);
+    }
 
 
 /**
@@ -380,16 +380,16 @@ class dbfoaf extends dbtable
      * @return array => the depictions urls related to this userId
      */
 
-	
-	
+    
+    
 
-	public function insertDepiction($url) 
+    public function insertDepiction($url) 
       {
         $this->_changeTable('tbl_foaf_depiction');
 
         $values = array(
             'userid' => $this->objUser->userId(),
-            'depictionurl' => $url		
+            'depictionurl' => $url        
         );
         return $this->insert($values);
       }
@@ -400,18 +400,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing depiction
-	   *@param string depictionId => id of the depiction to be removed
-	**/
-				
+    /**
+       *Method for removing depiction
+       *@param string depictionId => id of the depiction to be removed
+    **/
+                
 
-	  public function removeDepiction($depictionId) 
+      public function removeDepiction($depictionId) 
     {
          $this->_changeTable('tbl_foaf_depiction');
          $this->delete('id', $depictionId);
-	  $sql = "DELETE FROM tbl_foaf_depiction WHERE depictionurl is NULL";
-         $this->getArray($sql);			
+      $sql = "DELETE FROM tbl_foaf_depiction WHERE depictionurl is NULL";
+         $this->getArray($sql);            
 
     }
 
@@ -431,9 +431,9 @@ class dbfoaf extends dbtable
      public function getPgs()
      {
           $this->_changeTable('tbl_foaf_pages');
-	   $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY title ";									
-	   return $this->getAll($sql);
-	}
+       $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY title ";                                    
+       return $this->getAll($sql);
+    }
 
 
 /**
@@ -444,10 +444,10 @@ class dbfoaf extends dbtable
      * @return array => the page uri related to this userId
      */
 
-	
-	
+    
+    
 
-	public function insertPage($document_uri, $title, $description) 
+    public function insertPage($document_uri, $title, $description) 
       {
         $this->_changeTable('tbl_foaf_pages');
 
@@ -455,7 +455,7 @@ class dbfoaf extends dbtable
             'userid' => $this->objUser->userId(),
             'page' => $document_uri,
              'title' => $title,
-		'description' => $description
+        'description' => $description
         );
         return $this->insert($values);
       }
@@ -466,18 +466,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing pages
-	   *@param string pageId => id of the page to be removed
-	**/
-				
+    /**
+       *Method for removing pages
+       *@param string pageId => id of the page to be removed
+    **/
+                
 
-	  public function removePage($pageId) 
+      public function removePage($pageId) 
     {
          $this->_changeTable('tbl_foaf_pages');
          $this->delete('id', $pageId);
-	  $sql = "DELETE FROM tbl_foaf_pages WHERE page IS NULL";
-         $this->getArray($sql);			
+      $sql = "DELETE FROM tbl_foaf_pages WHERE page IS NULL";
+         $this->getArray($sql);            
 
     }
 
@@ -495,23 +495,23 @@ class dbfoaf extends dbtable
      public function getAccountTypes()
      {
         $this->_changeTable('tbl_foaf_accounts');
-	$accountTypes = $this->getAll();
-	$sql = "ORDER BY type ";
-	//There must be the very basic FOAF account type in the database
-	if(!isset($accountTypes) || empty($accountTypes))
-	{
+    $accountTypes = $this->getAll();
+    $sql = "ORDER BY type ";
+    //There must be the very basic FOAF account type in the database
+    if(!isset($accountTypes) || empty($accountTypes))
+    {
 
-	   $this->insertAccountType("onlineAccount");			
-	   $this->insertAccountType("onlineChatAccount", "http://xmlns.com/foaf/0.1/OnlineChatAccount");
-	   $this->insertAccountType("onlineEcommerceAccount", "http://xmlns.com/foaf/0.1/OnlineEcommerceAccount");
+       $this->insertAccountType("onlineAccount");            
+       $this->insertAccountType("onlineChatAccount", "http://xmlns.com/foaf/0.1/OnlineChatAccount");
+       $this->insertAccountType("onlineEcommerceAccount", "http://xmlns.com/foaf/0.1/OnlineEcommerceAccount");
            $this->insertAccountType("onlineGamingAccount", "http://xmlns.com/foaf/0.1/OnlineGamingAccount");
 
-	}	
+    }    
 
 
-	  								
-	   return $this->getAll($sql);
-	}
+                                      
+       return $this->getAll($sql);
+    }
 
 
 /**
@@ -522,10 +522,10 @@ class dbfoaf extends dbtable
      * @return array 
      */
 
-	
-	
+    
+    
 
-	public function insertAccountType($type) 
+    public function insertAccountType($type) 
       {
         $this->_changeTable('tbl_foaf_accounts');
 
@@ -541,18 +541,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing accounts
-	   *@param string accountId => id of the account to be removed
-	**/
-				
+    /**
+       *Method for removing accounts
+       *@param string accountId => id of the account to be removed
+    **/
+                
 
-	  public function removeAccountType($accountId) 
+      public function removeAccountType($accountId) 
     {
          $this->_changeTable('tbl_foaf_accounts');
          $this->delete('id', $accountId);
          $sql = "DELETE FROM tbl_foaf_accounts WHERE type IS NULL";
-         $this->getArray($sql);			
+         $this->getArray($sql);            
 
     }
 
@@ -571,9 +571,9 @@ class dbfoaf extends dbtable
      public function getAccounts()
      {
         $this->_changeTable('tbl_foaf_useraccounts');
-        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountname ";									
-	   return $this->getAll($sql);
-	}
+        $sql = "WHERE userid='".$this->objUser->userId()."'"." ORDER BY accountname ";                                    
+       return $this->getAll($sql);
+    }
 
 
 /**
@@ -585,19 +585,19 @@ class dbfoaf extends dbtable
      * @return array 
      */
 
-	
-	
+    
+    
 
-	public function insertAccount($accountName, $accountServiceHomepage , $accountType , $url = null) 
+    public function insertAccount($accountName, $accountServiceHomepage , $accountType , $url = null) 
         {
         $this->_changeTable('tbl_foaf_useraccounts');
 
         $values = array(
-	    'userid'=>$this->objUser->userId(),
-	    'accountName'=>$accountName,
-	    'accountServiceHomepage'=>$accountServiceHomepage,		
+        'userid'=>$this->objUser->userId(),
+        'accountName'=>$accountName,
+        'accountServiceHomepage'=>$accountServiceHomepage,        
             'type' => $accountType,
-	    'url'=>$url	
+        'url'=>$url    
         );
         return $this->insert($values);
        }
@@ -608,18 +608,18 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing accounts
-	   *@param string accountId => id of the account to be removed
-	**/
-				
+    /**
+       *Method for removing accounts
+       *@param string accountId => id of the account to be removed
+    **/
+                
 
-	  public function removeAccount($accountId) 
+      public function removeAccount($accountId) 
     {
          $this->_changeTable('tbl_foaf_useraccounts');
          $this->delete('id', $accountId);
          $sql = "DELETE FROM tbl_foaf_accounts WHERE type IS NULL";
-         $this->getArray($sql);			
+         $this->getArray($sql);            
 
     }
 
@@ -643,10 +643,10 @@ class dbfoaf extends dbtable
      public function getLinks()
      {
         $this->_changeTable('tbl_foaf_links');
-        $sql = " ORDER BY title ";									
-	 
-	return $this->getAll($sql);
-	}
+        $sql = " ORDER BY title ";                                    
+     
+    return $this->getAll($sql);
+    }
 
 
 /**
@@ -658,17 +658,17 @@ class dbfoaf extends dbtable
      * @return array => The FOAF links in the database
      */
 
-	
-	
+    
+    
 
-	public function insertLink($title, $url , $description = NULL) 
+    public function insertLink($title, $url , $description = NULL) 
         {
         $this->_changeTable('tbl_foaf_links');
 
         $values = array(
-	    'title'=>$title,
-	    'url'=>$url,
-	    'description'=>$description,		
+        'title'=>$title,
+        'url'=>$url,
+        'description'=>$description,        
         );
         return $this->insert($values);
        }
@@ -679,49 +679,49 @@ class dbfoaf extends dbtable
 
 
 
-	/**
-	   *Method for removing links
-	   *@param string linkId => id of the link to be removed
-	**/
-				
+    /**
+       *Method for removing links
+       *@param string linkId => id of the link to be removed
+    **/
+                
 
-	  public function removeLink($linkId) 
+      public function removeLink($linkId) 
     {
          $this->_changeTable('tbl_foaf_links');
          $this->delete('id', $linkId);
          $sql = "DELETE FROM tbl_foaf_links WHERE url IS NULL";
-         $this->getArray($sql);			
+         $this->getArray($sql);            
 
     }
 
 
-	/**
-	   *Method for tracking repeated entries
-	   *@param string $field => the field to check for duplication
-	   *@param string $value => the value to be looked for
-	   *@param string $table => the table for looking for repeated values
-	   *@return  TRUE|FALSE => TRUE if it finds a repeated entry otherwise FALSE
-	**/
-				
+    /**
+       *Method for tracking repeated entries
+       *@param string $field => the field to check for duplication
+       *@param string $value => the value to be looked for
+       *@param string $table => the table for looking for repeated values
+       *@return  TRUE|FALSE => TRUE if it finds a repeated entry otherwise FALSE
+    **/
+                
 
-	  public function isRepeated($field, $value , $table) 
-   	 {
-	   
+      public function isRepeated($field, $value , $table) 
+        {
+       
            parent::init($table);
-	   $sql = "WHERE userid='".$this->objUser->userId()."'"." AND ".$field."='".$value."'";
+       $sql = "WHERE userid='".$this->objUser->userId()."'"." AND ".$field."='".$value."'";
 
-	   $results = $this->getAll($sql);
-	   
-	   if(!isset($results) || empty($results))
-	   {
-	      return false;
-	   } else {
-	     return true;
-	 }
-     	   	
+       $results = $this->getAll($sql);
+       
+       if(!isset($results) || empty($results))
+       {
+          return false;
+       } else {
+         return true;
+     }
+                
      }   
 
-	
+    
 
 
 

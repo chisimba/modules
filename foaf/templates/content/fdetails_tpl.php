@@ -62,13 +62,13 @@ $images = $dbFoaf->getDepictions();
 $friends = $dbFoaf->getFriends();
 
 $fields = array('Organizations' => $orgs , 'Funders' => $funders , 'Pages' => $pages , 'Accounts' => $accounts ,
-		'Interests' => $interests , 'Images' => $images);
+        'Interests' => $interests , 'Images' => $images);
 
 foreach($fields as $field) {
-	if(!is_array($field))
-	{
-		$field = array();
-	}
+    if(!is_array($field))
+    {
+        $field = array();
+    }
 }
 
 if(!is_array($friends))
@@ -82,7 +82,7 @@ if ($msg == 'update') {
     $objmsg->message = $this->objLanguage->languageText('mod_foaf_recupdated', 'foaf');
     echo $objmsg->show();
 } else {
-    $objmsg->message = $msg;	
+    $objmsg->message = $msg;    
     echo $objmsg->show();
 }
 
@@ -179,8 +179,8 @@ $this->appendArrayVar('headerParams',$script);
 $css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("menu/assets/menu.css", 'yahoolib').'" />';
 $this->appendArrayVar('headerParams', $css);
 
-		//$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
-		//$this->appendArrayVar('headerParams', $css);
+        //$css = '<link rel="stylesheet" type="text/css" media="all" href="'.$this->getResourceURI("foaf.css", 'foaf').'" />';
+        //$this->appendArrayVar('headerParams', $css);
 
 
 
@@ -198,9 +198,9 @@ $userFields = '
 //each field is a group of organizations or friends or interests , etc..
 foreach($fields as $key => $field){
 $userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="/chisimba_framework/app/index.php?module=foaf&amp;action=fields&amp;content='.$key.'" title="'.$this->objLanguage->languageText('mod_foaf_manage', 'foaf').' '.$key.'">'.$key.'</a>';
-	$userFields.= ' <div id="'.$key.'" class="yuimenu">
+    $userFields.= ' <div id="'.$key.'" class="yuimenu">
                            <div class="bd">
-			     <ul>';
+                 <ul>';
 //echo "<h1>".$key.'  '.$objUser->userId()."</h1>";
 //var_dump($field);
 if(!empty($field))
@@ -209,26 +209,26 @@ if(!empty($field))
 //display a usefull fld property i.e. display name (for organizations), urls(for funders), title (for pages) ,etc.
 $url = NULL;
 switch($key){
-	case 'Organizations':
-	$key = 'name';
-	$url = 'homepage';
-	break;
-	case 'Funders':
-	$key ='funderurl';
-	$url = 'funderurl';
-	break;
-	case 'Pages':
-	$key = 'title';
-	$url = 'page';
-	break;
-	case 'Interests':
-	$key ='interesturl' ;
-	$url = 'interesturl';
-	break;
-	case 'Images':
-	$key ='depictionurl' ;
-	$url = 'depictionurl';
-	break;
+    case 'Organizations':
+    $key = 'name';
+    $url = 'homepage';
+    break;
+    case 'Funders':
+    $key ='funderurl';
+    $url = 'funderurl';
+    break;
+    case 'Pages':
+    $key = 'title';
+    $url = 'page';
+    break;
+    case 'Interests':
+    $key ='interesturl' ;
+    $url = 'interesturl';
+    break;
+    case 'Images':
+    $key ='depictionurl' ;
+    $url = 'depictionurl';
+    break;
 
 }
 
@@ -239,18 +239,18 @@ foreach($field as $fld){
 if($key=='Accounts')
 {
 
-	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld['accountservicehomepage'].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld['accountservicehomepage'].'">'.$fld['accountname'].' ('.$fld['type'].')'.'</a></li>';
+    $userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld['accountservicehomepage'].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld['accountservicehomepage'].'">'.$fld['accountname'].' ('.$fld['type'].')'.'</a></li>';
 
 } else {
 
-	//If it's a very long string to be displayed on screen
-	// then make it smaller
-	if(strlen($fld[$key]) > 20)
-	{
-	  $fld[$key] = substr($fld[$key] , 0 , 30).'....';
-	}
+    //If it's a very long string to be displayed on screen
+    // then make it smaller
+    if(strlen($fld[$key]) > 20)
+    {
+      $fld[$key] = substr($fld[$key] , 0 , 30).'....';
+    }
 
-	$userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld[$url].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld[$url].'">'.$fld[$key].'</a></li>';
+    $userFields.= '<li class="yuimenuitem"><a class="yuimenuitemlabel" href="'.$fld[$url].'" title="'.$this->objLanguage->languageText('mod_foaf_goto' , 'foaf').' '.$fld[$url].'">'.$fld[$key].'</a></li>';
 }
 
 
@@ -260,7 +260,7 @@ if($key=='Accounts')
 
 } else {
 
-	$userFields.= '<li class="yuimenuitem">'.$this->objLanguage->languageText('mod_foaf_noitems' , 'foaf').'</li>';
+    $userFields.= '<li class="yuimenuitem">'.$this->objLanguage->languageText('mod_foaf_noitems' , 'foaf').'</li>';
 
 
 }
@@ -286,182 +286,182 @@ $pane->addTab(array(
 
 //define the contenttab content
 switch($content){
-	case 'friends':
-	$pane->addTab(array(
-    		'name' => $myfriends,
-    		'content' => $this->objUi->foafFriends($tcont)
-	));
-	break;
+    case 'friends':
+    $pane->addTab(array(
+            'name' => $myfriends,
+            'content' => $this->objUi->foafFriends($tcont)
+    ));
+    break;
 
-	case 'fndadmin':
-	$pane->addTab(array(
-    		'name' => $myfriends,
-    		'content' => $this->objUi->manageFriends()
-	));
-	break;
-
-
-	case 'friend':
-	$pane->addTab(array(
-    		'name' => $this->objLanguage->languageText('mod_foaf_friend','foaf') ,
-    		'content' => $this->objUi->showFriend($tcont , $fIndex)
-	));
-	break;
-
-	case 'Organizations':
-	     $pane->addTab(array(
-	    'name' => $myorganizations,
-	    'content' => $this->objUi->foafOrgs($tcont)
-	));
-	break;
-
-	case 'orgsadmin':
-	     $pane->addTab(array(
-	    'name' => $myorganizations,
-	    'content' => $this->objUi->manageOrgs()
-	));
-	break;
+    case 'fndadmin':
+    $pane->addTab(array(
+            'name' => $myfriends,
+            'content' => $this->objUi->manageFriends()
+    ));
+    break;
 
 
-	case 'Funders':
-	    $pane->addTab(array(
-    	    'name' => $myfunders,
-	    'content' => $this->objUi->foafFunders($tcont)
-	));
-	break;
+    case 'friend':
+    $pane->addTab(array(
+            'name' => $this->objLanguage->languageText('mod_foaf_friend','foaf') ,
+            'content' => $this->objUi->showFriend($tcont , $fIndex)
+    ));
+    break;
 
-	case 'fnsadmin':
-	    $pane->addTab(array(
-    	    'name' => $myfunders,
-	    'content' => $this->objUi->manageFunders()
-	));
-	break;
+    case 'Organizations':
+         $pane->addTab(array(
+        'name' => $myorganizations,
+        'content' => $this->objUi->foafOrgs($tcont)
+    ));
+    break;
 
-
-	case 'Interests':
-	     $pane->addTab(array(
-	    'name' => $myinterests,
-	    'content' => $this->objUi->foafInterests($tcont)
-	));
-	break;
-
-
-	case 'intadmin':
-	     $pane->addTab(array(
-	    'name' => $myinterests,
-	    'content' => $this->objUi->manageInterests()
-	));
-	break;
-
-	
-
-	case 'Images':
-		$pane->addTab(array(
-	    'name' => $mydepictions,
-	    'content' => $this->objUi->foafDepictions($tcont)
- 	));
-	break;
+    case 'orgsadmin':
+         $pane->addTab(array(
+        'name' => $myorganizations,
+        'content' => $this->objUi->manageOrgs()
+    ));
+    break;
 
 
-	case 'imgadmin':
-		$pane->addTab(array(
-	    'name' => $mydepictions,
-	    'content' => $this->objUi->manageDepictions()
- 	));
-	break;
+    case 'Funders':
+        $pane->addTab(array(
+            'name' => $myfunders,
+        'content' => $this->objUi->foafFunders($tcont)
+    ));
+    break;
+
+    case 'fnsadmin':
+        $pane->addTab(array(
+            'name' => $myfunders,
+        'content' => $this->objUi->manageFunders()
+    ));
+    break;
 
 
+    case 'Interests':
+         $pane->addTab(array(
+        'name' => $myinterests,
+        'content' => $this->objUi->foafInterests($tcont)
+    ));
+    break;
 
-	case 'Pages':
-		$pane->addTab(array(
-	    'name' => $mypages,
-	    'content' => $this->objUi->foafPages($tcont)
-	));
-	break;
 
-	case 'pgsadmin':
-		$pane->addTab(array(
-	    'name' => $mypages,
-	    'content' => $this->objUi->managePages()
-	));
-	break;
-	
-	
-	case 'Accounts':
-		$pane->addTab(array(
-	    'name' => $myaccounts,
-	    'content' =>  $this->objUi->foafAccounts($tcont)
-	));
-	break;
+    case 'intadmin':
+         $pane->addTab(array(
+        'name' => $myinterests,
+        'content' => $this->objUi->manageInterests()
+    ));
+    break;
 
-	case 'accadmin':
-		$pane->addTab(array(
-	    'name' => $myaccounts,
-	    'content' =>  $this->objUi->manageAccounts()
-	));
-	break;
+    
+
+    case 'Images':
+        $pane->addTab(array(
+        'name' => $mydepictions,
+        'content' => $this->objUi->foafDepictions($tcont)
+     ));
+    break;
+
+
+    case 'imgadmin':
+        $pane->addTab(array(
+        'name' => $mydepictions,
+        'content' => $this->objUi->manageDepictions()
+     ));
+    break;
 
 
 
-	case 'search':
-		$pane->addTab(array(
-	    'name' => $searchfriends,
-	    'content' => $this->objUi->foafSearch()
-	));
-	break;
+    case 'Pages':
+        $pane->addTab(array(
+        'name' => $mypages,
+        'content' => $this->objUi->foafPages($tcont)
+    ));
+    break;
 
-	case 'results':
-		$pane->addTab(array(
-	    'name' => 'Search Results',
-	    'content' => $this->objUi->foafResults($matches , $predicate)."<p>&nbsp;</p>".$this->objUi->foafSearch()
-	));
-	break;
+    case 'pgsadmin':
+        $pane->addTab(array(
+        'name' => $mypages,
+        'content' => $this->objUi->managePages()
+    ));
+    break;
+    
+    
+    case 'Accounts':
+        $pane->addTab(array(
+        'name' => $myaccounts,
+        'content' =>  $this->objUi->foafAccounts($tcont)
+    ));
+    break;
+
+    case 'accadmin':
+        $pane->addTab(array(
+        'name' => $myaccounts,
+        'content' =>  $this->objUi->manageAccounts()
+    ));
+    break;
 
 
-	
-	case 'links':
-		$pane->addTab(array(
-	    'name' => $foafLinks,
-	    'content' => $this->objUi->foafLinks()
-	));
-	break;
 
-	case 'lnkadmin':
-		$pane->addTab(array(
-	    'name' => $foafLinks,
-	    'content' => $this->objUi->linksAdmin()
-	));
-	break;
+    case 'search':
+        $pane->addTab(array(
+        'name' => $searchfriends,
+        'content' => $this->objUi->foafSearch()
+    ));
+    break;
+
+    case 'results':
+        $pane->addTab(array(
+        'name' => 'Search Results',
+        'content' => $this->objUi->foafResults($matches , $predicate)."<p>&nbsp;</p>".$this->objUi->foafSearch()
+    ));
+    break;
 
 
-	case 'network':
-		$pane->addTab(array(
-	    'name' => $visualise,
-	    'content' => 'Visulalise the Network'
-	));
-	break;
+    
+    case 'links':
+        $pane->addTab(array(
+        'name' => $foafLinks,
+        'content' => $this->objUi->foafLinks()
+    ));
+    break;
 
-	case 'surprise':
-	$pane->addTab(array('name'=>$surprise,'content' => $game));
-	break;
+    case 'lnkadmin':
+        $pane->addTab(array(
+        'name' => $foafLinks,
+        'content' => $this->objUi->linksAdmin()
+    ));
+    break;
 
-	case 'gallery':
-	$pane->addTab(array('name'=>$gallery,'content' => $this->objUi->foafGallery( $fields['Images'] , $page)));
-	break;
-	//account types
-	case 'actypes':
-		$pane->addTab(array(
-    	'name' => $accountTypes,
-    	'content' => $this->objUi->foafAccountTypes()
-	));
-	break;
 
-	case 'profile':
-	default:
-		$pane->addTab(array(
-		    'name' => 'FOAF',
-    		    'content' => '<div id="about"><h2>'.$this->objLanguage->languageText('mod_foaf_welcometofoaf', 'foaf').'</h2>'.$this->objLanguage->languageText('mod_foaf_instructions','foaf').'</div>'
-		));
+    case 'network':
+        $pane->addTab(array(
+        'name' => $visualise,
+        'content' => 'Visulalise the Network'
+    ));
+    break;
+
+    case 'surprise':
+    $pane->addTab(array('name'=>$surprise,'content' => $game));
+    break;
+
+    case 'gallery':
+    $pane->addTab(array('name'=>$gallery,'content' => $this->objUi->foafGallery( $fields['Images'] , $page)));
+    break;
+    //account types
+    case 'actypes':
+        $pane->addTab(array(
+        'name' => $accountTypes,
+        'content' => $this->objUi->foafAccountTypes()
+    ));
+    break;
+
+    case 'profile':
+    default:
+        $pane->addTab(array(
+            'name' => 'FOAF',
+                'content' => '<div id="about"><h2>'.$this->objLanguage->languageText('mod_foaf_welcometofoaf', 'foaf').'</h2>'.$this->objLanguage->languageText('mod_foaf_instructions','foaf').'</div>'
+        ));
 
 
 

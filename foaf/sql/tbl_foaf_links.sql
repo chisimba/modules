@@ -7,32 +7,32 @@ $options = array('comment' => 'FOAF related links', 'collate' => 'utf8_general_c
 
 // Fields
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-	'title' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'url' => array(
-		'type' => 'text',
-		'length' => 255,
-		),
-	'description' => array(
-		'type' => 'text',
-		'length' => 255,
-		)
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+    'title' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'url' => array(
+        'type' => 'text',
+        'length' => 255,
+        ),
+    'description' => array(
+        'type' => 'text',
+        'length' => 255,
+        )
 
-	);
+    );
 
-	//create other indexes here...
+    //create other indexes here...
 
 
 
 $indexes = array(
                 'fields' => array(
-                	'url' => array(),
+                    'url' => array(),
                 )
         );
 ?>

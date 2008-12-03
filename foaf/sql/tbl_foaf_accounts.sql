@@ -7,24 +7,24 @@ $options = array('comment' => 'Table to store FOAF account types', 'collate' => 
 
 // Fields
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32
-		),
-		
-	'type' => array(
-		'type' => 'text',
-		'length' => 255,
-		)	
-	);
+    'id' => array(
+        'type' => 'text',
+        'length' => 32
+        ),
+        
+    'type' => array(
+        'type' => 'text',
+        'length' => 255,
+        )    
+    );
 
-	//create other indexes here...
+    //create other indexes here...
 
 $name = 'id';
 
 $indexes = array(
                 'fields' => array(
-                	'type' => array(),
+                    'type' => array(),
                 )
         );
 ?>

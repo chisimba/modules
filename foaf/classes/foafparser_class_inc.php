@@ -818,19 +818,19 @@ class foafparser extends object
     public function toObject()
     {
         $val = 'foaf';
-	$dcs = array();
+    $dcs = array();
         $foaf_object = new stdClass();
-	$foaf_object->$val = array();
-	$foaf_object->$val = $this->foaf_data[0];
-	
+    $foaf_object->$val = array();
+    $foaf_object->$val = $this->foaf_data[0];
+    
 
-	if(!isset($this->foaf_data["dc"]))
-	{
-		$this->foaf_data["dc"] = array();
-	}
-	array_push($foaf_object->$val,$this->foaf_data["dc"]);
+    if(!isset($this->foaf_data["dc"]))
+    {
+        $this->foaf_data["dc"] = array();
+    }
+    array_push($foaf_object->$val,$this->foaf_data["dc"]);
 
-  	 
+       
         return $foaf_object;
     }
     /**
@@ -956,7 +956,7 @@ public function queryFoaf($path , $foafFile , $predicate = NULL , $object = NULL
   echo "<br /> Function object >".$object."<br />";
   echo "Function predicate >".$predicate."<br />";
   if($object != 'all')
-  {	
+  {    
    switch ($predicate)
    {
     case 'name':
@@ -1021,7 +1021,7 @@ public function queryFoaf($foafFile , $predicate = NULL , $object = NULL)
   //echo "Function predicate >".$predicate."<br />";
  
   if($object != 'all')
-  {	
+  {    
     $matches = $model->findRegEx(NULL , '/http:\/\/xmlns.com\/foaf\/0.1\/'.$predicate.'$/i' , '/^'.$object.'/i');   
     
   } else {
