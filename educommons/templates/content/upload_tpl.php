@@ -1,5 +1,12 @@
 <?php
 
+$this->loadClass('htmlheading', 'htmlelements');
+
+$header = new htmlheading();
+$header->type = 1;
+$header->str = 'eduCommons IMS Package Import';
+echo $header->show();
+
 $objUpload = $this->newObject('uploadinput', 'filemanager');
 
 $objDropdown = $this->newObject('dropdown', 'htmlelements');
