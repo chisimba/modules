@@ -1,5 +1,5 @@
 /**
- * 	$Id: ChatPacket.java,v 1.3 2007/02/02 11:01:21 davidwaf Exp $
+ *  $Id: ChatPacket.java,v 1.3 2007/02/02 11:01:21 davidwaf Exp $
  *
  *  Copyright (C) GNU/GPL AVOIR 2007
  *
@@ -19,7 +19,7 @@
  */
 package avoir.realtime.common.packet;
 
-import avoir.realtime.common.packet.RealtimePacket;
+import java.awt.Color;
 
 /**
  * Packet that stores information about a Chat event
@@ -33,6 +33,12 @@ public class ChatPacket implements RealtimePacket {
     private String chatLogFile;
     private String id;
     private String sessionId;
+    private Color color;
+    private String fontName;
+    private int fontSize;
+    private int fontStyle;
+    private boolean privateChat;
+    private String receiver;
 
     public void setId(String id) {
         this.id = id;
@@ -48,12 +54,68 @@ public class ChatPacket implements RealtimePacket {
      * @param content The contents of the message
      * @param time The time message was send
      */
-    public ChatPacket(String usr, String content, String time, String chatLogFile, String sessionId) {
+    public ChatPacket(String usr, String content, String time, String chatLogFile,
+            String sessionId, Color color, String fontName, int fontStyle, int fontSize,
+            boolean privateChat, String receiver) {
         this.usr = usr;
         this.content = content;
         this.time = time;
         this.chatLogFile = chatLogFile;
         this.sessionId = sessionId;
+        this.color = color;
+        this.fontName = fontName;
+        this.fontSize = fontSize;
+        this.fontStyle = fontStyle;
+        this.privateChat = privateChat;
+        this.receiver = receiver;
+    }
+
+    public boolean isPrivateChat() {
+        return privateChat;
+    }
+
+    public void setPrivateChat(boolean privateChat) {
+        this.privateChat = privateChat;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getFontName() {
+        return fontName;
+    }
+
+    public void setFontName(String fontName) {
+        this.fontName = fontName;
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public int getFontStyle() {
+        return fontStyle;
+    }
+
+    public void setFontStyle(int fontStyle) {
+        this.fontStyle = fontStyle;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public String getSessionId() {
