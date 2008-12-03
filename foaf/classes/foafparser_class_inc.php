@@ -61,7 +61,7 @@ class foafparser extends object
         $this->_objDbConfig = $this->getObject('altconfig', 'config');
 
         // Determine the location of the RDF API library
-        $rdfapi_include_dir = $this->_objDbConfig->getModulePath() . "foaf/lib/rdfapi-php/api/";
+        $rdfapi_include_dir = $this->getResourcePath('rdfapi-php/api/');
 
         // Define the constant as this is used throughout the library
         define("RDFAPI_INCLUDE_DIR", $rdfapi_include_dir);
