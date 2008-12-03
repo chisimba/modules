@@ -11,7 +11,7 @@
 // security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
-	die("You cannot view this page directly");
+    die("You cannot view this page directly");
 }
 // end security check
 
@@ -29,7 +29,7 @@ if ($contextCode == NULL) {
     $context = "Lobby";
 }
 else {
-	$context = $objDbContext->getTitle();
+    $context = $objDbContext->getTitle();
 }
 $objConfig = $this->getObject('altconfig', 'config');
 $uri = $objConfig->getModuleURI();
@@ -40,17 +40,17 @@ $uri = $objConfig->getModuleURI();
 codebase="<?= $uri ?>/ircchat/resources/"
 code="IRCApplet.class"
 archive="
-	irc.jar,
-	pixx.jar
+    irc.jar,
+    pixx.jar
 "
 width="640"
 height="400"
 >
 <param name="CABINETS"
 value="
-	irc.cab,
-	securedirc.cab,
-	pixx.cab
+    irc.cab,
+    securedirc.cab,
+    pixx.cab
 "
 />
 <param name="nick" value="<?= $userName ?>"/>
