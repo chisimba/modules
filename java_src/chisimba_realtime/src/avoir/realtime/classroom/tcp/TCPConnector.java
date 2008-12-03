@@ -22,6 +22,7 @@ import avoir.realtime.appsharing.RemoteDesktopViewerFrame;
 import avoir.realtime.appsharing.tcp.StopScreenSharing;
 
 import avoir.realtime.chat.ChatPopup;
+import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.classroom.packets.ClientPacket;
@@ -47,15 +48,20 @@ import avoir.realtime.common.packet.FileUploadPacket;
 import avoir.realtime.common.packet.MsgPacket;
 import avoir.realtime.common.packet.NewSlideReplyPacket;
 import avoir.realtime.common.packet.SessionImg;
+import avoir.realtime.common.user.User;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -73,9 +79,15 @@ public class TCPConnector extends TCPSocket {
     private boolean showAppSharingFrame = true;
     private AppView appViewer;
     private JScrollPane whiteboardScrollPane;
+    private Map<String, PrivateChatFrame> privateChats = new HashMap<String, PrivateChatFrame>();
 
     public TCPConnector(ClassroomMainFrame mf) {
         this.mf = mf;
+    }
+
+    @Override
+    public Map<String, PrivateChatFrame> getPrivateChats() {
+        return privateChats;
     }
 
     @Override
@@ -115,6 +127,7 @@ public class TCPConnector extends TCPSocket {
                 packet = null;
                 try {
                     packet = reader.readObject();
+                    //System.out.println(packet.getClass());
                     connected = true;
                     if (packet instanceof ClientPacket) {
                         ClientPacket clientPacket = (ClientPacket) packet;
@@ -122,9 +135,14 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof NewUserPacket) {
                         NewUserPacket p = (NewUserPacket) packet;
                         mf.getUserListManager().addNewUser(p.getUser());
+                        mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " joined room.", "", "",
+                                p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket p = (RemoveUserPacket) packet;
                         mf.getUserListManager().removeUser(p.getUser());
+                        mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " left room.", "",
+                                "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
                         int userIndex = mf.getUserListManager().getUserIndex(p.getUserName());
@@ -216,19 +234,11 @@ public class TCPConnector extends TCPSocket {
             showAppSharingFrame = false;
         }
 
-        Thread t = new
+        Thread t = new Thread() {
 
-              Thread() {
+            public void run() {
 
-
-
-
-
-
-
-    public  void run( ) {
-
-        appViewer   .pixelUpdate(  packet.getData());
+                appViewer.pixelUpdate(packet.getData());
             }
         };
         t.start();
@@ -412,15 +422,25 @@ public class TCPConnector extends TCPSocket {
      * @param p
      */
     public void processChatPacket(ChatPacket p) {
-
-        if (!mf.getParentFrame().isActive()) {
-            if (!mf.getUser().getUserName().equals(p.getUsr())) {
-                showChatPopup(p.getUsr(), p.getContent());
+        if (p.isPrivateChat()) {
+           PrivateChatFrame privateChatFrame = privateChats.get(p.getId());
+            if (privateChatFrame == null) {
+                User usr = mf.getUserListManager().getUser(p.getUsr());
+                privateChatFrame = new PrivateChatFrame(usr, mf,p.getId());
+                privateChats.put(usr.getUserName(), privateChatFrame);
             }
+            privateChatFrame.getChatRoom().update(p);
+            privateChatFrame.show();
 
+        } else {
+            if (!mf.getParentFrame().isActive()) {
+                if (!mf.getUser().getUserName().equals(p.getUsr())) {
+                    showChatPopup(p.getUsr(), p.getContent());
+                }
+
+            }
+            mf.updateChat(p);
         }
-        mf.updateChat(p);
-
     }
 
     private void showChatPopup(String user, String message) {
