@@ -115,7 +115,7 @@ class educommonsimport extends object
      * TODO: Remove SimpleXMLElement and start using proper XML-DOM parsing.
      *
      * @access public
-     * @param string $file Path to the IMS Manifest XML file.
+     * @param  string $file Path to the IMS Manifest XML file.
      * @return array The data
      */
     public function parseIms($file)
