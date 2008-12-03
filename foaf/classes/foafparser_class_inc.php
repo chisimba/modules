@@ -22,13 +22,6 @@ define('FOAF_AGENT', 4);
 class foafparser extends object
 {
     /**
-     * The DB config object
-     *
-     * @access private
-     * @var    object
-     */
-    private $_objDbConfig;
-    /**
      * @var string Original FOAF file
      */
     public $foaf_xml = '';
@@ -57,9 +50,6 @@ class foafparser extends object
      */
     public function init()
     {
-        // Create the database configuration object
-        $this->_objDbConfig = $this->getObject('altconfig', 'config');
-
         // Determine the location of the RDF API library
         $rdfapi_include_dir = $this->getResourcePath('rdfapi-php/api/');
 
