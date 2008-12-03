@@ -87,6 +87,7 @@ class educommons extends controller
     {
         $action = $this->getParam('action');
         $context = $this->getParam('context');
+        $this->setLayoutTemplate('educommons_layout.php');
         switch ($action) {
             case 'rss':
                 $uri = $this->getParam('uri');
