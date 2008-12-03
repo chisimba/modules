@@ -22,12 +22,14 @@ package avoir.realtime.appsharing.tcp;
 import avoir.realtime.appsharing.DefaultDesktopPacketProcessor;
 import avoir.realtime.appsharing.ScreenScraper;
 
+import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.common.TCPSocket;
 
 import avoir.realtime.common.appshare.DesktopPacketIntf;
 import avoir.realtime.common.appshare.DesktopPacketProcessor;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.user.UserLevel;
+import java.util.Map;
 
 /**
  * David Wafula
@@ -40,6 +42,11 @@ public class TCPConnector extends TCPSocket {
 
     public TCPConnector(String username, String sessionId) {
         user = new User(UserLevel.GUEST, username, username, true, sessionId);
+    }
+
+    @Override
+    public Map<String, PrivateChatFrame> getPrivateChats() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public ScreenScraper getScreenScraper() {
@@ -65,7 +72,7 @@ public class TCPConnector extends TCPSocket {
 
     public boolean connectToServer(String host, int port) {
         if (connect(host, port)) {
-           publish(user);
+            publish(user);
             return true;
         }
         return false;
