@@ -327,10 +327,10 @@ public class Whiteboard extends WhiteboardSurface implements
     }
 
     public void addThumbNail(Image img, final int index, int maxIndex, boolean newThumbnail) {
-       
+
         //repaint();
         if (firstThumbNail) {
-          //  xValue = (getWidth() - pointerSurface.width             ) / 2;
+            //  xValue = (getWidth() - pointerSurface.width             ) / 2;
             firstThumbNail = false;
         }
         if (newThumbnail) {
@@ -673,8 +673,11 @@ public class Whiteboard extends WhiteboardSurface implements
                 if (thRect.contains(evt.getPoint())) {
                     int index = selectedIndex;
                     String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getSelectedFile()) + "/img" + index + ".jpg";
+                    if (mf.isWebPresent()) {
+                        slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + index + ".jpg";
+                    }
                     mf.getSessionManager().setCurrentSlide(index, mf.getUser().isPresenter(), slidePath);
-                    mf.getConnector().requestNewSlide(mf.getUser().getSiteRoot(), slideIndex, mf.getUser().isPresenter(),
+                    mf.getConnector().requestNewSlide(mf.getUser().getSiteRoot(), index, mf.getUser().isPresenter(),
                             mf.getUser().getSessionId(), mf.getUser().getUserName(),
                             true, mf.getSelectedFile(), mf.isWebPresent());
 
@@ -1219,8 +1222,6 @@ public class Whiteboard extends WhiteboardSurface implements
             Rectangle r1 = ovalRect2;//new Rectangle((xx + ww) - 20,
             //yy, 20, 20);
             Rectangle r2 = ovalRect3;// new Rectangle((xx + ww) - 20,
-            //(yy + hh) - 10, 20, 20);
-            // System.out.println("R1: " + r1 + "\nR2 : " + r2 + "\nEvt : " + evt.getPoint() + "\nContains R1: " + (r1.contains(evt.getPoint())) + "\nContails R2: " + r2.contains(evt.getPoint()));
             if (r1.contains(evt.getPoint())) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
             } else {
@@ -1292,7 +1293,7 @@ public class Whiteboard extends WhiteboardSurface implements
         public void run() {
             showThumbNails = false;
             repaint();
-            System.out.println("false");
+
         }
     }
 
@@ -1947,10 +1948,10 @@ public class Whiteboard extends WhiteboardSurface implements
                     }
                     int index = selectedIndex;
                     String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getSelectedFile()) + "/img" + index + ".jpg";
-                      
-                    if(mf.isWebPresent()){
-                    slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + index + ".jpg";
-                       System.out.println(slidePath);
+
+                    if (mf.isWebPresent()) {
+                        slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + index + ".jpg";
+
                     }
                     Image img = whiteboardUtil.getScaledImage(new ImageIcon(slidePath).getImage(), 250, 200);
                     slidesPreviewLabel.setIcon(new ImageIcon(img));
