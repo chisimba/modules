@@ -254,8 +254,7 @@ class dbsections extends dbTable
             $id = $parentSelected;
             $parentid = $id;
 
-            if ($this->getLevel($parentid) == '1' || $this->getLevel($parentid) == '0') {
-            	
+            if ($this->getLevel($parentid) == '0') {
                 $rootid = $parentid;
                 $rootnode = $this->checkindex($rootid);
                 //Get section details
@@ -275,7 +274,6 @@ class dbsections extends dbTable
                 if (is_array($checkData)) {
                     return false;
                 }
-
 
         		if($this->getParam('pagenum') == 'custom') {
                 	$numpagedisplay = $this->getParam('customnumber');
@@ -307,6 +305,7 @@ class dbsections extends dbTable
                 'link' => $this->getParam('imagesrc'),
                 'contextcode' =>$contextcode
                 );
+
                 $result = $this->insert($index);
                 
                 if ($result != FALSE) {
@@ -319,6 +318,7 @@ class dbsections extends dbTable
                
              
             } else {
+
                 $rootid = $this->getRootNodeId($id);
                 $rootnode = $this->checkindex($rootid);
                 //Get section details
