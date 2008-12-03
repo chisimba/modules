@@ -48,6 +48,7 @@ public class User implements Serializable {
     private boolean speakerOn,  micOn,  handOn,  editOn,  yesOn,  noOn;
     private String userDetails;
     private String userImagePath;
+    private boolean chatEnabled = true;
 
     public User(int level, String fullname, String userName, String host,
             int port, boolean isPresenter, String sessionId, String sessionTitle, String slidesDir,
@@ -75,8 +76,26 @@ public class User implements Serializable {
         this.sessionId = sessionId;
     }
 
+    public boolean isChatEnabled() {
+        return chatEnabled;
+    }
+
+    public void setChatEnabled(boolean chatEnabled) {
+        this.chatEnabled = chatEnabled;
+    }
+
     public String getUserDetails() {
         return userDetails;
+    }
+
+    /**
+     * Compares if the two user objects are equal. Two users are equal if and only
+     * if thier username are same
+     * @param usr
+     * @return boolean
+     */
+    public boolean equals(User usr) {
+        return usr.getUserName().equals(userName);
     }
 
     public boolean isIsSlidesHost() {
