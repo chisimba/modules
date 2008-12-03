@@ -18,6 +18,7 @@
 package avoir.realtime.common;
 
 
+import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.common.packet.AckPacket;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.user.User;
@@ -30,6 +31,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -158,7 +160,7 @@ public abstract class TCPSocket {
     }
 
     public abstract void startSession();
-
+    public abstract Map<String, PrivateChatFrame> getPrivateChats();
 
     public void setReader(ObjectInputStream reader) {
         this.reader = reader;
