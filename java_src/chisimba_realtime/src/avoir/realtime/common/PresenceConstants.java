@@ -45,4 +45,6 @@ public class PresenceConstants {
     public static final boolean OFFLINE = false;
     public static final boolean EDITING_WB = true;
     public static final boolean NOT_EDIING_WB = false;
+    public static final boolean CHAT_ENABLED = true;
+    public static final boolean CHAT_DISABLED = false;
 }

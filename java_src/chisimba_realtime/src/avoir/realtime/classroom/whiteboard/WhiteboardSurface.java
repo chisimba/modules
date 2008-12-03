@@ -27,8 +27,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -61,14 +59,12 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private final float[] dash1 = {1.0f};
     private final BasicStroke dashed = new BasicStroke(1.0f,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dash1, 0.0f);
-   
     private float strokeWidth = 5;
     private ClassroomMainFrame mf;
     private Rectangle pointerSurface = new Rectangle();
     private boolean drawingEnabled = true;
     private Vector<Item> items = new Vector<Item>();
     private JTextField textField = new JTextField();
-
     private Rectangle ovalRect1;
     private Rectangle ovalRect2;
     private Rectangle ovalRect3;
@@ -96,7 +92,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     protected boolean fromPresenter = false;
     boolean firstSlide = false;
     protected int totalSlideCount;
-    
     protected Rectangle currentSelectionArea = new Rectangle();
     int currentX, currentY;
     protected ImageIcon image;
@@ -107,11 +102,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     protected boolean gotSize = false;
     int slideWidth, slideHeight;
 
-
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(ClassroomMainFrame mf) {
         initComponents();
-        this.mf=mf;
+        this.mf = mf;
         setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         whiteboardManager = new WhiteboardUtil(mf, this);
@@ -120,7 +114,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
 
     }
-
 
     public ImageIcon getImage() {
         return image;
@@ -131,8 +124,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         imgs.add(image);
         repaint();
     }
-
-   
 
     public void setSelectedItem(Item selectedItem) {
         this.selectedItem = selectedItem;
@@ -148,7 +139,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void setTCPConnector(TCPConnector tcpConnector) {
-     //tcpConnector.setWhiteboardSurfaceHandler(this);
+        //tcpConnector.setWhiteboardSurfaceHandler(this);
     }
 
     /**
@@ -160,7 +151,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         items.addElement(item);
         repaint();
     }
-
 
     public Vector<Item> getItems() {
         return items;
@@ -192,7 +182,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     public void clearItems() {
         items.clear();
-        
+
         repaint();
 
     }
@@ -249,7 +239,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     public void mouseReleased(MouseEvent evt) {
     }
 
-  
     protected void centerViewPort() {
         JScrollPane scrollPane = mf.getSurfaceScrollPane();
         JViewport vport = scrollPane.getViewport();
@@ -276,7 +265,6 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void mouseDragged(MouseEvent evt) {
-        
     }
 
     public Vector<ImageIcon> getImgs() {
@@ -300,9 +288,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     }
 
     public void processMouseMoved(MouseEvent evt) {
-    
     }
-public void mouseMoved(MouseEvent evt) {
+
+    public void mouseMoved(MouseEvent evt) {
     }
 
     public void keyPressed(KeyEvent evt) {
@@ -313,7 +301,6 @@ public void mouseMoved(MouseEvent evt) {
 
     public void keyTyped(KeyEvent evt) {
     }
-
 
     public void clearWhiteboard() {
         clearItems();
@@ -390,8 +377,6 @@ public void mouseMoved(MouseEvent evt) {
         this.colour = colour;
     }
 
-    
-
     public void setGraphics(Graphics2D graphics) {
         this.graphics = graphics;
     }
@@ -416,8 +401,6 @@ public void mouseMoved(MouseEvent evt) {
         centerViewPort();
         resized = true;
     }
-
-    
     boolean resized = false;
     double prevXMag = magX;
     double prevYMag = magY;
@@ -448,7 +431,7 @@ public void mouseMoved(MouseEvent evt) {
         g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
 
         paintSlides(g2);
-    
+
         if (image != null) {
             graphics.drawImage(image.getImage(), 100, 100, this);
         }
@@ -499,10 +482,9 @@ public void mouseMoved(MouseEvent evt) {
             revalidate();
             resized = false;
         }
-     
+
 
     }
-
 
     public double getPrevXMag() {
         return prevXMag;
@@ -534,7 +516,7 @@ public void mouseMoved(MouseEvent evt) {
             int yy = ((int) (getHeight() * 1) - slide.getIconHeight()) / 2;
             g2.setFont(new Font("Dialog", 1, 10));
             g2.drawImage(slide.getImage(), xx, yy, (int) (slideWidth), (int) (slideHeight), this);
-      
+
             firstSlide = false;
         }
     }
@@ -568,8 +550,6 @@ public void mouseMoved(MouseEvent evt) {
 
         setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
