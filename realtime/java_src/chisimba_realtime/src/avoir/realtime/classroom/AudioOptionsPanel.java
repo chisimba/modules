@@ -23,7 +23,8 @@
  */
 package avoir.realtime.classroom;
 
-import javax.swing.JTextField;
+//import avoir.realtime.audio.AdvancedAudioPanel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -62,6 +63,21 @@ public class AudioOptionsPanel extends javax.swing.JPanel {
         return port;
     }
 
+    private void showAdvancedPanel() {
+//        AdvancedAudioPanel panel=new AdvancedAudioPanel();
+  //      JOptionPane.showConfirmDialog(null, panel);
+        try{
+
+        }catch(NumberFormatException ex){
+
+        }
+        try{
+
+        }catch(NumberFormatException ex){
+
+        }
+    }
+
     public String getAudioServerHost() {
         return audioServerHostField.getText();
     }
@@ -82,6 +98,7 @@ public class AudioOptionsPanel extends javax.swing.JPanel {
         speakerPortField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         micPortField = new javax.swing.JTextField();
+        advancedButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -120,8 +137,26 @@ public class AudioOptionsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(micPortField, gridBagConstraints);
+
+        advancedButton.setText("Advanced");
+        advancedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                advancedButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
+        add(advancedButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
+        showAdvancedPanel();
+    }//GEN-LAST:event_advancedButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton advancedButton;
     private javax.swing.JTextField audioServerHostField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

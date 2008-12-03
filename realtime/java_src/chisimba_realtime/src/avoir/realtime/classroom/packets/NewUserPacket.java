@@ -8,8 +8,6 @@ import avoir.realtime.common.packet.*;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.user.User;
 
-
-
 /**
  *
  * @author developer
@@ -17,6 +15,15 @@ import avoir.realtime.common.user.User;
 public class NewUserPacket implements RealtimePacket {
 
     private User user;
+    private String sessionId;
+
+    public NewUserPacket(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public User getUser() {
         return user;
@@ -27,7 +34,7 @@ public class NewUserPacket implements RealtimePacket {
     }
 
     public String getSessionId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return sessionId;
     }
 
     public void setUser(User user) {
