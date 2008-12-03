@@ -25,6 +25,7 @@ import avoir.realtime.common.user.User;
 import avoir.realtime.common.PresenceConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.util.Date;
 import java.util.LinkedList;
 import java.awt.BorderLayout;
@@ -41,9 +42,15 @@ import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
 import avoir.realtime.classroom.packets.PresencePacket;
 import avoir.realtime.common.TCPSocket;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +60,9 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
@@ -73,7 +83,11 @@ import javax.swing.text.StyledDocument;
 public class ChatRoom
         extends JPanel implements ActionListener {
 
-    private int fontSize = 10;
+    private int fontSize = 16;
+    private String fontName = "SansSerif";
+    private int fontStyle = 1;
+    private Color color = Color.BLACK;
+    private boolean bold = false;
     private JTextArea chatIn;
     private JButton chatSubmit;
     private JScrollPane chatScroll;
@@ -90,18 +104,28 @@ public class ChatRoom
     private JTextPane textPane = new JTextPane();
     private AbstractDocument doc;
     private SimpleAttributeSet st = new SimpleAttributeSet();
-    private ImageIcon smileIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/smile.png");
-    private ImageIcon yesIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/thumbs_up.png");
-    private ImageIcon sadIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/sad.png");
-    private ImageIcon noIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/thumbs_down.png");
+    private ImageIcon fontIcon = ImageUtil.createImageIcon(this, "/icons/font_go.png");
+    private ImageIcon colorIcon = ImageUtil.createImageIcon(this, "/icons/colors_chooser.png");
+    private ImageIcon saveIcon = ImageUtil.createImageIcon(this, "/icons/save.png");
+    private ImageIcon smileIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_smile.png");
+    private ImageIcon yesIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/thumb_up.png");
+    private ImageIcon sadIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_unhappy.png");
+    private ImageIcon grinIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_grin.png");
+    private ImageIcon surprisedIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_surprised.png");
+    private ImageIcon wailIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_waii.png");
+    private ImageIcon noIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/thumb_down.png");
     private Emot emots[] = {
-        new Emot(smileIcon, ":)"),
-        new Emot(sadIcon, ":("),
-        new Emot(yesIcon, "(y)"),
-        new Emot(noIcon, "(n)")
+        new Emot(smileIcon, ":)", "Smile"),
+        new Emot(sadIcon, ":(", "Sad"),
+        new Emot(grinIcon, ":D", "Grin"),
+        new Emot(surprisedIcon, ":S", "Surpised"),
+        new Emot(wailIcon, ":W", "Waii"),
+        new Emot(yesIcon, "(y)", "Thumb up"),
+        new Emot(noIcon, "(n)", "Thumb down")
     };
     private static final String COMMIT_ACTION = "commit";
     private Timer typingTimer = new Timer();
+    private JFileChooser fc = new JFileChooser();
 
     private static enum Mode {
 
@@ -115,52 +139,120 @@ public class ChatRoom
     private long duration = 0;
     private boolean firstTime = true;
     private JPopupMenu emotPopup = new JPopupMenu();
-    private JPanel popupPanel = new JPanel(new GridLayout(2, 2));
+    private IconsSurface iconsSurface;
+    private JComboBox fontSizeField = new JComboBox();
+    private JComboBox fontNameField = new JComboBox();
+    private JButton colorButton = new JButton(colorIcon);
+    private JButton saveButton = new JButton(saveIcon);
+    private JButton fontButton = new JButton(fontIcon);
+    private boolean privateChat;
+    private String receiver;
+    private String chatId;
 
     /**
      * Constructor
      * @param sl SocketList
      * @param usr User
      */
-    public ChatRoom(ClassroomMainFrame mf, User usr, String chatLogFile, String sessionId) {
-
+    public ChatRoom(ClassroomMainFrame mf, User usr, String chatLogFile, String sessionId,
+            final boolean privateChat, String receiver, String chatId) {
+        this.chatId = chatId;
         this.mf = mf;
         this.usr = usr;
+        this.receiver = receiver;
+        this.privateChat = privateChat;
         this.chatLogFile = chatLogFile;
         this.sessionId = sessionId;
+        if (usr.isPresenter()) {
+            color = new Color(255, 153, 51);
+            fontSize = 17;
+        }
+        colorButton.setContentAreaFilled(false);
+
         chatIn = new JTextArea();
+        chatIn.setFont(new Font(fontName, fontStyle, fontSize));
+        chatIn.setForeground(color);
         textPane.setEditable(false);
+        // textPane.setContentType("text/html");
         chatSubmit = new JButton("Send");
         chatScroll = new JScrollPane();
         chatInputPanel = new JPanel();
-        for (int i = 0; i < emots.length; i++) {
-            final JButton b = new JButton(emots[i].getIcon());
-            final int index = i;
-            b.setBorderPainted(false);
-            b.setContentAreaFilled(false);
-            b.addMouseListener(new MouseAdapter() {
+        iconsSurface = new IconsSurface(emots, chatIn, emotPopup);
 
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    b.setContentAreaFilled(true);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    b.setContentAreaFilled(false);
-
-                }
-            });
-            b.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent evt) {
-                    chatIn.append(emots[index].getSymbol());
-                    emotPopup.setVisible(false);
-                }
-            });
-            popupPanel.add(b);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String[] fontFamilies = ge.getAvailableFontFamilyNames();
+        for (int i = 0; i <
+                fontFamilies.length; i++) {
+            fontNameField.addItem(fontFamilies[i]);
         }
-        emotPopup.add(popupPanel);
+
+        fontNameField.setSelectedItem(fontName);
+
+        for (int i = 1; i < 100; i++) {
+            fontSizeField.addItem(i + "");
+        }
+
+        fontButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                showFontFrame();
+            }
+        });
+        fontButton.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                fontButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                fontButton.setContentAreaFilled(false);
+
+            }
+        });
+        colorButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                ChatColorChooser.createAndShowGUI(ChatRoom.this);
+            }
+        });
+        colorButton.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                colorButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                colorButton.setContentAreaFilled(false);
+
+            }
+        });
+        saveButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                if (fc.showSaveDialog(ChatRoom.this) == JFileChooser.APPROVE_OPTION) {
+                    saveChat(fc.getSelectedFile().getAbsolutePath());
+                }
+            }
+        });
+        saveButton.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                saveButton.setContentAreaFilled(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                saveButton.setContentAreaFilled(false);
+
+            }
+        });
+        iconsSurface.setPreferredSize(new Dimension(130, 100));
+        emotPopup.add(iconsSurface);
         chatIn.setEditable(true);
         chatIn.setLineWrap(true);
 
@@ -187,7 +279,6 @@ public class ChatRoom
         JToolBar titlePanel = new JToolBar();
         titlePanel.setFloatable(false);
         final JButton emotButton = new JButton(smileIcon);
-        emotButton.setBorderPainted(false);
         emotButton.setContentAreaFilled(false);
         emotButton.addMouseListener(new MouseAdapter() {
 
@@ -206,11 +297,32 @@ public class ChatRoom
 
             public void actionPerformed(ActionEvent evt) {
 
-                emotPopup.show(emotButton, emotButton.getX(), emotButton.getY() - emotPopup.getHeight());
+                emotPopup.show(emotButton, emotButton.getX(), emotButton.getY() - 100);// emotPopup.getHeight());
+            }
+        });
+        fontSizeField.setEditable(true);
+        fontSizeField.setSelectedItem(fontSize + "");
+        fontSizeField.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent arg0) {
+                fontSize = Integer.parseInt((String) fontSizeField.getSelectedItem());
+                chatIn.setFont(new Font(fontName, fontStyle, fontSize));
+            }
+        });
+        fontNameField.addItemListener(new ItemListener() {
+
+            public void itemStateChanged(ItemEvent arg0) {
+                fontName = (String) fontNameField.getSelectedItem();
+                chatIn.setFont(new Font(fontName, fontStyle, fontSize));
             }
         });
         titlePanel.add(emotButton);
-        titlePanel.add(titleLabel);
+        titlePanel.add(fontButton);
+        titlePanel.add(colorButton);
+        titlePanel.add(saveButton);
+        JPanel spacer = new JPanel();
+        spacer.setPreferredSize(new Dimension(200, 21));
+        // titlePanel.add(spacer);
 
         chatInputPanel.add(titlePanel, BorderLayout.NORTH);
         chatInputPanel.add(new JScrollPane(chatIn), BorderLayout.CENTER);
@@ -228,16 +340,20 @@ public class ChatRoom
             }
 
             public void insertUpdate(DocumentEvent evt) {
-                lasttime = System.currentTimeMillis();
-                monitorTyping(evt);
-                showUserEnteredText();
+                if (chatSubmit.isEnabled() && !privateChat) {
+                    lasttime = System.currentTimeMillis();
+                    monitorTyping(evt);
+                    showUserEnteredText();
+                }
             }
 
             public void removeUpdate(DocumentEvent evt) {
-                lasttime = System.currentTimeMillis();
-                if (chatIn.getText().trim().equals("")) {
+                if (chatSubmit.isEnabled() && !privateChat) {
+                    lasttime = System.currentTimeMillis();
+                    if (chatIn.getText().trim().equals("")) {
 
-                    showUserRemovedText();
+                        showUserRemovedText();
+                    }
                 }
             }
         });
@@ -270,8 +386,23 @@ public class ChatRoom
 
     }
 
+    private void showFontFrame() {
+        JPanel p = new JPanel();
+        p.add(fontNameField);
+        p.add(fontSizeField);
+        JOptionPane.showMessageDialog(this, p);
+    }
+
     public JTextPane getTextPane() {
         return textPane;
+    }
+
+    public JTextArea getChatIn() {
+        return chatIn;
+    }
+
+    public JButton getChatSubmit() {
+        return chatSubmit;
     }
 
     private class TypingStatus extends TimerTask {
@@ -283,6 +414,20 @@ public class ChatRoom
                 typing = false;
                 this.cancel();
             }
+        }
+    }
+
+    private void saveChat(String fileName) {
+        try {
+            if (fileName.indexOf(".txt") < 0) {
+                fileName += ".txt";
+            }
+            BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+            out.write(textPane.getText(), 0, textPane.getText().length());
+            out.close();
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error saving the chat");
         }
     }
 
@@ -362,31 +507,13 @@ public class ChatRoom
         }
     }
 
-    class Emot {
+    public Color getColor() {
+        return color;
+    }
 
-        ImageIcon icon;
-        String symbol;
-
-        public Emot(ImageIcon icon, String symbol) {
-            this.icon = icon;
-            this.symbol = symbol;
-        }
-
-        public ImageIcon getIcon() {
-            return icon;
-        }
-
-        public void setIcon(ImageIcon icon) {
-            this.icon = icon;
-        }
-
-        public String getSymbol() {
-            return symbol;
-        }
-
-        public void setSymbol(String symbol) {
-            this.symbol = symbol;
-        }
+    public void setColor(Color color) {
+        this.color = color;
+        chatIn.setForeground(color);
     }
 
     /**
@@ -434,8 +561,13 @@ public class ChatRoom
      * sends the chat packet
      */
     private void sendChat() {
-        ChatPacket p = new ChatPacket(ChatRoom.this.usr.getFullName(), chatIn.getText(),
-                getTime(), ChatRoom.this.chatLogFile, ChatRoom.this.sessionId);
+        if (privateChat) {
+            System.out.println("from " + usr.getUserName() + " to " + receiver);
+        }
+        ChatPacket p = new ChatPacket(ChatRoom.this.usr.getUserName(), chatIn.getText(),
+                getTime(), ChatRoom.this.chatLogFile, ChatRoom.this.sessionId, color, fontName,
+                fontStyle, fontSize, privateChat, receiver);
+        p.setId(chatId);
         tcpSocket.sendPacket(p);
         chatIn.setText("");
 
@@ -463,7 +595,7 @@ public class ChatRoom
         SimpleDateFormat formatter;
 
         formatter =
-                new SimpleDateFormat("MM-d-yyyy h:mm:ss",
+                new SimpleDateFormat("h:mm:ss",
                 new java.util.Locale("en_US"));
         today =
                 new Date();
@@ -496,15 +628,22 @@ public class ChatRoom
     private void formatStr(ChatPacket chatPacket) {
         //  StyleConstants.setIcon(st, null);
         st = new SimpleAttributeSet();
-        StyleConstants.setFontFamily(st, "SansSerif");
-        StyleConstants.setFontSize(st, fontSize + 1);
+        //color=chatPacket.getColor();
+        StyleConstants.setFontFamily(st, chatPacket.getFontName());
+        StyleConstants.setBold(st, chatPacket.getFontStyle() == 1 ? true : false);
+        StyleConstants.setItalic(st, chatPacket.getFontStyle() == 2 ? true : false);
+
+        StyleConstants.setFontSize(st, chatPacket.getFontSize());
         StyleConstants.setForeground(st, Color.GRAY);
         insertString("[" + getTime() + "]", st);
         StyleConstants.setForeground(st, new Color(0, 131, 0));
-        insertString("<" + chatPacket.getUsr() + ">", st);
+        if (!chatPacket.getUsr().equalsIgnoreCase("System")) {
+            insertString("<" + chatPacket.getUsr() + ">", st);
+        }
         StyleConstants.setForeground(st, new Color(0, 0, 0));
         String content = chatPacket.getContent();
-        parseEmoticons(content);
+        parseEmoticons(content, chatPacket.getColor(), chatPacket.getFontName(),
+                chatPacket.getFontStyle(), chatPacket.getFontSize());
 
     }
 
@@ -561,7 +700,8 @@ public class ChatRoom
         return new EmotIcon(index, 0);
     }
 
-    private void parseEmoticons(String str) {
+    private void parseEmoticons(String str, Color currentColor, String currentFontName,
+            int currentFontStyle, int currentFontSize) {
         EmotIcon emot = determineEmotIcon(str);
         int index = emot.getIndex();
         int length = emot.getLength();
@@ -583,18 +723,23 @@ public class ChatRoom
                     emot.getLength();
         }
 
+        st = new SimpleAttributeSet();
+        StyleConstants.setFontFamily(st, currentFontName);
+        StyleConstants.setBold(st, currentFontStyle == 1 ? true : false);
+        StyleConstants.setItalic(st, currentFontStyle == 2 ? true : false);
+        StyleConstants.setFontSize(st, currentFontSize);
+        StyleConstants.setForeground(st, currentColor);
         if (str.trim().length() > 0) {
-            st = new SimpleAttributeSet();
+
             insertString(str, st);
         }
 
-        st = new SimpleAttributeSet();
         insertString("\n", st);
     }
 
     private void insertString(String txt, SimpleAttributeSet st) {
         try {
-            StyleConstants.setFontSize(st, fontSize);
+
             doc.insertString(doc.getLength(), txt, st);
             textPane.setCaretPosition(doc.getLength());
         } catch (Exception ex) {
