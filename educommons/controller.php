@@ -89,7 +89,7 @@ class educommons extends controller
         $context = $this->getParam('context');
         switch ($action) {
             case 'rss':
-                $uri = 'http://free.uwc.ac.za/freecourseware/biodiversity-conservation-biology/conservation-biology/RSS';
+                $uri = $this->getParam('uri');
                 $this->objImport->doRssChapters($uri);
                 break;
             case 'upload':
