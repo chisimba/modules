@@ -21,6 +21,7 @@ public class UserObject {
     private ImageIcon speakerIcon;
     private ImageIcon micIcon;
     private ImageIcon presenceIcon;
+    private ImageIcon chatIcon;
     private boolean online;
 
     public UserObject(User user, Color color, boolean active, boolean handRaised, boolean online) {
@@ -37,6 +38,14 @@ public class UserObject {
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public ImageIcon getChatIcon() {
+        return chatIcon;
+    }
+
+    public void setChatIcon(ImageIcon chatIcon) {
+        this.chatIcon = chatIcon;
     }
 
     // @Override
