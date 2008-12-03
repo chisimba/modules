@@ -69,6 +69,7 @@ public class Classroom extends ClassroomMainFrame {
                 userLevel, slidesDir, siteRoot, slidesServerId, resourcesPath,
                 webPresent, mediaServerHost,
                 audioMICPort, audioSpeakerPort, parent);
+        
         sessionManager = new SessionManager(this);
         connector = new TCPConnector(this);
         connector.setName("Instructor");

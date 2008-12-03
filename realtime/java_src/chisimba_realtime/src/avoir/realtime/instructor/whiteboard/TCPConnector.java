@@ -20,6 +20,8 @@ package avoir.realtime.instructor.whiteboard;
 import avoir.realtime.appsharing.RemoteDesktopViewerFrame;
 
 import avoir.realtime.chat.ChatPopup;
+import avoir.realtime.chat.PrivateChat;
+import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.classroom.packets.ClientPacket;
 import avoir.realtime.classroom.packets.NewUserPacket;
@@ -43,8 +45,10 @@ import avoir.realtime.common.packet.NewSlideReplyPacket;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.packet.RequestScrape;
 import avoir.realtime.common.packet.SessionImg;
+import avoir.realtime.common.user.User;
 import avoir.realtime.instructor.packets.LocalSlideCacheRequestPacket;
 import avoir.realtime.instructor.packets.NewSlideRequestPacket;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -54,6 +58,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
@@ -74,10 +80,16 @@ public class TCPConnector extends TCPSocket {
     private JTabbedPane pane;
     private boolean initialSlideRequest = true;
     private Timer timer = new Timer();
+    private Map<String, PrivateChatFrame> privateChats = new HashMap<String, PrivateChatFrame>();
 
     public TCPConnector(Classroom mf) {
         this.mf = mf;
 
+    }
+
+    @Override
+    public Map<String, PrivateChatFrame> getPrivateChats() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public boolean connectToServer(String host, int port) {
@@ -192,9 +204,15 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof NewUserPacket) {
                         NewUserPacket p = (NewUserPacket) packet;
                         mf.getUserListManager().addNewUser(p.getUser());
+                        mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " joined room.",
+                                "", "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket p = (RemoveUserPacket) packet;
                         mf.getUserListManager().removeUser(p.getUser());
+                        mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " left room.",
+                                "", "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
                         int userIndex = mf.getUserListManager().getUserIndex(p.getUserName());
@@ -274,6 +292,10 @@ public class TCPConnector extends TCPSocket {
     public void processFilePacket(FilePacket packet) {
         try {
             String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
+            if (!mf.isWebPresent()) {
+                home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
+
+            }
             File homeDir = new File(home);
             if (!homeDir.exists()) {
                 homeDir.mkdirs();
@@ -287,7 +309,7 @@ public class TCPConnector extends TCPSocket {
             fc.close();
             mf.getSessionManager().setSlideCount(packet.getMaxValue());
             mf.setSelectedFile(packet.getPresentationName());
-            float perc = ((float) packet.getCurrentValue() + 1 / (float) packet.getMaxValue()) * 100;
+            //float perc = ((float) packet.getCurrentValue() + 1 / (float) packet.getMaxValue()) * 100;
             //  base.getSurface().setConnectingString("Please wait " + new java.text.DecimalFormat("##.#").format(perc) + "% ...");
 
             if (initialSlideRequest) {
@@ -336,12 +358,12 @@ public class TCPConnector extends TCPSocket {
         if (packet.getMessage() != null) {
             mf.showInfoMessage(packet.getMessage());
         }
-         mf.getWhiteboard().repaint();
+        mf.getWhiteboard().repaint();
         mf.setSelectedFile(packet.getPresentationName());
     }
 
     private void showThumbNails(String presentationName, String path) {
-       
+
         if (!mf.getSelectedFile().equals(presentationName) || firstTimeSlideReply) {
 
             int[] slidesList = mf.getConnector().getImageFileNames(path);
@@ -513,15 +535,24 @@ public class TCPConnector extends TCPSocket {
      * @param p
      */
     public void processChatPacket(ChatPacket p) {
+        if (p.isPrivateChat()) {
 
-        if (!mf.getParentFrame().isActive()) {
-            if (!mf.getUser().getUserName().equals(p.getUsr())) {
-                showChatPopup(p.getUsr(), p.getContent());
+            PrivateChatFrame privateChatFrame = privateChats.get(p.getId());
+            if (privateChatFrame == null) {
+                User usr = mf.getUserListManager().getUser(p.getUsr());
+                privateChatFrame = new PrivateChatFrame(usr, mf, p.getId());
+                privateChats.put(p.getId(), privateChatFrame);
             }
-
+            privateChatFrame.getChatRoom().update(p);
+            privateChatFrame.show();
+        } else {
+            if (!mf.getParentFrame().isActive()) {
+                if (!mf.getUser().getUserName().equals(p.getUsr())) {
+                    showChatPopup(p.getUsr(), p.getContent());
+                }
+            }
+            mf.updateChat(p);
         }
-        mf.updateChat(p);
-
     }
 
     private void showChatPopup(String user, String message) {
