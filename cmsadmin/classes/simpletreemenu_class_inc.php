@@ -192,7 +192,8 @@ class simpletreemenu extends object
                         //If the Section has child sections recurse
                         
                         $contentItem = '';
-                        if ($this->hasChildContent($node['id'])) {
+                        $hasChildContent = $this->hasChildContent($node['id']);
+                        if ($hasChildContent) {
 
                             //Adding the content for the parent node
                             $contentNodes = $this->getChildContent($node['id']);
@@ -223,9 +224,13 @@ class simpletreemenu extends object
                                     //var_dump($cNode); 
                                 }
                             }
+                        } else {
+                            //Catering for empty sections
+                            $html .= "<ul><li><span>--Empty--</span></ul>\n";
                         }
 
-                        if ($this->hasChildNodes($node['id'])){
+                        $hasChildNodes = $this->hasChildNodes($node['id']);
+                        if ($hasChildNodes){
                         //Call Recursively to add children sections and content
                             $level = $this->buildTree($node['id'], $admin, $module, $sectionAction, $contentAction, true) . $contentItem;
                             if (trim($level) != ''){
@@ -245,9 +250,9 @@ class simpletreemenu extends object
 
         /**
          * Method to build the next level in tree
-            * @param string $parentid The node id whose child nodes need to be built
+         * @param string $parentid The node id whose child nodes need to be built
          * @param string $currentNode The currently selected node, which should remain open
-            * @param bool $admin Select whether admin user or not
+         * @param bool $admin Select whether admin user or not
          * @return string
          * @access public
          */
