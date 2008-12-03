@@ -849,7 +849,7 @@ class foafparser extends object
         }
         foreach($foaf_data as $key => $agent) {
             if (isset($agent['type'])) {
-                $table.= '<tr><th colspan="2" class="xml_foaf_'.strtolower($agent['type']) .'><h1 class="xml_foaf">';
+                $table.= '<tr><th colspan="2" class="xml_foaf_'.strtolower($agent['type']) .'"><h1 class="xml_foaf">';
                 if (isset($agent['name'])) {
                     $table.= $agent['name'];
                 } else {
