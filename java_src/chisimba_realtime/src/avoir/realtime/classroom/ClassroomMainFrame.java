@@ -24,7 +24,7 @@
 package avoir.realtime.classroom;
 
 import avoir.realtime.chat.ChatRoom;
-import avoir.realtime.audio.AudioPanel;
+//import avoir.realtime.audio.AudioPanel;
 import avoir.realtime.classroom.packets.RemoveUserPacket;
 import avoir.realtime.classroom.tcp.TCPConnector;
 
@@ -104,7 +104,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     protected RealtimeOptions realtimeOptions = new RealtimeOptions();
     protected FileReceiverManager fileRecieverManager;
     protected JPanel centerPanel = new JPanel(new BorderLayout());
-    protected AudioPanel audioPanel;
+//    protected AudioPanel audioPanel;
     private String mediaServerHost;
     private int audioMICPort;
     private int audioSpeakerPort;
@@ -145,6 +145,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         this.mediaServerHost = mediaServerHost;
         this.audioMICPort = audioMICPort;
         this.audioSpeakerPort = audioSpeakerPort;
+        
         user = createUser();
         userListManager = new UserListManager(this);
         userInteractionManager = new UserInteractionManager(this);
@@ -153,9 +154,9 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         surfaceScrollPane = new JScrollPane(whiteBoardSurface);
         tcpConnector = new TCPConnector(this);
         tcpConnector.setName("student");
-        chatRoom = new ChatRoom(this, user, chatLogFile, sessionId);
+        chatRoom = new ChatRoom(this, user, chatLogFile, sessionId,false,null,sessionId);
         chatRoom.setTcpSocket(tcpConnector);
-        audioPanel = new AudioPanel(this);
+//        audioPanel = new AudioPanel(this);
         initCustomComponents();
     }
 
@@ -173,10 +174,10 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         dockTabbedPane.addTab("Chat", chatRoom);
         dockTabbedPane.setSelectedIndex(0);
         leftBottomPanel.add(dockTabbedPane, BorderLayout.CENTER);
-        audioPanel.setPreferredSize(new Dimension(ss.width / 4, 80));
+//        audioPanel.setPreferredSize(new Dimension(ss.width / 4, 80));
         JPanel p = new JPanel(new BorderLayout());
 
-        p.add(audioPanel, BorderLayout.CENTER);
+      //  p.add(audioPanel, BorderLayout.CENTER);
         AudioButtonsPanel audioButtonsPanel = new AudioButtonsPanel(new GridLayout(0, 1));
         audioButtonsPanel.add(userInteractionManager.getMicButton());
         audioButtonsPanel.add(userInteractionManager.getSpkrButton());
@@ -231,10 +232,10 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         return mediaServerHost;
     }
 
-    public AudioPanel getAudioPanel() {
+/*    public AudioPanel getAudioPanel() {
         return audioPanel;
     }
-
+*/
     public JSplitPane getLeftSplitPane() {
         return leftSplitPane;
     }

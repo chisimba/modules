@@ -4,6 +4,8 @@
  */
 package avoir.realtime.classroom;
 
+import avoir.realtime.chat.PrivateChat;
+import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.common.ImageUtil;
 
 
@@ -18,10 +20,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -41,9 +45,12 @@ public class UserListManager {
     private JPopupMenu popup = new JPopupMenu();
     private JMenuItem allowControlItem = new JMenuItem("Allow Control");
     private JMenuItem stopControlItem = new JMenuItem("Stop Control");
+    private JCheckBoxMenuItem chatControlItem = new JCheckBoxMenuItem("Disable Text Chat");
     private JMenuItem callItem = new JMenuItem("Give Microphone");
     private JMenuItem sendPrivateMessageItem = new JMenuItem("Send Private Message");
     ImageIcon speakerIcon = ImageUtil.createImageIcon(this, "/icons/mute_off.png");
+    ImageIcon chatOnIcon = ImageUtil.createImageIcon(this, "/icons/chat_enabled.png");
+    ImageIcon chatOffIcon = ImageUtil.createImageIcon(this, "/icons/chat_disabled.png");
     ImageIcon micIcon = ImageUtil.createImageIcon(this, "/icons/mic.png");
     ImageIcon editIcon = ImageUtil.createImageIcon(this, "/icons/edit.png");
     ImageIcon handIcon = ImageUtil.createImageIcon(this, "/icons/hand.png");
@@ -63,8 +70,11 @@ public class UserListManager {
     Vector<UserObject> userList = new Vector<UserObject>();
     private ClassroomMainFrame mf;
     private Timer blinkingTimer = new Timer();
+    int fontSize = 16;
+    private String currentPrivateChatUser = "";
+    private String chatId = "";
 
-    public UserListManager(ClassroomMainFrame mf) {
+    public UserListManager(final ClassroomMainFrame mf) {
         this.mf = mf;
         try {
             model = new ParticipantListingTableModel();
@@ -81,6 +91,8 @@ public class UserListManager {
                     if (selectedRow < userList.size() && userList.size() > 0) {
                         UserObject usr = userList.elementAt(selectedRow);
                         allowControlItem.setEnabled(usr.isHandRaised());
+                        chatControlItem.setSelected(!usr.getUser().isChatEnabled());
+                        sendPrivateMessageItem.setEnabled(usr.getUser().isPresenter() && !usr.getUser().equals(mf.getUser()));
                         popup.show(table, e.getX(), e.getY());
                     }
                 }
@@ -90,9 +102,29 @@ public class UserListManager {
         sendPrivateMessageItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                showPrivateChatFrame(userList.elementAt(selectedRow).getUser());
             }
         });
 
+
+        chatControlItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (selectedRow < userList.size() && userList.size() > 0) {
+                    /* UserObject usr = userList.elementAt(selectedRow);
+                    UserListManager.this.mf.getTcpConnector().sendPacket(new PresencePacket(usr.getUser().getSessionId(),
+                    PresenceConstants.CONTROL_ICON, chatControlItem.isSelected() ? PresenceConstants.CHAT_DISABLED : PresenceConstants.CHAT_ENABLED,
+                    usr.getUser().getUserName()));
+                     */
+
+                    UserObject usr = userList.elementAt(selectedRow);
+                    PresencePacket p = new PresencePacket(usr.getUser().getSessionId(),
+                            PresenceConstants.CONTROL_ICON, chatControlItem.isSelected() ? PresenceConstants.CHAT_DISABLED : PresenceConstants.CHAT_ENABLED,
+                            usr.getUser().getUserName());
+                    mf.getTcpConnector().sendPacket(p);
+                }
+            }
+        });
         stopControlItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -121,6 +153,7 @@ public class UserListManager {
         if (mf.getUser().isPresenter()) {
             popup.add(allowControlItem);
             popup.add(stopControlItem);
+            popup.add(chatControlItem);
             popup.addSeparator();
         }
         //Ask to be notified of selection changes.
@@ -151,17 +184,50 @@ public class UserListManager {
         table.setDefaultRenderer(UserObject.class, new LRenderer());
     }
 
+    private void showPrivateChatFrame(User usr) {
+        if (currentPrivateChatUser.equals("") || !currentPrivateChatUser.equals(usr.getUserName())) {
+            chatId = String.valueOf((long) (Long.MIN_VALUE *
+                    Math.random()));
+            currentPrivateChatUser = usr.getUserName();
+        }
+        Map<String, PrivateChatFrame> privateChats = mf.getTcpConnector().getPrivateChats();
+        PrivateChatFrame privateChatFrame = privateChats.get(chatId);
+        if (privateChatFrame == null) {
+            privateChatFrame = new PrivateChatFrame(usr, mf, chatId);
+            privateChats.put(chatId, privateChatFrame);
+        }
+
+        privateChatFrame.show();
+    }
+
+    /**
+     * Get user object based on user name
+     * @param username
+     * @return {@link User}
+     */
+    public User getUser(String username) {
+        for (int i = 0; i < userList.size(); i++) {
+            UserObject usr = userList.elementAt(i);
+
+            if (usr.getUser().getUserName().equals(username)) {
+                return usr.getUser();
+            }
+        }
+
+        return null;
+    }
+
     private void decorateTable() {
         table.setDefaultRenderer(UserObject.class, new LRenderer());
         TableColumn column = null;
         if (model != null) {
             for (int i = 0; i < model.getColumnCount(); i++) {
                 column = table.getColumnModel().getColumn(i);
-                if (i == 3) {
-                    column.setPreferredWidth(300);
+                if (i == 4) {
+                    column.setPreferredWidth(280);
 
                 } else {
-                    column.setPreferredWidth(10);
+                    column.setPreferredWidth(20);
                 }
             }
         }
@@ -191,7 +257,7 @@ public class UserListManager {
 
         public LRenderer() {
             super();
-            this.setFont(new java.awt.Font("Dialog", 1, 10));
+            this.setFont(new java.awt.Font("Dialog", 1, fontSize));
             setOpaque(true); //MUST do this for background to show up.
 
         }
@@ -206,17 +272,17 @@ public class UserListManager {
                 if (userObject.isOnline()) {
                     if (userObject.isActive()) {
 
-                        setFont(new java.awt.Font("Dialog", 0, 10));
+                        setFont(new java.awt.Font("Dialog", 0, fontSize));
                         this.setText(userObject.getDisplay());
                         this.setForeground(userObject.getColor());
                     } else {
-                        setFont(new java.awt.Font("Dialog", 3, 10));
+                        setFont(new java.awt.Font("Dialog", 3, fontSize));
                         setForeground(Color.YELLOW);
                         this.setText(userObject.getDisplay() + "-Away");
                     }
                 } else {
 
-                    setFont(new java.awt.Font("Dialog", 3, 10));
+                    setFont(new java.awt.Font("Dialog", 3, fontSize));
                     setForeground(Color.RED);
                     this.setText(userObject.getDisplay() + "-Offline");
                 }
@@ -238,7 +304,7 @@ public class UserListManager {
                 setBackground(table.getBackground());
             }
 
-            setFont(new java.awt.Font("Dialog", 0, 11));
+            setFont(new java.awt.Font("Dialog", 0, fontSize));
             this.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
             if (val instanceof ImageIcon) {
@@ -248,19 +314,19 @@ public class UserListManager {
                 UserObject userObject = (UserObject) val;
                 if (userObject.isOnline()) {
                     if (userObject.isActive()) {
-                        setFont(new java.awt.Font("Dialog", 0, 10));
+                        setFont(new java.awt.Font("Dialog", 0, fontSize));
                         this.setForeground(userObject.getColor());
                         this.setText(userObject.getDisplay());
 
                     } else {
-                        setFont(new java.awt.Font("Dialog", 3, 10));
+                        setFont(new java.awt.Font("Dialog", 3, fontSize));
                         setForeground(Color.RED);
                         this.setText(userObject.getDisplay() + "-Away");
 
                     }
                 } else {
 
-                    setFont(new java.awt.Font("Dialog", 3, 10));
+                    setFont(new java.awt.Font("Dialog", 3, fontSize));
                     setForeground(Color.LIGHT_GRAY);
                     this.setText(userObject.getDisplay() + "- Offline");
 
@@ -329,7 +395,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (A) " + presenter;// ");//[" + usr.getIpAddress() + "]");
+                display = usr.getUserName() + " (A) " + presenter;// ");//[" + usr.getIpAddress() + "]");
 
             } else {
                 userObject.setColor(new Color(0, 131, 0));
@@ -338,7 +404,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (A) " + presenter;
+                display = usr.getUserName() + " (A) " + presenter;
             }
 
         }
@@ -350,7 +416,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (S) " + presenter;
+                display = usr.getUserName() + " (S) " + presenter;
             } else {
                 userObject.setColor(Color.BLACK);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
@@ -358,7 +424,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (S) " + presenter;
+                display = usr.getUserName() + " (S) " + presenter;
             }
 
         }
@@ -370,7 +436,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (L) " + presenter;
+                display = usr.getUserName() + " (L) " + presenter;
             } else {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
@@ -378,7 +444,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (L) " + presenter;
+                display = usr.getUserName() + " (L) " + presenter;
             }
 
         }
@@ -390,7 +456,7 @@ public class UserListManager {
                     userObject.setColor(Color.BLUE);
 
                 }
-                display = usr.getFullName() + " (G) " + presenter;
+                display = usr.getUserName() + " (G) " + presenter;
             } else {
                 userObject.setColor(Color.DARK_GRAY);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
@@ -399,7 +465,7 @@ public class UserListManager {
 
                 }
 
-                display = usr.getFullName() + " (G) " + presenter;
+                display = usr.getUserName() + " (G) " + presenter;
             }
 
         }
@@ -418,7 +484,7 @@ public class UserListManager {
         userObject.setSpeakerIcon(usr.isSpeakerOn() ? speakerIcon : blankIcon);
         userObject.setMicIcon(usr.isMicOn() ? micIcon : blankIcon);
         userObject.setPresenceIcon(usr.isEditOn() ? editIcon : blankIcon);
-
+        userObject.setChatIcon(usr.isChatEnabled() ? chatOnIcon : chatOffIcon);
         if (usr.isPresenter()) {
             userList.add(0, decorateUser(userObject, usr));
         } else {
@@ -483,7 +549,7 @@ public class UserListManager {
         User usr = userObject.getUser();
         usr.setOnline(online);
         ImageIcon icon = blankIcon;
-        String fullNames = usr.getFullName();
+        String fullNames = usr.getUserName();
         if (iconType == PresenceConstants.SPEAKER_ICON) {
             if (show) {
                 icon = speakerIcon;
@@ -506,10 +572,10 @@ public class UserListManager {
             if (show) {
                 icon = editIcon;
             } else {
-                icon = blankIcon;
+                icon = usr.isChatEnabled() ? chatOnIcon : chatOffIcon;
             }
-        
-            model.setValueAt(icon, index, 2);
+
+            model.setValueAt(icon, index, 3);
         }
         if (iconType == PresenceConstants.EDIT_WB_ICON) {
             if (show) {
@@ -590,12 +656,21 @@ public class UserListManager {
 
 
             if (show) {
-                fullNames = "**" + fullNames;
+                //fullNames = "**" + fullNames;
+                icon = chatOnIcon;
             } else {
-                fullNames = "" + fullNames;
-            }
+                //fullNames = "" + fullNames;
+                icon = chatOffIcon;
 
-            model.setValueAt(icon, index, 2);
+            }
+            if (mf.getUser().getUserName().equals(usr.getUserName())) {
+                mf.getChatRoom().getChatIn().setEditable(show);
+                mf.getChatRoom().getChatSubmit().setEnabled(show);
+                String txt = show ? "" : "YOUR TEXT CHAT HAS BEEN DISABLED BY MODERATOR";
+                mf.getChatRoom().getChatIn().setText(txt);
+
+            }
+            model.setValueAt(icon, index, 3);
         }
 
 
@@ -717,6 +792,7 @@ public class UserListManager {
     class ParticipantListingTableModel extends AbstractTableModel {
 
         private String[] columnNames = {
+            "C",
             "S", //0
             "M",
             "P",
@@ -734,7 +810,7 @@ public class UserListManager {
                 UserObject userObject = userList.elementAt(i);
 
                 Object[] row = {userObject.getSpeakerIcon(), userObject.getMicIcon(),
-                    userObject.getPresenceIcon(), userObject
+                    userObject.getPresenceIcon(), userObject.getChatIcon(), userObject
                 };
                 data[i] = row;
             }
