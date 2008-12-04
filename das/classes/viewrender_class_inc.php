@@ -75,7 +75,9 @@ class viewrender extends object {
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
 		$this->objLink = $this->getObject ( 'link', 'htmlelements' );
         $this->objDBIM = $this->getObject('dbim', 'im');
-
+		$this->objUser = $this->getObject('user', 'security');
+ 		$this->objDbIm = $this->getObject ( 'dbim', 'im' );
+        $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
         $this->objIcon->setIcon ( 'green_bullet' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
         $this->activeIcon = $this->objIcon->show ();
@@ -203,9 +205,23 @@ class viewrender extends object {
 	{
 		$objPres = $this->getObject ( 'dbimpresence' , 'im' );
 		//number of live conversations
+		$cid = $this->objUser->userId();
+		$outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
+		$msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 		
-		$str = '<table><tr><td>Live Consersations</td><td>'.$objPres->countActiveUsers().'</td></tr>';
+		$num = count($msgs);
+		$myMessages = $num.$outof;
 		
+		$liveconv = $objPres->countActiveUsers();
+		$avg
+		$str = '<table>';
+
+		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
+
+		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.'</td></tr>';
+			
+		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.$avg.'</td></tr>';
+
 		$str .= '<tr><td>Messages</td><td> '.$objPres->countMessages().'</td></tr>';
 
 

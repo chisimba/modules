@@ -93,14 +93,14 @@ class das extends controller {
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
 			$this->timeLimit = 10;
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
-            if ($this->getParam('action') != 'messagehandler')
+            /*if ($this->getParam('action') != 'messagehandler')
             {
                 if(!$this->objIMUsers->isCounsilor($this->objUser->userId()) && !$this->objUser->inAdminGroup($this->objUser->userId()))
                 {
                     //var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
                     die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
                 }
-            }
+            }*/
         } catch ( customException $e ) {
             customException::cleanUp ();
             exit ();

@@ -54,7 +54,7 @@ $outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 $msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
 
 $num = count($msgs);
-$str = "Currently counsilling $num$outof users";
+$str = "$num$outof users";
 
 
 $middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
