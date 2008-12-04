@@ -204,6 +204,7 @@ class viewrender extends object {
 	public function getStatsBox()
 	{
 		$objPres = $this->getObject ( 'dbimpresence' , 'im' );
+		$objIMUsers = $this->getObject ( 'dbimusers', 'im' );
 		//number of live conversations
 		$cid = $this->objUser->userId();
 		$outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
@@ -212,8 +213,9 @@ class viewrender extends object {
 		$num = count($msgs);
 		$myMessages = $num.$outof;
 		
+
 		$liveconv = $objPres->countActiveUsers();
-		$avg = 2; //int($liveconv) / (int)
+		$avg = (int)$liveconv / (int)$objIMUsers->countCounsellors();
 		$str = '<table>';
 
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
