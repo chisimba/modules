@@ -1,18 +1,28 @@
 <?php
+header("Content-Type: text/html;charset=utf-8");
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
+$cssLayout->setNumColumns(3);
+
+$middleColumn = NULL;
+$leftColumn = NULL;
+$rightColumn = NULL;
 
 $objDBIMUser = $this->getObject('dbimusers', 'im');
 $objLink = $this->getObject('link','htmlelements');
 $objIcon = $this->getObject('geticon','htmlelements');
 $objTable = $this->getObject('htmltable','htmlelements');
 $objLoggedIn = $this->getObject('loggedinusers', 'security');
+$objFB = $this->getObject('featurebox', 'navigation');
 
 $numCounsilors = count($users);
 $numUsers = $this->objDbImPres->getRecordCount();
 $online = False;
-echo "IM User: <b>".$this->juser.'</b><br/>';
-echo "Status: <span class=\"highlight\">".$online.'</span><br/>';
-echo "Number of Counsilors: $numCounsilors<br/>";
-echo "Number of Users: $numUsers <br/><br/>";
+$str = "IM User: <b>".$this->juser.'</b><br/>';
+$str .= "Status: <span class=\"highlight\">".$online.'</span><br/>';
+$str .= "Number of Counsilors: $numCounsilors<br/>";
+$str .= "Number of Users: $numUsers <br/><br/>";
+
+$leftColumn .= $objFB->show('',$str);
 $arr = array();
 foreach ($users as $user)
 {
@@ -46,25 +56,29 @@ foreach ($users as $user)
 $objLink->href = $this->uri(array('action' => 'startsession'));
 $objLink->link = "Start Session";
 
-echo "".$objLink->show();
+$admin = "".$objLink->show();
 
 
 $objLink->href = $this->uri(array('action' => 'endsession'));
 $objLink->link = "Stop Session";
 
-echo "<br/>".$objLink->show();
+$admin .= "<br/>".$objLink->show();
 
-$objTable->width = "50%";
+$objTable->width = "90%";
 $objTable->addHeader(array("Name", "No. of people assigned", "Logged In", " "));
 $objTable->arrayToTable($arr);
-echo $objTable->show();
+$middleColumn .= $objTable->show();
 $objLink->href = $this->uri(array('action' => 'resetcounsillors'));
 $objLink->link = "Reset Counsillors";
 
-echo "<br/>".$objLink->show();
+$admin.= "<br/>".$objLink->show();
 
+$leftColumn .= $objFB->show('', $admin);
 
-
+$cssLayout->setMiddleColumnContent($middleColumn);
+$cssLayout->setLeftColumnContent($leftColumn);
+$cssLayout->setRightColumnContent($rightColumn);
+echo $cssLayout->show();
 //button to manage the session
 
 ?>
