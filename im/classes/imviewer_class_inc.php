@@ -135,7 +135,7 @@ class imviewer extends object {
             $ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">[REPLY]</p>
                        <p class=\"im_source\">
 			 <script charset=\"utf-8\">
-                            new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
+                            new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', {okText:'Send', callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
                         </script>
 			</p><p class=\"im_reassign\">&nbsp;".$resassignLink.'</p>';
 			
@@ -158,14 +158,15 @@ class imviewer extends object {
     }
 
     /**
-    *
+    * Nethod to show the quick links to conversations
     */
     public function renderLinkList($msgs)
 	{
 		if(count($msgs) > 0)
 		{
+			
 			$anchor = $this->getObject('link', 'htmlelements');
-			$str = '	<ul id="nav-secondary">';                                            
+			$str = '	<ul>';                                            
 			$class = ' class="first" ';
 
 			foreach($msgs as $msg)
@@ -173,17 +174,33 @@ class imviewer extends object {
 
 				$anchor->href = '#'.$msg['person'];
 				$anchor->link = $msg['person'];
-				$str .="<li $class>".$anchor->show()."</li>";
+				$str .="<li>".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
 
 			}
 			$str .= '</ul>';
-			return $str;
+			return $this->objFeatureBox->show('Quick Links', $str);
 		} else {
 			return "";
 		}
 	
+	}
+
+	/**
+	* Method to render stats
+	*/
+	public function getStatsBox()
+	{
+		//number of live conversations
+		
+		$str = '<table><tr><td>Live Consersations</td><td>233</td></tr>';
+		
+		$str .= '<tr><td>Messages</td><td>2343</td></tr>';
+
+
+		$str .= '</table>';
+		return $this->objFeatureBox->show('Stats', $str);
 	}
 }
 ?>

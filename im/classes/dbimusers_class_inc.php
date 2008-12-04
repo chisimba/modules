@@ -118,5 +118,16 @@ class dbimusers extends dbTable
         return $user['userid'];
     }
 
+	/**
+	*Method to count the number of counsellors
+	*/
+	public function countCounsellors()
+	{
+		$sql = "SELECT count(id) as c from tbl_im_users";
+		$rec = $this->query($sql);
+
+		return $rec[0]['c'];
+	}
+
 
 }
