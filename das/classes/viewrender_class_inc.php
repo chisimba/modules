@@ -213,7 +213,7 @@ class viewrender extends object {
 		$myMessages = $num.$outof;
 		
 		$liveconv = $objPres->countActiveUsers();
-		$avg
+		$avg = 2; //int($liveconv) / (int)
 		$str = '<table>';
 
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
