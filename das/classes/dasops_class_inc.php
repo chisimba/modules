@@ -191,7 +191,7 @@ class dasops extends object {
 	*/
 	public function startSession($detailsArr)
 	{
-		$username = $this->juser;
+		$username = $this->juser.'@'.$this->jdomain;
 		$password = $this->jpass;
 		$dbname = $this->objSysConfig->getValue ( 'imdbname', 'im' );
 		$dbusername = $this->objSysConfig->getValue ( 'imdbusername', 'im' );
