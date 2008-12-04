@@ -222,7 +222,7 @@ class viewrender extends object {
 
 		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.'</td></tr>';
 			
-		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.$avg.'</td></tr>';
+		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.number_format($avg,2).'</td></tr>';
 
 		$str .= '<tr><td>Messages</td><td> '.$objPres->countMessages().'</td></tr>';
 
