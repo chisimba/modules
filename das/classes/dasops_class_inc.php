@@ -189,7 +189,7 @@ class dasops extends object {
 		/**
 	* Method to evoke the python script to start the session
 	*/
-	public function startSession($detailsArr)
+	public function startSession()
 	{
 		$username = $this->juser.'@'.$this->jdomain;
 		$password = $this->jpass;
@@ -197,7 +197,7 @@ class dasops extends object {
 		$dbusername = $this->objSysConfig->getValue ( 'imdbusername', 'im' );
 		$dbhost = $this->objSysConfig->getValue ( 'imdbhost', 'im' );
 		$dbpassword = $this->objSysConfig->getValue ( 'imdbpassword', 'im' );
-		$pathToScript = $this->objSysConfig->getValue ( 'pathtodaemon', 'im' );
+		$pathToScript = $this->objSysConfig->getValue ( 'imdaemonpath', 'im' );
 		$exeString = "python $pathToScript/messagehandler.py $username $password $dbhost $dbusername $dbpassword $dbname";
 		exec($exeString. " > /dev/null &");
 		

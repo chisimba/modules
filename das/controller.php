@@ -66,7 +66,7 @@ class das extends controller {
             // Include the needed libs from resources
             include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
             include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
-            $this->objImOps = $this->getObject ( 'imops', 'im' );
+            $this->objImOps = $this->getObject ( 'dasops', 'das' );
             $this->objUser = $this->getObject ( "user", "security" );
             $this->objUserParams = $this->getObject ( 'dbuserparamsadmin', 'userparamsadmin' );
             $this->userJid = $this->objUserParams->getValue ( 'Jabber ID', 'im' );
@@ -138,7 +138,7 @@ class das extends controller {
                 $this->nextAction('viewcounsilors');
                 break;
             case 'startsession':
-				$this->objImOps->startSession(array('username'=> $this->juser.'@'.$this->jdomain, 'password' => $this->jpass));
+				$this->objImOps->startSession();
                 return $this->nextAction('viewcounsilors');
             case 'endsession':
 				$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
