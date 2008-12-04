@@ -211,22 +211,5 @@ class das extends controller {
         }
     }
 
-    /**
-     * Overide the login object in the parent class
-     *
-     * @param  void
-     * @return bool
-     * @access public
-     */
-    /*public function requiresLogin($action) {
-        $actionsRequiringLogin = array ('messagehandler' );
-        if (in_array ( $action, $actionsRequiringLogin )) {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
-    }*/
-	
-
-
+   
 }

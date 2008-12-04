@@ -191,13 +191,13 @@ class dasops extends object {
 	*/
 	public function startSession($detailsArr)
 	{
-		$username =  $detailsArr['username'];
-		$password = $detailsArr['password'];
-		$dbname = "chisimba";
-		$dbusername = "root";
-		$dbhost = "localhost";
-		$dbpassword = "root";
-		$pathToScript = "/home/wesley/work/xmpp/";
+		$username = $this->juser;
+		$password = $this->jpass;
+		$dbname = $this->objSysConfig->getValue ( 'imdbname', 'im' );
+		$dbusername = $this->objSysConfig->getValue ( 'imdbusername', 'im' );
+		$dbhost = $this->objSysConfig->getValue ( 'imdbhost', 'im' );
+		$dbpassword = $this->objSysConfig->getValue ( 'imdbpassword', 'im' );
+		$pathToScript = $this->objSysConfig->getValue ( 'pathtodaemon', 'im' );
 		$exeString = "python $pathToScript/messagehandler.py $username $password $dbhost $dbusername $dbpassword $dbname";
 		exec($exeString. " > /dev/null &");
 		
