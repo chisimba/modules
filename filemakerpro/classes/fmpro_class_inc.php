@@ -219,6 +219,7 @@ class fmpro extends object {
         $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
         $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
         $userinfo ['userid'] = $recid;
+        $userinfo['recid'] = $recid;
         $userinfo ['title'] = '';
         $userinfo ['logins'] = '0';
         $userinfo ['password'] = '--FMP--';
