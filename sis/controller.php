@@ -95,7 +95,10 @@ class sis extends controller {
                     if($res === TRUE) {
                         // Create a message for the user.
                         $message = $this->objLanguage->languageText("mod_sis_update_success", "sis");
-                        $this->setVarByRef('message', $message);
+                        // We need to send a mail or other notification to "the staff" to tell them something is new...
+                        // TODO make a mail functiom
+                        // TODO Find out who t f "the staff" are.
+
                         // return to the main screen
                         $this->nextAction(NULL, array('message' => $message));
                     }
