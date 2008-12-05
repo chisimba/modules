@@ -11,9 +11,9 @@ $middleColumn = NULL;
 $rightSideColumn = $objSF->parentMenu(TRUE);
 
 $leftCol .= $objSideBar->show();
+$middleColumn .=  $this->objUser->userName();
 
-
-$middleColumn = $objSF->profileForm($this->objUser->userName(), FALSE);
+$middleColumn .= $objSF->profileForm($this->objUser->userName(), FALSE);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());

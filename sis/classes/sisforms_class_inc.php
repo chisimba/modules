@@ -343,8 +343,8 @@ class sisforms extends object {
         $phonefieldset->addContent ( $phtbl->show () );
 
         $recid = new textinput ( 'recid' );
-        //$recid->type = "hidden";
         $recid->extra = 'READONLY';
+        $recid->fldType = 'hidden';
         if(isset($details['recid'])) {
             $recid->setValue($details['recid']);
         }
