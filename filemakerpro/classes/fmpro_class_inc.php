@@ -274,8 +274,9 @@ class fmpro extends object {
     public function getDetailsById($id) {
         $layoutName = 'Form: Person';
         $rec = $this->fm->getRecordById ( $layoutName, $id );
+        $recid = $rec->getRecordId ();
         $userinfo = array ();
-        $userinfo ['recid'] = $rec->getField ( 'Id' );
+        $userinfo ['recid'] = $recid;
         $userinfo ['username'] = $rec->getField ( 'UserName' );
         $userinfo ['surname'] = $rec->getField ( 'LastName' );
         $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
