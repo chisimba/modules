@@ -12,7 +12,7 @@ $rightSideColumn = $objSF->parentMenu(TRUE);
 
 $leftCol .= $objSideBar->show();
 
-
+echo $message;
 $middleColumn = $objSF->listKids();
 
 $cssLayout->setMiddleColumnContent($middleColumn);

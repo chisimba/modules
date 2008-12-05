@@ -281,7 +281,7 @@ class fmpro extends object {
         $userinfo ['surname'] = $rec->getField ( 'LastName' );
         $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
         $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
-        $userinfo ['emailpriv'] = $rec->getField ( 'isEmailPrivate' );
+        $userinfo ['emailpriv'] = $rec->getField ( 'IsEmailPrivate' );
         $userinfo ['street'] = $rec->getField ( 'Address' );
         $userinfo ['cellphone'] = $rec->getField ( 'Cell' );
         $userinfo ['city'] = $rec->getField ( 'City' );

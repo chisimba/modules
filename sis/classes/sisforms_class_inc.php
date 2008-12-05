@@ -263,8 +263,8 @@ class sisforms extends object {
         }
         $emaillabel = new label ( $this->objLanguage->languageText ( "mod_sis_emailaddress", "sis" ) . ':', 'comm_input_email' );
         $primail = new checkbox ( 'emailpriv' );
-        if(isset($details['emailpriv'])) {
-            $primail->checked = TRUE;  // setValue($details['emailaddress']);
+        if(isset($details['emailpriv']) && $details['emailpriv'] == '1') {
+            $primail->ischecked = 'checked';
         }
         $primaillabel = new label ( $this->objLanguage->languageText ( "mod_sis_private", "sis" ) . ':', 'comm_check_email' );
 
@@ -301,8 +301,8 @@ class sisforms extends object {
 
         // cell phone
         $cellpriv = new checkbox ( 'cellpriv' );
-        if(isset($details['cellpriv'])) {
-            $cellpriv->checked = TRUE;
+        if(isset($details['cellpriv']) && $details['cellpriv'] == '1') {
+            $cellpriv->ischecked = 'checked';
         }
         $cellprivlabel = new label ( $this->objLanguage->languageText ( "mod_sis_private", "sis" ) . ':', 'comm_check_cell' );
         $cphone = new textinput ( 'cphone' );

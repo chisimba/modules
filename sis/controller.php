@@ -47,18 +47,69 @@ class sis extends controller {
                 // email details
                 $email = $this->getParam('email');
                 $emailpriv = $this->getParam('emailpriv');
+                if($emailpriv == 'on') {
+                    $emailpriv = 1;
+                }
+                else {
+                    $emailpriv = 0;
+                }
                 // phone details
                 $hphone = $this->getParam('hphone');
                 $cphone = $this->getParam('cphone');
                 $cellpriv = $this->getParam('cellpriv');
+                if($cellpriv == 'on') {
+                    $cellpriv = 1;
+                }
+                else {
+                    $cellpriv = 0;
+                }
                 $wphone = $this->getParam('wphone');
                 // record id
                 $recid = $this->getParam('recid');
                 // check that the user doing the update has rights to do so
                 // First lets get the correct users info
-                echo $recid;
-                var_dump($this->objFMPro->getUsersIdByUsername($un));
-                echo $this->objUser->userId();
+                $formid = $this->objFMPro->getUsersIdByUsername($un);
+                $userid =  $this->objUser->userId();
+                if($formid === $userid) {
+                    // build up an array of data to update with
+                    $values = array('UserName'=> $un,
+                                    'LastName' => $ln,
+                                    'FirstName' => $fn,
+                                    'Email' => $email,
+                                    'IsEmailPrivate' => $emailpriv,
+                                    'Address' => $street,
+                                    'Cell' => $cphone,
+                                    'City' => $city,
+                                    'Employer' => $em,
+                                    'Occupation' => $oc,
+                                    'State' => $state,
+                                    'Zip' => $zip,
+                                    'HomePhone' => $hphone,
+                                    'WorkPhone' => $wphone,
+                                    'IsCellPrivate' => $cellpriv
+                    );
+
+                    $layoutName = 'Form: Person';
+                    $res = $this->objFMPro->editRecord($layoutName, $recid, $values);
+                    // check the results and take action
+                    if($res === TRUE) {
+                        // Create a message for the user.
+                        $message = $this->objLanguage->languageText("mod_sis_update_success", "sis");
+                        $this->setVarByRef('message', $message);
+                        // return to the main screen
+                        $this->nextAction(NULL, array('message' => $message));
+                    }
+                    else {
+                        // TODO: add in a template here
+                        echo "You have a mess on your hands...";
+                    }
+
+                }
+                else {
+                    echo "booboo!";
+
+                }
+                die();
                 //var_dump($this->objFMPro->getUserProfile ()); die();
 
 
@@ -68,16 +119,12 @@ class sis extends controller {
             case 'savestudent' :
                 return $this->saveStudent ();
             default :
-                return $this->showDefault ();
+                $message = $this->getParam('message');
+                if($message != '') {
+                    $this->setVarByRef('message', $message);
+                }
+                return "default_tpl.php";
         }
-    }
-
-    /**
-     * Default action
-     * @returns string $template
-     */
-    public function showDefault() {
-        return "default_tpl.php";
     }
 
     /**
