@@ -31,8 +31,15 @@ class sis extends controller {
     public function dispatch($action) {
         switch ($action) {
             case "showprofile" :
-                return $this->myProfile ();
+                // Just shows the users profile with an update form
+                $profile = $this->objFMPro->getUserProfile ();
+                $this->setVarByRef ( 'profile', $profile );
+
+                return "profile_tpl.php";
+                break;
+
             case "updateprofile" :
+                // Action to catch and process updates
                 $ln = $this->getParam('lastname', '');
                 $fn = $this->getParam('firstname', '');
                 $mn = $this->getParam('midname', '');
@@ -103,24 +110,25 @@ class sis extends controller {
                         $this->nextAction(NULL, array('message' => $message));
                     }
                     else {
-                        // TODO: add in a template here
-                        echo "You have a mess on your hands...";
+                        return "error_tpl.php";
+                        break;
                     }
 
                 }
                 else {
-                    echo "booboo!";
-
+                    return "error_tpl.php";
+                    break;
                 }
-                die();
-                //var_dump($this->objFMPro->getUserProfile ()); die();
+                break;
 
-
-                return $this->updateProfile ();
             case 'newstudent' :
                 return $this->showStudent ();
+                break;
+
             case 'savestudent' :
                 return $this->saveStudent ();
+                break;
+
             default :
                 $message = $this->getParam('message');
                 if($message == '') {
@@ -128,47 +136,9 @@ class sis extends controller {
                 }
                 $this->setVarByRef('message', $message);
                 return "default_tpl.php";
+                break;
         }
     }
-
-    /**
-
-     **
-     * Calls classes to get form info
-     * @returns string $template
-     */
-    public function showStudent() {
-        $this->string = $this->objSISforms->studentInput ();
-        return "default_tpl.php";
-    }
-
-    /**
-     * Calls classes to save form info
-     * @returns string $template
-     */
-    public function saveStudent() {
-        $paramNames = array ();
-        $paramvals = array ();
-        foreach ( $paramNames as $line ) {
-            $paramvals [$line] = $this->getParam ( $line );
-        }
-
-        return "default_tpl.php";
-    }
-
-    private function myProfile() {
-        $profile = $this->objFMPro->getUserProfile ();
-        //var_dump($profile[0]->_impl->_relatedSets);
-        $this->setVarByRef ( 'profile', $profile );
-        //var_dump ( $profile );
-        return "profile_tpl.php";
-    }
-
-    private function updateprofile() {
-        // update the profile by catching all the details then sending to FMP in this case
-
-    }
-
 }
 
 ?>

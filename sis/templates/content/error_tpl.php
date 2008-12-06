@@ -12,8 +12,7 @@ $rightSideColumn = $objSF->parentMenu(TRUE);
 
 $leftCol .= $objSideBar->show();
 
-$middleColumn .= $message;
-$middleColumn .= $objSF->listKids();
+$middleColumn .= $this->objLanguage->languageText("mod_sis_error", "sis");
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
