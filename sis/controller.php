@@ -97,7 +97,7 @@ class sis extends controller {
                         $message = $this->objLanguage->languageText("mod_sis_update_success", "sis");
                         $userdetails = array('firstname' => $fn,  'lastname' => $ln);
                         // We need to send a mail or other notification to "the staff" to tell them something is new...
-                        $this->objFMPro->sendStaffMail($userdetails);
+                        $mailres = $this->objFMPro->sendStaffMail($userdetails);
 
                         // return to the main screen
                         $this->nextAction(NULL, array('message' => $message));
