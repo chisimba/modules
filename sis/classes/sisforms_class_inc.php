@@ -81,6 +81,7 @@ class sisforms extends object {
             $this->loadClass ( 'dropdown', 'htmlelements' );
             $this->loadClass ( 'label', 'htmlelements' );
             $this->loadClass ( 'href', 'htmlelements' );
+            $this->loadClass ( 'radio', 'htmlelements' );
             $this->objJqTabs = $this->getObject('jqtabs', 'htmlelements');
             $objCaptcha = $this->getObject ( 'captcha', 'utilities' );
             $this->required = '<span class="warning"> * ' . $this->objLanguage->languageText ( 'word_required', 'system', 'Required' ) . '</span>';
@@ -412,12 +413,120 @@ class sisforms extends object {
 
     public function studentForm() {
         // Student information and edit form
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), 'Student bio data');
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm());
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), 'Student schedule');
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
 
         return $this->objJqTabs->show();
+    }
+
+    private function getStudentBioData($studentid) {
+        $data = $this->objFMPro->getStudentById($studentid);
+        return $data;
+    }
+
+    private function studentBioDataForm($details = NULL, $featurebox = FALSE) {
+        $bioform = new form ( 'updatestudentbio', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentbio' ) ) );
+        $biofieldset = $this->getObject ( 'fieldset', 'htmlelements' );
+        $biofieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentbio', 'sis' ) );
+
+        $biotbl = $this->newObject ( 'htmltable', 'htmlelements' );
+        $biotbl->cellpadding = 3;
+
+        // OK lets set up all the form bits first
+        // Last name
+        $ln = new textinput ( 'lastname' );
+        if(isset($details['surname'])) {
+            $ln->setValue($details['surname']);
+        }
+        $lnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_lastname", "sis" ) . ':', 'comm_input_ln' );
+
+        // First name
+        $fn = new textinput ( 'firstname' );
+        if(isset($details['firstname'])) {
+            $fn->setValue($details['firstname']);
+        }
+        $fnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_firstname", "sis" ) . ':', 'comm_input_fn' );
+
+        // Middle name
+        $mn = new textinput ( 'midname' );
+        if(isset($details['middlename'])) {
+            $mn->setValue($details['middlename']);
+        }
+        $mnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_middlename", "sis" ) . ':', 'comm_input_mn' );
+
+        // Race/Ethnicity
+        $ra = new textinput ( 'race' );
+        if(isset($details['race'])) {
+            $ra->setValue($details['race']);
+        }
+        $ralabel = new label ( $this->objLanguage->languageText ( "mod_sis_race", "sis" ) . ':', 'comm_input_ra' );
+
+        // Gender radio set
+        $gender = new radio('gender');
+        $gender->addOption('m','Male');
+        $gender->addOption('f','Female');
+
+        $genderlabel = new label ( $this->objLanguage->languageText ( "mod_sis_gender", "sis" ) . ':', 'comm_input_gender' );
+        // DOB field... I am presuming a text field from fmp here...
+        // TODO: check on the above.
+        // Race/Ethnicity
+        $dob = new textinput ( 'dob' );
+        if(isset($details['dob'])) {
+            $dob->setValue($details['dob']);
+        }
+        else {
+            $dob->setValue('mm/dd/YYYY');
+        }
+        $doblabel = new label ( $this->objLanguage->languageText ( "mod_sis_dob", "sis" ) . ':', 'comm_input_dob' );
+
+        // Okidokes, lets lay this thing out now...
+        $biotbl->startRow ();
+        $biotbl->addCell($lnlabel->show());
+        $biotbl->addCell($mnlabel->show());
+        $biotbl->addCell($fnlabel->show());
+        $biotbl->endRow();
+
+        $biotbl->startRow();
+        $biotbl->addCell($ln->show().$this->required);
+        $biotbl->addCell($mn->show());
+        $biotbl->addCell($fn->show().$this->required);
+        $biotbl->endRow();
+
+        $biotbl->startRow();
+        $biotbl->addCell($doblabel->show());
+        $biotbl->addCell($genderlabel->show());
+        $biotbl->addCell($ralabel->show());
+        $biotbl->endRow();
+
+        $biotbl->startRow();
+        $biotbl->addCell($dob->show().$this->required);
+        $biotbl->addCell($gender->show());
+        $biotbl->addCell($ra->show());
+        $biotbl->endRow();
+
+        // Some validation (client side)
+        $bioform->addRule('lastname', $this->objLanguage->languageText("mod_sis_lastnameempty", "sis"), 'required');
+        $bioform->addRule('firstname', $this->objLanguage->languageText("mod_sis_firstnameempty", "sis"), 'required');
+        $bioform->addRule('dob', $this->objLanguage->languageText("mod_sis_dobnonvalid", "sis"), 'required');
+
+        // Now the regular formy bits like buttons...
+        $this->objBioButton = new button ( $this->objLanguage->languageText ( 'word_save', 'system' ) );
+        $this->objBioButton->setValue ( $this->objLanguage->languageText ( 'word_save', 'system' ) );
+        $this->objBioButton->setToSubmit ();
+
+        $biofieldset->addContent ( $biotbl->show () );
+        $bioform->addToForm ( $biofieldset->show () );
+        $bioform->addToForm ( $this->objBioButton->show () );
+
+        // return the form for display
+        if ($featurebox == TRUE) {
+            $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
+            return $objFeaturebox->showContent ( $this->objLanguage->languageText ( "mod_sis_bioformheader", "sis" ), $bioform->show () );
+        } else {
+            return $bioform->show ();
+        }
     }
 
 }

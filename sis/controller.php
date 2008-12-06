@@ -151,6 +151,10 @@ class sis extends controller {
                 }
                 $this->setVarByRef('message', $message);
 
+
+                //$student = $this->objFMPro->getStudentById($studentid);
+//var_dump($student); die();
+  //              $this->setVarByRef('student', $student);
                 return 'student_tpl.php';
                 break;
 
