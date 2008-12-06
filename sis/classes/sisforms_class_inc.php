@@ -414,7 +414,7 @@ class sisforms extends object {
     public function studentForm() {
         // Student information and edit form
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm());
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), 'Student schedule');
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), $this->studentSchedule());
         // Tabs out of scope according to user story
         //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
         //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
@@ -527,6 +527,70 @@ class sisforms extends object {
             return $objFeaturebox->showContent ( $this->objLanguage->languageText ( "mod_sis_bioformheader", "sis" ), $bioform->show () );
         } else {
             return $bioform->show ();
+        }
+    }
+
+    public function studentSchedule($details = NULL, $featurebox = FALSE) {
+        $schedform = new form ( 'updatestudentsched', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentsched' ) ) );
+        $schedfieldset = $this->newObject ( 'fieldset', 'htmlelements' );
+        $schedfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentsched', 'sis' ) );
+
+        $schedtbl = $this->newObject ( 'htmltable', 'htmlelements' );
+        $schedtbl->cellpadding = 3;
+
+        $statuslabel = new label ( $this->objLanguage->languageText ( "mod_sis_sstatus", "sis" ), 'status');
+        $classlabel = new label ( $this->objLanguage->languageText ( "mod_sis_sclass", "sis" ), 'class');
+        $fylabel = new label ( $this->objLanguage->languageText ( "mod_sis_sfirstyear", "sis" ). ':', 'comm_input_fy' );
+        $lylabel = new label ( $this->objLanguage->languageText ( "mod_sis_sly", "sis" ), 'lastyear');
+        $schedtypelabel = new label ( $this->objLanguage->languageText ( "mod_sis_sschedtype", "sis" ), 'schedtype');
+        $schedlabel = new label ( $this->objLanguage->languageText ( "mod_sis_ssched", "sis" ), 'sched');
+
+        // Text input for fisrt year (not required)
+        $fy = new textinput ( 'firstyear' );
+        if(isset($details['firstyear'])) {
+            $fy->setValue($details['firstyear']);
+        }
+
+        // Okidokes, lets lay this thing out now...
+        $schedtbl->startRow ();
+        $schedtbl->addCell($statuslabel->show());
+        $schedtbl->addCell($classlabel->show());
+        $schedtbl->addCell($fylabel->show());
+        $schedtbl->addCell($lylabel->show());
+        $schedtbl->endRow();
+
+        $schedtbl->startRow ();
+        $schedtbl->addCell($details['status']);
+        $schedtbl->addCell($details['class']);
+        $schedtbl->addCell($fy->show());
+        $schedtbl->addCell($details['lastyear']);
+        $schedtbl->endRow();
+
+        $schedtbl->startRow ();
+        $schedtbl->addCell($schedtypelabel->show());
+        $schedtbl->addCell($schedlabel->show());
+        $schedtbl->endRow();
+
+        $schedtbl->startRow ();
+        $schedtbl->addCell($details['schedtype']);
+        $schedtbl->addCell($details['sched']);
+        $schedtbl->endRow();
+
+        // Now the regular formy bits like buttons...
+        $this->objSchedButton = new button ( $this->objLanguage->languageText ( 'word_save', 'system' ) );
+        $this->objSchedButton->setValue ( $this->objLanguage->languageText ( 'word_save', 'system' ) );
+        $this->objSchedButton->setToSubmit ();
+
+        $schedfieldset->addContent ( $schedtbl->show () );
+        $schedform->addToForm ( $schedfieldset->show () );
+        $schedform->addToForm ( $this->objSchedButton->show () );
+
+        // return the form for display
+        if ($featurebox == TRUE) {
+            $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
+            return $objFeaturebox->showContent ( $this->objLanguage->languageText ( "mod_sis_schedformheader", "sis" ), $schedform->show () );
+        } else {
+            return $schedform->show ();
         }
     }
 

@@ -135,12 +135,12 @@ class sis extends controller {
                 }
                 break;
 
-            case 'newstudent' :
-                return $this->showStudent ();
+            case 'updatestudentbio' :
+                echo "Not yet implemented"; die();
                 break;
 
-            case 'savestudent' :
-                return $this->saveStudent ();
+            case 'updatestudentsched' :
+                echo "Not yet implemented"; die();
                 break;
 
             case 'viewstudent':
