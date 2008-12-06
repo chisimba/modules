@@ -298,6 +298,14 @@ class fmpro extends object {
         return $userinfo;
     }
 
+    public function getStudentById($studentid) {
+        $layoutName = 'Form: Student';
+        $rec = $this->fm->getRecordById($layoutName, $studentid);
+        var_dump($rec);
+        $recid = $rec->getRecordId();
+        $studentinfo = array();
+    }
+
     public function editRecord($layoutName, $recid, $values) {
         $edit = $this->fm->newEditCommand ( $layoutName, $recid, $values );
         $result = $edit->execute ();
