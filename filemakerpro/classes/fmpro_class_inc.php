@@ -91,6 +91,8 @@ class fmpro extends object {
             $this->objLanguage = $this->getObject ( "language", "language" );
             // Get the sysconfig variables for the FMP user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+            // regular config object
+            $this->objConfig = $this->getObject ( 'altconfig', 'config' );
             // create an instance and connect to FMP
             $this->connFMP ();
 
@@ -219,7 +221,7 @@ class fmpro extends object {
         $userinfo ['firstname'] = $rec->getField ( 'FirstName' );
         $userinfo ['emailaddress'] = $rec->getField ( 'Email' );
         $userinfo ['userid'] = $recid;
-        $userinfo['recid'] = $recid;
+        $userinfo ['recid'] = $recid;
         $userinfo ['title'] = '';
         $userinfo ['logins'] = '0';
         $userinfo ['password'] = '--FMP--';
@@ -303,6 +305,43 @@ class fmpro extends object {
             return FALSE;
         } else {
             return TRUE;
+        }
+    }
+
+    public function sendStaffMail($user) {
+        // Get the sysconfig variable for staff mail
+        $staffmail = $this->objSysConfig->getValue ( 'mod_sis_staffmail', 'sis' );
+        $siteEmail = $this->objConfig->getsiteEmail ();
+        $siteName = $this->objConfig->getSiteName ();
+        $mail = '
+Dear Staff<br />
+<br />
+On [[DATE]], [[FIRSTNAME]] [[LASTNAME]] updated their profile with new information.<br />
+<br />
+Sincerely,<br />
+[[SITENAME]] Notifications <br />
+[[SITEADDRESS]]
+<br />
+<br />';
+
+        $mail = str_replace ( '[[FIRSTNAME]]', $user ['firstname'], $mail );
+        $mail = str_replace ( '[[LASTNAME]]', $user ['lastname'], $mail );
+        $mail = str_replace ( '[[DATE]]', date ( 'r' ), $mail );
+        $mail = str_replace ( '[[SITENAME]]', $siteName, $mail );
+        $mail = str_replace ( '[[SITEADDRESS]]', $this->objConfig->getsiteRoot (), $mail );
+
+        $objMailer = $this->getObject ( 'email', 'mail' );
+        $objMailer->setValue ( 'to', array ($staffmail ) );
+        $objMailer->setValue ( 'from', $siteEmail );
+        $objMailer->setValue ( 'fromName', $siteName . ' Notifications' );
+        $objMailer->setValue ( 'subject', 'Profile Update: ' . $siteName );
+        $objMailer->setValue ( 'body', strip_tags ( $mail ) );
+        $objMailer->setValue ( 'AltBody', strip_tags ( $mail ) );
+
+        if ($objMailer->send ()) {
+            return TRUE;
+        } else {
+            return FALSE;
         }
     }
 }
