@@ -35,6 +35,13 @@ class sis extends controller {
                 $profile = $this->objFMPro->getUserProfile ();
                 $this->setVarByRef ( 'profile', $profile );
 
+                // check for a message
+                $message = $this->getParam('message');
+                if($message == '' ) {
+                    $message = NULL;
+                }
+                $this->setVarByRef('message', $message);
+
                 return "profile_tpl.php";
                 break;
 
@@ -73,6 +80,13 @@ class sis extends controller {
                 $wphone = $this->getParam('wphone');
                 // record id
                 $recid = $this->getParam('recid');
+
+                // Some validation to check all required fields exist
+                if ($ln == '' || $fn == '' || $un == '' || $street == '' || $city == '' || $state == '' || $zip == '' || $email == '' || $hphone == '' || $wphone == '' ) {
+                    $message = $this->objLanguage->languageText("mod_sis_reqfieldsmissing", "sis");
+                    $this->nextAction('showprofile', array('message' => $message));
+                    break;
+                }
                 // check that the user doing the update has rights to do so
                 // First lets get the correct users info
                 $formid = $this->objFMPro->getUsersIdByUsername($un);

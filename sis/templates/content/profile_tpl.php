@@ -1,4 +1,4 @@
-<?
+<?php
 $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -8,6 +8,9 @@ $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
+if(isset($message)) {
+    $middleColumn .=  $message."<br />";
+}
 $rightSideColumn = $objSF->parentMenu(TRUE);
 
 $leftCol .= $objSideBar->show();
