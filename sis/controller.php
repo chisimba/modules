@@ -123,9 +123,10 @@ class sis extends controller {
                 return $this->saveStudent ();
             default :
                 $message = $this->getParam('message');
-                if($message != '') {
-                    $this->setVarByRef('message', $message);
+                if($message == '') {
+                    $message = NULL;
                 }
+                $this->setVarByRef('message', $message);
                 return "default_tpl.php";
         }
     }
