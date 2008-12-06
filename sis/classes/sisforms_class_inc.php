@@ -81,6 +81,7 @@ class sisforms extends object {
             $this->loadClass ( 'dropdown', 'htmlelements' );
             $this->loadClass ( 'label', 'htmlelements' );
             $this->loadClass ( 'href', 'htmlelements' );
+            $this->objJqTabs = $this->getObject('jqtabs', 'htmlelements');
             $objCaptcha = $this->getObject ( 'captcha', 'utilities' );
             $this->required = '<span class="warning"> * ' . $this->objLanguage->languageText ( 'word_required', 'system', 'Required' ) . '</span>';
         } catch ( customException $e ) {
@@ -394,9 +395,11 @@ class sisforms extends object {
     public function parentMenu($featurebox = FALSE) {
         // Add some links to the other bits and doodads
         $profile = new href ( $this->uri ( array ('action' => 'showprofile' ) ), $this->objLanguage->languageText ( "mod_sis_editprofile", "sis" ) );
+        $student = new href ( $this->uri ( array ('action' => 'viewstudent' ) ), $this->objLanguage->languageText ( "mod_sis_viewstudent", "sis" ) );
 
         // Add the links to the linklist
         $linklist = $profile->show() . "<br />";
+        $linklist .= $student->show() . "<br />";
 
         // return the link list for display
         if ($featurebox == TRUE) {
@@ -405,6 +408,16 @@ class sisforms extends object {
         } else {
             return $linklist;
         }
+    }
+
+    public function studentForm() {
+        // Student information and edit form
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), 'Student bio data');
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), 'Student schedule');
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
+
+        return $this->objJqTabs->show();
     }
 
 }
