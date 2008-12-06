@@ -415,8 +415,9 @@ class sisforms extends object {
         // Student information and edit form
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm());
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), 'Student schedule');
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
+        // Tabs out of scope according to user story
+        //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
+        //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
 
         return $this->objJqTabs->show();
     }
