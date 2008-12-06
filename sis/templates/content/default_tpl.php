@@ -11,8 +11,10 @@ $middleColumn = NULL;
 $rightSideColumn = $objSF->parentMenu(TRUE);
 
 $leftCol .= $objSideBar->show();
+$tomsg = $this->getObject('timeoutmessage', 'htmlelements');
+$tomsg->message = $message;
+$middleColumn .=  $tomsg->show()."<br />";
 
-$middleColumn .= $message;
 $middleColumn .= $objSF->listKids();
 
 $cssLayout->setMiddleColumnContent($middleColumn);

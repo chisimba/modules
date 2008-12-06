@@ -353,7 +353,16 @@ class sisforms extends object {
         $prtbl->addCell ( $phonefieldset->show ().$recid->show() );
         $prtbl->endRow ();
 
-
+        // Add the validation rules
+        $prform->addRule('lastname', $this->objLanguage->languageText("mod_sis_lastnameempty", "sis"), 'required');
+        $prform->addRule('firstname', $this->objLanguage->languageText("mod_sis_firstnameempty", "sis"), 'required');
+        $prform->addRule('street', $this->objLanguage->languageText("mod_sis_streetempty", "sis"), 'required');
+        $prform->addRule('city', $this->objLanguage->languageText("mod_sis_cityempty", "sis"), 'required');
+        $prform->addRule('state', $this->objLanguage->languageText("mod_sis_stateempty", "sis"), 'required');
+        $prform->addRule('zip', $this->objLanguage->languageText("mod_sis_zipempty", "sis"), 'required');
+        $prform->addRule('email', $this->objLanguage->languageText("mod_sis_emailempty", "sis"), 'required');
+        $prform->addRule('hphone', $this->objLanguage->languageText("mod_sis_hphoneempty", "sis"), 'required');
+        $prform->addRule('wphone', $this->objLanguage->languageText("mod_sis_wphoneempty", "sis"), 'required');
 
         //end off the form and add the buttons
         $this->objPrButton = new button ( $this->objLanguage->languageText ( 'word_save', 'system' ) );

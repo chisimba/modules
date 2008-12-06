@@ -9,7 +9,9 @@ $leftMenu = NULL;
 $leftCol = NULL;
 $middleColumn = NULL;
 if(isset($message)) {
-    $middleColumn .=  $message."<br />";
+    $tomsg = $this->getObject('timeoutmessage', 'htmlelements');
+    $tomsg->message = $message;
+    $middleColumn .=  $tomsg->show()."<br />";
 }
 $rightSideColumn = $objSF->parentMenu(TRUE);
 
