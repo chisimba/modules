@@ -59,6 +59,7 @@ class educommons extends controller
 {
     protected $objFolder;
     protected $objImport;
+    protected $objLanguage;
     protected $objUpload;
     protected $objZip;
 
@@ -74,6 +75,7 @@ class educommons extends controller
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objFolder = $this->getObject('dbfolder', 'filemanager');
         $this->objImport = $this->getObject('educommonsimport', 'educommons');
+        $this->objLanguage = $this->getObject ('language', 'language');
         $this->objUpload = $this->getObject('uploadinput', 'filemanager');
         $this->objZip = $this->getObject('wzip', 'utilities');
     }
