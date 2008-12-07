@@ -5,9 +5,7 @@ $fileText = $this->objLanguage->languageText('mod_educommons_imspackage', 'educo
 $contextText = $this->objLanguage->languageText('mod_educommons_contextlabel', 'educommons');
 $buttonText = $this->objLanguage->languageText('mod_educommons_uploadbutton', 'educommons');
 
-$this->loadClass('htmlheading', 'htmlelements');
-
-$header = new htmlheading();
+$header = $this->newObject('htmlheading', 'htmlelements');
 $header->type = 1;
 $header->str = $headingText;
 echo $header->show();
