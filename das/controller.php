@@ -88,7 +88,7 @@ class das extends controller {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
-			$this->timeLimit = 10;
+			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
            
         } catch ( customException $e ) {
@@ -194,7 +194,17 @@ class das extends controller {
                 echo "Messages were sent to ".count($users)." users";
 
                 break;
-          
+
+			case 'savesettings':
+				
+				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+				$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
+				$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
+				$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
+				return  $this->nextAction('viewcounsilors');
+          		break;
+
             default :
                 die ( "unknown action" );
                 break;

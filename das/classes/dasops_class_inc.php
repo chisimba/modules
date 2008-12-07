@@ -52,6 +52,7 @@ class dasops extends object {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
+			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
 
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
@@ -260,7 +261,45 @@ class dasops extends object {
 		 return $r2;
 	}
 
+	/**
+	* Method to config the session
+	*/
+	public function getConfigBlock()
+	{
+		$str = "";
+		$form = $this->newObject('form', 'htmlelements');
+		$this->loadClass('button', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		/*$daspassword = $this->newObject('textinput', 'htmlelements');
+		$idletime = $this->newObject('textinput', 'htmlelements');
+		$domain = $this->newObject('textinput', 'htmlelements');
+		*/
+		$form->action = $this->uri(array('action' => 'savesettings'));
+		$form->setDisplayType(2);
+		
+		$button = new  button();
+		$button->setToSubmit();
+		$button->setValue('Save');
+		$dasusername = new textinput('dasusername', $this->juser, null, 10);
+		$daspassword = new textinput('daspassword', $this->jpass,null, 10);
+		$domain = new textinput('domain', $this->jdomain, null, 10);
+		$idletime = new textinput('idletime', $this->timeLimit, null, 10);
+
+		$dasusername->label = 'Username';
+		$daspassword->label = 'Password';
+		$domain->label = 'Domain  @';
+		$idletime->label = 'Idle Time';
+		$button->label = '&nbsp;';
+
+		$form->addToForm($dasusername);
+		$form->addToForm($domain);
+		$form->addToForm($daspassword);
+		$form->addToForm($idletime);
+		$form->addToForm($button);		
+
+		return $form->show();
 	
+	}
 
 }
 ?>

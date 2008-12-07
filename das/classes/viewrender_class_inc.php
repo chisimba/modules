@@ -230,5 +230,8 @@ class viewrender extends object {
 		$str .= '</table>';
 		return $this->objFeatureBox->show('Stats', $str);
 	}
+
+	
+
 }
 ?>
