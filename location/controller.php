@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Location controller class
+ * Location controller class.
  * 
- * Class to control the Location module
+ * Class to control the Location module.
  * 
  * PHP version 5
  * 
@@ -32,11 +32,17 @@
 
 class location extends controller
 {
+    /**
+     * Instance of the location library object.
+     *
+     * @access protected
+     * @var object
+     */
     protected $objLocationOps;
 
     /**
      * Standard constructor to load the necessary resources
-     * and populate the new object's instance variables
+     * and populate the new object's instance variables.
      *
      * @access public
      */
@@ -47,7 +53,7 @@ class location extends controller
     }
 
     /**
-     * Standard dispatch method to handle the various possible actions
+     * Standard dispatch method to handle the various possible actions.
      *
      * @access public
      */
@@ -64,7 +70,7 @@ class location extends controller
     }
 
     /**
-     * The callback action for the callback from Fire Eagle
+     * The callback action for the callback from Fire Eagle.
      *
      * @access private
      */
@@ -76,7 +82,7 @@ class location extends controller
     }
 
     /**
-     * The synchronise action for refreshing the location info cache
+     * The synchronise action for refreshing the location info cache.
      *
      * @access private
      */
@@ -86,10 +92,10 @@ class location extends controller
     }
 
     /**
-     * The map action for displaying a map of the location module users
+     * The map action for displaying a map of the location module users.
      *
      * @access private
-     * @return string Template name
+     * @return string The template name.
      */
     private function actionMap()
     {
@@ -99,7 +105,7 @@ class location extends controller
     }
 
     /**
-     * The default action to be performed when no valid action is specified
+     * The default action to be performed when no valid action is specified.
      *
      * @access private
      */
@@ -113,7 +119,7 @@ class location extends controller
     }
 
     /**
-     * Checks if the user is authenticated with Fire Eagle, otherwise redirects to get authenticated
+     * Checks if the user is authenticated with Fire Eagle, otherwise redirects to get authenticated.
      *
      * @access private
      */
@@ -127,7 +133,7 @@ class location extends controller
     }
 
     /**
-     * Checks Fire Eagle for updates to the user's location
+     * Checks Fire Eagle for updates to the user's location.
      *
      * @access private
      */
@@ -138,7 +144,7 @@ class location extends controller
     }
 
     /**
-     * Enables Twitter integration for the current user
+     * Enables Twitter integration for the current user.
      *
      * @access private
      */
@@ -149,7 +155,7 @@ class location extends controller
     }
 
     /**
-     * Disables Twitter integration for the current user
+     * Disables Twitter integration for the current user.
      *
      * @access private
      */
@@ -160,7 +166,7 @@ class location extends controller
     }
 
     /**
-     * Overide the login object in the parent class
+     * Overide the login object in the parent class.
      *
      * @access public
      * @param  string $action The name of the action
