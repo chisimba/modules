@@ -22,8 +22,8 @@ $uri = $this->uri(array('action'=>'upload'));
 
 $objForm = new form('upload', $uri);
 $objForm->extra = ' ENCTYPE=\'multipart/form-data\'';
-$objForm->addToForm($objUpload->show());
-$objForm->addToForm($objDropdown->show());
-$objForm->addToForm($objButton->show());
+$objForm->addToForm('<p>'.$objUpload->show().'</p>');
+$objForm->addToForm('<p>'.$objDropdown->show().'</p>');
+$objForm->addToForm('<p>'.$objButton->show().'</p>');
 
 echo $objForm->show();
