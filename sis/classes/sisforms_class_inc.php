@@ -411,6 +411,14 @@ class sisforms extends object {
         }
     }
 
+    public function listFiles() {
+        $folder = $this->sysConfig->getValue ( 'mod_sis_filefolder', 'sis' );
+        $username = $this->sysConfig->getValue ( 'mod_sis_fileuser', 'sis' );
+
+        $this->objWashout = $this->getObject('washout', 'utilities');
+        return $this->objWashout->parseText("[FILES: username=$username, folder=$folder]");
+    }
+
     public function studentForm() {
         // Student information and edit form
         $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm());

@@ -16,6 +16,7 @@ $tomsg->message = $message;
 $middleColumn .=  $tomsg->show()."<br />";
 
 $middleColumn .= $objSF->listKids();
+$middleColumn .= $objSF->listFiles();
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
