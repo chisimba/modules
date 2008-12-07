@@ -57,6 +57,7 @@ public class RealtimeOptions {
     String libDir = avoir.realtime.common.Constants.getRealtimeHome() + "/lib/";
     String soundsDir = avoir.realtime.common.Constants.getRealtimeHome() + "/sounds/";
     String logDir = avoir.realtime.common.Constants.getRealtimeHome() + "/log/";
+    String iconsDir = avoir.realtime.common.Constants.getRealtimeHome() + "/icons/resources/";
     private String[][] actualProps = {
         {"DirectConnection", "true"},
         {"SystemProxy", "false"},
@@ -112,6 +113,10 @@ public class RealtimeOptions {
         File logFile = new File(logDir);
         if (!logFile.exists()) {
             logFile.mkdirs();
+        }
+        File iconsFile = new File(iconsDir);
+        if (!iconsFile.exists()) {
+            iconsFile.mkdirs();
         }
         loadProperties();
         updateAnyNewProperties();

@@ -23,8 +23,10 @@
  */
 package avoir.realtime.classroom;
 
+import avoir.realtime.audio.AudioPanel;
+import avoir.realtime.audio.client.AudioChatClient;
 import avoir.realtime.chat.ChatRoom;
-//import avoir.realtime.audio.AudioPanel;
+
 import avoir.realtime.classroom.packets.RemoveUserPacket;
 import avoir.realtime.classroom.tcp.TCPConnector;
 
@@ -46,7 +48,6 @@ import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -104,10 +105,11 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     protected RealtimeOptions realtimeOptions = new RealtimeOptions();
     protected FileReceiverManager fileRecieverManager;
     protected JPanel centerPanel = new JPanel(new BorderLayout());
-//    protected AudioPanel audioPanel;
     private String mediaServerHost;
     private int audioMICPort;
     private int audioSpeakerPort;
+    private RealtimeToolBar toolBar;
+    private AudioChatClient audioChatClient;
 
     public ClassroomMainFrame(
             String host,
@@ -125,7 +127,6 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
             boolean webPresent, String mediaServerHost,
             int audioMICPort,
             int audioSpeakerPort,
-
             JFrame parent) {
         this();
         this.host = host;
@@ -145,7 +146,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         this.mediaServerHost = mediaServerHost;
         this.audioMICPort = audioMICPort;
         this.audioSpeakerPort = audioSpeakerPort;
-        
+
         user = createUser();
         userListManager = new UserListManager(this);
         userInteractionManager = new UserInteractionManager(this);
@@ -154,10 +155,21 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         surfaceScrollPane = new JScrollPane(whiteBoardSurface);
         tcpConnector = new TCPConnector(this);
         tcpConnector.setName("student");
-        chatRoom = new ChatRoom(this, user, chatLogFile, sessionId,false,null,sessionId);
+        chatRoom = new ChatRoom(this, user, chatLogFile, sessionId, false, null, sessionId);
         chatRoom.setTcpSocket(tcpConnector);
-//        audioPanel = new AudioPanel(this);
-        initCustomComponents();
+        toolBar = new RealtimeToolBar(this);
+        audioChatClient = new AudioChatClient(this);
+
+initCustomComponents();
+        addToolbarButtons();
+        centerPanel.add(toolBar, BorderLayout.NORTH);
+
+    }
+
+    private void addToolbarButtons() {
+        toolBar.add("/icons/micro.png", "mic", "Microphone");
+        toolBar.add("/icons/speaker.png", "speaker", "Speaker");
+        toolBar.add("/icons/kedit.png", "notepad", "Notepad");
     }
 
     protected void initCustomComponents() {
@@ -166,23 +178,14 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         mainTabbedPane.addTab("Default", surfaceScrollPane);
         userListTabbedPane.setFont(new Font("Dialog", 0, 11));
 
-
-
         dockTabbedPane.setUI(docTabbedPaneUI);
+
         docTabbedPaneUI.setBase(this, "/icons/popout.png", "Chat", "Popout");
+        dockTabbedPane.setBorder(BorderFactory.createEtchedBorder());
         dockTabbedPane.setFont(new Font("Dialog", 0, 11));
         dockTabbedPane.addTab("Chat", chatRoom);
         dockTabbedPane.setSelectedIndex(0);
         leftBottomPanel.add(dockTabbedPane, BorderLayout.CENTER);
-//        audioPanel.setPreferredSize(new Dimension(ss.width / 4, 80));
-        JPanel p = new JPanel(new BorderLayout());
-
-      //  p.add(audioPanel, BorderLayout.CENTER);
-        AudioButtonsPanel audioButtonsPanel = new AudioButtonsPanel(new GridLayout(0, 1));
-        audioButtonsPanel.add(userInteractionManager.getMicButton());
-        audioButtonsPanel.add(userInteractionManager.getSpkrButton());
-        //    p.add(audioButtonsPanel, BorderLayout.WEST);
-        leftBottomPanel.add(p, BorderLayout.SOUTH);
 
         JTable table = userListManager.getUserList();
         JScrollPane sp = new JScrollPane(table);
@@ -192,7 +195,8 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         table.setOpaque(true);
 
         userListPanel.setLayout(new BorderLayout());
-
+        //JLabel allLabel=new JLabel("Participants");
+        //userListPanel.add(allLabel, BorderLayout.NORTH);
         userListPanel.add(sp, BorderLayout.CENTER);
         userListPanel.add(userItemsPanel, BorderLayout.SOUTH);
         userListPanel.setBackground(Color.WHITE);
@@ -206,18 +210,23 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
 
         userListPanel.setPreferredSize(new Dimension(ss.width / 4, (ss.height / 4) * 3));
         mainSplitPane.setDividerLocation(ss.width / 4);
-        leftSplitPane.setDividerLocation(ss.height / 2);
+        leftSplitPane.setDividerLocation((ss.height / 2) - 80);
 
         userListTabbedPane.addTab("Participants", userListPanel);
         topLeftPanel.add(userListTabbedPane, BorderLayout.CENTER);
         parent.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent e) {
                 tcpConnector.sendPacket(new RemoveUserPacket(user));
                 System.exit(0);
             }
         });
 
+    }
+
+    public AudioChatClient getAudioChatClient() {
+        return audioChatClient;
     }
 
     public int getAudioMICPort() {
@@ -232,10 +241,10 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         return mediaServerHost;
     }
 
-/*    public AudioPanel getAudioPanel() {
-        return audioPanel;
+    public RealtimeToolBar getToolBar() {
+        return toolBar;
     }
-*/
+
     public JSplitPane getLeftSplitPane() {
         return leftSplitPane;
     }
