@@ -5,9 +5,9 @@ $fileText = $this->objLanguage->languageText('mod_educommons_imspackage', 'educo
 $contextText = $this->objLanguage->languageText('mod_educommons_contextlabel', 'educommons');
 $buttonText = $this->objLanguage->languageText('mod_educommons_uploadbutton', 'educommons');
 
-$header = $this->newObject('htmlheading', 'htmlelements');
-$header->htmlheading($headingText, 1);
-echo $header->show();
+$heading = $this->newObject('htmlheading', 'htmlelements');
+$heading->htmlheading($headingText, 1);
+echo $heading->show();
 
 $objFileLabel = $this->newObject('label', 'htmlelements');
 $objFileLabel->label($fileText, 'input_fileupload');
