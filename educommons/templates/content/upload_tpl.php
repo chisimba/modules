@@ -6,8 +6,7 @@ $contextText = $this->objLanguage->languageText('mod_educommons_contextlabel', '
 $buttonText = $this->objLanguage->languageText('mod_educommons_uploadbutton', 'educommons');
 
 $header = $this->newObject('htmlheading', 'htmlelements');
-$header->type = 1;
-$header->str = $headingText;
+$header->htmlheading($headingText, 1);
 echo $header->show();
 
 $objFileLabel = $this->newObject('label', 'htmlelements');
