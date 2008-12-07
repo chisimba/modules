@@ -57,6 +57,8 @@ $GLOBALS['kewl_entry_point_run']) {
 
 class educommons extends controller
 {
+    protected $objConfig;
+    protected $objContext;
     protected $objFolder;
     protected $objImport;
     protected $objLanguage;
