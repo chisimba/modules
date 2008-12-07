@@ -67,11 +67,11 @@ class im extends controller {
             include ($this->getResourcePath ( 'XMPPHP/XMPP.php' ));
             include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php' ));
             $this->objImOps = $this->getObject ( 'imops' );
-            $this->objUser = $this->getObject ( "user", "security" );
+            $this->objUser = $this->getObject ( 'user', 'security' );
             $this->objUserParams = $this->getObject ( 'dbuserparamsadmin', 'userparamsadmin' );
             $this->userJid = $this->objUserParams->getValue ( 'Jabber ID' );
             //Create an instance of the language object
-            $this->objLanguage = $this->getObject ( "language", "language" );
+            $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objBack = $this->getObject ( 'background', 'utilities' );
             $this->objDbIm = $this->getObject ( 'dbim' );
             $this->objDbImPres = $this->getObject ( 'dbimpresence' );
