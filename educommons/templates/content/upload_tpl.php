@@ -1,19 +1,24 @@
 <?php
 
+$headingText = $this->objLanguage->languageText('mod_educommons_importheading', 'educommons');
+$fileText = $this->objLanguage->languageText('mod_educommons_imspackage', 'educommons');
+$contextText = $this->objLanguage->languageText('mod_educommons_contextlabel', 'educommons');
+$buttonText = $this->objLanguage->languageText('mod_educommons_uploadbutton', 'educommons');
+
 $this->loadClass('htmlheading', 'htmlelements');
 
 $header = new htmlheading();
 $header->type = 1;
-$header->str = 'eduCommons IMS Package Import';
+$header->str = $headingText;
 echo $header->show();
 
 $objFileLabel = $this->newObject('label', 'htmlelements');
-$objFileLabel->label('IMS Package', 'input_fileupload');
+$objFileLabel->label($fileText, 'input_fileupload');
 
 $objFileUpload = $this->newObject('uploadinput', 'filemanager');
 
 $objContextLabel = $this->newObject('label', 'htmlelements');
-$objContextLabel->label('Context', 'input_context');
+$objContextLabel->label($contextText, 'input_context');
 
 $objContextDropdown = $this->newObject('dropdown', 'htmlelements');
 $objContextDropdown->dropdown('context');
@@ -21,7 +26,7 @@ foreach ($contexts as $context) {
     $objContextDropdown->addOption($context['contextcode']);
 }
 
-$objButton = new button('upload', 'Upload');
+$objButton = new button('upload', $buttonText);
 $objButton->setToSubmit();
 
 $uri = $this->uri(array('action'=>'upload'));
