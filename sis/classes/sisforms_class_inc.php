@@ -416,7 +416,9 @@ class sisforms extends object {
         $username = $this->sysConfig->getValue ( 'mod_sis_fileuser', 'sis' );
 
         $this->objWashout = $this->getObject('washout', 'utilities');
-        return $this->objWashout->parseText("[FILES: username=$username, folder=$folder]");
+        $files = $this->objWashout->parseText("[FILES: username=$username, folder=$folder]");
+
+        return $files;
     }
 
     public function studentForm() {
