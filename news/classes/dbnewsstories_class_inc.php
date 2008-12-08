@@ -293,7 +293,8 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
     {
         $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $numTopStoriesValue = $objSysConfig->getValue('NUMFRONTPAGETOPICS', 'news');
-        
+        $objWashout = $this->getObject('washout', 'utilities');
+
         $stories = $this->getTopStories($numTopStoriesValue);
 
         if (count($stories) == 0) {
@@ -332,7 +333,7 @@ WHERE tbl_news_stories.id = \''.$id.'\'';
                     $output .= '[ '.$story['location'].' ] ';
                 }
 
-                $output .= $objTrimString->strTrim(strip_tags($story['storytext']), 300, TRUE);
+                $output .= $objWashout->parseText($objTrimString->strTrim(strip_tags($story['storytext']), 300, TRUE));
 
                 $storyLink->link = 'Read Story';
                 $output .= ' ('.$storyLink->show().')';
