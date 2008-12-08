@@ -56,11 +56,15 @@ class xmppquiz extends controller {
     public $objLanguage;
     public $objConfig;
     public $objSysConfig;
+    public $objImOps;
 
     public function init() {
+        include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
+        include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objImOps = $this->getObject('imops', 'im');
     }
 
     public function dispatch($action = NULL) {
@@ -71,6 +75,7 @@ class xmppquiz extends controller {
 
             default :
                 // wha!
+                $this->objImOps->sendMessage ( 'pscott209@gmail.com', 'Hope this works!' );
                 echo "hello?"; die();
                 break;
         }
