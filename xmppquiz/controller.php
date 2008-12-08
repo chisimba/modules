@@ -53,6 +53,27 @@ $GLOBALS ['kewl_entry_point_run']) {
  * @link      http://avoir.uwc.ac.za
  */
 class xmppquiz extends controller {
+    public $objLanguage;
+    public $objConfig;
+    public $objSysConfig;
 
+    public function init() {
+        $this->objLanguage = $this->getObject('language', 'language');
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+    }
+
+    public function dispatch($action = NULL) {
+        switch ($action) {
+            case "view" :
+                // Do nothing
+                break;
+
+            default :
+                // wha!
+                echo "hello?"; die();
+                break;
+        }
+    }
 }
 ?>
