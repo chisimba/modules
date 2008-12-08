@@ -1019,6 +1019,11 @@ class blog extends controller
                 //get the user id
                 $userid = $this->objUser->userId();
                 $this->setVarByRef('userid', $userid);
+                // Check if the user is allowed to blog - added Dec 2008
+                if (!($this->approvedBlogger())){
+                    return 'not_approved_tpl.php';
+                    exit;
+                }
                 //check the mode
                 $mode = $this->getParam('mode');
                 switch ($mode) {
@@ -2152,6 +2157,28 @@ class blog extends controller
                 return TRUE;
             } else {
                 return FALSE;
+            }
+        }
+
+
+        /**
+        * Check if user is allowed to blog
+        * @returns boolean
+        */
+        public function approvedBlogger()
+        {
+            $blogSetting=$this->objSysConfig->getValue('limited_users','blog');
+            if ($blogSetting==1){
+                $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+                $groupId = $this->objGroup->getLeafId(array('Blog Users'));
+                $this->userPkId = $this->objUser->PKId();
+                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return TRUE;
             }
         }
     }

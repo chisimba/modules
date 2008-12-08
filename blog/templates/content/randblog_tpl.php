@@ -26,7 +26,7 @@ if (!empty($latestpost) && !empty($posts)) {
     $middleColumn.= ($this->objblogPosts->showPosts($posts));
 } else {
     $middleColumn.= "<h1><em><center>" . $this->objLanguage->languageText("mod_blog_nopostsincat", "blog") . "</center></em></h1>";
-    if ($this->objUser->userId() == $userid) {
+    if (($this->objUser->userId() == $userid)&&($this->approvedBlogger())) {
         $linker = new href($this->uri(array(
             'module' => 'blog',
             'action' => 'blogadmin',
