@@ -93,7 +93,7 @@ class imops extends object {
         }
     }
 
-    public function showMassMessageBox($featurebox = FALSE, $editor = FALSE, $module="im") {
+    public function showMassMessageBox($featurebox = FALSE, $editor = FALSE, $module = "im") {
         if ($editor == FALSE) {
             $form = $this->massmessageform ( FALSE );
         } else {
@@ -122,8 +122,8 @@ class imops extends object {
             exit ();
         }
         $required = '<span class="warning"> * ' . $this->objLanguage->languageText ( 'word_required', 'system', 'Required' ) . '</span>';
-        $cform = new form ( 'massmsg');
-	$cform->action = $this->uri ( array ('action' => 'massmessage' ,'module' => 'das') ) ;
+        $cform = new form ( 'massmsg' );
+        $cform->action = $this->uri ( array ('action' => 'massmessage', 'module' => 'das' ) );
         $cfieldset = $this->getObject ( 'fieldset', 'htmlelements' );
         $ctbl = $this->newObject ( 'htmltable', 'htmlelements' );
         $ctbl->cellpadding = 5;
@@ -169,82 +169,70 @@ class imops extends object {
 
     }
 
+    /**
+     * Method to evoke the python script to start the session
+     */
+    public function startSession($detailsArr) {
+        $username = $detailsArr ['username'];
+        $password = $detailsArr ['password'];
+        $dbname = "chisimba";
+        $dbusername = "root";
+        $dbhost = "localhost";
+        $dbpassword = "root";
+        $pathToScript = "/home/wesley/work/xmpp/";
+        $exeString = "python $pathToScript/messagehandler.py $username $password $dbhost $dbusername $dbpassword $dbname";
+        exec ( $exeString . " > /dev/null &" );
 
-		/**
-	* Method to evoke the python script to start the session
-	*/
-	public function startSession($detailsArr)
-	{
-		$username =  $detailsArr['username'];
-		$password = $detailsArr['password'];
-		$dbname = "chisimba";
-		$dbusername = "root";
-		$dbhost = "localhost";
-		$dbpassword = "root";
-		$pathToScript = "/home/wesley/work/xmpp/";
-		$exeString = "python $pathToScript/messagehandler.py $username $password $dbhost $dbusername $dbpassword $dbname";
-		exec($exeString. " > /dev/null &");
-		
-	}
+    }
 
-	/**
-	* Method to kill the python script
-	*/
-	public function endSession($username)
-	{
+    /**
+     * Method to kill the python script
+     */
+    public function endSession($username) {
 
-		//return exec("killall python");
-		$pids = $this->getPID($username);
-		if(count($pids) > 0)
-		{
-			foreach($pids as $pid)
-			{			
-				return exec("kill ".$pid);
-			}
-		}
-	}
+        //return exec("killall python");
+        $pids = $this->getPID ( $username );
+        if (count ( $pids ) > 0) {
+            foreach ( $pids as $pid ) {
+                return exec ( "kill " . $pid );
+            }
+        }
+    }
 
-	/**
-	* Method to check if the script is running
-	*/
-	public function isScriptRunning($param)
-	{
+    /**
+     * Method to check if the script is running
+     */
+    public function isScriptRunning($param) {
 
-		if(count($this->getPID($username)) > 0)
-		{
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+        if (count ( $this->getPID ( $username ) ) > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
-	/**
-	* Method to get PID of processes
-	* @author James Scoble
-	* @param string $param
-	* @returns array
-	*/
-	function getPID($param)
-	{
-		 exec("ps aux", $result);
-	
-		 $r2=array();
-		 foreach ($result as $line)
-		 {
-			
-			if (strpos($line,$param))
-			{				
-				$l2=substr($line,strpos($line,' '),-1);
-				$l2=trim($l2);
-				$l2=substr($l2,0,strpos($l2,' '));
-				$l2=trim($l2);
-				$r2[]=$l2;
-			}
-		 }
-		 return $r2;
-	}
+    /**
+     * Method to get PID of processes
+     * @author James Scoble
+     * @param string $param
+     * @returns array
+     */
+    function getPID($param) {
+        exec ( "ps aux", $result );
 
-	
+        $r2 = array ();
+        foreach ( $result as $line ) {
+
+            if (strpos ( $line, $param )) {
+                $l2 = substr ( $line, strpos ( $line, ' ' ), - 1 );
+                $l2 = trim ( $l2 );
+                $l2 = substr ( $l2, 0, strpos ( $l2, ' ' ) );
+                $l2 = trim ( $l2 );
+                $r2 [] = $l2;
+            }
+        }
+        return $r2;
+    }
 
 }
 ?>
