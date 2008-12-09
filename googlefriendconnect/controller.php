@@ -66,6 +66,7 @@ class googlefriendconnect extends controller
      */
     private function actionDefault()
     {
+        return 'default_tpl.php';
     }
 
     /**
