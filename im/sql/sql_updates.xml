@@ -58,4 +58,16 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_im_users</table>
+        <version>0.191</version>
+        <description>Added manualassign field</description>
+        <data>
+            <add>
+                <name>manualassign</name>
+                <type>integer</type>                
+            </add>
+        </data>
+    </update>
+
 </updates>

@@ -129,5 +129,34 @@ class dbimusers extends dbTable
 		return $rec[0]['c'];
 	}
 
+    /**
+    * Method to check if a user is set to receive
+    * patient automattically
+    */
+    public function manualAssign($userId)
+    {
+        $row = $this->getRow('userid',$userId);
+        
+        if ($row['manualassign'] == '1')
+        {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+	/**
+	* Method to set the manual assignment
+	* @param string $userid
+	*/
+	public function setManualAssignment($userId, $assign = 1)
+	{
+        $row = $this->getRow('userid',$userId);
+        //var_dump($row);die;
+        $assign =  ($this->manualAssign($userId)) ? 0 : 1;
+		return $this->update('userid' , $userId, array('manualassign' => $assign));
+
+	}
+
 
 }
