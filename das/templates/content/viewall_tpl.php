@@ -80,4 +80,24 @@ $cssLayout->setRightColumnContent($rightColumn);
 echo $cssLayout->show();
 
 ?>
+<script type = "text/javascript">
+		function getHtml(){
+			var output = $("output");
+            var url = 'index.php';
+             var pars = 'action=getmsgs'; //+escape($F('greeting-name'));
+             var target = 'output';
+             var myAjax = new Ajax.Updater(target, url, {method: 'get', parameters: pars});
+            
+			
+		}
+		
+		</script>
+
+<a href = "javascript:getHtml()">Update HTML</a></p>
+<div id= "loading"><img src="http://localhost/php/framework/skins/_common/icons/loader.gif"></div>
+<div id = "output">
+	This is my output
+
+	</div>
+
 

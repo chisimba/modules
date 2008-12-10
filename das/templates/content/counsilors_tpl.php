@@ -29,17 +29,27 @@ foreach ($users as $user)
 {
     $cnt = 0;
     $name = $user['firstname']." ".$user['surname'];
+    
     if($objDBIMUser->isCounsilor($user['userid']))
     {
+        $objDBIMUser->manualAssign($user['userid']) ? $objIcon->setIcon('grey_bullet'): $objIcon->setIcon('green_bullet');
+        $reassignIcon = $objIcon->show();
+        $objLink->href = $this->uri(array("action" => "togglereassign", "userid" => $user['userid']));
+        $objLink->link = $objIcon->show();
+        $reassign = $objLink->show();
+
         $objIcon->setIcon('delete');
         $objLink->href = $this->uri(array("action" => "removecounsilor", "userid" => $user['userid']));
         $objLink->link = $objIcon->show();
         $cnt = count($this->objDbImPres->getUsers($user['userid']));
     }else{
+        $reassign = "";
         $objIcon->setIcon('add');
         $objLink->href = $this->uri(array("action" => "addcounsilor", "userid" => $user['userid']));
         $objLink->link = $objIcon->show();
     }
+
+   
 
     if ($objLoggedIn->isUserOnline($user['userid']))
     {
@@ -49,7 +59,7 @@ foreach ($users as $user)
     }
     $bullet = $objIcon->show();
 
-    $arr[] = array($name, $cnt, $bullet, $objLink->show());
+    $arr[] = array($name, $cnt, $bullet, $reassign, $objLink->show());
     //echo $name."   ".$objLink->show().'  ('.$cnt.' users assigned) <br/>';
 
 }
@@ -66,7 +76,7 @@ $objLink->link = "Stop Session";
 $admin .= "<br/>".$objLink->show();
 
 $objTable->width = "90%";
-$objTable->addHeader(array("Name", "No. of people assigned", "Logged In", " "));
+$objTable->addHeader(array("Name", "No. of people assigned", "Logged In", "Auto Assign"));
 $objTable->arrayToTable($arr);
 $middleColumn .= $objTable->show();
 $objLink->href = $this->uri(array('action' => 'resetcounsillors'));

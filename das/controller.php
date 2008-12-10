@@ -205,6 +205,15 @@ class das extends controller {
 				return  $this->nextAction('viewcounsilors');
           		break;
 
+            case 'getmsgs':
+                echo 'wesssssssssss';
+                break;
+
+            case 'togglereassign':
+                $this->objIMUsers->setManualAssignment($this->getParam('userid'));
+                return $this->nextAction('viewcounsilors');
+                break;
+
             default :
                 die ( "unknown action" );
                 break;
