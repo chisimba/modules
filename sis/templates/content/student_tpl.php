@@ -1,5 +1,5 @@
 <?php
-$cssLayout = &$this->newObject('csslayout', 'htmlelements');
+$cssLayout = $this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $objFeatureBox = $this->newObject('featurebox', 'navigation');
 $objSF = $this->getObject('sisforms');

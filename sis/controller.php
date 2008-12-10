@@ -32,9 +32,6 @@ class sis extends controller {
         switch ($action) {
             case "showprofile" :
                 // Just shows the users profile with an update form
-                $profile = $this->objFMPro->getUserProfile ();
-                $this->setVarByRef ( 'profile', $profile );
-
                 // check for a message
                 $message = $this->getParam('message');
                 if($message == '' ) {
@@ -145,6 +142,10 @@ class sis extends controller {
 
             case 'viewstudent':
                 // check for a message
+                $recid = $this->getParam('recid');
+                // get the record by id
+                $record = $this->objFMPro->getStudentById($recid);
+                echo $record->getField("Person::FirstName");die();
                 $message = $this->getParam('message');
                 if($message == '' ) {
                     $message = NULL;
@@ -159,10 +160,14 @@ class sis extends controller {
                 break;
 
             default :
+                $person = $this->objFMPro->getAuthenticatedPerson($this->objUser->userName());
+                $children = $this->objFMPro->getChildrenOf($person);
+
                 $message = $this->getParam('message');
                 if($message == '') {
                     $message = NULL;
                 }
+                $this->setVarByRef('children', $children);
                 $this->setVarByRef('message', $message);
                 return "default_tpl.php";
                 break;

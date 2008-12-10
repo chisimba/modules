@@ -384,10 +384,30 @@ class sisforms extends object {
         }
     }
 
-    public function listKids() {
-         $kids = NULL;
-         return "<h1> This is a list of kids associated with this profile...</h1>";
+    public function listKids($children) {
+         $count = sizeof($children);
+         $counter = 0;
+         while ($counter < $count) {
+             $firstname = $children[$counter]->getField("FirstName");
+             $lastname = $children[$counter]->getField("LastName");
+             $oid = $children[$counter]->getRecordId();
+             $data = $this->objFMPro->getStudentRecord($children[$counter]);
+             $id = $data->getRecordId();
+             $name = $firstname." ".$lastname;
+             $kids[$counter] = array($name, $id, $data);
+             $counter++;
+         }
+         return $kids;
     }
+
+    public function countKids($children) {
+        $count = sizeof($children);
+        $objheader = $this->getObject('htmlheading', 'htmlelements');
+        $objheader->str = "There are $count students associated with this profile:";
+        $objheader->type = 1;
+        return $objheader->show();
+    }
+
     /**
      * Method to display the parent menu
      *

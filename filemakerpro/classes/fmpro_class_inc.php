@@ -70,6 +70,7 @@ class fmpro extends object {
     public $username;
     public $password;
     public $record;
+    public $children;
 
     /**
      * Standard constructor
@@ -202,14 +203,73 @@ class fmpro extends object {
 
     public function getChildrenOf($parent) {
         // This depends on the portal in the current layout
-        //var_dump($parent->_impl->relatedSets);
-        $layoutName = 'Form: Person';
-        $layout = $this->grabLayout ( $layoutName );
-        $relatedsets = $layout->listRelatedSets ( $layout );
-        var_dump ( $relatedsets );
-        die ();
-        return $parent->getRelatedSet ( 'Child' );
+        $relatedSet = $parent->getRelatedSet('Child');
+        $children = array();
+        foreach ( $relatedSet as $record ) {
+            $child = $this->getPersonRecord($record->getRecordId());
+            if ( $child != NULL ) {
+                array_push($children, $child);
+            }
+        }
+
+        return $children;
+
     }
+
+    protected function getPersonRecord($recordId) {
+        $findCommand = $this->fm->newFindCommand('Form: Person');
+        $findCommand->setRecordId( $recordId );
+        $result = $findCommand->execute();
+        if (FileMaker::isError($result)) {
+            return NULL;
+        }
+
+        return $result->getFirstRecord();
+    }
+
+    public function getStudentRecord($person) {
+        $findCommand = $this->fm->newFindCommand('Form: Student');
+        $findCommand->addFindCriterion(
+            'Person::FirstName',
+            $person->getField('FirstName')
+            );
+        $findCommand->addFindCriterion(
+            'Person::MiddleName',
+            $person->getField('MiddleName')
+            );
+        $findCommand->addFindCriterion(
+            'Person::LastName',
+            $person->getField('LastName')
+            );
+        $result = $findCommand->execute();
+        if (FileMaker::isError($result)) {
+            return NULL;
+        }
+
+        return $result->getFirstRecord();
+    }
+
+    public function getStudentById($id) {
+        $layoutName = 'Form: Student';
+        $rec = $this->fm->getRecordById ( $layoutName, $id );
+        // create a pretty array of the info...
+
+        return $rec;
+    }
+
+    public function getAuthenticatedPerson($username) {
+        // FIXME: Prolly should make a form just for this purpose
+        $findCommand = $this->fm->newFindCommand('Form: Person');
+        $findCommand->addFindCriterion('UserName', $username);
+        $result = $findCommand->execute();
+        if (FileMaker::isError($result)) {
+            return NULL;
+        }
+
+        return $result->getFirstRecord();
+    }
+
+
 
     public function getUserInfo() {
         $layoutName = 'Form: Person';
@@ -296,14 +356,6 @@ class fmpro extends object {
         $userinfo ['cellpriv'] = $rec->getField ( 'IsCellPrivate' );
 
         return $userinfo;
-    }
-
-    public function getStudentById($studentid) {
-        $layoutName = 'Form: Student';
-        $rec = $this->fm->getRecordById($layoutName, $studentid);
-        var_dump($rec);
-        $recid = $rec->getRecordId();
-        $studentinfo = array();
     }
 
     public function editRecord($layoutName, $recid, $values) {
