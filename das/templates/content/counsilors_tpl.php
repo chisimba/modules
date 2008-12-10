@@ -85,7 +85,7 @@ $objLink->link = "Reset Counsillors";
 $admin.= "<br/>".$objLink->show();
 
 $leftColumn .= $objFB->show('', $admin);
-
+$leftColumn .= $this->objImOps->massMessage();
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
 $cssLayout->setRightColumnContent($rightColumn);
