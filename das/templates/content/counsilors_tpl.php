@@ -22,7 +22,7 @@ $str .= "Status: <span class=\"highlight\">".$online.'</span><br/>';
 $str .= "Number of Counsilors: $numCounsilors<br/>";
 $str .= "Number of Users: $numUsers <br/><br/>";
 
-$rightColumn .= $objFB->show("Settings",  $this->objImOps->getConfigBlock());
+
 $leftColumn .= $objFB->show('',$str);
 $arr = array();
 foreach ($users as $user)
@@ -84,7 +84,8 @@ $objLink->link = "Reset Counsillors";
 
 $admin.= "<br/>".$objLink->show();
 
-$leftColumn .= $objFB->show('', $admin);
+$rightColumn .= $objFB->show('', $admin);
+$rightColumn .= $objFB->show("Settings",  $this->objImOps->getConfigBlock());
 $leftColumn .= $this->objImOps->massMessage();
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
