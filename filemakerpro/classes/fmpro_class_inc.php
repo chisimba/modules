@@ -253,8 +253,25 @@ class fmpro extends object {
         $layoutName = 'Form: Student';
         $rec = $this->fm->getRecordById ( $layoutName, $id );
         // create a pretty array of the info...
+        // var_dump($rec);
+        $student = array();
+        $student['dob'] = $rec->getField("Person::DateOfBirth");
+        $student['lastname'] = $rec->getField("Person::LastName");
+        $student['firstname'] = $rec->getField("Person::FirstName");
+        $student['middlename'] = $rec->getField("Person::MiddleName");
+        $student['race'] = $rec->getField("Race");
+        $student['gender'] = $rec->getField("Person::Gender");
 
-        return $rec;
+        // Scheduling info
+        $student['firstyear'] = $rec->getField("EntryYear");
+        $student['lastyear'] = $rec->getField("ExitYear");
+        $student['status'] = $rec->getField("Status");
+        $student['class'] = $rec->getField("ClassId");
+        $student['schedtype'] = $rec->getField("ScheduleTypeId");
+        $student['sched'] = $rec->getField("actualSchedule");
+        $student['recid'] = $id;
+
+        return $student;
     }
 
     public function getAuthenticatedPerson($username) {

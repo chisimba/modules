@@ -145,17 +145,15 @@ class sis extends controller {
                 $recid = $this->getParam('recid');
                 // get the record by id
                 $record = $this->objFMPro->getStudentById($recid);
-                echo $record->getField("Person::FirstName");die();
+
                 $message = $this->getParam('message');
                 if($message == '' ) {
                     $message = NULL;
                 }
                 $this->setVarByRef('message', $message);
+                $this->setVarByRef('record', $record);
+                $this->setVarByRef('recid', $recid);
 
-
-                //$student = $this->objFMPro->getStudentById($studentid);
-//var_dump($student); die();
-  //              $this->setVarByRef('student', $student);
                 return 'student_tpl.php';
                 break;
 

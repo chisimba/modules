@@ -441,10 +441,10 @@ class sisforms extends object {
         return $files;
     }
 
-    public function studentForm() {
+    public function studentForm($record) {
         // Student information and edit form
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm());
-        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), $this->studentSchedule());
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_student", "sis"), $this->studentBioDataForm($record));
+        $this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_schedule", "sis"), $this->studentSchedule($record));
         // Tabs out of scope according to user story
         //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_medical", "sis"), 'Medical stuff');
         //$this->objJqTabs->addTab($this->objLanguage->languageText("mod_sis_contacts", "sis"), 'Contacts...');
@@ -458,7 +458,7 @@ class sisforms extends object {
     }
 
     private function studentBioDataForm($details = NULL, $featurebox = FALSE) {
-        $bioform = new form ( 'updatestudentbio', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentbio' ) ) );
+        $bioform = new form ( 'updatestudentbio', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentbio', 'recid' => $details['recid'] ) ) );
         $biofieldset = $this->getObject ( 'fieldset', 'htmlelements' );
         $biofieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentbio', 'sis' ) );
 
@@ -468,8 +468,8 @@ class sisforms extends object {
         // OK lets set up all the form bits first
         // Last name
         $ln = new textinput ( 'lastname' );
-        if(isset($details['surname'])) {
-            $ln->setValue($details['surname']);
+        if(isset($details['lastname'])) {
+            $ln->setValue($details['lastname']);
         }
         $lnlabel = new label ( $this->objLanguage->languageText ( "mod_sis_lastname", "sis" ) . ':', 'comm_input_ln' );
 
@@ -561,7 +561,7 @@ class sisforms extends object {
     }
 
     public function studentSchedule($details = NULL, $featurebox = FALSE) {
-        $schedform = new form ( 'updatestudentsched', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentsched' ) ) );
+        $schedform = new form ( 'updatestudentsched', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentsched', 'recid' => $details['recid'] ) ) );
         $schedfieldset = $this->newObject ( 'fieldset', 'htmlelements' );
         $schedfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentsched', 'sis' ) );
 
