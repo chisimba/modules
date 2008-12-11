@@ -97,6 +97,7 @@ class ahis extends controller {
             $this->setVar('pageSuppressToolbar', TRUE);
             $this->setLayoutTemplate('ahis_layout_tpl.php');
             $this->objGeo3 = $this->getObject('geolevel3');
+            $this->objGeo2 = $this->getObject('geolevel2');
             
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -152,6 +153,7 @@ class ahis extends controller {
                 $this->setVar('data', $data);
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('success', $this->getParam('success'));
+                $this->setVar('allowEdit', FALSE);
                 return 'admin_overview_tpl.php';
             
             case 'geography_level2_admin':
@@ -161,8 +163,7 @@ class ahis extends controller {
                     return 'redirect_tpl.php';
                 }
                 $searchStr = $this->getParam('searchStr');
-                //$data = $this->objGeo2->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
-                $data = array(array('id'=>1,'name'=>'the first one'),array('id'=>2,'name'=>'second one'));
+                $data = $this->objGeo2->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'geography_level2_add')));
                 $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_geo2add','ahis'));
                 $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_geo2adminheading','ahis'));
@@ -172,6 +173,8 @@ class ahis extends controller {
                 $this->setVar('fieldName', 'name');
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'geography_level2_add');
                 $this->setVar('success', $this->getParam('success'));
                 return 'admin_overview_tpl.php';
             
@@ -180,6 +183,9 @@ class ahis extends controller {
             
             case 'geography_level3_insert':
                 $name = $this->getParam('name');
+                if ($this->objGeo3->valueExists('name',$name)) {
+                    return $this->nextAction('geography_level3_admin', array('success'=>'4'));
+                }
                 $this->objGeo3->insert(array('name'=>$name));
                 return $this->nextAction('geography_level3_admin', array('success'=>'1'));
             
@@ -188,15 +194,29 @@ class ahis extends controller {
                 $this->objGeo3->delete('id', $id);
                 return $this->nextAction('geography_level3_admin', array('success'=>'2'));
             
-            case 'geography_level3_add':
+            case 'geography_level2_add':
+                $geo3 = $this->objGeo3->getAll("ORDER BY name");
+                $this->setVar('geo3',$geo3);
+                $this->setVar('id',$this->getParam('id'));
                 return 'geo2_add_tpl.php';
             
             case 'geography_level2_insert':
+                $id = $this->getParam('id');
                 $name = $this->getParam('name');
-                $this->objGeo2->insert(array('name'=>$name));
-                return $this->nextAction('geography_level2_admin', array('success'=>'1'));
+                $geo3Id = $this->getParam('geo3id');
+                if ($this->objGeo2->valueExists('name',$name)) {
+                    return $this->nextAction('geography_level2_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objGeo2->update('id', $id, array('name'=>$name, 'geo3id' => $geo3Id));
+                    $success = '3';
+                } else {
+                    $this->objGeo2->insert(array('name'=>$name, 'geo3id' => $geo3Id));
+                    $success = '1';
+                }
+                return $this->nextAction('geography_level2_admin', array('success'=>$success));
             
-            case 'geography_level3_delete':
+            case 'geography_level2_delete':
                 $id = $this->getParam('id');
                 $this->objGeo2->delete('id', $id);
                 return $this->nextAction('geography_level2_admin', array('success'=>'2'));

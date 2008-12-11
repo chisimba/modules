@@ -60,8 +60,14 @@ if (isset($success)) {
             $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_added', 'ahis')."<br />");
             break;
         case 2:
-        default:
             $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_deleted', 'ahis')."<br />");
+            break;
+        case 3:
+            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_updated', 'ahis')."<br />");
+            break;
+        case 4:
+            $objMsg->setMessage("<span class='error'>".$this->objLanguage->languageText('mod_ahis_duplicate', 'ahis')."</span><br />");
+            $objMsg->setTimeOut('0');
             break;
     }
 
@@ -102,6 +108,9 @@ $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 if (!empty($data)) {
     foreach ($data as $datum) {
         $link = $icon->getDeleteIconWithConfirm($datum['id'],array('action'=>$deleteAction,'id'=>$datum['id']), 'ahis', $message);
+        if ($allowEdit) {
+            $link = $icon->getEditIcon($this->uri(array('action'=>$editAction, 'id'=>$datum['id'])))." $link";
+        }
         $objTable->startRow($class);
         $objTable->addCell($datum[$fieldName]);
         $objTable->addCell($link);

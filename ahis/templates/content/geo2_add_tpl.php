@@ -42,12 +42,26 @@ $GLOBALS['kewl_entry_point_run']) {
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
+$this->loadClass('dropdown','htmlelements');
+
+if ($id) {
+    $hStr = $this->objLanguage->languageText('word_edit').$this->objLanguage->languageText('mod_ahis_geolevel','ahis');
+    $formUri = $this->uri(array('action'=>'geography_level2_insert', 'id'=>$id));
+    $record = $this->objGeo2->getRow('id', $id);
+} else {
+    $hStr = $this->objLanguage->languageText('mod_ahis_geo2add','ahis');
+    $formUri = $this->uri(array('action'=>'geography_level2_insert'));
+    $record['geo3id'] = $record['name'] = '';
+}
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
-$objHeading->str = $this->objLanguage->languageText('mod_ahis_geo2add','ahis');
+$objHeading->str = $hStr;
 
-$nameInput = new textinput('name');
+$nameInput = new textinput('name',$record['name']);
+$geo3Drop = new dropdown('geo3id');
+$geo3Drop->addFromDB($geo3, 'name', 'id');
+$geo3Drop->setSelected($record['geo3id']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
@@ -64,11 +78,16 @@ $objTable->addCell($nameInput->show());
 $objTable->endRow();
 
 $objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_geolevel','ahis')." 3: ");
+$objTable->addCell($geo3Drop->show());
+$objTable->endRow();
+
+$objTable->startRow();
 $objTable->addCell($bButton->show());
 $objTable->addCell($sButton->show());
 $objTable->endRow();
 
-$objForm = new form('geo2add', $this->uri(array('action'=>'geography_level2_insert')));
+$objForm = new form('geo2add', $formUri);
 $objForm->addToForm($objTable->show());
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
 
