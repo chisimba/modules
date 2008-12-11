@@ -152,7 +152,7 @@ class viewrender extends object {
 											savingText: 'Sending the message...',
 											callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
                         </script>
-						</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;". $refreshIcon."</p>";
+						</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;</p>";
 			
             $box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . '</b></p><p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
 
