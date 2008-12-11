@@ -133,7 +133,32 @@ class sis extends controller {
                 break;
 
             case 'updatestudentbio' :
-                echo "Not yet implemented"; die();
+                $recid = $this->getParam('recid');
+                $ln = $this->getParam('lastname');
+                $fn = $this->getParam('firstname');
+                $mn = $this->getParam('midname');
+                $race = $this->getParam('race');
+                $gender = $this->getParam('gender');
+                $dob = $this->getParam('dob');
+
+                // update the record and return to the default view.
+                $values = array("Person::DateOfBirth" => $dob,
+                                "Person::LastName" => $ln,
+                                "Person::FirstName" => $fn,
+                                "Person::MiddleName" => $mn,
+                                "Race" => $race,
+                                "Person::Gender" => $gender,
+                                );
+                $layoutName = 'Form: Student';
+                $res = $this->objFMPro->editRecord($layoutName, $recid, $values);
+                // check the results and take action
+                if($res === TRUE) {
+                    $this->nextAction(NULL);
+                }
+                else {
+                    throw new customException("Database error!");
+                    die();
+                }
                 break;
 
             case 'updatestudentsched' :

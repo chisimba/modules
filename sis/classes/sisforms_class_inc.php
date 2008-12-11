@@ -498,6 +498,7 @@ class sisforms extends object {
         $gender = new radio('gender');
         $gender->addOption('m','Male');
         $gender->addOption('f','Female');
+        $gender->setSelected('f');
 
         $genderlabel = new label ( $this->objLanguage->languageText ( "mod_sis_gender", "sis" ) . ':', 'comm_input_gender' );
         // DOB field... I am presuming a text field from fmp here...
@@ -561,6 +562,7 @@ class sisforms extends object {
     }
 
     public function studentSchedule($details = NULL, $featurebox = FALSE) {
+        var_dump($details);
         $schedform = new form ( 'updatestudentsched', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentsched', 'recid' => $details['recid'] ) ) );
         $schedfieldset = $this->newObject ( 'fieldset', 'htmlelements' );
         $schedfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentsched', 'sis' ) );
