@@ -15,7 +15,7 @@ $tomsg = $this->getObject('timeoutmessage', 'htmlelements');
 $tomsg->message = $message;
 $middleColumn .=  $tomsg->show()."<br />";
 
-$middleColumn .= $objSF->studentForm();
+$middleColumn .= $objSF->studentForm($record);
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftCol); //$leftMenu->show());
