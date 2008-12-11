@@ -509,8 +509,6 @@ class sisforms extends object {
 
 
         $genderlabel = new label ( $this->objLanguage->languageText ( "mod_sis_gender", "sis" ) . ':', 'comm_input_gender' );
-        // DOB field... I am presuming a text field from fmp here...
-        // TODO: check on the above.
         // Race/Ethnicity
         $dob = new textinput ( 'dob' );
         if(isset($details['dob'])) {
@@ -570,7 +568,7 @@ class sisforms extends object {
     }
 
     public function studentSchedule($details = NULL, $featurebox = FALSE) {
-        var_dump($details);
+        // var_dump($details);
         $schedform = new form ( 'updatestudentsched', $this->uri ( array ('module' => 'sis', 'action' => 'updatestudentsched', 'recid' => $details['recid'] ) ) );
         $schedfieldset = $this->newObject ( 'fieldset', 'htmlelements' );
         $schedfieldset->setLegend ( $this->objLanguage->languageText ( 'mod_sis_updatestudentsched', 'sis' ) );
