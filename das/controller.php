@@ -67,6 +67,7 @@ class das extends controller {
             include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
             include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
             $this->objImOps = $this->getObject ( 'dasops', 'das' );
+            $this->objViewRender = $this->getObject ( 'viewrender', 'das' );
             $this->objUser = $this->getObject ( "user", "security" );
             $this->objUserParams = $this->getObject ( 'dbuserparamsadmin', 'userparamsadmin' );
             $this->userJid = $this->objUserParams->getValue ( 'Jabber ID', 'im' );
@@ -111,11 +112,13 @@ class das extends controller {
 			case 'viewall' :
 
             case NULL :
+                $this->setLayoutTemplate('das_layout_tpl.php');
                 header("Content-Type: text/html;charset=utf-8");
                 return 'viewall_tpl.php';
                 break;
 
 	   		case 'viewreassign':
+                $this->setLayoutTemplate('das_layout_tpl.php');
 				return 'view_reassign_tpl.php';
 				break;
 

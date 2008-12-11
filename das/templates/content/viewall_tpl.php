@@ -77,9 +77,27 @@ if (!$this->objUser->isLoggedIn()) {
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);
 $cssLayout->setRightColumnContent($rightColumn);
-echo $cssLayout->show();
-
+//echo $cssLayout->show();
+echo $middleColumn;
 ?>
+<!--script type = "text/javascript">
+		function getHtml(){
+			var output = $("output");
+            var url = 'index.php';
+             var pars = 'action=getmsgs'; //+escape($F('greeting-name'));
+             var target = 'output';
+             var myAjax = new Ajax.Updater(target, url, {method: 'get', parameters: pars});
+            
+			
+		}
+		
+		</script>
 
+<a href = "javascript:getHtml()">Update HTML</a></p>
+<div id= "loading"></div>
+<div id = "output">
+	This is my output <img src="http://localhost/php/framework/skins/_common/icons/loader.gif">
+
+	</div-->
 
 

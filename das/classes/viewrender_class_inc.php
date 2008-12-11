@@ -234,7 +234,24 @@ class viewrender extends object {
 		return $this->objFeatureBox->show('Stats', $str);
 	}
 
+    /**
+    * Method to get the left blocks
+    */
+    public function getLeftBlocks()
+    {
+        return $this->getStatsBox();
+    }
 	
+
+    /**
+    * Method to get the right blocks
+    */
+    public function getRightBlocks()
+    {
+        
+        return $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
+                                 $this->objUser->userId()));
+    }
 
 }
 ?>
