@@ -163,7 +163,20 @@ class sis extends controller {
                 break;
 
             case 'updatestudentsched' :
-                echo "Not yet implemented"; die();
+                $firstyear = $this->getParam('firstyear');
+                $recid = $this->getParam('recid');
+                $values = array("EntryYear" => $firstyear);
+                $layoutName = 'Form: Student';
+                $res = $this->objFMPro->editRecord($layoutName, $recid, $values);
+                // check the results and take action
+                if($res === TRUE) {
+                    $this->nextAction(NULL);
+                }
+                else {
+                    var_dump($res); die();
+                    throw new customException("Database error!");
+                    die();
+                }
                 break;
 
             case 'viewstudent':

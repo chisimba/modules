@@ -422,7 +422,7 @@ class sisforms extends object {
         // Add the links to the linklist
         $linklist = $home->show() . "<br />";
         $linklist .= $profile->show() . "<br />";
-        $linklist .= $student->show() . "<br />";
+        //$linklist .= $student->show() . "<br />";
 
         // return the link list for display
         if ($featurebox == TRUE) {
