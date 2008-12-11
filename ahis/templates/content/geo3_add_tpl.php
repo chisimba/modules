@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis Login Template
+ * ahis Geography level 3 add Template
  *
- * Login template for Ahis module
+ * Template to add Geography Segment Level 3
  * 
  * PHP version 5
  * 
@@ -38,44 +38,39 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-$this->loadClass('form','htmlelements');
+
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
-$this->loadClass('layer','htmlelements');
+$this->loadClass('form','htmlelements');
 
-$objUsername = new textinput('username', NULL, 'text', 25);
-$objPassword = new textinput('password', NULL, 'password', 25);
-$objModule   = new textinput('mod', 'ahis', 'hidden');
+$objHeading = $this->getObject('htmlheading','htmlelements');
+$objHeading->type = 2;
+$objHeading->str = $this->objLanguage->languageText('mod_ahis_geo3add','ahis');
 
-$enterButton = new button('login',$this->objLanguage->languageText('word_enter'));
-$enterButton->setToSubmit();
-$clearButton = new button('clear',$this->objLanguage->languageText('word_clear'),
-                          "javascript: $('input_username').value = $('input_password').value = '';");
+$nameInput = new textinput('name');
 
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+$sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
+$sButton->setToSubmit();
+$backUri = $this->uri(array('action'=>'geography_level3_admin'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+
 $objTable = $this->getObject('htmltable','htmlelements');
-$objTable->width = NULL;
+$objTable->width = '50%';
+$objTable->cellspacing = 2;
+
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_username').": $tab");
-$objTable->addCell($objUsername->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_geolevelname','ahis').": ");
+$objTable->addCell($nameInput->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_password').": $tab");
-$objTable->addCell($objPassword->show().$objModule->show());
+$objTable->addCell($bButton->show());
+$objTable->addCell($sButton->show());
 $objTable->endRow();
 
-$objTable->startRow();
-$objTable->addCell($clearButton->show());
-$objTable->addCell($enterButton->show(), NULL, 'top', 'right');
-$objTable->endRow();
-
-$objForm = new form('loginForm',$this->uri(array('action'=>'login'),'security'));
+$objForm = new form('geo3add', $this->uri(array('action'=>'geography_level3_insert')));
 $objForm->addToForm($objTable->show());
-$objForm->addRule('username',$this->objLanguage->languageText("mod_login_unrequired", "security"),'required');
+$objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
 
-$objLayer = new layer();
-$objLayer->align = 'center';
-$objLayer->addToStr($objForm->show());
+echo $objHeading->show()."<hr />".$objForm->show();
 
-echo $objLayer->show();

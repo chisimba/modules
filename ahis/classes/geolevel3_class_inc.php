@@ -1,8 +1,8 @@
 <?php
 /**
- * Ahis not admin Template
+ * ahis geolevel3 Class
  *
- * unauthorised access template for AHIS module
+ * File containing geo_level3 table connection class
  * 
  * PHP version 5
  * 
@@ -39,7 +39,36 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
-$objHeader = $this->getObject('htmlheading','htmlelements');
-$objHeader->str = $this->objLanguage->languageText('mod_ahis_notadmin','ahis');
-echo $objHeader->show();
-?>
+
+/**
+ * ahis geolevel3 Class
+ * 
+ * Class to connect to geography_level3 table
+ * 
+ * @category  Chisimba
+ * @package   ahis
+ * @author    Nic Appleby <nappleby@uwc.ac.za>
+ * @copyright 2008 AVOIR
+ * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+ * @version   $Id$
+ * @link      http://avoir.uwc.ac.za
+ */
+class geolevel3 extends dbtable {
+	
+    /**
+     * Standard Chisimba init method
+     * 
+     * @return void  
+     * @access public
+     */
+	public function init() {
+		try {
+			parent::init('tbl_ahis_geography_level3');
+		}
+		catch (customException $e)
+		{
+			customException::cleanUp();
+			exit;
+		}
+	}
+}

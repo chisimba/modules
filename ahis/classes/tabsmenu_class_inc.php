@@ -120,6 +120,10 @@ class tabsmenu extends object
                 $this->default = 'entry';
                 break;
             case 'admin':
+            case 'geography_level3_admin':
+            case 'geography_level2_admin':
+            case 'geography_level3_add':
+            case 'geography_level2_add':
                 $this->default = 'admin';
                 break;
             case 'view_reports':
