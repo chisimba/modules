@@ -415,11 +415,13 @@ class sisforms extends object {
      */
     public function parentMenu($featurebox = FALSE) {
         // Add some links to the other bits and doodads
+        $home = new href ( $this->uri ( array ('action' => 'default' ) ), $this->objLanguage->languageText ( "word_home", "system" ) );
         $profile = new href ( $this->uri ( array ('action' => 'showprofile' ) ), $this->objLanguage->languageText ( "mod_sis_editprofile", "sis" ) );
         $student = new href ( $this->uri ( array ('action' => 'viewstudent' ) ), $this->objLanguage->languageText ( "mod_sis_viewstudent", "sis" ) );
 
         // Add the links to the linklist
-        $linklist = $profile->show() . "<br />";
+        $linklist = $home->show() . "<br />";
+        $linklist .= $profile->show() . "<br />";
         $linklist .= $student->show() . "<br />";
 
         // return the link list for display
