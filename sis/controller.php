@@ -158,8 +158,14 @@ class sis extends controller {
                 break;
 
             default :
-                $person = $this->objFMPro->getAuthenticatedPerson($this->objUser->userName());
-                $children = $this->objFMPro->getChildrenOf($person);
+                if($this->objUser->userName() == 'admin') {
+                    $children = NULL;
+                    $person = NULL;
+                }
+                else {
+                    $person = $this->objFMPro->getAuthenticatedPerson($this->objUser->userName());
+                    $children = $this->objFMPro->getChildrenOf($person);
+                }
 
                 $message = $this->getParam('message');
                 if($message == '') {
