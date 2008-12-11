@@ -156,6 +156,7 @@ class sis extends controller {
                     $this->nextAction(NULL);
                 }
                 else {
+                    var_dump($res); die();
                     throw new customException("Database error!");
                     die();
                 }
