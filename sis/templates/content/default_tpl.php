@@ -18,16 +18,24 @@ $middleColumn .=  $tomsg->show()."<br />";
 
 $middleColumn .= $objSF->countKids($children);
 $details = $objSF->listKids($children);
-foreach ($details as $kids) {
-    $name = $kids[0];
-    // make into a link
-    $nlink = new href ( $this->uri ( array ('action' => 'viewstudent', 'recid' => $kids[1]) ), $name );
-    $middleColumn .= $nlink->show()."<br />";
+if (isset($details) && !empty($details)) {
+    foreach ($details as $kids) {
+        $name = $kids[0];
+        // make into a link
+        $nlink = new href ( $this->uri ( array ('action' => 'viewstudent', 'recid' => $kids[1]) ), $name );
+        $middleColumn .= $nlink->show()."<br />";
+    }
+}
+else {
+    $objNKHead = $this->newObject('htmlheading', 'htmlelements');
+    $objNKHead->str = "No students found!";
+    $objNKHead->type = 3;
+    $middleColumn .= $objNKHead->show();
 }
 
 
 $objheader->str = $this->objLanguage->languageText("mod_sis_filesheader", "sis");
-$objheader->type = 1;
+$objheader->type = 2;
 $middleColumn .= $objheader->show();
 $middleColumn .= $objSF->listFiles();
 
