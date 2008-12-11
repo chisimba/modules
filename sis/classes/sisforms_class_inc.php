@@ -496,9 +496,17 @@ class sisforms extends object {
 
         // Gender radio set
         $gender = new radio('gender');
-        $gender->addOption('m','Male');
-        $gender->addOption('f','Female');
-        $gender->setSelected('f');
+        $gender->addOption('Male','Male');
+        $gender->addOption('Female','Female');
+        if(isset($details['gender'])) {
+             if($details['gender'] == 'Female') {
+                $gender->setSelected('Female');
+             }
+             else {
+                 $gender->setSelected('Male');
+             }
+        }
+
 
         $genderlabel = new label ( $this->objLanguage->languageText ( "mod_sis_gender", "sis" ) . ':', 'comm_input_gender' );
         // DOB field... I am presuming a text field from fmp here...
