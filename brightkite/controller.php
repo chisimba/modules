@@ -74,14 +74,14 @@ class brightkite extends controller
     private function actionCheckins()
     {
         $user = $this->getParam('user');
-        $checkins = $this->objBrightkiteOps->getCheckins($user);
+        $checkins = $this->objBrightkiteOps->getCheckinPlaces($user);
         print_r($checkins);
     }
 
     private function actionNotes()
     {
         $user = $this->getParam('user');
-        $notes = $this->objBrightkiteOps->getNotes($user);
+        $notes = $this->objBrightkiteOps->getNoteBodies($user);
         print_r($notes);
     }
 

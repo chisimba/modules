@@ -23,32 +23,53 @@ $GLOBALS['kewl_entry_point_run']) {
  */
 class brightkiteops extends object
 {
+    protected $objJson;
+
     /**
      * Standard constructor to load the necessary resources
      * and populate the new object's instance variables
      */
     public function init()
     {
+       $this->objJson = $this->getObject('json', 'utilities');
     }
 
     public function getCheckins($user)
     {
-        $checkins = array();
-        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=checkins", null, TRUE);
-        foreach ($xml->checkin as $checkin) {
-            $checkins[] = $checkin->place;
-        }
+        $json = file_get_contents("http://brightkite.com/people/$user/objects.json?filters=checkins");
+        $checkins = $this->objJson->decode($json);
+
         return $checkins;
+    }
+
+    public function getCheckinPlaces($user)
+    {
+        $checkins = $this->getCheckins($user);
+        $places = array();
+        foreach ($checkins as $checkin) {
+            $places[] = $checkin['place'];
+        }
+
+        return $places;
     }
 
     public function getNotes($user)
     {
-        $notes = array();
-        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=notes", null, TRUE);
-        foreach ($xml->note as $note) {
-            $notes[] = $note->body;
-        }
+        $json = file_get_contents("http://brightkite.com/people/$user/objects.json?filters=notes");
+        $notes = $this->objJson->decode($json);
+
         return $notes;
+    }
+
+    public function getNoteBodies($user)
+    {
+        $notes = $this->getNotes($user);
+        $bodies = array();
+        foreach ($notes as $note) {
+            $bodies[] = $note['body'];
+        }
+
+        return $bodies;
     }
 }
 
