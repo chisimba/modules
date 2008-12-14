@@ -21,7 +21,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @access    public
  * @version   $Id$
  */
-class locationops extends object
+class brightkiteops extends object
 {
     /**
      * Standard constructor to load the necessary resources
@@ -29,6 +29,16 @@ class locationops extends object
      */
     public function init()
     {
+    }
+
+    public function getNotes($user)
+    {
+        $notes = array();
+        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=notes", null, true);
+        foreach ($xml->note as $note) {
+            $notes[] = (string) $note->body;
+        }
+        return $notes;
     }
 }
 

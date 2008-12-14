@@ -32,6 +32,8 @@
 
 class brightkite extends controller
 {
+    protected $objBrightkiteOps;
+
     /**
      * Standard constructor to load the necessary resources
      * and populate the new object's instance variables.
@@ -40,6 +42,7 @@ class brightkite extends controller
      */
     public function init()
     {
+        $this->objBrightkiteOps = $this->getObject('brightkiteops', 'brightkite');
     }
 
     /**
@@ -66,6 +69,9 @@ class brightkite extends controller
      */
     private function actionDefault()
     {
+        $user = $this->getParam('user');
+        $notes = $this->objBrightkiteOps->getNotes($user);
+        print_r($notes);
     }
 
     /**
