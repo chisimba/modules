@@ -1285,7 +1285,11 @@ class blog extends controller
                     //dump in the tags
                     if (!empty($tagarray) && $tagarray[0] != "") {
                         $posid = $this->objDbBlog->getLatestPost($userid);
-                        $posid = $posid['id'];
+                        if (isset($posid['drafts'][0]['post_ts']) && (!isset($posid['post_ts']) || $posid['post_ts'] < $posid['drafts'][0]['post_ts'])) {
+                            $posid = $posid['drafts'][0]['id'];
+                        } else {
+                            $posid = $posid['id'];
+                        }
                         $this->objDbBlog->insertTags($tagarray, $userid, $posid);
                     }
                     if ($status == 1) {
