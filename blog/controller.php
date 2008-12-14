@@ -363,21 +363,21 @@ class blog extends controller
                 // the blog aggregator case:
                 if (!empty($blog_action) && $blog_action == 'aggregate') {
                     
-                	// get the latest posts and display em...
-                	$this->objLanguage = $this->getObject('language', 'language');
-        			$this->blogPosts = $this->getObject('blogposts', 'blog');
-        			$posts = $this->blogPosts->showLastTenPosts();
-        			// var_dump($posts);
-        			$this->setVarByRef('posts', $posts);
-        			
-        			// dummy vals so tpl doesn't complain
-        			$this->setVarByRef('stickypost', NULL);
+                    // get the latest posts and display em...
+                    $this->objLanguage = $this->getObject('language', 'language');
+                    $this->blogPosts = $this->getObject('blogposts', 'blog');
+                    $posts = $this->blogPosts->showLastTenPosts();
+                    // var_dump($posts);
+                    $this->setVarByRef('posts', $posts);
+                    
+                    // dummy vals so tpl doesn't complain
+                    $this->setVarByRef('stickypost', NULL);
                     //send all that to the template
                     $this->setVarByRef('rss', NULL);
                     $this->setVarByRef('latestpost', NULL);
                     $this->setVarByRef('linkcats', NULL);
                     $this->setVarByRef('cats', NULL);
-                	return 'randblog_tpl.php';
+                    return 'randblog_tpl.php';
                     break;
                 }
                
@@ -996,7 +996,7 @@ class blog extends controller
                 //send all that to the template
                 if(!isset($catid))
                 {
-                	$catid = NULL;
+                    $catid = NULL;
                 }
                 $this->setVarByRef('catid', $catid);
                 $this->setVarByRef('posts', $posts);
@@ -1034,8 +1034,8 @@ class blog extends controller
                         break;
 
                     case 'editpost':
-                    	//$this->setPageTemplate(NULL);
-                    	//$this->setLayoutTemplate(NULL);
+                        //$this->setPageTemplate(NULL);
+                        //$this->setLayoutTemplate(NULL);
                         return 'editpost_tpl.php';
                         break;
 
@@ -1049,7 +1049,7 @@ class blog extends controller
                 break;
             
             case 'adminpg':
-            	$this->objblogPosts->managePosts($this->objUser->userId());
+                $this->objblogPosts->managePosts($this->objUser->userId());
 
             case 'showarchives':
                 ini_set('max_execution_time', -1);
@@ -1185,14 +1185,14 @@ class blog extends controller
                 $geotags = $this->getParam('geotag');
                 if(isset($geotags[0]) && isset($geotags[1]))
                 {
-                	$geotags = explode(', ', $geotags);
-                	$lat = $geotags[0];
-                	$lon = $geotags[1];
+                    $geotags = explode(', ', $geotags);
+                    $lat = $geotags[0];
+                    $lon = $geotags[1];
                 }
                 else {
-                	$geotags = NULL;
-                	$lat = NULL;
-                	$lon = NULL;
+                    $geotags = NULL;
+                    $lat = NULL;
+                    $lon = NULL;
                 }
                 if ($stickypost == "on") {
                     $stickypost = 1;
@@ -1855,10 +1855,10 @@ class blog extends controller
                     //print_r($matches);
                     $mcount = 0;
                     foreach($matches as $match) {
-                    	if(isset($match[$mcount]))
-                    	{
-                        	$postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='" . $match[$mcount] . "'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
-                    	}
+                        if(isset($match[$mcount]))
+                        {
+                            $postcontent[0]['post_content'] = preg_replace('/\[img\](.*)\[\/img\]/U', "<img src='" . $match[$mcount] . "'/>", $postcontent[0]['post_content']); //$postcontent[0]['post_content'], $results, PREG_PATTERN_ORDER);
+                        }
                         $mcount++;
                     }
                     //thump together an email string (this must be html email as the post is html
@@ -2109,10 +2109,10 @@ class blog extends controller
                 break;
                 
             case 'viewgeoblog':
-            	$userid = $this->getParam('userid');
-            	$this->setVarByRef('userid', $userid);
+                $userid = $this->getParam('userid');
+                $this->setVarByRef('userid', $userid);
                 return 'geotagged_tpl.php';
-            	break;
+                break;
 
             case 'blogsearch':
                 $userid = $this->objUser->userId();
