@@ -57,6 +57,14 @@ $GLOBALS['kewl_entry_point_run']) {
 class blogposts extends object
 {
     /**
+     * Object of the Creative Commons Display License class.
+     *
+     * @access protected
+     * @var object $objCC
+     */
+    protected $objCC;
+
+    /**
      * Description for public
      *
      * @var    mixed
@@ -72,6 +80,7 @@ class blogposts extends object
     public function init()
     {
         try {
+            $this->objCC = $this->getObject('displaylicense', 'creativecommons');
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objDbBlog = $this->getObject('dbblog');
             $this->loadClass('href', 'htmlelements');
@@ -304,7 +313,6 @@ class blogposts extends object
                 // do the cc licence part
                 $cclic = $post['post_lic'];
                 // get the lic that matches from the db
-                $this->objCC = $this->getObject('displaylicense', 'creativecommons');
                 if ($cclic == '') {
                     $cclic = 'copyright';
                 }
