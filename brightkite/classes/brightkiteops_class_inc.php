@@ -31,12 +31,22 @@ class brightkiteops extends object
     {
     }
 
+    public function getCheckins($user)
+    {
+        $checkins = array();
+        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=checkins", null, TRUE);
+        foreach ($xml->checkin as $checkin) {
+            $checkins[] = $checkin->place;
+        }
+        return $checkins;
+    }
+
     public function getNotes($user)
     {
         $notes = array();
-        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=notes", null, true);
+        $xml = new SimpleXMLElement("http://brightkite.com/people/$user/objects.xml?filters=notes", null, TRUE);
         foreach ($xml->note as $note) {
-            $notes[] = (string) $note->body;
+            $notes[] = $note->body;
         }
         return $notes;
     }
