@@ -1288,7 +1288,11 @@ class blog extends controller
                         $posid = $posid['id'];
                         $this->objDbBlog->insertTags($tagarray, $userid, $posid);
                     }
-                    $this->nextAction('viewblog');
+                    if ($status == 1) {
+                        $this->nextAction('blogadmin', array('mode'=>'editpost'));
+                    } else {
+                        $this->nextAction('viewblog');
+                    }
                     break;
                 }
                 break;
