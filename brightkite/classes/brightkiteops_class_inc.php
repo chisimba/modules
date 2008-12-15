@@ -27,7 +27,7 @@ class brightkiteops extends object
 
     /**
      * Standard constructor to load the necessary resources
-     * and populate the new object's instance variables
+     * and populate the new object's instance variables.
      */
     public function init()
     {
@@ -70,6 +70,19 @@ class brightkiteops extends object
         }
 
         return $bodies;
+    }
+
+    public function postNote($user, $password, $note)
+    {
+        $checkins = $this->getCheckins($user);
+        $lastCheckinPlaceId = $checkins[0]['place']['id'];
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_USERPWD, "$user:$password");
+        curl_setopt($curl, CURLOPT_URL, "http://brightkite.com/places/$lastCheckinPlaceId/notes.xml");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'note[body]=' . urlencode($note));
+        curl_exec($curl);
+        curl_close($curl);
     }
 }
 

@@ -85,6 +85,14 @@ class brightkite extends controller
         print_r($notes);
     }
 
+    private function actionPostnote()
+    {
+        $user = $this->getParam('user');
+        $password = $this->getParam('password');
+        $note = $this->getParam('note');
+        $this->objBrightkiteOps->postNote($user, $password, $note);
+    }
+
     /**
      * Overide the login method in the parent class.
      *
