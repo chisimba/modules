@@ -71,7 +71,7 @@ class block_chatbot extends object
     {
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objUser = $this->getObject('user', 'security');
-        $userid = $this->objUser->userid();
+        $this->userid = $this->objUser->userid();
         $this->chatbot = $this->getObject('chatterbot', 'ai');
         $this->title = $this->objLanguage->languageText("mod_ai_chat", "ai");
     }
@@ -83,6 +83,7 @@ class block_chatbot extends object
     public function show()
     {
         // bang up a form and a textarea to see the responses
+        return $this->chatbot->chat("hello there!", $this->userid);
 
     }
 }
