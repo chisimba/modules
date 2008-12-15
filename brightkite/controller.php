@@ -93,6 +93,15 @@ class brightkite extends controller
         $this->objBrightkiteOps->postNote($user, $password, $note);
     }
 
+    private function actionPostcheckin()
+    {
+        $user = $this->getParam('user');
+        $password = $this->getParam('password');
+        $placeQuery = $this->getParam('place');
+        $place = $this->objBrightkiteOps->searchPlaces($placeQuery);
+        $this->objBrightkiteOps->postCheckin($user, $password, $place['id']);
+    }
+
     /**
      * Overide the login method in the parent class.
      *

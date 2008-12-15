@@ -53,6 +53,14 @@ class brightkiteops extends object
         return $places;
     }
 
+    public function searchPlaces($query)
+    {
+        $json = file_get_contents('http://brightkite.com/places/search.json?q=' . urlencode($query));
+        $place = $this->objJson->decode($json);
+
+        return $place;
+    }
+
     public function getNotes($user)
     {
         $json = file_get_contents("http://brightkite.com/people/$user/objects.json?filters=notes");
@@ -72,14 +80,25 @@ class brightkiteops extends object
         return $bodies;
     }
 
+    public function postCheckin($user, $password, $place)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_URL, "http://brightkite.com/places/$place/checkins.xml");
+        curl_setopt($curl, CURLOPT_USERPWD, "$user:$password");
+        curl_setopt($curl, CURLOPT_POST, TRUE);
+        curl_exec($curl);
+        curl_close($curl);
+    }
+
     public function postNote($user, $password, $note)
     {
         $checkins = $this->getCheckins($user);
         $lastCheckinPlaceId = $checkins[0]['place']['id'];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_USERPWD, "$user:$password");
         curl_setopt($curl, CURLOPT_URL, "http://brightkite.com/places/$lastCheckinPlaceId/notes.xml");
+        curl_setopt($curl, CURLOPT_USERPWD, "$user:$password");
         curl_setopt($curl, CURLOPT_POSTFIELDS, 'note[body]=' . urlencode($note));
         curl_exec($curl);
         curl_close($curl);
