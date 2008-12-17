@@ -43,6 +43,10 @@ $fields = array(
         'type' => 'text',
         'length' => 32,
         ),
+     'answered' => array(
+        'type' => 'text',
+        'length' => 120,
+        ),
     'updated' => array(
         'type' => 'timestamp',
         ),

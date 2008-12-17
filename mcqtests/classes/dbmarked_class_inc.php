@@ -128,6 +128,22 @@ class dbmarked extends dbtable
         return FALSE;
     }
 
+   public function getfreeformAnswers($studentId, $testId)
+   {
+   
+        $sql = "SELECT marked.answered,quest.mark FROM";
+        $sql.= " tbl_test_marked AS marked, tbl_test_answers AS ans, tbl_test_questions AS quest";
+        $sql.= " WHERE ans.answer = marked.answered";
+        $sql.= " AND marked.questionid = quest.id";
+        $sql.= " AND marked.studentid = '$studentId'";
+        $sql.= " AND marked.testid = '$testId'";
+        
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data;
+        }
+        return FALSE;
+   }
     /**
      * Method to delete a set of answers for a student on a specified test.
      *
