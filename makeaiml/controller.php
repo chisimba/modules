@@ -85,7 +85,10 @@ class makeaiml extends controller
     {
         switch ($action) {
             default:
+                $userid = $this->objUser->userId();
+                $path = $this->getResourcePath('aiml')."/".$userid."/";
 
+                echo $path;
                 break;
 
         }
