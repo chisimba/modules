@@ -278,21 +278,46 @@ if (!empty($data)) {
         $objInput->fldType = 'hidden';
         $hidden = $objInput->show();
 
-        $objRadio = new radio('ans'.$questionCounter);
-        //$objRadio = new radio('ans'.$line['id']);
-        $objRadio->setBreakSpace('<br />');
+        
         // Display answers
-        if (!empty($line['answers'])) {
-            foreach($line['answers'] as $key => $val) {
-                $ansNum = '<b>&nbsp;'.$alpha[($key+1) ].')</b>&nbsp;&nbsp;';
-                $objRadio->addOption($val['id'], $ansNum.$val['answer']);
-                if (isset($val['selected']) && !empty($val['selected'])) {
-                    $objRadio->setSelected($val['id']);
-                    $objInput->textinput('selected'.$line['questionorder'], $val['selected']);
-                    $objInput->fldType = 'hidden';
-                    $hidden.= $objInput->show();
-                }
-            }
+         if (!empty($line['answers'])) {
+             if ($line['questiontype'] == 'freeform' ){
+                 $simple = array();
+                 foreach($line['answers'] as $key => $cloze ){
+                  
+                 $simple[] = $cloze['answer'];
+                 }
+                 $stringOut = implode(';',$simple);
+                 $objInput->textinput('freeform'.$line['questionorder'], $stringOut );
+                 $objInput->fldType = 'hidden';
+                 $hidden.= $objInput->show();
+                 $objRadio = new textinput('ans'.$line['questionorder'], '');
+                 
+                 $objInput = new textinput('qtype'.$line['questionorder'], 'freeform');
+                 $objInput->fldType = 'hidden';
+                 $hidden.= $objInput->show();
+
+                 }else{
+                 
+                  $objRadio = new radio('ans'.$questionCounter);
+                   //$objRadio = new radio('ans'.$line['id']);
+                   $objRadio->setBreakSpace('<br />');
+       
+                 foreach($line['answers'] as $key => $val) {
+                       $ansNum = '<b>&nbsp;'.$alpha[($key+1) ].')</b>&nbsp;&nbsp;';
+                       $objRadio->addOption($val['id'], $ansNum.$val['answer']);
+                       if (isset($val['selected']) && !empty($val['selected'])) {
+                       $objRadio->setSelected($val['id']);
+                       $objInput->textinput('selected'.$line['questionorder'], $val['selected']);
+                       $objInput->fldType = 'hidden';
+                       $hidden.= $objInput->show();
+                       $objInput = new textinput('qtype'.$line['questionorder'], '');
+                     $objInput->fldType = 'hidden';
+                     $hidden.= $objInput->show();
+
+                        }
+                      }
+                 }
         }
         $row = array();
         $row[] = $hidden;
@@ -322,6 +347,8 @@ $hidden.= $objInput->show();
 $objInput = new textinput('mode', $mode);
 $objInput->fldType = 'hidden';
 $hidden.= $objInput->show();
+
+
 
 $objInput = new textinput('resultId', $resultId);
 $objInput->fldType = 'hidden';

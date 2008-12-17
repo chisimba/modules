@@ -15,6 +15,7 @@ $objTable = &$this->loadClass('htmltable', 'htmlelements');
 $objLayer = &$this->loadClass('layer', 'htmlelements');
 $objLink = &$this->loadClass('link', 'htmlelements');
 $objIcon = &$this->newObject('geticon', 'htmlelements');
+$objInput = &$this->loadClass('textinput', 'htmlelements');
 
 // Parse the MathML
 $objMathML = &$this->newObject('parse4mathml', 'filters');
@@ -60,7 +61,7 @@ $percent = round($result['mark']/$result['totalmark']*100, 2);
 $str = '<font size="3"><b>'.$testLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['name'].'<br />';
 $str.= '<b>'.$totalLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['totalmark'].'<br />';
 $str.= '<b>'.$markLabel.':</b>&nbsp;&nbsp;&nbsp;'.$result['mark'].'&nbsp;&nbsp;('.$percent.'%)<p /></font>';
-
+$i=0;
 $objTable = new htmltable();
 $objTable->cellpadding = 5;
 $objTable->width = '99%';
@@ -73,23 +74,36 @@ if (!empty($data)) {
     $tickIcon = $objIcon->show();
     $objIcon->setIcon('redcross');
     $crossIcon = $objIcon->show();
+    
     foreach($data as $line) {
         $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['answerorder']].')';
+        if ($line['questiontype'] == 'freeform'){
+         $content = '<b>'.$correctAnsLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studfreecorrect'].'<br />';
+        }else{
         $content = '<b>'.$correctAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['answer'].'<br />';
+        }
         if (!$line['studcorrect']) {
             if (!empty($line['studorder']) && !empty($line['studans'])) {
                 $ansNum = '&nbsp;&nbsp;&nbsp;'.$alpha[$line['studorder']].')';
                 $content.= '<b>'.$yourAnsLabel.':'.$ansNum.'</b>&nbsp;&nbsp;&nbsp;'.$line['studans'].'<br />';
-            } else {
+           
+           }else{
+            
                 $content.= $noAnsLabel;
+
             }
-            $icon = $crossIcon;
+                $icon = $crossIcon;
         } else {
             $icon = $tickIcon;
         }
+        if($line['questiontype'] == 'freeform'){
+                $content.= '<b>'.$yourAnsLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studfreeans'].'<br />';
+                $icon = $tickIcon;
+     }
         if (!empty($line['studcomment'])) {
             $content.= '<b>'.$commentLabel.':</b>&nbsp;&nbsp;&nbsp;'.$line['studcomment'].'<br />';
         }
+        
         $objLayer = new layer();
         $objLayer->str = $icon;
         $objLayer->align = 'right';
@@ -100,12 +114,15 @@ if (!empty($data)) {
         $parsed = $objMathML->parseAll($parsed);
 
         $objLayer = new layer();
+       
         $objLayer->left = '; margin-right: 20px; float:left';
         $objLayer->cssClass = 'forumTopic';
+       
         $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>&nbsp;&nbsp;&nbsp;'.$parsed;
+        
         $question = $objLayer->show() .$iconLayer;
 
-        $objLayer = new layer();
+        $objLayer = new layer(); 
         $objLayer->cssClass = 'forumContent';
         $objLayer->str = $content;
         $answers = $objLayer->show();
@@ -113,7 +130,7 @@ if (!empty($data)) {
         $objLayer = new layer();
         $objLayer->cssClass = 'topicContainer';
         $objLayer->str = $question.$answers;
-        $str.= $objLayer->show();
+        $str.= $objLayer->show(); 
 
         $objLayer = new layer();
         $objLayer->cssClass = 'forumBase';
@@ -147,4 +164,6 @@ $objLayer->cssClass = '';
 $objLayer->align = 'center';
 $str.= $objLayer->show();
 echo $str;
+//for($q=0;$q<$i;$q++)
+//}
 ?>

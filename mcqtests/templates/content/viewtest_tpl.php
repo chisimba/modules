@@ -193,10 +193,10 @@
 		$count = 0;
 	}
 
-// add a new question
+// choose questiontype 
 	$objIcon->title = $addLabel;
 	$addQUrl = $this->uri(array(
-		'action' => 'addquestion',
+		'action' => 'choosequestiontype',
 		'id' => $data['id'],
 		'count' => $count
 	));
