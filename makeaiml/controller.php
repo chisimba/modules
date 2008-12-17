@@ -87,7 +87,9 @@ class makeaiml extends controller
             default:
                 $userid = $this->objUser->userId();
                 $path = $this->getResourcePath('aiml')."/".$userid."/";
-
+                if(!file_exists($path)) {
+                    mkdir($path, 0777);
+                }
                 echo $path;
                 break;
 
