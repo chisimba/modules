@@ -276,12 +276,13 @@ class remoteimportexportutils extends dbTable
 	*/
 	public function createCourseInChisimba($newCourse)
 	{
-		$createContext = $this->objDBContext->createContext($newCourse);
+            //print "<pre>\n"; print_r($newCourse); print "</pre>\n";
+		$createContext = $this->objDBContext->createContext($newCourse['contextcode'],$newCourse['title']);
 		if(!isset($createContext) || $createContext === FALSE)
 		{
 			return "courseWriteError";
 		}
-		$saveAboutEdit = $this->objDBContext->saveAboutEdit($newCourse);
+		$saveAboutEdit = $this->objDBContext->updateAbout($newCourse['contextcode'],$newCourse['about']);
 		if(!isset($saveAboutEdit) || $saveAboutEdit === FALSE)
 		{
 			return "courseWriteError";
@@ -520,6 +521,9 @@ class remoteimportexportutils extends dbTable
 	*/
 	function writeFiles($htmlPages, $resourceFolder, $courseTitle = '', $fileType = '', $packageType = '')
 	{
+            if (!is_dir($resourceFolder)){
+               mkdir($resourceFolder, 0700);
+            }
 		if(!(preg_match('/\./',$fileType)))
 			$fileType = '.'.$fileType;
 		$courseTitle = str_replace(' ','',$courseTitle);
@@ -1135,8 +1139,14 @@ class remoteimportexportutils extends dbTable
 		$inpButton->setToSubmit();
 		$objElement = new dropdown('dropdownchoice');
 		// Dropdown .
-		foreach($dbData as $dataOld)
-			$objElement->addOption($dataOld['contextcode']);
+                $d2=array();
+                foreach ($dbData as $line){
+                    $d2[$line['contextcode']]=$line['title'];
+                }
+                asort($d2);
+		foreach($d2 as $code=>$title){
+			$objElement->addOption($code,$title);
+                }
 		$objForm->addToForm($objH);
 		$objForm->addToForm($label->show());
 		$objForm->addToForm($objElement->show());

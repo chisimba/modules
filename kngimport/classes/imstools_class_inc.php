@@ -40,7 +40,7 @@ class imstools extends object
 	{
         	$this->objUser = $this->getObject('user', 'security');
 		//Load Import Export Utilities class
-		$this->objIEUtils =  $this->newObject('importexportutils','contextadmin');
+		$this->objIEUtils =  $this->newObject('importexportutils','kngimport');
 	}
 
 	function getMetadata($dom, $metadata)
