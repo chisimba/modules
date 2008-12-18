@@ -39,6 +39,7 @@ class dbim extends dbTable
     {
         parent::init('tbl_im');
         $this->objPresence = $this->getObject('dbimpresence');
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     /**
@@ -113,7 +114,7 @@ class dbim extends dbTable
      */
     public function getPersonMessages($person)
     {
-        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 10");
+        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 20");
 	
 	return $ret;
 
@@ -134,6 +135,7 @@ class dbim extends dbTable
                         'msgfrom' => $rec['msgfrom'],
                         'parentid' =>  $msgId,
                         'msgbody' => $replytext,
+                        'msgtype' => $this->objUser->fullname(),
                         'msg_returned' => 'TRUE',
                         'datesent' => $this->now());
         //update presence table

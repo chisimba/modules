@@ -38,6 +38,8 @@ class dbimpresence extends dbTable
     public function init()
     {
         parent::init('tbl_im_presence');
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
     }
 
 
@@ -119,16 +121,16 @@ class dbimpresence extends dbTable
     public function getAllActiveUsers($userId = NULL)
     {
         //$sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' and status != 'unavailable' ORDER BY datesent ASC";
-        $interval = "10";
-		$user = (empty($userId)) ? "" : " counsilor='$userId' and ";
-		$sql="SELECT distinct(person) as person from tbl_im_presence WHERE 
-				$user
-				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
+        $interval = $this->timeLimit;
+        $user = (empty($userId)) ? "" : " counsilor='$userId' and ";
+        $sql="SELECT distinct(person) as person from tbl_im_presence WHERE 
+                        $user
+                        datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
 
 
-		$ret = $this->query($sql);
-		
-		return $ret;
+        $ret = $this->query($sql);
+        
+        return $ret;
     }
 
 
@@ -140,15 +142,15 @@ class dbimpresence extends dbTable
     public function countActiveUsers($userId = NULL)
     {
         
-        $interval = "10";
-		$user = (empty($userId)) ? "" : " counsilor='$userId' and ";
-		$sql="SELECT count(person) as counter from tbl_im_presence WHERE 
-				$user
-				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
+        $interval = $this->timeLimit;
+        $user = (empty($userId)) ? "" : " counsilor='$userId' and ";
+        $sql="SELECT count(person) as counter from tbl_im_presence WHERE 
+                        $user
+                        datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
 
-		$ret = $this->query($sql);
-		
-		return $ret[0]['counter'];
+        $ret = $this->query($sql);
+        
+        return $ret[0]['counter'];
     }
 
     /**
@@ -205,12 +207,24 @@ class dbimpresence extends dbTable
     */
     public function resetCounsillors()
     {
+        $objSysConfig = $this->getObject('altconfig', 'config');
+        $dbname = $objSysConfig->parseDSN($objSysConfig->getDsn());
+        $dbname = $dbname['mailbox'];   
+         //do the archiving first
+        $sql = "INSERT INTO `".$dbname."`.`tbl_das_messagearchive`
+                    SELECT *
+                    FROM `".$dbname."`.`tbl_im`";
+        $this->query($sql);
+        
+        //reset the presence table
         $sql = "TRUNCATE TABLE tbl_im_presence";
         $this->query($sql);
-
+        
+        //reset the counsellors
         $sql = "update tbl_im_users set patients=0";
         $this->query($sql);
 
+        //reset the messages
         $sql = "TRUNCATE TABLE tbl_im";
         $this->query($sql);
     }
