@@ -156,7 +156,7 @@ class das extends controller {
                 break;
             
 	    case 'viewarchive':
-		echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
+		echo "Under Construction";//$this->objViewRender->getArchivedMessages($this->getParam('personid'));
 		break;
             case 'reply' :
 				//reply via ajax
