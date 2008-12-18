@@ -266,6 +266,41 @@ class remoteimportexportutils extends dbTable
 		return $resultarray;
 	}
 
+        /**
+        * Fetch nextgen users
+        * @param string $courseName
+        * @returns array $userInfo;
+        */
+        public function remoteUsers($courseName)
+        {
+            $userInfo=array();
+             $query="SELECT id from tbl_groupadmin_group WHERE description='$courseName Lecturers'";
+             $data=$this->importDBData($this->dsn,'tbl_groupadmin_group',$query);
+             if (isset($data[0]['id'])){
+                 $id=$data[0]['id'];
+                 $query="SELECT user_id from tbl_groupadmin_groupuser WHERE group_id='$id'";
+                 $data=$this->importDBData($this->dsn,'tbl_groupadmin_groupuser',$query);
+                 foreach ($data as $line){
+                    $query="SELECT * from tbl_users where id='".$line['user_id']."'";
+                    $user=$this->importDBData($this->dsn,'tbl_users',$query);
+                    $info=$user[0];
+                    $userInfo[]=array(
+                       'firstName'=>$info['firstname'],
+                       'surname'=>$info['surname'],
+                       'username'=>$info['username'],
+                       'title'=>$info['title'],
+                       'emailAddress'=>$info['emailaddress'],
+                       'pass'=>$info['password'],
+                       'staffnumber'=>$info['userid'],
+                       'sex'=>$info['sex'],
+                       'country'=>$info['country'],
+                    );
+                 }
+                
+             }
+            return $userInfo;
+        }
+
 	/**
 	 * Use information to create the course
 	 *
@@ -287,7 +322,6 @@ class remoteimportexportutils extends dbTable
 		{
 			return "courseWriteError";
 		}
-
 		return $createContext;
 	}
 
@@ -329,7 +363,6 @@ class remoteimportexportutils extends dbTable
 				return  "courseReadError";
 			}
 			$this->switchDatabase();
-		
 			return $courseData['0'];
 		}
 
