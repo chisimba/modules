@@ -28,7 +28,7 @@
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbim extends dbTable
+class dbdas extends dbTable
 {
 
     /**
@@ -37,8 +37,8 @@ class dbim extends dbTable
      */
     public function init()
     {
-        parent::init('tbl_im');
-        $this->objPresence = $this->getObject('dbimpresence');
+        parent::init('tbl_das_messagearchive');
+        //$this->objPresence = $this->getObject('dbimpresence','im');
     }
 
     /**
@@ -156,7 +156,15 @@ class dbim extends dbTable
         }
     }
 
-
+    /**
+     *Method to get the archived messages
+     *@param string personId
+     *@return array
+     */
+    public function getArchivedMessages($personId)
+    {
+        return   $this->getAll("WHERE msgfrom='$personId' ORDER BY datesent DESC");        
+    }
 
 }
 ?>

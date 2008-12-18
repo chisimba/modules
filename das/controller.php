@@ -78,7 +78,7 @@ class das extends controller {
             $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
             $this->objIMUsers = $this->getObject ( 'dbimusers', 'im' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
-			$this->objConfig = $this->getObject ( 'altconfig', 'config' );
+	    $this->objConfig = $this->getObject ( 'altconfig', 'config' );
            
 
             // Get the sysconfig variables for the Jabber user to set up the connection.
@@ -89,7 +89,7 @@ class das extends controller {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
-			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
+	    $this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
            
         } catch ( customException $e ) {
@@ -155,7 +155,9 @@ class das extends controller {
                 return 'messageview_tpl.php';
                 break;
             
-
+	    case 'viewarchive':
+		echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
+		break;
             case 'reply' :
 				//reply via ajax
                 $msg = $this->getParam ( 'myparam' );
@@ -198,20 +200,17 @@ class das extends controller {
 
                 break;
 
-			case 'savesettings':
-				
-				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
-				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
-				$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
-				$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
-				$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
-				return  $this->nextAction('viewcounsilors');
-          		break;
+		case 'savesettings':
+			
+			$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+			$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+			$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
+			$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
+			$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
+			return  $this->nextAction('viewcounsilors');
+		break;
 
-            case 'getmsgs':
-                echo 'wesssssssssss';
-                break;
-
+            
             case 'togglereassign':
                 $this->objIMUsers->setManualAssignment($this->getParam('userid'));
                 return $this->nextAction('viewcounsilors');

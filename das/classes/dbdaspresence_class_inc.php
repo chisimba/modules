@@ -38,6 +38,8 @@ class dbimpresence extends dbTable
     public function init()
     {
         parent::init('tbl_im_presence');
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
     }
 
 
@@ -119,7 +121,7 @@ class dbimpresence extends dbTable
     public function getAllActiveUsers($userId)
     {
         //$sql = "select distinct(person)as person from tbl_im_presence where counsilor='$userId' and status != 'unavailable' ORDER BY datesent ASC";
-        $interval = "10";
+        $interval = $this->timeLimit;
 		$sql="SELECT distinct(person) as person from tbl_im_presence WHERE counsilor='$userId' and 
 				datesent > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $interval HOUR_MINUTE)";
 
@@ -183,12 +185,22 @@ class dbimpresence extends dbTable
     */
     public function resetCounsillors()
     {
+        var_dump($this->dsn);die;
+        //do the archiving first
+        $sql = "INSERT INTO `chisimba1`.`tbl_das_messagearchive`
+                    SELECT *
+                    FROM `chisimba1`.`tbl_im`";
+        $this->query($sql);
+        
+        //reset the presence table
         $sql = "TRUNCATE TABLE tbl_im_presence";
         $this->query($sql);
-
+        
+        //reset the counsellors
         $sql = "update tbl_im_users set patients=0";
         $this->query($sql);
 
+        //reset the messages
         $sql = "TRUNCATE TABLE tbl_im";
         $this->query($sql);
     }

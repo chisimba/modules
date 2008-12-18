@@ -73,16 +73,17 @@ class viewrender extends object {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
-		$this->objLink = $this->getObject ( 'link', 'htmlelements' );
+	$this->objLink = $this->getObject ( 'link', 'htmlelements' );
         $this->objDBIM = $this->getObject('dbim', 'im');
-		$this->objUser = $this->getObject('user', 'security');
- 		$this->objDbIm = $this->getObject ( 'dbim', 'im' );
+	$this->objUser = $this->getObject('user', 'security');
+ 	$this->objDbIm = $this->getObject ( 'dbim', 'im' );
         $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
         $this->objIcon->setIcon ( 'green_bullet' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
         $this->activeIcon = $this->objIcon->show ();
         $this->objIcon->setIcon ( 'grey_bullet' );
         $this->inactiveIcon = $this->objIcon->show ();
+	$this->objWashout = $this->getObject ( 'washout', 'utilities' );
     }
 
 	/**
@@ -91,12 +92,17 @@ class viewrender extends object {
 	* @return string
 	*/
     public function renderOutputForBrowser($msgs) {
-        $objWashout = $this->getObject ( 'washout', 'utilities' );
-		$objPres = $this->getObject ( 'dbimpresence', 'im' );
+        
+	$objAlertBox = $this->getObject('alertbox', 'htmlelements');
+	
+	
+	$objPres = $this->getObject ( 'dbimpresence', 'im' );
+	$this->objIcon->setIcon('archive','png');
+	$archiveIcon = $this->objIcon->show();
         $this->objIcon->setIcon('refresh','png');
-		$refreshIcon = $this->objIcon->show();
-		$this->objIcon->setIcon('reassign','png');
-		$reassignIcon = $this->objIcon->show();
+	$refreshIcon = $this->objIcon->show();
+	$this->objIcon->setIcon('reassign','png');
+	$reassignIcon = $this->objIcon->show();
         $ret = "<tr>";
 
         $max = 1;
@@ -118,10 +124,16 @@ class viewrender extends object {
                 $presence = $this->inactiveIcon;
             }
 		
-	    	$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
-	    	$this->objLink->link = $reassignIcon;
-			$resassignLink = $this->objLink->show();
-
+	    $this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
+	    $this->objLink->link = $archiveIcon;
+	    $archiveLink = $this->objLink->show();
+	    
+	    $archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
+	    
+	    $this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
+	    $this->objLink->link = $reassignIcon;
+	    $resassignLink = $this->objLink->show();
+	    
             $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
             $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
             $prevmessages = "";
@@ -129,14 +141,14 @@ class viewrender extends object {
                 //get the message
                 if($prevmess['parentid'] != "")
                 {
-                        $fromwho = "Counsellor";
+                        $fromwho = $prevmess['msgtype'];
                         $cssclass = "subdued";
                 }else{
                         $fromwho = "User";
                         $cssclass = "";
                 }
 				$timeArr = split(" ", $prevmess['datesent']);
-                $prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
+                $prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
                 //get the reply(s) if there was any
                 $replies = $this->objDBIM->getReplies($prevmess['id']);
 
@@ -152,7 +164,7 @@ class viewrender extends object {
 											savingText: 'Sending the message...',
 											callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
                         </script>
-						</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;</p>";
+						</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."</p>";
 			
             $box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . '</b></p><p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
 
@@ -171,6 +183,46 @@ class viewrender extends object {
         return "<table>" . $ret . "</table>";
     }
 
+    /**
+     *Method to get the archived messages for a user
+     *@param string $personId
+     *@return string
+     *@access public
+     */
+    public function getArchivedMessages($personId)
+    {
+	//get the users old messages
+	$objDBArchive = $this->newObject('dbdas', 'das');
+	$msgs = $objDBArchive->getArchivedMessages($personId);
+	if (count($msgs) > 0)
+	{
+	    $prevmessages = "";
+	    foreach ( $msgs as $prevmess )
+	    {
+                //get the message
+                if($prevmess['parentid'] != "")
+                {
+                        $fromwho = $prevmess['msgtype'];
+                        $cssclass = "subdued";
+                }else{
+                        $fromwho = "User";
+                        $cssclass = "";
+                }
+		$timeArr = split(" ", $prevmess['datesent']);
+                $prevmessages .= '<span class="subdued" style="small">['. $prevmess['datesent'].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
+                //get the reply(s) if there was any
+                //$replies = $this->objDBIM->getReplies($prevmess['id']);
+
+                //$lastmsgId = $prevmess ['id'];
+            }
+	    $str = $prevmessages;
+	}else{
+	    
+	    $str = '<span class="warning">No Messages found in the archives for this person</span>';
+	}
+	return $str;
+    }
+    
     /**
     * Nethod to show the quick links to conversations
     */
