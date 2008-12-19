@@ -117,25 +117,24 @@ class das extends controller {
                 return 'viewall_tpl.php';
                 break;
 
-	   		case 'viewreassign':
+	    case 'viewreassign':
                 $this->setLayoutTemplate('das_layout_tpl.php');
-				return 'view_reassign_tpl.php';
-				break;
+		return 'view_reassign_tpl.php';
+		break;
 
-			case 'reassign':
-				//print $this->getParam('counsellorbox');
-				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
-				return $this->nextAction('viewall');
+	    case 'reassign':
+		$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
+		return $this->nextAction('viewall');
             case 'resetcounsillors':
                 $this->objDbImPres->resetCounsillors();
                 $this->nextAction('viewcounsilors');
                 break;
             case 'startsession':
-				$this->objImOps->startSession();
+		$this->objImOps->startSession();
                 return $this->nextAction('viewcounsilors');
             case 'endsession':
-				$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
-               return $this->nextAction('viewcounsilors');
+		$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
+	        return $this->nextAction('viewcounsilors');
 
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
@@ -156,7 +155,7 @@ class das extends controller {
                 break;
             
 	    case 'viewarchive':
-		echo "Under Construction";//$this->objViewRender->getArchivedMessages($this->getParam('personid'));
+		echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
 		break;
             case 'reply' :
 				//reply via ajax

@@ -215,7 +215,9 @@ class viewrender extends object {
 
                 //$lastmsgId = $prevmess ['id'];
             }
-	    $str = $prevmessages;
+	    $str = '<div style="padding : 4px; height : 300px; overflow : auto; ">'.$prevmessages.'</div>';
+
+	    //$str = $prevmessages;
 	}else{
 	    
 	    $str = '<span class="warning">No Messages found in the archives for this person</span>';
