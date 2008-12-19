@@ -41,7 +41,7 @@ class rssreader extends object
 	 * @var object
 	 */
 	public $rss;
-	
+
 	/**
 	 * Language items
 	 *
@@ -51,7 +51,7 @@ class rssreader extends object
 
 	/**
 	 * Standard Chisimba init method
-	 * 
+	 *
 	 * @access public
 	 * @param void
 	 * @return string template
@@ -71,10 +71,13 @@ class rssreader extends object
 
 		// Check that the PEAR RSS file is available...
 		if (!@include_once ($this->getPearResource('XML/RSS.php'))) {
-            throw new customException($this->objLanguage->languageText("mod_feed_sanity_xmlrssnotfound", "blog"));
+            continue;
+        }
+        elseif(!@require_once $this->getPearResource("XML/RSS.php")) {
+            require_once("XML/RSS.php");
         }
         else {
-			require_once $this->getPearResource("XML/RSS.php");
+            throw new customException($this->objLanguage->languageText("mod_feed_sanity_xmlrssnotfound", "blog"));
         }
 
 	}
