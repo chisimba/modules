@@ -37,7 +37,7 @@ class dbdas extends dbTable
      */
     public function init()
     {
-        parent::init('tbl_das_messagearchive');
+        parent::init('tbl_das_messagesarchive');
         //$this->objPresence = $this->getObject('dbimpresence','im');
     }
 
