@@ -232,7 +232,7 @@ class importuserdata extends object
             $id=$this->objUserAdmin->addUser($line);
                                                                                                     
             if (isset($line['cryptpassword'])){
-                $this->objUserAdmin->update('id',$id,array('PASSWORD',$line['cryptpassword']));
+                $this->objUserAdmin->update('id',$id,array('pass',$line['cryptpassword']));
             } else {
                 $flag2=$this->objConfig->getValue('remotedata','sendmail');
                 if (($newPassWordFlag==1)&&(($flag2==1)||($flag2=='YES'))){
