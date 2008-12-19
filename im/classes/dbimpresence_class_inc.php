@@ -211,7 +211,7 @@ class dbimpresence extends dbTable
         $dbname = $objSysConfig->parseDSN($objSysConfig->getDsn());
         $dbname = $dbname['mailbox'];   
          //do the archiving first
-        $sql = "INSERT INTO `".$dbname."`.`tbl_das_messagearchive`
+        $sql = "INSERT INTO `".$dbname."`.`tbl_das_messagesarchive`
                     SELECT *
                     FROM `".$dbname."`.`tbl_im`";
         $this->query($sql);
