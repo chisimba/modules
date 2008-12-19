@@ -149,6 +149,9 @@ class importuserdata extends object
         $userId=$line['userId'];
         $username=$line['username'];
         $surname=$line['surname'];
+        if (isset($line['firstName']) && !(isset($line['firstname'])) ){
+            $line['firstname']=$line['firstName'];
+        }   
         $firstname=$line['firstname'];
         $email=$line['emailAddress'];
         
@@ -232,7 +235,7 @@ class importuserdata extends object
             $id=$this->objUserAdmin->addUser($line);
                                                                                                     
             if (isset($line['cryptpassword'])){
-                $this->objUserAdmin->update('id',$id,array('pass',$line['cryptpassword']));
+                $this->objUserAdmin->update('id',$id,array('pass'=>$line['cryptpassword']));
             } else {
                 $flag2=$this->objConfig->getValue('remotedata','sendmail');
                 if (($newPassWordFlag==1)&&(($flag2==1)||($flag2=='YES'))){
