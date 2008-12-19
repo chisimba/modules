@@ -293,6 +293,7 @@ class remoteimportexportutils extends dbTable
                        'pass'=>$info['password'],
                        'cryptpassword'=>$info['password'],
                        'staffnumber'=>$info['userid'],
+                       'userId'=>$info['userid'],
                        'sex'=>$info['sex'],
                        'country'=>$info['country'],
                     );

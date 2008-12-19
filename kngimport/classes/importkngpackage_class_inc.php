@@ -132,8 +132,43 @@ class importKNGPackage extends dbTable
 			$menutitles = $this->loadToChisimba($courseContent, $courseData, $this->contextCode);
 		$enterContext = $this->objDBContext->joinContext($this->contextCode);
 
+                // Import Lecturers
+                $staffList=$this->objIEUtils->remoteUsers($contextcode);
+                if (count($staffList)>0){
+                    $this->importKngUsers($staffList,$courseData['contextcode']);
+                }
+
 		return TRUE;
 	}
+
+
+        /**
+        * Importing Users from Kng and adding them to the group
+        * @param array $staffList
+        * @param string $localCode
+        */
+        public function importKngUsers($staffList,$localCode)
+        {
+            $this->userImport=$this->getObject('importuserdata','userimport');
+            $this->userGroup=$this->getObject('groupusersdb','groupadmin');
+            foreach ($staffList as $line){
+                $testId=$this->userImport->checkForUser($line['username'],$line['firstName'],$line['surname'],$line['emailAddress']);
+                if ($testId){
+                    $id=$this->userImport->objUser->PKId($testId);                    
+                } else {
+                    $result=$this->userImport->importUser($line);
+                    $res1=explode($result,'|');
+                    if (isset($res1[0])) {
+                        $id=$res1[0];
+                    } else {
+                        $id=FALSE;
+                    }
+                }
+                if ($id){
+                    $this->userGroup->addGroupUser( $localCode, $id);
+                }
+            }
+        }
 
 	/**
 	 * Sets the global variables and directory paths
