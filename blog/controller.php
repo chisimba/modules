@@ -1262,7 +1262,11 @@ class blog extends controller
                         $tagarray = array_diff($tagarray, $things);
                         $this->objDbBlog->insertTags($tagarray, $userid, $id);
                     }
-                    $this->nextAction('viewblog');
+                    if ($status == 1) {
+                        $this->nextAction('blogadmin', array('mode'=>'editpost'));
+                    } else {
+                        $this->nextAction('viewblog');
+                    }
                     break;
                 } else {
                     $this->objblogPosts->quickPostAdd($userid, array(
