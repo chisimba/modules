@@ -263,7 +263,7 @@ class dbimpresence extends dbTable
          */
         public function showContact($personId)
         {
-            return $this->update('person', $personId, array('hidden' => 1), 'tbl_im_presence');   
+            return $this->update('person', $personId, array('hidden' => 0), 'tbl_im_presence');   
             
         }
         
@@ -275,7 +275,7 @@ class dbimpresence extends dbTable
         public function hideContact($personId)
         {
             
-            return $this->update('person', $personId, array('hidden' => 0), 'tbl_im_presence');   
+            return $this->update('person', $personId, array('hidden' => 1), 'tbl_im_presence');   
             
         }
         
@@ -288,7 +288,7 @@ class dbimpresence extends dbTable
         {
             
             $row = $this->getRow('person', $personId);
-            if($row['hidden'] == 0)
+            if($row['hidden'] == 1)
             {
                 return TRUE;
             } else {
