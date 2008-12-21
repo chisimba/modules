@@ -28,15 +28,6 @@ $refreshLink->href = $this->uri(null, 'das');
 $refreshIcon->setIcon('refresh');
 $refreshLink->link = $refreshIcon->show();
 
-
-
-/*$objPagination = $this->newObject('pagination', 'navigation');
-$objPagination->module = 'im';
-$objPagination->action = 'viewallajax';
-$objPagination->id = 'im';
-$objPagination->numPageLinks = $pages;
-$objPagination->currentPage = $pages - 1;
-$middleColumn .= $objPagination->show();*/
 if($this->objUser->inAdminGroup($this->objUser->userId()))
 {
     $cid = $this->objUser->userId();

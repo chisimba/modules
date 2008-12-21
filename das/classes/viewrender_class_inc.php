@@ -99,6 +99,7 @@ class viewrender extends object {
 	$objPres = $this->getObject ( 'dbimpresence', 'im' );
 	$this->objIcon->setIcon('archive','png');
 	$archiveIcon = $this->objIcon->show();
+	
         $this->objIcon->setIcon('refresh','png');
 	$refreshIcon = $this->objIcon->show();
 	$this->objIcon->setIcon('reassign','png');
@@ -107,67 +108,85 @@ class viewrender extends object {
 
         $max = 1;
         $rownum = 0;
-        //var_dump($msgs);
+	
+        //loop the conversations
         foreach ( $msgs as $msg ) {
             $box = "";
-            //log_debug($msg);
-            // whip out a content featurebox and plak the messages in
-            //$from = explode('/', $msg['person']);
+            
             $fuser = $msg ['person'];
             $msgid = $msg ['id'];
-
-            // get the presence info if it exists
             
-            if ($objPres->getPresence ( $msg ['person'] ) == "available") {
-                $presence = $this->activeIcon;
-            } else {
-                $presence = $this->inactiveIcon;
-            }
+	    if ($this->objDbImPres->isHidden($fuser))
+	    {
 		
-	    $this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
-	    $this->objLink->link = $archiveIcon;
-	    $archiveLink = $this->objLink->show();
+		$this->objIcon->setIcon('plus');
+		$hiddenIcon = $this->objIcon->show();
+		
+		$this->objLink->href = $this->uri(array('action' => 'showcontact', 'personid' => $fuser), 'das');
+		$this->objLink->link = $hiddenIcon;
+		$hidden = $this->objLink->show();
+		
+		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
+		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $msg ['person'] . '</b></p></td>';
+	    } else {
+		
+		$this->objIcon->setIcon('minus');
+		$hiddenIcon = $this->objIcon->show();
+		
+		$this->objLink->href = $this->uri(array('action' => 'hidecontact', 'personid' => $fuser), 'das');
+		$this->objLink->link = $hiddenIcon;
+		$hidden = $this->objLink->show();
+		
+		$this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
+		$this->objLink->link = $archiveIcon;
+		$archiveLink = $this->objLink->show();
+		
+		$archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
+		
+		$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
+		$this->objLink->link = $reassignIcon;
+		$resassignLink = $this->objLink->show();
+		
+		$sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
+		$fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
+		$prevmessages = "";
+		foreach ( $msg ['messages'] as $prevmess ) {
+		    //get the message
+		    if($prevmess['parentid'] != "")
+		    {
+			    $fromwho = $prevmess['msgtype'];
+			    $cssclass = "subdued";
+		    }else{
+			    $fromwho = "User";
+			    $cssclass = "";
+		    }
+				    $timeArr = split(" ", $prevmess['datesent']);
+		    $prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
+		    //get the reply(s) if there was any
+		    $replies = $this->objDBIM->getReplies($prevmess['id']);
+    
+		    $lastmsgId = $prevmess ['id'];
+		}
 	    
-	    $archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
 	    
-	    $this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
-	    $this->objLink->link = $reassignIcon;
-	    $resassignLink = $this->objLink->show();
-	    
-            $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
-            $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
-            $prevmessages = "";
-            foreach ( $msg ['messages'] as $prevmess ) {
-                //get the message
-                if($prevmess['parentid'] != "")
-                {
-                        $fromwho = $prevmess['msgtype'];
-                        $cssclass = "subdued";
-                }else{
-                        $fromwho = "User";
-                        $cssclass = "";
-                }
-				$timeArr = split(" ", $prevmess['datesent']);
-                $prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
-                //get the reply(s) if there was any
-                $replies = $this->objDBIM->getReplies($prevmess['id']);
-
-                $lastmsgId = $prevmess ['id'];
-            }
-
-            $ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
-                       <p class=\"im_source\">
-			 		<script charset=\"utf-8\">
-                            new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
-											cancelText: 'Cancel',
-											savingControl: 'link',  
-											savingText: 'Sending the message...',
-											callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
-                        </script>
-						</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."</p>";
-			
-            $box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . '</b></p><p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
-
+		$ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
+			   <p class=\"im_source\">
+					    <script charset=\"utf-8\">
+				new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
+											    cancelText: 'Cancel',
+											    savingControl: 'link',  
+											    savingText: 'Sending the message...',
+											    callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
+			    </script>
+						    </p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."</p>";
+			    
+		
+		
+		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
+		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $msg ['person'] . '</b></p>';
+		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div>';
+		$box .= '</td>';
+	    }
           
             //try to put 4 conversations in a row
             $rownum ++;

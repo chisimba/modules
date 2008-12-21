@@ -215,6 +215,14 @@ class das extends controller {
                 return $this->nextAction('viewcounsilors');
                 break;
 
+	    case 'showcontact':
+		$this->objDbImPres->showContact($this->getParam('personid'));
+		return $this->nextAction(null);
+		
+	    case 'hidecontact':
+		$this->objDbImPres->hideContact($this->getParam('personid'));
+		return $this->nextAction(null);
+		
             default :
                 die ( "unknown action" );
                 break;
