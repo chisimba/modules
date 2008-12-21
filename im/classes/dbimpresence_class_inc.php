@@ -288,11 +288,11 @@ class dbimpresence extends dbTable
         {
             
             $row = $this->getRow('person', $personId);
-            if($row['hidden'] == 1)
+            if($row['hidden'] == 0)
             {
-                return FALSE;
-            } else {
                 return TRUE;
+            } else {
+                return FALSE;
             }
         }
 }
