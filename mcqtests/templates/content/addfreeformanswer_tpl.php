@@ -131,7 +131,7 @@ echo '<strong>'.$questionLabel.':</strong>&nbsp;&nbsp;'.$objWashout->parseText($
 )));
    $objForm->addToForm($objTable->show());
    $objForm->addToForm($objTableButtons->show());
-   $str.= $objForm->show();
+   $str = $objForm->show();
    
 echo $str;
 ?>
