@@ -84,6 +84,6 @@ $objTable->addCell($chseFree,'','','','heading');
 $objTable->endRow();
 
 //show table
-$tpl.=$objTable->show();
+$tpl=$objTable->show();
 echo $tpl;
 ?>
