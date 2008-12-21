@@ -69,5 +69,17 @@
             </add>
         </data>
     </update>
+    <update>
+        <table>tbl_im_presence</table>
+        <version>0.192</version>
+        <description>Added hidden field</description>
+        <data>
+            <add>
+                <name>hidden</name>
+                <type>integer</type>                
+            </add>
+        </data>
+    </update>
+
 
 </updates>

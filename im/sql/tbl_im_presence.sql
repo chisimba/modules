@@ -34,6 +34,9 @@ $fields = array(
         'type' => 'text',
 	'length' => 32,
         ),
+    'hidden' => array(
+        'type' => 'integer',	
+        ),
     );
 
 ?>

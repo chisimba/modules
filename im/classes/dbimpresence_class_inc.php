@@ -255,5 +255,45 @@ class dbimpresence extends dbTable
 		$ret = $this->query($sql);
 		return $ret[0]['count'];
 	}
+        
+        /**
+         *Method to set the show field
+         *@param string personId The person's Id
+         *@return boolean
+         */
+        public function showContact($personId)
+        {
+            return $this->update('person', $personId, array('hidden' => 1), 'tbl_im_presence');   
+            
+        }
+        
+        /**
+         *Method to set the show field
+         *@param string personId The person's Id
+         *@return boolean
+         */
+        public function hideContact($personId)
+        {
+            
+            return $this->update('person', $personId, array('hidden' => 0), 'tbl_im_presence');   
+            
+        }
+        
+        /**
+         *Method to check if a contact is hidden or not
+         *@param string personId
+         *@return boolean
+         */
+        public function isHidden($personId)
+        {
+            
+            $row = $this->getRow('person', $personId);
+            if($row['hidden'] == 1)
+            {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        }
 }
 ?>
