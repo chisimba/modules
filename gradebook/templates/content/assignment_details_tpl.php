@@ -44,10 +44,15 @@ $assessment = $this->getParam('assessment', NULL);
 $studentUserId = $this->getParam('studentuserid', NULL);
 $check = $this->getParam('check', NULL);
 
-// Ensure the current user is not a student attempting to access another student's records.
+// Ensure an assessment has been specified.
 $studentUserIds = $this->objGradebook->getStudentInContextInfo('userid');
+if (!is_array($studentUserIds)) {
+    die($objLanguage->languageText('mod_gradebook_noassessment', 'gradebook'));
+}
+
+// Ensure the current user is not a student attempting to access another student's records.
 $currentUserId = $this->objUser->userId();
-if (is_array($studentUserIds) && in_array($currentUserId, $studentUserIds) && $studentUserId != $currentUserId) {
+if (in_array($currentUserId, $studentUserIds) && $studentUserId != $currentUserId) {
     die($objLanguage->languageText('mod_gradebook_noaccess', 'gradebook'));
 }
 
