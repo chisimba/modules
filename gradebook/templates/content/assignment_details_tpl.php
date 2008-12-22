@@ -385,7 +385,7 @@ if(!$numberAssignments) {
 						$objAssignmentCheckBox->setValue("1");
 						$this->TableInstructions->addCell($objAssignmentCheckBox->show());
 						//closing date
-						$this->TableInstructions->addCell($objDatetime->formatDate($iassignment["closing_date"]));
+						$this->TableInstructions->addCell($objDatetime->formatDate(isset($iassignment['closing_date'])?$iassignment['closing_date']:null));
 						//assignment name
 						$objAssignmentLink = new link($this->uri(array('action'=>'assignmentDetails','assignment'=>'MCQ Tests','assignmentId'=>$iassignment["id"])));
 						$objAssignmentLink->link=$iassignment["name"];
@@ -401,7 +401,7 @@ if(!$numberAssignments) {
 						$sMark=array();
 						$sMark=$objTestresults->getAnnualResults("tbl_test_results.testId='".$iassignment["id"]."' and tbl_test_results.studentId='$studentUserId' and tbl_test_results.testId=tbl_tests.id","(tbl_test_results.mark/tbl_tests.totalMark)*100 studentMark","tbl_test_results,tbl_tests");
 						$mark=0;				
-						$mark=($sMark[0]["studentMark"]!=NULL?$sMark[0]["studentMark"]:0);
+						$mark = isset($sMark[0]['studentMark']) ? $sMark[0]['studentMark'] : 0;
 						$totalAvgMark+=$ca;
 						if(!empty($xstudentResult)) {
 							foreach($xstudentResult as $studentResult) {
