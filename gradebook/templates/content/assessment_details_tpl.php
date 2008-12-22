@@ -299,8 +299,12 @@ $firstName = $this->objGradebook->getStudentInContextInfo('firstname');
 $surname = $this->objGradebook->getStudentInContextInfo('surname');
 $userId = $this->objGradebook->getStudentInContextInfo('userid');
 
-$numberStudents=0;
-$numberStudents=$this->objGradebook->getNumberStudentsInContext();
+if (in_array($this->objUser->userId(), $userId)) {
+    $userId = array($this->objUser->userId());
+    $numberStudents = 1;
+} else {
+    $numberStudents = $this->objGradebook->getNumberStudentsInContext();
+}
 
 if(!$numberStudents) {
 	$this->TableInstructions->startRow();
