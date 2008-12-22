@@ -6,12 +6,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 }
 //set the layout
 $this->setLayoutTemplate('gradebook_layout_tpl.php');
-$assignment = 0;
-$assignment = $this->getParam("assessment", NULL);
-$studentUserId = 0;
-$studentUserId = $this->getParam("studentuserid", NULL);
-$check = 0;
-$check = $this->getParam("check", NULL);
 
 //load required form elements
 $this->loadClass('link','htmlelements');
@@ -47,9 +41,10 @@ $theCourse=0;
 //create the general form class
 $objForm = new form('upload');
 //parameters
-$action=$this->getParam("action", NULL);
-$assessment=$this->getParam("assessment", NULL);
-$studentUserId=$this->getParam("studentuserid", NULL);
+$action = $this->getParam('action', NULL);
+$assessment = $this->getParam('assessment', NULL);
+$studentUserId = $this->getParam('studentuserid', NULL);
+$check = $this->getParam('check', NULL);
 $objForm->setAction($this->uri(array('action'=>$action,'assessment'=>$assessment,'studentUserId'=>$studentUserId)));
 $objForm->displayType=3;  //Free form
 
