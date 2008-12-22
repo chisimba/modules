@@ -295,15 +295,16 @@ $userId=array();
 $firstName=array();
 $surname=array();
 
-$firstName = $this->objGradebook->getStudentInContextInfo('firstname');
-$surname = $this->objGradebook->getStudentInContextInfo('surname');
 $userId = $this->objGradebook->getStudentInContextInfo('userid');
-
 if (in_array($this->objUser->userId(), $userId)) {
-    $userId = array($this->objUser->userId());
     $numberStudents = 1;
+    $userId = array($this->objUser->userId());
+    $firstName = array($this->objUser->getFirstname());
+    $surname = array($this->objUser->getSurname());
 } else {
     $numberStudents = $this->objGradebook->getNumberStudentsInContext();
+    $firstName = $this->objGradebook->getStudentInContextInfo('firstname');
+    $surname = $this->objGradebook->getStudentInContextInfo('surname');
 }
 
 if(!$numberStudents) {
