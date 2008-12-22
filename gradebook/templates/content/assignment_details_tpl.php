@@ -38,13 +38,14 @@ $contextObject =& $this->getObject('dbcontext', 'context');
 $contextCode = $contextObject->getContextCode();
 $theCourse=0;
 
-//create the general form class
-$objForm = new form('upload');
-//parameters
+// Get request parameters.
 $action = $this->getParam('action', NULL);
 $assessment = $this->getParam('assessment', NULL);
 $studentUserId = $this->getParam('studentuserid', NULL);
 $check = $this->getParam('check', NULL);
+
+// Create the general form class.
+$objForm = new form('upload');
 $objForm->setAction($this->uri(array('action'=>$action,'assessment'=>$assessment,'studentUserId'=>$studentUserId)));
 $objForm->displayType=3;  //Free form
 
