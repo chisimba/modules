@@ -44,6 +44,13 @@ $assessment = $this->getParam('assessment', NULL);
 $studentUserId = $this->getParam('studentuserid', NULL);
 $check = $this->getParam('check', NULL);
 
+// Ensure the current user is not a student attempting to access another student's records.
+$studentUserIds = $this->objGradebook->getStudentInContextInfo('userid');
+$currentUserId = $this->objUser->userId();
+if (in_array($currentUserId, $studentUserIds) && $studentUserId != $currentUserId) {
+    die('Student cannot access another student\'s records.');
+}
+
 // Create the general form class.
 $objForm = new form('upload');
 $objForm->setAction($this->uri(array('action'=>$action,'assessment'=>$assessment,'studentUserId'=>$studentUserId)));
@@ -90,7 +97,7 @@ if(!$numberAssignments) {
 	$this->TableInstructions->endRow();
 } else {
 	$iassignment=array();
-	switch($assignment) {
+	switch($assessment) {
 		case 'Essays':
 		case 'Online Worksheets':
 		case 'MCQ Tests':
