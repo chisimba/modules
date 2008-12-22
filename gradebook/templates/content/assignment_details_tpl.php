@@ -47,8 +47,8 @@ $check = $this->getParam('check', NULL);
 // Ensure the current user is not a student attempting to access another student's records.
 $studentUserIds = $this->objGradebook->getStudentInContextInfo('userid');
 $currentUserId = $this->objUser->userId();
-if (in_array($currentUserId, $studentUserIds) && $studentUserId != $currentUserId) {
-    die('Student cannot access another student\'s records.');
+if (is_array($studentUserIds) && in_array($currentUserId, $studentUserIds) && $studentUserId != $currentUserId) {
+    die($objLanguage->languageText('mod_gradebook_noaccess', 'gradebook'));
 }
 
 // Create the general form class.
