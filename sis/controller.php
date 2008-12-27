@@ -153,6 +153,9 @@ class sis extends controller {
                 $res = $this->objFMPro->editRecord($layoutName, $recid, $values);
                 // check the results and take action
                 if($res === TRUE) {
+                    $userdetails = array('firstname' => $fn,  'lastname' => $ln);
+                    // We need to send a mail or other notification to "the staff" to tell them something is new...
+                    $mailres = $this->objFMPro->sendStaffMail($userdetails);
                     $this->nextAction(NULL);
                 }
                 else {
