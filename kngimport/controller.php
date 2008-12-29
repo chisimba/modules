@@ -22,7 +22,7 @@
  * @author    Wesley  Nitsckie, Jarrett Jordaan,Yasser Buchana
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: controller.php,v 1.39 2007-08-07 14:51:58 acej Exp $
+ * @version   $Id: controller.php,v 1.39 2007-08-07 14:51:58 acej Exp $
  * @link      http://avoir.uwc.ac.za
  * @see       any other relevant section
  */
