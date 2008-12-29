@@ -24,7 +24,7 @@
  * @author    Administrative User <admin@localhost.local>
  * @copyright 2007 Administrative User
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: controller.php,v 1.32 2007-10-24 09:33:23 arithon Exp $
+ * @version   $Id: controller.php,v 1.32 2007-10-24 09:33:23 arithon Exp $
  * @link      http://avoir.uwc.ac.za
  * @see       References to other sections (if any)...
  */
