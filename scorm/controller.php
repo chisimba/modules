@@ -25,7 +25,7 @@
  * @author    Paul Mungai <pwando@uonbi.ac.ke>
  * @copyright 2008 Paul Mungai
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: controller.php 9085 2008-05-08 17:55:52Z paul $ //correct this
+ * @version   $Id: controller.php 9085 2008-05-08 17:55:52Z paul $ //correct this
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
