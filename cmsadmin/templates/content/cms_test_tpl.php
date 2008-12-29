@@ -66,7 +66,7 @@ jQuery(document).ready(function(){
     });
 });
 </script>
-<?
+<?php
 $script = ob_get_contents();
 ob_end_clean();
 
@@ -196,7 +196,7 @@ echo $objCmsTree->getCMSAdminTree($currentNode);
 </ul>
 
 
-<?
+<?php
 
 /*
 //Testing Flexigrid Plugin
@@ -268,7 +268,7 @@ ob_start();
         //jQuery("#list2").jqGrid();
     });
 </script>
-<?
+<?php
 $jqgrid = ob_get_contents();
 ob_end_clean();
 
@@ -281,7 +281,7 @@ $this->appendArrayVar('headerParams', $jqgrid);
 <!-- pager definition. class scroll tels that we want to use the same theme as grid -->
 <div id="pager2" class="scroll" style="text-align:center;"></div>
 
-<?
+<?php
 /*
 //Testing Flexigrid Plugin
 $jQuery = $this->newObject('jquery', 'htmlelements');
@@ -367,7 +367,7 @@ ob_start();
     }); 
 
     </script>
-<?
+<?php
 $flexjs = ob_get_contents();
 ob_end_clean();
 
@@ -629,7 +629,7 @@ $this->appendArrayVar('headerParams', $script);
             </div>
         </div>
 
-<?
+<?php
 
 /*
 
@@ -769,7 +769,7 @@ $this->appendArrayVar('headerParams', $script);
 
 
 
-<?
+<?php
 
 /*
 $jQuery->loadAccordionMenuPlugin();
@@ -801,7 +801,7 @@ jQuery().ready(function(){
 </script>
 
 
-<?
+<?php
 $script = ob_get_contents();
 ob_end_clean();
 

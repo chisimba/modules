@@ -159,7 +159,7 @@ jQuery(document).ready(function(){
     });
 });
 </script>
-<?
+<?php
 $script = ob_get_contents();
 ob_end_clean();
 
