@@ -13,7 +13,7 @@
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2008 Pual Scott
  * @license   gpl
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
