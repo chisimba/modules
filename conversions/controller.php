@@ -28,7 +28,7 @@
  * @author    Raymond Williams <2541826@uwc.ac.za>
  * @copyright 2007 UWC
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -50,7 +50,7 @@ $GLOBALS['kewl_entry_point_run']) {
  * @author    Administrative User <admin@localhost.local.za>
  * @copyright 2007 Administrative User
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id$
+ * @version   $Id$
  * @link      http://avoir.uwc.ac.za
  * 
  */
