@@ -26,7 +26,7 @@
  * @author    Derek Keats _EMAIL
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: tweetbox_class_inc.php 8227 2008-03-27 20:05:32Z dkeats $
+ * @version   $Id: tweetbox_class_inc.php 8227 2008-03-27 20:05:32Z dkeats $
  * @link      http://avoir.uwc.ac.za
  */
 
