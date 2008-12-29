@@ -30,7 +30,7 @@
  * @author    zDerek Keats derek@dkeats.com
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: db_MODULECODE.php,v 1.1 2007-11-25 09:13:27 dkeats Exp $
+ * @version   $Id: db_MODULECODE.php,v 1.1 2007-11-25 09:13:27 dkeats Exp $
  * @link      http://avoir.uwc.ac.za
  */
 
