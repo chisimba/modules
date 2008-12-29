@@ -27,7 +27,7 @@
  * @author    Derek Keats dkeats@uwc.ac.za
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: controller.php 9125 2008-05-14 19:10:11Z dkeats $
+ * @version   $Id: controller.php 9125 2008-05-14 19:10:11Z dkeats $
  * @link      http://avoir.uwc.ac.za
  */
 
