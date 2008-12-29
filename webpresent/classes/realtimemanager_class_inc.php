@@ -23,7 +23,7 @@
 * @author    David Wafula <dwafula[AT]gmail[DOT]com>
 * @copyright 2008 UWC and AVOIR
 * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License 
-* @version   CVS: $Id: messagestpl_class_inc.php 7192 2007-09-21 19:12:48Z dkeats $
+* @version   $Id: messagestpl_class_inc.php 7192 2007-09-21 19:12:48Z dkeats $
 * @link      http://avoir.uwc.ac.za
 */
 
