@@ -26,7 +26,7 @@ set_time_limit(0);
 * @author    Charl Mert
 * @copyright 2007 AVOIR
 * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
-* @version   CVS: $Id: dblog_class_inc.php 7861 2008-01-27 16:58:28Z dkeats $
+* @version   $Id: dblog_class_inc.php 7861 2008-01-27 16:58:28Z dkeats $
 * @link      http://avoir.uwc.ac.za
 */
  
