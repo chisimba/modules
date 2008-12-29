@@ -25,7 +25,7 @@
  * @author    Tohir Solomons _EMAIL
  * @copyright 2007 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   CVS: $Id: dbimagemagick.php,v 1.2 2008-01-08 13:07:15 dkeats Exp $
+ * @version   $Id: dbimagemagick.php,v 1.2 2008-01-08 13:07:15 dkeats Exp $
  * @link      http://avoir.uwc.ac.za
  */
 
