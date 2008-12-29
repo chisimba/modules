@@ -13,7 +13,7 @@
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2008 Paul Scott
  * @license   gpl
- * @version   CVS: $Id: controller.php 9524 2008-06-10 06:48:28Z paulscott $
+ * @version   $Id: controller.php 9524 2008-06-10 06:48:28Z paulscott $
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
