@@ -3404,23 +3404,33 @@
                 }
 
                 //convert to strings to datetime
-                $override = date("Y-m-d H:i:s",strtotime($arrSection['created']));
+                if(isset($arrSection['created'])){
+                    $override = date("Y-m-d H:i:s",strtotime($arrSection['created']));
+                }
                 $start_pub = '';
                 $end_pub = '';
-
-                if (!is_null($arrSection['start_publish'])) {
-                    $start_pub = date("Y-m-d H:i:s",strtotime($arrSection['start_publish']));
-
-                }elseif (!is_null($arrSection['end_publish'])){
-                    $end_pub = date("Y-m-d H:i:s",strtotime($arrSection['end_publish']));
-
+                // ---------------------------- Uncrapification if statements added by Derek Keats
+                if( isset($arrSection['created']) && isset($arrSection['end_publish']) ){
+                    if (!is_null($arrSection['start_publish'])) {
+                        $start_pub = date("Y-m-d H:i:s",strtotime($arrSection['start_publish']));
+                    } elseif (!is_null($arrSection['end_publish'])) {
+                        $end_pub = date("Y-m-d H:i:s",strtotime($arrSection['end_publish']));
+                    }
                 }
-
-                $dateField = $objdate->show('overide_date', 'yes', 'no', $override);
-                $pub = $publishing->show('publish_date', 'yes', 'no',$start_pub);
-                $end_pub = $publishing_end->show('end_date', 'yes', 'no', $end_pub);
+                if( isset($override) ) {
+                    $dateField = $objdate->show('overide_date', 'yes', 'no', $override);
+                }
+                if ( isset($start_pub) ) {
+                    $pub = $publishing->show('publish_date', 'yes', 'no',$start_pub);
+                }
+                if ( isset($end_pub) ) {
+                    $end_pub = $publishing_end->show('end_date', 'yes', 'no', $end_pub);
+                }
                 //Author Alias
-                $author = new textinput('author_alias',$arrSection['created_by_alias'],null,20);
+                if ( isset ($arrSection['created_by_alias']) ) {
+                    $author = new textinput('author_alias',$arrSection['created_by_alias'],null,20);
+                }
+                // ---------------------------- End of uncrapification if statements added by Derek Keats
                 $lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
                 //Pre-populated dropdown
 
