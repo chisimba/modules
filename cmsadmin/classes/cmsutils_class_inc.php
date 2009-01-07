@@ -1551,7 +1551,11 @@
             $tbl_basic->endRow();
 
             $tbl_basic->startRow();
-            $tbl_basic->addCell($lbl_author_alias->show());
+            if (isset($lbl_author_alias)) {
+                $tbl_basic->addCell($lbl_author_alias->show());
+            } else {
+                $tbl_basic->addCell("");
+            }
             $tbl_basic->addCell($author->show());
             $tbl_basic->endRow();
 
