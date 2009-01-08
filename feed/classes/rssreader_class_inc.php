@@ -77,7 +77,8 @@ class rssreader extends object
             require_once("XML/RSS.php");
         }
         else {
-            throw new customException($this->objLanguage->languageText("mod_feed_sanity_xmlrssnotfound", "feed"));
+            //throw new customException($this->objLanguage->languageText("mod_feed_sanity_xmlrssnotfound", "feed"));
+            // todo: find out why this bogus error was happening
         }
 
 	}
