@@ -49,7 +49,6 @@ foreach ($users as $user)
         $objLink->link = $objIcon->show();
     }
 
-   
 
     if ($objLoggedIn->isUserOnline($user['userid']))
     {
@@ -59,7 +58,7 @@ foreach ($users as $user)
     }
     $bullet = $objIcon->show();
 
-    $arr[] = array($name, $cnt, $bullet, $reassign, $objLink->show());
+    $arr[] = array($name, $cnt, /*$bullet,*/ $reassign, $objLink->show());
     //echo $name."   ".$objLink->show().'  ('.$cnt.' users assigned) <br/>';
 
 }
@@ -76,7 +75,7 @@ $objLink->link = "Stop Session";
 $admin .= "<br/>".$objLink->show();
 
 $objTable->width = "90%";
-$objTable->addHeader(array("Name", "No. of people assigned", "Logged In", "Auto Assign"));
+$objTable->addHeader(array("Name"/*, "No. of people assigned"*/, "Logged In", "Auto Assign"));
 $objTable->arrayToTable($arr);
 $middleColumn .= $objTable->show();
 $objLink->href = $this->uri(array('action' => 'resetcounsillors'));

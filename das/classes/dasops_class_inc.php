@@ -282,6 +282,7 @@ class dasops extends object {
 		$button->setValue('Save');
 		$dasusername = new textinput('dasusername', $this->juser, null, 10);
 		$daspassword = new textinput('daspassword', $this->jpass,null, 10);
+		$daspassword->setType('password');
 		$domain = new textinput('domain', $this->jdomain, null, 10);
 		$idletime = new textinput('idletime', $this->timeLimit, null, 10);
 

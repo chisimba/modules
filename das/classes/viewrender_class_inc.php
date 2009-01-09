@@ -126,7 +126,7 @@ class viewrender extends object {
 		$this->objLink->link = $hiddenIcon;
 		$hidden = $this->objLink->show();
 		
-		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
+		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_hidden" >' ;
 		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $msg ['person'] . '</b></p></td>';
 	    } else {
 		
@@ -183,7 +183,7 @@ class viewrender extends object {
 		
 		
 		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
-		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $msg ['person'] . '</b></p>';
+		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $this->maskUser($msg ['person']) . '</b></p>';
 		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div>';
 		$box .= '</td>';
 	    }
@@ -312,7 +312,16 @@ class viewrender extends object {
     */
     public function getLeftBlocks()
     {
-        return $this->getStatsBox();
+	$objBlocks = $this->getObject('blocks','blocks');
+	$blocks = "";
+	
+	//Stats block
+	$blocks .= $this->getStatsBox();
+	
+	//Chat block
+	$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
+        return $blocks;
+	
     }
 	
 
@@ -326,5 +335,17 @@ class viewrender extends object {
                                  $this->objUser->userId()));
     }
 
+
+    /**
+     *Method to to the contact
+     *@param string $person The Person
+     *@return string
+     *@access public
+     */
+    public function maskUser($person)
+    {
+	return 'xxxxxxx'.substr($person, strpos($person, '@'));
+	
+    }
 }
 ?>
