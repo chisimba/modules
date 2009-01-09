@@ -320,7 +320,7 @@ class viewrender extends object {
 	$blocks .= $this->getStatsBox();
 	
 	//Chat block
-	$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
+	//$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
         return $blocks;
 	
     }
