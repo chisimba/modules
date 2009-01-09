@@ -27,22 +27,27 @@ class block_cmslatest extends object
     function init()
     {
     	//Instantiate the language object
-    	$this->objLanguage = &$this->getObject('language', 'language');
-    	$this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
-		$titlesArr = $this->_objContent->getLatestTitles(5);
-		$this->messageForBlock = "";
-		if (count($titlesArr, 1) == 0 ) {
-		    $this->messageForBlock = $this->objLanguage->languageText("mod_blockalicious_cmslatest_norecords", "blockalicious");
-		} else {
-		    foreach ($titlesArr as $item) {
-		    	$id = $item['id'];
-		    	$title = $item['title'];
-		    	$paramArray = array('action' => 'showfulltext', 'id' => $id);
-		    	$url = $this->uri($paramArray, "cms");
-				$link = "<a href=\"" . $url . "\">" . $title ."</a>";
-		        $this->messageForBlock .= $link . "<br />";
-		    }
-		}
+    	$this->objLanguage = $this->getObject('language', 'language');
+        $this->modules = $this->getObject('modules','modulecatalogue');
+        if ($this->modules->checkIfRegistered('cmsadmin')){
+    	    $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
+	    $titlesArr = $this->_objContent->getLatestTitles(5);
+        } else {
+            $titlesArr=array();
+        }
+	$this->messageForBlock = "";
+	if (count($titlesArr, 1) == 0 ) {
+	    $this->messageForBlock = $this->objLanguage->languageText("mod_blockalicious_cmslatest_norecords", "blockalicious");
+	} else {
+	    foreach ($titlesArr as $item) {
+	        $id = $item['id'];
+		$title = $item['title'];
+		$paramArray = array('action' => 'showfulltext', 'id' => $id);
+		$url = $this->uri($paramArray, "cms");
+		$link = "<a href=\"" . $url . "\">" . $title ."</a>";
+		$this->messageForBlock .= $link . "<br />";
+	    }
+	}
         //Set the title - 
         $this->title=$this->objLanguage->languageText("mod_blockalicious_cmslatest_title", "blockalicious");
     }

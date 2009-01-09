@@ -26,17 +26,22 @@ class block_cmsnews extends object
     function init()
     {
     	//Instantiate the language object
-    	$this->objLanguage = &$this->getObject('language', 'language');
-    	$this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
-		$titlesArr = $this->_objContent->getTitles("News");
-		$this->messageForBlock = "";
-		if (count($titlesArr == 0 )) {
-		    $this->messageForBlock = $this->objLanguage->languageText("mod_blockalicious_cmsnews_norecords", "blockalicious");
-		} else {
-		    foreach ($titlesArr as $item) {
-		        $this->messageForBlock .= $item['title'] . "<br />";
-		    }
-		}
+    	$this->objLanguage = $this->getObject('language', 'language');
+        $this->modules= $this->getObject('modules','modulecatalogue');
+        if ($this->modules->checkIfRegistered('cmsadmin')){
+            $this->_objContent = $this->getObject('dbcontent', 'cmsadmin');
+            $titlesArr = $this->_objContent->getTitles("News");
+        } else {
+            $titlesArr=array();
+        }
+        $this->messageForBlock = "";
+        if (count($titlesArr == 0 )) {
+            $this->messageForBlock = $this->objLanguage->languageText("mod_blockalicious_cmsnews_norecords", "blockalicious");
+	} else {
+	    foreach ($titlesArr as $item) {
+	        $this->messageForBlock .= $item['title'] . "<br />";
+	    }
+	}
         //Set the title - 
         $this->title=$this->objLanguage->languageText("mod_blockalicious_cmsnews_title", "blockalicious");
     }
