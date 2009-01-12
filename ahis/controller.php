@@ -98,13 +98,15 @@ class ahis extends controller {
             $this->setLayoutTemplate('ahis_layout_tpl.php');
             $this->objGeo3 = $this->getObject('geolevel3');
             $this->objGeo2 = $this->getObject('geolevel2');
+            $this->objTerritory = $this->getObject('territory');
             
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
                                         'geography_level2_admin', 'prodution_admin', 'territory_admin',
                                         'report_admin', 'quality_admin', 'diagnosis_admin',
                                         'control_admin', 'outbreak_admin', 'geography_level3_delete',
-                                        'geography_level3_add', 'geography_level3_insert');
+                                        'geography_level3_add', 'geography_level3_insert', 'create_territory',
+                                        'territory_insert');
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -220,6 +222,23 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objGeo2->delete('id', $id);
                 return $this->nextAction('geography_level2_admin', array('success'=>'2'));
+            
+            case 'create_territory':
+                $geo2 = $this->objGeo2->getAll("ORDER BY name");
+                $this->setVar('geo2',$geo2);
+                return "add_territory_tpl.php";
+            
+            case 'territory_insert':
+                $rec['name'] = $this->getParam('territory');
+                $rec['northlatitude'] = $this->getParam('latitude_north');
+                $rec['southlatitude'] = $this->getParam('latitude_south');
+                $rec['eastlongitude'] = $this->getParam('longitude_east');
+                $rec['westlongitude'] = $this->getParam('longitude_west');
+                $rec['geo2id'] = $this->getParam('geo2');
+                $rec['area'] = $this->getParam('area');
+                $rec['unitofmeasure'] = $this->getParam('unit_of_measure');
+                $this->objTerritory->insert($rec);
+                return $this->nextAction('admin');
             
             case 'view_reports':
                 

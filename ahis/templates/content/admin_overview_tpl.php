@@ -1,6 +1,6 @@
 <?php
 /**
- * ahis Overview Admin 3 Template
+ * ahis Overview Admin Template
  *
  * Reusable overview template for admin
  * 

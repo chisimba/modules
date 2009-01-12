@@ -81,7 +81,7 @@ $objTable->addCell($link->show());
 $link = new link($this->uri(array('action' => 'production_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_productionadmin', 'ahis');
 $objTable->addCell($link->show());
-$link = new link($this->uri(array('action' => 'territory_admin')));
+$link = new link($this->uri(array('action' => 'create_territory')));
 $link->link = $this->objLanguage->languageText('mod_ahis_territoryadmin', 'ahis');
 $objTable->addCell($link->show());
 $objTable->endRow();

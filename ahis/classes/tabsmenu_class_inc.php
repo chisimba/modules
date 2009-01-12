@@ -124,6 +124,7 @@ class tabsmenu extends object
             case 'geography_level2_admin':
             case 'geography_level3_add':
             case 'geography_level2_add':
+            case 'create_territory':
                 $this->default = 'admin';
                 break;
             case 'view_reports':
