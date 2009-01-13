@@ -240,7 +240,12 @@ class ahis extends controller {
                 $this->objTerritory->insert($rec);
                 return $this->nextAction('admin');
             
+            case 'create_employee':
+                $this->setVar('id', $this->getParam('id'));
+                return "add_employee_tpl.php";
+            
             case 'view_reports':
+                
                 
             
             default:

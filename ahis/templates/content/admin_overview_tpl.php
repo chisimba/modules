@@ -123,7 +123,16 @@ if (!empty($data)) {
     $objTable->endRow();    
 }
 
+$backLink = new link($this->uri(array('action' => 'admin')));
+$backLink->link = $this->objLanguage->languageText('word_back');
+$linkTable = $this->newObject('htmltable', 'htmlelements');
+$linkTable->width = '50%';
+$linkTable->startRow();
+$linkTable->addCell($addLink->show());
+$linkTable->addCell($backLink->show(), NULL, NULL, 'right');
+$linkTable->endRow();
+
 $heading = $objHeading->show()."<hr />".$msg;
-$body = $objForm->show().$objTable->show().$addLink->show();
+$body = $objForm->show().$objTable->show().$linkTable->show();
 
 echo $heading.$body;
