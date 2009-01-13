@@ -132,6 +132,7 @@ class importKNGPackage extends dbTable
 			$menutitles = $this->loadToChisimba($courseContent, $courseData, $this->contextCode);
 		$enterContext = $this->objDBContext->joinContext($this->contextCode);
 
+
                 // Import Lecturers
                 $staffList=$this->objIEUtils->remoteUsers($contextcode);
                 if (count($staffList)>0){
@@ -151,13 +152,17 @@ class importKNGPackage extends dbTable
         {
             $this->userImport=$this->getObject('importuserdata','userimport');
             $this->userGroup=$this->getObject('groupusersdb','groupadmin');
+            $query="SELECT id from tbl_groupadmin_group WHERE description='".$localCode." Lecturers'";
+            $result=$this->objUser->query($query);
+            $groupId=$result[0]['id'];
+            
             foreach ($staffList as $line){
                 $testId=$this->userImport->checkForUser($line['username'],$line['firstName'],$line['surname'],$line['emailAddress']);
                 if ($testId){
                     $id=$this->userImport->objUser->PKId($testId);                    
                 } else {
                     $result=$this->userImport->importUser($line);
-                    $res1=explode($result,'|');
+                    $res1=explode('|',$result);
                     if (isset($res1[0])) {
                         $id=$res1[0];
                     } else {
@@ -165,7 +170,7 @@ class importKNGPackage extends dbTable
                     }
                 }
                 if ($id){
-                    $this->userGroup->addGroupUser( $localCode, $id);
+                    $this->userGroup->addGroupUser( $groupId, $id);
                 }
             }
         }
