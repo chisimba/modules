@@ -4,4 +4,47 @@
 		<id>init_01</id>
 		<name>Passive Surveillance</name>
 	</tbl_ahis_reporttype>
+    
+    <tbl_ahis_title>
+        <id>init_01</id>
+        <name>Mr</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_02</id>
+        <name>Mrs</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_03</id>
+        <name>Miss</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_04</id>
+        <name>Ms</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_05</id>
+        <name>Dr</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_06</id>
+        <name>Prof</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_07</id>
+        <name>Assoc Prof</name>
+    </tbl_ahis_title>
+    <tbl_ahis_title>
+        <id>init_08</id>
+        <name>Rev</name>
+    </tbl_ahis_title>
+
+    <tbl_ahis_status>
+        <id>init_01</id>
+        <name>Active</name>
+    </tbl_ahis_status>
+    <tbl_ahis_status>
+        <id>init_02</id>
+        <name>Inactive</name>
+    </tbl_ahis_status>
+
 </defaultdata>

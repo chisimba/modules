@@ -43,17 +43,24 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
+$this->loadClass('checkbox','htmlelements');
 
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_employee');
     $formUri = $this->uri(array('action'=>'employee_insert', 'id'=>$id));
-    //$record = $this->objGeo2->getRow('id', $id);
+    $record = $this->objUser->getRow('id', $id);
+    $ahisRecord = $this->objAhisUser->getRow('id', $id);
+    if (empty($ahisRecord)) {
+        $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] =
+        $ahisRecord['titleid'] = $ahisRecord['statusid'] = $ahisRecord['retired'] = '';
+        $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
+    }
 } else {
     $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_employee');
     $formUri = $this->uri(array('action'=>'employee_insert'));
-    $record['surname'] = $record['firstname'] = $record['isactive'] = $record['title'] =
-    $record['username'] = $ahisRecord['location'] = $ahisRecord['department'] = $ahisRecord['role'] = '';
-    $ahisRecord['birthdate'] = $ahisRecord['hireddate'] = $ahisRecord['retireddate'] = date('Y-m-d');
+    $record['surname'] = $record['firstname'] = $ahisRecord['statusid'] = $ahisRecord['titleid'] = $ahisRecord['retired'] =
+    $record['username'] = $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] = '';
+    $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
@@ -66,31 +73,40 @@ $usernameInput = new textinput('username',$record['username']);
 $passwordInput = new textinput('password', NULL, 'password');
 $confirmInput = new textinput('confirm', NULL, 'password');
 
-$titleDrop = new dropdown('title');
-//$titleDrop->addFromDB($title, 'name', 'name');
-$titleDrop->setSelected($record['title']);
+$retiredBox = new checkbox('retired', NULL, $ahisRecord['retired']);
+$retiredBox->extra = "onchange = 'toggleRetiredDate()'";
+if (!$ahisRecord['retired']) {
+    $this->appendArrayVar('bodyOnLoad','toggleRetiredDate()');
+}
+
+$titleDrop = new dropdown('titled');
+$titleDrop->addFromDB($titles, 'name', 'id');
+$titleDrop->setSelected($ahisRecord['titleid']);
 $statusDrop = new dropdown('status');
-//$statusDrop->addFromDB($status, 'name', 'name');
-$statusDrop->setSelected($record['isactive']);
+$statusDrop->addFromDB($status, 'name', 'id');
+$statusDrop->setSelected($ahisRecord['statusid']);
 $locationDrop = new dropdown('location');
-//$locationDrop->addFromDB($location, 'name', 'id');
-$locationDrop->setSelected($ahisRecord['location']);
+$locationDrop->addFromDB($locations, 'name', 'id');
+$locationDrop->setSelected($ahisRecord['locationid']);
 $departmentDrop = new dropdown('department');
-//$departmentDrop->addFromDB($department, 'name', 'id');
-$departmentDrop->setSelected($ahisRecord['department']);
+$departmentDrop->addFromDB($departments, 'name', 'id');
+$departmentDrop->setSelected($ahisRecord['departmentid']);
 $roleDrop = new dropdown('role');
-//$roleDrop->addFromDB($role, 'name', 'id');
-$roleDrop->setSelected($ahisRecord['role']);
+$roleDrop->addFromDB($roles, 'name', 'id');
+$roleDrop->setSelected($ahisRecord['roleid']);
 
 $birthDate = $this->newObject('datepicker','htmlelements');
-$birthDate->setName('birthdate');
-$birthDate->setDefaultDate($ahisRecord['birthdate']);
+$birthDate->setName('datebirth');
+$birthDate->setDefaultDate($ahisRecord['dateofbirth']);
 $hiredDate = $this->newObject('datepicker','htmlelements');
 $hiredDate->setName('hireddate');
-$hiredDate->setDefaultDate($ahisRecord['hireddate']);
+$hiredDate->setDefaultDate($ahisRecord['datehired']);
 $retiredDate = $this->newObject('datepicker','htmlelements');
 $retiredDate->setName('retireddate');
-$retiredDate->setDefaultDate($ahisRecord['retireddate']);
+if (!$ahisRecord['dateretired']) {
+    $ahisRecord['dateretired'] = date('Y-m-d');
+}
+$retiredDate->setDefaultDate($ahisRecord['dateretired']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
@@ -105,27 +121,28 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_surname').": ");
 $objTable->addCell($surnameInput->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_firstname').": ");
-$objTable->addCell($nameInput->show());
+$objTable->addCell($nameInput->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_title').": ");
 $objTable->addCell($titleDrop->show());
 $objTable->addCell($this->objLanguage->languageText('word_status').": ");
-$objTable->addCell($statusDrop->show());
+$objTable->addCell($statusDrop->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_location').": ");
 $objTable->addCell($locationDrop->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_dob').": ");
-$objTable->addCell($birthDate->show());
+$objTable->addCell($birthDate->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_datehired').": ");
 $objTable->addCell($hiredDate->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_dateretired').": ");
+$objTable->addCell($retiredBox->show());
 $objTable->addCell($retiredDate->show());
 $objTable->endRow();
 
@@ -133,7 +150,7 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_department').": ");
 $objTable->addCell($departmentDrop->show());
 $objTable->addCell($this->objLanguage->languageText('word_role').": ");
-$objTable->addCell($roleDrop->show());
+$objTable->addCell($roleDrop->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
@@ -145,7 +162,7 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_password').": ");
 $objTable->addCell($passwordInput->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_confirmpassword').": ");
-$objTable->addCell($confirmInput->show());
+$objTable->addCell($confirmInput->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
@@ -157,7 +174,14 @@ $objTable->endRow();
 $objForm = new form('employeeadd', $formUri);
 $objForm->id = 'form_employeeadd';
 $objForm->addToForm($objTable->show());
+$objForm->addRule('surname', $this->objLanguage->languageText('mod_ahis_surnamerequired', 'ahis'), 'required');
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
-$objForm->addRule(array('password', 'confirm'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'ahis'), 'compare');
+$objForm->addRule('username', $this->objLanguage->languageText('mod_ahis_usernamerequired', 'ahis'), 'required');
+if (!$id) {
+    $objForm->addRule('password', $this->objLanguage->languageText('mod_ahis_passwordrequired', 'ahis'), 'required');
+}
+$objForm->addRule(array('confirm', 'password'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'ahis'), 'compare');
 
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar("headerParams", "<script type='text/javascript' src='$scriptUri'></script>");
 echo $objHeading->show()."<hr />".$objForm->show();

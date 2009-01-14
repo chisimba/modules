@@ -99,6 +99,7 @@ class ahis extends controller {
             $this->objGeo3 = $this->getObject('geolevel3');
             $this->objGeo2 = $this->getObject('geolevel2');
             $this->objTerritory = $this->getObject('territory');
+            $this->objAhisUser = $this->getObject('ahisuser');
             
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -240,8 +241,26 @@ class ahis extends controller {
                 $this->objTerritory->insert($rec);
                 return $this->nextAction('admin');
             
+            case 'employee_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objUser->getAll("WHERE firstname LIKE '%$searchStr%' OR surname LIKE '%$searchStr%' OR username LIKE '%$searchStr%' ORDER BY surname");
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                return 'admin_employee_tpl.php';
+            
             case 'create_employee':
+                $objTitle = $this->getObject('title');
+                $objLocation = $this->getObject('location');
+                $objDepartment = $this->getObject('department');
+                $objRole = $this->getObject('role');
+                $objStatus = $this->getObject('status');
+                
                 $this->setVar('id', $this->getParam('id'));
+                $this->setVar('titles', $objTitle->getAll());
+                $this->setVar('status', $objStatus->getAll());
+                $this->setVar('locations', $objLocation->getAll());
+                $this->setVar('departments', $objDepartment->getAll());
+                $this->setVar('roles', $objRole->getAll());
                 return "add_employee_tpl.php";
             
             case 'view_reports':
