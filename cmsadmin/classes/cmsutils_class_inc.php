@@ -1926,8 +1926,9 @@
 
             //$nav .= $viewCmsLink.'<br /><br />';
             $nav .= $objFeatureBox->showContent('Navigation Links',
-                                        $cmsAdminLink.'<br />
+                                        '<br />
                                         <div id="cmsleftcontrolpanel">
+                                        '.$cmsAdminLink.'
                                         '.$createRss.'
                                         '.$menuMangement.'
                                         '.$filemanager.'
