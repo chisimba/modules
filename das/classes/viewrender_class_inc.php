@@ -176,7 +176,7 @@ class viewrender extends object {
 											    cancelText: 'Cancel',
 											    savingControl: 'link',  
 											    savingText: 'Sending the message...',
-											    rows:3,cols:45,
+											    size:40,
 											    callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
 			    </script>
 						    </p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."</p>";
