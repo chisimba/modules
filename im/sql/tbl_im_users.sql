@@ -25,6 +25,9 @@ $fields = array(
     'dateoflastcontact' => array(
         'type' => 'timestamp',
         ),
+    'manualassign' => array(
+        'type' => 'integer',        
+        ),
     );
 
 ?>
