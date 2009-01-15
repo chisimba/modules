@@ -3,8 +3,13 @@
 * Template for viewing section details in cmsadmin
 *
 * @author Warren Windvogel
+* @author Charl Mert
 * @package cmsadmin
 */
+
+if (!isset($pageId)) {
+    $pageId = '';
+}
 
 //Set layout template
 //Equipping to handle loading via ajax
