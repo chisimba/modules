@@ -105,6 +105,9 @@ $objTable->addCell($link->show());
 $link = new link($this->uri(array('action' => 'quality_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_reportqualityadmin', 'ahis');
 $objTable->addCell($link->show());
+$link = new link($this->uri(array('action' => 'location_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_locationadmin', 'ahis');
+$objTable->addCell($link->show());
 $objTable->endRow();
 
 $objLayer = new layer();

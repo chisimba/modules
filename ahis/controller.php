@@ -100,6 +100,7 @@ class ahis extends controller {
             $this->objGeo2 = $this->getObject('geolevel2');
             $this->objTerritory = $this->getObject('territory');
             $this->objAhisUser = $this->getObject('ahisuser');
+            $this->objLocation = $this->getObject('location');
             
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -107,7 +108,8 @@ class ahis extends controller {
                                         'report_admin', 'quality_admin', 'diagnosis_admin',
                                         'control_admin', 'outbreak_admin', 'geography_level3_delete',
                                         'geography_level3_add', 'geography_level3_insert', 'create_territory',
-                                        'territory_insert');
+                                        'territory_insert', 'employee_admin', 'employee_insert', 'create_employee',
+                                        'location_admin');
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -246,11 +248,11 @@ class ahis extends controller {
                 $data = $this->objUser->getAll("WHERE firstname LIKE '%$searchStr%' OR surname LIKE '%$searchStr%' OR username LIKE '%$searchStr%' ORDER BY surname");
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('data', $data);
+                $this->setVar('success', $this->getParam('success'));
                 return 'admin_employee_tpl.php';
             
             case 'create_employee':
                 $objTitle = $this->getObject('title');
-                $objLocation = $this->getObject('location');
                 $objDepartment = $this->getObject('department');
                 $objRole = $this->getObject('role');
                 $objStatus = $this->getObject('status');
@@ -258,10 +260,95 @@ class ahis extends controller {
                 $this->setVar('id', $this->getParam('id'));
                 $this->setVar('titles', $objTitle->getAll());
                 $this->setVar('status', $objStatus->getAll());
-                $this->setVar('locations', $objLocation->getAll());
+                $this->setVar('locations', $this->objLocation->getAll());
                 $this->setVar('departments', $objDepartment->getAll());
                 $this->setVar('roles', $objRole->getAll());
                 return "add_employee_tpl.php";
+            
+            case 'employee_insert':
+                $id = $this->getParam('id');
+                $record['surname'] = $this->getParam('surname');
+                $record['firstname'] = $this->getParam('name');
+                $test = $this->objUser->getAll("WHERE firstname = '{$record['firstname']}' AND surname = '{$record['surname']}'");
+                $record['username'] = $this->getParam('username');
+                $password = $this->getParam('password');
+                if ($password) {
+                    $record['pass'] = sha1($password);
+                }
+                $ahisRecord['titleid'] = $this->getParam('titleid');
+                $ahisRecord['statusid'] = $this->getParam('statusid');
+                $ahisRecord['locationid'] = $this->getParam('locationid');
+                $ahisRecord['departmentid'] = $this->getParam('departmentid');
+                $ahisRecord['roleid'] = $this->getParam('roleid');
+                $ahisRecord['dateofbirth'] = $this->getParam('datebirth');
+                $ahisRecord['datehired'] = $this->getParam('hireddate');
+                $ahisRecord['retired'] = $this->getParam('retired');
+                if ($ahisRecord['retired']) {
+                    $ahisRecord['retired'] = 1;
+                    $ahisRecord['dateretired'] = $this->getParam('retireddate');
+                } else {
+                    $ahisRecord['retired'] = 0;
+                }
+
+                if ($id) {
+                    $this->objUser->update('id', $id, $record);
+                    $code = 3;
+                } else {
+                    if (!empty($test)) {
+                        return $this->nextAction('employee_admin', array('success'=>'4'));
+                    }
+                    $id = $this->objUser->insert($record);
+                    $code = 1;
+                }
+                if ($this->objAhisUser->valueExists('id', $id)) {
+                    $this->objAhisUser->update('id', $id, $ahisRecord);
+                } else {
+                    $ahisRecord['id'] = $id;
+                    $this->objAhisUser->insert($ahisRecord);
+                }
+                
+                return $this->nextAction('employee_admin', array('success'=>$code));
+            
+            case 'location_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objLocation->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'location_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_locationadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_locationadminheading','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
+                $this->setVar('deleteAction', 'location_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'location_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'location_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'location_add_tpl.php';
+            
+            case 'location_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objLocation->valueExists('name', $name)) {
+                    return $this->nextAction('location_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objLocation->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objLocation->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('location_admin', array('success'=>$code));
+            
+            case 'location_delete':
+                $id = $this->getParam('id');
+                $this->objLocation->delete('id', $id);
+                return $this->nextAction('location_admin', array('success'=>'2'));
             
             case 'view_reports':
                 

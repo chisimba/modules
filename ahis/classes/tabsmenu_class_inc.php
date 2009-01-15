@@ -127,6 +127,8 @@ class tabsmenu extends object
             case 'create_territory':
             case 'employee_admin':
             case 'create_employee':
+            case 'employee_insert':
+            case 'location_admin':
                 $this->default = 'admin';
                 break;
             case 'view_reports':

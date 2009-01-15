@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis Geography level 2 add Template
+ * ahis Location add Template
  *
- * Template to add Geography Segment Level 2
+ * Template to add user location
  * 
  * PHP version 5
  * 
@@ -45,13 +45,13 @@ $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 
 if ($id) {
-    $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('mod_ahis_geolevel','ahis');
-    $formUri = $this->uri(array('action'=>'geography_level2_insert', 'id'=>$id));
-    $record = $this->objGeo2->getRow('id', $id);
+    $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_location');
+    $formUri = $this->uri(array('action'=>'location_insert', 'id'=>$id));
+    $record = $this->objLocation->getRow('id', $id);
 } else {
-    $hStr = $this->objLanguage->languageText('mod_ahis_geo2add','ahis');
-    $formUri = $this->uri(array('action'=>'geography_level2_insert'));
-    $record['geo3id'] = $record['name'] = '';
+    $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_location');
+    $formUri = $this->uri(array('action'=>'location_insert'));
+    $record['name'] = '';
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
@@ -59,13 +59,10 @@ $objHeading->type = 2;
 $objHeading->str = $hStr;
 
 $nameInput = new textinput('name',$record['name']);
-$geo3Drop = new dropdown('geo3id');
-$geo3Drop->addFromDB($geo3, 'name', 'id');
-$geo3Drop->setSelected($record['geo3id']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'geography_level2_admin'));
+$backUri = $this->uri(array('action'=>'location_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -73,13 +70,8 @@ $objTable->width = '50%';
 $objTable->cellspacing = 2;
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_geolevelname','ahis').": ");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_locationname','ahis').": ");
 $objTable->addCell($nameInput->show());
-$objTable->endRow();
-
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_geolevel','ahis')." 3: ");
-$objTable->addCell($geo3Drop->show());
 $objTable->endRow();
 
 $objTable->startRow();
@@ -87,9 +79,8 @@ $objTable->addCell($bButton->show());
 $objTable->addCell($sButton->show());
 $objTable->endRow();
 
-$objForm = new form('geo2add', $formUri);
+$objForm = new form('locationadd', $formUri);
 $objForm->addToForm($objTable->show());
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
 
 echo $objHeading->show()."<hr />".$objForm->show();
-

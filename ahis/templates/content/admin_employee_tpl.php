@@ -108,16 +108,18 @@ $objTable->endHeaderRow();
 
 $class = 'odd';
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
+$objStatus = $this->getObject('status');
 if (!empty($data)) {
     foreach ($data as $datum) {
         //$link = $icon->getDeleteIconWithConfirm($datum['id'],array('action'=>$deleteAction,'id'=>$datum['id']), 'ahis', $message);
         $link = $icon->getEditIcon($this->uri(array('action'=>'create_employee', 'id'=>$datum['id'])));//." $link";
-
+        $ahisUser = $this->objAhisUser->getRow('id', $datum['id']);
+        $status = $objStatus->getRow('id', $ahisUser['statusid']);
         $objTable->startRow($class);
         $objTable->addCell($datum['surname']);
         $objTable->addCell($datum['firstname']);
         $objTable->addCell($datum['username']);
-        $objTable->addCell($datum['isactive']);
+        $objTable->addCell($status['name']);
         $objTable->addCell($link);
         $objTable->endRow();
         $class = ($class == 'odd')? 'even' : 'odd';

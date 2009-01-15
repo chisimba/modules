@@ -79,19 +79,19 @@ if (!$ahisRecord['retired']) {
     $this->appendArrayVar('bodyOnLoad','toggleRetiredDate()');
 }
 
-$titleDrop = new dropdown('titled');
+$titleDrop = new dropdown('titleid');
 $titleDrop->addFromDB($titles, 'name', 'id');
 $titleDrop->setSelected($ahisRecord['titleid']);
-$statusDrop = new dropdown('status');
+$statusDrop = new dropdown('statusid');
 $statusDrop->addFromDB($status, 'name', 'id');
 $statusDrop->setSelected($ahisRecord['statusid']);
-$locationDrop = new dropdown('location');
+$locationDrop = new dropdown('locationid');
 $locationDrop->addFromDB($locations, 'name', 'id');
 $locationDrop->setSelected($ahisRecord['locationid']);
-$departmentDrop = new dropdown('department');
+$departmentDrop = new dropdown('departmentid');
 $departmentDrop->addFromDB($departments, 'name', 'id');
 $departmentDrop->setSelected($ahisRecord['departmentid']);
-$roleDrop = new dropdown('role');
+$roleDrop = new dropdown('roleid');
 $roleDrop->addFromDB($roles, 'name', 'id');
 $roleDrop->setSelected($ahisRecord['roleid']);
 
