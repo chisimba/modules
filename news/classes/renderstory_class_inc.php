@@ -41,7 +41,7 @@ class renderstory extends object
         $this->setVar('pageTitle', $story['storytitle']);
 
         if ( $this->objUser->inAdminGroup($this->objUser->userId()) ) {
-            if ($this->objDT->isValid('editstory')) {
+            if ( $this->objDT->isValid('editstory') ) {
                 $this->objIcon->setIcon('edit');
                 $this->objIcon->alt = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
                 $this->objIcon->title = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
@@ -51,7 +51,7 @@ class renderstory extends object
                 $header->str .= ' '.$editLink->show();
             }
 
-            if ($this->objDT->isValid('deletestory')) {
+            if ( $this->objDT->isValid('deletestory') ) {
                 $this->objIcon->setIcon('delete');
                 $this->objIcon->alt = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
                 $this->objIcon->title = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
