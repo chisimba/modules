@@ -39,29 +39,29 @@ class renderstory extends object
         $header->type = 1;
         $header->str = $story['storytitle'];
         $this->setVar('pageTitle', $story['storytitle']);
-        
-        if ($this->objDT->isValid('editstory')) {
-            $this->objIcon->setIcon('edit');
-            $this->objIcon->alt = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
-            $this->objIcon->title = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
-            $editLink = new link ($this->uri(array('action'=>'editstory', 'id'=>$story['id'])));
-            $editLink->link = $this->objIcon->show();
-            
-            $header->str .= ' '.$editLink->show();
+
+        if ( $this->objUser->inAdminGroup($this->objUser->userId()) ) {
+            if ($this->objDT->isValid('editstory')) {
+                $this->objIcon->setIcon('edit');
+                $this->objIcon->alt = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
+                $this->objIcon->title = $this->objLanguage->languageText('mod_news_editstory', 'news', 'Edit Story');
+                $editLink = new link ($this->uri(array('action'=>'editstory', 'id'=>$story['id'])));
+                $editLink->link = $this->objIcon->show();
+
+                $header->str .= ' '.$editLink->show();
+            }
+
+            if ($this->objDT->isValid('deletestory')) {
+                $this->objIcon->setIcon('delete');
+                $this->objIcon->alt = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
+                $this->objIcon->title = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
+                $editLink = new link ($this->uri(array('action'=>'deletestory', 'id'=>$story['id'])));
+                $editLink->link = $this->objIcon->show();
+
+                $header->str .= ' '.$editLink->show();
+            }
         }
-        
-        if ($this->objDT->isValid('deletestory')) {
-            $this->objIcon->setIcon('delete');
-            $this->objIcon->alt = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
-            $this->objIcon->title = $this->objLanguage->languageText('mod_news_deletestory', 'news', 'Delete Story');
-            $editLink = new link ($this->uri(array('action'=>'deletestory', 'id'=>$story['id'])));
-            $editLink->link = $this->objIcon->show();
-            
-            $header->str .= ' '.$editLink->show();
-        }
-        
-        
-        
+
         $str = $header->show();
         
         $str .= '<p>'.$objDateTime->formatDateOnly($story['storydate']).'</p>';
