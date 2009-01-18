@@ -177,24 +177,21 @@ class blogposts extends object
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
                     $icons = '';
-                    if ($post['userid'] == $userid) { //|| $this->objUser->isAdmin() || $this->objUser->inAdminGroup($this->objUser->userId() )) {
+                    if ($post['userid'] == $userid) {
                         $this->objIcon = $this->getObject('geticon', 'htmlelements');
                         $edIcon = $this->objIcon->getEditIcon($this->uri(array(
                             'action' => 'postedit',
                             'id' => $post['id'],
                             'module' => 'blog'
                             )));
-                        // $delIcon = $this->objIcon->getDeleteIconWithconfirm($post['id'],array('action'=>'deletepost','id'=>$post['id'],'nextAction'=>'viewblog'),'blog');
-                        $icons = "$edIcon "; // $delIcon";
+                        $icons .= " $edIcon";
                     }
                     if($post['userid'] == $userid || $this->objUser->isAdmin() || $this->objUser->inAdminGroup($this->objUser->userId() )) {
                         $this->objIcon = $this->getObject('geticon', 'htmlelements');
                         $delIcon = $this->objIcon->getDeleteIconWithconfirm($post['id'],array('action'=>'deletepost','id'=>$post['id'],'nextAction'=>'viewblog'),'blog');
-                        $icons .= "$delIcon";
+                        $icons .= " $delIcon";
                     }
                     $head = $headLink->show() . " $icons<br />" . $dt . "<br />";
-                    // .'<script src="http:// digg.com/tools/diggthis.js" type="text/javascript"></script>';
-
                 }
                 // dump in the post content and voila! you have it...
                 // build the post content plus comment count and stats???
