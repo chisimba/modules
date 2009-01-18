@@ -141,6 +141,21 @@ class blogposts extends object
                         continue;
                     }
                 }
+                $icons = '';
+                if ($post['userid'] == $userid) {
+                    $this->objIcon = $this->getObject('geticon', 'htmlelements');
+                    $edIcon = $this->objIcon->getEditIcon($this->uri(array(
+                        'action' => 'postedit',
+                        'id' => $post['id'],
+                        'module' => 'blog'
+                        )));
+                    $icons .= " $edIcon";
+                }
+                if($post['userid'] == $userid || $this->objUser->isAdmin() || $this->objUser->inAdminGroup($this->objUser->userId() )) {
+                    $this->objIcon = $this->getObject('geticon', 'htmlelements');
+                    $delIcon = $this->objIcon->getDeleteIconWithconfirm($post['id'],array('action'=>'deletepost','id'=>$post['id'],'nextAction'=>'viewblog'),'blog');
+                    $icons .= " $delIcon";
+                }
                 if ($post['stickypost'] == 1) {
                     $objStickyIcon = $this->newObject('geticon', 'htmlelements');
                     $objStickyIcon->setIcon('sticky_yes');
@@ -159,7 +174,7 @@ class blogposts extends object
                         	'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
                     }
-                    $head = $objStickyIcon->show() . $headLink->show() . "<br />" . $dt;
+                    $head = $objStickyIcon->show() . $headLink->show() . " $icons<br />" . $dt;
                 } else {
                 	if($post['post_status'] == 1)
                     {
@@ -175,21 +190,6 @@ class blogposts extends object
                         	'postid' => $post['id'],
                         	'userid' => $post['userid']
                     	)) , stripslashes($post['post_title']) , NULL);
-                    }
-                    $icons = '';
-                    if ($post['userid'] == $userid) {
-                        $this->objIcon = $this->getObject('geticon', 'htmlelements');
-                        $edIcon = $this->objIcon->getEditIcon($this->uri(array(
-                            'action' => 'postedit',
-                            'id' => $post['id'],
-                            'module' => 'blog'
-                            )));
-                        $icons .= " $edIcon";
-                    }
-                    if($post['userid'] == $userid || $this->objUser->isAdmin() || $this->objUser->inAdminGroup($this->objUser->userId() )) {
-                        $this->objIcon = $this->getObject('geticon', 'htmlelements');
-                        $delIcon = $this->objIcon->getDeleteIconWithconfirm($post['id'],array('action'=>'deletepost','id'=>$post['id'],'nextAction'=>'viewblog'),'blog');
-                        $icons .= " $delIcon";
                     }
                     $head = $headLink->show() . " $icons<br />" . $dt . "<br />";
                 }
