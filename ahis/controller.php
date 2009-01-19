@@ -101,6 +101,7 @@ class ahis extends controller {
             $this->objTerritory = $this->getObject('territory');
             $this->objAhisUser = $this->getObject('ahisuser');
             $this->objLocation = $this->getObject('location');
+            $this->objProduction = $this->getObject('production');
             
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -349,6 +350,47 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objLocation->delete('id', $id);
                 return $this->nextAction('location_admin', array('success'=>'2'));
+            
+            case 'production_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objProduction->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'production_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_productionadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_productionadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
+                $this->setVar('deleteAction', 'production_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'production_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'production_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'production_add_tpl.php';
+            
+            case 'production_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objProduction->valueExists('name', $name)) {
+                    return $this->nextAction('production_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objProduction->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objProduction->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('production_admin', array('success'=>$code));
+            
+            case 'production_delete':
+                $id = $this->getParam('id');
+                $this->objProduction->delete('id', $id);
+                return $this->nextAction('production_admin', array('success'=>'2'));
             
             case 'view_reports':
                 
