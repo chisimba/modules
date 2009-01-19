@@ -1770,13 +1770,6 @@
             return $tabs->show();
         }
 
-
-
-
-
-
-
-
        /**
         * Method to the true/false tick
         *
@@ -2190,7 +2183,6 @@
             $objForm = new form('editfrm', $this->uri(array('action' => 'savemenu', 'id' => $menuNodeId)));
             $objForm->setDisplayType(3);
 
-
             $nodeTypeInput = new dropdown ('nodetype');
             if ($menuNode[0]['parent_id'] == '0') {
                 $nodeTypeInput->addOption('0','Menu Root'.'&nbsp;&nbsp;');
@@ -2230,7 +2222,6 @@
             } else {
                 $publishedInput->setChecked(FALSE);
             }
-
 
             $table->startRow();
             $table->addCell('Node Id');
@@ -2576,21 +2567,23 @@
                 $dropdown->addOption(0, '[Root]');
             }
 
-            foreach($arrSections as $section) {
-                $pref = "";
-                $matches = split('<', $section['title']);
-                $img = split('>', $matches[1]);
-                $image = '<'.$img[0].'>';
-                $linkText = $img[1];
-                $noSpaces = strlen($matches[0]);
-                for ($i = 1; $i < $noSpaces; $i++) {
-                    $pref .= '&nbsp;&nbsp;';
+            if (!empty($arrSections)) {
+                foreach($arrSections as $section) {
+                    $pref = "";
+                    $matches = split('<', $section['title']);
+                    $img = split('>', $matches[1]);
+                    $image = '<'.$img[0].'>';
+                    $linkText = $img[1];
+                    $noSpaces = strlen($matches[0]);
+                    for ($i = 1; $i < $noSpaces; $i++) {
+                        $pref .= '&nbsp;&nbsp;';
+                    }
+                    
+                    $section = $this->_objSections->getSection($section['id']);
+                    //View section link
+                    $sectionItem = $pref.$linkText;
+                $dropdown->addOption($section['id'], $sectionItem);
                 }
-                
-                $section = $this->_objSections->getSection($section['id']);
-                //View section link
-                $sectionItem = $pref.$linkText;
-            $dropdown->addOption($section['id'], $sectionItem);
             }
 
             $dropdown->setSelected($setSelected);
