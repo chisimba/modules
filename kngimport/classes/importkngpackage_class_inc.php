@@ -85,6 +85,7 @@ class importKNGPackage extends dbTable
         	$this->objContentTitles = $this->getObject('db_contextcontent_titles','contextcontent');
         	$this->objDBContext =  $this->newObject('dbcontext', 'context');
 		$this->objDebug = FALSE;
+		$this->objPlugins = $this->getObject('dbcontextmodules','context');
 	}
 
 	/**
@@ -103,7 +104,10 @@ class importKNGPackage extends dbTable
 			if($this->objError)
 				return  "choiceError";
 		// Retrieve data within context.
+		
 		$courseData = $this->objIEUtils->getCourse($contextcode);
+		//$r = $this->objIEUtils->getCourseContent($courseData['id']);
+		//var_dump($courseData); var_dump($contextcode);die;die;
 		$oldContextCode = $courseData['contextcode'];
 		if(!isset($courseData))
 			if($this->objError)
@@ -112,26 +116,45 @@ class importKNGPackage extends dbTable
 		$courseData['userid'] = $this->objUser->userId();
 		$courseData['isclosed'] = 'Public';
 		$courseData['isactive'] = 'UnPublished';
-		$courseData['contextcode'] = $contextcode.$this->objIEUtils->generateUniqueId('8');
-		$writeCourse = $this->objIEUtils->createCourseInChisimba($courseData);
+		$courseData['contextcode'] = $contextcode;//.$this->objIEUtils->generateUniqueId('8');
+		if(!$this->objDBContext->contextExists($contextcode))
+		{
+		    $writeCourse = $this->objIEUtils->createCourseInChisimba($courseData);
+		}
+		//var_dump($contextcode);die;
 		if(!isset($writeCourse))
 			if($this->objError)
 				return  "courseWriteError";
+			    
+		if(!$this->objPlugins->isContextPlugin($contextcode, 'contextcontent'))
+		{
+		   
+		    $this->objPlugins->addModule($contextcode, 'contextcontent');
+		} 
+		
 		// Initialize all locations.
-		$init = $this->initLocations($courseData['contextcode'], $courseData['title']);
+		//$init = $this->initLocations($courseData['contextcode'], $courseData['title']);
 		// Write Htmls to Chisimba usrfiles directory.
 		// Course id
+		
 		$courseId = $courseData['id'];
 		// Retrieve html page data within context.
-		$courseContent = $this->objIEUtils->getCourseContent($courseId);
-		// Write Html's to specified directory  (resources folder).
-		if(count($courseContent) > 0)
-			$writeKNGHtmls = $this->objIEUtils->writeFiles($courseContent, $this->docsLocation, '', 'html', 'kng');
-		// Load Html's into Chisimba.
-		if(count($courseContent) > 0)
-			$menutitles = $this->loadToChisimba($courseContent, $courseData, $this->contextCode);
-		$enterContext = $this->objDBContext->joinContext($this->contextCode);
+		$courseContent = $this->objIEUtils->getCourseContent($courseData);
+		//var_dump($courseContent);
+		$this->objIEUtils->insertContextContent($courseData, $courseContent);
+		//enable the contextcontent plugin
+		
 
+		
+		// Write Html's to specified directory  (resources folder).
+		//if(count($courseContent) > 0)
+		    //var_dump($this->docsLocation);die;
+			//$writeKNGHtmls = $this->objIEUtils->writeFiles($courseContent, $this->docsLocation, '', 'html', 'kng');
+		// Load Html's into Chisimba.
+		//if(count($courseContent) > 0)
+		   
+			//$menutitles = $this->loadToChisimba($courseContent, $courseData, $contextcode);
+		$enterContext = $this->objDBContext->joinContext($this->contextCode);
 
                 // Import Lecturers
                 $staffList=$this->objIEUtils->remoteUsers($contextcode);
@@ -157,7 +180,7 @@ class importKNGPackage extends dbTable
             $groupId=$result[0]['id'];
             
             foreach ($staffList as $line){
-                $testId=$this->userImport->checkForUser($line['username'],$line['firstName'],$line['surname'],$line['emailAddress']);
+                $testId=$this->userImport->checkForUser(addslashes($line['username']),addslashes($line['firstName']),addslashes($line['surname']),addslashes($line['emailAddress']));
                 if ($testId){
                     $id=$this->userImport->objUser->PKId($testId);                    
                 } else {
@@ -265,9 +288,15 @@ class importKNGPackage extends dbTable
 				'content' => $courseData['about'],
 				'language' => "en",
 				'headerscript' => "");
-		$this->chapterId = $this->objIEUtils->addChapters($this->contextCode, $this->courseTitle, $this->courseData['about']);
-		$writePage = $this->writePage($values, $contextCode);
+		///var_dump($contextCode);die;
+		//get the chapters
+		
+		
+		$this->chapterId = $this->objIEUtils->addChapters($contextData, $courseContent);
+		/*$writePage = $this->writePage($values, $contextCode);
+		//die('here');
 		static $i = 0;
+		var_dump($courseContent);die;
 		foreach($courseContent as $content)
 		{
 			$menutitle = $content['0']['menu_text'];
@@ -290,6 +319,7 @@ class importKNGPackage extends dbTable
 		}
 
 		return $menutitles;
+		*/
 	}
 
 	/**

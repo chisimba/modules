@@ -257,7 +257,7 @@ class kngimport extends controller
 		$this->setSession('dbData',$dbData);
 		$this->setSession('server', $server);
 		$this->setVar('newCourse',TRUE);
-//var_dump($server);die;
+
 		return 'importcourse_tpl.php';
 	break;
 	/**
@@ -265,7 +265,7 @@ class kngimport extends controller
 	*/
 	case 'uploadKNG':
 		$choice = $this->getParam('dropdownchoice');
-		$this->setLayoutTemplate('uploadstatus_tpl.php');
+		$this->setLayoutTemplate('uploadstatus_tpl.php');		
 		$this->objImportKNGContent->importKNGcontent($choice);
 
 		return $this->nextAction('default');

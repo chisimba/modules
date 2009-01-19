@@ -383,8 +383,11 @@ class remoteimportexportutils extends dbTable
 	 * @return array $subPages - list of all subpages in context
 	 *
 	*/
-	function getCourseContent($courseId, $type = NULL)
+	function getCourseContent($courseData, $type = NULL)
 	{
+	    $courseId = $courseData['id'];
+	    $contextCode = $courseData['contextcode'];
+	    
 		if($type == "new")
 		{
 			// Access new database.
@@ -408,14 +411,34 @@ class remoteimportexportutils extends dbTable
 		}
 		else
 		{
-			// Set database.
+		    // Set database.
 			$dsn = $this->getSession('server');
+			
+		    //get the context parent node id so that we can retrieve the content for that course
+		    $table = "tbl_context_parentnodes";
+			// Set query.
+			
+			$query = "SELECT * from tbl_context_parentnodes WHERE tbl_context_parentnodes_has_tbl_context_tbl_context_contextCode = '$contextCode'";
+			//var_dump($query);die;
+			// Execute query on specified database and table.
+			$parentNodes = $this->importDBData($dsn, $table, $query);
+			$parentNodeId = $parentNodes[0]['id'];
+			//print $parentNodeId;
 			// Set table.
 			$table = "tbl_context_nodes";
 			// Set query.
-			$query = "SELECT * from tbl_context_nodes WHERE tbl_context_parentnodes_id = '$courseId'";
+			$query = "SELECT  nodes.title, content.menu_text, content.body 
+				from tbl_context_nodes as nodes
+				inner join 
+				tbl_context_page_content as content
+				on  nodes.id = content.tbl_context_nodes_id
+				WHERE nodes.tbl_context_parentnodes_id = '$parentNodeId' ";
+			//$query = "SELECT * from tbl_context_nodes WHERE tbl_context_parentnodes_id = '$parentNodeId'";
 			// Execute query on specified database and table.
+			
 			$courseContent = $this->importDBData($dsn, $table, $query);
+			//var_dump(count($courseContent));die;
+			return $courseContent; 
 			$subPages = array();
 			$i = 0;
 			foreach($courseContent as $aNode)
@@ -432,6 +455,7 @@ class remoteimportexportutils extends dbTable
 				$subPages[$i] = $this->importDBData($dsn, $table, $query);
 				$i++;
 			}
+			//var_dump($subPages);
 			if(!isset($courseContent))
 				return  "courseReadError";
 			$this->switchDatabase();
@@ -441,7 +465,60 @@ class remoteimportexportutils extends dbTable
 
 		return FALSE;
 	}
-
+    
+    /**
+    * Method to inser the content coming from the old server
+    */
+    public function insertContextContent($contextData, $contextContent)
+    {
+        //add the root chapters
+        
+	$objContentPages = $this->getObject('db_contextcontent_pages', 'contextcontent');
+	$objContentTitles = $this->getObject('db_contextcontent_titles', 'contextcontent');
+	$objContentOrder = $this->getObject('db_contextcontent_order', 'contextcontent');
+        if(count($contextContent) > 0 )
+        {
+	    
+	    //create root chapter
+	    $chapterId = $this->objChapters->addChapter('', 'Root Chapter', 'All the course content was imported to this chapter');                
+	    $result = $this->objContextChapters->addChapterToContext($chapterId, $contextData['contextcode'], 'Y');
+	    print 'inserting root chapter..'.$result;
+	    
+	    //insert everything as pages
+            foreach($contextContent as $page)
+	    {
+		print '<br>insert page..'.$page['menu_text'];
+		$titleId = $objContentTitles->addTitle('', $page['menu_text'], $page['body'], 'en', '');
+		$objContentOrder->addPageToContext($titleId, '', $contextData['contextcode'], $chapterId);
+	    }
+	    die('done');
+         /*
+            foreach ($contextContent as $rootChapter)
+            {
+            
+                $title = str_replace('_',' ',$rootChapter['title']);
+		       
+	            
+	            //get the chapter content
+	           
+		        $chapterId = $this->objChapters->addChapter($contextCode, $title, 'Root Chapter');
+                
+		        $result = $this->objContextChapters->addChapterToContext($chapterId, $contextData['contextcode'], $visibility);
+		       
+            }
+	 */
+        }
+        
+    }
+    
+    public function getNodeBody($nodeId)
+    {
+        $sql="SELECT body FROM tbl_context_page_content WHERE tbl_context_nodes_id = '".$nodeId."'";
+	    //var_dump($sql);die;
+	    $body = $this->importDBData($this->getSession('server'), 'tbl_context_page_content', $sql);
+	    
+	    return $body[0];
+    }
 	/**
 	 * Writes all images specific to context to usrfiles directory of new system (Chisimba)
 	 * or to a specified folder
@@ -554,7 +631,7 @@ class remoteimportexportutils extends dbTable
 	 * @return array $htmlfilenames - 
 	 *
 	*/
-	function writeFiles($htmlPages, $resourceFolder, $courseTitle = '', $fileType = '', $packageType = '')
+	function writeFiles($htmlPages, $resourcecreateFolder, $courseTitle = '', $fileType = '', $packageType = '')
 	{
             if (!is_dir($resourceFolder)){
                mkdir($resourceFolder, 0700);
@@ -1052,9 +1129,12 @@ class remoteimportexportutils extends dbTable
 	*/
 	function addChapters($contextCode, $chapterName, $intro)
 	{
+	
 		$title = str_replace('_',' ',$chapterName);
 		$visibility = 'Y';
-		$chapterId = $this->objChapters->addChapter('', $title, $intro);
+	
+		$chapterId = $this->objChapters->addChapter($contextCode, $title, $intro);
+        
 		$result = $this->objContextChapters->addChapterToContext($chapterId, $contextCode, $visibility);
 
 		return $chapterId;
@@ -1175,8 +1255,9 @@ class remoteimportexportutils extends dbTable
 		$objElement = new dropdown('dropdownchoice');
 		// Dropdown .
                 $d2=array();
+		
                 foreach ($dbData as $line){
-                    $d2[$line['contextcode']]=$line['title'];
+                    $d2[$line['contextcode']]=$line['menutext'];
                 }
                 asort($d2);
 		foreach($d2 as $code=>$title){
