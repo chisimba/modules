@@ -101,7 +101,12 @@ class ahis extends controller {
             $this->objTerritory = $this->getObject('territory');
             $this->objAhisUser = $this->getObject('ahisuser');
             $this->objProduction = $this->getObject('production');
-            
+            $this->objTitle = $this->getObject('title');
+            $this->objStatus = $this->getObject('status');
+            $this->objDepartment = $this->getObject('department');
+            $this->objRole = $this->getObject('role');
+            $this->objSex = $this->getObject('sex');
+                       
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
                                         'geography_level2_admin', 'prodution_admin', 'territory_admin',
@@ -109,7 +114,8 @@ class ahis extends controller {
                                         'control_admin', 'outbreak_admin', 'geography_level3_delete',
                                         'geography_level3_add', 'geography_level3_insert', 'create_territory',
                                         'territory_insert', 'employee_admin', 'employee_insert', 'create_employee',
-                                        'production_admin', 'production_add');
+                                        'production_admin', 'production_add', 'title_admin', 'title_add',
+                                        'status_admin', 'status_add', 'sex_admin', 'sex_add');
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -227,6 +233,11 @@ class ahis extends controller {
                 return $this->nextAction('geography_level2_admin', array('success'=>'2'));
             
             case 'create_territory':
+                if ($this->objGeo2->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_nogeo2','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'geography_level2_admin')));
+                    return 'redirect_tpl.php';
+                }
                 $geo2 = $this->objGeo2->getAll("ORDER BY name");
                 $this->setVar('geo2',$geo2);
                 return "add_territory_tpl.php";
@@ -252,17 +263,38 @@ class ahis extends controller {
                 return 'admin_employee_tpl.php';
             
             case 'create_employee':
-                $objTitle = $this->getObject('title');
-                $objDepartment = $this->getObject('department');
-                $objRole = $this->getObject('role');
-                $objStatus = $this->getObject('status');
+                if ($this->objTitle->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_notitle','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'title_admin')));
+                    return 'redirect_tpl.php';
+                }
+                if ($this->objStatus->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_nostatus','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'status_admin')));
+                    return 'redirect_tpl.php';
+                }
+                if ($this->objRole->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_norole','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'role_admin')));
+                    return 'redirect_tpl.php';
+                }
+                if ($this->objDepartment->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_nodepartment','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'department_admin')));
+                    return 'redirect_tpl.php';
+                }
+                if ($this->objTerritory->getRecordCount() < 1) {
+                    $this->setVar('message', $this->objLanguage->languageText('mod_ahis_noterritory','ahis'));
+                    $this->setVar('location', $this->uri(array('action'=>'create_territory')));
+                    return 'redirect_tpl.php';
+                }
                 
                 $this->setVar('id', $this->getParam('id'));
-                $this->setVar('titles', $objTitle->getAll());
-                $this->setVar('status', $objStatus->getAll());
+                $this->setVar('titles', $this->objTitle->getAll());
+                $this->setVar('status', $this->objStatus->getAll());
                 $this->setVar('locations', $this->objTerritory->getAll());
-                $this->setVar('departments', $objDepartment->getAll());
-                $this->setVar('roles', $objRole->getAll());
+                $this->setVar('departments', $this->objDepartment->getAll());
+                $this->setVar('roles', $this->objRole->getAll());
                 return "add_employee_tpl.php";
             
             case 'employee_insert':
@@ -350,9 +382,130 @@ class ahis extends controller {
                 $this->objProduction->delete('id', $id);
                 return $this->nextAction('production_admin', array('success'=>'2'));
             
+            case 'title_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objTitle->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'title_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_titleadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_titleadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_title'));
+                $this->setVar('deleteAction', 'title_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'title_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'title_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'title_add_tpl.php';
+            
+            case 'title_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objTitle->valueExists('name', $name)) {
+                    return $this->nextAction('title_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objTitle->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objTitle->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('title_admin', array('success'=>$code));
+            
+            case 'title_delete':
+                $id = $this->getParam('id');
+                $this->objTitle->delete('id', $id);
+                return $this->nextAction('title_admin', array('success'=>'2'));
+            
+            case 'status_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objStatus->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'status_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_statusadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_statusadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_status'));
+                $this->setVar('deleteAction', 'status_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'status_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'status_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'status_add_tpl.php';
+            
+            case 'status_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objStatus->valueExists('name', $name)) {
+                    return $this->nextAction('status_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objStatus->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objStatus->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('status_admin', array('success'=>$code));
+            
+            case 'status_delete':
+                $id = $this->getParam('id');
+                $this->objStatus->delete('id', $id);
+                return $this->nextAction('status_admin', array('success'=>'2'));
+            
+            case 'sex_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objSex->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'sex_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sexadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_sexadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_sex'));
+                $this->setVar('deleteAction', 'sex_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'sex_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'sex_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'sex_add_tpl.php';
+            
+            case 'sex_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objSex->valueExists('name', $name)) {
+                    return $this->nextAction('sex_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objSex->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objSex->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('sex_admin', array('success'=>$code));
+            
+            case 'sex_delete':
+                $id = $this->getParam('id');
+                $this->objSex->delete('id', $id);
+                return $this->nextAction('sex_admin', array('success'=>'2'));
+            
             case 'view_reports':
-                
-                
             
             default:
                 return $this->nextAction('select_officer');
