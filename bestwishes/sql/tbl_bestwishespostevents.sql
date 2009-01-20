@@ -46,6 +46,12 @@ $options = array(
 Create the table fields
 */
 $fields = array(
+'id' => array(
+    'type' => 'text',
+    'length' => 32,
+    'notnull' => 1
+    ),
+
     'userid' => array(
         'type' => 'text',
         'length' => 50,
