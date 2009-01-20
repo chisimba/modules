@@ -128,7 +128,10 @@ class tabsmenu extends object
             case 'employee_admin':
             case 'create_employee':
             case 'employee_insert':
-            case 'location_admin':
+            case 'production_admin':
+            case 'production_add':
+            case 'production_delete':
+            case 'production_insert':
                 $this->default = 'admin';
                 break;
             case 'view_reports':
