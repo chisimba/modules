@@ -199,7 +199,94 @@
         }
 
         /**
+         * Method to save a record to the database
+         *
+         * @access public
+         * @return bool
+         */
+        public function addContent($title,
+                    $published,
+                    $override_date,
+                    $start_publish,
+                    $end_publish,
+                    $creatorid,
+                    $show_title,
+                    $show_author,
+                    $show_date,
+                    $show_pdf,
+                    $show_email,
+                    $show_print,
+                    $access,
+                    $created_by,
+                    $introText,
+                    $fullText,
+                    $metakey,
+                    $metadesc,
+                    $ccLicence)
+        {
+            //Create htmlcleaner object
+            $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
+            
+            if($published == 1){
+                $start_publish = $this->now();
+            }
+            
+            $end_publish = $this->getParam('end_date',null);
+            
+            if ($override_date==null) {
+                $override_date =  $this->now();
+            }
+            
+            if ($creatorid==NUll) {
+                $creatorid = $this->_objUser->userId();
+            }
+
+            $newArr = array(
+                          'title' => $title ,
+                          'sectionid' => $sectionid,
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
+                          'access' => $access,
+                          'ordering' => $this->getOrdering($sectionid),
+                          'published' => $published,
+                          'show_title' => $show_title,
+                          'show_author' => $show_author,
+                          'show_date' => $show_date,
+                          'show_pdf' => $show_pdf,
+                          'show_email' => $show_email,
+                          'show_print' => $show_print,
+                          'created' => $this->now(),
+                          'modified' => $this->now(),
+                          'post_lic' => $ccLicence,
+                          'created' =>$override_date,
+                          'created_by' => $creatorid,
+                          'created_by_alias'=>$created_by,
+                          'checked_out'=> $creatorid,
+                          'checked_out_time'=> $this->now(),
+                          'metakey'=>$metakey,
+                          'metadesc'=>$metadesc,
+                          'start_publish'=>$start_publish,
+                          'end_publish'=>$end_publish
+                          
+            );
+
+            $newId = $this->insert($newArr);
+            $newArr['id'] = $newId;
+            $this->luceneIndex($newArr);
+            //process the forntpage
+            $isFrontPage = $this->getParam('frontpage');
+
+            if ($isFrontPage == 1) {
+                $this->_objFrontPage->add($newId);
+            }
+
+            $this->_objSecurity->inheritContentPermissions($newId);
+            return $newId;
+        }
+
+        /**
          * Method to save a record to the database specifying all params
+         * @deprecated This method will be replaced by addContent(params)
          *
          * @param string $title The title of the page
          * @param string $sectionid The id of the section in which the content will appear
@@ -251,9 +338,10 @@
                           'show_pdf' => $show_pdf,
                           'show_email' => $show_email,
                           'show_print' => $show_print,
-                          'created' =>  $this->now(),
+                          'created' => $this->now(),
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
+                          'created' =>$override_date,
                           'created_by' => $creatorid,
                           'created_by_alias'=>$created_by,
                           'checked_out'=> $creatorid,
@@ -261,16 +349,21 @@
                           'metakey'=>$metakey,
                           'metadesc'=>$metadesc,
                           'start_publish'=>$start_publish,
-                          'end_publish'=>$$end_publish
+                          'end_publish'=>$end_publish
+                          
             );
 
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
             $this->luceneIndex($newArr);
-            if ($isFrontPage == 'on') {
+            //process the forntpage
+            $isFrontPage = $this->getParam('frontpage');
+
+            if ($isFrontPage == 1) {
                 $this->_objFrontPage->add($newId);
             }
 
+            $this->_objSecurity->inheritContentPermissions($newId);
             return $newId;
         }
 
