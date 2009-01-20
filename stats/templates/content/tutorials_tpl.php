@@ -46,7 +46,8 @@ $link->link = $this->objLanguage->languageText("word_back");
 $backLink = "<div style='float:left'>Good luck.</div><div style='float:right'>".$link->show()."</div>";
 
 $aam = $this->getResourceURI('login.aam');
-$iFrame = "<iframe width='100%' height='400' frameborder='0' scrolling='no' src='$aam'></iframe>";
+//$iFrame = "<iframe width='100%' height='400' frameborder='0' scrolling='no' src='$aam'></iframe>";
+$iFrame = "<EMBED SRC='$aam' WIDTH=100% HEIGHT=400 PALETTE=Background>";
 
 echo $objHead->show()."$note$backLink<br /><br />$iFrame";
 ?>
