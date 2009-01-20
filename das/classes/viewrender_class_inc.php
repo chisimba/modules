@@ -261,7 +261,7 @@ class viewrender extends object {
 			{
 
 				$anchor->href = '#'.$msg['person'];
-				$anchor->link = $msg['person'];
+				$anchor->link = $this->maskUser($msg['person']);
 				$str .="<li>".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
