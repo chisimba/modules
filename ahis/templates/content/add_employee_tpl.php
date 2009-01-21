@@ -53,6 +53,7 @@ if ($id) {
     if (empty($ahisRecord)) {
         $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] =
         $ahisRecord['titleid'] = $ahisRecord['statusid'] = $ahisRecord['retired'] = '';
+        $ahisRecord['ahisuser'] = 0;
         $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
     }
 } else {
@@ -60,12 +61,23 @@ if ($id) {
     $formUri = $this->uri(array('action'=>'employee_insert'));
     $record['surname'] = $record['firstname'] = $ahisRecord['statusid'] = $ahisRecord['titleid'] = $ahisRecord['retired'] =
     $record['username'] = $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] = '';
+    $ahisRecord['ahisuser'] = 0;
     $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
 $objHeading->str = $hStr;
+
+if ($error) {
+    $objMsg = $this->getObject('timeoutmessage','htmlelements');
+    $objMsg->setMessage("<span class='error'>".$this->objLanguage->languageText('mod_ahis_unameandpword', 'ahis')."</span><br />");
+    $objMsg->setTimeOut('0');
+    $msg = $objMsg->show();
+    
+} else {
+    $msg ='';
+}
 
 $surnameInput = new textinput('surname',$record['surname']);
 $nameInput = new textinput('name',$record['firstname']);
@@ -74,9 +86,15 @@ $passwordInput = new textinput('password', NULL, 'password');
 $confirmInput = new textinput('confirm', NULL, 'password');
 
 $retiredBox = new checkbox('retired', NULL, $ahisRecord['retired']);
-$retiredBox->extra = "onchange = 'toggleRetiredDate()'";
+$retiredBox->extra = "onchange = 'toggleRetiredDate();'";
 if (!$ahisRecord['retired']) {
-    $this->appendArrayVar('bodyOnLoad','toggleRetiredDate()');
+    $this->appendArrayVar('bodyOnLoad','toggleRetiredDate();');
+}
+
+$ahisBox = new checkbox('ahisuser', NULL, $ahisRecord['ahisuser']);
+$ahisBox->extra = "onchange = 'toggleAhisUser();'";
+if (!$ahisRecord['ahisuser']) {
+    $this->appendArrayVar('bodyOnLoad','toggleAhisUser();');
 }
 
 $titleDrop = new dropdown('titleid');
@@ -154,6 +172,8 @@ $objTable->addCell($roleDrop->show(), NULL, NULL, NULL, NULL, 'colspan=2');
 $objTable->endRow();
 
 $objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ahisuser','ahis').": ");
+$objTable->addCell($ahisBox->show());
 $objTable->addCell($this->objLanguage->languageText('word_username').": ");
 $objTable->addCell($usernameInput->show());
 $objTable->endRow();
@@ -176,12 +196,12 @@ $objForm->id = 'form_employeeadd';
 $objForm->addToForm($objTable->show());
 $objForm->addRule('surname', $this->objLanguage->languageText('mod_ahis_surnamerequired', 'ahis'), 'required');
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
-$objForm->addRule('username', $this->objLanguage->languageText('mod_ahis_usernamerequired', 'ahis'), 'required');
-if (!$id) {
-    $objForm->addRule('password', $this->objLanguage->languageText('mod_ahis_passwordrequired', 'ahis'), 'required');
-}
+//$objForm->addRule('username', $this->objLanguage->languageText('mod_ahis_usernamerequired', 'ahis'), 'required');
+//if (!$id) {
+//    $objForm->addRule('password', $this->objLanguage->languageText('mod_ahis_passwordrequired', 'ahis'), 'required');
+//}
 $objForm->addRule(array('confirm', 'password'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'ahis'), 'compare');
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar("headerParams", "<script type='text/javascript' src='$scriptUri'></script>");
-echo $objHeading->show()."<hr />".$objForm->show();
+echo $objHeading->show()."<hr />".$msg.$objForm->show();

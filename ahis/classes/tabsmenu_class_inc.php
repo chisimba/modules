@@ -144,6 +144,26 @@ class tabsmenu extends object
             case 'sex_add':
             case 'sex_delete':
             case 'sex_insert':
+            case 'outbreak_admin':
+            case 'outbreak_add':
+            case 'outbreak_delete':
+            case 'outbreak_insert':
+            case 'diagnosis_admin':
+            case 'diagnosis_add':
+            case 'diagnosis_delete':
+            case 'diagnosis_insert':
+            case 'control_admin':
+            case 'control_add':
+            case 'control_delete':
+            case 'control_insert':
+            case 'quality_admin':
+            case 'quality_add':
+            case 'quality_delete':
+            case 'quality_insert':
+            case 'age_admin':
+            case 'age_add':
+            case 'age_delete':
+            case 'age_insert':
                 $this->default = 'admin';
                 break;
             case 'view_reports':

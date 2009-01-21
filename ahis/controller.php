@@ -106,6 +106,11 @@ class ahis extends controller {
             $this->objDepartment = $this->getObject('department');
             $this->objRole = $this->getObject('role');
             $this->objSex = $this->getObject('sex');
+            $this->objOutbreak = $this->getObject('outbreak');
+            $this->objDiagnosis = $this->getObject('diagnosis');
+            $this->objControl = $this->getObject('control');
+            $this->objQuality = $this->getObject('quality');
+            $this->objAge = $this->getObject('age');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -115,7 +120,9 @@ class ahis extends controller {
                                         'geography_level3_add', 'geography_level3_insert', 'create_territory',
                                         'territory_insert', 'employee_admin', 'employee_insert', 'create_employee',
                                         'production_admin', 'production_add', 'title_admin', 'title_add',
-                                        'status_admin', 'status_add', 'sex_admin', 'sex_add');
+                                        'status_admin', 'status_add', 'sex_admin', 'sex_add', 'outbreak_admin',
+                                        'outbreak_add', 'control_admin', 'control_add', 'quality_admin', 'quality_add',
+                                        'age_add', 'age_admin');
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -290,6 +297,7 @@ class ahis extends controller {
                 }
                 
                 $this->setVar('id', $this->getParam('id'));
+                $this->setVar('error', $this->getParam('error'));
                 $this->setVar('titles', $this->objTitle->getAll());
                 $this->setVar('status', $this->objStatus->getAll());
                 $this->setVar('locations', $this->objTerritory->getAll());
@@ -309,6 +317,19 @@ class ahis extends controller {
                 }
                 $ahisRecord['titleid'] = $this->getParam('titleid');
                 $ahisRecord['statusid'] = $this->getParam('statusid');
+                if ($ahisRecord['statusid'] == "init_02") {
+                    $record['isactive'] = 0;
+                }
+                $ahisRecord['ahisuser'] = $this->getParam('ahisuser');
+                if ($ahisRecord['ahisuser']) {
+                    $ahisRecord['ahisuser'] = 1;
+                    if (!$record['username'] || !$password) {
+                        return $this->nextAction('create_employee', array('error'=>1, 'id'=>$id));
+                    }
+                } else {
+                    $ahisRecord['ahisuser'] = 0;
+                    $record['isactive'] = 0;
+                }
                 $ahisRecord['locationid'] = $this->getParam('locationid');
                 $ahisRecord['departmentid'] = $this->getParam('departmentid');
                 $ahisRecord['roleid'] = $this->getParam('roleid');
@@ -317,6 +338,7 @@ class ahis extends controller {
                 $ahisRecord['retired'] = $this->getParam('retired');
                 if ($ahisRecord['retired']) {
                     $ahisRecord['retired'] = 1;
+                    $record['isactive'] = 0;
                     $ahisRecord['dateretired'] = $this->getParam('retireddate');
                 } else {
                     $ahisRecord['retired'] = 0;
@@ -504,6 +526,211 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objSex->delete('id', $id);
                 return $this->nextAction('sex_admin', array('success'=>'2'));
+            
+            case 'outbreak_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objOutbreak->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'outbreak_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_outbreakadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_outbreakstatusadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_outbreak'));
+                $this->setVar('deleteAction', 'outbreak_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'outbreak_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'outbreak_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'outbreak_add_tpl.php';
+            
+            case 'outbreak_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objOutbreak->valueExists('name', $name)) {
+                    return $this->nextAction('outbreak_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objOutbreak->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objOutbreak->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('outbreak_admin', array('success'=>$code));
+            
+            case 'outbreak_delete':
+                $id = $this->getParam('id');
+                $this->objOutbreak->delete('id', $id);
+                return $this->nextAction('outbreak_admin', array('success'=>'2'));
+            
+            case 'diagnosis_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objDiagnosis->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'diagnosis_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diagnosisadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_diagnosisadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_diagnosis'));
+                $this->setVar('deleteAction', 'diagnosis_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'diagnosis_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'diagnosis_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'diagnosis_add_tpl.php';
+            
+            case 'diagnosis_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objDiagnosis->valueExists('name', $name)) {
+                    return $this->nextAction('diagnosis_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objDiagnosis->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objDiagnosis->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('diagnosis_admin', array('success'=>$code));
+            
+            case 'diagnosis_delete':
+                $id = $this->getParam('id');
+                $this->objDiagnosis->delete('id', $id);
+                return $this->nextAction('diagnosis_admin', array('success'=>'2'));
+            
+            case 'control_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objControl->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'control_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_controladd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_controladmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_control'));
+                $this->setVar('deleteAction', 'control_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'control_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'control_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'control_add_tpl.php';
+            
+            case 'control_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objControl->valueExists('name', $name)) {
+                    return $this->nextAction('control_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objControl->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objControl->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('control_admin', array('success'=>$code));
+            
+            case 'control_delete':
+                $id = $this->getParam('id');
+                $this->objControl->delete('id', $id);
+                return $this->nextAction('control_admin', array('success'=>'2'));
+            
+            case 'quality_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objQuality->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'quality_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_qualityadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_qualityadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_quality'));
+                $this->setVar('deleteAction', 'quality_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'quality_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'quality_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'quality_add_tpl.php';
+            
+            case 'quality_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objQuality->valueExists('name', $name)) {
+                    return $this->nextAction('quality_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objQuality->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objQuality->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('quality_admin', array('success'=>$code));
+            
+            case 'quality_delete':
+                $id = $this->getParam('id');
+                $this->objQuality->delete('id', $id);
+                return $this->nextAction('quality_admin', array('success'=>'2'));
+            
+            case 'age_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objAge->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'age_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_ageadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_ageadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_age'));
+                $this->setVar('deleteAction', 'age_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'age_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'age_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'age_add_tpl.php';
+            
+            case 'age_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objAge->valueExists('name', $name)) {
+                    return $this->nextAction('age_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objAge->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objAge->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('age_admin', array('success'=>$code));
+            
+            case 'age_delete':
+                $id = $this->getParam('id');
+                $this->objAge->delete('id', $id);
+                return $this->nextAction('age_admin', array('success'=>'2'));
             
             case 'view_reports':
             

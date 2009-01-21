@@ -58,7 +58,14 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
-		)
+		),
+    
+    'ahisuser' => array(
+        'type' => 'integer',
+        'length' => '1';
+        'notnull' => TRUE;
+        'default' => 0        
+        )
     );
 //create other indexes here...
 
