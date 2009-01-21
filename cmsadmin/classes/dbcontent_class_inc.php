@@ -473,10 +473,7 @@
                                     $fullText = '',
                                     $override_date = null,
                                     $start_publish = null,
-                                    $start_publish = null,
                                     $end_publish = null,
-                                    $override_date = null,
-                                    $override_date = null,
                                     $modifiedBy = null,
                                     $modifiedDate = null,
                                     $metakey = '',
@@ -630,6 +627,10 @@
             $objLucene = $this->getObject('indexdata', 'search');
             $objLucene->removeIndex('cms_page_'.$id);
             
+            if ($result !== FALSE) {
+                return TRUE;
+            }
+            
             return $result;
         }
 
@@ -691,7 +692,10 @@
                 
                 $this->luceneIndex($page);
                 
-                return $this->update('id', $id, $fields);
+                $result = $this->update('id', $id, $fields);
+                if ($result !== FALSE) {
+                    return TRUE;
+                }
             }
         }
 
@@ -729,6 +733,11 @@
             
             // Reorder the content
             $this->reorderContent($sectionId);
+            
+            if ($result !== FALSE) {
+                return TRUE;                
+            }
+            
             return $result;
         }
 
