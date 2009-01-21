@@ -459,6 +459,121 @@
         }
 
         /**
+         * Method to edit a record
+         *
+         * @access public
+         * @return bool
+         */
+        public function editContent($id = null,
+                                    $title = '',
+                                    $sectionid = null,
+                                    $published = 0,
+                                    $access = null,
+                                    $introText = '',
+                                    $fullText = '',
+                                    $override_date = null,
+                                    $start_publish = null,
+                                    $start_publish = null,
+                                    $end_publish = null,
+                                    $override_date = null,
+                                    $override_date = null,
+                                    $modifiedBy = null,
+                                    $modifiedDate = null,
+                                    $metakey = '',
+                                    $metadesc = '',
+                                    $ccLicence = '',
+                                    $show_title = 'g',
+                                    $show_author = 'g',
+                                    $show_date = 'g',
+                                    $show_pdf = 'g',
+                                    $show_email = 'g',
+                                    $show_print = 'g')
+        {
+            $id = $this->getParam('id');
+            $title = $this->getParam('title');
+            $sectionid = $this->getParam('parent');
+            $published = ($this->getParam('published') == '1') ? 1 : 0;
+            $access = $this->getParam('access');
+            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
+            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+
+            $override_date = $this->getParam('overide_date',null);
+            $start_publish = $this->getParam('publish_date',null);
+            if($published == 1 && empty($start_publish)){
+                $start_publish = $this->now();
+            }
+
+            $end_publish = $this->getParam('end_date',null);
+            if ($override_date!=null) {
+                $override_date =  $this->now();
+            }
+            
+            $access = $this->getParam('access');
+            $modifiedBy = $this->_objUser->userId();
+            $modifiedDate = $this->now();
+            
+            $metakey = $this->getParam('keyword',null);
+            $metadesc = $this->getParam('description',null);
+            $ccLicence = $this->getParam('creativecommons');
+
+            $show_title = $this->getParam('show_title','g');
+            $show_author = $this->getParam('show_title','g');
+            $show_date = $this->getParam('show_title','g');
+
+            $show_pdf = $this->getParam('show_pdf','g');
+            $show_email = $this->getParam('show_email','g');
+            $show_print = $this->getParam('show_print','g');
+
+            $newArr = array(
+                          'title' => $title ,
+                          'sectionid' => $sectionid,
+                          'access' => $access,
+                          'introtext' => addslashes($introText),
+                          'body' => addslashes($fullText),
+                          'modified' => $modifiedDate,
+                          'modified_by' => $modifiedBy,
+                          'published' => $published,
+                          'show_title' => $show_title,
+                          'show_author' => $show_author,
+                          'show_date' => $show_date,
+                          'show_pdf' => $show_pdf,
+                          'show_email' => $show_email,
+                          'show_print' => $show_print,
+                          'post_lic' => $ccLicence,
+                          'checked_out'=> $modifiedBy,
+                          'checked_out_time'=> $this->now(),
+                          'metakey'=>$metakey,
+                          'metadesc'=>$metadesc,
+                          'start_publish'=>$start_publish,
+                          'end_publish'=>$end_publish
+            );
+            
+            $creatorid = $this->getParam('creator',null);
+            if(!empty($creatorid)){
+                $newArr['created_by'] = $creatorid;
+            }
+            
+            //process the frontpage
+            $isFrontPage = $this->getParam('frontpage');
+            //$this->luceneIndex($newArr);
+            if ($isFrontPage == '1') {
+                $this->_objFrontPage->add($id);
+            } else {
+                $this->_objFrontPage->removeIfExists($id);
+            }
+            
+            $result = $this->update('id', $id, $newArr);
+            
+            if ($result != FALSE) {
+                $newArr['id'] = $id;
+                $this->luceneIndex($newArr);
+                return TRUE;
+            }
+            
+            return $result;
+        }
+
+        /**
          * Method to update a content record's body text
          *
          * @param string $id The id of the record that needs to be changed
@@ -471,7 +586,6 @@
             $this->update('id', $contentid, $fields);	
             return TRUE;
         }
-
 
         /**
     *
