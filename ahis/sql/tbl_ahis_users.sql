@@ -62,8 +62,8 @@ $fields = array(
     
     'ahisuser' => array(
         'type' => 'integer',
-        'length' => '1';
-        'notnull' => TRUE;
+        'length' => '1',
+        'notnull' => TRUE,
         'default' => 0        
         )
     );

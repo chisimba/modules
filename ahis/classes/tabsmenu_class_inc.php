@@ -164,6 +164,14 @@ class tabsmenu extends object
             case 'age_add':
             case 'age_delete':
             case 'age_insert':
+            case 'role_admin':
+            case 'role_add':
+            case 'role_delete':
+            case 'role_insert':
+            case 'department_admin':
+            case 'department_add':
+            case 'department_delete':
+            case 'department_insert':
                 $this->default = 'admin';
                 break;
             case 'view_reports':

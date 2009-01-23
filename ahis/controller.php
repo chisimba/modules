@@ -111,6 +111,8 @@ class ahis extends controller {
             $this->objControl = $this->getObject('control');
             $this->objQuality = $this->getObject('quality');
             $this->objAge = $this->getObject('age');
+            $this->objRole = $this->getObject('role');
+            $this->objDepartment = $this->getObject('department');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -122,7 +124,7 @@ class ahis extends controller {
                                         'production_admin', 'production_add', 'title_admin', 'title_add',
                                         'status_admin', 'status_add', 'sex_admin', 'sex_add', 'outbreak_admin',
                                         'outbreak_add', 'control_admin', 'control_add', 'quality_admin', 'quality_add',
-                                        'age_add', 'age_admin');
+                                        'age_add', 'age_admin', 'role_add', 'role_admin', 'department_add', 'department_admin');
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -731,6 +733,88 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objAge->delete('id', $id);
                 return $this->nextAction('age_admin', array('success'=>'2'));
+            
+            case 'role_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objRole->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'role_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_roleadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_roleadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_role'));
+                $this->setVar('deleteAction', 'role_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'role_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'role_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'role_add_tpl.php';
+            
+            case 'role_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objRole->valueExists('name', $name)) {
+                    return $this->nextAction('role_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objRole->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objRole->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('role_admin', array('success'=>$code));
+            
+            case 'role_delete':
+                $id = $this->getParam('id');
+                $this->objRole->delete('id', $id);
+                return $this->nextAction('role_admin', array('success'=>'2'));
+            
+            case 'department_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objDepartment->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'department_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_departmentadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_departmentadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_department'));
+                $this->setVar('deleteAction', 'department_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'department_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'department_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'department_add_tpl.php';
+            
+            case 'department_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objDepartment->valueExists('name', $name)) {
+                    return $this->nextAction('department_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objDepartment->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objDepartment->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('department_admin', array('success'=>$code));
+            
+            case 'department_delete':
+                $id = $this->getParam('id');
+                $this->objDepartment->delete('id', $id);
+                return $this->nextAction('department_admin', array('success'=>'2'));
             
             case 'view_reports':
             
