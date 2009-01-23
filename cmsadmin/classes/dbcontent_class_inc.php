@@ -222,7 +222,8 @@
                     $fullText,
                     $metakey,
                     $metadesc,
-                    $ccLicence)
+                    $ccLicence,
+                    $sectionid)
         {
             //Create htmlcleaner object
             $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
@@ -231,8 +232,6 @@
                 $start_publish = $this->now();
             }
             
-            $end_publish = $this->getParam('end_date',null);
-            
             if ($override_date==null) {
                 $override_date =  $this->now();
             }
@@ -240,6 +239,9 @@
             if ($creatorid==NUll) {
                 $creatorid = $this->_objUser->userId();
             }
+
+            $introText = str_ireplace("<br />", " <br /> ", $introText);
+            $fullText = str_ireplace("<br />", " <br /> ", $fullText);
 
             $newArr = array(
                           'title' => $title ,
@@ -474,8 +476,6 @@
                                     $override_date = null,
                                     $start_publish = null,
                                     $end_publish = null,
-                                    $modifiedBy = null,
-                                    $modifiedDate = null,
                                     $metakey = '',
                                     $metadesc = '',
                                     $ccLicence = '',
@@ -486,40 +486,21 @@
                                     $show_email = 'g',
                                     $show_print = 'g')
         {
-            $id = $this->getParam('id');
-            $title = $this->getParam('title');
-            $sectionid = $this->getParam('parent');
-            $published = ($this->getParam('published') == '1') ? 1 : 0;
-            $access = $this->getParam('access');
-            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
+            $published = ($published == '1') ? 1 : 0;
 
-            $override_date = $this->getParam('overide_date',null);
-            $start_publish = $this->getParam('publish_date',null);
+            $introText = str_ireplace("<br />", " <br /> ", $introText);
+            $fullText = str_ireplace("<br />", " <br /> ", $fullText);
+
             if($published == 1 && empty($start_publish)){
                 $start_publish = $this->now();
             }
 
-            $end_publish = $this->getParam('end_date',null);
-            if ($override_date!=null) {
+            if ($override_date != null) {
                 $override_date =  $this->now();
             }
             
-            $access = $this->getParam('access');
             $modifiedBy = $this->_objUser->userId();
             $modifiedDate = $this->now();
-            
-            $metakey = $this->getParam('keyword',null);
-            $metadesc = $this->getParam('description',null);
-            $ccLicence = $this->getParam('creativecommons');
-
-            $show_title = $this->getParam('show_title','g');
-            $show_author = $this->getParam('show_title','g');
-            $show_date = $this->getParam('show_title','g');
-
-            $show_pdf = $this->getParam('show_pdf','g');
-            $show_email = $this->getParam('show_email','g');
-            $show_print = $this->getParam('show_print','g');
 
             $newArr = array(
                           'title' => $title ,

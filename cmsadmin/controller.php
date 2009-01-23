@@ -52,80 +52,92 @@
         */
         protected $_objFrontPage;
 
-                /**
-                 * The CMS Utilities object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The CMS Utilities object
+         *
+         * @access private
+         * @var object
+         */
         protected $_objUtils;
 
-                /**
-                 * The user object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The user object
+         *
+         * @access private
+         * @var object
+         */
         protected $_objUser;
 
-                /**
-                 * The layout object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The layout object
+         *
+         * @access private
+         * @var object
+         */
         protected $_objLayout;
 
-                /**
-                 * The config object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The config object
+         *
+         * @access private
+         * @var object
+         */
         protected $_objConfig;
 
-                /**
-                 * The language object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The language object
+         *
+         * @access private
+         * @var object
+         */
         public $objLanguage;
 
-                /**
-                 * The blocks object
-                 *
-                 * @access private
-                 * @var object
-                 */
+        /**
+         * The blocks object
+         *
+         * @access private
+         * @var object
+         */
         public $_objBlocks;
 
-                /** the id of the current page
-                 *
-                 * @access public
-                 * @var object
-                 */
+        /** the id of the current page
+         *
+         * @access public
+         * @var object
+         */
         public $currentPageId;
 
+        /**
+         * The tree menu object
+         *
+         * @access public
+         * @var object
+         */
         public $objTreeMenu;
-
+        
+        /**
+         * The tree object
+         *
+         * @access public
+         * @var object
+         */
         public $objTreeNodes;
 
-                /**
-                 * The security object
-                 *
-                 * @access public
-                 * @var object
-                 */
+        /**
+         * The security object
+         *
+         * @access public
+         * @var object
+         */
         public $_objSecurity;
 
 
-                /**
-                 * Class Constructor
-                 *
-                 * @access public
-                 * @return void
-                 */
+        /**
+         * Class Constructor
+         *
+         * @access public
+         * @return void
+         */
         public function init()
         {
             try {       
@@ -300,7 +312,6 @@
                 $this->setVar('content', $content);
     
                 return "menu_child_node_tpl.php";
-
 
                 /* ** Trash manager section ** */
                 case 'trashmanager':
@@ -774,8 +785,53 @@
 
                 case 'createcontent':
                 //Save the content page
-                $this->_objContent->add();
-                $sectionId = $this->getParam('parent', NULL);
+                
+                //Get details of the new entry
+                $title = $this->getParam('title');
+                $sectionId = $this->getParam('parent');
+                $published = ($this->getParam('published') == '1') ? 1 : 0;
+                $override_date = $this->getParam('overide_date',null);
+                $start_publish = $this->getParam('publish_date',null);
+                $end_publish = $this->getParam('end_date',null);
+                $creatorid = $this->getParam('creator',null);
+                
+                $show_title = $this->getParam('show_title','g');
+                $show_author = $this->getParam('show_author','g');
+                $show_date = $this->getParam('show_date','g');
+                
+                $show_pdf = $this->getParam('show_pdf','g');
+                $show_email = $this->getParam('show_email','g');
+                $show_print = $this->getParam('show_print','g');
+                
+                $access = $this->getParam('access');
+                $created_by = $this->getParam('title_alias',null);
+                $introText = $this->getParam('intro');
+                $fullText = $this->getParam('body');
+                $metakey = $this->getParam('keyword',null);
+                $metadesc = $this->getParam('description',null);
+                $ccLicence = $this->getParam('creativecommons',null);                
+                
+                $this->_objContent->addContent( $title,
+                                                $published,
+                                                $override_date,
+                                                $start_publish,
+                                                $end_publish,
+                                                $creatorid,
+                                                $show_title,
+                                                $show_author,
+                                                $show_date,
+                                                $show_pdf,
+                                                $show_email,
+                                                $show_print,
+                                                $access,
+                                                $created_by,
+                                                $introText,
+                                                $fullText,
+                                                $metakey,
+                                                $metadesc,
+                                                $ccLicence,
+                                                $sectionId);
+                
                 if(!empty($sectionId)) {
                     return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
                 } else {
@@ -783,36 +839,76 @@
                 }
 
                 case 'editcontent':
-                $this->_objContent->edit();
-                $mustApply = $this->getParam('must_apply');
-                $contentId = $this->getParam('id');
 
+                    $contentId = $this->getParam('id');
+                    $title = $this->getParam('title');
+                    $sectionId = $this->getParam('parent');
+                    $published = $this->getParam('published');
+                    $access = $this->getParam('access');
+                    $introText = $this->getParam('intro');
+                    $fullText = $this->getParam('body');
+                    $override_date = $this->getParam('overide_date',null);
+                    $start_publish = $this->getParam('publish_date',null);
+                    $end_publish = $this->getParam('end_date',null);
+                    $access = $this->getParam('access');
+                    $metakey = $this->getParam('keyword',null);
+                    $metadesc = $this->getParam('description',null);
+                    $ccLicence = $this->getParam('creativecommons');
+                    
+                    $show_title = $this->getParam('show_title','g');
+                    $show_author = $this->getParam('show_author','g');
+                    $show_date = $this->getParam('show_date','g');
+                    
+                    $show_pdf = $this->getParam('show_pdf','g');
+                    $show_email = $this->getParam('show_email','g');
+                    $show_print = $this->getParam('show_print','g');
+                    
+                    $this->_objContent->editContent($contentId ,
+                                                    $title ,
+                                                    $sectionId ,
+                                                    $published ,
+                                                    $access ,
+                                                    $introText ,
+                                                    $fullText ,
+                                                    $override_date ,
+                                                    $start_publish ,
+                                                    $end_publish ,
+                                                    $metakey ,
+                                                    $metadesc ,
+                                                    $ccLicence ,
+                                                    $show_title ,
+                                                    $show_author ,
+                                                    $show_date ,
+                                                    $show_pdf ,
+                                                    $show_email ,
+                                                    $show_print);
 
-                $sectionId = $this->getParam('parent', NULL);
-                $is_front = $this->getParam('frontman', FALSE);
-                $fromAction = $this->getParam('fromaction');
-                $fromModule = $this->getParam('frommodule',FALSE);
-
-                if ($mustApply == '1'){
-                    return $this->nextAction('addcontent', array('id' => $contentId, 'frontman' => $is_front), 'cmsadmin');
-                }
-
-                if ($fromModule && $fromModule != "") {
-                    if ($fromAction == "") {
-                        $fromAction = NULL;
+                    $mustApply = $this->getParam('must_apply');
+    
+                    $is_front = $this->getParam('frontman', FALSE);
+                    $fromAction = $this->getParam('fromaction');
+                    $fromModule = $this->getParam('frommodule',FALSE);
+    
+                    if ($mustApply == '1'){
+                        return $this->nextAction('addcontent', array('id' => $contentId, 'frontman' => $is_front), 'cmsadmin');
                     }
-                    $s_param = $this->getParam('s_param');
-                    $a_param = array();
-                    if ($s_param) {
-                        $a_param = unserialize($s_param);
+    
+                    if ($fromModule && $fromModule != "") {
+                        if ($fromAction == "") {
+                            $fromAction = NULL;
+                        }
+                        $s_param = $this->getParam('s_param');
+                        $a_param = array();
+                        if ($s_param) {
+                            $a_param = unserialize($s_param);
+                        }
+                        return $this->nextAction($fromAction,$a_param,$fromModule);
                     }
-                    return $this->nextAction($fromAction,$a_param,$fromModule);
-                }
-                if (!empty($sectionId) && !$is_front) {
-                    return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
-                } else {
-                    return $this->nextAction('frontpages', array(), 'cmsadmin');
-                }
+                    if (!empty($sectionId) && !$is_front) {
+                        return $this->nextAction('viewsection', array('id' => $sectionId), 'cmsadmin');
+                    } else {
+                        return $this->nextAction('frontpages', array(), 'cmsadmin');
+                    }
                 break;
 
                 case 'viewcontent':
