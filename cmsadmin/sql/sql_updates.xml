@@ -415,7 +415,7 @@
       </add>
     </data>
   </update>       
-  
+
   <update>
     <table>tbl_cms_content</table>
     <version>1.598</version>
@@ -478,6 +478,21 @@
         <length>1</length>
         <notnull>0</notnull>
         <default>g</default>
+      </add>
+    </data>
+    
+  </update>       
+
+  
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.601</version>
+    <description>Added Override Creation Date Field</description>
+    
+    <data>
+      <add>
+        <name>override_date</name>
+        <type>timestamp</type>
       </add>
     </data>
     
