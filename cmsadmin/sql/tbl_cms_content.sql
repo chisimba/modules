@@ -89,7 +89,10 @@ $fields = array(
         'length' => 32,
 
 		),
- 
+	'override_date' => array(
+		'type' => 'timestamp',
+
+		),
     'groupid' => array(
 		'type' => 'text',
         'length' => 32,
