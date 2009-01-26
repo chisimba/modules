@@ -44,7 +44,8 @@ class pagemenu extends object
         public function init()
         {
             try {
-				$this->_objPortalImporterLog = $this->getObject('dblog', 'portalimporter'); 
+                //TODO: Create initial page menu off imported content
+				#$this->_objPortalImporterLog = $this->getObject('dblog', 'portalimporter'); 
 				$this->sConfig = $this->getObject('dbsysconfig', 'sysconfig');
                 $this->_objPage = & $this->newObject('dbpagemenu', 'cmsadmin');
                 $this->_objUser = & $this->newObject('user', 'security');
