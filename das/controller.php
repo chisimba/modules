@@ -117,24 +117,24 @@ class das extends controller {
                 return 'viewall_tpl.php';
                 break;
 
-	    case 'viewreassign':
-                $this->setLayoutTemplate('das_layout_tpl.php');
-		return 'view_reassign_tpl.php';
-		break;
+			case 'viewreassign':
+					$this->setLayoutTemplate('das_layout_tpl.php');
+			return 'view_reassign_tpl.php';
+			break;
 
-	    case 'reassign':
-		$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
-		return $this->nextAction('viewall');
-            case 'resetcounsillors':
-                $this->objDbImPres->resetCounsillors();
-                $this->nextAction('viewcounsilors');
-                break;
-            case 'startsession':
-		$this->objImOps->startSession();
-                return $this->nextAction('viewcounsilors');
-            case 'endsession':
-		$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
-	        return $this->nextAction('viewcounsilors');
+			case 'reassign':
+				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
+				return $this->nextAction('viewall');
+			case 'resetcounsillors':
+				$this->objDbImPres->resetCounsillors();
+				$this->nextAction('viewcounsilors');
+				break;
+			case 'startsession':
+				$this->objImOps->startSession();
+				return $this->nextAction('viewcounsilors');
+			case 'endsession':
+				$this->objImOps->endSession($this->juser.'@'.$this->jdomain);
+				return $this->nextAction('viewcounsilors');
 
             case 'viewcounsilors':
                 $this->setVar('users', $this->objUser->getAll());
@@ -154,9 +154,10 @@ class das extends controller {
                 return 'messageview_tpl.php';
                 break;
             
-	    case 'viewarchive':
-		echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
-		break;
+			case 'viewarchive':
+				echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
+				break;
+				
             case 'reply' :
 				//reply via ajax
                 $msg = $this->getParam ( 'myparam' );
@@ -199,33 +200,39 @@ class das extends controller {
 
                 break;
 
-		case 'savesettings':
+			case 'savesettings':
+				
+				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+				$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
+				$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
+				$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
+				$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
+				return  $this->nextAction('viewcounsilors');
+				break;
+
+				
+			case 'togglereassign':
+				$this->objIMUsers->setManualAssignment($this->getParam('userid'));
+				return $this->nextAction('viewcounsilors');
+				break;
+
+			case 'showcontact':
+				$this->objDbImPres->showContact($this->getParam('personid'));
+				return $this->nextAction(null);
 			
-			$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
-			$this->objSysConfig->changeParam('jabberuser', 'im', $this->getParam('dasusername'));
-			$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
-			$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
-			$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
-			return  $this->nextAction('viewcounsilors');
-		break;
-
-            
-            case 'togglereassign':
-                $this->objIMUsers->setManualAssignment($this->getParam('userid'));
-                return $this->nextAction('viewcounsilors');
-                break;
-
-	    case 'showcontact':
-		$this->objDbImPres->showContact($this->getParam('personid'));
-		return $this->nextAction(null);
-		
-	    case 'hidecontact':
-		$this->objDbImPres->hideContact($this->getParam('personid'));
-		return $this->nextAction(null);
-		
-            default :
-                die ( "unknown action" );
-                break;
+			case 'hidecontact':
+				$this->objDbImPres->hideContact($this->getParam('personid'));
+				return $this->nextAction(null);
+				
+			case 'addalias':
+				$objAlias = $this->getObject('dbalias', 'das');
+				$objAlias->addAlias($this->getParam('personid'), $this->getParam('myparam'));
+				echo $this->getParam('myparam');
+				break;
+				
+			default :
+					die ( "unknown action" );
+					break;
         }
     }
 

@@ -1,4 +1,9 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
 <updates>
- 
-
+	<update>
+		<table>tbl_das_alias</table>
+		<version>0.021</version>
+		<description>Added Alias table</description>
+	</update>
+    
 </updates>

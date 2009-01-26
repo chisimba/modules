@@ -73,17 +73,18 @@ class viewrender extends object {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
-	$this->objLink = $this->getObject ( 'link', 'htmlelements' );
+		$this->objLink = $this->getObject ( 'link', 'htmlelements' );
         $this->objDBIM = $this->getObject('dbim', 'im');
-	$this->objUser = $this->getObject('user', 'security');
- 	$this->objDbIm = $this->getObject ( 'dbim', 'im' );
+		$this->objUser = $this->getObject('user', 'security');
+		$this->objDbIm = $this->getObject ( 'dbim', 'im' );
         $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
         $this->objIcon->setIcon ( 'green_bullet' );
         //$this->objIcon->setAlt($this->objLanguage->languageText('mod_im_available', 'im'));
         $this->activeIcon = $this->objIcon->show ();
         $this->objIcon->setIcon ( 'grey_bullet' );
         $this->inactiveIcon = $this->objIcon->show ();
-	$this->objWashout = $this->getObject ( 'washout', 'utilities' );
+		$this->objWashout = $this->getObject ( 'washout', 'utilities' );
+		 $this->objAilas = $this->getObject('dbalias', 'das');
     }
 
 	/**
@@ -184,7 +185,7 @@ class viewrender extends object {
 		
 		
 		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
-		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $this->maskUser($msg ['person']) . '</b></p>';
+		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
 		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div>';
 		$box .= '</td>';
 	    }
@@ -202,6 +203,30 @@ class viewrender extends object {
         header("Content-Type: text/html;charset=utf-8");
         return "<table>" . $ret . "</table>";
     }
+	
+	/**
+	* Method to get the alias editor
+	*
+	*/
+	public function getAliasEditor($personId, $lastmsgId)
+	{
+		$alias = $this->objAilas->getAlias($personId);
+		
+		$name = ($alias) ? $alias: $this->maskUser($personId);
+			
+		$aliasAjax = "<span  id=\"aliasdiv" . $lastmsgId . "\">$name</span>
+			   
+					    <script charset=\"utf-8\">
+				new Ajax.InPlaceEditor('aliasdiv" . $lastmsgId . "', 'index.php', { 	okText:'Save', 	
+											    cancelText: 'Cancel',
+											    savingControl: 'link',  
+											    savingText: 'Saving Alias...',
+											    size:40,
+											    callback: function(form, value) { return 'module=das&action=addalias&personid=" . $personId . "&myparam=' + escape(value) }})
+			    </script> ";
+				
+		return $aliasAjax;
+	}
 
     /**
      *Method to get the archived messages for a user
@@ -261,7 +286,14 @@ class viewrender extends object {
 			{
 
 				$anchor->href = '#'.$msg['person'];
-				$anchor->link = $this->maskUser($msg['person']);
+				if($this->objAilas->hasAlias($msg['person']))
+				{
+					$link = $this->objAilas->getAlias($msg['person']);
+				} else {
+					$link = $this->maskUser($msg['person']);
+				}
+				$anchor->link = $link;
+				
 				$str .="<li>".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
@@ -292,7 +324,12 @@ class viewrender extends object {
 		
 
 		$liveconv = $objPres->countActiveUsers();
-		$avg = (int)$liveconv / (int)$objIMUsers->countCounsellors();
+		if((int)$liveconv > 0 ||  (int)$objIMUsers->countCounsellors())
+		{
+			$avg = (int)$liveconv / (int)$objIMUsers->countCounsellors();
+		} else {
+			$avg = 0;
+		}
 		$str = '<table>';
 
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
@@ -345,7 +382,7 @@ class viewrender extends object {
      */
     public function maskUser($person)
     {
-	return 'xxxxxxx'.substr($person, strpos($person, '@'));
+		return 'xxxxxxx'.substr($person, strpos($person, '@'));
 	
     }
 }
