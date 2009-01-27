@@ -127,11 +127,19 @@ class dbmarked extends dbtable
         }
         return FALSE;
     }
-
+/**
+*Methof to get the correct answers entered by the student on a specified test.
+*
+* @access public
+* @param string $studentId The id of the student.
+* @param string $testId The id of the test.
+* @return array data the question id,students correct answer and marks
+    
+*/
    public function getfreeformAnswers($studentId, $testId)
    {
    
-        $sql = "SELECT marked.answered,quest.mark FROM";
+        $sql = "SELECT distinct marked.questionid,marked.answered,quest.mark FROM";
         $sql.= " tbl_test_marked AS marked, tbl_test_answers AS ans, tbl_test_questions AS quest";
         $sql.= " WHERE ans.answer = marked.answered";
         $sql.= " AND marked.questionid = quest.id";

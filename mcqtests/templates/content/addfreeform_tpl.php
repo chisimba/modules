@@ -27,7 +27,6 @@ $this->setLayoutTemplate('mcqtests_layout_tpl.php');
    $markLabel = $this->objLanguage->languageText('mod_mcqtests_mark', 'mcqtests');
    $saveLabel = $this->objLanguage->languageText('word_save');
    $exitLabel = $this->objLanguage->languageText('word_cancel');
-   $exitLabel = $this->objLanguage->languageText('mod_clozetests_');
    $hintLabel = $this->objLanguage->languageText('mod_mcqtests_hint', 'mcqtests');
    $addhintLabel = $this->objLanguage->languageText('mod_mcqtests_hintenable', 'mcqtests');
    $lbEnable = $this->objLanguage->languageText('mod_mcqtests_hintaddenable','mcqtests');
@@ -117,10 +116,10 @@ if (!empty($data)) {
 
    
    //Create Submit of the form
-   $objButton=new button('save','Save');
+   $objButton=new button('save',$saveLabel);
    $objButton->setToSubmit();
    $btn =$objButton->show().'&nbsp;&nbsp;&nbsp;&nbsp;';
-   $objButton=new button('save','Cancel');
+   $objButton=new button('save',$exitLabel);
    $objButton->setToSubmit();
    $btn.=$objButton->show();
    

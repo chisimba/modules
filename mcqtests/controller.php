@@ -885,8 +885,8 @@ class mcqtests extends controller
      */
     private function addAnswers($testId, $questionId, $answers, $num = 4)
     {
-        $answerId = $this->getParam('answerId', NULL);
-                $questiontype = $this->getParam('qtype',NULL);
+        $answerId = $this->getParam('answerId');
+                $questiontype = $this->getParam('qtype');
         /*if ($answerId) {
             $fields = array();
             $fields['testid'] = $testId;
@@ -1170,14 +1170,14 @@ class mcqtests extends controller
                 // Check if answer selected and needs updating
                 $postSelected = $this->getParam('selected'.$i, NULL);
                 // Save the students answers.
-                $testId = $this->getParam('id', '');
-                $questType = $this->getParam('qtype'.$i,'');
-                $questId = $this->getParam('questionId'.$i, '');
+                $testId = $this->getParam('id');
+                $questType = $this->getParam('qtype'.$i);
+                $questId = $this->getParam('questionId'.$i);
                 if (!empty($testId) && !empty($questId)) {
                     $fields = array();
                     $fields['testid'] = $testId;
                     $fields['questionid'] = $questId;
-                    $postAns = $this->getParam('ans'.$i, NULL);
+                    $postAns = $this->getParam('ans'.$i);
                     $fields['studentid'] = $this->userId;
                     if ($questType == 'freeform')
                     {
@@ -1208,31 +1208,23 @@ class mcqtests extends controller
     {
         $total = 0;
         $testId = $this->getParam('id', '');
-        
-                       $postCount = $this->getParam('count', NULL);
-                       $j = $this->getParam('first', 0);
+            //$j = $this->getParam('first', 0);
+         // $questType = $this->getParam('qtype'.$j,'');
+         if (!empty($testId)) {
         $data = $this->dbMarked->getfreeformAnswers($this->userId, $testId);
 
-                   
+        if (!empty($data)) {
         foreach ($data as $val){
-          $freeForm = $this->getParam('freeform'.$j ); 
-           while ($freeForm == NULL && $j<$postCount){
-           $j++;
-           $freeForm = $this->getParam('freeform'.$j );
-           } 
-           $questType = $this->getParam('qtype'.$j,'');
-           $strCloze = explode (';',$freeForm);
-           if ($questType == 'freeform'){
-               for ($i=0;$i<4;$i++) {        
-                 if($strCloze[$i] == $val['answered']){
+
+           if ($val[answered]!= NULL){
                       $total = $total+$val['mark'];
                             //$total = $p;
                              }
                                
                           }
-                    }
-                    $j++;
-              }
+                  
+               }
+               }   //  $j++;
      
         
         if (!empty($testId)) {
