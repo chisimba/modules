@@ -113,6 +113,7 @@ class ahis extends controller {
             $this->objAge = $this->getObject('age');
             $this->objRole = $this->getObject('role');
             $this->objDepartment = $this->getObject('department');
+            $this->objPassive = $this->getObject('passive');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -151,13 +152,43 @@ class ahis extends controller {
         
         switch ($action) {
         	case 'select_officer':
-                $this->setVar('officer', $this->getParam('officer'));
-                $this->setVar('district', $this->getParam('district'));
-                $this->setVar('calendardate', $this->getParam('calendardate',date('Y-m-d')));
-                $this->setVar('reportType', $this->getParam('reportType'));
+                $this->setVar('officer', $this->getSession('ps_officer'));
+                $this->setVar('district', $this->getSession('ps_district'));
+                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
+                $this->setVar('reportType', $this->getSession('ps_reportType'));
                 return 'select_officer_tpl.php';
             
+            case 'report_filter':
+                $this->setSession('ps_officer', $this->getParam('officer'));
+                $this->setSession('ps_district' , $this->getParam('district'));
+                $this->setSession('ps_calendardate', $this->getParam('calendardate'));
+                $reportType = $this->getParam('reportType');
+                $this->setSession('ps_reportType', $reportType);
+                switch ($reportType) {
+                    case "init_01":
+                        return $this->nextAction('passive_surveillance');
+                    default:
+                        return $this->nextAction();
+                }
+            
+            case 'passive_surveillance':
+                $this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
+                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
+                $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
+                $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY NAME"));
+                $this->setVar('territoryId', $this->getSession('ps_territoryId'));
+                $this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
+                $this->setVar('qualityId', $this->getSession('ps_qualityId'));
+                $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
+                $this->setVar('dateIBAR', $this->getSession('ps_dateIBAR', date('Y-m-d')));
+                $this->setVar('dateReceived', $this->getSession('ps_dateReceived', date('Y-m-d')));
+                $this->setVar('dateIsReported', $this->getSession('ps_dateisReported', date('Y-m-d')));
+                $this->setVar('refNo', $this->getSession('ps_refNo', $this->objPassive->nextRefNo()));
+                $this->setVar('remarks', $this->getSession('ps_remarks'));
+                return "passive_surveillance_tpl.php";
+            
             case 'admin':
+
                return 'admin_tpl.php';
             
             case 'geography_level3_admin':

@@ -117,6 +117,7 @@ class tabsmenu extends object
         switch ($action)
         {
             case 'select_officer':
+            case 'passive_surveillance':
                 $this->default = 'entry';
                 break;
             case 'admin':

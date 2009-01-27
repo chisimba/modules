@@ -87,7 +87,7 @@ $objTable->addCell($buttonNext->show(),NULL,'top','right');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'select officer')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'report_filter')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('officer', $this->objLanguage->languageText('mod_ahis_officerrule','ahis'), 'required');
 $objForm->addRule('district', $this->objLanguage->languageText('mod_ahis_districtrule','ahis'), 'required');
