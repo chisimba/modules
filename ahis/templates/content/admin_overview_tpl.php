@@ -43,6 +43,7 @@ $this->loadClass('link','htmlelements');
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 $icon = $this->newObject('geticon','htmlelements');
 $addLink = new link($addLinkUri);
@@ -85,7 +86,8 @@ $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "
 $search = $this->objLanguage->languageText('word_search').": ".$objSearchStr->show()." ".$button->show()." ".$cButton->show();
 
 $formTable = $this->getObject('htmltable', 'htmlelements');
-$formTable->width = '50%';
+$formTable->width = NULL;
+$formTable->cssClass = "min50";
 $formTable->cellspacing = 2;
 $formTable->startRow();
 $formTable->addCell($addLink->show());
@@ -96,7 +98,8 @@ $objForm->addToForm($formTable);
 $objForm->extra = "style='margin: 0px;'";
 
 $objTable = $this->newObject('htmltable','htmlelements');
-$objTable->width = '50%';
+$objTable->width = NULL;
+$objTable->cssClass = "min50";
 $objTable->cellspacing = 2;
 $objTable->startHeaderRow();
 $objTable->addHeaderCell($columnName);
@@ -135,4 +138,8 @@ $linkTable->endRow();
 $heading = $objHeading->show()."<hr />".$msg;
 $body = $objForm->show().$objTable->show().$linkTable->show();
 
-echo $heading.$body;
+$objLayer = new layer();
+$objLayer->addToStr($heading.$body);
+$objLayer->align = 'center';
+
+echo $objLayer->show();

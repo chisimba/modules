@@ -44,6 +44,7 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('checkbox','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_employee');
@@ -132,7 +133,8 @@ $backUri = $this->uri(array('action' => 'employee_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
-$objTable->width = '50%';
+$objTable->width = NULL;
+$objTable->cssClass = "min50";
 $objTable->cellspacing = 2;
 
 $objTable->startRow();
@@ -160,8 +162,7 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_datehired').": ");
 $objTable->addCell($hiredDate->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_dateretired').": ");
-$objTable->addCell($retiredBox->show());
-$objTable->addCell($retiredDate->show());
+$objTable->addCell($retiredBox->show().$retiredDate->show());
 $objTable->endRow();
 
 $objTable->startRow();
@@ -196,12 +197,14 @@ $objForm->id = 'form_employeeadd';
 $objForm->addToForm($objTable->show());
 $objForm->addRule('surname', $this->objLanguage->languageText('mod_ahis_surnamerequired', 'ahis'), 'required');
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
-//$objForm->addRule('username', $this->objLanguage->languageText('mod_ahis_usernamerequired', 'ahis'), 'required');
-//if (!$id) {
-//    $objForm->addRule('password', $this->objLanguage->languageText('mod_ahis_passwordrequired', 'ahis'), 'required');
-//}
+
 $objForm->addRule(array('confirm', 'password'), $this->objLanguage->languageText('mod_ahis_pwordmismatch', 'ahis'), 'compare');
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar("headerParams", "<script type='text/javascript' src='$scriptUri'></script>");
-echo $objHeading->show()."<hr />".$msg.$objForm->show();
+
+$objLayer = new layer();
+$objLayer->addToStr($objHeading->show()."<hr />".$msg.$objForm->show());
+$objLayer->align = 'center';
+
+echo $objLayer->show();

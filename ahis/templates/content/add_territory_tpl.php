@@ -44,6 +44,7 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
+$this->loadClass('layer', 'htmlelements');
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
@@ -66,34 +67,37 @@ $backUri = $this->uri(array('action' => 'admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
+$objTable->width = NULL;
+$objTable->attributes = "style='min-width: 65%'";
+
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("word_territory"));
+$objTable->addCell($this->objLanguage->languageText("word_territory").": ");
 $objTable->addCell($nameText->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudenorth", "ahis"));
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudenorth", "ahis").": ");
 $objTable->addCell($latNText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudesouth", "ahis"));
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_latitudesouth", "ahis").": ");
 $objTable->addCell($latSText->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudeeast", "ahis"));
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudeeast", "ahis").": ");
 $objTable->addCell($lonEText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudewest", "ahis"));
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_longitudewest", "ahis").": ");
 $objTable->addCell($lonWText->show());
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText("word_area"));
 $objTable->addCell($areaText->show());
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_geolevel", "ahis")." 2");
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_geolevel", "ahis")." 2: ");
 $objTable->addCell($geo2Drop->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("mod_ahis_unitofmeasure", "ahis"));
+$objTable->addCell($this->objLanguage->languageText("mod_ahis_unitofmeasure", "ahis").": ");
 $objTable->addCell($unitText->show());
 $objTable->endRow();
 
@@ -116,4 +120,8 @@ $objForm->addRule('unit_of_measure', $this->objLanguage->languageText('mod_ahis_
 $heading = $objHeading->show()."<hr />";
 $body = $objForm->show();
 
-echo $heading.$body;
+$objLayer = new layer();
+$objLayer->addToStr($heading.$body);
+$objLayer->align = 'center';
+
+echo $objLayer->show();

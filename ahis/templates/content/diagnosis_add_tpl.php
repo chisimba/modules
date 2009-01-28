@@ -43,6 +43,7 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('phrase_diagnosis');
@@ -66,7 +67,8 @@ $backUri = $this->uri(array('action'=>'diagnosis_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
-$objTable->width = '50%';
+$objTable->width = NULL;
+$objTable->cssClass = "min50";
 $objTable->cellspacing = 2;
 
 $objTable->startRow();
@@ -83,4 +85,8 @@ $objForm = new form('diagnosisadd', $formUri);
 $objForm->addToForm($objTable->show());
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
 
-echo $objHeading->show()."<hr />".$objForm->show();
+$objLayer = new layer();
+$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+$objLayer->align = 'center';
+
+echo $objLayer->show();

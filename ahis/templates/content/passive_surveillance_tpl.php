@@ -47,6 +47,7 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
@@ -86,6 +87,7 @@ $remarksBox = new textarea('remarks', $remarks);
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
+$objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').": ");
@@ -135,4 +137,8 @@ $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
 $objForm->addToForm($objTable->show());
 
-echo $objHeading->show()."<hr />".$objForm->show();
+$objLayer = new layer();
+$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+$objLayer->align = 'center';
+
+echo $objLayer->show();

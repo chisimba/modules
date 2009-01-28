@@ -38,10 +38,14 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
+$this->loadClass('link', 'htmlelements');
 
 $objHeader = $this->getObject('htmlheading','htmlelements');
 $objHeader->str = $message;
+$link = new link($location);
+$link->link = $this->objLanguage->languageText('word_here');
+$body = $this->objLanguage->languageText('mod_ahis_redirect', 'ahis')." ".$link->show();
 $redirectJS = "<script type='text/javascript'>setTimeout(\"document.location = '$location'\", 5000);</script>";
 $this->appendArrayVar('headerParams', str_replace('&amp;','&',$redirectJS));
-echo $objHeader->show();
+echo $objHeader->show().$body;
 ?>

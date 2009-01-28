@@ -42,6 +42,7 @@ $GLOBALS['kewl_entry_point_run']) {
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('form','htmlelements');
+$this->loadClass('layer','htmlelements');
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
@@ -55,7 +56,8 @@ $backUri = $this->uri(array('action'=>'geography_level3_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
-$objTable->width = '50%';
+$objTable->width = NULL;
+$objTable->cssClass = "min50";
 $objTable->cellspacing = 2;
 
 $objTable->startRow();
@@ -72,5 +74,8 @@ $objForm = new form('geo3add', $this->uri(array('action'=>'geography_level3_inse
 $objForm->addToForm($objTable->show());
 $objForm->addRule('name', $this->objLanguage->languageText('mod_ahis_namerequired', 'ahis'), 'required');
 
-echo $objHeading->show()."<hr />".$objForm->show();
+$objLayer = new layer();
+$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+$objLayer->align = 'center';
 
+echo $objLayer->show();
