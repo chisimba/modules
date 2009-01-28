@@ -152,8 +152,9 @@ class ahis extends controller {
         
         switch ($action) {
         	case 'select_officer':
-                $this->setVar('officer', $this->getSession('ps_officer'));
-                $this->setVar('district', $this->getSession('ps_district'));
+                $this->setVar('userList', $this->objAhisUser->getList());
+                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
+                $this->setVar('districtId', $this->getSession('ps_districtId', $this->objAhisUser->getTerritory()));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                 $this->setVar('reportType', $this->getSession('ps_reportType'));
                 return 'select_officer_tpl.php';
@@ -356,7 +357,7 @@ class ahis extends controller {
                 $ahisRecord['ahisuser'] = $this->getParam('ahisuser');
                 if ($ahisRecord['ahisuser']) {
                     $ahisRecord['ahisuser'] = 1;
-                    if (!$record['username'] || !$password) {
+                    if ((!$record['username'] || !$password) && !$id) {
                         return $this->nextAction('create_employee', array('error'=>1, 'id'=>$id));
                     }
                 } else {

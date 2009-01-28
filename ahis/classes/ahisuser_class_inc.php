@@ -64,11 +64,37 @@ class ahisuser extends dbtable {
 	public function init() {
 		try {
 			parent::init('tbl_ahis_users');
+			$this->objUser = $this->getObject('user','security');
 		}
 		catch (customException $e)
 		{
 			customException::cleanUp();
 			exit;
 		}
+	}
+	
+	/**
+	 * Method to return a user's territory
+	 *
+	 * @param string $userId the id of the user, leave out for current user
+	 * @return string the id of the territory
+	 */
+	public function getTerritory($userId = NULL) {
+		$id = $this->objUser->PKId($userId);
+		$row = $this->getRow('id', $id);
+		return $row['locationid'];
+	}
+	
+	/**
+	 * Method to return a list of all ARIS users
+	 *
+	 * @return array ARIS users
+	 */
+	public function getList() {
+		$sql = "SELECT u.userid, CONCAT(u.firstname,' ',u.surname) AS name
+				FROM tbl_users AS u, tbl_ahis_users AS au
+				WHERE u.id = au.id
+				ORDER BY u.surname";
+		return $this->objUser->getArray($sql);
 	}
 }
