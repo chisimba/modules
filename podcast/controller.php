@@ -121,7 +121,7 @@ class podcast extends controller
      *
      * @return string Template
      */
-    private function podcastHome()
+    public function podcastHome()
     {
         $podcasts = $this->objPodcast->getLast5();
         $this->setVar('podcasts', $podcasts);
@@ -135,7 +135,7 @@ class podcast extends controller
      * @param string $id user Id
      * @return string Template
      */
-    private function showUserPodcasts($username= '')
+    public function showUserPodcasts($username= '')
     {
         if ($username == '') {
             $username = $this->objUser->userName();
@@ -158,7 +158,7 @@ class podcast extends controller
      * @author Nonhlanhla Gangeni
      */
 
-    private function showAllPodcasts($id='')
+    public function showAllPodcasts($id='')
     {
                
         $this->setVar('id', $id);
@@ -172,7 +172,7 @@ class podcast extends controller
     /**
      * Method to add a new podcast
      */
-    private function saveNewPodCast()
+    public function saveNewPodCast()
     {
         if ($this->getParam('podcast') == '') {
             return $this->nextAction(NULL, array('error'=>'nofileselected'));
@@ -192,7 +192,7 @@ class podcast extends controller
     /**
      * Method to confirm podcast, after user has checked details
      */
-    private function confirmAdd()
+    public function confirmAdd()
     {
         $id = $this->getParam('id', 'noid');
         $fileid = $this->getParam('fileid', 'noid');
@@ -232,7 +232,7 @@ class podcast extends controller
     /**
      * Method to update a podcast
      */
-    private function confirmSave()
+    public function confirmSave()
     {
         $id = $this->getParam('id');
         $title = $this->getParam('title');
@@ -272,7 +272,7 @@ class podcast extends controller
      *
      * @param string $id Record Id of the Podcast
      */
-    private function editPodcast($id)
+    public function editPodcast($id)
     {
         if ($id == '') {
             return $this->nextAction(NULL);
@@ -299,7 +299,7 @@ class podcast extends controller
      *
      * @param string $id Record id of the podcast
      */
-    private function deletePodcast($id)
+    public function deletePodcast($id)
     {
         if ($id == '') {
             return $this->nextAction(NULL);
@@ -317,7 +317,7 @@ class podcast extends controller
      *
      * @param string $id Record Id of the podcast
      */
-    private function downloadFile($id)
+    public function downloadFile($id)
     {
         if ($id == '') {
             return $this->nextAction(NULL, array('message'=>'nopodcastprovided'));
@@ -337,7 +337,7 @@ class podcast extends controller
      *
      * @param string $id User Id of the Feed
      */
-    private function showRssFeed($id='')
+    public function showRssFeed($id='')
     {
         $rssFeed = $this->getObject('itunesrssgenerator');
         
@@ -385,7 +385,7 @@ class podcast extends controller
      *
      * @param string $id Record Id of the podcast
      */
-    private function playPodcast($id)
+    public function playPodcast($id)
     {
         $podcast = $this->objPodcast->getPodcast($id);
         
@@ -416,7 +416,7 @@ class podcast extends controller
      *
      * @param string $id Record Id of the podcast
      */
-    private function viewPodcast($id)
+    public function viewPodcast($id)
     {
         $podcast = $this->objPodcast->getPodcast($id);
         
@@ -442,7 +442,7 @@ class podcast extends controller
      * @param string $id course Id
      * @return string Template
      */
-    private function showCoursePoadcasts($contextCode)
+    public function showCoursePoadcasts($contextCode)
     {
         
         $podcasts = $this->objPodcast->getCoursePodcasts($contextCode);
@@ -456,7 +456,7 @@ class podcast extends controller
      * @author Mohamed Yusuf
      * @param string $id Context Id of the Feed
      */
-    private function showRssFeedByCourse($contextCode)
+    public function showRssFeedByCourse($contextCode)
     {
         $rssFeed = $this->getObject('itunesrssgenerator');
         
