@@ -131,48 +131,28 @@ class tabsmenu extends object
             case 'employee_insert':
             case 'production_admin':
             case 'production_add':
-            case 'production_delete':
-            case 'production_insert':
             case 'title_admin':
             case 'title_add':
-            case 'title_delete':
-            case 'title_insert':
             case 'status_admin':
             case 'status_add':
-            case 'status_delete':
-            case 'status_insert':
             case 'sex_admin':
             case 'sex_add':
-            case 'sex_delete':
-            case 'sex_insert':
             case 'outbreak_admin':
             case 'outbreak_add':
-            case 'outbreak_delete':
-            case 'outbreak_insert':
             case 'diagnosis_admin':
             case 'diagnosis_add':
-            case 'diagnosis_delete':
-            case 'diagnosis_insert':
             case 'control_admin':
             case 'control_add':
-            case 'control_delete':
-            case 'control_insert':
             case 'quality_admin':
             case 'quality_add':
-            case 'quality_delete':
-            case 'quality_insert':
             case 'age_admin':
             case 'age_add':
-            case 'age_delete':
-            case 'age_insert':
             case 'role_admin':
             case 'role_add':
-            case 'role_delete':
-            case 'role_insert':
             case 'department_admin':
             case 'department_add':
-            case 'department_delete':
-            case 'department_insert':
+            case 'report_admin':
+            case 'report_add':
                 $this->default = 'admin';
                 break;
             case 'view_reports':

@@ -63,8 +63,7 @@ if (!$this->objUser->isAdmin()) {
 //$inputDistrict = new textinput('district', $district, 'text', 25);
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
-$objReportType = $this->getObject('reporttype');
-$allReportTypes = $objReportType->getAll("ORDER BY name");
+$allReportTypes = $this->objReport->getAll("ORDER BY name");
 $inputType = new dropdown('reportType');
 $inputType->addFromDB($allReportTypes, 'name', 'id');
 $inputType->setSelected($reportType);

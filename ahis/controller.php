@@ -114,6 +114,7 @@ class ahis extends controller {
             $this->objRole = $this->getObject('role');
             $this->objDepartment = $this->getObject('department');
             $this->objPassive = $this->getObject('passive');
+            $this->objReport = $this->getObject('reporttype');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -122,10 +123,18 @@ class ahis extends controller {
                                         'control_admin', 'outbreak_admin', 'geography_level3_delete',
                                         'geography_level3_add', 'geography_level3_insert', 'create_territory',
                                         'territory_insert', 'employee_admin', 'employee_insert', 'create_employee',
-                                        'production_admin', 'production_add', 'title_admin', 'title_add',
-                                        'status_admin', 'status_add', 'sex_admin', 'sex_add', 'outbreak_admin',
-                                        'outbreak_add', 'control_admin', 'control_add', 'quality_admin', 'quality_add',
-                                        'age_add', 'age_admin', 'role_add', 'role_admin', 'department_add', 'department_admin');
+                                        'production_admin', 'production_add', 'production_insert', 'production_delete',
+                                        'title_admin', 'title_add', 'title_insert', 'title_delete',
+                                        'status_admin', 'status_add', 'sex_insert', 'sex_delete',
+                                        'sex_admin', 'sex_add', 'sex_insert', 'sex_delete',
+                                        'outbreak_admin', 'outbreak_add', 'outbreak_insert', 'outbreak_delete',
+                                        'control_admin', 'control_add', 'control_insert', 'control_delete',
+                                        'quality_admin', 'quality_add', 'quality_insert', 'quality_delete',
+                                        'age_add', 'age_admin', 'age_insert', 'age_delete',
+                                        'role_add', 'role_admin', 'role_insert', 'role_delete',
+                                        'department_add', 'department_admin', 'department_insert', 'department_delete',
+                                        'report_add', 'report_admin', 'report_insert', 'report_delete'
+                                        );
         }
         catch(customException $e) {
         	customException::cleanUp();
@@ -160,8 +169,8 @@ class ahis extends controller {
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
-                $this->setSession('ps_officer', $this->getParam('officer'));
-                $this->setSession('ps_district' , $this->getParam('district'));
+                $this->setSession('ps_officerId', $this->getParam('officer'));
+                $this->setSession('ps_districtId' , $this->getParam('district'));
                 $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
                 $this->setSession('ps_reportType', $reportType);
@@ -169,7 +178,7 @@ class ahis extends controller {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
                     default:
-                        return $this->nextAction();
+                        return $this->nextAction('');
                 }
             
             case 'passive_surveillance':
@@ -177,7 +186,8 @@ class ahis extends controller {
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
                 $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
                 $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY NAME"));
-                $this->setVar('territoryId', $this->getSession('ps_territoryId'));
+                //$this->setVar('territoryId', $this->getSession('ps_territoryId'));
+                $this->setVar('territoryId', $this->getSession('ps_districtId'));
                 $this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
                 $this->setVar('qualityId', $this->getSession('ps_qualityId'));
                 $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
@@ -188,6 +198,33 @@ class ahis extends controller {
                 $this->setVar('remarks', $this->getSession('ps_remarks'));
                 return "passive_surveillance_tpl.php";
             
+            case 'passive_outbreak':
+                //$this->setSession('ps_territoryId', $this->getParam('territoryId'));
+                $this->setSession('ps_oStatusId', $this->getParam('oStatusId'));
+                $this->setSession('ps_qualityId', $this->getParam('qualityId'));
+                $this->setSession('ps_datePrepared', $this->getParam('datePrepared'));
+                $this->setSession('ps_dateIBAR', $this->getParam('dateIBAR'));
+                $this->setSession('ps_dateReceived', $this->getParam('dateReceived'));
+                $this->setSession('ps_dateIsReported', $this->getParam('dateIsReported'));
+                $this->setSession('ps_refNo', $this->getParam('refNo'));
+                $this->setSession('ps_remarks', $this->getParam('remarks'));
+                
+                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
+                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
+                $this->setVar('refNo', $this->getSession('ps_refNo'));
+                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
+                $this->setVar('dateOccurence', $this->getSession('ps_dateOccurence', date('Y-m-d')));
+                $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
+                $this->setVar('dateInvestigation', $this->getSession('ps_dateinvestigation', date('Y-m-d')));
+                $this->setVar('location', $this->getSession('ps_location'));
+                $this->setVar('latitude', $this->getSession('ps_latitude'));
+                $this->setVar('longitude', $this->getSession('ps_longitude'));
+                $this->setVar('disease', $this->getSession('ps_disease'));
+                $this->setVar('causitive', $this->getSession('ps_causitive'));
+                
+                return 'passive_outbreak_tpl.php';
+                            
             case 'admin':
 
                return 'admin_tpl.php';
@@ -724,6 +761,47 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objQuality->delete('id', $id);
                 return $this->nextAction('quality_admin', array('success'=>'2'));
+            
+            case 'report_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objReport->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'report_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_reportadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_reportadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_report'));
+                $this->setVar('deleteAction', 'report_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'report_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'report_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'report_add_tpl.php';
+            
+            case 'report_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objReport->valueExists('name', $name)) {
+                    return $this->nextAction('report_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objReport->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objReport->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('report_admin', array('success'=>$code));
+            
+            case 'report_delete':
+                $id = $this->getParam('id');
+                $this->objReport->delete('id', $id);
+                return $this->nextAction('report_admin', array('success'=>'2'));
             
             case 'age_admin':
                 $searchStr = $this->getParam('searchStr');
