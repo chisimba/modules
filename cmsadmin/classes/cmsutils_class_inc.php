@@ -2889,7 +2889,7 @@
                 $menuTextInput->value = $section['menutext'];
                 $layout = $section['layout'];
                 $isPublished = $section['published'];
-                $hideTitle = isset($section['hidetitle']) ? $section['hidetitle'] : '0';
+                $showTitle = isset($section['show_title']) ? $section['show_title'] : '0';
                 //Set rootid as hidden field
                 $objRootId = new textinput();
                 $objRootId->name = 'rootid';
@@ -2918,7 +2918,7 @@
                 $bodyInput->value = '';
                 $layout = 0;
                 $isPublished = '1';
-                $hideTitle = '0';
+                $showTitle = '0';
             }
 
             //Add form elements to the table
@@ -3240,13 +3240,25 @@
             $drp_image->addOption('','- Select Image -');
             $drp_image->addFromDB($listFiles,'filename','path');
 
-            //Show intro or not
+            //Show Intro
             $label = new label ($this->objLanguage->languageText('mod_cmsadmin_showintro', 'cmsadmin').': ', 'input_showintro');
             $showdate = new radio ('showintro');
             $showdate->addOption('1', $this->objLanguage->languageText('word_yes'));
             $showdate->addOption('0', $this->objLanguage->languageText('word_no'));
             if ($editmode) {
-                $showdate->setSelected($section['showintroduction']);
+                $showdate->setSelected($section['show_introduction']);
+            } else {
+                $showdate->setSelected('1');
+            }
+            $showdate->setBreakSpace(' &nbsp; ');
+
+            //Show Date
+            $label = new label ($this->objLanguage->languageText('mod_cmsadmin_showintro', 'cmsadmin').': ', 'input_showintro');
+            $showdate = new radio ('showintro');
+            $showdate->addOption('1', $this->objLanguage->languageText('word_yes'));
+            $showdate->addOption('0', $this->objLanguage->languageText('word_no'));
+            if ($editmode) {
+                $showdate->setSelected($section['show_introduction']);
             } else {
                 $showdate->setSelected('1');
             }
@@ -3321,7 +3333,7 @@
             $showdate->addOption('1', $this->objLanguage->languageText('word_yes'));
             $showdate->addOption('0', $this->objLanguage->languageText('word_no'));
             if ($editmode) {
-                $showdate->setSelected($section['showdate']);
+                $showdate->setSelected($section['show_date']);
             } else {
                 $showdate->setSelected('1');
             }
@@ -3378,19 +3390,44 @@
 
             $show_content = '0';
 
+            $show_introduction = 'g';
+            $show_title = 'g';
+            $show_author = 'g';
+            $show_date = 'g';
+
+            $lbl_introduction = $this->objLanguage->languageText('mod_cmsadmin_show_introduction','cmsadmin');
+            $lbl_title = $this->objLanguage->languageText('mod_cmsadmin_show_title','cmsadmin');
+            $lbl_date = $this->objLanguage->languageText('mod_cmsadmin_show_date','cmsadmin');
+            $lbl_author = $this->objLanguage->languageText('mod_cmsadmin_show_author','cmsadmin');
+
             //date controls
             if (is_array($arrSection)) {
 
                 //Initializing options
 
-                $is_front = $arrSection['showintroduction'];
+                $published = $arrSection['published'];
+                $visible = $published;
 
-                $frontPage->setChecked($is_front);
-                $published->setChecked($arrSection['published']);
-                $visible = $arrSection['published'];
-                $hide_title = $arrSection['hidetitle'];
-                //$hide_user = $arrSection['hide_user'];;
-                //$hide_date = $arrSection['hide_date'];
+                //show intro
+                if (isset($arrContent['show_introduction'])) {
+                    $show_introduction = $arrContent['show_introduction'];
+                }
+
+                //show title
+                if (isset($arrContent['show_title'])) {
+                    $show_title = $arrContent['show_title'];
+                }
+
+                //show author
+                if (isset($arrContent['show_author'])) {
+                    $show_author = $arrContent['show_author'];
+                }
+
+                //show date
+                if (isset($arrContent['show_date'])) {
+                    $show_date = $arrContent['show_date'];
+                }
+
 
                 //Set licence option
                 if(isset($arrSection['post_lic'])){
@@ -3403,6 +3440,7 @@
                 }
                 $start_pub = '';
                 $end_pub = '';
+                
                 // ---------------------------- Uncrapification if statements added by Derek Keats
                 if( isset($arrSection['created']) && isset($arrSection['end_publish']) ){
                     if (!is_null($arrSection['start_publish'])) {
@@ -3425,7 +3463,6 @@
                     $author = new textinput('author_alias',$arrSection['created_by_alias'],null,20);
                 }
                 // ---------------------------- End of uncrapification if statements added by Derek Keats
-                $lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
                 //Pre-populated dropdown
 
                 //Change Created Date
@@ -3433,35 +3470,21 @@
                 $lbl_pub = new label($this->objLanguage->languageText('mod_cmsadmin_start_publishing','cmsadmin'),'publish_date');
                 $lbl_pub_end = new label($this->objLanguage->languageText('mod_cmsadmin_end_publishing','cmsadmin'),'end_date');
 
-            }else{
+            } else {
                 //Initializing options
 
                 $published->setChecked(TRUE);
                 $visible = TRUE;
-                $hide_title = '0';
-                $hide_user = '1';
-                $hide_date = '1';
+                $show_title = 'g';
+                $show_user = 'g';
+                $show_date = 'g';
+                $show_introduction = 'g';
                 $contentId = '';
                 $arrSection = null;
-
-                if (!isset($is_front)) {
-                    $is_front = false;
-                }
-
-                if ( $this->getParam('frontpage') == 'true') {
-                    $frontPage->setChecked(TRUE);
-                    $is_front = TRUE;
-                }
-
-                $frontPage->setChecked($is_front);
-
 
                 $dateField = $objdate->show('overide_date', 'yes', 'no', '');
                 $pub = $publishing->show('publish_date', 'yes', 'no', '');
                 $end_pub = $publishing_end->show('end_date', 'yes', 'no', '');
-                //Author Alias
-                $author = new textinput('author_alias',null,null,20);
-                $lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
 
                 //Change Created Date
                 $lbl_date_created = new label($this->objLanguage->languageText('mod_cmsadmin_override_creation_date','cmsadmin'),'overide_date');
@@ -3475,20 +3498,55 @@
             //$tbl_basic->addCell($published->show());
             $tbl_basic->endRow();
 
-            //Hide Title
             $lbNo = $this->objLanguage->languageText('word_no');
             $lbYes = $this->objLanguage->languageText('word_yes');
 
+            //intro option
+            $opt_introduction = new dropdown('show_introduction');
+            $opt_introduction->addOption('g',"-Global-Option-");
+            $opt_introduction->addOption("y",'yes');
+            $opt_introduction->addOption("n",'no');
+            $opt_introduction->setSelected($show_introduction);
 
-            $objRadio = new radio('hidetitle');
-            $objRadio->addOption('1', '&nbsp;'.$lbYes);
-            $objRadio->addOption('0', '&nbsp;'.$lbNo);
-            $objRadio->setSelected($hide_title);
-            $objRadio->setBreakSpace('&nbsp;&nbsp;');
+            //title option
+            $opt_title = new dropdown('show_title');
+            $opt_title->addOption('g',"-Global-Option-");
+            $opt_title->addOption("y",'yes');
+            $opt_title->addOption("n",'no');
+            $opt_title->setSelected($show_title);
+
+            //author option
+            $opt_author = new dropdown('show_author');
+            $opt_author->addOption('g',"-Global-Option-");
+            $opt_author->addOption('y','yes');
+            $opt_author->addOption('n','no');
+            $opt_author->setSelected($show_author);
+
+            //date option
+            $opt_date = new dropdown('show_date');
+            $opt_date->addOption('g',"-Global-Option-");
+            $opt_date->addOption('y','yes');
+            $opt_date->addOption('n','no');
+            $opt_date->setSelected($show_date);
 
             $tbl_basic->startRow();
-            $tbl_basic->addCell($this->objLanguage->languageText('phrase_hidetitle').': &nbsp; ');
-            $tbl_basic->addCell($objRadio->show());
+            $tbl_basic->addCell($lbl_introduction, null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_introduction->show());
+            $tbl_basic->endRow();
+
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_title, null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_title->show());
+            $tbl_basic->endRow();
+
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_author, null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_author->show());
+            $tbl_basic->endRow();
+
+            $tbl_basic->startRow();
+            $tbl_basic->addCell($lbl_date, null, 'top', null, 'cmstinyvspacer');
+            $tbl_basic->addCell($opt_date->show());
             $tbl_basic->endRow();
 
             //Hide User
@@ -3524,17 +3582,6 @@
             //$lbDisplay = $this->objLanguage->languageText('mod_cmsadmin_displaysummaryorcontent', 'cmsadmin');
             $lbIntroOnly = $this->objLanguage->languageText('mod_cmsadmin_introonly', 'cmsadmin');
             $lbFullContent = $this->objLanguage->languageText('mod_cmsadmin_fullcontent', 'cmsadmin');
-
-            $objRadio = new radio('show_content');
-            $objRadio->addOption('0', '&nbsp;'.$lbIntroOnly);
-            $objRadio->addOption('1', '&nbsp;'.$lbFullContent);
-            $objRadio->setBreakSpace('<br/>');
-            $objRadio->setSelected($show_content);
-
-            $tbl_basic->startRow();
-            $tbl_basic->addCell($this->objLanguage->languageText('mod_cmsadmin_showintro', 'cmsadmin').': ');
-            $tbl_basic->addCell($frontPage->show());
-            $tbl_basic->endRow();
 
             //Toggle Intro Only vs Full Content
             //$toggleLayer = new layer();
@@ -4970,7 +5017,7 @@
         {
 
             
-            $this->_objQuery->loadJFramePlugin();
+            //$this->_objQuery->loadJFramePlugin();
 
             $h3 = $this->newObject('htmlheading', 'htmlelements');
 
@@ -5216,6 +5263,7 @@
 
             //Adding the 250px hieght buffer to make sure the jQuery functions won't overlap existing skins
             //var_dump($is_front); exit;
+
             if (!$is_front) {
                 $layer = new layer();
                 $layer->height = '250px';
@@ -5255,15 +5303,16 @@
 
             $wrapLayer->str = $leftLayer->show().$rightLayer->show();
 
+            
 	        $tableContainer->startRow();
 	        $tableContainer->addCell($table->show(),'', 'top', '', 'AddContentLeft');
 	        $tableContainer->addCell($pageParams->show(),'', 'top', '', 'AddContentRight');
 	        $tableContainer->endRow();
-
-            //Add validation for title            
+            
+	        //Add validation for title            
             $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
             $objForm->addRule('title', $errTitle, 'required');
-            $objForm->addToForm(/*$tableContainer->show()*/$wrapLayer->show());
+            $objForm->addToForm($tableContainer->show() /*$wrapLayer->show()*/);
             //$objForm->addToForm($div1->show());
             //add action
             $objForm->addToForm($txt_action);

@@ -497,7 +497,65 @@
     </data>
     
   </update>       
-  
+
+  <update>
+    <table>tbl_cms_sections</table>
+    <version>1.602</version>
+    <description>Ensuring code consistancy and readability</description>
+
+    <data>
+        <remove>hidetitle</remove>
+    </data>
+    
+    <data>
+        <remove>showintroduction</remove>
+    </data>
+
+    <data>
+        <remove>showdate</remove>
+    </data>
+    
+    <data>
+      <add>
+        <name>show_title</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+
+    <data>
+      <add>
+        <name>show_user</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+	
+	<data>
+      <add>
+        <name>show_date</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>    
+
+	<data>
+      <add>
+        <name>show_introduction</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+  </update>
+
 </updates>
 
 

@@ -78,6 +78,8 @@
 
 
         /**
+         * Depricated: Use getNChildContent instead
+         *
          * Method to return the current and next levels child content
          *
          * @access public
@@ -108,6 +110,85 @@
         }
 
 
+        /**
+         * Method to return a particular sections child content up to the N'th level specified.
+         * 
+         * @param string $sectionId The section node id
+         * @param string $level The depth to search for content starting at the current section. Default is null to return all items for any depth
+         * @param string $published Flag to retrieve either published content vs all content. Default is to return all content.
+         * @param string $filter Extra sql query filter for extra/full control of querying child content.
+         * 
+         * @access public
+         * @return array of child content items or FALSE if empty
+         */
+        public function getNChildContent($sectionId, $level = null, $published = true, $filter = '') {
+
+            $_objSections = & $this->getObject('dbsections', 'cmsadmin');
+
+            //Content item container
+            $arrContent = array();
+
+            //Setting the published var for use in queries
+            if ($published == TRUE) {
+                $published = 1;
+            } else {
+                $published = 0;
+            }
+            
+            //gets all the child nodes for the current sectionId
+            $contentNodes = $this->getPagesInSection($sectionId, $published);
+            array_push($arrContent, $contentNodes);
+            
+            //Determine if the curernt section has child sections
+            if ($_objSections->hasChildSections($id)) {
+
+                $sectionNodes = $this->_objSections->getSubSectionsInSection($sectionId);
+
+                /*
+               echo "PARENT IDs : [".$parentId."]<br/>"; 
+                if ($parentId == 'gen9Srv16Nme30_2000_1207657570' && $parentId != 0){ 
+                    echo "PARENT ID : ".$parentId.'<br/>';
+                    //var_dump($nodes);
+                    echo "Node Title : ". $nodes['title'];
+                }
+                */
+    
+                //var_dump($nodes);
+                /*
+                if (!empty($sectionNodes)) {
+    
+                    foreach($nodes as $node) {
+    
+                        if ($this->getPagesInSection($node['id'], published)) {
+                            $htmlLevel .= "<li>".$link."\n";
+                            $item = $this->addContent($node['id'], $module, $sectionAction, $contentAction, $admin);
+    
+                            $htmlLevel .= '<ul>'.$this->buildLevel($node['id'], $currentNode, $admin, $module, $sectionAction, $contentAction).'</ul>';
+    
+                            $htmlLevel .= $item.'</li>' ."\n";
+                        }else{
+    
+                              $htmlLevel .= "<li>".$link."\n";
+                              $item .= $this->addContent($node['id'], $module, $sectionAction, $contentAction, $admin);
+                              $htmlLevel .= $item.'</li>' ."\n";
+    
+                        }
+                                           
+                    }
+    
+                    //echo "CALLED: ".$htmlLevel . '<br/>'.$link. "</br><br/>";
+                    return $htmlLevel;
+                }
+                */
+            } else {
+                //No child sections available                
+            }
+            if (!is_empty($arrContent)){
+                return $arrContent;
+            } else {
+                return FALSE;
+            }
+        }
 
 
         /**
@@ -232,7 +313,7 @@
                 $start_publish = $this->now();
             }
             
-            if ($override_date==null) {
+            if ($override_date == null) {
                 $override_date =  $this->now();
             }
             
@@ -243,6 +324,7 @@
             $introText = str_ireplace("<br />", " <br /> ", $introText);
             $fullText = str_ireplace("<br />", " <br /> ", $fullText);
 
+            $create_date = $this->now();
             $newArr = array(
                           'title' => $title ,
                           'sectionid' => $sectionid,
@@ -257,7 +339,8 @@
                           'show_pdf' => $show_pdf,
                           'show_email' => $show_email,
                           'show_print' => $show_print,
-                          'created' => $this->now(),
+                          'created' => $create_date,
+                          'override_date' => $override_date,
                           'modified' => $this->now(),
                           'post_lic' => $ccLicence,
                           'created' =>$override_date,
@@ -371,7 +454,7 @@
 
         /**
          * Method to edit a record
-         *
+         * Deprecated: Use editContent() instead
          * @access public
          * @return bool
          */
@@ -468,7 +551,7 @@
          */
         public function editContent($id = null,
                                     $title = '',
-                                    $sectionid = null,
+                                    $sectionId = null,
                                     $published = 0,
                                     $access = null,
                                     $introText = '',
@@ -495,7 +578,7 @@
                 $start_publish = $this->now();
             }
 
-            if ($override_date != null) {
+            if ($override_date == null) {
                 $override_date =  $this->now();
             }
             
@@ -504,12 +587,13 @@
 
             $newArr = array(
                           'title' => $title ,
-                          'sectionid' => $sectionid,
+                          'sectionId' => $sectionId,
                           'access' => $access,
                           'introtext' => addslashes($introText),
                           'body' => addslashes($fullText),
                           'modified' => $modifiedDate,
                           'modified_by' => $modifiedBy,
+                          'override_date' => $override_date,
                           'published' => $published,
                           'show_title' => $show_title,
                           'show_author' => $show_author,
@@ -533,7 +617,7 @@
             
             //process the frontpage
             $isFrontPage = $this->getParam('frontpage');
-            //$this->luceneIndex($newArr);
+            $this->luceneIndex($newArr);
             if ($isFrontPage == '1') {
                 $this->_objFrontPage->add($id);
             } else {
@@ -593,7 +677,7 @@
          * @return bool
          */
         public function trashContent($id)
-        {  
+        {
             //First remove from front page
             $this->_objFrontPage->removeIfExists($id);
             

@@ -241,6 +241,8 @@ class dbsections extends dbTable
         }
 
         /**
+		 * Depricated: Use addSection instead
+		 *
          * Method to add a section to the database
          *
          * @access public
@@ -377,6 +379,95 @@ class dbsections extends dbTable
             }
             
         }
+
+
+        /**
+         * Method to add a section to the database specifying all parameters
+         *
+         * @access public
+         * @return bool
+         */
+        public function addSection($title,
+								   $parentId = 0,
+								   $menuText = '',
+								   $access = null,
+								   $description = '',
+								   $published = 0,
+								   $layout = 'page',
+								   $showIntroduction = 0,
+								   $showTitle = 'g',
+								   $showAuthor = 'g',
+								   $showDate = 'g',
+								   $pageNum = '0',
+								   $customNum = null,
+								   $pageOrder = 'pagedate_asc',
+								   $imageUrl = null,
+								   $contextCode = null)
+        {
+			
+			$user = $this->_objUser->userId();
+
+            //if ($this->getLevel($parentId) == '0') {
+                $rootId = $parentId;
+                //$rootNode = $this->checkindex($rootId);
+			//} else {
+                //$rootId = $this->getRootNodeId($parentId);
+                //$rootNode = $this->checkindex($rootId);
+            //}
+			
+			$description = str_ireplace("<br />", " <br /> ",$description);
+
+			//Preventing Duplicates (title, parentId as key)
+			/*
+			$isDuplicate = $this->isDuplicateSection($title,$parentId);
+
+			if ($isDuplicate == TRUE){
+				return FALSE;
+			}
+			*/
+			
+			if($pageNum == 'custom') {
+				$numPageDisplay = $customNum;
+			} else {
+				$numPageDisplay = $pageNum;
+			}
+
+			$ordering = $this->getOrdering($parentId);
+
+			//Add section
+			$index = array(
+			'rootid' => $rootId,
+			'parentid' => $parentId,
+			'title' => $title,
+			'menutext' => $menuText,
+			'access' => $access,
+			'layout' => $layout,
+			'ordering' => $ordering,
+			'description' => $description,
+			'published' => $published,
+			'show_introduction' => $showIntroduction,
+			'show_title' => $showTitle,
+			'show_user' => $showAuthor,
+			'show_date' => $showDate,
+			'numpagedisplay' => $numPageDisplay,
+			'ordertype' => $pageOrder,
+			'nodelevel' => $this->getLevel($parentId) + '1',
+			'datecreated'=>$this->now(),
+			'userid' => $user,
+			'link' => $imageUrl,
+			'contextcode' => $contextCode
+			);
+
+			$result = $this->insert($index);
+			
+			if ($result != FALSE) {
+				$index['id'] = $result;
+				$this->luceneIndex($index);
+				$this->_objSecurity->inheritSectionPermissions($result);
+			}
+			
+			return $result;
+        }
         
         private function checkindex($rootid=null,$parentid=null){
         	
@@ -384,7 +475,38 @@ class dbsections extends dbTable
         	return $rootid;
         }
 
+
         /**
+		 * Depricated: Use addSection(params...) instead
+         * Method to add a section to the database
+         *
+         * @param string $parent The id of the parent node. '0' for root nodes
+         * @param string $title The title of the new section
+         * @param string $menuText The text that will appear in the tree menu
+         * @param bool $published Whether page will be visible or not
+         * @param bool $access True if "registered" page False if "public" page
+         * @param string $description The introduction text 
+         * @param string $layout The layout type of the section
+         * @param bool $showdate Whether date will be visible or not
+         * @param bool $showintroduction Whether introduction will be visible or not
+         * @param int $numpagedisplay Number of pages to display 
+         * @param string $ordertype How the page should be ordered
+         * @param string $contextCode The context code if you are using the cms as the context section manager
+         * @access public
+         * @return bool
+         */
+        public function isDuplicateSection($name, $parentid) {
+			//Preventing Duplicates (title, parentId as key)
+			$checkData = $this->query("SELECT id FROM tbl_cms_sections WHERE id = '$parentid' AND title = '$name'");
+			if (isset($checkData[0]['id'])) {
+				return TRUE;
+			} else {
+				return FALSE;				
+			}
+		}
+
+        /**
+		 * Depricated: Use addSection(params...) instead
          * Method to add a section to the database
          *
          * @param string $parent The id of the parent node. '0' for root nodes
@@ -445,6 +567,8 @@ class dbsections extends dbTable
         }
 
         /**
+		 * Depricated: use editSection instead
+		 *
          * Method to edit a section in the database
          *
          * @access public
@@ -502,8 +626,80 @@ class dbsections extends dbTable
             return $result;
         }
 
+
+		/**
+         * Method to edit a section to the database specifying all parameters
+         *
+         * @access public
+         * @return bool
+         */
+        public function editSection($id,
+								    $parentId = 0,
+									$title,
+								    $menuText = '',
+								    $access = null,
+								    $description = '',
+								    $published = 0,
+								    $layout = 'page',
+								    $showIntroduction = 0,
+								    $showTitle = 'g',
+								    $showAuthor = 'g',
+								    $showDate = 'g',
+								    $pageNum = '0',
+								    $customNum = null,
+								    $pageOrder = 'pagedate_asc',
+								    $imageUrl = null,
+								    $contextCode = null)
+        {
+			$user = $this->_objUser->userId();
+
+			if ($this->getLevel($parentId) == '0') {
+                $rootId = $parentId;
+			} else {
+                $rootId = $this->getRootNodeId($parentId);
+            }
+			
+            if($pageNum == 'custom') {
+				$numPageDisplay = $customNum;
+			} else {
+				$numPageDisplay = $pageNum;
+			}
+			
+			$ordering = $this->getOrdering($parentId);
+			
+            $arrFields = array(
+                            'rootid' => $rootId,
+							'parentid' => $parentId,
+							'title' => $title,
+							'menutext' => $menuText,
+							'access' => $access,
+							'layout' => $layout,
+							'ordering' => $ordering,
+							'description' => $description,
+							'published' => $published,
+							'show_introduction' => $showIntroduction,
+							'show_title' => $showTitle,
+							'show_user' => $showAuthor,
+							'show_date' => $showDate,
+							'numpagedisplay' => $numPageDisplay,
+							'ordertype' => $pageOrder,
+							'nodelevel' => $this->getLevel($parentId) + '1',
+							'userid' => $user,
+							'link' => $imageUrl,
+							'contextcode' => $contextCode);
+            $result = $this->update('id', $id, $arrFields);
+    
+            if ($result != FALSE) {
+                $arrFields['id'] = $id;
+                $this->luceneIndex($arrFields);
+				return TRUE;
+            }
+            
+            return $result;
+        }
+
         /**
-         * Method to check if there is sections
+         * Method to check if there are any sections
          *
          * @access public
          * @return boolean

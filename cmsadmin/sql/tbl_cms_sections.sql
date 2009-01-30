@@ -33,20 +33,29 @@ $fields = array(
 		'length' => 255,
 
 		),
-	'showdate' => array(
-		'type' => 'integer',
-		'length' => 3
-
+	'show_title' => array(
+		'type' => 'text',
+		'length' => 1,
+		'notnull' => FALSE,
+		'default' => 'g'
 		),
-	'showintroduction' => array(
-		'type' => 'integer',
-		'length' => 3
+	'show_user' => array(
+		'type' => 'text',
+		'length' => 1,
+		'notnull' => FALSE,
+		'default' => 'g'
 		),
-	'hidetitle' => array(
-		'type' => 'integer',
-		'length' => 3,
-		'notnull' => TRUE,
-		'default' => '0'
+	'show_date' => array(
+		'type' => 'text',
+		'length' => 1,
+		'notnull' => FALSE,
+		'default' => 'g'
+		),
+	'show_introduction' => array(
+		'type' => 'text',
+		'length' => 1,
+		'notnull' => FALSE,
+		'default' => 'g'
 		),
 	'numpagedisplay' => array(
 		'type' => 'integer',

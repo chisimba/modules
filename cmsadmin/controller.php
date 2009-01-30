@@ -582,23 +582,96 @@
                 return 'cms_permissions_content_add_user_group_tpl.php';				
 
                 case 'addpermissions_user_group':
-                $this->addEditSectionPermissionsUserGroup($sectionid);
-                return 'cms_permissions_add_user_group_tpl.php';
+                    $this->addEditSectionPermissionsUserGroup($sectionid);
+                    return 'cms_permissions_add_user_group_tpl.php';
 
                 case 'createsection':
-                //Save the section
-                $this->_objSections->add($this->contextCode);
-                $parent = $this->getParam('parentid');
-                if (!empty($parent)) {
-                    return $this->nextAction('viewsection', array('id' => $parent), 'cmsadmin');
-                } else {
-                    return $this->nextAction('sections');
-                }
+                    //Save the section
+                    $parentId = $this->getParam('parent');
+                    $title = $this->getParam('title');
+                    $menuText = $this->getParam('menutext');
+                    $access = $this->getParam('access');
+                    $description = $this->getParam('introtext');
+                    $published = $this->getParam('published');
+                    $layout = $this->getParam('display');
+                    $showIntroduction = $this->getParam('show_introduction');
+                    $showTitle = $this->getParam('show_title');
+                    $showAuthor = $this->getParam('show_author');
+                    $showDate = $this->getParam('show_date');
+                    $customNum = $this->getParam('customnumber');
+                    $pageNum = $this->getParam('pagenum');
+                    $pageOrder = $this->getParam('pageorder');
+                    $imageUrl = '';
+                    $contextCode = '';
+
+                    
+                    $this->_objSections->addSection($title,
+                                       $parentId,
+                                       $menuText,
+                                       $access,
+                                       $description,
+                                       $published,
+                                       $layout,
+                                       $showIntroduction,
+                                       $showTitle,
+                                       $showAuthor,
+                                       $showDate,
+                                       $pageNum,
+                                       $customNum,
+                                       $pageOrder,
+                                       $imageUrl,
+                                       $contextCode);
+                    
+                    //$this->_objSections->add();
+
+                    $parent = $this->getParam('parentid');
+                    if (!empty($parent)) {
+                        return $this->nextAction('viewsection', array('id' => $parent), 'cmsadmin');
+                    } else {
+                        return $this->nextAction('sections');
+                    }
 
                 case 'editsection':
-                $this->_objSections->edit();
-                $id = $this->getParam('id');
-                return $this->nextAction('viewsection', array('id' => $id), 'cmsadmin');
+                    
+                    //Edit the section
+                    $id = $this->getParam('id');
+                    $parentId = $this->getParam('parent');
+                    $rootId = $this->getParam('rootid');
+                    $title = $this->getParam('title');
+                    $menuText = $this->getParam('menutext');
+                    $access = $this->getParam('access');
+                    $description = $this->getParam('introtext');
+                    $published = $this->getParam('published');
+                    $layout = $this->getParam('display');
+                    $showIntroduction = $this->getParam('show_introduction');
+                    $showTitle = $this->getParam('show_title');
+                    $showAuthor = $this->getParam('show_author');
+                    $showDate = $this->getParam('show_date');
+                    $customNum = $this->getParam('customnumber');
+                    $pageNum = $this->getParam('pagenum');
+                    $pageOrder = $this->getParam('pageorder');
+                    $imageUrl = '';
+                    $contextCode = '';
+                    
+                    $this->_objSections->editSection($id,
+                                                     $parentId,
+                                                     $rootId,
+                                                     $title,
+                                                     $menuText,
+                                                     $access,
+                                                     $description,
+                                                     $published,
+                                                     $layout,
+                                                     $showIntroduction,
+                                                     $showTitle,
+                                                     $showAuthor,
+                                                     $showDate,
+                                                     $pageNum,
+                                                     $customNum,
+                                                     $pageOrder,
+                                                     $imageUrl,
+                                                     $contextCode);
+                    return $this->nextAction('viewsection', array('id' => $id), 'cmsadmin');
 
                 case 'select':
                 $item = $this->getParam('arrayList');
