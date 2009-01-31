@@ -1986,6 +1986,11 @@
                  */
 
         public function getSectionGroupNames($sectionid){
+            //TODO: groupid?? suppose to be sectionid??
+            //Removing notices for now.
+            if (!isset($groupid)) {
+                $groupid = '';
+            }
 
             $objGroups = & $this->newObject('dbgroups', 'cmsadmin');
             $group = $objGroups->getNode($groupid);
@@ -2020,6 +2025,12 @@
 
         public function getSectionUserNames($sectionid){
 
+            //TODO: groupid?? suppose to be sectionid??
+            //Removing notices for now.
+            if (!isset($groupid)) {
+                $groupid = '';
+            }
+
             $objGroups = & $this->newObject('dbgroups', 'cmsadmin');
             $group = $objGroups->getNode($groupid);
             $names = array();
@@ -2053,6 +2064,11 @@
                  */
 
         public function getContentGroupNames($contentid){
+            //TODO: groupid?? suppose to be sectionid??
+            //Removing notices for now.
+            if (!isset($groupid)) {
+                $groupid = '';
+            }
 
             $objGroups = & $this->newObject('dbgroups', 'cmsadmin');
             $group = $objGroups->getNode($groupid);
@@ -2086,6 +2102,11 @@
                  */
 
         public function getContentUserNames($contentid){
+            //TODO: groupid?? suppose to be sectionid??
+            //Removing notices for now.
+            if (!isset($groupid)) {
+                $groupid = '';
+            }
 
             $objGroups = & $this->newObject('dbgroups', 'cmsadmin');
             $group = $objGroups->getNode($groupid);
