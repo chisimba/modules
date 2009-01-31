@@ -32,7 +32,6 @@
         <title>Welcome to Chisimba</title>
         <menutext>Welcome </menutext>
         <layout>page</layout>
-        <showdate>1</showdate>
         <showintroduction>1</showintroduction>
         <numpagedisplay>0</numpagedisplay>
         <ordertype>pageorder</ordertype>
