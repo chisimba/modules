@@ -1,4 +1,8 @@
 <?php
+
+//Sending display to 1 column layout
+ob_start();
+
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
@@ -92,4 +96,9 @@ if ($forum['defaultforum'] == 'Y') {
     
     echo '<p align="center">'.$returnLink->show().'</p>';
 }
+
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

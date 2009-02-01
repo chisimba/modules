@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -139,4 +141,8 @@ $postReplyForm->addToForm($hiddenTemporaryId->show());
 
 echo $postReplyForm->show();
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

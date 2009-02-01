@@ -1,4 +1,7 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
+
 // Load HTML Classes as Needed
 $this->loadClass('htmlheading','htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -450,5 +453,8 @@ echo $backtoAllForumsLink->show();
 
 echo '</p>';
 
+$display = ob_get_contents();
+ob_end_clean();
 
+$this->setVar('middleColumn', $display);
 ?>

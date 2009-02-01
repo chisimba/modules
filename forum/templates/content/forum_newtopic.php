@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
 echo $objHighlightLabels->show();
@@ -257,5 +259,8 @@ $newTopicForm->addToForm($hiddenTemporaryId->show());
 echo $newTopicForm->show();
 
 
+$display = ob_get_contents();
+ob_end_clean();
 
+$this->setVar('middleColumn', $display);
 ?>

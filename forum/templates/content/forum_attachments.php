@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
@@ -37,5 +39,9 @@ if (count($files) > 0) {
     echo '</ul>';
 } 
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 
 ?>

@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -31,4 +33,8 @@ $link->link = 'Return to Topic';
 
 echo '<p align="center">'.$link->show().'</p>';
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

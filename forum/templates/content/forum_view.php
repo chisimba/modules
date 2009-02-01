@@ -1,5 +1,8 @@
 <?php
 
+//Sending display to 1 column layout
+ob_start();
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('multitabbedbox','htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -314,4 +317,10 @@ if ($forum['forumlocked'] != 'Y') {
 }
 
 echo $this->showForumFooter($forumid);
+
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
+
 ?>

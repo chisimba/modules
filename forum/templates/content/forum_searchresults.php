@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 echo '<h1>'.$objLanguage->languageText('mod_forum_searchresultsfor', 'forum', 'Search Results for').': <em>'.htmlentities($searchTerm).'</em></h1>';
 
@@ -17,4 +19,8 @@ echo $searchResults;
 
 echo $searchForm;
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

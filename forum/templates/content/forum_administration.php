@@ -1,4 +1,8 @@
 <?php
+
+//Sending display to 1 column layout
+ob_start();
+
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -198,5 +202,9 @@ $backToForumListLink->link = $this->objLanguage->languageText('mod_forum_backtof
 
 echo ('<p>'.$editLink->show().' / '.$backToForumListLink->show().'</p>');
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 
 ?>

@@ -1,4 +1,7 @@
-
+<?PHP
+//Sending display to 1 column layout
+ob_start();
+?>
 <script language="JavaScript" type="text/javascript">
 
 if(!document.getElementById && document.all)
@@ -29,7 +32,8 @@ document.getElementById = function(id){ return document.all[id]}
         }*/
     }
 </script>
-<?php
+<?PHP
+
 
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
@@ -111,4 +115,8 @@ $forumLink->title = $this->objLanguage->languageText('mod_forum_backtoforum');
 
 echo $forumLink->show();
 
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

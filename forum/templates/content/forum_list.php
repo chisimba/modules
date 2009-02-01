@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -127,5 +129,10 @@ if ($this->isValid('administration') && $this->isLoggedIn) {
     $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
     echo '<p><strong>'.$administrationLink->show().'</strong></p>';
 }
+
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 
 ?>

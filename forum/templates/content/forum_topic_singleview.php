@@ -1,4 +1,7 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
+
 /**
 * This template displays a topic in a single view format
 */
@@ -150,4 +153,9 @@ if ($this->isValid('moderatetopic') && !$forumlocked && $forumtype != 'workgroup
 echo $returntoforum->show().'</p>';
 
 echo $this->showForumFooter($post['forum_id'], FALSE);
+
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>

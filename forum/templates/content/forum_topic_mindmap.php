@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 /**
 * This template displays a topic in a freemind view format
@@ -115,5 +117,8 @@ if ($this->isValid('moderatetopic') && !$forumlocked && $forumtype != 'workgroup
 echo $returntoforum->show().'</p>';
 
 
+$display = ob_get_contents();
+ob_end_clean();
 
+$this->setVar('middleColumn', $display);
 ?>

@@ -1,4 +1,6 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
 
 $this->setVar('pageSuppressXML',true);
 
@@ -280,3 +282,11 @@ if(!document.getElementById && document.all) {
     }
 //]]>
 </script>
+
+<?PHP
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
+
+?>

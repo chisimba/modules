@@ -1,4 +1,7 @@
 <?php
+//Sending display to 1 column layout
+ob_start();
+
 //POP languages from array that have already been translated.
 
 $this->loadClass('form', 'htmlelements');
@@ -102,4 +105,9 @@ $hiddenTangentInput->value = $post['post_id'];
 $translateForm->addToForm($hiddenTangentInput->show());
 
 echo $translateForm->show();
+
+$display = ob_get_contents();
+ob_end_clean();
+
+$this->setVar('middleColumn', $display);
 ?>
