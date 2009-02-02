@@ -62,6 +62,9 @@
     $dropStr = $drp_filter->show();
     */
         
+    if (!isset($dropStr)) {
+        $dropStr = '';
+    }    
         
     //Setup filter display
     $tbl_filter = new htmltable();
@@ -83,9 +86,12 @@
     //Heading box
     $objIcon->setIcon('permissions_small', 'png', 'icons/cms/');
     $objIcon->title = $this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
-    $objH->str =  $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin')."<br/><h3>Sections List</h3>";
+    $objH->str =  $objIcon->show().'&nbsp;'.$this->objLanguage->languageText('mod_cmsadmin_permissionsmanager', 'cmsadmin');
+
+    $hdr = $objH->show() . "<h3>Sections List</h3>";
+
     $tbl->startRow();
-    $tbl->addCell($objH->show(), '', 'center');
+    $tbl->addCell($hdr, '', 'center');
     $tbl->addCell($topNav, '','center','right');
     $tbl->endRow();
 
