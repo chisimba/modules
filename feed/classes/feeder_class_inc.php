@@ -23,7 +23,7 @@ class feeder extends object
         //check if the author wants a stylesheet associated...
         if($stylesheet == "true")
         {
-            $this->objFeeder->xslStyleSheet = "http://feedster.com/rss20.xsl";
+            $this->objFeeder->xslStyleSheet = "http://manalang.com/wp-content/rss2.xsl";
         }
 
         $this->objFeeder->title = $title;
