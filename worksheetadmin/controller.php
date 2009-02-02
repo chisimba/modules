@@ -155,7 +155,7 @@ class worksheetadmin extends controller
                 if(isset($postSubmit) && !empty($postSubmit)){
                     return $this->nextAction('addquestion', array('id' => $wid, 'count' => $array['order']));
                 }
-                return $this->nextAction('view', array('id'=>$wid));
+                return $this->nextAction('view', array('id'=>$this->getParam('worksheet_id')));
 
             // Save an editted question
             case 'updatequestion':
@@ -164,8 +164,16 @@ class worksheetadmin extends controller
                 if(isset($postCancel) && !empty($postCancel)){
                     return $this->nextAction('view',array('id'=>$this->getParam('worksheet_id')));
                 }
-                $wid = $this->updateQuestion();
-                return $this->nextAction('view', array('id'=>$wid));
+                 //Retriving values from the form
+                 $question=$this->getParam('question');
+                 $answer=$this->getParam('answer');
+                 $worth=$this->getParam('worth');
+                 $id=$this->getParam('id');
+                 $ValuesArray=array('question'=>$question,'model_answer'=>$answer,'question_worth'=>$worth);
+                 $objDbworksheetquestion=$this->newObject('dbworksheetquestions','worksheet');
+                 $objDbworksheetquestion->updateQn('id',$id,$ValuesArray);
+           
+                return $this->nextAction('view', array('id'=>$this->getParam('worksheet_id')));
 
             // Display form to edit a question
             case 'editquestion':
@@ -568,7 +576,8 @@ class worksheetadmin extends controller
         }
 
         $userId = $this->objUser->userId();
-        $this->objWorksheetQuestions->saveRecord('edit', $userId, $imageFile);
+	$this->objworksheetquestions = $this->newObject('dbworksheetquestions','worksheet');
+        //$this->objWorksheetQuestions->saveRecord('edit', $userId, $imageFile);
 
         $markOld = $this->getParam('old_worth', 0);
         $markNew = $this->getParam('worth', 0);
