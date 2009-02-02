@@ -229,7 +229,7 @@ class dbworksheetquestions extends dbTable
     public function getFirstQuestion($worksheet_id)
     {
         $sql = 'SELECT * FROM '.$this->table."
-        WHERE worksheet_id='$worksheet_id' ORDER BY question_order LIMIT 1";
+        WHERE worksheet_id='$worksheet_id' ORDER BY question_order LIMIT 4";
 
         $data=$this->getArray($sql);
 
@@ -260,5 +260,32 @@ class dbworksheetquestions extends dbTable
         }
         return FALSE;
     }
+ /*
+ public function saveRecord($question_id, $question, $answer, $question_worth)
+    {
+        $result = $this->update('id', $question_id, array(
+                'question' => $question,
+                'model_answer' => $answer,
+                'question_worth' => $question_worth,
+                'userid' => $this->objUser->userId(),
+                'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime()),
+                'updated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
+            ));
+       
+        if ($result != FALSE) {
+            $objWorksheetquestions = $this->getObject('dbworksheetquestions');
+            $question = $this->getQuestion($question_id);
+            $objWorksheet->saveRecord($question['worksheet_id']);
+
+        
+       return $result;
+    }
+*/
+function updateQn($pkfield, $pkvalue, $fields)
+ {
+   $tablename='tbl_worksheet_questions';
+   $status=$this->update($pkfield,$pkvalue,$fields,$tablename);
+   return $status;
+ }
 } //end of class
 ?>
