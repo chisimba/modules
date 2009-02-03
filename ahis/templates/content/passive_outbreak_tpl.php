@@ -57,7 +57,7 @@ $bButton = new button('back', $this->objLanguage->languageText('word_back'), "ja
 
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));
-$yearBox = new textinput('year', date('Y', strtotime($calendardate)));
+$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 8);
 $dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)));
 $yearBox->extra = $monthBox->extra = $dateBox->extra = $refNoBox->extra = "readonly";
 
@@ -80,9 +80,9 @@ $investigationDate->setName('dateInvestigation');
 $investigationDate->setDefaultDate($dateInvestigation);
 
 $locationBox = new textinput('refNo', $location);
-$latitudeBox = new textinput('refNo', $latitude);
-$longitudeBox = new textinput('refNo', $longitude);
-$diseaseBox = new textinput('refNo', $disease);
+$latitudeBox = new textinput('latitude', $latitude);
+$longitudeBox = new textinput('longitude', $longitude);
+$diseaseBox = new textinput('disease', $disease);
 $causitiveBox = new textinput('causitive', $causitive);
 
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -142,7 +142,7 @@ $objTable->addCell($sButton->show(),NULL);//,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'passive_species')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

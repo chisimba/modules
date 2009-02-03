@@ -216,7 +216,7 @@ class ahis extends controller {
                 $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
                 $this->setVar('dateOccurence', $this->getSession('ps_dateOccurence', date('Y-m-d')));
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
-                $this->setVar('dateInvestigation', $this->getSession('ps_dateinvestigation', date('Y-m-d')));
+                $this->setVar('dateInvestigation', $this->getSession('ps_dateInvestigation', date('Y-m-d')));
                 $this->setVar('location', $this->getSession('ps_location'));
                 $this->setVar('latitude', $this->getSession('ps_latitude'));
                 $this->setVar('longitude', $this->getSession('ps_longitude'));
@@ -224,6 +224,50 @@ class ahis extends controller {
                 $this->setVar('causitive', $this->getSession('ps_causitive'));
                 
                 return 'passive_outbreak_tpl.php';
+            
+            case 'passive_species':
+                $this->setSession('ps_dateVet', $this->getParam('dateVet'));
+                $this->setSession('ps_dateOccurence', $this->getParam('dateOccurence'));
+                $this->setSession('ps_dateDiagnosis', $this->getParam('dateDiagnosis'));
+                $this->setSession('ps_dateInvestigation', $this->getParam('dateInvestigation'));
+                $this->setSession('ps_location', $this->getParam('location'));
+                $this->setSession('ps_longitude', $this->getParam('longitude'));
+                $this->setSession('ps_latitude', $this->getParam('latitude'));
+                $this->setSession('ps_disease', $this->getParam('disease'));
+                $this->setSession('ps_causitive', $this->getParam('causitive'));
+                
+                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
+                //$this->setVar('arrayOStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
+                $this->setVar('arrayProduction', $this->objProduction->getAll("ORDER BY NAME"));
+                $this->setVar('arrayAge', $this->objAge->getAll("ORDER BY NAME"));
+                $this->setVar('arraySex', $this->objSex->getAll("ORDER BY NAME"));
+                //$this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY NAME"));
+                $this->setVar('arrayBasis', $this->objDiagnosis->getAll("ORDER BY NAME"));
+                $this->setVar('arrayControl', $this->objControl->getAll("ORDER BY NAME"));
+                
+                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                //$this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
+                $this->setVar('productionId', $this->getSession('ps_productionId'));
+                $this->setVar('ageId', $this->getSession('ps_ageId'));
+                $this->setVar('sexId', $this->getSession('ps_sexId'));
+                //$this->setVar('speciesId', $this->getSession('ps_speciesId'));
+                $this->setVar('basisId', $this->getSession('ps_diagnosisId'));
+                $this->setVar('controlId', $this->getSession('ps_controlId'));
+                
+                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
+                $this->setVar('refNo', $this->getSession('ps_refNo'));
+                $this->setVar('susceptible', $this->getSession('ps_susceptible'));
+                $this->setVar('cases', $this->getSession('ps_cases'));
+                $this->setVar('deaths', $this->getSession('ps_deaths'));
+                $this->setVar('vaccinated', $this->getSession('ps_vaccinated'));
+                $this->setVar('slaughtered', $this->getSession('ps_slaughtered'));
+                $this->setVar('destroyed', $this->getSession('ps_destroyed'));
+                $this->setVar('production', $this->getSession('ps_production'));
+                $this->setVar('newcases', $this->getSession('ps_newcases'));
+                $this->setVar('recovered', $this->getSession('ps_recovered'));
+                $this->setVar('prophylactic', $this->getSession('ps_prophylactic'));
+                
+                return 'passive_species_tpl.php';
                             
             case 'admin':
 
