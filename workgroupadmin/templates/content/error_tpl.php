@@ -1,3 +1,3 @@
 <?php
-	echo "<p>".$objLanguage->languageText("phrase_notincontext")."</p>";
+	echo "<p>".$objLanguage->code2Txt("phrase_notincontext")."</p>";
 ?>
