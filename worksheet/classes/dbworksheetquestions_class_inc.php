@@ -162,9 +162,9 @@ class dbworksheetquestions extends dbTable
         $sql = 'SELECT * FROM '.$this->table." WHERE worksheet_id='$worksheet_id' AND
         question_order>$order ORDER BY question_order";
 
-        if($limit){
+        /*if($limit){
             $sql .= " LIMIT 4";
-        }
+        }*/
         $result = $this->getArray($sql);
         return $result;
     }
