@@ -92,7 +92,7 @@ class diclookup extends object
         $definition = curl_exec($ch);
         curl_close($ch);
         //return the definition
-        return htmlentities($definition);
+        return htmlentities("Returned Value");
     }
 
 }
