@@ -68,7 +68,10 @@ class twitops extends object {
             $this->curlTwitter($url, $parentid);
             $this->objDbTwit->setCheck($check['id']);
             sleep(60);
-
+        }
+        $check2 = $this->objDbTwit->getUnchecked();
+        if(!empty($check2)) {
+            $this->recursiveCheck($check2);
         }
     }
 

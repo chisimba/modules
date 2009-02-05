@@ -59,8 +59,8 @@ class twitsocial extends controller {
                 $url = "http://twitter.com/statuses/friends/paulscott56.xml";
                 $parentid = $this->objUser->PKId($this->objUser->userId());
                 $ret = $this->objTwitOps->curlTwitter($url, $parentid);
-                $checks = $this->objDbTwit->getUnchecked();
                 // now we get all the unchecked users and check em for 2nd level followers
+                $checks = $this->objDbTwit->getUnchecked();
                 //check the connection status
                 $status = $this->objBg->isUserConn();
                 //keep the user connection alive even if the browser is closed
@@ -68,7 +68,7 @@ class twitsocial extends controller {
                 //This is where you call your long running process
                 $this->objTwitOps->recursiveCheck($checks);
                 //fork the process and create the child process and call the callback function when done
-                $call2 = $this->objBg->setCallBack($this->objUser->emailAddress(), "Your social graph is ready!", "Your twitter 6 degrees has completed");
+                $call2 = $this->objBg->setCallBack($this->objUser->email(), "Your social graph is ready!", "Your twitter 6 degrees has completed");
 
                 $this->setVarByRef('msg', $this->objLanguage->languageText("mod_twitsocial_all_done", "twitsocial"));
                 return 'alldone_tpl.php';
