@@ -115,7 +115,7 @@ class dasops extends object {
 	{
 		$objFB = $this->getObject('featurebox', 'navigation');
 		 $ajax = "<p class=\"im_source\" id=\"massdiv\">Ready...</p>
-            
+
 			 <script charset=\"utf-8\">
                             new Ajax.InPlaceEditor('massdiv', 'index.php', {rows:10,cols:13, callback: function(form, value) { return 'module=das&action=massmessage&msg=' + escape(value) }})
                         </script>
@@ -123,7 +123,7 @@ class dasops extends object {
 
 		return '<p>'.$objFB->show("Mass Message", $ajax).'</p>';
 	}
-	
+
     private function massmessageform($editor = FALSE) {
         try {
             $this->loadClass ( 'form', 'htmlelements' );
@@ -201,7 +201,7 @@ class dasops extends object {
 		$pathToScript = $this->objSysConfig->getValue ( 'imdaemonpath', 'im' );
 		$exeString = "python $pathToScript/messagehandler.py $username $password $dbhost $dbusername $dbpassword $dbname";
 		exec($exeString. " > /dev/null &");
-		
+
 	}
 
 	/**
@@ -215,7 +215,7 @@ class dasops extends object {
 		if(count($pids) > 0)
 		{
 			foreach($pids as $pid)
-			{			
+			{
 				return exec("kill ".$pid);
 			}
 		}
@@ -244,13 +244,13 @@ class dasops extends object {
 	function getPID($param)
 	{
 		 exec("ps aux", $result);
-	
+
 		 $r2=array();
 		 foreach ($result as $line)
 		 {
-			
+
 			if (strpos($line,$param))
-			{				
+			{
 				$l2=substr($line,strpos($line,' '),-1);
 				$l2=trim($l2);
 				$l2=substr($l2,0,strpos($l2,' '));
@@ -276,7 +276,7 @@ class dasops extends object {
 		*/
 		$form->action = $this->uri(array('action' => 'savesettings'));
 		$form->setDisplayType(2);
-		
+
 		$button = new  button();
 		$button->setToSubmit();
 		$button->setValue('Save');
@@ -296,10 +296,10 @@ class dasops extends object {
 		$form->addToForm($domain);
 		$form->addToForm($daspassword);
 		$form->addToForm($idletime);
-		$form->addToForm($button);		
+		$form->addToForm($button);
 
 		return $form->show();
-	
+
 	}
 
 }

@@ -93,14 +93,14 @@ class viewrender extends object {
 	* @return string
 	*/
     public function renderOutputForBrowser($msgs) {
-        
+
 	$objAlertBox = $this->getObject('alertbox', 'htmlelements');
-	
-	
+
+
 	$objPres = $this->getObject ( 'dbimpresence', 'im' );
 	$this->objIcon->setIcon('archive','png');
 	$archiveIcon = $this->objIcon->show();
-	
+
         $this->objIcon->setIcon('refresh','png');
 	$refreshIcon = $this->objIcon->show();
 	$this->objIcon->setIcon('reassign','png');
@@ -109,45 +109,45 @@ class viewrender extends object {
 
         $max = 1;
         $rownum = 0;
-	
+
         //loop the conversations
         foreach ( $msgs as $msg ) {
             $box = "";
-            
+            //var_dump($msg);
             $fuser = $msg ['person'];
-            $msgid = $msg ['id'];
-            
+            $msgid = $msg ['messages'][0]['id'];
+
 	    if ($this->objDbImPres->isHidden($fuser))
 	    {
-		
+
 		$this->objIcon->setIcon('plus');
 		$hiddenIcon = $this->objIcon->show();
-		
+
 		$this->objLink->href = $this->uri(array('action' => 'showcontact', 'personid' => $fuser), 'das');
 		$this->objLink->link = $hiddenIcon;
 		$hidden = $this->objLink->show();
-		
+
 		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_hidden" >' ;
 		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $msg ['person'] . '</b></p></td>';
 	    } else {
-		
+
 		$this->objIcon->setIcon('minus');
 		$hiddenIcon = $this->objIcon->show();
-		
+
 		$this->objLink->href = $this->uri(array('action' => 'hidecontact', 'personid' => $fuser), 'das');
 		$this->objLink->link = $hiddenIcon;
 		$hidden = $this->objLink->show();
-		
+
 		$this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
 		$this->objLink->link = $archiveIcon;
 		$archiveLink = $this->objLink->show();
-		
+
 		$archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
-		
+
 		$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
 		$this->objLink->link = $reassignIcon;
 		$resassignLink = $this->objLink->show();
-		
+
 		$sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
 		$fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
 		$prevmessages = "";
@@ -165,31 +165,31 @@ class viewrender extends object {
 		    $prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
 		    //get the reply(s) if there was any
 		    $replies = $this->objDBIM->getReplies($prevmess['id']);
-    
+
 		    $lastmsgId = $prevmess ['id'];
 		}
-	    
-	    
+
+
 		$ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
 			   <p class=\"im_source\">
 					    <script charset=\"utf-8\">
-				new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
+				new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send',
 											    cancelText: 'Cancel',
-											    savingControl: 'link',  
+											    savingControl: 'link',
 											    savingText: 'Sending the message...',
 											    size:40,
 											    callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
 			    </script>
 						    </p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."</p>";
-			    
-		
-		
+
+
+
 		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
 		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
 		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div>';
 		$box .= '</td>';
 	    }
-          
+
             //try to put 4 conversations in a row
             $rownum ++;
             if ($rownum == $max) {
@@ -203,7 +203,7 @@ class viewrender extends object {
         header("Content-Type: text/html;charset=utf-8");
         return "<table>" . $ret . "</table>";
     }
-	
+
 	/**
 	* Method to get the alias editor
 	*
@@ -211,20 +211,20 @@ class viewrender extends object {
 	public function getAliasEditor($personId, $lastmsgId)
 	{
 		$alias = $this->objAilas->getAlias($personId);
-		
+
 		$name = ($alias) ? $alias: $this->maskUser($personId);
-			
+
 		$aliasAjax = "<span  id=\"aliasdiv" . $lastmsgId . "\">$name</span>
-			   
+
 					    <script charset=\"utf-8\">
-				new Ajax.InPlaceEditor('aliasdiv" . $lastmsgId . "', 'index.php', { 	okText:'Save', 	
+				new Ajax.InPlaceEditor('aliasdiv" . $lastmsgId . "', 'index.php', { 	okText:'Save',
 											    cancelText: 'Cancel',
-											    savingControl: 'link',  
+											    savingControl: 'link',
 											    savingText: 'Saving Alias...',
 											    size:40,
 											    callback: function(form, value) { return 'module=das&action=addalias&personid=" . $personId . "&myparam=' + escape(value) }})
 			    </script> ";
-				
+
 		return $aliasAjax;
 	}
 
@@ -264,12 +264,12 @@ class viewrender extends object {
 
 	    //$str = $prevmessages;
 	}else{
-	    
+
 	    $str = '<span class="warning">No Messages found in the archives for this person</span>';
 	}
 	return $str;
     }
-    
+
     /**
     * Nethod to show the quick links to conversations
     */
@@ -277,9 +277,9 @@ class viewrender extends object {
 	{
 		if(count($msgs) > 0)
 		{
-			
+
 			$anchor = $this->getObject('link', 'htmlelements');
-			$str = '	<ul>';                                            
+			$str = '	<ul>';
 			$class = ' class="first" ';
 
 			foreach($msgs as $msg)
@@ -293,7 +293,7 @@ class viewrender extends object {
 					$link = $this->maskUser($msg['person']);
 				}
 				$anchor->link = $link;
-				
+
 				$str .="<li>".$anchor->show()."</li>";
 
 				$class = "  class=\"personalspace\" ";
@@ -304,7 +304,7 @@ class viewrender extends object {
 		} else {
 			return "";
 		}
-	
+
 	}
 
 	/**
@@ -318,10 +318,10 @@ class viewrender extends object {
 		$cid = $this->objUser->userId();
 		$outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 		$msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
-		
+
 		$num = count($msgs);
 		$myMessages = $num.$outof;
-		
+
 
 		$liveconv = $objPres->countActiveUsers();
 		if((int)$liveconv > 0 ||  (int)$objIMUsers->countCounsellors())
@@ -335,7 +335,7 @@ class viewrender extends object {
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
 
 		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.'</td></tr>';
-			
+
 		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.number_format($avg,2).'</td></tr>';
 
 		$str .= '<tr><td>Messages</td><td> '.$objPres->countMessages().'</td></tr>';
@@ -352,23 +352,23 @@ class viewrender extends object {
     {
 	$objBlocks = $this->getObject('blocks','blocks');
 	$blocks = "";
-	
+
 	//Stats block
 	$blocks .= $this->getStatsBox();
-	
+
 	//Chat block
 	//$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
         return $blocks;
-	
+
     }
-	
+
 
     /**
     * Method to get the right blocks
     */
     public function getRightBlocks()
     {
-        
+
         return $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
                                  $this->objUser->userId()));
     }
@@ -383,7 +383,7 @@ class viewrender extends object {
     public function maskUser($person)
     {
 		return 'xxxxxxx'.substr($person, strpos($person, '@'));
-	
+
     }
 }
 ?>

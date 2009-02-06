@@ -29,7 +29,7 @@ foreach ($users as $user)
 {
     $cnt = 0;
     $name = $user['firstname']." ".$user['surname'];
-    
+
     if($objDBIMUser->isCounsilor($user['userid']))
     {
         $objDBIMUser->manualAssign($user['userid']) ? $objIcon->setIcon('grey_bullet'): $objIcon->setIcon('green_bullet');
