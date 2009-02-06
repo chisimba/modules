@@ -79,20 +79,20 @@ $bigString = '<div style="position: relative; display: inline;">
         
         <!-- This first one is the template that others are copied from -->
         <div class="fileuploadbox" id="filetemplate">
-          <input type="file" size="40" name="files" />
+          <input type="file" size="40" name="files[]" />
         </div>
         <div class="fileuploadbox">
-          <input type="file" size="40" name="files1" />
+          <input type="file" size="40" name="files[]" />
 
         </div>
         <div class="fileuploadbox">
-          <input type="file" size="40" name="files2" />
+          <input type="file" size="40" name="files[]" />
         </div>
         <div class="fileuploadbox">
-          <input type="file" size="40" name="files3" />
+          <input type="file" size="40" name="files[]" />
         </div>
         <div class="fileuploadbox">
-          <input type="file" size="40" name="files4" />
+          <input type="file" size="40" name="files[]" />
 
         </div>
 

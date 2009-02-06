@@ -37,7 +37,9 @@ class dbalbum extends dbTable
      */
      public function createAlbum()
      {
-        
+        if (!isset($contextCode)) {
+	    $contextCode = '';	    
+	}
         $albumTitle = $this->getParam('albumtitle');
         if($albumTitle == '')
         {

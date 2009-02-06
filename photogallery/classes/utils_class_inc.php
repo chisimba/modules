@@ -93,7 +93,7 @@ class utils extends object
 		
 		$objUpload =& $this->newObject('upload', 'filemanager');
 		$objUpload->setUploadFolder('users/'.$this->_objUser->userId().'/photos/');
-		$results = $objUpload->uploadFiles();
+		$results = $objUpload->uploadFilesArray('files');
 		
 		return $results;
 	}
@@ -105,17 +105,22 @@ class utils extends object
 	* @return boolean
 	* @access public
 	*/
-	public function insertToImagesTable($albumId, $results = null)
+	public function insertToImagesTable($albumId = '', $results = null)
 	{
 		if($results == null)
 		{
 			return FALSE;
 		} 
 		
+		
+		
 		//$albumId = $this->getParam('albumselect');
-                $imageCount = count($this->_objDBImages->getAll("WHERE album_id= '".$albuimId."'"));
+                $imageCount = count($this->_objDBImages->getAll("WHERE album_id= '".$albumId."'"));
 		foreach($results as $result)
 		{
+		    if (!isset ($result['fileid'])) {
+			$result['fileid'] = '';
+		    }
 			if($result['fileid'] != '')
 			{
                             $imageCount++;
