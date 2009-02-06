@@ -52,6 +52,8 @@ class twitsocial extends controller {
     function dispatch($action) {
         switch ($action) {
             default :
+                // let us show something lightweight. Don't want to burdon the db yet
+
 
                 break;
             case 'getsocial' :
@@ -73,6 +75,23 @@ class twitsocial extends controller {
                 $this->setVarByRef('msg', $this->objLanguage->languageText("mod_twitsocial_all_done", "twitsocial"));
                 return 'alldone_tpl.php';
                 break;
+
+            case 'getloctags' :
+                // get tags from all the descriptions
+                $tagcloud = $this->objDbTwit->locTagCloud();
+                $this->setVarByRef('tagcloud', $tagcloud);
+
+                return 'tagcloud_tpl.php';
+
+                break;
+
+            case 'viewlocusers' :
+                $loc = $this->getParam('tag');
+                $users = $this->objDbTwit->getUsersByLoc($loc);
+                $ret = $this->objTwitOps->layoutLocUsers($users);
+                $this->setVarByRef('ret', $ret);
+
+                return 'userview_tpl.php';
           }
     }
 } //end of class

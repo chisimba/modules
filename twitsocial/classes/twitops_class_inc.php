@@ -39,6 +39,7 @@ class twitops extends object {
         $this->objCurl = $this->getObject ( 'curl', 'utilities' );
         $this->objDbTwit = $this->getObject ( 'dbtwits' );
         $this->objUser = $this->getObject('user', 'security');
+        $this->objTC = $this->getObject('tagcloud', 'utilities');
     }
 
     public function curlTwitter($url, $parentid) {
@@ -53,7 +54,7 @@ class twitops extends object {
             $image_url = $twit->profile_image_url;
             $url = $twit->url;
             $follow_count = $twit->followers_count;
-            $twit = array ('name' => $name, 'screen_name' => $sname, 'location' => $location, 'description' => $description, 'image_url' => $image_url, 'url' => $url, 'follow_count' => $follow_count, 'parent_id' => $parentid );
+            $twit = array ('name' => $name, 'screen_name' => $sname, 'location' => $location, 'description' => $description, 'image_url' => $image_url, 'url' => $url, 'follow_count' => $follow_count, 'parent_id' => $parentid, 'sntag' => 0, 'loctag' => 0 );
             $userarr [] = $twit;
         }
         $this->objDbTwit->saveRecords ( $userarr );
@@ -77,6 +78,40 @@ class twitops extends object {
 
     public function createURL($screen_name) {
         return "http://twitter.com/statuses/friends/$screen_name.xml";
+    }
+
+    public function layoutLocUsers($users, $numperRow = 12) {
+        $gtable = $this->newObject('htmltable', 'htmlelements');
+        $gtable->cellpadding = 5;
+        $inners = NULL;
+        $row = 0;
+        $gtable->startRow();
+        foreach($users as $user) {
+            $itable = $this->newObject('htmltable', 'htmlelements');
+            $itable->cellpadding = 2;
+            $icon = '<img src="'.$user['image_url'].'" />';
+            $href = $this->loadClass('href', 'htmlelements');
+            $lnk1 = new href("http://www.twitter.com/".$user['screen_name'], $icon, NULL);
+            $lnk = new href("http://www.twitter.com/".$user['screen_name'],$user['name'], NULL);
+            $grpname = $lnk->show();
+            $itable->startRow();
+            $itable->addCell($lnk1->show());
+            $itable->endRow();
+            $itable->startRow();
+            $itable->addCell($grpname);
+            $itable->endRow();
+            // if the $row var is divisible by 4, start a new row
+            if(is_int($row/$numperRow)) {
+                $gtable->endRow();
+                $gtable->startRow();
+            }
+            $gtable->addCell($itable->show());
+
+            $row++;
+        }
+        $gtable->endRow();
+
+        return $gtable->show();
     }
 } //end of class
 ?>

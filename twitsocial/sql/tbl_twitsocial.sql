@@ -47,13 +47,25 @@ $fields = array(
         'length' => 1,
         'default' => 0,
         ),
+    'sntag' => array(
+        'type' => 'integer',
+        'length' => 1,
+        'default' => 0,
+        ),
+    'loctag' => array(
+        'type' => 'integer',
+        'length' => 1,
+        'default' => 0,
+    ),
 );
 
 $name = 'parentid';
 
 $indexes = array(
                 'fields' => array(
-                    'parent_id' => array()
+                    'parent_id' => array(),
+                   // 'screen_name' => array(),
+                   // 'location' => array(),
                 )
         );
 ?>
