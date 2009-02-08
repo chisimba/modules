@@ -2,18 +2,15 @@
 
 class modaldialogue extends controller
 {
-    protected $objSkin;
+    protected $objJqDialogue;
 
     public function init()
     {
-        $this->objSkin = $this->getObject('skin', 'skin');
+        $this->objJqDialogue = $this->getObject('jqdialogue', 'modaldialogue');
     }
 
     public function dispatch()
     {
-        $this->objSkin->setVar('SUPPRESS_PROTOTYPE', true);
-        $this->objSkin->setVar('JQUERY_VERSION', '1.2.6');
-
         return 'main_tpl.php';
     }
 }
