@@ -53,7 +53,7 @@ class twitsocial extends controller {
         switch ($action) {
             default :
                 // let us show something lightweight. Don't want to burdon the db yet
-
+                $this->nextAction('getloctags');
 
                 break;
             case 'getsocial' :
@@ -77,6 +77,7 @@ class twitsocial extends controller {
                 break;
 
             case 'getloctags' :
+                $this->requiresLogin();
                 // get tags from all the descriptions
                 $tagcloud = $this->objDbTwit->locTagCloud();
                 $this->setVarByRef('tagcloud', $tagcloud);
@@ -86,6 +87,7 @@ class twitsocial extends controller {
                 break;
 
             case 'viewlocusers' :
+                $this->requiresLogin();
                 $loc = $this->getParam('tag');
                 $users = $this->objDbTwit->getUsersByLoc($loc);
                 $ret = $this->objTwitOps->layoutLocUsers($users);
@@ -93,6 +95,10 @@ class twitsocial extends controller {
 
                 return 'userview_tpl.php';
           }
+    }
+
+    public function requiresLogin() {
+        return FALSE;
     }
 } //end of class
 ?>

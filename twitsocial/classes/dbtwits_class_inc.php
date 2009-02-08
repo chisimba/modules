@@ -69,7 +69,7 @@ class dbtwits extends dbtable {
                 // update the table and add +1 to the weight
                 $srec = $srec[0];
                 $weight = intval($srec['weight']) + 1;
-                $this->update('id', $srec['id'], array('weight' => $weight), 'tbl_twitsocial_sn');
+                $this->update('id', $srec['id'], array('screen_name' => $sn, 'weight' => $weight), 'tbl_twitsocial_sn');
             }
             else {
                 // add the location to the locs tag table
@@ -131,7 +131,14 @@ class dbtwits extends dbtable {
     }
 
     public function getUsersByLoc($loc) {
-        return $this->getAll("WHERE location = '$loc'");
+        $users = $this->getAll("WHERE location = '$loc'");
+        /*var_dump($users);
+        //return $users;
+        $users = array_unique($users);
+        var_dump($users);
+        die();*/
+
+        return $users;
     }
 } //end of class
 ?>
