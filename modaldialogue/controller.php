@@ -8,6 +8,6 @@ class modaldialogue extends controller
 	
 	public function dispatch()
 	{
-	    echo 'Test';
+	    return 'main_tpl.php';
 	}
 }
