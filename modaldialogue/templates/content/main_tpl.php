@@ -1,7 +1,8 @@
+<script type="text/javascript" src="core_modules/htmlelements/resources/jquery/api/ui/ui.core.js"></script>
 <script type="text/javascript" src="core_modules/htmlelements/resources/jquery/api/ui/dialog/ui.dialog.js"></script>
 <script type="text/javascript">
-	$(function() {
-		$("#dialog").dialog({
+	jQuery(function() {
+		jQuery("#dialog").dialog({
 			bgiframe: true,
 			height: 140,
 			modal: true
