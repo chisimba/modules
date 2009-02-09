@@ -84,7 +84,7 @@ $yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 //if (!$this->objUser->isAdmin()) {
     $territoryDrop->extra = 'disabled';
 //}
-$remarksBox = new textarea('remarks', $remarks);
+$remarksBox = new textarea('remarks', $remarks, 4, 40);
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;

@@ -169,8 +169,8 @@ class ahis extends controller {
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
-                $this->setSession('ps_officerId', $this->getParam('officer'));
-                $this->setSession('ps_districtId' , $this->getParam('district'));
+                $this->setSession('ps_officerId', $this->getParam('officerId'));
+                $this->setSession('ps_districtId' , $this->getParam('districtId'));
                 $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
                 $this->setSession('ps_reportType', $reportType);
@@ -200,14 +200,23 @@ class ahis extends controller {
             
             case 'passive_outbreak':
                 //$this->setSession('ps_territoryId', $this->getParam('territoryId'));
-                $this->setSession('ps_oStatusId', $this->getParam('oStatusId'));
-                $this->setSession('ps_qualityId', $this->getParam('qualityId'));
-                $this->setSession('ps_datePrepared', $this->getParam('datePrepared'));
-                $this->setSession('ps_dateIBAR', $this->getParam('dateIBAR'));
-                $this->setSession('ps_dateReceived', $this->getParam('dateReceived'));
-                $this->setSession('ps_dateIsReported', $this->getParam('dateIsReported'));
-                $this->setSession('ps_refNo', $this->getParam('refNo'));
-                $this->setSession('ps_remarks', $this->getParam('remarks'));
+                $oStatusId = $this->getParam('oStatusId', $this->getSession('ps_oStatusId'));
+                $qualityId = $this->getParam('qualityId', $this->getSession('ps_qualityId'));
+                $datePrepared = $this->getParam('datePrepared', $this->getSession('ps_datePrepared'));
+                $dateIBAR = $this->getParam('dateIBAR', $this->getSession('ps_dateIBAR'));
+                $dateReceived = $this->getParam('dateReceived', $this->getSession('ps_dateReceived'));
+                $dateIsReported = $this->getParam('dateIsReported', $this->getSession('ps_dateIsReported'));
+                $refNo = $this->getParam('refNo', $this->getSession('ps_refNo'));
+                $remarks = $this->getParam('remarks', $this->getSession('ps_remarks'));
+
+                $this->setSession('ps_oStatusId', $oStatusId);
+                $this->setSession('ps_qualityId', $qualityId);
+                $this->setSession('ps_datePrepared', $datePrepared);
+                $this->setSession('ps_dateIBAR', $dateIBAR);
+                $this->setSession('ps_dateReceived', $dateReceived);
+                $this->setSession('ps_dateIsReported', $dateIsReported);
+                $this->setSession('ps_refNo', $refNo);
+                $this->setSession('ps_remarks', $remarks);
                 
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate'));
@@ -226,15 +235,25 @@ class ahis extends controller {
                 return 'passive_outbreak_tpl.php';
             
             case 'passive_species':
-                $this->setSession('ps_dateVet', $this->getParam('dateVet'));
-                $this->setSession('ps_dateOccurence', $this->getParam('dateOccurence'));
-                $this->setSession('ps_dateDiagnosis', $this->getParam('dateDiagnosis'));
-                $this->setSession('ps_dateInvestigation', $this->getParam('dateInvestigation'));
-                $this->setSession('ps_location', $this->getParam('location'));
-                $this->setSession('ps_longitude', $this->getParam('longitude'));
-                $this->setSession('ps_latitude', $this->getParam('latitude'));
-                $this->setSession('ps_disease', $this->getParam('disease'));
-                $this->setSession('ps_causitive', $this->getParam('causitive'));
+                $dateVet = $this->getParam('dateVet', $this->getSession('ps_dateVet'));
+                $dateOccurence = $this->getParam('dateOccurence', $this->getSession('ps_dateOccurence'));
+                $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
+                $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
+                $location = $this->getParam('location', $this->getSession('ps_location'));
+                $longitude = $this->getParam('longitude', $this->getSession('ps_longitude'));
+                $latitude = $this->getParam('latitude', $this->getSession('ps_latitude'));
+                $disease = $this->getParam('disease', $this->getSession('ps_disease'));
+                $causitive = $this->getParam('causitive', $this->getSession('ps_causitive'));
+                
+                $this->setSession('ps_dateVet', $dateVet);
+                $this->setSession('ps_dateOccurence', $dateOccurence);
+                $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
+                $this->setSession('ps_dateInvestigation', $dateInvestigation);
+                $this->setSession('ps_location', $location);
+                $this->setSession('ps_longitude', $longitude);
+                $this->setSession('ps_latitude', $latitude);
+                $this->setSession('ps_disease', $disease);
+                $this->setSession('ps_causitive', $causitive);
                 
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
                 //$this->setVar('arrayOStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
@@ -268,6 +287,14 @@ class ahis extends controller {
                 $this->setVar('prophylactic', $this->getSession('ps_prophylactic'));
                 
                 return 'passive_species_tpl.php';
+            
+            case 'passive_vaccine':
+                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
+                $this->setVar('refNo', $this->getSession('ps_refNo'));
+                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
+                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                
+                return 'passive_vaccine_tpl.php';
                             
             case 'admin':
 

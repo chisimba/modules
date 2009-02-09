@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis Passive Surveillance Outbreak Template
+ * ahis Passive Surveillance Species Template
  *
- * Template for capturing passive surveillance outbreak data
+ * Template for capturing passive surveillance species data
  * 
  * PHP version 5
  * 
@@ -44,7 +44,6 @@ $objHeading->str = $this->objLanguage->languageText('phrase_passive')." ".$this-
 $objHeading->type = 2;
 
 $this->loadClass('textinput','htmlelements');
-$this->loadClass('textarea','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
