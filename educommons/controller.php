@@ -110,7 +110,7 @@ class educommons extends controller
                 $data = $this->objImport->parseIms($manifest);
                 $this->objImport->addCourses($data, $context);
                 $this->objImport->addPages($data, $directory, $context);
-                $this->nextAction(null, null, 'contextadmin');
+                $this->nextAction(null, null, 'contextcontent');
                 break;
             default:
                 $contexts = $this->objContext->getListOfContext();
