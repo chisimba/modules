@@ -120,6 +120,7 @@ class tabsmenu extends object
             case 'passive_surveillance':
             case 'passive_outbreak':
             case 'passive_species':
+            case 'passive_vaccine':
                 $this->default = 'entry';
                 break;
             case 'admin':
