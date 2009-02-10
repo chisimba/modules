@@ -244,7 +244,42 @@ class worksheet extends controller
         
         return 'step1_tpl.php';
     }
+	
+	 /**
+    * Method to add a worksheet
+    * @access private
+    */
+    private function __edit()
+    {
+        $this->setVar('mode', 'edit');
+		$this->setVar('worksheet', $this->objWorksheet->getWorksheet($this->getParam("id")));
+        return 'step1_tpl.php';
+    }
     
+	/**
+    * Method to save a worksheet
+    * @access private
+    */
+    private function __saveworksheetedit()
+    {
+        //var_dump($_POST);
+        
+        $title = $this->getParam('title');
+        $id = $this->getParam('id');
+        $description = $this->getParam('description');
+        $date = $this->getParam('calendardate');
+        $time = $this->getParam('time');
+        $percentage = $this->getParam('percentage');
+        
+        $activity_status = $this->getParam('activity_status');
+        $closing_date = $date.' '.$time;
+		$lastUpdated = strftime('%Y-%m-%d %H:%M:%S', mktime());
+        
+        $id = $this->objWorksheet->updateWorkSheet($id, $this->contextCode, $title, $activity_status, $percentage, $closing_date, $description, $this->objUser->userId(), $lastUpdated);
+        
+        return $this->nextAction('home');
+    }
+	
     /**
     * Method to save a worksheet
     * @access private
@@ -262,7 +297,7 @@ class worksheet extends controller
         $activity_status = 'inactive';
         $closing_date = $date.' '.$time;
         
-        $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description);
+        $id = $this->objWorksheet->insertWorkSheet($this->contextCode, NULL, $title, $activity_status, $percentage, $closing_date, $description );
         
         return $this->nextAction('managequestions', array('id'=>$id));
     }

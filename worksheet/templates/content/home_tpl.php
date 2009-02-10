@@ -14,6 +14,7 @@ $objIcon->title = $this->objLanguage->languageText('mod_worksheet_createnewworks
 $addLink = new link ($this->uri(array('action'=>'add')));
 $addLink->link = $objIcon->show();
 
+
 $header = new htmlheading();
 $header->type = 1;
 $header->str = $this->objContext->getTitle().': '.$this->objLanguage->languageText('mod_worksheet_worksheets', 'worksheet', 'Worksheets');
@@ -38,6 +39,7 @@ if (count($worksheets) == 0) {
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_percentage', 'worksheet', 'Percentage'));
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_totalmark', 'worksheet', 'Total Mark'));
             $table->addHeaderCell($this->objLanguage->languageText('mod_worksheet_closingdate', 'worksheet', 'Closing Date'));
+            $table->addHeaderCell("&nbsp;");
         $table->endHeaderRow();
         
         foreach ($worksheets as $worksheet)
@@ -51,6 +53,13 @@ if (count($worksheets) == 0) {
                 $table->addCell($worksheet['percentage']);
                 $table->addCell($worksheet['total_mark']);
                 $table->addCell($worksheet['closing_date']);
+				$editLink = new link ($this->uri(array('action'=>'edit', 'id' => $worksheet['id'] )));
+				$objIcon->setIcon('edit');
+				$objIcon->alt = "";
+				$objIcon->title = "";
+				$editLink->link = $objIcon->show();
+				$table->addCell($editLink->show());
+				$editLink = null;
             $table->endRow();
         }
     } else {
