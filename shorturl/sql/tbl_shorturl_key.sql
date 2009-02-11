@@ -9,6 +9,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'map_id' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'key_nr' => array(
 		'type' => 'integer',
 		'length' => 4

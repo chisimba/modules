@@ -134,7 +134,7 @@
             }
         }
 
-   /**
+       /**
 	* Method to return the Main Form
 	*
 	* @access public
@@ -143,15 +143,11 @@
         public function showList()
         {
             $h3 = $this->newObject('htmlheading', 'htmlelements');
+            $link =  $this->newObject('link', 'htmlelements');
+            $objIcon =  $this->newObject('geticon', 'htmlelements');
+
             $objForm = new form('addfrm', $this->uri(array('action' => $action, 'id' => $contentId, 'frontman' => $frontMan), 'cmsadmin'));
             $objForm->setDisplayType(3);
-
-            $tableContainer = new htmlTable();
-            $tableContainer->width = "100%";
-            $tableContainer->cellspacing = "0";
-            $tableContainer->cellpadding = "0";
-            $tableContainer->border = "0";
-            $tableContainer->attributes = "align ='center'";
 
             $table_list = new htmlTable();
             $table_list->width = "100%";
@@ -160,331 +156,125 @@
             $table_list->border = "0";
             $table_list->attributes = "align ='center'";
 
-            $this->objGrid->url = '?module=shorturl&action=getjsondata';
-            $this->objGrid->editurl = '?module=shorturl&action=edit';
-            $this->objGrid->dataType = 'json';
-            $this->objGrid->panelId = '';
-            $this->objGrid->height = '100%';
-            $this->objGrid->multiselect = true;
+            $this->bindEditEvents();
+            $this->bindDeleteConfirmEvents();
 
-//unbinds and then binds (to avoid duplicate binding) the delete events when the grid has loaded.
-$this->objGrid->loadComplete = <<<GRIDLOADCALLBACK
-                function(){
-                    //Binding Edit/Delete Events when grid has loaded
-                    var ids = jQuery("#chisimba_grid_01").getDataIDs();
-                    ids = ids.toString().split(",");
-                    for (i = 0; i < ids.length; i++){
-                        unbindDeleteEvent('del_' + ids[i], 'rm_' + ids[i], 'chisimba_grid_01',  ids[i]);
-                        bindDeleteEvent('del_' + ids[i], 'rm_' + ids[i], 'chisimba_grid_01',  ids[i]);
-                        bindAjaxEditForm('edit_' + ids[i], ids[i]);
-        
-                        row_id = ids[i];
-                        bindFormSubmit('frm_addgrid_' + row_id, 'frm_submit_btn_' + row_id);
-                    }
-
-                    jQuery('#content').css('height', 'auto');
-                    //jQuery('#chisimba_grid_container').addClass('grid_padding_bottom');
-                    
-                }
-GRIDLOADCALLBACK;
-
-            $this->objGrid->addColumn('Match URL', 'match_url', '180', 'left', true);
-            $this->objGrid->addColumn('Target URL', 'target_url', '180', 'left', true);
+            $table_list->startHeaderRow();
+            $table_list->addHeaderCell('Match URL');
+            $table_list->addHeaderCell('Target URL');
             //$this->objGrid->addColumn('Dynamic', 'is_dynamic', '70', 'center', false);
-            $this->objGrid->addColumn('Order', 'ordering', '44', 'center', true);
-            $this->objGrid->addColumn('Options', 'ordering', '60', 'left', false);
-            $this->objGrid->addColumn('Date', 'datestamp', '140', 'left', true);
+            $table_list->addHeaderCell('Order');
+            $table_list->addHeaderCell('Options');
+            $table_list->addHeaderCell('Date');
+            $table_list->endHeaderRow();
 
-            $this->objGrid->buildGrid('Short URL Manager');
+            //Traversing the array of maps
+            $arrMaps = $this->objMap->getAll();
+            
+            if (!empty($arrMaps)){
+            
+                //Adding Mappings Here
+                foreach ($arrMaps as $map){
+                
+                    //Setting up the fields for display
+            
+                    $matchUrl = $map['match_url'];
+                    $targetUrl = $map['target_url'];
+                    $order = $map['ordering'];
+                    $date = $map['datestamp'];
+            
+                    //is Dynamic Checkbox
+                    /* //Ditched this for only displaying (Overhead of forms loading not worth the bandwith)
+                    $chkBool = ($map['is_dynamic'] == '1')? true : false;
+                    $check = new checkbox('chk_dynamic', '', $chkBool);
+                    $check->cssId = 'edit_'.$map['id'];
+                    $dynamic = $check->show();
+                    */
+            
+                    if ($map['is_dynamic'] == '1') {
+                        $objIcon->setIcon('checked', 'gif', 'icons/shorturl/');
+                    } else {
+                        $objIcon->setIcon('unchecked', 'gif', 'icons/shorturl/');
+                    }
+            
+                    $dynamic = $objIcon->show();
+            
+                    //options [edit/delete]
+                    //TODO: Add Node level Security for Rules
+            
+                    //if ($this->_objSecurity->canUserWriteSection($section['id'])){
 
-            //Attaching the grids refresh event to the link with id set like : <a id='refreh_grid' href='javascript:void(0)'>
-            $this->objGrid->attachRefreshEvent('refresh_grid');
-            $this->objGrid->attachDeleteMultipleEvent('delete_grid_items');
 
-            //Attaching Delete Confirm Click Events
+                    //$delArray = array('action' => 'deletemapping', 'confirm'=>'yes', 'id'=>$map['id']);
+                    //$deletephrase = $this->objLanguage->languageText('mod_shorturl_confirmdelmapping', 'shorturl');
+                    //$delIcon = $objIcon->getDeleteIconWithConfirm($map['id'], $delArray,'shorturl',$deletephrase);
 
-//Attaching the callback method to dynamically bind DELETE events for Ajax loaded items
-//This will be called when the grid completes the JSON load
-$script = <<<DELETECALLBACK
-<script type="text/javascript">
-    //Method to provide a callback function to bind delete events
-    function bindDeleteEvent(icon_id, yes_btn_id, grid_id, row_id){
 
-            //Binding the trash icon click event to boxy confirmation form
-            jQuery('#' + icon_id).livequery('click',function(){
-                var dialog = new Boxy("<table>    <tr style=\"padding-bottom:20px;\">        <td>Are you sure you want to delete this item?</td>    </tr>    <tr>        <td align=\"center\">            <input id=\"" + yes_btn_id + "\" type=\"button\" onclick=\'Boxy.get(this).hide(); return false\' value=\"Yes\" style=\"width:50px;\">            <input type=\"button\" onclick=\'Boxy.get(this).hide(); return false\' value=\"No\" style=\"width:50px;\">            <input type=\"button\" onclick=\'Boxy.get(this).hide(); return false\' value=\"Cancel\" style=\"width:50px;\">        </td>    </tr></table>", {title: "Confirm Delete"});
-            });
-    
-            //Binding boxy confirmation form's 'Yes' button to trigger the grids delete function
-            jQuery('#' + yes_btn_id).livequery('click',function(){
-                jQuery('#' + grid_id).delGridRow(row_id);
-            });
+            
+                    $objIcon->setIcon('bigtrash');
+                    $delIcon = "<a id='del_$map[id]' href='javascript:void(0)'>".$objIcon->show()."</a>";
+            
+                    //} else {
+                    //    $delIcon = '';
+                    //}
+            
+                    //edit icon
+                    //if ($this->_objSecurity->canUserWriteSection($section['id'])){
+                    $objIcon->setIcon('edit');
+                    $editIcon = "<a id='edit_$map[id]' href='javascript:void(0)'>".$objIcon->show()."</a>";
+                    //$editIcon = "<a id='edit_$map[id]' title='Edit URL Mapping' href='http://localhost/fresh/?module=shorturl&action=getform&type=addeditform&id=$map[id]'>".$objIcon->show()."</a>";
+                    //} else {
+                    //    $editIcon = '';
+                    //}
+            
+                    /*
+                    if (!$this->_objSecurity->canUserWriteSection($section['id'])){
+                        $editIcon = '';
+                        $deleteIcon = '';
+                    }
+                    */
+            
+                    $options = $editIcon.$delIcon;
+            
+                    $table_list->startRow();
 
-    }
+                    $table_list->addCell($matchUrl);
+                    $table_list->addCell($targetUrl);
+                    $table_list->addCell($order);
+                    $table_list->addCell($options);
+                    $table_list->addCell($date);
+                    
+                    $table_list->endRow();
 
-    //Method to unbind all delete events
-    function unbindDeleteEvent(icon_id, yes_btn_id, grid_id, row_id){
-
-            //unbind ALL delete events at the given index
-            jQuery('#' + icon_id).expire();
-            jQuery('#' + yes_btn_id).expire();
-
-    }
-
-</script>
-DELETECALLBACK;
-$this->appendArrayVar('headerParams', $script);
-
-//Attaching the callback method to dynamically bind EDIT events for Ajax loaded items
-//This will be called when the grid completes the JSON load
-$script = <<<EDITCALLBACK
-<script type="text/javascript">
-    //Method to provide a callback function to bind edit events
-    function bindAjaxEditForm(anchor_id, row_id){
-        //Initializing the AJAX Boxy Window
-        options = {
-            sessionName: 'PHPSESSID',
-            showBoxOnSessionExpiry: false,
-            ajaxComplete: function(data){
-                jQuery('#chisimba_grid_01').hideLoading();
-
-                //Firefox 3.05beta won't rebind after first event fired (Boxy submit only works once)
-                bindFormSubmit('frm_addgrid_' + row_id, 'frm_submit_btn_' + row_id);
-
-            },
-            ajaxError: function(data){
-                location.href="?module=shorturl";
-            },
-            ajaxSessionExpired: function(data){
-                jQuery('#chisimba_grid_01').hideLoading();
-                document.location.href="?module=shorturl";
+                }
             }
-        };
 
-        jQuery('#' + anchor_id).livequery('click',function(){
-            jQuery('#chisimba_grid_01').showLoading();
-        });
 
-        jQuery('#' + anchor_id).boxy(options);
-
-    }
-
-</script>
-EDITCALLBACK;
-$this->appendArrayVar('headerParams', $script);
-
-            //$this->bindDeleteConfirmEvents(); //DON'T UNCOMMENT
-
-            //Attaching Edit Click Events
-            //$this->bindEditEvents(); //DON'T UNCOMMENT
-
-            $table_panel = new htmlTable();
-            $table_panel->width = "100%";
-            $table_panel->cellspacing = "0";
-            $table_panel->cellpadding = "0";
-            $table_panel->border = "0";
-            $table_panel->attributes = "align ='center'";
-
-            /*
-            $tableContainer->startRow();
-            $tableContainer->addCell($table_panel->show());
-            $tableContainer->endRow();
-            */
+/*
+            $tableContainer = new htmlTable();
+            $tableContainer->width = "100%";
+            $tableContainer->cellspacing = "0";
+            $tableContainer->cellpadding = "0";
+            $tableContainer->border = "0";
+            $tableContainer->attributes = "align ='center'";
 
             $tableContainer->startRow();
             $tableContainer->addCell($this->objGrid->show());
             $tableContainer->endRow();
-    
+*/  
             //Add validation for title            
             $errTitle = $this->objLanguage->languageText('mod_cmsadmin_entertitle', 'cmsadmin');
             $objForm->addRule('title', $errTitle, 'required');
-            $objForm->addToForm($tableContainer->show());
-            //$objForm->addToForm($div1->show());
-            //add action
+            //$objForm->addToForm($tableContainer->show());
+            
             $objForm->addToForm($txt_action);
-
+            
             //Testing the output div of the ajax form submission
             $objLayer = new layer();
             $objLayer->id = 'output_div';
-
-            $display = $objForm->show().$objLayer->show();
-
-            //jQuery Toggle to display the addKeys Form
-            //TODO: need to abstract the jquery functionality below but theres just no time now ;-)
-
-            $script = "
-                <script language='javascript'>
-                    //jQuery standard toggle effect
+            $objLayer->str = $table_list->show();
             
-                    function doToggle(id, chkid) {
-                        chkBox = jQuery('#' + chkid);
-                        if (chkBox.attr('checked')){
-                            jQuery('#' + id).show('slow');
-
-                            jQuery('#txtMatchUrl').addClass('match_target_url_grow').show('slow');
-                            jQuery('#txtTargetUrl').addClass('match_target_url_grow').show('slow');
-
-                            jQuery('#txtMatchUrl').attr('disabled','true');
-                            
-                        } else {
-                            jQuery('#' + id).hide('slow');
-                            jQuery('#txtMatchUrl').addClass('match_target_url_init').show('slow');
-                            jQuery('#txtTargetUrl').addClass('match_target_url_init').show('slow');
-
-                            jQuery('#txtMatchUrl').removeAttr('disabled');
-
-                        }
-                    }
-
-                    var key_counter;
-
-                    function activateAddLink() {
-                        var linkContainer = jQuery('#addkeybuttoncontainer');
-                        linkContainer.css({display:'block'});
-                    }
-
-                    jQuery(document).ready(function(){
-
-                        //jQuery('#addkeysform').hide('slow');
-                        doToggle('addkeysform', 'input_is_dynamic');
-                        //jQuery('#addkeybutton').hide('slow');
-                        doToggle('addkeybuttoncontainer', 'input_is_dynamic');
-
-                        //Setting the key counter
-                        var key_counter = 1;
-                        jQuery('#addkeybutton').livequery('click', function() {
-                            var _parent = jQuery('#keyclonesource').parent();
-                            _parent.clone().insertAfter(_parent).attr('name','txtKeyChanged' + key_counter);
-                            key_counter++;
-                        });
-
-/*
-                        jQuery('#sData').livequery('click', function(){
-                            //var gr = jQuery('#editgrid').getSelectedRow(); 
-                            jQuery('#chisimba_grid_01').editGridRow(
-                                '1',
-                                    {
-                                        height:280,
-                                        reloadAfterSubmit:false
-                                    }
-                            ); 
-                            
-                        });
-*/
-
-
-/*
-                        //Handling the submit for all dynamic add forms
-                        jQuery('#frm_addgrid').livequery('submit', function() {
-                            var options = {
-                                target: 'output_div',
-                                url:    '?module=shorturl&action=edit',
-                                type:   'POST',
-                                data: {'dukey':'houser'},
-
-                                //beforeSubmit:   
-                                //    function(responseText) {
-                                //        jQuery('#chisimba_grid_01').trigger('processGrid');
-                                //        alert('Success');
-                                //        return true;
-                                //    },
-
-                                success: 
-                                    function(responseText) {
-                                        //jQuery('#chisimba_grid_01').trigger('reloadGrid');
-                                        alert(responseText);
-                                    },
-
-                                semantic: false,
-                                resetForm: false,
-                                clearForm: false
-                            };
-                            
-                            //jQuery('#chisimba_grid_01').showProcessing();
-
-                            //jQuery('#frm_addgrid').ajaxSubmit(options); //This implementation is broken in the plugin, should report as bug
-                            jQuery('#frm_addgrid').ajaxSubmit(function(responseText) {
-                                //jQuery('#chisimba_grid_01').hideProcessing();
-                                //setTimeout(function(){jQuery('#chisimba_grid_01').trigger('reloadGrid');}, 1000);
-
-                                jQuery('#chisimba_grid_01').trigger('reloadGrid');
-                            });
-                            
-                            //Hiding the boxy form window
-                            jQuery('#frm_addgrid').parents('.boxy-wrapper').hide();
-
-                            //Reloading the grid
-                            return false; // cancel conventional submit
-                        });
-*/
-
-
-
-
-
-
-
-
-                        //Handling GLOBAL Ajax Errors
-                        jQuery('#chisimba_grid_container').bind('ajaxError', function(){
-                            location.href = '?module=shorturl';
-                        });
-
-                        //New Form Click Event
-                        /*
-                        jQuery('#add_mapping_form').livequery('submit', function() {
-                            var anchor_id = 'add_mapping_form';
-
-                            //Initializing the AJAX Boxy Window
-                            options = {
-                                onSuccess: function(){
-                                    jQuery('#chisimba_grid_01').hideLoading();
-                                }
-                            };
-                    
-                            jQuery('#' + anchor_id).livequery('click',function(){
-                                jQuery('#chisimba_grid_01').showLoading();
-                            });
-                    
-                            jQuery('#' + anchor_id).boxy(options);
-                        });
-                        */
-
-
-                        //Binding the 'New' button
-                        bindFormSubmit('frm_addgrid_', 'frm_submit_btn_');
-
-                    });
-
-                    function bindFormSubmit(id, btn_id){
-                        window.console.log('binding id : ' + id + ' || button id : ' + btn_id);
-                        //Unbind ALL edit events first avoid multiple binding
-                        jQuery('#' + btn_id).expire();
-
-                        //Rebind
-                        jQuery('#' + btn_id).livequery('click', function() {
-                            window.console.log('caught event on button : ' + btn_id);
-
-                            //jQuery('#chisimba_grid_01').showProcessing();
-
-                            //jQuery('#frm_addgrid').ajaxSubmit(options); //This implementation is broken in the plugin, should report as bug
-                            jQuery('#' + id).ajaxSubmit(function(responseText) {
-                                //jQuery('#chisimba_grid_01').hideProcessing();
-                                jQuery('#chisimba_grid_01').trigger('reloadGrid');
-                            });
-                            
-                            //Hiding the boxy form window
-                            jQuery('#' + id).parents('.boxy-wrapper').hide();
-
-                            //Reloading the grid
-                            return false; // cancel conventional submit
-                        });
-
-                    }
-
-                    </script>";
-
-            $this->appendArrayVar('headerParams', $script);
+            $display = $objForm->show().$objLayer->show();
 
             return $display;
         }
@@ -507,9 +297,11 @@ $innerHtml = <<<HTSRC
     </tr>
     <tr>
         <td align="center">
-            <input id="rm_$map[id]" type="button" onclick='Boxy.get(this).hide(); return false' value="Yes" style="width:50px;"/>
-            <input type="button" onclick='Boxy.get(this).hide(); return false' value="No" style="width:50px;"/>
-            <input type="button" onclick='Boxy.get(this).hide(); return false' value="Cancel" style="width:50px;"/>
+            <form action="?module=shorturl&action=deletemapping&confirm=yes&id={$map['id']}" method="POST">
+                <input id="rm_$map[id]" value = 'Yes' type="submit" style="width:50px;"/>
+                <input type="button" onclick='Boxy.get(this).hide(); return false' value="No" style="width:50px;"/>
+                <input type="button" onclick='Boxy.get(this).hide(); return false' value="Cancel" style="width:50px;"/>
+            </form>
         </td>
     </tr>
 </table>
@@ -550,7 +342,7 @@ HTSRC;
                     // Binding the Actual Delete events to the 'OK' buttons of the corresponding confirm dialog
                     // When you click ok to delete, the handler will be ready to remove the specified row from 
                     // the grid via ajax request.
-                    $this->objGrid->attachDeleteEvent("rm_$map[id]", $map['id']);
+                    //$this->objGrid->attachDeleteEvent("rm_$map[id]", $map['id']);
                 }
             }
 
@@ -577,6 +369,47 @@ HTSRC;
                 }
             }
 
+
+//Attaching the callback method to dynamically bind EDIT events for Ajax loaded items
+//This will be called when the grid completes the JSON load
+/*
+$script = <<<EDITCALLBACK
+<script type="text/javascript">
+    //Method to provide a callback function to bind edit events
+    function bindAjaxEditForm(anchor_id, row_id){
+        //Initializing the AJAX Boxy Window
+        options = {
+            sessionName: 'PHPSESSID',
+            showBoxOnSessionExpiry: false,
+            ajaxComplete: function(data){
+                jQuery('#chisimba_grid_01').hideLoading();
+
+                //Firefox 3.05beta won't rebind after first event fired (Boxy submit only works once)
+                bindFormSubmit('frm_addgrid_' + row_id, 'frm_submit_btn_' + row_id);
+
+            },
+            ajaxError: function(data){
+                location.href="?module=shorturl";
+            },
+            ajaxSessionExpired: function(data){
+                jQuery('#chisimba_grid_01').hideLoading();
+                document.location.href="?module=shorturl";
+            }
+        };
+
+        jQuery('#' + anchor_id).livequery('click',function(){
+            jQuery('#chisimba_grid_01').showLoading();
+        });
+
+        jQuery('#' + anchor_id).boxy(options);
+
+    }
+
+</script>
+EDITCALLBACK;
+$this->appendArrayVar('headerParams', $script);
+*/
+
             $table = new htmlTable();
             $table->width = "100%";
             $table->cellspacing = "0";
@@ -590,7 +423,7 @@ HTSRC;
             $tbl->cellpadding = "10";
             $tbl->border = "0";
             $tbl->attributes = "align ='center'";
-
+            
             //TODO: Add Language Items for these
             //Match
             $lblMatchUrl = 'Match URL:';
@@ -634,8 +467,8 @@ HTSRC;
             $tbl->endRow();
 
             //Submit/Cancel
-            //$btnOk = "<input type='submit' id='sData' name='sData' value='Save' style='width:50px;'/>";
-            $btnOk = "<input type='button' id='frm_submit_btn_$mapId' name='frm_add_submit' value='Save' style='width:50px;'/>";
+            $btnOk = "<input type='submit' id='sData' name='sData' value='Save' style='width:50px;'/>";
+            //$btnOk = "<input type='button' id='frm_submit_btn_$mapId' name='frm_add_submit' value='Save' style='width:50px;'/>";
             $btnCancel = "<input type='button' id='cancel' name='cancel' value='Cancel' style='width:50px;' onclick='Boxy.get(this).hide(); return false'/>";
 
             $tbl1 = new htmlTable();
@@ -721,7 +554,7 @@ HTSRC;
             $action .= '<input type="hidden" name="id" value="'.$arrMaps['id'].'" />';
 
             //Stripping New Lines and preparing for boxy input = (Facebook style window)
-            $display = '<form id="frm_addgrid_'.$mapId.'" class="FormGrid" name="frm_addgrid" action="?module=shorturl&action=edit" method="GET">';
+            $display = '<form id="frm_addgrid_'.$mapId.'" class="FormGrid" name="frm_addgrid" action="?module=shorturl&action=editmapping" method="POST">';
             $display .= str_replace("\n", '', $table->show());
             $display .= $action;
             $display .= '</form>';
@@ -776,7 +609,6 @@ HTSRC;
             
             $objContainerLayer->str = $header.$headShow.'<hr />';
             $objContainerLayer->id = 'shorturl_header';
-            $objContainerLayer->width = '726px';
             
             return $objContainerLayer->show();
         }
@@ -808,11 +640,13 @@ HTSRC;
             $linkText = $this->objLanguage->languageText('word_new');
             $iconList .= $objIcon->getCleanTextIcon('add_mapping_form', $url, 'new', $linkText, 'png', 'icons/shorturl/');
 
+            /*
             // Refresh Grid
             $url = 'javascript:void(0)';
             //$linkText = $this->objLanguage->languageText('word_refresh');
             $linkText = 'Refresh';
             $iconList .= $objIcon->getCleanTextIcon('refresh_grid', $url, 'refresh', $linkText, 'png', 'icons/shorturl/');
+            */
 
             /* //Need to revisit multiple deletes using jqGrid - Need to fix this in the jqgrid.formedit.js
             // Delete

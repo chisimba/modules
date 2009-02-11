@@ -91,6 +91,21 @@ class shorturl extends controller
             }
         }
 
+
+
+	/**
+	 * Method to handle the redirects triggered by the shorturl module
+	 *
+	 * @author Charl Mert
+	 */
+	 function redirectTo()
+	{
+	    //Supressing the template
+	    $this->setContentType('text/html');
+	    return 'shorturl_redirect_tpl.php';
+	}
+
+
        /**
         *
         * This is a method that overrides the parent class to stipulate whether
@@ -196,6 +211,34 @@ class shorturl extends controller
             return "shorturl_ajax_forms_tpl.php";
         }
 
+
+        /**
+         * This method will handle the creation AND editing of mappings.
+         *
+         * @access private
+         * @return boolean TRUE if operation successful FALSE if failed.
+         *
+         */
+        private function _editmapping()
+        {
+	    $mappingId = $this->getParam('id', '');
+	    $this->objMap->addEditMapping($mappingId);
+	    return "shorturl_list_tpl.php";
+	}
+
+        /**
+         * This method will handle the deleting of mappings.
+         *
+         * @access private
+         * @return boolean TRUE if operation successful FALSE if failed.
+         *
+         */
+        private function _deletemapping()
+        {
+	    $mappingId = $this->getParam('id');
+	    $this->objMap->deleteMapping($mappingId);
+	    return "shorturl_list_tpl.php";
+	}
 
         /**
          * This method will handle the editing for the grid control

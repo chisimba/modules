@@ -323,7 +323,7 @@
             }
             
             $this->_tableName = 'tbl_shorturl_map';
-            return $newId;
+            return $mapId;
         }
 
         /**
