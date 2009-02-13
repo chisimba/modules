@@ -178,7 +178,7 @@ class ahis extends controller {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
                     default:
-                        return $this->nextAction('');
+                        return $this->nextAction('active_surveillance');
                 }
             
             case 'passive_surveillance':
@@ -295,7 +295,42 @@ class ahis extends controller {
                 $this->setVar('territoryId', $this->getSession('ps_districtId'));
                 
                 return 'passive_vaccine_tpl.php';
-                            
+                
+                
+                
+                
+            case 'active_surveillance':
+               $this->setVar('campName', $this->getSession('ps_campName'));
+               $officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
+               $this->setSession('ps_officerName',$this->objUser->fullName($officerId));
+               $this->setVar('officerName', $this->getSession('ps_officerName'));
+               $this->setVar('disease', $this->getSession('ps_disease'));
+               $this->setVar('surveyTypeId', $this->getSession('ps_surveyTypeId'));
+               $this->setVar('comments', $this->getSession('ps_comments'));
+
+               
+            
+               return 'active_surveillance_tpl.php';  
+                
+            case 'active_addtest':
+            
+               $campName = $this->getParam('campName', $this->getSession('ps_campName'));
+               
+               $this->setSession('ps_campName',$campName);
+               //$this->setSession('ps_qualityId', $qualityId);
+               $this->setVar('campName', $this->getSession('ps_campName'));
+                
+               return 'active_addtest_tpl.php';
+               
+            case 'active_search':
+               $campName = $this->getParam('campName', $this->getSession('ps_campName'));
+               
+               $this->setSession('ps_campName',$campName);
+               $this->setVar('campName', $this->getSession('ps_campName'));
+                
+               $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
+               return 'active_search_tpl.php';
+                               
             case 'admin':
 
                return 'admin_tpl.php';
