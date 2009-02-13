@@ -13,9 +13,11 @@ class jqdialogue extends object
     {
         $this->objSkin->setVar('SUPPRESS_PROTOTYPE', true);
         $this->objSkin->setVar('JQUERY_VERSION', '1.2.6');
-        
-        $html = '<script type="text/javascript" src="core_modules/htmlelements/resources/jquery/api/ui/ui.core.js"></script>
-            <script type="text/javascript" src="core_modules/htmlelements/resources/jquery/api/ui/dialog/ui.dialog.js"></script>
+
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery/api/ui/ui.core.js', 'htmlelements'));
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery/api/ui/dialog/ui.dialog.js', 'htmlelements'));
+
+        $html = '
 <script type="text/javascript">
 	jQuery(function() {
 		jQuery("#dialog").dialog({
