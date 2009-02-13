@@ -6,12 +6,12 @@
 
 /* Basics
 ------------------------------ */
-html {
+/*html {
 	/* IE */
-	overflow-y: scroll; 
+	/*overflow-y: scroll; 
 	/* Moz */
-	height: 100%;
-	margin-bottom: 0.1em;
+	/*height: 100%;
+	margin-bottom: ;
 }
 
 /* Main Layout
@@ -22,17 +22,24 @@ html {
 	padding: 0px 0px 50px;
 	text-align: center;
 }*/
+#main {padding: 5px;}
+
+	
+	
+
+
 #main2 {
 	text-align: left;
-	margin: 20px auto;
-	width: 650px;
-	/*background: #fff;*/
+	margin: 20px ;
+	width: 650px;	
 	padding: 20px 30px 70px;
 	border-top: 1px solid #E6E6DF;
 	border-right: 1px solid #E6E6DF;
 	border-bottom: 5px solid #E6E6DF;
-	border-left: 1px solid #E6E6DF;
+	border-left: 1px solid #E6E6DF;*/
+	
 }
+/*
 #credit, #sort {
 	margin: 0 auto;
 	width: 640px;
@@ -61,7 +68,7 @@ html {
 
 /* Text Styles
 ------------------------------ */
-body {
+/*body {
 	font: normal 82%/200% "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #5A5A4B;
 }
@@ -267,6 +274,12 @@ ul.pagelist li.next {
 #comments {
 	clear: both;
 }
+
+img 
+{
+	border:none;
+}
+	
 .error { 
   color: #C33; 
   font-weight: bold; 

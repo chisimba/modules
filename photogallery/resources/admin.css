@@ -8,7 +8,7 @@
 /
 
 /* Main Layout
------------------------------- */
+------------------------------ *//*
 #logo {
 	float: left;
 	text-align: left;
@@ -63,7 +63,8 @@
 	border-bottom: 5px solid #BAC9CF;
 	min-height: 450px;
 	_height: 450px; /* IE Only */
-}
+/*}
+*/
 
 
 /* Text Styles
@@ -91,6 +92,7 @@ p {
 
 /* Menu
 ------------------------------ */
+/*
 #nav {
 	list-style-type: none;
 	padding: 0;
@@ -118,8 +120,8 @@ p {
 	color: #8797A5;
 	background: #E9ECEF;
 	
-	_position: relative; /* IE Only */
-	_top: 6px;	/* IE Only */
+	_position: relative; /* IE Only *//*
+	_top: 6px;	/* IE Only *//*
 }
 #nav li a:hover {
 	border-top: 1px solid #BAC9CF;
@@ -134,7 +136,7 @@ p {
 
 	position: relative;
 	top: -3px;
-	_top: 1px; /* IE Only */
+	_top: 1px; /* IE Only *//*
 }
 #nav li.current a {
 	border-top: 1px solid #BAC9CF;
@@ -153,7 +155,7 @@ p {
 	_top: 1px; /* IE Only */
 }
 
-
+*/
 /* Error Messages
 ------------------------------ */
 .errorbox {
@@ -221,7 +223,7 @@ table.bordered td {
   background: #F7F8F9;
   border: 1px solid #BAC9CF;
   border-bottom-width: 5px;
-  padding: 4px 12px;
+  padding: 10px;
 }
 
 div.box { 
