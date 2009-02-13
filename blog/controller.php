@@ -2190,15 +2190,11 @@ class blog extends controller
         */
         public function approvedBlogger()
         {
-            $blogSetting=$this->objSysConfig->getValue('limited_users','blog');
-            if ($blogSetting==1){
+            $blogSetting = $this->objSysConfig->getValue('limited_users', 'blog');
+            if ($blogSetting) {
                 $groupId = $this->objGroup->getLeafId(array('Blog Users'));
                 $this->userPkId = $this->objUser->PKId();
-                if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
-                    return TRUE;
-                } else {
-                    return FALSE;
-                }
+                return $this->objGroup->isGroupMember($this->userPkId, $groupId);
             } else {
                 return TRUE;
             }
