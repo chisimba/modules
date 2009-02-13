@@ -190,7 +190,7 @@
                 $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common.css'.'">'));
 
                 //jQuery pngFix behaves wierdly in ies4linux but works on windows machines
-                $this->_objJQuery->loadPngFixPlugin();
+                //$this->_objJQuery->loadPngFixPlugin();
 
             } catch (customException $e){
                 throw customException($e->getMessage());
