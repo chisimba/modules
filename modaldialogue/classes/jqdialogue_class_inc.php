@@ -17,19 +17,10 @@ class jqdialogue extends object
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery/api/ui/ui.core.js', 'htmlelements'));
         $this->appendArrayVar('headerParams', $this->getJavascriptFile('jquery/api/ui/dialog/ui.dialog.js', 'htmlelements'));
 
-        $html = '
-<script type="text/javascript">
-	jQuery(function() {
-		jQuery("#dialog").dialog({
-			bgiframe: true,
-			height: 140,
-			modal: true
-		});
-	});
-	</script>
-<div id="dialog" title="Basic modal dialog">
-	<p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>
-</div>';
+        $script = '<script type="text/javascript">jQuery(function(){jQuery("#dialog").dialog({bgiframe:true,height:140,modal:true});});</script>';
+        $this->appendArrayVar('headerParams', $script);
+
+        $html = '<div id="dialog" title="Basic modal dialog"><p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p></div>';
 
         return $html;
     }
