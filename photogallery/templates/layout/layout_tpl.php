@@ -18,7 +18,7 @@ if ($this->_objUser->isLoggedIn())
 
 
 //$cssLayout->setRightColumnContent($this->getRightWidgets());
-$cssLayout->setMiddleColumnContent($this->getContent());
+$cssLayout->setMiddleColumnContent($this->getContent().'<br style="clear:both">');
 
 
 

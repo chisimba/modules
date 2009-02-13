@@ -29,7 +29,7 @@ $link->href = $this->uri(array('action' => 'front'));
 $link->link = ' Browse my <strong>gallery</strong>';
 $str .= '<li>'.$link->show().'</li></ul><hr />';
 
-$str .='<div class="box" id="overview-comments">
+$str .='<br style="clear:both"><div class="box" id="overview-comments">
         <h2>10 Most Recent Comments</h2><ul>';
     
 foreach($tencomments as $tencomment)
@@ -48,6 +48,6 @@ foreach($tencomments as $tencomment)
 
 
       
-echo '<div id="main">'.$str.'</ul></div></div>';      
+echo '<div id="main">'.$str.'</ul></div><br style="clear:both"></div>';      
 
 ?>
