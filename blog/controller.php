@@ -243,6 +243,15 @@ class blog extends controller
      * @access public
      */
     public $objblogTrackbacks;
+
+    /**
+     * Object of the groupadminmodel class in the groupadmin module.
+     *
+     * @access protected
+     * @var object $objGroup
+     */
+    protected $objGroup;
+
     public function init() 
     {
         try {
@@ -255,6 +264,8 @@ class blog extends controller
             //maybe a config here to check if we wanna use this?
             //feeds classes
             $this->objFeed = $this->getObject('feeds', 'feed');
+            //group object
+            $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
             //user object
             $this->objUser = $this->getObject('user', 'security');
             //feed creator subsystem
@@ -2181,7 +2192,6 @@ class blog extends controller
         {
             $blogSetting=$this->objSysConfig->getValue('limited_users','blog');
             if ($blogSetting==1){
-                $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
                 $groupId = $this->objGroup->getLeafId(array('Blog Users'));
                 $this->userPkId = $this->objUser->PKId();
                 if($this->objGroup->isGroupMember($this->userPkId, $groupId)){
