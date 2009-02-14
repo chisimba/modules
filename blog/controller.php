@@ -2193,8 +2193,8 @@ class blog extends controller
             $blogSetting = $this->objSysConfig->getValue('limited_users', 'blog');
             if ($blogSetting) {
                 $groupId = $this->objGroup->getId('Bloggers');
-                $this->userPkId = $this->objUser->PKId();
-                return $this->objGroup->isGroupMember($this->userPkId, $groupId);
+                $userId = $this->objUser->userId();
+                return $this->objGroup->isGroupMember($userId, $groupId);
             } else {
                 return TRUE;
             }
