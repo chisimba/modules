@@ -31,16 +31,34 @@ class jqdialogue extends object
         $this->objSkin = $this->getObject('skin', 'skin');
     }
 
+    /**
+     * Sets the title of the dialogue.
+     *
+     * @access public
+     * @param string $title The new title of the dialogue.
+     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
+    /**
+     * Sets the content of the dialogue.
+     *
+     * @access public
+     * @param string $content The new content of the dialogue.
+     */
     public function setContent($content)
     {
         $this->content = $content;
     }
 
+    /**
+     * Adds applicable scripts to the HTML header and returns the HTML for the body.
+     *
+     * @access public
+     * @return string The HTML for the body.
+     */
     public function show()
     {
         $this->objSkin->setVar('SUPPRESS_PROTOTYPE', true);
