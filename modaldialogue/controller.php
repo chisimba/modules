@@ -6,7 +6,7 @@ class modaldialogue extends controller
 
     public function init()
     {
-        $this->objJqDialogue = $this->getObject('jqdialogue', 'modaldialogue');
+        $this->objJqDialogue = $this->getObject('jqdialogue', 'htmlelements');
     }
 
     public function dispatch()
