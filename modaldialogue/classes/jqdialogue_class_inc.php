@@ -2,8 +2,28 @@
 
 class jqdialogue extends object
 {
+    /**
+     * The instance of the skin class in the skin module.
+     *
+     * @access protected
+     * @var object $objSkin
+     */
     protected $objSkin;
+
+    /**
+     * The title of the dialogue.
+     *
+     * @access protected
+     * @var string $title
+     */
     protected $title;
+
+    /**
+     * The contents of the dialogue.
+     *
+     * @access protected
+     * @var string $content
+     */
     protected $content;
 
     public function init()
