@@ -408,7 +408,7 @@ class faq extends controller
      */
     protected function isRestricted($action)
     {
-        $restrictedActions = array('add');
+        $restrictedActions = array('add', 'addconfirm', 'edit', 'editconfirm', 'deleteconfirm', 'addcategory', 'addcategoryconfirm', 'editcategory', 'editcategoryconfirm', 'deletecategoryconfirm', 'managecategories');
         return in_array($action, $restrictedActions);
     }
 
