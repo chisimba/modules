@@ -81,7 +81,9 @@
             //
             $fh = fopen($jnlpFile, 'w') or die("can't open file");
    fwrite($fh, '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
-   fwrite($fh, '<jnlp codebase="http://chameleon.uwc.ac.za/classroom" href="launch.jnlp" spec="1.0+">');
+            fwrite($fh,'<jnlp spec="1.0+" ');
+            fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
+            fwrite($fh,     ' href="'.$type.'_'.$username.'_chisimba_classroom.jnlp">');
    fwrite($fh, '    <information>');
    fwrite($fh, '        <title>InstanceLauncher</title>');
    fwrite($fh, '        <vendor>developer</vendor>');
@@ -98,8 +100,12 @@
    fwrite($fh, '<jar eager="true" href="InstanceLauncher.jar" main="true"/>');
    fwrite($fh, '    </resources>');
    fwrite($fh, '    <application-desc main-class="avoir.realtime.launcher.Main">');
-   fwrite($fh,'    </application-desc>');
+   fwrite($fh,   ' <argument>'.$username.'</argument>');
+   fwrite($fh,   ' <argument>'.$isPresenter.'</argument>');
+   fwrite($fh,   ' <argument>'.$slideServerId.'</argument>');
+            fwrite($fh,'    </application-desc>');
    fwrite($fh,'</jnlp>');
+        fclose($fh);
         /*    fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>'   fwrite($fh,
             fwrite($fh,'<jnlp spec="1.0+" ');
             fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
