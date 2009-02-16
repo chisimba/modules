@@ -393,6 +393,17 @@ class faq extends controller
         }
     }
 
+    /**
+     * Checks if the given action is only available to certain user groups.
+     *
+     * @param string $action The name of the action to check.
+     * @return boolean True if the action is restricted, false otherwise.
+     */
+    protected function isRestricted($action)
+    {
+        $restrictedActions = array('add');
+        return in_array($action, $restrictedActions);
+    }
 
 
 
