@@ -80,8 +80,27 @@
             $jnlpFile = $fileBase.'/'.$type.'_'.$username.'_chisimba_classroom.jnlp';
             //
             $fh = fopen($jnlpFile, 'w') or die("can't open file");
-
-            fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>');
+   fwrite($fh, '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+   fwrite($fh, '<jnlp codebase="http://chameleon.uwc.ac.za/classroom" href="launch.jnlp" spec="1.0+">');
+   fwrite($fh, '    <information>');
+   fwrite($fh, '        <title>InstanceLauncher</title>');
+   fwrite($fh, '        <vendor>developer</vendor>');
+   fwrite($fh, '        <homepage href=""/>');
+   fwrite($fh,'        <description>InstanceLauncher</description>');
+   fwrite($fh, '       <description kind="short">InstanceLauncher</description>');
+   fwrite($fh, '   <offline-allowed/>');
+   fwrite($fh, '</information>');
+   fwrite($fh, '<security>');
+   fwrite($fh, '<all-permissions/>');
+   fwrite($fh, '</security>');
+   fwrite($fh, '    <resources>');
+   fwrite($fh, '<j2se version="1.5+"/>');
+   fwrite($fh, '<jar eager="true" href="InstanceLauncher.jar" main="true"/>');
+   fwrite($fh, '    </resources>');
+   fwrite($fh, '    <application-desc main-class="avoir.realtime.launcher.Main">');
+   fwrite($fh,'    </application-desc>');
+   fwrite($fh,'</jnlp>');
+        /*    fwrite($fh,'<?xml version="1.0" encoding="utf-8"?>'   fwrite($fh,
             fwrite($fh,'<jnlp spec="1.0+" ');
             fwrite($fh,      'codebase="'.$appletCodeBase.'" ');
             fwrite($fh,     ' href="'.$type.'_'.$username.'_chisimba_classroom.jnlp">');
@@ -127,6 +146,8 @@
             fwrite($fh,'</security> ');
             fwrite($fh,'</jnlp>');
             fclose($fh);
+        */
+
         }
 
         public function generateJNLP1_0_2Beta(
