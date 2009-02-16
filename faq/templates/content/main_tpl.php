@@ -58,9 +58,7 @@ if (count($categories) == 0) {
         
         echo '<li>'.$categoryLink->show().' ('.$numItems.')';
         
-        $permissions = TRUE;
-        
-        if ($permissions) {
+        if ($this->userHasModifyAccess()) {
             // Create the edit link.
             $editLink = new link($this->uri(array('action'=>'editcategory', 'id'=>$item['id'])));
             $editLink->link = $editIcon;
