@@ -21,7 +21,7 @@ $objLink->link = $iconAdd->show();
 $objHeading->str = $contextTitle.': '.$objLanguage->languageText("phrase_faq","system", 'Frequently Asked Questions');
 
 // Show Add Item link
-if (count($categories) > 0) {
+if (count($categories) > 0 && $this->userHasModifyAccess()) {
     $objHeading->str .= ' '.$objLink->show();
 }
 
