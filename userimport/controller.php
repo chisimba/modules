@@ -35,7 +35,7 @@ class userimport extends controller
     {
         // The user and useradmin objects
         $this->objUser= $this->getObject('user', 'security');
-        $this->objUserAdmin= $this->getObject('sqlusers', 'security');
+        $this->objUserAdmin= $this->getObject('useradmin_model', 'security');
 
         // The config object
         //$this->objConfig=& $this->getObject('altconfig','config');
@@ -196,7 +196,7 @@ class userimport extends controller
     * This method checks for the existance of an uploaded file.
     * if one exists, it passes the file location to the batchImport()
     * method in the userimport class, where the new users are added
-    * by calls to the security module's sqlusers class.
+    * by calls to the security module's useradmin class.
     * @param string $method the type of file
     */
     function uploadData($method='CSV',$location='upload')

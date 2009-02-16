@@ -27,7 +27,7 @@ class importuserdata extends object
         // Create or get instances of the user, sqlusers and passwords classes
         $this->objConfig=$this->getObject('altconfig','config');
         $this->objUser=$this->getObject('user','security');
-        $this->objUserAdmin=$this->getObject('sqlusers','security');
+        $this->objUserAdmin=$this->getObject('useradmin_model','security');
         $this->objPassword=$this->getObject('passwords','useradmin');
     }
 
@@ -139,7 +139,7 @@ class importuserdata extends object
     
     /**
     * Method to add a user to the database with info from the CSV
-    * It calls the AddUser method in the sqlusers class
+    * It calls the AddUser method in the users class
     * @param array $line
     * @returns string $id the new id field of the user
     */

@@ -32,7 +32,7 @@ class dbuserimport extends dbTable
     {
         parent::init('tbl_importusers');
         $this->objUser=$this->getObject('user','security');
-        $this->objUserAdmin=$this->getObject('sqlusers','security');
+        $this->objUserAdmin=$this->getObject('useradmin_model','security');
         $this->objConfig=$this->getObject('altconfig','config');
         
     }

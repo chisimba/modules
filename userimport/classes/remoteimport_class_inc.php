@@ -160,6 +160,8 @@ class remoteimport extends object
     */
     function XMLexport($classmodule)
     {
+        $asciiFlag=$this->objConfig->getValue('set_to_ascii','userimport');
+
         $classlist=$this->getClassList($classmodule);
         $xml="<batch>\n";
         $xml.="<batchcode>$classmodule</batchcode>\n";
@@ -170,6 +172,14 @@ class remoteimport extends object
             }
             foreach ($classlist as $line)
             {
+                // Strip Problem Chars
+                $line->firstname=html_entity_decode($line->firstname,ENT_NOQUOTES,'UTF-8');
+                $line->surname=html_entity_decode($line->surname,ENT_NOQUOTES,'UTF-8');
+                if ($asciiFlag==1){
+                    setlocale(LC_ALL, 'en_US.UTF8');
+                    $line->firstname=iconv('UTF-8', 'ASCII//TRANSLIT', $line->firstname);
+                    $line->surname=iconv('UTF-8', 'ASCII//TRANSLIT', $line->surname);
+                }
                 $xml.="<student>\n";
                 $xml.="<userId>".$line->studnum."</userId>\n";
                 $xml.="<username>".$line->username."</username>\n";
