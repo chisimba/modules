@@ -35,17 +35,16 @@ class faq extends controller
     */
     public function init()
     {
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
-        $this->objLanguage =& $this->getObject('language','language');
-        $this->objFaqCategories =& $this->getObject('dbfaqcategories');
-        $this->objFaqEntries =& $this->getObject('dbfaqentries');
+        $this->objLanguage = $this->getObject('language','language');
+        $this->objFaqCategories = $this->getObject('dbfaqcategories');
+        $this->objFaqEntries = $this->getObject('dbfaqentries');
         
-        //Get the activity logger class
-        $this->objLog=$this->newObject('logactivity', 'logger');
-        //Set it to log once per session
-        //$this->objLog->logOncePerSession = TRUE;
-        //Log this module call
+        // Get the activity logger class
+        $this->objLog = $this->newObject('logactivity', 'logger');
+
+        // Log this module call
         $this->objLog->log();
     }
 
