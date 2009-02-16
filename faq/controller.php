@@ -368,6 +368,14 @@ class faq extends controller
         return $this->nextAction(NULL);
     }
 
+    /**
+     * Checks if the user has access to make modifications to the FAQ.
+     *
+     * @return boolean True if the user can make modifications, false otherwise.
+     */
+    protected function userHasModifyAccess()
+    {
+    }
 
 
 
