@@ -17,6 +17,8 @@ class faq extends controller
     public $objUser;
 
     protected $objGroup;
+
+    protected $objSysConfig;
     
     public $objLanguage;
     
@@ -37,6 +39,7 @@ class faq extends controller
     {
         $this->objUser = $this->getObject('user', 'security');
         $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objLanguage = $this->getObject('language','language');
         $this->objFaqCategories = $this->getObject('dbfaqcategories');
         $this->objFaqEntries = $this->getObject('dbfaqentries');
