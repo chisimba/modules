@@ -56,6 +56,11 @@ class faq extends controller
     {
         // Set the layout template for faq - includes the context menu
         $this->setLayoutTemplate("context_layout_tpl.php");
+
+        // Check to ensure the user is allowed to execute this action.
+        if ($this->isRestricted($action) && !$this->userHasModifyAccess()) {
+            die('Access denied.');
+        }
         
         // Set the error string
         $error = "";
