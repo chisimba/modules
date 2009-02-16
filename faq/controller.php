@@ -62,7 +62,7 @@ class faq extends controller
 
         // Check to ensure the user is allowed to execute this action.
         if ($this->isRestricted($action) && !$this->userHasModifyAccess()) {
-            die('Access denied.');
+            return 'access_denied_tpl.php';
         }
         
         // Set the error string
