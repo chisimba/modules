@@ -15,6 +15,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class faq extends controller
 {
     public $objUser;
+
+    protected $objGroup;
     
     public $objLanguage;
     
@@ -34,6 +36,7 @@ class faq extends controller
     public function init()
     {
         $this->objUser =& $this->getObject('user', 'security');
+        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objLanguage =& $this->getObject('language','language');
         $this->objFaqCategories =& $this->getObject('dbfaqcategories');
         $this->objFaqEntries =& $this->getObject('dbfaqentries');
