@@ -382,7 +382,7 @@ class faq extends controller
      */
     protected function userHasModifyAccess()
     {
-        $limitedUsers = $this->objSysConfig->getValue('limited_users', 'faq');
+        $limitedUsers = $this->objSysConfig->getValue('mod_faq_limited_users', 'faq');
         if ($limitedUsers) {
             $userId = $this->objUser->userId();
             $groups = array('Site Admin', 'Lecturers');
