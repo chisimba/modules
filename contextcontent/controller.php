@@ -102,6 +102,8 @@ class contextcontent extends controller
             
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
+			
+			$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
             
             $this->objMenuTools = $this->getObject('tools', 'toolbar');
             $this->objConfig = $this->getObject('altconfig', 'config');
@@ -215,7 +217,19 @@ class contextcontent extends controller
         }
     }
 
-    
+     /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
+        }
+    }
 
     /**
     * Method to display the list of chapters in a context
