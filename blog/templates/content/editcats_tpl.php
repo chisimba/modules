@@ -1,4 +1,8 @@
 <?php
+
+// Display dialogue if necessary.
+echo $this->objJqDialogue->show();
+
 //edit cats
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
 $middleColumn = NULL;

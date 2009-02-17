@@ -1,4 +1,8 @@
 <?php
+
+// Display dialogue if necessary.
+echo $this->objJqDialogue->show();
+
 //write post template
 $objUi = $this->getObject('blogui');
 // left hand blocks
