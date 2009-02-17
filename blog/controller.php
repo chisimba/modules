@@ -260,6 +260,14 @@ class blog extends controller
      */
     protected $objJqDialogue;
 
+    /**
+     * Object of the dbuserparamsadmin class in the userparamsadmin module.
+     *
+     * @access protected
+     * @var object $objUserParams
+     */
+    protected $objUserParams;
+
     public function init() 
     {
         try {
@@ -321,6 +329,7 @@ class blog extends controller
             $this->objblogMail = $this->getObject('blogmail');
             $this->objblogTrackbacks = $this->getObject('blogtrackbacks');
             $this->objJqDialogue = $this->getObject('jqdialogue', 'htmlelements');
+            $this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
         }
         catch(customException $e) {
             //oops, something not there - bail out
