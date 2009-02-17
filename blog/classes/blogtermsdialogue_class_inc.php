@@ -16,7 +16,16 @@ class blogtermsdialogue extends jqdialogue
     public function show()
     {
         if ($this->content) {
-            $this->content .= 'Test';
+            $this->loadClass('checkbox', 'htmlelements');
+            $this->loadClass('label', 'htmlelements');
+
+            $checkbox = new checkbox('acceptedterms');
+            $checkbox->setId('acceptedterms');
+            $this->content .= $checkbox->show();
+
+            $labelText = $this->objLanguage->languageText('mod_blog_terms_accept', 'blog');
+            $label = new label($labelText, 'acceptedterms');
+            $this->content .= $label->show();
         }
         return parent::show();
     }
