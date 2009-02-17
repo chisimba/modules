@@ -1084,7 +1084,7 @@ class blog extends controller
                         break;
 
                     case 'acceptterms':
-                        $this->objUserParams->setItem('accepted_blog_terms', 1);
+                        echo $this->objUserParams->setItem('accepted_blog_terms', 1);
                         return;
                 }
                 // return the default template for no mode set
