@@ -1048,8 +1048,9 @@ class blog extends controller
                 $terms = $this->objSysConfig->getValue('mod_blog_terms', 'blog');
                 if ($terms) {
                     $dialogueTitle = $this->objLanguage->languageText('mod_blog_terms_title', 'blog');
+                    $dialogueContent = file_get_contents($terms);
                     $this->objJqDialogue->setTitle($dialogueTitle);
-                    $this->objJqDialogue->setContent($terms);
+                    $this->objJqDialogue->setContent($dialogueContent);
                 }
                 //check the mode
                 $mode = $this->getParam('mode');
