@@ -1058,9 +1058,7 @@ class blog extends controller
                 if ($terms) {
                     $acceptedBlogTerms = $this->objUserParams->getValue('accepted_blog_terms');
                     if (!$acceptedBlogTerms) {
-                        $dialogueTitle = $this->objLanguage->languageText('mod_blog_terms_title', 'blog');
                         $dialogueContent = file_get_contents($terms);
-                        $this->objTermsDialogue->setTitle($dialogueTitle);
                         $this->objTermsDialogue->setContent($dialogueContent);
                     }
                 }
