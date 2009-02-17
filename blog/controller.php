@@ -253,12 +253,12 @@ class blog extends controller
     protected $objGroup;
 
     /**
-     * Object of jQuery dialogue class in the htmlelements module.
+     * Object of terms dialogue class in the blog module.
      *
      * @access protected
-     * @var object $objJqDialogue
+     * @var object $objTermsDialogue
      */
-    protected $objJqDialogue;
+    protected $objTermsDialogue;
 
     /**
      * Object of the dbuserparamsadmin class in the userparamsadmin module.
@@ -328,7 +328,7 @@ class blog extends controller
             $this->objblogExtras = $this->getObject('blogopsextras');
             $this->objblogMail = $this->getObject('blogmail');
             $this->objblogTrackbacks = $this->getObject('blogtrackbacks');
-            $this->objJqDialogue = $this->getObject('jqdialogue', 'htmlelements');
+            $this->objTermsDialogue = $this->getObject('blogtermsdialogue', 'blog');
             $this->objUserParams = $this->getObject('dbuserparamsadmin', 'userparamsadmin');
         }
         catch(customException $e) {
@@ -1060,8 +1060,8 @@ class blog extends controller
                     if (!$acceptedBlogTerms) {
                         $dialogueTitle = $this->objLanguage->languageText('mod_blog_terms_title', 'blog');
                         $dialogueContent = file_get_contents($terms);
-                        $this->objJqDialogue->setTitle($dialogueTitle);
-                        $this->objJqDialogue->setContent($dialogueContent);
+                        $this->objTermsDialogue->setTitle($dialogueTitle);
+                        $this->objTermsDialogue->setContent($dialogueContent);
                     }
                 }
                 //check the mode
