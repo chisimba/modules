@@ -329,6 +329,7 @@ class ahis extends controller {
                
             case 'sero_surveillance':
             
+            
                return 'sero_surveillance_tpl.php';   
             case 'active_search':
                $campName = $this->getParam('campName', $this->getSession('ps_campName'));
