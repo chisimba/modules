@@ -1082,6 +1082,10 @@ class blog extends controller
                     case 'editcats':
                         return 'editcats_tpl.php';
                         break;
+
+                    case 'acceptterms':
+                        $this->objUserParams->setItem('accepted_blog_terms', 1);
+                        return;
                 }
                 // return the default template for no mode set
                 return 'blogadminmenu_tpl.php';
