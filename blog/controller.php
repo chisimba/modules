@@ -1035,6 +1035,10 @@ class blog extends controller
                     return 'not_approved_tpl.php';
                     exit;
                 }
+                // Check to see if the user needs to accept terms and conditions before being able to blog.
+                $terms = $this->objSysConfig->getValue('mod_blog_terms', 'blog');
+                if ($terms) {
+                }
                 //check the mode
                 $mode = $this->getParam('mode');
                 switch ($mode) {
