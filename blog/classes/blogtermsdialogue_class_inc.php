@@ -26,6 +26,12 @@ class blogtermsdialogue extends jqdialogue
             $labelText = $this->objLanguage->languageText('mod_blog_terms_accept', 'blog');
             $label = new label($labelText, 'acceptedterms');
             $this->content .= $label->show();
+
+            $acceptedJs = 'jQuery.getJSON("index.php?module=blog&action=blogadmin&mode=acceptterms")';
+            $declinedJs = 'document.location="index.php?module=blog&action=viewblog"';
+            $closeJs = 'document.getElementById("acceptedterms").checked?'.$acceptedJs.':'.$declinedJs;
+
+            $this->setClose($closeJs);
         }
         return parent::show();
     }
