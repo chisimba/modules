@@ -1047,6 +1047,8 @@ class blog extends controller
                 // Check to see if the user needs to accept terms and conditions before being able to blog.
                 $terms = $this->objSysConfig->getValue('mod_blog_terms', 'blog');
                 if ($terms) {
+                    $this->objJqDialogue->setTitle('Terms and Conditions');
+                    $this->objJqDialogue->setContent($terms);
                 }
                 //check the mode
                 $mode = $this->getParam('mode');
