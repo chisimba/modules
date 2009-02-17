@@ -1084,7 +1084,11 @@ class blog extends controller
                         break;
 
                     case 'acceptterms':
-                        echo $this->objUserParams->setItem('accepted_blog_terms', 1);
+                        $value = $this->objUserParams->setItem('accepted_blog_terms', 1);
+                        $data = array('value' => $value);
+                        $json = json_encode($data);
+                        $this->setContentType('application/json');
+                        echo $json;
                         return;
                 }
                 // return the default template for no mode set
