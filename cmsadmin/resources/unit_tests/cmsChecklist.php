@@ -107,7 +107,8 @@ class cmsChecklist
                                $fullText = null,
                                $metakey = null,
                                $metadesc = null,
-                               $ccLicence = null){
+                               $ccLicence = null,
+							   $sectionId = null){
         
         return $this->objContent->addContent($title,
                                     $published,
@@ -127,7 +128,8 @@ class cmsChecklist
                                     $fullText,
                                     $metakey,
                                     $metadesc,
-                                    $ccLicence);
+                                    $ccLicence,
+									$sectionId);
     }
 
     /*
@@ -891,6 +893,7 @@ public function check_section_show_introduction($record){
         return FALSE;
     }
 }
+
 public function check_section_userid($record){
     if (isset($record['userid'])){
         return $record['userid'];
@@ -898,7 +901,23 @@ public function check_section_userid($record){
         return FALSE;
     }
 }
- 
+
+
+ /*
+ * Method to return all sections
+ */
+public function getAllSections($clause= ''){
+	return $this->objSection->getAll($clause);
+}
+
+/*
+ * Method to return a single section
+ */
+public function getSection($id){
+	return $this->objSection->getSection($id);
+}
+
+
     /*
      * DESC:
      */

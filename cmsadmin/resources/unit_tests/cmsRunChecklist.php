@@ -6,7 +6,6 @@ $cl = new cmsChecklist;
 
 //echo "\n\n UserId : [".$cl->userId()."]\n\n\n";
 
-/*
 echo "Checking Dependancies: -------------------\n";
 echo "Blockalicious Module Registered? : ";
 echo $cl->isBlockaliciousModuleInstalled();
@@ -328,11 +327,18 @@ echo (is_array($result)) ? 'is_array: TRUE' : 'is_array: FALSE';
 echo "\nCount: ";
 echo count($result);
 echo "\n";
-*/
 
 echo "\n===================Testing DB Section Functions===================\n";
 
-/*
+
+echo "\n\nRetrieve Section Records\n";
+$result = $cl->getAllSections();
+echo "Array Test: ";
+echo (is_array($result)) ? 'is_array: TRUE' : 'is_array: FALSE';
+echo "\nCount: ";
+echo count($result);
+echo "\n";
+
 //Save the section
 $parentId = 0;
 $title = 'Test Title Unit Test';
@@ -371,7 +377,8 @@ $result = $cl->addSection($title,
 
 echo $result;
 echo "\n";
-*/
+
+$testRootId = $result;
 
 //Add A Child Section using the id retrieved from the $result above
 //$parentId = $result;
@@ -459,12 +466,23 @@ $result = $cl->editSection($id,
 echo $result;
 echo "\n";
 
-$sectionId = $id;
+$testSectionId = $id;
+
+
+
+echo "Get a single section record [$testSectionId]\n";
+$record = $cl->getSection($testSectionId);
+var_dump($record);
+//Assert Array : $record
+echo "\n";
+
+
+
 //Assert: that results were edited
 echo "\nChecking weather fields were edited:";
 
 echo "\nCheck ID Remains Unchanged: ";
-if ($cl->check_section_id($record) == $sectionId){
+if ($cl->check_section_id($record) == $testSectionId){
     echo "PASSED";
 } else {
     echo "FAILED";
@@ -585,14 +603,19 @@ if ($cl->check_section_contextcode($record) == 'Edited'){
 }
 
 
-echo "Retrieve Section Records\n";
-$result = $cl->getContentPages('');
+
+//===========================Deleting Root and Child Section===============================
+
+
+
+echo "\n\nRetrieve Section Records\n";
+$result = $cl->getAllSections();
 echo "Array Test: ";
 echo (is_array($result)) ? 'is_array: TRUE' : 'is_array: FALSE';
 echo "\nCount: ";
 echo count($result);
 echo "\n";
-*/
+
 
 //session_destroy();
 ?>
