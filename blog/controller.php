@@ -252,6 +252,14 @@ class blog extends controller
      */
     protected $objGroup;
 
+    /**
+     * Object of jQuery dialogue class in the htmlelements module.
+     *
+     * @access protected
+     * @var object $objJqDialogue
+     */
+    protected $objJqDialogue;
+
     public function init() 
     {
         try {
@@ -312,6 +320,7 @@ class blog extends controller
             $this->objblogExtras = $this->getObject('blogopsextras');
             $this->objblogMail = $this->getObject('blogmail');
             $this->objblogTrackbacks = $this->getObject('blogtrackbacks');
+            $this->objJqDialogue = $this->getObject('jqdialogue', 'htmlelements');
         }
         catch(customException $e) {
             //oops, something not there - bail out
