@@ -1070,8 +1070,7 @@ class blog extends controller
                         return 'editcats_tpl.php';
                         break;
                 }
-                //return the default template for no mode set
-                // $this->setVar('pageSuppressXML', TRUE);
+                // return the default template for no mode set
                 return 'blogadminmenu_tpl.php';
                 break;
             
