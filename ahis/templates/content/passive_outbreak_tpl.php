@@ -79,7 +79,7 @@ $investigationDate = $this->newObject('datepicker','htmlelements');
 $investigationDate->setName('dateInvestigation');
 $investigationDate->setDefaultDate($dateInvestigation);
 
-$locationBox = new textinput('refNo', $location);
+$locationBox = new textinput('location', $location);
 $latitudeBox = new textinput('latitude', $latitude);
 $longitudeBox = new textinput('longitude', $longitude);
 $diseaseBox = new textinput('disease', $disease);
@@ -144,6 +144,13 @@ $objTable->endRow();
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_species')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('dateVet', $this->objLanguage->languageText('mod_ahis_valdatevet', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateOccurence', $this->objLanguage->languageText('mod_ahis_valdateoccurence', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateDiagnosis', $this->objLanguage->languageText('mod_ahis_valdatediagnosis', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateInvestigation', $this->objLanguage->languageText('mod_ahis_valdateinvestigation', 'ahis'), 'datenotfuture');
+$objForm->addRule('location', $this->objLanguage->languageText('mod_ahis_locationreq', 'ahis'), 'required');
+$objForm->addRule('disease', $this->objLanguage->languageText('mod_ahis_diseasereq', 'ahis'), 'required');
+$objForm->addRule('causitive', $this->objLanguage->languageText('mod_ahis_causitivereq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

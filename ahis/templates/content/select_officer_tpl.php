@@ -100,8 +100,9 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'report_filter')));
 $objForm->addToForm($objTable->show());
-$objForm->addRule('officer', $this->objLanguage->languageText('mod_ahis_officerrule','ahis'), 'required');
-$objForm->addRule('district', $this->objLanguage->languageText('mod_ahis_districtrule','ahis'), 'required');
+//$objForm->addRule('officer', $this->objLanguage->languageText('mod_ahis_officerrule','ahis'), 'required');
+//$objForm->addRule('district', $this->objLanguage->languageText('mod_ahis_districtrule','ahis'), 'required');
+$objForm->addRule('calendardate', $this->objLanguage->languageText('mod_ahis_valdatereport', 'ahis'), 'datenotfuture');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());

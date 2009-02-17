@@ -138,6 +138,10 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_outbreak')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('datePrepared', $this->objLanguage->languageText('mod_ahis_valdateprepared', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateIBAR', $this->objLanguage->languageText('mod_ahis_valdateibar', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateReceived', $this->objLanguage->languageText('mod_ahis_valdatedvs', 'ahis'), 'datenotfuture');
+$objForm->addRule('dateIsReported', $this->objLanguage->languageText('mod_ahis_valdateisreported', 'ahis'), 'datenotfuture');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

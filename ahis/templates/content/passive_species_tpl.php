@@ -170,8 +170,20 @@ $objTable->addCell($sButton->show(),NULL);//,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
+$valStr = $this->objLanguage->languageText('mod_ahis_valnumeric', 'ahis');
+
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_vaccine')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('susceptible', $valStr." ".$objLanguage->languageText('word_susceptible'), 'numeric');
+$objForm->addRule('cases', $valStr." ".$objLanguage->languageText('word_cases'), 'numeric');
+$objForm->addRule('deaths', $valStr." ".$objLanguage->languageText('word_deaths'), 'numeric');
+$objForm->addRule('vaccinated', $valStr." ".$objLanguage->languageText('word_vaccinated'), 'numeric');
+$objForm->addRule('slaughtered', $valStr." ".$objLanguage->languageText('word_slaughtered'), 'numeric');
+$objForm->addRule('destroyed', $valStr." ".$objLanguage->languageText('word_destroyed'), 'numeric');
+$objForm->addRule('production', $valStr." ".$objLanguage->languageText('word_production'), 'numeric');
+$objForm->addRule('newcases', $valStr." ".$objLanguage->languageText('phrase_newcases'), 'numeric');
+$objForm->addRule('recovered', $valStr." ".$objLanguage->languageText('word_recovered'), 'numeric');
+$objForm->addRule('prophylactic', $valStr." ".$objLanguage->languageText('word_prophylactic'), 'numeric');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

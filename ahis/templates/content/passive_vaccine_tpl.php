@@ -52,7 +52,7 @@ $this->loadClass('form','htmlelements');
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_finish'));
 $sButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'passive_save'));
+$backUri = $this->uri(array('action'=>'passive_species'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $refNoBox = new textinput('refNo', $refNo);
@@ -72,8 +72,8 @@ $expireDate = $this->newObject('datepicker','htmlelements');
 $expireDate->setName('dateExpire');
 $expireDate->setDefaultDate(date('Y-m-d'));
 
-$sourceBox = new textinput('susceptible');
-$batchBox = new textinput('cases');
+$sourceBox = new textinput('source');
+$batchBox = new textinput('batch');
 
 $panvacCheck = new checkbox('panvac');
 
@@ -120,6 +120,9 @@ $objTable->endRow();
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_vaccine')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('dateManufactured', $this->objLanguage->languageText('mod_ahis_valdatemanufactured', 'ahis'), 'datenotfuture');
+$objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsourcerequired', 'ahis'), 'required');
+$objForm->addRule('batch', $this->objLanguage->languageText('mod_ahis_valvacbatchrequired', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
