@@ -1,7 +1,7 @@
 <?php
 
 // Display dialogue if necessary.
-echo $this->objJqDialogue->show();
+echo $this->objTermsDialogue->show();
 
 //write post template
 $objUi = $this->getObject('blogui');
