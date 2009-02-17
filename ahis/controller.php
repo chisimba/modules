@@ -307,9 +307,7 @@ class ahis extends controller {
                $this->setVar('disease', $this->getSession('ps_disease'));
                $this->setVar('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $this->setVar('comments', $this->getSession('ps_comments'));
-
-               
-            
+                
                return 'active_surveillance_tpl.php';  
                 
             case 'active_addtest':
@@ -321,7 +319,17 @@ class ahis extends controller {
                $this->setVar('campName', $this->getSession('ps_campName'));
                 
                return 'active_addtest_tpl.php';
+            case 'active_addherd':
+
+            
+               return 'active_addherd_tpl.php';   
+            case 'active_herdview':
+            
+               return 'active_herdview_tpl.php';
                
+            case 'sero_surveillance':
+            
+               return 'sero_surveillance_tpl.php';   
             case 'active_search':
                $campName = $this->getParam('campName', $this->getSession('ps_campName'));
                
