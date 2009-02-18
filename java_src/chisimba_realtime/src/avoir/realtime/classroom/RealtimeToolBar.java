@@ -17,9 +17,10 @@
  */
 package avoir.realtime.classroom;
 
-import avoir.realtime.classroom.notepad.JNotepad;
-import avoir.realtime.classroom.notepad.Stylepad;
+import avoir.realtime.classroom.packets.PresencePacket;
 import avoir.realtime.common.ImageUtil;
+import avoir.realtime.common.PresenceConstants;
+import avoir.realtime.classroom.RButton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,8 +35,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -43,9 +45,9 @@ import javax.swing.JPanel;
  */
 public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotionListener {
 
-    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
     private BlurShape blur = new BlurShape(5);
-    private ArrayList<RButton> buttons = new ArrayList<RButton>();
+    protected ArrayList<RButton> buttons = new ArrayList<RButton>();
+    private ArrayList<RButton> subButtons = new ArrayList<RButton>();
     private int MAX_ICON_WIDTH = 50;
     private int MAX_ICON_HEIGHT = 50;
     private int SPACING = 64;
@@ -63,8 +65,22 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
     private Image micIcon = ImageUtil.createImageIcon(this, "/icons/micro.png").getImage();
     private Image micFailIcon = ImageUtil.createImageIcon(this, "/icons/mic_fail.png").getImage();
     private Image micSelectedIcon = ImageUtil.createImageIcon(this, "/icons/micro_selected.png").getImage();
-    private Image speakerSelectedIcon = ImageUtil.createImageIcon(this, "/icons/speaker_selected.png").getImage();
+    private ImageIcon arrowSideIcon = ImageUtil.createImageIcon(this, "/icons/arrow_side.png");
+    private ImageIcon arrowUpIcon = ImageUtil.createImageIcon(this, "/icons/arrow_up.png");
+    private ImageIcon handLeftIcon = ImageUtil.createImageIcon(this, "/icons/hand_left.png");
+    private ImageIcon handRightIcon = ImageUtil.createImageIcon(this, "/icons/hand_right.png");
+    protected Object[][] arrows = {{arrowSideIcon, "arrowSide"}, {arrowUpIcon, "arrowUp"}, {handLeftIcon, "handLeft"},
+        {handRightIcon, "handRight"}
+    };
+    protected boolean firsTimeArrowShow = true;
     private boolean talking = false;
+    private Color ocolor = new Color(255, 204, 102);//new Color(255, 153, 51);
+    protected JPopupMenu tooltip = new JPopupMenu();
+    protected JLabel tooltipField = new JLabel();
+    protected Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private boolean savednotes = false;
+    protected boolean recording = false;
+    protected ToolbarActionManager toolbarManager;
 
     public RealtimeToolBar(ClassroomMainFrame mf) {
         setPreferredSize(new Dimension(ss.width - 20, 80));
@@ -72,10 +88,12 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.mf = mf;
+        tooltip.add(tooltipField);
         repaint();
+        toolbarManager = new ToolbarActionManager(mf);
     }
 
-    public void add(String imagePath, String actionCommand, String tooltipText) {
+    public void add(String imagePath, String actionCommand, String tooltipText, boolean bg, boolean isToggle) {
         ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
         int w = image.getIconWidth();
         w = w > MAX_ICON_WIDTH ? MAX_ICON_WIDTH : w;
@@ -84,18 +102,44 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         RoundRectangle2D roundRect = new RoundRectangle2D.Double(startx, 13, rectW, rectH, 10, 10);
         int xVal = startx + (((int) roundRect.getWidth() - w) / 2);
         int yVal = 10 + (RECT_HEIGHT - h) / 2;
-        buttons.add(new RButton(image.getImage(), actionCommand, tooltipText,
-                xVal, yVal, w, h, roundRect));
+        RButton rb = new RButton(image.getImage(), actionCommand, tooltipText,
+                xVal, yVal, w, h, roundRect, "parent");
+        rb.setAButtonGroup(bg);
+        rb.setToggleButton(isToggle);
+        buttons.add(rb);
         startx += SPACING;
         repaint();
     }
 
-    private void showNotepad() {
-        JNotepad fr = new JNotepad();
-        //fr.setAlwaysOnTop(true);
-        fr.setSize(400, 300);
-        fr.setLocationRelativeTo(null);
-        fr.setVisible(true);
+    public ToolbarActionManager getToolbarManager() {
+        return toolbarManager;
+    }
+
+    public void showRecorderFrame() {
+    }
+
+    public void add(String imagePath, String actionCommand, String tooltipText) {
+        add(imagePath, actionCommand, tooltipText, true, false);
+    }
+
+    public void addSubButton(String imagePath, String actionCommand, String tooltipText, String parent) {
+        ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
+
+        for (int i = 0; i < buttons.size(); i++) {
+            RButton b = buttons.get(i);
+            if (b.getActionCommand().equals(parent)) {
+                RoundRectangle2D rect = b.getRect();
+                RoundRectangle2D srect = new RoundRectangle2D.Double(rect.getX() + 10, rect.getY() + rect.getHeight() - 8,
+                        16, 16, 1, 1);
+                buttons.add(new RButton(image.getImage(), actionCommand, tooltipText,
+                        (int) srect.getX(), (int) srect.getY(), (int) srect.getWidth(), (int) srect.getHeight(), srect, "child"));
+                savednotes = true;
+            }
+        }
+        repaint();
+    }
+
+    public void showQuestionsManager() {
     }
 
     @Override
@@ -111,63 +155,85 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         g2.drawRoundRect(6, 6, getWidth() - 12, 70, 20, 20);
 
         for (int i = 0; i < buttons.size(); i++) {
-            Color color = Color.GRAY;
+            Color color = ocolor;// Color.GRAY;
 
             if (selectedButton != null) {
                 if (selectedIndex == i) {
-                    paintSelected(g2, i);
+                    paintSelected(g2, i, buttons.get(i).getType());
                 } else {
                     if (clickedButton != null) {
                         if (clickedIndex == i && clickedButton.isClicked()) {
-                            paintSelected(g2, i);
+                            paintSelected(g2, i, buttons.get(i).getType());
                         } else {
                             if (talking && buttons.get(i).getActionCommand().equals("mic")) {
-                                paintTalking(g2, i);
+                                paintTalking(g2, i, buttons.get(i).getType());
+                            } else if (recording && buttons.get(i).getActionCommand().equals("record")) {
+                                paintRecording(g2, i, buttons.get(i).getType());
                             } else {
 
                                 g2.setColor(color);
                             }
-                            paintImage(g2, i);
+                            paintImage(g2, i, buttons.get(i).getType());
                         }
                     } else {
 
                         if (talking && buttons.get(i).getActionCommand().equals("mic")) {
-                            paintTalking(g2, i);
+                            paintTalking(g2, i, buttons.get(i).getType());
+                        } else if (recording && buttons.get(i).getActionCommand().equals("record")) {
+                            paintRecording(g2, i, buttons.get(i).getType());
                         } else {
                             g2.setColor(color);
                         }
-                        paintImage(g2, i);
+                        paintImage(g2, i, buttons.get(i).getType());
                     }
                 }
             } else if (clickedButton != null) {
                 if (clickedIndex == i && clickedButton.isClicked()) {
-                    paintSelected(g2, i);
+                    paintSelected(g2, i, buttons.get(i).getType());
                 } else {
 
                     if (talking && buttons.get(i).getActionCommand().equals("mic")) {
-                        paintTalking(g2, i);
+                        paintTalking(g2, i, buttons.get(i).getType());
+                    } else if (recording && buttons.get(i).getActionCommand().equals("record")) {
+                        paintRecording(g2, i, buttons.get(i).getType());
                     } else {
                         g2.setColor(color);
                     }
-                    paintImage(g2, i);
+                    paintImage(g2, i, buttons.get(i).getType());
                 }
             } else {
                 if (talking && buttons.get(i).getActionCommand().equals("mic")) {
-                    paintTalking(g2, i);
+                    paintTalking(g2, i, buttons.get(i).getType());
+                } else if (recording && buttons.get(i).getActionCommand().equals("record")) {
+                    paintRecording(g2, i, buttons.get(i).getType());
                 } else {
                     g2.setColor(color);
                 }
-                paintImage(g2, i);
+                paintImage(g2, i, buttons.get(i).getType());
             }
             if (talking && buttons.get(i).getActionCommand().equals("mic")) {
-                paintTalking(g2, i);
+                paintTalking(g2, i, buttons.get(i).getType());
             }
+            if (recording && buttons.get(i).getActionCommand().equals("record")) {
+                paintRecording(g2, i, buttons.get(i).getType());
+            }
+
         }
 
     }
 
+    private void showConfigFrame() {
+        RealtimeOptionsFrame fr = new RealtimeOptionsFrame(mf, 0);
+        fr.setSize(600, 400);
+        fr.setLocationRelativeTo(null);
+        fr.setVisible(true);
+    }
+
     public void setTalking(boolean talking) {
         this.talking = talking;
+        mf.getTcpConnector().sendPacket(new PresencePacket(
+                mf.getUser().getSessionId(), PresenceConstants.SOUND_ICON, talking ? PresenceConstants.SPEAKING : PresenceConstants.NOT_SPEAKING, mf.getUser().getUserName()));
+
         for (int i = 0; i < buttons.size(); i++) {
             if (buttons.get(i).getActionCommand().equals("mic")) {
                 RButton button = buttons.get(i);
@@ -183,7 +249,8 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         repaint();
     }
 
-    private void paintSelected(Graphics2D g2, int i) {
+    private void paintSelected(Graphics2D g2, int i, String type) {
+        g2.setStroke(new BasicStroke(4));
         g2.setColor(Color.LIGHT_GRAY);
         RoundRectangle2D r = buttons.get(i).getRect();
         g2.fill(r);
@@ -191,23 +258,63 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         g2.setColor(color);
         g2.draw(buttons.get(i).getRect());
         g2.drawImage(buttons.get(i).getImage(), buttons.get(i).getX() - 3, buttons.get(i).getY() - 3, buttons.get(i).getWidth() + 6, buttons.get(i).getHeight() + 6, this);
-        paintImage(g2, i);
+        paintImage(g2, i, type);
     }
 
-    private void paintImage(Graphics2D g2, int i) {
-        g2.draw(buttons.get(i).getRect());
+    protected void paintImage(Graphics2D g2, int i, String type) {
+        g2.setStroke(new BasicStroke(3));
+
+        Color color = new Color(255, 153, 51);
+        if (type.equals("child")) {
+            color = new Color(0, 131, 0);
+        }
+        String actionCommand = buttons.get(i).getActionCommand();
+        if (actionCommand.equals("mic") && talking) {
+
+            color = Color.GREEN;
+
+        }
+        if (actionCommand.equals("record") && recording) {
+
+            color = Color.GREEN;
+
+        }
+        g2.setColor(color);
+        if (buttons.get(i).isClicked()) {
+            g2.setStroke(new BasicStroke(4));
+            g2.setColor(Color.LIGHT_GRAY);
+            RoundRectangle2D r = buttons.get(i).getRect();
+            g2.fill(r);
+
+            g2.setColor(new Color(255, 153, 51));
+            g2.draw(buttons.get(i).getRect());
+        }
+        //g2.draw(buttons.get(i).getRect());
         g2.drawImage(buttons.get(i).getImage(), buttons.get(i).getX(), buttons.get(i).getY(), buttons.get(i).getWidth(), buttons.get(i).getHeight(), this);
 
     }
 
-    private void paintTalking(Graphics2D g2, int i) {
+    private void paintTalking(Graphics2D g2, int i, String type) {
         g2.setColor(Color.LIGHT_GRAY);
         RoundRectangle2D r = buttons.get(i).getRect();
         g2.fill(r);
         g2.setColor(Color.GREEN);
+        g2.draw(buttons.get(i).getRect());
+
         g2.setFont(new Font("Dialog", 1, 10));
         g2.drawString("Talking ...", buttons.get(i).getX(), buttons.get(i).getY() + 40);
-        paintImage(g2, i);
+        paintImage(g2, i, type);
+    }
+
+    private void paintRecording(Graphics2D g2, int i, String type) {
+        g2.setColor(Color.LIGHT_GRAY);
+        RoundRectangle2D r = buttons.get(i).getRect();
+        g2.fill(r);
+        g2.setColor(Color.GREEN);
+        g2.draw(buttons.get(i).getRect());
+        g2.setFont(new Font("Dialog", 1, 10));
+        g2.drawString("Recording ...", buttons.get(i).getX() - 10, buttons.get(i).getY() + 40);
+        paintImage(g2, i, type);
     }
 
     public void setMicNotAvailable() {
@@ -233,30 +340,94 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
         repaint();
     }
 
+    private void showPlayer() {
+     
+    }
+
+    protected void showPointerOptions(MouseEvent evt) {
+    }
+
+    protected void startDesktopshare() {
+    }
+
+    protected void showWebpage() {
+    }
+
+    protected void setBold() {
+    }
+
+    protected void setUnder() {
+    }
+
+    protected void setItalic() {
+    }
+
     public void mouseClicked(MouseEvent evt) {
         for (int i = 0; i < buttons.size(); i++) {
 
             if (buttons.get(i).getRect().contains(evt.getPoint())) {
-                //unselect the prev button if any
+                //unselect the prev button if any...and if is not a button group
                 if (clickedIndex > -1 && clickedButton != null) {
-                    clickedButton.setClicked(!clickedButton.isClicked());
-                    buttons.set(clickedIndex, clickedButton);
+                    if (clickedButton.isAButtonGroup() && clickedButton.isToggleButton()) {
+                        clickedButton.setClicked(!clickedButton.isClicked());
+                        buttons.set(clickedIndex, clickedButton);
+                    }
                 }
                 clickedIndex = i;
                 clickedButton = buttons.get(i);
-                clickedButton.setClicked(!clickedButton.isClicked());
+                if (clickedButton.isToggleButton()) {
+                    clickedButton.setClicked(!clickedButton.isClicked());
+                } else {
+                    clickedButton.setClicked(false);
+                }
+                if (buttons.get(i).getActionCommand().equals("pointer")) {
+                    showPointerOptions(evt);
+                }
                 if (buttons.get(i).getActionCommand().equals("mic")) {
-                    mf.getAudioChatClient().connect();
-                    mf.getAudioChatClient().signIn(mf.getUser().getUserName());
                     mf.getAudioChatClient().talk();
+                }
+                if (buttons.get(i).getActionCommand().equals("italic")) {
+                    setItalic();
+                }
+                if (buttons.get(i).getActionCommand().equals("under")) {
+                    setUnder();
+                }
+                if (buttons.get(i).getActionCommand().equals("bold")) {
+                    setBold();
+                }
+                if (buttons.get(i).getActionCommand().equals("play")) {
+                    showPlayer();
+                }
+                if (buttons.get(i).getActionCommand().equals("record")) {
+                    showRecorderFrame();
+                }
+                if (buttons.get(i).getActionCommand().equals("config")) {
+                    showConfigFrame();
+                }
+                if (buttons.get(i).getActionCommand().equals("desktopshare")) {
 
+                    startDesktopshare();
+                }
+                if (buttons.get(i).getActionCommand().equals("webpage")) {
+                    showWebpage();
                 }
                 if (buttons.get(i).getActionCommand().equals("notepad")) {
-                    showNotepad();
+                    if (savednotes) {
+                        toolbarManager.showNotepadList();
+                    } else {
+                        toolbarManager.showNotepad();
+                    }
+                }
+                if (buttons.get(i).getActionCommand().equals("question")) {
+                    showQuestionsManager();
                 }
             }
         }
         repaint();
+    }
+
+    public void setSavednotes(boolean savednotes) {
+        this.savednotes = savednotes;
     }
 
     public void mouseEntered(MouseEvent evt) {
@@ -285,109 +456,10 @@ public class RealtimeToolBar extends JPanel implements MouseListener, MouseMotio
             if (buttons.get(i).getRect().contains(evt.getPoint())) {
                 selectedIndex = i;
                 selectedButton = buttons.get(i);
+
+
             }
         }
         repaint();
-    }
-
-    private class RButton {
-
-        private Image image;
-        private String actionCommand;
-        private String tooltiptext;
-        private int width,  height,  x,  y;
-        private RoundRectangle2D rect;
-        private boolean clicked = false;
-
-        public RButton(
-                Image image,
-                String actionCommand,
-                String tooltiptext,
-                int x,
-                int y,
-                int width,
-                int height,
-                RoundRectangle2D rect) {
-            this.image = image;
-            this.actionCommand = actionCommand;
-            this.tooltiptext = tooltiptext;
-            this.width = width;
-            this.height = height;
-            this.rect = rect;
-            this.x = x;
-            this.y = y;
-        }
-
-        public boolean isClicked() {
-            return clicked;
-        }
-
-        public void setClicked(boolean clicked) {
-            this.clicked = clicked;
-        }
-
-        public RoundRectangle2D getRect() {
-            return rect;
-        }
-
-        public void setRect(RoundRectangle2D rect) {
-            this.rect = rect;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public void setX(int x) {
-            this.x = x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public String getActionCommand() {
-            return actionCommand;
-        }
-
-        public void setActionCommand(String actionCommand) {
-            this.actionCommand = actionCommand;
-        }
-
-        public String getTooltiptext() {
-            return tooltiptext;
-        }
-
-        public void setTooltiptext(String tooltiptext) {
-            this.tooltiptext = tooltiptext;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
-        public Image getImage() {
-            return image;
-        }
-
-        public void setImage(Image image) {
-            this.image = image;
-        }
     }
 }
