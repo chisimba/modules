@@ -22,7 +22,7 @@ import avoir.realtime.common.Constants;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.packet.AckPacket;
 import avoir.realtime.common.packet.FilePacket;
-import avoir.realtime.instructor.packets.LocalSlideCacheRequestPacket;
+import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.packet.RemoveMePacket;
 import java.io.BufferedInputStream;
@@ -35,6 +35,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -56,7 +57,7 @@ public class SlidesConsumer {
     private String SUPERNODE_HOST;
     private int SUPERNODE_PORT;
     private static DateFormat dateFormat = new SimpleDateFormat("yyy-MM-ddd-H-mm-ss");
-    public static final String REALTIME_HOME = System.getProperty("user.home") + "/avoir-realtime-1.0.2";
+    public static final String REALTIME_HOME = "/tmp/avoir-realtime-1.0.2";// System.getProperty("user.home") + "/avoir-realtime-1.0.2";
 
     public SlidesConsumer(String SUPERNODE_HOST, int SUPERNODE_PORT) {
         this.SUPERNODE_HOST = SUPERNODE_HOST;
@@ -151,7 +152,7 @@ public class SlidesConsumer {
                 Object packet = null;
                 try {
                     packet = reader.readObject();
-                    //log("" + packet);
+                   // log("" + packet);
                 } catch (Exception ex) {
                     running = false;
                     ex.printStackTrace();
@@ -286,12 +287,27 @@ public class SlidesConsumer {
 
     }
 
+    /**
+     * Creates and returns a {@link java.lang.String} from <code>t</code>’s stacktrace
+     * @param t Throwable whose stack trace is required
+     * @return String representing the stack trace of the exception
+     */
+    public String getStackTrace(Throwable t) {
+        StringWriter stringWritter = new StringWriter();
+        PrintWriter printWritter = new PrintWriter(stringWritter, true);
+        t.printStackTrace(printWritter);
+        printWritter.flush();
+        stringWritter.flush();
+
+        return stringWritter.toString();
+    }
+
     public void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
         try {
-            log("slide server received " + packet.getSlidesServerId());
+            log("slide server received " + packet.getSlidesServerId()+" for "+packet.getPathToSlides());
             int slides[] = getImageFileNames(packet.getPathToSlides());
             String slidesPath = packet.getPathToSlides();
-            log("slide server received request: , " + slides.length + " for " + packet.getPathToSlides());
+            //log("slide server received request: , " + slides.length + " for " + packet.getPathToSlides());
             // i hope to use threads here..dont know if it will help
             if (slides != null) {
                 for (int i = 0; i <
@@ -303,7 +319,8 @@ public class SlidesConsumer {
                 }
             }
         } catch (Exception ex) {
-            log(ex + "");
+
+            log(getStackTrace(ex));
         }
     }
 }
