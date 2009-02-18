@@ -22,7 +22,9 @@ public class PresenceConstants {
     public static final int APPLAUD_ICON = 9;
     public static final int ONLINE_STATUS_ICON = 10;
     public static final int EDIT_WB_ICON = 11;
-    public static final int USER_ACTIVE_ICON = 12;
+    //public static final int USER_ACTIVE_ICON = 12;
+    public static final int USER_IDLE_ICON = 12;
+
     public static final int SOUND_ICON = 13;
     public static final int ANSWER_ICON = 14;
     public static final boolean TEXT_AVAILABLE = true;
@@ -49,8 +51,8 @@ public class PresenceConstants {
     public static final boolean NOT_EDIING_WB = false;
     public static final boolean CHAT_ENABLED = true;
     public static final boolean CHAT_DISABLED = false;
-    public static final boolean USER_ACTIVE = true;
-    public static final boolean USER_IDLE = false;
+    public static final boolean USER_ORANGE_IDLE = true;
+    public static final boolean USER_RED_IDLE = false;
     public static final boolean SPEAKING = true;
     public static final boolean NOT_SPEAKING = false;
     public static final boolean CORRECT_ANSWER = true;
