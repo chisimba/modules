@@ -6,6 +6,7 @@ class editform extends object {
     public function init() {
         // language object.
         $this->objLanguage = $this->getObject ( 'language', 'language' );
+        $this->objUser = $this->getObject('user', 'security');
     }
 
     private function loadElements() {
@@ -107,7 +108,25 @@ class editform extends object {
     }
 
     public function uMenu() {
-        return "This will be a menu to add/edit/delete patterns, as well as a way for admin users to reload the bot with the files.";
+        $this->loadClass('href', 'htmlelements');
+        $fb = $this->getObject('featurebox', 'navigation');
+
+        // build some links up
+        // edit your aiml
+        $editaiml = new href($this->uri(array('action' => 'editaiml')), $this->objLanguage->languageText("mod_computerscience_editaiml", "computerscience"));
+        $editaiml = $editaiml->show();
+        // add new aiml patterns
+        $addaiml = new href($this->uri(array('action' => '')), $this->objLanguage->languageText("mod_computerscience_addaiml", "computerscience"));
+        $addaiml = $addaiml->show();
+        // reload the bot
+        $reloadbot = new href($this->uri(array('action' => 'reloadbot')), $this->objLanguage->languageText("mod_computerscience_reloadbot", "computerscience"));
+        if($this->objUser->isAdmin()) {
+            $reloadbot = $reloadbot->show();
+        }
+        else {
+            $reloadbot = NULL;
+        }
+        return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$reloadbot);
     }
 }
 ?>
