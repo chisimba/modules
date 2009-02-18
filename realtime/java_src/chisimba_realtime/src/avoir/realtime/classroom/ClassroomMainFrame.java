@@ -23,7 +23,6 @@
  */
 package avoir.realtime.classroom;
 
-import avoir.realtime.audio.AudioPanel;
 import avoir.realtime.audio.client.AudioChatClient;
 import avoir.realtime.chat.ChatRoom;
 
@@ -32,6 +31,7 @@ import avoir.realtime.classroom.tcp.TCPConnector;
 
 import avoir.realtime.classroom.whiteboard.WhiteboardSurface;
 import avoir.realtime.common.Flash;
+import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.WebPage;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
@@ -41,6 +41,9 @@ import avoir.realtime.common.user.UserLevel;
 import avoir.realtime.filetransfer.FileReceiverManager;
 
 import avoir.realtime.common.TCPSocket;
+import avoir.realtime.common.packet.QuestionPacket;
+import avoir.realtime.survey.AnsweringFrame;
+import avoir.realtime.survey.SurveyFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,10 +54,16 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -63,6 +72,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 /**
@@ -108,8 +119,16 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     private String mediaServerHost;
     private int audioMICPort;
     private int audioSpeakerPort;
-    private RealtimeToolBar toolBar;
+    //  protected RealtimeToolBar toolBar;
+    protected ClassicToolbar toolBar;
     private AudioChatClient audioChatClient;
+    private InfoPanel infoPanel;
+    private UserListHeaderPanel userListHeaderPanel = new UserListHeaderPanel();
+    private JTextField headerField;// = new JLabel("Class password: xxxx; Class Name: yyyyyy");
+    final protected JPanel leftBottonNorthPanel = new JPanel(new BorderLayout());
+    final protected JPanel ttop = new JPanel();
+    protected ButtonGroup chatButtonGroup = new ButtonGroup();
+    protected JToggleButton chatButton = new JToggleButton("Chat");
 
     public ClassroomMainFrame(
             String host,
@@ -146,7 +165,9 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         this.mediaServerHost = mediaServerHost;
         this.audioMICPort = audioMICPort;
         this.audioSpeakerPort = audioSpeakerPort;
-
+        headerField = new JTextField("Class password: " + sessionId + " | Class Name:  " + sessionTitle);
+        headerField.setFont(new Font("Dialog", 1, 12));
+        headerField.setEditable(false);
         user = createUser();
         userListManager = new UserListManager(this);
         userInteractionManager = new UserInteractionManager(this);
@@ -157,19 +178,49 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         tcpConnector.setName("student");
         chatRoom = new ChatRoom(this, user, chatLogFile, sessionId, false, null, sessionId);
         chatRoom.setTcpSocket(tcpConnector);
-        toolBar = new RealtimeToolBar(this);
+
+        initCustomComponents();
+
+    }
+
+    public void initToolbar() {
+        toolBar = new ClassicToolbar(this);
+        addToolbarButtons();
+        JPanel pp = new JPanel(new BorderLayout());
+        pp.add(headerField, BorderLayout.NORTH);
+        pp.add(toolBar, BorderLayout.CENTER);
+        centerPanel.add(pp, BorderLayout.NORTH);
+    }
+
+    private void pause(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (Exception ex) {
+        }
+    }
+
+    public void initAudio() {
         audioChatClient = new AudioChatClient(this);
 
-initCustomComponents();
-        addToolbarButtons();
-        centerPanel.add(toolBar, BorderLayout.NORTH);
+        Thread t = new Thread() {
 
+            public void run() {
+                getAudioChatClient().connect();
+                pause(2000);
+                getAudioChatClient().signIn(getUser().getUserName());
+            }
+        };
+
+        t.start();
     }
 
     private void addToolbarButtons() {
         toolBar.add("/icons/micro.png", "mic", "Microphone");
         toolBar.add("/icons/speaker.png", "speaker", "Speaker");
         toolBar.add("/icons/kedit.png", "notepad", "Notepad");
+        toolBar.add("/icons/global_config.png", "config", "Settings");
+    //toolBar.add("/icons/media-record.png", "record", "Record");
+    //toolBar.add("/icons/player_play.png", "play", "Play");
     }
 
     protected void initCustomComponents() {
@@ -185,7 +236,28 @@ initCustomComponents();
         dockTabbedPane.setFont(new Font("Dialog", 0, 11));
         dockTabbedPane.addTab("Chat", chatRoom);
         dockTabbedPane.setSelectedIndex(0);
-        leftBottomPanel.add(dockTabbedPane, BorderLayout.CENTER);
+        chatButton.setIcon(ImageUtil.createImageIcon(this, "/icons/chat32.png"));
+
+        chatButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                leftBottonNorthPanel.removeAll();
+                leftBottonNorthPanel.add(ttop, BorderLayout.NORTH);
+                leftBottonNorthPanel.add(chatRoom, BorderLayout.CENTER);
+                leftSplitPane.repaint();
+
+            }
+        });
+        chatButtonGroup.add(chatButton);
+        chatButton.setSelected(true);
+        ttop.add(chatButton);
+        leftBottonNorthPanel.add(ttop, BorderLayout.NORTH);
+        leftBottonNorthPanel.add(chatRoom, BorderLayout.CENTER);
+        leftBottomPanel.add(leftBottonNorthPanel, BorderLayout.CENTER);
+        infoPanel = new InfoPanel();
+        infoPanel.setPreferredSize(new Dimension(150, 80));
+        leftBottomPanel.add(infoPanel, BorderLayout.NORTH);
+
 
         JTable table = userListManager.getUserList();
         JScrollPane sp = new JScrollPane(table);
@@ -196,7 +268,8 @@ initCustomComponents();
 
         userListPanel.setLayout(new BorderLayout());
         //JLabel allLabel=new JLabel("Participants");
-        //userListPanel.add(allLabel, BorderLayout.NORTH);
+        userListHeaderPanel.setPreferredSize(new Dimension(150, 50));
+        userListPanel.add(userListHeaderPanel, BorderLayout.NORTH);
         userListPanel.add(sp, BorderLayout.CENTER);
         userListPanel.add(userItemsPanel, BorderLayout.SOUTH);
         userListPanel.setBackground(Color.WHITE);
@@ -212,8 +285,8 @@ initCustomComponents();
         mainSplitPane.setDividerLocation(ss.width / 4);
         leftSplitPane.setDividerLocation((ss.height / 2) - 80);
 
-        userListTabbedPane.addTab("Participants", userListPanel);
-        topLeftPanel.add(userListTabbedPane, BorderLayout.CENTER);
+        //userListTabbedPane.addTab("Participants", userListPanel);
+        topLeftPanel.add(userListPanel, BorderLayout.CENTER);
         parent.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -223,6 +296,10 @@ initCustomComponents();
             }
         });
 
+    }
+
+    public UserListHeaderPanel getUserListHeaderPanel() {
+        return userListHeaderPanel;
     }
 
     public AudioChatClient getAudioChatClient() {
@@ -241,7 +318,7 @@ initCustomComponents();
         return mediaServerHost;
     }
 
-    public RealtimeToolBar getToolBar() {
+    public ClassicToolbar getToolBar() {
         return toolBar;
     }
 
@@ -309,6 +386,10 @@ initCustomComponents();
         this.whiteBoardSurface = whiteBoardSurface;
     }
 
+    public JButton getAlertButton() {
+        return alertButton;
+    }
+
     /**
      * Diplays the chat room (frame)
      */
@@ -333,6 +414,30 @@ initCustomComponents();
         dockTabbedPane.remove(0);
     }
 
+    public InfoPanel getInfoPanel() {
+        return infoPanel;
+    }
+
+    public void showSurveyFrame(ArrayList<QuestionPacket> questions, String title) {
+        SurveyFrame fr = new SurveyFrame(this);
+        fr.setQuestions(questions, title);
+        fr.setTitle(title);
+        fr.setAlwaysOnTop(true);
+        fr.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
+        fr.setLocationRelativeTo(null);
+        fr.setVisible(true);
+    }
+
+    public void showQuestionFrame(QuestionPacket questions, String title) {
+        AnsweringFrame fr = new AnsweringFrame(questions, this);
+
+        fr.setTitle(title);
+        fr.setAlwaysOnTop(true);
+        fr.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
+        fr.setLocationRelativeTo(null);
+        fr.setVisible(true);
+    }
+
     /**
      * Connect to server
      */
@@ -348,6 +453,7 @@ initCustomComponents();
                     JOptionPane.showMessageDialog(ClassroomMainFrame.this, msg);
                     showErrorMessage(msg);
                 }
+
             }
         };
         t.start();
@@ -416,6 +522,7 @@ initCustomComponents();
         if (chatRoom != null) {
             chatRoom.update(chatLogPacket);
         }
+
     }
 
     /**
@@ -436,11 +543,14 @@ initCustomComponents();
         if (username == null || username.startsWith("Language")) { //not logging on through KEWL for dev, so give random user name
 
             username = "Guest" + new java.util.Random().nextInt(200);
-            fullnames = username;
+            fullnames =
+                    username;
         }
+
         int xuserLevel = UserLevel.GUEST; //assume guest unless set differently in applet param
 
-        xuserLevel = UserLevel.getUserLevel(userLevel.toUpperCase());
+        xuserLevel =
+                UserLevel.getUserLevel(userLevel.toUpperCase());
 
         return new User(xuserLevel, fullnames, username, host, 22225, isPresenter,
                 sessionId, sessionTitle, slidesDir, false, siteRoot, slidesServerId);
@@ -476,6 +586,7 @@ initCustomComponents();
         infoField = new javax.swing.JLabel();
         participantsField = new javax.swing.JLabel();
         timerField = new javax.swing.JLabel();
+        alertButton = new javax.swing.JButton();
         mainSplitPane = new javax.swing.JSplitPane();
         leftSplitPane = new javax.swing.JSplitPane();
         leftBottomPanel = new javax.swing.JPanel();
@@ -501,6 +612,10 @@ initCustomComponents();
         timerField.setText("0.00 ");
         timerField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         footerPanel.add(timerField);
+
+        alertButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        alertButton.setContentAreaFilled(false);
+        footerPanel.add(alertButton);
 
         getContentPane().add(footerPanel, java.awt.BorderLayout.PAGE_END);
 
@@ -555,30 +670,30 @@ initCustomComponents();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ClassroomMainFrame().setVisible(true);
             }
         });
     }
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JButton alertButton;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenuItem;
     private javax.swing.JPanel footerPanel;
     private javax.swing.JLabel infoField;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel leftBottomPanel;
-    private javax.swing.JSplitPane leftSplitPane;
+    protected javax.swing.JSplitPane leftSplitPane;
     private javax.swing.JSplitPane mainSplitPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel participantsField;
     private javax.swing.JLabel timerField;
     private javax.swing.JPanel topLeftPanel;
     // End of variables declaration//GEN-END:variables
-
 }
