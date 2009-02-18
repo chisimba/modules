@@ -17,8 +17,8 @@
  */
 package avoir.realtime.common;
 
-
 import avoir.realtime.chat.PrivateChatFrame;
+import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.common.packet.AckPacket;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.user.User;
@@ -160,7 +160,10 @@ public abstract class TCPSocket {
     }
 
     public abstract void startSession();
+
     public abstract Map<String, PrivateChatFrame> getPrivateChats();
+
+    public abstract SessionTimer getSessionTimer();
 
     public void setReader(ObjectInputStream reader) {
         this.reader = reader;
