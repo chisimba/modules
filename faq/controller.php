@@ -19,17 +19,17 @@ class faq extends controller
     protected $objGroup;
 
     protected $objSysConfig;
-    
+
     public $objLanguage;
-    
+
     public $objFaqCategories;
-    
+
     public $objFaqEntries;
-    
+
     public $contextId;
-    
+
     public $contextTitle;
-    
+
     public $categoryId;
 
     /**
@@ -43,7 +43,7 @@ class faq extends controller
         $this->objLanguage = $this->getObject('language','language');
         $this->objFaqCategories = $this->getObject('dbfaqcategories');
         $this->objFaqEntries = $this->getObject('dbfaqentries');
-        
+        $this->objTags = $this->getObject('dbfaqtags');
         // Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
 
@@ -64,15 +64,15 @@ class faq extends controller
         if ($this->isRestricted($action) && !$this->userHasModifyAccess()) {
             return 'access_denied_tpl.php';
         }
-        
+
         // Set the error string
         $error = "";
         $this->setVarByRef("error", $error);
-        
+
         // Get the context
         $this->objDbContext = &$this->getObject('dbcontext','context');
         $this->contextCode = $this->objDbContext->getContextCode();
-        
+
         // If we are not in a context...
         if ($this->contextCode == null) {
             $this->contextId = "root";
@@ -88,13 +88,13 @@ class faq extends controller
             $this->contextTitle = $contextRecord['title'];
             $this->setVarByRef('contextTitle', $this->contextTitle);
         }
-        
+
         $numCategories = $this->objFaqCategories->getNumContextCategories($this->contextId);
-        
+
         // Get category from URL
         $this->categoryId = $this->getParam('category');
         $this->setVarByRef('categoryId', $this->categoryId);
-        
+
         // return the name of the template to use  because it is a page content template
         // the file must live in the templates/content subdir of the module directory
         switch($action){
@@ -110,6 +110,9 @@ class faq extends controller
             // Edit an entry
             case "edit":
                 return $this->edit();
+            case "tag":
+             $tag = $this->getParam('tag');
+                return $this->viewByTag($tag);
             //Edit confirm
             case "editconfirm":
                 return $this->editConfirm();
@@ -117,10 +120,10 @@ class faq extends controller
             case "deleteconfirm":
                 return $this->deleteConfirm();
             // Default : view entries
-            
+
 
             // Add an entry
-            case "addcategory": 
+            case "addcategory":
                 return "add_category_tpl.php";
             // Add Confirm
             case "addcategoryconfirm":
@@ -150,10 +153,10 @@ class faq extends controller
                 return $this->listCategories();
         } // switch
 
- 
+
     }
      /**
-    * 
+    *
     * This is a method that overrides the parent class to stipulate whether
     * the current module requires login. Having it set to false gives public
     * access to this module including all its actions.
@@ -161,22 +164,38 @@ class faq extends controller
     * @access public
     * @return bool FALSE
     */
-    public function requiresLogin($action) 
+    public function requiresLogin($action)
     {
         $requiresLogin = array ('add', 'addcategory');
-        
+
         if (in_array($action, $requiresLogin)) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
-    
+
     public function listCategories()
     {
+        $tagCloud = $this->objTags->getTagCloud();
+        $this->setVarByRef('tagCloud', $tagCloud);
+
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
         return "main_tpl.php";
+    }
+  /**
+    * View all FAQ entries by tag.
+    */
+    public function viewByTag($tag)
+    {
+        $list = $this->objFaqEntries->listAllByTag($tag);
+        $this->setVarByRef('list', $list);
+
+       // Get all the categories
+        $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
+        $this->setVarByRef('categories', $categories);
+        return "view_tpl.php";
     }
 
     /**
@@ -184,16 +203,14 @@ class faq extends controller
     */
     public function view()
     {
-        
-        
-        // Get all FAQ entries
+       // Get all FAQ entries
        // $list = $this->objFaqEntries->listAll($this->contextId, $this->categoryId);
        // $this->setVarByRef('list', $list);
-        
+
         // Get all FAQ entries
         $list = $this->objFaqEntries->listAllWithNav($this->contextId, $this->categoryId);
         $this->setVarByRef('list', $list);
-        
+
         // Get all the categories
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
@@ -208,7 +225,7 @@ class faq extends controller
         // Get all the categories
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
-        
+
         return "add_tpl.php";
     }
 
@@ -220,7 +237,7 @@ class faq extends controller
         $question = $this->getParam("question");
         $answer = $this->getParam("answer");
         $category = $this->getParam("category");
-        
+        $tags = $this->getParam("faqtags");
         // Insert a record into the database
         $this->objFaqEntries->insertSingle(
             $this->contextId,
@@ -228,7 +245,8 @@ class faq extends controller
             $question,
             $answer,
             $this->objUser->userId(),
-            mktime()
+            mktime(),
+            $tags
         );
 
         return $this->nextAction('view', array('category'=>$category));
@@ -259,7 +277,7 @@ class faq extends controller
         $question = $this->getParam('question');
         $answer = $this->getParam('answer');
         $category = $this->getParam('category');
-        
+
         // Update the record in the database
         $this->objFaqEntries->updateSingle(
             $id,
@@ -269,7 +287,7 @@ class faq extends controller
             $this->objUser->userId(),
             mktime()
         );
-        
+
         return $this->nextAction('view', array('category'=>$category));
     }
 
@@ -313,8 +331,8 @@ class faq extends controller
      {
          return $this->getObject($name, 'htmlelements');
      }
-     
-    
+
+
 
     /**
     * Confirm add.
@@ -322,20 +340,21 @@ class faq extends controller
     public function addCategoryConfirm()
     {
         $categoryName = $this->getParam("category");
-        
+       
+
         if (trim($categoryName) == '') {
             return $this->nextAction('addcategory', array('error'=>'nothingentered'));
         } else {
             // Insert the category into the database
             $result = $this->objFaqCategories->insertSingle(
-                $this->contextId, 
-                $categoryName, 
+                $this->contextId,
+                $categoryName,
                 $this->objUser->userId()
             );
             return $this->nextAction(NULL, array('message'=>'categoryadded', 'result'=>$result));
         }
     }
-    
+
     /**
     * Edit a FAQ entry.
     */
@@ -355,8 +374,8 @@ class faq extends controller
         $categoryId = $_POST["category"];
         // Update the record in the database
         $this->objFaqCategories->updateSingle(
-            $id, 
-            $categoryId, 
+            $id,
+            $categoryId,
             $this->objUser->userId(),
             mktime()
         );
@@ -370,7 +389,7 @@ class faq extends controller
     {
         $id = $this->getParam('id', null);
         // Delete the record from the database
-        $this->objFaqCategories->deleteSingle($id); 
+        $this->objFaqCategories->deleteSingle($id);
         $this->objFaqEntries->delete("categoryid",$id);
         return $this->nextAction(NULL);
     }

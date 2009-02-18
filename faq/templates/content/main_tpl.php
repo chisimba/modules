@@ -16,13 +16,22 @@ $iconAdd->alt = $objLanguage->languageText("faq_addnewentry", "faq");
 $iconAdd->title = $objLanguage->languageText("faq_addnewentry", "faq");
 $iconAdd->align=false;
 $objLink->link = $iconAdd->show();
-        
+
+$tagCloudLink = new link ($this->uri(array('action'=>'tagcloud')));
+$tagCloudLink->link = 'View All Tags';
+
+$tagCloudContent = '<span style="text-align:center">' . $tagCloud . '</span><br />'.$tagCloudLink->show();
+
+
 // Add the Icon to the heading
 $objHeading->str = $contextTitle.': '.$objLanguage->languageText("phrase_faq","system", 'Frequently Asked Questions');
+// Make a tabbed box
+$objTabs = $this->newObject('tabcontent', 'htmlelements');
+$objTabs->width = '95%';
 
 // Show Add Item link
 if (count($categories) > 0 && $this->userHasModifyAccess()) {
-    $objHeading->str .= ' '.$objLink->show();
+    $objHeading->str .= ' '.$objLink->show().'<br>'.$tagCloudContent;
 }
 
 echo $objHeading->show();
@@ -31,41 +40,41 @@ if (count($categories) == 0) {
     echo '<div class="noRecordsMessage">No FAQ Categories available</div>';
 } else {
     echo '<ol>';
-    
+
     $objIcon = $this->newObject('geticon','htmlelements');
-    
+
     $objIcon->setIcon('edit');
     $objIcon->alt=$objLanguage->languageText("word_edit");
     $objIcon->title=$objLanguage->languageText("word_edit");
-    
+
     $editIcon = $objIcon->show();
-    
+
     $objIcon->setIcon('delete');
     $objIcon->alt=$objLanguage->languageText("word_delete");
     $objIcon->title=$objLanguage->languageText("word_delete");
-    
+
     $deleteIcon = $objIcon->show();
-    
+
     foreach ($categories as $item)
     {
-        
+
         $numItems = $this->objFaqEntries->getNumCategoryItems($item['id']);
-        
+
         // Create link to category
         $categoryLink = new link($this->uri(array('action'=>'view','category'=>$item['id'])));
         $categoryLink->link = $item['categoryname'];
         $categoryLink->title = $this->objLanguage->languageText('mod_faq_viewcategory', 'faq');
-        
+
         echo '<li>'.$categoryLink->show().' ('.$numItems.')';
-        
+
         if ($this->userHasModifyAccess()) {
             // Create the edit link.
             $editLink = new link($this->uri(array('action'=>'editcategory', 'id'=>$item['id'])));
             $editLink->link = $editIcon;
-            
+
             // Create the delete link.
             $objConfirm = $this->newObject('confirm','utilities');
-            
+
             $objConfirm->setConfirm(
                 $deleteIcon,
                 $this->uri(array(
@@ -74,10 +83,10 @@ if (count($categories) == 0) {
                 )),
                 $objLanguage->languageText('phrase_suredelete')
             );
-            
+
             echo ' &nbsp; '.$editLink->show().' '.$objConfirm->show();
         }
-        
+
         echo '</li>';
     }
     echo '</ol>';
@@ -113,13 +122,33 @@ echo $objHeading->show();
 $this->loadClass("form","htmlelements");
 $this->loadClass("textinput","htmlelements");
 $this->loadClass("button","htmlelements");
+$this->loadClass('textarea', 'htmlelements');
+$this->loadClass('label', 'htmlelements');
+
 
 // Create the form.
 $form = new form("createcategory", $this->uri(array('action'=>'addcategoryconfirm')));
+$formTable = $this->newObject('htmltable', 'htmlelements');
+
 
 $textInput = new textinput("category", NULL);
 $textInput->size = 40;
 
+
+$taglabel = new label ($this->objLanguage->languageText('mod_faq_tags', 'faq', 'Category Tag'), 'tagslabel');
+$catlabel = new label ($this->objLanguage->languageText('mod_faq_category', 'faq', 'Category'), 'catlabel');
+$faqTags = new textarea('faqtags');
+
+$formTable->startRow();
+//$formTable->addCell($catlabel->show());
+//$formTable->addCell($textInput->show().'<br />&nbsp;');
+$formTable->endRow();
+/*
+$formTable->startRow();
+$formTable->addCell($taglabel->show());
+$formTable->addCell($faqTags->show().'<br />&nbsp;');
+$formTable->endRow();
+*/
 $form->setDisplayType(1);
 $form->addToForm($textInput->show());
 $form->addToForm("&nbsp;");
