@@ -15,6 +15,7 @@ import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.Constants;
 
 
+import avoir.realtime.common.Pointer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -32,6 +33,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.RoundRectangle2D;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -61,7 +63,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dash1, 0.0f);
     private float strokeWidth = 5;
     private ClassroomMainFrame mf;
-    private Rectangle pointerSurface = new Rectangle();
+    private RoundRectangle2D.Double pointerSurface = new RoundRectangle2D.Double();
     private boolean drawingEnabled = true;
     private Vector<Item> items = new Vector<Item>();
     private JTextField textField = new JTextField();
@@ -72,7 +74,9 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     private Graphics2D graphics;
     public JComboBox fontSizeField = new JComboBox();
     public JComboBox fontNamesField = new JComboBox();
-    public JToggleButton boldButton,  italicButton,  underButton;
+    public JToggleButton boldButton = new JToggleButton();
+    public JToggleButton italicButton = new JToggleButton();
+    public JToggleButton underButton = new JToggleButton();
     private Vector<Item> pointerLocations = new Vector<Item>();
     private int pointer = Constants.WHITEBOARD;
     protected ImageIcon warnIcon = ImageUtil.createImageIcon(this, "/icons/warn.png");
@@ -101,6 +105,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
     protected double magY = 1;
     protected boolean gotSize = false;
     int slideWidth, slideHeight;
+    int angle = 40;
 
     /** Creates new form WhiteboardSurface */
     public WhiteboardSurface(ClassroomMainFrame mf) {
@@ -110,7 +115,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         whiteboardManager = new WhiteboardUtil(mf, this);
 
-        pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+        pointerSurface = new RoundRectangle2D.Double(0, 0, slideWidth, slideHeight, angle, angle);
 
 
     }
@@ -415,7 +420,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             slideHeight = (int) (this.getSize().getHeight() * 0.8);
             if (slideHeight > 0 && slideHeight > 0) {
                 gotSize = false;
-                pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+                pointerSurface = new RoundRectangle2D.Double(0, 0, slideWidth, slideHeight, angle, angle);
 
             }
 
@@ -425,12 +430,18 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         if (XOR) {
             g2.setXORMode(getBackground());
         }
-        int xx = (getWidth() - pointerSurface.width) / 2;
-        int yy = (getHeight() - pointerSurface.height) / 2;
+        int xx = (getWidth() - (int) pointerSurface.getWidth()) / 2;
+        int yy = (getHeight() - (int) pointerSurface.getHeight()) / 2;
 
-        g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
-
+        //  g2.drawRect(xx, yy, (int)pointerSurface.getWidth(), (int)pointerSurface);
+        pointerSurface = new RoundRectangle2D.Double(xx, yy, slideWidth, slideHeight, angle, angle);
+        g2.setColor(Color.GRAY);//new Color(255, 153, 51));
+        g2.setStroke(new BasicStroke(4f));
+        g2.draw(pointerSurface);
         paintSlides(g2);
+        g2.setStroke(new BasicStroke());
+        g2.setColor(Color.BLACK);
+
 
         if (image != null) {
             graphics.drawImage(image.getImage(), 100, 100, this);
@@ -453,9 +464,14 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             graphics.drawString(infoMessage, 60, 80);
         }
         if (currentPointer != null) {
-            graphics.drawImage(currentPointer.getIcon().getImage(),
-                    (int) pointerSurface.x + currentPointer.getPoint().x - 10,
-                    (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
+  /*          graphics.drawImage(currentPointer.getIcon().getImage(),
+                    (int) pointerSurface.getX() + currentPointer.getPoint().x - 10,
+                    (int) pointerSurface.getY() + currentPointer.getPoint().y - 10, this);
+    */
+                   graphics.drawImage(currentPointer.getIcon().getImage(),
+                    currentPointer.getPoint().x - 10,
+                  currentPointer.getPoint().y - 10, this);
+
         }
 
         g2.setStroke(new BasicStroke());
