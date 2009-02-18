@@ -51,7 +51,7 @@ public class LoginFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Unable to connecto to the server");
             return;
         }
-        new AppShareFrame(tcpClient, sessionId).setVisible(true);
+        new AppShareFrame(null, sessionId).setVisible(true);
         dispose();
     }
 
