@@ -16,7 +16,7 @@ public class PresencePacket implements RealtimePacket {
     private int presenceType;
     private boolean showIcon;
     private String userName;
-    private boolean forward;
+    private boolean forward=true;
 
     public PresencePacket(String sessionId, int presenceType, boolean showIcon, String userName) {
         this.sessionId = sessionId;
