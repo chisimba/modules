@@ -5,6 +5,8 @@
 package avoir.realtime.classroom.whiteboard;
 
 import avoir.realtime.classroom.ClassroomMainFrame;
+import avoir.realtime.common.Constants;
+
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.classroom.whiteboard.item.Item;
 import avoir.realtime.classroom.whiteboard.item.Oval;
@@ -12,8 +14,6 @@ import avoir.realtime.classroom.whiteboard.item.Pen;
 import avoir.realtime.classroom.whiteboard.item.Rect;
 import avoir.realtime.classroom.whiteboard.item.Txt;
 import avoir.realtime.classroom.whiteboard.item.WBLine;
-import avoir.realtime.common.Constants;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -25,6 +25,7 @@ import java.awt.RenderingHints;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Line2D;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 import java.util.Vector;
@@ -55,7 +56,6 @@ public class WhiteboardUtil {
         }
         return state;
     }
-
     /**
      * Resizes an image using a Graphics2D object backed by a BufferedImage.
      * @param srcImg - source image to scale
@@ -87,7 +87,7 @@ public class WhiteboardUtil {
     private void doActualItemPainting(
             Item temp,
             Graphics2D g2,
-            Rectangle pointerSurface,
+            RoundRectangle2D.Double pointerSurface,
             Vector<ImageIcon> imgs,
             Rectangle currentSelectionArea,
             Item selectedItem,
@@ -127,7 +127,9 @@ public class WhiteboardUtil {
             for (int k = 0; k <
                     v.size(); k++) {
                 WBLine l = v.elementAt(k);
-                g2.drawLine(l.x1 + pointerSurface.x, l.y1 + pointerSurface.y, l.x2, l.y2);
+//                g2.drawLine(l.x1 + (int)pointerSurface.getX(), l.y1 + (int)pointerSurface.getY(), l.x2, l.y2);
+                g2.drawLine(l.x1, l.y1, l.x2, l.y2);
+
             }
 
         }
@@ -222,7 +224,7 @@ public class WhiteboardUtil {
             BasicStroke dashed,
             boolean dragging,
             Item selectedItem,
-            Rectangle pointerSurface,
+            RoundRectangle2D.Double pointerSurface,
             Vector<ImageIcon> imgs,
             Rectangle ovalRect1,
             Rectangle ovalRect2,
@@ -234,10 +236,10 @@ public class WhiteboardUtil {
             Item temp = items.elementAt(i);
             if (dragging && selectedItem != null && temp != null) {
                 if (!temp.getId().equals(selectedItem.getId())) {
-                    this.doActualItemPainting(temp, g2, pointerSurface, imgs, pointerSurface, selectedItem, items, dashed);
+                    this.doActualItemPainting(temp, g2, pointerSurface, imgs,pointerSurface.getBounds() , selectedItem, items, dashed);
                 }
             } else {
-                this.doActualItemPainting(temp, g2, pointerSurface, imgs, pointerSurface, selectedItem, items, dashed);
+                this.doActualItemPainting(temp, g2, pointerSurface, imgs, pointerSurface.getBounds(), selectedItem, items, dashed);
             }
         }
 
