@@ -4,7 +4,6 @@
  */
 package avoir.realtime.classroom;
 
-import avoir.realtime.chat.PrivateChat;
 import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.common.ImageUtil;
 
@@ -14,27 +13,43 @@ import avoir.realtime.common.user.UserLevel;
 import avoir.realtime.common.user.UserObject;
 import avoir.realtime.common.PresenceConstants;
 import avoir.realtime.classroom.packets.PresencePacket;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
+import java.util.EventObject;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.tree.TreeCellEditor;
 
 /**
  *
@@ -43,6 +58,8 @@ import javax.swing.table.TableColumn;
 public class UserListManager {
 
     private JPopupMenu popup = new JPopupMenu();
+    private JMenuItem giveMicItem = new JMenuItem("Give Microphone");
+    private JMenuItem removeMicItem = new JMenuItem("Deny Microphone");
     private JMenuItem allowControlItem = new JMenuItem("Allow Control");
     private JMenuItem stopControlItem = new JMenuItem("Stop Control");
     private JCheckBoxMenuItem chatControlItem = new JCheckBoxMenuItem("Disable Text Chat");
@@ -60,6 +77,12 @@ public class UserListManager {
     ImageIcon laughIcon = ImageUtil.createImageIcon(this, "/icons/laugh.jpeg");
     ImageIcon applaudIcon = ImageUtil.createImageIcon(this, "/icons/applaud.jpeg");
     ImageIcon editWBIcon = ImageUtil.createImageIcon(this, "/icons/editwhiteboard.png");
+    ImageIcon userActiveIcon = ImageUtil.createImageIcon(this, "/icons/user_green.png");
+    ImageIcon userOrangeIcon = ImageUtil.createImageIcon(this, "/icons/user_orange.png");
+    ImageIcon userRedIcon = ImageUtil.createImageIcon(this, "/icons/user_red.png");
+    ImageIcon soundIcon = ImageUtil.createImageIcon(this, "/icons/sound.png");
+    ImageIcon correctAnswerIcon = ImageUtil.createImageIcon(this, "/icons/tick.png");
+    ImageIcon wrongAnswerIcon = ImageUtil.createImageIcon(this, "/icons/cross16.png");
     ParticipantListingTableModel model;
     int selectedRow = 0;
     int DEFAULT_SIZE = 0;
@@ -82,7 +105,7 @@ public class UserListManager {
             ex.printStackTrace();
         }
         sendPrivateMessageItem.setEnabled(false);
-
+        table.setTableHeader(null);
         table.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -98,7 +121,9 @@ public class UserListManager {
                 }
             }
         });
-
+        table.setFont(new Font("Dialog", 0, 18));
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
         sendPrivateMessageItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -137,6 +162,18 @@ public class UserListManager {
                 }
             }
         });
+
+
+        removeMicItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        giveMicItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
         allowControlItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -151,8 +188,10 @@ public class UserListManager {
 
         table.setGridColor(new Color(238, 238, 238));
         if (mf.getUser().isPresenter()) {
-            popup.add(allowControlItem);
-            popup.add(stopControlItem);
+            //popup.add(allowControlItem);
+            // popup.add(stopControlItem);
+            popup.add(giveMicItem);
+            popup.add(removeMicItem);
             popup.add(chatControlItem);
             popup.addSeparator();
         }
@@ -181,7 +220,10 @@ public class UserListManager {
         popup.add(sendPrivateMessageItem);
         table.setShowHorizontalLines(false);
         stopControlItem.setEnabled(false);
-        table.setDefaultRenderer(UserObject.class, new LRenderer());
+        // table.setDefaultRenderer(UserObject.class, new LRenderer());
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
+
     }
 
     private void showPrivateChatFrame(User usr) {
@@ -218,20 +260,27 @@ public class UserListManager {
     }
 
     private void decorateTable() {
-        table.setDefaultRenderer(UserObject.class, new LRenderer());
+        //   table.setDefaultRenderer(UserObject.class, new LRenderer());
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
+
         TableColumn column = null;
         if (model != null) {
             for (int i = 0; i < model.getColumnCount(); i++) {
                 column = table.getColumnModel().getColumn(i);
                 if (i == 4) {
                     column.setPreferredWidth(280);
-
+                } else if (i == 3) {
+                    column.setPreferredWidth(100);
                 } else {
                     column.setPreferredWidth(20);
                 }
             }
         }
-        table.setDefaultRenderer(UserObject.class, new LRenderer());
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
+
+        // table.setDefaultRenderer(UserObject.class, new LRenderer());
         mf.getParticipantsField().setText(userList.size() + " " + (userList.size() > 1 ? "Participants" : "Partcipant"));
 
     }
@@ -243,7 +292,10 @@ public class UserListManager {
             usr.setOnline(true);
             addUser(usr, i);
         }
-        table.setDefaultRenderer(UserObject.class, new LRenderer());
+        //     table.setDefaultRenderer(UserObject.class, new LRenderer());
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
+
         model = new ParticipantListingTableModel();
         table.setModel(model);
         decorateTable();
@@ -264,8 +316,14 @@ public class UserListManager {
 
         @Override
         public void setValue(Object val) {
+            System.out.println("A " + val.getClass());
             if (val instanceof ImageIcon) {
                 this.setIcon((ImageIcon) val);
+            }
+            if (val instanceof Score) {
+                Score score = (Score) val;
+                this.setIcon(score.getIcon());
+                this.setText(score.getText());
             }
             if (val instanceof UserObject) {
                 UserObject userObject = (UserObject) val;
@@ -306,9 +364,13 @@ public class UserListManager {
 
             setFont(new java.awt.Font("Dialog", 0, fontSize));
             this.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-
             if (val instanceof ImageIcon) {
                 this.setIcon((ImageIcon) val);
+            }
+            if (val instanceof Score) {
+                Score score = (Score) val;
+                this.setIcon(score.getIcon());
+                this.setText(score.getText());
             }
             if (val instanceof UserObject) {
                 UserObject userObject = (UserObject) val;
@@ -373,12 +435,37 @@ public class UserListManager {
                 return;
             }
         }
-        user.setOnline(true);
         addUser(user, userList.size());
         model = new ParticipantListingTableModel();
         table.setModel(model);
         decorateTable();
         mf.getParticipantsField().setText(userList.size() + " Participants");
+        mf.getUserListHeaderPanel().setCount(userList.size());
+        Color idleColor = Color.ORANGE;
+        JLabel display = new JLabel();
+        JPanel pp = new JPanel(new BorderLayout());
+        pp.add(display, BorderLayout.CENTER);
+        display.setFont(new Font("Dialog", 1, 18));
+        display.setBackground(Color.WHITE);
+        ImageIcon icon = userActiveIcon;
+        pp.setBackground(Color.WHITE);
+
+        if (user.isOrangleIdle()) {
+            icon = userOrangeIcon;
+            display.setFont(new Font("Dialog", 2, 18));
+
+        }
+        if (user.isRedIdle()) {
+            idleColor = Color.RED;
+            icon = userRedIcon;
+            display.setFont(new Font("Dialog", 2, 18));
+
+        }
+        display.setForeground(idleColor);
+        display.setText(user.getUserName());
+        model.setValueAt(pp, user.isPresenter() ? 0 : model.getRowCount() - 1, 4);
+        model.setValueAt(icon, user.isPresenter() ? 0 : model.getRowCount() - 1, 0);
+
     }
 
     private UserObject decorateUser(UserObject userObject, User usr) {
@@ -392,7 +479,7 @@ public class UserListManager {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (A) " + presenter;// ");//[" + usr.getIpAddress() + "]");
@@ -401,7 +488,7 @@ public class UserListManager {
                 userObject.setColor(new Color(0, 131, 0));
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (A) " + presenter;
@@ -413,7 +500,7 @@ public class UserListManager {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (S) " + presenter;
@@ -421,7 +508,7 @@ public class UserListManager {
                 userObject.setColor(Color.BLACK);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (S) " + presenter;
@@ -433,7 +520,7 @@ public class UserListManager {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (L) " + presenter;
@@ -441,7 +528,7 @@ public class UserListManager {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (L) " + presenter;
@@ -453,7 +540,7 @@ public class UserListManager {
                 userObject.setColor(Color.ORANGE);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
                 display = usr.getUserName() + " (G) " + presenter;
@@ -461,7 +548,7 @@ public class UserListManager {
                 userObject.setColor(Color.DARK_GRAY);
                 if (usr.getUserName().trim().equals(mf.getUser().getUserName().trim())) {
                     presenter += " [Me]";
-                    userObject.setColor(Color.BLUE);
+                    userObject.setColor(Color.ORANGE);
 
                 }
 
@@ -485,12 +572,21 @@ public class UserListManager {
         userObject.setMicIcon(usr.isMicOn() ? micIcon : blankIcon);
         userObject.setPresenceIcon(usr.isEditOn() ? editIcon : blankIcon);
         userObject.setChatIcon(usr.isChatEnabled() ? chatOnIcon : chatOffIcon);
+        if (usr.isOrangleIdle()) {
+            userObject.setActiveIcon(userOrangeIcon);
+        }
+        if (usr.isRedIdle()) {
+            userObject.setActiveIcon(userRedIcon);
+        }
+
+        userObject.setSpeakingIcon(usr.isSpeaking() ? soundIcon : blankIcon);
         if (usr.isPresenter()) {
             userList.add(0, decorateUser(userObject, usr));
         } else {
             userList.addElement(decorateUser(userObject, usr));
         }
         mf.getParticipantsField().setText(userList.size() + " Participants");
+        mf.getUserListHeaderPanel().setCount(userList.size());
 
     }
 
@@ -505,13 +601,57 @@ public class UserListManager {
         }
     }
 
-    public void setAllUsersOnline(boolean state) {
+    public void updateUserAnswerStatus(User usr, boolean state) {
 
         for (int i = 0; i < userList.size(); i++) {
             UserObject userObject = userList.elementAt(i);
 
+            if (userObject.getUser().getUserName().equals(usr.getUserName())) {
+                userObject.setResultIcon(state ? correctAnswerIcon : wrongAnswerIcon);
+                userObject.setUser(usr);
+                int correctScores = userObject.getCorrectScores();
+                int wrongScrores = userObject.getWrongScores();
+                if (state) {
+                    correctScores++;
+                } else {
+                    wrongScrores++;
+                }
+                userObject.setCorrectScores(correctScores);
+                userObject.setWrongScores(wrongScrores);
+                userList.set(i, userObject);
+                setUser(i, PresenceConstants.ANSWER_ICON, state, true);
+            }
+        }
+    }
+
+    public void setAllUsersOnline(boolean state) {
+
+        for (int i = 0; i < userList.size(); i++) {
+            UserObject userObject = userList.elementAt(i);
+            String username = userObject.getUser().getUserName();
+            JLabel display = new JLabel();
+            JPanel pp = new JPanel(new BorderLayout());
+            pp.add(display, BorderLayout.CENTER);
+            display.setBackground(Color.WHITE);
+            pp.setBackground(Color.WHITE);
+            //   display.setBorderPainted(false);
+            //  display.setContentAreaFilled(false);
+            display.setFont(new Font("Dialog", 0, 18));
+
+            if (username.equals(mf.getUser().getUserName())) {
+                display.setText(username + "-ME");
+                display.setForeground(Color.ORANGE);
+
+            } else {
+                if (userObject.getUser().isPresenter()) {
+                    display.setForeground(Color.ORANGE);
+                } else {
+                    display.setForeground(new Color(0, 131, 0));
+                }
+                display.setText(username);
+            }
             userObject.setOnline(state);
-            model.setValueAt(userObject, i, 3);
+            model.setValueAt(display, i, 3);
             userList.set(i, decorateUser(userObject, userObject.getUser()));
         }
     }
@@ -536,8 +676,10 @@ public class UserListManager {
      * the user raised hand
      */
     public void setUser(int index, int iconType, boolean show, boolean online) {
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
 
-        table.setDefaultRenderer(UserObject.class, new LRenderer());
+        //table.setDefaultRenderer(UserObject.class, new LRenderer());
         UserObject userObject;
         try {
             userObject = userList.elementAt(index);
@@ -548,25 +690,94 @@ public class UserListManager {
         userObject.setOnline(online);
         User usr = userObject.getUser();
         usr.setOnline(online);
+        String username = userObject.getUser().getUserName();
+        JLabel display = new JLabel();
+        JPanel pp = new JPanel(new BorderLayout());
+        pp.setBackground(Color.WHITE);
+        pp.add(display, BorderLayout.CENTER);
+        display.setBackground(Color.WHITE);
+        pp.setBackground(Color.WHITE);
+        display.setFont(new Font("Dialog", 0, 18));
+
+        if (username.equals(mf.getUser().getUserName())) {
+            display.setText(username + "-ME");
+            display.setForeground(Color.ORANGE);
+
+        } else {
+            if (userObject.getUser().isPresenter()) {
+                display.setForeground(Color.ORANGE);
+            } else {
+                display.setForeground(new Color(0, 131, 0));
+            }
+            display.setText(username);
+        }
+
         ImageIcon icon = blankIcon;
-        String fullNames = usr.getUserName();
-        if (iconType == PresenceConstants.SPEAKER_ICON) {
+        if (iconType == PresenceConstants.USER_IDLE_ICON) {
+            Color idleColor = Color.ORANGE;
             if (show) {
-                icon = speakerIcon;
+                icon = userOrangeIcon;
+            } else {
+                idleColor = Color.RED;
+                icon = userRedIcon;
+            }
+            display.setForeground(idleColor);
+            display.setFont(new Font("Dialog", 2, 18));
+            model.setValueAt(pp, index, 4);
+            model.setValueAt(icon, index, 0);
+        }
+        if (iconType == PresenceConstants.SOUND_ICON) {
+            if (show) {
+                icon = soundIcon;
             } else {
                 icon = blankIcon;
             }
-            model.setValueAt(icon, index, 0);
+
+            model.setValueAt(pp, index, 4);
+            model.setValueAt(userActiveIcon, index, 0);
+            model.setValueAt(icon, index, 2);
+        }
+        if (iconType == PresenceConstants.ANSWER_ICON) {
+            if (show) {
+                icon = correctAnswerIcon;
+            } else {
+                icon = wrongAnswerIcon;
+            }
+            icon = correctAnswerIcon;
+            String txt = "<html><font color =\"green\"/>" + userObject.getCorrectScores() + " <font color =\"red\"/>" + userObject.getWrongScores();
+            if (userObject.getCorrectScores() == 0 && userObject.getWrongScores() == 0) {
+                txt = "";
+                icon = blankIcon;
+            }
+            icon = userObject.getCorrectScores() > userObject.getWrongScores() ? correctAnswerIcon : wrongAnswerIcon;
+            JButton button = new JButton(icon);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.setText(txt);
+            button.setFont(new Font("Dialog", 0, 10));
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
+            model.setValueAt(button, index, 3);
+        }
+        /*
+        if (iconType == PresenceConstants.SPEAKER_ICON) {
+        if (show) {
+        icon = speakerIcon;
+        } else {
+        icon = blankIcon;
+        }
+        model.setValueAt(icon, index, 0);
         }
 
         if (iconType == PresenceConstants.MIC_ICON) {
-            if (show) {
-                icon = micIcon;
-            } else {
-                icon = blankIcon;
-            }
-            model.setValueAt(icon, index, 1);
+        if (show) {
+        icon = micIcon;
+        } else {
+        icon = blankIcon;
         }
+        model.setValueAt(icon, index, 1);
+        }*/
 
         if (iconType == PresenceConstants.EDIT_ICON) {
             if (show) {
@@ -574,16 +785,21 @@ public class UserListManager {
             } else {
                 icon = usr.isChatEnabled() ? chatOnIcon : chatOffIcon;
             }
+            model.setValueAt(pp, index, 4);
 
-            model.setValueAt(icon, index, 3);
+            model.setValueAt(userActiveIcon, index, 0);
+            model.setValueAt(icon, index, 1);
         }
         if (iconType == PresenceConstants.EDIT_WB_ICON) {
             if (show) {
                 icon = editWBIcon;
             } else {
-                icon = blankIcon;
+                icon = usr.isChatEnabled() ? chatOnIcon : chatOffIcon;
             }
-            model.setValueAt(icon, index, 2);
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
+            model.setValueAt(icon, index, 1);
         }
 
         if (iconType == PresenceConstants.HAND_ICON) {
@@ -598,8 +814,11 @@ public class UserListManager {
                 icon = blankIcon;
                 blinking = false;
             }
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
             doBlinking(index, iconType, 500);
-            model.setValueAt(icon, index, 2);
+//            model.setValueAt(icon, index, 2);
         }
         if (iconType == PresenceConstants.LAUGHTER_ICON) {
 
@@ -612,8 +831,11 @@ public class UserListManager {
                 blinking = false;
                 icon = blankIcon;
             }
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
             doBlinking(index, iconType, 500);
-            model.setValueAt(icon, index, 2);
+        //          model.setValueAt(icon, index, 2);
         }
         if (iconType == PresenceConstants.APPLAUD_ICON) {
             userObject.setHandRaised(show);
@@ -625,8 +847,11 @@ public class UserListManager {
                 blinking = false;
                 icon = blankIcon;
             }
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
             doBlinking(index, iconType, 500);
-            model.setValueAt(icon, index, 2);
+        //        model.setValueAt(icon, index, 2);
         }
 
 
@@ -638,7 +863,10 @@ public class UserListManager {
             } else {
                 icon = blankIcon;
             }
-            model.setValueAt(icon, index, 2);
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(userActiveIcon, index, 0);
+        //      model.setValueAt(icon, index, 2);
         }
 
         if (iconType == PresenceConstants.NO_ICON) {
@@ -648,7 +876,10 @@ public class UserListManager {
             } else {
                 icon = blankIcon;
             }
-            model.setValueAt(icon, index, 2);
+
+            model.setValueAt(pp, index, 4);
+            model.setValueAt(userActiveIcon, index, 0);
+        //    model.setValueAt(icon, index, 2);
         }
 
 
@@ -670,22 +901,24 @@ public class UserListManager {
                 mf.getChatRoom().getChatIn().setText(txt);
 
             }
-            model.setValueAt(icon, index, 3);
+            model.setValueAt(pp, index, 4);
+
+            model.setValueAt(icon, index, 1);
         }
 
 
         if (iconType == PresenceConstants.STEP_OUT_ICON) {
             userObject.setActive(!show);
-            model.setValueAt(userObject, index, 3);
+            model.setValueAt(display, index, 4);
         }
         if (iconType == PresenceConstants.ONLINE_STATUS_ICON) {
 
             userObject.setOnline(online);
-            model.setValueAt(userObject, index, 3);
+            model.setValueAt(display, index, 3);
         }
 
         userList.set(index, decorateUser(userObject, usr));
-
+//table.setModel(model);
 
     }
     ImageIcon icon;
@@ -792,9 +1025,9 @@ public class UserListManager {
     class ParticipantListingTableModel extends AbstractTableModel {
 
         private String[] columnNames = {
-            "C",
-            "S", //0
-            "M",
+            "U",
+            "C", //0
+            "S",
             "P",
             "Name"
         };
@@ -808,9 +1041,45 @@ public class UserListManager {
             }
             for (int i = 0; i < userList.size(); i++) {
                 UserObject userObject = userList.elementAt(i);
+                String username = userObject.getUser().getUserName();
+                JLabel display = new JLabel();
+                JPanel pp = new JPanel(new BorderLayout());
+                pp.add(display, BorderLayout.CENTER);
+                pp.setBackground(Color.WHITE);
+                display.setBackground(Color.WHITE);
+                pp.setBackground(Color.WHITE);
+                display.setFont(new Font("Dialog", 0, 18));
+                ImageIcon icon = userActiveIcon;
+                if (username.equals(mf.getUser().getUserName())) {
+                    display.setText(username + "-ME");
+                    display.setForeground(Color.ORANGE);
 
-                Object[] row = {userObject.getSpeakerIcon(), userObject.getMicIcon(),
-                    userObject.getPresenceIcon(), userObject.getChatIcon(), userObject
+                } else {
+                    if (userObject.getUser().isPresenter()) {
+                        display.setForeground(Color.ORANGE);
+                    } else {
+                        if (userObject.getUser().isPresenter()) {
+                            display.setForeground(Color.ORANGE);
+                        } else {
+                            display.setForeground(new Color(0, 131, 0));
+                        }
+                    }
+
+                    display.setText(username);
+                }
+                if (userObject.getUser().isOrangleIdle()) {
+                    display.setForeground(Color.ORANGE);
+                    display.setFont(new Font("Dialog", 2, 18));
+                    icon = userOrangeIcon;
+                }
+
+                if (userObject.getUser().isRedIdle()) {
+                    display.setForeground(Color.RED);
+                    display.setFont(new Font("Dialog", 2, 18));
+                    icon = userRedIcon;
+                }
+                Object[] row = {icon, userObject.getChatIcon(),
+                    userObject.getSpeakingIcon(), userObject.getScore(), pp
                 };
                 data[i] = row;
             }
@@ -856,6 +1125,147 @@ public class UserListManager {
             } else {
                 return new Object().getClass();
             }
+        }
+    }
+
+    // End of variables declaration
+    class JComponentCellRenderer implements TableCellRenderer {
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            return (JComponent) value;
+        }
+    }
+
+    class JComponentCellEditor implements TableCellEditor, TreeCellEditor,
+            Serializable {
+
+        protected EventListenerList listenerList = new EventListenerList();
+        transient protected ChangeEvent changeEvent = null;
+        protected JComponent editorComponent = null;
+        protected JComponent container = null;		// Can be tree or table
+
+        public Component getComponent() {
+            return editorComponent;
+        }
+
+        public Object getCellEditorValue() {
+            return editorComponent;
+        }
+
+        public boolean isCellEditable(EventObject anEvent) {
+            return true;
+        }
+
+        public boolean shouldSelectCell(EventObject anEvent) {
+            if (editorComponent != null && anEvent instanceof MouseEvent && ((MouseEvent) anEvent).getID() == MouseEvent.MOUSE_PRESSED) {
+                Component dispatchComponent = SwingUtilities.getDeepestComponentAt(editorComponent, 3, 3);
+                MouseEvent e = (MouseEvent) anEvent;
+                MouseEvent e2 = new MouseEvent(dispatchComponent, MouseEvent.MOUSE_RELEASED,
+                        e.getWhen() + 100000, e.getModifiers(), 3, 3, e.getClickCount(),
+                        e.isPopupTrigger());
+                dispatchComponent.dispatchEvent(e2);
+                e2 = new MouseEvent(dispatchComponent, MouseEvent.MOUSE_CLICKED,
+                        e.getWhen() + 100001, e.getModifiers(), 3, 3, 1,
+                        e.isPopupTrigger());
+                dispatchComponent.dispatchEvent(e2);
+            }
+            return false;
+        }
+
+        public boolean stopCellEditing() {
+            fireEditingStopped();
+            return true;
+        }
+
+        public void cancelCellEditing() {
+            fireEditingCanceled();
+        }
+
+        public void addCellEditorListener(CellEditorListener l) {
+            listenerList.add(CellEditorListener.class, l);
+        }
+
+        public void removeCellEditorListener(CellEditorListener l) {
+            listenerList.remove(CellEditorListener.class, l);
+        }
+
+        protected void fireEditingStopped() {
+            Object[] listeners = listenerList.getListenerList();
+            // Process the listeners last to first, notifying
+            // those that are interested in this event
+            for (int i = listeners.length - 2; i >= 0; i -= 2) {
+                if (listeners[i] == CellEditorListener.class) {
+                    // Lazily create the event:
+                    if (changeEvent == null) {
+                        changeEvent = new ChangeEvent(this);
+                    }
+                    ((CellEditorListener) listeners[i + 1]).editingStopped(changeEvent);
+                }
+            }
+        }
+
+        protected void fireEditingCanceled() {
+            // Guaranteed to return a non-null array
+            Object[] listeners = listenerList.getListenerList();
+            // Process the listeners last to first, notifying
+            // those that are interested in this event
+            for (int i = listeners.length - 2; i >= 0; i -= 2) {
+                if (listeners[i] == CellEditorListener.class) {
+                    // Lazily create the event:
+                    if (changeEvent == null) {
+                        changeEvent = new ChangeEvent(this);
+                    }
+                    ((CellEditorListener) listeners[i + 1]).editingCanceled(changeEvent);
+                }
+            }
+        }
+
+        // implements javax.swing.tree.TreeCellEditor
+        public Component getTreeCellEditorComponent(JTree tree, Object value,
+                boolean isSelected, boolean expanded, boolean leaf, int row) {
+            String stringValue = tree.convertValueToText(value, isSelected,
+                    expanded, leaf, row, false);
+
+            editorComponent = (JComponent) value;
+            container = tree;
+            return editorComponent;
+        }
+
+        // implements javax.swing.table.TableCellEditor
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+
+            editorComponent = (JComponent) value;
+            container = table;
+            return editorComponent;
+        }
+    } // End of class JComponentCellEditor
+
+    class Score {
+
+        private ImageIcon icon;
+        private String text;
+
+        public Score(ImageIcon icon, String text) {
+            this.icon = icon;
+            this.text = text;
+        }
+
+        public ImageIcon getIcon() {
+            return icon;
+        }
+
+        public void setIcon(ImageIcon icon) {
+            this.icon = icon;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
     }
 }
