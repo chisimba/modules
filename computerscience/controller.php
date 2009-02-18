@@ -97,6 +97,16 @@
                     return 'editadd_tpl.php';
                     break;
 
+                    case 'editaiml':
+                        echo "not yet implemented";
+                        die();
+                        break;
+
+                    case 'reloadbot':
+                        echo "not yet implemented";
+                        die();
+                        break;
+
                     default:
                         $message = $this->getParam('message', NULL);
                         $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';
