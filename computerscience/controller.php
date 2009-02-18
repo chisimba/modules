@@ -108,8 +108,11 @@
                         break;
 
                     case 'publishaiml':
-                        echo "publish to a specified dir so the bot can pick it up";
-                        die();
+                        $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml'
+                        // copy the file to the resources/aiml directory
+                        copy($filename, $this->getResourcePath().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml');
+                        $message = $this->objLanguage->languageText("mod_computerscience_aimlpublished", "computerscience");
+                        $this->nextAction('');
                         break;
 
                     default:
