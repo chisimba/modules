@@ -47,13 +47,22 @@ import avoir.realtime.common.packet.FilePacket;
 import avoir.realtime.common.packet.FileUploadPacket;
 import avoir.realtime.common.packet.MsgPacket;
 import avoir.realtime.common.packet.NewSlideReplyPacket;
+import avoir.realtime.common.packet.NotepadLogPacket;
+import avoir.realtime.common.packet.NotepadPacket;
+import avoir.realtime.common.packet.PointerPacket;
+import avoir.realtime.common.packet.QuestionPacket;
 import avoir.realtime.common.packet.SessionImg;
+import avoir.realtime.common.packet.SurveyPackPacket;
 import avoir.realtime.common.user.User;
+import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
@@ -61,7 +70,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -80,9 +88,11 @@ public class TCPConnector extends TCPSocket {
     private AppView appViewer;
     private JScrollPane whiteboardScrollPane;
     private Map<String, PrivateChatFrame> privateChats = new HashMap<String, PrivateChatFrame>();
+    private SessionTimer sessionTimer;
 
     public TCPConnector(ClassroomMainFrame mf) {
         this.mf = mf;
+        sessionTimer = new SessionTimer(mf);
     }
 
     @Override
@@ -90,21 +100,73 @@ public class TCPConnector extends TCPSocket {
         return privateChats;
     }
 
+    public SessionTimer getSessionTimer() {
+        return sessionTimer;
+    }
+
+    private String stripExt(String filename) {
+        int index = filename.lastIndexOf(".");
+        if (index > -1) {
+            return filename.substring(0, index);
+        }
+        return filename;
+    }
+
+    public void checkForSlides() {
+
+        System.out.println("in start session");
+        String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getUser().getSessionTitle());
+
+        final File f = new File(slidePath);//avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
+        //first check if it exist in local cache, if so dont bother with downloads
+        //unless the 'UseCache option is off, so it forces downloads every time
+        if (f.exists() && f.list().length > 1) {
+            Constants.log("Slides detected in cache");
+            if (mf.getRealtimeOptions().useCache()) {
+
+                return;
+            }
+        } else {
+            System.out.println("Nothing in cache..requesting for slides from " + mf.getUser().getSlideServerId() + " session " + mf.getUser().getSessionId());
+            Constants.log("Nothing in cache..requesting for slides from " + mf.getUser().getSlideServerId() + " session " + mf.getUser().getSessionId());
+            f.mkdirs();
+            //     mf.getConnector().requestForSlides(mf.getUser().getSessionId(), mf.getUser().getSlideServerId(),
+            //           mf.getUser().getSlidesDir(), mf.getUser().getUserName());
+            sendPacket(new LocalSlideCacheRequestPacket(mf.getUser().getSessionId(), mf.getUser().getSlideServerId(),
+                    mf.getUser().getSlidesDir(), mf.getUser().getUserName()));
+
+        }
+
+    }
+
     @Override
     public void startSession() {
+
+        mf.initToolbar();
+        mf.initAudio();
         connected = true;
         running = true;
         timer.cancel();
         timer = new Timer();
-        timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
+        timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
         publish(mf.getUser());
         Thread t = new Thread() {
 
             public void run() {
-                mf.getTcpConnector().listen();
+                listen();
             }
         };
         t.start();
+        checkForSlides();
+    /* PresencePacket p = new PresencePacket(
+    mf.getUser().getSessionId(),
+    PresenceConstants.USER_ACTIVE_ICON,
+    PresenceConstants.USER_ACTIVE,
+    mf.getUser().getUserName());
+    p.setForward(true);
+
+    sendPacket(p);
+     */
     }
 
     @Override
@@ -114,6 +176,7 @@ public class TCPConnector extends TCPSocket {
             timer = new Timer();
             timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
             publish(mf.getUser());
+
             return true;
         }
         return false;
@@ -136,13 +199,16 @@ public class TCPConnector extends TCPSocket {
                         NewUserPacket p = (NewUserPacket) packet;
                         mf.getUserListManager().addNewUser(p.getUser());
                         mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " joined room.", "", "",
-                                p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+                                p.getSessionId(), Color.GRAY, "SansSerif", 0, 12, false, null));
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket p = (RemoveUserPacket) packet;
                         mf.getUserListManager().removeUser(p.getUser());
                         mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " left room.", "",
-                                "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
-
+                                "", p.getSessionId(), Color.GRAY, "SansSerif", 0, 12, false, null));
+                    } else if (packet instanceof NotepadLogPacket) {
+                        // mf.getToolBar().addSubButton("/icons/application_cascade.png", "savednotepad", "Notepad", "notepad");
+                        // JOptionPane.showMessageDialog(null, "got " + ((NotepadLogPacket) packet).getNotepads().size());
+                        saveNotepads((NotepadLogPacket) packet);
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
                         int userIndex = mf.getUserListManager().getUserIndex(p.getUserName());
@@ -152,6 +218,9 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof ChatPacket) {
                         ChatPacket p = (ChatPacket) packet;
                         processChatPacket(p);
+                    } else if (packet instanceof PointerPacket) {
+                        PointerPacket p = (PointerPacket) packet;
+                        mf.getWhiteBoardSurface().setCurrentPointer(p.getType(), p.getPoint());
                     } else if (packet instanceof ChatLogPacket) {
                         ChatLogPacket p = (ChatLogPacket) packet;
                         mf.updateChat(p);
@@ -178,6 +247,12 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof CurrentSessionSlidePacket) {
                         CurrentSessionSlidePacket p = (CurrentSessionSlidePacket) packet;
                         processCurrentSessionSlidePacket(p);
+                    } else if (packet instanceof SurveyPackPacket) {
+                        SurveyPackPacket pac = (SurveyPackPacket) packet;
+                        mf.showSurveyFrame(pac.getQuestions(), pac.getTitle());
+                    } else if (packet instanceof QuestionPacket) {
+                        QuestionPacket p = (QuestionPacket) packet;
+                        mf.showQuestionFrame(p, p.getQuestion());
                     } else if (packet instanceof DesktopPacket) {
                         DesktopPacket p = (DesktopPacket) packet;
                         processDesktopPacket(p);
@@ -211,7 +286,31 @@ public class TCPConnector extends TCPSocket {
         }
 
         if (!connected && !running) {
+            timer.cancel();
             refreshConnection();
+        }
+    }
+
+    private void saveNotepads(NotepadLogPacket p) {
+        String path = Constants.getRealtimeHome() + "/notepad/";
+        File f = new File(path);
+        f.mkdirs();
+        for (int i = 0; i < p.getNotepads().size(); i++) {
+            try {
+                NotepadPacket note = p.getNotepads().get(i);
+                String name = note.getFilename();
+                if (!name.endsWith(".txt")) {
+                    name += ".txt";
+                }
+
+                FileOutputStream fstrm = new FileOutputStream(new File(path + "/" + name));
+                ObjectOutput ostrm = new ObjectOutputStream(fstrm);
+                ostrm.writeObject(note.getDocument());
+                ostrm.flush();
+
+            } catch (IOException io) {
+                System.err.println("IOException: " + io.getMessage());
+            }
         }
     }
 
@@ -277,7 +376,9 @@ public class TCPConnector extends TCPSocket {
 
     public void processFilePacket(FilePacket packet) {
         try {
-            String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
+        //    String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
+           String  home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
+
             File homeDir = new File(home);
             if (!homeDir.exists()) {
                 homeDir.mkdirs();
@@ -405,10 +506,10 @@ public class TCPConnector extends TCPSocket {
 
     public void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
         int slideIndex = packet.getSlideIndex();
-        String slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
-        if (!packet.isWebPresent()) {
-            slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
-        }
+       // String slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
+       // if (!packet.isWebPresent()) {
+          String  slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
+        //}
 
         mf.getWhiteBoardSurface().setCurrentSlide(new ImageIcon(slidePath), slideIndex, slideIndex, true);
         if (packet.getMessage() != null) {
@@ -423,10 +524,10 @@ public class TCPConnector extends TCPSocket {
      */
     public void processChatPacket(ChatPacket p) {
         if (p.isPrivateChat()) {
-           PrivateChatFrame privateChatFrame = privateChats.get(p.getId());
+            PrivateChatFrame privateChatFrame = privateChats.get(p.getId());
             if (privateChatFrame == null) {
                 User usr = mf.getUserListManager().getUser(p.getUsr());
-                privateChatFrame = new PrivateChatFrame(usr, mf,p.getId());
+                privateChatFrame = new PrivateChatFrame(usr, mf, p.getId());
                 privateChats.put(usr.getUserName(), privateChatFrame);
             }
             privateChatFrame.getChatRoom().update(p);
