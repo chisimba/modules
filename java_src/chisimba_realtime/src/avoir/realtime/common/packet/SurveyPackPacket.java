@@ -4,7 +4,8 @@
  */
 package avoir.realtime.common.packet;
 
-import avoir.realtime.common.packet.RealtimePacket;
+import avoir.realtime.common.packet.QuestionPacket;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -14,10 +15,10 @@ import java.util.Vector;
 public class SurveyPackPacket implements RealtimePacket {
 
     private String sessionId;
-    private Vector questions;
+    private ArrayList<QuestionPacket> questions;
     private String title;
 
-    public SurveyPackPacket(String sessionId, Vector questions, String title) {
+    public SurveyPackPacket(String sessionId, ArrayList<QuestionPacket> questions, String title) {
         this.sessionId = sessionId;
         this.questions = questions;
         this.title = title;
@@ -31,11 +32,11 @@ public class SurveyPackPacket implements RealtimePacket {
         this.title = title;
     }
 
-    public Vector getQuestions() {
+    public ArrayList<QuestionPacket> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Vector questions) {
+    public void setQuestions(ArrayList<QuestionPacket> questions) {
         this.questions = questions;
     }
 
