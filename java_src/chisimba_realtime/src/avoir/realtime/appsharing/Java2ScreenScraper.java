@@ -4,7 +4,6 @@
  */
 package avoir.realtime.appsharing;
 
-
 import avoir.realtime.common.TCPSocket;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,11 +20,13 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class Java2ScreenScraper
         extends ScreenScraper {
- public Java2ScreenScraper(TCPSocket client,String sessionId)
+
+    public Java2ScreenScraper(TCPSocket client, String sessionId, boolean record)
             throws Exception {
-        super(client,sessionId);
+        super(client, sessionId, record);
         robot = new Robot();
     }
+
     public byte[] doJpegCompression(int[] pixels, int iWidth, int iHeight) {
         byte[] baRet = null;
         try {
@@ -44,8 +45,6 @@ public class Java2ScreenScraper
         return baRet;
     }
 
-   
-   
     public int[] grabPixels(int[] pixels, Rectangle rect)
             throws Exception {
 //    	System.out.println("grabbing rect:" + rect);
@@ -79,9 +78,10 @@ public class Java2ScreenScraper
 
     public void stopScraping() {
         super.stopScraping();
-        //System.out.println(getClass().getName() + ".stopScraping: "
-        //  + " setting robot = null.");
-       // robot = null;
+
+    //System.out.println(getClass().getName() + ".stopScraping: "
+    //  + " setting robot = null.");
+    // robot = null;
     }
 
     private BufferedImage grabBufferedImage(Rectangle rect) {

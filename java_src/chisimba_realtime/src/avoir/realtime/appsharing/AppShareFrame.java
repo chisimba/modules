@@ -5,8 +5,7 @@
  */
 package avoir.realtime.appsharing;
 
-import avoir.realtime.common.TCPSocket;
-
+import avoir.realtime.classroom.ClassroomMainFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -20,19 +19,19 @@ public class AppShareFrame extends javax.swing.JFrame {
 
     private Java2ScreenScraper ss;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private TCPSocket tcpClient;
+    private ClassroomMainFrame mf;
 
     /** Creates new form AppShareFrame */
     public AppShareFrame() {
         initComponents();
     }
 
-    public AppShareFrame(final TCPSocket tcpClient, String sessionId) {
+    public AppShareFrame(ClassroomMainFrame mf, String sessionId) {
         this();
-        this.tcpClient = tcpClient;
+        this.mf = mf;
 
         try {
-            ss = new Java2ScreenScraper(tcpClient, sessionId);
+            ss = new Java2ScreenScraper(mf.getTcpConnector(), sessionId, false);
 
 
         } catch (Exception ex) {
@@ -52,8 +51,10 @@ public class AppShareFrame extends javax.swing.JFrame {
         stopButton.setEnabled(true);
         startButton.setEnabled(false);
         //  base.getBaseManager().startApplicationSharing();
+
         ss.startScraping();
         setState(JFrame.ICONIFIED);
+        mf.getInfoPanel().setCenterMessage("Desktop Sharing On");
     }
 
     /** This method is called from within the constructor to
