@@ -23,6 +23,7 @@ import avoir.realtime.appsharing.DefaultDesktopPacketProcessor;
 import avoir.realtime.appsharing.ScreenScraper;
 
 import avoir.realtime.chat.PrivateChatFrame;
+import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.common.TCPSocket;
 
 import avoir.realtime.common.appshare.DesktopPacketIntf;
@@ -46,6 +47,11 @@ public class TCPConnector extends TCPSocket {
 
     @Override
     public Map<String, PrivateChatFrame> getPrivateChats() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public SessionTimer getSessionTimer() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

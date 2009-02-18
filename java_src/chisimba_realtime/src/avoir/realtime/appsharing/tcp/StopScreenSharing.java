@@ -12,6 +12,20 @@ import avoir.realtime.common.packet.*;
  */
 public class StopScreenSharing implements RealtimePacket {
 
+    private boolean record;
+
+    public StopScreenSharing(boolean record) {
+        this.record = record;
+    }
+
+    public boolean isRecord() {
+        return record;
+    }
+
+    public void setRecord(boolean record) {
+        this.record = record;
+    }
+
     public String getId() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
