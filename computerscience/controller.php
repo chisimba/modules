@@ -107,6 +107,11 @@
                         die();
                         break;
 
+                    case 'publishaiml':
+                        echo "publish to a specified dir so the bot can pick it up";
+                        die();
+                        break;
+
                     default:
                         $message = $this->getParam('message', NULL);
                         $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';

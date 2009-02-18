@@ -118,6 +118,9 @@ class editform extends object {
         // add new aiml patterns
         $addaiml = new href($this->uri(array('action' => '')), $this->objLanguage->languageText("mod_computerscience_addaiml", "computerscience"));
         $addaiml = $addaiml->show();
+        // publish aiml
+        $pubaiml = new href($this->uri(array('action' => 'publishaiml')), $this->objLanguage->languageText("mod_computerscience_pubaiml", "computerscience"));
+        $pubaiml = $pubaiml->show();
         // reload the bot
         $reloadbot = new href($this->uri(array('action' => 'reloadbot')), $this->objLanguage->languageText("mod_computerscience_reloadbot", "computerscience"));
         if($this->objUser->isAdmin()) {
