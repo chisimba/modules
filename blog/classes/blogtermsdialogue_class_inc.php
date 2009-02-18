@@ -4,8 +4,19 @@ $GLOBALS['_globalObjEngine']->loadClass('jqdialogue', 'htmlelements');
 
 class blogtermsdialogue extends jqdialogue
 {
+    /**
+     * Object of the language class in the language module.
+     *
+     * @access protected
+     * @var object $objLanguage
+     */
     protected $objLanguage;
 
+    /**
+     * The constructor.
+     *
+     * @access public
+     */
     public function init()
     {
         parent::init();
@@ -13,6 +24,12 @@ class blogtermsdialogue extends jqdialogue
         $this->title = $this->objLanguage->languageText('mod_blog_terms_title', 'blog');
     }
 
+    /**
+     * Generates the dialogue box.
+     *
+     * @access public
+     * @return string The generated (X)HTML.
+     */
     public function show()
     {
         if ($this->content) {
