@@ -8,7 +8,7 @@ $cssLayout->setNumColumns(3);
 $leftMenu = NULL;
 $rightSideColumn = NULL;
 
-//$rightSideColumn .= $this->objLanguage->languageText("mod_computerscience_helptext", "computerscience");
+$rightSideColumn .= $this->objDict->uMenu();
 
 $leftCol = NULL;
 $middleColumn = NULL;

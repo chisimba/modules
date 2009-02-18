@@ -105,5 +105,9 @@ class editform extends object {
     public function show() {
         return $this->buildForm ();
     }
+
+    public function uMenu() {
+        return "This will be a menu to add/edit/delete patterns, as well as a way for admin users to reload the bot with the files.";
+    }
 }
 ?>
