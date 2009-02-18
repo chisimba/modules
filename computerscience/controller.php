@@ -108,11 +108,12 @@
                         break;
 
                     case 'publishaiml':
-                        $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml'
+                        $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';
                         // copy the file to the resources/aiml directory
-                        copy($filename, $this->getResourcePath().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml');
+                        $to = $this->getResourcePath('').'aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';
+                        copy($filename, $to);
                         $message = $this->objLanguage->languageText("mod_computerscience_aimlpublished", "computerscience");
-                        $this->nextAction('');
+                        $this->nextAction('', array('message' => $message));
                         break;
 
                     default:
@@ -132,7 +133,6 @@
                         $str = $this->objDict->buildForm($catarr);
                         $this->setVar('message', $message);
                         $this->setVar('str', $str);
-
 
                         return 'editadd_tpl.php';
                         break;
