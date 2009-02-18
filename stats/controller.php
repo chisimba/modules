@@ -254,13 +254,14 @@ class stats extends controller {
             $back = $this->getParam('back', 'home');
             $showAll = $this->getParam('showAll', false);
             if ($this->objUser->isLecturer() && isset($user)) {
-                $userId = $user;
+                $userId = $this->objUser->getUserId($user);
             } else {
                 $userId = $this->objUser->userId();
+                $user = $this->objUser->userName();
             }
-            $student = "$userId - ".$this->objUser->fullName($userId);
-            $this->setVar('userId', $userId);
-            $this->setVar('tutorials', $this->objTuts->getMarks($userId, $showAll));
+            $student = "$userName - ".$this->objUser->fullName($userId);
+            $this->setVar('userName', $userName);
+            $this->setVar('tutorials', $this->objTuts->getMarks($userName, $showAll));
             $this->setVar('student', $student);
             $this->setVar('back', $back);
             $this->setVar('showAll',$showAll);

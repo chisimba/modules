@@ -107,17 +107,17 @@ class dbtuts extends dbtable {
     /**
      * Method to save the result of a students tutorial
      *
-     * @param string $userId The userId of the student
+     * @param string $userName The user name of the student
      * @param string $password The sha-1 hash of the password
      * @param string $test The test (tutorial) number
      * @param string $mark The students mark, as a percentage
      * @param string $time The time taken
      * @access public
      */
-    public function saveMark($userId, $password, $test, $mark, $time) {
-        $user = $this->objUser->getUserDetails($userId);
+    public function saveMark($userName, $password, $test, $mark, $time) {
+        $user = $this->objUser->getRow("WHERE username = '$userName' LIMIT 1"); //UserDetails($userId);
         if ($password == $user['pass']) {
-            $this->insert(array('studentno'=>$userId, 'testno'=>$test, 'mark'=>$mark, 'time'=>$time));
+            $this->insert(array('studentno'=>$userName, 'testno'=>$test, 'mark'=>$mark, 'time'=>$time));
         }
     }
     
@@ -126,7 +126,7 @@ class dbtuts extends dbtable {
      * can be sure the user actually took the tutorial and did
      * not attempt to inject the mark
      *
-     * @param string $user the userid
+     * @param string $user the username
      * @return string the nonce
      * @access public
      */
@@ -159,21 +159,21 @@ class dbtuts extends dbtable {
      * Method to return the best marks for each tut for a
      * particular student
      *
-     * @param string $userId the userid (studentno) of the student
+     * @param string $userName the user name (studentno) of the student
      * @return array The array of results
      * @access public
      */
-    public function getMarks($userId, $showAll=false) {
+    public function getMarks($userName, $showAll=false) {
         if (!$showAll) {
             $sql = "SELECT testno, MAX(mark) AS best, time
                     FROM tbl_stats_tuts
-                    WHERE studentno = '$userId'
+                    WHERE studentno = '$userName'
                     GROUP BY testno
                     ORDER BY testno";
         } else {
             $sql = "SELECT testno, mark AS best, time
                     FROM tbl_stats_tuts
-                    WHERE studentno = '$userId'
+                    WHERE studentno = '$userName'
                     ORDER BY testno, best";
                 
         }

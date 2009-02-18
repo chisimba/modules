@@ -93,7 +93,7 @@ if ($this->objUser->isLecturer()) {
     $form = "";
 }
 
-$link->link($this->uri(array('action'=>'marks', 'studentno'=>$userId, 'back'=>$back, 'showAll'=>$showAll)));
+$link->link($this->uri(array('action'=>'marks', 'studentno'=>$userName, 'back'=>$back, 'showAll'=>$showAll)));
 $link->link = $toggleLink;
 $form .= "<div style='float:right'>".$link->show()."</div>";
 echo $objHead->show().$sDetail->show().$form.$objTable->show()."$backLink<br /><br />";

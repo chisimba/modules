@@ -78,15 +78,16 @@ class dbquestionnaire extends dbtable {
     /**
      * Method to check if a student has completed the questionnaire
      *
-     * @param string $userId The userId of the student
+     * @param string $userName The username of the student (student number)
      * @return string 1|0 whether or not the student has completed it,
      *                preceded by the word true iff the user is authenticated,
      * @access public
      */
-    public function checkStudent($userId, $password) {
-        $user = $this->objUser->getUserDetails($userId);
+    public function checkStudent($userName, $password) {
+        $user = $this->objUser->getRow("WHERE username = '$userName' LIMIT 1");
+        //$user = $this->objUser->getUserDetails($userId);
         $response = ($password == $user['pass'])? "true" : "";
-        $response .= ($this->valueExists('studentno',$userId))? "1" : "0";       
+        $response .= ($this->valueExists('studentno', $userName))? "1" : "0";       
         return $response;
     }
     
