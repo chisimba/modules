@@ -3,10 +3,13 @@ $cssLayout = &$this->newObject('csslayout', 'htmlelements');
 $objSideBar = $this->newObject('usermenu', 'toolbar');
 $this->loadClass('htmlheading', 'htmlelements');
 
-// Set columns to 2
-$cssLayout->setNumColumns(2);
+// Set columns to 3
+$cssLayout->setNumColumns(3);
 $leftMenu = NULL;
 $rightSideColumn = NULL;
+
+$rightSideColumn .= $this->objLanguage->languageText("mod_computerscience_helptext", "computerscience");
+
 $leftCol = NULL;
 $middleColumn = NULL;
 $leftCol .= $objSideBar->show();

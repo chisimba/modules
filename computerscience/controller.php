@@ -26,7 +26,8 @@
                     else {
                         chmod ($this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/', 0777);
                     }
-                    $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/std-cs4fn.aiml';
+                    $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';;
+
                     if(!file_exists($filename)) {
                         $this->objXml->createDoc();
                         $this->objXml->startElement('aiml');
@@ -44,9 +45,22 @@
                         $this->objXml->writeElement("pattern", strtoupper($pattern));
                         if($that != "")
                         {
-                           $this->objXml->writeElement("that", $that);
+                            if(file_exists($filename)) {
+                            $xml = simplexml_load_file($filename);
+                            $cats = $xml->category;
+                            foreach ($cats as $cat) {
+                                $catarr[] = $cat->pattern;
+                            }
                         }
-                        $this->objXml->writeElement("template", $template);
+                        else {
+                            $catarr = array();
+                        }
+                            // so now we can get the correct pattern out
+                           $this->objXml->writeElement("srai", $catarr[$that]);
+                        }
+                        else {
+                            $this->objXml->writeElement("template", $template);
+                        }
                         $this->objXml->endElement();
                     }
 
@@ -85,10 +99,22 @@
 
                     default:
                         $message = $this->getParam('message', NULL);
+                        $filename = $this->objConfig->getContentBasepath().'users/'.$this->objUser->userId().'/aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';
+                        if(file_exists($filename)) {
+                            $xml = simplexml_load_file($filename);
+                            $cats = $xml->category;
+                            foreach ($cats as $cat) {
+                                $catarr[] = $cat->pattern;
+                            }
+                        }
+                        else {
+                            $catarr = array();
+                        }
 
-                        $str = $this->objDict->show();
+                        $str = $this->objDict->buildForm($catarr);
                         $this->setVar('message', $message);
                         $this->setVar('str', $str);
+
 
                         return 'editadd_tpl.php';
                         break;

@@ -23,7 +23,7 @@ class editform extends object {
         $this->loadClass ( 'dropdown', 'htmlelements' );
     }
 
-    private function buildForm() {
+    public function buildForm($catarr) {
         // Load the required form elements that we need
         $this->loadElements ();
         // Create the form
@@ -47,19 +47,19 @@ class editform extends object {
 
         $lblPattern = new label ( $this->objLanguage->languageText ( "mod_computerscience_pattern", "computerscience" ), "pattern" );
         $lblTemplate = new label ( $this->objLanguage->languageText ( "mod_computerscience_template", "computerscience" ), "template" );
-        $lblThat = new label ( $this->objLanguage->languageText ( "mod_computerscience_that", "computerscience" ), "that" );
-        //$objForm->addToForm ( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $lblPattern->show () );
+        $lblSrai = new label ( $this->objLanguage->languageText ( "mod_computerscience_that", "computerscience" ), "srai" );
         $txtPatternOne = new textinput ( 'txtPatternOne' );
-        $txtPatternOne->value = $this->getParam ( 'txtPatternOne' );
-        //$objForm->addToForm ( "&nbsp;&nbsp;&nbsp;&nbsp;" . $txtPatternOne->show () . "<br />" );
-        //$objForm->addToForm ( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $lblThat->show () );
-        $txtThatOne = new textinput ( 'txtThatOne' );
-        $txtThatOne->value = $this->getParam ( 'txtThatOne' );
-        //$objForm->addToForm ( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $txtThatOne->show () . "<br />" );
-        //$objForm->addToForm ( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $lblTemplate->show () );
+        $txtSrai = new dropdown ( 'txtThatOne' );
+
+        $count = 0;
+
+        foreach($catarr as $cats) {
+            $txtSrai->addOption($count, $cats);
+            $count++;
+        }
+        $txtSrai->addOption();
         $txtTemplateOne = new textarea ( 'txtTemplateOne' );
         $txtTemplateOne->value = $this->getParam ( 'txtTemplateOne' );
-        //$objForm->addToForm ( "&nbsp;" . $txtTemplateOne->show () . "<br /><br /><hr width=60% />" );
 
         // layout the form nicely
         $gtable->addCell($lblPattern->show());
@@ -68,8 +68,8 @@ class editform extends object {
         $gtable->startRow();
 
         // that
-        $gtable->addCell($lblThat->show());
-        $gtable->addCell($txtThatOne->show());
+        $gtable->addCell($lblSrai->show());
+        $gtable->addCell($txtSrai->show());
         $gtable->endRow();
 
         $gtable->startRow();
