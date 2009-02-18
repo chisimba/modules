@@ -31,10 +31,11 @@ class dbFaqEntries extends dbTable
     * @param string $userId The user ID
     * @param string $dateLastUpdated Date last updated
     */
-    function insertSingle($contextId, $categoryId, $question, $answer, $userId, $dateLastUpdated)
+    function insertSingle($contextId, $categoryId, $question, $answer, $userId, $dateLastUpdated,$tags)
     {
         //$array = $this->getArray("SELECT MAX(_index) AS _max FROM {$this->_tableName}");
-      $ins = $this->insert(array(
+
+        $ins = $this->insert(array(
             'contextid'=>$contextId, 
             'categoryid'=>$categoryId, 
             '_index' => $this->getNextIndex($contextId, $categoryId),
@@ -43,7 +44,13 @@ class dbFaqEntries extends dbTable
             'userid' => $userId,
             'dateLastUpdated' => strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated)
         ));
-        
+
+        $idresults=$this->getIdByLastUpdateDate( strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated));
+//print_r($idresults);
+//die();
+        $objTags = $this->getObject('dbfaqtags');
+        $objTags->addFaqTags($idresults[0]['id'], $tags);
+
         $this->objDbFaqCategories =& $this->getObject('dbfaqcategories');
         $categoryRow = $this->objDbFaqCategories->getRow('id', $categoryId);
         
@@ -65,6 +72,17 @@ class dbFaqEntries extends dbTable
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, NULL, NULL, $context);
         return $ins;	
     }
+
+     /**
+    * Get id of specific entry
+
+    */
+    function getIdByLastUpdateDate($dateLastUpdated)
+    {
+        $sql = "SELECT id FROM tbl_faq_entries  WHERE dateLastUpdated='" . $dateLastUpdated."'";
+
+        return $this->getArray($sql);
+    }
     
     /**
     * Get FAQ entries
@@ -77,6 +95,7 @@ class dbFaqEntries extends dbTable
         return $this->getArray($sql);
     }
 
+   
     /**
     * Return all records
     * @param string $contextId The context ID
@@ -179,7 +198,68 @@ class dbFaqEntries extends dbTable
         $objIndexData = $this->getObject('indexdata', 'search');
         $objIndexData->removeIndex('faq_entry_'.$id);
     }//
-    
+    /**
+    * Return all records that match given tags
+    * @param string $contextId The context ID
+    * @param string $categoryId The category ID
+    * @return array The FAQ entries
+    */
+    function listAllByTag($tag)
+    {
+
+       $sql = 'SELECT tbl_faq_entries.id,
+                tbl_faq_entries.contextid,
+                tbl_faq_entries.categoryid,
+                tbl_faq_entries.question,
+                tbl_faq_entries.answer,
+                tbl_faq_entries.userid,
+                tbl_faq_entries.datelastupdated,
+                tbl_faq_entries.updated,
+                tbl_faq_entries._index,
+                tbl_faq_entries.puid
+                FROM tbl_faq_entries, tbl_faq_tags
+                WHERE
+                tbl_faq_tags.faqid = tbl_faq_entries.id  AND tbl_faq_tags.tag LIKE \''.$tag.'\'';
+      // echo $sql;
+      // die();
+
+
+
+        $list= $this->getArray($sql);
+
+        $indexArray = array();
+        $count = 0;
+		foreach ($list as $num) {
+			$temp = array('_index'=>$num['_index']);
+			$indexArray[] = $temp;
+			$count++;
+		}
+
+        $listArray = array();
+		$index = 1;
+        foreach($list as $element) {
+        	if ($index > 1){
+        		$previndex = $index - 2;
+        		$prev = $indexArray[$previndex];
+        		$prevRow = $this->getRow('_index', $prev['_index']);
+        	} else {
+        		$prevRow = null;
+        	}
+			if ($index < $count) {
+	        	$next = $indexArray[$index];
+	        	$nextRow = $this->getRow('_index', $next['_index']);
+			} else {
+				$nextRow = null;
+			}
+
+			$newArray = array('id'=>$element['id'], 'contextid'=>$element['contextid'], 'categoryid'=>$element['categoryid'], 'question'=>$element['question'], 'answer'=>$element['answer'], 'userid'=>$element['userid'], 'datelastupdated'=>$element['datelastupdated'], 'updated'=>$element['updated'], '_index'=>$element['_index'], 'puid'=>$element['puid'], 'previd'=>$prevRow['id'], 'nextid'=>$nextRow['id']);
+
+        	$listArray[] = $newArray;
+        	$index++;
+        }
+        return $listArray;
+
+    }
     /**
     * Return all records previous and next record ids, these ids are used for navigation
     * @param string $contextId The context ID
