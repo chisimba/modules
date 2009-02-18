@@ -32,6 +32,8 @@ class workgroup extends controller
         $this->objFile =& $this->getObject('dbfile', 'filemanager');
         $this->objLanguage =& $this->getObject('language','language');
 		$this->objDbWorkgroup =& $this->getObject('dbworkgroup', 'workgroup'); 
+		$this->objDbFiles =& $this->getObject('dbworkgroupfiles', 'workgroup'); 
+		$this->objOps =& $this->getObject('workgroupops', 'workgroup'); 
 		$this->objDbWorkgroupUsers =& $this->getObject('dbworkgroupusers', 'workgroup'); 
         //$this->objHelp=& $this->getObject('helplink','help');
         //$this->objHelp->rootModule="helloworld";
@@ -50,6 +52,9 @@ class workgroup extends controller
     */
     function dispatch($action=Null)
     {
+		//$this->setLayoutTemplate('layout_tpl.php');
+		
+		
         $this->objConfig = &$this->getObject('altconfig','config');
         //$systemType = $this->objConfig->getValue("SYSTEM_TYPE", "contextabstract");
         //$isAlumni = ($systemType == "alumni");
@@ -62,7 +67,7 @@ class workgroup extends controller
         $userInWorkGroup = $this->objDbWorkgroupUsers->memberOfWorkGroup($userId, $this->workgroupId);
         
         if (is_null($this->workgroupId)) {
-            $this->setLayoutTemplate("context_layout_tpl.php");
+            $this->setLayoutTemplate("layout_tpl.php");
         } else {
             //$this->setLayoutTemplate("layout_tpl.php");
         }
@@ -106,10 +111,22 @@ class workgroup extends controller
                 $this->objDbWorkgroup->unsetWorkgroupId();
                 return $this->nextAction(null,null);
             case 'upload':
+				$this->setVar('editMode', FALSE);
             	$this->objDbWorkgroup->listAll($contextCode);
             	return "uploadDocument_tpl.php";
-            /*case 'uploadconfirm':
-            	$this->objDbWorkgroup->uploadFile(
+            case 'uploadconfirm':
+				$fields = array();
+				$fields['workgroupid'] = $this->workgroupId;
+				$fields['fileId'] = $this->getParam('fileupload');
+				$fields['title'] = $this->getParam('title');
+				$fields['description'] = $this->getParam('description');
+				$fields['version'] = $this->getParam('version');
+				
+				
+				$this->objDbFiles->insertFile($fields);
+				return $this->nextAction(null,null);
+				break;
+            /*	$this->objDbWorkgroup->uploadFile(
 				//$contextCode,	
 				$workgroupId,
 				$userId,
@@ -125,6 +142,30 @@ class workgroup extends controller
             
             //return 'upload_tpl.php';
 			return "main_tpl.php";*/
+			case 'ajaxgetfiles':
+				
+				echo $this->objOps->showFiles($this->getParam('workgroupid'));
+				//echo $this->getParam('workgroupid');
+				exit(0);
+				break;
+			case 'editfile':
+				$this->setVar('editMode', TRUE);
+				$this->setVar('fileId', $this->getParam('fileid'));
+				$this->objDbWorkgroup->listAll($contextCode);
+            	return "uploadDocument_tpl.php";
+			case 'editfileupload';
+				$fields = array();
+				$fields['workgroupid'] = $this->workgroupId;
+				$fields['fileId'] = $this->getParam('fileupload');
+				$fields['title'] = $this->getParam('title');
+				$fields['description'] = $this->getParam('description');
+				$fields['version'] = $this->getParam('version');
+				
+				
+				$this->objDbFiles->editWorkgroupFiles($this->getParam('fileid'), $fields);
+				return $this->nextAction(null,null);
+			case 'deletefile':
+				$this->objDbFiles->deleteWorkgroupFiles($this->getParam('fileid'));
             default:
                 break;
         }
