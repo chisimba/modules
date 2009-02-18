@@ -50,20 +50,30 @@
                         $this->objXml->endElement();
                     }
 
-                    // end the aiml element
-                    $this->objXml->endElement();
-                    $document = $this->objXml->dumpXML();
-                    // unhtmlentities $document
-                    $table = array_flip(get_html_translation_table(HTML_ENTITIES));
-                    $document = strtr($document, $table);
                     if(!file_exists($filename)) {
                         // write to file as a new file
-                        file_put_contents($filename, $document) or die('Could not write to file');
+                        // end the aiml element
+                        $this->objXml->endElement();
+                        $document = $this->objXml->dumpXML();
+
+                        // unhtmlentities $document
+                        $table = array_flip(get_html_translation_table(HTML_ENTITIES));
+                        $document = strtr($document, $table);
+                        file_put_contents($filename, $document);
                     }
                     else {
                         // Open the file and read it, then append to it
                         $contents = file_get_contents($filename);
+                        $contents = str_replace("</aiml>", '', $contents);
+                        // end the aiml element
+                        $this->objXml->endElement();
+                        $document = $this->objXml->dumpXML();
+                        // unhtmlentities $document
+                        $table = array_flip(get_html_translation_table(HTML_ENTITIES));
+                        $document = strtr($document, $table);
+                        $document .= "</aiml>";
                         $document = $contents.$document;
+
                         file_put_contents($filename, $document);
                     }
                     $message = $this->objLanguage->languageText("mod_computerscience_word_updated", "computerscience");
