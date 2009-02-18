@@ -129,7 +129,7 @@ class editform extends object {
         else {
             $reloadbot = NULL;
         }
-        return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$reloadbot);
+        return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$pubaiml."<br />".$reloadbot);
     }
 }
 ?>
