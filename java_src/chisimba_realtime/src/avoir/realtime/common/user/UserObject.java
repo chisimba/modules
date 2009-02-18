@@ -6,6 +6,7 @@ package avoir.realtime.common.user;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 /**
  *
@@ -22,7 +23,13 @@ public class UserObject {
     private ImageIcon micIcon;
     private ImageIcon presenceIcon;
     private ImageIcon chatIcon;
+    private ImageIcon activeIcon;
+    private ImageIcon speakingIcon;
+    private ImageIcon resultIcon;
     private boolean online;
+    private JLabel score=new JLabel();
+    private int correctScores;
+    private int wrongScores;
 
     public UserObject(User user, Color color, boolean active, boolean handRaised, boolean online) {
         this.user = user;
@@ -30,6 +37,58 @@ public class UserObject {
         this.active = active;
         this.handRaised = handRaised;
         this.online = online;
+    }
+
+    public int getCorrectScores() {
+        return correctScores;
+    }
+
+    public void setCorrectScores(int correctScores) {
+        this.correctScores = correctScores;
+    }
+
+    public int getWrongScores() {
+        return wrongScores;
+    }
+
+    public void setWrongScores(int wrongScores) {
+        this.wrongScores = wrongScores;
+    }
+
+    public JLabel getScore() {
+        return score;
+    }
+
+    public void setScore(JLabel score) {
+        this.score = score;
+    }
+
+    public String toString() {
+        return user.getUserName();
+    }
+
+    public void setResultIcon(ImageIcon resultIcon) {
+        this.resultIcon = resultIcon;
+    }
+
+    public ImageIcon getResultIcon() {
+        return resultIcon;
+    }
+
+    public ImageIcon getSpeakingIcon() {
+        return speakingIcon;
+    }
+
+    public void setSpeakingIcon(ImageIcon speakingIcon) {
+        this.speakingIcon = speakingIcon;
+    }
+
+    public ImageIcon getActiveIcon() {
+        return activeIcon;
+    }
+
+    public void setActiveIcon(ImageIcon activeIcon) {
+        this.activeIcon = activeIcon;
     }
 
     public boolean isOnline() {

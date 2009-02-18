@@ -36,7 +36,7 @@ public class User implements Serializable {
     private boolean hasToken;
     private boolean isPresenter;
     private boolean online;
-    boolean active = true;
+    //boolean active = true;
     private String host;
     private int port;
     private String sessionId;
@@ -49,6 +49,9 @@ public class User implements Serializable {
     private String userDetails;
     private String userImagePath;
     private boolean chatEnabled = true;
+    private boolean speaking;
+    private boolean orangleIdle;
+    private boolean redIdle;
 
     public User(int level, String fullname, String userName, String host,
             int port, boolean isPresenter, String sessionId, String sessionTitle, String slidesDir,
@@ -74,6 +77,14 @@ public class User implements Serializable {
         this.userName = userName;
         this.isPresenter = isPresenter;
         this.sessionId = sessionId;
+    }
+
+    public boolean isSpeaking() {
+        return speaking;
+    }
+
+    public void setSpeaking(boolean speaking) {
+        this.speaking = speaking;
     }
 
     public boolean isChatEnabled() {
@@ -207,10 +218,6 @@ public class User implements Serializable {
         return this.fullname;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     public String getHost() {
         return host;
     }
@@ -227,8 +234,20 @@ public class User implements Serializable {
         return sessionId;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public boolean isOrangleIdle() {
+        return orangleIdle;
+    }
+
+    public void setOrangleIdle(boolean orangleIdle) {
+        this.orangleIdle = orangleIdle;
+    }
+
+    public boolean isRedIdle() {
+        return redIdle;
+    }
+
+    public void setRedIdle(boolean redIdle) {
+        this.redIdle = redIdle;
     }
 
     /*** Returns the user's level.
