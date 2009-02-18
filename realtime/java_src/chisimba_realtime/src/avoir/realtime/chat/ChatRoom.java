@@ -41,14 +41,18 @@ import java.awt.event.KeyEvent;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
 import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.Constants;
 import avoir.realtime.common.TCPSocket;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +91,6 @@ public class ChatRoom
     private String fontName = "SansSerif";
     private int fontStyle = 1;
     private Color color = Color.BLACK;
-    private boolean bold = false;
     private JTextArea chatIn;
     private JButton chatSubmit;
     private JScrollPane chatScroll;
@@ -114,6 +117,7 @@ public class ChatRoom
     private ImageIcon surprisedIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_surprised.png");
     private ImageIcon wailIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/emoticon_waii.png");
     private ImageIcon noIcon = ImageUtil.createImageIcon(this, "/icons/emoticons/thumb_down.png");
+    private ImageIcon logo = ImageUtil.createImageIcon(this, "/icons/logo1.png");
     private Emot emots[] = {
         new Emot(smileIcon, ":)", "Smile"),
         new Emot(sadIcon, ":(", "Sad"),
@@ -126,6 +130,7 @@ public class ChatRoom
     private static final String COMMIT_ACTION = "commit";
     private Timer typingTimer = new Timer();
     private JFileChooser fc = new JFileChooser();
+    private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
 
     private static enum Mode {
 
@@ -137,7 +142,6 @@ public class ChatRoom
     private boolean typing = false;
     private long lasttime = 0;
     private long duration = 0;
-    private boolean firstTime = true;
     private JPopupMenu emotPopup = new JPopupMenu();
     private IconsSurface iconsSurface;
     private JComboBox fontSizeField = new JComboBox();
@@ -154,7 +158,7 @@ public class ChatRoom
      * @param sl SocketList
      * @param usr User
      */
-    public ChatRoom(ClassroomMainFrame mf, User usr, String chatLogFile, String sessionId,
+    public ChatRoom(final ClassroomMainFrame mf, User usr, String chatLogFile, String sessionId,
             final boolean privateChat, String receiver, String chatId) {
         this.chatId = chatId;
         this.mf = mf;
@@ -168,11 +172,13 @@ public class ChatRoom
             fontSize = 17;
         }
         colorButton.setContentAreaFilled(false);
+        //  setMinimumSize(new Dimension((ss.width / 4), 200));
 
         chatIn = new JTextArea();
         chatIn.setFont(new Font(fontName, fontStyle, fontSize));
         chatIn.setForeground(color);
         textPane.setEditable(false);
+
         // textPane.setContentType("text/html");
         chatSubmit = new JButton("Send");
         chatScroll = new JScrollPane();
@@ -344,6 +350,7 @@ public class ChatRoom
                     lasttime = System.currentTimeMillis();
                     monitorTyping(evt);
                     showUserEnteredText();
+                    mf.getTcpConnector().getSessionTimer().setIdleTime(0);
                 }
             }
 
@@ -376,13 +383,35 @@ public class ChatRoom
         ActionMap am = chatIn.getActionMap();
         im.put(KeyStroke.getKeyStroke("ENTER"), COMMIT_ACTION);
         am.put(COMMIT_ACTION, new CommitAction());
+        words = readFile(Constants.getRealtimeHome() + "/icons/englishwords.png");
 
-        words = new ArrayList<String>(5);
-        words.add("spark");
-        words.add("special");
-        words.add("spectacles");
-        words.add("spectacular");
-        words.add("swing");
+        showIntroText();
+    }
+
+    private void showIntroText() {
+        st = new SimpleAttributeSet();
+       
+        StyleConstants.setIcon(st, logo);
+        StyleConstants.setFontSize(st, 12);
+        StyleConstants.setForeground(st, Color.ORANGE);// new Color(0, 131, 0));
+        insertString("\n", st);
+        st = new SimpleAttributeSet();
+    }
+
+    public static ArrayList<String> readFile(String file) {
+        ArrayList<String> lines = new ArrayList<String>();
+
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = in.readLine()) != null) {
+                lines.add(line);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return lines;
 
     }
 
@@ -626,24 +655,27 @@ public class ChatRoom
     }
 
     private void formatStr(ChatPacket chatPacket) {
-        //  StyleConstants.setIcon(st, null);
-        st = new SimpleAttributeSet();
-        //color=chatPacket.getColor();
+
+        StyleConstants.setForeground(st, new Color(0, 131, 0));
         StyleConstants.setFontFamily(st, chatPacket.getFontName());
         StyleConstants.setBold(st, chatPacket.getFontStyle() == 1 ? true : false);
         StyleConstants.setItalic(st, chatPacket.getFontStyle() == 2 ? true : false);
-
         StyleConstants.setFontSize(st, chatPacket.getFontSize());
-        StyleConstants.setForeground(st, Color.GRAY);
-        insertString("[" + getTime() + "]", st);
-        StyleConstants.setForeground(st, new Color(0, 131, 0));
         if (!chatPacket.getUsr().equalsIgnoreCase("System")) {
             insertString("<" + chatPacket.getUsr() + ">", st);
         }
         StyleConstants.setForeground(st, new Color(0, 0, 0));
         String content = chatPacket.getContent();
+        if (content.lastIndexOf('\n') > -1) {
+            content = content.substring(0, content.lastIndexOf('\n'));
+        }
         parseEmoticons(content, chatPacket.getColor(), chatPacket.getFontName(),
                 chatPacket.getFontStyle(), chatPacket.getFontSize());
+
+        st = new SimpleAttributeSet();
+        StyleConstants.setFontSize(st, 10);
+        StyleConstants.setForeground(st, Color.GRAY);
+        insertString(getTime() + "\n", st);
 
     }
 
