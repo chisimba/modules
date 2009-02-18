@@ -5,6 +5,8 @@ $this->loadClass('link', 'htmlelements');
 $pageText = $this->newObject('htmlheading','htmlelements');
 $pageText->align='left';
 
+$loading = $this->getObject('geticon', 'htmlelements');
+$loading->setIcon('loader');
 /*
 // Display the heading. 
 $pageText->type=1;
@@ -24,7 +26,7 @@ $middleContent .= $pageText->show();
 
 $workgroupPosts =& $this->getObject('dbpost', 'forum');
 
-$middleContent .= '<div class="wrapperLightBkg" style="border: 5px outset #c0c0c0;">'.$workgroupPosts->getWorkGroupPosts($this->workgroupId, $contextCode).'</div>';
+$middleContent .= '<div class="wrapperLightBkg" style="border: 1px dotted #c0c0c0;">'.$workgroupPosts->getWorkGroupPosts($this->workgroupId, $contextCode).'</div>';
 
 $forumLink = new link ($this->uri(array('action'=>'workgroup'), 'forum'));
 $forumLink->link = $objLanguage->languageText('mod_workgroup_enterforum','workgroup');
@@ -47,6 +49,13 @@ $fileshareUploadLink->link = $objLanguage->languageText('mod_workgroup_uploaddoc
 $middleContent .= '<h3 align="center">'.$fileshareLink->show().'</h3>';
 $middleContent .= '<h3 align="center">'.$fileshareUploadLink->show().'</h3>';
 
+$script = $this->getJavaScriptFile('workgroup.js');
+$this->appendArrayVar('headerParams', $script);
+$this->appendArrayVar('bodyOnLoad', "getWorkgroupFiles('".$this->workgroupId."')");
+$middleContent .= '<div id="browsefiles">'.$loading->show().'</div>';
+        
+        
+		
 
 /*
 $refLink = new link('#');
@@ -167,18 +176,19 @@ if ($objContextCondition->isContextMember('Lecturers')) {
 
 // ------------- END RIGHT CONTENT ------------------- //
 $this->objBlock = $this->newObject('blocks', 'blocks');
-$chatBlock = $this->objBlock->showBlock('workgroupchat', 'messaging');
+//$chatBlock = $this->objBlock->showBlock('workgroupchat', 'messaging');
 
 $cssLayout =& $this->getObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(3);
+$cssLayout->setNumColumns(2);
 
 /*
 $menuBar=& $this->getObject('workgroupmenu');
 */
-//$sideMenu=& $this->getObject('sidemenu','toolbar');
-$cssLayout->setLeftColumnContent($rightContent);
+$toolbar = $this->getObject('contextsidebar','context');
+$sideMenu=$toolbar->show();
+$cssLayout->setLeftColumnContent($rightContent.$sideMenu);
 $cssLayout->setMiddleColumnContent($middleContent);
-$cssLayout->setRightColumnContent($chatBlock);
+//$cssLayout->setRightColumnContent($chatBlock);
 echo $cssLayout->show(); 
 
 
