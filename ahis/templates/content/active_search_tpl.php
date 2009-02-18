@@ -51,6 +51,8 @@ $this->loadClass('layer','htmlelements');
 
 $searchButton = new button('search', $this->objLanguage->languageText('word_search'));
 $searchButton->setToSubmit();
+$backUri = $this->uri(array('action'=>'sero_surveillance'));
+$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $campNameDrop = new dropdown('campName');
 $campNameDrop->addFromDB($arraycampName, 'name', 'id');
@@ -150,7 +152,11 @@ $objTable->addCell($searchDrop->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell('');
+$objTable->addCell('&nbsp');
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($backButton->show());
 $objTable->addCell($searchButton->show());
 $objTable->endRow();
 

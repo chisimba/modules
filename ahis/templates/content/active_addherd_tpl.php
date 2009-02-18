@@ -53,6 +53,9 @@ $this->loadClass('layer','htmlelements');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
+$backUri = $this->uri(array('action'=>'active_herdview'));
+$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+
 
 $territoryDrop = new dropdown('territory');
 $territoryDrop->addFromDB($arraytesttype, 'name', 'id');
@@ -60,7 +63,6 @@ $territoryDrop->setSelected($territory);
 $farmsystemDrop = new dropdown('farmsystem');
 $farmsystemDrop->addFromDB($arraytesttype, 'name', 'id');
 $farmsystemDrop->setSelected($farmsystem);
-
 
 $geo2Box = new textinput('Geo2', $geo2);
 $geo3Box = new textinput('Geo3', $geo3);
@@ -95,9 +97,13 @@ $objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->o
 $objTable->addCell($farmsystemDrop->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell($addButton->show(),NULL);//,'top','right');
-$objTable->addCell('');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($backButton->show());
+$objTable->addCell($addButton->show());
 $objTable->endRow();
 
 

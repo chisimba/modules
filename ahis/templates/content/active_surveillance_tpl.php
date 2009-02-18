@@ -53,17 +53,20 @@ $this->loadClass('layer','htmlelements');
 
 
 
-$okButton = new button('ok', $this->objLanguage->languageText('word_ok'));
+$okButton = new button('ok', $this->objLanguage->languageText('word_next'));
 $okButton->setToSubmit();
 $cancelUri = $this->uri(array('action'=>'select_officer'));
-$cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$cancelUri'");
+$cancelButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$cancelUri'");
 
 
 
 $campNameBox = new textinput('campName', $campName);
-$officerBox = new textinput('officerName',$officerName );
+//$officerDrop = new textinput('officerId',$officerId);
 
-
+$officerDrop = new dropdown('officerId');
+$officerDrop->addFromDB($userList, 'name', 'userid');
+$officerDrop->setSelected($officerId);
+$officerDrop->extra = 'disabled';
 $diseaseDrop = new dropdown('disease');
 $diseaseDrop->addFromDB($arrayoutbreak, 'name', 'id');
 $diseaseDrop->setSelected($outbreakId);
@@ -85,7 +88,7 @@ $objTable->addCell($campNameBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($officerBox->show());
+$objTable->addCell($officerDrop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_disease').": ");
@@ -97,6 +100,10 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_comments').": ");
 $objTable->addCell($commentsBox->show());
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell('&nbsp');
 $objTable->endRow();
 
 $objTable->startRow();

@@ -301,9 +301,10 @@ class ahis extends controller {
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));
-               $officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
-               $this->setSession('ps_officerName',$this->objUser->fullName($officerId));
-               $this->setVar('officerName', $this->getSession('ps_officerName'));
+               //$officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
+               //$this->setSession('ps_officerName',$this->objUser->fullName($officerId));
+               $this->setVar('userList', $this->objAhisUser->getList());
+               $this->setVar('officerId', $this->getSession('ps_officerId'));
                $this->setVar('disease', $this->getSession('ps_disease'));
                $this->setVar('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $this->setVar('comments', $this->getSession('ps_comments'));
@@ -333,7 +334,11 @@ class ahis extends controller {
             case 'active_addherd':
                return 'active_addherd_tpl.php';
                   
-            case 'active_herdview':            
+            case 'active_herdview': 
+            
+               $this->setVar('userList', $this->objAhisUser->getList());
+               $this->setVar('officerId', $this->getSession('ps_officerId'));
+                        
                return 'active_herdview_tpl.php';
                
             case 'sero_surveillance':            

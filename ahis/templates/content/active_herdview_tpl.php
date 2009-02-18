@@ -46,13 +46,25 @@ $objHeading->type = 2;
 
 
 $this->loadClass('layer','htmlelements');
-
+$this->loadClass('dropdown','htmlelements');
+$this->loadClass('textinput','htmlelements');
 
 $objTable = $this->getObject('htmltable','htmlelements');
 
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
+$backUri = $this->uri(array('action'=>'sero_surveillance'));
+$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+
+$campBox = new textinput('campBox',$campBox);
+$diseaseBox = new textinput('diseaseBox',$diseaseBox);
+
+
+$officerDrop = new dropdown('officerId');
+$officerDrop->addFromDB($userList, 'name', 'userid');
+$officerDrop->setSelected($officerId);
+$officerDrop->extra = 'disabled';
 
 
 $objTable->cellspacing = 2;
@@ -62,21 +74,15 @@ $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
-$objTable->addCell($campName);
+$objTable->addCell($campBox->show());
 $objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
 $objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
-$objTable->addCell($disease);
+$objTable->addCell($diseaseBox->show());
 $objTable->endRow();
-$objTable->startRow();$objTable = $this->getObject('htmltable','htmlelements');
-
-$objTable->cellspacing = 2;
-$objTable->width = NULL;
-$objTable->cssClass = 'min50';
-
-
+$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($reportofficer);
+$objTable->addCell($officerDrop->show());
 $objTable->addCell('');
 $objTable->addCell('');
 $objTable->endRow();
@@ -115,15 +121,18 @@ $objTable->addCell('');
 $objTable->addCell('');
 $objTable->addCell('');
 $objTable->addCell('');
+$objTable->startRow();
+$objTable->addCell('&nbsp');
+$objTable->endRow();
+$objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
 $objTable->endRow();
-
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addherd')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+$objLayer->addToStr($objForm->show());
 $objLayer->align = 'center';
 
 echo $objLayer->show();

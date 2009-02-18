@@ -49,7 +49,7 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 
-$addButton = new button('add', $this->objLanguage->languageText('word_add'));
+$addButton = new button('back', $this->objLanguage->languageText('word_back'));
 $addButton->setToSubmit();
 $finUri = $this->uri(array('action'=>'sero_surveillance'));
 $finButton = new button('finish', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
@@ -58,6 +58,10 @@ $testTypeDrop = new dropdown('testtype');
 $testTypeDrop->addFromDB($arraytesttype, 'name', 'id');
 $testTypeDrop->setSelected($testtype);
 
+
+
+$campBox = new textinput('campBox',$campBox);
+$diseaseBox = new textinput('diseaseBox',$diseaseBox);
 $sensitivityBox = new textinput('sensitivity', $sensivity);
 $specificityBox = new textinput('specificity', $officerId);
 
@@ -68,14 +72,11 @@ $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
-$objTable->addCell($campName);
+$objTable->addCell($campBox->show());
 $objTable->addCell('');
 $objTable->addCell('');
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
-$objTable->addCell($disease);
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell('&nbsp');
+$objTable->addCell($diseaseBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_testtype').": $tab");
@@ -89,6 +90,9 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_specificity').": $tab");
 $objTable->addCell($specificityBox->show());
 $objTable->endRow();
+$objTable->startRow();
+$objTable->addCell('&nbsp');
+$objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
@@ -98,7 +102,7 @@ $objTable->addCell('');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_addtest')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_surveillance')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();
