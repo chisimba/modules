@@ -19,6 +19,7 @@ package avoir.realtime.instructor.whiteboard;
 
 import avoir.realtime.appsharing.AppShareFrame;
 import avoir.realtime.appsharing.Java2ScreenScraper;
+import avoir.realtime.appsharing.tcp.StartScreenSharing;
 import avoir.realtime.appsharing.tcp.StopScreenSharing;
 import avoir.realtime.classroom.RealtimeOptionsFrame;
 import avoir.realtime.common.Constants;
@@ -45,6 +46,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 
 /**
  * This managers the menu system
@@ -74,8 +76,10 @@ public class MenuManager implements ActionListener {
     private boolean shareWhiteboard = true;
     private boolean shareWebPage = false;
     private Java2ScreenScraper screenScraper;
+    private Java2ScreenScraper recordScreen;
     private Timer shareAlertTimer = new Timer();
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private boolean appSharing = true;
 
     public MenuManager(Classroom mf) {
         this.mf = mf;
@@ -84,7 +88,12 @@ public class MenuManager implements ActionListener {
         graphicFC.addChoosableFileFilter(new ImageFilter());
         flashFC.addChoosableFileFilter(new FlashFilter());
         try {
-            screenScraper = new Java2ScreenScraper(mf.getConnector(), mf.getUser().getSessionId());
+            screenScraper = new Java2ScreenScraper(mf.getConnector(), mf.getUser().getSessionId(), false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            recordScreen = new Java2ScreenScraper(mf.getConnector(), mf.getUser().getSessionId(), true);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -94,6 +103,8 @@ public class MenuManager implements ActionListener {
         JMenu toolsMenu = createMenu("Tools");
         JMenu helpMenu = createMenu("Help");
 
+        createMenuItem(toolsMenu, "Session Details", "sessionDetails", true);
+        toolsMenu.addSeparator();
         createMenuItem(toolsMenu, "File Sharing", "fileSharing", true);
         createMenuItem(toolsMenu, "Survey", "survey", true);
         createMenuItem(toolsMenu, "Filters", "filter", true);
@@ -113,10 +124,9 @@ public class MenuManager implements ActionListener {
 
         fileMenu.addSeparator();
         createMenuItem(fileMenu, "Exit", "exit", true);
-        createMenuItem(insertMenu, "Insert Webpage", "insertWebpage", true);
-
-        createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", true);
         createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", true);
+       // createMenuItem(insertMenu, "Insert Webpage", "insertWebpage", true);
+        createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", true);
         createMenuItem(insertMenu, "Insert Flash", "insertFlash", true);
         menuBar.add(fileMenu);
         menuBar.add(screenShareMenu);
@@ -151,7 +161,65 @@ public class MenuManager implements ActionListener {
         return menuBar;
     }
 
+    public void initAppshare() {
+        /* if (appShareFrame == null) {
+        appShareFrame = new AppShareFrame(mf, mf.getUser().getSessionId());
+        }
+        appShareFrame.setVisible(true);
+        appShareFrame.setSize(400, 300);
+        appShareFrame.setLocationRelativeTo(null);*/
+        if (appSharing) {
+            screenScraper.startScraping();
+            mf.getInfoPanel().setCenterMessage("Application Sharing On");
+        } else {
+            screenScraper.stopScraping();
+            mf.getTcpConnector().sendPacket(new StopScreenSharing(false));
+            mf.getInfoPanel().setCenterMessage("Quick Info");
+
+        }
+        appSharing = !appSharing;
+    }
+
+    public void stopAppshare() {
+        screenScraper.stopScraping();
+    }
+
+    public Java2ScreenScraper getRecordScreen() {
+        return recordScreen;
+    }
+
+    public void setRecordScreen(Java2ScreenScraper recordScreen) {
+        this.recordScreen = recordScreen;
+    }
+
+    public void initRecord() {
+        mf.getConnector().sendPacket(new StartScreenSharing(true));
+        recordScreen.startScraping();
+//        mf.getToolBar().setRecording(true);
+    }
+
+    public void stopRecord() {
+        recordScreen.stopScraping();
+        mf.getConnector().sendPacket(new StopScreenSharing(true));
+    //      mf.getToolBar().setRecording(false);
+
+    }
+
+    public void insertWebpage() {
+        new Thread() {
+
+            public void run() {
+               // mf.getClassroomManager().showWebpage();
+            }
+        }.start();
+    }
+
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("sessionDetails")) {
+            JTextField infoField = new JTextField(mf.getUser().getSessionId());
+            JOptionPane.showMessageDialog(mf.getParentFrame(), infoField);
+
+        }
         if (e.getActionCommand().equals("webBrowserSettings")) {
             BrowserSettingsFrame fr = new BrowserSettingsFrame(mf.getRealtimeOptions());
             fr.setLocationRelativeTo(null);
@@ -164,12 +232,7 @@ public class MenuManager implements ActionListener {
             // mf.showSurveyManagerFrame();
         }
         if (e.getActionCommand().equals("insertWebpage")) {
-            new Thread() {
-
-                public void run() {
-                    mf.getClassroomManager().showWebpage();
-                }
-            }.start();
+            insertWebpage();
         }
         if (e.getActionCommand().equals("shareWhiteboard")) {
             JCheckBoxMenuItem cb = (JCheckBoxMenuItem) e.getSource();
@@ -208,15 +271,13 @@ public class MenuManager implements ActionListener {
                 shareAlertTimer.cancel();
 
                 screenScraper.stopScraping();
-                mf.getConnector().sendPacket(new StopScreenSharing());
+                mf.getConnector().sendPacket(new StopScreenSharing(false));
                 glassPane.setVisible(false);
 
             }
         }
         if (e.getActionCommand().equals("appshare")) {
-            appShareFrame.setSize(400, 300);
-            appShareFrame.setLocationRelativeTo(null);
-            appShareFrame.setVisible(true);
+            initAppshare();
 
         }
         if (e.getActionCommand().equals("insertGraphic")) {
@@ -257,6 +318,7 @@ public class MenuManager implements ActionListener {
         if (e.getActionCommand().equals("insertPresentation")) {
             if (presentationFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
                 final File f = presentationFC.getSelectedFile();
+                WhiteboardUtil.showStatusWindow("Processing ... please wait", false);
                 Thread t = new Thread() {
 
                     public void run() {
@@ -278,7 +340,7 @@ public class MenuManager implements ActionListener {
         }
         if (e.getActionCommand().equals("options")) {
             RealtimeOptionsFrame fr = new RealtimeOptionsFrame(mf, 0);
-            fr.setSize((ss.width/4)*3, (ss.height/4)*3);
+            fr.setSize((ss.width / 4) * 3, (ss.height / 4) * 3);
             fr.setLocationRelativeTo(null);
             fr.setVisible(true);
         }
