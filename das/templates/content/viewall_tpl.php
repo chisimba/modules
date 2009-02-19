@@ -33,7 +33,7 @@ $header->str = 'My Conversations' ;$this->objLanguage->languageText('mod_im_rece
 $header->type = 3;
 
 $refreshLink->href = "#";//$this->uri(null, 'das');
-$refreshLink->extra = ' onclick="showLoading(); loadConversations()" ';
+$refreshLink->extra = ' onclick="showLoading(\'conversations\'); loadConversations()" ';
 $refreshIcon->setIcon('refresh');
 $refreshLink->link = $refreshIcon->show();
 
@@ -58,7 +58,7 @@ $str = "$num$outof users";
 
 
 $middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
-$middleColumn .= '<div id="conversations"><h3>Loading Conversations....'.$loadIcon->show().'</h3></div>'; //$objImView->renderOutputForBrowser($msgs)
+$middleColumn .= '<div id="conversations"><span class="subdued"><i><h3>Loading....'.$loadIcon->show().'</h3></i></span></div>'; //$objImView->renderOutputForBrowser($msgs)
 
 
 if (!$this->objUser->isLoggedIn()) {

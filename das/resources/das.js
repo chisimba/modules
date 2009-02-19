@@ -21,10 +21,10 @@ function loadConversations(id)
         
     }
 	
-function showLoading()
+function showLoading(divId)
 {
 	
-	div = document.getElementById("conversations");
-	div.innerHTML = "<h3>Loading Conversations...<img src=\"skins/_common/icons/loader.gif\"></h3>";
+	div = document.getElementById(divId);
+	div.innerHTML = "<span class=\"subdued\"><i><h3>Loading ...<img src=\"skins/_common/icons/loader.gif\"></i></span></h3>";
 	
 }
