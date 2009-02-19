@@ -171,9 +171,12 @@ class importuserdata extends object
             $genIdFlag=0;
         }
         
+        // Check if the user is already there
+        $currentId=$this->checkForUser($username,$firstname,$surname,$email);
+
         // If this user is already in the database we don't add a duplicate
         if ($genIdFlag==1){
-            $currentId=$this->checkForUser($username,$firstname,$surname,$email);
+            //
         } else {
             // Insertion here for defined userId, ignore other values.
             // This is here due to UWC's elearning needs.
@@ -181,7 +184,7 @@ class importuserdata extends object
             {
                 $currentId=$userId;
             } else {
-                $currentId=FALSE;
+                //$currentId=FALSE; //We want to keep the currentId otherwise we get duplicates
             }
         }
         if ($currentId!=FALSE){
@@ -234,6 +237,13 @@ class importuserdata extends object
             // Add this user by calling the useradmin object.
             $id=$this->objUserAdmin->addUser($line);
                                                                                                     
+            // Add the staff number
+            $staffnumber=$userId;
+            if (is_numeric($username)){
+                $staffnumbner=$username;
+            }
+            $this->objUserAdmin->update('id',$id,array('staffNumber'=>$staffnumber,'howcreated'=>'userimport'));
+
             if (isset($line['cryptpassword'])){
                 $this->objUserAdmin->update('id',$id,array('pass'=>$line['cryptpassword']));
             } else {
