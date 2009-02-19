@@ -130,7 +130,15 @@ class editform extends object {
         else {
             $reloadbot = NULL;
         }
-        return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$pubaiml."<br />".$reloadbot);
+        // kill the bot
+        $killbot = new href($this->uri(array('action' => 'killbot')), $this->objLanguage->languageText("mod_computerscience_killbot", "computerscience"));
+        if($this->objUser->isAdmin()) {
+            $killbot = $killbot->show();
+        }
+        else {
+            $killbot = NULL;
+        }
+        return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$pubaiml."<br />".$reloadbot."<br />".$killbot);
     }
 
     public function rebuildStdDefs($filearray) {
