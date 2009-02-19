@@ -72,6 +72,7 @@ class workgroupops extends object
 		$this->objUser =& $this->getObject('user', 'security');
 		$this->objFile = $this->getObject('dbfile', 'filemanager');
 		$this->objConfig = $this->getObject('altconfig', 'config');
+		$this->objFileIcons = $this->getObject('fileicons', 'files');
 	}
 	
 	/**
@@ -87,7 +88,7 @@ class workgroupops extends object
 			$objFile = $this->getObject('dbfile', 'filemanager');
 			$objIcon = $this->getObject('geticon', 'htmlelements');
 			$objLink =  $this->getObject('link', 'htmlelements');
-			$str = '<span class="subdued">'.count($files) .' Files Found </div><div class="colorbox bluebox"><table id="workgrouptable" width="80%">';
+			$str = '<span class="subdued">'.count($files) .' Files Found </div><table id="workgrouptable" width="80%">';
 			foreach ($files as $file)
 			{
 				//edit link
@@ -104,6 +105,11 @@ class workgroupops extends object
 				$objLink->link = $objIcon->show();
 				$objLink->href = $fileDownloadPath;//$this->uri(array('action'=>'editfile', 'fileid'=>$file['id']));
 				$download = $objLink->show();
+					
+				$filename = $objFile->getFileName($file['fileid']);
+				$icon = $this->objFileIcons->getFileIcon($filename);
+				$objLink->link = $filename;
+				$fileNameLink = $objLink->show();
 				
 				//delete link
 				$objIcon->setIcon('delete');
@@ -114,7 +120,7 @@ class workgroupops extends object
 				$rec ='<tr ><td style="border-top:1px dotted;">';
 				
 				$rec .='<div class="colorbox greenbox"><table ><tr>';
-				$rec .='<td>'. $objFile->getFileName($file['fileid']).'  ('.$objFile->getFileSize($file['fileid']).' bytes) </td>';
+				$rec .='<td>'. $icon.'  '.$fileNameLink.'  <span class="subdued">('.$objFile->getFileSize($file['fileid']).' bytes) </span></td>';
 				$rec .= '<td></td><td rowspan="2"><div class="colorbox pinkbox">'.$file['description'].'</div></td>';
 				$rec .= '</tr><tr>';
 				$rec .='<td>Modified by '. $this->objUser->fullname($file['modifierid']).'</td>';
@@ -123,7 +129,7 @@ class workgroupops extends object
 				
 				$rec .='</table></td>';
 				$rec .='<td style="border-top:1px dotted;">File Type: '.$objFile->getFileMimetype($file['fileid']).'</td>';
-				$rec .='<td style="border-top:1px dotted;">Version:'.$file['modifierid'].'</td>';
+				$rec .='<td style="border-top:1px dotted;">Version:'.$file['version'].'</td>';
 				$rec .='<td style="border-top:1px dotted;">'.$download.'&nbsp;'.$edit.'&nbsp;'.$delete.'</td>';
 				$rec .='</tr></div>';
 				
@@ -132,7 +138,7 @@ class workgroupops extends object
 				$str .= $rec;
 			}	
 			
-			return $str.'</table></div>';
+			return $str.'</table>';
 		} else {
 			return '<span class="subdued"><i>No files for this workgroup</i></span>';
 			}
