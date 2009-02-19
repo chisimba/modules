@@ -17,19 +17,28 @@
  */
 package avoir.realtime.instructor.whiteboard;
 
+import avoir.realtime.classroom.ClassicToolbar;
 import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.classroom.whiteboard.item.Img;
+import avoir.realtime.common.ImageUtil;
 import avoir.realtime.filetransfer.FileUploader;
-import chrriis.common.UIUtils;
-import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+//import chrriis.common.UIUtils;
+//import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 /**
@@ -47,6 +56,9 @@ public class Classroom extends ClassroomMainFrame {
     private MenuManager menuManager;
     private ToolbarManager toolbarManager;
     private ClassroomManager classroomManager;
+    //private InstructorRealtimeToolBar instructorToolbar;
+    private ClassicInstructorToolbar instructorToolbar;
+    private JLabel headerField;// = new JLabel("Class password: xxxx; Class Name: yyyyyy");
 
     public Classroom(
             String host,
@@ -69,7 +81,13 @@ public class Classroom extends ClassroomMainFrame {
                 userLevel, slidesDir, siteRoot, slidesServerId, resourcesPath,
                 webPresent, mediaServerHost,
                 audioMICPort, audioSpeakerPort, parent);
-        
+        headerField = new JLabel("Class password: " + sessionId + " | Class Name:  " + sessionTitle);
+        headerField.setFont(new Font("Dialog", 1, 12));
+       // headerField.setEnabled(false);
+      //  headerField.setEditable(false);
+        headerField.setBorder(BorderFactory.createEtchedBorder());
+        headerField.setBackground(Color.WHITE);
+        headerField.setOpaque(true);
         sessionManager = new SessionManager(this);
         connector = new TCPConnector(this);
         connector.setName("Instructor");
@@ -79,28 +97,72 @@ public class Classroom extends ClassroomMainFrame {
         archiveManager = new ArchiveManager(this);
         toolbarManager = new ToolbarManager(this);
         classroomManager = new ClassroomManager(this);
+//        instructorToolbar = new InstructorRealtimeToolBar(this);
+        instructorToolbar = new ClassicInstructorToolbar(this);
         JToolBar toolsBar = whiteboard.getToolsToolbar();
-        JToolBar whiteboardToolbar = whiteboard.getMainToolbar();
-        JToolBar navToolbar = toolbarManager.getSlidesNavigationToolBar();
+        //    JToolBar whiteboardToolbar = whiteboard.getMainToolbar();
+        //    JToolBar navToolbar = toolbarManager.getSlidesNavigationToolBar();
         centerPanel.add(toolsBar, BorderLayout.EAST);
-        JToolBar toolbar = new JToolBar();
-       
-        toolbar.add(whiteboardToolbar);
-        toolbar.add(navToolbar);
-        centerPanel.add(toolbar, BorderLayout.NORTH);
+        JPanel pp = new JPanel(new BorderLayout());
+        pp.setBorder(BorderFactory.createEtchedBorder());
+        pp.add(headerField, BorderLayout.NORTH);
+        pp.add(instructorToolbar, BorderLayout.CENTER);
+        centerPanel.add(pp, BorderLayout.NORTH);
         surfaceScrollPane.setViewportView(whiteboard);
         setTcpConnector(connector);
 
-        dockTabbedPane.addTab("Archive", archiveManager.getArchiveTree());
+        //dockTabbedPane.addTab("Archive", archiveManager.getArchiveTree());
+
+        JToggleButton historyButton = new JToggleButton("History");
+        historyButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                leftBottonNorthPanel.removeAll();
+                leftBottonNorthPanel.add(ttop, BorderLayout.NORTH);
+                leftBottonNorthPanel.add(archiveManager.getArchiveTree(), BorderLayout.CENTER);
+                leftSplitPane.repaint();
+
+            }
+        });
+        // chatButtonGroup.add(chatButton);
+        //chatButton.setSelected(true);
+        historyButton.setIcon(ImageUtil.createImageIcon(this, "/icons/folder_yellow.png"));
+
+        chatButtonGroup.add(historyButton);
+        ttop.add(historyButton);
+
         chatRoom.setTcpSocket(connector);
         setJMenuBar(menuManager.getMenuBar());
-        initNativeSwing();
-       
+     //   initNativeSwing();
+
         loadCachedSlides();
+        addToolbarButtons();
+        initAudio();
+    }
+
+    @Override
+    public ClassicToolbar getToolBar() {
+        return instructorToolbar;
+    }
+
+    private void addToolbarButtons() {
+        instructorToolbar.add("/icons/micro.png", "mic", "Microphone", false, true);
+        instructorToolbar.add("/icons/speaker.png", "speaker", "Speaker", false, true);
+        instructorToolbar.add("/icons/kedit.png", "notepad", "Notepad");
+        instructorToolbar.add("/icons/global_config.png", "config", "Settings");
+        //   instructorToolbar.add("/icons/media-record.png", "record", "Record");
+        instructorToolbar.add("/icons/question.jpg", "question", "Question Builder");
+        instructorToolbar.add("/icons/desktopshare.png", "desktopshare", "Desktop Share", false, true);
+        //instructorToolbar.add("/icons/package_network.png", "webpage", "Insert Webpage");
+        instructorToolbar.add("/icons/arrow_side32.png", "pointer", "Pointer");
+        instructorToolbar.add("/icons/text_bold.png", "bold", "Bold", false, true);
+        instructorToolbar.add("/icons/text_under.png", "under", "Underline", false, true);
+        instructorToolbar.add("/icons/text_italic.png", "italic", "Italic", false, true);
+        instructorToolbar.add("/icons/fonts.png", "fonts", "Fonts", false, true);
     }
 
     /**
-     * Over ride the parent chat room method. Since they are both attached to dokTabbed pane
+     * Over ride the parent chat room method. Since they are both attached to dockTabbed pane
      * add the archive manager too. And allow undocking and re-docking of chat window
      * but everytime this clears the tabbed pane (no idea why, yet ) , so before
      * undocking it, keep a copy of archve panel, then add it back when everying
@@ -179,8 +241,8 @@ public class Classroom extends ClassroomMainFrame {
     }
 
     private void initNativeSwing() {
-        UIUtils.setPreferredLookAndFeel();
-        NativeInterface.open();
+//        UIUtils.setPreferredLookAndFeel();
+//        NativeInterface.open();
     }
 
     /**
