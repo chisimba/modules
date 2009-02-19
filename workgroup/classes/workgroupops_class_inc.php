@@ -73,6 +73,7 @@ class workgroupops extends object
 		$this->objFile = $this->getObject('dbfile', 'filemanager');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objFileIcons = $this->getObject('fileicons', 'files');
+		$this->loadClass('formatfilesize', 'files');
 	}
 	
 	/**
@@ -88,6 +89,7 @@ class workgroupops extends object
 			$objFile = $this->getObject('dbfile', 'filemanager');
 			$objIcon = $this->getObject('geticon', 'htmlelements');
 			$objLink =  $this->getObject('link', 'htmlelements');
+			$objFileSize = new formatfilesize();
 			$str = '<span class="subdued">'.count($files) .' Files Found </div><table id="workgrouptable" width="80%">';
 			foreach ($files as $file)
 			{
@@ -107,6 +109,7 @@ class workgroupops extends object
 				$download = $objLink->show();
 					
 				$filename = $objFile->getFileName($file['fileid']);
+				$fileSize = $objFileSize->formatsize($objFile->getFileSize($file['fileid']));
 				$icon = $this->objFileIcons->getFileIcon($filename);
 				$objLink->link = $filename;
 				$fileNameLink = $objLink->show();
@@ -120,7 +123,7 @@ class workgroupops extends object
 				$rec ='<tr ><td style="border-top:1px dotted;">';
 				
 				$rec .='<div class="colorbox greenbox"><table ><tr>';
-				$rec .='<td>'. $icon.'  '.$fileNameLink.'  <span class="subdued">('.$objFile->getFileSize($file['fileid']).' bytes) </span></td>';
+				$rec .='<td>'. $icon.'  '.$fileNameLink.'  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="subdued">'.$fileSize.'</span></td>';
 				$rec .= '<td></td><td rowspan="2"><div class="colorbox pinkbox">'.$file['description'].'</div></td>';
 				$rec .= '</tr><tr>';
 				$rec .='<td>Modified by '. $this->objUser->fullname($file['modifierid']).'</td>';
