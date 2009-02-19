@@ -7,6 +7,7 @@ class editform extends object {
         // language object.
         $this->objLanguage = $this->getObject ( 'language', 'language' );
         $this->objUser = $this->getObject('user', 'security');
+        $this->objXml = $this->getObject('xmlthing', 'utilities');
     }
 
     private function loadElements() {
@@ -130,6 +131,35 @@ class editform extends object {
             $reloadbot = NULL;
         }
         return $fb->show($this->objLanguage->languageText("mod_computerscience_aimlmenu", "computerscience"), $editaiml."<br />".$addaiml."<br />".$pubaiml."<br />".$reloadbot);
+    }
+
+    public function rebuildStdDefs($filearray) {
+        $this->objXml->createDoc();
+        $this->objXml->startElement('aiml');
+        $this->objXml->writeAtrribute('version', '1.0');
+        $this->objXml->startElement('bot');
+        $this->objXml->writeAtrribute('name', 'CS4fn');
+        $this->objXml->endElement();
+        // start the category element
+        $this->objXml->startElement('category');
+
+        // start the pattern element
+        // add the LOAD AIML B pattern
+        $this->objXml->writeElement('pattern', 'LOAD AIML B');
+
+        // start the template of all the files we need
+        $this->objXml->startElement('template');
+        // learn stanzas
+        foreach($filearray as $filename) {
+            $this->objXml->writeElement('learn', $filename);
+        }
+
+        // end of all the things now and return
+        $this->objXml->endElement();
+        $this->objXml->endElement();
+        $this->objXml->endElement();
+
+        return $this->objXml->dumpXML();
     }
 }
 ?>

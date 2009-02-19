@@ -56,7 +56,9 @@
                             $catarr = array();
                         }
                             // so now we can get the correct pattern out
-                           $this->objXml->writeElement("srai", $catarr[$that]);
+                            $this->objXml->startElement('template');
+                            $this->objXml->writeElement("srai", $catarr[$that]);
+                            $this->objXml->endElement();
                         }
                         else {
                             $this->objXml->writeElement("template", $template);
@@ -103,7 +105,23 @@
                         break;
 
                     case 'reloadbot':
-                        echo "not yet implemented";
+                        $pathToScript = $this->getResourcePath('');
+                        // first stop the bot, unlink the brn file and restart it
+                        $this->endSession();
+                        $respath = $this->getResourcePath('').'aiml/';
+                        $brn = $pathToScript."standard.brn";
+
+                        if(file_exists($brn)) {
+                            unlink($brn);
+                        }
+
+                        // restart the bot
+                        $exeString = $pathToScript."bot.py";
+
+                        exec ( $exeString . " > /dev/null &", $output );
+                        //var_dump($output);
+                        $message = $this->objLanguage->languageText("mod_computerscience_botreloaded", "computerscience");
+                        $this->nextAction('', array('message' => $message));
                         die();
                         break;
 
@@ -112,6 +130,17 @@
                         // copy the file to the resources/aiml directory
                         $to = $this->getResourcePath('').'aiml/'.$this->objUser->userId().'_std-cs4fn.aiml';
                         copy($filename, $to);
+                        // now update the std-definitions file
+                        $respath = $this->getResourcePath('').'aiml/';
+                        foreach(glob($respath.'*.aiml') as $file) {
+                            $filearray[] = "aiml/".basename($file);
+                        }
+
+                        $stdxml = $this->objDict->rebuildStdDefs($filearray);
+                        unlink($this->getResourcePath('')."std-startup.xml");
+
+                        file_put_contents($this->getResourcePath('')."/std-startup.xml", $stdxml);
+
                         $message = $this->objLanguage->languageText("mod_computerscience_aimlpublished", "computerscience");
                         $this->nextAction('', array('message' => $message));
                         break;
@@ -138,5 +167,31 @@
                         break;
             }
         }
+
+        private function endSession() {
+            //return exec("killall python");
+            $pids = $this->getPID ( 'bot.py' );
+            if (count ( $pids ) > 0) {
+                foreach ( $pids as $pid ) {
+                    return exec ( "kill " . $pid );
+                }
+            }
+        }
+
+        private function getPID($param) {
+            exec ( "ps aux", $result );
+            $r2 = array ();
+            foreach ( $result as $line ) {
+                if (strpos ( $line, $param )) {
+                    $l2 = substr ( $line, strpos ( $line, ' ' ), - 1 );
+                    $l2 = trim ( $l2 );
+                    $l2 = substr ( $l2, 0, strpos ( $l2, ' ' ) );
+                    $l2 = trim ( $l2 );
+                    $r2 [] = $l2;
+                }
+            }
+            return $r2;
+        }
+
     }
 ?>
