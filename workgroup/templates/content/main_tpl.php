@@ -109,7 +109,7 @@ if (!empty($lecturers)) {
         $table->endRow();
     }
     
-    $rightContent .= $table->show(); 
+    //$rightContent .= $table->show(); 
 }
 
 // Display the members of the workgroup.
