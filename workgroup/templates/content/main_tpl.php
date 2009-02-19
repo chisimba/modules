@@ -86,7 +86,7 @@ $instantMessaging = $moduleCheck->checkIfRegistered('instantmessaging');
 
 if (!empty($lecturers)) {
     $pageText->str=ucwords($objLanguage->code2Txt('mod_workgroup_lecturers','workgroup'));
-    $rightContent .= $pageText->show();
+    //$rightContent .= $pageText->show();
 
     $table=$this->newObject('htmltable','htmlelements');
     $table->cellspacing='1';
