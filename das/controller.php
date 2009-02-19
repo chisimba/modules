@@ -78,7 +78,7 @@ class das extends controller {
             $this->objDbImPres = $this->getObject ( 'dbimpresence', 'im' );
             $this->objIMUsers = $this->getObject ( 'dbimusers', 'im' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
-	    $this->objConfig = $this->getObject ( 'altconfig', 'config' );
+			$this->objConfig = $this->getObject ( 'altconfig', 'config' );
            
 
             // Get the sysconfig variables for the Jabber user to set up the connection.
@@ -89,13 +89,14 @@ class das extends controller {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
-	    $this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
+			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
            
         } catch ( customException $e ) {
             customException::cleanUp ();
             exit ();
         }
+		
     }
 
     /**
@@ -112,15 +113,18 @@ class das extends controller {
 			case 'viewall' :
 
             case NULL :
-                $this->setLayoutTemplate('das_layout_tpl.php');
-                header("Content-Type: text/html;charset=utf-8");
-                return 'viewall_tpl.php';
-                break;
-
+				$this->setLayoutTemplate('das_layout_tpl.php');
+				return 'viewall_tpl.php';
+				break;
 			case 'viewreassign':
-					$this->setLayoutTemplate('das_layout_tpl.php');
-			return 'view_reassign_tpl.php';
-			break;
+				$this->setLayoutTemplate('das_layout_tpl.php');
+				return 'view_reassign_tpl.php';
+				break;
+			
+			case 'getconversations':
+				$msgs = $this->objDbIm->getMessagesByActiveUser ($this->objUser->userId());
+				echo  $this->objViewRender->renderOutputForBrowser($msgs);
+				break;
 
 			case 'reassign':
 				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
@@ -230,6 +234,15 @@ class das extends controller {
 				echo $this->getParam('myparam');
 				break;
 				
+			case "sendfeedback":				
+				if ($this->objImOps->sendFeedBack($this->getParam('personid')))
+				{					
+					echo "Feedback sent to ";
+				} else {
+					echo "There was an error send the feedback. Please information the site Administrator";
+				}
+				
+				break;
 			default :
 					die ( "unknown action" );
 					break;

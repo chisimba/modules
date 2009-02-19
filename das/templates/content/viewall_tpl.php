@@ -15,6 +15,14 @@ $this->objFeatureBox = $this->getObject('featurebox', 'navigation');
 $objWashout = $this->getObject('washout', 'utilities');
 $this->objImOps = $this->getObject('dasops', 'das');
 $objImView = $this->getObject('viewrender', 'das');
+
+
+$script = $this->getJavaScriptFile('das.js');
+$this->appendArrayVar('headerParams', $script);
+$this->appendArrayVar('bodyOnLoad', "loadConversations()");
+
+$loadIcon->setIcon('loader');
+
 $middleColumn = NULL;
 $leftColumn = NULL;
 $rightColumn = NULL;
@@ -24,7 +32,8 @@ $header = new htmlHeading();
 $header->str = 'My Conversations' ;$this->objLanguage->languageText('mod_im_recentmessages', 'im');
 $header->type = 3;
 
-$refreshLink->href = $this->uri(null, 'das');
+$refreshLink->href = "#";//$this->uri(null, 'das');
+$refreshLink->extra = ' onclick="showLoading(); loadConversations()" ';
 $refreshIcon->setIcon('refresh');
 $refreshLink->link = $refreshIcon->show();
 
@@ -49,7 +58,7 @@ $str = "$num$outof users";
 
 
 $middleColumn .= $header->show().'<br/>'.$config.'  '.$refreshLink->show().'<br/>'.$str;
-$middleColumn .= $objImView->renderOutputForBrowser($msgs);
+$middleColumn .= '<div id="conversations"><h3>Loading Conversations....'.$loadIcon->show().'</h3></div>'; //$objImView->renderOutputForBrowser($msgs)
 
 
 if (!$this->objUser->isLoggedIn()) {
