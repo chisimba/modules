@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 32
 		),
+	'fileid' => array(
+		'type' => 'text',
+		'length' => 32
+		),
 	'description' => array(
 		'type' => 'text',
 		'length' => 255
