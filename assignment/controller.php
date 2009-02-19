@@ -105,7 +105,8 @@ class assignment extends controller
         $this->objLanguage = $this->getObject('language','language');
         $this->objUser = $this->getObject('user','security');
         $this->objContext = $this->getObject('dbcontext','context');
-
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+            
 
         //Get the activity logger class
         $this->objLog=$this->newObject('logactivity', 'logger');
@@ -114,7 +115,7 @@ class assignment extends controller
     }
 
 
-    public function isValid($action)
+    /*public function isValid($action)
     {
         $restrictedActions = array ('add', 'edit', 'saveassignment', 'updateassignment', 'delete', 'markassignments', 'saveuploadmark', 'saveonlinemark');
 
@@ -126,6 +127,20 @@ class assignment extends controller
             }
         } else {
             return TRUE;
+        }
+    }*/
+	
+	   /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
         }
     }
 
