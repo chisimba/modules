@@ -1,0 +1,662 @@
+<?php
+/*
+ * This is the controller class for the rmfhe(Research Information Management for Higher Education
+ * Module
+ *
+ */
+// security check - must be included in all scripts
+if (!$GLOBALS['kewl_entry_point_run']){
+    die("You cannot view this page directly");
+}
+/**
+ *
+ * @package rimfhe
+ * @version 0.1
+ * @Copyright January 2009
+ * @author Joey Akwunwa
+ */
+
+class rimfhe extends controller
+{
+/*
+*Declare class properties
+*variables to hold datta
+*/
+	public $objLanguage;
+	public $objUrl;
+	public $dbInsert;
+	public $objStaffRegistration;
+	public $objEntireBook;
+	public $objChaptersInBook;
+	public $objJournals;
+	public $objDoctorateStudents;
+	public $objMastersStudents;
+	public $formElements;
+
+/**
+*
+Public fuction to instantiate required  objestc
+*
+*/
+	public function init()
+	{
+		//instantiate the language Object
+		$this->formElements =$this->getObject('formhelperclass', 'rimfhe');
+		$this->objLanguage = $this->getObject('language', 'language');		
+		$this->objUrl = $this->getObject('url', 'strings');
+		$this->objStaffMember =$this->getObject('dbstaffmember', 'rimfhe');
+		//$this->objStaffRegistration= $this->getObject('staffregistration', 'rimfhe');
+		//$this->objEntireBook= $this->getObject('entirebook', 'rimfhe');
+		//$this->objChaptersInBook= $this->getObject('chaptersinbook', 'rimfhe');
+		//$this->objJournals= $this->getObject('staffregistration', 'rimfhe');
+		//$this->objDoctorateStudents= $this->getObject('doctoratestudents', 'rimfhe');
+		//$this->objMastersStudents= $this->getObject('mastersstudents', 'rimfhe');
+		$this->objAccreditedJournal= $this->getObject('dbaccreditedjournal', 'rimfhe');
+		$this->objAccreditedJournalAuthors= $this->getObject('dbaccreditedjournalauthors', 'rimfhe');
+	}//end init
+
+	public function dispatch()
+	{ 	
+		$action =$this ->getParam('action');
+		$this->setLayoutTemplate('default_layout_tpl.php');
+		//if form is submitted
+		if($_POST){
+			//$action =$this ->getParam('action');
+			//switch statment for find action
+			
+			switch($action){
+			case 'registerstaff':
+				return $this->AddStaffMember();
+
+			case 'accreditedjournal':
+				return $this-> addAccretedJournal();
+			case 'entirebook';
+				return $this->addEntireBook();
+
+			case 'chapterinbook';
+				return $this->addChapterInBook();
+
+			case 'doctoralstudents';
+				return $this->addDoctoralStudents();
+
+			case 'mastersstudents';
+				return $this->addMastersStudents();
+			case 'staffdetails':
+				$arrDisplayStaff = $this->objStaffMember->dispalyStaffDetails();
+				$this->setVarByRef('arrDisplayStaff', $arrDisplayStaff);
+				return 'displaystaff_tpl.php'; 
+
+			}//end switch
+		}
+		//Display Landing page and forms	
+		else{	
+			switch($action)
+			{
+			default: 
+			return 'staffregistration_tpl.php';
+			break;
+			
+			case 'Staff Member Registarion' :
+			return 'staffregistration_tpl.php';
+			break;
+
+			case 'DOE Accredoted Journal Articles' :
+			return 'accreditedjournal_tpl.php';
+			break;
+
+			case 'Entire Book/Monogragh' :
+			return 'entirebook_tpl.php';
+			break;
+
+			case 'Chapter In a Book' :
+			return 'chapterinbook_tpl.php';
+			break;
+
+			case 'Graduating Doctoral Student' :
+			return 'doctoralstudents_tpl.php';
+			break;
+
+			case 'Graduating Masters Student' :
+			return 'mastersstudents_tpl.php';
+			break;
+			case 'Registered Staff Member' :
+			$arrDisplayStaff = $this->objStaffMember->displayStaffDetails();
+			$this->setVarByRef('arrDisplayStaff', $arrDisplayStaff);
+			return 'displaystaff_tpl.php';  
+			break;  
+			
+			case 'Accredted Journal Authors' :			
+			$arrJournal=array();
+			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
+			$this->setVarByRef('arrJournal', $arrJournal);
+			return 'displayaccrjournal_tpl.php';  
+			break; 
+
+			case 'confirnregistration' :
+			return 'staffregistrationconfirm_tpl.php';
+			break;
+ 
+			}//end switch
+		}
+	}//end dispatch
+
+	//Method to check if all form field have data and add data to db table
+	private function addAccreditedJorunalAndAuthor()
+	{	
+		$this->objAccreditedJournal->accreditedJournal();
+		$this->objAccreditedJournalAuthors->accreditedJournalAuthors();
+	} 
+/*
+*Public Method that checks if all required fields are filled
+*If fiels are fiels, it inserts data into db table, else returns error
+*/
+	public function AddStaffMember()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$surname = $this->getParam('surname');
+		$initials= $this->getParam('initials');
+		$firstname= $this->getParam('firstname');
+		$droptitle= $this->getParam('title');
+		$rank= $this->getParam('rank');
+		$appointment= $this->getParam('appointment');
+		$dept= $this->getParam('department');
+		$faculty= $this->getParam('faculty');
+		$staffNumber= $this->getParam('staffNumber');
+		$email= $this->getParam('email');
+		$confirmemail=$this->getParam('confirmemail');			
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array($captcha, 	$surname, $initials, $firstname, $rank, $dept, $faculty, $staffNumber, $email, $confirmemail
+			);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+
+		// Check that all required field are not empty
+						
+		//ckeck user name
+		if(empty($surname)){
+			$problems[] = 'nosurname';
+		}
+		
+		if(empty($initials)){
+			$problems[] = 'noinittials';
+		}
+
+		if(empty($firstname)){
+			$problems[] ='nofirstname' ;
+		}
+
+		if(empty($rank)){
+			$problems[] = 'norank';
+		}
+
+		if(empty($dept)){
+			$problems[] ='nodepatment' ;
+		}
+
+		if(empty($faculty)){
+			$problems[] ='nofaculty' ;
+		}
+		if(empty($staffNumber)){
+			$problems[] = 'nostaffnumber';
+		}
+
+		//check if email is invalid and/or empty
+		 if (!($this->objUrl->isValidFormedEmailAddress($email) ||$this->objUrl->isValidFormedEmailAddress($confirmemail) )) 
+		{
+            		$problems[] = 'emailnotvalid';
+        	}
+		elseif(empty($email)){
+			$problems[] = 'noemail';
+		}
+		elseif(empty($confirmemail)){
+			$problems[] = 'norepeatemail';
+		}
+		elseif($email!=$confirmemail){
+			$problems[] = 'emailnotmatch';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'staffregistration_tpl.php';
+        } 
+	else {
+		$this->nextAction('confirnregistration');
+                  return $this->objStaffMember->addStaffDetails(); 
+		}
+	
+	}//end addStaffMember
+	
+	public function addAccretedJournal()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$journalname = $this->getParam('journalname');
+		$category= $this->getParam('category');
+		$articletitle= $this->getParam('articletitle');
+		$publicationyear= $this->getParam('publicationyear');
+		$volume= $this->getParam('volume');
+		$firstpage= $this->getParam('firstpage');
+		$lastpage= $this->getParam('lastpage');
+		$author1= $this->getParam('author1');
+		$author2= $this->getParam('author2');
+		$author3= $this->getParam('author3');
+		$author4= $this->getParam('author4');				
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array($captcha,$journalname, $articletitle, $publicationyear, $volume, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+
+		//ckeck user name
+		if(empty($journalname)){
+			$problems[] = 'nojournalname';
+		}
+		
+		if(empty($articletitle)){
+			$problems[] = 'noarticletitle';
+		}
+
+		if(empty($publicationyear)){
+			$problems[] ='nopublicationyr' ;
+		}
+
+		if(empty($volume)){
+			$problems[] = 'volume';
+		}
+
+		if(empty($firstpage)){
+			$problems[] ='nofirstpage' ;
+		}
+
+		if(empty($lastpage)){
+			$problems[] ='nolastpage' ;
+		}
+		
+		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+			$problems[] = 'noauthor';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'accreditedjournal_tpl.php';
+        } 
+	else {
+                  return ; $this->objAccreditedJournal->accreditedJournal();
+		}
+	
+	}//end addAccretedJournal
+
+	public function addEntireBook()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$bookname = $this->getParam('bookname');
+		$category= $this->getParam('isbnnumber');
+		$publishinghouse= $this->getParam('publishinghouse');
+		$firstpage= $this->getParam('firstpage');
+		$lastpage= $this->getParam('lastpage');
+		$author1= $this->getParam('author1');
+		$author2= $this->getParam('author2');
+		$author3= $this->getParam('author3');
+		$author4= $this->getParam('author4');				
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array($captcha,$bookname, $isbnnumber, $publishinghouse, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+
+		//ckeck user name
+		if(empty($bookname)){
+			$problems[] = 'nobookname';
+		}
+		
+		if(empty($isbnnumber)){
+			$problems[] = 'noisbnnumber';
+		}
+
+		if(empty($publishinghouse)){
+			$problems[] ='nopublishinghouse' ;
+		}
+
+		if(empty($firstpage)){
+			$problems[] ='nofirstpage' ;
+		}
+
+		if(empty($lastpage)){
+			$problems[] ='nolastpage' ;
+		}
+		
+		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+			$problems[] = 'noauthor';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'entirebook_tpl.php';
+        } 
+	else {
+                  return ; 
+		}
+	
+	}//end entireBook
+		
+	public function addChapterInBook()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$bookname = $this->getParam('bookname');
+		$category= $this->getParam('isbnnumber');
+		$editors= $this->getParam('editors');
+		$publishinghouse= $this->getParam('publishinghouse');
+		$chaptertile= $this->getParam('chaptertile');
+		$firstpage= $this->getParam('firstpage');
+		$lastpage= $this->getParam('lastpage');
+		$author1= $this->getParam('author1');
+		$author2= $this->getParam('author2');
+		$author3= $this->getParam('author3');
+		$author4= $this->getParam('author4');				
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array($captcha,$bookname, $isbnnumber,$editors, $publishinghouse, $chaptertile, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+
+		//ckeck user name
+		if(empty($bookname)){
+			$problems[] = 'nobookname';
+		}
+		
+		if(empty($isbnnumber)){
+			$problems[] = 'noisbnnumber';
+		}
+		if(empty($editors)){
+			$problems[] = 'noeditors';
+		}
+		if(empty($publishinghouse)){
+			$problems[] ='nopublishinghouse' ;
+		}
+		if(empty($chaptertile)){
+			$problems[] ='nochaptertile' ;
+		}
+		if(empty($firstpage)){
+			$problems[] ='nofirstpage' ;
+		}
+
+		if(empty($lastpage)){
+			$problems[] ='nolastpage' ;
+		}
+		
+		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+			$problems[] = 'noauthor';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'chapterinbook_tpl.php';
+        } 
+	else {
+                  return ; 
+		}
+	
+	}//end chapterInBook
+
+
+	public function addDoctoralStudents()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$surname = $this->getParam('surname');
+		$initials= $this->getParam('initials');
+		$firstname= $this->getParam('firstname');
+		$gender= $this->getParam('gender');
+		$studnumber= $this->getParam('studnumber');
+		$dept= $this->getParam('department');
+		$faculty= $this->getParam('faculty');
+		$thesis= $this->getParam('thesis');
+		$supervisor1= $this->getParam('supervisor1');
+		$supervisor2= $this->getParam('supervisor2');
+		$supervisor3= $this->getParam('supervisor3');
+		$degree= $this->getParam('degree');		
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array(
+		  	$captcha, $surname, $initials, $firstname, $gender, $studnumber, $dept, $faculty, $thesis, $supervisor1, $supervisor2, $supervisor3, $degree);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+	
+		if(empty($surname)){
+			$problems[] = 'nosurname';
+		}
+		
+		if(empty($initials)){
+			$problems[] = 'noinittials';
+		}
+
+		if(empty($firstname)){
+			$problems[] ='nofirstname' ;
+		}
+
+		if(empty($studnumber)){
+			$problems[] = 'nostudnumber';
+		}
+
+		if(empty($dept)){
+			$problems[] ='nodepatment' ;
+		}
+
+		if(empty($faculty)){
+			$problems[] ='nofaculty' ;
+		}
+		if(empty($thesis)){
+			$problems[] = 'nothesis';
+		}
+
+		if(empty($supervisor1) || empty($supervisor2) ||empty($supervisor3)){
+			$problems[] = 'nosupervisor';
+		}
+		if(empty($degree)){
+			$problems[] = 'nodegree';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'doctoralstudents_tpl.php';
+        } 
+	else {
+                  return ; 
+		}
+	
+	}//end addDoctorialStudents
+	public function addMastersStudents()
+	{
+		$captcha = $this->getParam('request_captcha');
+		$surname = $this->getParam('surname');
+		$initials= $this->getParam('initials');
+		$firstname= $this->getParam('firstname');
+		$gender= $this->getParam('gender');
+		$studnumber= $this->getParam('studnumber');
+		$dept= $this->getParam('department');
+		$faculty= $this->getParam('faculty');
+		$thesis= $this->getParam('thesis');
+		$supervisor1= $this->getParam('supervisor1');
+		$supervisor2= $this->getParam('supervisor2');
+		$supervisor3= $this->getParam('supervisor3');
+		$degree= $this->getParam('degree');		
+
+		// Create an array of fields that cannot be empty
+		$checkFields = array(
+		  	$captcha, $surname, $initials, $firstname, $gender, $studnumber, $dept, $faculty, $thesis, $supervisor1, $supervisor2, $supervisor3, $degree);	
+
+		// Create an array to hold information about problems
+		$problem = array();
+	
+		if(empty($surname)){
+			$problems[] = 'nosurname';
+		}
+		
+		if(empty($initials)){
+			$problems[] = 'noinittials';
+		}
+
+		if(empty($firstname)){
+			$problems[] ='nofirstname' ;
+		}
+
+		if(empty($studnumber)){
+			$problems[] = 'nostudnumber';
+		}
+
+		if(empty($dept)){
+			$problems[] ='nodepatment' ;
+		}
+
+		if(empty($faculty)){
+			$problems[] ='nofaculty' ;
+		}
+		if(empty($thesis)){
+			$problems[] = 'nothesis';
+		}
+
+		if(empty($supervisor1) || empty($supervisor2) ||empty($supervisor3)){
+			$problems[] = 'nosupervisor';
+		}
+		if(empty($degree)){
+			$problems[] = 'nodegree';
+		}
+	
+		// Check whether user matched captcha
+		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
+		    $problems[] = 'captchadoesntmatch';
+		}
+		//if form entry is in corect or invavalid
+		 if (count($problems) > 0) {
+			$this->setVar('mode', 'fixerror');
+			$this->setVarByRef('problems', $problems);
+			return 'doctoralstudents_tpl.php';
+        } 
+	else {
+                  return ; 
+		}
+	
+	}//end addMastersStudents
+/*
+*Private function that is called  by other Mothods
+*Walks through the $checkFields array and returns true if all field have dat
+*/
+	private function checkFields($checkFields) 
+	{
+		$allFieldsOk = TRUE;
+		foreach($checkFields as $field) {
+			if (empty($field)) {
+			 $allFieldsOk = FALSE;
+			}
+		}
+		return $allFieldsOk;
+	}//end checkFields
+	
+/**
+     * Method to display the error messages/problems in the user registration
+     * @getParam string $problem Problem Code
+     * @return string Explanation of Problem
+     */
+	protected function explainProblemsInfo($problem) 
+	{
+		switch ($problem) {
+			case 'nosurname':
+			return 'Please enter the Surname.';
+			case 'noinittials':
+			return 'Please enter the Initial(s).';
+			case 'nofirstname':
+			return 'Please enter the Firstname.';
+			case 'norank':
+			return 'Please enter the Rank';
+			case 'nodepatment':
+			return 'Please enter the Department/Schoool. ';
+			case 'nofaculty':
+			return 'Please enter the Faculty.';
+			case 'nostaffnumber':
+			return 'Please enter the Staff Number.';
+			case 'emailnotvalid':
+			return 'Please enter a valid email.';
+			case 'noemail':
+			return 'Please enter a email address.';
+			case 'norepeatemail':
+			return 'Please enter repeat the email address.';
+			case 'emailnotmatch':
+			return 'The email addresses you entered do not match.';
+			//DOE Accredited Journal Articles
+			case 'nojournalname':
+			return 'You have not entered the name of the Journal.';
+			case 'noarticletitle':
+			return 'You have not entered the title of the Journal.';
+			case 'nopublicationyr':
+			return 'You have not entered the Year of Publication.';
+			case 'volume':
+			return 'You have not entered the Journal\'s Volume.';
+			case 'nofirstpage':
+			return 'You have not entered the Chapter/Article\'s First Page Number.';
+			case 'nolastpage':
+			return 'You have not entered the Chapter/Article\'s Last Page Number.';
+			case 'noauthor':
+			return 'You must enter atleast one Author\'s Name.';
+			//Entire Book
+			case 'nobookname':
+			return 'You have not entered the Title of The Book.';
+			case 'noisbnnumber':
+			return 'You have not entered the ISBN Number.';
+			case 'nopublishinghouse':
+			return 'You have not Entered the Publishing House.';
+			// chapter in a Book
+			case 'noeditors':
+			return 'You have not entered the Editors of The Book.';
+			case 'nochaptertile':
+			return 'You have not entered the Title Of the Chapter.';
+			// Doctoral Students
+			case 'nostudnumber':
+			return 'You hhave not entered the Student Number.';
+			case 'nothesis':
+			return 'You have not entered the Title of the Thesis.';
+			case 'nosupervisor':
+			return 'You must enter atleast one Supervisor.';
+			case 'nodegree':
+			return 'You have not entered the Degree.';
+			//Captcha Error message
+			case 'captchadoesntmatch':
+			return 'You have entered an incorrect image code';
+		}
+	}
+	
+}//end iimfhe
+?>
