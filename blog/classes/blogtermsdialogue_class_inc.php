@@ -94,7 +94,7 @@ class blogtermsdialogue extends jqdialogue
 
             $labelText = $this->objLanguage->languageText('mod_blog_terms_accept', 'blog');
             $label = new label($labelText, 'acceptedterms');
-            $this->content .= $label->show();
+            $this->content .= ' '.$label->show();
 
             $this->content .= '</p>';
 
