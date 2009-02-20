@@ -47,6 +47,8 @@ $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $this->objLanguage->languageText('word_sero')." ".$this->objLanguage->languageText('word_surveillance');
 $objHeading->type = 2;
 
+$backUri = $this->uri(array('action'=>'active_addtest'));
+$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 
 $searchUri = $this->uri(array('action'=>'active_search'));
@@ -74,6 +76,12 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($browseLink);
 $objTable->endRow();
+
+$objTable->startRow();
+
+$objTable->addCell($backButton->show());
+$objTable->endRow();
+
 
 
 $objLayer = new layer();

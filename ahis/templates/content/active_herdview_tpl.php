@@ -41,7 +41,7 @@ $GLOBALS['kewl_entry_point_run']) {
 
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_herd');
+$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_herd')." ".$this->objLanguage->languageText('word_details');
 $objHeading->type = 2;
 
 
@@ -56,6 +56,8 @@ $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'sero_surveillance'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$nextUri = $this->uri(array('action'=>'active_sampleview'));
+$nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
 $campBox = new textinput('campBox',$campBox);
 $diseaseBox = new textinput('diseaseBox',$diseaseBox);
@@ -101,7 +103,7 @@ echo $objLayer->show();
 $objTable = new htmlTable();
 $objTable->cellpadding =4;
 $objTable->cellspacing = 2;
-$objTable->width = NULL;
+$objTable->width = '60%';
 $objTable->cssClass = 'min50';
 
 $objTable->startRow();
@@ -124,8 +126,10 @@ $objTable->addCell('');
 $objTable->startRow();
 $objTable->addCell('&nbsp');
 $objTable->endRow();
+$objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
+$objTable->addCell($nextButton->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addherd')));
