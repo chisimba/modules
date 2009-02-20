@@ -70,6 +70,9 @@ class dbquestions extends dbtable
             $sql.= " WHERE testid='$testId' ORDER BY questionorder";
         }
         $data = $this->getArray($sql);
+        foreach ($data as $datum) {
+            $datum['question.question'] = $this->objWashout->parseText($datum['question.question']);
+        }
         if (!empty($data)) {
             $count = $this->countQuestions($testId);
             $data[0]['count'] = $count;
@@ -97,6 +100,9 @@ class dbquestions extends dbtable
         $sql.= " AND question.questionorder > $num";
         $sql.= " ORDER BY question.questionorder LIMIT 10";
         $data = $this->getArray($sql);
+        foreach ($data as $datum) {
+            $datum['question.question'] = $this->objWashout->parseText($datum['question.question']);
+        }
         if (!empty($data)) {
             $count = $this->countQuestions($testId);
             $data[0]['count'] = $count;
@@ -120,6 +126,9 @@ class dbquestions extends dbtable
         $sql.= " AND testid='$testId'";
         $sql.= " ORDER BY question.questionorder, answer.answerorder";
         $data = $this->getArray($sql);
+        foreach ($data as $datum) {
+            $datum['question.question'] = $this->objWashout->parseText($datum['question.question']);
+        }
         if (!empty($data)) {
             return $data;
         }
