@@ -53,6 +53,7 @@ $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'passive_outbreak'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSpecies()");
 
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));
@@ -166,7 +167,8 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($bButton->show());
-$objTable->addCell($sButton->show(),NULL);//,'top','right');
+$objTable->addCell($cButton->show());
+$objTable->addCell($sButton->show(),NULL,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
@@ -188,5 +190,8 @@ $objForm->addRule('prophylactic', $valStr." ".$objLanguage->languageText('word_p
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();

@@ -10,3 +10,75 @@ function toggleAhisUser() {
     $('input_password').disabled = !$('input_password').disabled;
     $('input_confirm').disabled =  !$('input_confirm').disabled;   
 }
+
+function resetDate(fieldName) {
+    var today = new Date();
+    
+    var day = today.getDate();
+    var monthIndex = today.getMonth();
+    var month = monthIndex + 1;
+    var year = today.getFullYear();
+
+    $(fieldName + '_Day_ID').selectedIndex = day - 1;
+    $(fieldName + '_Month_ID').selectedIndex = monthIndex;
+    $(fieldName + '_Year_ID').value = year;
+    day += '';
+    month += '';
+    if (day.length < 2) {
+        day = '0' + day;
+    }
+    if (month.length < 2) {
+        month = '0' + month;
+    }
+    
+    $('input_' + fieldName).value = year + '-' + month + '-' + day;
+}
+
+function clearPassiveSurveillance() {
+    $('input_oStatusId').selectedIndex = 0;
+    $('input_qualityId').selectedIndex = 0;
+    $('input_remarks').value = '';
+    resetDate('datePrepared');
+    resetDate('dateIBAR');
+    resetDate('dateReceived');
+    resetDate('dateIsReported');
+}
+
+function clearPassiveOutbreak() {
+    resetDate('dateVet');
+    resetDate('dateOccurence');
+    resetDate('dateDiagnosis');
+    resetDate('dateInvestigation');
+    $('input_location').value = '';
+    $('input_latitude').value = '';
+    $('input_longitude').value = '';
+    $('input_disease').value = '';
+    $('input_causitive').value = '';
+}
+
+function clearPassiveSpecies() {
+    $('input_speciesId').selectedIndex = 0;
+    $('input_ageId').selectedIndex = 0;
+    $('input_sexId').selectedIndex = 0;
+    $('input_productionId').selectedIndex = 0;
+    $('input_controlId').selectedIndex = 0;
+    $('input_basisId').selectedIndex = 0;
+    $('input_susceptible').value = '';
+    $('input_cases').value = '';
+    $('input_deaths').value = '';
+    $('input_vaccinated').value = '';
+    $('input_slaughtered').value = '';
+    $('input_destroyed').value = '';
+    $('input_production').value = '';
+    $('input_newcases').value = '';
+    $('input_recovered').value = '';
+    $('input_prophylactic').value = '';  
+}
+
+function clearPassiveVaccine() {
+    $('input_source').value = '';
+    $('input_batch').value = '';
+    resetDate('dateManufactured');
+    resetDate('dateExpire');
+    $('input_panvac').checked = false;
+}

@@ -54,6 +54,7 @@ $sButton = new button('enter', $this->objLanguage->languageText('word_finish'));
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'passive_species'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveVaccine()");
 
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));
@@ -114,7 +115,8 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($bButton->show());
-$objTable->addCell($sButton->show());
+$objTable->addCell($cButton->show());
+$objTable->addCell($sButton->show(), NULL, 'top', 'right');
 $objTable->addCell('');
 $objTable->endRow();
 
@@ -127,5 +129,8 @@ $objForm->addRule('batch', $this->objLanguage->languageText('mod_ahis_valvacbatc
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();

@@ -54,6 +54,7 @@ $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'passive_surveillance'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveOutbreak()");
 
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));
@@ -138,7 +139,8 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($bButton->show());
-$objTable->addCell($sButton->show(),NULL);//,'top','right');
+$objTable->addCell($cButton->show());
+$objTable->addCell($sButton->show(),NULL,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
@@ -149,11 +151,16 @@ $objForm->addRule('dateOccurence', $this->objLanguage->languageText('mod_ahis_va
 $objForm->addRule('dateDiagnosis', $this->objLanguage->languageText('mod_ahis_valdatediagnosis', 'ahis'), 'datenotfuture');
 $objForm->addRule('dateInvestigation', $this->objLanguage->languageText('mod_ahis_valdateinvestigation', 'ahis'), 'datenotfuture');
 $objForm->addRule('location', $this->objLanguage->languageText('mod_ahis_locationreq', 'ahis'), 'required');
+$objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'containsnumber');
+$objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'ahis'), 'containsnumber');
 $objForm->addRule('disease', $this->objLanguage->languageText('mod_ahis_diseasereq', 'ahis'), 'required');
 $objForm->addRule('causitive', $this->objLanguage->languageText('mod_ahis_causitivereq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();

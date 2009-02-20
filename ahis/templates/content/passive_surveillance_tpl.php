@@ -53,6 +53,7 @@ $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
 
 $territoryDrop = new dropdown('territoryId');
 $territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
@@ -131,7 +132,8 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($bButton->show());
-$objTable->addCell($sButton->show(),NULL);//,'top','right');
+$objTable->addCell($cButton->show());
+$objTable->addCell($sButton->show(),NULL,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
@@ -146,5 +148,8 @@ $objForm->addRule('dateIsReported', $this->objLanguage->languageText('mod_ahis_v
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();
