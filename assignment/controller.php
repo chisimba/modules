@@ -162,9 +162,9 @@ class assignment extends controller
             return $this->nextAction(NULL, array('error'=>'notincontext'), '_default');
         }
 
-        if (!$this->isValid($action)) {
+        /*if (!$this->isValid($action)) {
             return $this->nextAction(NULL, array('error'=>'nopermission'));
-        }
+        }*/
 
         $this->setLayoutTemplate('assignment_layout_tpl.php');
 
