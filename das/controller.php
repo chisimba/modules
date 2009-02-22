@@ -123,9 +123,10 @@ class das extends controller {
 			
 			case 'getconversations':
 				$msgs = $this->objDbIm->getMessagesByActiveUser ($this->objUser->userId());
-				echo  $this->objViewRender->renderOutputForBrowser($msgs);
+				
+				echo $this->objViewRender->renderOutputForBrowser($msgs);
 				break;
-
+					
 			case 'reassign':
 				$this->objDbImPres->reAssignCounsellor($this->getParam('patient'), $this->getParam('counsellorbox'));
 				return $this->nextAction('viewall');

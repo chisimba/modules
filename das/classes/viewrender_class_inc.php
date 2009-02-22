@@ -146,7 +146,7 @@ class viewrender extends object {
 		$archiveLink = $this->objLink->show();
 		
 		$archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
-		$feedback = $objAlertBox->show($feedbackIcon, $this->uri(array('action' => 'sendfeedback', 'personid' => $fuser)));
+		$feedback = '';//$objAlertBox->show($feedbackIcon, $this->uri(array('action' => 'sendfeedback', 'personid' => $fuser)));
 		
 		$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
 		$this->objLink->link = $reassignIcon;
@@ -190,7 +190,7 @@ class viewrender extends object {
 		
 		$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
 		$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
-		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div>';
+		$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">'   . $prevmessages . '</p><p>' . $ajax . '</p></div>';
 		$box .= '</td>';
 	    }
           
