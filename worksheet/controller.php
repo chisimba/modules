@@ -110,6 +110,7 @@ class worksheet extends controller
         //Log this module call
         $this->objLog->log();
         
+        $this->objWashout = $this->getObject('washout','utilities');
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->contextCode = $this->objContext->getContextCode();
         

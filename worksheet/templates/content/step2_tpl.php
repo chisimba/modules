@@ -38,7 +38,7 @@ echo $objStepMenu->show();
 
 echo '<br />'.$header->show();
 
-echo $worksheet['description'];
+echo $this->objWashout->parseText($worksheet['description']);
 
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 
@@ -65,7 +65,6 @@ if (count($questions) > 0) {
     
     $deletephrase = $this->objLanguage->languageText('mod_worksheet_confirmdeletequestion', 'worksheet', 'Are you sure you want to delete this question');
     
-    $objWashout = $this->getObject('washout', 'utilities');
     foreach ($questions as $question)
     {
         echo '<div class="newForumContainer">';
@@ -82,7 +81,7 @@ if (count($questions) > 0) {
                     echo '<div style="float:right;">'.$questionLink->show().' '.$deleteIcon.'</div>';
                 }
                 echo '<strong>'.$this->objLanguage->languageText('mod_worksheet_question', 'worksheet', 'Question').' '.$counter.':</strong><br />';
-                echo $objWashout->parseText($question['question']);
+                echo $this->objWashout->parseText($question['question']);
                 echo '<strong>'.$this->objLanguage->languageText('mod_worksheet_marks', 'worksheet', 'Marks').'</strong> ('.$question['question_worth'].')';
             echo '</div>';
             echo '<div class="newForumContent">';

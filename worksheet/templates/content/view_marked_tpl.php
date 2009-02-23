@@ -62,7 +62,8 @@ $objTable->endRow();
 if(!empty($data)){
     foreach($data as $line){
         $objTable->startRow();
-        $objTable->addCell('<b>'.$questionLabel.' '.$line['question_order'].':</b> '.$line['question'],'','','','odd','colspan="3"');
+        $pQuestion = $this->objWashout->parseText($line['question']);
+        $objTable->addCell('<b>'.$questionLabel.' '.$line['question_order'].':</b> '.$pQuestion,'','','','odd','colspan="3"');
         $objTable->endRow();
 
         // Display image if set

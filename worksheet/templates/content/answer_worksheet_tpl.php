@@ -63,7 +63,7 @@ $heading = $worksheetLabel.' '.$worksheet['name'].' - '.$questionsLabel.' '
 
 $this->setVarByRef('heading',$heading);
 
-echo '<b>'.$descriptionLabel.'</b><p>'.$worksheet['description'].'</p>';
+echo '<b>'.$descriptionLabel.'</b><p>'.$this->objWashout->parseText($worksheet['description']).'</p>';
 
 // set up answer form
 $objForm = new form('answerWS',$this->uri(''));
@@ -71,7 +71,7 @@ $objForm = new form('answerWS',$this->uri(''));
 $str=''; $i=0; $objHead->type=6;
 
 foreach($question as $line){
-    $str = '<b >'.$questionLabel.' '.$line['question_order'].':</b> '.$line['question'];
+    $str = '<b >'.$questionLabel.' '.$line['question_order'].':</b> '.$this->objWashout->parseText($line['question']);
 
     // Display image if set
     if(!empty($line['imageName'])){

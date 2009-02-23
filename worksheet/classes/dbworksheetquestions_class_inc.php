@@ -31,6 +31,7 @@ class dbworksheetquestions extends dbTable
         $this->table='tbl_worksheet_questions';
         
         $this->objUser = $this->getObject('user', 'security');
+        $this->objWashout = $this->getObject('washout','utilities');
     }
 
 
@@ -165,8 +166,8 @@ class dbworksheetquestions extends dbTable
         /*if($limit){
             $sql .= " LIMIT 4";
         }*/
-        $result = $this->getArray($sql);
-        return $result;
+        $data = $this->getArray($sql);
+        return $data;
     }
 
     /**
@@ -176,7 +177,9 @@ class dbworksheetquestions extends dbTable
     */
     public function getQuestion($id)
     {
-        return $this->getRow('id', $id);
+        $row = $this->getRow('id', $id);
+        $row['question'] = $this->objWashout->parseText($row['question']);
+        return $row;
     }
 
     /**
@@ -232,7 +235,6 @@ class dbworksheetquestions extends dbTable
         WHERE worksheet_id='$worksheet_id' ORDER BY question_order LIMIT 4";
 
         $data=$this->getArray($sql);
-
         $data[0]['count']=$this->getNumQuestions($worksheet_id);
 
         if($data){
@@ -252,7 +254,6 @@ class dbworksheetquestions extends dbTable
         WHERE worksheet_id='$worksheet_id' AND question_order='$order' LIMIT 1";
 
         $data=$this->getArray($sql);
-
         $data[0]['count']=$this->getNumQuestions($worksheet_id);
 
         if($data){

@@ -19,7 +19,7 @@ $header->str = $this->objLanguage->languageText('mod_worksheet_worksheet', 'work
 
 echo '<br />'.$header->show();
 
-echo $worksheet['description'];
+echo $this->objWashout->parseText($worksheet['description']);
 
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 
@@ -64,15 +64,13 @@ $form->addToForm($hiddenInput->show());
 $hiddenInput = new hiddeninput('student', $worksheetResult['userid']);
 $form->addToForm($hiddenInput->show());
 
-$objWashout = $this->getObject('washout', 'utilities');
-
 $counter = 1;
 foreach ($questions as $question)
 {
     $str = '<div class="newForumContainer">';
         $str .= '<div class="newForumTopic">';
             $str .= '<strong>'.$this->objLanguage->languageText('mod_worksheet_question', 'worksheet', 'Question').' '.$counter.':</strong><br />';
-            $str .= $objWashout->parseText($question['question']);
+            $str .= $this->objWashout->parseText($question['question']);
             $str .= '<strong>'.$this->objLanguage->languageText('mod_worksheet_marks', 'worksheet', 'Marks').'</strong> ('.$question['question_worth'].')';
         $str .= '</div>';
         $str .= '<div class="newForumContent">';

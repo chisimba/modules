@@ -42,7 +42,7 @@ echo $objStepMenu->show();
 
 echo '<br />'.$header->show();
 
-echo $worksheet['description'];
+echo $this->objWashout->parseText($worksheet['description']);
 
 $objDateTime = $this->getObject('dateandtime', 'utilities');
 
