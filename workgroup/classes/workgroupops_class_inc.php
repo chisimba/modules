@@ -73,6 +73,7 @@ class workgroupops extends object
 		$this->objFile = $this->getObject('dbfile', 'filemanager');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 		$this->objFileIcons = $this->getObject('fileicons', 'files');
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 		$this->loadClass('formatfilesize', 'files');
 	}
 	
@@ -93,11 +94,7 @@ class workgroupops extends object
 			$str = '<span class="subdued">'.count($files) .' Files Found </div><table id="workgrouptable" width="80%">';
 			foreach ($files as $file)
 			{
-				//edit link
-				$objIcon->setIcon('edit');
-				$objLink->link = $objIcon->show();
-				$objLink->href = $this->uri(array('action'=>'editfile', 'fileid'=>$file['id']));
-				$edit = $objLink->show();
+				
 				
 				//download link
 				$fileDownloadPath = $this->objFile->getFilePath($file['fileid']);
@@ -114,12 +111,23 @@ class workgroupops extends object
 				$objLink->link = $filename;
 				$fileNameLink = $objLink->show();
 				
-				//delete link
-				$objIcon->setIcon('delete');
-				$objLink->link = $objIcon->show();
-				$objLink->href = $this->uri(array('action'=>'deletefile', 'fileid'=>$file['id']));
-				$delete = $objLink->show();
-				
+				if(($this->objUser->userId() == $file['modifierid']) || $this->objUser->isAdmin() || $this->objContextGroups->isContextLecturer())
+				{
+					//delete link
+					$objIcon->setIcon('delete');
+					$objLink->link = $objIcon->show();
+					$objLink->href = $this->uri(array('action'=>'deletefile', 'fileid'=>$file['id']));
+					$delete = $objLink->show();
+					
+					//edit link
+					$objIcon->setIcon('edit');
+					$objLink->link = $objIcon->show();
+					$objLink->href = $this->uri(array('action'=>'editfile', 'fileid'=>$file['id']));
+					$edit = $objLink->show();
+				} else {
+					$edit = "";
+					$delete = "";
+				}
 				$rec ='<tr ><td style="border-top:1px dotted;">';
 				
 				$rec .='<div class="colorbox greenbox"><table ><tr>';
