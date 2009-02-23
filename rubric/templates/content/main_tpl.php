@@ -266,6 +266,7 @@
         $tblclass->endHeaderRow();        
         
         $oddOrEven = "odd";
+    if (isset($pdtables)) {
         foreach ($pdtables as $pdtable) {
             $tblclass->startRow();
             $oddOrEven = ($oddOrEven=="even")? "odd":"even";
@@ -376,6 +377,7 @@
             }
             $tblclass->addCell($options, "null", "top", "left", $oddOrEven, null);
             $tblclass->endRow();
+        }
     }
     
     if (empty($pdtables)) {
