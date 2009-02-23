@@ -2,6 +2,24 @@
 
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
+$this->loadClass('hiddeninput', 'htmlelements');
+$this->loadClass('textinput', 'htmlelements');
+$form = new form ('searchform', $this->uri(array('action'=>'tag')));
+$form->method = 'GET';
+
+$module = new hiddeninput('module', 'faq');
+$form->addToForm($module->show());
+
+$action = new hiddeninput('action', 'tag');
+$form->addToForm($action->show());
+
+$textinput = new textinput ('tag');
+$textinput->size = 60;
+$button = new button ('search', 'Search');
+$button->setToSubmit();
+
+$form->addToForm('<div align="center">'.$textinput->show().' '.$button->show().'</div>');
+$tagCloudContent=$form->show().'<br>';
 
 // Show the heading
 $objHeading = new htmlheading();
@@ -20,7 +38,7 @@ $objLink->link = $iconAdd->show();
 $tagCloudLink = new link ($this->uri(array('action'=>'tagcloud')));
 $tagCloudLink->link = 'View All Tags';
 
-$tagCloudContent = '<span style="text-align:center">' . $tagCloud . '</span><br />'.$tagCloudLink->show();
+$tagCloudContent .= '<span style="text-align:center">' . $tagCloud . '</span><br />'.$tagCloudLink->show();
 
 
 // Add the Icon to the heading

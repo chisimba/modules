@@ -112,7 +112,7 @@ class faq extends controller
                 return $this->edit();
             case "tag":
              $tag = $this->getParam('tag');
-                return $this->viewByTag($tag);
+              return $this->viewByTag($tag);
             //Edit confirm
             case "editconfirm":
                 return $this->editConfirm();
@@ -121,7 +121,10 @@ class faq extends controller
                 return $this->deleteConfirm();
             // Default : view entries
 
-
+            case "search":
+            $query = $this->getParam('q');
+            $this->setVarByRef('query', $query);
+            return 'search_tpl.php';
             // Add an entry
             case "addcategory":
                 return "add_category_tpl.php";
@@ -344,7 +347,7 @@ class faq extends controller
     public function addCategoryConfirm()
     {
         $categoryName = $this->getParam("category");
-       
+
 
         if (trim($categoryName) == '') {
             return $this->nextAction('addcategory', array('error'=>'nothingentered'));
