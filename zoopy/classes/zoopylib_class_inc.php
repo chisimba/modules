@@ -1,30 +1,48 @@
 <?php
- $dom = new DOMDocument();
- $dom->load('http://www.zoopy.com/search/rss/hoi');
- $domItems = $dom->getElementsByTagName('item');
- $items = array();
- for ($i = 0; $i < $domItems->length; $i++) {
-  $domItem = $domItems->item($i);
-  $item = array();
-  $item['title'] = htmlspecialchars($domItem->getElementsByTagName('title')->item(0)->textContent);
-  $item['link'] = htmlspecialchars($domItem->getElementsByTagName('link')->item(0)->textContent);
-  $item['image'] = $domItem->getElementsByTagName('content')->item(0)->getAttribute('url');
-  preg_match_all('#/([0-9]+)/thumb#i', $item['image'], $matches);
-  $item['image'] = 'http://www.zoopy.com/data/media/' . $matches[1][0] . '/thumb-150x150f.jpg';
-  $items[] = $item;
- }
-?>
-<!DOCTYPE HTML>
-<html lang="en">
- <head>
-  <title>Charl van Niekerk: Zoopy</title>
- </head>
- <body>
-  <h1>Zoopy</h1>
-  <ul>
-<?php foreach ($items as $item) : ?>
-   <li><a href="<?php echo $item['link']; ?>"><img src="<?php echo $item['image']; ?>" alt="<?php echo $item['title']; ?>"></a></li>
-<?php endforeach; ?>
-  </ul>
- </body>
-</html>
+
+class zoopylib
+{
+    protected $items;
+    public function init()
+    {
+        $this->items = array();
+    }
+
+    public function loadFeed($uri)
+    {
+        $dom = new DOMDocument();
+        $dom->load($uri);
+        $domItems = $dom->getElementsByTagName('item');
+        for ($i = 0; $i < $domItems->length; $i++) {
+            $domItem = $domItems->item($i);
+            $item = array();
+            $item['title'] = $domItem->getElementsByTagName('title')->item(0)->textContent;
+            $item['link'] = $domItem->getElementsByTagName('link')->item(0)->textContent;
+            $item['image'] = $domItem->getElementsByTagName('content')->item(0)->getAttribute('url');
+            preg_match_all('#/([0-9]+)/thumb#i', $item['image'], $matches);
+            $item['image'] = 'http://www.zoopy.com/data/media/' . $matches[1][0] . '/thumb-150x150f.jpg';
+            $this->items[] = $item;
+        }
+    }
+
+    public function show()
+    {
+        $dom = new DOMDocument();
+        $ul = $dom->createElement('ul');
+        $dom->importNode($ul);
+        foreach ($this->items as $item) {
+            $img = $dom->createElement('img');
+            $img->setAttribute('src', $item['image']);
+            $img->setAttribute('alt', $item['title']);
+            $img->setAttribute('title', $item['title']);
+            $a = $dom->createElement('a');
+            $a->setAttribute('href', $item['link']);
+            $a->appendChild($img);       
+            $li = $dom->createElement('li');
+            $li->appendChild($a);
+            $ul->appendChild($li);
+        }
+
+        return $dom->saveHTML();
+    }
+}
