@@ -13,7 +13,7 @@ class zoopy extends controller
 
     public function dispatch()
     {
-        $uri = $this->objSysconfig->getValue('zoopy_feed_uri');
+        $uri = $this->objSysConfig->getValue('mod_zoopy_feed_uri', 'zoopy');
         $this->objZoopyLib->loadFeed($uri);
 
         return 'main_tpl.php';
