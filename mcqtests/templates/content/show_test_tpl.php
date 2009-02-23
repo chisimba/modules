@@ -11,14 +11,11 @@
 $this->setLayoutTemplate('mcqtests_layout_tpl.php');
 
 // set up html elements
-$objTable = &$this->loadClass('htmltable', 'htmlelements');
-$objLayer = &$this->loadClass('layer', 'htmlelements');
-$objLink = &$this->loadClass('link', 'htmlelements');
-$objIcon = &$this->newObject('geticon', 'htmlelements');
-$objInput = &$this->loadClass('textinput', 'htmlelements');
-
-// Parse the MathML
-$objMathML = &$this->newObject('parse4mathml', 'filters');
+$objTable = $this->loadClass('htmltable', 'htmlelements');
+$objLayer = $this->loadClass('layer', 'htmlelements');
+$objLink = $this->loadClass('link', 'htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objInput = $this->loadClass('textinput', 'htmlelements');
 
 // set up language items
 $studentLabel = ucfirst($this->objLanguage->languageText('mod_context_readonly', 'context'));
@@ -111,7 +108,7 @@ if (!empty($data)) {
         $iconLayer = $objLayer->show();
 
         $parsed = stripslashes($line['question']);
-        $parsed = $objMathML->parseAll($parsed);
+        $parsed = $this->objWashout->parseText($parsed);
 
         $objLayer = new layer();
        

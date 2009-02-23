@@ -98,7 +98,8 @@ if (!empty($data)) {
         $objLayer = new layer();
         $objLayer->left = '; margin-right: 20px; float:left';
         $objLayer->cssClass = 'forumTopic';
-        $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>&nbsp;&nbsp;&nbsp;'.$line['question'];
+        $parsedQuestion = $this->objWashout->parseText($line['question']);
+        $objLayer->str = '<b>'.$questionLabel.' '.$line['questionorder'].':</b>&nbsp;&nbsp;&nbsp;'.$parsedQuestion;
         $question = $objLayer->show() .$iconLayer;
 
         $objLayer = new layer();

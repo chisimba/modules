@@ -77,6 +77,7 @@ class mcqtests extends controller
         $this->email = $this->objUser->email($this->userId);
         $this->objMail = $this->newObject('dbemail', 'internalmail');
         $this->objEmailFiles = $this->newObject('emailfiles', 'internalmail');
+        $this->objWashout = $this->getObject('washout','utilities');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');

@@ -248,8 +248,7 @@ $objTable->addCell($counter, '', '', '', '', 'colspan="2"');
 $objTable->endRow();
 $hidden1 = '';
 $count = 0;
-// Parse the MathML
-$objMathML = &$this->newObject('parse4mathml', 'filters');
+
 // Display questions
 if (!empty($data)) {
     $i = $data[0]['questionorder'];
@@ -260,7 +259,7 @@ if (!empty($data)) {
         $row = array();
         $row[] = '<nobr><b>'.$questionLabel.' '.$questionCounter.':</b></nobr>';
         $parsed = stripslashes($line['question']);
-        $parsed = $objMathML->parseAll($parsed);
+        $parsed = $this->objWashout->parseText($parsed);
         $row[] = '<b>'.$parsed.'</b>';
         $objTable->addRow($row, 'odd" valign="top');
         $row = array();
