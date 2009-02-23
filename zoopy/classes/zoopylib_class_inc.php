@@ -3,6 +3,7 @@
 class zoopylib
 {
     protected $items;
+
     public function init()
     {
         $this->items = array();
@@ -28,8 +29,8 @@ class zoopylib
     public function show()
     {
         $dom = new DOMDocument();
-        $ul = $dom->createElement('ul');
-        $dom->importNode($ul);
+        $dom->loadHTML('<ul></ul>');
+        $ul = $dom->getElementsByTagName('ul')->item(0);
         foreach ($this->items as $item) {
             $img = $dom->createElement('img');
             $img->setAttribute('src', $item['image']);
