@@ -18,4 +18,9 @@ class zoopy extends controller
 
         return 'main_tpl.php';
     }
+
+    public function requiresLogin()
+    {
+        return false;
+    }
 }
