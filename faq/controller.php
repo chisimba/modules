@@ -260,7 +260,9 @@ class faq extends controller
         $id = $this->getParam('id', null);
         $item = $this->objFaqEntries->listSingle($id);
         $this->setVarByRef('item', $item);
-
+        $objTags = $this->getObject('dbfaqtags');
+        $tags=$objTags->getFaqTags($id);
+        $this->setVarByRef("tags", $tags);
         // Get all the categories
         $categories =  $this->objFaqCategories->getContextCategories($this->contextId);
         $this->setVarByRef('categories', $categories);
@@ -277,7 +279,8 @@ class faq extends controller
         $question = $this->getParam('question');
         $answer = $this->getParam('answer');
         $category = $this->getParam('category');
-
+        $objTags = $this->getObject('dbfaqtags');
+        $tags = $this->getParam("faqtags");
         // Update the record in the database
         $this->objFaqEntries->updateSingle(
             $id,
@@ -288,6 +291,7 @@ class faq extends controller
             mktime()
         );
 
+        $objTags->updateFaqTags($id,$tags);
         return $this->nextAction('view', array('category'=>$category));
     }
 

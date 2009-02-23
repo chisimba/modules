@@ -85,7 +85,26 @@ FROM tbl_faq_tags GROUP BY tbl_faq_tags.tag ORDER BY tbl_faq_tags.puid DESC ';
 			}
 		}
 	}
-	
+
+
+    public function updateFaqTags($faqId, $tags)
+	{
+		$tags = explode(',', $tags);
+
+		$this->clearFaqTags($faqId);
+
+		if (count($tags) > 0) {
+			foreach ($tags as $tag)
+			{
+				$tag = trim(stripslashes($tag));
+
+				if ($tag != '') {
+					$this->addTag($faqId, $tag);
+				}
+			}
+		}
+	}
+
 	private function addTag($faqId, $tag)
 	{
 		return $this->insert(array(

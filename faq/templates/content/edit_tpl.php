@@ -35,6 +35,23 @@ $label = new label ($objLanguage->languageText("word_question"), 'input_question
 $form->addToForm("<strong>" . $label->show() . ":</strong>");
 $form->addToForm(new textarea("question", $item["question"], 5, 80));
 
+$formTable = $this->newObject('htmltable', 'htmlelements');
+$taglabel = new label ($this->objLanguage->languageText('mod_faq_tags', 'faq', 'Category Tag'), 'tagslabel');
+$str = '';
+foreach ($tags as $tag){
+$str .= $tag.',';
+    }
+$faqTagsField = new textarea('faqtags',$str,5,80);
+
+$formTable->startRow();
+$formTable->addCell("<b>".$taglabel->show().":</b>");
+$formTable->endRow();
+
+$formTable->startRow();
+$formTable->addCell($faqTagsField->show().'<br />&nbsp;');
+$formTable->endRow();
+
+$form->addToForm($formTable->show());
 $label = new label ($objLanguage->languageText("word_answer"), 'input_answer');
 $form->addToForm("<strong>" . $label->show() . ":</strong>");
 

@@ -46,8 +46,7 @@ class dbFaqEntries extends dbTable
         ));
 
         $idresults=$this->getIdByLastUpdateDate( strftime('%Y-%m-%d %H:%M:%S', $dateLastUpdated));
-//print_r($idresults);
-//die();
+
         $objTags = $this->getObject('dbfaqtags');
         $objTags->addFaqTags($idresults[0]['id'], $tags);
 
