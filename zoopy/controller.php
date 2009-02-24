@@ -100,7 +100,7 @@ class zoopy extends controller
             $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('zoopy.css', 'zoopy').'">');
             return 'main_tpl.php';
         } else {
-            $this->nextAction(null, null, 'sysconfig');
+            $this->nextAction('step2', array('pmodule_id'=>'zoopy'), 'sysconfig');
         }
     }
 
