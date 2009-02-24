@@ -2,13 +2,28 @@
 
 class zoopylib
 {
+    /**
+     * The feed items to be displayed.
+     *
+     * @access protected
+     * @var array
+     */
     protected $items;
 
+    /**
+     * Initialises the instance variables.
+     */
     public function init()
     {
         $this->items = array();
     }
 
+    /**
+     * Loads and parses the RSS feed from the URI specified.
+     *
+     * @access public
+     * @param string $uri The URI to load the feed from.
+     */
     public function loadFeed($uri)
     {
         $dom = new DOMDocument();
@@ -26,6 +41,12 @@ class zoopylib
         }
     }
 
+    /**
+     * Generates the HTML output to send back to the user agent.
+     *
+     * @access public
+     * @return string The HTML output.
+     */
     public function show()
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
