@@ -28,8 +28,8 @@ class zoopylib
 
     public function show()
     {
-        $dom = new DOMDocument();
-        $dom->loadHTML('<ul></ul>');
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->loadXML('<ul></ul>');
         $ul = $dom->getElementsByTagName('ul')->item(0);
         foreach ($this->items as $item) {
             $img = $dom->createElement('img');
@@ -44,6 +44,6 @@ class zoopylib
             $ul->appendChild($li);
         }
 
-        return $dom->saveHTML();
+        return $dom->saveXML($ul);
     }
 }
