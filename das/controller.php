@@ -212,6 +212,7 @@ class das extends controller {
 				$this->objSysConfig->changeParam('jabberpass', 'im', $this->getParam('daspassword'));
 				$this->objSysConfig->changeParam('jabberdomain', 'im', $this->getParam('domain'));
 				$this->objSysConfig->changeParam('imtimelimit', 'im', $this->getParam('idletime'));
+				$this->objSysConfig->changeParam('feedbackemail', 'das', $this->getParam('dasfeedbackemail'));
 				return  $this->nextAction('viewcounsilors');
 				break;
 

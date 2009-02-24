@@ -53,6 +53,7 @@ class dasops extends object {
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
 			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
+			$this->dasfeedbackemail = $this->objSysConfig->getValue ( 'feedbackemail', 'das' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
 
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
@@ -282,12 +283,14 @@ class dasops extends object {
 		$button->setValue('Save');
 		$dasusername = new textinput('dasusername', $this->juser, null, 10);
 		$daspassword = new textinput('daspassword', $this->jpass,null, 10);
+		$dasfeedback = new textinput('dasfeedbackemail', $this->dasfeedbackemail,null, 10);
 		$daspassword->setType('password');
 		$domain = new textinput('domain', $this->jdomain, null, 10);
 		$idletime = new textinput('idletime', $this->timeLimit, null, 10);
 
 		$dasusername->label = 'Username';
 		$daspassword->label = 'Password';
+		$dasfeedback->label = 'Feedback email';
 		$domain->label = 'Domain  @';
 		$idletime->label = 'Idle Time';
 		$button->label = '&nbsp;';
@@ -296,6 +299,7 @@ class dasops extends object {
 		$form->addToForm($domain);
 		$form->addToForm($daspassword);
 		$form->addToForm($idletime);
+		$form->addToForm($dasfeedback);
 		$form->addToForm($button);		
 
 		return $form->show();
@@ -315,7 +319,7 @@ class dasops extends object {
 		$body = "test";//$objViewRender->getCurrentSessionMessages($personId);
 		
 		//get the service email
-		$to = 'wnitsckie@uwc.ac.za, wesleynitsckie@gmail.com';//$this->juser.'@'.$this->jdomain;
+		$to = $this->dasfeedbackemail; //'$this->wnitsckie@uwc.ac.za, wesleynitsckie@gmail.com';//$this->juser.'@'.$this->jdomain;
 		$subject = "Feedback from ";//.$this->objSysConfig->getSiteName();
 		
 		
