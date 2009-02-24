@@ -29,8 +29,8 @@ class zoopylib
     public function show()
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->loadXML('<ul></ul>');
-        $ul = $dom->getElementsByTagName('ul')->item(0);
+        $ul = $dom->createElement('ul');
+        $ul->setAttribute('class', 'zoopy');
         foreach ($this->items as $item) {
             $img = $dom->createElement('img');
             $img->setAttribute('src', $item['image']);
