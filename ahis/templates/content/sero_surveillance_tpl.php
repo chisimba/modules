@@ -47,7 +47,7 @@ $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $this->objLanguage->languageText('word_sero')." ".$this->objLanguage->languageText('word_surveillance');
 $objHeading->type = 2;
 
-$backUri = $this->uri(array('action'=>'active_addtest'));
+$backUri = $this->uri(array('action'=>'select_officer'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 

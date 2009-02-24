@@ -177,8 +177,10 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
-                    default:
+                    case "init_02":
                         return $this->nextAction('active_surveillance');
+                    default:
+                        return $this->nextAction('sero_surveillance');
                 }
             
             case 'passive_surveillance':
@@ -308,17 +310,26 @@ class ahis extends controller {
                $this->setVar('disease', $this->getSession('ps_disease'));
                $this->setVar('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $this->setVar('comments', $this->getSession('ps_comments'));
-                
+             
                return 'active_surveillance_tpl.php';  
                 
             case 'active_addtest':
             
                $campName = $this->getParam('campName', $this->getSession('ps_campName'));
+               $officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
+               $disease = $this->getParam('disease', $this->getSession('ps_disease'));
+               $surveyTypeId = $this->getParam('surveyTypeId', $this->getSession('ps_surveyTypeId'));
+               $comments = $this->getParam('comments', $this->getSession('ps_comments'));
                
                $this->setSession('ps_campName',$campName);
+	            $this->setSession('ps_officerId',$officerId);
+	            $this->setSession('ps_disease',$disease);
+	            $this->setSession('ps_survyTypeId',$surveyTypeId);
+	            $this->setSession('ps_comments',$comments);
                //$this->setSession('ps_qualityId', $qualityId);
                $this->setVar('campName', $this->getSession('ps_campName'));
-                
+               $this->setVar('disease', $this->getSession('ps_disease'));
+               
                return 'active_addtest_tpl.php';
                
                

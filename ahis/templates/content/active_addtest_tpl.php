@@ -49,21 +49,26 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 
-$addButton = new button('back', $this->objLanguage->languageText('word_back'));
-$addButton->setToSubmit();
-$finUri = $this->uri(array('action'=>'sero_surveillance'));
-$finButton = new button('finish', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
+$finButton = new button('finish', $this->objLanguage->languageText('word_finish'));
+$finButton->setToSubmit();
+$backUri = $this->uri(array('action'=>'active_surveillance'));
+$backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $testTypeDrop = new dropdown('testtype');
 $testTypeDrop->addFromDB($arraytesttype, 'name', 'id');
 $testTypeDrop->setSelected($testtype);
 
+$diseaseDrop = new dropdown('disease');
+$diseaseDrop->addFromDB($arraydisease, 'name', 'id');
+$diseaseDrop->setSelected($disease);
+$diseaseDrop->extra = 'disabled';
 
 
-$campBox = new textinput('campBox',$campBox);
-$diseaseBox = new textinput('diseaseBox',$diseaseBox);
+$campBox = new textinput('campName',$campName);
 $sensitivityBox = new textinput('sensitivity', $sensivity);
 $specificityBox = new textinput('specificity', $officerId);
+$campBox->extra ="readonly";
+
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
@@ -76,7 +81,7 @@ $objTable->addCell($campBox->show());
 $objTable->addCell('');
 $objTable->addCell('');
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
-$objTable->addCell($diseaseBox->show());
+$objTable->addCell($diseaseDrop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_testtype').": $tab");
@@ -96,18 +101,23 @@ $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($addButton->show());
+$objTable->addCell($backButton->show());
 $objTable->addCell($finButton->show(),NULL);//,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_surveillance')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'select_officer')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_sensreq', 'ahis'), 'required');
+$objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_specreq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());
 $objLayer->align = 'center';
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();
 

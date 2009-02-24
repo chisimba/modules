@@ -117,10 +117,16 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addtest')));
 $objForm->addToForm($objTable->show());
+$objForm->addRule('campName', $this->objLanguage->languageText('mod_ahis_campnamereq', 'ahis'), 'required');
+
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
+
+
+$scriptUri = $this->getResourceURI('util.js');
+$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 echo $objLayer->show();
 
