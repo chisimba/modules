@@ -95,11 +95,13 @@ class zoopy extends controller
     public function dispatch()
     {
         $uri = $this->objSysConfig->getValue('mod_zoopy_feed_uri', 'zoopy');
-        $this->objZoopyLib->loadFeed($uri);
-
-        $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('zoopy.css', 'zoopy').'">');
-
-        return 'main_tpl.php';
+        if ($uri) {
+            $this->objZoopyLib->loadFeed($uri);
+            $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('zoopy.css', 'zoopy').'">');
+            return 'main_tpl.php';
+        } else {
+            $this->nextAction(null, null, 'sysconfig');
+        }
     }
 
     /**
