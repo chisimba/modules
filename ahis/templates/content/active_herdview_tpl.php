@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis Active Survaillance Herd screen Template
+ * ahis Active Survaillance Herd Details for a territory screen Template
  *
- * Template for capturing active surveillance herd data
+ * Template for capturing and displaying active surveillance herd data
  * 
  * PHP version 5
  * 
@@ -41,7 +41,7 @@ $GLOBALS['kewl_entry_point_run']) {
 
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_herd')." ".$this->objLanguage->languageText('word_details');
+$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_herd')." ".$this->objLanguage->languageText('word_farm')." ".$this->objLanguage->languageText('word_details');
 $objHeading->type = 2;
 
 
@@ -54,10 +54,10 @@ $objTable = $this->getObject('htmltable','htmlelements');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'sero_surveillance'));
-$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$nextUri = $this->uri(array('action'=>'active_sampleview'));
-$nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+$backUri = $this->uri(array('action'=>'active_search'));
+$backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$nextUri = $this->uri(array('action'=>'active_herddetails'));
+$nextButton = new button('next', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
 $campBox = new textinput('campBox',$campBox);
 $diseaseBox = new textinput('diseaseBox',$diseaseBox);
@@ -77,8 +77,8 @@ $objTable->cssClass = 'min50';
 $objTable->startRow();
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
 $objTable->addCell($campBox->show());
-$objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
-$objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
+$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp');
 $objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
 $objTable->addCell($diseaseBox->show());
 $objTable->endRow();

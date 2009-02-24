@@ -162,7 +162,7 @@ $objTable->endRow();
 
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => '')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_herdview')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

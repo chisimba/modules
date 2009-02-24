@@ -109,8 +109,8 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'select_officer')));
 $objForm->addToForm($objTable->show());
-$objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_sensreq', 'ahis'), 'required');
-$objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_specreq', 'ahis'), 'required');
+$objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_valsens', 'ahis'), 'numeric');
+$objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'numeric');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());

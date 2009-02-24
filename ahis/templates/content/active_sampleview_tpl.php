@@ -55,19 +55,24 @@ $objTable = $this->getObject('htmltable','htmlelements');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'sero_surveillance'));
+$backUri = $this->uri(array('action'=>'active_herdsampling'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $nextUri = $this->uri(array('action'=>'sero_surveillance'));
 $nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
-$campBox = new textinput('campBox',$campBox);
+$campBox = new textinput('campName',$campName);
 $diseaseBox = new textinput('diseaseBox',$diseaseBox);
 
+
+$numberBox = new textinput('number',$number);
 
 $officerDrop = new dropdown('officerId');
 $officerDrop->addFromDB($userList, 'name', 'userid');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
+
+$inputDate = $this->getObject('datepicker','htmlelements');
+$inputDate->setDefaultDate($calendardate);
 
 
 $objTable->cellspacing = 2;
@@ -88,6 +93,13 @@ $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ah
 $objTable->addCell($officerDrop->show());
 $objTable->addCell('');
 $objTable->addCell('');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('phrase_samplingdate').": ");
+$objTable->addCell($inputDate->show());
+$objTable->addCell('&nbsp');
+$objTable->addCell($this->objLanguage->languageText('phrase_numberofsamples').": ");
+$objTable->addCell($numberBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_samples').": $tab");

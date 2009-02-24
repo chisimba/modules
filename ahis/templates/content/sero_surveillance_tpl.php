@@ -59,10 +59,6 @@ $objLink->link = $this->objLanguage->languageText('word_search');
 $searchLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 
-$browseUri = $this->uri(array('action'=>'active_herdview'));
-$objLink = new link($browseUri);
-$objLink->link = $this->objLanguage->languageText('phrase_browsesurveillance');
-$browseLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
@@ -72,9 +68,6 @@ $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell($searchLink);
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($browseLink);
 $objTable->endRow();
 
 $objTable->startRow();

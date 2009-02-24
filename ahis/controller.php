@@ -353,7 +353,7 @@ class ahis extends controller {
                return 'active_herdview_tpl.php';
                
             case 'active_sampleview':
-            
+               $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
             
                return 'active_sampleview_tpl.php';
                
@@ -364,7 +364,12 @@ class ahis extends controller {
             case 'sero_surveillance':            
                return 'sero_surveillance_tpl.php'; 
                  
-                               
+            case 'active_herddetails':
+               return 'active_herddetails_tpl.php';    
+               
+            case 'active_herdsampling':
+               return 'active_herdsampling_tpl.php';
+                             
             case 'admin':
 
                return 'admin_tpl.php';
