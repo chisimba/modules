@@ -271,7 +271,7 @@ class importuserdata extends object
     */
     function checkForUser($username,$firstname,$surname,$email)
     {
-        $data=$this->objUser->getAll("where username='$username' and firstname='$firstname' and surname='$surname' and emailAddress='$email'");
+        $data=$this->objUser->getAll("where username='".addslashes($username)."' and firstname='".addslashes($firstname)."' and surname='".addslashes($surname)."' and emailAddress='$email'");
         $count=count($data);
         if ($count==0){
             return FALSE;

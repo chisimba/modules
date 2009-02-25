@@ -142,7 +142,7 @@
             $viewLink="<a href='".$this->uri(array('action'=>'view','batchCode'=>$line['batchId']))."' class='pseudobutton'>".$this->objLanguage->languageText("word_view")."</a>";
             $exportCSV="<a href='".$this->uri(array('action'=>'exportcsv','batchCode'=>$line['batchId']))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportcsv",'userimport')."</a>";
             $exportXML="<a href='".$this->uri(array('action'=>'exportxml','batchCode'=>$line['batchId']))."' class='pseudobutton'>".$this->objLanguage->languageText("mod_userimport_exportxml",'userimport')."</a>";
-            $objTable->addRow(array($line['batchId'],$deleteLink,$viewLink,$exportCSV,$exportXML));
+            $objTable->addRow(array($line['batchId'],$deleteLink,$viewLink,$exportCSV,$exportXML,$line['creationdate'],$line['contextcode']));
         }
 
 

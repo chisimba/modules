@@ -116,7 +116,7 @@ class dbuserimport extends dbTable
     */
     function listBatch($contextCode)
     {
-        $sql1="select distinct batchId from tbl_importusers";
+        $sql1="select distinct batchId,creationDate,contextCode from tbl_importusers";
         if ($this->objUser->isAdmin()){
             $sql2=" order by batchId";
         } else {
@@ -185,7 +185,7 @@ class dbuserimport extends dbTable
 
         if ($batchCode!='ALL'){
             $data=$this->getAll("where batchId='$batchCode' LIMIT 1");
-            $contextCode=$data[0]['contextCode'];
+            @$contextCode=$data[0]['contextCode'];
         } else {
             $contextCode='ALL';
         }
