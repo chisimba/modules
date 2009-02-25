@@ -23,8 +23,6 @@ class rimfhe extends controller
 *variables to hold datta
 */
 
-//CHARL CHANGED THIS
-
 	public $objLanguage;
 	public $objUrl;
 	public $dbInsert;
