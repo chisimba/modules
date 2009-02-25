@@ -22,6 +22,9 @@ class rimfhe extends controller
 *Declare class properties
 *variables to hold datta
 */
+
+//CHARL CHANGED THIS
+
 	public $objLanguage;
 	public $objUrl;
 	public $dbInsert;
