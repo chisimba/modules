@@ -22,9 +22,9 @@ import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.PresenceConstants;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -87,19 +87,23 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
         return resizedImg;
     }
 
-    public void add(String imagePath, String actionCommand, String tooltipText, boolean bg, boolean isToggle) {
+    public void add(String text,String imagePath, String actionCommand, String tooltipText, boolean bg, boolean isToggle) {
         if (isToggle) {
-            add(imagePath, actionCommand, tooltipText, bg);
+            add(text,imagePath, actionCommand, tooltipText, bg);
 
         } else {
-            add(imagePath, actionCommand, tooltipText);
+            add(text,imagePath, actionCommand, tooltipText);
 
         }
     }
 
-    public void add(String imagePath, String actionCommand, String tooltip) {
+    public void add(String text,String imagePath, String actionCommand, String tooltip) {
         ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
         final JButton b = new JButton();
+        b.setFont(new Font("dialog",0,11));
+        b.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        b.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        b.setText(text);
         b.addActionListener(this);
         b.setBorderPainted(false);
         b.setContentAreaFilled(false);
@@ -120,12 +124,14 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
         add(b);
     }
 
-    public void add(String imagePath, String actionCommand, String tooltip, boolean bg) {
+    public void add(String text,String imagePath, String actionCommand, String tooltip, boolean bg) {
         ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
         final JToggleButton b = new JToggleButton();
         b.addActionListener(this);
         b.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         b.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        b.setText(text);
+        b.setFont(new Font("dialog",0,11));
 //        b.setMargin(new Insets(1, 1, 1, 1));
 
         b.setBorderPainted(false);
