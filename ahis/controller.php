@@ -188,7 +188,7 @@ class ahis extends controller {
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
                 $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
                 $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY NAME"));
-                //$this->setVar('territoryId', $this->getSession('ps_territoryId'));
+                
                 $this->setVar('territoryId', $this->getSession('ps_districtId'));
                 $this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
                 $this->setVar('qualityId', $this->getSession('ps_qualityId'));
@@ -272,7 +272,7 @@ class ahis extends controller {
                 $this->setVar('ageId', $this->getSession('ps_ageId'));
                 $this->setVar('sexId', $this->getSession('ps_sexId'));
                 //$this->setVar('speciesId', $this->getSession('ps_speciesId'));
-                $this->setVar('basisId', $this->getSession('ps_diagnosisId'));
+                $this->setVar('basisId', $this->getSession('ps_basisId'));
                 $this->setVar('controlId', $this->getSession('ps_controlId'));
                 
                 $this->setVar('calendardate', $this->getSession('ps_calendardate'));
@@ -291,15 +291,92 @@ class ahis extends controller {
                 return 'passive_species_tpl.php';
             
             case 'passive_vaccine':
+                $this->setSession('ps_productionId', $this->getParam('productionId'));
+                $this->setSession('ps_ageId', $this->getParam('ageId'));
+                $this->setSession('ps_sexId', $this->getParam('sexId'));
+                $this->setSession('ps_speciesId', $this->getParam('speciesId'));
+                $this->setSession('ps_controlId', $this->getParam('controlId'));
+                $this->setSession('ps_basisId', $this->getParam('basisId'));
+                $this->setSession('ps_cases', $this->getParam('cases'));
+                $this->setSession('ps_susceptible', $this->getParam('susceptible'));
+                $this->setSession('ps_deaths', $this->getParam('deaths'));
+                $this->setSession('ps_vaccinated', $this->getParam('vaccinated'));
+                $this->setSession('ps_slaughtered', $this->getParam('slaughtered'));
+                $this->setSession('ps_destroyed', $this->getParam('destroyed'));
+                $this->setSession('ps_newcases', $this->getParam('newcases'));
+                $this->setSession('ps_production', $this->getParam('production'));
+                $this->setSession('ps_recovered', $this->getParam('recovered'));
+                $this->setSession('ps_prophylactic', $this->getParam('prophylactic'));
+                
                 $this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
                 $this->setVar('territoryId', $this->getSession('ps_districtId'));
                 
                 return 'passive_vaccine_tpl.php';
+            
+            case 'passive_save':
                 
+                var_dump($_SESSION);
+                $ps_array['reporterid'] = $this->getSession('ps_officerId');
+                $ps_array['territoryid'] = $this->getSession('ps_districtId');
+                $ps_array['reportdate'] = $this->getSession('ps_calendardate');
+                $ps_array['refno'] = $this->getSession('ps_refNo');
                 
+                $ps_array['statusid'] = $this->getSession('ps_oStatusId');
+                $ps_array['qualityid'] = $this->getSession('ps_qualityId');
+                $ps_array['prepareddate'] = $this->getSession('ps_datePrepared', date('Y-m-d'));
+                $ps_array['ibardate'] = $this->getSession('ps_dateIBAR', date('Y-m-d'));
+                $ps_array['dvsdate'] = $this->getSession('ps_dateReceived', date('Y-m-d'));
+                $ps_array['reporteddate'] = $this->getSession('ps_dateisReported', date('Y-m-d'));
+                $ps_array['remarks'] = $this->getSession('ps_remarks');
                 
+                $ps_array['vetdate'] = $this->getSession('ps_dateVet', date('Y-m-d'));
+                $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
+                $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
+                $ps_array['investigationdate'] =$this->getSession('ps_dateInvestigation', date('Y-m-d'));
+                $ps_array['location'] = $this->getSession('ps_location');
+                $ps_array['latitude'] = $this->getSession('ps_latitude');
+                $ps_array['longitude'] = $this->getSession('ps_longitude');
+                $ps_array['disease'] = $this->getSession('ps_disease');
+                $ps_array['causitive'] = $this->getSession('ps_causitive');
+                
+                $ps_array['speciesid'] = $this->getSession('ps_speciesId',1);
+                $ps_array['ageid'] = $this->getSession('ps_ageId');
+                $ps_array['sexid'] = $this->getSession('ps_sexId',1);
+                $ps_array['productionid'] = $this->getSession('ps_productionId');
+                $ps_array['controlmeasureid'] = $this->getSession('ps_controlId',1);
+                $ps_array['basisofdiagnosisid'] = $this->getSession('ps_diagnosisId',1);
+                
+                $ps_array['susceptible'] = $this->getSession('ps_susceptible');
+                $ps_array['cases'] = $this->getSession('ps_cases');
+                $ps_array['deaths'] = $this->getSession('ps_deaths');
+                $ps_array['vaccinated'] = $this->getSession('ps_vaccinated');
+                $ps_array['slaughtered'] = $this->getSession('ps_slaughtered');
+                $ps_array['destroyed'] = $this->getSession('ps_destroyed');
+                $ps_array['production'] = $this->getSession('ps_production');
+                $ps_array['newcases'] = $this->getSession('ps_newcases');
+                $ps_array['recovered'] = $this->getSession('ps_recovered');
+                $ps_array['prophylactic'] = $this->getSession('ps_prophylactic');
+                
+                $ps_array['vaccinemanufacturedate'] = $this->getParam('dateManufactured');
+                $ps_array['vaccineexpirydate'] = $this->getParam('dateExpire');
+                $ps_array['vaccinesource'] = $this->getParam('source');
+                $ps_array['vaccinebatch'] = $this->getParam('batch');
+                $ps_array['vaccinetested'] = ($this->getParam('panvac') == 'on')? true : false;
+                
+                $result = $this->objPassive->insert($ps_array);
+                
+                return $this->nextAction('passive_feedback', array('success'=>$result));
+            
+            case 'passive_feedback':
+                $success = $this->getParam('success');
+                if ($success) {
+                    $this->unsetSession('ps_refNo');
+                } else {
+                    echo "no";
+                }
+                break;
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));

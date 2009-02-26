@@ -63,7 +63,7 @@ class passive extends dbtable {
      */
 	public function init() {
 		try {
-			
+			parent::init('tbl_ahis_passive_surveillance');
 		}
 		catch (customException $e)
 		{
@@ -78,6 +78,9 @@ class passive extends dbtable {
 	 * @return int Reference no.
 	 */
 	public function nextRefNo() {
-		return rand(100000000,999999999);
+		$sql = "SELECT MAX(refno) AS refno
+				FROM tbl_ahis_passive_surveillance";
+		$result = $this->getArray($sql);
+		return (empty($result[0]))? 1000 : $result[0]['refno'] + 1;
 	}
 }

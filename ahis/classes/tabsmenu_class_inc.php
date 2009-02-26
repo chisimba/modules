@@ -77,8 +77,8 @@ class tabsmenu extends object
         
         $this->objLanguage = $this->getObject('language', 'language');
         
-        $this->menuItems['entry'] = array('text'=>$this->objLanguage->languageText('mod_ahis_dataentry', 'ahis'), 'link'=>$this->uri(array('action'=>'select_officer', 'ahis')), 'class'=>'homelink');
-        $this->menuItems['report'] = array('text'=>$this->objLanguage->languageText('mod_ahis_viewreports', 'ahis'), 'link'=>$this->uri(array('action'=>'view_reports', 'ahis')));
+        $this->menuItems['entry'] = array('text'=>$this->objLanguage->languageText('mod_ahis_dataentry', 'ahis'), 'link'=>$this->uri(array('action'=>'select_officer'), 'ahis'), 'class'=>'homelink');
+        $this->menuItems['report'] = array('text'=>$this->objLanguage->languageText('mod_ahis_viewreports', 'ahis'), 'link'=>$this->uri(array('action'=>'view_reports'), 'ahis'));
     }
     
     /**

@@ -120,7 +120,7 @@ $objTable->addCell($sButton->show(), NULL, 'top', 'right');
 $objTable->addCell('');
 $objTable->endRow();
 
-$objForm = new form('reportForm', $this->uri(array('action' => 'passive_vaccine')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'passive_save')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('dateManufactured', $this->objLanguage->languageText('mod_ahis_valdatemanufactured', 'ahis'), 'datenotfuture');
 $objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsourcerequired', 'ahis'), 'required');
