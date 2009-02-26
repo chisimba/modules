@@ -312,7 +312,11 @@ if ( $_REQUEST['action'] == 'launchresolve' || $_REQUEST['action'] == 'direct'
   // response, debug outtput, or redirect back to ourselves
 
   $theurl = $_SERVER[SCRIPT_URI];
-  $theurl = "http://chisimba.charlvn.za.net/";
+  if ( ! $theurl ) {
+       $hostname = $_SERVER[HTTP_HOST];
+      if ( ! $hostname ) $hostname = $_SERVER[SERVER_NAME];
+      if ( $_SERVER[SERVER_PORT] == "443" ) {
+        $theurl = "https://".$hostname."
   $theuri = $_SERVER[REQUEST_URI];
   $i = strpos($theuri,'?') ;
   if ( $i > 0 ) {
