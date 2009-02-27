@@ -153,8 +153,8 @@ class codeanalyzer extends object
 		$objee = $this->instantiateClass($this->_className);
 
 		//Get all the methods
-		$this->classCode = str_replace('{METHODS}',
-		$methods = $this->getMethods($classFile), $this->classCode);
+		//$this->classCode = str_replace('{METHODS}',
+		$methods = $this->getMethods($classFile);//, $this->classCode;//);
 
 		//Get all the properties
 		//$this->classCode = str_replace('{PROPERTIES}',
@@ -184,7 +184,7 @@ class codeanalyzer extends object
             //log_debug ($loadedClassFileName . ' | '. $reflectClassFileName);
             if ($loadedClassFileName == $reflectClassFileName) {
                 //Conflict Caught:
-                //log_debug ("PHPUnit: CAUGHT Duplicate File Exception $classFile");
+                log_debug ("PHPUnit: CAUGHT Duplicate File Exception $classFile");
                 //Moving to temp area and renaming to fix require_once namespace issue
                 $this->phpunitBasePath = $this->objConfig->getcontentBasePath()."phpunit/$moduleName/";
                 $stamp = date('Ymd');
@@ -197,6 +197,7 @@ class codeanalyzer extends object
         */
         
         //load the class
+        log_debug ("PHPUnit: CAUGHT Duplicate File Exception $classFile");
         require_once($classFile);
     }
 
@@ -569,6 +570,26 @@ class codeanalyzer extends object
 
         return $depArr;
     }
+
+    /**
+    *
+    * Method to extract tables used by the module
+    * being processed
+    *
+    * @param string $moduleName The name of the module
+    *
+    */
+    public function getTables($moduleName)
+    {
+        $depArr = array();
+
+        $registerFile = $this->objConfig->getModulePath() . $moduleName . '/register.conf';
+        $regData = $this->objModFile->readRegisterFile($registerFile);
+        $depArr = $regData['TABLE'];
+
+        return $depArr;
+    }
+
 
 
 	/**

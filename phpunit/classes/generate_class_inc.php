@@ -42,7 +42,8 @@ class generate extends object
 	{
 		try {
 			$this->objCodeAnalyzer = $this->getObject('codeanalyzer', 'phpunit');
-			$this->objConfig =$this->getObject('altconfig', 'config');
+			$this->objConfig = $this->getObject('altconfig', 'config');
+            $this->objDbManager = $this->objEngine->getDbManagementObj();
 			$this->objLanguage =$this->getObject('language', 'language');
             $this->classesArr = array();
 		} catch (Exception $e){
@@ -65,7 +66,11 @@ class generate extends object
 		if (is_dir($moduleClassPath)) {
 
 			$filesArr = $this->objCodeAnalyzer->getAllClasses($moduleClassPath);
-            
+
+            //Populating the classes array to be used later when generating the main checklist skeleton
+            foreach($filesArr as $file=>$fpath) {
+                $this->classesArr[$file] = $fpath;
+            }            
             $templateCode = '<?PHP';
             //Generating template code for the logical Data Add Methods
             //--$methods = $this->objCodeAnalyzer->getInitMethods($fpath);
@@ -77,10 +82,6 @@ class generate extends object
             $templateCode .= $this->generateChecklistDependacyCheckCode($moduleName);
 
 			foreach($filesArr as $file=>$fpath) {
-                
-                //Populating the classes array to be used later when generating the main
-                //checklist skeleton
-                $this->classesArr[$file] = $fpath;
 
                 //files array was posted using filename with .php replaced with _php
 				$postKey = str_replace('.', '_', $file);
@@ -119,11 +120,15 @@ class generate extends object
         '."\n";
                         $templateCode .= $this->generateChecklistTemplateCode($editMethods, $fpath, $moduleName);
                     }
+
+                    $templateCode .= $this->generateChecklistTableFieldCheckCode($moduleName);
+
 				}
 
 				$counter++;
 			}
 
+            //Closing CheckList Container Class
             $templateCode .= '}'."\n?>";
 
             $saveFileName = $moduleName.'Checklist.php';
@@ -161,7 +166,7 @@ class generate extends object
             foreach ($methods as $method=>$params) {
                 $decl = "    public function $moduleName".'_'."$className".'_'."$method($params) {";
                 $templateCode .= $decl . "\n";
-                $templateCode .= '        return $this->'.$moduleName.'->' . $method .'(' .$params . ');' . "\n";
+                $templateCode .= '        return $this->'.$className.'->' . $method .'(' .$params . ');' . "\n";
                 $templateCode .= "    }\n\n";
             }
         }
@@ -199,7 +204,7 @@ class generate extends object
                 
             }
         }
-
+    
         return $templateCode;
     }
 
@@ -227,9 +232,14 @@ class '.$genClassName.'
 
     //Generated checklist members
 ';
-    foreach ($this->classesArr as $file=>$fpath) {
-        $objName = preg_replace('/_class.*/', '', $file);
-        $templateCode .= '    public $' . $objName . ';' . "\n";
+    if (!empty($this->classesArr)) {
+        foreach ($this->classesArr as $file=>$fpath) {
+            $objName = preg_replace('/_class.*/', '', $file);
+            $templateCode .= '    public $' . $objName . ';' . "\n";
+        }
+    } else {
+        echo "Init Code Generator Exception Caught: Empty Class Array | Can't create objects";
+        exit();
     }
     
 $templateCode .= '
@@ -254,9 +264,57 @@ $templateCode .= '
 
 
 
+    /**
+     * Method to generate dependancy check code
+     *
+     * @param $methods An array of full method prototype declarations: e.g. "function someMethod ()"[0]
+     * @access public
+     * @return HTML
+     */
+    public function generateChecklistTableFieldCheckCode($moduleName)
+    {
+        $genClassName = $moduleName . 'Checklist';
+
+        $templateCode = '';
+
+
+        $tables = $this->objCodeAnalyzer->getTables($moduleName);
+        if (is_array($tables)) {
+            foreach ($tables as $tbl) {
+                //Getting a list of fields
+                //TODO: Update Pear MDB2_Driver_mysql to include the listTableFields method
+                $fields = $this->objDbManager->listTableFields($tbl);
+                
+                foreach ($fields as $field) {
+                    $nspace = $moduleName .'_'. $tbl .'_'. $field;
+
+                    $templateCode .= '
+
+    /*
+     * Methods for validating the Table Fields
+     * Module: '.$moduleName.'
+     * Table: '.$tbl.'
+     * Field: '.$field.'
+     */
+
+    public function '.$nspace.'($record){
+        if (isset($record[\''.$field.'\'])){
+            return $record[\''.$field.'\'];
+        } else {
+            return FALSE;
+        }
+    }
+';
+                }
+            }
+        }
+
+        return $templateCode;
+    }
+
 
     /**
-     * Method to generate checklist initialization code
+     * Method to write the checklist to a file in 'usrfiles/phpunit/<yourmodule>/'
      *
      * @param $methods An array of full method prototype declarations: e.g. "function someMethod ()"[0]
      * @access public

@@ -13,7 +13,7 @@
 * @category chisimba
 * @copyright AVOIR
 * @license GNU GPL
-* @author Charl Mert
+* @author Charl Mert <charl.mert@gmail.com>
 */
 
     class dbreports extends dbTable
