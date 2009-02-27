@@ -18,75 +18,12 @@
     class ui extends object
     {
        /**
-        * The context  object
+        * The map object
         *
         * @access private
         * @var object
         */
-        protected $_objContext;	
-
-      /**
-        * The inContextMode  object
-        *
-        * @access private
-        * @var object
-        */
-        protected $inContextMode;	
-
-      /**
-        * The sections  object
-        *
-        * @access private
-        * @var object
-        */
-        protected $_objSections;
-
-      /**
-        * The Content object
-        *
-        * @access private
-        * @var object
-        */
-        protected $_objContent;
-
-      /**
-        * The Skin object
-        *
-        * @access private
-        * @var object
-        */
-        protected $objSkin;
-
-      /**
-        * The Content Front Page object
-        *
-        * @access private
-        * @var object
-        */
-        protected $objFrontPage;
-
-      /**
-        * The User object
-        *
-        * @access private
-        * @var object
-        */
-        protected $objUser;
-
-      /**
-        * The user model
-        *
-        * @access private
-        * @var object
-        */
-        protected $objUserModel;
-
-      /**
-        * Feature box object
-        *
-        * @var object
-        */
-        public $objFeatureBox;
+        protected $objMap;	
 
       /**
         * Class Constructor

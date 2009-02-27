@@ -63,12 +63,8 @@
             try {
                 parent::init('tbl_shorturl_map');
                 $this->table = 'tbl_cms_content';
-                $this->_objSectionGroup = & $this->getObject('dbsectiongroup', 'cmsadmin');
                 $this->_objUser = & $this->getObject('user', 'security');
-                $this->_objSecurity = & $this->getObject('dbsecurity', 'cmsadmin');
-                $this->_objFrontPage = & $this->newObject('dbcontentfrontpage', 'cmsadmin');
                 $this->_objLanguage = & $this->newObject('language', 'language');
-                $this->_objBlocks = & $this->newObject('dbblocks', 'cmsadmin');
                 $this->objConf = & $this->newObject('altconfig', 'config');
 
             } catch (Exception $e){
