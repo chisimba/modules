@@ -3,7 +3,6 @@
 class simplelti extends controller
 {
     protected $objUserAdmin;
-    protected $objGroupAdmin;
     protected $ltiLaunchId;
     protected $ltiStuff;
     protected $LTI;
@@ -17,7 +16,6 @@ class simplelti extends controller
         $this->objUserAdmin = $this->getObject( 'useradmin_model2', 'security');
         $this->objContext = $this->getObject ( 'dbcontext', 'context' );
         $this->objUser = $this->getObject ( 'user', 'security' );
-        $this->objGroupAdmin = $this->getObject('groupadminmodel','groupadmin');
     }
 
     public function dispatch()
@@ -118,41 +116,13 @@ class simplelti extends controller
             if ( $mycontext ) {
                  // print "YAY CREATED Context";
             } else {
-                 // print "Could not create CREATED Context";
+                 print "Could not create CREATED Context";
             }
         }
 
         if ( $mycontext ) {
-            // print "Course id = ".$courseid;
-            $contextGroupId = $this->objGroupAdmin->getId( $courseid );
-	    if ( $contextGroupId ) {
-               // print "Found Context group id";
-            } else {
-               $contextGroupId = $this->objGroupAdmin->addGroup($courseid,$this->LTI->course('title'),NULL);
-               // print "Created Context group id = $contextGroupId";
-            }
-
-            // print "Context group id = $contextGroupId";
-            // It seems as though getLeafId() is not yet implemented in 3 - so we fake it by hand
-            if ( $contextGroupId ) {
-                $lecGname = $courseId . "^" . "Lecturers";
-                // print "lecture group name = ".$lecGname;
-                $lecGroupId = $this->objGroupAdmin->getId( $lecGname );
-                // print "lecture group id = ".$lecGroupId;
-	        if ( $lecGroupId ) {
-                   // print "Found Lecture group id";
-                } else {
-                   $lecGroupId = $this->objGroupAdmin->addGroup($lecGname,$this->LTI->course('title'),NULL);
-                   // print "Created Lecture group id = $lecGroupId";
-                }
-                // Eventually we will do this
-                //     public function addGroupUser( $groupId, $userId )
-
-            }
-
             $this->setSession ( 'contextId', $mycontext ['id'], $this->objContext->moduleName);
-            // $this->setSession ( 'contextCode', $mycontext['contextcode'], $this->objContext->moduleName );
-            $this->setSession ( 'contextCode', $courseid, $this->objContext->moduleName );
+            $this->setSession ( 'contextCode', $mycontext['contextcode'], $this->objContext->moduleName );
         }
 
         // Set the Skin
