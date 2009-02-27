@@ -1,3 +1,10 @@
+/*Target URL Chopper for long URL's*/
+.urlchopper {
+    width:500px;
+    overflow:hidden;
+}
+
+
 /*Grid Bottom Padding (Dynamically set via jquery when grid has loaded)*/
 .grid_padding_bottom{
     padding-bottom: 10px;

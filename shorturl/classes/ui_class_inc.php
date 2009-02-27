@@ -97,8 +97,8 @@
             $this->bindDeleteConfirmEvents();
 
             $table_list->startHeaderRow();
-            $table_list->addHeaderCell('Match URL');
-            $table_list->addHeaderCell('Target URL');
+            $table_list->addHeaderCell('Match URL', '100px');
+            $table_list->addHeaderCell('Target URL', '200px');
             //$this->objGrid->addColumn('Dynamic', 'is_dynamic', '70', 'center', false);
             $table_list->addHeaderCell('Order');
             $table_list->addHeaderCell('Options');
@@ -149,7 +149,7 @@
 
             
                     $objIcon->setIcon('bigtrash');
-                    $delIcon = "<a id='del_$map[id]' href='javascript:void(0)'>".$objIcon->show()."</a>";
+                    $delIcon = "<a id='del_$map[id]' title='Delete' href='javascript:void(0)'>".$objIcon->show()."</a>";
             
                     //} else {
                     //    $delIcon = '';
@@ -158,7 +158,7 @@
                     //edit icon
                     //if ($this->_objSecurity->canUserWriteSection($section['id'])){
                     $objIcon->setIcon('edit');
-                    $editIcon = "<a id='edit_$map[id]' href='javascript:void(0)'>".$objIcon->show()."</a>";
+                    $editIcon = "<a id='edit_$map[id]' title='Edit' href='javascript:void(0)'>".$objIcon->show()."</a>";
                     //$editIcon = "<a id='edit_$map[id]' title='Edit URL Mapping' href='http://localhost/fresh/?module=shorturl&action=getform&type=addeditform&id=$map[id]'>".$objIcon->show()."</a>";
                     //} else {
                     //    $editIcon = '';
@@ -175,6 +175,8 @@
             
                     $table_list->startRow();
 
+                    $targetUrl = '<div class="urlchopper"> <a href="' . $targetUrl . '"> ' . $targetUrl . ' </a></div>';
+                    
                     $table_list->addCell($matchUrl);
                     $table_list->addCell($targetUrl);
                     $table_list->addCell($order);
