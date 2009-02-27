@@ -177,11 +177,9 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
-                    case "init_02":
-                        return $this->nextAction('active_surveillance');
                     default:
-                        return $this->nextAction('sero_surveillance');
-                }
+                        return $this->nextAction('active_surveillance');
+                      }
             
             case 'passive_surveillance':
                 $this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
@@ -437,10 +435,7 @@ class ahis extends controller {
             case 'active_addsample':
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                return 'active_addsample_tpl.php';
-               
-            case 'sero_surveillance':            
-               return 'sero_surveillance_tpl.php'; 
-                 
+                   
             case 'active_herddetails':
                return 'active_herddetails_tpl.php';    
                

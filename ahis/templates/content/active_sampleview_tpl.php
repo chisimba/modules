@@ -81,30 +81,25 @@ $objTable->cssClass = 'min50';
 
 
 $objTable->startRow();
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": ");
 $objTable->addCell($campBox->show());
-$objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
-$objTable->addCell('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp');
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_disease').":");
 $objTable->addCell($diseaseBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
 $objTable->addCell($officerDrop->show());
-$objTable->addCell('');
-$objTable->addCell('');
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_samplingdate').": ");
 $objTable->addCell($inputDate->show());
-$objTable->addCell('&nbsp');
+
 $objTable->addCell($this->objLanguage->languageText('phrase_numberofsamples').": ");
 $objTable->addCell($numberBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_samples').": $tab");
-$objTable->addCell('');
-$objTable->addCell('');
+
 $objTable->endRow();
 
 $objLayer = new layer();

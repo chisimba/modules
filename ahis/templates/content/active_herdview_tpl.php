@@ -75,11 +75,11 @@ $objTable->cssClass = 'min50';
 
 
 $objTable->startRow();
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":");
 $objTable->addCell($campBox->show());
 $objTable->addCell('&nbsp');
 $objTable->addCell('&nbsp');
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_disease').":");
 $objTable->addCell($diseaseBox->show());
 $objTable->endRow();
 $objTable->startRow();

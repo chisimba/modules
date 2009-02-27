@@ -76,11 +76,11 @@ $objTable->width = NULL;
 $objTable->cssClass = 'min50';
 
 $objTable->startRow();
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":");
 $objTable->addCell($campBox->show());
 $objTable->addCell('');
 $objTable->addCell('');
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
+$objTable->addCell($this->objLanguage->languageText('word_disease').": ");
 $objTable->addCell($diseaseDrop->show());
 $objTable->endRow();
 $objTable->startRow();
@@ -107,7 +107,7 @@ $objTable->addCell('');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'select_officer')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_surveillance')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_valsens', 'ahis'), 'numeric');
 $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'numeric');

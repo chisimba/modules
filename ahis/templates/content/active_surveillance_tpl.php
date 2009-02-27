@@ -39,8 +39,16 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+$this->loadClass('link', 'htmlelements');
+
+$searchUri = $this->uri(array('action'=>'active_search'));
+$objLink = new link($searchUri);
+$objLink->link = $this->objLanguage->languageText('phrase_browsesurveillance');
+$searchLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('phrase_newcampaign');
+$objHeading->str =$this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('phrase_newcampaign');
+
 $objHeading->type = 2;
 
 
@@ -121,14 +129,13 @@ $objForm->addRule('campName', $this->objLanguage->languageText('mod_ahis_campnam
 
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+$objLayer->addToStr($searchLink.$objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
 
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
+
 echo $objLayer->show();
-
-
 ?>
