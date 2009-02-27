@@ -6,8 +6,8 @@
 
 /*Match URL Chopper for long URL's*/
 .matchchopper {
-    width:100px;
-    overflow:hidden;
+    width:200px;
+    overflow:auto;
 }
 
 
