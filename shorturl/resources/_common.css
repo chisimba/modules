@@ -4,6 +4,12 @@
     overflow:hidden;
 }
 
+/*Match URL Chopper for long URL's*/
+.matchchopper {
+    width:100px;
+    overflow:hidden;
+}
+
 
 /*Grid Bottom Padding (Dynamically set via jquery when grid has loaded)*/
 .grid_padding_bottom{

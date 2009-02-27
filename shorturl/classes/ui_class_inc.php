@@ -175,6 +175,7 @@
             
                     $table_list->startRow();
 
+                    $matchUrl = '<div class="matchchopper"> <a href="' . $matchUrl . '"> ' . $matchUrl . ' </a></div>';
                     $targetUrl = '<div class="urlchopper"> <a href="' . $targetUrl . '"> ' . $targetUrl . ' </a></div>';
                     
                     $table_list->addCell($matchUrl);
