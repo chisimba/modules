@@ -78,7 +78,7 @@ class dbAnnouncements extends dbTable
             if ($messageId != FALSE) {
                 
                 // Add to Search
-                $this->addAnnouncementToSearchIndex($id, $title, $message, 'root');
+                $this->addAnnouncementToSearchIndex($messageId, $title, $message, 'root');
                 
                 // Optimize Search
                 $this->objIndexData->optimize();

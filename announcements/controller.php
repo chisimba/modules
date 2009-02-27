@@ -362,14 +362,18 @@ class announcements extends controller
             $this->loadClass('htmlheading', 'htmlelements');
             $objDateTime = $this->getObject('dateandtime', 'utilities');
             $objTrimString = $this->getObject('trimstr', 'strings');
+            $objIcon = $this->getObject('geticon', 'htmlelements');
+			$objIcon->setIcon('delete');
             
             $table = $this->newObject('htmltable', 'htmlelements');
+			$table->width= '80%';
             $table->startHeaderRow();
             $table->addHeaderCell($this->objLanguage->languageText('word_date', 'system', 'Date'));
             $table->addHeaderCell($this->objLanguage->languageText('word_title', 'system', 'Title'));
             $table->addHeaderCell($this->objLanguage->languageText('word_by', 'system', 'By'));
             $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'));
-            $table->endHeaderRow();
+			$table->addHeaderCell('&nbsp;');
+			$table->endHeaderRow();
             
             
             foreach ($announcements as $announcement)
@@ -377,6 +381,9 @@ class announcements extends controller
                 $link = new link ($this->uri(array('action'=>'view', 'id'=>$announcement['id'])));
                 $link->link = $announcement['title'];
                 
+				$deleteLink = new link ($this->uri(array('action'=>'delete', 'id'=>$announcement['id'])));
+                $deleteLink->link = $objIcon->show();
+				
                 $table->startRow();
                 $table->addCell($objDateTime->formatDate($announcement['createdon']), 150);
                 $table->addCell($link->show());
@@ -389,6 +396,9 @@ class announcements extends controller
                 }
                 
                 $table->addCell($type, 200);
+				if (!$this->checkPermission($announcement['id'])) {
+					$table->addCell($deleteLink->show(), 200);
+				}
                 $table->endRow();
                 
             }
