@@ -9,16 +9,11 @@ $objUser = $this->newObject('user', 'security');
 $objLanguage = $this->newObject('language', 'language');
 
 $cssLayout = $this->newObject('csslayout', 'htmlelements');
-if($hasBlocks){
-    $cssLayout->setNumColumns(3);
-    $cssLayout->setRightColumnContent($rightSide);
-} else {
-    $cssLayout->setNumColumns(2);
-}
+$cssLayout->setNumColumns(1);
 
-$leftColumn = $this->getVar('leftContent');
+//$leftColumn = $this->getVar('leftContent');
 
-$cssLayout->setLeftColumnContent($leftColumn.'<br />');
+//$cssLayout->setLeftColumnContent($leftColumn.'<br />');
 
 $middleColumn = $this->getVar('middleContent');
 
