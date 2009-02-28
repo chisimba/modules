@@ -32,7 +32,7 @@ $header = new htmlHeading();
 $header->str = 'My Conversations' ;$this->objLanguage->languageText('mod_im_recentmessages', 'im');
 $header->type = 3;
 
-$refreshLink->href = "#";//$this->uri(null, 'das');
+$refreshLink->href = $this->uri(null, 'das');
 $refreshLink->extra = ' onclick="showLoading(\'conversations\'); loadConversations()" ';
 $refreshIcon->setIcon('refresh');
 $refreshLink->link = $refreshIcon->show();
