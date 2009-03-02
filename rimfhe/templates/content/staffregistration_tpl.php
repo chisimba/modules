@@ -21,8 +21,14 @@ function showResponse (originalRequest) {
 </script>
 <?php
 $this->loadClass('htmlheading', 'htmlelements');
+$pageHeading = new htmlheading();
+ $pageHeading->type = 2;
+ $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Registration for Staff Members');
+ echo '<br />'.$pageHeading->show();
+
+
 $header = new htmlheading();
-$header->type = 3;
+$header->type = 4;
 $header->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
 
 $header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required');
@@ -139,23 +145,31 @@ echo '<br /><span style="color:red;font-size:12px;">'.$header2.'</span>';
 
 	//Input and label for Department/Scool/Division
 	$table->startRow();
-	$objDepartment = new textinput ('department');
+	$objDepartment = new dropdown ('department');
 	$departmentLabel = new label($dept.'&nbsp;', 'department');
-	$staffRegistration->addRule('department','Please enter your Department','required');
-	if($mode == 'fixerror'){
-		$objDepartment->value =$this->getParam('department');//set input vbalue	
+	$departments=array("Academic Development", "Accounting", "Afrikaans", "Anthropology & Sociology", "Biodiversity & Conservation", "Biotechnology", "Chemistry", "Computer Sciences", "Dietetics", "Earth Sciences", "Economics", "English", "Foreign Languages", "Geography", "History", "Human Ecology", "Industrial Psychology", "Information Systems", "Library & Info.", "Linguistics", "Management", "Mathematics", "Medical Bioscience", "Nursing", "Occupational Therapy", "Pharmacy", "Philosophy", "Physics", "Physiotherapy", "Political Studies", "Psychology", "Public Administration", "Religion & Theology", "Social Work", "Sport, Recreation & Exercise", "Statistics", "Women & Gender", "Xhosa", "School of Government", "School of Natural Medicine", "School of Pharmacy", "School of Public Health");
+	foreach ($departments as $department)
+	{
+	       $objDepartment->addOption($department,$department);
+		if($mode == 'fixerror'){
+		$objDepartment->setSelected($this->getParam('department'));
+		}
 	}	
 	$table->addCell($departmentLabel->show(), 150, NULL, 'left');
 	$table->addCell($objDepartment ->show(), 150, NULL, 'left');
 	$table->endRow();
 
-	//Input and label for Facultyn
+	//Input and label for Faculty
 	$table->startRow();
-	$objFaculty = new textinput ('faculty');
+	$objFaculty = new dropdown ('faculty');
 	$facultyLabel = new label($faculty.'&nbsp;', 'faculty');
-	$staffRegistration->addRule('faculty','Please enter your Faculty','required');
-	if($mode == 'fixerror'){
-		$objFaculty->value =$this->getParam('faculty');//set input vbalue
+	$faculties=array("Arts", "Community & Health", "Dentistry", "Economic & Management", "Education", "Law", "Natural Science");
+	foreach ($faculties as $faculty)
+	{
+	       $objFaculty->addOption($faculty,$faculty);
+		if($mode == 'fixerror'){
+		$objFaculty->setSelected($this->getParam('faculty'));
+		}
 	}		
 	$table->addCell($facultyLabel->show(), 150, NULL, 'left');
 	$table->addCell($objFaculty ->show(), 150, NULL, 'left');

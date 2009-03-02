@@ -76,6 +76,9 @@ $table->startRow();
 //Input and label for Book Name
 $objbookName = new textinput('bookname');
 $bookNameLabel = new label($bookName,'bookname');
+	if($mode == 'fixerror'){
+		$objbookName->value =$this->getParam('bookname');
+	}
 $table->addCell($bookNameLabel->show(), 150, NULL, 'left');		
 $table->addCell($objbookName->show(), 150, NULL, 'left');
 $table->endRow();
@@ -84,6 +87,9 @@ $table->endRow();
 $table->startRow();
 $objIsbnNumber = new textinput('isbnnumber');
 $isbnNumberLabel = new label($isbnNumber.'&nbsp;', 'isbnnumber');
+	if($mode == 'fixerror'){
+		$objIsbnNumber->value =$this->getParam('isbnnumber');
+	}
 $table->addCell($isbnNumberLabel->show(), 150, NULL, 'left');
 $table->addCell($objIsbnNumber->show(), 150, NULL, 'left');
 $table->endRow();
@@ -92,6 +98,9 @@ $table->endRow();
 $table->startRow();
 $objPublishingHouse = new textinput('publishinghouse');
 $publishingHouseLabel = new label($publisher,'publishinghouse');
+	if($mode == 'fixerror'){
+		$objPublishingHouse->value =$this->getParam('publishinghouse');
+	}	
 $table->addCell($publishingHouseLabel->show(), 150, NULL, 'left');
 $table->addCell($objPublishingHouse->show(), 150, NULL, 'left');
 $table->endRow();
@@ -99,20 +108,25 @@ $table->endRow();
 //Input and label for Author 1
 $table->startRow();
 $objAuthor1 = new textinput ('author1');
-$Author1lLabel = new label($author1.'&nbsp;', 'author1');		
+$Author1lLabel = new label($author1.'&nbsp;', 'author1');
+	if($mode == 'fixerror'){
+		$objAuthor1->value =$this->getParam('author1');
+	}			
 $table->addCell($Author1lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor1->show(), 150, NULL, 'left');
 $table->endRow();
 
 // Author 1 affiliate
 $table->startRow();
-$objAffiliate1 = new dropdown('author1affiliate');
+$objAffiliate1 = new dropdown('author1affiliate');	
 $affiliate1Label = new label($author1label, 'author1affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
-{
-   
-    $objAffiliate1->addOption($category,$category);
+{   
+    	$objAffiliate1->addOption($category,$category);
+	if($mode == 'fixerror'){
+		$objAffiliate1->setSelected($this->getParam('author1affiliate'));
+	}
 }
 
 $table->addCell($affiliate1Label->show(), 150, NULL, 'left');
@@ -122,7 +136,10 @@ $table->endRow();
 //Input and label for Author 2
 $table->startRow();
 $objAuthor2 = new textinput ('author2');
-$Author2lLabel = new label($author2.'&nbsp;', 'author2');		
+$Author2lLabel = new label($author2.'&nbsp;', 'author2');
+	if($mode == 'fixerror'){
+		$objAuthor2->value =$this->getParam('author2');
+	}		
 $table->addCell($Author2lLabel->show(), 150, NULL, 'author2');
 $table->addCell($objAuthor2->show(), 150, NULL, 'left');
 $table->endRow();
@@ -133,11 +150,11 @@ $objAffiliate2 = new dropdown('author2affiliate');
 $affiliate2Label = new label($author2label, 'author2affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
-{
-   
-    $objAffiliate2->addOption($category,$category);
+{   	$objAffiliate2->addOption($category,$category);
+	if($mode == 'fixerror'){
+		$objAffiliate2->setSelected($this->getParam('author2affiliate'));
+	}	
 }
-
 $table->addCell($affiliate2Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate2->show(), 150, NULL, 'left');
 $table->endRow();
@@ -145,7 +162,10 @@ $table->endRow();
 //Input and label for Author 3
 $table->startRow();
 $objAuthor3 = new textinput ('author3');
-$Author3lLabel = new label($author3.'&nbsp;', 'author3');		
+$Author3lLabel = new label($author3.'&nbsp;', 'author3');
+	if($mode == 'fixerror'){
+		$objAuthor3->value =$this->getParam('author3');
+	}	
 $table->addCell($Author3lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor3->show(), 150, NULL, 'left');
 $table->endRow();
@@ -156,11 +176,11 @@ $objAffiliate3 = new dropdown('author3affiliate');
 $affiliate3Label = new label($author3label, 'author3affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
-{
-   
-    $objAffiliate3->addOption($category,$category);
+{   	$objAffiliate3->addOption($category,$category);
+	if($mode == 'fixerror'){
+		$objAffiliate3->setSelected($this->getParam('author3affiliate'));
+	}
 }
-
 $table->addCell($affiliate3Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate3->show(), 150, NULL, 'left');
 $table->endRow();
@@ -169,7 +189,10 @@ $table->endRow();
 //Input and label for Author 4
 $table->startRow();
 $objAuthor4 = new textinput ('author4');
-$Author4lLabel = new label($author4.'&nbsp;', 'author4');		
+$Author4lLabel = new label($author4.'&nbsp;', 'author4');
+	if($mode == 'fixerror'){
+		$objAuthor4->value =$this->getParam('author4');
+	}			
 $table->addCell($Author4lLabel->show(), 150, NULL, 'left');
 $table->addCell($objAuthor4->show(), 150, NULL, 'left');
 $table->endRow();
@@ -180,41 +203,50 @@ $objAffiliate4 = new dropdown('author4affiliate');
 $affiliate4Label = new label($author4label, 'author4affiliate');
 $categories=array("UWC Staff Member", "UWC Student", "External Author");
 foreach ($categories as $category)
-{
-   
-    $objAffiliate4->addOption($category,$category);
+{   
+	$objAffiliate4->addOption($category,$category);
+	if($mode == 'fixerror'){
+		$objAffiliate4->setSelected($this->getParam('author4affiliate'));
+	}
 }
-
 $table->addCell($affiliate4Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate4->show(), 150, NULL, 'left');
 $table->endRow();
+
 //Input and label for First Chapter Page Number
 $table->startRow();
-$objFirstPagey = new textinput ('firstpage');
-$firstPageLabel = new label($firstChaprtPgNo.'&nbsp;', 'firstpage');		
+$objFirstPage= new textinput ('firstpage');
+$firstPageLabel = new label($firstChaprtPgNo.'&nbsp;', 'firstpage');
+	if($mode == 'fixerror'){
+		$objFirstPage->value =$this->getParam('firstpage');
+	}		
 $table->addCell($firstPageLabel->show(), 150, NULL, 'left');
-$table->addCell($objFirstPagey ->show(), 150, NULL, 'left');
+$table->addCell($objFirstPage ->show(), 150, NULL, 'left');
 $table->endRow();		
 
 //Input and label for Last Chapter Page Number
 $table->startRow();
 $objLastPage = new textinput ('lastpage');
-$lastPageLabel = new label($lastChaprtPgNo.'&nbsp;', 'lastpage');		
+$lastPageLabel = new label($lastChaprtPgNo.'&nbsp;', 'lastpage');
+	if($mode == 'fixerror'){
+		$objLastPage->value =$this->getParam('lastpage');
+	}		
 $table->addCell($lastPageLabel->show(), 150, NULL, 'left');
 $table->addCell($objLastPage ->show(), 150, NULL, 'left');
 $table->endRow();
 
 //Input and label for Peer Review
 $table->startRow();
-$objPeerReview = new dropdown('category');
-$peerRevLabel = new label($peerReview.'&nbsp;', 'category');
+$objPeerReview = new dropdown('peerreview');
+$peerRevLabel = new label($peerReview.'&nbsp;', 'peerreview');
 $answers=array("YES", "NO");
 foreach ($answers as $answer)
-{
-   
+{   
     $objPeerReview->addOption($answer,$answer);
+	if($mode == 'fixerror'){
+		$objPeerReview->setSelected($this->getParam('peerreview'));
+	}
 }
-
 $table->addCell($peerRevLabel->show(), 150, NULL, 'left');
 $table->addCell($objPeerReview->show(), 150, NULL, 'left');
 $table->endRow();
@@ -239,7 +271,6 @@ $table->addCell(NULL, 150, NULL, 'left');
 $table->addCell($captcha->show().'  <a href="javascript:redraw();">'.$this->objLanguage->languageText('word_redraw', 'security', 'Redraw').'</a>', 150, NULL, 'left');
 $table->endRow();
 
-
 //submit button
 $table->startRow();
 $table->addCell(NULL, 150, NULL, 'left');	
@@ -247,7 +278,6 @@ $button = new button ('submitform', 'Submit Details');
 $button->setToSubmit();
 $table->addCell($button->show(), 150, NULL, 'left');
 $table->endRow();
-
 		
 //display table
 $entireBook->addToForm($table->show());

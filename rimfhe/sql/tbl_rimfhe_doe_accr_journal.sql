@@ -65,6 +65,16 @@ $fields = array(
 	'pagetotal' => array(
 		'type' => 'integer',
 		'notnull' => TRUE
+		),
+	'authorname' => array(
+		'type' => 'text',
+		'length'=> 300,
+		'notnull' => TRUE
+		),
+	'fractweightedavg' => array(
+		'type' => 'float',
+		'length'=> 4,
+		'notnull' => FALSE
 		)
 	);
 /*

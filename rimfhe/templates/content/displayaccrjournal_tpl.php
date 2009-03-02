@@ -24,17 +24,6 @@ $table->cellpadding = '5';
 //setup the table headings
 $table->startHeaderRow();
 
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Name of Journal'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Categroy'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Article'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Year of Publication'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Vlume'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Page #'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Page #'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Pages'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
-$table->endHeaderRow();
-
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
@@ -53,6 +42,17 @@ $rowcount = 0;
 
 //setup the tables rows  and loop though the records
 if ( count($arrJournal) > 0) {	
+//Set up fields heading
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Name of Journal'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Categroy'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Article'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Year of<br /> Publication'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Vlume'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Page #'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Page #'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Pages'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
+	$table->endHeaderRow();
 	
 	foreach($arrJournal as $journal) {
 	 //Set odd even row colour
@@ -67,18 +67,7 @@ if ( count($arrJournal) > 0) {
 	$tableRow[] = $journal['firstpageno'];
 	$tableRow[] = $journal['lastpageno'];
 	$tableRow[] = $journal['pagetotal'];
-	
-	$authorcount =array();
-	$result = array();
-		$author = array();
-	
-	$result = $this->objAccreditedJournalAuthors->getAllJournalAuthor('Hoey Cul');
-		foreach($result as $author) {	  
-		$tableRow1 = array();
-		$tableRow1[] = $author['authorname'];
-		$authortable->addRow($tableRow1);	  
-		}
-	$tableRow[] = $authortable->show();
+	$tableRow[] = $journal['authorname'];
 	
 	$table->addRow($tableRow, $oddOrEven);
 	
@@ -88,7 +77,7 @@ if ( count($arrJournal) > 0) {
 	}	
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has be entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
 	
 }
  echo $table->show();

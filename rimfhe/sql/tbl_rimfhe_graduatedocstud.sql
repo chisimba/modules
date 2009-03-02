@@ -29,48 +29,53 @@ $fields = array(
 		'length'=> 32,
 		'notnull' => TRUE
 		),
-	'ds_surname' => array(
+	'surname' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'ds_initials' => array(
+	'initials' => array(
 		'type' => 'text',
 		'length'=> 10,
 		'notnull' => TRUE
 		),
-	'ds_firstname' => array(
+	'firstname' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'ds_gender' => array(
+	'gender' => array(
 		'type' => 'text',
 		'length'=> 6,
 		'notnull' => TRUE
 		),
-	'ds_regnumber' => array(
+	'regnumber' => array(
 		'type' => 'text',
 		'length'=> 20,
 		'notnull' => TRUE
 		),
-	'ds_deptschoool' => array(
+	'deptschoool' => array(
 		'type' => 'text',
 		'length'=> 40,
 		'notnull' => TRUE
 		),
-	'ds_faculty' => array(
+	'faculty' => array(
 		'type' => 'text',
 		'length'=> 20,
 		'notnull' => TRUE
 		),
-	'ds_thesistitle' => array(
+	'thesistitle' => array(
 		'type' => 'text',
 		'notnull' => TRUE
 		),
-	'ds_degree' => array(
+	'supervisorname' => array(
 		'type' => 'text',
-		'length'=> 10,
+		'length'=> 300,
+		'notnull' => TRUE
+		),
+	'degree' => array(
+		'type' => 'text',
+		'length'=> 100,
 		'notnull' => TRUE
 		)
 	);
@@ -81,7 +86,7 @@ $name = 'tbl_rimfhe_graduatedocstud_idx';
 
 $indexes = array(
                 'fields' => array(
-				'ds_regnumber' => array()
+				'regnumber' => array()
 		)
 	);
 ?>

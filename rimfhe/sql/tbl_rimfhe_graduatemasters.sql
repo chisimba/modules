@@ -29,49 +29,54 @@ $fields = array(
 		'length'=> 32,
 		'notnull' => TRUE
 		),
-	'ms_surname' => array(
+	'surname' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'ms_initials' => array(
+	'initials' => array(
 		'type' => 'text',
 		'length'=> 10,
 		'notnull' => TRUE
 		),
-	'ms_firstname' => array(
+	'firstname' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'ms_gender' => array(
+	'gender' => array(
 		'type' => 'text',
 		'length'=> 6,
 		'notnull' => TRUE
 		),
-	'ms_regnumber' => array(
+	'regnumber' => array(
 		'type' => 'text',
 		'length'=> 20,
 		'notnull' => TRUE
 		),
-	'ms_deptschoool' => array(
+	'deptschoool' => array(
 		'type' => 'text',
 		'length'=> 40,
 		'notnull' => TRUE
 		),
-	'ms_faculty' => array(
+	'faculty' => array(
 		'type' => 'text',
 		'length'=> 40,
 		'notnull' => TRUE
 		),
-	'ms_thesistitle' => array(
+	'thesistitle' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'ms_degree' => array(
+	'supervisorname' => array(
 		'type' => 'text',
-		'length'=> 10,
+		'length'=> 300,
+		'notnull' => TRUE
+		),
+	'degree' => array(
+		'type' => 'text',
+		'length'=> 100,
 		'notnull' => TRUE
 		)
 	);
@@ -82,7 +87,7 @@ $name = 'tbl_rimfhe_graduatemasters_idx';
 
 $indexes = array(
                 'fields' => array(
-				'ms_regnumber' => array()
+				'regnumber' => array()
 		)
 	);
 

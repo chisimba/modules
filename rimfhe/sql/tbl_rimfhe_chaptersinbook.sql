@@ -34,6 +34,16 @@ $fields = array(
 		'length'=> 200,
 		'notnull' => TRUE
 		),
+	'isbn' => array(
+		'type' => 'text',
+		'length'=> 20,
+		'notnull' => TRUE
+		),
+	'bookeditors' => array(
+		'type' => 'text',
+		'length'=> 300,
+		'notnull' => TRUE
+		),
 	'publisher' => array(
 		'type' => 'text',
 		'length'=> 100,
@@ -44,7 +54,7 @@ $fields = array(
 		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'bookeditors' => array(
+	'authorname' => array(
 		'type' => 'text',
 		'length'=> 300,
 		'notnull' => TRUE
@@ -64,6 +74,11 @@ $fields = array(
 	'peerreviewed' => array(
 		'type' => 'text',
 		'notnull' => TRUE
+		),
+	'fractweightedavg' => array(
+		'type' => 'float',
+		'length'=> 4,
+		'notnull' => FALSE
 		)
 	);
 /*

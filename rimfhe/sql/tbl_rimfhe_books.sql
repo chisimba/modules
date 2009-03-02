@@ -28,18 +28,23 @@ $fields = array(
 		'type' => 'text',
 		'length'=> 32,
 		'notnull' => TRUE
+		),	
+	'booktitle' => array(
+		'type' => 'text',
+		'length'=> 200,
+		'notnull' => TRUE
 		),
 	'isbn' => array(
 		'type' => 'text',
 		'length'=> 20,
 		'notnull' => TRUE
 		),
-	'booktitle' => array(
+	'publishinghouse' => array(
 		'type' => 'text',
-		'length'=> 200,
+		'length'=> 100,
 		'notnull' => TRUE
 		),
-	'publishinghouse' => array(
+	'authorname' => array(
 		'type' => 'text',
 		'length'=> 100,
 		'notnull' => TRUE

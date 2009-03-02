@@ -22,15 +22,14 @@ class rimfhe extends controller
 *Declare class properties
 *variables to hold datta
 */
-
 	public $objLanguage;
 	public $objUrl;
 	public $dbInsert;
 	public $objStaffRegistration;
 	public $objEntireBook;
-	public $objChaptersInBook;
+	public $objChapterInBook;
 	public $objJournals;
-	public $objDoctorateStudents;
+	public $objDoctoralStudents;
 	public $objMastersStudents;
 	public $formElements;
 
@@ -46,15 +45,12 @@ Public fuction to instantiate required  objestc
 		$this->objLanguage = $this->getObject('language', 'language');		
 		$this->objUrl = $this->getObject('url', 'strings');
 		$this->objStaffMember =$this->getObject('dbstaffmember', 'rimfhe');
-		//$this->objStaffRegistration= $this->getObject('staffregistration', 'rimfhe');
-		//$this->objEntireBook= $this->getObject('entirebook', 'rimfhe');
-		//$this->objChaptersInBook= $this->getObject('chaptersinbook', 'rimfhe');
-		//$this->objJournals= $this->getObject('staffregistration', 'rimfhe');
-		//$this->objDoctorateStudents= $this->getObject('doctoratestudents', 'rimfhe');
-		//$this->objMastersStudents= $this->getObject('mastersstudents', 'rimfhe');
 		$this->objAccreditedJournal= $this->getObject('dbaccreditedjournal', 'rimfhe');
-		$this->objAccreditedJournalAuthors= $this->getObject('dbaccreditedjournalauthors', 'rimfhe');
-	}//end init
+		$this->objEntireBook= $this->getObject('dbentirebook', 'rimfhe');
+		$this->objChapterInBook= $this->getObject('dbchapterinbook', 'rimfhe');
+		$this->objDoctoralStudents= $this->getObject('dbdoctoralstudents', 'rimfhe');
+		$this->objMastersStudents= $this->getObject('dbmastersstudents', 'rimfhe');
+		}//end init
 
 	public function dispatch()
 	{ 	
@@ -86,7 +82,6 @@ Public fuction to instantiate required  objestc
 				$arrDisplayStaff = $this->objStaffMember->dispalyStaffDetails();
 				$this->setVarByRef('arrDisplayStaff', $arrDisplayStaff);
 				return 'displaystaff_tpl.php'; 
-
 			}//end switch
 		}
 		//Display Landing page and forms	
@@ -94,62 +89,105 @@ Public fuction to instantiate required  objestc
 			switch($action)
 			{
 			default: 
-			return 'staffregistration_tpl.php';
-			break;
+			return 'rimfhehomepage_tpl.php';
 			
-			case 'Staff Member Registarion' :
+			case 'Home':
+			return 'rimfhehomepage_tpl.php';
+			
+			case 'Staff Member Registarion':
 			return 'staffregistration_tpl.php';
-			break;
-
-			case 'DOE Accredoted Journal Articles' :
+			
+			case 'DOE Accredoted Journal Articles':
 			return 'accreditedjournal_tpl.php';
-			break;
-
-			case 'Entire Book/Monogragh' :
-			return 'entirebook_tpl.php';
-			break;
-
-			case 'Chapter In a Book' :
-			return 'chapterinbook_tpl.php';
-			break;
-
-			case 'Graduating Doctoral Student' :
-			return 'doctoralstudents_tpl.php';
-			break;
-
-			case 'Graduating Masters Student' :
-			return 'mastersstudents_tpl.php';
-			break;
-			case 'Registered Staff Member' :
-			$arrDisplayStaff = $this->objStaffMember->displayStaffDetails();
-			$this->setVarByRef('arrDisplayStaff', $arrDisplayStaff);
-			return 'displaystaff_tpl.php';  
-			break;  
-			
-			case 'Accredted Journal Authors' :			
+		
+			case 'Accredted Journal Articles Info':			
 			$arrJournal=array();
 			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
 			$this->setVarByRef('arrJournal', $arrJournal);
 			return 'displayaccrjournal_tpl.php';  
-			break; 
+				
+			case 'Entire Book/Monogragh':
+			return 'entirebook_tpl.php';
+		
+			case 'Entire Book/Monogragh Details':
+			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks();
+			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
+			return 'displayentirebook_tpl.php';			
+			
+			case 'Chapter In a Book':			
+			return 'chapterinbook_tpl.php';
+						
+			case 'Chapter In a Book Details':
+			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks();
+			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
+			return 'displaychapterinbook_tpl.php';
+			
+			case 'Graduating Doctoral Student':
+			return 'doctoralstudents_tpl.php';
+						
+			case 'Graduating Doctoral Student Info':
+			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents();
+			$this->setVarByRef('arrDisplayDoctoral', $arrDisplayDoctoral);		
+			return 'displaydoctoralstudents_tpl.php';
+			
+			case 'Graduating Doctoral Students Summary':
+			$arrDeptSummary= $this->objDoctoralStudents->displayByDepartment();
+			$arrFacultySummary= $this->objDoctoralStudents->displayByFaculty();
+			$this->setVarByRef('arrDeptSummary', $arrDeptSummary);
+			$this->setVarByRef('arrFacultySummary', $arrFacultySummary);
+			$totalCount = $this->objDoctoralStudents->totalDoctoralStudents();
+			$this->setVar('totalCount', $totalCount);
+			return 'summarydoctoralstudents_tpl.php';
+			
+			case 'Graduating Masters Student':
+			return 'mastersstudents_tpl.php';
+			
+			case 'Graduating Masters Student Info':
+			$arrDisplayMasterss= $this->objMastersStudents->getAllMastersStudents();
+			$this->setVarByRef('arrDisplayMasters', $arrDisplayMasters);
+			return 'displaymastersstudents_tpl.php';			
 
-			case 'confirnregistration' :
+			case 'Graduating Masters Students Summary':
+			$arrDeptSummary= $this->objMastersStudents->displayByDepartment();
+			$arrFacultySummary= $this->objMastersStudents->displayByFaculty();
+			$this->setVarByRef('arrDeptSummary', $arrDeptSummary);
+			$this->setVarByRef('arrFacultySummary', $arrFacultySummary);
+			$totalCount = $this->objMastersStudents->totalMastersStudents();
+			$this->setVar('totalCount', $totalCount);
+			return 'summarymastersstudents_tpl.php';
+		
+			case 'Registered Staff Member':
+			$arrDisplayStaff = $this->objStaffMember->displayStaffDetails();
+			$this->setVarByRef('arrDisplayStaff', $arrDisplayStaff);
+			return 'displaystaff_tpl.php';  
+					
+			case 'General Summary':
+			$totalArticles = $this->objAccreditedJournal->totalJournalArticle();
+			$totalBooks = $this->objEntireBook->totalBooks();
+			$totalChapterInBook = $this->objChapterInBook->totalChapterInBook();
+			$totalDoctoralStudents = $this->objDoctoralStudents->totalDoctoralStudents();
+			$totalMastersStudents = $this->objMastersStudents->totalMastersStudents();
+			$this->setVarByRef('totalArticles', $totalArticles);
+			$this->setVarByRef('totalBooks', $totalBooks);
+			$this->setVarByRef('totalArticles', $totalChapterInBook);
+			$this->setVarByRef('totalArticles', $totalDoctoralStudents);
+			$this->setVarByRef('totalArticles', $totalMastersStudents);
+
+			return 'universitysummary_tpl.php';  
+			
+			case 'confirnregistration':
 			return 'staffregistrationconfirm_tpl.php';
-			break;
- 
+			
+			case 'generalconfirmation':
+			return 'generalconfirm_tpl.php';
+			
 			}//end switch
 		}
 	}//end dispatch
 
-	//Method to check if all form field have data and add data to db table
-	private function addAccreditedJorunalAndAuthor()
-	{	
-		$this->objAccreditedJournal->accreditedJournal();
-		$this->objAccreditedJournalAuthors->accreditedJournalAuthors();
-	} 
 /*
-*Public Method that checks if all required fields are filled
-*If fiels are fiels, it inserts data into db table, else returns error
+ *Public Method that checks if all required fields are filled
+ *If fiels are fiels, it inserts data into db table, else returns error
 */
 	public function AddStaffMember()
 	{
@@ -185,7 +223,7 @@ Public fuction to instantiate required  objestc
 		}
 
 		if(empty($firstname)){
-			$problems[] ='nofirstname' ;
+			$problems[] ='nofirstname';
 		}
 
 		if(empty($rank)){
@@ -193,7 +231,7 @@ Public fuction to instantiate required  objestc
 		}
 
 		if(empty($dept)){
-			$problems[] ='nodepatment' ;
+			$problems[] ='nodepatment';
 		}
 
 		if(empty($faculty)){
@@ -266,7 +304,7 @@ Public fuction to instantiate required  objestc
 		}
 
 		if(empty($publicationyear)){
-			$problems[] ='nopublicationyr' ;
+			$problems[] ='nopublicationyr';
 		}
 
 		if(empty($volume)){
@@ -274,11 +312,11 @@ Public fuction to instantiate required  objestc
 		}
 
 		if(empty($firstpage)){
-			$problems[] ='nofirstpage' ;
+			$problems[] ='nofirstpage';
 		}
 
 		if(empty($lastpage)){
-			$problems[] ='nolastpage' ;
+			$problems[] ='nolastpage';
 		}
 		
 		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
@@ -296,8 +334,8 @@ Public fuction to instantiate required  objestc
 			return 'accreditedjournal_tpl.php';
         } 
 	else {
-                  return ; $this->objAccreditedJournal->accreditedJournal();
-		}
+                  return $this->objAccreditedJournal->accreditedJournal();
+	}
 	
 	}//end addAccretedJournal
 
@@ -305,7 +343,7 @@ Public fuction to instantiate required  objestc
 	{
 		$captcha = $this->getParam('request_captcha');
 		$bookname = $this->getParam('bookname');
-		$category= $this->getParam('isbnnumber');
+		$isbnnumber= $this->getParam('isbnnumber');
 		$publishinghouse= $this->getParam('publishinghouse');
 		$firstpage= $this->getParam('firstpage');
 		$lastpage= $this->getParam('lastpage');
@@ -355,9 +393,10 @@ Public fuction to instantiate required  objestc
 			$this->setVarByRef('problems', $problems);
 			return 'entirebook_tpl.php';
         } 
-	else {
-                  return ; 
-		}
+	else {	
+		$this->nextAction('generalconfirmation');
+		return $this->objEntireBook->entireBook();
+	}
 	
 	}//end entireBook
 		
@@ -365,7 +404,7 @@ Public fuction to instantiate required  objestc
 	{
 		$captcha = $this->getParam('request_captcha');
 		$bookname = $this->getParam('bookname');
-		$category= $this->getParam('isbnnumber');
+		$isbnnumber= $this->getParam('isbnnumber');
 		$editors= $this->getParam('editors');
 		$publishinghouse= $this->getParam('publishinghouse');
 		$chaptertile= $this->getParam('chaptertile');
@@ -406,10 +445,17 @@ Public fuction to instantiate required  objestc
 		if(empty($lastpage)){
 			$problems[] ='nolastpage' ;
 		}
-		
-		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+				
+		if((empty($author1)) && (empty($author2)) && empty($author3) && empty($author4)){
 			$problems[] = 'noauthor';
 		}
+	/*
+			
+		if((empty($author1)) && (empty($author2)) && (empty($author3)) && (empty($author4))){
+			$problems[] = 'noauthor';
+		}
+
+*/
 	
 		// Check whether user matched captcha
 		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
@@ -420,10 +466,11 @@ Public fuction to instantiate required  objestc
 			$this->setVar('mode', 'fixerror');
 			$this->setVarByRef('problems', $problems);
 			return 'chapterinbook_tpl.php';
-        } 
-	else {
-                  return ; 
-		}
+		} 
+		else {
+			$this->nextAction('generalconfirmation');
+			return $this->objChapterInBook->chaperterInBook();
+	}
 	
 	}//end chapterInBook
 
@@ -494,9 +541,10 @@ Public fuction to instantiate required  objestc
 			$this->setVar('mode', 'fixerror');
 			$this->setVarByRef('problems', $problems);
 			return 'doctoralstudents_tpl.php';
-        } 
-	else {
-                  return ; 
+        	} 
+		else {
+		        $this->nextAction('generalconfirmation');
+			return $this->objDoctoralStudents->doctoralStudents();
 		}
 	
 	}//end addDoctorialStudents
@@ -565,10 +613,11 @@ Public fuction to instantiate required  objestc
 		 if (count($problems) > 0) {
 			$this->setVar('mode', 'fixerror');
 			$this->setVarByRef('problems', $problems);
-			return 'doctoralstudents_tpl.php';
+			return 'mastersstudents_tpl.php';
         } 
-	else {
-                  return ; 
+		else {
+		         		$this->nextAction('generalconfirmation');
+			return $this->objMastersStudents->mastersStudents();
 		}
 	
 	}//end addMastersStudents

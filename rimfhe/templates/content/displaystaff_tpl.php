@@ -15,26 +15,9 @@ $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-
 $table = new htmltable();
 $table->cellspacing = '2';
 $table->cellpadding = '5';
-
-//setup the table headings
-$table->startHeaderRow();
-
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Serial #'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Surname'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Initials'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Names'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Rank'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Appointment'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Department'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Staff #'));
-$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Email'));
-$table->endHeaderRow();
 
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
@@ -54,9 +37,28 @@ $rowcount = 0;
 
 //setup the tables rows  and loop though the records
 if (count($arrDisplayStaff) > 0) {
+
+	//setup the table headings
+	$table->startHeaderRow();
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Serial #'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Surname'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Initials'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Names'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Rank'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Appointment'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Department'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Staff #'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Email'));
+	$table->endHeaderRow();
+
+	//Loop through $arrDisplayStaff and set data in rows
 	foreach($arrDisplayStaff as $staffmember) {
 	    //Set odd even row colour
 	 $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+
+	//Setuo table rows
 	$tableRow = array();
 	$tableRow[] = $staffmember['puid'];
 	$tableRow[] = $staffmember['surname'];
@@ -69,20 +71,18 @@ if (count($arrDisplayStaff) > 0) {
 	$tableRow[] = $staffmember['faculty'];
 	$tableRow[] = $staffmember['staffnumber'];
 	$tableRow[] = $staffmember['email'];
-
-	    $table->addRow($tableRow, $oddOrEven);
+	
+	//add to table
+	$table->addRow($tableRow, $oddOrEven);
 	
 	    $rowcount = ($rowcount == 0) ? 1 : 0;
 	}
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has be entered').'</div>';
+	//When no data has been entered
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
 	
 }
  echo $table->show();
-
-//$this->setVar('leftContent', 'LEFT CONTENT');
-//$this->setVar('middleContent', $table->show());
-
 
 ?>
