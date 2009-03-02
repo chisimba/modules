@@ -1093,5 +1093,37 @@ class survey extends controller {
         }
         return $canViewResults;
     }
+
+
+   /**
+    *
+    *  Allowing anonymous survey's to be taken
+    *
+    */
+    function requiresLogin() {
+        $action = $this->getParam('action', '');
+        switch ($action) {
+            case 'takesurvey' :
+                return FALSE;
+            break;
+            case 'validateresponse' :
+                return FALSE;
+            break;
+            case 'validatequestion' :
+                return FALSE;
+            break;
+            case 'saveresponse' :
+                return FALSE;
+            break;
+            case 'confirm' :
+                return FALSE;
+            break;
+
+            default:
+                return TRUE;
+        }
+    }
+
+
 }
 ?>
