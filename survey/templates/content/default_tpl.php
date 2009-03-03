@@ -303,13 +303,13 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
             // set up take survey link
             if($surveyActive=='1' && strtotime($startDate)<=strtotime($currentDate) && strtotime($endDate)>=strtotime($currentDate) && $responseCounter<$responseMaximum && $responded==FALSE){
-                if((!empty($arrRespondentList) && $userGroup=='Respondents') || (empty($arrRespondentList) && $userGroup=='None')){
+                //if((!empty($arrRespondentList) && $userGroup=='Respondents') || (empty($arrRespondentList) && $userGroup=='None')){
                     $objLink=new    link($this->uri(array('action'=>'takesurvey','survey_id'=>$surveyId)));
                     $objLink->link=$takeLabel;
                     $takeSurvey=$objLink->show();
-                }else{
-                    $takeSurvey='';
-                }
+               // }else{
+               //     $takeSurvey='';
+               // }
             }else{
                 if((!empty($arrRespondentList) && $userGroup=='Respondents') || (empty($arrRespondentList) && $userGroup=='None')){
                     $takeSurvey=$unavailableLabel;

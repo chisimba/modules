@@ -109,7 +109,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $finishedButton=$objButton->show();
 
     // Set up form
-    $objForm=new form('continue',$this->uri(array('action'=>'')));
+    //$objForm=new form('continue',$this->uri(array('action'=>'')));
+    $objForm=new form('continue','?');
     $objForm->addToForm($finishedButton);
     $str=$objForm->show();
 
