@@ -116,12 +116,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
             $questionId=$question['id'];
             $surveyId=$question['survey_id'];
-            $questionText=$question['question_text'];
-            $questionSubtext=$question['question_subtext'];
+            $questionText=stripslashes($question['question_text']);
+            $questionSubtext=stripslashes($question['question_subtext']);
             $compulsoryQuestion=$question['compulsory_question'];
             $verticalAlignment=$question['vertical_alignment'];
             $commentRequested=$question['comment_requested'];
-            $commentText=$question['comment_request_text'];
+            $commentText=stripslashes($question['comment_request_text']);
             $htmlElementType=$question['radio_element'];
             $booleanType=$question['preset_options'];
             $trueOrFalse=$question['true_or_false'];
