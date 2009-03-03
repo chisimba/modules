@@ -371,7 +371,7 @@ class announcements extends controller
             $table->addHeaderCell($this->objLanguage->languageText('word_date', 'system', 'Date'));
             $table->addHeaderCell($this->objLanguage->languageText('word_title', 'system', 'Title'));
             $table->addHeaderCell($this->objLanguage->languageText('word_by', 'system', 'By'));
-            $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'));
+            $table->addHeaderCell($this->objLanguage->languageText('word_type', 'system', 'Type'));            
 			$table->addHeaderCell('&nbsp;');
 			$table->endHeaderRow();
             
