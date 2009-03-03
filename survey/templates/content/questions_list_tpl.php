@@ -112,7 +112,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $surveyId=$question['survey_id'];
             $typeId=$question['type_id'];
             $orderNumber=$question['question_order'];
-            $questionText=$question['question_text'];
+            $questionText=stripslashes($question['question_text']);
             $questionDescription=$this->dbType->getQuestionTypeDescription($typeId);
             $required=$question['compulsory_question'];
 
@@ -195,7 +195,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 $surveyId=$question['survey_id'];
                 $typeId=$question['type_id'];
                 $orderNumber=$question['question_order'];
-                $questionText=$question['question_text'];
+                $questionText=stripslashes($question['question_text']);
                 $questionDescription=$this->dbType->getQuestionTypeDescription($typeId);
                 $required=$question['compulsory_question'];
 
@@ -321,7 +321,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                             $surveyId=$question['survey_id'];
                             $typeId=$question['type_id'];
                             $orderNumber=$i;
-                            $questionText=$question['question_text'];
+                            $questionText=stripslashes($question['question_text']);
                             $questionDescription=$this->dbType->getQuestionTypeDescription($typeId);
                             $required=$question['compulsory_question'];
 
