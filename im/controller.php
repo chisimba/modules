@@ -93,14 +93,7 @@ class im extends controller {
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
 
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
-            if ($this->getParam('action') != 'messagehandler')
-            {
-                if(!$this->objIMUsers->isCounsilor($this->objUser->userId()) && !$this->objUser->inAdminGroup($this->objUser->userId()))
-                {
-                    //var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
-                    die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
-                }
-            }
+			
         } catch ( customException $e ) {
             customException::cleanUp ();
             exit ();
@@ -117,6 +110,16 @@ class im extends controller {
      */
     public function dispatch() {
         $action = $this->getParam ( 'action' );
+		
+	
+            if ($action != 'messagehandler')
+            {
+                if(!$this->objIMUsers->isCounsilor($this->objUser->userId()) && !$this->objUser->inAdminGroup($this->objUser->userId()))
+                {
+                    //var_dump($this->objIMUsers->isCounsilor($this->objUser->userId()));
+                    die($this->objLanguage->languageText("mod_im_notacounsellor", "im", "Sorry, you have not been registered as a counsellor! Please contact the system admin!"));
+                }
+            }
         switch ($action) {
 
             case 'messageview' :
@@ -265,6 +268,8 @@ class im extends controller {
                 // OK something went wrong, make sure the sysadmin knows about it!
                 $email = $this->objConfig->getsiteEmail ();
                 $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
+
+				
                 break;
 
             default :

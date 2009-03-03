@@ -112,9 +112,9 @@ class dbim extends dbTable
      *@param string $person
      *@return array
      */
-    public function getPersonMessages($person)
+    public function getPersonMessages($person, $limit = 20)
     {
-        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 20");
+        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT $limit");
 	
 	return $ret;
 

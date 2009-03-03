@@ -208,14 +208,35 @@ class dbimpresence extends dbTable
     public function resetCounsillors()
     {
         $objSysConfig = $this->getObject('altconfig', 'config');
+        $objModCat = $this->getObject('modules', 'modulecatalogue');
         $dbname = $objSysConfig->parseDSN($objSysConfig->getDsn());
         $dbname = $dbname['mailbox'];   
          //do the archiving first
         $sql = "INSERT INTO `".$dbname."`.`tbl_das_messagesarchive`
                     SELECT *
                     FROM `".$dbname."`.`tbl_im`";
-        $this->query($sql);
-        
+        //$this->query($sql);
+		
+		//check if das is installed
+		if($objModCat->checkIfRegistered('das'))
+		{
+			parent::init('tbl_im');
+			$messages = $this->getAll();
+			if(count($messages))
+			{
+				foreach($messages as $message)
+				{
+					array_shift($message);
+					array_pop($message);
+					//$message['im_id'] = $message['id'];
+					
+				
+					$this->insert($message, 'tbl_das_messagesarchive');
+				}
+			}
+			parent::init('tbl_im_presence');
+			
+		}
         //reset the presence table
         $sql = "TRUNCATE TABLE tbl_im_presence";
         $this->query($sql);
