@@ -150,13 +150,23 @@ class ahis extends controller {
      * @access public 
      */
     public function dispatch($action = NULL) {
+        $this->objTools = $this->getObject('tools','toolbar');
+        
+                
         if (!$this->objUser->isLoggedIn()) {
+            $this->objTools->addToBreadCrumbs(array($this->objLanguage->languageText('word_login')));
             return 'login_tpl.php';
         }
+        
         if (in_array($action, $this->adminActions) && !$this->objUser->isAdmin()) {
             $this->setVar('message', $this->objLanguage->languageText('mod_ahis_notadmin','ahis'));
             $this->setVar('location', $this->uri(array('action'=>'select_officer')));
             return 'redirect_tpl.php';
+        }
+        
+        if (strstr($action, 'passive')) {
+            $this->objTools->addToBreadCrumbs(array($this->objLanguage->languageText('phrase_passiveentry'),
+                                                    $action));
         }
         
         switch ($action) {
@@ -166,6 +176,7 @@ class ahis extends controller {
                 $this->setVar('districtId', $this->getSession('ps_districtId', $this->objAhisUser->getTerritory()));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                 $this->setVar('reportType', $this->getSession('ps_reportType'));
+                
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
@@ -177,9 +188,11 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
-                    default:
+                    case "init_02":
                         return $this->nextAction('active_surveillance');
-                      }
+                    default:
+                        return $this->nextAction('sero_surveillance');
+                }
             
             case 'passive_surveillance':
                 $this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
@@ -314,8 +327,6 @@ class ahis extends controller {
                 return 'passive_vaccine_tpl.php';
             
             case 'passive_save':
-                
-                var_dump($_SESSION);
                 $ps_array['reporterid'] = $this->getSession('ps_officerId');
                 $ps_array['territoryid'] = $this->getSession('ps_districtId');
                 $ps_array['reportdate'] = $this->getSession('ps_calendardate');
@@ -332,7 +343,7 @@ class ahis extends controller {
                 $ps_array['vetdate'] = $this->getSession('ps_dateVet', date('Y-m-d'));
                 $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
                 $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
-                $ps_array['investigationdate'] =$this->getSession('ps_dateInvestigation', date('Y-m-d'));
+                $ps_array['investigationdate'] = $this->getSession('ps_dateInvestigation', date('Y-m-d'));
                 $ps_array['location'] = $this->getSession('ps_location');
                 $ps_array['latitude'] = $this->getSession('ps_latitude');
                 $ps_array['longitude'] = $this->getSession('ps_longitude');
@@ -369,12 +380,14 @@ class ahis extends controller {
             
             case 'passive_feedback':
                 $success = $this->getParam('success');
+                $this->setVar('success', $success);
                 if ($success) {
-                    $this->unsetSession('ps_refNo');
-                } else {
-                    echo "no";
+                    $this->unsetPassiveSession();
                 }
-                break;
+                
+                return  "passive_feedback_tpl.php";
+                
+            case 'view_reports':
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));
@@ -435,7 +448,10 @@ class ahis extends controller {
             case 'active_addsample':
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                return 'active_addsample_tpl.php';
-                   
+               
+            case 'sero_surveillance':            
+               return 'sero_surveillance_tpl.php'; 
+                 
             case 'active_herddetails':
                return 'active_herddetails_tpl.php';    
                
@@ -1149,6 +1165,49 @@ class ahis extends controller {
                 return $this->nextAction('select_officer');
             	
         }
+    }
+    
+    /**
+     * Method to unset the passive surveillance session variables
+     *
+     */
+    private function unsetPassiveSession() {
+        //$this->unsetSession('ps_officerId');
+        //$this->unsetSession('ps_districtId');
+        //$this->unsetSession('ps_calendardate');
+        $this->unsetSession('ps_oStatusId');
+        $this->unsetSession('ps_qualityId');
+        $this->unsetSession('ps_datePrepared');
+        $this->unsetSession('ps_dateIBAR');
+        $this->unsetSession('ps_dateReceived');
+        $this->unsetSession('ps_dateIsReported');
+        $this->unsetSession('ps_refNo');
+        $this->unsetSession('ps_remarks');
+        $this->unsetSession('ps_dateVet');
+        $this->unsetSession('ps_dateOccurence');
+        $this->unsetSession('ps_dateDiagnosis');
+        $this->unsetSession('ps_dateInvestigation');
+        $this->unsetSession('ps_location');
+        $this->unsetSession('ps_longitude');
+        $this->unsetSession('ps_latitude');
+        $this->unsetSession('ps_disease');
+        $this->unsetSession('ps_causitive');
+        $this->unsetSession('ps_productionId');
+        $this->unsetSession('ps_ageId');
+        $this->unsetSession('ps_sexId');
+        $this->unsetSession('ps_speciesId');
+        $this->unsetSession('ps_controlId');
+        $this->unsetSession('ps_basisId');
+        $this->unsetSession('ps_cases');
+        $this->unsetSession('ps_susceptible');
+        $this->unsetSession('ps_deaths');
+        $this->unsetSession('ps_vaccinated');
+        $this->unsetSession('ps_slaughtered');
+        $this->unsetSession('ps_destroyed');
+        $this->unsetSession('ps_newcases');
+        $this->unsetSession('ps_production');
+        $this->unsetSession('ps_recovered');
+        $this->unsetSession('ps_prophylactic');
     }
     
     /**
