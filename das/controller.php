@@ -132,6 +132,7 @@ class das extends controller {
 				return $this->nextAction('viewall');
 			case 'resetcounsillors':
 				$this->objDbImPres->resetCounsillors();
+			
 				$this->nextAction('viewcounsilors');
 				break;
 			case 'startsession':

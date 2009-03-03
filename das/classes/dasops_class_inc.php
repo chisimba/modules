@@ -316,11 +316,11 @@ class dasops extends object {
 	{
 		//get the conversation
 		$objViewRender = $this->getObject('viewrender', 'das');
-		$body = "test";//$objViewRender->getCurrentSessionMessages($personId);
+		$body = $objViewRender->getCurrentSessionMessages($personId);
 		
 		//get the service email
 		$to = $this->dasfeedbackemail; //'$this->wnitsckie@uwc.ac.za, wesleynitsckie@gmail.com';//$this->juser.'@'.$this->jdomain;
-		$subject = "Feedback from ";//.$this->objSysConfig->getSiteName();
+		$subject = "Feedback from ".$this->objSysConfig->getSiteName();
 		
 		
 		//set mailer
@@ -329,7 +329,7 @@ class dasops extends object {
 		$objEmail->setBaseMailerProperty('subject', $subject);
 		$objEmail->setBaseMailerProperty('body', $body);
 		//send the mail
-		//$objEmail->send();
+		$objEmail->send();
 		
 		mail($to, $subject,$body);
 		return TRUE;
