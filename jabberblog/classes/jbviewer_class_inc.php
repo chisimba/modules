@@ -94,12 +94,15 @@ class jbviewer extends object {
         $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'jabberblog' );
         $commenttxt = $this->objComment->showJblogComments($msgid);
         $comment = $this->objComment->commentAddForm($msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL);
-        $ret = '<div class="bubble"><div class="rounded">
+        $objFeaturebox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeaturebox->showContent('<strong>'.$this->objUser->fullName($this->jposteruid).'</strong> on '.$msg['datesent'], nl2br($msgbody)."<br />".$commenttxt."<br />".$comment);
+        $ret .= "<hr />";
+        /*$ret = '<div class="bubble"><div class="rounded">
                      <blockquote><p>'.nl2br($msgbody).'</p></blockquote>
                      </div>
                      <cite class="rounded"><strong>'.$this->objUser->fullName($this->jposteruid).'</strong> on '.$msg['datesent'].'</cite>
                      </div><br />'.$commenttxt."<br />".$comment;
-
+*/
         return $ret;
 
     }
@@ -121,19 +124,15 @@ class jbviewer extends object {
             // get the comment count
             $comments = $this->objComment->getCount($msgid);
 
-            $ret .= '<div class="bubble"><div class="rounded">
+            // alt featurebox
+            $objFeaturebox = $this->getObject('featurebox', 'navigation');
+            $ret .= $objFeaturebox->showContent('<strong>'.$this->objUser->fullName($this->jposteruid).'</strong> on '.$msg['datesent']." ".$clink->show()."  (".$comments.")", nl2br($msgbody)."<br />");
+            $ret .= "<hr />";
+            /*$ret .= '<div class="bubble"><div class="rounded">
                      <blockquote><p>'.nl2br($msgbody).'</p></blockquote>
                      </div>
                      <cite class="rounded"><strong>'.$this->objUser->fullName($this->jposteruid).'</strong> on '.$msg['datesent']." ".$clink->show()."  (".$comments.")".'</cite>
-                     </div>';
-
-            /*
-            $ret .= '<div class="bubble">
-                     <blockquote><p>'.$msg['msgbody'].'</p></blockquote>
-
-                     <cite><strong>'.$msg['msgfrom'].'</strong> on '.$msg['datesent'].'</cite>
-                     </div>'; */
-
+                     </div>';*/
         }
         header ( "Content-Type: text/html;charset=utf-8" );
         return $ret;
