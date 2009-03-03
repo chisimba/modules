@@ -154,9 +154,9 @@ class jabberblog extends controller {
                 log_debug("Starting messagehandler");
                 // This is a looooong running task... Lets use the background class to handle it
                 //check the connection status
-                ///$status = $this->objBack->isUserConn ();
+                $status = $this->objBack->isUserConn ();
                 //keep the user connection alive even if the browser is closed
-                ///$callback = $this->objBack->keepAlive ();
+                $callback = $this->objBack->keepAlive ();
                 // Now the code is backrounded and cannot be aborted! Be careful now...
                 $this->conn->autoSubscribe ();
                 try {
