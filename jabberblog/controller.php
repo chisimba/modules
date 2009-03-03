@@ -92,6 +92,7 @@ class jabberblog extends controller {
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'jabberblog' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'jabberblog' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'jabberblog' );
+            $this->profiletext = $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
 
             // now for the posters address
             $this->jposter = $this->objSysConfig->getValue ( 'jposter', 'jabberblog' );

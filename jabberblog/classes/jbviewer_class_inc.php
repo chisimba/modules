@@ -177,8 +177,11 @@ class jbviewer extends object {
     }
 
     public function showUserMenu() {
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $objWashout = $this->getObject('washout', 'utilities');
+        $this->profiletext = $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
         $menu = "<center>".$this->objUser->getUserImage($this->jposteruid )."</center>";
-        $blurb = "I am an asshole";
+        $blurb = $objWashout->parseText($this->profiletext);
         $objFeature = $this->newObject('featurebox', 'navigation');
 
         return $objFeature->show($this->objUser->fullName($this->jposteruid), $menu."<br />".$blurb);
