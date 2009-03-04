@@ -239,7 +239,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     }
                 }
             }else{
-                if($userGroup!='Creator'){
+                if($userGroup!='Creator' && $this->objUser->isAdmin()){
                     $objIcon->title=$activeLabel;
                     $statusIcon=$objIcon->setIcon('surveyactive');
                     $statusIcon=$objIcon->show();
@@ -274,14 +274,14 @@ if(!$GLOBALS['kewl_entry_point_run']){
             }
 
             // set up groups icon
-            if($userGroup=='Creator' && $surveyActive!='1'){
+            if($userGroup=='Creator' && $surveyActive!='1' || $this->objUser->isAdmin()){
                 $objIcon->title=$editGroupsLabel;
                 $groupsIcon=$objIcon->getLinkedIcon($this->uri(array('action'=>'surveygroups','survey_id'=>$surveyId)),'groups');
                 $icons.=$groupsIcon;
             }
 
             // set up edit icon
-            if($userGroup=='Creator' && $surveyActive!='1'){
+            if($userGroup=='Creator' && $surveyActive!='1' || $this->objUser->isAdmin()){
                 $objIcon->title=$editSurveyLabel;
                 $editIcon=$objIcon->getEditIcon($this->uri(array('action'=>'editsurvey','survey_id'=>$surveyId)));
                 $icons.='&nbsp;'.$editIcon;
