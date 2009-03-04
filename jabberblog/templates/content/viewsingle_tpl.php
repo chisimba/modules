@@ -39,16 +39,22 @@ $script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"
 $middleColumn .= $header->show();
 $middleColumn .= $output;
 
+$objLT = $this->getObject('block_lasttweet', 'twitter');
+
 
 if (!$this->objUser->isLoggedIn()) {
-    //$leftColumn .= $this->objImOps->loginBox(TRUE);
+    $leftColumn .= $objImView->showUserMenu();
+    $leftColumn .= $objImView->getStatsBox();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
+    // show the last tweet block from the 'ol twitter stream
+    $leftColumn .= $objLT->show();
 } else {
     $leftColumn .= $this->leftMenu->show();
-    if($this->objUser->inAdminGroup($this->objUser->userId()))
-    {
-     //  $leftColumn .= $this->objImOps->showMassMessageBox(TRUE, TRUE);
-    }
+    $leftColumn .= $objImView->getStatsBox();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
+    $leftColumn .= $objLT->show();
 }
+
 
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

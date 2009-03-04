@@ -51,14 +51,19 @@ $middleColumn .= $header->show().'<br/>'.$objPagination->show();
 $rssLink = $this->getObject('link', 'htmlelements');
 $rssLink->href = $this->uri(array( 'action' => 'rss'));
 $rssLink->link = $this->objLanguage->languageText("mod_jabberblog_showrss", "jabberblog");
+$objLT = $this->getObject('block_lasttweet', 'twitter');
+
 if (!$this->objUser->isLoggedIn()) {
     $leftColumn .= $objImView->showUserMenu();
     $leftColumn .= $objImView->getStatsBox();
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
+    // show the last tweet block from the 'ol twitter stream
+    $leftColumn .= $objLT->show();
 } else {
     $leftColumn .= $this->leftMenu->show();
     $leftColumn .= $objImView->getStatsBox();
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
+    $leftColumn .= $objLT->show();
 }
 
 $cssLayout->setMiddleColumnContent($middleColumn);
