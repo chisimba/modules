@@ -17,7 +17,7 @@
  */
 package avoir.realtime.server;
 
-import avoir.realtime.instructor.packets.LocalSlideCacheRequestPacket;
+import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.common.packet.NewSlideReplyPacket;
 import avoir.realtime.common.packet.RemoveMePacket;
 import avoir.realtime.common.packet.TestPacket;
@@ -63,7 +63,7 @@ public class SlideProcessor {
 
     public void broadcastSlide(NewSlideReplyPacket p) {
         synchronized (serverThread.getClients()) {
-           
+
             //send it to all those people logged in on this presentation (session)
             for (int i = 0; i < serverThread.getClients().size(); i++) {
                 if (serverThread.getClients().nameAt(i).getSessionId().equals(p.getSessionId())) {
@@ -79,51 +79,32 @@ public class SlideProcessor {
 
     }
 
-
-
-           public void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
+    public void processLocalSlideCacheRequest(LocalSlideCacheRequestPacket packet) {
         removeNullSlideServers();
         //locate the slides server based on the ids
-        boolean slideServerFound =    false;
-        int MAX_TRIES
-          = 10;
-        int nooftries
-          = 0;
-        int sleep = 1 
-          * 1000;
-        waitForSlideServer
-
-         =
-
-                   true;
-       removeNullSlideServers();
+        boolean slideServerFound = false;
+        int MAX_TRIES = 10;
+        int nooftries = 0;
+        int sleep = 1 * 1000;
+        waitForSlideServer =
+                true;
+        removeNullSlideServers();
         while (!slideServerFound) {
             synchronized (slideServers) {
-                if (slideServers.size()
-
-
-                    == 0) {
+                     System.out.print("Slide servers available: "+slideServers.size());
+                if (slideServers.size() == 0) {
                     break;
                 }
-                for (int i =  0;
-                     i
-
-                          < slideServers.size(); i++) {
-                   // System.out.print("Testing Slide server "+slideServers.elementAt(i).getId()+" against "+packet.getSlidesServerId()+": " + nooftries + " ..");
+                for (int i = 0;
+                        i < slideServers.size(); i++) {
+                     System.out.print("Testing Slide server "+slideServers.elementAt(i).getId()+" against "+packet.getSlidesServerId()+": " + nooftries + " ..");
                     if (slideServers.elementAt(i).getId().trim().equals(packet.getSlidesServerId().trim())) {
                         serverThread.sendPacket(packet, slideServers.elementAt(i).getObjectOutputStream());
-                        slideServerFound 
-                         = true;
+                        slideServerFound = true;
                         waitForSlideServer = false;
-                        System.out.println
+                        System.out.println("OK");
 
-
-
-
-             ("OK"  )
-                ;
-
-            break;
+                        break;
                     }
                 }
             }
@@ -131,16 +112,8 @@ public class SlideProcessor {
                 break;
             }
             System.out.println(
-
-
-         "FAIL")
-
-
-
-
-
-                ;
-              serverThread  .delay(sleep);
+                    "FAIL");
+            serverThread.delay(sleep);
 
         }
 
@@ -154,16 +127,8 @@ public class SlideProcessor {
             Vector<SlideServer> invalidSlideServers = new Vector<SlideServer>();
 
             //first, get hold of offenders 
-            for (int i =  0;
-
-                    i
-
-
-
-
-
-
-                < slideServers.size(); i++) {
+            for (int i = 0;
+                    i < slideServers.size(); i++) {
                 try {
                     slideServers.elementAt(i).getObjectOutputStream().writeObject(new TestPacket());
                     slideServers.elementAt(i).getObjectOutputStream().flush();
@@ -174,15 +139,8 @@ public class SlideProcessor {
 
             }
             //then purge them
-            for (int i =  0;
-                i
-
-
-
-
-
-
-                < invalidSlideServers.size(); i++) {
+            for (int i = 0;
+                    i < invalidSlideServers.size(); i++) {
                 slideServers.remove(invalidSlideServers.elementAt(i));
 
             }
@@ -193,19 +151,8 @@ public class SlideProcessor {
         synchronized (slideServers) {
 
             //first, get hold of offenders 
-            for (int i =  0;
-
-                    i
-
-
-
-
-
-
-
-
-
-< slideServers.size(); i++) {
+            for (int i = 0;
+                    i < slideServers.size(); i++) {
                 try {
                     slideServers.elementAt(i).getId().equals(p.getId());
                     slideServers.remove(i);

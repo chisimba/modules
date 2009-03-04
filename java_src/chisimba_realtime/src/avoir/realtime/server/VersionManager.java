@@ -4,7 +4,8 @@
  */
 package avoir.realtime.server;
 
-import avoir.realtime.tcp.launcher.packet.VersionReplyPacket;
+
+import avoir.realtime.launcher.packet.VersionReplyPacket;
 import java.util.HashMap;
 import java.util.Map;
 

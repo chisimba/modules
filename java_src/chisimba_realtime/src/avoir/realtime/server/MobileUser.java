@@ -4,6 +4,7 @@
  */
 package avoir.realtime.server;
 
+import avoir.realtime.common.user.User;
 import java.io.OutputStream;
 
 /**
@@ -12,11 +13,11 @@ import java.io.OutputStream;
  */
 public class MobileUser {
 
-    private String username;
+    private User user;
     private OutputStream out;
 
-    public MobileUser(String username, OutputStream out) {
-        this.username = username;
+    public MobileUser(User user, OutputStream out) {
+        this.user = user;
         this.out = out;
     }
 
@@ -24,15 +25,16 @@ public class MobileUser {
         return out;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
+    @Override
     public String toString() {
-        return username;
+        return user.getUserName();
     }
 }

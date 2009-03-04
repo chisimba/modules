@@ -21,8 +21,9 @@ import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.common.GenerateUUID;
 import avoir.realtime.common.packet.FileUploadPacket;
 import avoir.realtime.common.packet.SessionImgPacket;
-import avoir.realtime.tcp.launcher.packet.ModuleFilePacket;
 
+
+import avoir.realtime.launcher.packet.ModuleFilePacket;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

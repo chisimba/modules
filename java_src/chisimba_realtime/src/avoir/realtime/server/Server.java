@@ -34,8 +34,7 @@ public class Server implements WrapperListener {
 
     public void controlEvent(int event) {
         if ((event == WrapperManager.WRAPPER_CTRL_LOGOFF_EVENT) &&
-                (WrapperManager.isLaunchedAsService()
-                )) {
+                (WrapperManager.isLaunchedAsService())) {
             // Ignore
         } else {
             WrapperManager.stop(0);
@@ -45,6 +44,8 @@ public class Server implements WrapperListener {
     }
 
     public Integer start(String[] argv) {
+        System.setProperty("java.awt.headless", "true");
+
         if (argv.length > 1) {
             throw new IllegalArgumentException("Syntax: Server [<port>]");
         }
@@ -76,11 +77,11 @@ public class Server implements WrapperListener {
         if (argv.length > 1) {
             throw new IllegalArgumentException("Syntax: Server [<port>]");
         }
-               // Start the application.  If the JVM was launched from the native
+        // Start the application.  If the JVM was launched from the native
         //  Wrapper then the application will wait for the native Wrapper to
         //  call the application's start method.  Otherwise the start method
         //  will be called immediately.
-        WrapperManager.start( new Server(), argv );
+        WrapperManager.start(new Server(), argv);
 
     }
 }
