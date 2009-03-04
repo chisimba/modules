@@ -8,7 +8,7 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the scraGNU General Public License for more
  * details.
  * 
  * You should have received a copy of the GNU General Public License along with
@@ -17,37 +17,50 @@
  */
 package avoir.realtime.instructor.whiteboard;
 
+import avoir.realtime.appsharing.AppView;
 import avoir.realtime.appsharing.RemoteDesktopViewerFrame;
 
 import avoir.realtime.chat.ChatPopup;
-import avoir.realtime.chat.PrivateChat;
 import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.classroom.SessionTimer;
-import avoir.realtime.classroom.packets.ClientPacket;
-import avoir.realtime.classroom.packets.NewUserPacket;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.ClientPacket;
+import avoir.realtime.common.packet.NewUserPacket;
+import avoir.realtime.common.packet.PresencePacket;
 import avoir.realtime.common.TCPSocket;
-import avoir.realtime.classroom.packets.RemoveUserPacket;
-import avoir.realtime.classroom.packets.WhiteboardItems;
-import avoir.realtime.classroom.packets.WhiteboardPacket;
+import avoir.realtime.common.packet.RemoveUserPacket;
+import avoir.realtime.common.packet.WhiteboardItems;
+import avoir.realtime.common.packet.WhiteboardPacket;
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.classroom.whiteboard.item.Item;
 import avoir.realtime.common.Constants;
+
+import avoir.realtime.common.FileManager;
+import avoir.realtime.common.packet.AnswerPacket;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
 import avoir.realtime.common.packet.ClassroomFile;
 import avoir.realtime.common.packet.ClassroomFileLog;
 import avoir.realtime.common.packet.ClassroomSlidePacket;
+import avoir.realtime.common.packet.DesktopPacket;
 import avoir.realtime.common.packet.FilePacket;
 import avoir.realtime.common.packet.FileUploadPacket;
+import avoir.realtime.common.packet.FileViewReplyPacket;
 import avoir.realtime.common.packet.MsgPacket;
 import avoir.realtime.common.packet.NewSlideReplyPacket;
+import avoir.realtime.common.packet.NotepadLogPacket;
+import avoir.realtime.common.packet.NotepadPacket;
+import avoir.realtime.common.packet.PointerPacket;
 import avoir.realtime.common.packet.RealtimePacket;
 import avoir.realtime.common.packet.RequestScrape;
 import avoir.realtime.common.packet.SessionImg;
 import avoir.realtime.common.user.User;
-import avoir.realtime.instructor.packets.LocalSlideCacheRequestPacket;
-import avoir.realtime.instructor.packets.NewSlideRequestPacket;
+import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
+import avoir.realtime.common.packet.MobileUsersPacket;
+import avoir.realtime.common.packet.NewSlideRequestPacket;
+import avoir.realtime.common.packet.XmlQuestionPacket;
+import avoir.realtime.survey.SurveyManagerFrame;
+import avoir.realtime.survey.Value;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -56,14 +69,23 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -81,10 +103,29 @@ public class TCPConnector extends TCPSocket {
     private boolean initialSlideRequest = true;
     private Timer timer = new Timer();
     private Map<String, PrivateChatFrame> privateChats = new HashMap<String, PrivateChatFrame>();
+    private SessionTimer sessionTimer;
+    private AppView appViewer;
+    private boolean showAppSharePreviewFrame = true;
+    private SurveyManagerFrame surveyManagerFrame;
+    private String fileManagerMode = ".";
+    private FileManager fileManager;
+    private String selectedFilePath;
 
     public TCPConnector(Classroom mf) {
         this.mf = mf;
+        sessionTimer = new SessionTimer(mf);
+    }
 
+    public SessionTimer getSessionTimer() {
+        return sessionTimer;
+    }
+
+    public String getSelectedFilePath() {
+        return selectedFilePath;
+    }
+
+    public void setSelectedFilePath(String selectedFilePath) {
+        this.selectedFilePath = selectedFilePath;
     }
 
     @Override
@@ -92,11 +133,23 @@ public class TCPConnector extends TCPSocket {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public void setSurveyManagerFrame(SurveyManagerFrame surveyManagerFrame) {
+        this.surveyManagerFrame = surveyManagerFrame;
+    }
+
+    public String getFileManagerMode() {
+        return fileManagerMode;
+    }
+
+    public void setFileManagerMode(String fileManagerMode) {
+        this.fileManagerMode = fileManagerMode;
+    }
+
     public boolean connectToServer(String host, int port) {
         if (connect(host, port)) {
             timer.cancel();
             timer = new Timer();
-            timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
+            timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
             mf.getSessionManager().startSession();
             publish(mf.getUser());
             return true;
@@ -112,7 +165,15 @@ public class TCPConnector extends TCPSocket {
         timer = new Timer();
         timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
         publish(mf.getUser());
-
+        /*  PresencePacket p = new PresencePacket(
+        mf.getUser().getSessionId(),
+        PresenceConstants.USER_ACTIVE_ICON,
+        PresenceConstants.USER_ACTIVE,
+        mf.getUser().getUserName());
+        p.setForward(true);
+        
+        sendPacket(p);
+         */
         mf.getSessionManager().startSession();
         Thread t = new Thread() {
 
@@ -173,6 +234,10 @@ public class TCPConnector extends TCPSocket {
         }
     }
 
+    private void processMobileUsersPacket(MobileUsersPacket p) {
+        mf.getUserListManager().addMobileUserList(p.getUsers());
+    }
+
     /**
      * preload the slides to the applet
      * @param slidesServerId
@@ -205,13 +270,41 @@ public class TCPConnector extends TCPSocket {
                         NewUserPacket p = (NewUserPacket) packet;
                         mf.getUserListManager().addNewUser(p.getUser());
                         mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " joined room.",
-                                "", "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+                                "", "", p.getSessionId(), Color.GRAY, "SansSerif", 0, 12, false, null));
+                    } else if (packet instanceof XmlQuestionPacket) {
+                        XmlQuestionPacket p = (XmlQuestionPacket) packet;
+                        if (surveyManagerFrame != null) {
+                            surveyManagerFrame.setQuestion(p);
+                        }
+                    } else if (packet instanceof AnswerPacket) {
+                        AnswerPacket p = (AnswerPacket) packet;
+                        User usr = mf.getUserListManager().getUser(p.getSender());
+                        boolean correct = false;
+                        if (!p.isEssay()) {
+                            correct = getCorrectAnswer(p);
+
+                            mf.getUserListManager().updateUserAnswerStatus(usr, correct);
+                        } else {
+                            JPanel panel = new JPanel(new BorderLayout());
+                            panel.add(new JScrollPane(new JTextArea(p.getQuestion())), BorderLayout.NORTH);
+                            panel.add(new JScrollPane(new JTextArea(p.getEssayAnswer())), BorderLayout.CENTER);
+                            JOptionPane.showMessageDialog(null, panel);
+                        }
+                    } else if (packet instanceof MobileUsersPacket) {
+                        processMobileUsersPacket((MobileUsersPacket) packet);
+                    } else if (packet instanceof PointerPacket) {
+                        PointerPacket p = (PointerPacket) packet;
+                        mf.getWhiteboard().setCurrentPointer(p.getType(), p.getPoint());
+                    } else if (packet instanceof NotepadLogPacket) {
+//                        mf.getToolBar().addSubButton("/icons/application_cascade.png", "savednotepad", "Notepad", "notepad");
+                        // JOptionPane.showMessageDialog(null, "got " + ((NotepadLogPacket) packet).getNotepads().size());
+                        saveNotepads((NotepadLogPacket) packet);
 
                     } else if (packet instanceof RemoveUserPacket) {
                         RemoveUserPacket p = (RemoveUserPacket) packet;
                         mf.getUserListManager().removeUser(p.getUser());
                         mf.getChatRoom().update(new ChatPacket("System", p.getUser().getUserName() + " left room.",
-                                "", "", p.getSessionId(), new Color(0, 131, 0), "SansSerif", 1, 15, false, null));
+                                "", "", p.getSessionId(), Color.GRAY, "SansSerif", 0, 12, false, null));
 
                     } else if (packet instanceof PresencePacket) {
                         PresencePacket p = (PresencePacket) packet;
@@ -225,12 +318,10 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof ChatLogPacket) {
                         ChatLogPacket p = (ChatLogPacket) packet;
                         mf.updateChat(p);
-                    } else if (packet instanceof MsgPacket) {
-                        MsgPacket p = (MsgPacket) packet;
-                        mf.showInfoMessage(p.getMessage());
+
                     } else if (packet instanceof FileUploadPacket) {
                         animateTab();
-                        mf.getFileRecieverManager().processFileDownload((FileUploadPacket) packet);
+                        mf.getInstructorFileReceiverManager().processFileDownload((FileUploadPacket) packet);
                     } else if (packet instanceof ClassroomSlidePacket) {
                         processClassroomSlidePacket((ClassroomSlidePacket) packet);
                     } else if (packet instanceof WhiteboardPacket) {
@@ -242,15 +333,28 @@ public class TCPConnector extends TCPSocket {
                         processClassromFilesLog(p);
                     } else if (packet instanceof WhiteboardItems) {
                         processWhiteboardItems((WhiteboardItems) packet);
+                    } else if (packet instanceof DesktopPacket) {
+                        DesktopPacket p = (DesktopPacket) packet;
+                        processDesktopPacket(p);
+
                     } else if (packet instanceof NewSlideReplyPacket) {
 
                         NewSlideReplyPacket nsr = (NewSlideReplyPacket) packet;
                         processNewSlideReplyPacket(nsr);
+                    } else if (packet instanceof FileViewReplyPacket) {
+                        processFileVewReplyPacket((FileViewReplyPacket) packet);
                     } else if (packet instanceof MsgPacket) {
+
                         MsgPacket p = (MsgPacket) packet;
+                        WhiteboardUtil.setStatusMessage(p.getMessage());
+
+                        if (p.getMessage().startsWith("Import appears")) {
+                            WhiteboardUtil.disposeStatusWindow();
+                        }
                         if (p.isErrorMsg()) {
                             mf.showInfoMessage(p.getMessage());
                         } else {
+
                             mf.showInfoMessage(p.getMessage());
                         }
                     } else if (packet instanceof RequestScrape) {
@@ -260,9 +364,15 @@ public class TCPConnector extends TCPSocket {
                         Point location = pane.getSelectedComponent().getLocationOnScreen();
                         int width = mf.getWhiteboard().getWidth();
                         int height = mf.getWhiteboard().getHeight();
-                        mf.getMenuManager().getScreenScraper().setFullScrapeRect(new Rectangle(location.x, location.y, width, height));
-                        mf.getMenuManager().getScreenScraper().scrapeRequested();
+                        RequestScrape p = (RequestScrape) packet;
+                        if (p.isRecord()) {
+                            mf.getMenuManager().getRecordScreen().setFullScrapeRect(new Rectangle(location.x, location.y, width, height));
+                            mf.getMenuManager().getRecordScreen().scrapeRequested();
 
+                        } else {
+                            mf.getMenuManager().getScreenScraper().setFullScrapeRect(new Rectangle(location.x, location.y, width, height));
+                            mf.getMenuManager().getScreenScraper().scrapeRequested();
+                        }
                     } else if (packet instanceof FilePacket) {
                         FilePacket p = (FilePacket) packet;
                         processFilePacket(p);
@@ -289,13 +399,148 @@ public class TCPConnector extends TCPSocket {
         }
     }
 
+    public Classroom getMf() {
+        return mf;
+    }
+
+    public void processFileVewReplyPacket(FileViewReplyPacket p) {
+        ArrayList<String> filters = new ArrayList<String>();
+        if (fileManager == null) {
+            fileManager = new FileManager(p.getList(), this, null);
+            fileManager.setSize(500, 400);
+            fileManager.setLocationRelativeTo(null);
+
+        }
+        if (fileManagerMode.equals("presentation")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Insert");
+        }
+        if (fileManagerMode.equals("question-image")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Insert");
+        }
+        if (fileManagerMode.equals("document")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Open");
+        }
+        if (fileManagerMode.equals("slide-builder-text")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Open");
+        }
+        if (fileManagerMode.equals("slide-show")) {
+            fileManager.getUploadButton().setEnabled(false);
+            fileManager.getSelectButton().setText("Open");
+        }
+        if (fileManagerMode.equals("slide-builder-question")) {
+            fileManager.getUploadButton().setEnabled(false);
+            fileManager.getSelectButton().setText("Insert");
+        }
+        if (fileManagerMode.equals("slide-builder-image")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Insert");
+        }
+        if (fileManagerMode.equals("whiteboard-image")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Insert");
+        }
+        if (fileManagerMode.equals("question-list")) {
+            filters.add(".xml");
+            fileManager.setFilters(filters);
+            fileManager.getUploadButton().setEnabled(false);
+            fileManager.getSelectButton().setText("Open");
+        }
+        if (fileManagerMode.equals("notepad")) {
+
+            fileManager.getSelectButton().setText("Open");
+            fileManager.getUploadButton().setEnabled(false);
+        }
+        fileManager.setFiles(p.getList());
+
+        fileManager.setVisible(true);
+    }
+
+    public void processDesktopPacket(final DesktopPacket packet) {
+
+        if (showAppSharePreviewFrame) {
+            int hh = packet.getData().getHeight();
+            int ww = packet.getData().getWidth();
+
+            viewer = new RemoteDesktopViewerFrame();
+
+            viewer.setSize(150, 150);
+            appViewer = new AppView(150, 150);//viewer.getWidth(), viewer.getHeight());
+            JFrame fr = new JFrame("Preview");
+            fr.setLocation(mf.getWidth() - fr.getWidth(), 10);
+            fr.setAlwaysOnTop(true);
+            fr.setSize(300, 250);
+            fr.setContentPane(appViewer);
+            fr.setVisible(true);
+            showAppSharePreviewFrame = false;
+        }
+        Thread t = new Thread() {
+
+            public void run() {
+
+                appViewer.pixelUpdate(packet.getData());
+            }
+        };
+        t.start();
+    }
+
+    private void saveNotepads(NotepadLogPacket p) {
+        String path = Constants.getRealtimeHome() + "/notepad/";
+        File f = new File(path);
+        f.mkdirs();
+        mf.getToolBar().setSavednotes(p.getNotepads().size() > 0 ? true : false);
+        for (int i = 0; i < p.getNotepads().size(); i++) {
+            try {
+                NotepadPacket note = p.getNotepads().get(i);
+                String name = note.getFilename();
+                if (!name.endsWith(".txt")) {
+                    name += ".txt";
+                }
+
+                FileOutputStream fstrm = new FileOutputStream(new File(path + "/" + name));
+                ObjectOutput ostrm = new ObjectOutputStream(fstrm);
+                ostrm.writeObject(note.getDocument());
+                ostrm.flush();
+
+            } catch (IOException io) {
+                System.err.println("IOException: " + io.getMessage());
+            }
+        }
+    }
+
+    private boolean getCorrectAnswer(AnswerPacket p) {
+        ArrayList<Value> options = p.getAnswerOptions();
+        boolean result = false;
+        int selectedAnswerIndex = -1;
+        int correctAnswerIndex = -1;
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).isSelectedByStudentAsAnswer()) {
+                selectedAnswerIndex = i;
+            }
+        }
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).isCorrectAnswer()) {
+                correctAnswerIndex = i;
+                break;
+            }
+        }
+        System.out.println("Correct answer is : " + correctAnswerIndex + " selected answr " + selectedAnswerIndex);
+        if (correctAnswerIndex == selectedAnswerIndex) {
+            result = true;
+        }
+        return result;
+    }
+
     public void processFilePacket(FilePacket packet) {
         try {
-            String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
-            if (!mf.isWebPresent()) {
-                home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
+            //String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
+            //if (!mf.isWebPresent()) {
+            String home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
 
-            }
+            //}
             File homeDir = new File(home);
             if (!homeDir.exists()) {
                 homeDir.mkdirs();
@@ -335,25 +580,29 @@ public class TCPConnector extends TCPSocket {
      * @param packet
      */
     boolean firstTimeSlideReply = true;
+    int thumbNailShowCount = 0;
 
     public void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
         int slideIndex = packet.getSlideIndex();
 
-        String slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
+        String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(packet.getPresentationName()) + "/img" + slideIndex + ".jpg";
+        //Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
         if (firstTimeSlideReply) {
-            showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
-        }
-        if (packet.isWebPresent()) {
-            if (firstTimeSlideReply) {
-                showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
-            }
-        } else {
-            slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
-            if (firstTimeSlideReply) {
-                showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName());
-            }
+            //     showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
+            showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(packet.getPresentationName()));
 
         }
+        /* if (packet.isWebPresent()) {
+        if (firstTimeSlideReply) {
+        showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
+        }
+        } else {
+        slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(packet.getPresentationName()) + "/img" + slideIndex + ".jpg";
+        if (firstTimeSlideReply) {
+        showThumbNails(mf.getSelectedFile(), Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(packet.getPresentationName()));
+        }
+
+        }*/
         mf.getSessionManager().setCurrentSlide(slideIndex, packet.isIsPresenter(), slidePath);
         if (packet.getMessage() != null) {
             mf.showInfoMessage(packet.getMessage());
@@ -362,20 +611,31 @@ public class TCPConnector extends TCPSocket {
         mf.setSelectedFile(packet.getPresentationName());
     }
 
+    private String stripExt(String filename) {
+        int index = filename.lastIndexOf(".");
+        if (index > -1) {
+            return filename.substring(0, index);
+        }
+        return filename;
+    }
+
     private void showThumbNails(String presentationName, String path) {
 
         if (!mf.getSelectedFile().equals(presentationName) || firstTimeSlideReply) {
 
             int[] slidesList = mf.getConnector().getImageFileNames(path);
             mf.getWhiteboard().clearThumbNails();
-
+            mf.getSessionManager().setSlideCount(slidesList.length);
             for (int i = 0; i < slidesList.length; i++) {
                 String imgPath = path + "/img" + slidesList[i] + ".jpg";
                 Image srcImg = new ImageIcon(imgPath).getImage();
                 mf.getWhiteboard().addThumbNail(mf.getWhiteboard().getWhiteboardManager().getScaledImage(srcImg), i, 0, true);
             }
             mf.getWhiteboard().repaint();
+            //if (thumbNailShowCount > 3) {
             firstTimeSlideReply = false;
+
+            // thumbNailShowCount++;
         }
     }
 
@@ -461,7 +721,7 @@ public class TCPConnector extends TCPSocket {
 
             }
             if (p.getType() == Constants.WEBPAGE) {
-                mf.getClassroomManager().showWebpage(p.getPath(), p.getId(), true);//a log is always treated as new
+//                mf.getClassroomManager().showWebpage(p.getPath(), p.getId(), true);//a log is always treated as new
             }
         }
     }
@@ -471,7 +731,7 @@ public class TCPConnector extends TCPSocket {
             sendPacket(p);
         } else {
             if (p.getType() == Constants.FLASH) {
-                mf.getClassroomManager().showFlashPlayer(filePath, p.getId(), p.getSessionId());
+//                mf.getClassroomManager().showFlashPlayer(filePath, p.getId(), p.getSessionId());
             }
         }
     }
@@ -551,6 +811,7 @@ public class TCPConnector extends TCPSocket {
                     showChatPopup(p.getUsr(), p.getContent());
                 }
             }
+
             mf.updateChat(p);
         }
     }
@@ -570,7 +831,7 @@ public class TCPConnector extends TCPSocket {
         int max = 10;
         mf.getChatRoom().getTextPane().setText("");
         while (!connected) {
-            System.out.println("Disconnected from server. Reconnecting to " + host + ":" + port + " " + count + " of " + max + "...");
+            mf.showErrorMessage("Disconnected from server. Reconnecting to " + host + ":" + port + " " + count + " of " + max + "...");
             if (connect(host, port)) {
 
                 publish(mf.getUser());
@@ -584,7 +845,7 @@ public class TCPConnector extends TCPSocket {
 
         }
         if (!connected) {
-            System.out.println("Connection to server failed. Contact your system administrator.");
+            mf.showErrorMessage("Connection to server failed. Contact your system administrator.");
 
         }
     }

@@ -24,6 +24,7 @@ import avoir.realtime.common.ImageUtil;
 import avoir.realtime.filetransfer.FileUploader;
 //import chrriis.common.UIUtils;
 //import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+import avoir.realtime.survey.SurveyManagerFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -59,6 +60,11 @@ public class Classroom extends ClassroomMainFrame {
     //private InstructorRealtimeToolBar instructorToolbar;
     private ClassicInstructorToolbar instructorToolbar;
     private JLabel headerField;// = new JLabel("Class password: xxxx; Class Name: yyyyyy");
+    private SurveyManagerFrame surveyManagerFrame;
+    int surveyCount = 0;
+    private InstructorFileReceiverManager instructorFileReceiverManager;
+    private SlideBuilderManager slideBuilderManager;
+    int slideBuilderCount = 0;
 
     public Classroom(
             String host,
@@ -83,8 +89,8 @@ public class Classroom extends ClassroomMainFrame {
                 audioMICPort, audioSpeakerPort, parent);
         headerField = new JLabel("Class password: " + sessionId + " | Class Name:  " + sessionTitle);
         headerField.setFont(new Font("Dialog", 1, 12));
-       // headerField.setEnabled(false);
-      //  headerField.setEditable(false);
+        // headerField.setEnabled(false);
+        //  headerField.setEditable(false);
         headerField.setBorder(BorderFactory.createEtchedBorder());
         headerField.setBackground(Color.WHITE);
         headerField.setOpaque(true);
@@ -97,8 +103,10 @@ public class Classroom extends ClassroomMainFrame {
         archiveManager = new ArchiveManager(this);
         toolbarManager = new ToolbarManager(this);
         classroomManager = new ClassroomManager(this);
+        slideBuilderManager = new SlideBuilderManager(this);
 //        instructorToolbar = new InstructorRealtimeToolBar(this);
         instructorToolbar = new ClassicInstructorToolbar(this);
+        instructorFileReceiverManager = new InstructorFileReceiverManager(this);
         JToolBar toolsBar = whiteboard.getToolsToolbar();
         //    JToolBar whiteboardToolbar = whiteboard.getMainToolbar();
         //    JToolBar navToolbar = toolbarManager.getSlidesNavigationToolBar();
@@ -133,7 +141,7 @@ public class Classroom extends ClassroomMainFrame {
 
         chatRoom.setTcpSocket(connector);
         setJMenuBar(menuManager.getMenuBar());
-     //   initNativeSwing();
+        //   initNativeSwing();
 
         loadCachedSlides();
         addToolbarButtons();
@@ -145,20 +153,65 @@ public class Classroom extends ClassroomMainFrame {
         return instructorToolbar;
     }
 
+    public InstructorFileReceiverManager getInstructorFileReceiverManager() {
+        return instructorFileReceiverManager;
+    }
+
+    @Override
+    public void setQuestionImage(ImageIcon image) {
+        JOptionPane.showMessageDialog(null, image);
+    }
+
+    public SurveyManagerFrame getSurveyManagerFrame() {
+        return surveyManagerFrame;
+    }
+
+    public void showSlideBuilder() {
+        int offset = 30 * slideBuilderCount;
+        slideBuilderManager = new SlideBuilderManager(this);
+        slideBuilderManager.setSize((ss.width / 8) * 6, (ss.height / 8) * 6);
+        slideBuilderManager.setLocation(((ss.width - slideBuilderManager.getWidth()) / 2) + offset,
+                ((ss.height - slideBuilderManager.getHeight()) / 2) + offset);
+
+        slideBuilderManager.setVisible(true);
+        slideBuilderCount++;
+    }
+
+    public int getSlideBuilderCount() {
+        return slideBuilderCount;
+    }
+
+    public void showQuestionsManager() {
+        int offset = 30 * surveyCount;
+        surveyManagerFrame = new SurveyManagerFrame(this);
+        ((TCPConnector) tcpConnector).setSurveyManagerFrame(surveyManagerFrame);
+        surveyManagerFrame.requestForQuestions();
+        surveyManagerFrame.setSize((ss.width / 8) * 6, (ss.height / 8) * 6);
+        surveyManagerFrame.setLocation(((ss.width - surveyManagerFrame.getWidth()) / 2) + offset, ((ss.height - surveyManagerFrame.getHeight()) / 2) + offset);
+        surveyManagerFrame.setVisible(true);
+        surveyCount++;
+    }
+
     private void addToolbarButtons() {
-        instructorToolbar.add("/icons/micro.png", "mic", "Microphone", false, true);
-        instructorToolbar.add("/icons/speaker.png", "speaker", "Speaker", false, true);
-        instructorToolbar.add("/icons/kedit.png", "notepad", "Notepad");
-        instructorToolbar.add("/icons/global_config.png", "config", "Settings");
+        //instructorToolbar.add("Chat", "/icons/chat32.png", "chat", "Private Chat", false, true);
+      //  instructorToolbar.add("Mic", "/icons/micro.png", "mic", "Microphone", false, true);
+        instructorToolbar.add("Pointer", "/icons/arrow_side32.png", "pointer", "Pointer");
+        //instructorToolbar.add("Speaker", "/icons/speaker.png", "speaker", "Speaker", false, true);
+        instructorToolbar.add("Notepad", "/icons/kedit32.png", "notepad", "Notepad");
+        instructorToolbar.add("Documents", "/icons/document.png", "documents", "Documents");
+        instructorToolbar.add("Slide Builder", "/icons/slidebuilder.png", "slideBuilder", "Slide Builder");
+        instructorToolbar.add("Presentation", "/icons/odt.png", "presentation", "Presentation");
+        instructorToolbar.add("Insert Image", "/icons/image.png", "graphic", "Insert Graphic");
         //   instructorToolbar.add("/icons/media-record.png", "record", "Record");
-        instructorToolbar.add("/icons/question.jpg", "question", "Question Builder");
-        instructorToolbar.add("/icons/desktopshare.png", "desktopshare", "Desktop Share", false, true);
+        instructorToolbar.add("Questions", "/icons/question32.jpg", "question", "Question Builder");
+        instructorToolbar.add("App Share", "/icons/desktopshare.png", "desktopshare", "Desktop Share", false, true);
         //instructorToolbar.add("/icons/package_network.png", "webpage", "Insert Webpage");
-        instructorToolbar.add("/icons/arrow_side32.png", "pointer", "Pointer");
-        instructorToolbar.add("/icons/text_bold.png", "bold", "Bold", false, true);
-        instructorToolbar.add("/icons/text_under.png", "under", "Underline", false, true);
-        instructorToolbar.add("/icons/text_italic.png", "italic", "Italic", false, true);
-        instructorToolbar.add("/icons/fonts.png", "fonts", "Fonts", false, true);
+        instructorToolbar.add("Settings", "/icons/global_config.png", "config", "Settings");
+
+        //instructorToolbar.add("/icons/text_bold.png", "bold", "Bold", false, true);
+        //instructorToolbar.add("/icons/text_under.png", "under", "Underline", false, true);
+        //instructorToolbar.add("/icons/text_italic.png", "italic", "Italic", false, true);
+        //instructorToolbar.add("/icons/fonts.png", "fonts", "Fonts", false, true);
     }
 
     /**
@@ -238,6 +291,10 @@ public class Classroom extends ClassroomMainFrame {
         }
         whiteboard.setImage(new ImageIcon(path));
 
+    }
+
+    public SlideBuilderManager getSlideBuilderManager() {
+        return slideBuilderManager;
     }
 
     private void initNativeSwing() {

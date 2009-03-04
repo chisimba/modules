@@ -58,14 +58,6 @@ class PixelButtonOption extends Component implements ActionListener {
      */
     public void paint(Graphics g) {
 
-
-
-
-
-
-
-
-
         int width = getSize().width, height = getSize().height;
         g.setColor(Color.white);
         g.draw3DRect(1, 1, width - 3, height - 3, !pressed);

@@ -7,6 +7,7 @@ package avoir.realtime.instructor.whiteboard;
 import avoir.realtime.common.Constants;
 import java.io.File;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -36,10 +37,20 @@ public class SessionManager {
         return isPresenter;
     }
 
+    private String stripExt(String filename) {
+        int index = filename.lastIndexOf(".");
+        if (index > -1) {
+            return filename.substring(0, index);
+        }
+        return filename;
+    }
+
     public void startSession() {
 
+        System.out.println("in start session");
+        String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getUser().getSessionTitle());
 
-        final File f = new File(avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
+        final File f = new File(slidePath);//avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId());
         //first check if it exist in local cache, if so dont bother with downloads
         //unless the 'UseCache option is off, so it forces downloads every time
         if (f.exists() && f.list().length > 1) {
@@ -57,6 +68,7 @@ public class SessionManager {
                 return;
             }
         } else {
+            System.out.println("Nothing in cache..requesting for slides from " + mf.getUser().getSlideServerId() + " session " + mf.getUser().getSessionId());
             Constants.log("Nothing in cache..requesting for slides from " + mf.getUser().getSlideServerId() + " session " + mf.getUser().getSessionId());
             f.mkdirs();
             mf.getConnector().requestForSlides(mf.getUser().getSessionId(), mf.getUser().getSlideServerId(),
