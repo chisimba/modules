@@ -293,22 +293,28 @@ class twitterremote extends object
     public function showStatus($showTime=FALSE, $showimage=FALSE)
     {
         $xml = $this->getStatus();
-        $ret = "<div name=\"myLastTweet\" id=\"myLastTweet\">" . $xml->status->text;
-        if ($showTime) {
-            $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
-            $fixedTime = strtotime($xml->status->created_at);
-            $fixedTime = date('Y-m-d H:i:s', $fixedTime);
-            $humanTime = $objHumanizeDate->getDifference($fixedTime);
-            $ret.= "<br /><span class=\"minute\">"
-              . $humanTime . "</span>";
+        if(is_object($xml)) {
+            $ret = "<div name=\"myLastTweet\" id=\"myLastTweet\">" . $xml->status->text;
+            if ($showTime) {
+                $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
+                $fixedTime = strtotime($xml->status->created_at);
+                $fixedTime = date('Y-m-d H:i:s', $fixedTime);
+                $humanTime = $objHumanizeDate->getDifference($fixedTime);
+                $ret.= "<br /><span class=\"minute\">"
+                  . $humanTime . "</span>";
+            }
+            if ($showimage){
+                $ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\""
+                 . $xml->profile_image_url
+                 . "\" /></td><td class=\"tweetcell\">" . $ret
+                 ."</td></tr></table>";
+            }
+
+            return $ret . "</div>";
         }
-        if ($showimage){
-            $ret = "<table class=\"tweets\" id=\"mytweets\"><tr><td class=\"tweetcell\"><img src=\""
-             . $xml->profile_image_url
-             . "\" /></td><td class=\"tweetcell\">" . $ret
-             ."</td></tr></table>";
+        else {
+            return NULL;
         }
-        return $ret . "</div>";
     }
 
     /**
@@ -421,7 +427,7 @@ class twitterremote extends object
             return false;
         }
     }
-    
+
     private function debugStr($str)
     {
         $str = str_replace("<", "&lt;", $str);
