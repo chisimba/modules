@@ -16,10 +16,20 @@ public class DesktopPacket implements RealtimePacket{
 
     private ScreenScrapeData data;
     private String sessionId;
+    private boolean record;
 
-    public DesktopPacket(ScreenScrapeData data, String sessionId) {
+    public DesktopPacket(ScreenScrapeData data, String sessionId,boolean record) {
         this.data = data;
         this.sessionId = sessionId;
+        this.record=record;
+    }
+
+    public boolean isRecord() {
+        return record;
+    }
+
+    public void setRecord(boolean record) {
+        this.record = record;
     }
 
     public String getId() {

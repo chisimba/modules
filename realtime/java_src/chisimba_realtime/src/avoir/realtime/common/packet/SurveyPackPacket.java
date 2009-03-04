@@ -4,9 +4,7 @@
  */
 package avoir.realtime.common.packet;
 
-import avoir.realtime.common.packet.QuestionPacket;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  *

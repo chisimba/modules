@@ -45,7 +45,7 @@ public class User implements Serializable {
     private String siteRoot;
     private String slideServerId;
     private String sessionTitle;
-    private boolean speakerOn,  micOn,  handOn,  editOn,  yesOn,  noOn;
+    private boolean speakerOn, micOn, handOn, editOn, yesOn, noOn;
     private String userDetails;
     private String userImagePath;
     private boolean chatEnabled = true;
@@ -74,7 +74,7 @@ public class User implements Serializable {
     public User(int level, String fullname, String userName, boolean isPresenter, String sessionId) {
         this.level = level;
         this.fullname = fullname;
-        this.userName = userName;
+        this.userName = userName.toLowerCase();
         this.isPresenter = isPresenter;
         this.sessionId = sessionId;
     }

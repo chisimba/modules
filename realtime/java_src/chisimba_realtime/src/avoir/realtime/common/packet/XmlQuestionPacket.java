@@ -18,6 +18,7 @@
 package avoir.realtime.common.packet;
 
 import avoir.realtime.survey.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
@@ -25,21 +26,49 @@ import javax.swing.ImageIcon;
  *
  * @author developer
  */
-public class QuestionPacket implements RealtimePacket {
+public class XmlQuestionPacket implements RealtimePacket {
 
     private String question;
     private ArrayList<Value> answerOptions;
     private int type;
     private String essayAnswer;
     private String sender;
-    private ImageIcon image;
-    private String imagePath;
     private String id;
     private String sessionId;
     private boolean answered;
+    private String name;
+    private String imagePath;
+    private ImageIcon image;
+    private String questionPath;
+
+
+
+    public String getQuestionPath() {
+        return questionPath;
+    }
+
+    public void setQuestionPath(String questionPath) {
+        this.questionPath = questionPath;
+    }
 
     public String getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isAnswered() {
@@ -62,23 +91,9 @@ public class QuestionPacket implements RealtimePacket {
         this.id = id;
     }
 
-    public QuestionPacket(String question, ArrayList<Value> answerOptions,
-            int type, String sender, String id, ImageIcon image,String imagePath) {
-        this.question = question;
-        this.answerOptions = answerOptions;
-        this.type = type;
-        this.sender = sender;
-        this.id = id;
-        this.image=image;
-        this.imagePath=imagePath;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    @Override
+    public String toString() {
+        return name;
     }
 
     public ImageIcon getImage() {
@@ -89,7 +104,18 @@ public class QuestionPacket implements RealtimePacket {
         this.image = image;
     }
 
-    
+    public XmlQuestionPacket(String question, ArrayList<Value> answerOptions,
+            int type, String sender, String id,
+            String name, ImageIcon image, String imagePath) {
+        this.question = question;
+        this.answerOptions = answerOptions;
+        this.type = type;
+        this.sender = sender;
+        this.id = id;
+        this.name = name;
+        this.imagePath = imagePath;
+        this.image = image;
+    }
 
     public String getSender() {
         return sender;
@@ -109,10 +135,6 @@ public class QuestionPacket implements RealtimePacket {
 
     public int getType() {
         return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public ArrayList<Value> getAnswerOptions() {

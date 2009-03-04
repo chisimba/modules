@@ -18,6 +18,7 @@
 package avoir.realtime.common;
 
 import avoir.realtime.chat.PrivateChatFrame;
+import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.common.packet.AckPacket;
 import avoir.realtime.common.packet.RealtimePacket;
@@ -164,6 +165,16 @@ public abstract class TCPSocket {
     public abstract Map<String, PrivateChatFrame> getPrivateChats();
 
     public abstract SessionTimer getSessionTimer();
+
+    public abstract ClassroomMainFrame getMf();
+
+    public abstract String getSelectedFilePath();
+
+    public abstract void setSelectedFilePath(String mode);
+
+    public abstract void setFileManagerMode(String mode);
+
+    public abstract String getFileManagerMode();
 
     public void setReader(ObjectInputStream reader) {
         this.reader = reader;

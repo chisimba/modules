@@ -23,6 +23,7 @@ public class FileUploadPacket implements RealtimePacket {
     private int recepientIndex;
     private int fileType;
     private int index;
+    private String target;
 
     public FileUploadPacket(
             String sessionId,
@@ -50,6 +51,14 @@ public class FileUploadPacket implements RealtimePacket {
         this.recepientIndex = recepientIndex;
         this.fileType = fileType;
         
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 
 
