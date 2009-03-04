@@ -24,8 +24,10 @@
 package avoir.realtime.classroom.notepad;
 
 import avoir.realtime.classroom.ClassroomMainFrame;
+
 import avoir.realtime.common.Constants;
 import avoir.realtime.common.ImageUtil;
+import avoir.realtime.common.packet.FileVewRequestPacket;
 import avoir.realtime.common.packet.NotepadPacket;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,12 +44,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
@@ -232,40 +232,88 @@ public class JNotepad extends javax.swing.JFrame implements ActionListener {
         }
     }
 
-    public void openFile(String filePath) {
+    public void setContent(Document doc, String filename, String path) {
+        try {
+            if (contentField.getDocument() != null) {
+                contentField.getDocument().removeUndoableEditListener(undoHandler);
+            }
+            contentField.setDocument(doc);
+            doc.addUndoableEditListener(undoHandler);
+            resetUndoManager();
+            setTitle(filename);
+            validate();
+            openedFilename = filename;
+            state = "edit";
+        } catch (Exception cnf) {
+            // should put in status panel
+            System.err.println("Class not found: " + cnf.getMessage());
+        }
 
+    }
+
+    public void openFile(String filePath) {
+        /*
         File f = new File(filePath);
         if (f.exists()) {
-            try {
-                FileInputStream fin = new FileInputStream(f);
-                ObjectInputStream istrm = new ObjectInputStream(fin);
-                Document doc = (Document) istrm.readObject();
-                if (contentField.getDocument() != null) {
-                    contentField.getDocument().removeUndoableEditListener(undoHandler);
-                }
-                contentField.setDocument(doc);
-                doc.addUndoableEditListener(undoHandler);
-                resetUndoManager();
-                setTitle(f.getName());
-                validate();
-                openedFilename = f.getAbsolutePath();
-                state = "edit";
-            } catch (IOException io) {
-                // should put in status panel
-                System.err.println("IOException: " + io.getMessage());
-            } catch (ClassNotFoundException cnf) {
-                // should put in status panel
-                System.err.println("Class not found: " + cnf.getMessage());
-            }
+        try {
+        FileInputStream fin = new FileInputStream(f);
+        ObjectInputStream istrm = new ObjectInputStream(fin);
+        Document doc = (Document) istrm.readObject();
+        if (contentField.getDocument() != null) {
+        contentField.getDocument().removeUndoableEditListener(undoHandler);
         }
+        contentField.setDocument(doc);
+        doc.addUndoableEditListener(undoHandler);
+        resetUndoManager();
+        setTitle(f.getName());
+        validate();
+        openedFilename = f.getAbsolutePath();
+        state = "edit";
+        } catch (IOException io) {
+        // should put in status panel
+        System.err.println("IOException: " + io.getMessage());
+        } catch (ClassNotFoundException cnf) {
+        // should put in status panel
+        System.err.println("Class not found: " + cnf.getMessage());
+        }
+        }
+         */
+        String path = mf.getUser().getUserName() + "/notepad/";
+
+        mf.getTcpConnector().setFileManagerMode("notepad");
+        mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }
 
     private void initSave() {
+        /*
         String home = Constants.getRealtimeHome() + "/notepad/";
         new File(home).mkdirs();
         // JFileChooser chooser = new JFileChooser();
         //int ret = chooser.showSaveDialog(this);
         String filename = JOptionPane.showInputDialog("Notepad Name:");
+        if (filename == null) {
+        return;
+        }
+        if (filename.trim().equals("")) {
+        JOptionPane.showMessageDialog(this, "Empty name not allowed");
+        return;
+        }
+
+        File f = new File(home + "/" + filename);
+        if (f.exists()) {
+        if (state.equals("new")) {
+        askIfToOverwrite(f);
+        } else if (state.equals("edit")) {
+        if (!f.getAbsoluteFile().equals(openedFilename)) {
+        askIfToOverwrite(f);
+        }
+        }
+        } else {
+        saveNotePad(f);
+        }
+
+         */
+        String filename = JOptionPane.showInputDialog("Notepad Name:",openedFilename);
         if (filename == null) {
             return;
         }
@@ -273,20 +321,14 @@ public class JNotepad extends javax.swing.JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "Empty name not allowed");
             return;
         }
-
-        File f = new File(home + "/" + filename);
-        if (f.exists()) {
-            if (state.equals("new")) {
-                askIfToOverwrite(f);
-            } else if (state.equals("edit")) {
-                if (!f.getAbsoluteFile().equals(openedFilename)) {
-                    askIfToOverwrite(f);
-                }
-            }
-        } else {
-            saveNotePad(f);
-        }
-
+        saved = true;
+        openedFilename=filename;
+        setTitle(filename);
+        mf.getTcpConnector().sendPacket(new NotepadPacket(contentField.getDocument(),
+                mf.getUser().getUserName(),
+                filename,
+                mf.getUser().getSessionId()));
+     //   mf.getToolBar().getToolbarManager().getNotepadModel().addElement(name);
     }
 
     private void close() {
@@ -319,7 +361,12 @@ public class JNotepad extends javax.swing.JFrame implements ActionListener {
             initSave();
         }
         if (evt.getActionCommand().equals("open")) {
-            mf.getToolBar().getToolbarManager().showNotepadList();
+            // mf.getToolBar().getToolbarManager().showNotepadList();
+           
+            String path = mf.getUser().getUserName()+"/notepad";
+            mf.getTcpConnector().setFileManagerMode("notepad");
+            mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+
         }
     }
 
@@ -372,8 +419,7 @@ public class JNotepad extends javax.swing.JFrame implements ActionListener {
         String[][] buttons = {
             {"/icons/new.gif", "new", "New note"},
             {"/icons/open.gif", "open", "Open note"},
-            {"/icons/save.gif", "save", "Save note"},
-        };
+            {"/icons/save.gif", "save", "Save note"},};
         String[][] editorbuttons = {
             {"/icons/cut.gif", "cut-to-clipboard", "Cut"},
             {"/icons/paste.gif", "paste-from-clipboard", "Paste"},
@@ -382,8 +428,7 @@ public class JNotepad extends javax.swing.JFrame implements ActionListener {
             {"/icons/underline.gif", "font-underline", "Underline"},
             {"/icons/left.gif", "left-justify", "Left justify"},
             {"/icons/center.gif", "center-justify", "Center justify"},
-            {"/icons/right.gif", "right-justify", "Right justify"},
-        };
+            {"/icons/right.gif", "right-justify", "Right justify"},};
         for (int i = 0; i < buttons.length; i++) {
             createButton(buttons[i][0], buttons[i][1], buttons[i][2]);
         }

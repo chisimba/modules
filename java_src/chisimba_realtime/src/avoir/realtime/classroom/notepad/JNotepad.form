@@ -72,28 +72,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JMenuBar" name="menuBar">
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
-        <Property name="useNullLayout" type="boolean" value="true"/>
-      </Layout>
-      <SubComponents>
-        <Menu class="javax.swing.JMenu" name="fileMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="File"/>
-          </Properties>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="editMenuItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
-          </Properties>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="colorMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Color"/>
-          </Properties>
-        </Menu>
-      </SubComponents>
-    </Container>
   </SubComponents>
 </Form>

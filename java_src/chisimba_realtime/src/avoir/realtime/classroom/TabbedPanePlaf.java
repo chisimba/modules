@@ -8,7 +8,7 @@ import avoir.realtime.common.Constants;
 import avoir.realtime.common.Flash;
 import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.WebPage;
-import avoir.realtime.classroom.packets.RemoveDocumentPacket;
+import avoir.realtime.common.packet.RemoveDocumentPacket;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Insets;

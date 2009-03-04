@@ -17,7 +17,7 @@
  */
 package avoir.realtime.classroom;
 
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.PresenceConstants;
 import java.awt.Color;
@@ -87,20 +87,20 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
         return resizedImg;
     }
 
-    public void add(String text,String imagePath, String actionCommand, String tooltipText, boolean bg, boolean isToggle) {
+    public void add(String text, String imagePath, String actionCommand, String tooltipText, boolean bg, boolean isToggle) {
         if (isToggle) {
-            add(text,imagePath, actionCommand, tooltipText, bg);
+            add(text, imagePath, actionCommand, tooltipText, bg);
 
         } else {
-            add(text,imagePath, actionCommand, tooltipText);
+            add(text, imagePath, actionCommand, tooltipText);
 
         }
     }
 
-    public void add(String text,String imagePath, String actionCommand, String tooltip) {
+    public void add(String text, String imagePath, String actionCommand, String tooltip) {
         ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
         final JButton b = new JButton();
-        b.setFont(new Font("dialog",0,11));
+        b.setFont(new Font("dialog", 0, 11));
         b.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         b.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         b.setText(text);
@@ -124,14 +124,14 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
         add(b);
     }
 
-    public void add(String text,String imagePath, String actionCommand, String tooltip, boolean bg) {
+    public void add(String text, String imagePath, String actionCommand, String tooltip, boolean bg) {
         ImageIcon image = ImageUtil.createImageIcon(this, imagePath);
         final JToggleButton b = new JToggleButton();
         b.addActionListener(this);
         b.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         b.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         b.setText(text);
-        b.setFont(new Font("dialog",0,11));
+        b.setFont(new Font("dialog", 0, 11));
 //        b.setMargin(new Insets(1, 1, 1, 1));
 
         b.setBorderPainted(false);
@@ -259,7 +259,32 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
     public void showFonts() {
     }
 
+    protected void showDocumentViewer(){
+        
+    }
+
+    protected void insertPresentation() {
+    }
+
+    protected void insertGraphic() {
+    }
+
+    protected void showSlideBuilder() {
+    }
+
     public void actionPerformed(ActionEvent evt) {
+         if (evt.getActionCommand().equals("documents")) {
+             showDocumentViewer();
+         }
+        if (evt.getActionCommand().equals("slideBuilder")) {
+            showSlideBuilder();
+        }
+        if (evt.getActionCommand().equals("graphic")) {
+            insertGraphic();
+        }
+        if (evt.getActionCommand().equals("presentation")) {
+            insertPresentation();
+        }
         if (evt.getActionCommand().equals("pointer")) {
             JButton b = (JButton) evt.getSource();
             showPointerOptions(b.getX(), b.getY());
@@ -300,11 +325,12 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
         }
         if (evt.getActionCommand().equals(
                 "notepad")) {
-            if (savednotes) {
+            /*if (savednotes) {
                 toolbarManager.showNotepadList();
             } else {
                 toolbarManager.showNotepad();
-            }
+            }*/
+            mf.showNotepad(null, "", "");
         }
         if (evt.getActionCommand().equals("question")) {
             showQuestionsManager();
