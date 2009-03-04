@@ -185,7 +185,7 @@ class dbquestion extends dbTable
     {
         $sql="SELECT * FROM ".$this->table;
         $sql.=" WHERE survey_id='$surveyId'";
-        $sql.=" ORDER BY 'question_order' ";
+        $sql.=" ORDER BY question_order ";
         $data=$this->getArray($sql);
         return $data;
     }
