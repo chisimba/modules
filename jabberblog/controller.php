@@ -67,7 +67,6 @@ class jabberblog extends controller {
             // Include the needed libs from resources
             include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
             include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
-            //$this->objImOps = $this->getObject ( 'imops' );
             $this->objUser = $this->getObject ( 'user', 'security' );
             $this->objUserParams = $this->getObject ( 'dbuserparamsadmin', 'userparamsadmin' );
             $this->userJid = $this->objUserParams->getValue ( 'Jabber ID' );
@@ -76,14 +75,11 @@ class jabberblog extends controller {
             $this->objBack = $this->getObject ( 'background', 'utilities' );
             $this->objDbIm = $this->getObject ( 'dbjbim' );
             $this->objDbImPres = $this->getObject ( 'dbjbpresence' );
-            //$this->objIMUsers = $this->getObject ( 'dbimusers' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
-
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
             }
-
             // Get the sysconfig variables for the Jabber user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->jserver = $this->objSysConfig->getValue ( 'jabberserver', 'jabberblog' );
@@ -119,7 +115,6 @@ class jabberblog extends controller {
         switch ($action) {
 
             case 'messageview' :
-                // echo "booyakasha!";
                 $msgs = $this->objDbIm->getMessagesByActiveUser ();
 
                 $this->setVarByRef ( 'msgs', $msgs );
@@ -128,7 +123,6 @@ class jabberblog extends controller {
                 break;
 
             case 'viewallajax' :
-                //var_dump($this->objDbIm->getMessagesByActiveUser());
                 $page = intval ( $this->getParam ( 'page', 0 ) );
                 if ($page < 0) {
                     $page = 0;
@@ -148,6 +142,7 @@ class jabberblog extends controller {
                 $this->setVarByRef ( 'pages', $pages );
 
                 header("Content-Type: text/html;charset=utf-8");
+
                 return 'viewall_tpl.php';
                 break;
 
@@ -169,7 +164,6 @@ class jabberblog extends controller {
 
                             switch ($event [0]) {
                                 case 'message' :
-                                    //$this->objImOps->parseSysMessages($pl);
                                     switch ($pl ['body']) {
                                         case 'quit' :
                                             $this->conn->disconnect ();
@@ -181,10 +175,7 @@ class jabberblog extends controller {
                                         case 'NULL' :
                                             continue;
                                     }
-                                    // Update Twitter
-                                    if ($this->objTwitterLib && $pl ['body']) {
-                                        $this->objTwitterLib->updateStatus ( $pl ['from'] . ': ' . $pl ['body'] );
-                                    }
+
                                     // Send a response message
                                     if ($pl ['body'] != "") {
                                         // Bang the array into a table to keep a record of it.
@@ -192,10 +183,22 @@ class jabberblog extends controller {
                                         $poster = $poster[0];
                                         if($poster == $this->jposter) {
                                             $this->objDbIm->addRecord ( $pl );
-                                            $this->conn->message($pl['from'], $body=$this->objLanguage->languageText('mod_jabberblog_msgadded', 'jabberblog'));
+                                            // Update Twitter
+                                            if ($this->objTwitterLib && $pl ['body']) {
+                                                // check for 140 char length restriction.
+                                                if(strlen($pl['body']) < 100 ) {
+                                                    //log_debug( $pl ['body'].": ".$this->uri(''));
+                                                    $this->objTwitterLib->updateStatus ( $pl ['body'].": ".$this->uri('') );
+                                                }
+                                                else {
+                                                    //log_debug($this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri(''));
+                                                    $this->objTwitterLib->updateStatus ( $this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri('') );
+                                                }
+                                            }
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_msgadded', 'jabberblog'));
                                         }
                                         else {
-                                            $this->conn->message($pl['from'], $body = $this->objLanguage->languageText('mod_jabberblog_invaliduser', 'jabberblog'));
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_invaliduser', 'jabberblog'));
                                         }
                                     }
                                     break;
