@@ -83,20 +83,20 @@ public class InstructorRealtimeToolBar extends RealtimeToolBar {
     @Override
     protected void setBold() {
         bold = !bold;
-        mf.getWhiteboard().getBoldButton().setSelected(bold);
+//        mf.getWhiteboard().getBoldButton().setSelected(bold);
 
     }
 
     @Override
     protected void setItalic() {
         italic = !italic;
-        mf.getWhiteboard().getItalicButton().setSelected(italic);
+  //      mf.getWhiteboard().getItalicButton().setSelected(italic);
     }
 
     @Override
     protected void setUnder() {
         under = !under;
-        mf.getWhiteboard().getUnderButton().setSelected(under);
+    //    mf.getWhiteboard().getUnderButton().setSelected(under);
     }
 
     @Override

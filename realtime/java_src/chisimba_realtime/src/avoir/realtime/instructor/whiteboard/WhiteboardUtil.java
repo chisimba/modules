@@ -4,10 +4,9 @@
  */
 package avoir.realtime.instructor.whiteboard;
 
-
 import avoir.realtime.common.Constants;
 import avoir.realtime.common.PresenceConstants;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.classroom.whiteboard.item.Item;
@@ -17,6 +16,7 @@ import avoir.realtime.classroom.whiteboard.item.Rect;
 import avoir.realtime.classroom.whiteboard.item.Txt;
 import avoir.realtime.classroom.whiteboard.item.WBLine;
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,7 +33,9 @@ import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JWindow;
 
 /**
  *
@@ -44,10 +46,27 @@ public class WhiteboardUtil {
     private Classroom mf;
     private Whiteboard whiteBoardSurface;
     private int rect_size = 8;
+    final static JWindow intro = new JWindow();
+    final static JLabel info = new JLabel("", JLabel.CENTER);
 
     public WhiteboardUtil(Classroom mf, Whiteboard whiteBoardSurface) {
-        this.mf=mf;
+        this.mf = mf;
         this.whiteBoardSurface = whiteBoardSurface;
+    }
+
+    public static void showStatusWindow(String msg, boolean showPb) {
+        intro.setSize(300, 100);
+        info.setText(msg);
+        intro.getContentPane().setLayout(new BorderLayout());
+        intro.getContentPane().add(info, BorderLayout.CENTER);
+
+
+        intro.setVisible(true);
+        intro.setLocationRelativeTo(null);
+    }
+
+    public static void setStatusMessage(String txt) {
+        info.setText(txt);
     }
 
     public boolean isPointerInUser() {
@@ -61,20 +80,26 @@ public class WhiteboardUtil {
         return state;
     }
 
+    public static void disposeStatusWindow() {
+        if (intro != null) {
+            intro.dispose();
+        }
+    }
+
     /**
      * this sends an edit icon to show that the user has entered some text
      */
     public void showUserModifyingWhiteboard() {
-      mf.getConnector().sendPacket(new PresencePacket(mf.getUser().getSessionId(),
+        mf.getConnector().sendPacket(new PresencePacket(mf.getUser().getSessionId(),
                 PresenceConstants.EDIT_WB_ICON, PresenceConstants.EDITING_WB,
-               mf.getUser().getUserName()));
+                mf.getUser().getUserName()));
     }
 
     /**
      * this sends a signal to show that the user is removing text
      */
     public void showUserStoppedModifyingWhiteboard() {
-   mf.getConnector().sendPacket(new PresencePacket(mf.getUser().getSessionId(),
+        mf.getConnector().sendPacket(new PresencePacket(mf.getUser().getSessionId(),
                 PresenceConstants.EDIT_WB_ICON, PresenceConstants.NOT_EDIING_WB,
                 mf.getUser().getUserName()));
     }
@@ -86,9 +111,9 @@ public class WhiteboardUtil {
      * @param h - desired height
      * @return - the new resized image
      */
-    public Image getScaledImage(Image srcImg){
-        int w=60;
-        int h=40;
+    public Image getScaledImage(Image srcImg) {
+        int w = 60;
+        int h = 40;
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = resizedImg.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -96,7 +121,8 @@ public class WhiteboardUtil {
         g2.dispose();
         return resizedImg;
     }
-    public Image getScaledImage(Image srcImg,int w,int h){
+
+    public Image getScaledImage(Image srcImg, int w, int h) {
 
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = resizedImg.createGraphics();

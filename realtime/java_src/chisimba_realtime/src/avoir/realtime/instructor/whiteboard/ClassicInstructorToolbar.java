@@ -19,8 +19,7 @@ package avoir.realtime.instructor.whiteboard;
 
 import avoir.realtime.classroom.ClassicToolbar;
 import avoir.realtime.common.Constants;
-import avoir.realtime.survey.SurveyManagerFrame;
-import com.sun.org.apache.bcel.internal.generic.IFEQ;
+import avoir.realtime.common.packet.FileVewRequestPacket;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,7 +29,6 @@ import java.util.TimerTask;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
-import javax.swing.border.Border;
 
 /**
  *
@@ -66,7 +64,7 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
         boolean showText = false;
 
         public void run() {
-           b.setText("Sharing");
+            b.setText("Sharing");
             if (showText) {
                 b.setForeground(Color.RED);
             } else {
@@ -74,6 +72,18 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
             }
             showText = !showText;
         }
+    }
+
+    @Override
+    protected void showDocumentViewer() {
+        String path = mf.getUser().getUserName()+"/documents/";
+        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("documents");
+        mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+    }
+
+    @Override
+    protected void showSlideBuilder() {
+        mf.showSlideBuilder();
     }
 
     @Override
@@ -85,19 +95,16 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
             desktopTimer.scheduleAtFixedRate(new SharingAlerter(b), 0, 1000);
         } else {
             desktopTimer.cancel();
-            b.setText("");
+            b.setFont(new Font("dialog", 0, 11));
+            b.setForeground(Color.BLACK);
+            b.setText("App Share");
         }
         mf.getMenuManager().initAppshare();
     }
 
     @Override
     public void showQuestionsManager() {
-        int offset = 30 * count;
-        SurveyManagerFrame fr = new SurveyManagerFrame(mf);
-        fr.setSize((ss.width / 8) * 6, (ss.height / 8) * 6);
-        fr.setLocation(((ss.width - fr.getWidth()) / 2) + offset, ((ss.height - fr.getHeight()) / 2) + offset);
-        fr.setVisible(true);
-        count++;
+        mf.showQuestionsManager();
     }
 
     public void setRecording(boolean recording) {
@@ -118,24 +125,34 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
     @Override
     protected void setBold() {
         bold = !bold;
-        mf.getWhiteboard().getBoldButton().setSelected(bold);
+//        mf.getWhiteboard().getBoldButton().setSelected(bold);
 
     }
 
     @Override
     protected void setItalic() {
         italic = !italic;
-        mf.getWhiteboard().getItalicButton().setSelected(italic);
+//        mf.getWhiteboard().getItalicButton().setSelected(italic);
     }
 
     @Override
     protected void setUnder() {
         under = !under;
-        mf.getWhiteboard().getUnderButton().setSelected(under);
+//        mf.getWhiteboard().getUnderButton().setSelected(under);
     }
 
     @Override
     public void showFonts() {
+    }
+
+    @Override
+    protected void insertPresentation() {
+        mf.getMenuManager().insertPresentation();
+    }
+
+    @Override
+    protected void insertGraphic() {
+        mf.getMenuManager().insertGraphic();
     }
 
     @Override

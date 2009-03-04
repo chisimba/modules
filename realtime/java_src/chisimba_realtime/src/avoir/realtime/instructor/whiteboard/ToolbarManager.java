@@ -20,7 +20,7 @@ package avoir.realtime.instructor.whiteboard;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.PresenceConstants;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

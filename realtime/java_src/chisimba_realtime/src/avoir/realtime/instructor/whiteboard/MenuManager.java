@@ -26,11 +26,11 @@ import avoir.realtime.common.Constants;
 import avoir.realtime.common.FlashFilter;
 import avoir.realtime.common.ImageFilter;
 import avoir.realtime.common.PresentationFilter;
+import avoir.realtime.common.packet.FileVewRequestPacket;
 import avoir.realtime.common.packet.ResumeWhiteboardSharePacket;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -125,7 +125,7 @@ public class MenuManager implements ActionListener {
         fileMenu.addSeparator();
         createMenuItem(fileMenu, "Exit", "exit", true);
         createMenuItem(insertMenu, "Insert Presentation", "insertPresentation", true);
-       // createMenuItem(insertMenu, "Insert Webpage", "insertWebpage", true);
+        // createMenuItem(insertMenu, "Insert Webpage", "insertWebpage", true);
         createMenuItem(insertMenu, "Insert Graphic", "insertGraphic", true);
         createMenuItem(insertMenu, "Insert Flash", "insertFlash", true);
         menuBar.add(fileMenu);
@@ -201,7 +201,7 @@ public class MenuManager implements ActionListener {
     public void stopRecord() {
         recordScreen.stopScraping();
         mf.getConnector().sendPacket(new StopScreenSharing(true));
-    //      mf.getToolBar().setRecording(false);
+        //      mf.getToolBar().setRecording(false);
 
     }
 
@@ -209,7 +209,7 @@ public class MenuManager implements ActionListener {
         new Thread() {
 
             public void run() {
-               // mf.getClassroomManager().showWebpage();
+                // mf.getClassroomManager().showWebpage();
             }
         }.start();
     }
@@ -281,22 +281,7 @@ public class MenuManager implements ActionListener {
 
         }
         if (e.getActionCommand().equals("insertGraphic")) {
-            if (graphicFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
-                final File f = graphicFC.getSelectedFile();
-                Thread t = new Thread() {
-
-                    public void run() {
-                        if (mf.getMainTabbedPane().getSelectedIndex() != 0) {
-                            mf.getClassroomManager().animateTabTitle(mf.getMainTabbedPane(), 0);
-                        }
-                        mf.getFileUploader().transferFile(f.getAbsolutePath(), Constants.IMAGE);
-                        mf.setSelectedFile(f.getName());
-
-
-                    }
-                };
-                t.start();
-            }
+            insertGraphic();
         }
         if (e.getActionCommand().equals("insertFlash")) {
             if (flashFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
@@ -316,24 +301,7 @@ public class MenuManager implements ActionListener {
         }
 
         if (e.getActionCommand().equals("insertPresentation")) {
-            if (presentationFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
-                final File f = presentationFC.getSelectedFile();
-                WhiteboardUtil.showStatusWindow("Processing ... please wait", false);
-                Thread t = new Thread() {
-
-                    public void run() {
-
-                        if (mf.getMainTabbedPane().getSelectedIndex() != 0) {
-                            mf.getClassroomManager().animateTabTitle(mf.getMainTabbedPane(), 0);
-                        }
-
-                        mf.getFileUploader().transferFile(f.getAbsolutePath(), Constants.PRESENTATION);
-                        mf.setSelectedFile(f.getName());
-
-                    }
-                };
-                t.start();
-            }
+            insertPresentation();
         }
         if (e.getActionCommand().equals("exit")) {
             System.exit(0);
@@ -351,21 +319,69 @@ public class MenuManager implements ActionListener {
             //        MenuManager.this.mf.showAudioWizardFrame();
         }
         if (e.getActionCommand().equals("about")) {
-            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.1 Beta</center>");
+            JOptionPane.showMessageDialog(null, aboutText + "<br><center>Version 1.0.2 Beta</center>");
 
         }
     }
 
+    public void insertGraphic() {
+        /*
+        if (graphicFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
+        final File f = graphicFC.getSelectedFile();
+        Thread t = new Thread() {
+
+        public void run() {
+        if (mf.getMainTabbedPane().getSelectedIndex() != 0) {
+        mf.getClassroomManager().animateTabTitle(mf.getMainTabbedPane(), 0);
+        }
+        mf.getFileUploader().transferFile(f.getAbsolutePath(), Constants.IMAGE);
+        mf.setSelectedFile(f.getName());
+
+
+        }
+        };
+        t.start();
+        }*/
+        String path = mf.getUser().getUserName()+"/images";
+        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("whiteboard-image");
+        mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+    }
+
+    public void insertPresentation() {
+        /* if (presentationFC.showOpenDialog(mf) == JFileChooser.APPROVE_OPTION) {
+        final File f = presentationFC.getSelectedFile();
+        WhiteboardUtil.showStatusWindow("Processing ... please wait", false);
+        Thread t = new Thread() {
+
+        public void run() {
+
+        if (mf.getMainTabbedPane().getSelectedIndex() != 0) {
+        mf.getClassroomManager().animateTabTitle(mf.getMainTabbedPane(), 0);
+        }
+
+        mf.getFileUploader().transferFile(f.getAbsolutePath(), Constants.PRESENTATION);
+        mf.setSelectedFile(f.getName());
+
+        }
+        };
+        t.start();
+        }*/
+
+        String path = mf.getUser().getUserName()+"/presentations/";
+        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("presentation");
+        mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+    }
+
     private JMenu createMenu(String txt) {
         JMenu menu = new JMenu(txt);
-        menu.setFont(new Font("Dialog", 0, 11));
+        //menu.setFont(new Font("Dialog", 0, 11));
 
         return menu;
     }
 
     private void createCBMenuItem(JMenu menu, String txt, String action, boolean enabled) {
         JCheckBoxMenuItem item = new JCheckBoxMenuItem(txt);
-        item.setFont(new Font("Dialog", 0, 11));
+        // item.setFont(new Font("Dialog", 0, 11));
         if (txt.equals("Share Whiteboard")) {
             item.setSelected(true);
         }
@@ -377,7 +393,7 @@ public class MenuManager implements ActionListener {
 
     private void createMenuItem(JMenu menu, String txt, String action, boolean enabled) {
         JMenuItem item = new JMenuItem(txt);
-        item.setFont(new Font("Dialog", 0, 11));
+        //item.setFont(new Font("Dialog", 0, 11));
 
         item.setEnabled(enabled);
         item.addActionListener(this);

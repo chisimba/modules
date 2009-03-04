@@ -21,18 +21,19 @@ package avoir.realtime.instructor.whiteboard;
 
 import avoir.realtime.classroom.*;
 import avoir.realtime.appsharing.DesktopUtil;
-import avoir.realtime.classroom.packets.RemoveUserPacket;
-import avoir.realtime.classroom.packets.WhiteboardPacket;
+import avoir.realtime.common.packet.RemoveUserPacket;
+import avoir.realtime.common.packet.WhiteboardPacket;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.Constants;
 import avoir.realtime.common.GenerateUUID;
 import avoir.realtime.common.WebPage;
 import avoir.realtime.common.Flash;
+/*
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
 import chrriis.dj.nativeswing.swtimpl.components.WebBrowserAdapter;
 import chrriis.dj.nativeswing.swtimpl.components.WebBrowserEvent;
 import chrriis.dj.nativeswing.swtimpl.components.WebBrowserNavigationEvent;
-import chrriis.dj.nativeswing.swtimpl.components.JFlashPlayer;
+import chrriis.dj.nativeswing.swtimpl.components.JFlashPlayer;*/
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -79,7 +80,7 @@ public class ClassroomManager {
     public void setScreenCapture(boolean screenCapture) {
         this.screenCapture = screenCapture;
     }
-
+/*
     public void showWebpage() {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -108,10 +109,10 @@ public class ClassroomManager {
                         mf.getMainTabbedPane().setTitleAt(count - 1, title);
                         String id = GenerateUUID.getId();
                         mf.getWebPages().add(new WebPage(id, url, count - 1));
-                        /* if (mf.getControl()) {
-                        mf.getTcpClient().sendPacket(new ClassroomFile(url,
-                        Constants.WEBPAGE, mf.getSessionId(), id, newTab, oldID));
-                        }*/
+                        // if (mf.getControl()) {
+                       // mf.getTcpClient().sendPacket(new ClassroomFile(url,
+                        //Constants.WEBPAGE, mf.getSessionId(), id, newTab, oldID));
+                        //}
                         
                         newTab = false;
                         oldID = id;
@@ -132,7 +133,7 @@ public class ClassroomManager {
             }
         });
     }
-
+*/
     private String formatTitle(String url) {
         try {
             URL r = new URL(url);
@@ -169,7 +170,7 @@ public class ClassroomManager {
         return -1;
     }
 
-    public void showWebpage(final String url, final String id, final boolean xnewTab) {
+  /*  public void showWebpage(final String url, final String id, final boolean xnewTab) {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
@@ -204,11 +205,11 @@ public class ClassroomManager {
                             newTab = false;
 
                             updateWebPageUrl(id, url);
-                            /*                            if (mf.getControl()) {
-                            mf.getTcpClient().sendPacket(new ClassroomFile(url,
-                            Constants.WEBPAGE, mf.getSessionId(), id, newTab, oldID));
-                            }
-                             */
+                            //                            if (mf.getControl()) {
+                            //mf.getTcpClient().sendPacket(new ClassroomFile(url,
+                            //Constants.WEBPAGE, mf.getSessionId(), id, newTab, oldID));
+                           // }
+                             //
                             oldID = id;
                             newTab = false;
                         }
@@ -229,8 +230,8 @@ public class ClassroomManager {
             }
         });
     }
-
-    public void showFlashPlayer(final String filepath, final String id, final String sessionId) {
+*/
+    /*public void showFlashPlayer(final String filepath, final String id, final String sessionId) {
 
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -248,7 +249,7 @@ public class ClassroomManager {
                 mf.getMainTabbedPane().setSelectedIndex(count - 1);
             }
         });
-    }
+    }*/
 
     /**
      * When the application is close..remove user from the list

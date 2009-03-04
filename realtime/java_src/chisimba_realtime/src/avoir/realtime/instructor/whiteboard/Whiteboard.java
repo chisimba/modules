@@ -38,8 +38,9 @@ import avoir.realtime.common.Constants;
 import avoir.realtime.common.GenerateUUID;
 
 import avoir.realtime.common.packet.PointerPacket;
-import avoir.realtime.classroom.packets.WhiteboardPacket;
+import avoir.realtime.common.packet.WhiteboardPacket;
 
+import avoir.realtime.common.Pointer;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -56,6 +57,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -70,6 +72,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -115,12 +118,13 @@ public class Whiteboard extends WhiteboardSurface implements
     private Item selectedItem;
     private int selectedIndex = -1;
     private final float[] dash1 = {1.0f};
+    protected Font defaultFont = new Font("SansSerif", 0, 17);
     private final BasicStroke dashed = new BasicStroke(1.0f,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, dash1, 0.0f);
     private Vector<WBLine> penVector = new Vector<WBLine>();
     private float strokeWidth = 5;
     private Classroom mf;
-    private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR),  DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+    private static final Cursor SELECT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR), DRAW_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
     private Rectangle pointerSurface = new Rectangle();
     /*Color.gray, Color.lightGray, Color.white, Color.red, Color.orange, Color.yellow,
     Color.green, Color.cyan, Color.blue, Color.magenta,
@@ -162,7 +166,7 @@ public class Whiteboard extends WhiteboardSurface implements
     private JTextField editTextField = new JTextField();
     private JPopupMenu editPopup = new JPopupMenu();
     private JPopupMenu popup = new JPopupMenu();
-    private JPopupMenu deletePopup = new JPopupMenu();
+    private JPopupMenu whiteboardPopup = new JPopupMenu();
     private int initH;
     private int initW;
     private int last_w;
@@ -208,12 +212,23 @@ public class Whiteboard extends WhiteboardSurface implements
     private Timer rightScrollTimer = new Timer();
     private WhiteboardUtil whiteboardUtil;
     private Timer slidePanelTimer = new Timer();
+    private Image cimg = blankIcon.getImage();
+    private Cursor curCircle = Toolkit.getDefaultToolkit().createCustomCursor(cimg, new Point(5, 5), "circle");
+    private JMenuItem insertGraphicMenuItem = new JMenuItem("Insert Graphic");
+    private JMenuItem insertPresentationMenuItem = new JMenuItem("Insert Presentation");
+    private String fontName = "SansSerif";
+    private int fontStyle = 0;
+    private int fontSize = 22;
+    private JMenu textFontMenuItem = new JMenu("Text Font - " + fontName);
+    private JMenu textSizeMenuItem = new JMenu("Text Size - " + fontSize);
+    private JMenu textStyleMenuItem = new JMenu("Text Style - " + getStyleName(fontStyle));
+    private JMenu lineSizeMenuItem = new JMenu("Line Size - " + strokeWidth);
 
-    /** Creates new form WhiteboardSurface */
     public Whiteboard(Classroom mf) {
         super(mf);
         initComponents();
         this.mf = mf;
+        initFont();
         setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         addMouseListener(this);
@@ -242,6 +257,12 @@ public class Whiteboard extends WhiteboardSurface implements
         handRightButton.addActionListener(this);
         handRightButton.setActionCommand("handRight");
         handRightButton.setToolTipText("Point right");
+
+        insertGraphicMenuItem.addActionListener(this);
+        insertGraphicMenuItem.setActionCommand("insertGraphic");
+        insertPresentationMenuItem.addActionListener(this);
+        insertPresentationMenuItem.setActionCommand("insertPresentation");
+
 
         colorChooserButton.addActionListener(this);
         colorChooserButton.setActionCommand("color-chooser");
@@ -284,6 +305,7 @@ public class Whiteboard extends WhiteboardSurface implements
         //  repaint();
 
         textField.addActionListener(this);
+        textField.setFont(defaultFont);
         textField.setActionCommand("text");
         textField.setOpaque(false);
         textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -301,14 +323,22 @@ public class Whiteboard extends WhiteboardSurface implements
         });
         deleteMenuItem.setActionCommand("delete");
         deleteMenuItem.addActionListener(this);
-        deletePopup.add(deleteMenuItem);
-
+        whiteboardPopup.add(insertGraphicMenuItem);
+        whiteboardPopup.add(insertPresentationMenuItem);
+        whiteboardPopup.addSeparator();
+        whiteboardPopup.add(deleteMenuItem);
+        whiteboardPopup.addSeparator();
+        whiteboardPopup.add(textFontMenuItem);
+        whiteboardPopup.add(textSizeMenuItem);
+        whiteboardPopup.add(textStyleMenuItem);
+        whiteboardPopup.addSeparator();
+        whiteboardPopup.add(lineSizeMenuItem);
         pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
     }
 
     public void showBanner() {
         String id = GenerateUUID.getId();
-        imgs.add(chisimbaBanner);
+        // imgs.add(chisimbaBanner);
         addItem(new Img(120, 120, 200, 51, "", 0, id));
 
     }
@@ -417,26 +447,6 @@ public class Whiteboard extends WhiteboardSurface implements
         return mainToolbar;
     }
 
-    public JToggleButton getBoldButton() {
-        return boldButton;
-    }
-
-    public JComboBox getFontNamesField() {
-        return fontNamesField;
-    }
-
-    public JComboBox getFontSizeField() {
-        return fontSizeField;
-    }
-
-    public JToggleButton getItalicButton() {
-        return italicButton;
-    }
-
-    public JToggleButton getUnderButton() {
-        return underButton;
-    }
-
     private void resizeTextField() {
         Font f = getSelectedFont();
         metrics = graphics.getFontMetrics(f);
@@ -475,29 +485,30 @@ public class Whiteboard extends WhiteboardSurface implements
                     selectedItems.clear();
                     whiteboardUtil.selectItem(tmp, selectedItems);
                 }
-                boldButton.setSelected(false);
-                italicButton.setSelected(false);
-                underButton.setSelected(false);
 
-                underButton.setSelected(txt.isUnderlined());
 
                 Font f = txt.getFont();
-                fontNamesField.setSelectedItem(f.getFamily());
-                fontSizeField.setSelectedItem(f.getSize() + "");
+                fontName = f.getFamily();
+                textFontMenuItem.setText("Text Font - " + fontName);
+                fontSize = f.getSize();
+                textSizeMenuItem.setText("Text Size - " + fontSize);
 
-                int style = f.getStyle();
-                if (style == Font.BOLD) {
-                    boldButton.setSelected(true);
+                fontStyle = f.getStyle();
+                if (fontStyle == Font.PLAIN) {
+                    textStyleMenuItem.setText("Font Style - PLAIN");
+                }
+                if (fontStyle == Font.BOLD) {
+                    textStyleMenuItem.setText("Font Style - BOLD");
                 }
 
-                if (style == Font.ITALIC) {
-                    italicButton.setSelected(true);
+                if (fontStyle == Font.ITALIC) {
+                    textStyleMenuItem.setText("Font Style - ITALIC");
+                }
+                if (fontStyle == (Font.BOLD | Font.ITALIC)) {
+                    textStyleMenuItem.setText("Font Style - BOLD ITALIC");
                 }
 
                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-
-
-
 
                 if (evt.getClickCount() == 2) {
 
@@ -517,7 +528,7 @@ public class Whiteboard extends WhiteboardSurface implements
                         //                          editPopup.show(mf.getSurface(), evt.getX(), evt.getY() - editTextField.getHeight());
                         //                    } else {
                         editPopup.show(this, evt.getX(), evt.getY() - editTextField.getHeight());
-                    //                  }
+                        //                  }
 
                     }
 
@@ -661,6 +672,20 @@ public class Whiteboard extends WhiteboardSurface implements
         return false;
     }
 
+    private String getStyleName(int style) {
+        if (style == Font.PLAIN) {
+            return "PLAIN";
+        }
+        if (fontStyle == Font.BOLD) {
+            return "BOLD";
+        }
+
+        if (fontStyle == Font.ITALIC) {
+            return "ITALIC";
+        }
+        return "PLAIN";
+    }
+
     public void processMousePressed(MouseEvent evt) {
         int xx = (getWidth() - pointerSurface.width) / 2;
         Rectangle rect = new Rectangle(xx, slideHeight + slideYOffset, slideWidth, 60);
@@ -673,9 +698,9 @@ public class Whiteboard extends WhiteboardSurface implements
                 if (thRect.contains(evt.getPoint())) {
                     int index = selectedIndex;
                     String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getSelectedFile()) + "/img" + index + ".jpg";
-                    if (mf.isWebPresent()) {
-                        slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + index + ".jpg";
-                    }
+                    //if (mf.isWebPresent()) {
+                    //  slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + index + ".jpg";
+                    //}
                     mf.getSessionManager().setCurrentSlide(index, mf.getUser().isPresenter(), slidePath);
                     mf.getConnector().requestNewSlide(mf.getUser().getSiteRoot(), index, mf.getUser().isPresenter(),
                             mf.getUser().getSessionId(), mf.getUser().getUserName(),
@@ -701,8 +726,8 @@ public class Whiteboard extends WhiteboardSurface implements
                     selected = null;
                     selectedItem =
                             null;
-                    for (int i = 0; i <
-                            items.size(); i++) {
+                    for (int i = items.size() - 1; i >
+                            -1; i--) {
                         Item tmp = items.elementAt(i);
                         if (setSelectedItem(evt, tmp, i)) {
                             break;
@@ -734,7 +759,7 @@ public class Whiteboard extends WhiteboardSurface implements
 
                     int hgt = metrics.getHeight();
                     //  textField.setForeground(colour);
-                    popup.setPopupSize(100, hgt + (int) (hgt * 0.2));
+                    popup.setPopupSize(300, hgt + (int) (hgt * 0.2));
                     //popup.setPreferredSize(new Dimension(100, 50));
 //                    if (mf.getMODE() == Constants.APPLET) {
                     //   popup.show(mf.getSurface(), evt.getX(), evt.getY() - textField.getHeight());
@@ -744,13 +769,13 @@ public class Whiteboard extends WhiteboardSurface implements
 
                     textField.requestFocus();
                 }
-            /*                if (selectedThumbNail != null) {
-            int index = selectedThumbNail.getIndex();
-            String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getSelectedFile()) + "/img" + index + ".jpg";
-            mf.getSessionManager().setCurrentSlide(index, mf.isPresenter(), slidePath);
+                /*                if (selectedThumbNail != null) {
+                int index = selectedThumbNail.getIndex();
+                String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + stripExt(mf.getSelectedFile()) + "/img" + index + ".jpg";
+                mf.getSessionManager().setCurrentSlide(index, mf.isPresenter(), slidePath);
 
-            }
-             */
+                }
+                 */
             } else {
                 mf.showErrorMessage("You dont have privileges to modify the whiteboard");
             }
@@ -762,38 +787,31 @@ public class Whiteboard extends WhiteboardSurface implements
          */
         if (button == MouseEvent.BUTTON3) {
             if (drawingEnabled) {
-                /*     selected = null;
+                selected = null;
 
                 int tempIndex = 0;
                 for (int i = 0; i <
-                items.size(); i++) {
-                Item tmp = items.elementAt(i);
-                if (tmp.contains(startX, startY)) {
-                selected = tmp;
-                selectedIndex =
-                tempIndex;
-                tempIndex++;
+                        items.size(); i++) {
+                    Item tmp = items.elementAt(i);
+                    if (tmp.contains(startX, startY)) {
+                        selected = tmp;
+                        selectedIndex =
+                                tempIndex;
+                        tempIndex++;
 
-                break;
+                        break;
 
-                }
+                    }
 
 
                 }
                 if (editPopup.isVisible()) {
-                editPopup.setVisible(false);
-                }*/
-
-                if (brush == BRUSH_MOVE) {
-                    if (selectedItem != null) {
-                        //if (mf.getMODE() == Constants.APPLET) {
-                        //    deletePopup.show(mf.getSurface(), evt.getX(), evt.getY());
-                        // } else {
-                        deletePopup.show(this, evt.getX(), evt.getY());
-                    //}
-                    }
-
+                    editPopup.setVisible(false);
+                    return;
                 }
+
+                deleteMenuItem.setEnabled(brush == BRUSH_MOVE && selectedItem != null);
+                whiteboardPopup.show(this, evt.getX(), evt.getY());
             }
         }
         //loop t
@@ -815,8 +833,13 @@ public class Whiteboard extends WhiteboardSurface implements
      */
     @Override
     public void addItem(Item item) {
+        showLogo = false;
+        if (item instanceof Img) {
+            items.add(0, item);
 
-        items.addElement(item);
+        } else {
+            items.addElement(item);
+        }
         repaint();
     }
 
@@ -886,6 +909,13 @@ public class Whiteboard extends WhiteboardSurface implements
     }
 
     @Override
+    public void mouseClicked(MouseEvent evt) {
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            //   wbpopup.show(popup, evt.getX(), evt.getY());
+        }
+    }
+
+    @Override
     public void mousePressed(MouseEvent evt) {
         if (isDrawingEnabled()) {
             drawSelection = false;
@@ -935,7 +965,7 @@ public class Whiteboard extends WhiteboardSurface implements
             mf.showErrorMessage("You dont have privileges to modify the whiteboard");
         }
         if (selectedItem == null && !whiteboardUtil.isPointerInUser()) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            //   setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         repaint();
     }
@@ -957,12 +987,12 @@ public class Whiteboard extends WhiteboardSurface implements
                 mf.getConnector().sendPacket(
                         new WhiteboardPacket(mf.getUser().getSessionId(), pen, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 addItem(pen);
-            //     selectedItem = pen;
+                //     selectedItem = pen;
   /*              penVector.removeAllElements();
-            tempPenVector.removeAllElements();
-            penVector =
-            null;
-             */
+                tempPenVector.removeAllElements();
+                penVector =
+                null;
+                 */
             } else if (brush == BRUSH_MOVE) {
                 if (selected != null) {
                     if (this.getCursor() == Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)) {
@@ -995,8 +1025,8 @@ public class Whiteboard extends WhiteboardSurface implements
                                         item, Constants.REPLACE_ITEM, selected.getId()));
 
                                 replaceItem(item);
-                            //  mf.getConnector().sendPacket(new WhiteboardPacket(mf.getUser().getSessionId(),
-                            //        item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
+                                //  mf.getConnector().sendPacket(new WhiteboardPacket(mf.getUser().getSessionId(),
+                                //        item, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
 
                             }
                         }
@@ -1031,6 +1061,10 @@ public class Whiteboard extends WhiteboardSurface implements
         mf.getSurfaceScrollPane().repaint();
         repaint();
         }*/
+        if (brush != BRUSH_TEXT) {
+            brush = BRUSH_MOVE;
+            moveButton.setSelected(true);
+        }
         setCursor(DRAW_CURSOR);
     }
 
@@ -1051,6 +1085,7 @@ public class Whiteboard extends WhiteboardSurface implements
         int x = evt.getX();
         int y = evt.getY();
         if (drawingEnabled) {
+            showLogo = false;
             if (brush == BRUSH_PEN) {
                 drawSelection = false;
                 penVector.addElement(new WBLine(prevX, prevY, x, y, colour,
@@ -1157,10 +1192,60 @@ public class Whiteboard extends WhiteboardSurface implements
         this.whiteboardUtil = whiteboardUtil;
     }
 
+    private void printPointer() {
+        switch (pointer) {
+            case Constants.HAND_LEFT: {
+                System.out.println("hand left");
+                break;
+            }
+            case Constants.HAND_RIGHT: {
+                System.out.println("hand right");
+                break;
+            }
+            case Constants.ARROW_UP: {
+                System.out.println("arrow up");
+                break;
+            }
+            case Constants.ARROW_SIDE: {
+                System.out.println("arrow side");
+                break;
+            }
+            case Constants.WHITEBOARD: {
+                System.out.println("whiteboard");
+
+                break;
+            }
+        }
+
+    }
+
+    public void setCurrentPointer(int type, Point point) {
+        switch (type) {
+            case Constants.HAND_LEFT: {
+                currentPointer = new Pointer(point, leftHand);
+                break;
+            }
+            case Constants.HAND_RIGHT: {
+                currentPointer = new Pointer(point, rightHand);
+                break;
+            }
+            case Constants.ARROW_UP: {
+                currentPointer = new Pointer(point, arrowUp);
+                break;
+            }
+            case Constants.ARROW_SIDE: {
+                currentPointer = new Pointer(point, arrowSide);
+                break;
+            }
+
+        }
+        repaint();
+    }
+
     @Override
     public void mouseDragged(MouseEvent evt) {
         if (drawingEnabled) {
-            Point xpoint = new Point(evt.getX() - 10, evt.getY() - 10);
+            // printPointer();
             currentX = evt.getX();
             currentY = evt.getY();
 
@@ -1175,6 +1260,7 @@ public class Whiteboard extends WhiteboardSurface implements
                     setOwnCursor();
                     mf.getConnector().sendPacket(new PointerPacket(mf.getUser().getSessionId(), point, Constants.HAND_LEFT));
                     setCurrentPointer(Constants.HAND_LEFT, point);
+
                     break;
                 }
                 case Constants.HAND_RIGHT: {
@@ -1211,9 +1297,14 @@ public class Whiteboard extends WhiteboardSurface implements
             mf.showErrorMessage("You dont have privileges to modify the whiteboard");
         }
         if (selectedItem == null && !whiteboardUtil.isPointerInUser()) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            // setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             scrollOnDrag(evt);
         }
+    }
+
+    @Override
+    public void setOwnCursor() {
+        setCursor(curCircle);
     }
 
     @Override
@@ -1281,7 +1372,6 @@ public class Whiteboard extends WhiteboardSurface implements
 
     @Override
     public void keyPressed(KeyEvent evt) {
-
         if (evt.getKeyCode() == Event.DELETE) {
 
             deleteSelectedItem();
@@ -1316,12 +1406,12 @@ public class Whiteboard extends WhiteboardSurface implements
                         cancel();
                     }
                 }
-            /*
-            if(i == thumbNails.size() - 1){
-            if(th.getX()+100 > slidesRect.getX()+slidesRect.getWidth()){
-            cancel();
-            }
-            }*/
+                /*
+                if(i == thumbNails.size() - 1){
+                if(th.getX()+100 > slidesRect.getX()+slidesRect.getWidth()){
+                cancel();
+                }
+                }*/
 
             }
             if (c > 10) {
@@ -1330,6 +1420,13 @@ public class Whiteboard extends WhiteboardSurface implements
             c++;
             repaint();
         }
+    }
+
+    @Override
+    public void setPointer(int type) {
+        pointer = type;
+        pointerLocations.clear();
+        setCurrentPointer(pointer);
     }
 
     public void deleteSelectedItem() {
@@ -1341,6 +1438,13 @@ public class Whiteboard extends WhiteboardSurface implements
     }
 
     public void actionPerformed(ActionEvent evt) {
+
+        if (evt.getActionCommand().equals("insertPresentation")) {
+            mf.getMenuManager().insertPresentation();
+        }
+        if (evt.getActionCommand().equals("insertGraphic")) {
+            mf.getMenuManager().insertGraphic();
+        }
         if (evt.getActionCommand().equals("color-chooser")) {
             WBColorChooser.createAndShowGUI(this);
         }
@@ -1396,7 +1500,7 @@ public class Whiteboard extends WhiteboardSurface implements
             colour = new Color(255, 255, 0);
             brush = BRUSH_MOVE;
             setPointer(Constants.WHITEBOARD);
-        // mf.getSurface().setPointer(Constants.NO_POINTER);
+            // mf.getSurface().setPointer(Constants.NO_POINTER);
         }
 
         if (evt.getActionCommand().equals("select")) {
@@ -1451,26 +1555,14 @@ public class Whiteboard extends WhiteboardSurface implements
 
 
         if (evt.getActionCommand().equals("edit")) {
-            int size = Integer.parseInt((String) fontSizeField.getSelectedItem());
-            int style = Font.PLAIN;
-            if (boldButton.isSelected()) {
-                style = Font.BOLD;
-            }
 
-            if (italicButton.isSelected()) {
-                style = Font.ITALIC;
-            }
-
-            if (boldButton.isSelected() && italicButton.isSelected()) {
-                style = Font.BOLD | Font.ITALIC;
-            }
             if (selectedItem != null) {
                 if (selectedItem instanceof Txt) {
                     Txt old = (Txt) selectedItem;
                     Rectangle r = old.getRect(graphics);
                     Txt txt = new Txt(r.x, r.y, editTextField.getForeground(), editTextField.getText(),
-                            new Font((String) fontNamesField.getSelectedItem(), style, size),
-                            underButton.isSelected());
+                            new Font((String) fontName, fontStyle, fontSize),
+                            false);
 
                     mf.getConnector().sendPacket(new WhiteboardPacket(mf.getUser().getSessionId(), txt, Constants.REPLACE_ITEM, old.getId()));
 
@@ -1586,22 +1678,9 @@ public class Whiteboard extends WhiteboardSurface implements
                 break;
 
             case BRUSH_TEXT:
-                int size = Integer.parseInt((String) fontSizeField.getSelectedItem());
-                int style = Font.PLAIN;
-                if (boldButton.isSelected()) {
-                    style = Font.BOLD;
-                }
-
-                if (italicButton.isSelected()) {
-                    style = Font.ITALIC;
-                }
-
-                if (boldButton.isSelected() && italicButton.isSelected()) {
-                    style = Font.BOLD | Font.ITALIC;
-                }
                 Txt txt = new Txt(x - pointerSurface.x, y - pointerSurface.y, textField.getForeground(), textField.getText(),
-                        new Font((String) fontNamesField.getSelectedItem(), style, size),
-                        underButton.isSelected());
+                        new Font((String) fontName, fontStyle, fontSize),
+                        false);
                 mf.getConnector().sendPacket(new WhiteboardPacket(mf.getUser().getSessionId(), txt, Constants.ADD_NEW_ITEM, GenerateUUID.getId()));
                 lastItem = txt;
                 //  selectedItem = lastItem;
@@ -1724,22 +1803,9 @@ public class Whiteboard extends WhiteboardSurface implements
     }
 
     private Font getSelectedFont() {
-        int size = Integer.parseInt((String) fontSizeField.getSelectedItem());
-        int style = Font.PLAIN;
-        if (boldButton.isSelected()) {
-            style = Font.BOLD;
-        }
 
-        if (italicButton.isSelected()) {
-            style = Font.ITALIC;
-        }
-
-        if (boldButton.isSelected() && italicButton.isSelected()) {
-            style = Font.BOLD | Font.ITALIC;
-        }
-
-        return new Font((String) fontNamesField.getSelectedItem(),
-                style, size);
+        return new Font(fontName,
+                fontStyle, fontSize);
     }
 
     /** Our own button behavoir
@@ -1777,25 +1843,6 @@ public class Whiteboard extends WhiteboardSurface implements
         try {
             mainToolbar.setBorder(BorderFactory.createEtchedBorder());
 
-            boldButton = new JToggleButton(ImageUtil.createImageIcon(this,
-                    "/icons/whiteboard/text_bold.png"));
-            boldButton.setBorderPainted(false);
-            boldButton.setToolTipText("Bold");
-            mainToolbar.add(boldButton);
-
-            italicButton =
-                    new JToggleButton(ImageUtil.createImageIcon(this,
-                    "/icons/whiteboard/text_italic.png"));
-            italicButton.setToolTipText("Italic");
-            italicButton.setBorderPainted(false);
-            mainToolbar.add(italicButton);
-
-            underButton =
-                    new JToggleButton(ImageUtil.createImageIcon(this,
-                    "/icons/whiteboard/text_under.png"));
-            underButton.setToolTipText("Underline");
-            underButton.setBorderPainted(false);
-            mainToolbar.add(underButton);
 
             pixelButton.addActionListener(this);
             pixelButton.setActionCommand(COMMAND_PIXEL);
@@ -1805,25 +1852,9 @@ public class Whiteboard extends WhiteboardSurface implements
              * toolbar layout...where else?
              */
             mainToolbar.add(pixelButton);
-
-            for (int i = 8; i <
-                    100; i++) {
-                fontSizeField.addItem(i + "");
-            }
-
-            fontSizeField.setSelectedItem("12");
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            String[] fontFamilies = ge.getAvailableFontFamilyNames();
-            for (int i = 0; i <
-                    fontFamilies.length; i++) {
-                fontNamesField.addItem(fontFamilies[i]);
-            }
-
-            fontNamesField.setSelectedItem("Dialog");
-            mainToolbar.add(fontNamesField);
             JPanel p = new JPanel();
             p.setLayout(new BorderLayout());
-            p.add(fontSizeField, BorderLayout.WEST);
+//            p.add(fontSizeField, BorderLayout.WEST);
             p.setPreferredSize(new Dimension(18, 25));
             mainToolbar.add(p);
             mainToolbar.setEnabled(false);
@@ -1832,6 +1863,100 @@ public class Whiteboard extends WhiteboardSurface implements
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private JMenuItem createFontNameMenuItem(String txt) {
+        final JMenuItem item = new JMenuItem(txt);
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                fontName = item.getText();
+                textFontMenuItem.setText("Text Font - " + fontName);
+            }
+        });
+        return item;
+    }
+
+    private JMenuItem createFontSizeMenuItem(String txt) {
+        final JMenuItem item = new JMenuItem(txt);
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                fontSize = Integer.parseInt(item.getText());
+                textSizeMenuItem.setText("Text Size - " + fontSize);
+            }
+        });
+        return item;
+    }
+
+    private JMenuItem createLineSizeMenuItem(String txt) {
+        final JMenuItem item = new JMenuItem(txt);
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                strokeWidth = Integer.parseInt(item.getText());
+                lineSizeMenuItem.setText("Line Size - " + strokeWidth);
+            }
+        });
+        return item;
+    }
+
+    private JMenuItem createFontStyle(String txt) {
+        final JMenuItem item = new JMenuItem(txt);
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                String val = item.getText();
+                if (val.equals("PLAIN")) {
+                    fontStyle = 0;
+                    textStyleMenuItem.setText("Text Font - PLAIN");
+                }
+                if (val.equals("BOLD")) {
+                    fontStyle = 1;
+                    textStyleMenuItem.setText("Text Font - BOLD");
+
+                }
+                if (val.equals("ITALIC")) {
+                    fontStyle = 2;
+                    textStyleMenuItem.setText("Text Font - ITALIC");
+
+                }
+                if (val.equals("BOLD ITALIC")) {
+                    fontStyle = 3;
+                    textStyleMenuItem.setText("Text Font - BOLD ITALIC");
+
+                }
+            }
+        });
+        item.setFont(new Font(fontName, fontStyle, 12));
+
+        return item;
+    }
+
+    private void initFont() {
+        textStyleMenuItem.add(createFontStyle("PLAIN"));
+        textStyleMenuItem.add(createFontStyle("BOLD"));
+        textStyleMenuItem.add(createFontStyle("ITALIC"));
+        textStyleMenuItem.add(createFontStyle("BOLD ITALIC"));
+        for (int i = 8; i <
+                50; i++) {
+
+            textSizeMenuItem.add(createFontSizeMenuItem(i + ""));
+        }
+        for (int i = 1; i <
+                9; i++) {
+
+            lineSizeMenuItem.add(createLineSizeMenuItem(i + ""));
+        }
+
+        //  fontSizeField.setSelectedItem("22");
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String[] fontFamilies = {"Monospaced", "Dialog", "SansSerif", "System", "Serif"}; //ge.getAvailableFontFamilyNames();
+        for (int i = 0; i <
+                fontFamilies.length; i++) {
+            textFontMenuItem.add(createFontNameMenuItem(fontFamilies[i]));
         }
 
     }
@@ -1857,14 +1982,19 @@ public class Whiteboard extends WhiteboardSurface implements
 
         }
         graphics = g2;
-
         if (XOR) {
             g2.setXORMode(getBackground());
         }
         int xx = (getWidth() - pointerSurface.width) / 2;
         int yy = (getHeight() - pointerSurface.height) / 2;
+
+        /*   if (showLogo) {
+
+        g2.drawImage(introLogo, xx + 50, yy + 50, (int) (pointerSurface.width * 0.8), (int) (pointerSurface.height * 0.8), this);
+        }
+         */
         g2.setColor(Color.BLACK);
-        g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
+        //g2.drawRect(xx, yy, pointerSurface.width, pointerSurface.height);
 
         paintSlides(g2);
         drawStroke(g2);
@@ -1889,10 +2019,14 @@ public class Whiteboard extends WhiteboardSurface implements
             }
             graphics.drawString(infoMessage, 60, 80);
         }
-        if (currentPointer != null) {
+        if (super.currentPointer != null) {
+            /* graphics.drawImage(currentPointer.getIcon().getImage(),
+            (int) pointerSurface.x + currentPointer.getPoint().x - 10,
+            (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
+             */
             graphics.drawImage(currentPointer.getIcon().getImage(),
-                    (int) pointerSurface.x + currentPointer.getPoint().x - 10,
-                    (int) pointerSurface.y + currentPointer.getPoint().y - 10, this);
+                    currentPointer.getPoint().x - 10,
+                    currentPointer.getPoint().y - 10, this);
         }
 
         g2.setStroke(new BasicStroke());
