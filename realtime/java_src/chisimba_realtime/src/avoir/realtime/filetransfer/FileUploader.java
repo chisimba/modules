@@ -17,7 +17,7 @@
  */
 package avoir.realtime.filetransfer;
 
-
+import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.common.GenerateUUID;
 import avoir.realtime.common.packet.FileUploadPacket;
 import avoir.realtime.instructor.whiteboard.Classroom;
@@ -34,13 +34,15 @@ public class FileUploader {
 
     public static final int BUFFER_SIZE = 4096;
     public static final int MAX_CHUNK_SIZE = 10 * BUFFER_SIZE;
-    private Classroom mf;
+    private ClassroomMainFrame mf;
     // private ProgressMonitor progressMonitor;
-    public FileUploader(Classroom mf) {
-        this.mf=mf;
+
+    public FileUploader(ClassroomMainFrame mf) {
+        this.mf = mf;
     }
 
-    public void transferFile(String fileName, int type) {
+    public void transferFile(String fileName, int type, String target) {
+
         try {
 
             File file = new File(fileName);
@@ -52,7 +54,7 @@ public class FileUploader {
             if (fileSize % MAX_CHUNK_SIZE > 0) {
                 nChunks++;
             }
-       
+
 
             long bytesRemaining = fileSize;
 
@@ -63,7 +65,7 @@ public class FileUploader {
 
                 int chunkSize = (int) ((bytesRemaining > MAX_CHUNK_SIZE) ? MAX_CHUNK_SIZE : bytesRemaining);
                 float val = (chunkSize / bytesRemaining) * 100;
-                 mf.showInfoMessage("Initializing " + new DecimalFormat("#.#").format(val) + "% ...");
+                mf.showInfoMessage("Initializing " + new DecimalFormat("#.#").format(val) + "% ...");
                 bytesRemaining -= chunkSize;
                 byte[] buf = new byte[chunkSize];
 
@@ -73,11 +75,18 @@ public class FileUploader {
                 } else if (read > 0) {
 
                     FileUploadPacket pk = new FileUploadPacket(
-                          mf.getUser().getSessionId(),
+                            mf.getUser().getSessionId(),
                             GenerateUUID.getId(), buf, i, nChunks, file.getName(),
-                            clientID,mf.getUser().getSessionId(), true, mf.getUser().getUserName(), -1, type);
-                    pk.setIndex(mf.getWhiteboard().getImgs().size());
-                   mf.getConnector().sendPacket(pk);
+                            clientID, mf.getUser().getSessionId(), true, mf.getUser().getUserName(), -1, type);
+                    if (mf instanceof Classroom) {
+                        pk.setIndex(((Classroom) mf).getWhiteboard().getImgs().size());
+                    }
+                    if (target != null) {
+                        pk.setTarget(target);
+                    }
+                    if (mf instanceof Classroom) {
+                        ((Classroom) mf).getConnector().sendPacket(pk);
+                    }
                 }
 
 
@@ -85,5 +94,9 @@ public class FileUploader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void transferFile(String fileName, int type) {
+        transferFile(fileName, type, null);
     }
 }
