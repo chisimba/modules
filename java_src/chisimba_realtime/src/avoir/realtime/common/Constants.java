@@ -37,6 +37,18 @@ public class Constants {
     public static final int NO_POINTER = 16;
     public static final int PRESENTATION = 17;
     public static final int IMAGE = 18;
+    public static final int FILE_UPLOAD = 22;
+    public static final int QUESTION_IMAGE = 23;
+    public static final int ESSAY_QUESTION = 24;
+    public static final int MCQ_QUESTION = 25;
+    public static final int TRUE_FALSE_QUESTION = 26;
+    public static final int DOCUMENT = 27;
+    public static final int SLIDE_BUILDER_TEXT = 28;
+    public static final int QUESTION_FILE = 29;
+    public static final int SLIDE_BUILDER_IMAGE = 30;
+    public static final int SLIDE_SHOW = 31;
+    public static final int SLIDE_SHOW_VIEW = 32;
+    public static final int NOTEPAD = 33;
     public static final int ANY = 19;
     public static final int FLASH = 20;
     public static final int WEBPAGE = 21;
@@ -53,7 +65,7 @@ public class Constants {
     public static int APPLET = 0;
     public static int WEBSTART = 1;
 
-    private static void write(String txt,String filename) {
+    private static void write(String txt, String filename) {
         try {
             FileWriter outFile = new FileWriter(filename, true);
             PrintWriter printWriter = new PrintWriter(outFile);

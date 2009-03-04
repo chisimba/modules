@@ -8,20 +8,21 @@ package avoir.realtime.common.packet;
  *
  * @author developer
  */
-public class RequestScrape implements RealtimePacket {
+public class PresentationRequest implements RealtimePacket {
 
-    private boolean record;
+    private String sessionId;
+    private String path;
 
-    public RequestScrape(boolean record) {
-        this.record = record;
+    public PresentationRequest(String path) {
+        this.path = path;
     }
 
-    public boolean isRecord() {
-        return record;
+    public String getPath() {
+        return path;
     }
 
-    public void setRecord(boolean record) {
-        this.record = record;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getId() {
@@ -29,7 +30,7 @@ public class RequestScrape implements RealtimePacket {
     }
 
     public String getSessionId() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return sessionId;
     }
 
     public void setId(String id) {
