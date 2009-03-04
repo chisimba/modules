@@ -1,6 +1,6 @@
 <?php
 /**
- * message IM dbtable derived class
+ * message jabberblog dbtable derived class
  *
  * Class to interact with the database for the popularity contest module
  *
@@ -20,7 +20,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  chisimba
- * @package   im
+ * @package   jabberblog
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2008 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -28,18 +28,15 @@
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbjbim extends dbTable
-{
-
+class dbjbim extends dbTable {
     /**
      * Constructor
      *
      */
-    public function init()
-    {
-        parent::init('tbl_jabberblog');
-        $this->objPresence = $this->getObject('dbjbpresence');
-        $this->objUser = $this->getObject('user', 'security');
+    public function init() {
+        parent::init ( 'tbl_jabberblog' );
+        $this->objPresence = $this->getObject ( 'dbjbpresence' );
+        $this->objUser = $this->getObject ( 'user', 'security' );
     }
 
     /**
@@ -50,127 +47,37 @@ class dbjbim extends dbTable
      * @param array $recarr
      * @return string $id
      */
-    public function addRecord($pl)
-    {
-        $userSplit = explode('/', $pl['from']);
-        $userSplit2 = explode("/", $userSplit[0]);
-        $times = $this->now();
-        $recarr['datesent'] = $times;
-        $recarr['msgtype'] = $pl['type'];
-        $recarr['msgfrom'] = $userSplit2[0];
-        $recarr['msgbody'] = $pl['body'];
+    public function addRecord($pl) {
+        $userSplit = explode ( '/', $pl ['from'] );
+        $userSplit2 = explode ( "/", $userSplit [0] );
+        $times = $this->now ();
+        $recarr ['datesent'] = $times;
+        $recarr ['msgtype'] = $pl ['type'];
+        $recarr ['msgfrom'] = $userSplit2 [0];
+        $recarr ['msgbody'] = $pl ['body'];
         // Check for empty messages
-        //var_dump($rearr);
-        if($recarr['msgbody'] == "")
-        {
+        if ($recarr ['msgbody'] == "") {
             return;
-        }
-        else {
-            return $this->insert($recarr, 'tbl_jabberblog');
-        }
-    }
-
-    public function updateReply($msgId)
-    {
-        return $this->update('id', $msgId, array('msg_returned' => '1'));
-    }
-
-    public function getRange($start, $num)
-    {
-        $range = $this->getAll("ORDER BY datesent ASC LIMIT {$start}, {$num}");
-        return array_reverse($range);
-    }
-
-    /**
-     *Method to get the a user post
-     *@param  int $start
-     *@param int $max
-     *@access public
-     *@return array
-     */
-    public function getMessagesByActiveUser($userId)
-    {
-        $bigArr = array();
-        $usersArr = $this->objPresence->getAllActiveUsers($userId);
-
-        foreach($usersArr as $activeUser)
-        {
-            //get all messages for the user
-            $activeUser['messages'] = $this->getPersonMessages($activeUser['person']);
-            //add only if the user has messages
-            if(count($activeUser['messages']) > 0)
-            {
-                array_push($bigArr, $activeUser);
-            }
-        }
-
-        return $bigArr;
-    }
-
-    /**
-     *Method to get all the users messages
-     *@param string $person
-     *@return array
-     */
-    public function getPersonMessages($person)
-    {
-        $ret = $this->getAll("WHERE msgfrom = '$person' ORDER BY datesent DESC LIMIT 20");
-
-	return $ret;
-
-    }
-
-    /**
-     *Method save a reply message
-     *@param string msgId
-     *@param string $rplytext
-     *
-     */
-    public function saveReply($msgId, $replytext)
-    {
-        $rec = $this->getAll("where id = '$msgId'");
-        $rec = $rec[0];
-
-        $fields = array('msgtype' => $rec['msgtype'],
-                        'msgfrom' => $rec['msgfrom'],
-                        'parentid' =>  $msgId,
-                        'msgbody' => $replytext,
-                        'msgtype' => $this->objUser->fullname(),
-                        'msg_returned' => 'TRUE',
-                        'datesent' => $this->now());
-        //update presence table
-        $this->update('person',$rec['msgfrom'] , array('datesent' => $this->now()), 'tbl_jabberblog_presence');
-        return $this->insert($fields, 'tbl_jabberblog');
-    }
-
-    /**
-     *Method to get a reply message
-     *@param string $msgId
-     *@return array
-     */
-    public function getReplies($msgId)
-    {
-        if($this->valueExists('parentid', $msgId))
-        {
-            return FALSE;
         } else {
-            return $this->getAll("WHERE parentid = '$msgId'");
+            return $this->insert ( $recarr, 'tbl_jabberblog' );
         }
+    }
+
+    public function getRange($start, $num) {
+        $range = $this->getAll ( "ORDER BY datesent ASC LIMIT {$start}, {$num}" );
+        return array_reverse ( $range );
     }
 
     public function getSingle($msgid) {
-        return $this->getAll("WHERE id = '$msgid'");
+        return $this->getAll ( "WHERE id = '$msgid'" );
     }
 
     public function getPostById($pid) {
-        return $this->getSingle($pid);
+        return $this->getSingle ( $pid );
     }
 
     public function getNoMsgs() {
-        return $this->getRecordCount('tbl_jabberblog');
+        return $this->getRecordCount ( 'tbl_jabberblog' );
     }
-
-
-
 }
 ?>

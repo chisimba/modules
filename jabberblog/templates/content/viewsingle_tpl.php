@@ -1,20 +1,20 @@
 <?php
-header("Content-Type: text/html;charset=utf-8");
-$cssLayout = $this->newObject('csslayout', 'htmlelements');
-$cssLayout->setNumColumns(2);
+header ( "Content-Type: text/html;charset=utf-8" );
+$cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
+$cssLayout->setNumColumns ( 2 );
 
 // get the sidebar object
-$this->leftMenu = $this->newObject('usermenu', 'toolbar');
-$this->loadClass('htmlheading', 'htmlelements');
-$this->objFeatureBox = $this->getObject('featurebox', 'navigation');
-$objWashout = $this->getObject('washout', 'utilities');
+$this->leftMenu = $this->newObject ( 'usermenu', 'toolbar' );
+$this->loadClass ( 'htmlheading', 'htmlelements' );
+$this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
+$objWashout = $this->getObject ( 'washout', 'utilities' );
 
 $middleColumn = NULL;
 $leftColumn = NULL;
 
 // Add in a heading
-$header = new htmlHeading();
-$header->str = $this->objLanguage->languageText('mod_jabberblog_jabberblogof', 'jabberblog');
+$header = new htmlHeading ( );
+$header->str = $this->objLanguage->languageText ( 'mod_jabberblog_jabberblogof', 'jabberblog' );
 $header->type = 1;
 
 $script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"></script>
@@ -32,30 +32,26 @@ $script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"
           myBoxObject.applyCornersToAll();
       }
     </script>';
-        $this->appendArrayVar('headerParams', $script);
+$this->appendArrayVar ( 'headerParams', $script );
 
-
-
-$middleColumn .= $header->show();
+$middleColumn .= $header->show ();
 $middleColumn .= $output;
 
-$objLT = $this->getObject('block_lasttweet', 'twitter');
+$objLT = $this->getObject ( 'block_lasttweet', 'twitter' );
 
-
-if (!$this->objUser->isLoggedIn()) {
-    $leftColumn .= $objImView->showUserMenu();
-    $leftColumn .= $objImView->getStatsBox();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
+if (! $this->objUser->isLoggedIn ()) {
+    $leftColumn .= $objImView->showUserMenu ();
+    $leftColumn .= $objImView->getStatsBox ();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
     // show the last tweet block from the 'ol twitter stream
-    $leftColumn .= $objLT->show();
+    $leftColumn .= $objLT->show ();
 } else {
-    $leftColumn .= $this->leftMenu->show();
-    $leftColumn .= $objImView->getStatsBox();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText("mod_jabberblog_feed", "jabberblog"), $rssLink->show() );
-    $leftColumn .= $objLT->show();
+    $leftColumn .= $this->leftMenu->show ();
+    $leftColumn .= $objImView->getStatsBox ();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
+    $leftColumn .= $objLT->show ();
 }
 
-
-$cssLayout->setMiddleColumnContent($middleColumn);
-$cssLayout->setLeftColumnContent($leftColumn);
-echo $cssLayout->show();
+$cssLayout->setMiddleColumnContent ( $middleColumn );
+$cssLayout->setLeftColumnContent ( $leftColumn );
+echo $cssLayout->show ();

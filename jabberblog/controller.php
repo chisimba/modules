@@ -254,13 +254,7 @@ class jabberblog extends controller {
      * @access public
      */
     public function requiresLogin($action) {
-        //$actionsRequiringLogin = array ('messagehandler', NULL );
-        //if (in_array ( $action, $actionsRequiringLogin )) {
-            return FALSE;
-        //} else {
-         //   return TRUE;
-        //}
+        return FALSE;
     }
-
-
 }
+?>

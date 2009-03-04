@@ -1,6 +1,6 @@
 <?php
 /**
- * Presence IM dbtable derived class
+ * Presence jabberblog dbtable derived class
  *
  * Class to interact with the database for the popularity contest module
  *
@@ -20,7 +20,7 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  * @category  chisimba
- * @package   im
+ * @package   jabberblog
  * @author    Paul Scott <pscott@uwc.ac.za>
  * @copyright 2008 Paul Scott
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
@@ -28,44 +28,37 @@
  * @link      http://avoir.uwc.ac.za
  * @see       api
  */
-class dbjbpresence extends dbTable
-{
-
+class dbjbpresence extends dbTable {
     /**
      * Constructor
      *
      */
-    public function init()
-    {
-        parent::init('tbl_jabberblog_presence');
+    public function init() {
+        parent::init ( 'tbl_jabberblog_presence' );
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
     }
 
-
-    public function updatePresence($userarr)
-    {
+    public function updatePresence($userarr) {
         //split user and user agent
-        $userSplit = explode("/", $userarr['from']);
+        $userSplit = explode ( "/", $userarr ['from'] );
         // check if user exists in msg table
-        $status = $this->userExists($userSplit[0]);
-        $times = $this->now();
-        $insarr['datesent'] = $times;
-        $insarr['person'] = $userSplit[0];
-        $person = $insarr['person'];
-        if(isset($userarr['type'])) {
-            $insarr['status'] = $userarr['type'];
+        $status = $this->userExists ( $userSplit [0] );
+        $times = $this->now ();
+        $insarr ['datesent'] = $times;
+        $insarr ['person'] = $userSplit [0];
+        $person = $insarr ['person'];
+        if (isset ( $userarr ['type'] )) {
+            $insarr ['status'] = $userarr ['type'];
+        } else {
+            $insarr ['status'] = 'available';
         }
-        else {
-            $insarr['status'] = 'available';
-        }
-        $insarr['presshow'] = $userarr['show'];
-        $insarr['useragent'] = $userSplit[1];
-        if($status === FALSE) {
-            $this->insert($insarr, 'tbl_jabberblog_presence');
-        }
-        else {
+        $insarr ['presshow'] = $userarr ['show'];
+        $insarr ['useragent'] = $userSplit [1];
+        if ($status === FALSE) {
+            $this->insert ( $insarr, 'tbl_jabberblog_presence' );
+        } else {
             // update the presence info for this user
-            $this->update('id', $status[0]['id'], $insarr, 'tbl_jabberblog_presence');
+            $this->update ( 'id', $status [0] ['id'], $insarr, 'tbl_jabberblog_presence' );
         }
     }
 
@@ -77,33 +70,26 @@ class dbjbpresence extends dbTable
      * @param array $recarr
      * @return string $id
      */
-    private function addRecord($insarr)
-    {
+    private function addRecord($insarr) {
 
-        return $this->insert($insarr, 'tbl_jabberblog_presence');
+        return $this->insert ( $insarr, 'tbl_jabberblog_presence' );
     }
 
-    public function userExists($user)
-    {
-        $count = $this->getRecordCount("WHERE person = '$user'");
-        if($count > 0)
-        {
-            return $this->getAll("WHERE person = '$user'");
-        }
-        else {
+    public function userExists($user) {
+        $count = $this->getRecordCount ( "WHERE person = '$user'" );
+        if ($count > 0) {
+            return $this->getAll ( "WHERE person = '$user'" );
+        } else {
             return FALSE;
         }
     }
 
-    public function getPresence($jid)
-    {
-        $userSplit = explode("/", $jid);
-        $res = $this->getAll("WHERE person = '$userSplit[0]'");
-        if(!empty($res))
-        {
-            return $res[0]['presshow'];
-        }
-        else {
+    public function getPresence($jid) {
+        $userSplit = explode ( "/", $jid );
+        $res = $this->getAll ( "WHERE person = '$userSplit[0]'" );
+        if (! empty ( $res )) {
+            return $res [0] ['presshow'];
+        } else {
             return NULL;
         }
     }
