@@ -59,9 +59,9 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $singleResponses=$arrSurveyData['single_responses'];
     $viewResults=$arrSurveyData['view_results'];
     $introductionLabel=$arrSurveyData['intro_label'];
-    $introductionText=$arrSurveyData['intro_text'];
-    $thankyouLabel=$arrSurveyData['thanks_label'];
-    $thankyouText=$arrSurveyData['thanks_text'];
+    $introductionText=stripslashes($arrSurveyData['intro_text']);
+    $thankyouLabel=stripslashes($arrSurveyData['thanks_label']);
+    $thankyouText=stripslashes($arrSurveyData['thanks_text']);
 
 // set up heading
     $objHeader = new htmlheading();

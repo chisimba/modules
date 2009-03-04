@@ -102,13 +102,13 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $column){
-                        $objTable->addCell($column['column_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($column['column_text']))),'','','',$class,'');
                     }
                     $objTable->endRow();
 
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text']))),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             $temp='text_'.($rowKey+1).'_'.($columnKey+1);
                             $objTable->addCell('<b>'.$arrItems[$ii]['item_value'].'</b>','','','',$class,'');
@@ -142,7 +142,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 }else{
                     $objTable->startRow();
                     foreach($arrRowList as $rowKey=>$row){
-                        $objTable->addCell($row['row_text'].' - <b>'.$arrItems[$rowKey]['item_value'].'</b>','','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text']))).' - <b>'.$arrItems[$rowKey]['item_value'].'</b>','','','',$class,'');
                     }
                     $objTable->endRow();
                 }

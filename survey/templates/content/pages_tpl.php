@@ -111,8 +111,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
         $pageId=$page['id'];
         $pageOrder=$page['page_order'];
-        $pageLabel=$page['page_label'];
-        $pageText=$page['page_text'];
+        $pageLabel=stripslashes($page['page_label']);
+        $pageText=stripslashes($page['page_text']);
 
         // set up elements
         $objInput=new textinput('arrPageId[]',$pageId);

@@ -65,10 +65,10 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $arrPageList=$this->dbPages->listPages($surveyId);
     $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
     $surveyName=$arrSurveyData['0']['survey_name'];
-    $introLabel=$arrSurveyData['0']['intro_label'];
-    $introText=$arrSurveyData['0']['intro_text'];
-    $thanksLabel=$arrSurveyData['0']['thanks_label'];
-    $thanksText=$arrSurveyData['0']['thanks_text'];
+    $introLabel=stripslashes($arrSurveyData['0']['intro_label']);
+    $introText=stripslashes($arrSurveyData['0']['intro_text']);
+    $thanksLabel=stripslashes($arrSurveyData['0']['thanks_label']);
+    $thanksText=stripslashes($arrSurveyData['0']['thanks_text']);
     $arrQuestionList=$this->dbQuestion->listQuestions($surveyId);
     if($error){
         $arrErrorMsg=$this->getSession('error');
@@ -184,7 +184,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         if($pageKey!='0'){
             $arrPageData=$this->dbPages->getPage($pageKey);
             $pageLabelText=$arrPageData['0']['page_label'];
-            $pageText=$arrPageData['0']['page_text'];
+            $pageText=stripslashes($arrPageData['0']['page_text']);
         }else{
             if(!empty($arrPageList)){
                 $pageLabelText=$unassignedLabel;
@@ -483,7 +483,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1).'_'.($columnKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1).'_'.($columnKey+1)]);
                             }else{
                                 $answer='';
                             }
@@ -543,7 +543,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
                 case '7':// Open ended-Textarea(Comments box)
                     if(isset($arrAnswerData[$key])){
-                        $answer=$arrAnswerData[$key]['area'];
+                        $answer=stripslashes($arrAnswerData[$key]['area']);
                     }else{
                         $answer='';
                     }
@@ -564,7 +564,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     if($verticalAlignment!='1'){
                         foreach($arrRowList as $rowKey=>$row){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1)]);
                             }else{
                                 $answer='';
                             }
@@ -580,7 +580,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $objTable->startRow();
                         foreach($arrRowList as $rowKey=>$row){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1)]);
                             }else{
                                 $answer='';
                             }
@@ -595,7 +595,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
                 case '9':// Open ended-Number
                     if(isset($arrAnswerData[$key])){
-                        $answer=$arrAnswerData[$key]['text'];
+                        $answer=stripslashes($arrAnswerData[$key]['text']);
                     }else{
                         $answer='';
                     }

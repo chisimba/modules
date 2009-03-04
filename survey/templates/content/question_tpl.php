@@ -77,7 +77,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             $arrQuestionData['question_id']=$arrQuestionData['id'];
             $surveyId=$arrQuestionData['survey_id'];
             $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
-            $survey_name=$arrSurveyData['0']['survey_name'];
+            $survey_name=stripslashes($arrSurveyData['0']['survey_name']);
             $arrRowData=$this->dbRows->listQuestionRows($questionId);
             $arrColumnData=$this->dbColumns->listQuestionColumns($questionId);
         }
@@ -149,7 +149,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $formElements=$questionHead;
 
         if($error && isset($arrErrorMsg['question_text'])){
-            $formElements.='<br /><font class="error"><b>'.$arrErrorMsg['question_text'].'</b></font>';
+            $formElements.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['question_text']).'</b></font>';
         }
         $arrQuestionTextinput=$this->questions->arrQuestionTextinput($arrQuestionData);
         $objTable=$this->questions->makeTable($arrQuestionTextinput);
@@ -355,7 +355,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
          }
 
         if($error && isset($arrErrorMsg['comment_request_text'])){
-            $formElements.='<br /><font class="error"><b>'.$arrErrorMsg['comment_request_text'].'</b></font>';
+            $formElements.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['comment_request_text']).'</b></font>';
         }
         $arrCommentsCheckbox=$this->questions->arrCommentsCheckbox($arrQuestionData);
         $objTable=$this->questions->makeTable($arrCommentsCheckbox);

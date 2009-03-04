@@ -94,7 +94,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
         echo $str.'<hr />';
     }else{
         $objTable->startRow();
-        $objTable->addCell($arrSurveyData[0]['thanks_text'],'','','','odd','');
+        $objTable->addCell(stripslashes($arrSurveyData[0]['thanks_text']),'','','','odd','');
         $objTable->endRow();
         $str=$objTable->show().'<hr />';
         $objLayer->addToStr($str);

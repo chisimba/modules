@@ -94,17 +94,17 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
 // set up data variables
     $surveyId=$arrSurveyData['survey_id'];
-    $surveyName=$arrSurveyData['survey_name'];
+    $surveyName=stripslashes($arrSurveyData['survey_name']);
     $startDate=$arrSurveyData['start_date'];
     $endDate=$arrSurveyData['end_date'];
     $responseMaximum=$arrSurveyData['max_responses'];
     $recordedResponses=$arrSurveyData['recorded_responses'];
     $singleResponses=$arrSurveyData['single_responses'];
     $viewResults=$arrSurveyData['view_results'];
-    $introductionLabel=$arrSurveyData['intro_label'];
-    $introductionText=$arrSurveyData['intro_text'];
-    $thankyouLabel=$arrSurveyData['thanks_label'];
-    $thankyouText=$arrSurveyData['thanks_text'];
+    $introductionLabel=stripslashes($arrSurveyData['intro_label']);
+    $introductionText=stripslashes($arrSurveyData['intro_text']);
+    $thankyouLabel=stripslashes($arrSurveyData['thanks_label']);
+    $thankyouText=stripslashes($arrSurveyData['thanks_text']);
 
 // set up heading
     $objHeader = new htmlheading();
@@ -178,7 +178,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
     $objTable->startRow();
     if($error && isset($arrErrorMsg['survey_name'])){
-        $nameLabel.='<br /><font class="error"><b>'.$arrErrorMsg['survey_name'].'</b></font>';
+        $nameLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['survey_name']).'</b></font>';
         $objTable->addCell($nameLabel,'','','','odd','');
     }else{
         $objTable->addCell($nameLabel,'','','','odd','');
@@ -189,7 +189,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->endRow();
     $objTable->startRow();
     if($error && isset($arrErrorMsg['start_date'])){
-        $startLabel.='<br /><font class="error"><b>'.$arrErrorMsg['start_date'].'</b></font>';
+        $startLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['start_date']).'</b></font>';
         $objTable->addCell($startLabel,'','','','even','');
     }else{
         $objTable->addCell($startLabel,'','','','even','');
@@ -240,7 +240,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->endRow();
     $objTable->startRow();
     if($error && isset($arrErrorMsg['intro_label'])){
-        $introLabel.='<br /><font class="error"><b>'.$arrErrorMsg['intro_label'].'</b></font>';
+        $introLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['intro_label']).'</b></font>';
         $objTable->addCell($introLabel,'','','','even','');
     }else{
         $objTable->addCell($introLabel,'','','','even','');
@@ -251,7 +251,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->endRow();
     $objTable->startRow();
     if($error && isset($arrErrorMsg['intro_text'])){
-        $intronoteLabel.='<br /><font class="error"><b>'.$arrErrorMsg['intro_text'].'</b></font>';
+        $intronoteLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['intro_text']).'</b></font>';
         $objTable->addCell($intronoteLabel,'','','','odd','');
     }else{
         $objTable->addCell($intronoteLabel,'','','','odd','');
@@ -262,7 +262,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->endRow();
     $objTable->startRow();
     if($error && isset($arrErrorMsg['thanks_label'])){
-        $thanksLabel.='<br /><font class="error"><b>'.$arrErrorMsg['thanks_label'].'</b></font>';
+        $thanksLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['thanks_label']).'</b></font>';
         $objTable->addCell($thanksLabel,'','','','even','');
     }else{
         $objTable->addCell($thanksLabel,'','','','even','');
@@ -273,7 +273,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     $objTable->endRow();
     $objTable->startRow();
     if($error && isset($arrErrorMsg['thanks_text'])){
-        $thanksnoteLabel.='<br /><font class="error"><b>'.$arrErrorMsg['thanks_text'].'</b></font>';
+        $thanksnoteLabel.='<br /><font class="error"><b>'.stripslashes($arrErrorMsg['thanks_text']).'</b></font>';
         $objTable->addCell($thanksnoteLabel,'','','','odd','');
     }else{
         $objTable->addCell($thanksnoteLabel,'','','','odd','');

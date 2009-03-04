@@ -60,11 +60,11 @@ if(!$GLOBALS['kewl_entry_point_run']){
 // set up data
     $arrPageList=$this->dbPages->listPages($surveyId);
     $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
-    $surveyName=$arrSurveyData['0']['survey_name'];
-    $introLabel=$arrSurveyData['0']['intro_label'];
-    $introText=$arrSurveyData['0']['intro_text'];
-    $thanksLabel=$arrSurveyData['0']['thanks_label'];
-    $thanksText=$arrSurveyData['0']['thanks_text'];
+    $surveyName=stripslashes($arrSurveyData['0']['survey_name']);
+    $introLabel=stripslashes($arrSurveyData['0']['intro_label']);
+    $introText=stripslashes($arrSurveyData['0']['intro_text']);
+    $thanksLabel=stripslashes($arrSurveyData['0']['thanks_label']);
+    $thanksText=stripslashes($arrSurveyData['0']['thanks_text']);
     $endDate=$arrSurveyData['0']['end_date'];
     $responseMaximum=$arrSurveyData['0']['max_responses'];
     $responseCounter=$arrSurveyData['0']['response_counter'];
@@ -160,8 +160,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
         if($pageKey!='0'){
             $arrPageData=$this->dbPages->getPage($pageKey);
-            $pageLabelText=$arrPageData['0']['page_label'];
-            $pageText=$arrPageData['0']['page_text'];
+            $pageLabelText=stripslashes($arrPageData['0']['page_label']);
+            $pageText=stripslashes($arrPageData['0']['page_text']);
         }else{
             if(!empty($arrPageList)){
                 $pageLabelText=$unassignedLabel;
@@ -195,12 +195,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
             $questionId=$question['id'];
             $surveyId=$question['survey_id'];
-            $questionText=$question['question_text'];
-            $questionSubtext=$question['question_subtext'];
+            $questionText=stripslashes($question['question_text']);
+            $questionSubtext=stripslashes($question['question_subtext']);
             $compulsoryQuestion=$question['compulsory_question'];
             $verticalAlignment=$question['vertical_alignment'];
             $commentRequested=$question['comment_requested'];
-            $commentText=$question['comment_request_text'];
+            $commentText=stripslashes($question['comment_request_text']);
             $h1tmlElementType=$question['radio_element'];
             $booleanType=$question['preset_options'];
             $trueOrFalse=$question['true_or_false'];
@@ -293,7 +293,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 case '1':// Choice-Multiple answers-Checkboxes
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
 
                         $answered=0;
                         foreach($arrItemList as $item){
@@ -319,7 +319,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     if($booleanType!='1'){
                         foreach($arrRowList as $rowKey=>$row){
                             $objTable->startRow();
-                            $objTable->addCell($row['row_text'],'','','',$class,'');
+                            $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
 
                             $answered=0;
                             foreach($arrItemList as $item){
@@ -371,12 +371,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.stripslashes($column['column_text']).'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell('<b>'.$row['row_text'].'</b>','','','',$class,'rowspan="2"');
+                        $objTable->addCell('<b>'.stripslashes($row['row_text']).'</b>','','','',$class,'rowspan="2"');
                         foreach($arrColumnList as $columnKey=>$column){
                             $answered=0;
                             foreach($arrItemList as $item){
@@ -414,12 +414,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.stripslashes($column['column_text']).'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             $answered=0;
                             foreach($arrItemList as $item){
@@ -448,7 +448,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
                         for($ii=1;$ii<=$ratingScale;$ii++){
                             $answered=0;
                             foreach($arrItemList as $item){

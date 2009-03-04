@@ -57,11 +57,11 @@ if(!$GLOBALS['kewl_entry_point_run']){
 // set up data
     $arrPageList=$this->dbPages->listPages($surveyId);
     $arrSurveyData=$this->dbSurvey->getSurvey($surveyId);
-    $surveyName=$arrSurveyData['0']['survey_name'];
-    $introLabel=$arrSurveyData['0']['intro_label'];
-    $introText=$arrSurveyData['0']['intro_text'];
-    $thanksLabel=$arrSurveyData['0']['thanks_label'];
-    $thanksText=$arrSurveyData['0']['thanks_text'];
+    $surveyName=stripslashes($arrSurveyData['0']['survey_name']);
+    $introLabel=stripslashes($arrSurveyData['0']['intro_label']);
+    $introText=stripslashes($arrSurveyData['0']['intro_text']);
+    $thanksLabel=stripslashes($arrSurveyData['0']['thanks_label']);
+    $thanksText=stripslashes($arrSurveyData['0']['thanks_text']);
     $arrQuestionList=$this->dbQuestion->listQuestions($surveyId);
     $arrAnswerData=$this->getSession('answer');
     if($error){
@@ -99,8 +99,8 @@ if(!$GLOBALS['kewl_entry_point_run']){
         $i=1;
         foreach($arrPageQuestionList as $pageKey=>$questionList){
             $arrPageData=$this->dbPages->getPage($pageKey);
-            $pageData[$i]['page_label']=$arrPageData['0']['page_label'];
-            $pageData[$i]['page_text']=$arrPageData['0']['page_text'];
+            $pageData[$i]['page_label']=stripslashes($arrPageData['0']['page_label']);
+            $pageData[$i]['page_text']=stripslashes($arrPageData['0']['page_text']);
             $arrQuestionList[$i]=$questionList;
             $i++;
         }
@@ -206,7 +206,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                                 $objCheck->ischecked=TRUE;
                             }
                             $objTable->startRow();
-                            $objTable->addCell($objCheck->show().' '.$row['row_text'],'','','',$class,'');
+                            $objTable->addCell($objCheck->show().' '.stripslashes($row['row_text'])),'','','',$class,'');
                             $objTable->endRow();
                         }
                     }else{
@@ -217,7 +217,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                             if(isset($arrAnswerData[$key]['check_'.($rowKey+1)])){
                                 $objCheck->ischecked=TRUE;
                             }
-                            $objTable->addCell($objCheck->show().' '.$row['row_text'],'','','',$class,'');
+                            $objTable->addCell($objCheck->show().' '.stripslashes($row['row_text'])),'','','',$class,'');
                         }
                         $objTable->endRow();
                     }
@@ -230,7 +230,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $objDrop->addOption('0',$optionLabel);
                         if($booleanType!='1'){
                             foreach($arrRowList as $rowKey=>$row){
-                                $objDrop->addOption(($rowKey+1),$row['row_text']);
+                                $objDrop->addOption(($rowKey+1),stripslashes($row['row_text'])));
                             }
                         }else{
                             if($trueOrFalse=='1'){
@@ -253,7 +253,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                             if($booleanType!='1'){
                                 foreach($arrRowList as $rowKey=>$row){
                                     $objRadio=new radio($temp);
-                                    $objRadio->addOption(($rowKey+1),$row['row_text']);
+                                    $objRadio->addOption(($rowKey+1),stripslashes($row['row_text'])));
                                     if(isset($arrAnswerData[$key]['radio'])){
                                         $objRadio->setSelected($arrAnswerData[$key]['radio']);
                                     }
@@ -303,7 +303,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                                 $objTable->startRow();
                                 foreach($arrRowList as $rowKey=>$row){
                                     $objRadio=new radio($temp);
-                                    $objRadio->addOption(($rowKey+1),$row['row_text']);
+                                    $objRadio->addOption(($rowKey+1),stripslashes($row['row_text'])));
                                     if(isset($arrAnswerData[$key]['radio'])){
                                         $objRadio->setSelected($arrAnswerData[$key]['radio']);
                                     }
@@ -351,12 +351,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.stripslashes($column['column_text'])).'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text'])),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             $temp=$answerField.'[check_'.($rowKey+1).'_'.($columnKey+1).']';
                             $objCheck=new checkbox($temp);                        if(isset($arrAnswerData[$key]['check_'.($rowKey+1).'_'.($columnKey+1)])){
@@ -372,15 +372,15 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.stripslashes($column['column_text'])).'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text'])),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1).'_'.($columnKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1).'_'.($columnKey+1)]);
                             }else{
                                 $answer='';
                             }
@@ -396,12 +396,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->startRow();
                     $objTable->addCell('','','','',$class,'');
                     foreach($arrColumnList as $columnKey=>$column){
-                        $objTable->addCell('<b>'.$column['column_text'].'</b>','','','center',$class,'');
+                        $objTable->addCell('<b>'.stripslashes($column['column_text'])).'</b>','','','center',$class,'');
                     }
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text'])),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             $temp=$answerField.'[radio_'.($rowKey+1).']';
                             $objRadio=new radio($temp);
@@ -424,7 +424,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $objTable->endRow();
                     foreach($arrRowList as $rowKey=>$row){
                         $objTable->startRow();
-                        $objTable->addCell($row['row_text'],'','','',$class,'');
+                        $objTable->addCell(stripslashes($row['row_text'])),'','','',$class,'');
                         for($ii=1;$ii<=$ratingScale;$ii++){
                             $temp=$answerField.'[radio_'.($rowKey+1).']';
                             $objRadio=new radio($temp);
@@ -440,7 +440,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
                 case '7':// Open ended-Textarea(Comments box)
                     if(isset($arrAnswerData[$key])){
-                        $answer=$arrAnswerData[$key]['area'];
+                        $answer=stripslashes($arrAnswerData[$key]['area']);
                     }else{
                         $answer='';
                     }
@@ -461,7 +461,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     if($verticalAlignment!='1'){
                         foreach($arrRowList as $rowKey=>$row){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1)]);
                             }else{
                                 $answer='';
                             }
@@ -470,21 +470,21 @@ if(!$GLOBALS['kewl_entry_point_run']){
                             $objInput->extra='maxlength="6"';
                             $objTable->startRow();
                             $objTable->addCell($objInput->show(),'10%','','',$class,'');
-                            $objTable->addCell($row['row_text'],'90%','','',$class,'');
+                            $objTable->addCell(stripslashes($row['row_text'])),'90%','','',$class,'');
                             $objTable->endRow();
                         }
                     }else{
                         $objTable->startRow();
                         foreach($arrRowList as $rowKey=>$row){
                             if(isset($arrAnswerData[$key])){
-                                $answer=$arrAnswerData[$key]['text_'.($rowKey+1)];
+                                $answer=stripslashes($arrAnswerData[$key]['text_'.($rowKey+1)]);
                             }else{
                                 $answer='';
                             }
                             $temp=$answerField.'[text_'.($rowKey+1).']';
                             $objInput=new textinput($temp,$answer,'','6');
                             $objInput->extra='maxlength="6"';
-                            $objTable->addCell($row['row_text'].'&nbsp;'.$objInput->show(),'','','',$class,'');
+                            $objTable->addCell(stripslashes($row['row_text'])).'&nbsp;'.$objInput->show(),'','','',$class,'');
                         }
                         $objTable->endRow();
                     }
@@ -492,7 +492,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
 
                 case '9':// Open ended-Number
                     if(isset($arrAnswerData[$key])){
-                        $answer=$arrAnswerData[$key]['text'];
+                        $answer=stripslashes($arrAnswerData[$key]['text']);
                     }else{
                         $answer='';
                     }
@@ -542,7 +542,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
             }
             $tabContent.=$objTable->show();
         }
-        $tabContent=$pageData[$pageNo]['page_text'].$tabContent;
+        $tabContent=stripslashes($pageData[$pageNo]['page_text']).$tabContent;
 
         $objTabbedbox=new tabbedbox();
         $objTabbedbox->extra=' style="padding: 10px;"';
