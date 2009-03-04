@@ -26,7 +26,8 @@ package avoir.realtime.classroom;
 import avoir.realtime.audio.client.AudioChatClient;
 import avoir.realtime.chat.ChatRoom;
 
-import avoir.realtime.classroom.packets.RemoveUserPacket;
+import avoir.realtime.classroom.notepad.JNotepad;
+import avoir.realtime.common.packet.RemoveUserPacket;
 import avoir.realtime.classroom.tcp.TCPConnector;
 
 import avoir.realtime.classroom.whiteboard.WhiteboardSurface;
@@ -59,6 +60,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -129,6 +132,12 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     final protected JPanel ttop = new JPanel();
     protected ButtonGroup chatButtonGroup = new ButtonGroup();
     protected JToggleButton chatButton = new JToggleButton("Chat");
+    private Font classroomFont = new Font("Dialog", 1, 12);
+    private AnsweringFrame answerFrame;
+    private Timer msgTimer = new Timer();
+    private SlideShowViewerFrame slideShowViewerFrame;
+    private JNotepad notepad;
+    private int notepadCount = 0;
 
     public ClassroomMainFrame(
             String host,
@@ -183,6 +192,24 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
 
     }
 
+    public Font getClassroomFont() {
+        return classroomFont;
+    }
+
+    public void showNotepad(javax.swing.text.Document doc, String filename, String path) {
+        notepad = new JNotepad(this);
+        notepad.setTitle(filename);
+        if (doc != null) {
+            notepad.setContent(doc, filename, path);
+        }
+        notepad.setAlwaysOnTop(true);
+        notepad.setSize(400, 300);
+        int offset = (notepadCount * 30);
+        notepad.setLocation(((ss.width - notepad.getWidth())), offset);
+        notepad.setVisible(true);
+        notepadCount++;
+    }
+
     public void initToolbar() {
         toolBar = new ClassicToolbar(this);
         addToolbarButtons();
@@ -215,28 +242,28 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     }
 
     private void addToolbarButtons() {
-        toolBar.add("/icons/micro.png", "mic", "Microphone");
-        toolBar.add("/icons/speaker.png", "speaker", "Speaker");
-        toolBar.add("/icons/kedit.png", "notepad", "Notepad");
-        toolBar.add("/icons/global_config.png", "config", "Settings");
-    //toolBar.add("/icons/media-record.png", "record", "Record");
-    //toolBar.add("/icons/player_play.png", "play", "Play");
+        toolBar.add("Mic", "/icons/micro.png", "mic", "Microphone");
+        toolBar.add("Speaker", "/icons/speaker.png", "speaker", "Speaker");
+        toolBar.add("Notepad", "/icons/kedit32.png", "notepad", "Notepad");
+        toolBar.add("Settings", "/icons/global_config.png", "config", "Settings");
+        //toolBar.add("/icons/media-record.png", "record", "Record");
+        //toolBar.add("/icons/player_play.png", "play", "Play");
     }
 
     protected void initCustomComponents() {
         centerPanel.add(mainTabbedPane, BorderLayout.CENTER);
         mainSplitPane.setRightComponent(centerPanel);
         mainTabbedPane.addTab("Default", surfaceScrollPane);
-        userListTabbedPane.setFont(new Font("Dialog", 0, 11));
+        userListTabbedPane.setFont(classroomFont);
 
         dockTabbedPane.setUI(docTabbedPaneUI);
 
         docTabbedPaneUI.setBase(this, "/icons/popout.png", "Chat", "Popout");
         dockTabbedPane.setBorder(BorderFactory.createEtchedBorder());
-        dockTabbedPane.setFont(new Font("Dialog", 0, 11));
+        dockTabbedPane.setFont(classroomFont);
         dockTabbedPane.addTab("Chat", chatRoom);
         dockTabbedPane.setSelectedIndex(0);
-        chatButton.setIcon(ImageUtil.createImageIcon(this, "/icons/chat32.png"));
+        chatButton.setIcon(ImageUtil.createImageIcon(this, "/icons/chat16.png"));
 
         chatButton.addActionListener(new ActionListener() {
 
@@ -279,7 +306,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         userItemsPanel.add(userInteractionManager.getHandButton());
         userItemsPanel.setBorder(BorderFactory.createTitledBorder("Interact"));
          */
-        userItemsPanel.setFont(new Font("Dialog", 0, 11));
+        userItemsPanel.setFont(classroomFont);
 
         userListPanel.setPreferredSize(new Dimension(ss.width / 4, (ss.height / 4) * 3));
         mainSplitPane.setDividerLocation(ss.width / 4);
@@ -342,6 +369,9 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         return timerField;
     }
 
+    public void setQuestionImage(ImageIcon image) {
+    }
+
     public boolean isWebPresent() {
         return webPresent;
     }
@@ -390,6 +420,19 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         return alertButton;
     }
 
+    public SlideShowViewerFrame getSlideShowViewerFrame() {
+        return slideShowViewerFrame;
+    }
+
+    public void showSlideViewer() {
+        if (slideShowViewerFrame == null) {
+            slideShowViewerFrame = new SlideShowViewerFrame();
+            slideShowViewerFrame.setSize((ss.width / 8) * 6, (ss.height / 8) * 6);
+            slideShowViewerFrame.setLocationRelativeTo(null);
+        }
+        slideShowViewerFrame.setVisible(true);
+    }
+
     /**
      * Diplays the chat room (frame)
      */
@@ -428,14 +471,13 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         fr.setVisible(true);
     }
 
-    public void showQuestionFrame(QuestionPacket questions, String title) {
-        AnsweringFrame fr = new AnsweringFrame(questions, this);
-
-        fr.setTitle(title);
-        fr.setAlwaysOnTop(true);
-        fr.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
-        fr.setLocationRelativeTo(null);
-        fr.setVisible(true);
+    public void initAnswerFrame(QuestionPacket questions, String title) {
+        answerFrame = new AnsweringFrame(questions, this, false);
+        answerFrame.setTitle(title);
+        answerFrame.setAlwaysOnTop(true);
+        answerFrame.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
+        answerFrame.setLocationRelativeTo(null);
+        answerFrame.setVisible(true);
     }
 
     /**
@@ -474,10 +516,22 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     public void showInfoMessage(String msg) {
         infoField.setForeground(Color.BLACK);
         infoField.setText(msg);
+        whiteBoardSurface.showMessage(msg, false);
+        msgTimer.cancel();
+        msgTimer = new Timer();
+        msgTimer.schedule(new MsgTimer(), 5000);
+    }
+
+    class MsgTimer extends TimerTask {
+
+        public void run() {
+            whiteBoardSurface.showMessage("", false);
+        }
     }
 
     public void showErrorMessage(String msg) {
         infoField.setForeground(Color.RED);
+        whiteBoardSurface.showMessage(msg, true);
         infoField.setText(msg);
     }
 

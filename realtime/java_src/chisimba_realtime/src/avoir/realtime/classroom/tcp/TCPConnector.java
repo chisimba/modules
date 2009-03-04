@@ -25,16 +25,17 @@ import avoir.realtime.chat.ChatPopup;
 import avoir.realtime.chat.PrivateChatFrame;
 import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.classroom.SessionTimer;
-import avoir.realtime.classroom.packets.ClientPacket;
-import avoir.realtime.classroom.packets.NewUserPacket;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.ClientPacket;
+import avoir.realtime.common.packet.NewUserPacket;
+import avoir.realtime.common.packet.PresencePacket;
 import avoir.realtime.common.TCPSocket;
-import avoir.realtime.classroom.packets.RemoveUserPacket;
-import avoir.realtime.classroom.packets.WhiteboardItems;
-import avoir.realtime.classroom.packets.WhiteboardPacket;
+import avoir.realtime.common.packet.RemoveUserPacket;
+import avoir.realtime.common.packet.WhiteboardItems;
+import avoir.realtime.common.packet.WhiteboardPacket;
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.classroom.whiteboard.item.Item;
 import avoir.realtime.common.Constants;
+import avoir.realtime.common.FileManager;
 import avoir.realtime.common.packet.AudioPacket;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
@@ -45,6 +46,7 @@ import avoir.realtime.common.packet.CurrentSessionSlidePacket;
 import avoir.realtime.common.packet.DesktopPacket;
 import avoir.realtime.common.packet.FilePacket;
 import avoir.realtime.common.packet.FileUploadPacket;
+import avoir.realtime.common.packet.FileViewReplyPacket;
 import avoir.realtime.common.packet.MsgPacket;
 import avoir.realtime.common.packet.NewSlideReplyPacket;
 import avoir.realtime.common.packet.NotepadLogPacket;
@@ -55,6 +57,7 @@ import avoir.realtime.common.packet.SessionImg;
 import avoir.realtime.common.packet.SurveyPackPacket;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
+import avoir.realtime.common.packet.MobileUsersPacket;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -65,11 +68,13 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -89,6 +94,9 @@ public class TCPConnector extends TCPSocket {
     private JScrollPane whiteboardScrollPane;
     private Map<String, PrivateChatFrame> privateChats = new HashMap<String, PrivateChatFrame>();
     private SessionTimer sessionTimer;
+    private String selectedFilePath;
+    private String fileManagerMode = ".";
+    private FileManager fileManager;
 
     public TCPConnector(ClassroomMainFrame mf) {
         this.mf = mf;
@@ -104,12 +112,55 @@ public class TCPConnector extends TCPSocket {
         return sessionTimer;
     }
 
+    public String getSelectedFilePath() {
+        return selectedFilePath;
+    }
+
+    @Override
+    public ClassroomMainFrame getMf() {
+        return mf;
+    }
+
+    public String getFileManagerMode() {
+        return fileManagerMode;
+    }
+
+    public void setFileManagerMode(String fileManagerMode) {
+        this.fileManagerMode = fileManagerMode;
+    }
+
+    public void setSelectedFilePath(String selectedFilePath) {
+        this.selectedFilePath = selectedFilePath;
+    }
+
     private String stripExt(String filename) {
         int index = filename.lastIndexOf(".");
         if (index > -1) {
             return filename.substring(0, index);
         }
         return filename;
+    }
+
+    public void processFileVewReplyPacket(FileViewReplyPacket p) {
+       
+        ArrayList<String> filters = new ArrayList<String>();
+        if (fileManager == null) {
+            fileManager = new FileManager(p.getList(), this,null);
+            fileManager.setSize(500, 400);
+            fileManager.setLocationRelativeTo(null);
+        }
+        if (fileManagerMode.equals("notepad")) {
+            
+            fileManager.getUploadButton().setEnabled(false);
+            fileManager.getSelectButton().setText("Open");
+        }
+        if (fileManagerMode.equals("document")) {
+            fileManager.getUploadButton().setEnabled(true);
+            fileManager.getSelectButton().setText("Open");
+        }
+        fileManager.setFiles(p.getList());
+
+        fileManager.setVisible(true);
     }
 
     public void checkForSlides() {
@@ -158,15 +209,15 @@ public class TCPConnector extends TCPSocket {
         };
         t.start();
         checkForSlides();
-    /* PresencePacket p = new PresencePacket(
-    mf.getUser().getSessionId(),
-    PresenceConstants.USER_ACTIVE_ICON,
-    PresenceConstants.USER_ACTIVE,
-    mf.getUser().getUserName());
-    p.setForward(true);
+        /* PresencePacket p = new PresencePacket(
+        mf.getUser().getSessionId(),
+        PresenceConstants.USER_ACTIVE_ICON,
+        PresenceConstants.USER_ACTIVE,
+        mf.getUser().getUserName());
+        p.setForward(true);
 
-    sendPacket(p);
-     */
+        sendPacket(p);
+         */
     }
 
     @Override
@@ -190,7 +241,7 @@ public class TCPConnector extends TCPSocket {
                 packet = null;
                 try {
                     packet = reader.readObject();
-                    //System.out.println(packet.getClass());
+                    //  System.out.println(packet.getClass());
                     connected = true;
                     if (packet instanceof ClientPacket) {
                         ClientPacket clientPacket = (ClientPacket) packet;
@@ -215,6 +266,10 @@ public class TCPConnector extends TCPSocket {
                         if (userIndex > -1) {
                             mf.getUserListManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon(), true);
                         }
+                    } else if (packet instanceof FileViewReplyPacket) {
+                        processFileVewReplyPacket((FileViewReplyPacket) packet);
+                    } else if (packet instanceof MobileUsersPacket) {
+                        processMobileUsersPacket((MobileUsersPacket) packet);
                     } else if (packet instanceof ChatPacket) {
                         ChatPacket p = (ChatPacket) packet;
                         processChatPacket(p);
@@ -252,7 +307,7 @@ public class TCPConnector extends TCPSocket {
                         mf.showSurveyFrame(pac.getQuestions(), pac.getTitle());
                     } else if (packet instanceof QuestionPacket) {
                         QuestionPacket p = (QuestionPacket) packet;
-                        mf.showQuestionFrame(p, p.getQuestion());
+                        mf.initAnswerFrame(p, p.getQuestion());
                     } else if (packet instanceof DesktopPacket) {
                         DesktopPacket p = (DesktopPacket) packet;
                         processDesktopPacket(p);
@@ -289,6 +344,10 @@ public class TCPConnector extends TCPSocket {
             timer.cancel();
             refreshConnection();
         }
+    }
+
+    private void processMobileUsersPacket(MobileUsersPacket p) {
+        mf.getUserListManager().addMobileUserList(p.getUsers());
     }
 
     private void saveNotepads(NotepadLogPacket p) {
@@ -328,7 +387,7 @@ public class TCPConnector extends TCPSocket {
             //viewer.setContentPane(appViewer);
             whiteboardScrollPane = (JScrollPane) mf.getMainTabbedPane().getComponent(0);
             mf.getMainTabbedPane().remove(0);
-            mf.getMainTabbedPane().addTab("WebPresent", appViewer);
+            mf.getMainTabbedPane().addTab("Application Sharing", appViewer);
             //viewer.setVisible(true);
             showAppSharingFrame = false;
         }
@@ -376,8 +435,8 @@ public class TCPConnector extends TCPSocket {
 
     public void processFilePacket(FilePacket packet) {
         try {
-        //    String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
-           String  home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
+            //    String home = avoir.realtime.common.Constants.getRealtimeHome() + "/presentations/" + packet.getSessionId();
+            String home = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName();
 
             File homeDir = new File(home);
             if (!homeDir.exists()) {
@@ -506,9 +565,9 @@ public class TCPConnector extends TCPSocket {
 
     public void processNewSlideReplyPacket(NewSlideReplyPacket packet) {
         int slideIndex = packet.getSlideIndex();
-       // String slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
-       // if (!packet.isWebPresent()) {
-          String  slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
+        // String slidePath = Constants.getRealtimeHome() + "/presentations/" + mf.getUser().getSessionId() + "/img" + slideIndex + ".jpg";
+        // if (!packet.isWebPresent()) {
+        String slidePath = Constants.getRealtimeHome() + "/classroom/slides/" + mf.getUser().getSessionId() + "/" + packet.getPresentationName() + "/img" + slideIndex + ".jpg";
         //}
 
         mf.getWhiteBoardSurface().setCurrentSlide(new ImageIcon(slidePath), slideIndex, slideIndex, true);

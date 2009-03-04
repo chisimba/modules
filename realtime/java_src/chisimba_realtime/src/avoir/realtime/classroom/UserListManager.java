@@ -12,7 +12,7 @@ import avoir.realtime.common.user.User;
 import avoir.realtime.common.user.UserLevel;
 import avoir.realtime.common.user.UserObject;
 import avoir.realtime.common.PresenceConstants;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -283,6 +283,22 @@ public class UserListManager {
         // table.setDefaultRenderer(UserObject.class, new LRenderer());
         mf.getParticipantsField().setText(userList.size() + " " + (userList.size() > 1 ? "Participants" : "Partcipant"));
 
+    }
+    public void addMobileUserList(Vector<User> list) {
+     
+        for (int i = 0; i < list.size(); i++) {
+            User usr = list.elementAt(i);
+            usr.setUserName(usr.getUserName()+ "[Mobile]");
+            usr.setOnline(true);
+            addUser(usr, i);
+        }
+        //     table.setDefaultRenderer(UserObject.class, new LRenderer());
+        table.setDefaultRenderer(JComponent.class, new JComponentCellRenderer());
+        table.setDefaultEditor(JComponent.class, new JComponentCellEditor());
+
+        model = new ParticipantListingTableModel();
+        table.setModel(model);
+        decorateTable();
     }
 
     public void updateUserList(Vector<User> list) {

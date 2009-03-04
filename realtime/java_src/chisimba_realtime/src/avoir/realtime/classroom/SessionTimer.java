@@ -4,7 +4,7 @@
  */
 package avoir.realtime.classroom;
 
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 import avoir.realtime.common.PresenceConstants;
 import java.util.TimerTask;
 
