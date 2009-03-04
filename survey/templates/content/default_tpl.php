@@ -244,10 +244,12 @@ if(!$GLOBALS['kewl_entry_point_run']){
                     $statusIcon=$objIcon->setIcon('surveyactive');
                     $statusIcon=$objIcon->show();
                 }else{
-                    if($responseCounter>='1'){
+                    //Giving the user a message indicating that the survey is active and been responded to.
+					if($responseCounter>='1'){
                         $objIcon->title=$noDeactivateLabel;
-                        $objIcon->setIcon('surveyactive');
-                        $statusIcon=$objIcon->show();
+                        //$objIcon->setIcon('surveyactive');
+                        //$statusIcon=$objIcon->show();
+                        $statusIcon=$objIcon->getLinkedIcon($this->uri(array('action'=>'changestatus','survey_id'=>$surveyId,'status'=>'deactivate')),'surveyactive');
                     }else{
                         $objIcon->title=$deactivateLabel;
                         $statusIcon=$objIcon->getLinkedIcon($this->uri(array('action'=>'changestatus','survey_id'=>$surveyId,'status'=>'deactivate')),'surveyactive');
