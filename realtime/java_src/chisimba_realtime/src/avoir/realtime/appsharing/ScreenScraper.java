@@ -37,14 +37,16 @@ public abstract class ScreenScraper implements Runnable {
             new BandwidthController(DEFAULT_KILOBITS_PER_SECOND);
     private ScrapeCompressionMessage compType =
             new JPEGCompression();
-           // new APPCompression();
+    // new APPCompression();
     private TCPSocket tcpclient;
     private String sessionId;
     private Rectangle fullScrapeRect = new Rectangle(ss);
+    private boolean record = false;
 
-    public ScreenScraper(TCPSocket tcpclient, String sessionId) {
+    public ScreenScraper(TCPSocket tcpclient, String sessionId, boolean record) {
         appView = new AppView(PixelUtil.DEFAULT_WIDTH, PixelUtil.DEFAULT_HEIGHT);
         this.tcpclient = tcpclient;
+        this.record = record;
         this.sessionId = sessionId;
     }
 
@@ -217,7 +219,7 @@ public abstract class ScreenScraper implements Runnable {
 //            this.updateBandwidthMetric(data.getByteCount());
             // appView.pixelUpdate(data);
             //if (tcpclient != null) {
-                tcpclient.sendPacket(new DesktopPacket(data, sessionId));
+            tcpclient.sendPacket(new DesktopPacket(data, sessionId, record));
             //}
 
             this.iNextWait = Math.max(
