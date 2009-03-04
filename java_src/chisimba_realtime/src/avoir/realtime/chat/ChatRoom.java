@@ -23,6 +23,8 @@ import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.common.ImageUtil;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.PresenceConstants;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -40,13 +42,15 @@ import javax.swing.JPanel;
 import java.awt.event.KeyEvent;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
-import avoir.realtime.classroom.packets.PresencePacket;
+import avoir.realtime.common.packet.PresencePacket;
 import avoir.realtime.common.Constants;
 import avoir.realtime.common.TCPSocket;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -66,6 +70,8 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
@@ -85,7 +91,7 @@ import javax.swing.text.StyledDocument;
  */
 @SuppressWarnings("serial")
 public class ChatRoom
-        extends JPanel implements ActionListener {
+        extends JPanel implements ActionListener, ClipboardOwner {
 
     private int fontSize = 16;
     private String fontName = "SansSerif";
@@ -131,6 +137,10 @@ public class ChatRoom
     private Timer typingTimer = new Timer();
     private JFileChooser fc = new JFileChooser();
     private Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
+    private JPopupMenu popup = new JPopupMenu();
+    private JMenuItem copyMenuItem = new JMenuItem("Copy");
+    private JMenuItem saveMenuItem = new JMenuItem("Save Chat");
+    private JMenuItem claerMenuItem = new JMenuItem("Clear Chat");
 
     private static enum Mode {
 
@@ -152,6 +162,8 @@ public class ChatRoom
     private boolean privateChat;
     private String receiver;
     private String chatId;
+    private String[] fontSizes = {"10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30", "32", "34", "36", "40"};
+    private JMenu fontSizesMenu = new JMenu("Text Size");
 
     /**
      * Constructor
@@ -171,6 +183,10 @@ public class ChatRoom
             color = new Color(255, 153, 51);
             fontSize = 17;
         }
+
+        for (int i = 0; i < fontSizes.length; i++) {
+            fontSizesMenu.add(createMenuItem(fontSizes[i]));
+        }
         colorButton.setContentAreaFilled(false);
         //  setMinimumSize(new Dimension((ss.width / 4), 200));
 
@@ -178,8 +194,23 @@ public class ChatRoom
         chatIn.setFont(new Font(fontName, fontStyle, fontSize));
         chatIn.setForeground(color);
         textPane.setEditable(false);
+        popup.add(copyMenuItem);
+        popup.add(fontSizesMenu);
+        popup.add(saveMenuItem);
+        popup.add(claerMenuItem);
 
+        
         // textPane.setContentType("text/html");
+        textPane.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    copyMenuItem.setEnabled(textPane.getSelectedText() != null);
+                    popup.show(textPane, e.getX(), e.getY());
+                }
+            }
+        });
         chatSubmit = new JButton("Send");
         chatScroll = new JScrollPane();
         chatInputPanel = new JPanel();
@@ -234,6 +265,20 @@ public class ChatRoom
             public void mouseExited(MouseEvent e) {
                 colorButton.setContentAreaFilled(false);
 
+            }
+        });
+        claerMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+               textPane.setText("");
+            }
+        });
+         saveMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent arg0) {
+                if (fc.showSaveDialog(ChatRoom.this) == JFileChooser.APPROVE_OPTION) {
+                    saveChat(fc.getSelectedFile().getAbsolutePath());
+                }
             }
         });
         saveButton.addActionListener(new ActionListener() {
@@ -339,6 +384,14 @@ public class ChatRoom
         this.setLayout(new BorderLayout());
         this.add(chatScroll, BorderLayout.CENTER);
         this.add(chatInputPanel, BorderLayout.SOUTH);
+        copyMenuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                StringSelection stringSelection = new StringSelection(textPane.getSelectedText());
+                Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipBoard.setContents(stringSelection, ChatRoom.this);
+            }
+        });
         //chatIn.setPreferredSize(new Dimension(100, 50));
         chatIn.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -388,9 +441,12 @@ public class ChatRoom
         showIntroText();
     }
 
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    }
+
     private void showIntroText() {
         st = new SimpleAttributeSet();
-       
+
         StyleConstants.setIcon(st, logo);
         StyleConstants.setFontSize(st, 12);
         StyleConstants.setForeground(st, Color.ORANGE);// new Color(0, 131, 0));
@@ -413,6 +469,21 @@ public class ChatRoom
         }
         return lines;
 
+    }
+
+    private JMenuItem createMenuItem(String txt) {
+        final JMenuItem item = new JMenuItem(txt);
+        item.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                fontSize = Integer.parseInt(item.getText());
+                
+                //String prevText = textPane.getText();
+                //textPane.setFont(new Font(fontName, 0, size));
+                //textPane.setText(prevText);
+            }
+        });
+        return item;
     }
 
     private void showFontFrame() {
@@ -662,7 +733,7 @@ public class ChatRoom
         StyleConstants.setItalic(st, chatPacket.getFontStyle() == 2 ? true : false);
         StyleConstants.setFontSize(st, chatPacket.getFontSize());
         if (!chatPacket.getUsr().equalsIgnoreCase("System")) {
-            insertString("<" + chatPacket.getUsr() + ">", st);
+            insertString("" + chatPacket.getUsr() + ":", st);
         }
         StyleConstants.setForeground(st, new Color(0, 0, 0));
         String content = chatPacket.getContent();
@@ -786,11 +857,11 @@ public class ChatRoom
      */
     public void update(ChatPacket chatPacket) {
         formatStr(chatPacket);
-    /*    chatPacket.setTime(getTime());
-    this.chatLog.add(chatPacket);
-    movePanel(0, 1, chatLog.size());
-    messagePanel.repaint();
-     */
+        /*    chatPacket.setTime(getTime());
+        this.chatLog.add(chatPacket);
+        movePanel(0, 1, chatLog.size());
+        messagePanel.repaint();
+         */
     }
 
     /**
