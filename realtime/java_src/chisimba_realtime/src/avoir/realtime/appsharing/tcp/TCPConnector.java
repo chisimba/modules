@@ -23,6 +23,7 @@ import avoir.realtime.appsharing.DefaultDesktopPacketProcessor;
 import avoir.realtime.appsharing.ScreenScraper;
 
 import avoir.realtime.chat.PrivateChatFrame;
+import avoir.realtime.classroom.ClassroomMainFrame;
 import avoir.realtime.classroom.SessionTimer;
 import avoir.realtime.common.TCPSocket;
 
@@ -47,6 +48,31 @@ public class TCPConnector extends TCPSocket {
 
     @Override
     public Map<String, PrivateChatFrame> getPrivateChats() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getFileManagerMode() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ClassroomMainFrame getMf() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getSelectedFilePath() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFileManagerMode(String mode) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setSelectedFilePath(String mode) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
