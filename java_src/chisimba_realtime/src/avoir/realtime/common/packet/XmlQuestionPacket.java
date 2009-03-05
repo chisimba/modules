@@ -41,8 +41,6 @@ public class XmlQuestionPacket implements RealtimePacket {
     private ImageIcon image;
     private String questionPath;
 
-
-
     public String getQuestionPath() {
         return questionPath;
     }
@@ -119,6 +117,12 @@ public class XmlQuestionPacket implements RealtimePacket {
 
     public String getSender() {
         return sender;
+    }
+
+    public QuestionPacket getQuestionPacket() {
+        return new QuestionPacket(question,
+                answerOptions, type, sender,
+                id, image, imagePath);
     }
 
     public void setSender(String sender) {

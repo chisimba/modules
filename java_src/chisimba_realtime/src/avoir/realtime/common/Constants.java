@@ -48,6 +48,8 @@ public class Constants {
     public static final int SLIDE_BUILDER_IMAGE = 30;
     public static final int SLIDE_SHOW = 31;
     public static final int SLIDE_SHOW_VIEW = 32;
+    public static final int SLIDE_SHOW_NAV = 34;
+    public static final int QUESTION_NAV = 35;
     public static final int NOTEPAD = 33;
     public static final int ANY = 19;
     public static final int FLASH = 20;

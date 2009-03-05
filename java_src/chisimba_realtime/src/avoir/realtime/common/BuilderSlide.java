@@ -13,17 +13,22 @@ import javax.swing.ImageIcon;
  *
  * @author developer
  */
-public class BuilderSlide implements Serializable{
+public class BuilderSlide implements Serializable {
 
     private String title;
     private String text;
     private Color textColor;
     private int textSize;
+    private int textXPos;
+    private int textYPos;
     private XmlQuestionPacket question;
     private ImageIcon image;
     private String imagePath;
+    int index;
 
-    public BuilderSlide(String title, String text, Color textColor, int textSize, XmlQuestionPacket question, ImageIcon image, String imagePath) {
+    public BuilderSlide(String title, String text, Color textColor, int textSize,
+            XmlQuestionPacket question, ImageIcon image, String imagePath,int index,
+            int textXPos,int textYPos) {
         this.title = title;
         this.text = text;
         this.textColor = textColor;
@@ -31,6 +36,33 @@ public class BuilderSlide implements Serializable{
         this.question = question;
         this.image = image;
         this.imagePath = imagePath;
+        this.index=index;
+        this.textXPos=textXPos;
+        this.textYPos=textYPos;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getTextXPos() {
+        return textXPos;
+    }
+
+    public void setTextXPos(int textXPos) {
+        this.textXPos = textXPos;
+    }
+
+    public int getTextYPos() {
+        return textYPos;
+    }
+
+    public void setTextYPos(int textYPos) {
+        this.textYPos = textYPos;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public Color getTextColor() {
@@ -49,7 +81,6 @@ public class BuilderSlide implements Serializable{
         this.textSize = textSize;
     }
 
-    
     public ImageIcon getImage() {
         return image;
     }
@@ -74,8 +105,6 @@ public class BuilderSlide implements Serializable{
         this.question = question;
     }
 
-   
-
     public String getText() {
         return text;
     }
@@ -90,5 +119,10 @@ public class BuilderSlide implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }
