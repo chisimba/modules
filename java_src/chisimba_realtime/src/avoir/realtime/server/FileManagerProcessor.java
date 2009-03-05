@@ -66,8 +66,8 @@ public class FileManagerProcessor {
         } else if (p.getPath().startsWith(serverThread.getThisUser().getUserName())) {
             String pp = p.getPath();
             pp = pp.substring(pp.lastIndexOf("/"));
-            path = serverThread.getSERVER_HOME() + "/userfiles/" +p.getPath(); // serverThread.getThisUser().getUserName()+"/"+pp;
-           File f = new File(path);
+            path = serverThread.getSERVER_HOME() + "/userfiles/" + p.getPath(); // serverThread.getThisUser().getUserName()+"/"+pp;
+            File f = new File(path);
             fileList.add(new RealtimeFile(true,
                     "..", f.getParent()));
 //System.out.println("2: "+path);
@@ -76,9 +76,44 @@ public class FileManagerProcessor {
             File f = new File(path);
             fileList.add(new RealtimeFile(true,
                     "..", f.getParent()));
-        //System.out.println("3: "+path);
+            //System.out.println("3: "+path);
         }
         //System.out.println("Filemanager: " + path);
+        File f = new File(path);
+        String[] list = f.list();
+        java.util.Arrays.sort(list);
+
+        if (list != null) {
+            for (int i = 0; i < list.length; i++) {
+                fileList.add(new RealtimeFile(new File(path + "/" + list[i]).isDirectory(),
+                        list[i], path + "/" + list[i]));
+            }
+        }
+        serverThread.sendPacket(new FileViewReplyPacket(fileList), serverThread.getObjectOutStream());
+    }
+
+    public void sendFileViewRequestPacket(String xpath) {
+        ArrayList<RealtimeFile> fileList = new ArrayList();
+
+        String path = serverThread.getSERVER_HOME() + "/userfiles/" + serverThread.getThisUser().getUserName();
+        if (xpath.endsWith(serverThread.getThisUser().getUserName())) {
+            path = serverThread.getSERVER_HOME() + "/userfiles/" + serverThread.getThisUser().getUserName();
+
+        } else if (xpath.startsWith(serverThread.getThisUser().getUserName())) {
+            String pp = xpath;
+            pp = pp.substring(pp.lastIndexOf("/"));
+            path = serverThread.getSERVER_HOME() + "/userfiles/" + xpath; // serverThread.getThisUser().getUserName()+"/"+pp;
+            File f = new File(path);
+            fileList.add(new RealtimeFile(true,
+                    "..", f.getParent()));
+
+        } else {
+            path = xpath;
+            File f = new File(path);
+            fileList.add(new RealtimeFile(true,
+                    "..", f.getParent()));
+        }
+
         File f = new File(path);
         String[] list = f.list();
         java.util.Arrays.sort(list);

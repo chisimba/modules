@@ -48,7 +48,7 @@ public class PresentationProcessor {
     public void processSlideShowPopulateRequest(SlideShowPopulateRequest p) {
         String name = p.getPath();
         String path = serverThread.getSERVER_HOME() + "/userfiles/" +
-                serverThread.getThisUser().getUserName() + "/slides/"+name+".xml";
+                serverThread.getThisUser().getUserName() + "/slides/" + name + ".xml";
         serverThread.getFileTransferEngine().populateBinaryFile(serverThread, path, "", Constants.SLIDE_SHOW_VIEW, false);
 
     }
@@ -223,6 +223,9 @@ public class PresentationProcessor {
             content += "\t\t\t<title>" + slides.get(i).getTitle() + "</title>\n";
             content += "\t\t\t<text>" + slides.get(i).getText() + "</text>\n";
             content += "\t\t\t<text-size>" + slides.get(i).getTextSize() + "</text-size>\n";
+            content += "\t\t\t<text-x-pos>" + slides.get(i).getTextXPos() + "</text-x-pos>\n";
+            content += "\t\t\t<text-y-pos>" + slides.get(i).getTextYPos() + "</text-y-pos>\n";
+            content += "\t\t\t<index>" + slides.get(i).getIndex() + "</index>\n";
             content += "\t\t\t<text-color>\n";
             content += "\t\t\t\t<red>" + slides.get(i).getTextColor().getRed() + "</red>\n";
             content += "\t\t\t\t<green>" + slides.get(i).getTextColor().getGreen() + "</green>\n";
@@ -255,7 +258,7 @@ public class PresentationProcessor {
         content += "\t</slides>\n";
         content += "</slide-show>\n";
         write(name, content);
-
+        serverThread.getFileManagerProcessor().updateFileView(path);
     }
 
     public synchronized void write(String fileName, String txt) {

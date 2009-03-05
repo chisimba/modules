@@ -1402,6 +1402,10 @@ public class ServerThread extends Thread {
         }
     }
 
+    public FileManagerProcessor getFileManagerProcessor() {
+        return fileManagerProcessor;
+    }
+
     private void updateUserPresenceStatus(boolean state, String userName, int presenceType) {
 
         synchronized (clients) {
