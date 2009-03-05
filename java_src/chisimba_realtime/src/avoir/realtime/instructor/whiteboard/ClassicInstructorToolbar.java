@@ -76,14 +76,18 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
 
     @Override
     protected void showDocumentViewer() {
-        String path = mf.getUser().getUserName()+"/documents/";
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("documents");
+        String path = mf.getUser().getUserName() + "/documents";
+         mf.getTcpConnector().setFileManagerMode("documents");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+
     }
 
     @Override
     protected void showSlideBuilder() {
-        mf.showSlideBuilder();
+        //mf.showSlideBuilder();
+        mf.setSlideShowNavigatorVisible(true, "Slide Show Navigator");
+        mf.getSlideShowNavigator().setMode("slide-show");
+        mf.getSlideShowNavigator().requestFileList();
     }
 
     @Override
@@ -104,7 +108,10 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
 
     @Override
     public void showQuestionsManager() {
-        mf.showQuestionsManager();
+        // mf.showQuestionsManager();
+        mf.setSlideShowNavigatorVisible(true, "Questions Navigator");
+        mf.getSlideShowNavigator().setMode("question-manager");
+        mf.getSlideShowNavigator().requestFileList();
     }
 
     public void setRecording(boolean recording) {

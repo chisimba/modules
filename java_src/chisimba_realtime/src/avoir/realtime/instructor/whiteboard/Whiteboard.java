@@ -70,7 +70,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -223,6 +222,11 @@ public class Whiteboard extends WhiteboardSurface implements
     private JMenu textSizeMenuItem = new JMenu("Text Size - " + fontSize);
     private JMenu textStyleMenuItem = new JMenu("Text Style - " + getStyleName(fontStyle));
     private JMenu lineSizeMenuItem = new JMenu("Line Size - " + strokeWidth);
+    private Color textColor = Color.BLACK;
+    int textsize = 18;
+    private String slideText = "";
+    private int slideTextXPos = 100;
+    private int slideTextYPos = 100;
 
     public Whiteboard(Classroom mf) {
         super(mf);
@@ -351,22 +355,51 @@ public class Whiteboard extends WhiteboardSurface implements
         return pointerToolbar;
     }
 
+    public int getSlideTextXPos() {
+        return slideTextXPos;
+    }
+
+    public void setSlideTextXPos(int slideTextXPos) {
+        this.slideTextXPos = slideTextXPos;
+    }
+
+    public int getSlideTextYPos() {
+        return slideTextYPos;
+    }
+
+    public void setSlideTextYPos(int slideTextYPos) {
+        this.slideTextYPos = slideTextYPos;
+    }
+
     public void clearThumbNails() {
         thumbNails.clear();
         xValue = (getWidth() - pointerSurface.width) / 2;
     }
 
     public void addThumbNail(Image img, final int index, int maxIndex, boolean newThumbnail) {
-
-        //repaint();
         if (firstThumbNail) {
-            //  xValue = (getWidth() - pointerSurface.width             ) / 2;
             firstThumbNail = false;
         }
         if (newThumbnail) {
             thumbNails.add(new ThumbNail(img, xValue, 10, 40, 32, index, Color.LIGHT_GRAY));
         }
         xValue += spacing;
+    }
+
+    public String getSlideText() {
+        return slideText;
+    }
+
+    public void setSlideText(String slideText) {
+        this.slideText = slideText;
+    }
+
+    public int getTextsize() {
+        return textsize;
+    }
+
+    public void setTextsize(int textsize) {
+        this.textsize = textsize;
     }
 
     public JToolBar getToolsToolbar() {
@@ -2005,6 +2038,7 @@ public class Whiteboard extends WhiteboardSurface implements
         whiteboardUtil.paintItems(g2, items, dashed, dragging, selectedItem, pointerSurface, imgs, ovalRect1, ovalRect2, ovalRect3, ovalRect4);
 
         paintSelection(g2);
+        drawCustomText(g2);
         if (showInfoMessage) {
             g2.setStroke(new BasicStroke());
             FontMetrics fm = graphics.getFontMetrics(msgFont);
@@ -2057,6 +2091,23 @@ public class Whiteboard extends WhiteboardSurface implements
             paintThumbNails(g2, xx);
         }
 
+    }
+
+    private void drawCustomText(Graphics2D g2) {
+        if (slideText.trim().equals("")) {
+            return;
+        }
+        String[] lines = slideText.split("\n");
+        int xx = slideTextXPos;
+        int yy = slideTextYPos;
+        g2.setColor(textColor);
+        g2.setFont(new Font("SansSerif", 0, textsize));
+        FontMetrics fm = graphics.getFontMetrics();
+        for (int i = 0; i < lines.length; i++) {
+
+            g2.drawString(lines[i], xx, yy);
+            yy += fm.getHeight();
+        }
     }
 
     private void checkIfShouldScrollThumbNails(MouseEvent evt) {
