@@ -37,13 +37,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
-import java.awt.font.TextLayout;
 import java.awt.geom.RoundRectangle2D;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -179,6 +175,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         //addKeyListener(this);
         //setFocusable(true);
         //addKeyListener(this);
+
 
     }
 
@@ -686,7 +683,7 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
             int xx = ((int) (getWidth() * 1) - slide.getIconWidth()) / 2;
             int yy = ((int) (getHeight() * 1) - slide.getIconHeight()) / 2;
             g2.setFont(new Font("Dialog", 1, 10));
-            g2.drawImage(slide.getImage(), xx, yy, (int) (slideWidth), (int) (slideHeight), this);
+            g2.drawImage(slide.getImage(), 50, 50, (int) (slideWidth), (int) (slideHeight), this);
 
             firstSlide = false;
         }
