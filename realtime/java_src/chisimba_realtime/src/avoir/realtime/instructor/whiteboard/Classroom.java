@@ -19,6 +19,7 @@ package avoir.realtime.instructor.whiteboard;
 
 import avoir.realtime.classroom.ClassicToolbar;
 import avoir.realtime.classroom.ClassroomMainFrame;
+import avoir.realtime.instructor.SlideShowNavigator;
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.common.ImageUtil;
 import avoir.realtime.filetransfer.FileUploader;
@@ -65,6 +66,7 @@ public class Classroom extends ClassroomMainFrame {
     private InstructorFileReceiverManager instructorFileReceiverManager;
     private SlideBuilderManager slideBuilderManager;
     int slideBuilderCount = 0;
+    private SlideShowNavigator slideShowNavigator;
 
     public Classroom(
             String host,
@@ -107,6 +109,7 @@ public class Classroom extends ClassroomMainFrame {
 //        instructorToolbar = new InstructorRealtimeToolBar(this);
         instructorToolbar = new ClassicInstructorToolbar(this);
         instructorFileReceiverManager = new InstructorFileReceiverManager(this);
+        slideShowNavigator = new SlideShowNavigator(this);
         JToolBar toolsBar = whiteboard.getToolsToolbar();
         //    JToolBar whiteboardToolbar = whiteboard.getMainToolbar();
         //    JToolBar navToolbar = toolbarManager.getSlidesNavigationToolBar();
@@ -149,6 +152,22 @@ public class Classroom extends ClassroomMainFrame {
     }
 
     @Override
+    public void setSlideShowNavigatorVisible(boolean show, String text) {
+        centerPanel.remove(slideShowNavigator);
+        slideShowNavigator.clear();
+        if (show) {
+            centerPanel.add(slideShowNavigator, BorderLayout.WEST);
+        } else {
+            centerPanel.remove(slideShowNavigator);
+        }
+        slideShowNavigator.setRootText(text);
+        int w = parent.getWidth();
+        int h = parent.getHeight();
+        parent.setSize(w + 1, h + 1);
+        parent.setSize(w - 1, h - 1);
+    }
+
+    @Override
     public ClassicToolbar getToolBar() {
         return instructorToolbar;
     }
@@ -164,6 +183,10 @@ public class Classroom extends ClassroomMainFrame {
 
     public SurveyManagerFrame getSurveyManagerFrame() {
         return surveyManagerFrame;
+    }
+
+    public SlideShowNavigator getSlideShowNavigator() {
+        return slideShowNavigator;
     }
 
     public void showSlideBuilder() {
@@ -194,7 +217,7 @@ public class Classroom extends ClassroomMainFrame {
 
     private void addToolbarButtons() {
         //instructorToolbar.add("Chat", "/icons/chat32.png", "chat", "Private Chat", false, true);
-      //  instructorToolbar.add("Mic", "/icons/micro.png", "mic", "Microphone", false, true);
+        //  instructorToolbar.add("Mic", "/icons/micro.png", "mic", "Microphone", false, true);
         instructorToolbar.add("Pointer", "/icons/arrow_side32.png", "pointer", "Pointer");
         //instructorToolbar.add("Speaker", "/icons/speaker.png", "speaker", "Speaker", false, true);
         instructorToolbar.add("Notepad", "/icons/kedit32.png", "notepad", "Notepad");

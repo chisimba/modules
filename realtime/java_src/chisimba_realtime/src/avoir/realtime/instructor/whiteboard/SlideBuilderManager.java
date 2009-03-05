@@ -26,13 +26,26 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -70,6 +83,12 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     private String mode = "add-slide";
     boolean saved = false;
     private String customSlideText;
+    int textXPos = 100;
+    int textYPos = 100;
+    int offSetX = 0;
+    int offSetY = 0;
+    private Graphics2D graphics;
+    private boolean dragText = false;
 
     /** Creates new form SlideBuilderManager */
     public SlideBuilderManager(Classroom mf) {
@@ -98,7 +117,23 @@ public class SlideBuilderManager extends javax.swing.JFrame {
             public void changedUpdate(DocumentEvent e) {
             }
         });
+        titleField.getDocument().addDocumentListener(new DocumentListener() {
 
+            public void insertUpdate(DocumentEvent e) {
+                addButton.setEnabled(true);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                addButton.setEnabled(true);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        setControlsEnabled(true);
+        mode = "save-slide";
+        addButton.setText("Save Slide");
+        titleField.requestFocus();
     }
 
     public ImageIcon getSlideImage() {
@@ -121,40 +156,141 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         questionField.setText(((TCPConnector) mf.getTcpConnector()).getSelectedFilePath());
     }
 
-    class Surface extends JPanel {
+    class Surface extends JPanel implements MouseListener, MouseMotionListener {
+
+        int startX, startY, currentX, currentY;
+        // The LineBreakMeasurer used to line-break the paragraph.
+        private LineBreakMeasurer lineMeasurer;
+        // index of the first character in the paragraph.
+        private int paragraphStart;
+        // index of the first character after the end of the paragraph.
+        private int paragraphEnd;
+        private final Hashtable<TextAttribute, Object> map =
+                new Hashtable<TextAttribute, Object>();
 
         public Surface() {
             setBackground(Color.WHITE);
+            map.put(TextAttribute.FAMILY, "Serif");
+            map.put(TextAttribute.SIZE, new Float(18.0));
+            addMouseListener(this);
+            addMouseMotionListener(this);
+        }
+
+        public void mouseDragged(MouseEvent evt) {
+            if (dragText) {
+                textXPos = evt.getX() - offSetX;
+                textYPos = evt.getY() - offSetY;
+                repaint();
+            }
+        }
+
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
+
+        public void mousePressed(MouseEvent evt) {
+            startX = evt.getX();
+            startY = evt.getY();
+
+            if (graphics != null) {
+                FontMetrics fm = graphics.getFontMetrics();
+                int totalLines = customSlideText.split("\n").length;
+                Rectangle rect = new Rectangle(textXPos, textYPos - fm.getHeight(),
+                        fm.stringWidth(customSlideText), fm.getAscent() * (totalLines + 1));
+
+                if (rect.contains(evt.getPoint())) {
+                    dragText = true;
+                    offSetX = evt.getX() - textXPos;
+                    offSetY = evt.getY() - textYPos;
+                } else {
+                    dragText = false;
+                }
+                //System.out.println(dragText);
+            }
+            repaint();
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            dragText = false;
+            repaint();
         }
 
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
+            graphics = g2;
             if (slideImage != null) {
-                g2.drawImage(slideImage.getImage(), 0, 0, this);
+                g2.drawImage(slideImage.getImage(), 50, 50, this);
                 setPreferredSize(new Dimension(slideImage.getIconWidth(), slideImage.getIconHeight()));
             }
-            if (customSlideText == null) {
-                return;
+            if (customSlideText != null) {
+                FontMetrics fm = graphics.getFontMetrics();
+                if (!customSlideText.trim().equals("")) {
+                    g2.setColor(textColor);
+                    g2.setFont(new Font("Dialog", 0, textSize));
+                    String lines[] = customSlideText.split("\n");
+                    int yy = textYPos;
+                    int longest = 0;
+                    for (int i = 0; i < lines.length; i++) {
+                        g2.drawString(lines[i], textXPos, yy);
+                        if (fm.stringWidth(lines[i]) > longest) {
+                            longest = fm.stringWidth(lines[i]);
+                        }
+                        yy += fm.getHeight();
+                    }
+
+                    //drawCustomText(g2);
+                    if (dragText) {
+
+                        g2.drawRect(textXPos, textYPos - fm.getHeight(),
+                                longest, (fm.getHeight() * (lines.length + 1)) + 10);
+                    }
+                }
             }
+            revalidate();
+
+        }
+
+        private void drawCustomText(Graphics2D g2) {
             if (customSlideText.trim().equals("")) {
                 return;
             }
-            String[] lines = customSlideText.split("\n");
-            int xx = 10;
-            int yy = 100;
-            g2.setColor(textColor);
-            g2.setFont(new Font("Dialog", 0, textSize));
 
-            for (int i = 0; i < lines.length; i++) {
-
-                g2.drawString(lines[i], xx, yy);
-                yy += 30;
+            // Create a new LineBreakMeasurer from the paragraph.
+            // It will be cached and re-used.
+            if (lineMeasurer == null) {
+                AttributedString str = new AttributedString(customSlideText);
+                AttributedCharacterIterator paragraph = str.getIterator();
+                paragraphStart = paragraph.getBeginIndex();
+                paragraphEnd = paragraph.getEndIndex();
+                FontRenderContext frc = g2.getFontRenderContext();
+                lineMeasurer = new LineBreakMeasurer(paragraph, frc);
             }
 
-            revalidate();
+            // Set break width to width of Component.
+            float breakWidth = (float) getSize().width;
+            float drawPosY = textYPos;
+            lineMeasurer.setPosition(paragraphStart);
 
+            // Get lines until the entire paragraph has been displayed.
+            while (lineMeasurer.getPosition() < paragraphEnd) {
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+
+                float drawPosX = layout.isLeftToRight()
+                        ? textXPos : breakWidth - layout.getAdvance();
+                drawPosY += layout.getAscent();
+                layout.draw(g2, drawPosX, drawPosY);
+                drawPosY += layout.getDescent() + layout.getLeading();
+            }
         }
     }
 
@@ -283,13 +419,19 @@ public class SlideBuilderManager extends javax.swing.JFrame {
                 question.setQuestionPath(questionPath);
             }
             BuilderSlide slide = new BuilderSlide(title, text, textColor, textSize, question, slideImage,
-                    ((TCPConnector) mf.getTcpConnector()).getSelectedFilePath());
+                    ((TCPConnector) mf.getTcpConnector()).getSelectedFilePath(),
+                    model.getSize(), textXPos, textYPos);
             model.addElement(slide);
             mode = "add-slide";
             addButton.setText("Add New Slide");
             setControlsEnabled(false);
             return;
         }
+
+        setControlsEnabled(true);
+        mode = "save-slide";
+        addButton.setEnabled(false);
+        titleField.requestFocus();
     }
 
     private String encodeImage(Image image, int i) {
@@ -332,7 +474,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
 
                 Image image = null;
                 if (im != null) {
-                  image=  slide.getImage().getImage();
+                    image = slide.getImage().getImage();
                 }
 
                 XmlQuestionPacket qn = slide.getQuestion();
@@ -381,14 +523,19 @@ public class SlideBuilderManager extends javax.swing.JFrame {
                         isAnswered,
                         qname,
                         qnImageData,
-                        qpath);
+                        qpath,
+                        slide.getIndex(),
+                        textXPos,
+                        textYPos);
                 slides.add(xmlSlide);
             }
+            mf.getTcpConnector().setFileManagerMode("slide-show-list");
             mf.getTcpConnector().sendPacket(new SlideBuilderPacket(slides, name));
         }
         setTitle("Slide Builder: " + name);
         slideNameField.setText(name);
         saved = true;
+
     }
 
     public void setSlides(ArrayList<BuilderSlide> slides, String name) {
@@ -636,7 +783,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         slideDetailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Slide Details"));
         slideDetailsPanel.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText("Title");
+        jLabel1.setText("Slide Title");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         slideDetailsPanel.add(jLabel1, gridBagConstraints);
@@ -647,7 +794,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         slideDetailsPanel.add(titleField, gridBagConstraints);
 
-        jLabel2.setText("Text");
+        jLabel2.setText("Slide Text");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -669,7 +816,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         slideDetailsPanel.add(textFieldSP, gridBagConstraints);
 
-        jLabel3.setText("Question");
+        jLabel3.setText("Slide Question");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -771,7 +918,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
 
         imagePanel.add(cPanel2, java.awt.BorderLayout.PAGE_END);
 
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Dialog", 1, 18));
         jLabel4.setForeground(new java.awt.Color(255, 102, 0));
         jLabel4.setText("Preview");
         jPanel1.add(jLabel4);
@@ -805,8 +952,8 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void textUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textUploadButtonActionPerformed
-        String path = mf.getUser().getUserName();
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("slide-builder-text");
+        String path = mf.getUser().getUserName()+"/documents";
+        mf.getTcpConnector().setFileManagerMode("slide-builder-text");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }//GEN-LAST:event_textUploadButtonActionPerformed
 
@@ -819,8 +966,8 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     }//GEN-LAST:event_prevQnButtonActionPerformed
 
     private void questionUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_questionUploadButtonActionPerformed
-        String path = mf.getUser().getUserName();
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("slide-builder-question");
+        String path = mf.getUser().getUserName() + "/questions";
+        mf.getTcpConnector().setFileManagerMode("slide-builder-question");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }//GEN-LAST:event_questionUploadButtonActionPerformed
 
@@ -830,8 +977,8 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     }//GEN-LAST:event_clearQuestionButtonActionPerformed
 
     private void imageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageButtonActionPerformed
-        String path = mf.getUser().getUserName();
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("slide-builder-image");
+        String path = mf.getUser().getUserName() + "/images";
+        mf.getTcpConnector().setFileManagerMode("slide-builder-image");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }//GEN-LAST:event_imageButtonActionPerformed
 

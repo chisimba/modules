@@ -414,49 +414,82 @@ public class TCPConnector extends TCPSocket {
         if (fileManagerMode.equals("presentation")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Insert");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("question-image")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Insert");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("document")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Open");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("slide-builder-text")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Open");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
+        }
+        if (fileManagerMode.equals("question-nav-list")) {
+            mf.getSlideShowNavigator().setFiles(p.getList());
+        }
+        if (fileManagerMode.equals("slide-show-list")) {
+             mf.getSlideShowNavigator().setFiles(p.getList());
         }
         if (fileManagerMode.equals("slide-show")) {
             fileManager.getUploadButton().setEnabled(false);
             fileManager.getSelectButton().setText("Open");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("slide-builder-question")) {
             fileManager.getUploadButton().setEnabled(false);
             fileManager.getSelectButton().setText("Insert");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("slide-builder-image")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Insert");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("whiteboard-image")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Insert");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("question-list")) {
             filters.add(".xml");
             fileManager.setFilters(filters);
             fileManager.getUploadButton().setEnabled(false);
             fileManager.getSelectButton().setText("Open");
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+
         }
         if (fileManagerMode.equals("notepad")) {
 
             fileManager.getSelectButton().setText("Open");
             fileManager.getUploadButton().setEnabled(false);
-        }
-        fileManager.setFiles(p.getList());
 
-        fileManager.setVisible(true);
+            fileManager.setFiles(p.getList());
+            fileManager.setVisible(true);
+        }
     }
 
     public void processDesktopPacket(final DesktopPacket packet) {
