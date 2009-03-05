@@ -45,4 +45,9 @@ public class RealtimeFile implements Serializable {
     public void setDirectory(boolean directory) {
         this.directory = directory;
     }
+
+    @Override
+    public String toString() {
+        return fileName;
+    }
 }
