@@ -36,10 +36,10 @@ class dbblogcomments extends dbTable
 		$this->objLanguage = $this->getObject('language', 'language');
 		$this->objConfig = $this->getObject('altconfig', 'config');
 	}
-	
+
 	/**
 	 * Method to delete a comment
-	 * 
+	 *
 	 * @param string id
 	 * @return bool
 	 */
@@ -72,13 +72,12 @@ class dbblogcomments extends dbTable
 		$pmod = $commentarray['mod'];
 		$ptable = $commentarray['table'];
 
-
 		$this->insert(array('userid' => $userid, 'comment_author' => $commentauthor, 'comment_author_email' => $authemail,
 		  				    'comment_author_url' => $authurl, 'comment_author_ip' => $authip, 'comment_date' => $date,
 							'comment_content' => $cont, 'comment_karma' => 0, 'comment_approved' => 1, 'comment_agent' => $agent,
 							'comment_type' => $type, 'comment_parentid' => $pid, 'comment_parentmod' => $pmod, 'comment_parenttbl' => $ptable));
 		//email the owner
-		if($email == TRUE)
+		if($email == TRUE && $pmod == 'blog')
 		{
 			//var_dump($commentarray); die();
 			$postid = $commentarray['postid'];
@@ -133,7 +132,7 @@ class dbblogcomments extends dbTable
 		$filter = "WHERE comment_parentid = '$pid' ORDER BY comment_date DESC";
 		return $this->getAll($filter);
 	}
-	
+
 	/**
 	 * Method to return the comments for the user
 	 * You need to supply a user id to the method. This will get all the extra data
@@ -170,10 +169,10 @@ class dbblogcomments extends dbTable
 		$this->_changeTable("tbl_blog_posts");
 		return $this->getAll("WHERE id = '$id'");
 	}
-	
+
 	/**
 	 * Method to grab a single comment by ID
-	 * 
+	 *
 	 * @param $id
 	 * @return array
 	 */
@@ -182,7 +181,7 @@ class dbblogcomments extends dbTable
 		$this->_changeTable('tbl_blogcomments');
 		return $this->getAll("WHERE id = '$id'");
 	}
-	
+
 	public function updateComment($id, $newcomment)
 	{
 		$this->_changeTable('tbl_blogcomments');

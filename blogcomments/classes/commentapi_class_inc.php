@@ -31,7 +31,7 @@ class commentapi extends object
 	 * @var object
 	 */
 	protected $objLanguage;
-	
+
 	public $showfullname;
 
 	/**
@@ -201,6 +201,65 @@ class commentapi extends object
 		}
 	}
 
+	public function showJblogComments($postid) {
+	    $washer = $this->getObject('washout', 'utilities');
+        $this->objDbComm = $this->getObject('dbblogcomments');
+        $objFeatureBox = $this->newObject('featurebox', 'navigation');
+        $comms = $this->objDbComm->grabComments($postid);
+	    if(empty($comms))
+        {
+            //shouldn't happen except on permalinks....?
+            return $objFeatureBox->showComment($this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments"), "<em>".$this->objLanguage->languageText("mod_blogcomments_nocomments", "blogcomments")."</em>");
+        }
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+
+        // Add in a heading
+        $header = new htmlHeading ( );
+        $header->str = $this->objLanguage->languageText("mod_blogcomments_comment4post", "blogcomments");
+        $header->type = 3;
+
+        $commtext = $header->show();
+        foreach($comms as $comm)
+        {
+            //build up the display
+            $ctable = $this->newObject('htmltable', 'htmlelements');
+            $ctable->cellpadding = 2;
+            //$ctable->width = '80%';
+            //set up the header row
+            $ctable->startHeaderRow();
+            $ctable->addHeaderCell('');
+            $ctable->addHeaderCell('');
+            $ctable->endHeaderRow();
+
+            //build in author with url if available, with [email] as fbox head
+            //then content as the content
+            //where did it come from?
+            $auth = $comm['comment_author'];
+            $authurl = $comm['comment_author_url'];
+            $authemail = $comm['comment_author_email'];
+            $commentdate = $comm['comment_date'];
+            $hrcdate = date('r', $commentdate);
+            //do a check to see if the comment author is the viewer so that they can edit the comment inline
+            //get the userid
+            $viewerid = $this->objUser->userId();
+            $vemail = $this->objUser->email($viewerid);
+            $fboxcontent = stripslashes($comm['comment_content']);
+
+            $authemail = "[".$authemail."]";
+            $authhead = NULL; //$auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
+            if(isset($delIcon))
+            {
+               $fboxhead = $authhead; // . " " . $authemail;
+            }
+            else {
+                $fboxhead = $authhead;
+            }
+            $commtext .= $objFeatureBox->showComment($fboxhead . " On ".$hrcdate, $washer->parseText($fboxcontent));
+        }
+
+        return $commtext;
+
+	}
 	/**
 	 * Method to show the comments in the comments table to the user on a singleview post display
 	 *
@@ -276,7 +335,7 @@ class commentapi extends object
                     'postid' => $pid
                 ) , 'blogcomments');
                 //$delic = $delIcon->show();
-                
+
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
 			}
 			elseif($vemail == $comm['comment_author_email'])
@@ -287,7 +346,7 @@ class commentapi extends object
                       //<script src="core_modules/htmlelements/resources/script.aculos.us/src/scriptaculous.js" type="text/javascript"></script>
                       //<script src="core_modules/htmlelements/resources/script.aculos.us/src/unittest.js" type="text/javascript"></script>';
         		//$this->appendArrayVar('headerParams',$scripts);
-				
+
                 //display the inline editor
 				$updateuri = 'index.php'; //$this->uri(array('module' =>'blogcomments','action' => 'updatecomment'));
 				$commid = $comm['id'];
@@ -295,7 +354,7 @@ class commentapi extends object
 				$script .= '<script type="text/javascript">';
 				$script .= "new Ajax.InPlaceEditor('editme2', '$updateuri', {rows:15,cols:40, callback: function(form, value) { return 'module=blogcomments&action=updatecomment&commid=' + escape('$commid') + '&newcomment=' +escape(value) }});";
 				$script .= "</script>";
-				
+
 				//echo $updateuri; die();
 				$this->objIcon = $this->getObject('geticon', 'htmlelements');
                 $edIcon = $this->objIcon->getEditIcon($this->uri(array(
@@ -311,11 +370,11 @@ class commentapi extends object
                     'postid' => $pid
                 ) , 'blogcomments');
                 //$delic = $delIcon->show();
-                
+
 				$fboxcontent = $script."<br /><br />".$delIcon; //stripslashes($comm['comment_content']); // . "<br /><br />" . $delIcon;
 			}
 			else {
-				$fboxcontent = stripslashes($comm['comment_content']);	
+				$fboxcontent = stripslashes($comm['comment_content']);
 			}
 			//$link = new href(urlencode($authurl), $auth, NULL);
 			//$link->show();
@@ -330,7 +389,7 @@ class commentapi extends object
 				$fboxhead = $authhead;
 			}
 
-			
+
 
 			$commtext .= $objFeatureBox->showComment($fboxhead . " - ".$hrcdate, $washer->parseText($fboxcontent));
 		}
@@ -393,10 +452,10 @@ class commentapi extends object
 		$this->objDbComm = $this->getObject('dbblogcomments');
 		return $this->objDbComm->commentCount($pid);
 	}
-	
+
 	/**
 	 * Method to grab all the post info for a post ID
-	 * 
+	 *
 	 * @param string $pid
 	 * @return array
 	 */
