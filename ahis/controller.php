@@ -115,6 +115,7 @@ class ahis extends controller {
             $this->objDepartment = $this->getObject('department');
             $this->objPassive = $this->getObject('passive');
             $this->objReport = $this->getObject('reporttype');
+            $this->objViewReport = $this->getObject('report');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -212,7 +213,6 @@ class ahis extends controller {
                 return "passive_surveillance_tpl.php";
             
             case 'passive_outbreak':
-                //$this->setSession('ps_territoryId', $this->getParam('territoryId'));
                 $oStatusId = $this->getParam('oStatusId', $this->getSession('ps_oStatusId'));
                 $qualityId = $this->getParam('qualityId', $this->getSession('ps_qualityId'));
                 $datePrepared = $this->getParam('datePrepared', $this->getSession('ps_datePrepared'));
@@ -269,7 +269,6 @@ class ahis extends controller {
                 $this->setSession('ps_causitive', $causitive);
                 
                 $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
-                //$this->setVar('arrayOStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
                 $this->setVar('arrayProduction', $this->objProduction->getAll("ORDER BY NAME"));
                 $this->setVar('arrayAge', $this->objAge->getAll("ORDER BY NAME"));
                 $this->setVar('arraySex', $this->objSex->getAll("ORDER BY NAME"));
@@ -278,7 +277,6 @@ class ahis extends controller {
                 $this->setVar('arrayControl', $this->objControl->getAll("ORDER BY NAME"));
                 
                 $this->setVar('territoryId', $this->getSession('ps_districtId'));
-                //$this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
                 $this->setVar('productionId', $this->getSession('ps_productionId'));
                 $this->setVar('ageId', $this->getSession('ps_ageId'));
                 $this->setVar('sexId', $this->getSession('ps_sexId'));
@@ -352,10 +350,10 @@ class ahis extends controller {
                 
                 $ps_array['speciesid'] = $this->getSession('ps_speciesId',1);
                 $ps_array['ageid'] = $this->getSession('ps_ageId');
-                $ps_array['sexid'] = $this->getSession('ps_sexId',1);
+                $ps_array['sexid'] = $this->getSession('ps_sexId');
                 $ps_array['productionid'] = $this->getSession('ps_productionId');
-                $ps_array['controlmeasureid'] = $this->getSession('ps_controlId',1);
-                $ps_array['basisofdiagnosisid'] = $this->getSession('ps_diagnosisId',1);
+                $ps_array['controlmeasureid'] = $this->getSession('ps_controlId');
+                $ps_array['basisofdiagnosisid'] = $this->getSession('ps_basisId');
                 
                 $ps_array['susceptible'] = $this->getSession('ps_susceptible');
                 $ps_array['cases'] = $this->getSession('ps_cases');
@@ -385,9 +383,43 @@ class ahis extends controller {
                     $this->unsetPassiveSession();
                 }
                 
-                return  "passive_feedback_tpl.php";
+                return "passive_feedback_tpl.php";
                 
             case 'view_reports':
+                $outputType = $this->getParam('outputType', 2);
+                $reportType = $this->getParam('reportType');
+                $month = $this->getParam('month', date('m'));
+                $year = $this->getParam('year', date('Y'));
+                $reportName = $this->objReport->getRow('id', $reportType);
+                $fileName = str_replace(" ", "_", "{$reportName['name']}_$month-$year");
+                switch ($outputType) {
+                    case 1:
+                        //csv
+                        $csv = $this->objViewReport->generateCSV($year, $month, $reportType);
+                        header("Content-Type: application/csv"); 
+                        header("Content-length: " . sizeof($csv)); 
+                        header("Content-Disposition: attachment; filename=$fileName.csv"); 
+                        echo $csv;
+                        break;
+                    case 3:
+                        //pdf
+                        $html = $this->objViewReport->generateReport($year, $month, $reportType, 'true');
+                        //$objPDF = $this->getObject('dompdfwrapper','dompdf');
+                        //$objPDF->setPaper('a4', 'landscape');
+                        //$objPDF->generatePDF($html, "$fileName.pdf");
+                        echo "$html <br />not yet implemented";
+                        break;
+                    default:
+                        $this->setVar('reportTypes', $this->objReport->getAll("ORDER BY name"));
+                        $this->setVar('year', $year);
+                        $this->setVar('month', $month);
+                        $this->setVar('outputType', $outputType);
+                        $this->setVar('reportType', $reportType);
+                        $this->setVar('enter', $this->getParam('enter'));
+                        return "view_reports_tpl.php";
+                }
+                
+                break;
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));
@@ -1172,9 +1204,6 @@ class ahis extends controller {
      *
      */
     private function unsetPassiveSession() {
-        //$this->unsetSession('ps_officerId');
-        //$this->unsetSession('ps_districtId');
-        //$this->unsetSession('ps_calendardate');
         $this->unsetSession('ps_oStatusId');
         $this->unsetSession('ps_qualityId');
         $this->unsetSession('ps_datePrepared');
