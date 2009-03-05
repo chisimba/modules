@@ -86,13 +86,19 @@ class jbviewer extends object {
     }
 
     public function renderSingle($msg) {
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+        // Add in a comment heading
+        $header = new htmlHeading ( );
+        $header->str = $this->objLanguage->languageText ( 'mod_jabberblog_comments', 'jabberblog' );
+        $header->type = 3;
+
         $msg = $msg [0];
         $msgbody = $this->objWashout->parseText ( $msg ['msgbody'] );
         $msgid = $msg ['id'];
         $commenttxt = $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />" . $commenttxt . "<br />" . $comment );
+        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment );
         $ret .= "<hr />";
 
         return $ret;
