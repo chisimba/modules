@@ -307,7 +307,7 @@ public class TCPConnector extends TCPSocket {
                         mf.showSurveyFrame(pac.getQuestions(), pac.getTitle());
                     } else if (packet instanceof QuestionPacket) {
                         QuestionPacket p = (QuestionPacket) packet;
-                        mf.initAnswerFrame(p, p.getQuestion());
+                        mf.initAnswerFrame(p, p.getQuestion(),false);
                     } else if (packet instanceof DesktopPacket) {
                         DesktopPacket p = (DesktopPacket) packet;
                         processDesktopPacket(p);

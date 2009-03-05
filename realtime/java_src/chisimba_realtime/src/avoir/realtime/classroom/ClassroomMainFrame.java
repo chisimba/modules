@@ -210,6 +210,9 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         notepadCount++;
     }
 
+    public void setSlideShowNavigatorVisible(boolean show,String text) {
+    }
+
     public void initToolbar() {
         toolBar = new ClassicToolbar(this);
         addToolbarButtons();
@@ -471,7 +474,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         fr.setVisible(true);
     }
 
-    public void initAnswerFrame(QuestionPacket questions, String title) {
+    public void initAnswerFrame(QuestionPacket questions, String title,boolean enableSubmitButton) {
         answerFrame = new AnsweringFrame(questions, this, false);
         answerFrame.setTitle(title);
         answerFrame.setAlwaysOnTop(true);
