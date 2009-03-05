@@ -28,13 +28,13 @@ class dbaccreditedjournal extends dbtable
 		$author2 =$this->getParam('author2');
 		$author3 =$this->getParam('author3');
 		$author4 =$this->getParam('author4');	
-		//$fractweightedavg= $this->getParam('category');
 		$author1affiliate= $this->getParam('author1affiliate');
 		$author2affiliate= $this->getParam('author2affiliate');
 		$author3affiliate= $this->getParam('author3affiliate');
 		$author4affiliate= $this->getParam('author4affiliate');
 			
 		//check which author fieild is not empty
+		//Differiate authors affiliated to UWC with bold text
 		if (!empty($author1)){
 		
 			switch($author1affiliate){
@@ -118,9 +118,18 @@ class dbaccreditedjournal extends dbtable
 				'pagetotal'=> $pagetotal,
 				'authorname' => $author
 				);
-		$this->insert($fields);
+		//Cheeck if book with same title is already in the database
+		$where = "WHERE articletitle='".$articletitle."'";
+		$checkRecord = $this->getAll($where);
+
+		if(count($checkRecord) > 0){
+		return FALSE;
+		}
+		else{
+		return $this->insert($fields);
+		}
 		
-	}//end addStaffDetails	
+	}//end 
 
 	public function getAllJournalAuthor()
 	{						

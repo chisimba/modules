@@ -39,7 +39,7 @@ $rowcount = 0;
 
 if ( count($arrDeptSummary) > 0) {	
 //Description for $table 
-	$tableHeader = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Masters Students by Department');
+	$tableHeader = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Doctoral Students by Department');
 	
 //Set up fields heading
 	$table->startHeaderRow();
@@ -62,7 +62,7 @@ if ( count($arrDeptSummary) > 0) {
 	}
 
 	//Description for $table2 
-	$table2Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Masters Students by Faculty');
+	$table2Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Doctoral Students by Faculty');
 	//Set up fields heading for $table2
 	$table2->startHeaderRow();
 	$table2->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
@@ -111,8 +111,7 @@ echo $table2->show();
 echo '<br /><br />';
 
 echo $totalDoctoralStuds;
+echo '<br />';
 
 echo $totalUnitOutPut;
 ?>
-
-

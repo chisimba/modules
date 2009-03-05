@@ -32,6 +32,7 @@ class rimfhe extends controller
 	public $objDoctoralStudents;
 	public $objMastersStudents;
 	public $formElements;
+	public $preLoginInterface;
 
 /**
 *
@@ -50,8 +51,20 @@ Public fuction to instantiate required  objestc
 		$this->objChapterInBook= $this->getObject('dbchapterinbook', 'rimfhe');
 		$this->objDoctoralStudents= $this->getObject('dbdoctoralstudents', 'rimfhe');
 		$this->objMastersStudents= $this->getObject('dbmastersstudents', 'rimfhe');
+		$this->preLoginInterface= $this->getObject('loginInterface', 'security');
 		}//end init
 
+	/*public function requiresLogin($action)
+	{
+
+		$required = array('staff member registarion');
+		if (in_array($action, $required)) {
+		return TRUE;
+		} else {
+		return FALSE;
+		}
+	}*/
+	
 	public function dispatch()
 	{ 	
 		$action =$this ->getParam('action');
@@ -89,8 +102,10 @@ Public fuction to instantiate required  objestc
 			switch($action)
 			{
 			default: 
+			//$this->setLayoutTemplate('prelogin_layout_tpl.php');
+			//return 'rimfhehomepage_tpl.php';
 			return 'rimfhehomepage_tpl.php';
-			
+
 			case 'Home':
 			return 'rimfhehomepage_tpl.php';
 			
@@ -102,7 +117,7 @@ Public fuction to instantiate required  objestc
 		
 			case 'Accredted Journal Articles Info':			
 			$arrJournal=array();
-			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
+			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor($where);
 			$this->setVarByRef('arrJournal', $arrJournal);
 			return 'displayaccrjournal_tpl.php';  
 				
@@ -110,7 +125,7 @@ Public fuction to instantiate required  objestc
 			return 'entirebook_tpl.php';
 		
 			case 'Entire Book/Monogragh Details':
-			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks();
+			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks($where);
 			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
 			return 'displayentirebook_tpl.php';			
 			
@@ -118,7 +133,7 @@ Public fuction to instantiate required  objestc
 			return 'chapterinbook_tpl.php';
 						
 			case 'Chapter In a Book Details':
-			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks();
+			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks($where);
 			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
 			return 'displaychapterinbook_tpl.php';
 			
@@ -126,7 +141,7 @@ Public fuction to instantiate required  objestc
 			return 'doctoralstudents_tpl.php';
 						
 			case 'Graduating Doctoral Student Info':
-			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents();
+			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents($where);
 			$this->setVarByRef('arrDisplayDoctoral', $arrDisplayDoctoral);		
 			return 'displaydoctoralstudents_tpl.php';
 			
@@ -143,7 +158,7 @@ Public fuction to instantiate required  objestc
 			return 'mastersstudents_tpl.php';
 			
 			case 'Graduating Masters Student Info':
-			$arrDisplayMasterss= $this->objMastersStudents->getAllMastersStudents();
+			$arrDisplayMasters= $this->objMastersStudents->getAllMastersStudents($where);
 			$this->setVarByRef('arrDisplayMasters', $arrDisplayMasters);
 			return 'displaymastersstudents_tpl.php';			
 
@@ -169,10 +184,9 @@ Public fuction to instantiate required  objestc
 			$totalMastersStudents = $this->objMastersStudents->totalMastersStudents();
 			$this->setVarByRef('totalArticles', $totalArticles);
 			$this->setVarByRef('totalBooks', $totalBooks);
-			$this->setVarByRef('totalArticles', $totalChapterInBook);
-			$this->setVarByRef('totalArticles', $totalDoctoralStudents);
-			$this->setVarByRef('totalArticles', $totalMastersStudents);
-
+			$this->setVarByRef('totalChapterInBook', $totalChapterInBook);
+			$this->setVarByRef('totalDoctoralStudents', $totalDoctoralStudents);
+			$this->setVarByRef('totalMastersStudents', $totalMastersStudents);
 			return 'universitysummary_tpl.php';  
 			
 			case 'confirnregistration':
@@ -180,6 +194,9 @@ Public fuction to instantiate required  objestc
 			
 			case 'generalconfirmation':
 			return 'generalconfirm_tpl.php';
+			
+			case 'recordexists':
+			return 'recordexists_tpl.php';
 			
 			}//end switch
 		}
@@ -273,7 +290,7 @@ Public fuction to instantiate required  objestc
 	
 	}//end addStaffMember
 	
-	public function addAccretedJournal()
+  	public function addAccretedJournal()
 	{
 		$captcha = $this->getParam('request_captcha');
 		$journalname = $this->getParam('journalname');
@@ -333,12 +350,22 @@ Public fuction to instantiate required  objestc
 			$this->setVarByRef('problems', $problems);
 			return 'accreditedjournal_tpl.php';
         } 
-	else {
-                  return $this->objAccreditedJournal->accreditedJournal();
-	}
-	
+	else {	
+		
+		//Return Error if Book with same title exist in data base
+		if($this->objAccreditedJournal->accreditedJournal() == FALSE){
+		$title = "<strong>$articletitle</strong>";
+		$rep = array('TITLE' => $title);
+		$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
+		 return 'recordexists_tpl.php';
+		}
+		else{
+		//Insert into data base
+		$this->nextAction('generalconfirmation');
+		return $this->objAccreditedJournal->accreditedJournal();
+		}
+	     }
 	}//end addAccretedJournal
-
 	public function addEntireBook()
 	{
 		$captcha = $this->getParam('request_captcha');
@@ -377,7 +404,7 @@ Public fuction to instantiate required  objestc
 
 		if(empty($lastpage)){
 			$problems[] ='nolastpage' ;
-		}
+		} 
 		
 		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
 			$problems[] = 'noauthor';
@@ -394,12 +421,24 @@ Public fuction to instantiate required  objestc
 			return 'entirebook_tpl.php';
         } 
 	else {	
+		//Return Error if Book with same title exist in data base
+		if($this->objEntireBook->entireBook() == FALSE){
+		$title = "<strong>$bookname</strong>";
+		$rep = array('TITLE' => $title);
+		$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
+		 return 'recordexists_tpl.php';
+		}
+		else{
+		//Insert into data base
 		$this->nextAction('generalconfirmation');
 		return $this->objEntireBook->entireBook();
-	}
+		}
+	      }
 	
 	}//end entireBook
 		
+	
+	
 	public function addChapterInBook()
 	{
 		$captcha = $this->getParam('request_captcha');
@@ -449,14 +488,6 @@ Public fuction to instantiate required  objestc
 		if((empty($author1)) && (empty($author2)) && empty($author3) && empty($author4)){
 			$problems[] = 'noauthor';
 		}
-	/*
-			
-		if((empty($author1)) && (empty($author2)) && (empty($author3)) && (empty($author4))){
-			$problems[] = 'noauthor';
-		}
-
-*/
-	
 		// Check whether user matched captcha
 		if (md5(strtoupper($captcha)) != $this->getParam('captcha')){
 		    $problems[] = 'captchadoesntmatch';
@@ -468,12 +499,21 @@ Public fuction to instantiate required  objestc
 			return 'chapterinbook_tpl.php';
 		} 
 		else {
+			//Return Error if Book with same title exist in data base
+			if($this->objChapterInBook->chaperterInBook() == FALSE){
+			$title = "<strong>$chaptertile</strong>";
+			$rep = array('TITLE' => $title);
+			$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
+			 return 'recordexists_tpl.php';
+			}
+			else{
+			//Insert into data base
 			$this->nextAction('generalconfirmation');
 			return $this->objChapterInBook->chaperterInBook();
-	}
+			}
+		}
 	
 	}//end chapterInBook
-
 
 	public function addDoctoralStudents()
 	{
@@ -543,8 +583,18 @@ Public fuction to instantiate required  objestc
 			return 'doctoralstudents_tpl.php';
         	} 
 		else {
-		        $this->nextAction('generalconfirmation');
+			//Return Error if Book with same title exist in data base
+			if($this->objDoctoralStudents->doctoralStudents() == FALSE){
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
+			 return 'recordexists_tpl.php';
+			}
+			else{
+			//Insert into data base
+			$this->nextAction('generalconfirmation');
 			return $this->objDoctoralStudents->doctoralStudents();
+			}
 		}
 	
 	}//end addDoctorialStudents
@@ -616,8 +666,18 @@ Public fuction to instantiate required  objestc
 			return 'mastersstudents_tpl.php';
         } 
 		else {
-		         		$this->nextAction('generalconfirmation');
+			//Return Error if Book with same title exist in data base
+			if($this->objMastersStudents->mastersStudents() == FALSE){
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
+			 return 'recordexists_tpl.php';
+			}
+			else{
+			//Insert into data base
+			$this->nextAction('generalconfirmation');
 			return $this->objMastersStudents->mastersStudents();
+			}
 		}
 	
 	}//end addMastersStudents
@@ -707,6 +767,7 @@ Public fuction to instantiate required  objestc
 			return 'You have entered an incorrect image code';
 		}
 	}
+
 	
 }//end iimfhe
 ?>

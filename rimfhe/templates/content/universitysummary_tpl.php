@@ -36,12 +36,26 @@ echo $display;
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
-if (!(empty($totalArticles) || empty($totalBooks) || empty($totalChapterInBook) || empty($totalDoctoralStudents) ||empty($totalMastersStudents))) {
-
+if (!empty($totalArticles) || !empty($totalBooks) || !empty($totalChapterInBook) || !empty($totalDoctoralStudents) || !empty($totalMastersStudents)) {
+	if (empty($totalArticles)){
+		$totalArticles = 0;
+	}
+	if (empty($totalBooks)){
+		$totalBooks = 0;
+	}
+	if (empty($totalChapterInBook)){
+		$totalChapterInBook = 0;
+	}
+	if (empty($totalDoctoralStudents)){
+		$totalDoctoralStudents = 0;
+	}
+	if (empty($totalMastersStudents)){
+		$totalMastersStudents = 0;
+	}
 //Description for $table 
 	$sumArticle = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Journal Articles');
 	$sumBooks = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Books');
-	$sumChapterInBook = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Chapter In Book');
+	$sumChapterInBook = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Chapters In Books');
 	$sumDoctoral = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total graduating Doctoral Students');		
 
 	$sumMasters = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total graduating Masters Students');	
@@ -54,13 +68,14 @@ if (!(empty($totalArticles) || empty($totalBooks) || empty($totalChapterInBook) 
 	$doctoral= '<span style="color:red;font-size:12px;">'.$sumDoctoral.'</span>:&nbsp;&nbsp;<strong>'.$totalDoctoralStudents.'</strong><br />';
 	$masters= '<span style="color:red;font-size:12px;">'.$sumMasters.'</span>:&nbsp;&nbsp;<strong>'.$totalMastersStudents.'</strong><br />';
 
-	//$total= '<span style="color:red;font-size:12px;">'.$OveralTotral.'</span>:&nbsp;&nbsp;<strong>'.($totalArticles+$totalBooks+$totalChapterInBook+$totalDoctoralStudents+$totalMastersStudent.'</strong><br />';
+	$total= '<span style="color:red;font-size:12px;">'.$OveralTotral.'</span>:&nbsp;&nbsp;<strong>'.($totalArticles+$totalBooks+$totalChapterInBook+$totalDoctoralStudents+$totalMastersStudents).'</strong><br />';
 }
 else{
     echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
 	
 }
 //Header for $table
+
 echo '<br /><br />';
 echo $articles;
 echo '<br /><br />';
@@ -70,9 +85,9 @@ echo $chapters;
 echo '<br /><br />';
 echo $doctoral;
 echo '<br /><br />';
-echo $master;
+echo $masters;
 echo '<br /><br />';
-//echo $total;
+echo $total;
 echo '<br /><br />';
 ?>
 

@@ -46,6 +46,7 @@ class dbentirebook extends dbtable
 		$pagetotal= ($lastpage - $firstpage) + 1;
 		
 		//check which author fieild is not empty
+		//Differiate authors affiliated to UWC with bold text
 		if (!empty($author1)){
 		
 			switch($author1affiliate){
@@ -128,13 +129,23 @@ class dbentirebook extends dbtable
 				'totalpages'=> $pagetotal,
 				'peerreviewed' => $peerreview,
 			);
-		$this->insert($fields);
+
+		//Cheeck if book with same title is already in the database
+		$where = "WHERE booktitle='" . $bookname . "'";
+		$checkRecord = $this->getAllEntireBooks($where);
+
+		if(count($checkRecord) > 0){
+		return FALSE;
+		}
+		else{
+		return $this->insert($fields);
+		}
 		
-	}//end addStaffDetails	
+	}//end entireBook
 	
-	public function getAllEntireBooks()
+	public function getAllEntireBooks($where)
 	{						
-		return $this->getAll();	
+		return $this->getAll($where);	
 	}
 
 	//This public method counts the totall number of Books 

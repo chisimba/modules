@@ -89,7 +89,7 @@ $cssLayout = $this->getObject('csslayout', 'htmlelements');
 //$middleColumn = $this->getVar('middleContent');
 
 $cssLayout->setNumColumns(2);
-$cssLayout->setLeftColumnContent('<br />'.$landinging.'<br />'.$a.'<br />'.$b.'<br />'.$c.'<br />'.$d.'<br />'.$dd.'<br />'.$e.'<br />'.$ee.'<br />'.$f.'<br />'.$ff.'<br />'.$fff.'<br />'.$g.'<br />'.$gg.'<br />'.$ggg.'<br />'.$h.'<br />'.$sumarry);
+$cssLayout->setLeftColumnContent('<br />'.$landinging.'<br />'.$h.'<br />'.$a.'<br />'.$b.'<br />'.$c.'<br />'.$d.'<br />'.$dd.'<br />'.$e.'<br />'.$ee.'<br />'.$f.'<br />'.$ff.'<br />'.$fff.'<br />'.$g.'<br />'.$gg.'<br />'.$ggg.'<br />'.$sumarry);
 $cssLayout->setMiddleColumnContent($this->getContent());
 echo $cssLayout->show();
 ?>

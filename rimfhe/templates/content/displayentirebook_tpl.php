@@ -46,11 +46,11 @@ if ( count($arrDisplayBooks) > 0) {
 	$table->startHeaderRow();
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Book/<br />Monograph'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'ISBN Number'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Publishing <br />House'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Chapter<br /> Page #'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Chapter<br /> Page #'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Number <br /> of Pages'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Page #'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Evidence of<br />Peer Review'));	
 	$table->endHeaderRow();
 	

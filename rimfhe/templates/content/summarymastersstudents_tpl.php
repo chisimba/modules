@@ -70,7 +70,7 @@ if ( count($arrDeptSummary) > 0) {
 		
 	$table->endHeaderRow();
 	
-	foreach($arrFacyltySummary as $arrFacultySummaries) {
+	foreach($arrFacultySummary as $arrFacultySummaries) {
 	 //Set odd even row colour
 	$oddOrEven = ($rowcount == 0) ? "even" : "odd";
 	$tableRow = array();

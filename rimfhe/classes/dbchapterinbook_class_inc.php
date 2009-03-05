@@ -134,14 +134,22 @@ class dbchapterinbook extends dbtable
 				'pagetotal'=> $pagetotal,
 				'peerreviewed' => $peerreview
 			);
-		//insert into database
-		$this->insert($fields);
+		//Cheeck if book with same title is already in the database
+		$where = "WHERE chaptertitle='".$chaptertile."'";
+		$checkRecord = $this->getAllChapterInBooks($where);
+
+		if(count($checkRecord) > 0){
+		return FALSE;
+		}
+		else{
+		return $this->insert($fields);
+		}
 		
 	}//end addStaffDetails	
 	
-	public function getAllChapterInBooks()
+	public function getAllChapterInBooks($where)
 	{						
-		return $this->getAll();	
+		return $this->getAll($where);	
 	}
 	
 	//This public method counts the totall number of Chapter In a Book 

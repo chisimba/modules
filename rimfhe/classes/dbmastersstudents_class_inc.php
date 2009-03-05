@@ -99,22 +99,25 @@ class dbmastersstudents extends dbtable
 				'supervisorname'=> $supervisorname,
 				'degree' =>$degree
 			);
-		//insert into database
-		$this->insert($fields);
-		
-	}//end addStaffDetails	
-	
-	public function getAllMastersStudents()
-	{						
-		return $this->getAll();	
-	}
+
+		//Cheeck if book with same title is already in the database
+		$where = "WHERE thesistitle='".$thesis."'";
+		$checkRecord = $this->getAllMastersStudents($where);
+
+		if(count($checkRecord) > 0){
+		return FALSE;
+		}
+		else{
+		return $this->insert($fields);
+		}
+	}//end
 
 	//This public method retrieves all the record form the table
-	public function getAllDoctoralStudents()
+	public function getAllMastersStudents($where)
 	{						
-		return $this->getAll();	
+		return $this->getAll($where);	
 	}
-	
+		
 	//This public method counts the Number of Masters Studenst in each Department
 	public function displayByDepartment()
 	{
