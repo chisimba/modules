@@ -44,12 +44,12 @@ if (! $this->objUser->isLoggedIn ()) {
     $leftColumn .= $objImView->getStatsBox ();
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
     // show the last tweet block from the 'ol twitter stream
-    $leftColumn .= $objLT->show ();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 } else {
     $leftColumn .= $this->leftMenu->show ();
     $leftColumn .= $objImView->getStatsBox ();
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
-    $leftColumn .= $objLT->show ();
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 }
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
