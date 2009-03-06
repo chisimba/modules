@@ -45,7 +45,8 @@ class rubric extends controller
         $this->objLog->log();
     }
     
-    
+    public function isValid()
+	{return true;}
     
     /**
     * The dispatch funtion
@@ -654,10 +655,12 @@ class rubric extends controller
 				$cols = $tableInfo[0]['cols'];
 				//$cols = $tableInfo['cols'];
 				//}
+				
 				$this->setVarByRef("title", $title);
 				$this->setVarByRef("description", $description);
-				$this->setVar('maxtotal',100);// $cols*$rows);
+				$this->setVar('maxtotal',$cols*$rows);
 				$assessments = $this->objDbRubricAssessments->listAll($tableId);
+				
 				$this->setVarByRef("assessments", $assessments);
 				// Do we want to show student names ?
 				$showStudentNames = $this->getParam("showStudentNames", "yes");
