@@ -57,7 +57,7 @@ class spie extends object
     * and set the useProxy to TRUE if settings found
     * 
     * @access private
-    * @return TRUE
+    * @return TRUE|FALSE
     *
     */
     private function checkProxy()
@@ -66,6 +66,7 @@ class spie extends object
         $proxy = $this->objConfig->getProxy();
         if ($proxy && $proxy !=="") {
             $this->useProxy=TRUE;
+            return TRUE;
         } else {
             return FALSE;
         }
