@@ -43,6 +43,7 @@ class rubric extends controller
         $this->objLog=$this->newObject('logactivity', 'logger');       
         //Log this module call
         $this->objLog->log();
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
     }
     
    /**
