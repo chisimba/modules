@@ -45,8 +45,8 @@ class rubric extends controller
         $this->objLog->log();
     }
     
-    public function isValid()
-	{return true;}
+    //public function isValid()
+	//{return true;}
     
     /**
     * The dispatch funtion
