@@ -58,7 +58,7 @@ class rubric extends controller
         } else {
             return FALSE;//parent::isValid ( $action );
         }
-    }}
+    }
     
     /**
     * The dispatch funtion
