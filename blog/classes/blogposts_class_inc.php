@@ -460,7 +460,9 @@ class blogposts extends object
                         'postid' => $post['id'],
                         'bloggerid' => $post['userid']
                     )) , $mtfimg, NULL);
-                    $tblnl->addCell($pdflink->show() . $mtflink->show());
+                    if ($post['showpdf'] == '1' || $post['showpdf'] == 'on') {
+                        $tblnl->addCell($pdflink->show() . $mtflink->show());
+                    }
                     // pdf icon
                     $tblnl->endRow();
                     // echo $this->objTB->autodiscCode();
@@ -479,9 +481,7 @@ class blogposts extends object
                     if (empty($linkstr)) {
                         $linkstr = $this->objLanguage->languageText("mod_blog_word_notags", "blog");
                     }
-                    $ret.= $objFeatureBox->showContent($head, /*$this->cleaner->cleanHtml(*/
-                    $post['post_content']) . "<center>" . $tblnl->show() . "</center>" /*)*/;
-
+                    $ret.= $objFeatureBox->showContent($head, $post['post_content'] . "<center>" . $tblnl->show() . "</center>" );
                 }
             }
         } else {
