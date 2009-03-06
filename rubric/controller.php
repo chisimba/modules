@@ -45,8 +45,19 @@ class rubric extends controller
         $this->objLog->log();
     }
     
-    //public function isValid()
-	//{return true;}
+   /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {		
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
+        }
+    }}
     
     /**
     * The dispatch funtion
