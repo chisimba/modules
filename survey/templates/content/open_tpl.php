@@ -94,7 +94,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                 $objTable->endRow();
 
                 $ii=0;
-                if($arrItems[$ii]['item_value']==''){
+                if(stripslashes($arrItems[$ii]['item_value'])==''){
                     $objTable->startRow();
                     $objTable->addCell('<b><font class="error">'.$abstainedLabel.'</font></b>','','','',$class,$colspan);
                     $objTable->endRow();
@@ -111,7 +111,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
                         $objTable->addCell(stripslashes($row['row_text']),'','','',$class,'');
                         foreach($arrColumnList as $columnKey=>$column){
                             $temp='text_'.($rowKey+1).'_'.($columnKey+1);
-                            $objTable->addCell('<b>'.$arrItems[$ii]['item_value'].'</b>','','','',$class,'');
+                            $objTable->addCell('<b>'.stripslashes($arrItems[$ii]['item_value']).'</b>','','','',$class,'');
                             $ii++;
                         }
                         $objTable->endRow();
