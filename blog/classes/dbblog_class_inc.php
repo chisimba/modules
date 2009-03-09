@@ -44,17 +44,17 @@ class dbblog extends dbTable
      * @param  void
      * @return void
      */
-    public function init() 
+    public function init()
     {
         $this->objLanguage = $this->getObject("language", "language");
         $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->lindex = TRUE;//$this->sysConfig->getValue('lucene_index', 'blog');
         // $this->objblogPost = $this->getObject('blogposts');
         $this->objConfig = $this->getObject('altconfig', 'config');
-        
+
     }
     //methods to manipulate the categories table.
-    
+
     /**
      * Method to get a list of the users categories as defined by the user
      *
@@ -62,7 +62,7 @@ class dbblog extends dbTable
      * @return arrayunknown_type
      * @access public
      */
-    public function getAllCats($userid) 
+    public function getAllCats($userid)
     {
         $this->_changeTable('tbl_blog_cats');
         return $this->getAll(" where userid = '$userid'");
@@ -76,7 +76,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function deleteCat($catid) 
+    public function deleteCat($catid)
     {
         $this->_changeTable('tbl_blog_cats');
         return $this->delete('id', $catid, 'tbl_blog_cats');
@@ -87,7 +87,7 @@ class dbblog extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getParentCats($userid) 
+    public function getParentCats($userid)
     {
         $this->_changeTable('tbl_blog_cats');
         return $this->getAll("where userid = '$userid' AND cat_parent = '0'");
@@ -99,7 +99,7 @@ class dbblog extends dbTable
      * @param  string  $cat
      * @return unknown
      */
-    public function getChildCats($userid, $cat) 
+    public function getChildCats($userid, $cat)
     {
         $this->_changeTable('tbl_blog_cats');
         $child = $this->getAll("where userid = '$userid' AND cat_parent = '$cat'");
@@ -112,7 +112,7 @@ class dbblog extends dbTable
      *
      * @param
      */
-    public function getCatForEdit($userid, $id) 
+    public function getCatForEdit($userid, $id)
     {
         $this->_changeTable('tbl_blog_cats');
         $ret = $this->getAll("WHERE userid = '$userid' AND id = '$id'");
@@ -124,7 +124,7 @@ class dbblog extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getCatsTree($userid) 
+    public function getCatsTree($userid)
     {
         $parents = $this->getParentCats($userid);
         $tree = new stdClass();
@@ -149,7 +149,7 @@ class dbblog extends dbTable
      * @param  array   $cats
      * @return boolean
      */
-    public function setCats($userid, $cats = array() , $mode = NULL) 
+    public function setCats($userid, $cats = array() , $mode = NULL)
     {
         if (!empty($cats)) {
             if ($mode == 'editcommit') {
@@ -166,7 +166,7 @@ class dbblog extends dbTable
      * @param  mixed $childId
      * @return array
      */
-    public function mapKid2Parent($childId) 
+    public function mapKid2Parent($childId)
     {
         $this->_changeTable('tbl_blog_cats');
         $ret = $this->getAll("WHERE id = '$childId'");
@@ -178,7 +178,7 @@ class dbblog extends dbTable
      * @param  string  $cat
      * @return integer
      */
-    public function catCount($cat) 
+    public function catCount($cat)
     {
         if ($cat == NULL) {
             $this->_changeTable('tbl_blog_posts');
@@ -188,7 +188,7 @@ class dbblog extends dbTable
         return $this->getRecordCount("WHERE post_category = '$cat'");
     }
     //Methods to manipulate the link categories
-    
+
     /**
      * Method to get a list of the users link categories as defined by the user
      *
@@ -196,7 +196,7 @@ class dbblog extends dbTable
      * @return array
      * @access public
      */
-    public function getAllLinkCats($userid) 
+    public function getAllLinkCats($userid)
     {
         $this->_changeTable('tbl_blog_linkcats');
         return $this->getAll(" where userid = '$userid'");
@@ -208,7 +208,7 @@ class dbblog extends dbTable
      * @param  string  $cat
      * @return mixed
      */
-    public function getLinksCats($userid, $cat) 
+    public function getLinksCats($userid, $cat)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid' AND link_category = '$cat'");
@@ -220,7 +220,7 @@ class dbblog extends dbTable
      * @param  array   $linkCats
      * @return boolean
      */
-    public function setLinkCats($userid, $linkCats = array()) 
+    public function setLinkCats($userid, $linkCats = array())
     {
         if (!empty($linkCats)) {
             $this->_changeTable('tbl_blog_linkcats');
@@ -236,7 +236,7 @@ class dbblog extends dbTable
      * @param  array   $linkarr
      * @return boolean
      */
-    public function setLink($userid, $linkarr) 
+    public function setLink($userid, $linkarr)
     {
         $this->_changeTable('tbl_blog_links');
         if (!empty($linkarr)) {
@@ -251,7 +251,7 @@ class dbblog extends dbTable
      * @param  string $catid
      * @return string
      */
-    public function getCatById($catid) 
+    public function getCatById($catid)
     {
         if ($catid == '0') {
             return $this->objLanguage->languageText("mod_blog_defcat", "blog");
@@ -266,7 +266,7 @@ class dbblog extends dbTable
         }
     }
     // posts section
-    
+
     /**
      * Method to get all the posts in a category (published posts)
      *
@@ -274,7 +274,7 @@ class dbblog extends dbTable
      * @param  mixed   $catid
      * @return array
      */
-    public function getAbsAllPosts($userid) 
+    public function getAbsAllPosts($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE userid = '$userid' ORDER BY post_ts DESC");
@@ -288,7 +288,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getAbsAllPostsWithSiteBlogs($userid) 
+    public function getAbsAllPostsWithSiteBlogs($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE userid = '$userid' OR userid = '1' ORDER BY post_ts DESC");
@@ -300,7 +300,7 @@ class dbblog extends dbTable
      * @param  mixed   $catid
      * @return array
      */
-    public function getAbsAllPostsNoDrafts($userid) 
+    public function getAbsAllPostsNoDrafts($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC");
@@ -312,7 +312,7 @@ class dbblog extends dbTable
      * @param  mixed   $catid
      * @return array
      */
-    public function getAllPosts($userid, $catid) 
+    public function getAllPosts($userid, $catid)
     {
         if ($catid == '') {
             $this->_changeTable('tbl_blog_posts');
@@ -328,7 +328,7 @@ class dbblog extends dbTable
      * @param  string $userid
      * @return array
      */
-    public function getPostsMonthly($startdate, $userid) 
+    public function getPostsMonthly($startdate, $userid)
     {
         $this->_changeTable('tbl_blog_posts');
         $this->objblogOps = $this->getObject('blogops');
@@ -353,7 +353,7 @@ class dbblog extends dbTable
      * @return unknown Return description (if any) ...
      * @access public
      */
-    public function getMonthPostCount($startdate, $userid) 
+    public function getMonthPostCount($startdate, $userid)
     {
         $this->_changeTable('tbl_blog_posts');
         $this->objblogOps = &$this->getObject('blogops');
@@ -376,7 +376,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getPostByPostID($postid) 
+    public function getPostByPostID($postid)
     {
         $this->_changeTable('tbl_blog_posts');
         $filter = "WHERE id = '$postid'";
@@ -388,7 +388,7 @@ class dbblog extends dbTable
      * @param  mixed   $id
      * @return boolean
      */
-    public function deletePost($id) 
+    public function deletePost($id)
     {
         $this->_changeTable('tbl_blog_posts');
         //delete the post
@@ -421,7 +421,7 @@ class dbblog extends dbTable
                 $this->delete('id', $tbs['id'], 'tbl_blog_trackbacks');
             }
         }
-        
+
         // Remove Lucene Entry
         $objIndexData = $this->getObject('indexdata', 'search');
         $objIndexData->removeIndex('blog_post_'.$id);
@@ -432,7 +432,7 @@ class dbblog extends dbTable
      * @param  mixed $id
      * @return array
      */
-    public function getPostById($id) 
+    public function getPostById($id)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE id = '$id'");
@@ -444,7 +444,7 @@ class dbblog extends dbTable
      * @param  mixed   $catid
      * @return array
      */
-    public function getPostsFromCat($userid, $catid) 
+    public function getPostsFromCat($userid, $catid)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getAll("WHERE userid = '$userid' AND post_category = '$catid'");
@@ -455,7 +455,7 @@ class dbblog extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getLatestPost($userid) 
+    public function getLatestPost($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         $filter = "WHERE userid = '$userid' AND post_status = '0' ORDER BY post_ts DESC";
@@ -482,7 +482,7 @@ class dbblog extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getStickyPosts($userid) 
+    public function getStickyPosts($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         $filter = "WHERE userid = '$userid' AND stickypost= '1' ORDER BY post_ts DESC";
@@ -496,7 +496,7 @@ class dbblog extends dbTable
      * @param  integer $userid
      * @return array
      */
-    public function getLastPosts($num = 10, $userid = FALSE) 
+    public function getLastPosts($num = 10, $userid = FALSE)
     {
         if ($userid == FALSE) {
             $this->_changeTable('tbl_blog_posts');
@@ -509,14 +509,14 @@ class dbblog extends dbTable
         }
         return $posts;
     }
-    
+
     /**
      * Method to get the geotagged posts
      *
      * @param  integer $userid
      * @return array
      */
-    public function getGeoPosts($userid = FALSE) 
+    public function getGeoPosts($userid = FALSE)
     {
         if ($userid == FALSE) {
             $this->_changeTable('tbl_blog_posts');
@@ -529,21 +529,21 @@ class dbblog extends dbTable
         }
         return $posts;
     }
-    
+
     public function countGeoPosts($userid)
     {
         $this->_changeTable('tbl_blog_posts');
         $filter = "WHERE userid = '$userid' AND geolat != '' AND geolon != ''";
         return $this->getRecordCount($filter);
     }
-    
+
     /**
      * Method to return a random blog
      *
      * @param  void
      * @return mixed
      */
-    public function getRandBlog() 
+    public function getRandBlog()
     {
         $this->_changeTable('tbl_blog_posts');
         $res = $this->getAll();
@@ -558,7 +558,7 @@ class dbblog extends dbTable
         }
     }
     //post methods
-    
+
     /**
      * Method to insert a post to your posts table
      *
@@ -567,7 +567,7 @@ class dbblog extends dbTable
      * @param  string  $mode
      * @return array
      */
-    public function insertPostAPI($userid, $insarr) 
+    public function insertPostAPI($userid, $insarr)
     {
         $this->_changeTable("tbl_blog_posts");
         $insarr['post_content'] = str_ireplace("<br />", " <br /> ", $insarr['post_content']);
@@ -575,7 +575,7 @@ class dbblog extends dbTable
         $this->luceneIndex($insarr);
         return $insarr['id'];
     }
-    public function updatePostAPI($blogid, $postarr) 
+    public function updatePostAPI($blogid, $postarr)
     {
         $this->_changeTable("tbl_blog_posts");
         $this->update('id', $blogid, $postarr, 'tbl_blog_posts');
@@ -589,7 +589,7 @@ class dbblog extends dbTable
      * @param  string  $mode
      * @return array
      */
-    public function insertPost($userid, $postarr, $mode = NULL) 
+    public function insertPost($userid, $postarr, $mode = NULL)
     {
         $this->_changeTable("tbl_blog_posts");
         $this->objblogOps = $this->getObject('blogops');
@@ -624,12 +624,12 @@ class dbblog extends dbTable
             }
             // add to the blog sitemap
             $this->objConfig = $this->getObject('altconfig', 'config');
-            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
-            	                                           'postid' => $insarr['id'], 
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle',
+            	                                           'postid' => $insarr['id'],
             	                                           'userid' => $userid)
-            	                                        ), 
-            	              'lastmod' => date('Y-m-d', $insarr['post_ts']), 
-            	              'changefreq' => 'weekly', 
+            	                                        ),
+            	              'lastmod' => date('Y-m-d', $insarr['post_ts']),
+            	              'changefreq' => 'weekly',
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
@@ -639,7 +639,7 @@ class dbblog extends dbTable
             	$sitemap = $this->getObject('sitemap', 'utilities');
             	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
             	{
-            	
+
             		$smxml = $sitemap->createSiteMap($smarr);
             		$sitemap->writeSitemap($smxml, 'blogsitemap');
             	}
@@ -655,7 +655,7 @@ class dbblog extends dbTable
             //$postarr['postcontent'] = preg_replace("/(\r\n|\n|\r)/", " ", $postarr['postcontent']);
             $postarr['postcontent'] = str_ireplace("<br />", " <br /> ", $postarr['postcontent']);
             $pc = $postarr['postcontent'];
-        
+
             $edarr = array(
                 'userid' => $userid,
                 'post_date' => strftime('%Y-%m-%d %H:%M:%S', mktime()) ,
@@ -675,14 +675,14 @@ class dbblog extends dbTable
                 'geolon' => $postarr['geolon'],
             );
             $this->update('id', $postarr['id'], $edarr, 'tbl_blog_posts');
-            
+
             // add to the blog sitemap
-            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
-            	                                           'postid' => $postarr['id'], 
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle',
+            	                                           'postid' => $postarr['id'],
             	                                           'userid' => $userid)
-            	                                        ), 
-            	              'lastmod' => date('Y-m-d', $edarr['post_ts']), 
-            	              'changefreq' => 'weekly', 
+            	                                        ),
+            	              'lastmod' => date('Y-m-d', $edarr['post_ts']),
+            	              'changefreq' => 'weekly',
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
@@ -692,7 +692,7 @@ class dbblog extends dbTable
             	$sitemap = $this->getObject('sitemap', 'utilities');
             	if(!file_exists($this->objConfig->getsiteRootPath().'blogsitemap.xml'))
             	{
-            	
+
             		$smxml = $sitemap->createSiteMap($smarr);
             		$sitemap->writeSitemap($smxml, 'blogsitemap');
             	}
@@ -726,14 +726,14 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $imparr['id'] = $this->insert($imparr, 'tbl_blog_posts');
-            
+
             // add to the blog sitemap
-            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
-            	                                           'postid' => $postarr['id'], 
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle',
+            	                                           'postid' => $postarr['id'],
             	                                           'userid' => $userid)
-            	                                        ), 
-            	              'lastmod' => date('Y-m-d', $imparr['post_ts']), 
-            	              'changefreq' => 'weekly', 
+            	                                        ),
+            	              'lastmod' => date('Y-m-d', $imparr['post_ts']),
+            	              'changefreq' => 'weekly',
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
@@ -776,14 +776,14 @@ class dbblog extends dbTable
                 'post_lic' => $postarr['cclic']
             );
             $mparr['id'] = $this->insert($mparr, 'tbl_blog_posts');
-            
+
             // add to the blog sitemap
-            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
-            	                                           'postid' => $postarr['id'], 
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle',
+            	                                           'postid' => $postarr['id'],
             	                                           'userid' => $userid)
-            	                                        ), 
-            	              'lastmod' => date('Y-m-d', $mparr['post_ts']), 
-            	              'changefreq' => 'weekly', 
+            	                                        ),
+            	              'lastmod' => date('Y-m-d', $mparr['post_ts']),
+            	              'changefreq' => 'weekly',
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
@@ -828,12 +828,12 @@ class dbblog extends dbTable
             );
             $this->update('id', $postarr['id'], $inseditarr, 'tbl_blog_posts');
             // add to the blog sitemap
-            $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 
-            	                                           'postid' => $postarr['id'], 
+            $maparray = array('url' => $this->uri(array('action' => 'viewsingle',
+            	                                           'postid' => $postarr['id'],
             	                                           'userid' => $userid)
-            	                                        ), 
-            	              'lastmod' => date('Y-m-d', $inseditarr['post_ts']), 
-            	              'changefreq' => 'weekly', 
+            	                                        ),
+            	              'lastmod' => date('Y-m-d', $inseditarr['post_ts']),
+            	              'changefreq' => 'weekly',
             	              'priority' => 0.5
             	             );
             $smarr = array($maparray);
@@ -853,7 +853,7 @@ class dbblog extends dbTable
             if ($this->lindex == 'TRUE') {
                 $this->luceneReIndex($inseditarr);
             }
-            
+
             return TRUE;
         }
     }
@@ -864,7 +864,7 @@ class dbblog extends dbTable
      * @param  mixed $table
      * @return array
      */
-    public function getUBlogs($column, $table) 
+    public function getUBlogs($column, $table)
     {
         $this->_changeTable('tbl_blog_posts');
         return $this->getArray("SELECT DISTINCT $column from $table");
@@ -877,7 +877,7 @@ class dbblog extends dbTable
      * @return unknown Return description (if any) ...
      * @access public
      */
-    public function checkValidUser() 
+    public function checkValidUser()
     {
         $this->_changeTable('tbl_users');
         $val = $this->getAll();
@@ -889,7 +889,7 @@ class dbblog extends dbTable
      * @param  array $data
      * @return bool
      */
-    public function setTrackback($data) 
+    public function setTrackback($data)
     {
         $this->_changeTable('tbl_blog_trackbacks');
         $userid = $data['userid'];
@@ -916,7 +916,7 @@ class dbblog extends dbTable
      * @param  post    id string $pid
      * @return integer
      */
-    public function getTrackbacksPerPost($pid) 
+    public function getTrackbacksPerPost($pid)
     {
         $this->_changeTable('tbl_blog_trackbacks');
         $filter = "WHERE postid = '$pid'";
@@ -928,7 +928,7 @@ class dbblog extends dbTable
      * @param  postid string $pid
      * @return array
      */
-    public function grabTrackbacks($pid) 
+    public function grabTrackbacks($pid)
     {
         $this->_changeTable('tbl_blog_trackbacks');
         $filter = "WHERE postid = '$pid'";
@@ -940,7 +940,7 @@ class dbblog extends dbTable
      * @param string $id
      * @return bool
      */
-    public function deleteTrackBack($id) 
+    public function deleteTrackBack($id)
     {
         $this->_changeTable('tbl_blog_trackbacks');
         return $this->delete('id', $id, 'tbl_blog_trackbacks');
@@ -951,7 +951,7 @@ class dbblog extends dbTable
      * @param  string $postid
      * @return array
      */
-    public function getPostTags($postid) 
+    public function getPostTags($postid)
     {
         $this->_changeTable("tbl_tags");
         return $this->getAll("WHERE item_id = '$postid' AND module = 'blog'");
@@ -963,11 +963,12 @@ class dbblog extends dbTable
      * @param string $userid
      * @param String $postid
      */
-    public function insertTags($tagarray, $userid, $postid) 
+    public function insertTags($tagarray, $userid, $postid)
     {
         $this->_changeTable("tbl_tags");
         foreach($tagarray as $tins) {
             $tins = trim($tins);
+            $tins = addslashes($tins);
             if (!empty($tins)) {
                 $this->insert(array(
                     'userid' => $userid,
@@ -985,7 +986,7 @@ class dbblog extends dbTable
      * @param  string $postid
      * @return void
      */
-    public function removeAllTags($postid) 
+    public function removeAllTags($postid)
     {
         // I have changed all aspects of tbl_post_mtadata to tbl_tags to cater for the new API
         $this->_changeTable("tbl_tags");
@@ -997,7 +998,7 @@ class dbblog extends dbTable
      * @param  string $userid
      * @return array
      */
-    public function getTagsByUser($userid) 
+    public function getTagsByUser($userid)
     {
         $this->_changeTable("tbl_tags");
         return $this->getAll("WHERE userid = '$userid' and meta_key = 'tag' and module = 'blog'");
@@ -1009,8 +1010,9 @@ class dbblog extends dbTable
      * @param  string  $userid
      * @return integer
      */
-    public function getTagWeight($tag, $userid) 
+    public function getTagWeight($tag, $userid)
     {
+        $tag = addslashes($tag);
         $this->_changeTable("tbl_tags");
         $count = $this->getRecordCount("WHERE meta_value = '$tag' AND userid = '$userid' and module = 'blog'");
         return $count;
@@ -1022,9 +1024,10 @@ class dbblog extends dbTable
      * @param  string $tag
      * @return array
      */
-    public function getAllPostsByTag($userid, $tag) 
+    public function getAllPostsByTag($userid, $tag)
     {
         //first do a lookup and see what the post(s) id is/are
+        $tag = addslashes($tag);
         $this->_changeTable("tbl_tags");
         $poststoget = $this->getAll("WHERE meta_value = '$tag' AND userid = '$userid'");
         //print_r($poststoget);
@@ -1049,7 +1052,7 @@ class dbblog extends dbTable
      * @param  string $url
      * @return bool
      */
-    public function addRss($rssarr, $mode = NULL) 
+    public function addRss($rssarr, $mode = NULL)
     {
         $this->_changeTable("tbl_blog_userrss");
         if ($mode == NULL) {
@@ -1069,7 +1072,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getUserRss($userid) 
+    public function getUserRss($userid)
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->getAll("WHERE userid = '$userid'");
@@ -1083,7 +1086,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getRssById($id) 
+    public function getRssById($id)
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->getAll("WHERE id = '$id'");
@@ -1097,7 +1100,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function delRss($id) 
+    public function delRss($id)
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->delete('id', $id, "tbl_blog_userrss");
@@ -1112,7 +1115,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function updateRss($rssarr, $id) 
+    public function updateRss($rssarr, $id)
     {
         $this->_changeTable("tbl_blog_userrss");
         return $this->update('id', $id, $rssarr);
@@ -1126,7 +1129,7 @@ class dbblog extends dbTable
      * @return unknown Return description (if any) ...
      * @access public
      */
-    public function saveProfile($profile) 
+    public function saveProfile($profile)
     {
         $this->_changeTable("tbl_blog_profile");
         return $this->insert($profile);
@@ -1140,7 +1143,7 @@ class dbblog extends dbTable
      * @return mixed   Return description (if any) ...
      * @access public
      */
-    public function checkProfile($userid) 
+    public function checkProfile($userid)
     {
         $this->_changeTable("tbl_blog_profile");
         $ret = $this->getAll("WHERE userid = '$userid'");
@@ -1160,7 +1163,7 @@ class dbblog extends dbTable
      * @return mixed  Return description (if any) ...
      * @access public
      */
-    public function updateProfile($profile) 
+    public function updateProfile($profile)
     {
         $this->_changeTable("tbl_blog_profile");
         return $this->update('id', $profile['id'], $profile);
@@ -1174,14 +1177,14 @@ class dbblog extends dbTable
      * @return void
      * @access public
      */
-    public function luceneIndex($data) 
+    public function luceneIndex($data)
     {
         $objIndexData = $this->getObject('indexdata', 'search');
         if(!isset($data['id']))
         {
         	$data['id'] = $this->getlastInsertId();
         }
-        
+
         $docId = 'blog_post_'.$data['id'];
         if(!isset($data['post_date']))
         {
@@ -1196,29 +1199,29 @@ class dbblog extends dbTable
         $url = $this->uri(array('action'=>'viewsingle', 'postid'=>$data['id'], 'userid'=>$data['userid']));
         $title = $data['post_title'];
         $contents = $data['post_title'].' '.$data['post_content'];
-        
+
         if (trim($data['post_excerpt']) == '') {
             $objTrimStr = $this->getObject('trimstr', 'strings');
             $teaser = $objTrimStr->strTrim(strip_tags($data['post_content']));
         } else {
             $teaser = $data['post_excerpt'];
         }
-        
+
         $module = 'blog';
         $userId = $data['userid'];
         $license = $data['post_lic'];
         $context = NULL;
         $workgroup = NULL;
-        $tags = NULL;  
-        
+        $tags = NULL;
+
         if ($data['post_status'] == 1) {
             $permissions = 'useronly';
         } else {
             $permissions = NULL;
         }
-        
+
         $objIndexData->luceneIndex($docId, $docDate, $url, $title, $contents, $teaser, $module, $userId, $tags, $license, $context, $workgroup, $permissions);
-        
+
     }
     /**
      * Short description for public
@@ -1229,10 +1232,10 @@ class dbblog extends dbTable
      * @return void
      * @access public
      */
-    public function luceneReIndex($data) 
+    public function luceneReIndex($data)
     {
         $this->luceneIndex($data);
-        
+
     }
     /**
      * Short description for public
@@ -1243,7 +1246,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getUserLinks($userid) 
+    public function getUserLinks($userid)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid'");
@@ -1257,7 +1260,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getUserLinksonly($userid) 
+    public function getUserLinksonly($userid)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid' AND link_type='bloglink'");
@@ -1271,7 +1274,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getUserbroll($userid) 
+    public function getUserbroll($userid)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE userid = '$userid' AND link_type='blogroll'");
@@ -1286,7 +1289,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getUserLink($id, $userid) 
+    public function getUserLink($id, $userid)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->getAll("WHERE id = '$id' AND userid = '$userid'");
@@ -1300,7 +1303,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function insertUserLink($insarr) 
+    public function insertUserLink($insarr)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->insert($insarr, 'tbl_blog_links');
@@ -1315,7 +1318,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function updateUserLink($id, $insarr) 
+    public function updateUserLink($id, $insarr)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->update('id', $id, $insarr, 'tbl_blog_links');
@@ -1329,7 +1332,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function deleteBlink($id) 
+    public function deleteBlink($id)
     {
         $this->_changeTable('tbl_blog_links');
         return $this->delete('id', $id, 'tbl_blog_links');
@@ -1343,7 +1346,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function savepage($pagearr) 
+    public function savepage($pagearr)
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->insert($pagearr, 'tbl_blog_pages');
@@ -1358,7 +1361,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function updatePage($id, $pagearr) 
+    public function updatePage($id, $pagearr)
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->update('id', $id, $pagearr, 'tbl_blog_pages');
@@ -1372,7 +1375,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function deletePage($id) 
+    public function deletePage($id)
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->delete('id', $id, 'tbl_blog_pages');
@@ -1386,7 +1389,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getPages($userid) 
+    public function getPages($userid)
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->getAll("WHERE userid = '$userid'");
@@ -1400,7 +1403,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getPageById($id) 
+    public function getPageById($id)
     {
         $this->_changeTable('tbl_blog_pages');
         return $this->getAll("WHERE id = '$id'");
@@ -1414,7 +1417,7 @@ class dbblog extends dbTable
      * @return unknown Return description (if any) ...
      * @access public
      */
-    public function quickSearch($term) 
+    public function quickSearch($term)
     {
         $this->_changeTable('tbl_blog_posts');
         $ret = $this->getAll("WHERE post_content LIKE '%%$term%%' OR post_title LIKE '%%$term%%' OR post_excerpt LIKE '%%$term%%'");
@@ -1428,7 +1431,7 @@ class dbblog extends dbTable
      * @return unknown Return description (if any) ...
      * @access public
      */
-    public function getLists() 
+    public function getLists()
     {
         $this->_changeTable('tbl_blog_lists');
         return $this->getAll();
@@ -1442,7 +1445,7 @@ class dbblog extends dbTable
      * @return string  Return description (if any) ...
      * @access public
      */
-    public function getListInfo($list_identifier) 
+    public function getListInfo($list_identifier)
     {
         $this->_changeTable('tbl_blog_lists');
         return $this->getAll("WHERE list_identifier = '$list_identifier'");
@@ -1454,7 +1457,7 @@ class dbblog extends dbTable
      * @return boolean
      * @access private
      */
-    private function _changeTable($table) 
+    private function _changeTable($table)
     {
         try {
             parent::init($table);
@@ -1465,7 +1468,7 @@ class dbblog extends dbTable
             return FALSE;
         }
     }
-    
+
     /**
      * Method to migrate from the old search to the new search
      * @access public
@@ -1473,9 +1476,9 @@ class dbblog extends dbTable
     public function updateSearch()
     {
         $this->_changeTable('tbl_blog_posts');
-        
+
         $posts = $this->getAll();
-        
+
         foreach ($posts as $post)
         {
             $this->luceneIndex($post);

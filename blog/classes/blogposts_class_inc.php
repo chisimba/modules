@@ -397,7 +397,7 @@ class blogposts extends object
                             'action' => 'viewblogbytag',
                             'userid' => $userid,
                             'tag' => $tags['meta_value']
-                        )) , $tags['meta_value']);
+                        )) , stripslashes($tags['meta_value']));
                         $linkstr.= $link->show();
                         $link = NULL;
                     }
@@ -474,7 +474,7 @@ class blogposts extends object
                             'action' => 'viewblogbytag',
                             'userid' => $userid,
                             'tag' => $tags['meta_value']
-                        )) , $tags['meta_value']);
+                        )) , stripslashes($tags['meta_value']));
                         $linkstr.= $link->show();
                         $link = NULL;
                     }
