@@ -53,7 +53,7 @@ class jabberblog extends controller {
     public $jdomain;
     public $jposteruid;
     public $jposter;
-
+    public $objDbSubs;
     public $objModules;
 
     /**
@@ -75,6 +75,7 @@ class jabberblog extends controller {
             $this->objBack = $this->getObject ( 'background', 'utilities' );
             $this->objDbIm = $this->getObject ( 'dbjbim' );
             $this->objDbImPres = $this->getObject ( 'dbjbpresence' );
+            $this->objDbSubs = $this->getObject('dbsubs');
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -165,19 +166,51 @@ class jabberblog extends controller {
                             switch ($event [0]) {
                                 case 'message' :
                                     switch ($pl ['body']) {
+                                        // administrative functions that only the owner should be able to do
                                         case 'quit' :
-                                            $this->conn->disconnect ();
-                                            break;
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            if($poster == $this->jposter) {
+                                               $this->conn->disconnect ();
+                                               die();
+                                            }
+                                            else {
+                                                continue;
+                                            }
+
                                         case 'break' :
-                                            $this->conn->send ( "</end>" );
-                                            break;
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            if($poster == $this->jposter) {
+                                                $this->conn->send ( "</end>" );
+                                                break;
+                                            }
+                                            else {
+                                                continue;
+                                            }
+
+                                        case 'subscribe':
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            $this->objDbSubs->addRecord($poster);
+                                            // send a message saying that you are now subscribed back
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_subscribed', 'jabberblog'));
+                                            continue;
+
+                                        case 'unsubscribe':
+                                            $poster = explode('/', $pl['from']);
+                                            $poster = $poster[0];
+                                            // remove the JID to the subscribers table
+                                            $this->objDbSubs->inactiveRecord($poster);
+                                            // send a message saying that you are now unsubscribed back
+                                            $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_unsubscribed', 'jabberblog'));
+                                            continue;
 
                                         case 'NULL' :
                                             continue;
                                     }
-
                                     // Send a response message
-                                    if ($pl ['body'] != "") {
+                                    if ($pl ['body'] != "" && $pl ['body'] != "subscribe" && $pl ['body'] != "unsubscribe" && $pl ['body'] != "quit" && $pl ['body'] != "break") {
                                         // Bang the array into a table to keep a record of it.
                                         $poster = explode('/', $pl['from']);
                                         $poster = $poster[0];
@@ -195,7 +228,13 @@ class jabberblog extends controller {
                                                     $this->objTwitterLib->updateStatus ( $this->objLanguage->languageText("mod_jabberblog_newpost", "jabberblog").': '.$this->uri('') );
                                                 }
                                             }
+                                            // send a message to the poster
                                             $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_msgadded', 'jabberblog'));
+                                            // send out a mass message to the subscribers letting them know a new post is here
+                                            $active = $this->objDbSubs->getActive();
+                                            foreach ($active as $user) {
+                                               $this->conn->message($user['jid'], $this->objLanguage->languageText('mod_jabberblog_newpost', 'jabberblog')." ".$this->uri(''));
+                                            }
                                         }
                                         else {
                                             $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_invaliduser', 'jabberblog'));
