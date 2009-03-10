@@ -226,15 +226,17 @@ class announcements extends controller
             $item = $this->objAnnouncements->getMessage($item);
         }
         
-        if ($item == FALSE) {
+        if ($item === FALSE) {
+			
             return FALSE;
         }
         
         if ($item['contextid'] == 'site' && $this->isAdmin) {
+		
             return TRUE;
         }
         
-        
+       
         if ($item['contextid'] == 'context' && count($this->lecturerContext) > 0) {
             // See if some items match
             $diff = array_intersect($this->lecturerContext, $this->objAnnouncements->getMessageContexts($item['id']));
@@ -396,7 +398,7 @@ class announcements extends controller
                 }
                 
                 $table->addCell($type, 200);
-				if (!$this->checkPermission($announcement['id'])) {
+				if ($this->checkPermission($announcement['id'])) {
 					$table->addCell($deleteLink->show(), 200);
 				}
                 $table->endRow();
