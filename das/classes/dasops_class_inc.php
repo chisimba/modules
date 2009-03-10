@@ -324,12 +324,12 @@ class dasops extends object {
 		
 		
 		//set mailer
-		$objEmail = $this->getObject('email', 'mail');
-		$objEmail->setBaseMailerProperty('to', $to);
-		$objEmail->setBaseMailerProperty('subject', $subject);
-		$objEmail->setBaseMailerProperty('body', $body);
+		//$objEmail = $this->getObject('email', 'mail');
+		//$objEmail->setBaseMailerProperty('to', $to);
+		//$objEmail->setBaseMailerProperty('subject', $subject);
+		//$objEmail->setBaseMailerProperty('body', $body);
 		//send the mail
-		$objEmail->send();
+		//$objEmail->send();
 		
 		mail($to, $subject,$body);
 		return TRUE;
