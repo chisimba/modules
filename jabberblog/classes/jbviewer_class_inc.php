@@ -132,8 +132,18 @@ class jbviewer extends object {
      */
     public function getStatsBox() {
         $this->objDbIm = $this->getObject ( 'dbjbim' );
-        $str = $this->objLanguage->languageText ( "mod_jabberblog_nomsgs", "jabberblog" );
+        $this->objDbSubs = $this->getObject('dbsubs');
+        $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
+        $this->juser = $this->objSysConfig->getValue ( 'jabberuser', 'jabberblog' );
+        $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'jabberblog' );
+        $str = $this->objLanguage->languageText ( "mod_jabberblog_subinfo", "jabberblog" ).": ".$this->juser."@".$this->jdomain;
+        $str .= "<br />";
+        $str .= "<br />";
+        $str .= $this->objLanguage->languageText ( "mod_jabberblog_nomsgs", "jabberblog" );
         $str .= " " . $this->objDbIm->getNoMsgs ();
+        $str .= "<br />";
+        $str .= $this->objLanguage->languageText ( "mod_jabberblog_numsubs", "jabberblog" );
+        $str .= " " . $this->objDbSubs->getNoSubs ();
 
         return $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_stats", "jabberblog" ), $str );
     }
@@ -147,6 +157,26 @@ class jbviewer extends object {
         $objFeature = $this->newObject ( 'featurebox', 'navigation' );
 
         return $objFeature->show ( $this->objUser->fullName ( $this->jposteruid ), $menu . "<br />" . $blurb );
+    }
+
+    public function searchBox() {
+        $this->loadClass('textinput', 'htmlelements');
+        $qseekform = new form('qseek', $this->uri(array(
+            'action' => 'jbsearch',
+        )));
+        $qseekform->addRule('searchterm', $this->objLanguage->languageText("mod_jabberblog_phrase_searchtermreq", "jabberblog") , 'required');
+        $qseekterm = new textinput('searchterm');
+        $qseekterm->size = 15;
+        $qseekform->addToForm($qseekterm->show());
+        $this->objsTButton = &new button($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setValue($this->objLanguage->languageText('word_search', 'system'));
+        $this->objsTButton->setToSubmit();
+        $qseekform->addToForm($this->objsTButton->show());
+        $qseekform = $qseekform->show();
+        $objFeatureBox = $this->getObject('featurebox', 'navigation');
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_jabberblog_qseek", "jabberblog") , $this->objLanguage->languageText("mod_jabberblog_qseekinstructions", "jabberblog") . "<br />" . $qseekform);
+
+        return $ret;
     }
 
     public function rssBox() {

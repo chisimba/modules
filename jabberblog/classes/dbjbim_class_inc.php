@@ -79,5 +79,9 @@ class dbjbim extends dbTable {
     public function getNoMsgs() {
         return $this->getRecordCount ( 'tbl_jabberblog' );
     }
+
+    public function keySearch($keyword) {
+        return $this->getAll("WHERE msgbody LIKE '%%$keyword%%'");
+    }
 }
 ?>

@@ -279,6 +279,15 @@ class jabberblog extends controller {
                 echo $objImView->rssBox();
                 break;
 
+            case 'jbsearch':
+                // search
+                $term = $this->getParam('searchterm');
+                $msgs = $this->objDbIm->keySearch($term);
+                $this->setVarByRef('msgs', $msgs);
+
+                return 'viewsearch_tpl.php';
+                break;
+
             default :
                 die ( "unknown action" );
                 break;

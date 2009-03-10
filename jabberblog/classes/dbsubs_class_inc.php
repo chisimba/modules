@@ -88,5 +88,9 @@ class dbsubs extends dbTable {
     public function getActive() {
         return $this->getAll("WHERE status = 1");
     }
+
+    public function getNoSubs() {
+        return count($this->getAll("WHERE status = 1"));
+    }
 }
 ?>

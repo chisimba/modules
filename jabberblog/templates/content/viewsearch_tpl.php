@@ -20,33 +20,17 @@ $header = new htmlHeading ( );
 $header->str = $this->objLanguage->languageText ( 'mod_jabberblog_jabberblogof', 'jabberblog' ) . " " . $this->objUser->fullName ( $this->jposteruid );
 $header->type = 1;
 
-$script = '<script type="text/JavaScript" src="resources/rounded_corners.inc.js"></script>
-    <script type="text/JavaScript">
-      window.onload = function() {
-          settings = {
-              tl: { radius: 10 },
-              tr: { radius: 10 },
-              bl: { radius: 10 },
-              br: { radius: 10 },
-              antiAlias: true,
-              autoPad: true
-          }
-          var myBoxObject = new curvyCorners(settings, "rounded");
-          myBoxObject.applyCornersToAll();
-      }
-    </script>';
-$this->appendArrayVar ( 'headerParams', $script );
-
-$objPagination = $this->newObject ( 'pagination', 'navigation' );
-$objPagination->module = 'jabberblog';
-$objPagination->action = 'viewallajax';
-$objPagination->id = 'jabberblog';
-$objPagination->numPageLinks = $pages;
-$objPagination->currentPage = $pages - 1;
-
-$middleColumn .= $header->show () . '<br/>' . $objPagination->show ();
-//$middleColumn .= $objImView->renderOutputForBrowser($msgs);
-
+if(empty($msgs)) {
+    $eheader = new htmlHeading ( );
+    $eheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_noresults', 'jabberblog' );
+    $eheader->type = 3;
+    $middleColumn .= $header->show () . '<br />' . $eheader->show();
+}
+else {
+    $objImView = $this->getObject ( 'jbviewer' );
+    $view = $objImView->renderOutputForBrowser ( $msgs );
+    $middleColumn .= $header->show () . '<br />' . $view;
+}
 
 $rssLink = $this->getObject ( 'link', 'htmlelements' );
 $rssLink->href = $this->uri ( array ('action' => 'rss' ) );
