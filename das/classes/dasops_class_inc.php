@@ -320,7 +320,7 @@ class dasops extends object {
 		
 		//get the service email
 		$to = $this->dasfeedbackemail; //'$this->wnitsckie@uwc.ac.za, wesleynitsckie@gmail.com';//$this->juser.'@'.$this->jdomain;
-		$subject = "Feedback from ".$this->objSysConfig->getSiteName();
+		$subject = "Feedback from ".$this->objConfig ->getSiteName();
 		
 		
 		//set mailer
