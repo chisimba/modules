@@ -390,6 +390,9 @@ class viewrender extends object {
 	//Stats block
 	$blocks .= $this->getStatsBox();
 	
+	//Conversations Block
+	$blocks .= $this->getCounselorStatBox();
+	
 	//Chat block
 	//$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
         return $blocks;
@@ -419,5 +422,42 @@ class viewrender extends object {
 		return 'xxxxxxx'.substr($person, strpos($person, '@'));
 	
     }
+	
+	
+	/**
+	* Method to see the number of 
+	* live conversations of other counselors
+	*/
+	public function getCounselorStatBox()
+	{
+		$objPres = $this->getObject ( 'dbimpresence' , 'im' );
+		$objIMUsers = $this->getObject ( 'dbimusers', 'im' );
+		$objUser = $this->getObject('user', 'security');
+		//get all the live counselors
+		$activeCounselors = $objIMUsers->getAll();
+		if(count($activeCounselors) > 0)
+		{
+			$str = '<table>';
+			$myUserId = $objUser->userId();
+			foreach($activeCounselors as $counselor)
+			{
+				if ($myUserId != $counselor['userid'])
+				{
+					$name = $objUser->fullname($counselor['userid']);
+					$msgs = $objPres->countActiveUsers($counselor['userid'])."/".$this->objDbImPres->numOfUserAssigned ($counselor['userid']);;
+					
+					$str .= '<tr><td>'.$name.'</td><td> '.$msgs.'</td></tr>';
+				}
+			}
+
+
+
+			$str .= '</table>';
+		} else {
+			$str = '<span class="subdued">No Records Found</span>';
+		}
+		return $this->objFeatureBox->show('Other Counselors', $str);
+		
+	}
 }
 ?>

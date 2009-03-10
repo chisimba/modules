@@ -334,6 +334,8 @@ class dasops extends object {
 		mail($to, $subject,$body);
 		return TRUE;
 	}
+	
+	
 
 }
 ?>
