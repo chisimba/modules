@@ -9,7 +9,7 @@ if($objDBContext->isInContext())
 }
 
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-if ($this->objUser->isContextLecturer()|| $this->objUser->isContextStudent() ) {
+/*if ($this->objUser->isContextLecturer()|| $this->objUser->isContextStudent() ) {
 	$userMenuBar=& $this->getObject('sidemenu','toolbar');
 }
 else if ($this->objUser->isLecturer()) {
@@ -17,7 +17,8 @@ else if ($this->objUser->isLecturer()) {
 }
 else {
 	die('Access denied');
-}
+}*/
+$userMenuBar=& $this->getObject('sidemenu','toolbar');
 $toolbar = $this->getObject('contextsidebar', 'context');
 $cssLayout->setLeftColumnContent($toolbar->show());
 //$this->sideMenuBar=& $this->getObject('sidemenu','toolbar');
