@@ -49,17 +49,19 @@ $this->loadClass('layer','htmlelements');
 
 //$inputOfficer = new textinput('officer', $officer, 'text', 25);
 $inputOfficer = new dropdown('officerId');
-$inputOfficer->addFromDB($userList, 'name', 'userid');
+$inputOfficer->addFromDB($userList, 'name', 'name');
 $inputOfficer->setSelected($officerId);
 if (!$this->objUser->isAdmin()) {
     $inputOfficer->extra = 'disabled';
 }
+
 $inputDistrict = new dropdown('districtId');
 $inputDistrict->addFromDB($this->objTerritory->getAll("ORDER BY NAME"), 'name', 'id');
 $inputDistrict->setSelected($districtId);
 if (!$this->objUser->isAdmin()) {
     $inputDistrict->extra = 'disabled';
 }
+
 //$inputDistrict = new textinput('district', $district, 'text', 25);
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
@@ -67,6 +69,7 @@ $allReportTypes = $this->objReport->getAll("ORDER BY name");
 $inputType = new dropdown('reportType');
 $inputType->addFromDB($allReportTypes, 'name', 'id');
 $inputType->setSelected($reportType);
+print_r($reportType);
 $buttonNext = new button('next',$this->objLanguage->languageText('word_next'));
 $buttonNext->setToSubmit();
 $buttonBack = new button('back',$this->objLanguage->languageText('word_back'));

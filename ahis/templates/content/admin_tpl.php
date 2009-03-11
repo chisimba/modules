@@ -115,6 +115,43 @@ $objTable->startRow();
 $link = new link($this->uri(array('action' => 'department_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_departmentadmin', 'ahis');
 $objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'disease_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_diseaseadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'test_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_testadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+
+$objTable->endRow();
+
+$objTable->startRow();
+$link = new link($this->uri(array('action' => 'testresult_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_testresultadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'sample_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_sampleadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'survey_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_surveyadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$objTable->endRow();
+
+$objTable->startRow();
+$link = new link($this->uri(array('action' => 'farmingsystem_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_farmingsystemadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'vaccinationhistory_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_vaccinationadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'species_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_speciesadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$objTable->endRow();
+
+$objTable->startRow();
+$link = new link($this->uri(array('action' => 'breed_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_breedadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
 $objTable->endRow();
 
 $objLayer = new layer();

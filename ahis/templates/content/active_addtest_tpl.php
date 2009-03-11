@@ -55,18 +55,18 @@ $backUri = $this->uri(array('action'=>'active_surveillance'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $testTypeDrop = new dropdown('testtype');
-$testTypeDrop->addFromDB($arraytesttype, 'name', 'id');
+$testTypeDrop->addFromDB($arraytest, 'name', 'name');
 $testTypeDrop->setSelected($testtype);
 
 $diseaseDrop = new dropdown('disease');
-$diseaseDrop->addFromDB($arraydisease, 'name', 'id');
+$diseaseDrop->addFromDB($arraydisease, 'name', 'name');
 $diseaseDrop->setSelected($disease);
 $diseaseDrop->extra = 'disabled';
 
 
 $campBox = new textinput('campName',$campName);
-$sensitivityBox = new textinput('sensitivity', $sensivity);
-$specificityBox = new textinput('specificity', $officerId);
+$sensitivityBox = new textinput('sensitivity', $sensitivity);
+$specificityBox = new textinput('specificity', $specificity);
 $campBox->extra ="readonly";
 
 
@@ -107,7 +107,7 @@ $objTable->addCell('');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_surveillance')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_save')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_valsens', 'ahis'), 'numeric');
 $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'numeric');

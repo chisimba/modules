@@ -59,8 +59,16 @@ $backButton = new button('back', $this->objLanguage->languageText('word_back'), 
 $nextUri = $this->uri(array('action'=>'active_herddetails'));
 $nextButton = new button('next', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
-$campBox = new textinput('campBox',$campBox);
-$diseaseBox = new textinput('diseaseBox',$diseaseBox);
+
+$campBox = new dropdown('campName');
+$campBox->addFromDB($arrayCamp, 'campname', 'id');
+$campBox->setSelected($campName);
+$campBox->extra = 'disabled';
+
+
+$diseaseBox = new dropdown('diseases');
+$diseaseBox->addFromDB($arraydisease, 'disease', 'id');
+$diseaseBox->setSelected($diseases);
 
 
 $officerDrop = new dropdown('officerId');

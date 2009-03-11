@@ -55,26 +55,26 @@ $backUri = $this->uri(array('action'=>'sero_surveillance'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $campNameDrop = new dropdown('campName');
-$campNameDrop->addFromDB($arraycampName, 'name', 'id');
+$campNameDrop->addFromDB($arrayCamp, 'campname', 'id');
 $campNameDrop->setSelected($campName);
 
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
 
 $testTypeDrop = new dropdown('testtype');
-$testTypeDrop->addFromDB($arraytesttype, 'name', 'id');
-$testTypeDrop->setSelected($testtype);
+$testTypeDrop->addFromDB($arrayTest, 'name', 'id');
+$testTypeDrop->setSelected($test);
 $speciesDrop = new dropdown('speciesId');
-//$speciesDrop->addFromDB($arraySpecies, 'name', 'id');
-//$speciesDrop->setSelected($speciesId);
+$speciesDrop->addFromDB($arraySpecies, 'name', 'id');
+$speciesDrop->setSelected($speciesId);
 $testResultDrop = new dropdown('result');
-$testResultDrop->addFromDB($arraytesttype, 'name', 'id');
-$testResultDrop->setSelected($testtype);
+$testResultDrop->addFromDB($arrayTestresult, 'name', 'id');
+$testResultDrop->setSelected($testresult);
 $territoryDrop = new dropdown('territory');
-$territoryDrop->addFromDB($arraytesttype, 'name', 'id');
+$territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
 $territoryDrop->setSelected($testtype);
 $searchDrop = new dropdown('search');
-$searchDrop->addFromDB($arraytesttype, 'name', 'id');
+$searchDrop->addFromDB($arraySearch, 'name', 'id');
 $searchDrop->setSelected($testtype);
 
 $officerText = new textinput('officerId');

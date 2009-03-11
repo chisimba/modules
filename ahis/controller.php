@@ -115,6 +115,17 @@ class ahis extends controller {
             $this->objDepartment = $this->getObject('department');
             $this->objPassive = $this->getObject('passive');
             $this->objReport = $this->getObject('reporttype');
+            $this->objDisease = $this->getObject('disease');
+            $this->objTest = $this->getObject('test');
+            $this->objTestresult = $this->getObject('testresult');
+            $this->objSample = $this->getObject('sample');
+            $this->objSurvey = $this->getObject('survey');
+            $this->objFarmingsystem = $this->getObject('farmingsystem');
+            $this->objVaccination = $this->getObject('vaccinationhistory');
+            $this->objBreed = $this->getObject('breed');
+            $this->objSpecies = $this->getObject('species');
+            $this->objActive = $this->getObject('active');
+            
             $this->objViewReport = $this->getObject('report');
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
@@ -134,7 +145,15 @@ class ahis extends controller {
                                         'age_add', 'age_admin', 'age_insert', 'age_delete',
                                         'role_add', 'role_admin', 'role_insert', 'role_delete',
                                         'department_add', 'department_admin', 'department_insert', 'department_delete',
-                                        'report_add', 'report_admin', 'report_insert', 'report_delete'
+                                        'report_add', 'report_admin', 'report_insert', 'report_delete','disease_admin',
+                                        'test_admin','testresult_admin','sample_admin','species_admin','breed_admin',
+                                        'survey_admin','farmingsystem_admin','vaccinationhistory_admin','disease_add',
+                                        'disease_insert','disease_delete','test_add','test_insert','disease_delete',
+                                        'testresult_add','testresult_insert','testresult_delete','sample_add','sample_insert',
+                                        'sample_delete','species_add','species_insert','species_delete','survey_add',
+                                        'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
+                                        'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
+                                        'vaccinationhistory_delete'
                                         );
         }
         catch(customException $e) {
@@ -173,11 +192,10 @@ class ahis extends controller {
         switch ($action) {
         	case 'select_officer':
                 $this->setVar('userList', $this->objAhisUser->getList());
-                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
+                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userName()));
                 $this->setVar('districtId', $this->getSession('ps_districtId', $this->objAhisUser->getTerritory()));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                 $this->setVar('reportType', $this->getSession('ps_reportType'));
-                
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
@@ -189,10 +207,8 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
-                    case "init_02":
+                       default:
                         return $this->nextAction('active_surveillance');
-                    default:
-                        return $this->nextAction('sero_surveillance');
                 }
             
             case 'passive_surveillance':
@@ -210,6 +226,7 @@ class ahis extends controller {
                 $this->setVar('dateIsReported', $this->getSession('ps_dateisReported', date('Y-m-d')));
                 $this->setVar('refNo', $this->getSession('ps_refNo', $this->objPassive->nextRefNo()));
                 $this->setVar('remarks', $this->getSession('ps_remarks'));
+                print_r($this->getSession('ps_districtId'));
                 return "passive_surveillance_tpl.php";
             
             case 'passive_outbreak':
@@ -427,10 +444,11 @@ class ahis extends controller {
                //$this->setSession('ps_officerName',$this->objUser->fullName($officerId));
                $this->setVar('userList', $this->objAhisUser->getList());
                $this->setVar('officerId', $this->getSession('ps_officerId'));
+               $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
+               $this->setVar('arraysurvey', $this->objSurvey->getAll("ORDER BY NAME"));
                $this->setVar('disease', $this->getSession('ps_disease'));
                $this->setVar('surveyTypeId', $this->getSession('ps_surveyTypeId'));
-               $this->setVar('comments', $this->getSession('ps_comments'));
-             
+               $this->setVar('comments', $this->getSession('ps_comments'));               
                return 'active_surveillance_tpl.php';  
                 
             case 'active_addtest':
@@ -440,39 +458,92 @@ class ahis extends controller {
                $disease = $this->getParam('disease', $this->getSession('ps_disease'));
                $surveyTypeId = $this->getParam('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $comments = $this->getParam('comments', $this->getSession('ps_comments'));
-               
                $this->setSession('ps_campName',$campName);
 	            $this->setSession('ps_officerId',$officerId);
 	            $this->setSession('ps_disease',$disease);
-	            $this->setSession('ps_survyTypeId',$surveyTypeId);
+	            $this->setSession('ps_surveyTypeId',$surveyTypeId);
 	            $this->setSession('ps_comments',$comments);
                //$this->setSession('ps_qualityId', $qualityId);
+               $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
+               $this->setVar('arraytest', $this->objTest->getAll("ORDER BY NAME"));
                $this->setVar('campName', $this->getSession('ps_campName'));
                $this->setVar('disease', $this->getSession('ps_disease'));
-               
+               $this->setVar('testtype', $testype);
                return 'active_addtest_tpl.php';
                
+            case 'active_save':
+                $ps_array = array();
+                $ps_array['reporterid'] = $this->getSession('ps_officerId');
+                $ps_array['campname'] = $this->getSession('ps_campName');
+                $ps_array['disease'] =$this->getSession('ps_disease');
+                $ps_array['surveytype'] = $this->getSession('ps_surveyTypeId');
+                $ps_array['comments'] = $this->getSession('ps_comments');
+                $ps_array['sensitivity'] = $this->getParam('sensitivity');
+                $ps_array['specificity'] = $this->getParam('specificity');
+                $ps_array['testtype'] = $this->getParam('testtype');
+                $result = $this->objActive->insert($ps_array);                            
+                return $this->nextAction('active_feedback',array('success'=>$result));           
+
+                 
                
+            case 'active_feedback':
+                $success = $this->getParam('success');
+               // print_r($success);
+                $this->setVar('success', $success);
+                if ($success) {
+                    $this->unsetActiveSession();
+                } 
+                 return  "active_feedback_tpl.php";
+                 
             case 'active_search':
-               $campName = $this->getParam('campName', $this->getSession('ps_campName'));
-               
-               $this->setSession('ps_campName',$campName);
+            
+
                $this->setVar('campName', $this->getSession('ps_campName'));
-                
+               $this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY NAME"));
+               $this->setVar('arrayTest', $this->objTest->getAll("ORDER BY NAME"));
+               $this->setVar('arrayCamp', $this->objActive->listcamp());
+               $this->setVar('arrayTerritory',$this->objTerritory->getAll("ORDER BY NAME"));
+               $this->setVar('arrayTestresult', $this->objTestresult->getAll("ORDER BY NAME"));
+
+                                 
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
+
                return 'active_search_tpl.php';
             
             case 'active_addherd':
                return 'active_addherd_tpl.php';
                   
-            case 'active_herdview': 
-            
+            case 'active_herdview':
+                                              print_r($campName); 
+               $campName = $this->getParam('campName');
+
+               $this->setSession('ps_campName', $campName);
+
+               $this->setVar('arrayCamp', $this->objActive->listcamp());
+               $this->setVar('arraydisease', $this->objActive->getdisease($campName));
                $this->setVar('userList', $this->objAhisUser->getList());
                $this->setVar('officerId', $this->getSession('ps_officerId'));
-                        
+               $this->setVar('campName', $this->getSession('ps_campName'));
+               $this->setVar('diseases', $this->getSession('ps_diseases')); 
+
+               print_r($disease,'dfklaf');
                return 'active_herdview_tpl.php';
                
+            case 'active_herddetails':
+               $campName = $this->getParam('campName');
+               $this->setVar('arraydisease', $this->objActive->getdisease($campName));
+               $disease = $this->getParam('diseases');
+             
+               $this->setSession('ps_diseases', 'gssfdsf');
+                print_r($diseases); 
+               $this->setVar('diseases', $this->getSession('ps_disease')); 
+
+
+               return 'active_herddetails_tpl.php';    
+          
+               
             case 'active_sampleview':
+
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
             
                return 'active_sampleview_tpl.php';
@@ -484,9 +555,7 @@ class ahis extends controller {
             case 'sero_surveillance':            
                return 'sero_surveillance_tpl.php'; 
                  
-            case 'active_herddetails':
-               return 'active_herddetails_tpl.php';    
-               
+                
             case 'active_herdsampling':
                return 'active_herdsampling_tpl.php';
                              
@@ -1191,6 +1260,367 @@ class ahis extends controller {
                 $this->objDepartment->delete('id', $id);
                 return $this->nextAction('department_admin', array('success'=>'2'));
             
+            case 'disease_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objDisease->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'disease_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_diseaseadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_diseaseadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_disease'));
+                $this->setVar('deleteAction', 'disease_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'disease_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'disease_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'disease_add_tpl.php';
+               
+             case 'disease_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objDisease->valueExists('name', $name)) {
+                    return $this->nextAction('disease_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objDisease->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objDisease->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('disease_admin', array('success'=>$code));
+            case 'disease_delete':
+                $id = $this->getParam('id');
+                $this->objDisease->delete('id', $id);
+                return $this->nextAction('disease_admin', array('success'=>'2'));
+              
+            case 'test_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objTest->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'test_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_testadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_test'));
+                $this->setVar('deleteAction', 'test_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'test_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+                
+                
+            case 'test_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'test_add_tpl.php';
+             case 'test_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objTest->valueExists('name', $name)) {
+                    return $this->nextAction('test_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objTest->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objTest->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('test_admin', array('success'=>$code));
+            case 'test_delete':
+                $id = $this->getParam('id');
+                $this->objTest->delete('id', $id);
+                return $this->nextAction('test_admin', array('success'=>'2'));
+             
+            case 'testresult_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objTestresult->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'testresult_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_testresultadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_testresultadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_testresult'));
+                $this->setVar('deleteAction', 'testresult_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'testresult_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'testresult_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'testresult_add_tpl.php';
+             case 'testresult_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objTestresult->valueExists('name', $name)) {
+                    return $this->nextAction('testresult_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objTestresult->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objTestresult->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('testresult_admin', array('success'=>$code));
+            case 'testresult_delete':
+                $id = $this->getParam('id');
+                $this->objTestresult->delete('id', $id);
+                return $this->nextAction('testresult_admin', array('success'=>'2'));
+                 
+            case 'sample_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objSample->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'sample_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_sampleadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_sampleadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_sample'));
+                $this->setVar('deleteAction', 'sample_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'sample_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'sample_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'sample_add_tpl.php';
+            
+             case 'sample_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objSample->valueExists('name', $name)) {
+                    return $this->nextAction('sample_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objSample->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objSample->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('sample_admin', array('success'=>$code));
+            case 'sample_delete':
+                $id = $this->getParam('id');
+                $this->objSample->delete('id', $id);
+                return $this->nextAction('sample_admin', array('success'=>'2'));
+             
+            case 'survey_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objSurvey->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'survey_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_surveyadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_surveyadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_survey'));
+                $this->setVar('deleteAction', 'survey_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'survey_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+                
+            case 'survey_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'survey_add_tpl.php';
+            
+             case 'survey_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objSurvey->valueExists('name', $name)) {
+                    return $this->nextAction('survey_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objSurvey->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objSurvey->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('survey_admin', array('success'=>$code));
+            case 'survey_delete':
+                $id = $this->getParam('id');
+                $this->objSurvey->delete('id', $id);
+                return $this->nextAction('survey_admin', array('success'=>'2'));
+             
+            
+            case 'farmingsystem_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objFarmingsystem->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'farmingsystem_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_farmingsystemadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_farmingsystemadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system'));
+                $this->setVar('deleteAction', 'farmingsystem_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'farmingsystem_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+           
+            case 'farmingsystem_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'farmingsystem_add_tpl.php';
+            
+            case 'farmingsystem_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objFarmingsystem->valueExists('name', $name)) {
+                    return $this->nextAction('farmingsystem_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objFarmingsystem->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objFarmingsystem->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('farmingsystem_admin', array('success'=>$code));
+            case 'farmingsystem_delete':
+                $id = $this->getParam('id');
+                $this->objFarmingsystem->delete('id', $id);
+                return $this->nextAction('survey_admin', array('success'=>'2'));
+             
+            
+            case 'vaccinationhistory_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objVaccination->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'vaccination_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_vaccinationadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_vaccinationadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('phrase_vaccinationhistory'));
+                $this->setVar('deleteAction', 'vaccination_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'vaccination_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'vaccination_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'vaccination_add_tpl.php';
+             case 'vaccination_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objSurvey->valueExists('name', $name)) {
+                    return $this->nextAction('vaccination_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objVaccination->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objVaccination->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('vaccinationhistory_admin', array('success'=>$code));
+            case 'vaccination_delete':
+                $id = $this->getParam('id');
+                $this->objVaccination->delete('id', $id);
+                return $this->nextAction('vaccinationhistory_admin', array('success'=>'2'));
+             
+            
+            case 'species_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objSpecies->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'species_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_speciesadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_speciesadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_species'));
+                $this->setVar('deleteAction', 'species_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'species_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'species_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'species_add_tpl.php';
+             case 'species_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objSurvey->valueExists('name', $name)) {
+                    return $this->nextAction('species_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objSpecies->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objSpecies->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('species_admin', array('success'=>$code));
+            case 'species_delete':
+                $id = $this->getParam('id');
+                $this->objSpecies->delete('id', $id);
+                return $this->nextAction('species_admin', array('success'=>'2'));
+             
+            
+            case 'breed_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objBreed->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'breed_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_breedadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_breedadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_breed'));
+                $this->setVar('deleteAction', 'breed_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'breed_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+          
+             case 'breed_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'breed_add_tpl.php';
+             case 'breed_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objBreed->valueExists('name', $name)) {
+                    return $this->nextAction('breed_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objBreed->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objBreed->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('breed_admin', array('success'=>$code));
+            case 'breed_delete':
+                $id = $this->getParam('id');
+                $this->objSurvey->delete('id', $id);
+                return $this->nextAction('breed_admin', array('success'=>'2'));
+             
+            
             case 'view_reports':
             
             default:
@@ -1238,6 +1668,21 @@ class ahis extends controller {
         $this->unsetSession('ps_recovered');
         $this->unsetSession('ps_prophylactic');
     }
+    
+    
+    /**
+     * Method to unset the active surveillance session variables
+     *
+     */
+    private function unsetActiveSession() {
+    
+        $this->unsetSession('ps_officerId');
+        $this->unsetSession('ps_disease');
+        $this->unsetSession('ps_comments');
+        $this->unsetSession('ps_surveyTypeId');
+        $this->unsetSession('ps_campName');
+        
+       }
     
     /**
      * Method to determine whether the user needs to be logged in

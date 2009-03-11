@@ -72,14 +72,14 @@ $campNameBox = new textinput('campName', $campName);
 //$officerDrop = new textinput('officerId',$officerId);
 
 $officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'name', 'userid');
+$officerDrop->addFromDB($userList, 'name', 'name');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
 $diseaseDrop = new dropdown('disease');
-$diseaseDrop->addFromDB($arrayoutbreak, 'name', 'id');
-$diseaseDrop->setSelected($outbreakId);
-$surveyTypeDrop = new dropdown('surveyType');
-$surveyTypeDrop->addFromDB($arraysurveyType, 'name', 'id');
+$diseaseDrop->addFromDB($arraydisease, 'name', 'name');
+$diseaseDrop->setSelected($disease);
+$surveyTypeDrop = new dropdown('surveyTypeId');
+$surveyTypeDrop->addFromDB($arraysurvey, 'name', 'name');
 $surveyTypeDrop->setSelected($surveyTypeId);
 
 $commentsBox = new textarea('comments', $comments , 4, 40);
