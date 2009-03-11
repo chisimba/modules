@@ -234,7 +234,11 @@ $objTable->addCell($btn1,'','','right');
 $objTable->addCell($btn2);
 $objTable->endRow();
 
+if($this->getParam('id')!=NULL)
+$objForm = new form('edit',$this->uri(array('action' => 'saveassign','id' => $this->getParam('id'))));
+else
 $objForm = new form('add',$this->uri(array('action' => 'saveassign')));
+
 $objForm->addRule('name', $errName, 'required');
 $objForm->addRule('mark', $errMarkReq, 'required');
 $objForm->addRule('mark', $errMark, 'numeric');
