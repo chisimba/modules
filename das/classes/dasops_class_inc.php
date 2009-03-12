@@ -324,18 +324,18 @@ class dasops extends object {
 		
 		
 		//set mailer
-		$objEmail = $this->getObject('email', 'mail');
-		$objEmail->setBaseMailerProperty('to', $to);
-		$objEmail->setBaseMailerProperty('subject', $subject);
-		$objEmail->setBaseMailerProperty('body', $body);
+		//$objEmail = $this->getObject('email', 'mail');
+		//$objEmail->setBaseMailerProperty('to', $to);
+		//$objEmail->setBaseMailerProperty('subject', $subject);
+		//$objEmail->setBaseMailerProperty('body', $body);
 		//send the mail
-		return $objEmail->send();
+		//return $objEmail->send();
 		
-		return mail($to, $subject,$body);		
+		//return mail($to, $subject,$body);		
 		
-		$to      = 'wesleynitsckie@gmail.com';
-		$subject = 'the subject';
-		$message = 'hello';
+		//$to      = 'wesleynitsckie@gmail.com';
+		//$subject = 'the subject';
+		//$message = 'hello';
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 		$headers .= 'From: webmaster@example.com' . "\r\n" .
