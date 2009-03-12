@@ -240,7 +240,7 @@ class das extends controller {
 			case "sendfeedback":				
 				if ($this->objImOps->sendFeedBack($this->getParam('personid')))
 				{					
-					echo "Feedback sent to ";
+					echo "Feedback was successfully sent ";
 				} else {
 					echo "There was an error send the feedback. Please information the site Administrator";
 				}

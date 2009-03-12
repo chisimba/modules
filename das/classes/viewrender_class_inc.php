@@ -352,6 +352,7 @@ class viewrender extends object {
 		$cid = $this->objUser->userId();
 		$outof = '/'.$this->objDbImPres->numOfUserAssigned ($cid);
 		$msgs = $this->objDbIm->getMessagesByActiveUser ($cid);
+		$numConv = $objPres->getRecordCount();
 		
 		$num = count($msgs);
 		$myMessages = $num.$outof;
@@ -368,7 +369,7 @@ class viewrender extends object {
 
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
 
-		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.'</td></tr>';
+		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.$numConv.'</td></tr>';
 			
 		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.number_format($avg,2).'</td></tr>';
 
