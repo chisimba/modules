@@ -369,7 +369,7 @@ class viewrender extends object {
 
 		$str .= '<tr><td>My Conversations</td><td> '.$myMessages.'</td></tr>';
 
-		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv.$numConv.'</td></tr>';
+		$str .= '<tr><td>Live Consersations</td><td>'.$liveconv."/".$numConv.'</td></tr>';
 			
 		$str .= '<tr><td>Avg Conversation per Counsellor</td><td>'.number_format($avg,2).'</td></tr>';
 
