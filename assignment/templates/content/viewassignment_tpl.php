@@ -232,7 +232,7 @@ if ($this->isValid('markassignments')) {
             $form->extra = 'enctype="multipart/form-data"';
             
             $objUpload = $this->newObject('uploadinput', 'filemanager');
-            $objUpload->restrictFileList = array('doc', 'odt', 'rtf', 'txt');
+            $objUpload->restrictFileList = array('doc', 'odt', 'rtf', 'txt', 'mp3', 'flv', 'ppt', 'pdf');
             
             $button = new button('submitform', $this->objLanguage->languageText('mod_assignment_uploadassignment', 'assignment', 'Upload Assignment'));
             $button->setToSubmit();;
