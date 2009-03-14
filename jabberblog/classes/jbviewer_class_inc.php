@@ -98,7 +98,7 @@ class jbviewer extends object {
         $commenttxt = $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment );
+        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $this->renderHashTags( $msgbody ) ) . "<br />".$commenttxt . "<br />" . $comment );
         $ret .= "<hr />";
 
         return $ret;
@@ -120,7 +120,7 @@ class jbviewer extends object {
             $comments = $this->objComment->getCount ( $msgid );
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")", nl2br ( $msgbody ) . "<br />" );
+            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")", nl2br ( $this->renderHashTags( $msgbody ) ) . "<br />" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );
@@ -152,7 +152,7 @@ class jbviewer extends object {
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->profiletext = $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
-        $menu = "<center>" . $this->objUser->getUserImage ( $this->jposteruid ) . "</center>";
+        $menu = "<center>" . $this->objUser->getUserImage ( $this->jposteruid, FALSE, 'user_image' ) . "</center>";
         $blurb = $objWashout->parseText ( $this->profiletext );
         $objFeature = $this->newObject ( 'featurebox', 'navigation' );
 
@@ -198,6 +198,39 @@ class jbviewer extends object {
         }
 
         return $this->objFeed->output ( "RSS2.0" );
+    }
+
+    public function parseHashtags($str, $itemId)
+    {
+        $str = stripslashes($str);
+        preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item)
+        {
+            $memetag = array($item);
+            // add the $item to tbl_tags as a jabberblog meme for later
+            $objTags = $this->getObject('dbtags', 'tagging');
+            $objTags->insertHashTags($memetag, $this->jposteruid, $itemId, 'jabberblog', NULL, NULL);
+            $counter++;
+        }
+
+        return $str;
+    }
+
+    public function renderHashTags($str) {
+    	$str = stripslashes($str);
+        preg_match_all('/\#([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item) {
+            // set up a link to the URI to display all posts in the meme
+            $hashlink = $this->getObject ( 'link', 'htmlelements' );
+            $hashlink->href = $this->uri ( array ('meme' => $item, 'action' => 'viewmeme' ) );
+            $hashlink->link = $item;
+            $str = str_replace($results[0][$counter], $hashlink->show()." ", $str);
+            $counter++;
+        }
+
+        return $str;
     }
 }
 ?>

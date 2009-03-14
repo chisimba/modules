@@ -59,7 +59,13 @@ class dbjbim extends dbTable {
         if ($recarr ['msgbody'] == "") {
             return;
         } else {
-            return $this->insert ( $recarr, 'tbl_jabberblog' );
+            // check for hastags
+            //$objImView = $this->getObject('jbviewer');
+            //$recarr['msgbody'] = $objImView->parseHashtags($recarr['msgbody']);
+            //log_debug($output);
+            $itemid = $this->insert ( $recarr, 'tbl_jabberblog' );
+            $objImView = $this->getObject('jbviewer');
+            $objImView->parseHashtags($recarr['msgbody'], $itemid);
         }
     }
 
@@ -82,6 +88,10 @@ class dbjbim extends dbTable {
 
     public function keySearch($keyword) {
         return $this->getAll("WHERE msgbody LIKE '%%$keyword%%'");
+    }
+
+    public function addHashTag() {
+
     }
 }
 ?>
