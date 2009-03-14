@@ -119,91 +119,92 @@ class viewrender extends object {
             
             $fuser = $msg ['person'];
             //$msgid = $msg ['id'];
-            
-	    if ($this->objDbImPres->isHidden($fuser))
-	    {
-		
-			$this->objIcon->setIcon('plus');
-			$hiddenIcon = $this->objIcon->show();
+           
+			if ($this->objDbImPres->isHidden($fuser))
+			{
 			
-			$this->objLink->href = $this->uri(array('action' => 'showcontact', 'personid' => $fuser), 'das');
-			$this->objLink->link = $hiddenIcon;
-			$hidden = $this->objLink->show();
+				$this->objIcon->setIcon('plus');
+				$hiddenIcon = $this->objIcon->show();
+				
+				$this->objLink->href = $this->uri(array('action' => 'showcontact', 'personid' => $fuser), 'das');
+				$this->objLink->link = $hiddenIcon;
+				$hidden = $this->objLink->show();
+				
+				$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_hidden" >' ;
+				$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p></td>';
+			} else {
 			
-			$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_hidden" >' ;
-			$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' . $this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p></td>';
-	    } else {
-		
-			$this->objIcon->setIcon('minus');
-			$hiddenIcon = $this->objIcon->show();
+				$this->objIcon->setIcon('minus');
+				$hiddenIcon = $this->objIcon->show();
+				
+				$this->objLink->href = $this->uri(array('action' => 'hidecontact', 'personid' => $fuser), 'das');
+				$this->objLink->link = $hiddenIcon;
+				$hidden = $this->objLink->show();
+				
+				$this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
+				$this->objLink->link = $archiveIcon;
+				$archiveLink = $this->objLink->show();
+				
+				$archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
+				$feedback = $objAlertBox->show($feedbackIcon, $this->uri(array('action' => 'sendfeedback', 'personid' => $fuser)));
+				
+				$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
+				$this->objLink->link = $reassignIcon;
+				$resassignLink = $this->objLink->show();
+				
+				$sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
+				$fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
+				$prevmessages = "";
+				
+				//get the messages for the user
+				foreach ( $msg ['messages'] as $prevmess ) {
+					//get the message
+					if($prevmess['parentid'] != "")
+					{
+						$fromwho = $prevmess['msgtype'];
+						$cssclass = "subdued";
+					}else{
+						$fromwho = "User";
+						$cssclass = "";
+					}
+							$timeArr = split(" ", $prevmess['datesent']);
+					$prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
+					//get the reply(s) if there was any
+					$replies = $this->objDBIM->getReplies($prevmess['id']);
 			
-			$this->objLink->href = $this->uri(array('action' => 'hidecontact', 'personid' => $fuser), 'das');
-			$this->objLink->link = $hiddenIcon;
-			$hidden = $this->objLink->show();
-			
-			$this->objLink->href = '#';//$this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
-			$this->objLink->link = $archiveIcon;
-			$archiveLink = $this->objLink->show();
-			
-			$archive = $objAlertBox->show($archiveIcon, $this->uri(array('action' => 'viewarchive', 'personid' => $fuser)));
-			$feedback = $objAlertBox->show($feedbackIcon, $this->uri(array('action' => 'sendfeedback', 'personid' => $fuser)));
-			
-			$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser));
-			$this->objLink->link = $reassignIcon;
-			$resassignLink = $this->objLink->show();
-			
-			$sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'im' );
-			$fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'im' );
-			$prevmessages = "";
-			
-			//get the messages for the user
-			foreach ( $msg ['messages'] as $prevmess ) {
-				//get the message
-				if($prevmess['parentid'] != "")
-				{
-					$fromwho = $prevmess['msgtype'];
-					$cssclass = "subdued";
-				}else{
-					$fromwho = "User";
-					$cssclass = "";
+					$lastmsgId = $prevmess ['id'];
 				}
-						$timeArr = split(" ", $prevmess['datesent']);
-				$prevmessages .= '<span class="subdued" style="small">['. $timeArr[1].']</span> <span class="'.$cssclass.'">'.$this->objWashout->parseText ( nl2br ( htmlentities ( "$fromwho: ".$prevmess ['msgbody'] ) ) ) . '</span> <br/>';
-				//get the reply(s) if there was any
-				$replies = $this->objDBIM->getReplies($prevmess['id']);
-		
-				$lastmsgId = $prevmess ['id'];
+			
+			
+				$ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
+					   <p class=\"im_source\">
+								<script charset=\"utf-8\">
+						new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
+														cancelText: 'Cancel',
+														savingControl: 'link',  
+														savingText: 'Sending the message...',
+														size:40,
+														callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
+						</script>
+									</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."&nbsp;&nbsp;&nbsp;".$feedback."</p>";
+						
+				
+				$pres = $this->getPresenceIndicator($msg['person']);
+				
+				$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
+				$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;'.$pres.'&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
+				$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">'   . $prevmessages . '</p><p>' . $ajax . '</p></div>';
+				$box .= '</td>';
 			}
-	    
-	    
-			$ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
-				   <p class=\"im_source\">
-							<script charset=\"utf-8\">
-					new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
-													cancelText: 'Cancel',
-													savingControl: 'link',  
-													savingText: 'Sending the message...',
-													size:40,
-													callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
-					</script>
-								</p><p class=\"im_reassign\">&nbsp;".$resassignLink."&nbsp;&nbsp;&nbsp;".$archive."&nbsp;&nbsp;&nbsp;".$feedback."</p>";
-					
-			
-			
-			$box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' ;
-			$box .= '<p class="im_source">'.$hidden.'&nbsp;&nbsp;&nbsp;<b>' .$this->getAliasEditor($msg ['person'], $lastmsgId). '</b></p>';
-			$box .= '<p style ="height : 200px; overflow : auto;" class="im_message">'   . $prevmessages . '</p><p>' . $ajax . '</p></div>';
-			$box .= '</td>';
-	    }
-	  
+		  
 		//try to put 4 conversations in a row
-		$rownum ++;
+		/*$rownum ++;
 		if ($rownum == $max) {
 			$box .= "</tr><tr>";
 			$rownum = 0;
-		}
+		}*/
 
-		$ret .= $box;
+			$ret .= $box;
 
         }
         header("Content-Type: text/html;charset=utf-8");
@@ -250,8 +251,41 @@ class viewrender extends object {
 	
 	}
 	
+	/**
+	* Method to get the presence idicator for a user
+	* @param string $person
+	*/
+	public function getPresenceIndicator($person)
+	{
+		$pres = $this->objDbImPres->getPresenceIndicator($person);
+		print_r($pres);
+		
+		switch(strtolower($pres[0]))
+		{
+			case 'none':
+				if ($pres[1] == 'unavailable')
+				{
+					$icon = 'offline';
+				} else {
+					$icon = 'online';
+				}
+				break;
+			case 'dnd':
+				$icon = 'busy';
+				break;
+			case 'away':
+				$icon = 'idle';
+				break;
+			case 'unavailable':
+				$icon = 'offline';
+				break;
+			
+		}
+		$this->objIcon->setIcon ($icon, 'png');
+		return $this->objIcon->show();
+	}
 	
-	    /**
+	/**
      *Method to get the archived messages for a user
      *@param string $personId
      *@return string
