@@ -59,10 +59,6 @@ class dbjbim extends dbTable {
         if ($recarr ['msgbody'] == "") {
             return;
         } else {
-            // check for hastags
-            //$objImView = $this->getObject('jbviewer');
-            //$recarr['msgbody'] = $objImView->parseHashtags($recarr['msgbody']);
-            //log_debug($output);
             $itemid = $this->insert ( $recarr, 'tbl_jabberblog' );
             $objImView = $this->getObject('jbviewer');
             $objImView->parseHashtags($recarr['msgbody'], $itemid);
