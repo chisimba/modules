@@ -198,11 +198,11 @@ class viewrender extends object {
 			}
 		  
 		//try to put 4 conversations in a row
-		/*$rownum ++;
+		$rownum ++;
 		if ($rownum == $max) {
 			$box .= "</tr><tr>";
 			$rownum = 0;
-		}*/
+		}
 
 			$ret .= $box;
 
@@ -258,8 +258,7 @@ class viewrender extends object {
 	public function getPresenceIndicator($person)
 	{
 		$pres = $this->objDbImPres->getPresenceIndicator($person);
-		print_r($pres);
-		
+
 		switch(strtolower($pres[0]))
 		{
 			case 'none':
