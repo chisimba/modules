@@ -316,5 +316,17 @@ class dbimpresence extends dbTable
                 return FALSE;
             }
         }
+		
+		 /**
+         *Method to check if a contact is hidden or not
+         *@param string personId
+         *@return boolean
+         */
+        public function getPresenceIndicator($personId)
+        {
+            
+            $row = $this->getRow('person', $personId);
+            return array($row['presshow'], $row['status']);
+        }
 }
 ?>
