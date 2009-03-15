@@ -55,6 +55,7 @@ class jabberblog extends controller {
     public $jposter;
     public $objDbSubs;
     public $objModules;
+    public $objDbTags;
 
     /**
      *
@@ -77,6 +78,7 @@ class jabberblog extends controller {
             $this->objDbImPres = $this->getObject ( 'dbjbpresence' );
             $this->objDbSubs = $this->getObject('dbsubs');
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
+            $this->objDbTags = $this->getObject('dbtags', 'tagging');
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
@@ -283,6 +285,30 @@ class jabberblog extends controller {
                 // search
                 $term = $this->getParam('searchterm');
                 $msgs = $this->objDbIm->keySearch($term);
+                $this->setVarByRef('msgs', $msgs);
+
+                return 'viewsearch_tpl.php';
+                break;
+
+            case 'viewmeme':
+                $meme = $this->getParam('meme', NULL);
+                $posts = $this->objDbTags->getPostsBySpecTag($meme, 'hashtag', 'jabberblog');
+                foreach($posts as $post) {
+                    $im = $this->objDbIm->getSingle($post['item_id']);
+                    $msgs[] = $im[0];
+                }
+                $this->setVarByRef('msgs', $msgs);
+
+                return 'viewsearch_tpl.php';
+                break;
+
+            case 'viewloc':
+                $loc = $this->getParam('loc', NULL);
+                $posts = $this->objDbTags->getPostsBySpecTag($loc, 'attag', 'jabberblog');
+                foreach($posts as $post) {
+                    $im = $this->objDbIm->getSingle($post['item_id']);
+                    $msgs[] = $im[0];
+                }
                 $this->setVarByRef('msgs', $msgs);
 
                 return 'viewsearch_tpl.php';
