@@ -94,11 +94,15 @@ class jbviewer extends object {
 
         $msg = $msg [0];
         $msgbody = $this->objWashout->parseText ( $msg ['msgbody'] );
+        // run the parsers on the body
+        $msgbody = $this->renderHashTags( $msgbody );
+        $msgbody = $this->renderAtTags( $msgbody );
+
         $msgid = $msg ['id'];
         $commenttxt = $this->objComment->showJblogComments ( $msgid );
         $comment = $this->objComment->commentAddForm ( $msgid, 'jabberblog', 'tbl_jabberblog', $postuserid = NULL, $editor = TRUE, $featurebox = FALSE, $showtypes = FALSE, $captcha = FALSE, $comment = NULL, $useremail = NULL );
         $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $this->renderHashTags( $msgbody ) ) . "<br />".$commenttxt . "<br />" . $comment );
+        $ret = $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'], nl2br ( $msgbody ) . "<br />".$commenttxt . "<br />" . $comment );
         $ret .= "<hr />";
 
         return $ret;
@@ -108,6 +112,10 @@ class jbviewer extends object {
         $ret = NULL;
         foreach ( $msgs as $msg ) {
             $msgbody = $this->objWashout->parseText ( $msg ['msgbody'] );
+            // run the parsers on the body
+            $msgbody = $this->renderHashTags( $msgbody );
+            $msgbody = $this->renderAtTags( $msgbody );
+
             $fuser = $msg ['msgfrom'];
             $msgid = $msg ['id'];
             $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'jabberblog' );
@@ -118,9 +126,10 @@ class jbviewer extends object {
             $clink->link = $this->objLanguage->languageText ( "mod_jabberblog_leavecomment", "jabberblog" );
             // get the comment count
             $comments = $this->objComment->getCount ( $msgid );
+
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")", nl2br ( $this->renderHashTags( $msgbody ) ) . "<br />" );
+            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")", nl2br ( $msgbody ) . "<br />" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );
@@ -227,6 +236,39 @@ class jbviewer extends object {
             $hashlink->href = $this->uri ( array ('meme' => $item, 'action' => 'viewmeme' ) );
             $hashlink->link = $item;
             $str = str_replace($results[0][$counter], $hashlink->show()." ", $str);
+            $counter++;
+        }
+
+        return $str;
+    }
+
+    public function parseAtTags($str, $itemId)
+    {
+        $str = stripslashes($str);
+        preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item)
+        {
+            $attag = array($item);
+            // add the $item to tbl_tags as a jabberblog meme for later
+            $objTags = $this->getObject('dbtags', 'tagging');
+            $objTags->insertAtTags($attag, $this->jposteruid, $itemId, 'jabberblog', NULL, NULL);
+            $counter++;
+        }
+
+        return $str;
+    }
+
+    public function renderAtTags($str) {
+    	$str = stripslashes($str);
+        preg_match_all('/\@([a-zA-Z0-9_]{1,15}) ?/', $str, $results);
+        $counter = 0;
+        foreach ($results[1] as $item) {
+            // set up a link to the URI to display all posts in the meme
+            $atlink = $this->getObject ( 'link', 'htmlelements' );
+            $atlink->href = $this->uri ( array ('loc' => $item, 'action' => 'viewloc' ) );
+            $atlink->link = $item;
+            $str = str_replace($results[0][$counter], $atlink->show()." ", $str);
             $counter++;
         }
 

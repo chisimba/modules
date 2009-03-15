@@ -62,6 +62,7 @@ class dbjbim extends dbTable {
             $itemid = $this->insert ( $recarr, 'tbl_jabberblog' );
             $objImView = $this->getObject('jbviewer');
             $objImView->parseHashtags($recarr['msgbody'], $itemid);
+            $objImView->parseAtTags($recarr['msgbody'], $itemid);
         }
     }
 
