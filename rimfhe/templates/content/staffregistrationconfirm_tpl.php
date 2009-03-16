@@ -15,5 +15,5 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 //Show Header
 echo $display;
 
-echo $this->objLanguage->languageText('word_text2', 'rimfhe', 'Your registarion is succefull.<br /> Thank you fo registering.');
+echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_rimfhe_confirmregistration', 'rimfhe').'</div>';
 ?>

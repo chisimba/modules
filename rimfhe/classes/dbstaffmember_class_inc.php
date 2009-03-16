@@ -10,7 +10,7 @@ class dbstaffmember extends dbtable
 	//method to define the table
 	public function init()
 	{
-		parent::init('tbl_rimfhe_staffMember');
+		parent::init('tbl_rimfhe_staffmember');
 		$this->objUrl = $this->getObject('url', 'strings');
 	}//end init()
 		

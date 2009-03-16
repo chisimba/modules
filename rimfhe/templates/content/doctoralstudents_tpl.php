@@ -1,24 +1,4 @@
-<script type="text/javascript">
-//<![CDATA[
-function init () {
-	$('input_redraw').onclick = function () {
-		redraw();
-	}
-}
-function redraw () {
-	var url = 'index.php';
-	var pars = 'module=security&action=generatenewcaptcha';
-	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-function showLoad () {
-	$('load').style.display = 'block';
-}
-function showResponse (originalRequest) {
-	var newData = originalRequest.responseText;
-	$('captchaDiv').innerHTML = newData;
-}
-//]]>
-</script>
+
 <?php
 $this->loadClass('htmlheading', 'htmlelements');
 /*
@@ -26,7 +6,7 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $pageHeading = new htmlheading();
  $pageHeading->type = 2;
- $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Graduating Doctoral Students');
+ $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingdoctoral', 'rimfhe');
  echo '<br />'.$pageHeading->show();
 
 /*
@@ -34,10 +14,10 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $formheader = new htmlheading();
  $formheader->type = 3;
- $formheader->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
+ $formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
 
 //All fields are Required
-$header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required except Supervisor. Atleast one Supervisor must be entered');
+$header2 = $this->objLanguage->languageText('mod_rimfhe_requiredsupervisor', 'rimfhe');
 // Show if no Error
 if($mode!='fixerror'){
  echo '<br />'.$formheader->show();
@@ -51,20 +31,20 @@ $doctorateStudents = new form ('doctoralstudents', $this->uri(array('action'=>'d
 /* ---------------------- Form Elements--------*/
 //assign laguage objects to variables		
 $surname = $this->objLanguage->languageText('word_surname', 'system');
-$initials= $this->objLanguage->languageText('mod_staffregistration_initials', 'rimfhe');
+$initials= $this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe');
 $firstname= $this->objLanguage->languageText('phrase_firstname', 'system');
 $gender= $this->objLanguage->languageText('word_gender', 'system', 'Gender');
-$registrationNumber= $this->objLanguage->languageText('mod_doctoratestudents_studentnumber', 'rimfhe', 'Student Registration Number');
-$dept= $this->objLanguage->languageText('mod_staffregistration_department', 'rimfhe');
-$faculty= $this->objLanguage->languageText('mod_staffregistration_faculty', 'rimfhe');
-$thesistitle= $this->objLanguage->languageText('phrase_doctoratestudents', 'rimfhe','Title of Thesis');
-$supervisor1= $this->objLanguage->languageText('mod_staffregistration_supervisor1', 'rimfhe', 'Supervisor (1)');
-$supervisor2= $this->objLanguage->languageText('mod_staffregistration_supervisor1', 'rimfhe', 'Supervisor (2)');
-$supervisor3= $this->objLanguage->languageText('mod_staffregistration_supervisor3', 'rimfhe', 'Supervisor (3)');
-$supervisor1Affiliation= $this->objLanguage->languageText('mod_staffregistration_supervisor1', 'rimfhe', '1st Supervisor\'s Affiliation');
-$supervisor2Affiliation= $this->objLanguage->languageText('mod_staffregistration_supervisor1', 'rimfhe', '2nd Supervisor\'s Affiliation');
-$supervisor3Affiliation= $this->objLanguage->languageText('mod_staffregistration_supervisor3', 'rimfhe', '3rd Supervisor\'s Affiliation');
-$degree= $this->objLanguage->languageText('mod_staffregistration_supervisor3', 'rimfhe', 'Degree');
+$registrationNumber= $this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe');
+$dept= $this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe');
+$faculty= $this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe');
+$thesistitle= $this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe');
+$supervisor1= $this->objLanguage->languageText('mod_rimfhe_supervisor1', 'rimfhe');
+$supervisor2= $this->objLanguage->languageText('mod_rimfhe_supervisor2', 'rimfhe');
+$supervisor3= $this->objLanguage->languageText('mod_rimfhe_supervisor3', 'rimfhe');
+$supervisor1Affiliation= $this->objLanguage->languageText('mod_rimfhe_supervisoraffiliate1', 'rimfhe');
+$supervisor2Affiliation= $this->objLanguage->languageText('mod_rimfhe_supervisoraffiliate2', 'rimfhe');
+$supervisor3Affiliation= $this->objLanguage->languageText('mod_rimfhe_supervisoraffiliate3', 'rimfhe');
+$degree= $this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe');
 
 //create table
 $table =new htmltable('registration');
@@ -327,3 +307,24 @@ if ($mode == 'fixerror' && count($messages) > 0) {
 //display form
 echo $doctorateStudents->show();
 ?>
+<script type="text/javascript">
+//<![CDATA[
+function init () {
+	$('input_redraw').onclick = function () {
+		redraw();
+	}
+}
+function redraw () {
+	var url = 'index.php';
+	var pars = 'module=security&action=generatenewcaptcha';
+	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+	$('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+	$('captchaDiv').innerHTML = newData;
+}
+//]]>
+</script>

@@ -1,24 +1,3 @@
-<script type="text/javascript">
-//<![CDATA[
-function init () {
-	$('input_redraw').onclick = function () {
-		redraw();
-	}
-}
-function redraw () {
-	var url = 'index.php';
-	var pars = 'module=security&action=generatenewcaptcha';
-	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-function showLoad () {
-	$('load').style.display = 'block';
-}
-function showResponse (originalRequest) {
-	var newData = originalRequest.responseText;
-	$('captchaDiv').innerHTML = newData;
-}
-//]]>
-</script>
 <?php
 $this->loadClass('htmlheading', 'htmlelements');
 /*
@@ -26,7 +5,7 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $pageHeading = new htmlheading();
  $pageHeading->type = 2;
- $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Chapter In a Book');
+ $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingchapterinbook', 'rimfhe');
  echo '<br />'.$pageHeading->show();
 
 /*
@@ -34,10 +13,10 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $formheader = new htmlheading();
  $formheader->type = 3;
- $formheader->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
+ $formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
 
 //All fields are Required
-$header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required except Authors. Atleast one Author must be entered');
+$header2 = $this->objLanguage->languageText('mod_rimfhe_requiredauthor', 'rimfhe');
 // Show if no Error
 if($mode!='fixerror'){
  echo '<br />'.$formheader->show();
@@ -52,25 +31,23 @@ $chapterinbook = new form ('entirebook', $this->uri(array('action'=>'chapterinbo
 $chapterinbook->addToForm('<br />');
 		/* ---------------------- Form Elements--------*/
 //assign laguage objects to variables		
-$bookTitle = $this->objLanguage->languageText('mod__chaptersinbook_title', 'rimfhe', 'Title of the Book');
-$isbnNumber= $this->objLanguage->languageText('mod_entirebook_isbn', 'rimfhe');
-$editors = $this->objLanguage->languageText('mod_chaptersin book_editors', 'rimfhe', 'Editors');
-$publisher= $this->objLanguage->languageText('mod_entirebook_publisher', 'rimfhe');
-$chapterTitle = $this->objLanguage->languageText('mod_entirebook_chapter', 'rimfhe', 'Title of The Chapter');
-$authorsofthechapter= $this->objLanguage->languageText('mod_chaptersinbook_authors', 'rimfhe', 'Authors of the Chapter:');
-$author1= $this->objLanguage->languageText('mod_entirebook_author1', 'rimfhe');
-$author2= $this->objLanguage->languageText('mod_entirebook_author2', 'rimfhe');
-$author3= $this->objLanguage->languageText('mod_entirebook_author3', 'rimfhe');
-$author4= $this->objLanguage->languageText('mod_entirebook_author4', 'rimfhe');
-$firstChaprtPgNo= $this->objLanguage->languageText('mod_chaptersinbook_chapterfirstpageno', 'rimfhe', 'Numnber of First Page of the Chapter');
-$lastChaprtPgNo= $this->objLanguage->languageText('mod_chaptersinbook_chapterlastpageno', 'rimfhe', 'Numnber of Last Page of the Chapter');
-$firstChaprtPgNo= $this->objLanguage->languageText('mod_entirebook_firschapterpageno', 'rimfhe');
-$author1label= $this->objLanguage->languageText('mod_accreditedjournal_author1label', 'rimfhe', "1st Author's Affiliation");
-$author2label= $this->objLanguage->languageText('mod_accreditedjournal_author2label', 'rimfhe',"2nd Author's Affiliation");
-$author3label= $this->objLanguage->languageText('mod_accreditedjournal_author3label', 'rimfhe', "3rd Author's Affiliation");
-$author4label= $this->objLanguage->languageText('mod_accreditedjournal_author4label', 'rimfhe', "4th Author's Affiliation");
-$lastChaprtPgNo= $this->objLanguage->languageText('mod_entirebook_lastchapterpageno', 'rimfhe');
-
+$bookTitle = $this->objLanguage->languageText('mod_rimfhe_booktitle2', 'rimfhe');
+$isbnNumber= $this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe');
+$editors = $this->objLanguage->languageText('mod_rimfhe_editors', 'rimfhe');
+$publisher= $this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe');
+$chapterTitle = $this->objLanguage->languageText('mod_rimfhe_chaptertitle', 'rimfhe');
+//$authorsofthechapter= $this->objLanguage->languageText('mod_rimfhe_chapterauthors', 'rimfhe');
+$author1= $this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe');
+$author2= $this->objLanguage->languageText('mod_rimfhe_author2', 'rimfhe');
+$author3= $this->objLanguage->languageText('mod_rimfhe_author3', 'rimfhe');
+$author4= $this->objLanguage->languageText('mod_rimfhe_author4', 'rimfhe');
+$firstChapterPgNo= $this->objLanguage->languageText('mod_rimfhe_chapterfirstpageno', 'rimfhe');
+$lastChaptePgNo= $this->objLanguage->languageText('mod_rimfhe_chapterlastpageno', 'rimfhe');
+$author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation', 'rimfhe');
+$author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
+$author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
+$author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
+$peerReview= $this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe');
 //create table
 $table =new htmltable('entirebook');
 $table->width ='80%';
@@ -119,7 +96,6 @@ $table->addCell($publishingHouseLabel->show(), 150, NULL, 'left');
 $table->addCell($objPublishingHouse->show(), 150, NULL, 'left');
 $table->endRow();
 
-		
 //Input and label for Title of the Chapter
 $table->startRow();
 $objChapterTile = new textinput ('chaptertile');
@@ -214,7 +190,6 @@ $table->addCell($affiliate3Label->show(), 150, NULL, 'left');
 $table->addCell($objAffiliate3->show(), 150, NULL, 'left');
 $table->endRow();
 
-
 //Input and label for Author 4
 $table->startRow();
 $objAuthor4 = new textinput ('author4');
@@ -245,7 +220,7 @@ $table->endRow();
 //Input and label for First Chapter Page Number
 $table->startRow();
 $objFirstPage = new textinput ('firstpage');
-$firstPageLabel = new label($firstChaprtPgNo.'&nbsp;', 'firstpage');
+$firstPageLabel = new label($firstChapterPgNo.'&nbsp;', 'firstpage');
 	if($mode == 'fixerror'){
 		$objFirstPage->value =$this->getParam('firstpage');
 	}		
@@ -256,7 +231,7 @@ $table->endRow();
 //Input and label for Last Chapter Page Number
 $table->startRow();
 $objLastPage = new textinput ('lastpage');
-$lastPageLabel = new label($lastChaprtPgNo.'&nbsp;', 'lastpage');
+$lastPageLabel = new label($lastChaptePgNo.'&nbsp;', 'lastpage');
 if($mode == 'fixerror'){
 		$objLastPage->value =$this->getParam('lastpage');
 	}		
@@ -341,3 +316,24 @@ if ($mode == 'fixerror' && count($messages) > 0) {
 //display form
 echo $chapterinbook->show();
 ?>
+<script type="text/javascript">
+//<![CDATA[
+function init () {
+	$('input_redraw').onclick = function () {
+		redraw();
+	}
+}
+function redraw () {
+	var url = 'index.php';
+	var pars = 'module=security&action=generatenewcaptcha';
+	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+	$('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+	$('captchaDiv').innerHTML = newData;
+}
+//]]>
+</script>

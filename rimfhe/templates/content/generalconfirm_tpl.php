@@ -4,7 +4,7 @@
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 $objIcon =  $this->newObject('geticon', 'htmlelements');
-$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('word_text', 'rimfhe', 'Data Entry Confirmation.');
+$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_rimfhe_dataentryconfirm', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -15,5 +15,5 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 //Show Header
 echo $display;
 
-echo $this->objLanguage->languageText('word_text2', 'rimfhe', 'The information you entered has been successfully submitted to the database.<br /> Thank you.');
+echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_rimfhe_dataentryconfirm2', 'rimfhe').'</div>';
 ?>

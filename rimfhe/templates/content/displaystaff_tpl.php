@@ -22,7 +22,7 @@ $table->cellpadding = '5';
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('word_text', 'rimfhe', 'Registererd Staff Members');
+$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_rimfhe_pgheadingdisplaystaff', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -40,17 +40,16 @@ if (count($arrDisplayStaff) > 0) {
 
 	//setup the table headings
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Serial #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Surname'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Initials'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Names'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Rank'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Appointment'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Department'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Staff #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Email'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_rimfhe', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_rank', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_appointment', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('phrase_staffnumber', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('phrase_rimfhe', 'system'));
 	$table->endHeaderRow();
 
 	//Loop through $arrDisplayStaff and set data in rows
@@ -60,7 +59,6 @@ if (count($arrDisplayStaff) > 0) {
 
 	//Setuo table rows
 	$tableRow = array();
-	$tableRow[] = $staffmember['puid'];
 	$tableRow[] = $staffmember['surname'];
 	$tableRow[] = $staffmember['initials'];
 	$tableRow[] = $staffmember['firstname'];
@@ -80,7 +78,7 @@ if (count($arrDisplayStaff) > 0) {
 }
 else{
 	//When no data has been entered
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
 	
 }
  echo $table->show();

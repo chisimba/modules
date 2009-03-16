@@ -27,7 +27,7 @@ $table->cellpadding = '5';
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('word_text', 'rimfhe', 'Graduating Doctoral Student Information');
+$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_rimfhe_pgheadingdisplaydoctoral', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -44,17 +44,16 @@ $rowcount = 0;
 if ( count($arrDisplayDoctoral) > 0) {	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Surname'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Initials.
- Number'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Names'));	
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Gender'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Student<br /> Registration<br />Number'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Department'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', ' Title of Thesis'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Name of Supervisors'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Degree'));	
+	$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));	
+	$table->addHeaderCell($this->objLanguage->languageText('word_gender', 'system', 'Gender'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_studentnumber', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisors', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rifhme'));	
 	$table->endHeaderRow();
 	
 	foreach($arrDisplayDoctoral as $doctoralstudents) {
@@ -79,7 +78,7 @@ if ( count($arrDisplayDoctoral) > 0) {
 	}	
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
 	
 }
  echo $table->show();

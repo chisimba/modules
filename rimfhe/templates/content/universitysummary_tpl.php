@@ -22,7 +22,7 @@ $table2->cellpadding = '5';
 //setup the table headings
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
-$h3->str =$this->objLanguage->languageText('word_text', 'rimfhe', 'Total University Output');
+$h3->str =$this->objLanguage->languageText('mod_rimfhe_universitytotaloutputt', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -53,14 +53,12 @@ if (!empty($totalArticles) || !empty($totalBooks) || !empty($totalChapterInBook)
 		$totalMastersStudents = 0;
 	}
 //Description for $table 
-	$sumArticle = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Journal Articles');
-	$sumBooks = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Books');
-	$sumChapterInBook = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total Chapters In Books');
-	$sumDoctoral = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total graduating Doctoral Students');		
-
-	$sumMasters = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'Total graduating Masters Students');	
-
-	$OveralTotral = $this->objLanguage->languageText('mod_university_summary', 'rimfhe', 'TOTAL');	
+	$sumArticle = $this->objLanguage->languageText('mod_rimfhe_totaljournalarticle', 'rimfhe');
+	$sumBooks = $this->objLanguage->languageText('mod_rimfhe_totalbooks', 'rimfhe', '');
+	$sumChapterInBook = $this->objLanguage->languageText('mod_rimfhe_totalchapterinbook', 'rimfhe');
+	$sumDoctoral = $this->objLanguage->languageText('mod_rimfhe_totaldoctoralstudents', 'rimfhe');
+	$sumMasters = $this->objLanguage->languageText('mod_rimfhe_totalmastersstudents', 'rimfhe');
+	$OveralTotral = $this->objLanguage->languageText('mod_rimfhe_grandtotal', 'rimfhe', 'TOTAL');	
 
 	$articles= '<span style="color:red;font-size:12px;">'.$sumArticle.'</span>:&nbsp;&nbsp;<strong>'.$totalArticles.'</strong><br />';
 	$books= '<span style="color:red;font-size:12px;">'.$sumBooks.'</span>:&nbsp;&nbsp;<strong>'.$totalBooks.'</strong><br />';
@@ -71,7 +69,7 @@ if (!empty($totalArticles) || !empty($totalBooks) || !empty($totalChapterInBook)
 	$total= '<span style="color:red;font-size:12px;">'.$OveralTotral.'</span>:&nbsp;&nbsp;<strong>'.($totalArticles+$totalBooks+$totalChapterInBook+$totalDoctoralStudents+$totalMastersStudents).'</strong><br />';
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
 	
 }
 //Header for $table

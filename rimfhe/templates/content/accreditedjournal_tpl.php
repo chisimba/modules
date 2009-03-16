@@ -34,10 +34,10 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $formheader = new htmlheading();
  $formheader->type = 3;
- $formheader->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
+ $formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
 
 //All fields are Required
-$header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required except Authors. Atleast one Author must be entered');
+$header2 = $this->objLanguage->languageText('mod_rimfhe_requiredauthor', 'rimfhe');
 // Show if no Error
 if($mode!='fixerror'){
  echo $formheader->show();
@@ -49,21 +49,21 @@ $this->formElements->sendElements();
 //Instantiate a new form object
 $accreditedJournal = new form ('accreditedjournal', $this->uri(array('action'=>'accreditedjournal'), 'rimfhe'));
 //assign laguage objects to variables		
-$journalName = $this->objLanguage->languageText('mod_accreditedjournal_name', 'rimfhe');
-$journalCategory= $this->objLanguage->languageText('mod_accreditedjournal_categorey', 'rimfhe');
-$articleTitle= $this->objLanguage->languageText('mod_accreditedjournal_atitcletitle', 'rimfhe');
-$publicationYear= $this->objLanguage->languageText('mod_accreditedjournal_year', 'rimfhe');
-$volume= $this->objLanguage->languageText('mod_accreditedjournal_volume', 'rimfhe');
-$firstPabeNo= $this->objLanguage->languageText('mod_accreditedjournal_firstpage', 'rimfhe');
-$lastPageNo= $this->objLanguage->languageText('mod_accreditedjournal_lastpage', 'rimfhe');
-$author1= $this->objLanguage->languageText('mod_accreditedjournal_author1', 'rimfhe');
-$author2= $this->objLanguage->languageText('mod_accreditedjournal_author2', 'rimfhe');
-$author3= $this->objLanguage->languageText('mod_accreditedjournal_author3', 'rimfhe');
-$author4= $this->objLanguage->languageText('mod_accreditedjournal_author4', 'rimfhe');
-$author1label= $this->objLanguage->languageText('mod_accreditedjournal_author1label', 'rimfhe', "1st Author's Affiliation");
-$author2label= $this->objLanguage->languageText('mod_accreditedjournal_author2label', 'rimfhe',"2nd Author's Affiliation");
-$author3label= $this->objLanguage->languageText('mod_accreditedjournal_author3label', 'rimfhe', "3rd Author's Affiliation");
-$author4label= $this->objLanguage->languageText('mod_accreditedjournal_author4label', 'rimfhe', "4th Author's Affiliation");
+$journalName = $this->objLanguage->languageText('mod_rimfhe_name', 'rimfhe');
+$journalCategory= $this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe');
+$articleTitle= $this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe');
+$publicationYear= $this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe');
+$volume= $this->objLanguage->languageText('mod_rimfhe_volume', 'rimfhe');
+$firstPabeNo= $this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe');
+$lastPageNo= $this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe');
+$author1= $this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe');
+$author2= $this->objLanguage->languageText('mod_rimfhe_author2', 'rimfhe');
+$author3= $this->objLanguage->languageText('mod_rimfhe_author3', 'rimfhe');
+$author4= $this->objLanguage->languageText('mod_rimfhe_author4', 'rimfhe');
+$author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation', 'rimfhe');
+$author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
+$author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
+$author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
 	
 //create table
 $table =new htmltable('accreditedjournal');

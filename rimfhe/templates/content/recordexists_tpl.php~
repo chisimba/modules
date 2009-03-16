@@ -15,5 +15,5 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 //Show Header
 echo $display;
 
-echo $bookname;
+echo '<div class="noRecordsMessage">'.$title.'</div>';
 ?>

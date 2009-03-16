@@ -27,7 +27,7 @@ $table->startHeaderRow();
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('word_text', 'rimfhe', 'List of DOE Accredited Journal Articles');
+$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_rimfhe_pgheadingdisplayjournal', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -43,15 +43,15 @@ $rowcount = 0;
 //setup the tables rows  and loop though the records
 if ( count($arrJournal) > 0) {	
 //Set up fields heading
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Name of Journal'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Categroy'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Article'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Year of<br /> Publication'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Vlume'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Page #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Page #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Pages'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_name', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_volume', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rifhme'));
 	$table->endHeaderRow();
 	
 	foreach($arrJournal as $journal) {

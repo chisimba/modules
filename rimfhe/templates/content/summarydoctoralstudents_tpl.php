@@ -23,7 +23,7 @@ $table2->cellpadding = '5';
 //setup the table headings
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
-$h3->str =$this->objLanguage->languageText('word_text', 'rimfhe', 'Graduating Doctoral Students Summary Page');
+$h3->str =$this->objLanguage->languageText('mod_rimfhe_doctoralstudentssummry', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -39,12 +39,12 @@ $rowcount = 0;
 
 if ( count($arrDeptSummary) > 0) {	
 //Description for $table 
-	$tableHeader = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Doctoral Students by Department');
+	$tableHeader = $this->objLanguage->languageText('mod_rimfhe_doctoraltotal', 'rimfhe');
 	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Deaprtment'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Number of graduate Doctoral Students'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_dept', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_totaldocgradnumber', 'rifhme'));
 		
 	$table->endHeaderRow();
 	
@@ -62,11 +62,11 @@ if ( count($arrDeptSummary) > 0) {
 	}
 
 	//Description for $table2 
-	$table2Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Doctoral Students by Faculty');
+	$table2Header = $this->objLanguage->languageText('mod_rimfhe_doctsumbyfaculty', 'rimfhe');
 	//Set up fields heading for $table2
 	$table2->startHeaderRow();
-	$table2->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Faculty'));
-	$table2->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Number of graduate Doctoral Students'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rifhme'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_numberofdoc', 'rifhme'));
 		
 	$table->endHeaderRow();
 	
@@ -85,15 +85,15 @@ if ( count($arrDeptSummary) > 0) {
 
 	$mastersTotalCount=$totalCount;
 	
-	$table3Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Doctoral Students For the University');
+	$table3Header = $this->objLanguage->languageText('mod_rimfhe_doctoralstudentssummary', 'rimfhe');
 
 	$totalDoctoralStuds= '<span style="color:red;font-size:12px;">'.$table3Header.'</span>:&nbsp;&nbsp;<strong>'.$mastersTotalCount.'</strong><br />';
 
-	$table4Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total Output for the Unversity');
+	$table4Header = $this->objLanguage->languageText('mod_rimfhe_universitytotaloutput', 'rimfhe');
 	
 	$totalUnitOutPut = '<span style="color:red;font-size:12px;">'.$table4Header.'</span>:&nbsp;&nbsp;<strong>'.($mastersTotalCount*3).'</strong><br /><br />';
 }
-else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
 	
 }
 //Header for $table

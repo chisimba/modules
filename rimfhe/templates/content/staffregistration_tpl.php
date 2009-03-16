@@ -31,7 +31,7 @@ $header = new htmlheading();
 $header->type = 4;
 $header->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
 
-$header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required');
+$header2 = $this->objLanguage->languageText('mod_rimfhe_required', 'rimfhe');
 if($mode!='fixerror'){
 echo '<br />'.$header->show();
 echo '<br /><span style="color:red;font-size:12px;">'.$header2.'</span>';
@@ -46,13 +46,13 @@ echo '<br /><span style="color:red;font-size:12px;">'.$header2.'</span>';
 	/* ---------------------- Form Elements--------*/
 	//assign laguage objects to variables		
 	$surname = $this->objLanguage->languageText('word_surname', 'system');
-	$initials= $this->objLanguage->languageText('mod_staffregistration_initials', 'rimfhe');
+	$initials= $this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe');
 	$firstname= $this->objLanguage->languageText('phrase_firstname', 'system');
 	$droptitle= $this->objLanguage->languageText('word_title', 'system');
-	$rank= $this->objLanguage->languageText('mod_staffregistration_rank', 'rimfhe');
-	$appointment= $this->objLanguage->languageText('mod_staffregistration_appointment', 'rimfhe');
-	$dept= $this->objLanguage->languageText('mod_staffregistration_department', 'rimfhe');
-	$faculty= $this->objLanguage->languageText('mod_staffregistration_faculty', 'rimfhe');
+	$rank= $this->objLanguage->languageText('mod_rimfhe_rank', 'rimfhe');
+	$appointment= $this->objLanguage->languageText('mod_rimfhe_appointment', 'rimfhe');
+	$dept= $this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe');
+	$faculty= $this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe');
 	$staffNumber= $this->objLanguage->languageText('phrase_staffnumber', 'system');
 	$email= $this->objLanguage->languageText('phrase_emailaddress', 'system');
 	$confirmemail= $this->objLanguage->languageText('phrase_confirmemail', 'system');

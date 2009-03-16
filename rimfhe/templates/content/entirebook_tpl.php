@@ -26,7 +26,7 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $pageHeading = new htmlheading();
  $pageHeading->type = 2;
- $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pageheading', 'rimfhe', 'Entire Book/Monograph');
+ $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingentirebook', 'rimfhe');
  echo '<br />'.$pageHeading->show();
 
 /*
@@ -34,10 +34,10 @@ $this->loadClass('htmlheading', 'htmlelements');
  */
  $formheader = new htmlheading();
  $formheader->type = 3;
- $formheader->str = $this->objLanguage->languageText('mod_staffregistration_forminstruction', 'rimfhe');
+ $formheader->str = $this->objLanguage->languageText('mod_rimfhe_forminstruction', 'rimfhe');
 
 //All fields are Required
-$header2 = $this->objLanguage->languageText('mod_staffregistration_required', 'rimfhe', '*All fields are Required except Authors. Atleast one Author must be entered');
+$header2 = $this->objLanguage->languageText('mod_rimfhe_requiredauthor', 'rimfhe');
 // Show if no Error
 if($mode!='fixerror'){
  echo '<br />'.$formheader->show();
@@ -53,20 +53,23 @@ $entireBook->addToForm('<br />');
 
 /* ---------------------- Form Elements--------*/
 //assign laguage objects to variables		
-$bookName = $this->objLanguage->languageText('mod_entirebook_title', 'rimfhe');
-$isbnNumber= $this->objLanguage->languageText('mod_entirebook_isbn', 'rimfhe');
-$publisher= $this->objLanguage->languageText('mod_entirebook_publisher', 'rimfhe');
-$peerReview= $this->objLanguage->languageText('mod_entirebook_peer', 'rimfhe', 'Evidence of Peer Review');
-$author1= $this->objLanguage->languageText('mod_entirebook_author1', 'rimfhe');
-$author2= $this->objLanguage->languageText('mod_entirebook_author2', 'rimfhe');
-$author3= $this->objLanguage->languageText('mod_entirebook_author3', 'rimfhe');
-$author4= $this->objLanguage->languageText('mod_entirebook_author4', 'rimfhe');
-$firstChaprtPgNo= $this->objLanguage->languageText('mod_entirebook_firschapterpageno', 'rimfhe');
-$author1label= $this->objLanguage->languageText('mod_accreditedjournal_author1label', 'rimfhe', "1st Author's Affiliation");
-$author2label= $this->objLanguage->languageText('mod_accreditedjournal_author2label', 'rimfhe',"2nd Author's Affiliation");
-$author3label= $this->objLanguage->languageText('mod_accreditedjournal_author3label', 'rimfhe', "3rd Author's Affiliation");
-$author4label= $this->objLanguage->languageText('mod_accreditedjournal_author4label', 'rimfhe', "4th Author's Affiliation");
-$lastChaprtPgNo= $this->objLanguage->languageText('mod_entirebook_lastchapterpageno', 'rimfhe');
+$bookName = $this->objLanguage->languageText('mod_rimfhe_title', 'rimfhe');
+$isbnNumber= $this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe');
+$publisher= $this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe');
+$peerReview= $this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe');
+$author1= $this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe');
+$author2= $this->objLanguage->languageText('mod_rimfhe_author2', 'rimfhe');
+$author3= $this->objLanguage->languageText('mod_rimfhe_author3', 'rimfhe');
+$author4= $this->objLanguage->languageText('mod_rimfhe_author4', 'rimfhe');
+
+$firstChaprtPgNo= $this->objLanguage->languageText('mod_rimfhe_firstchapterpageno', 'rimfhe');
+
+$author1label= $this->objLanguage->languageText('mod_rimfhe_author1affiliation', 'rimfhe');
+$author2label= $this->objLanguage->languageText('mod_rimfhe_author2affiliation', 'rimfhe');
+$author3label= $this->objLanguage->languageText('mod_rimfhe_author3affiliation', 'rimfhe');
+$author4label= $this->objLanguage->languageText('mod_rimfhe_author4affiliation', 'rimfhe');
+
+$lastChaprtPgNo= $this->objLanguage->languageText('mod_rimfhe_lastchapterpageno', 'rimfhe');
 
 //create table
 $table =new htmltable('entirebook');

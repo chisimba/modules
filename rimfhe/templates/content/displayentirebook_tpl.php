@@ -27,7 +27,7 @@ $table->cellpadding = '5';
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
-$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('word_text', 'rimfhe', 'Entire Books Details');
+$h3->str = $objIcon->show().'&nbsp;'. $this->objLanguage->languageText('mod_rimfhe_pgheadingdisplayentirebook', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -44,14 +44,14 @@ $rowcount = 0;
 if ( count($arrDisplayBooks) > 0) {	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Book/<br />Monograph'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'ISBN Number'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Publishing <br />House'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'First Chapter<br /> Page #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Last Chapter<br /> Page #'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Number <br /> of Pages'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Evidence of<br />Peer Review'));	
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_title', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstchapterpageno', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastchapterpageno', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe'));	
 	$table->endHeaderRow();
 	
 	foreach($arrDisplayBooks as $entirebook) {
@@ -74,11 +74,8 @@ if ( count($arrDisplayBooks) > 0) {
 	}	
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe' ).'</div>';
 	
 }
  echo $table->show();
-
 ?>
-
-

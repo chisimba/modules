@@ -44,16 +44,16 @@ $rowcount = 0;
 if ( count($arrDisplayBooks) > 0) {	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Book/<br />Monograph'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'ISBN Number'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Editors of the Book'));	
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Publishing <br /> House'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Title of Chapter'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Authors'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Number of  First<br /> Page of Chapter'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', ' Number of Last <br /> Page of Chapter'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Total Number <br /> of Pages'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'rifhme', 'Evidence of<br />Peer Review'));	
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_booktitle2', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editors','rimfhe'));	
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chaptertitle', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chapterfirstpageno', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chapterlastpageno', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe'));	
 	$table->endHeaderRow();
 	
 	foreach($arrDisplayBooks as $entirebook) {

@@ -336,7 +336,7 @@ Public fuction to instantiate required  objestc
 			$problems[] ='nolastpage';
 		}
 		
-		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+		if(empty($author1) && empty($author2) && empty($author3) && empty($author4)){
 			$problems[] = 'noauthor';
 		}
 	
@@ -406,7 +406,7 @@ Public fuction to instantiate required  objestc
 			$problems[] ='nolastpage' ;
 		} 
 		
-		if(empty($author1)||empty($author2)||empty($author3)||empty($author4)){
+		if(empty($author1) && empty($author2) && empty($author3) && empty($author4)){
 			$problems[] = 'noauthor';
 		}
 	
@@ -485,7 +485,7 @@ Public fuction to instantiate required  objestc
 			$problems[] ='nolastpage' ;
 		}
 				
-		if((empty($author1)) && (empty($author2)) && empty($author3) && empty($author4)){
+		if(empty($author1) && empty($author2) && empty($author3) && empty($author4)){
 			$problems[] = 'noauthor';
 		}
 		// Check whether user matched captcha
@@ -565,7 +565,7 @@ Public fuction to instantiate required  objestc
 			$problems[] = 'nothesis';
 		}
 
-		if(empty($supervisor1) || empty($supervisor2) ||empty($supervisor3)){
+		if(empty($supervisor1) && empty($supervisor2) && empty($supervisor3)){
 			$problems[] = 'nosupervisor';
 		}
 		if(empty($degree)){
