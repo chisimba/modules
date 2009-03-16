@@ -49,7 +49,7 @@ $this->formElements->sendElements();
 //Instantiate a new form object
 $accreditedJournal = new form ('accreditedjournal', $this->uri(array('action'=>'accreditedjournal'), 'rimfhe'));
 //assign laguage objects to variables		
-$journalName = $this->objLanguage->languageText('mod_rimfhe_name', 'rimfhe');
+$journalName = $this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe');
 $journalCategory= $this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe');
 $articleTitle= $this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe');
 $publicationYear= $this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe');

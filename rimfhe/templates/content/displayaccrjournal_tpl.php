@@ -43,7 +43,7 @@ $rowcount = 0;
 //setup the tables rows  and loop though the records
 if ( count($arrJournal) > 0) {	
 //Set up fields heading
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_name', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_categorey', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_atitcletitle', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_year', 'rimfhe'));
