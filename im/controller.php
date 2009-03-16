@@ -199,7 +199,46 @@ class im extends controller {
                 $this->nextAction ( NULL );
 
                 break;
+				
+			 case 'changestatus' :
+			 
+                $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
+				
+				
+				
+				
+				
+				
+				
+				//$conn = new XMPPHP_XMPP('jabber.example', 5222, 'jabber_username', 'jabber_password_here', 'xmpphp', 'server_name', $printlog=false, $loglevel=XMPPHP_Log::LEVEL_INFO);
 
+				try {
+				    $conn->connect();
+				    $conn->processUntil('session_start');
+					$status = "offline";
+					$type = "unavailable";
+				    $conn->presence("Ya, I'm online $status",$status,"wesleynitsckie@gmail.com", $type);
+				    //$conn->message('wesleynitsckie@gmail.com', 'Chaning status to '.$status);
+				    $conn->disconnect();
+				} catch(XMPPHP_Exception $e) {
+				    die($e->getMessage());
+				}
+					
+				die("end: Changing status to :$status type -> $type");
+				break;
+								
+								
+								/*>connect ();
+				                //$conn2->processUntil ( 'session_start' );
+				               
+				                print $conn2->presence(null, 'dnd', 'fsiu123@gmail.com') ;		   
+				               
+				                $conn2->disconnect ();
+				
+				                //$this->nextAction ( NULL );
+				die('end');
+				                break;
+				*/
             case 'messagehandler' :
                 // This is a looooong running task... Lets use the background class to handle it
                 //check the connection status
