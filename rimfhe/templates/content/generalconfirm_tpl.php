@@ -16,7 +16,4 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 echo $display;
 
 echo '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_rimfhe_dataentryconfirm2', 'rimfhe').'</div>';
-echo '<br />';
-
-
 ?>
