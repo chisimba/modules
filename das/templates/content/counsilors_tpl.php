@@ -85,6 +85,7 @@ $admin.= "<br/>".$objLink->show();
 
 $rightColumn .= $objFB->show('', $admin);
 $rightColumn .= $objFB->show("Settings",  $this->objImOps->getConfigBlock());
+$leftColumn .= $objFB->show("Status",  $this->objImOps->getStatusBlock());
 $leftColumn .= $this->objImOps->massMessage();
 $cssLayout->setMiddleColumnContent($middleColumn);
 $cssLayout->setLeftColumnContent($leftColumn);

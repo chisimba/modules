@@ -205,6 +205,25 @@ class das extends controller {
                 echo "Messages were sent to ".count($users)." users";
 
                 break;
+                
+            case 'savestatus':
+            	$this->objSysConfig->changeParam('jabberstatus', 'im', $this->getParam('status'));
+				$this->objSysConfig->changeParam('jabbershow', 'im', $this->getParam('show'));
+				/*try {
+				    $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );				
+				    $conn->connect();
+				    $conn->processUntil('session_start');
+					$status = $this->getParam('status');
+					$show = $this->getParam('show');
+					$type = "available";
+				    $conn->presence($status,$show,"wesleynitsckie@gmail.com");
+				    //$conn->message('wesleynitsckie@gmail.com', 'Chaning status to '.$status);
+				    $conn->disconnect();
+				} catch(XMPPHP_Exception $e) {
+				    die($e->getMessage());
+				}*/
+				return  $this->nextAction('viewcounsilors');
+				break;
 
 			case 'savesettings':
 				

@@ -50,6 +50,8 @@ class dasops extends object {
             $this->jport = $this->objSysConfig->getValue ( 'jabberport', 'im' );
             $this->juser = $this->objSysConfig->getValue ( 'jabberuser', 'im' );
             $this->jpass = $this->objSysConfig->getValue ( 'jabberpass', 'im' );
+            $this->jstatus = $this->objSysConfig->getValue ( 'jabberstatus', 'im' );
+            $this->jshow = $this->objSysConfig->getValue ( 'jabbershow', 'im' );
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'im' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'im' );
 			$this->timeLimit = $this->objSysConfig->getValue ( 'imtimelimit', 'im' );
@@ -306,6 +308,45 @@ class dasops extends object {
 	
 	}
 	
+	/**
+	 * Method to get the status block
+	 * 
+	 */
+	public function getStatusBlock()
+	{
+		$str = "";
+		$form = $this->newObject('form', 'htmlelements');
+		$this->loadClass('button', 'htmlelements');
+		$this->loadClass('textinput', 'htmlelements');
+		$this->loadClass('dropdown', 'htmlelements');
+		
+		$form->action = $this->uri(array('action' => 'savestatus'));
+		$form->setDisplayType(2);
+		
+		$button = new  button();
+		$button->setToSubmit();
+		$button->setValue('Save');
+		$dasstatus = new textinput('status', $this->jstatus, null, 10);
+		//$dasshow = new textinput('show', $this->jshow,null, 10);
+		$dasshow = new dropdown('show');
+		
+		$dasshow->addOption('avaible', 'Available');
+		$dasshow->addOption('away', 'Away');
+		$dasshow->addOption('dnd', 'Do Not Disturb');
+		$dasshow->addOption('unavaible', 'Unavailable');
+		
+		$dasshow->setSelected($this->jshow);
+		
+		$dasstatus->label = 'Message';
+		$dasshow->label = 'Status';
+		
+		$form->addToForm($dasstatus);
+		$form->addToForm($dasshow);
+		$form->addToForm($button);		
+
+		return $form->show();
+		
+	}
 	
 	/**
 	* This method send an email to the user config jabber email
