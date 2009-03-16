@@ -85,6 +85,17 @@ class report extends object {
 		}
 	}
 	
+	
+	/**
+	 * Method to generate a table of the reports in the database for viewing
+	 * online or saving to PDF
+	 *
+	 * @param integer  $year The year to consider reports from
+	 * @param integer  $month The month to consider reports from
+	 * @param string   $reportTypeThe id of the type of reports to consider
+	 * @param boolean  $static whether or not the static css should be applied
+	 * @return string  the html table
+	 */
 	public function generateReport($year, $month, $reportType, $static = FALSE) {
 		
 		$objTable = $this->newObject('htmltable', 'htmlelements');
@@ -188,6 +199,15 @@ class report extends object {
 		return "<br />$css".$objTable->show();
 	}
 	
+	/**
+	 * Method to retrieve the data from the database and return it as a
+	 * comma separated list, to be openend in excel or other csv reading application
+	 *
+	 * @param integer  $year The year to consider reports from
+	 * @param integer  $month The month to consider reports from
+	 * @param string   $reportTypeThe id of the type of reports to consider
+	 * @return string  the csv string
+	 */
 	public function generateCSV($year, $month, $reportType) {
 		switch ($reportType) {
 			case 'init_01': 			//passive surveillance
