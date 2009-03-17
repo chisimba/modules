@@ -333,7 +333,8 @@ class dasops extends object {
 		$dasshow->addOption('avaible', 'Available');
 		$dasshow->addOption('away', 'Away');
 		$dasshow->addOption('dnd', 'Do Not Disturb');
-		$dasshow->addOption('unavaible', 'Unavailable');
+		$dasshow->addOption('unavailable', 'Unavailable');
+		$dasshow->addOption('invisible', 'Invisible');
 		
 		$dasshow->setSelected($this->jshow);
 		
