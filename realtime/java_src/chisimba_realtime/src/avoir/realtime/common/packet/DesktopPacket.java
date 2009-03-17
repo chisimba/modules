@@ -17,11 +17,22 @@ public class DesktopPacket implements RealtimePacket{
     private ScreenScrapeData data;
     private String sessionId;
     private boolean record;
+    private String sender;
 
-    public DesktopPacket(ScreenScrapeData data, String sessionId,boolean record) {
+    public DesktopPacket(ScreenScrapeData data, String sessionId,
+            boolean record,String sender) {
         this.data = data;
         this.sessionId = sessionId;
         this.record=record;
+        this.sender=sender;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public boolean isRecord() {
