@@ -510,7 +510,7 @@ class viewrender extends object {
 		$str = '<div style="padding:5px"><div id="screen" style="padding:3px;width:170px;height:200px;overflow:auto">'.$this->objIcon->show().'</div>';
 		$str .= '
 				<!--textarea id="screen2" cols="40" rows="40"> </textarea--> <br> 
-					<input id="message" >
+					<input id="message" size="15">
 					<button id="button"> Send </button></div>';
 		return $this->objFeatureBox->show('Counselior Chat', $str);
 		
@@ -534,7 +534,7 @@ class viewrender extends object {
 			
 			return $str;
 		} else {
-			return "No messages found";
+			return '<span class="subdued">No messages found</span>';
 		}
 		
 		

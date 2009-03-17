@@ -24,7 +24,7 @@ $scripts .= '<script type="text/javascript">
 	{
 	    $.post("index.php?module=das&action=getchatcontent", {}, function(data){ $("#screen").html(data);}); 
 	 
-	    setTimeout(\'update()\', 1000);
+	    setTimeout(\'update()\', 5000);
 	}
  
 	$(document).ready(
