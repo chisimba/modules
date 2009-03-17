@@ -428,7 +428,7 @@ class viewrender extends object {
 	$blocks .= $this->getCounselorStatBox();
 	
 	//Chat block
-	$blocks .= $this->getChatBlock();//$objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
+	//$blocks .= $this->getChatBlock();//$objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
         return $blocks;
 	
     }
@@ -440,8 +440,12 @@ class viewrender extends object {
     public function getRightBlocks()
     {
         
-        return $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
+        $blocks = $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
                                  $this->objUser->userId()));
+                                 
+        $blocks .= $this->getChatBlock();
+        
+        return $blocks;
     }
 
 
