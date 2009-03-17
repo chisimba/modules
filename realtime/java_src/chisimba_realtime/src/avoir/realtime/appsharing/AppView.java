@@ -76,8 +76,12 @@ class AppViewPanel extends Canvas
 
 //    private static final int[] X_POINTS = {0, 0, 20, 20};
 //    private static final int[] Y_POINTS = {0, 20, 20, 0};
+    int imageWidth=100;
+    int imageHeight=100;
     public AppViewPanel(int width, int height) {
         rectBox = new Rectangle(0, 0, width, height);
+        this.imageHeight=height;
+        this.imageWidth=width;
         setBackground(Color.white);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -178,39 +182,31 @@ class AppViewPanel extends Canvas
     }
 
     public void paint(Graphics g) {
-        //	System.out.println("entering paint");
         if (bClearPending && null != this.graphicsOffscreen) {
             bClearPending = false;
-            // System.out.println("clearing offscreen rect");
-            this.graphicsOffscreen.clearRect(0, 0,
-                    PixelUtil.MAX_WIDTH,
-                    PixelUtil.MAX_HEIGHT + getMessagesHeight());//width, height);
+            this.graphicsOffscreen.clearRect(0, 0,600,500);
+                  //  PixelUtil.MAX_WIDTH,
+                  //  PixelUtil.MAX_HEIGHT + getMessagesHeight());//width, height);
         }
-        //      System.out.println("Vect Images: "+vectLocatedImages);
+        
         bSharer = false;
         if (bSharer) {
 
             super.paint(g);
-            // System.out.println("in bsharer");
             paintSharerView(g, getColor());
         } else if (null != this.vectLocatedImages) {
-            //      System.out.println("8**************888888888********************************");
-            // synchronize so no drawing happens while rects
-            // are being updated?
             int iImageCount = this.vectLocatedImages.size();
             for (int i = 0; i < iImageCount; i++) {
-                //g.drawImage(
                 LocatedImage li = (LocatedImage) this.vectLocatedImages.elementAt(i);
-                // System.out.println("drawing image offscreen");
                 this.graphicsOffscreen.drawImage(
                         li.getImage(),
-                        li.x,//this.aRectTiles[i].x,//this.compRects[i].getOrigin().x,
-                        li.y,//this.aRectTiles[i].y,//this.compRects[i].getOrigin().y,
+                        li.x,
+                        li.y,
+                       600,
+                       500,
                         this);
             }
-            //	System.out.println("blitting offscreen to onscreen...");
-            g.drawImage(this.imageOffscreen, 0, 0, this);
-        //	System.out.println("...returned from blitting offscreen to onscreen.");
+            g.drawImage(this.imageOffscreen, 0, 0,600,500, this);
         }
     }
 
