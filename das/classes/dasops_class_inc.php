@@ -330,11 +330,11 @@ class dasops extends object {
 		//$dasshow = new textinput('show', $this->jshow,null, 10);
 		$dasshow = new dropdown('show');
 		
-		$dasshow->addOption('avaible', 'Available');
+		$dasshow->addOption('', 'Available');
 		$dasshow->addOption('away', 'Away');
 		$dasshow->addOption('dnd', 'Do Not Disturb');
-		$dasshow->addOption('unavailable', 'Unavailable');
-		//$dasshow->addOption('invisible', 'Invisible');
+		$dasshow->addOption('unavailable', 'Invisible');
+		$dasshow->addOption('unavailable', 'Offline');
 		
 		$dasshow->setSelected($this->jshow);
 		
