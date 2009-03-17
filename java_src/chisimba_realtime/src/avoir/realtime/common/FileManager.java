@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -56,8 +57,12 @@ public class FileManager extends javax.swing.JFrame {
 
     public FileManager(ArrayList<RealtimeFile> xfiles, TCPSocket xtcpConnector, ArrayList<String> xfilters) {
         presentationFC.addChoosableFileFilter(new PresentationFilter());
+        presentationFC.setMultiSelectionEnabled(true);
         graphicFC.addChoosableFileFilter(new ImageFilter());
+        graphicFC.setMultiSelectionEnabled(true);
         flashFC.addChoosableFileFilter(new FlashFilter());
+        flashFC.setMultiSelectionEnabled(true);
+        fc.setMultiSelectionEnabled(true);
         this.filters = xfilters;
         initComponents();
         this.files = xfiles;
@@ -138,21 +143,25 @@ public class FileManager extends javax.swing.JFrame {
 
             }
             if (tcpConnector.getFileManagerMode().equals("question-image")) {
+                // Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new FileDownloadRequest(targetPath, Constants.QUESTION_IMAGE));
                 tcpConnector.setSelectedFilePath(targetPath);
 
             }
             if (tcpConnector.getFileManagerMode().equals("slide-show")) {
+                // Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new FileDownloadRequest(targetPath, Constants.SLIDE_SHOW));
                 tcpConnector.setSelectedFilePath(targetPath);
 
             }
             if (tcpConnector.getFileManagerMode().equals("slide-builder-image")) {
+                // Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new FileDownloadRequest(targetPath, Constants.SLIDE_BUILDER_IMAGE));
                 tcpConnector.setSelectedFilePath(targetPath);
 
             }
             if (tcpConnector.getFileManagerMode().equals("whiteboard-image")) {
+                //Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new FileDownloadRequest(targetPath, Constants.IMAGE));
                 tcpConnector.setSelectedFilePath(targetPath);
 
@@ -167,11 +176,13 @@ public class FileManager extends javax.swing.JFrame {
 
             }
             if (tcpConnector.getFileManagerMode().equals("presentation")) {
+                // Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new PresentationRequest(targetPath));
                 tcpConnector.setSelectedFilePath(targetPath);
 
             }
             if (tcpConnector.getFileManagerMode().equals("slide-builder-question")) {
+                //Utils.showStatusWindow("Downloading...", false);
                 tcpConnector.sendPacket(new FileDownloadRequest(targetPath, Constants.QUESTION_FILE));
                 tcpConnector.setSelectedFilePath(targetPath);
 
@@ -303,33 +314,54 @@ public class FileManager extends javax.swing.JFrame {
                 tcpConnector.getFileManagerMode().equals("slide-builder-image") ||
                 tcpConnector.getFileManagerMode().equals("whiteboard-image")) {
             if (graphicFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = graphicFC.getSelectedFile();
-                fileUploader.transferFile(file.getAbsolutePath(), Constants.FILE_UPLOAD, targetPath);
+                File[] selectedFiles = graphicFC.getSelectedFiles();
+                Utils.showStatusWindow("Uploading...", false);
+                for (int i = 0; i < selectedFiles.length; i++) {
+                    File file = selectedFiles[i];
+                    targetPath = tcpConnector.getMf().getUser().getUserName() + "/images";
+
+                    fileUploader.transferFile(file.getAbsolutePath(), Constants.SLIDE_BUILDER_IMAGE, targetPath);
+                }
             }
         }
         if (tcpConnector.getFileManagerMode().equals("presentation")) {
             if (presentationFC.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = presentationFC.getSelectedFile();
-                fileUploader.transferFile(file.getAbsolutePath(), Constants.FILE_UPLOAD, targetPath);
+                File[] selectedFiles = presentationFC.getSelectedFiles();
+                for (int i = 0; i < selectedFiles.length; i++) {
+                    Utils.showStatusWindow("Uploading...", false);
+                    File file = selectedFiles[i];
+                    targetPath = tcpConnector.getMf().getUser().getUserName() + "/presentations";
+                    fileUploader.transferFile(file.getAbsolutePath(), Constants.PRESENTATION, targetPath);
+                }
             }
         }
         if (tcpConnector.getFileManagerMode().equals("documents") ||
                 tcpConnector.getFileManagerMode().equals("slide-builder-text")) {
             if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                fileUploader.transferFile(file.getAbsolutePath(), Constants.FILE_UPLOAD, targetPath);
+                Utils.showStatusWindow("Uploading...", false);
+                File[] selectedFiles = fc.getSelectedFiles();
+                for (int i = 0; i < selectedFiles.length; i++) {
+                    File file = selectedFiles[i];
+                    String path = tcpConnector.getMf().getUser().getUserName() + "/documents";
+                    fileUploader.transferFile(file.getAbsolutePath(), Constants.FILE_UPLOAD, path);
+                }
             }
         }
 
 
     }
 
+    private void processRefresh() {
+        tcpConnector.sendPacket(new FileVewRequestPacket(targetPath));
+        filePathField.setText(targetPath);
+    }
+
     private void processBack() {
         /*if (!targetPath.endsWith(tcpConnector.getMf().getUser().getUserName())) {
-            String parentPath=new File(targetPath).getParent();
-            tcpConnector.sendPacket(new FileVewRequestPacket(parentPath));
-            targetPath=parentPath;
-            filePathField.setText(targetPath);
+        String parentPath=new File(targetPath).getParent();
+        tcpConnector.sendPacket(new FileVewRequestPacket(parentPath));
+        targetPath=parentPath;
+        filePathField.setText(targetPath);
         }*/
     }
 
@@ -374,7 +406,7 @@ public class FileManager extends javax.swing.JFrame {
         filePathField.setPreferredSize(new java.awt.Dimension(269, 19));
         backPanel.add(filePathField);
 
-        backButton.setText("Back");
+        backButton.setText("Refresh");
         backButton.setEnabled(false);
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -468,7 +500,7 @@ public class FileManager extends javax.swing.JFrame {
     }//GEN-LAST:event_selectButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        processBack();
+        processRefresh();
 }//GEN-LAST:event_backButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;

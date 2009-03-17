@@ -25,10 +25,11 @@ public class BuilderSlide implements Serializable {
     private ImageIcon image;
     private String imagePath;
     int index;
+    private String url;
 
     public BuilderSlide(String title, String text, Color textColor, int textSize,
             XmlQuestionPacket question, ImageIcon image, String imagePath,int index,
-            int textXPos,int textYPos) {
+            int textXPos,int textYPos,String url) {
         this.title = title;
         this.text = text;
         this.textColor = textColor;
@@ -39,6 +40,15 @@ public class BuilderSlide implements Serializable {
         this.index=index;
         this.textXPos=textXPos;
         this.textYPos=textYPos;
+        this.url=url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getIndex() {
