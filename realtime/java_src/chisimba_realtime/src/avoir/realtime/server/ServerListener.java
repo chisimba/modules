@@ -85,6 +85,8 @@ public class ServerListener extends Thread {
     public void run() {
         try {
             ServerSocket ssocket = new ServerSocket(port);
+            //ssocket.setSoTimeout(5000);
+            
             /*  ServerSocketFactory ssocketFactory = SSLServerSocketFactory.getDefault();
             SSLServerSocket ssocket = (SSLServerSocket) ssocketFactory.createServerSocket(port);
             final String[] enabledCipherSuites = {"SSL_DH_anon_WITH_RC4_128_MD5"};

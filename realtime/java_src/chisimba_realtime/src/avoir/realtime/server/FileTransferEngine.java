@@ -37,10 +37,11 @@ public class FileTransferEngine {
     int index;
     String recepient = "";
     int BUFFER_SIZE = 4096;
-    int MAX_CHUNK_SIZE = 5 * BUFFER_SIZE;
+    int MAX_CHUNK_SIZE =5 *  BUFFER_SIZE;
     int nChunks;
 
-    public synchronized void populateBinaryFile(ServerThread server, String filepath, String id, int type, boolean sessionUpdate) {
+    public synchronized void populateBinaryFile(ServerThread server, 
+            String filepath, String id, int type, boolean sendBackToSender) {
 
         try {
 
@@ -75,11 +76,12 @@ public class FileTransferEngine {
                             server.getThisUser().getSessionId(), buf, i, nChunks, file.getName(),
                             clientID, recepient, false, server.getThisUser().getUserName(), index, type);
                     packet.setId(id);
-                    if (!sessionUpdate) {
-                        server.broadcastPacket(packet, true);
-                    } else {
+                    if (sendBackToSender) {
                         packet.setId(GenerateUUID.getId());
                         server.sendPacket(packet, server.getObjectOutStream());
+
+                    } else {
+                        server.broadcastPacket(packet, true);
 
                     }
 

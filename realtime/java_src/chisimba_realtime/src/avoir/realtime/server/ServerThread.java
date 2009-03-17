@@ -98,16 +98,19 @@ import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.classroom.whiteboard.item.Item;
 import avoir.realtime.common.packet.AnswerPacket;
 import avoir.realtime.common.packet.CurrentSessionSlidePacket;
+import avoir.realtime.common.packet.DeleteFilePacket;
 import avoir.realtime.common.packet.FileDownloadRequest;
 import avoir.realtime.common.packet.FileVewRequestPacket;
 import avoir.realtime.common.packet.MobileUsersPacket;
 import avoir.realtime.common.packet.NotepadLogPacket;
 import avoir.realtime.common.packet.NotepadPacket;
+
 import avoir.realtime.common.packet.PresentationRequest;
 import avoir.realtime.common.packet.QuestionPacket;
 import avoir.realtime.common.packet.ResumeWhiteboardSharePacket;
 import avoir.realtime.common.packet.SlideBuilderPacket;
 import avoir.realtime.common.packet.SlideShowPopulateRequest;
+import avoir.realtime.common.packet.UpdateSlideShowIndexPacket;
 import avoir.realtime.common.packet.XmlQuestionPacket;
 import avoir.realtime.common.packet.XmlQuestionRequestPacket;
 import avoir.realtime.common.user.User;
@@ -525,6 +528,7 @@ public class ServerThread extends Thread {
         }
 
         launchers.addElement(lc);
+        
     }
 
     /**
@@ -539,7 +543,7 @@ public class ServerThread extends Thread {
                 Object obj = null;
                 try {
                     obj = objectIn.readObject();
-                    // logger.info(obj.getClass() + "");
+                  ///  logger.info(obj.getClass() + "");
                 } catch (Exception ex) {
                     logger.info(ex.getLocalizedMessage());
 
@@ -798,6 +802,8 @@ public class ServerThread extends Thread {
                         } else {
                             broadcastChat(p, p.getSessionId());
                         }
+                    } else if (packet instanceof DeleteFilePacket) {
+                        fileManagerProcessor.processDeleteFilePacket((DeleteFilePacket) packet);
                     } else if (packet instanceof SlideShowPopulateRequest) {
                         presentationProcessor.processSlideShowPopulateRequest((SlideShowPopulateRequest) packet);
                     } else if (packet instanceof SlideBuilderPacket) {
@@ -806,6 +812,8 @@ public class ServerThread extends Thread {
                         presentationProcessor.processPresentationRequest((PresentationRequest) packet);
                     } else if (packet instanceof FileVewRequestPacket) {
                         fileManagerProcessor.processFileViewRequestPacket((FileVewRequestPacket) packet);
+                    } else if (packet instanceof UpdateSlideShowIndexPacket) {
+                        broadcastPacket(packet, thisUser.getSessionId(), thisUser.getUserName());
                     } else if (packet instanceof NewSlideRequestPacket) {
                         NewSlideRequestPacket newSlideRequest = (NewSlideRequestPacket) packet;
                         processNewSlideRequest(newSlideRequest, objectOut);
@@ -954,7 +962,7 @@ public class ServerThread extends Thread {
     private void processAckPacket(RealtimePacket packet, ObjectOutputStream objectOut) {
         AckPacket ack = (AckPacket) packet;
         thisUser = ack.getUser();
-
+       logger.info(thisUser+" signed in");
         releaseSessionIfLocked();
         //check if user is slides host, if so, add to special list
         if (thisUser.isSlidesHost()) {
@@ -1182,16 +1190,21 @@ public class ServerThread extends Thread {
         }
 
         OutputStream out = null;
-        String path = SERVER_HOME + "/" + thisUser.getUserName() + "/documents/";
-        if (p.getFileType() == Constants.IMAGE) {
-            path = SERVER_HOME + "/" + thisUser.getUserName() + "/images/";
+        String path = SERVER_HOME + "/userfiles/" + thisUser.getUserName() + "/documents/";
+        if (p.getFileType() == Constants.IMAGE || p.getFileType() == Constants.SLIDE_BUILDER_IMAGE) {
+            path = SERVER_HOME + "/userfiles/" + thisUser.getUserName() + "/images/";
         }
         if (p.getFileType() == Constants.PRESENTATION) {
-            path = SERVER_HOME + "/" + thisUser.getUserName() + "/presentations/";
+            path = SERVER_HOME + "/userfiles/" + thisUser.getUserName() + "/presentations/";
         }
         if (p.getFileType() == Constants.FILE_UPLOAD) {
             path = p.getTarget();
+            if (path.startsWith(thisUser.getUserName())) {
+                path = SERVER_HOME + "/userfiles/" + thisUser.getUserName() + "/documents/";
+            }
+
         }
+       // System.out.println("APth: "+ path);
         try {
             if (nChunks == 1) {
                 out = new FileOutputStream(path + "/" + p.getFilename());
@@ -1202,11 +1215,16 @@ public class ServerThread extends Thread {
             out.write(p.getBuff());
             out.close();
             if (nChunks == 1) {
-                if (p.getFileType() == Constants.FILE_UPLOAD) {
+                if (p.getFileType() == Constants.FILE_UPLOAD ||
+                        p.getFileType() == Constants.SLIDE_BUILDER_IMAGE ||
+                        p.getFileType() == Constants.IMAGE) {
                     fileManagerProcessor.updateFileView(path);
+                    sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
                 if (p.getFileType() == Constants.PRESENTATION) {
                     String filePath = path + "/" + p.getFilename();
+                    fileManagerProcessor.updateFileView(path);
                     if (presentationProcessor.jodConvert(filePath)) {
                         sendPacket(new MsgPacket("Import appears successfull.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
 
@@ -1214,6 +1232,8 @@ public class ServerThread extends Thread {
                             documentsAndFiles.add(new ClassroomFile(uploadedFileName, Constants.PRESENTATION, thisUser.getSessionId(), p.getId(), true, ""));
                         }
                         presentationProcessor.populateConvertedDoc(createSlidesPath(filePath), p.getFilename());
+                        sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                     } else {
                         sendPacket(new MsgPacket("Conversion Failed: Document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
 
@@ -1226,6 +1246,8 @@ public class ServerThread extends Thread {
                     Img img = new Img(100, 100, 150, 150, uploadedFileName, p.getIndex(), p.getId());
                     img.setSessionId(thisUser.getSessionId());
                     whiteboardItems.add(img);
+                              sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
 
                 if (p.getFileType() == Constants.FLASH) {
@@ -1235,6 +1257,8 @@ public class ServerThread extends Thread {
                                 thisUser.getSessionId(), p.getId(), true, ""));
                     }
                     populateFile(path, p.getFilename(), p.getId(), Constants.FLASH, false);
+                    sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
                 return;
             }
@@ -1257,10 +1281,15 @@ public class ServerThread extends Thread {
             if (!tmpFile.renameTo(destFile)) {
                 sendPacket(new MsgPacket("Unable to create file", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
             } else {
-                if (p.getFileType() == Constants.FILE_UPLOAD) {
+                if (p.getFileType() == Constants.FILE_UPLOAD ||
+                        p.getFileType() == Constants.SLIDE_BUILDER_IMAGE ||
+                        p.getFileType() == Constants.IMAGE) {
                     fileManagerProcessor.updateFileView(path);
+                    sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
                 if (p.getFileType() == Constants.PRESENTATION) {
+                    fileManagerProcessor.updateFileView(path);
                     if (presentationProcessor.jodConvert(destFile.getAbsolutePath())) {
                         sendPacket(new MsgPacket("Import appears successful.", Constants.TEMPORARY_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
                         presentationProcessor.populateConvertedDoc(createSlidesPath(destFile.getAbsolutePath()), p.getFilename());
@@ -1268,25 +1297,36 @@ public class ServerThread extends Thread {
                             documentsAndFiles.add(new ClassroomFile(uploadedFileName,
                                     Constants.PRESENTATION,
                                     thisUser.getSessionId(), p.getId(), true, ""));
+                            sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                         }
                     } else {
                         sendPacket(new MsgPacket("Conversion Failed, document cannot be imported.", Constants.TEMPORARY_MESSAGE, Constants.ERROR_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
                     }
+                }
+                if (p.getFileType() == Constants.DOCUMENT) {
+                    sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
                 if (p.getFileType() == Constants.IMAGE) {
                     populateFile(path, p.getFilename(), p.getId(), Constants.IMAGE, false);
                     Img img = new Img(100, 100, 150, 150, uploadedFileName, p.getIndex(), p.getId());
                     img.setSessionId(thisUser.getSessionId());
                     whiteboardItems.add(img);
+                    sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                 }
                 if (p.getFileType() == Constants.FLASH) {
                     populateFile(path, p.getFilename(), p.getId(), Constants.FLASH, false);
                     synchronized (documentsAndFiles) {
                         documentsAndFiles.add(new ClassroomFile(uploadedFileName, Constants.FLASH,
                                 thisUser.getSessionId(), p.getId(), true, ""));
+                        sendPacket(new MsgPacket("Complete", Constants.LONGTERM_MESSAGE, Constants.INFORMATION_MESSAGE, MessageCode.CLASSROOM_SPECIFIC), objectOutStream);
+
                     }
                 }
             }
+
         } else {
             float val = chunk + 1;
             float total = p.getTotalChunks();
@@ -1445,7 +1485,6 @@ public class ServerThread extends Thread {
 
     private void processFilePacket(FilePacket packet) {
         synchronized (clients) {
-            System.out.println("Clients: " + clients.size() + " sending ....");
             for (int i = 0; i < clients.size(); i++) {
 
                 if (clients.nameAt(i).getSessionId().equals(packet.getSessionId())) {

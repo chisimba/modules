@@ -4,7 +4,9 @@
  */
 package avoir.realtime.server;
 
+import avoir.realtime.common.Constants;
 import avoir.realtime.common.RealtimeFile;
+import avoir.realtime.common.packet.DeleteFilePacket;
 import avoir.realtime.common.packet.FileDownloadRequest;
 import avoir.realtime.common.packet.FileVewRequestPacket;
 import avoir.realtime.common.packet.FileViewReplyPacket;
@@ -37,8 +39,18 @@ public class FileManagerProcessor {
         this.serverThread = serverThread;
     }
 
+    public void processDeleteFilePacket(DeleteFilePacket p) {
+        File f = new File(p.getFilePath());
+        f.delete();
+        updateFileView(new File(f.getParent()).getAbsolutePath());
+    }
+
     public void processFileDownloadRequest(FileDownloadRequest p) {
-        serverThread.getFileTransferEngine().populateBinaryFile(serverThread, p.getPath(), "", p.getType(), false);
+        boolean sendBackToSenderOnly = false;
+        if (p.getType() == Constants.NOTEPAD) {
+            sendBackToSenderOnly = true;
+        }
+        serverThread.getFileTransferEngine().populateBinaryFile(serverThread, p.getPath(), "", p.getType(), sendBackToSenderOnly);
     }
 
     public void updateFileView(String path) {

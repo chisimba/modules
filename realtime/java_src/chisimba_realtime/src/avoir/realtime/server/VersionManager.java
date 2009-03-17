@@ -4,7 +4,6 @@
  */
 package avoir.realtime.server;
 
-
 import avoir.realtime.launcher.packet.VersionReplyPacket;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,6 @@ public class VersionManager {
 
     private String[][] corePlugins;
     private Map<String, Integer> map = new HashMap<String, Integer>();
-
     private ServerThread server;
 
     public VersionManager(String[][] corePlugins, ServerThread server) {
@@ -32,5 +30,6 @@ public class VersionManager {
             map.put(corePlugins[i][0], new Integer(ver));
         }
         server.sendPacket(new VersionReplyPacket(map), server.getObjectOutStream());
+        System.out.println("send version back...");
     }
 }
