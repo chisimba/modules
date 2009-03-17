@@ -185,20 +185,19 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
 
     public void setSlides(ArrayList<BuilderSlide> slides) {
         this.slides = slides;
-        setContent(0);
+
     }
 
     public void setContent(int index) {
         BuilderSlide xslide = slides.get(index);
         XmlQuestionPacket question = xslide.getQuestion();
-        //titleField.setText(slide.getTitle());
-        //textField.setText(xslide.getText());
-        /*if (question != null) {
-        questionField.setText(question.getQuestionPath());
-        }*/
+        System.out.println(question.getType());
+        if (question.getType() != -1) {
+            mf.initAnswerFrame(question.getQuestionPacket(), question.getName(), true);
+        }
         setCustomSlideText(xslide.getText());
-        textColor=xslide.getTextColor();
-        textsize=xslide.getTextSize();
+        textColor = xslide.getTextColor();
+        textsize = xslide.getTextSize();
         setCurrentSlide(xslide.getImage(), slideIndex, slides.size(), true);
     }
 
@@ -595,6 +594,10 @@ public class WhiteboardSurface extends javax.swing.JPanel implements MouseListen
         }
 
 
+    }
+
+    public void updateSlideShowContent(int index) {
+        setContent(index);
     }
 
     private void drawCustomText(Graphics2D g2) {
