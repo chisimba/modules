@@ -79,11 +79,21 @@ public class FileReceiverManager {
         new File(base.getUser().getUserName()).mkdirs();
         new File(Constants.getRealtimeHome() + "/classroom/images/" + base.getUser().getSessionId()).mkdirs();
         new File(Constants.getRealtimeHome() + "/classroom/flash/" + base.getUser().getSessionId()).mkdirs();
+        new File(Constants.getRealtimeHome() + "/classroom/documents/" + base.getUser().getSessionId()).mkdirs();
+        new File(Constants.getRealtimeHome() + "/classroom/slides/" + base.getUser().getSessionId()).mkdirs();
 
-        if (p.getFileType() == Constants.IMAGE || p.getFileType() == Constants.QUESTION_IMAGE) {
+        if (p.getFileType() == Constants.IMAGE ||
+                p.getFileType() == Constants.QUESTION_IMAGE ||
+                p.getFileType() == Constants.SLIDE_BUILDER_IMAGE) {
             filename = Constants.getRealtimeHome() + "/classroom/images/" + base.getUser().getSessionId() + "/" + p.getFilename();
         }
-        if (p.getFileType() == Constants.SLIDE_SHOW || p.getFileType() == Constants.DOCUMENT) {
+        if (p.getFileType() == Constants.SLIDE_BUILDER_TEXT ||
+                p.getFileType() == Constants.QUESTION_FILE ||
+                p.getFileType() == Constants.SLIDE_SHOW_NAV ||
+                p.getFileType() == Constants.QUESTION_NAV ||
+                p.getFileType() == Constants.SLIDE_SHOW_VIEW ||
+                p.getFileType() == Constants.NOTEPAD ||
+                p.getFileType() == Constants.SLIDE_SHOW) {
             filename = Constants.getRealtimeHome() + "/classroom/documents/" + base.getUser().getSessionId() + "/" + p.getFilename();
         }
 
@@ -144,9 +154,6 @@ public class FileReceiverManager {
                 }
                 if (p.getFileType() == Constants.SLIDE_SHOW_VIEW) {
                     ArrayList<BuilderSlide> list = XmlUtil.readXmlSlideShowFile(filename);
-                    /*    base.showSlideViewer();
-                    base.getSlideShowViewerFrame().setSlides(list);
-                     */
                     base.getWhiteBoardSurface().setSlides(list);
                 }
                 return;
@@ -194,8 +201,6 @@ public class FileReceiverManager {
                 }
                 if (p.getFileType() == Constants.SLIDE_SHOW_VIEW) {
                     ArrayList<BuilderSlide> list = XmlUtil.readXmlSlideShowFile(filename);
-                    //base.showSlideViewer();
-                    //base.getSlideShowViewerFrame().setSlides(list);
                     base.getWhiteBoardSurface().setSlides(list);
                 }
             }
