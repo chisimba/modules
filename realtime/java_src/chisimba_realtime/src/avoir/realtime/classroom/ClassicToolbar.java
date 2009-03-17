@@ -161,7 +161,11 @@ public class ClassicToolbar extends JToolBar implements ActionListener {
 
     protected void showPointerOptions(int x, int y) {
     }
-
+/**
+ * this is intentionally left empty here. Its implemented in the sublass <link>
+ * ClassicInstructorToolbar</link>
+ * @param b
+ */
     protected void startDesktopshare(JToggleButton b) {
     }
 
