@@ -8,6 +8,7 @@ import avoir.realtime.common.Constants;
 import avoir.realtime.common.MessageCode;
 import avoir.realtime.common.packet.ClassroomSlidePacket;
 import avoir.realtime.common.packet.MsgPacket;
+
 import avoir.realtime.common.packet.PresentationRequest;
 import avoir.realtime.common.packet.SlideBuilderPacket;
 import avoir.realtime.common.packet.SlideShowPopulateRequest;
@@ -47,8 +48,9 @@ public class PresentationProcessor {
 
     public void processSlideShowPopulateRequest(SlideShowPopulateRequest p) {
         String name = p.getPath();
+        
         String path = serverThread.getSERVER_HOME() + "/userfiles/" +
-                serverThread.getThisUser().getUserName() + "/slides/" + name + ".xml";
+                serverThread.getThisUser().getUserName() + "/slides/" + name;
         serverThread.getFileTransferEngine().populateBinaryFile(serverThread, path, "", Constants.SLIDE_SHOW_VIEW, false);
 
     }
@@ -73,7 +75,7 @@ public class PresentationProcessor {
             populateConvertedDoc(parent.getAbsolutePath(), parent.getName());
         } else {
             if (jodConvert(path)) {
-                serverThread.sendPacket(new MsgPacket("",
+                serverThread.sendPacket(new MsgPacket("Complete",
                         Constants.LONGTERM_MESSAGE,
                         Constants.INFORMATION_MESSAGE,
                         MessageCode.CLASSROOM_SPECIFIC),
@@ -167,7 +169,7 @@ public class PresentationProcessor {
         try {
             serverThread.sendPacket(new MsgPacket("Converting ...",
                     Constants.LONGTERM_MESSAGE,
-                    Constants.ERROR_MESSAGE,
+                    Constants.INFORMATION_MESSAGE,
                     MessageCode.CLASSROOM_SPECIFIC),
                     serverThread.getObjectOutStream());
 
@@ -226,6 +228,8 @@ public class PresentationProcessor {
             content += "\t\t\t<text-x-pos>" + slides.get(i).getTextXPos() + "</text-x-pos>\n";
             content += "\t\t\t<text-y-pos>" + slides.get(i).getTextYPos() + "</text-y-pos>\n";
             content += "\t\t\t<index>" + slides.get(i).getIndex() + "</index>\n";
+            content += "\t\t\t<url>" + slides.get(i).getUrl() + "</url>\n";
+
             content += "\t\t\t<text-color>\n";
             content += "\t\t\t\t<red>" + slides.get(i).getTextColor().getRed() + "</red>\n";
             content += "\t\t\t\t<green>" + slides.get(i).getTextColor().getGreen() + "</green>\n";
@@ -260,6 +264,7 @@ public class PresentationProcessor {
         write(name, content);
         serverThread.getFileManagerProcessor().updateFileView(path);
     }
+
 
     public synchronized void write(String fileName, String txt) {
         try {
