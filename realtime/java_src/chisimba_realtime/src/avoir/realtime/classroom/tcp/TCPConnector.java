@@ -58,6 +58,7 @@ import avoir.realtime.common.packet.SurveyPackPacket;
 import avoir.realtime.common.user.User;
 import avoir.realtime.common.packet.LocalSlideCacheRequestPacket;
 import avoir.realtime.common.packet.MobileUsersPacket;
+import avoir.realtime.common.packet.UpdateSlideShowIndexPacket;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -74,7 +75,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -142,15 +142,15 @@ public class TCPConnector extends TCPSocket {
     }
 
     public void processFileVewReplyPacket(FileViewReplyPacket p) {
-       
+
         ArrayList<String> filters = new ArrayList<String>();
         if (fileManager == null) {
-            fileManager = new FileManager(p.getList(), this,null);
+            fileManager = new FileManager(p.getList(), this, null);
             fileManager.setSize(500, 400);
             fileManager.setLocationRelativeTo(null);
         }
         if (fileManagerMode.equals("notepad")) {
-            
+
             fileManager.getUploadButton().setEnabled(false);
             fileManager.getSelectButton().setText("Open");
         }
@@ -197,6 +197,8 @@ public class TCPConnector extends TCPSocket {
         mf.initAudio();
         connected = true;
         running = true;
+        host = mf.getHost();
+        port = mf.getPort();
         timer.cancel();
         timer = new Timer();
         timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
@@ -223,6 +225,8 @@ public class TCPConnector extends TCPSocket {
     @Override
     public boolean connect(String host, int port) {
         if (super.connect(host, port)) {
+            this.host = host;
+            this.port = port;
             timer.cancel();
             timer = new Timer();
             timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
@@ -266,6 +270,9 @@ public class TCPConnector extends TCPSocket {
                         if (userIndex > -1) {
                             mf.getUserListManager().setUser(userIndex, p.getPresenceType(), p.isShowIcon(), true);
                         }
+                    } else if (packet instanceof UpdateSlideShowIndexPacket) {
+                        UpdateSlideShowIndexPacket p = (UpdateSlideShowIndexPacket) packet;
+                        mf.getWhiteBoardSurface().setContent(p.getIndex());
                     } else if (packet instanceof FileViewReplyPacket) {
                         processFileVewReplyPacket((FileViewReplyPacket) packet);
                     } else if (packet instanceof MobileUsersPacket) {
@@ -307,7 +314,7 @@ public class TCPConnector extends TCPSocket {
                         mf.showSurveyFrame(pac.getQuestions(), pac.getTitle());
                     } else if (packet instanceof QuestionPacket) {
                         QuestionPacket p = (QuestionPacket) packet;
-                        mf.initAnswerFrame(p, p.getQuestion(),false);
+                        mf.initAnswerFrame(p, p.getQuestion(), true);
                     } else if (packet instanceof DesktopPacket) {
                         DesktopPacket p = (DesktopPacket) packet;
                         processDesktopPacket(p);
@@ -383,7 +390,7 @@ public class TCPConnector extends TCPSocket {
             viewer = new RemoteDesktopViewerFrame();
 
             //viewer.setSize(ww, hh);
-            appViewer = new AppView(viewer.getWidth(), viewer.getHeight());
+            appViewer = new AppView(ww,hh);//viewer.getWidth(), viewer.getHeight());
             //viewer.setContentPane(appViewer);
             whiteboardScrollPane = (JScrollPane) mf.getMainTabbedPane().getComponent(0);
             mf.getMainTabbedPane().remove(0);
@@ -621,6 +628,9 @@ public class TCPConnector extends TCPSocket {
         while (!connected) {
             mf.showErrorMessage("Disconnected from server. Retrying " + count + " of " + max + "...");
             if (this.connect(host, port)) {
+                timer.cancel();
+                 timer = new Timer();
+        timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
                 break;
             }
 
