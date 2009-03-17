@@ -61,10 +61,10 @@ $monthBox = new textinput('month', date('F', strtotime($calendardate)));
 $yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 8);
 $yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 
-$territoryDrop = new dropdown('territoryId');
-$territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
-$territoryDrop->setSelected($territoryId);
-$territoryDrop->extra = 'disabled';
+$geo2Drop = new dropdown('geo2Id');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
+$geo2Drop->setSelected($geo2Id);
+$geo2Drop->extra = 'disabled';
 
 $manufactureDate = $this->newObject('datepicker','htmlelements');
 $manufactureDate->setName('dateManufactured');
@@ -86,8 +86,8 @@ $objTable->cssClass = 'min50';
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').": ");
 $objTable->addCell($refNoBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_territory').": ");
-$objTable->addCell($territoryDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
+$objTable->addCell($geo2Drop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_month').": ");

@@ -55,9 +55,9 @@ $backUri = $this->uri(array('action'=>'select_officer'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSurveillance()");
 
-$territoryDrop = new dropdown('territoryId');
-$territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
-$territoryDrop->setSelected($territoryId);
+$geo2Drop = new dropdown('geo2Id');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
+$geo2Drop->setSelected($geo2Id);
 $oStatusDrop = new dropdown('oStatusId');
 $oStatusDrop->addFromDB($arrayOutbreakStatus, 'name', 'id');
 $oStatusDrop->setSelected($oStatusId);
@@ -83,7 +83,7 @@ $monthBox = new textinput('month', date('F', strtotime($calendardate)));
 $yearBox = new textinput('year', date('Y', strtotime($calendardate)));
 $yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 //if (!$this->objUser->isAdmin()) {
-    $territoryDrop->extra = 'disabled';
+    $geo2Drop->extra = 'disabled';
 //}
 $remarksBox = new textarea('remarks', $remarks, 4, 40);
 
@@ -103,8 +103,8 @@ $objTable->addCell($this->objLanguage->languageText('word_year').": ");
 $objTable->addCell($yearBox->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_territory').": ");
-$objTable->addCell($territoryDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
+$objTable->addCell($geo2Drop->show());
 $objTable->addCell($this->objLanguage->languageText('phrase_outbreak').": ");
 $objTable->addCell($oStatusDrop->show());
 $objTable->endRow();

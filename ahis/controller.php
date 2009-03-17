@@ -192,15 +192,15 @@ class ahis extends controller {
         switch ($action) {
         	case 'select_officer':
                 $this->setVar('userList', $this->objAhisUser->getList());
-                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userName()));
-                $this->setVar('districtId', $this->getSession('ps_districtId', $this->objAhisUser->getTerritory()));
+                $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id', $this->objAhisUser->getGeo2Id()));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                 $this->setVar('reportType', $this->getSession('ps_reportType'));
                 return 'select_officer_tpl.php';
             
             case 'report_filter':
                 $this->setSession('ps_officerId', $this->getParam('officerId'));
-                $this->setSession('ps_districtId' , $this->getParam('districtId'));
+                $this->setSession('ps_geo2Id' , $this->getParam('geo2Id'));
                 $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
                 $this->setSession('ps_reportType', $reportType);
@@ -213,11 +213,11 @@ class ahis extends controller {
             
             case 'passive_surveillance':
                 $this->setVar('calendardate', $this->getSession('ps_calendardate',date('Y-m-d')));
-                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
-                $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY NAME"));
-                $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY NAME"));
+                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+                $this->setVar('arrayOutbreakStatus', $this->objOutbreak->getAll("ORDER BY name"));
+                $this->setVar('arrayQuality', $this->objQuality->getAll("ORDER BY name"));
                 
-                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 $this->setVar('oStatusId', $this->getSession('ps_oStatusId'));
                 $this->setVar('qualityId', $this->getSession('ps_qualityId'));
                 $this->setVar('datePrepared', $this->getSession('ps_datePrepared', date('Y-m-d')));
@@ -248,19 +248,23 @@ class ahis extends controller {
                 $this->setSession('ps_refNo', $refNo);
                 $this->setSession('ps_remarks', $remarks);
                 
-                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
+                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+                $this->setVar('arrayLocation', $this->objTerritory->getAll("ORDER BY name"));
+                $this->setVar('arrayDisease', $this->objDisease->getAll("ORDER BY name"));
+                //$this->setVar('arrayCausative', $this->objCausative->getAll("ORDER BY name"));
+				$this->setVar('arrayCausative', array(array('id'=>1, 'name'=>'temp')));
                 $this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
                 $this->setVar('dateOccurence', $this->getSession('ps_dateOccurence', date('Y-m-d')));
                 $this->setVar('dateDiagnosis', $this->getSession('ps_dateDiagnosis', date('Y-m-d')));
                 $this->setVar('dateInvestigation', $this->getSession('ps_dateInvestigation', date('Y-m-d')));
-                $this->setVar('location', $this->getSession('ps_location'));
+                $this->setVar('locationId', $this->getSession('ps_locationId'));
                 $this->setVar('latitude', $this->getSession('ps_latitude'));
                 $this->setVar('longitude', $this->getSession('ps_longitude'));
-                $this->setVar('disease', $this->getSession('ps_disease'));
-                $this->setVar('causitive', $this->getSession('ps_causitive'));
+                $this->setVar('diseaseId', $this->getSession('ps_diseaseId'));
+                $this->setVar('causativeId', $this->getSession('ps_causativeId'));
                 
                 return 'passive_outbreak_tpl.php';
             
@@ -269,35 +273,35 @@ class ahis extends controller {
                 $dateOccurence = $this->getParam('dateOccurence', $this->getSession('ps_dateOccurence'));
                 $dateDiagnosis = $this->getParam('dateDiagnosis', $this->getSession('ps_dateDiagnosis'));
                 $dateInvestigation = $this->getParam('dateInvestigation', $this->getSession('ps_dateInvestigation'));
-                $location = $this->getParam('location', $this->getSession('ps_location'));
+                $locationId = $this->getParam('locationId', $this->getSession('ps_locationId'));
                 $longitude = $this->getParam('longitude', $this->getSession('ps_longitude'));
                 $latitude = $this->getParam('latitude', $this->getSession('ps_latitude'));
-                $disease = $this->getParam('disease', $this->getSession('ps_disease'));
-                $causitive = $this->getParam('causitive', $this->getSession('ps_causitive'));
+                $diseaseId = $this->getParam('diseaseId', $this->getSession('ps_diseaseId'));
+                $causativeId = $this->getParam('causativeId', $this->getSession('ps_causativeId'));
                 
                 $this->setSession('ps_dateVet', $dateVet);
                 $this->setSession('ps_dateOccurence', $dateOccurence);
                 $this->setSession('ps_dateDiagnosis', $dateDiagnosis);
                 $this->setSession('ps_dateInvestigation', $dateInvestigation);
-                $this->setSession('ps_location', $location);
                 $this->setSession('ps_longitude', $longitude);
                 $this->setSession('ps_latitude', $latitude);
-                $this->setSession('ps_disease', $disease);
-                $this->setSession('ps_causitive', $causitive);
+                $this->setSession('ps_locationId', $locationId);
+                $this->setSession('ps_diseaseId', $diseaseId);
+                $this->setSession('ps_causativeId', $causativeId);
                 
-                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
-                $this->setVar('arrayProduction', $this->objProduction->getAll("ORDER BY NAME"));
-                $this->setVar('arrayAge', $this->objAge->getAll("ORDER BY NAME"));
-                $this->setVar('arraySex', $this->objSex->getAll("ORDER BY NAME"));
-                //$this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY NAME"));
-                $this->setVar('arrayBasis', $this->objDiagnosis->getAll("ORDER BY NAME"));
-                $this->setVar('arrayControl', $this->objControl->getAll("ORDER BY NAME"));
+                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+                $this->setVar('arrayProduction', $this->objProduction->getAll("ORDER BY name"));
+                $this->setVar('arrayAge', $this->objAge->getAll("ORDER BY name"));
+                $this->setVar('arraySex', $this->objSex->getAll("ORDER BY name"));
+                $this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY name"));
+                $this->setVar('arrayBasis', $this->objDiagnosis->getAll("ORDER BY name"));
+                $this->setVar('arrayControl', $this->objControl->getAll("ORDER BY name"));
                 
-                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 $this->setVar('productionId', $this->getSession('ps_productionId'));
                 $this->setVar('ageId', $this->getSession('ps_ageId'));
                 $this->setVar('sexId', $this->getSession('ps_sexId'));
-                //$this->setVar('speciesId', $this->getSession('ps_speciesId'));
+                $this->setVar('speciesId', $this->getSession('ps_speciesId'));
                 $this->setVar('basisId', $this->getSession('ps_basisId'));
                 $this->setVar('controlId', $this->getSession('ps_controlId'));
                 
@@ -336,14 +340,14 @@ class ahis extends controller {
                 
                 $this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
-                $this->setVar('arrayTerritory', $this->objTerritory->getAll("ORDER BY NAME"));
-                $this->setVar('territoryId', $this->getSession('ps_districtId'));
+                $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+                $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 
                 return 'passive_vaccine_tpl.php';
             
             case 'passive_save':
                 $ps_array['reporterid'] = $this->getSession('ps_officerId');
-                $ps_array['territoryid'] = $this->getSession('ps_districtId');
+                $ps_array['geo2id'] = $this->getSession('ps_geo2Id');
                 $ps_array['reportdate'] = $this->getSession('ps_calendardate');
                 $ps_array['refno'] = $this->getSession('ps_refNo');
                 
@@ -359,13 +363,13 @@ class ahis extends controller {
                 $ps_array['occurencedate'] = $this->getSession('ps_dateOccurence', date('Y-m-d'));
                 $ps_array['diagnosisdate'] = $this->getSession('ps_dateDiagnosis', date('Y-m-d'));
                 $ps_array['investigationdate'] = $this->getSession('ps_dateInvestigation', date('Y-m-d'));
-                $ps_array['location'] = $this->getSession('ps_location');
                 $ps_array['latitude'] = $this->getSession('ps_latitude');
                 $ps_array['longitude'] = $this->getSession('ps_longitude');
-                $ps_array['disease'] = $this->getSession('ps_disease');
-                $ps_array['causitive'] = $this->getSession('ps_causitive');
                 
-                $ps_array['speciesid'] = $this->getSession('ps_speciesId',1);
+                $ps_array['locationid'] = $this->getSession('ps_locationId');
+                $ps_array['diseaseid'] = $this->getSession('ps_diseaseId');
+                $ps_array['causativeid'] = $this->getSession('ps_causativeId');
+                $ps_array['speciesid'] = $this->getSession('ps_speciesId');
                 $ps_array['ageid'] = $this->getSession('ps_ageId');
                 $ps_array['sexid'] = $this->getSession('ps_sexId');
                 $ps_array['productionid'] = $this->getSession('ps_productionId');
@@ -1646,11 +1650,11 @@ class ahis extends controller {
         $this->unsetSession('ps_dateOccurence');
         $this->unsetSession('ps_dateDiagnosis');
         $this->unsetSession('ps_dateInvestigation');
-        $this->unsetSession('ps_location');
+        $this->unsetSession('ps_locationId');
         $this->unsetSession('ps_longitude');
         $this->unsetSession('ps_latitude');
-        $this->unsetSession('ps_disease');
-        $this->unsetSession('ps_causitive');
+        $this->unsetSession('ps_diseaseId');
+        $this->unsetSession('ps_causativeId');
         $this->unsetSession('ps_productionId');
         $this->unsetSession('ps_ageId');
         $this->unsetSession('ps_sexId');

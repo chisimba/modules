@@ -65,6 +65,7 @@ class ahisuser extends dbtable {
 		try {
 			parent::init('tbl_ahis_users');
 			$this->objUser = $this->getObject('user','security');
+			$this->objTerritory = $this->getObject('territory');
 		}
 		catch (customException $e)
 		{
@@ -79,10 +80,11 @@ class ahisuser extends dbtable {
 	 * @param string $userId the id of the user, leave out for current user
 	 * @return string the id of the territory
 	 */
-	public function getTerritory($userId = NULL) {
+	public function getGeo2Id($userId = NULL) {
 		$id = $this->objUser->PKId($userId);
 		$row = $this->getRow('id', $id);
-		return $row['locationid'];
+		$locationRow = $this->objTerritory->getRow('id', $row['locationid']);
+		return $locationRow['geo2id'];
 	}
 	
 	/**
@@ -91,7 +93,7 @@ class ahisuser extends dbtable {
 	 * @return array ARIS users
 	 */
 	public function getList() {
-		$sql = "SELECT u.userid, CONCAT(u.firstname,' ',u.surname) AS name
+		$sql = "SELECT u.userid AS userid, CONCAT(u.firstname,' ',u.surname) AS name
 				FROM tbl_users AS u, tbl_ahis_users AS au
 				WHERE u.id = au.id
 				ORDER BY u.surname";

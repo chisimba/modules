@@ -71,7 +71,7 @@ $objTable->width = NULL;
 $objTable->attributes = "style='min-width: 65%'";
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText("word_territory").": ");
+$objTable->addCell($this->objLanguage->languageText("word_location").": ");
 $objTable->addCell($nameText->show());
 $objTable->endRow();
 

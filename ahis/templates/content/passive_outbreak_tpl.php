@@ -62,10 +62,20 @@ $yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 8)
 $dateBox = new textinput('reportdate', date('Y/m/d', strtotime($calendardate)));
 $yearBox->extra = $monthBox->extra = $dateBox->extra = $refNoBox->extra = "readonly";
 
-$territoryDrop = new dropdown('territoryId');
-$territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
-$territoryDrop->setSelected($territoryId);
-$territoryDrop->extra = 'disabled';
+$geo2Drop = new dropdown('geo2Id');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
+$geo2Drop->setSelected($geo2Id);
+$geo2Drop->extra = 'disabled';
+
+$locationDrop = new dropdown('locationId');
+$locationDrop->addFromDB($arrayLocation, 'name', 'id');
+$locationDrop->setSelected($locationId);
+$diseaseDrop = new dropdown('diseaseId');
+$diseaseDrop->addFromDB($arrayDisease, 'name', 'id');
+$diseaseDrop->setSelected($diseaseId);
+$causativeDrop = new dropdown('causativeId');
+$causativeDrop->addFromDB($arrayCausative, 'name', 'id');
+$causativeDrop->setSelected($causativeId);
 
 $vetDate = $this->newObject('datepicker','htmlelements');
 $vetDate->setName('dateVet');
@@ -80,11 +90,8 @@ $investigationDate = $this->newObject('datepicker','htmlelements');
 $investigationDate->setName('dateInvestigation');
 $investigationDate->setDefaultDate($dateInvestigation);
 
-$locationBox = new textinput('location', $location);
 $latitudeBox = new textinput('latitude', $latitude);
 $longitudeBox = new textinput('longitude', $longitude);
-$diseaseBox = new textinput('disease', $disease);
-$causitiveBox = new textinput('causitive', $causitive);
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
@@ -94,8 +101,8 @@ $objTable->cssClass = 'min50';
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').": ");
 $objTable->addCell($refNoBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_territory').": ");
-$objTable->addCell($territoryDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
+$objTable->addCell($geo2Drop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_month').": ");
@@ -121,7 +128,7 @@ $objTable->addCell($investigationDate->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_location').": ");
-$objTable->addCell($locationBox->show());
+$objTable->addCell($locationDrop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_latitude').": ");
@@ -131,9 +138,9 @@ $objTable->addCell($longitudeBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_disease').": ");
-$objTable->addCell($diseaseBox->show());
+$objTable->addCell($diseaseDrop->show());
 $objTable->addCell($this->objLanguage->languageText('word_causitive').": ");
-$objTable->addCell($causitiveBox->show());
+$objTable->addCell($causativeDrop->show());
 $objTable->endRow();
 
 $objTable->startRow();
@@ -150,11 +157,8 @@ $objForm->addRule('dateVet', $this->objLanguage->languageText('mod_ahis_valdatev
 $objForm->addRule('dateOccurence', $this->objLanguage->languageText('mod_ahis_valdateoccurence', 'ahis'), 'datenotfuture');
 $objForm->addRule('dateDiagnosis', $this->objLanguage->languageText('mod_ahis_valdatediagnosis', 'ahis'), 'datenotfuture');
 $objForm->addRule('dateInvestigation', $this->objLanguage->languageText('mod_ahis_valdateinvestigation', 'ahis'), 'datenotfuture');
-$objForm->addRule('location', $this->objLanguage->languageText('mod_ahis_locationreq', 'ahis'), 'required');
 $objForm->addRule('latitude', $this->objLanguage->languageText('mod_ahis_vallatitude', 'ahis'), 'containsnumber');
 $objForm->addRule('longitude', $this->objLanguage->languageText('mod_ahis_vallongitude', 'ahis'), 'containsnumber');
-$objForm->addRule('disease', $this->objLanguage->languageText('mod_ahis_diseasereq', 'ahis'), 'required');
-$objForm->addRule('causitive', $this->objLanguage->languageText('mod_ahis_causitivereq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());

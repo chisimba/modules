@@ -15,7 +15,7 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'territoryid' => array(
+	'geo2id' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
@@ -126,9 +126,9 @@ $fields = array(
         'notnull' => TRUE,
         'default' => 0
 		),
-	'location' => array(
+	'locationid' => array(
 		'type' => 'text',
-		'length' => 64,
+		'length' => 32,
         'notnull' => TRUE
 		),
 	'latitude' => array(
@@ -141,14 +141,14 @@ $fields = array(
 		'length' => 64,
         'notnull' => TRUE
 		),
-	'disease' => array(
+	'diseaseid' => array(
 		'type' => 'text',
-		'length' => 64,
+		'length' => 32,
         'notnull' => TRUE
 		),
-	'causitive' => array(
+	'causativeid' => array(
 		'type' => 'text',
-		'length' => 64,
+		'length' => 32,
         'notnull' => TRUE
 		),
 	'vaccinesource' => array(

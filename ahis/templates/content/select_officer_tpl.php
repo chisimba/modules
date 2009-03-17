@@ -47,29 +47,28 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 
-//$inputOfficer = new textinput('officer', $officer, 'text', 25);
+
 $inputOfficer = new dropdown('officerId');
-$inputOfficer->addFromDB($userList, 'name', 'name');
+$inputOfficer->addFromDB($userList, 'name', 'userid');
 $inputOfficer->setSelected($officerId);
 if (!$this->objUser->isAdmin()) {
     $inputOfficer->extra = 'disabled';
 }
 
-$inputDistrict = new dropdown('districtId');
-$inputDistrict->addFromDB($this->objTerritory->getAll("ORDER BY NAME"), 'name', 'id');
-$inputDistrict->setSelected($districtId);
+$inputGeo2 = new dropdown('geo2Id');
+$inputGeo2->addFromDB($this->objGeo2->getAll("ORDER BY name"), 'name', 'id');
+$inputGeo2->setSelected($geo2Id);
 if (!$this->objUser->isAdmin()) {
-    $inputDistrict->extra = 'disabled';
+    $inputGeo2->extra = 'disabled';
 }
 
-//$inputDistrict = new textinput('district', $district, 'text', 25);
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
 $allReportTypes = $this->objReport->getAll("ORDER BY name");
 $inputType = new dropdown('reportType');
 $inputType->addFromDB($allReportTypes, 'name', 'id');
 $inputType->setSelected($reportType);
-print_r($reportType);
+
 $buttonNext = new button('next',$this->objLanguage->languageText('word_next'));
 $buttonNext->setToSubmit();
 $buttonBack = new button('back',$this->objLanguage->languageText('word_back'));
@@ -84,8 +83,8 @@ $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ah
 $objTable->addCell($inputOfficer->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_district').": $tab");
-$objTable->addCell($inputDistrict->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": $tab");
+$objTable->addCell($inputGeo2->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','ahis').": $tab");

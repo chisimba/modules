@@ -76,6 +76,9 @@ class report extends object {
             $this->objControl = $this->getObject('control');
 			$this->objProduction = $this->getObject('production');
             $this->objOutbreak = $this->getObject('outbreak');
+            $this->objSpecies = $this->getObject('species');
+            $this->objDisease = $this->getObject('disease');
+            //$this->objCausative = $this->getObject('causative');
             
 		}
 		catch (customException $e)
@@ -132,23 +135,29 @@ class report extends object {
 				foreach ($passiveRecords as $report) {
 					$objTable->startRow($class);
 					
-					$territory = $this->objTerritory->getRow('id', $report['territoryid']);
-					$geo2 = $this->objGeo2->getRow('id', $territory['geo2id']);
+					$geo2 = $this->objGeo2->getRow('id', $report['geo2id']);
 					$geo3 = $this->objGeo3->getRow('id', $geo2['geo3id']);
 					$objTable->addCell($geo3['name']);
 					
 					$objTable->addCell($report['refno']);
 					$objTable->addCell($this->objUser->fullname($report['reporterid']));
-					$objTable->addCell($report['disease']);
+					
+					$disease = $this->objDisease->getRow('id', $report['diseaseid']);
+					$objTable->addCell($disease['name']);
+					
 					$objTable->addCell($report['reporteddate']);
 					$objTable->addCell($report['vetdate']);
 					$objTable->addCell($report['investigationdate']);
 					$objTable->addCell($report['diagnosisdate']);
-					$objTable->addCell($report['location']);
+					
+					$location = $this->objTerritory->getRow('id', $report['locationid']);
+					$objTable->addCell($location['name']);
+					
 					$objTable->addCell($report['latitude']);
 					$objTable->addCell($report['longitude']);
 					
-					$objTable->addCell('');
+					$species = $this->objSpecies->getRow('id', $report['speciesid']);
+					$objTable->addCell($species['name']);
 					
 					$age = $this->objAge->getRow('id', $report['ageid']);
 					$objTable->addCell($age['name']);
@@ -233,8 +242,7 @@ class report extends object {
 				
 				foreach ($passiveRecords as $report) {
 										
-					$territory = $this->objTerritory->getRow('id', $report['territoryid']);
-					$geo2 = $this->objGeo2->getRow('id', $territory['geo2id']);
+					$geo2 = $this->objGeo2->getRow('id', $report['geo2id']);
 					$geo3 = $this->objGeo3->getRow('id', $geo2['geo3id']);
 					$age = $this->objAge->getRow('id', $report['ageid']);
 					$sex = $this->objSex->getRow('id',$report['sexid']);
@@ -242,11 +250,14 @@ class report extends object {
 					$control = $this->objControl->getRow('id', $report['controlmeasureid']);
 					$basis = $this->objDiagnosis->getRow('id', $report['basisofdiagnosisid']);
 					$status = $this->objOutbreak->getRow('id', $report['statusid']);
+					$location = $this->objTerritory->getRow('id', $report['locationid']);
+					$disease = $this->objDisease->getRow('id', $report['diseaseid']);
+					$species = $this->objSpecies->getRow('id', $report['speciesid']);
 					
 					$row = array($geo3['name'], $report['refno'], $this->objUser->fullname($report['reporterid']),
-								$report['disease'], $report['reporteddate'], $report['vetdate'],
-								$report['investigationdate'], $report['diagnosisdate'], $report['location'],
-								$report['latitude'], $report['longitude'], '', $age['name'], $sex['name'],
+								$disease['name'], $report['reporteddate'], $report['vetdate'],
+								$report['investigationdate'], $report['diagnosisdate'], $location['name'],
+								$report['latitude'], $report['longitude'], $species['name'], $age['name'], $sex['name'],
 								$production['name'], $control['name'], $basis['name'], $report['susceptible'],
 								$report['newcases'], $report['deaths'], $report['slaughtered'], $report['recovered'],
 								$report['destroyed'], $status['name'], $report['vaccinated'], $report['prophylactic'],
