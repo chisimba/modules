@@ -199,7 +199,12 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         public void mousePressed(MouseEvent evt) {
             startX = evt.getX();
             startY = evt.getY();
-
+            if (customSlideText == null) {
+                return;
+            }
+            if (customSlideText.trim().equals("")) {
+                return;
+            }
             if (graphics != null) {
                 FontMetrics fm = graphics.getFontMetrics();
                 int totalLines = customSlideText.split("\n").length;
@@ -415,12 +420,13 @@ public class SlideBuilderManager extends javax.swing.JFrame {
             }
             String text = textField.getText();
             String questionPath = questionField.getText();
+            String url=urlField.getText();
             if (question != null) {
                 question.setQuestionPath(questionPath);
             }
             BuilderSlide slide = new BuilderSlide(title, text, textColor, textSize, question, slideImage,
                     ((TCPConnector) mf.getTcpConnector()).getSelectedFilePath(),
-                    model.getSize(), textXPos, textYPos);
+                    model.getSize(), textXPos, textYPos,url);
             model.addElement(slide);
             mode = "add-slide";
             addButton.setText("Add New Slide");
@@ -469,65 +475,83 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         ArrayList<XmlBuilderSlide> slides = new ArrayList<XmlBuilderSlide>();
         if (name != null) {
             for (int i = 0; i < model.size(); i++) {
-                BuilderSlide slide = (BuilderSlide) model.elementAt(i);
-                ImageIcon im = slide.getImage();
+                try {
+                    BuilderSlide slide = (BuilderSlide) model.elementAt(i);
+                    ImageIcon im = slide.getImage();
 
-                Image image = null;
-                if (im != null) {
-                    image = slide.getImage().getImage();
+                    Image image = null;
+                    if (im != null) {
+                        image = slide.getImage().getImage();
+                    }
+
+                    XmlQuestionPacket qn = slide.getQuestion();
+                    String imageData = encodeImage(image, i);
+
+                    ImageIcon sll = null;
+                    String qnStr = "";
+
+                    ArrayList<Value> answerOptions = new ArrayList<Value>();
+                    int qnType = -1;
+                    String essayAns = "";
+                    String sender = "";
+                    String qnId = "";
+                    String sessionId = "";
+                    String qname = "";
+                    String qpath = "";
+                    boolean isAnswered = false;
+                    if (qn != null) {
+                        sll = qn.getImage();
+                        qnStr = qn.getQuestion();
+                        answerOptions = qn.getAnswerOptions();
+                        qnType = qn.getType();
+                        essayAns = qn.getEssayAnswer();
+                        sender = qn.getSender();
+                        qnId = qn.getId();
+                        sessionId = qn.getSessionId();
+                        isAnswered = qn.isAnswered();
+                        qname = qn.getName();
+                        qpath = qn.getImagePath();
+                    }
+                    String qnImageData = "";
+                    if (sll != null) {
+                        if (sll.getIconWidth() > 0) {
+                            Image qnImage = sll.getImage();
+
+                            if (qnImage != null) {
+                                try {
+                                    qnImageData = encodeImage(qnImage, i);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    XmlBuilderSlide xmlSlide = new XmlBuilderSlide(
+                            slide.getTitle(),
+                            slide.getText(),
+                            textColor,
+                            textSize,
+                            imageData,
+                            qnStr,
+                            answerOptions,
+                            qnType,
+                            essayAns,
+                            sender,
+                            qnId,
+                            sessionId,
+                            isAnswered,
+                            qname,
+                            qnImageData,
+                            qpath,
+                            i,
+                            textXPos,
+                            textYPos,
+                            slide.getUrl());
+                    slides.add(xmlSlide);
+                    System.out.println("Added Slide: " + xmlSlide.getIndex());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
-                XmlQuestionPacket qn = slide.getQuestion();
-                String imageData = encodeImage(image, i);
-
-                ImageIcon sll = null;
-                String qnStr = "";
-
-                ArrayList<Value> answerOptions = new ArrayList<Value>();
-                int qnType = -1;
-                String essayAns = "";
-                String sender = "";
-                String qnId = "";
-                String sessionId = "";
-                String qname = "";
-                String qpath = "";
-                boolean isAnswered = false;
-                if (qn != null) {
-                    sll = qn.getImage();
-                    qnStr = qn.getQuestion();
-                    answerOptions = qn.getAnswerOptions();
-                    qnType = qn.getType();
-                    essayAns = qn.getEssayAnswer();
-                    sender = qn.getSender();
-                    qnId = qn.getId();
-                    sessionId = qn.getSessionId();
-                    isAnswered = qn.isAnswered();
-                    qname = qn.getName();
-                    qpath = qn.getImagePath();
-                }
-                Image qnImage = sll == null ? null : sll.getImage();
-                String qnImageData = qnImage == null ? "" : encodeImage(qnImage, i);
-                XmlBuilderSlide xmlSlide = new XmlBuilderSlide(
-                        slide.getTitle(),
-                        slide.getText(),
-                        textColor,
-                        textSize,
-                        imageData,
-                        qnStr,
-                        answerOptions,
-                        qnType,
-                        essayAns,
-                        sender,
-                        qnId,
-                        sessionId,
-                        isAnswered,
-                        qname,
-                        qnImageData,
-                        qpath,
-                        slide.getIndex(),
-                        textXPos,
-                        textYPos);
-                slides.add(xmlSlide);
             }
             mf.getTcpConnector().setFileManagerMode("slide-show-list");
             mf.getTcpConnector().sendPacket(new SlideBuilderPacket(slides, name));
@@ -649,6 +673,8 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         textformatPanel = new javax.swing.JPanel();
         formatButton = new javax.swing.JButton();
         textUploadButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        urlField = new javax.swing.JTextField();
         imagePanel = new javax.swing.JPanel();
         cPanel2 = new javax.swing.JPanel();
         imageButton = new javax.swing.JButton();
@@ -785,7 +811,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
 
         jLabel1.setText("Slide Title");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         slideDetailsPanel.add(jLabel1, gridBagConstraints);
 
         titleField.setEditable(false);
@@ -798,7 +824,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         slideDetailsPanel.add(jLabel2, gridBagConstraints);
 
@@ -820,7 +846,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         slideDetailsPanel.add(jLabel3, gridBagConstraints);
 
         questionField.setEditable(false);
@@ -895,6 +921,18 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         slideDetailsPanel.add(textformatPanel, gridBagConstraints);
 
+        jLabel5.setText("URL:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        slideDetailsPanel.add(jLabel5, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        slideDetailsPanel.add(urlField, gridBagConstraints);
+
         toprightPanel.add(slideDetailsPanel, java.awt.BorderLayout.CENTER);
 
         splitPane2.setLeftComponent(toprightPanel);
@@ -914,6 +952,11 @@ public class SlideBuilderManager extends javax.swing.JFrame {
 
         clearButton.setText("Clear");
         clearButton.setEnabled(false);
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
         cPanel2.add(clearButton);
 
         imagePanel.add(cPanel2, java.awt.BorderLayout.PAGE_END);
@@ -952,7 +995,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void textUploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textUploadButtonActionPerformed
-        String path = mf.getUser().getUserName()+"/documents";
+        String path = mf.getUser().getUserName() + "/documents";
         mf.getTcpConnector().setFileManagerMode("slide-builder-text");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }//GEN-LAST:event_textUploadButtonActionPerformed
@@ -1050,10 +1093,23 @@ public class SlideBuilderManager extends javax.swing.JFrame {
         addButton.setText("Save Slide");
     }//GEN-LAST:event_editSlideButtonActionPerformed
 
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        slideImage = null;
+        repaint();
+    }//GEN-LAST:event_clearButtonActionPerformed
+
     private void open() {
         String path = mf.getUser().getUserName() + "/slides/";
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("slide-show");
+        mf.getTcpConnector().setFileManagerMode("slide-show");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     private void previewQuestion() {
@@ -1064,7 +1120,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
                 question.getSender(), question.getId(), question.getImage(),
                 question.getImagePath());
 
-        AnsweringFrame answerFrame = new AnsweringFrame(qn, mf, true);
+        AnsweringFrame answerFrame = new AnsweringFrame(qn, mf, false);
         answerFrame.setTitle("Preview");
         answerFrame.setAlwaysOnTop(true);
         answerFrame.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
@@ -1101,6 +1157,7 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel listPanel;
     private javax.swing.JPanel mscCPanel;
@@ -1125,5 +1182,6 @@ public class SlideBuilderManager extends javax.swing.JFrame {
     private javax.swing.JPanel textformatPanel;
     private javax.swing.JTextField titleField;
     private javax.swing.JPanel toprightPanel;
+    private javax.swing.JTextField urlField;
     // End of variables declaration//GEN-END:variables
 }

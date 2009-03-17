@@ -34,12 +34,13 @@ public class XmlBuilderSlide implements Serializable {
     private int index;
     private int textXPos;
     private int textYPos;
+    private String url;
 
     public XmlBuilderSlide(String title, String text, Color color, int size,
             String imageData, String question, ArrayList<Value> answerOptions,
             int type, String essayAnswer, String sender, String id, String sessionId,
             boolean answered, String name, String questionImageData, String questionPath, int index,
-            int textXPos, int textYPos) {
+            int textXPos, int textYPos,String url) {
         this.title = title;
         this.text = text;
         this.textColor = color;
@@ -51,6 +52,7 @@ public class XmlBuilderSlide implements Serializable {
         this.essayAnswer = essayAnswer;
         this.sender = sender;
         this.id = id;
+        this.url=url;
         this.sessionId = sessionId;
         this.answered = answered;
         this.name = name;
@@ -58,6 +60,15 @@ public class XmlBuilderSlide implements Serializable {
         this.questionPath = questionPath;
         this.textXPos = textXPos;
         this.textYPos = textYPos;
+        this.index=index;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getTextXPos() {
