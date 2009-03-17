@@ -210,7 +210,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         notepadCount++;
     }
 
-    public void setSlideShowNavigatorVisible(boolean show,String text) {
+    public void setSlideShowNavigatorVisible(boolean show, String text) {
     }
 
     public void initToolbar() {
@@ -281,7 +281,7 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         chatButtonGroup.add(chatButton);
         chatButton.setSelected(true);
         ttop.add(chatButton);
-        leftBottonNorthPanel.add(ttop, BorderLayout.NORTH);
+        //leftBottonNorthPanel.add(ttop, BorderLayout.NORTH);
         leftBottonNorthPanel.add(chatRoom, BorderLayout.CENTER);
         leftBottomPanel.add(leftBottonNorthPanel, BorderLayout.CENTER);
         infoPanel = new InfoPanel();
@@ -334,6 +334,14 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
 
     public AudioChatClient getAudioChatClient() {
         return audioChatClient;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public int getAudioMICPort() {
@@ -474,8 +482,8 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
         fr.setVisible(true);
     }
 
-    public void initAnswerFrame(QuestionPacket questions, String title,boolean enableSubmitButton) {
-        answerFrame = new AnsweringFrame(questions, this, false);
+    public void initAnswerFrame(QuestionPacket questions, String title, boolean enableSubmitButton) {
+        answerFrame = new AnsweringFrame(questions, this, enableSubmitButton);
         answerFrame.setTitle(title);
         answerFrame.setAlwaysOnTop(true);
         answerFrame.setSize((ss.width / 8) * 5, (ss.height / 8) * 5);
@@ -517,12 +525,16 @@ public class ClassroomMainFrame extends javax.swing.JFrame {
     }
 
     public void showInfoMessage(String msg) {
-        infoField.setForeground(Color.BLACK);
-        infoField.setText(msg);
-        whiteBoardSurface.showMessage(msg, false);
-        msgTimer.cancel();
-        msgTimer = new Timer();
-        msgTimer.schedule(new MsgTimer(), 5000);
+        try {
+            infoField.setForeground(Color.BLACK);
+            infoField.setText(msg);
+            whiteBoardSurface.showMessage(msg, false);
+            msgTimer.cancel();
+            msgTimer = new Timer();
+            msgTimer.schedule(new MsgTimer(), 5000);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     class MsgTimer extends TimerTask {
