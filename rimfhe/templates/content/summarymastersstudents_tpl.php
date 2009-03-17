@@ -43,8 +43,8 @@ if ( count($arrDeptSummary) > 0) {
 	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_dept', 'rifhme'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_totalnumberofmasters', 'rifhme', ''));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_dept', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_totalnumberofmasters', 'rimfhe', ''));
 		
 	$table->endHeaderRow();
 	
@@ -65,8 +65,8 @@ if ( count($arrDeptSummary) > 0) {
 	$table2Header = $this->objLanguage->languageText('mod_rimfhe_totalmastersbyfaculty', 'rimfhe');
 	//Set up fields heading for $table2
 	$table2->startHeaderRow();
-	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rifhme'));
-	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_numberofmastersstudents', 'rifhme'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_numberofmastersstudents', 'rimfhe'));
 		
 	$table->endHeaderRow();
 	
@@ -96,19 +96,22 @@ else{
 	
 }
 //Header for $table
-
+if(!empty($tableHeader)){
 echo '<span style="color:red;font-size:12px;">'.$tableHeader.'<br /></span>';
+}
+
 echo $table->show();
 echo '<br /><br />';
-
+if(!empty($table2Header)){
 echo '<span style="color:red;font-size:12px;">'.$table2Header.'<br /></span>';
+}
 echo $table2->show();
 
 echo '<br /><br />';
-
+if(!empty($totalMastersStuds)){
 echo $totalMastersStuds;
-
+}
+if(!empty($totalUnitOutPut)){
 echo $totalUnitOutPut;
+}
 ?>
-
-

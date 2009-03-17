@@ -9,7 +9,6 @@ $this->loadClass('form', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 
-
 //Define the for  Graduates by Department
 $table = new htmltable();
 $table->cellspacing = '2';
@@ -35,7 +34,6 @@ $display = '<p>'.$header.'</p><hr />';
 echo $display;
 
 $rowcount = 0;
-
 
 if ( count($arrDeptSummary) > 0) {	
 //Description for $table 
@@ -93,25 +91,26 @@ if ( count($arrDeptSummary) > 0) {
 	
 	$totalUnitOutPut = '<span style="color:red;font-size:12px;">'.$table4Header.'</span>:&nbsp;&nbsp;<strong>'.($mastersTotalCount*3).'</strong><br /><br />';
 }
-else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
-	
+else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';	
 }
 //Header for $table
-
+if(!empty($tableHeader)){
 echo '<span style="color:red;font-size:12px;">'.$tableHeader.'<br /></span>';
-
+}
 echo $table->show();
 
 echo '<br /><br />';
-
+if(!empty($table2Header)){
 echo '<span style="color:red;font-size:12px;">'.$table2Header.'<br /></span>';
-
+}
 echo $table2->show();
 
 echo '<br /><br />';
-
+if(!empty($totalDoctoralStuds)){
 echo $totalDoctoralStuds;
+}
 echo '<br />';
-
+if(!empty($totalUnitOutPut)){
 echo $totalUnitOutPut;
+}
 ?>

@@ -136,8 +136,7 @@ class dbchapterinbook extends dbtable
 			);
 		//Cheeck if book with same title is already in the database
 		$where = "WHERE chaptertitle='".$chaptertile."'";
-		$checkRecord = $this->getAllChapterInBooks($where);
-
+		$checkRecord = $this->getAll($where);
 		if(count($checkRecord) > 0){
 		return FALSE;
 		}
@@ -147,9 +146,9 @@ class dbchapterinbook extends dbtable
 		
 	}//end addStaffDetails	
 	
-	public function getAllChapterInBooks($where)
+	public function getAllChapterInBooks()
 	{						
-		return $this->getAll($where);	
+		return $this->getAll();	
 	}
 	
 	//This public method counts the totall number of Chapter In a Book 

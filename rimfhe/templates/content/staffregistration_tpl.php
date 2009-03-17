@@ -20,6 +20,9 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 <?php
+if(!isset($mode)){
+$mode = '';
+}
 $this->loadClass('htmlheading', 'htmlelements');
 $pageHeading = new htmlheading();
  $pageHeading->type = 2;
@@ -40,9 +43,7 @@ echo '<br /><span style="color:red;font-size:12px;">'.$header2.'</span>';
 	$this->formElements->sendElements();
 	//create the form
 	$staffRegistration = new form ('register', $this->uri(array('action'=>'registerstaff'), 'rimfhe'));
-	//add instruction to form
-	//$staffRegistration->addToForm($mode);
-	//$staffRegistration->addToForm($this->formInstruction());
+	
 	/* ---------------------- Form Elements--------*/
 	//assign laguage objects to variables		
 	$surname = $this->objLanguage->languageText('word_surname', 'system');

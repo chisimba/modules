@@ -33,7 +33,7 @@ $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p>'.$header.'</p><hr />';
 
 //Show Header
 echo $display;
@@ -52,8 +52,8 @@ if ( count($arrDisplayDoctoral) > 0) {
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisors', 'rifhme'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rifhme'));	
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisor', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));	
 	$table->endHeaderRow();
 	
 	foreach($arrDisplayDoctoral as $doctoralstudents) {
@@ -84,5 +84,3 @@ else{
  echo $table->show();
 
 ?>
-
-

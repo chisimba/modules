@@ -22,7 +22,7 @@ $table2->cellpadding = '5';
 //setup the table headings
 $h3 = $this->getObject('htmlheading', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
-$h3->str =$this->objLanguage->languageText('mod_rimfhe_universitytotaloutputt', 'rimfhe');
+$h3->str =$this->objLanguage->languageText('mod_rimfhe_universitytotaloutput', 'rimfhe');
 
 $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
@@ -73,19 +73,30 @@ else{
 	
 }
 //Header for $table
-
+if(!empty($articles)){
 echo '<br /><br />';
 echo $articles;
+}
+if(!empty($books)){
 echo '<br /><br />';
 echo $books;
+}
+if(!empty($chapters)){
 echo '<br /><br />';
 echo $chapters;
+}
+if(!empty($doctoral)){
 echo '<br /><br />';
 echo $doctoral;
+}
+if(!empty($masters)){
 echo '<br /><br />';
 echo $masters;
+}
+if(!empty($total)){
 echo '<br /><br />';
 echo $total;
+}
 echo '<br /><br />';
 ?>
 

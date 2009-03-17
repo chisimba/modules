@@ -117,7 +117,7 @@ Public fuction to instantiate required  objestc
 		
 			case 'Accredted Journal Articles Info':			
 			$arrJournal=array();
-			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor($where);
+			$arrJournal = $this->objAccreditedJournal->getAllJournalAuthor();
 			$this->setVarByRef('arrJournal', $arrJournal);
 			return 'displayaccrjournal_tpl.php';  
 				
@@ -125,7 +125,7 @@ Public fuction to instantiate required  objestc
 			return 'entirebook_tpl.php';
 		
 			case 'Entire Book/Monogragh Details':
-			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks($where);
+			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks();
 			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
 			return 'displayentirebook_tpl.php';			
 			
@@ -133,7 +133,7 @@ Public fuction to instantiate required  objestc
 			return 'chapterinbook_tpl.php';
 						
 			case 'Chapter In a Book Details':
-			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks($where);
+			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks();
 			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
 			return 'displaychapterinbook_tpl.php';
 			
@@ -141,7 +141,7 @@ Public fuction to instantiate required  objestc
 			return 'doctoralstudents_tpl.php';
 						
 			case 'Graduating Doctoral Student Info':
-			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents($where);
+			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents();
 			$this->setVarByRef('arrDisplayDoctoral', $arrDisplayDoctoral);		
 			return 'displaydoctoralstudents_tpl.php';
 			
@@ -158,7 +158,7 @@ Public fuction to instantiate required  objestc
 			return 'mastersstudents_tpl.php';
 			
 			case 'Graduating Masters Student Info':
-			$arrDisplayMasters= $this->objMastersStudents->getAllMastersStudents($where);
+			$arrDisplayMasters= $this->objMastersStudents->getAllMastersStudents();
 			$this->setVarByRef('arrDisplayMasters', $arrDisplayMasters);
 			return 'displaymastersstudents_tpl.php';			
 
@@ -196,8 +196,7 @@ Public fuction to instantiate required  objestc
 			return 'generalconfirm_tpl.php';
 			
 			case 'recordexists':
-			return 'recordexists_tpl.php';
-			
+			return 'recordexists_tpl.php';			
 			}//end switch
 		}
 	}//end dispatch
@@ -226,7 +225,7 @@ Public fuction to instantiate required  objestc
 			);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 
 		// Check that all required field are not empty
 						
@@ -309,7 +308,7 @@ Public fuction to instantiate required  objestc
 		$checkFields = array($captcha,$journalname, $articletitle, $publicationyear, $volume, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 
 		//ckeck user name
 		if(empty($journalname)){
@@ -383,7 +382,7 @@ Public fuction to instantiate required  objestc
 		$checkFields = array($captcha,$bookname, $isbnnumber, $publishinghouse, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 
 		//ckeck user name
 		if(empty($bookname)){
@@ -458,7 +457,7 @@ Public fuction to instantiate required  objestc
 		$checkFields = array($captcha,$bookname, $isbnnumber,$editors, $publishinghouse, $chaptertile, $firstpage, $lastpage, $author1,$author2, $author3,$author4);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 
 		//ckeck user name
 		if(empty($bookname)){
@@ -536,7 +535,7 @@ Public fuction to instantiate required  objestc
 		  	$captcha, $surname, $initials, $firstname, $gender, $studnumber, $dept, $faculty, $thesis, $supervisor1, $supervisor2, $supervisor3, $degree);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 	
 		if(empty($surname)){
 			$problems[] = 'nosurname';
@@ -619,7 +618,7 @@ Public fuction to instantiate required  objestc
 		  	$captcha, $surname, $initials, $firstname, $gender, $studnumber, $dept, $faculty, $thesis, $supervisor1, $supervisor2, $supervisor3, $degree);	
 
 		// Create an array to hold information about problems
-		$problem = array();
+		$problems = array();
 	
 		if(empty($surname)){
 			$problems[] = 'nosurname';

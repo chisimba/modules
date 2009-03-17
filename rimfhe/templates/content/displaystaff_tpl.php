@@ -29,7 +29,7 @@ $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p>'.$header.'</p><hr />';
 //Show Header
 echo $display;
 
@@ -40,7 +40,7 @@ if (count($arrDisplayStaff) > 0) {
 
 	//setup the table headings
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_rimfhe', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
 	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'system'));
@@ -49,7 +49,7 @@ if (count($arrDisplayStaff) > 0) {
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('phrase_staffnumber', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('phrase_rimfhe', 'system'));
+	$table->addHeaderCell($this->objLanguage->languageText('phrase_emailaddress', 'system'));
 	$table->endHeaderRow();
 
 	//Loop through $arrDisplayStaff and set data in rows

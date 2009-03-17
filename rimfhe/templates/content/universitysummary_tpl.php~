@@ -56,10 +56,8 @@ if (!empty($totalArticles) || !empty($totalBooks) || !empty($totalChapterInBook)
 	$sumArticle = $this->objLanguage->languageText('mod_rimfhe_totaljournalarticle', 'rimfhe');
 	$sumBooks = $this->objLanguage->languageText('mod_rimfhe_totalbooks', 'rimfhe', '');
 	$sumChapterInBook = $this->objLanguage->languageText('mod_rimfhe_totalchapterinbook', 'rimfhe');
-	$sumDoctoral = $this->objLanguage->languageText('mod_rimfhe_totaldoctoralstudents', 'rimfhe', 'Total Graduating Doctoral Students');		
-
-	$sumMasters = $this->objLanguage->languageText('mod_rimfhe_totalmastersstudents', 'rimfhe', 'Total Graduating Masters Students');	
-
+	$sumDoctoral = $this->objLanguage->languageText('mod_rimfhe_totaldoctoralstudents', 'rimfhe');
+	$sumMasters = $this->objLanguage->languageText('mod_rimfhe_totalmastersstudents', 'rimfhe');
 	$OveralTotral = $this->objLanguage->languageText('mod_rimfhe_grandtotal', 'rimfhe', 'TOTAL');	
 
 	$articles= '<span style="color:red;font-size:12px;">'.$sumArticle.'</span>:&nbsp;&nbsp;<strong>'.$totalArticles.'</strong><br />';
@@ -75,19 +73,30 @@ else{
 	
 }
 //Header for $table
-
+if(!empty($articles)){
 echo '<br /><br />';
 echo $articles;
+}
+if(!empty($books)){
 echo '<br /><br />';
 echo $books;
+}
+if(!empty($chapters)){
 echo '<br /><br />';
 echo $chapters;
+}
+if(!empty($doctoral)){
 echo '<br /><br />';
 echo $doctoral;
+}
+if(!empty($masters)){
 echo '<br /><br />';
 echo $masters;
+}
+if(!empty($total)){
 echo '<br /><br />';
 echo $total;
+}
 echo '<br /><br />';
 ?>
 

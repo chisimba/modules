@@ -84,7 +84,7 @@ if ( count($arrDeptSummary) > 0) {
 	}
 
 	$mastersTotalCount=$totalCount;	
-	$table3Header = $this->objLanguage->languageText('mod_doraclstudents_summary', 'rimfhe', 'Total number of Masters Students For the University');
+	$table3Header = $this->objLanguage->languageText('mod_rimfhe_mastersstudentssummary', 'rimfhe', '');
 	$totalMastersStuds= '<span style="color:red;font-size:12px;">'.$table3Header.'</span>:&nbsp;&nbsp;<strong>'.$mastersTotalCount.'</strong><br />';
 
 	$table4Header = $this->objLanguage->languageText('mod_rimfhe_universitytotaloutput', 'rimfhe');
@@ -92,23 +92,26 @@ if ( count($arrDeptSummary) > 0) {
 	$totalUnitOutPut = '<span style="color:red;font-size:12px;">'.$table4Header.'</span>:&nbsp;&nbsp;<strong>'.($mastersTotalCount*1).'</strong><br /><br />';
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
 	
 }
 //Header for $table
-
+if(!empty($tableHeader)){
 echo '<span style="color:red;font-size:12px;">'.$tableHeader.'<br /></span>';
+}
+
 echo $table->show();
 echo '<br /><br />';
-
+if(!empty($table2Header)){
 echo '<span style="color:red;font-size:12px;">'.$table2Header.'<br /></span>';
+}
 echo $table2->show();
 
 echo '<br /><br />';
-
+if(!empty($totalMastersStuds)){
 echo $totalMastersStuds;
-
+}
+if(!empty($totalUnitOutPut)){
 echo $totalUnitOutPut;
+}
 ?>
-
-

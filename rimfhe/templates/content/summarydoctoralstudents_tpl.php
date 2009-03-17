@@ -9,7 +9,6 @@ $this->loadClass('form', 'htmlelements');
 $objLayer =$this->newObject('layer','htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 
-
 //Define the for  Graduates by Department
 $table = new htmltable();
 $table->cellspacing = '2';
@@ -36,15 +35,14 @@ echo $display;
 
 $rowcount = 0;
 
-
 if ( count($arrDeptSummary) > 0) {	
 //Description for $table 
 	$tableHeader = $this->objLanguage->languageText('mod_rimfhe_doctoraltotal', 'rimfhe');
 	
 //Set up fields heading
 	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_dept', 'rifhme'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_totaldocgradnumber', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_dept', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_totaldocgradnumber', 'rimfhe'));
 		
 	$table->endHeaderRow();
 	
@@ -65,8 +63,8 @@ if ( count($arrDeptSummary) > 0) {
 	$table2Header = $this->objLanguage->languageText('mod_rimfhe_doctsumbyfaculty', 'rimfhe');
 	//Set up fields heading for $table2
 	$table2->startHeaderRow();
-	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rifhme'));
-	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_numberofdoc', 'rifhme'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+	$table2->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_numberofdoc', 'rimfhe'));
 		
 	$table->endHeaderRow();
 	
@@ -93,25 +91,26 @@ if ( count($arrDeptSummary) > 0) {
 	
 	$totalUnitOutPut = '<span style="color:red;font-size:12px;">'.$table4Header.'</span>:&nbsp;&nbsp;<strong>'.($mastersTotalCount*3).'</strong><br /><br />';
 }
-else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';
-	
+else{	echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe').'</div>';	
 }
 //Header for $table
-
+if(!empty($tableHeader)){
 echo '<span style="color:red;font-size:12px;">'.$tableHeader.'<br /></span>';
-
+}
 echo $table->show();
 
 echo '<br /><br />';
-
+if(!empty($table2Header)){
 echo '<span style="color:red;font-size:12px;">'.$table2Header.'<br /></span>';
-
+}
 echo $table2->show();
 
 echo '<br /><br />';
-
+if(!empty($totalDoctoralStuds)){
 echo $totalDoctoralStuds;
+}
 echo '<br />';
-
+if(!empty($totalUnitOutPut)){
 echo $totalUnitOutPut;
+}
 ?>

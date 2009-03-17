@@ -33,7 +33,7 @@ $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p>'.$header.'</p><hr />';
 
 //Show Header
 echo $display;
@@ -49,10 +49,10 @@ if ( count($arrDisplayBooks) > 0) {
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editors','rimfhe'));	
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chaptertitle', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chapterfirstpageno', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_chapterlastpageno', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe'));	
 	$table->endHeaderRow();
 	

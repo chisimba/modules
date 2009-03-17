@@ -102,8 +102,7 @@ class dbmastersstudents extends dbtable
 
 		//Cheeck if book with same title is already in the database
 		$where = "WHERE thesistitle='".$thesis."'";
-		$checkRecord = $this->getAllMastersStudents($where);
-
+		$checkRecord = $this->getAll($where);
 		if(count($checkRecord) > 0){
 		return FALSE;
 		}
@@ -113,9 +112,9 @@ class dbmastersstudents extends dbtable
 	}//end
 
 	//This public method retrieves all the record form the table
-	public function getAllMastersStudents($where)
+	public function getAllMastersStudents()
 	{						
-		return $this->getAll($where);	
+		return $this->getAll();	
 	}
 		
 	//This public method counts the Number of Masters Studenst in each Department

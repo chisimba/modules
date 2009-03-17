@@ -33,7 +33,7 @@ $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p>'.$header.'</p><hr />';
 
 //Show Header
 echo $display;
@@ -50,8 +50,8 @@ if ( count($arrJournal) > 0) {
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_volume', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstpage', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_author1', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rifhme'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
 	$table->endHeaderRow();
 	
 	foreach($arrJournal as $journal) {
@@ -72,8 +72,7 @@ if ( count($arrJournal) > 0) {
 	$table->addRow($tableRow, $oddOrEven);
 	
 	$rowcount = ($rowcount == 0) ? 1 : 0;
-	 echo $title.'<br />';
-
+	
 	}	
 }
 else{
@@ -83,5 +82,3 @@ else{
  echo $table->show();
 
 ?>
-
-

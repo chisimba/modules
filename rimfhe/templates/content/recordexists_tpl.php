@@ -10,7 +10,7 @@ $objLayer->str = $h3->show();
 $objLayer->border = '; float:left; align: left; margin:0px; padding:0px;';
 $header = $objLayer->show();
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p>'.$header.'</p><hr />';
 
 //Show Header
 echo $display;

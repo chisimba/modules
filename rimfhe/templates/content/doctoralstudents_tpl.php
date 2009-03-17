@@ -1,6 +1,30 @@
-
+<script type="text/javascript">
+//<![CDATA[
+function init () {
+	$('input_redraw').onclick = function () {
+		redraw();
+	}
+}
+function redraw () {
+	var url = 'index.php';
+	var pars = 'module=security&action=generatenewcaptcha';
+	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
+}
+function showLoad () {
+	$('load').style.display = 'block';
+}
+function showResponse (originalRequest) {
+	var newData = originalRequest.responseText;
+	$('captchaDiv').innerHTML = newData;
+}
+//]]>
+</script>
 <?php
+if(!isset($mode)){
+$mode = '';
+}
 $this->loadClass('htmlheading', 'htmlelements');
+$mode = $mode;
 /*
  *The Tilte of The Page
  */
@@ -307,24 +331,3 @@ if ($mode == 'fixerror' && count($messages) > 0) {
 //display form
 echo $doctorateStudents->show();
 ?>
-<script type="text/javascript">
-//<![CDATA[
-function init () {
-	$('input_redraw').onclick = function () {
-		redraw();
-	}
-}
-function redraw () {
-	var url = 'index.php';
-	var pars = 'module=security&action=generatenewcaptcha';
-	var myAjax = new Ajax.Request( url, {method: 'get', parameters: pars, onComplete: showResponse} );
-}
-function showLoad () {
-	$('load').style.display = 'block';
-}
-function showResponse (originalRequest) {
-	var newData = originalRequest.responseText;
-	$('captchaDiv').innerHTML = newData;
-}
-//]]>
-</script>

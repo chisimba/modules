@@ -132,8 +132,7 @@ class dbentirebook extends dbtable
 
 		//Cheeck if book with same title is already in the database
 		$where = "WHERE booktitle='" . $bookname . "'";
-		$checkRecord = $this->getAllEntireBooks($where);
-
+		$checkRecord = $this->getAll($where);
 		if(count($checkRecord) > 0){
 		return FALSE;
 		}
@@ -143,9 +142,9 @@ class dbentirebook extends dbtable
 		
 	}//end entireBook
 	
-	public function getAllEntireBooks($where)
+	public function getAllEntireBooks()
 	{						
-		return $this->getAll($where);	
+		return $this->getAll();	
 	}
 
 	//This public method counts the totall number of Books 

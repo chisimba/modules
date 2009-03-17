@@ -121,7 +121,6 @@ class dbaccreditedjournal extends dbtable
 		//Cheeck if book with same title is already in the database
 		$where = "WHERE articletitle='".$articletitle."'";
 		$checkRecord = $this->getAll($where);
-
 		if(count($checkRecord) > 0){
 		return FALSE;
 		}

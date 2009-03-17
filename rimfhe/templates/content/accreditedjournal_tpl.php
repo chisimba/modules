@@ -20,6 +20,9 @@ function showResponse (originalRequest) {
 //]]>
 </script>
 <?php
+if(!isset($mode)){
+$mode = '';
+}
 $this->loadClass('htmlheading', 'htmlelements');
 /*
  *The Tilte of The Page
