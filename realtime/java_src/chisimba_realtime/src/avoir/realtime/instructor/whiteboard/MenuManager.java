@@ -342,8 +342,8 @@ public class MenuManager implements ActionListener {
         };
         t.start();
         }*/
-        String path = mf.getUser().getUserName()+"/images";
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("whiteboard-image");
+        String path = mf.getUser().getUserName() + "/images";
+        mf.getTcpConnector().setFileManagerMode("whiteboard-image");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }
 
@@ -367,8 +367,8 @@ public class MenuManager implements ActionListener {
         t.start();
         }*/
 
-        String path = mf.getUser().getUserName()+"/presentations/";
-        ((TCPConnector) mf.getTcpConnector()).setFileManagerMode("presentation");
+        String path = mf.getUser().getUserName() + "/presentations";
+        mf.getTcpConnector().setFileManagerMode("presentation");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
     }
 

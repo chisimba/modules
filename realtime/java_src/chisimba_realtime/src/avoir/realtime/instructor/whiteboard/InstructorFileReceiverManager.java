@@ -7,6 +7,7 @@ package avoir.realtime.instructor.whiteboard;
 import avoir.realtime.common.BuilderSlide;
 import avoir.realtime.classroom.whiteboard.item.Img;
 import avoir.realtime.common.Constants;
+import avoir.realtime.common.Utils;
 import avoir.realtime.common.XmlUtil;
 import avoir.realtime.common.packet.FileUploadPacket;
 import avoir.realtime.common.packet.UploadMsgPacket;
@@ -75,6 +76,7 @@ public class InstructorFileReceiverManager extends FileReceiverManager {
                 p.getFileType() == Constants.QUESTION_FILE ||
                 p.getFileType() == Constants.SLIDE_SHOW_NAV ||
                 p.getFileType() == Constants.QUESTION_NAV ||
+                p.getFileType() == Constants.SLIDE_SHOW_VIEW ||
                 p.getFileType() == Constants.NOTEPAD ||
                 p.getFileType() == Constants.SLIDE_SHOW) {
             filename = Constants.getRealtimeHome() + "/classroom/documents/" + mf.getUser().getSessionId() + "/" + p.getFilename();
@@ -115,6 +117,7 @@ public class InstructorFileReceiverManager extends FileReceiverManager {
                 mf.getTcpConnector().sendPacket(new UploadMsgPacket(mf.getUser().getSessionId(), "Successful", p.getSender(), p.getRecepientIndex()));
 
                 mf.showInfoMessage("Download complete.");
+                Utils.disposeStatusWindow();
                 if (p.getFileType() == Constants.SLIDE_SHOW_NAV) {
                     ArrayList<BuilderSlide> list = XmlUtil.readXmlSlideShowFile(filename);
                     mf.getSlideShowNavigator().addSlides(list);
@@ -175,6 +178,7 @@ public class InstructorFileReceiverManager extends FileReceiverManager {
             } else {
                 mf.getTcpConnector().sendPacket(new UploadMsgPacket(mf.getUser().getSessionId(), "Successful.", p.getSender(), p.getRecepientIndex()));
                 mf.showInfoMessage("Download complete.");
+                Utils.disposeStatusWindow();
                 if (p.getFileType() == Constants.SLIDE_BUILDER_IMAGE) {
                     ImageIcon image = new ImageIcon(filename);
                     mf.getSlideBuilderManager().setSlideImage(image);
@@ -196,7 +200,7 @@ public class InstructorFileReceiverManager extends FileReceiverManager {
                 }
                 if (p.getFileType() == Constants.QUESTION_NAV) {
                     XmlQuestionPacket pac = XmlUtil.readXmlQuestionFile(filename);
-                    mf.initAnswerFrame(pac.getQuestionPacket(), pac.getName(),true);
+                    mf.initAnswerFrame(pac.getQuestionPacket(), pac.getName(), true);
                 }
                 if (p.getFileType() == Constants.NOTEPAD) {
                     javax.swing.text.Document doc = getNotepadContent(filename);

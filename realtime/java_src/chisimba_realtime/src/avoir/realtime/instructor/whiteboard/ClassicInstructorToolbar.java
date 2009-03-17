@@ -77,7 +77,7 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
     @Override
     protected void showDocumentViewer() {
         String path = mf.getUser().getUserName() + "/documents";
-         mf.getTcpConnector().setFileManagerMode("documents");
+        mf.getTcpConnector().setFileManagerMode("documents");
         mf.getTcpConnector().sendPacket(new FileVewRequestPacket(path));
 
     }
@@ -88,8 +88,8 @@ public class ClassicInstructorToolbar extends ClassicToolbar {
         mf.setSlideShowNavigatorVisible(true, "Slide Show Navigator");
         mf.getSlideShowNavigator().setMode("slide-show");
         mf.getSlideShowNavigator().requestFileList();
+    
     }
-
     @Override
     protected void startDesktopshare(JToggleButton b) {
         if (b.isSelected()) {

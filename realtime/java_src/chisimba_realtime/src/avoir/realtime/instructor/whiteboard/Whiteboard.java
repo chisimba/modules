@@ -227,6 +227,9 @@ public class Whiteboard extends WhiteboardSurface implements
     private String slideText = "";
     private int slideTextXPos = 100;
     private int slideTextYPos = 100;
+    private String slideUrl;
+    private Rectangle slideUrlRect = new Rectangle();
+    private Color urlColor = Color.BLACK;
 
     public Whiteboard(Classroom mf) {
         super(mf);
@@ -338,6 +341,15 @@ public class Whiteboard extends WhiteboardSurface implements
         whiteboardPopup.addSeparator();
         whiteboardPopup.add(lineSizeMenuItem);
         pointerSurface = new Rectangle(0, 0, slideWidth, slideHeight);
+    }
+
+    public String getSlideUrl() {
+        return slideUrl;
+    }
+
+    public void setSlideUrl(String slideUrl) {
+        this.slideUrl = slideUrl;
+        repaint();
     }
 
     public void showBanner() {
@@ -831,12 +843,8 @@ public class Whiteboard extends WhiteboardSurface implements
                         selectedIndex =
                                 tempIndex;
                         tempIndex++;
-
                         break;
-
                     }
-
-
                 }
                 if (editPopup.isVisible()) {
                     editPopup.setVisible(false);
@@ -950,6 +958,11 @@ public class Whiteboard extends WhiteboardSurface implements
 
     @Override
     public void mousePressed(MouseEvent evt) {
+        if (slideUrlRect.contains(evt.getPoint())) {
+            JOptionPane.showMessageDialog(null,
+                    "Could not load " + slideUrl);
+            return;
+        }
         if (isDrawingEnabled()) {
             drawSelection = false;
             startX = evt.getX();
@@ -1342,6 +1355,7 @@ public class Whiteboard extends WhiteboardSurface implements
 
     @Override
     public void processMouseMoved(MouseEvent evt) {
+
         if (ovalRect1 != null) {
             Rectangle r1 = ovalRect2;//new Rectangle((xx + ww) - 20,
             //yy, 20, 20);
@@ -1400,6 +1414,15 @@ public class Whiteboard extends WhiteboardSurface implements
 
     @Override
     public void mouseMoved(MouseEvent evt) {
+        if (slideUrlRect.contains(evt.getPoint())) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            urlColor = Color.BLUE;
+            repaint();
+            return;
+        } else {
+            urlColor = Color.BLACK;
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
         processMouseMoved(evt);
     }
 
@@ -2053,6 +2076,19 @@ public class Whiteboard extends WhiteboardSurface implements
             }
             graphics.drawString(infoMessage, 60, 80);
         }
+        if (slideUrl != null) {
+            if (!slideUrl.trim().equals("")) {
+                g2.setStroke(new BasicStroke());
+                FontMetrics fm = graphics.getFontMetrics(msgFont);
+                graphics.setColor(Color.white);
+                slideUrlRect = new Rectangle(35, 15, fm.stringWidth(slideUrl) + 30, fm.getHeight() + 10);
+                graphics.fill(slideUrlRect);
+                graphics.setColor(urlColor);
+                graphics.drawRect(35, 15, fm.stringWidth(slideUrl) + 30, fm.getHeight() + 10);
+                graphics.setFont(msgFont);
+                graphics.drawString(slideUrl, 60, 30);
+            }
+        }
         if (super.currentPointer != null) {
             /* graphics.drawImage(currentPointer.getIcon().getImage(),
             (int) pointerSurface.x + currentPointer.getPoint().x - 10,
@@ -2094,6 +2130,9 @@ public class Whiteboard extends WhiteboardSurface implements
     }
 
     private void drawCustomText(Graphics2D g2) {
+        if (slideText == null) {
+            return;
+        }
         if (slideText.trim().equals("")) {
             return;
         }

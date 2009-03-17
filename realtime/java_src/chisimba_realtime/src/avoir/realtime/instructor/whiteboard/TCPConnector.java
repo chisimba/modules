@@ -35,6 +35,7 @@ import avoir.realtime.classroom.whiteboard.item.Item;
 import avoir.realtime.common.Constants;
 
 import avoir.realtime.common.FileManager;
+import avoir.realtime.common.Utils;
 import avoir.realtime.common.packet.AnswerPacket;
 import avoir.realtime.common.packet.ChatLogPacket;
 import avoir.realtime.common.packet.ChatPacket;
@@ -147,6 +148,8 @@ public class TCPConnector extends TCPSocket {
 
     public boolean connectToServer(String host, int port) {
         if (connect(host, port)) {
+            this.host = host;
+            this.port = port;
             timer.cancel();
             timer = new Timer();
             timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
@@ -160,7 +163,8 @@ public class TCPConnector extends TCPSocket {
     public void startSession() {
         running = true;
         connected = true;
-
+        host = mf.getHost();
+        port = mf.getPort();
         timer.cancel();
         timer = new Timer();
         timer.scheduleAtFixedRate(new SessionTimer(mf), 0, 1000);
@@ -346,13 +350,17 @@ public class TCPConnector extends TCPSocket {
                     } else if (packet instanceof MsgPacket) {
 
                         MsgPacket p = (MsgPacket) packet;
-                        WhiteboardUtil.setStatusMessage(p.getMessage());
+                        Utils.setStatusMessage(p.getMessage());
 
-                        if (p.getMessage().startsWith("Import appears")) {
-                            WhiteboardUtil.disposeStatusWindow();
+                        if (p.getMessage().startsWith("Complete")) {
+                            Utils.disposeStatusWindow();
                         }
                         if (p.isErrorMsg()) {
                             mf.showInfoMessage(p.getMessage());
+                            Utils.disposeStatusWindow();
+                            JOptionPane.showMessageDialog(null, p.getMessage(),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            Utils.disposeStatusWindow();
                         } else {
 
                             mf.showInfoMessage(p.getMessage());
@@ -425,7 +433,7 @@ public class TCPConnector extends TCPSocket {
             fileManager.setVisible(true);
 
         }
-        if (fileManagerMode.equals("document")) {
+        if (fileManagerMode.equals("documents")) {
             fileManager.getUploadButton().setEnabled(true);
             fileManager.getSelectButton().setText("Open");
             fileManager.setFiles(p.getList());
@@ -443,7 +451,7 @@ public class TCPConnector extends TCPSocket {
             mf.getSlideShowNavigator().setFiles(p.getList());
         }
         if (fileManagerMode.equals("slide-show-list")) {
-             mf.getSlideShowNavigator().setFiles(p.getList());
+            mf.getSlideShowNavigator().setFiles(p.getList());
         }
         if (fileManagerMode.equals("slide-show")) {
             fileManager.getUploadButton().setEnabled(false);
@@ -497,15 +505,18 @@ public class TCPConnector extends TCPSocket {
         if (showAppSharePreviewFrame) {
             int hh = packet.getData().getHeight();
             int ww = packet.getData().getWidth();
-
+              if(packet.getSender().equals(mf.getUser().getUserName())){
+                 ww=200;
+                  hh=150;
+              }
             viewer = new RemoteDesktopViewerFrame();
 
-            viewer.setSize(150, 150);
-            appViewer = new AppView(150, 150);//viewer.getWidth(), viewer.getHeight());
+            viewer.setSize(ww, hh);
+            appViewer = new AppView(viewer.getWidth(), viewer.getHeight());
             JFrame fr = new JFrame("Preview");
             fr.setLocation(mf.getWidth() - fr.getWidth(), 10);
             fr.setAlwaysOnTop(true);
-            fr.setSize(300, 250);
+            fr.setSize(ww, hh);
             fr.setContentPane(appViewer);
             fr.setVisible(true);
             showAppSharePreviewFrame = false;
@@ -864,9 +875,12 @@ public class TCPConnector extends TCPSocket {
         int max = 10;
         mf.getChatRoom().getTextPane().setText("");
         while (!connected) {
+
             mf.showErrorMessage("Disconnected from server. Reconnecting to " + host + ":" + port + " " + count + " of " + max + "...");
             if (connect(host, port)) {
-
+                timer.cancel();
+                timer = new Timer();
+                timer.scheduleAtFixedRate(sessionTimer, 0, 1000);
                 publish(mf.getUser());
                 break;
             }
