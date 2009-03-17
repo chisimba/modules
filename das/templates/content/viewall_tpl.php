@@ -16,6 +16,41 @@ $objWashout = $this->getObject('washout', 'utilities');
 $this->objImOps = $this->getObject('dasops', 'das');
 $objImView = $this->getObject('viewrender', 'das');
 
+$scripts = $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-1.3.1.js', 'htmlelements');
+//$scripts .= $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-ui-personalized-1.6rc6.js', 'htmlelements');
+//$scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery/jquery-ui-personalized-1.6rc6/theme/ui.all.css', 'htmlelements').'" rel="Stylesheet" />';
+$scripts .= '<script type="text/javascript">
+	function update()
+	{
+	    $.post("index.php?module=das&action=getchatcontent", {}, function(data){ $("#screen").html(data);}); 
+	 
+	    setTimeout(\'update()\', 1000);
+	}
+ 
+	$(document).ready(
+ 
+		function()
+    	{
+     		update();
+ 
+     		$("#button").click(   
+      			function()
+      			{        
+       				$.post("index.php?module=das&action=addchatmessage",
+    					{ message: $("#message").val()},
+    						function(data){ 
+    							$("#screen").val(data);
+    							$("#message").val("");
+    						}
+    					);
+      			}
+     		);
+    	}
+    );
+ 
+		</script>';
+
+$this->appendArrayVar('headerParams', $scripts);
 
 $script = $this->getJavaScriptFile('das.js');
 $this->appendArrayVar('headerParams', $script);

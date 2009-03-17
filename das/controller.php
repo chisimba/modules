@@ -79,6 +79,7 @@ class das extends controller {
             $this->objIMUsers = $this->getObject ( 'dbimusers', 'im' );
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
 			$this->objConfig = $this->getObject ( 'altconfig', 'config' );
+			$this->objChat = $this->getObject ( 'dbchat', 'das' );
            
 
             // Get the sysconfig variables for the Jabber user to set up the connection.
@@ -160,6 +161,16 @@ class das extends controller {
                 return 'messageview_tpl.php';
                 break;
             
+            case 'getchatcontent':
+            	echo $this->objViewRender->formatChat($this->objChat->getMessages());
+            	exit(0);
+            	break;
+            	
+            case 'addchatmessage':
+            	$this->objChat->addMessage($this->getParam('message'), $this->objUser->userId());
+            	exit(0);
+            	break;
+            		
 			case 'viewarchive':
 				echo $this->objViewRender->getArchivedMessages($this->getParam('personid'));
 				break;

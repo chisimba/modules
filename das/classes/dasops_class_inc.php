@@ -330,7 +330,7 @@ class dasops extends object {
 		//$dasshow = new textinput('show', $this->jshow,null, 10);
 		$dasshow = new dropdown('show');
 		
-		$dasshow->addOption('', 'Available');
+		$dasshow->addOption('', '<img src="http://sitepointstatic.com/forums/images/statusicon/user_offline.gif">Available');
 		$dasshow->addOption('away', 'Away');
 		$dasshow->addOption('dnd', 'Do Not Disturb');
 		$dasshow->addOption('unavailable', 'Invisible');
@@ -388,6 +388,5 @@ class dasops extends object {
 	}
 	
 	
-
 }
 ?>

@@ -428,7 +428,7 @@ class viewrender extends object {
 	$blocks .= $this->getCounselorStatBox();
 	
 	//Chat block
-	//$blocks .= $objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
+	$blocks .= $this->getChatBlock();//$objBlocks->showBlock('contextchat', 'messaging', '', '', FALSE, FALSE);
         return $blocks;
 	
     }
@@ -493,5 +493,48 @@ class viewrender extends object {
 		return $this->objFeatureBox->show('Other Counselors', $str);
 		
 	}
+	
+	/**
+	 * Method to get the chat block for the counselor
+	 * chat
+	 * @return string
+	 * @access public
+	 */
+	public function getChatBlock()
+	{
+		$this->objIcon->setIcon('loader');
+		$str = '<div style="padding:5px"><div id="screen" style="padding:3px;width:170px;height:200px;overflow:auto">'.$this->objIcon->show().'</div>';
+		$str .= '
+				<!--textarea id="screen2" cols="40" rows="40"> </textarea--> <br> 
+					<input id="message" size="20">
+					<button id="button"> Send </button></div>';
+		return $this->objFeatureBox->show('Counselior Chat', $str);
+		
+	}
+	
+	/**
+	 * Method to format the chat messages
+	 * 
+	 */
+	public function formatChat($messages)
+	{
+		if(count($messages) > 0)
+		{
+			$str = "";
+			foreach($messages as $message)
+			{
+				
+				$str .= '<span class="subdued" style="font-size:xx-small">['.$this->objUser->fullname($message['userid']).']</span>&nbsp;';
+				$str .= '<span class="warning" style="font-size:xx-small">'.$message['body'].'</span><br>';
+			}
+			
+			return $str;
+		} else {
+			return "No messages found";
+		}
+		
+		
+	}
+
 }
 ?>
