@@ -36,8 +36,8 @@ public abstract class ScreenScraper implements Runnable {
     private BandwidthController bandwidthController =
             new BandwidthController(DEFAULT_KILOBITS_PER_SECOND);
     private ScrapeCompressionMessage compType =
-            new JPEGCompression();
-    // new APPCompression();
+             new JPEGCompression();
+            //new APPCompression();
     private TCPSocket tcpclient;
     private String sessionId;
     private Rectangle fullScrapeRect = new Rectangle(ss);
@@ -55,8 +55,6 @@ public abstract class ScreenScraper implements Runnable {
     }
 
     public void startScraping() {
-
-
         thread = new Thread(this, getClass().getName());
         try {
             thread.setPriority(Thread.MIN_PRIORITY + 1);
@@ -117,7 +115,7 @@ public abstract class ScreenScraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    //bRunning = false;
+        //bRunning = false;
     }
 
     public synchronized ScrapeCompressionMessage getScrapeCompression() {
@@ -189,10 +187,10 @@ public abstract class ScreenScraper implements Runnable {
                 // means send key frame because threshold was exceeded
                 aRectsToSend = getCompressedKeyFrameRect();
                 bDoKeyFrame = true;
-            //  System.out.println("sending keyframe anyway (threshold exceeded)");
+                //  System.out.println("sending keyframe anyway (threshold exceeded)");
             } else {
                 aRectsToSend = compressChangedRects(aChangedRawScrapes, misFullScrape);
-            // System.out.println("sending update: " + aRectsToSend.length + "/" + this.currentScrapes.length);
+                // System.out.println("sending update: " + aRectsToSend.length + "/" + this.currentScrapes.length);
             }
         } else {
             aRectsToSend = getCompressedKeyFrameRect();
@@ -219,7 +217,7 @@ public abstract class ScreenScraper implements Runnable {
 //            this.updateBandwidthMetric(data.getByteCount());
             // appView.pixelUpdate(data);
             //if (tcpclient != null) {
-            tcpclient.sendPacket(new DesktopPacket(data, sessionId, record));
+            tcpclient.sendPacket(new DesktopPacket(data, sessionId, record, tcpclient.getMf().getUser().getUserName()));
             //}
 
             this.iNextWait = Math.max(
@@ -230,8 +228,8 @@ public abstract class ScreenScraper implements Runnable {
                 // System.out.println("is key frame");
                 resetKeyframe();
             }
-        // scrapeRequested();
-        // System.out.println("sending scrape");
+            // scrapeRequested();
+            // System.out.println("sending scrape");
         } else {
             // b/c server only requests scrape after
             // having received one
@@ -239,9 +237,9 @@ public abstract class ScreenScraper implements Runnable {
             scrapeRequested();
 
         }
-    //baHash = baNewDigest;
+        //baHash = baNewDigest;
 
-    //new ScreenScrapeData(ba, width, height)));
+        //new ScreenScrapeData(ba, width, height)));
     }
 
     public abstract int[] grabPixels(int[] pixels, Rectangle rect)
@@ -252,6 +250,7 @@ public abstract class ScreenScraper implements Runnable {
     }
     // nasty nasty nasty: return zero-length array if no rects changed
     // return null if key frame called for
+
     private RawScrape[] getChangedRawScrapesBelowThreshold() {
         //RawScrape[] changedScrapes = null;
         Vector vectChanged = new Vector();
@@ -344,7 +343,6 @@ public abstract class ScreenScraper implements Runnable {
     int[] currentPixels;
     //int[] previousPixels;
     //private boolean bRunning = false;
-
     //private Point pLastOrigin;
     private Rectangle lastRect;
     private DataChangeChecker changeChecker = new SimpleChecker();

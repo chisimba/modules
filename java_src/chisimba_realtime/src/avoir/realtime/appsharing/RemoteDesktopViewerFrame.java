@@ -91,7 +91,7 @@ public class RemoteDesktopViewerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-       viewer.setResized(false);
+//       viewer.setResized(false);
     }//GEN-LAST:event_formComponentResized
 
     /**
