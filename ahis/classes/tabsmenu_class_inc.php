@@ -156,6 +156,8 @@ class tabsmenu extends object
             case 'department_add':
             case 'report_admin':
             case 'report_add':
+            case 'causative_add':
+            case 'causative_admin':
                 $this->default = 'admin';
                 break;
             case 'view_reports':

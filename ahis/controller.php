@@ -125,6 +125,7 @@ class ahis extends controller {
             $this->objBreed = $this->getObject('breed');
             $this->objSpecies = $this->getObject('species');
             $this->objActive = $this->getObject('active');
+            $this->objCausative = $this->getObject('causative');
             
             $this->objViewReport = $this->getObject('report');
                        
@@ -143,6 +144,7 @@ class ahis extends controller {
                                         'control_admin', 'control_add', 'control_insert', 'control_delete',
                                         'quality_admin', 'quality_add', 'quality_insert', 'quality_delete',
                                         'age_add', 'age_admin', 'age_insert', 'age_delete',
+										'causative_add', 'causative_admin', 'causative_insert', 'causative_delete',
                                         'role_add', 'role_admin', 'role_insert', 'role_delete',
                                         'department_add', 'department_admin', 'department_insert', 'department_delete',
                                         'report_add', 'report_admin', 'report_insert', 'report_delete','disease_admin',
@@ -251,9 +253,8 @@ class ahis extends controller {
                 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
                 $this->setVar('arrayLocation', $this->objTerritory->getAll("ORDER BY name"));
                 $this->setVar('arrayDisease', $this->objDisease->getAll("ORDER BY name"));
-                //$this->setVar('arrayCausative', $this->objCausative->getAll("ORDER BY name"));
-				$this->setVar('arrayCausative', array(array('id'=>1, 'name'=>'temp')));
-                $this->setVar('calendardate', $this->getSession('ps_calendardate'));
+                $this->setVar('arrayCausative', $this->objCausative->getAll("ORDER BY name"));
+				$this->setVar('calendardate', $this->getSession('ps_calendardate'));
                 $this->setVar('refNo', $this->getSession('ps_refNo'));
                 $this->setVar('geo2Id', $this->getSession('ps_geo2Id'));
                 $this->setVar('dateVet', $this->getSession('ps_dateVet', date('Y-m-d')));
@@ -1181,6 +1182,47 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objAge->delete('id', $id);
                 return $this->nextAction('age_admin', array('success'=>'2'));
+            
+			case 'causative_admin':
+                $searchStr = $this->getParam('searchStr');
+                $data = $this->objCausative->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'causative_add')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_causativeadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_causativeadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_causative'));
+                $this->setVar('deleteAction', 'causative_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'causative_add');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+            
+            case 'causative_add':
+                $this->setVar('id', $this->getParam('id'));
+                return 'causative_add_tpl.php';
+            
+            case 'causative_insert':
+                $id = $this->getParam('id');
+                $name = $this->getParam('name');
+                if ($this->objCausative->valueExists('name', $name)) {
+                    return $this->nextAction('causative_admin', array('success'=>'4'));
+                }
+                if ($id) {
+                    $this->objCausative->update('id', $id, array('name'=>$name));
+                    $code = 3;
+                } else {
+                    $this->objCausative->insert(array('name'=>$name));
+                    $code = 1;
+                }
+                return $this->nextAction('causative_admin', array('success'=>$code));
+            
+            case 'causative_delete':
+                $id = $this->getParam('id');
+                $this->objCausative->delete('id', $id);
+                return $this->nextAction('causative_admin', array('success'=>'2'));
             
             case 'role_admin':
                 $searchStr = $this->getParam('searchStr');

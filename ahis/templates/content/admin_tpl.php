@@ -152,6 +152,9 @@ $objTable->startRow();
 $link = new link($this->uri(array('action' => 'breed_admin')));
 $link->link = $this->objLanguage->languageText('mod_ahis_breedadmin', 'ahis');
 $objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'causative_admin')));
+$link->link = $this->objLanguage->languageText('mod_ahis_causativeadmin', 'ahis');
+$objTable->addCell($link->show(),NULL,NULL,'center');
 $objTable->endRow();
 
 $objLayer = new layer();
