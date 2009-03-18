@@ -47,14 +47,14 @@ $addTable->cellpadding = 10;
 $addTable->startRow();
     $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system').':', 'input_title');
     $addTable->addCell($subjectLabel->show(), 120);
-    
+
     $titleInput = new textinput('title');
     $titleInput->size = 50;
-    
+
     if ($mode == 'fix') {
         $titleInput->value = $details['title'];
     }
-    
+
     $addTable->addCell($titleInput->show());
 
 $addTable->endRow();
@@ -65,55 +65,55 @@ $addTable->startRow();
 
     $discussionTypeLabel = new label('<nobr>'.$this->objLanguage->languageText('mod_forum_typeoftopic', 'forum').':</nobr>', 'input_discussionType');
     $addTable->addCell($discussionTypeLabel->show(), 120);
-    
+
     $discussionType = new dropdown('discussionType');
-    
-    
-    foreach ($discussionTypes as $element) 
+
+
+    foreach ($discussionTypes as $element)
     {
         $discussionType->addOption($element['id'], $element['type_name']);
     }
-    
-    
+
+
     $counter = 0;
     $objIcon =& $this->getObject('geticon', 'htmlelements');
-    
+
     $objRadioButton = new radio('discussionType');
     $objRadioButton->setTableColumns(3);
     $objRadioButton->setBreakSpace('table');
-    
-    
-    foreach ($discussionTypes as $element) 
+
+
+    foreach ($discussionTypes as $element)
     {
         $objIcon->setIcon($element['type_icon'], NULL, 'icons/forum/');
-        
+
         $objRadioButton->addOption($element['id'], $objIcon->show().' '.htmlentities($element['type_name']));
-        
+
         //$objRadioButton->extra = 'onclick="changeLabel();"';
     }
-    
+
     // TODO: Set to NULL and add client side validation
     if ($mode == 'fix') {
         $objRadioButton->setSelected($details['type']);
     } else {
         $objRadioButton->setSelected($discussionTypes[0]['id']);
     }
-    
+
     $addTable->addCell($objRadioButton->show());
-    
-    
+
+
 
 
 $addTable->endRow();
 
 
 // Show Sticky Topic
-if ($this->isValid('moderatetopic') || $this->isValid('moderatetopic')) {
+if ($this->objUser->isCourseAdmin() || $this->objUser->isCourseAdmin()) {
     $addTable->startRow();
     $addTable->addCell($this->objLanguage->languageText('mod_forum_stickytopic', 'forum', 'Sticky Topic').':');
-    
+
     $sticky = new radio ('stickytopic');
-    
+
     $objIcon->setIcon('sticky_yes');
     $sticky->addOption('1', $objIcon->show().$this->objLanguage->languageText('word_yes'));
     $objIcon->setIcon('sticky_no');
@@ -133,28 +133,28 @@ $addTable->startRow();
 
     $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
     $addTable->addCell($languageLabel->show(), 120);
-    
+
     //$language =& $this->newObject('language','language');
     $languageDropdown = new dropdown('language');
-    
-    
+
+
     $languageCodes = & $this->newObject('languagecode','language');
-    
+
     // Sort Associative Array by Language, not ISO Code
     $languageList = $languageCodes->iso_639_2_tags->codes;
-    
+
     asort($languageList);
-    
+
     foreach ($languageList as $key => $value) {
         $languageDropdown->addOption($key, $value);
     }
-    
+
     if ($mode == 'fix') {
         $languageDropdown->setSelected($details['language']);
     } else {
         $languageDropdown->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
     }
-    
+
     $addTable->addCell($languageDropdown->show());
 
 $addTable->endRow();
@@ -187,18 +187,18 @@ $addTable->endRow();
 
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
-    
+
     $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 120);
-    
+
     $attachmentIframe = new iframe();
     $attachmentIframe->width='100%';
     $attachmentIframe->height='100';
     $attachmentIframe->frameborder='0';
-    $attachmentIframe->src= $this->uri(array('action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forumid, 'type'=>$forumtype)); 
-    
+    $attachmentIframe->src= $this->uri(array('action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forumid, 'type'=>$forumtype));
+
     $addTable->addCell($attachmentIframe->show());
-    
+
     $addTable->endRow();
 }
 // ------------------------------
@@ -214,7 +214,7 @@ if ($forum['subscriptions'] == 'Y') {
 	$subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
 	$subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
 	$subscriptionsRadio->setBreakSpace('<br />');
-	
+
 	if ($forumSubscription) {
 		$subscriptionsRadio->setSelected('forumsubscribe');
 		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
@@ -223,10 +223,10 @@ if ($forum['subscriptions'] == 'Y') {
 		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
         $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
 	}
-	
+
 	$div = '
 	<div class="forumTangentIndent">'.$subscribeMessage.'</div>';
-	
+
 	$addTable->addCell($subscriptionsRadio->show().$div);
 	$addTable->endRow();
 }

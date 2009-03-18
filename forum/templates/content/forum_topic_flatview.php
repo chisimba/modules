@@ -25,14 +25,14 @@ $headerString = $link->show().' &gt; '.stripslashes($post['post_title']);
 
 $header->str=$headerString;
 
-if ($this->isValid('moderatetopic') && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin() && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
     $objIcon->setIcon('moderate');
     $objIcon->title = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
     $objIcon->alt = $this->objLanguage->languageText('mod_forum_moderatetopic', 'forum');
-    
+
     $moderateTopicLink = new link($this->uri(array('action'=>'moderatetopic', 'id'=>$post['topic_id'], 'type'=>$forumtype)));
     $moderateTopicLink->link = $objIcon->show();
-    
+
     $header->str .= ' '.$moderateTopicLink->show();
 }
 
@@ -85,11 +85,11 @@ if ($showRatingsForm) {
     $objButton = new button('submitForm');
     $objButton->setValue($this->objLanguage->languageText('mod_forum_sendratings', 'forum'));
     $objButton->setToSubmit();
-    
+
     if ($post['status'] != 'CLOSE' && !$forumlocked) {
         $ratingsForm->addToForm('<p align="right">'.$objButton->show().'</p>');
     }
-    
+
     // These elements are need for the redirect
     $hiddenTopicId = new textinput('topic', $post['topic_id']);
     $hiddenTopicId->fldType = 'hidden';
@@ -105,7 +105,7 @@ if (isset($tangentsTable)) {
     echo $tangentsTable;
 }
 
-/* 
+/*
 Do not show reply form if:
 1) Topic is Locked
 2) Forum is Locked
@@ -115,9 +115,9 @@ if ($post['status'] != 'CLOSE' && !$forumlocked && $this->getParam('message') ==
     $header = new htmlheading();
     $header->type=3;
     $header->str = $this->objLanguage->languageText('mod_forum_replytotopic', 'forum');
-    
+
     echo $header->show();
-    
+
     echo $this->objPost->showPostReplyForm($post['post_id'], FALSE);
 }
 
@@ -144,11 +144,11 @@ echo '<p align="center">';
     // echo $replylink->show().' / ';
 // }
 
-if ((!$forumlocked && $this->isValid('newtopic2')) || $forumtype == 'workgroup') {
+if ((!$forumlocked && $this->objUser->isCourseAdmin()) || $forumtype == 'workgroup') {
     echo $newtopiclink->show().' / ';
 }
 
-if ($this->isValid('moderatetopic') && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin() && !$forumlocked && $forumtype != 'workgroup' && $this->isLoggedIn) {
     echo $moderateTopicLink->show().' / ';
 }
 

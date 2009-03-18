@@ -16,10 +16,10 @@ $this->loadClass('hiddeninput', 'htmlelements');
 switch (strtolower($this->getParam('error')))
 {
     default: break;
-    case 'topicdoesntexist': 
+    case 'topicdoesntexist':
         $this->setErrorMessage('The topic you tried to view doesn\'t exist or has been deleted.');
         break;
-    case 'moderatetopicdoesnotexist': 
+    case 'moderatetopicdoesnotexist':
         $this->setErrorMessage('The topic you tried to moderate doesn\'t exist or has been deleted.');
         break;
 }
@@ -59,16 +59,16 @@ $dropdown->addOption('all', 'All Forums');
 foreach ($forums as $forum)
 {
     $dropdown->addOption($forum['forum_id'], $forum['forum_name']);
-    
+
     $forumLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'forum', 'id' => $forum['forum_id'])));
 
     $forumLink->link = $forum['forum_name'];
     $forumName = $forumLink->show();
-    
+
     if ($forum['defaultforum'] == 'Y') {
         $forumName .= '<em> - '.$this->objLanguage->languageText('mod_forum_defaultForum', 'forum').'</em>';
     }
-    
+
     $objIcon = $this->getObject('geticon', 'htmlelements');
     if ($forum['forumlocked'] == 'Y') {
         $objIcon->setIcon('lock', NULL, 'icons/forum/');
@@ -77,15 +77,15 @@ foreach ($forums as $forum)
         $objIcon->setIcon('unlock', NULL, 'icons/forum/');
         $objIcon->title = $this->objLanguage->languageText('mod_forum_forumisopen', 'forum');
     }
-    
+
     $tblclass->startRow();
     $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
     $tblclass->addCell($forumName.'<br />'.$forum['forum_description'], '40%', 'center');
     $tblclass->addCell($forum['topics'], NULL, NULL, 'center');
     $tblclass->addCell($forum['posts'], 100, NULL, 'center');
-    
+
     $post = $this->objPost->getLastPost($forum['forum_id']);
-    
+
     if ($post == FALSE) {
         $postDetails = '<em>'.$this->objLanguage->languageText('mod_forum_nopostsyet', 'forum').'</em>';
         $cssClass= NULL;
@@ -95,7 +95,7 @@ foreach ($forums as $forum)
         $postLink->link = stripslashes($post['post_title']);
         $postDetails = '<strong>'.$postLink->show().'</strong>';
         $postDetails .= '<br />'.$this->trimstrObj->strTrim(stripslashes(str_replace("\r\n", ' ', strip_tags($post['post_text']))), 80);
-        
+
         if ($post['firstname'] != '') {
             if ($this->showFullName) {
                 $user = 'By: '.$post['firstname'].' '.$post['surname'].' - ';
@@ -105,16 +105,16 @@ foreach ($forums as $forum)
         } else {
             $user = '';
         }
-        
+
         if ($this->objDateTime->formatDateOnly($post['datelastupdated']) == date('j F Y')) {
             $datefield = $this->objLanguage->languageText('mod_forum_todayat', 'forum').' '.$this->objDateTime->formatTime($post['datelastupdated']);
         } else {
             $datefield = $this->objDateTime->formatDateOnly($post['datelastupdated']).' - '.$this->objDateTime->formatTime($post['datelastupdated']);
         }
-        
+
         $postDetails .= '<br /><strong>'.$user.$datefield.'</strong>';
     }
-    
+
     $tblclass->addCell($postDetails, '40%', 'center', NULL, $cssClass);
     $tblclass->endRow();
 }
@@ -124,7 +124,7 @@ echo $tblclass->show();
 $objSearch = $this->getObject('forumsearch');
 echo $objSearch->show();
 
-if ($this->isValid('administration') && $this->isLoggedIn) {
+if ($this->objUser->isCourseAdmin() && $this->isLoggedIn) {
     $administrationLink = new link($this->uri(array( 'module'=> 'forum', 'action' => 'administration')));
     $administrationLink->link = $this->objLanguage->languageText('mod_forum_forumadministration', 'forum');
     echo '<p><strong>'.$administrationLink->show().'</strong></p>';
