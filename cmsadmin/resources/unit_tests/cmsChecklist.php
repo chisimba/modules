@@ -1,6 +1,6 @@
 <?PHP
-session_start();
-$_SESSION['userid'] = 1;
+//session_start();
+//$_SESSION['userid'] = 1;
 $GLOBALS['kewl_entry_point_run'] = true;
 require_once 'classes/core/engine_class_inc.php';
 //require_once 'PHPUnit/Framework/TestCase.php';
@@ -903,7 +903,7 @@ public function check_section_userid($record){
 }
 
 
- /*
+/*
  * Method to return all sections
  */
 public function getAllSections($clause= ''){

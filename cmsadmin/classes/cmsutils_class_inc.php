@@ -2904,7 +2904,7 @@
             //$button->setToSubmit();
             $button = new button('save', $this->objLanguage->languageText('word_save'));
             $button->id = 'save';
-            $button->setToSubmit(); 
+            $button->setToSubmit();
             if ($editmode) {
                 $titleInput->value = $section['title'];
                 $menuTextInput->value = $section['menutext'];
@@ -5026,14 +5026,14 @@
 
 
 
-	    /**
-	    * Method to return the add edit content form
-	    *
-	    * @param string $contentId The id of the content to be edited. Default NULL for adding new section
-	    * @access public
-	    * @return string $middleColumnContent The form used to create and edit a page
-	    * @author Warren Windvogel, Charl Mert
-	    */
+        /**
+        * Method to return the add edit content form
+        *
+        * @param string $contentId The id of the content to be edited. Default NULL for adding new section
+        * @access public
+        * @return string $middleColumnContent The form used to create and edit a page
+        * @author Warren Windvogel, Charl Mert
+        */
         public function getAddEditContentForm($contentId = NULL, $section = NULL, $fromModule = NULL, $fromAction = NULL, $s_param = NULL)
         {
 
@@ -5310,6 +5310,10 @@
 	        $pageParams = new layer();
 	        $pageParams->id = 'AddContentPageParams';
 	        $pageParams->str = $table2->show();
+
+	        $pageContent = new layer();
+	        $pageContent->id = 'AddContentPageContent';
+	        $pageContent->str = $table->show();
     
             $wrapLayer = new layer();
             $wrapLayer->id = "wrapAddContent";
@@ -5326,7 +5330,7 @@
 
             
 	        $tableContainer->startRow();
-	        $tableContainer->addCell($table->show(),'', 'top', '', 'AddContentLeft');
+	        $tableContainer->addCell($pageContent->show(),'', 'top', '', 'AddContentLeft');
 	        $tableContainer->addCell($pageParams->show(),'', 'top', '', 'AddContentRight');
 	        $tableContainer->endRow();
             

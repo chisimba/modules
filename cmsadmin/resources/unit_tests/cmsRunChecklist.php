@@ -1,5 +1,4 @@
 <?PHP
-ini_set("session.use_cookies", false);
 require_once 'cmsChecklist.php';
 
 $cl = new cmsChecklist;
@@ -616,7 +615,5 @@ echo "\nCount: ";
 echo count($result);
 echo "\n";
 
-
-//session_destroy();
 ?>
 

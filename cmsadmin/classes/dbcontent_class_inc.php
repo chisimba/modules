@@ -304,7 +304,7 @@
                     $metakey,
                     $metadesc,
                     $ccLicence,
-                    $sectionid)
+                    $sectionId)
         {
             //Create htmlcleaner object
             $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
@@ -327,11 +327,11 @@
             $create_date = $this->now();
             $newArr = array(
                           'title' => $title ,
-                          'sectionid' => $sectionid,
+                          'sectionid' => $sectionId,
                           'introtext' => addslashes($introText),
                           'body' => addslashes($fullText),
                           'access' => $access,
-                          'ordering' => $this->getOrdering($sectionid),
+                          'ordering' => $this->getOrdering($sectionId),
                           'published' => $published,
                           'show_title' => $show_title,
                           'show_author' => $show_author,

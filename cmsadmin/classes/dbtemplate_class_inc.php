@@ -7,13 +7,13 @@
     // end security check
 
 /**
-* Data access class for the cmsadmin module. Used to access data in the template table.
+* Data access class for the template manager.
 *
 * @package cmsadmin
 * @category chisimba
 * @copyright AVOIR
 * @license GNU GPL
-* @author Charl Mert
+* @author Charl Mert <charl.mert@gmail.com>
 */
 
     class dbtemplate extends dbTable

@@ -1,5 +1,20 @@
 <?PHP
 
+
+/*
+   Recursive deleting of a given directory
+
+*/
+
+$objDir = $this->getObject('dir', 'files');
+
+if ($objDir->deleteRecursive('/home/charl/trash/kim_wits')) {
+	echo "Successfully Deleted /home/charl/trash/kim_wits";
+} else {
+	echo "Failed to delete /home/charl/trash/kim_wits";
+}
+
+/*
 var_dump($_REQUEST);
 
 echo "Body Returned: <br/>".$_REQUEST['body'];

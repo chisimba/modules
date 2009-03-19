@@ -3,6 +3,13 @@
     width: 100%;
 }
 
+
+/*Content Page Parameters Tabbed Form Container*/
+#AddContentPageContent {
+    min-width: 400px;
+}
+
+
 /*Template's List Table*/
 #templateListTable th, td{
     padding-left: 5px;
@@ -328,4 +335,8 @@ background-x-position: 0pt;
 background-y-position: -23px;
 line-height: 27px;
 font-size: 0.8em;
+}
+
+#bodydiv {
+    min-width: 
 }

@@ -307,6 +307,8 @@
 
             //Checking Public Access
             if (!$this->isContentPublic($contentid)){
+				//echo ($this->isContentPublic($contentid)? 'TRUE': 'FALSE')." : isContentPublic"; exit;
+				$this->setVar('SECURITY_IS_CONTENT_PUBLIC', FALSE);
                 return false;        
             }
         

@@ -416,7 +416,7 @@ class dbsections extends dbTable
             //}
 			
 			$description = str_ireplace("<br />", " <br /> ",$description);
-
+			
 			//Preventing Duplicates (title, parentId as key)
 			/*
 			$isDuplicate = $this->isDuplicateSection($title,$parentId);
@@ -635,6 +635,7 @@ class dbsections extends dbTable
          */
         public function editSection($id,
 								    $parentId = 0,
+                                    $rootId = 0,
 									$title,
 								    $menuText = '',
 								    $access = null,
