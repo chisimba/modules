@@ -6,7 +6,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
     die("You cannot view this page directly");
 }
 // end security check
-                                                                                                                                             
+
 /**
 * Controller class for the module load users from a file
 * @copyright 2004 KEWL.NextGen
@@ -22,7 +22,7 @@ class userimport extends controller
     var $userPKId;
     var $contextCode;
     var $result;
-    
+
     // Holders for objects that will be instantiated in the controller
     var $objUser;
     var $objUserAdmin;
@@ -30,29 +30,29 @@ class userimport extends controller
     var $objUserBatch;
     var $objDBContext;
     var $objGroups;
-    
+
     public function init()
     {
         // The user and useradmin objects
         $this->objUser= $this->getObject('user', 'security');
-        $this->objUserAdmin= $this->getObject('useradmin_model', 'security');
+        //$this->objUserAdmin= $this->getObject('useradmin_model', 'security');
 
         // The config object
         //$this->objConfig=& $this->getObject('altconfig','config');
         $this->objConfig= $this->getObject('dbsysconfig','sysconfig');
-        
+
         // The classes specific to this module
         $this->objUserImport= $this->getObject('importuserdata', 'userimport');
         $this->objUserBatch= $this->getObject('dbuserimport', 'userimport');
-        
+
         // The language object
         $this->objLanguage=  $this->getObject('language','language');
-        
+
         // The context and group objects used here to determine which context
         // the session is in, and whether the user has rights there.
         $this->objDBContext=$this->getObject('dbcontext','context');
         $this->objGroups=$this->getObject('groupadminmodel','groupadmin');
-        
+
         // The properties are assigned values:
         // The user's primary key id is needed for looking up group membership.
         $this->userId=$this->objUser->userId();
@@ -80,8 +80,8 @@ class userimport extends controller
         // within a context in which you are a lecturer.
         if (!$this->allowUpload()){
             return 'error_tpl.php';
-        }    
-        
+        }
+
         // Now the main 'switch' statement to parse values for "$action"
         switch ($action)
         {
@@ -170,7 +170,7 @@ class userimport extends controller
     }
 
 
-    /** 
+    /**
     * Method to determine if the user has to be logged in or not
     */
     function requiresLogin() // overides that in parent class
@@ -240,7 +240,7 @@ class userimport extends controller
             $this->setVar('remoteFac',$facNameData['desc']);
             $this->setVar('programs',$programlist);
         }
-        
+
         $facultylist=$objRemoteImport->getFaculties();
         $this->setVar('faculties',$facultylist);
 
@@ -256,6 +256,6 @@ class userimport extends controller
         }
 
     }
-            
+
 }
 ?>

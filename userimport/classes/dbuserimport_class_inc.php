@@ -20,21 +20,21 @@ class dbuserimport extends dbTable
     // Output variables
     var $export;
     var $exportName;
-    
+
     // Groups class and XML class
     var $objContextGroups;
     var $objSerialXML;
-    
+
     /**
     * Constructor method to define the table
     */
-    function init() 
+    function init()
     {
         parent::init('tbl_importusers');
         $this->objUser=$this->getObject('user','security');
-        $this->objUserAdmin=$this->getObject('useradmin_model','security');
+        $this->objUserAdmin=$this->getObject('useradmin_model2','security');
         $this->objConfig=$this->getObject('altconfig','config');
-        
+
     }
 
     /**
@@ -97,7 +97,7 @@ class dbuserimport extends dbTable
                 $userPK=$this->objUser->PKId($line['userid']);
                 if ((trim($this->objUser->getItemFromPkId($userPK,'howcreated'))=='import')&&
                     ( count($this->objContextGroups->userContexts($line['userid'],array('contextcode')))<2) ){
-                    $this->objUserAdmin->delete('userid',$line['userid']);
+                    $this->objUserAdmin->setUserDelete($line['userid']);
                 } else {
                 // Here they didn't cascade-delete, so we have to remove them specifically.
                     if ($groupId==NULL){
@@ -109,7 +109,7 @@ class dbuserimport extends dbTable
         }
     }
 
-    /** 
+    /**
     * This method returns a list of all the 'batches' available to the user
     * @param string $contextCode
     * @returns array $info
@@ -125,7 +125,7 @@ class dbuserimport extends dbTable
         $info=$this->getArray($sql1.$sql2);
         return $info;
     }
-   
+
 
     /**
     * This method returns an array of all users imported as a specific 'batch'
@@ -149,7 +149,7 @@ class dbuserimport extends dbTable
         }
         return $data;
     }
-    
+
     /**
     * This method exports all users imported as a specific 'batch'
     * @param string $batchCode
@@ -167,7 +167,7 @@ class dbuserimport extends dbTable
         }
         $this->exportName=$batchCode.".csv";
     }
-    
+
     /**
     * This method exports all users imported as a specific 'batch'
     * @param string $batchCode
@@ -212,7 +212,7 @@ class dbuserimport extends dbTable
         $this->export=$xml;
         $this->exportName=$batchCode.".xml";
         return TRUE;
-        
+
         // Call the XML class and put the output in the class variable.
         // This code is not used at the moment - there is a return before it.
         $this->objSerialXML=$this->getObject('xmlserial','utilities');
@@ -222,7 +222,7 @@ class dbuserimport extends dbTable
 
     /**
     * This method exports all students in the specified context,
-    * whether imported in a batch or not. 
+    * whether imported in a batch or not.
     * @param string $batchCode
     */
     function exportClassXML($contextCode,$role='Students')
