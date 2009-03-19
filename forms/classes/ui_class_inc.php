@@ -81,7 +81,7 @@
                 $this->_objSysConfig =$this->newObject('dbsysconfig', 'sysconfig');
                 $this->objSkin =$this->newObject('skin', 'skin');
                 $this->_objUser =$this->newObject('user', 'security');
-                $this->_objUserModel =$this->newObject('useradmin_model','security');
+                // $this->_objUserModel =$this->newObject('useradmin_model','security');
                 $this->objLanguage =$this->newObject('language', 'language');
                 $this->_objContext =$this->newObject('dbcontext', 'context');
                 $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
@@ -295,18 +295,18 @@
 
             $txt_action = new textinput('action',$action,'hidden');
             $table->startRow();
-            $table->endRow();               
-    
+            $table->endRow();
+
             $pageParams = new layer();
             $pageParams->id = 'AddFormPageParams';
             $pageParams->str = $table2->show();
-    
+
             $tableContainer->startRow();
             $tableContainer->addCell($table->show(),'', 'top', '', 'AddContentLeft');
             $tableContainer->addCell($pageParams->show(),'', 'top', '', 'AddContentRight');
             $tableContainer->endRow();
 
-            //Add validation for title            
+            //Add validation for title
             $errTitle = $this->objLanguage->languageText('mod_forms_entertitle', 'forms');
             $objForm->addRule('form_title', $errTitle, 'required');
             $objForm->addToForm($tableContainer->show());
@@ -322,7 +322,7 @@
             // $dialogForm->addToForm($table2->show());
             //add page header for the body
 
-            $display = $objForm->show();    
+            $display = $objForm->show();
             return $display;
         }
 
@@ -373,7 +373,7 @@
 
             // Description Input
             $descInput = new textarea ('description', $descInputValue);
-            $descInput->cssId = 'input_description'; 
+            $descInput->cssId = 'input_description';
 
 
             $tbl_basic->startRow();
@@ -414,7 +414,7 @@
             $extra = '';
 
             // Semi Global FCK Preview Function
-            // Also global preview binding to any div id'd 'btn_preview_content' for showing the preview 
+            // Also global preview binding to any div id'd 'btn_preview_content' for showing the preview
             // of any FCK instance with id of 'body'
             $script = "<script type='text/javascript'>
                 function FCKPreview(fckEditorInstance) {
@@ -429,7 +429,7 @@
                         //oEditor.Focus();
                     }
                         catch (e) {}
-                        
+
                 }
 
                 jQuery(document).ready(function(){
@@ -460,7 +460,7 @@
                 $linkText = $this->objLanguage->languageText('word_new');
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'new', $linkText, 'png', 'icons/cms/');
 
-                // Cancel           
+                // Cancel
                 $url = "javascript:history.back();";
                 $linkText = ucwords($this->objLanguage->languageText('word_back'));
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'back', $linkText, 'png', 'icons/cms/');
@@ -489,7 +489,7 @@
                 $linkText = $this->objLanguage->languageText('word_save');
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'save', $linkText, 'png', 'icons/cms/');
 
-                // Cancel           
+                // Cancel
                 $url = "javascript:history.back();";
                 $linkText = ucwords($this->objLanguage->languageText('word_back'));
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'back', $linkText, 'png', 'icons/cms/');
@@ -508,7 +508,7 @@
                 $linkText = $this->objLanguage->languageText('word_new');
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'new', $linkText, 'png', 'icons/cms/');
 
-                // Cancel           
+                // Cancel
                 $url = "javascript:history.back();";
                 $linkText = ucwords($this->objLanguage->languageText('word_back'));
                 $iconList .= $icon_publish->getCleanTextIcon('', $url, 'back', $linkText, 'png', 'icons/cms/');
@@ -548,7 +548,7 @@
                 $objIcon->title = $this->objLanguage->languageText('word_published');
                 $visibleIcon = $objIcon->show();
             }
-    
+
             $objRadio = new radio ($name);
 
             $objRadio->addOption('1', $visibleIcon.$this->objLanguage->languageText('word_yes'));

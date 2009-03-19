@@ -6,7 +6,7 @@
     // end security check
 
 /**
- * This object contains forms export methods for processing and sending data via 
+ * This object contains forms export methods for processing and sending data via
  * email, pdf, csv and other reporting mechanisms
  *
  * @package forms
@@ -71,7 +71,7 @@ class export extends object
             $this->_objSysConfig =$this->newObject('dbsysconfig', 'sysconfig');
             $this->objSkin =$this->newObject('skin', 'skin');
             $this->_objUser =$this->newObject('user', 'security');
-            $this->_objUserModel =$this->newObject('useradmin_model','security');
+            // $this->_objUserModel =$this->newObject('useradmin_model','security');
             $this->objLanguage =$this->newObject('language', 'language');
             $this->_objContext =$this->newObject('dbcontext', 'context');
             $this->objFeatureBox = $this->newObject('featurebox', 'navigation');
