@@ -69,6 +69,7 @@ class siocmaker extends object {
 
     public function init() {
         require_once($this->getResourcePath('sioc_inc.php','siocexport'));
+        $this->siocExport = new SIOCExporter();
     }
 
     /**
@@ -171,7 +172,8 @@ class siocmaker extends object {
      * Post
      */
     public function createPost($url, $subject, $content, $encoded, $created, $updated = "", $tags = array(), $links = array()) {
-        return $this->siocPost = new SIOCPost($url, $subject, $content, $encoded, $this->siocUser, $created, $updated, $tags, $links);
+        $siocPost = new SIOCPost($url, $subject, $content, $encoded, $this->siocUser, $created, $updated, $tags, $links);
+        $this->siocExport->addObject($siocPost);
     }
 
     public function addPostComment($postid, $url) {
@@ -202,7 +204,7 @@ class siocmaker extends object {
      * @return string formatted RDF
      */
     public function dumpSioc($siocData) {
-        $this->siocExport = new SIOCExporter();
+        // $this->siocExport = new SIOCExporter();
 
         $this->siocExport->setParameters($siocData['title'], $siocData['url'], $siocData['sioc_url'], $siocData['encoding'], $siocData['generator']);
         // add the SIOC objects that we have created for the site, posts etc
@@ -217,7 +219,7 @@ class siocmaker extends object {
         // user data
         $this->siocExport->addObject($this->siocUser);
         // posts data
-        $this->siocExport->addObject($this->siocPost);
+        //$this->siocExport->addObject($this->siocPost);
 
         // export the lot
         return $this->siocExport->export();
