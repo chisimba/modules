@@ -314,6 +314,71 @@ class jabberblog extends controller {
                 return 'viewsearch_tpl.php';
                 break;
 
+            case 'sioc':
+                $this->objSiocMaker = $this->getObject('siocmaker', 'siocexport');
+                // site data
+                $siocData = array();
+			    $siocData['title'] = "Chisimba Jabberblog";
+			    $siocData['url'] = $this->uri(array('module' => 'jabberblog'));
+			    $siocData['sioc_url'] = $this->uri(array('module' => 'jabberblog')).'#';
+			    $siocData['encoding'] = "UTF-8";
+			    $siocData['generator'] = $this->uri(array('module' => 'jabberblog', 'action' => 'sioc'));
+
+			    // make the site data
+			    $siteData = array();
+			    $siteData['url'] = $this->uri(array('module' => 'jabberblog'));
+			    $siteData['name'] = "Chisimba Jabberblog";
+			    $siteData['description'] = $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
+
+			    $fora = array();
+			    $fora[0]['id'] = $this->jposteruid;
+			    $fora[0]['url'] = $this->uri(array('module' => 'jabberblog', 'userid' => $this->jposteruid));
+
+			    $users = array();
+			    $user[0]['id'] = $this->jposteruid;
+			    $user[0]['url'] = $this->uri('');
+
+			    $this->objSiocMaker->setSite($siteData);
+			    $this->objSiocMaker->setFora($fora);
+			    $this->objSiocMaker->setUsers($users);
+
+			    $this->objSiocMaker->createForum($this->jposteruid, $this->uri(array('module' => 'jabberblog', 'userid' => $this->jposteruid)), $this->jposteruid, 'Chisimba Jabberblog', $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' ));
+
+			    $posts = $this->objDbIm->getAllPosts();
+
+			    foreach($posts as $post) {
+			        $p[] =  array('id' => $post['id'], 'url' => $this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ));
+			    }
+			    $this->objSiocMaker->forumPosts($p);
+
+			    // user
+			    $user = array();
+			    $user['id'] = $this->jposteruid;
+			    $user['url'] = $this->uri('');
+			    $user['name'] = $this->objUser->userName($this->jposteruid);
+			    $user['email'] = $this->objUser->email();
+			    $user['homepage'] = $this->uri('');
+			    $user['role'] = "Admin";
+
+			    $this->objSiocMaker->createUser($user);
+
+			    // posts
+			    foreach($posts as $post) {
+			        // get the tags for this post (meme)
+			        $tags = $this->objDbTags->getPostTags($post['id'], 'jabberblog');
+                    $this->objSiocMaker->createPost($this->uri ( array ('postid' => $post['id'], 'action' => 'viewsingle' ) ),
+                                                    $post['msgtype'], strip_tags($post['msgbody']), $post['msgbody'], $post['datesent'],
+                                                    $updated = "",
+                                                    $tags,
+                                                    $links = array()
+                                                    );
+			    }
+
+			    echo $this->objSiocMaker->dumpSioc($siocData);
+
+			    break;
+
+
             default :
                 die ( "unknown action" );
                 break;

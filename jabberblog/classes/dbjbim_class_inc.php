@@ -71,6 +71,10 @@ class dbjbim extends dbTable {
         return array_reverse ( $range );
     }
 
+    public function getAllPosts() {
+        return array_reverse($this->getAll());
+    }
+
     public function getSingle($msgid) {
         return $this->getAll ( "WHERE id = '$msgid'" );
     }
