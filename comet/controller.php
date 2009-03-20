@@ -118,15 +118,15 @@ class comet extends controller
                     $script = $this->getJavascriptFile('Phico.js', 'comet').'
                         <script>
                         onload = function(){
-                        var i = 0,
-                        p = Phico.init("?PHP_SELF", function(data){
-                        document.getElementById("time").innerHTML = data;
-                        // comment this line to test "infinite" connection
-                        if(++i === 20) p.disconnect();
-                        });
-                        setTimeout(function(){
-                            p.connect();
-                        }, 10);
+                            var i = 0,
+                            p = Phico.init("?PHP_SELF", function(data) {
+                                document.getElementById("time").innerHTML = data;
+                                // comment this line to test "infinite" connection
+                                if(++i === 20) p.disconnect();
+                            });
+                            setTimeout(function(){
+                                p.connect();
+                            }, 10);
                         };
                         </script>
                         <div id="time"></div>';
