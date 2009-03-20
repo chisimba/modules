@@ -3,7 +3,7 @@
 *
 * Wrapper class for SimplePie. This wrapper was generated
 * using the generate module of the Chisimba framework as
-* developed by Derek Keats on his birthday in 2006. For 
+* developed by Derek Keats on his birthday in 2006. For
 * further information about the class being wrapped, see
 * the SimplePie documentation.
 * @version $Id$
@@ -11,14 +11,14 @@
 */
 class spie extends object
 {
-    
+
     public $objSimplePieWrapper;
     public $objConfig;
     public $useProxy=FALSE;
-    
+
     /**
-    * 
-    * Standard init method to initialize the class 
+    *
+    * Standard init method to initialize the class
     * (SimplePie) being wrapped.
     *
     */
@@ -26,7 +26,7 @@ class spie extends object
     {
         // Get the config object.
         $this->objConfig = $this->getObject('altconfig', 'config');
-        //Include the class file to wrap 
+        //Include the class file to wrap
         require_once($this->getResourcePath('simplepie.inc', "feed"));
         //Instantiate the class
         $this->objSimplePieWrapper = new SimplePie();
@@ -36,33 +36,33 @@ class spie extends object
         //Check the proxy settings
         $this->checkProxy();
     }
-    
+
     /**
-    * 
+    *
     * Set the limit for the number of feeds to display
-    * 
+    *
     * @param int $limit The number of feeds to display
     * @return VOID
     * @access public
-    * 
+    *
     */
     public function setLimit($limit=5)
     {
         $this->limit = $limit;
     }
-        
+
     /**
     *
     * Method to extract the proxy settings from the chisimba settings
     * and set the useProxy to TRUE if settings found
-    * 
+    *
     * @access private
     * @return TRUE|FALSE
     *
     */
     private function checkProxy()
     {
-        
+
         $proxy = $this->objConfig->getProxy();
         if ($proxy && $proxy !=="") {
             $this->useProxy=TRUE;
@@ -71,17 +71,17 @@ class spie extends object
             return FALSE;
         }
     }
-    
+
     /**
-    * 
+    *
     * Check the proxy settings and start SimplePie
     * This just avoids having to replicate the code in every
     * method that uses it.
-    * 
+    *
     * @param string $url The URL of the feed
     * @return TRUE
     * @access public
-    *  
+    *
     */
     public function startPie($url)
     {
@@ -90,14 +90,14 @@ class spie extends object
         } else {
             // We are using a proxy so use the curl wrapper to return the string
             $objCurl = $this->getObject('curl', 'utilities');
-            $rss = $objCurl->exec($link);
+            $rss = $objCurl->exec($url);
             $this->objSimplePieWrapper->set_raw_data($rss);
         }
         $this->objSimplePieWrapper->init();
         return TRUE;
     }
-    
-    
+
+
     /**
      * This is the URL of the feed you want to parse.
      *
@@ -117,36 +117,36 @@ class spie extends object
     {
         return $this->objSimplePieWrapper->set_feed_url($url);
     }
-    
+
     /**
-    * 
+    *
     * Get the feed provided by the given URL and hand off to
     * the display method indicated by $display. Valid methods
     * are:
     *   displayPlain (boring, title and description)
     *   displaySmart (try to figure out what feed it is and display accordingly)
-    * 
+    *
     * @param string $display The method to use to render the output
     * @param string $url The URL of the feed
     * @return string The rendered feed
     * @access public
-    * 
+    *
     */
     public function getFeed($url, $display="displayPlain")
     {
         $this->startPie($url);
         return $this->$display();
     }
-    
+
     /**
-    * 
+    *
     * Get the title for the whole feed, and insert the logo if
-    * there is a logo that exists. If no logo, then just use the 
+    * there is a logo that exists. If no logo, then just use the
     * title.
-    * 
+    *
     * @return string The rendered title, with or without a logo
-    * @access private 
-    *   
+    * @access private
+    *
     */
     private function getTitleWithLogo()
     {
@@ -154,89 +154,89 @@ class spie extends object
         $title = $this->getTitle();
         if ($logo = $this->getImageUrl()) {
             $logo = '<img src="' . $logo
-              . '" width="' . $this->getImageWidth() 
-              . '" height="' . $this->getImageHeight() 
+              . '" width="' . $this->getImageWidth()
+              . '" height="' . $this->getImageHeight()
               . '" alt="' . $title . '" />';
-            return '<div class="feed_render_title_forcewhite">'  
-              . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;' 
+            return '<div class="feed_render_title_forcewhite">'
+              . '<table><tr><td>' . $logo . '</td><td><h3 style="color:black;">&nbsp;&nbsp;'
               . $title . '</h3></td></tr></table></div>';
         } else {
             return '<h3 class="feed_render_title">' . $title . '</h3><br />';
         }
-        
+
     }
-    
+
     /**
-    * 
-    * Method to provice a div tag that goes above each feed. 
+    *
+    * Method to provice a div tag that goes above each feed.
     * This can be used to provide a tab above each feed
     * for example.
-    * 
+    *
     * @return string The div tag above each item
     * @access private
-    * 
+    *
     */
     private function getFeedTop()
     {
         return '<div class="feed_render_feedtop"></div>';
     }
-    
+
     /**
-    * 
-    * Method to provice a div tag that goes blow each feed. 
+    *
+    * Method to provice a div tag that goes blow each feed.
     * This can be used to provide a tab above each feed
     * for example.
-    * 
+    *
     * @return string The div tag below each item
     * @access private
-    * 
+    *
     */
     private function getFeedBottom()
     {
         return '<div class="feed_render_feedbottom"></div>';
     }
-    
+
     /**
-    * 
+    *
     * Method to provice a div tag that goes above each item in
     * a feed. This can be used to provide a tab above each item
     * for example.
-    * 
+    *
     * @return string The div tag above each item
     * @access private
-    * 
+    *
     */
     private function getItemTop()
     {
         return '<div class="feed_render_top"></div>';
     }
-    
+
     /**
-    * 
+    *
     * Method to provice a div tag that goes bllow each item in
     * a feed. This can be used to provide a tab below each item
     * for example.
-    * 
+    *
     * @return string The div tag above each item
     * @access private
-    * 
+    *
     */
     private function getItemBottom()
     {
         return '<div class="feed_render_bottom"></div>';
     }
-    
+
     /**
-    * 
+    *
     * Get the feeds and display only a list of fields
-    * 
+    *
     * @param string $url The URL of the feed
     * @param string $fields An array of fields to display
     * @return string The rendered feed
     * @access public
     */
     public function getFields($url, $fields)
-    {   
+    {
         $this->startPie($url);
         $ret = $this->getTitleWithLogo();
         $counter = 0;
@@ -253,7 +253,7 @@ class spie extends object
                     $ret .= '<a href="' . $ln . '">' . $$field . '</a><br />';
                 } else {
                     if ($field == "date") {
-                        $ret .= '<p class="feed_render_date">' 
+                        $ret .= '<p class="feed_render_date">'
                           .  $item->get_date('j F Y | g:i a') . '</p>';
                     } else {
                         $ret .= $$field . "<br />";
@@ -269,14 +269,14 @@ class spie extends object
         }
         return $ret;
     }
-    
+
     /**
-    * 
+    *
     * Render the output as a plain display of Title and description
-    * 
+    *
     * @return string the formatted output
     * @access private
-    * 
+    *
     */
     private function displayPlain()
     {
@@ -299,25 +299,25 @@ class spie extends object
         }
         return $ret;
     }
-    
+
     /**
-     * 
+     *
      * Try to figure out what kind of feed we have and be a bit
-     * smart about how it is rendered. It uses some criteria to 
+     * smart about how it is rendered. It uses some criteria to
      * identify known feed sources, and calls the appropriate method
      * to render them. It degrades to displayPlain if it does not
      * recognize the source.
-     * 
+     *
      * @return string the formatted output
      * @access private
-     * 
+     *
      */
     private function displaySmart()
     {
         $title = $this->getTitle();
         if ($this->isTwitterSearch($title)) {
             return $this->twitterSearch();
-        } 
+        }
         $permaLink = $this->getPermalink();
         if ($this->isYouTube($permaLink)) {
             return $this->youTubeFeed();
@@ -328,16 +328,16 @@ class spie extends object
         // Degrade to the plain display so as not to fail when it cannot identify feed
         return $this->displayPlain();
     }
-    
+
     /**
-    * 
+    *
     * Process the results of a feed from a twitter search. This
-    * avoids the title and description (which are the same in the 
-    * feed) being duplicated, and caters for a bug with links in the 
+    * avoids the title and description (which are the same in the
+    * feed) being duplicated, and caters for a bug with links in the
     * title in the current version of SimplePie.
-    * 
+    *
     * @return string The rendered feed
-    * 
+    *
     */
     public function twitterSearch()
     {
@@ -358,16 +358,16 @@ class spie extends object
             $nick = "<a href=\"" . $ln . "\">" . $nickAr[0] . "</a>:&nbsp;&nbsp;";
             $description = $item->get_description();
             $info = '<table><tr><td>' . $avatar
-              . '</td><td>' . $nick . " " 
+              . '</td><td>' . $nick . " "
               . $description . '</td></tr></table>';
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
-              . '<p class="feed_render_description">' . $info 
-              . '<br /><span class="feed_render_date">' 
-              .  $item->get_date('j F Y | g:i a') 
+              . '<p class="feed_render_description">' . $info
+              . '<br /><span class="feed_render_date">'
+              .  $item->get_date('j F Y | g:i a')
               . '</span></p>'
               . '</div>' . $this->getItemBottom();
-              
+
             if (isset($this->limit)) {
                 if ($counter==$this->limit) {
                     break;
@@ -377,15 +377,15 @@ class spie extends object
         unset($author, $name, $ln, $nickAr, $nick, $description, $info);
         return $ret;
     }
-    
+
     /**
-    * 
-    * Process the output of a YouTube feed. This avoids the title 
+    *
+    * Process the output of a YouTube feed. This avoids the title
     * being repeated since it is already part of the description. It
     * also inserts the YouTube logo
-    * 
+    *
     * @return string The rendered feed
-    * 
+    *
     */
     public function youTubeFeed()
     {
@@ -408,9 +408,9 @@ class spie extends object
             }
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
-              . '<p class="feed_render_description">' . $description 
-              . '<br /><span class="feed_render_date">' 
-              .  $item->get_date('j F Y | g:i a') 
+              . '<p class="feed_render_description">' . $description
+              . '<br /><span class="feed_render_date">'
+              .  $item->get_date('j F Y | g:i a')
               . '</span></p>'
               . '</div>' . $this->getItemBottom();;
             if (isset($this->limit)) {
@@ -421,18 +421,18 @@ class spie extends object
         }
         unset($title, $description, $logo);
         return $ret;
-        
+
     }
-    
+
     /**
     * Process the output of a SlideShare feed
-    * 
+    *
     * Slideshare embeds its whole layout in a CDATA tag and does not give
     * any control over layout. This sucks. It floats the thumbnail right, which looks very ugly.
     * Thus we take it and float it left
-    * 
+    *
     * @return string The rendered feed
-    * 
+    *
     */
     public function slideShareFeed()
     {
@@ -447,10 +447,10 @@ class spie extends object
             $ln = $item->get_link();
             $ret .= $this->getItemTop()
               . '<div class="feed_render_default">'
-              . '<p class="feed_render_description"><a href="' 
-              . $ln . '">' . $title . '</a><br />' . $description 
-              . '<br /><span class="feed_render_date">' 
-              .  $item->get_date('j F Y | g:i a') 
+              . '<p class="feed_render_description"><a href="'
+              . $ln . '">' . $title . '</a><br />' . $description
+              . '<br /><span class="feed_render_date">'
+              .  $item->get_date('j F Y | g:i a')
               . '</span></p>'
               . '</div>' . $this->getItemBottom();
             if (isset($this->limit)) {
@@ -461,20 +461,20 @@ class spie extends object
         }
         return $ret;
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     // --------------- Methods for determining the search type
     /**
-     * 
+     *
      * Method to determine if a feed is a twitter search feed
-     * 
+     *
      * @param string Title The title from the feed
      * @return TRUE|FALSE
      * @access private
-     * 
+     *
      */
     private function isTwitterSearch($title)
     {
@@ -486,15 +486,15 @@ class spie extends object
             return FALSE;
         }
     }
-    
+
     /**
-     * 
+     *
      * Method to determine if a feed is a Youtube feed
-     * 
+     *
      * @param string $permaLink The permaLink from the feed
      * @return TRUE|FALSE
      * @access private
-     * 
+     *
      */
     private function isYouTube($permaLink)
     {
@@ -505,7 +505,7 @@ class spie extends object
             return FALSE;
         }
     }
-    
+
     private function isYoutTubeStandards($permaLink)
     {
         $yt = stripos($permaLink, "standards");
@@ -515,15 +515,15 @@ class spie extends object
             return FALSE;
         }
     }
-    
+
     /**
-     * 
+     *
      * Method to determine if a feed is a Slideshare feed
-     * 
+     *
      * @param string $permaLink The permaLink from the feed
      * @return TRUE|FALSE
      * @access private
-     * 
+     *
      */
     public function isSlideShare($permaLink)
     {
@@ -533,19 +533,19 @@ class spie extends object
         } else {
             return FALSE;
         }
-        
+
     }
     // --------------- End methods for determining search type
-    
-    
+
+
     /**
     *
     * Wrapper method for get_title in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_titlemethod.
-    * 
+    *
     * Gets the title of the channel
-    * 
+    *
     * @return String The feed title
     * @access Public
     *
@@ -554,30 +554,30 @@ class spie extends object
     {
         return $this->objSimplePieWrapper->get_title();
     }
-    
+
     /**
     *
     * Wrapper method for get_permalink in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_permalinkmethod.
     *
     * Gets the permalink of the channel
-    * 
+    *
     * @return String The feed permalink
     * @access Public
-    * 
+    *
     */
     public function getPermalink()
     {
         return $this->objSimplePieWrapper->get_permalink();
     }
-    
+
     /**
     *
     * Wrapper method for get_image_title in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_image_titlemethod.
-    * 
+    *
     * @return String The logo Title
     * @access Public
     *
@@ -590,9 +590,9 @@ class spie extends object
     /**
     *
     * Wrapper method for get_image_url in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_image_urlmethod.
-    * 
+    *
     * @return String The Logo image URL
     * @access Public
     *
@@ -605,9 +605,9 @@ class spie extends object
     /**
     *
     * Wrapper method for get_image_link in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_image_linkmethod.
-    * 
+    *
     * @return String The logo image Link
     * @access Public
     *
@@ -620,9 +620,9 @@ class spie extends object
     /**
     *
     * Wrapper method for get_image_width in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_image_widthmethod.
-    * 
+    *
     * @return String The logo image width
     * @access Public
     *
@@ -635,7 +635,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_image_height in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_image_heightmethod.
     *
     * @return String The logo image height
@@ -646,36 +646,36 @@ class spie extends object
     {
         return $this->objSimplePieWrapper->get_image_height();
     }
-    
-   
-   
-   
-   
-   
-   
-    
-    
+
+
+
+
+
+
+
+
+
     //--------------------- PLEASE NOTE --------------------------//
-    /* 
+    /*
      * I am working here. This is incomplete. Documentation will be inserted
      * as I update or add functionality
-     * 
-     * @Todo -- 
-     *  1. Deal with proxy settings (can SimplePie handle it?)  
      *
-     * 
+     * @Todo --
+     *  1. Deal with proxy settings (can SimplePie handle it?)
+     *
+     *
      */
-    
-    
-    
+
+
+
     /**
     *
     * Wrapper method for get_author in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_authormethod.
-    * 
+    *
     * This returns the author of a feed identified by key
-    * 
+    *
     * @access public
     *
     */
@@ -689,7 +689,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_description in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_descriptionmethod.
     *
     */
@@ -701,7 +701,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_copyright in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_copyrightmethod.
     *
     */
@@ -713,7 +713,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_language in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_languagemethod.
     *
     */
@@ -725,7 +725,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_latitude in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_latitudemethod.
     *
     */
@@ -737,7 +737,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_longitude in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_longitudemethod.
     *
     */
@@ -751,7 +751,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_item_quantity in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_item_quantitymethod.
     *
     */
@@ -763,7 +763,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_item in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_itemmethod.
     *
     */
@@ -775,7 +775,7 @@ class spie extends object
     /**
     *
     * Wrapper method for get_items in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * get_itemsmethod.
     *
     */
@@ -787,7 +787,7 @@ class spie extends object
     /**
     *
     * Wrapper method for sort_items in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * sort_itemsmethod.
     *
     */
@@ -799,7 +799,7 @@ class spie extends object
     /**
     *
     * Wrapper method for merge_items in the SimplePie
-    * class being wrapped. See that class for details of the 
+    * class being wrapped. See that class for details of the
     * merge_itemsmethod.
     *
     */
