@@ -51,7 +51,7 @@ $this->loadClass('layer','htmlelements');
 
 $searchButton = new button('search', $this->objLanguage->languageText('word_search'));
 $searchButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'sero_surveillance'));
+$backUri = $this->uri(array('action'=>'active_surveillance'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $campNameDrop = new dropdown('campName');
@@ -72,9 +72,9 @@ $testResultDrop->addFromDB($arrayTestresult, 'name', 'id');
 $testResultDrop->setSelected($testresult);
 $territoryDrop = new dropdown('territory');
 $territoryDrop->addFromDB($arrayTerritory, 'name', 'id');
-$territoryDrop->setSelected($testtype);
+$territoryDrop->setSelected($territory);
 $searchDrop = new dropdown('search');
-$searchDrop->addFromDB($arraySearch, 'name', 'id');
+$searchDrop->addOption('Listing','Listing');
 $searchDrop->setSelected($testtype);
 
 $officerText = new textinput('officerId');
@@ -162,7 +162,7 @@ $objTable->endRow();
 
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_herdview')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_newherd')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

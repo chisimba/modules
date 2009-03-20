@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis active Class
+ * ahis newherd
  *
- * active class
+ * newherd class
  * 
  * PHP version 5
  * 
@@ -24,7 +24,7 @@
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: active_class_inc.php 12627 2009-02-26 14:29:10Z nic $
+ * @version   $Id: newherd_class_inc.php
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -41,19 +41,19 @@ $GLOBALS['kewl_entry_point_run']) {
 
 
 /**
- * ahis active Class
+ * ahis newherd Class
  * 
- * Class to access active surveillance reports in the DB
+ * Class to access newherd records in the DB
  * 
  * @category  Chisimba
  * @package   ahis
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: active_class_inc.php 
+ * @version   $Id: newherd_class_inc.php
  * @link      http://avoir.uwc.ac.za
  */
-class active extends dbtable {
+class newherd extends dbtable {
 	
     /**
      * Standard Chisimba init method
@@ -63,7 +63,7 @@ class active extends dbtable {
      */
 	public function init() {
 		try {
-			parent::init('tbl_ahis_active_surveillance');
+			parent::init('tbl_ahis_newherd');
 		}
 		catch (customException $e)
 		{
@@ -72,23 +72,6 @@ class active extends dbtable {
 		}
 	}
 	
-	public function listcamp()
-    {
-       $sql = "SELECT * FROM tbl_ahis_active_surveillance";
-        return $this->getArray($sql);
-    }
 	
 	
-	public function getall($campaign){
-	
-	$sql="SELECT * FROM tbl_ahis_active_surveillance AS d WHERE 
-	     d.id = '$campaign'";
-	     
-	return $this->getArray($sql);
-	
-	
-	}
-	
-	
-
 }

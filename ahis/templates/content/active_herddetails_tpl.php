@@ -51,18 +51,26 @@ $this->loadClass('textinput','htmlelements');
 
 $objTable = $this->getObject('htmltable','htmlelements');
 
+$backUri = $this->uri(array('action'=>'active_herdview'));
+$backButton = new button('back', $this->objLanguage->languageText('word_back'),"javascript: document.location='$backUri'");
 
-$backButton = new button('back', $this->objLanguage->languageText('word_back'));
-$backButton->setToSubmit();
-$nextUri = $this->uri(array('action'=>'active_herdsampling'));
-$nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+$nextButton = new button('next', $this->objLanguage->languageText('word_next'));
+$nextButton->setToSubmit();
 
-$campBox = new textinput('campBox',$campBox);
-$diseaseBox = new textinput('diseaseBox',$diseaseBox);
+
+$campBox = new dropdown('campName');
+$campBox->addFromDB($arrayCamp, 'campname', 'id');
+$campBox->setSelected($campName);
+$campBox->extra = 'disabled';
+
+$diseaseBox = new dropdown('disease');
+$diseaseBox->addFromDB($arraydisease, 'disease', 'id');
+$diseaseBox->setSelected($disease);
+$diseaseBox->extra = 'disabled';
 
 
 $officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'name', 'userid');
+$officerDrop->addFromDB($arraydisease, 'reporterid', 'id');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
 
@@ -136,7 +144,7 @@ $objTable->addCell($backButton->show());
 $objTable->addCell($nextButton->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_herdview')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_herdsampling')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

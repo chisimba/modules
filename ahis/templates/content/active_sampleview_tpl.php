@@ -57,7 +57,7 @@ $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_herdsampling'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$nextUri = $this->uri(array('action'=>'sero_surveillance'));
+$nextUri = $this->uri(array('action'=>'active_surveillance'));
 $nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
 $campBox = new textinput('campName',$campName);

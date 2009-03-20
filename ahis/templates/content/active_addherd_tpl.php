@@ -39,9 +39,24 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+if ($id) {
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_herd');
+    $formUri = $this->uri(array('action'=>'newherd_insert', 'id'=>$id));
+    $record = $this->objNewherd->getRow('id', $id);
+    
+} else {
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_herd');
+    $formUri = $this->uri(array('action'=>'newherd_insert'));
+    $record['geolevel2'] = '';
+    $record['geolevel3'] = '';
+    $record['territory'] = '';
+    $record['farm'] = '';
+    $record['farmingtype'] = '';
+
+}
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_herd');
+$objHeading->str = $hstr;
 $objHeading->type = 2;
 
 
@@ -53,22 +68,23 @@ $this->loadClass('layer','htmlelements');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_herdview'));
+$backUri = $this->uri(array('action'=>'active_newherd'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 
 $territoryDrop = new dropdown('territory');
-$territoryDrop->addFromDB($arraytesttype, 'name', 'id');
-$territoryDrop->setSelected($territory);
-$farmsystemDrop = new dropdown('farmsystem');
-$farmsystemDrop->addFromDB($arraytesttype, 'name', 'id');
-$farmsystemDrop->setSelected($farmsystem);
+$territoryDrop->addFromDB($arrayTerritory, 'name', 'name');
+$territoryDrop->setSelected($record['territory']);
 
-$geo2Box = new textinput('Geo2', $geo2);
-$geo3Box = new textinput('Geo3', $geo3);
-$farmBox = new textinput('farm', $farmBox);
+$farmsystemDrop = new dropdown('farmingsystem');
+$farmsystemDrop->addFromDB($arrayFarmingsystem, 'name', 'name');
+$farmsystemDrop->setSelected($record['farmingtype']);
 
+$geo2Box = new textinput('Geo2', $record['geolevel2']);
+$geo3Box = new textinput('Geo3', $record['geolevel3']);
+$farmBox = new textinput('farm', $record['farmname']);
 
+$activeBox = new textinput('activeid',$activeid,'hidden');
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
@@ -95,6 +111,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system')." $tab");
 $objTable->addCell($farmsystemDrop->show());
+$objTable->addCell($activeBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->endRow();
@@ -108,7 +125,7 @@ $objTable->endRow();
 
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_herdview')));
+$objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

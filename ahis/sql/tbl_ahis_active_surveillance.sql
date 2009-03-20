@@ -59,6 +59,6 @@ $fields = array(
     );
 //create other indexes here...
 
-$name = 'index_tbl_ahis_passive_surveillance';
+$name = 'index_tbl_ahis_active_surveillance';
 
 ?>
