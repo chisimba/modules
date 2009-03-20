@@ -80,6 +80,7 @@ class comet extends controller
 		try {
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objConfig = $this->getObject('altconfig', 'config');
+			require_once($this->getResourcePath('Phico.class.php', 'comet'));
 		}
 		catch(customException $e)
 		{
@@ -98,9 +99,48 @@ class comet extends controller
 	{
 		switch ($action) {
 			default:
-				echo "Comet!";
-				break;
-		}
-	}
+			    $js = $this->getParam('JavaScript');
+			    $ph = $this->getParam('Phico');
+
+				if(isset($js)) {
+                    Phico::JavaScript(true, $this->getResourcePath('Phico.js', 'comet'));
+				}
+                elseif(isset($ph)) {
+                    Phico::init($ph);
+                    Phico::send('Hello, Phico is ready to tell you what time is it.');
+                    sleep(1);
+                    while(true) {
+                        Phico::send('GMT '.gmdate('Y-m-d H:i:s'));
+                        sleep(1);
+                    }
+                }
+                else {
+                    $script = $this->getJavascriptFile('Phico.js', 'comet').'
+                        <script>
+                        onload = function(){
+                        var i = 0,
+                        p = Phico.init("?PHP_SELF", function(data){
+                        document.getElementById("time").innerHTML = data;
+                        // comment this line to test "infinite" connection
+                        if(++i === 20) p.disconnect();
+                        });
+                        setTimeout(function(){
+                            p.connect();
+                        }, 10);
+                        };
+                        </script>
+                        <div id="time"></div>';
+                }
+		        break;
+
+			case 'donothing':
+
+			    break;
+	     }
+     }
+
+     public function requiresLogin() {
+         return FALSE;
+     }
 }
 ?>
