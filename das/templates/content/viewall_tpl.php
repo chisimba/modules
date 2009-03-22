@@ -31,7 +31,7 @@ $scripts = '<script type="text/javascript">
  
 		function()
     	{
-     		update();
+     		//update();
  
      		$("#button").click(   
       			function()
