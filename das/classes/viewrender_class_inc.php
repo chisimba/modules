@@ -443,7 +443,7 @@ class viewrender extends object {
         $blocks = $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
                                  $this->objUser->userId()));
                                  
-        $blocks .= $this->getChatBlock();
+        //$blocks .= $this->getChatBlock();
         
         return $blocks;
     }
@@ -508,11 +508,10 @@ class viewrender extends object {
 	{
 		$this->objIcon->setIcon('loader');
 		$str = '<div style="padding:5px"><div id="screen" style="padding:3px;width:170px;height:200px;overflow:auto">'.$this->objIcon->show().'</div>';
-		$str .= '
-				<!--textarea id="screen2" cols="40" rows="40"> </textarea--> <br> 
-					<input id="message" size="15">
+		$str .= ' <br> 
+					<input id="message" size="170px">
 					<button id="button"> Send </button></div>';
-		return $this->objFeatureBox->show('Counselior Chat', $str);
+		return $this->objFeatureBox->show('Counselor Chat', $str);
 		
 	}
 	
