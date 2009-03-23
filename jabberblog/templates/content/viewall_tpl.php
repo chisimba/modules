@@ -47,6 +47,11 @@ $objPagination->currentPage = $pages - 1;
 $middleColumn .= $header->show () . '<br/>' . $objPagination->show ();
 //$middleColumn .= $objImView->renderOutputForBrowser($msgs);
 
+$objIcon = $this->newObject ( 'geticon', 'htmlelements' );
+$this->loadClass('href', 'htmlelements');
+$objIcon->alt = 'SIOC';
+$objIcon->setIcon('sioc', 'gif');
+$sioclink = new href($this->uri(array('action' => 'sioc', 'sioc_type' => 'site')), $objIcon->show());
 
 $rssLink = $this->getObject ( 'link', 'htmlelements' );
 $rssLink->href = $this->uri ( array ('action' => 'rss' ) );
@@ -56,14 +61,14 @@ $objLT = $this->getObject ( 'block_lasttweet', 'twitter' );
 if (! $this->objUser->isLoggedIn ()) {
     $leftColumn .= $objImView->showUserMenu ();
     $leftColumn .= $objImView->getStatsBox ();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show ()."<br />".$sioclink->show() );
     $leftColumn .= $objImView->searchBox();
     // show the last tweet block from the 'ol twitter stream
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 } else {
     $leftColumn .= $this->leftMenu->show ();
     $leftColumn .= $objImView->getStatsBox ();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
+    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show ()."<br />".$sioclink->show() );
     $leftColumn .= $objImView->searchBox();
     $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 }
