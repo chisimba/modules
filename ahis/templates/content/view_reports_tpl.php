@@ -64,9 +64,10 @@ for ($i=1; $i<=12; $i++) {
 $monthDrop->setSelected($month);
 $outputDrop = new dropdown('outputType');
 $outputDrop->addOption(1, 'CSV');
-$outputDrop->addOption(2, $this->objLanguage->languageText('phrase_onscreen'));
-$outputDrop->addOption(3, 'PDF');
-$outputDrop->setSelected($outputType);
+$outputDrop->setSelected(1);
+//$outputDrop->addOption(2, $this->objLanguage->languageText('phrase_onscreen'));
+//$outputDrop->addOption(3, 'PDF');
+//$outputDrop->setSelected($outputType);
 $reportDrop = new dropdown('reportType');
 $reportDrop->addFromDB($reportTypes, 'name', 'id');
 $reportDrop->setSelected($reportType);

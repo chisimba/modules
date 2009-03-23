@@ -270,6 +270,5 @@ class report extends object {
 				
 		}
 		
-		return "<br />".$objTable->show();
 	}
 }
