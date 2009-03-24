@@ -59,6 +59,7 @@ class internalmail extends controller
         // system objects
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objGroups = $this->newObject('managegroups', 'contextgroups');
+        $this->objGroupAdminOps = $this->newObject('groupops', 'groupadmin');
         $this->objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->objContext = $this->newObject('dbcontext', 'context');
         $this->objDate = $this->newObject('dateandtime', 'utilities');
@@ -93,7 +94,8 @@ class internalmail extends controller
         $this->objLog->log();
         */
     }
-
+    
+    
     /**
      * This is the main method of the class
      * It calls other functions depending on the value of $action
@@ -106,6 +108,36 @@ class internalmail extends controller
     {
         // Now the main switch statement to pass values for $action
         switch ($action) {
+        	
+        	case 'ajaxaddrecicienpt':      		
+        		$username = $this->getParam('username');
+        		$this->addRecipient($username);
+        		exit(0);
+        		break;
+        	
+        	case 'ajaxremoverecicienpt':      		
+        		$username = $this->getParam('username');
+        		$this->removeRecipient($username);
+        		exit(0);
+        		break;
+        		
+        	case 'searchusers':
+				$items = $this->objGroupAdminOps->getSearchableUsers();
+
+				$q = $this->getParam('q');
+				foreach ($items as $key=>$value) {
+					if (strpos(strtolower($key), $q) !== false) {
+						echo "$key|$value\n";
+
+					}
+				}
+				exit(0);
+				
+			case 'ajaxgetrecipientlist':
+				echo $this->formatRecipientList();				
+				exit(0);
+				break;
+        		
             case 'managefolders':
                 $currentFolderId = $this->getParam('currentFolderId');
                 $mode = $this->getParam('mode');
@@ -346,7 +378,8 @@ class internalmail extends controller
                 break;
 
             case 'sendemail':
-                $recipientList = $this->getParam('recipient');
+            	
+                $recipientList = $this->getRecipientListForDB();//$this->getParam('recipient');
                 $subject = $this->getParam('subject');
                 if ($subject == '') {
                     $subject = $this->noSubject;
@@ -358,8 +391,14 @@ class internalmail extends controller
                     $this->emailFiles->clearAttachments();
                     return $this->nextAction('compose');
                 } elseif ($sendbutton == 'Send') {
-                    $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
+                  //  $emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
                 }
+                if($recipientList)
+                {
+                	$emailId = $this->dbEmail->sendMail($recipientList, $subject, $message, 0);
+                	$this->setSession('recipientList', null);
+                }
+                
                 return $this->nextAction('');
                 break;
 
@@ -737,6 +776,7 @@ class internalmail extends controller
     public function composeList($search, $field)
     {
         $arrUserList = $this->dbEmailUsers->getUsers($field, $search);
+        
         if ($arrUserList != FALSE) {
             $response = '<ul>';
             foreach ($arrUserList as $user) {
@@ -1018,5 +1058,112 @@ class internalmail extends controller
         }
         echo $response;
     }
+    
+     /**
+     * Method to add person to the recipient list
+     * @param string $username
+     */
+    public function addRecipient($username)
+    { 	
+    	
+    	$reccipients = $this->getSession('recipientList');
+    	
+    	//create the sesstion list if it doesnt exist
+    	if($reccipients == NULL)
+    	{
+    		$reccipients = array();
+    		$this->setSession('recipientList',$reccipients);   		
+    	} 
+    	
+    	if($username != "" || !in_array($username,$reccipients))
+        {
+        	//add the recipient to the session list
+        	$reccipients[] = $username;
+        	$this->setSession('recipientList', $reccipients);	
+        }        
+        
+    }
+    
+     /**
+     * Method to add person to the recipient list
+     * @param string $username
+     */
+    public function removeRecipient($username)
+    { 	
+    	
+    	$reccipients = $this->getSession('recipientList');
+    	$k = array_keys($reccipients, $username);
+		
+    	if(count($k) > 0)
+    	{    		
+    		unset($reccipients[$k[0]]);
+    		$this->setSession('recipientList', $reccipients);   		
+    	} 
+    	
+        
+    }
+    
+    /**
+     * Method to format the recipient list
+     * 
+     */
+    public function formatRecipientList()
+    {
+    	$list = $this->getSession('recipientList');
+    	//var_dump($list);
+    	if(count($list) > 0)
+    	{
+    		$objIcon = $this->getObject('geticon','htmlelements');
+    		$objIcon->setIcon('delete','png');
+    		$str = "";
+    		$cnt = 0;
+    		foreach($list as $user)
+    		{
+    			
+    			$str .= $this->objUser->fullname($this->objUser->getUserId($user));
+    			$cnt++;
+    			
+    			//add the delete icon
+    			$objLink = $this->newObject('link', 'htmlelements');
+				$objLink->href = '#';
+				$objLink->link = $objIcon->show();
+				$objLink->extra = ' onclick="removeRecipient(\''.$user.'\') "' ;
+				
+				$str .= '&nbsp;'.$objLink->show();
+    			//add the comma
+    			if($cnt < count($list))
+    			{
+    				$str .=",";
+    			}
+    		}
+    		
+    		return $str;
+    	} else {
+    		return  '<span class="subdued">'.$this->objLanguage->languageText('phrase_norecipients').'</span>';
+    	}
+    	
+    }
+    
+	/**
+	 * Method to put the recipient list into a stupid string
+	 * 
+	 */
+	public function getRecipientListForDB()
+	{
+		$reccipients = $this->getSession('recipientList');
+    	if(count($reccipients) > 0)
+    	{
+    		$str = '';
+    		foreach($reccipients as $rec)
+    		{
+    			$str .= $this->objUser->getUserId($rec).'|';
+    		}
+    		
+    		return $str;
+    	} else {
+    		
+    		return FALSE;
+    	}
+	}
 }
 ?>

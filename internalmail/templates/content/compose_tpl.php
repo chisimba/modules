@@ -1,4 +1,20 @@
 <?php
+
+$scripts = $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-1.3.1.js', 'htmlelements');
+$scripts .= $this->getJavaScriptFile('jquery/jquery-ui-personalized-1.6rc6/jquery-ui-personalized-1.6rc6.js', 'htmlelements');
+$scripts .= '<link type="text/css" href="'.$this->getResourceUri('jquery/jquery-ui-personalized-1.6rc6/theme/ui.all.css', 'htmlelements').'" rel="Stylesheet" />';
+$this->appendArrayVar('headerParams', $scripts);
+
+
+$this->appendArrayVar('bodyOnLoad', 'loadRecipientList();');
+
+
+
+
+
+
+
+
 // security check-must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
@@ -18,30 +34,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 $headerParams = $this->getJavascriptFile('compose.js', 'internalmail');
 $this->appendArrayVar('headerParams', $headerParams);
 
-// set up style for autocomplete
-$style = '<style type="text/css">
-    div.autocomplete {
-        position:absolute;
-        background-color:white;
-    }    
-    div.autocomplete ul {
-        list-style-type:none;
-        margin:0px;
-        padding:0px;
-    }    
-    div.autocomplete ul li.selected {
-        border:1px solid #888;
-        background-color: #ffb;
-    }
-    div.autocomplete ul li {
-        border:1px solid #888;
-        list-style-type:none;
-        display:block;
-        margin:0;
-        cursor:pointer;
-    }
-</style>';
-echo $style;
 
 // set up html elements
 $objIcon = $this->newObject('geticon', 'htmlelements');
@@ -55,7 +47,7 @@ $objFieldset = $this->loadClass('fieldset', 'htmlelements');
 $objLayer = $this->loadClass('layer', 'htmlelements');
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
-$objIcon->setIcon('loading_circles_big');
+$objIcon->setIcon('loader');
 
 // set up language items
 $heading = $this->objLanguage->languageText('mod_internalmail_compose', 'internalmail');
@@ -103,16 +95,17 @@ $pageData = $objHeader->show();
 
 // set up html elements
 $objInput = new textinput('firstname', '', '', '50');
-$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listfirstname();"';
+//$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listfirstname();"';
 $firstnameInput = $objInput->show();
 
 $objLayer = new layer();
 $objLayer->id = 'firstnameDiv';
+$objLayer->value = 'firstnameDiv';
 $objLayer->cssClass = 'autocomplete';
 $nameLayer = $objLayer->show();
 
 $objInput = new textinput('surname', '', '', '50');
-$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listsurname();"';
+//$objInput->extra = ' onfocus="javascript:this.value=\'\'" onkeyup="javascript:listsurname();"';
 $surnameInput = $objInput->show();
 
 $objLayer = new layer();
@@ -190,6 +183,16 @@ $objFieldset->extra = ' style="border: 1px solid #808080; margin: 3px; padding: 
 $objFieldset->legend = '<b>'.$searchSurnameLabel.'</b>';
 $objFieldset->contents = $searchTable;
 $searchFieldset.= $objFieldset->show();
+
+$f = '<form id="searchform" name="searchform" autocomplete="off">
+				<p>
+					<label>Search Users</label><br/>
+					<input type="text" id="suggest4">
+					<input type="hidden" id="hiddensuggest4" name="username">							
+					<input id="searchbutton" type="button" onclick="submitSearchForm(this.form)" value="Add Recipient" />
+				</p>
+			</form>';
+$searchFieldset = $f;
 
 // set up tables and tabbedboxes
 $objTable = new htmltable();
@@ -298,14 +301,15 @@ $attachmentsTable = $objTable->show();
 
 // set up buttons
 $objButton = new button('submitbutton', $sendLabel);
-$objButton->extra = ' onclick="javascript:
+/*$objButton->extra = ' onclick="javascript:
     if($(\'input_recipient\').value!=\'\'){
         $(\'form_composeform\').sendbutton.value=\'Send\';
         $(\'form_composeform\').submit();
     }else{
         alert(\''.$requiredLabel.'\');
         $(\'form_composeform\').surname.focus();
-    }"';
+    }"';*/
+$objButton->setToSubmit();
 $buttons = '<br />'.$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
@@ -351,4 +355,82 @@ $objLayer->padding = '10px';
 $objLayer->str = $pageData;
 $pageLayer = $objLayer->show();
 echo $pageLayer;
+
+
+
+$script = $this->getJavaScriptFile('jquery/jquery.autocomplete.js', 'htmlelements');
+$this->appendArrayVar('headerParams', $script);
+$str = '<link rel="stylesheet" href="'.$this->getResourceUri('jquery/jquery.autocomplete.css', 'htmlelements').'" type="text/css" />';
+$this->appendArrayVar('headerParams', $str);
+
+	
+	$str = '<script type="text/javascript">
+$().ready(function() {
+
+	function findValueCallback(event, data, formatted) {
+		$("<li>").html( !data ? "No match!" : "Selected: " + formatted).appendTo("#result");
+	}
+
+	function formatItem(row) {
+		return row[0] + " (<strong>username: " + row[1] + "</strong>)";
+	}
+	function formatResult(row) {
+		//return row[0].replace(/(<.+?>)/gi, \'\');
+		return row[0];
+	}
+
+$(":text, textarea").result(findValueCallback).next().click(function() {
+		$(this).prev().search();
+	});
+
+
+	$("#suggest4").autocomplete(\'index.php?module=internalmail&action=searchusers\', {
+		width: 300,
+		multiple: false,
+		matchContains: true,
+		formatItem: formatItem,
+		formatResult: formatResult,
+		
+	}).result(function (evt, data, formatted) {				
+					$("#hiddensuggest4").val(data[1]);
+					});
+
+
+	$("#clear").click(function() {
+		$(":input").unautocomplete();
+	});
+});
+
+function submitSearch(data)
+{
+
+	alert(data[0]);
+}
+
+
+function changeOptions(){
+	var max = parseInt(window.prompt(\'Please type number of items to display:\', jQuery.Autocompleter.defaults.max));
+	if (max > 0) {
+		$("#suggest1").setOptions({
+			max: max
+		});
+	}
+}
+
+function submitSearchForm(frm)
+{	
+	username = frm.hiddensuggest4.value;
+	//groupId = frm.groupid.value;
+	if(username)
+	{
+		addRecipient(username);
+	}
+	
+	frm.hiddensuggest4.value = "";
+	frm.suggest4.value = "";
+	
+}
+	</script>';
+	$this->appendArrayVar('headerParams', $str);
 ?>
+

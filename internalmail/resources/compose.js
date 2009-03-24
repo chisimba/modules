@@ -1,8 +1,50 @@
+
+function addRecipient(username)
+{
+	
+	 jQuery.ajax({
+            type: "GET", 
+            url: "index.php", 
+            data: "module=internalmail&action=ajaxaddrecicienpt&username="+username,
+            success: function(msg){              
+				loadRecipientList();
+				jQuery('#result').html(msg);
+            }
+        });
+}
+
+
+function removeRecipient(username)
+{
+	
+	 jQuery.ajax({
+            type: "GET", 
+            url: "index.php", 
+            data: "module=internalmail&action=ajaxremoverecicienpt&username="+username,
+            success: function(msg){              
+				loadRecipientList();
+				jQuery('#result').html(msg);
+            }
+        });
+}
+
+function loadRecipientList()
+{	
+	jQuery.ajax({
+            type: "GET", 
+            url: "index.php", 
+            data: "module=internalmail&action=ajaxgetrecipientlist",
+            success: function(msg){              
+				//loadRecipientList();
+				jQuery('#toList').html(msg);
+            }
+        });
+}
+
 function listfirstname()
 {        
     $("input_surname").value = "";
-
-    var pars = "module=internalmail&action=composelist&field=firstname";
+    pars = "module=internalmail&action=composelist&field=firstname&firstname=a";
     new Ajax.Autocompleter("input_firstname", "firstnameDiv", "index.php", {parameters: pars});
 }
 
@@ -14,7 +56,7 @@ function listsurname()
     new Ajax.Autocompleter("input_surname", "surnameDiv", "index.php", {parameters: pars});
 }
     
-function addRecipient(userid)
+function addRecipient2(userid)
 {
     var el = $("input_recipient");
     var elArr = el.value.split("|");
