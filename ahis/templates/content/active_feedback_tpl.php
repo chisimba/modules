@@ -44,16 +44,19 @@ $objHeading->str = $this->objLanguage->languageText('mod_ahis_activefinished','a
 $objHeading->type = 2;
 
 $this->loadClass('layer','htmlelements');
-if ($success) {
+if($success) 
+{
     $result = $this->objLanguage->languageText('mod_ahis_activesuccess','ahis')."<br />";
     $morePhrase = $this->objLanguage->languageText('phrase_addmore');
     $addUri = $this->uri(array('action'=>'select_officer'));
 
 } else {
-    $result = "<span class='error'>".$this->objLanguage->languageText('mod_ahis_activefail','ahis')."</span><br />";
+    $result = "<span class='error'>".$this->objLanguage->languageText('mod_ahis_passivefail','ahis')."</span><br />";
     $morePhrase = $this->objLanguage->languageText('word_back');
-    $addUri = $this->uri(array('action'=>'active_addtest'));
+    $addUri = $this->uri(array('action'=>'passive_vaccine'));
 }
+
+
 
 $reportUri = $this->uri(array('action'=>'active_search'));
 $buttonMore = new button('more', $morePhrase, "window.location='$addUri';");

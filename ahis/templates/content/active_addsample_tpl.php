@@ -40,9 +40,7 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 
-$objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_samples');
-$objHeading->type = 2;
+
 
 
 $this->loadClass('textinput','htmlelements');
@@ -52,10 +50,42 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 
+
+
+if ($id) {
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_samples');
+    $formUri = $this->uri(array('action'=>'sampleview_insert', 'id'=>$id));
+    $record = $this->objSampledetails->getRow('id', $id);
+    
+} else {
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_samples');
+    $formUri = $this->uri(array('action'=>'sampleview_insert'));
+    $record['sampleid'] = '';
+    $record['animalid'] = '';
+    $record['species'] = '';
+    $record['age'] = '';
+    $record['sex'] = '';
+    $record['sampletype'] = '';
+    $record['testtype'] = '';
+    $record['testresult'] = '';
+    $record['specification'] = '';
+    $record['vachist'] = '';
+    $record['number'] = '';
+    $record['remarks'] = '';
+
+}
+
+$objHeading = $this->getObject('htmlheading','htmlelements');
+$objHeading->str = $hstr;
+$objHeading->type = 2;
+
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_sampleview'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+
+
+
 
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
@@ -66,35 +96,35 @@ $inputDate->setDefaultDate($calendardate);
 
 
 $speciesDrop = new dropdown('species');
-$speciesDrop->addFromDB($arraytesttype, 'name', 'id');
-$speciesDrop->setSelected($species);
+$speciesDrop->addFromDB($arraySpecies, 'name', 'name');
+$speciesDrop->setSelected($record['species']);
 $ageDrop = new dropdown('age');
-$ageDrop->addFromDB($arraytesttype, 'name', 'id');
-$ageDrop->setSelected($age);
+$ageDrop->addFromDB($arrayAge, 'name', 'name');
+$ageDrop->setSelected($record['age']);
+
 $sexDrop = new dropdown('sex');
-$sexDrop->addFromDB($arraytesttype, 'name', 'id');
-$sexDrop->setSelected($sex);
+$sexDrop->addFromDB($arraySex, 'name', 'name');
+$sexDrop->setSelected($record['sex']);
 $sampletypeDrop = new dropdown('sampletype');
-$sampletypeDrop->addFromDB($arraytesttype, 'name', 'id');
-$sampletypeDrop->setSelected($sampletype);
+$sampletypeDrop->addFromDB($arraySample, 'name', 'name');
+$sampletypeDrop->setSelected($record['sampletype']);
 $testtypeDrop = new dropdown('testtype');
-$testtypeDrop->addFromDB($arraytesttype, 'name', 'id');
-$testtypeDrop->setSelected($testttype);
+$testtypeDrop->addFromDB($arrayTest, 'name', 'name');
+$testtypeDrop->setSelected($record['testtype']);
 $testresultDrop = new dropdown('testresult');
-$testresultDrop->addFromDB($arraytesttype, 'name', 'id');
-$testresultDrop->setSelected($testresult);
+$testresultDrop->addFromDB($arrayTestresult, 'name', 'name');
+$testresultDrop->setSelected($record['testresult']);
 $vachistoryDrop = new dropdown('vachistory');
-$vachistoryDrop->addFromDB($arraytesttype, 'name', 'id');
-$vachistoryDrop->setSelected($vachistory);
+$vachistoryDrop->addFromDB($arrayVac, 'name', 'name');
+$vachistoryDrop->setSelected($record['vachist']);
 
 
-$specArea = new textarea('spec',$spec,0,25);
+$specArea = new textarea('spec',$record['specification'],0,25);
 
-$sampleidBox = new textinput('sampleid', $sampleid);
-$animalidBox = new textinput('animalid', $animalid);
-$ageidBox = new textinput('ageid', $ageid);
-$numberBox = new textinput('number', $number);
-$remarksBox = new textinput('remarks', $remarks);
+$sampleidBox = new textinput('sampleid', $record['sampleid']);
+$animalidBox = new textinput('animalid', $record['animalid']);
+$numberBox = new textinput('number', $record['number']);
+$remarksBox = new textarea('remarks', $record['remarks']);
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
@@ -165,7 +195,7 @@ $objTable->endRow();
 
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_sampleview')));
+$objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

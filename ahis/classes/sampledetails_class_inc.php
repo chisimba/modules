@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis newherd
+ * ahis sampledetails Class
  *
- * newherd class
+ * file housing sampledetails class
  * 
  * PHP version 5
  * 
@@ -20,11 +20,11 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  * @category  Chisimba
- * @package   ahis
+ * @packsampledetails   ahis
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: newherd_class_inc.php
+ * @version   $Id: sampledetails_class_inc.php 12186 2009-01-21 14:55:17Z nic $
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -35,25 +35,25 @@ if (!
  * @name   $kewl_entry_point_run
  */
 $GLOBALS['kewl_entry_point_run']) {
-    die("You cannot view this page directly");
+    die("You cannot view this psampledetails directly");
 }
 // end security check
 
 
 /**
- * ahis newherd Class
+ * ahis sampledetails  Class
  * 
- * Class to access newherd records in the DB
+ * class to connect to sampledetails table
  * 
  * @category  Chisimba
- * @package   ahis
+ * @packsampledetails   ahis
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: newherd_class_inc.php
+ * @version   $Id: sampledetails_class_inc.php 
  * @link      http://avoir.uwc.ac.za
  */
-class newherd extends dbtable {
+class sampledetails extends dbtable {
 	
     /**
      * Standard Chisimba init method
@@ -63,7 +63,7 @@ class newherd extends dbtable {
      */
 	public function init() {
 		try {
-			parent::init('tbl_ahis_newherd');
+			parent::init('tbl_ahis_sampledetails');
 		}
 		catch (customException $e)
 		{
@@ -72,14 +72,13 @@ class newherd extends dbtable {
 		}
 	}
 	
-	public function getherd($campaign){
+	public function getsamples($id){
 	
-	$sql="SELECT * FROM tbl_ahis_newherd AS d WHERE 
-	     d.activeid = '$campaign'";
+	$sql="SELECT * FROM tbl_ahis_sampledetails AS d WHERE 
+	     d.newherdid = '$id'";
 	     
 	return $this->getArray($sql);
 	
-}
-
 	
+	}
 }

@@ -89,6 +89,12 @@ class active extends dbtable {
 	
 	}
 	
+	public function getcamp($campaign){
 	
+	$sql="SELECT * FROM tbl_ahis_active_surveillance AS d WHERE 
+	     d.campname = '$campaign'";
+	     
+	return $this->getArray($sql);
+	}
 
 }

@@ -72,9 +72,10 @@ $campNameBox = new textinput('campName', $campName);
 //$officerDrop = new textinput('officerId',$officerId);
 
 $officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'name', 'name');
+$officerDrop->addFromDB($userList, 'userid', 'name');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
+
 $diseaseDrop = new dropdown('disease');
 $diseaseDrop->addFromDB($arraydisease, 'name', 'name');
 $diseaseDrop->setSelected($disease);

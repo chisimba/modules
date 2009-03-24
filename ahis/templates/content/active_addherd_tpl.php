@@ -80,8 +80,16 @@ $farmsystemDrop = new dropdown('farmingsystem');
 $farmsystemDrop->addFromDB($arrayFarmingsystem, 'name', 'name');
 $farmsystemDrop->setSelected($record['farmingtype']);
 
-$geo2Box = new textinput('Geo2', $record['geolevel2']);
-$geo3Box = new textinput('Geo3', $record['geolevel3']);
+$geo2Drop = new dropdown('Geo2');
+$geo2Drop->addFromDB($arraygeo2, 'name', 'name');
+$geo2Drop->setSelected($geo2);
+
+$geo3Drop = new dropdown('Geo3');
+$geo3Drop->addFromDB($arraygeo3, 'name', 'name');
+$geo3Drop->setSelected($record['farmingtype']);
+
+
+
 $farmBox = new textinput('farm', $record['farmname']);
 
 $activeBox = new textinput('activeid',$activeid,'hidden');
@@ -98,11 +106,11 @@ $objTable->addCell($territoryDrop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_geolevel3'));
-$objTable->addCell($geo3Box->show());
+$objTable->addCell($geo3Drop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
-$objTable->addCell($geo2Box->show());
+$objTable->addCell($geo2Drop->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_farm').": $tab");

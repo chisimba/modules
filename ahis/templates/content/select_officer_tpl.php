@@ -49,7 +49,7 @@ $this->loadClass('layer','htmlelements');
 
 
 $inputOfficer = new dropdown('officerId');
-$inputOfficer->addFromDB($userList, 'name', 'userid');
+$inputOfficer->addFromDB($userList, 'userid', 'name');
 $inputOfficer->setSelected($officerId);
 if (!$this->objUser->isAdmin()) {
     $inputOfficer->extra = 'disabled';

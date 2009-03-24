@@ -63,7 +63,7 @@ $diseaseDrop->addFromDB($arraydisease, 'name', 'name');
 $diseaseDrop->setSelected($disease);
 $diseaseDrop->extra = 'disabled';
 
-
+$activeBox = new textinput('activeid',$activeid,'hidden');
 $campBox = new textinput('campName',$campName);
 $sensitivityBox = new textinput('sensitivity', $sensitivity);
 $specificityBox = new textinput('specificity', $specificity);
@@ -94,6 +94,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_specificity').": $tab");
 $objTable->addCell($specificityBox->show());
+$objTable->addCell($activeBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('&nbsp');
@@ -102,15 +103,20 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($backButton->show());
-$objTable->addCell($finButton->show(),NULL);//,'top','right');
+
+$objTable->addCell($nbsp);
+$objTable->addCell($nbsp);
+$objTable->addCell($finButton->show());//,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => 'active_save')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_insert')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_valsens', 'ahis'), 'numeric');
+$objForm->addRule('sensitivity', $this->objLanguage->languageText('mod_ahis_valsens', 'ahis'), 'required');
 $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'numeric');
+$objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());

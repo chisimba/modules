@@ -28,9 +28,17 @@ $fields = array(
 		'length' => 64,
         'notnull' => TRUE
 		),
+	
+ 
+	'disease' => array(
+		'type' => 'text',
+		'length' => 64,
+        'notnull' => TRUE
+		),
+	
 	'sensitivity' => array(
 		'type' => 'text',
-		'length' => 4,
+		'length' => 64,
         'notnull' => TRUE
 		),
    
@@ -41,19 +49,17 @@ $fields = array(
         'notnull' => TRUE
 		),
 		
-	'disease' => array(
-		'type' => 'text',
-		'length' => 64,
-        'notnull' => TRUE
-		),
+	
 	'testtype' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
 	
+	
 	'comments' => array(
 		'type' => 'clob'
+		 'notnull' => FALSE 
 		)
 	
     );

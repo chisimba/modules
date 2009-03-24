@@ -49,27 +49,23 @@ $objHeading->type = 2;
 $this->loadClass('layer','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$objIcon = $this->newObject('geticon', 'htmlelements');
+$objConfirm = $this->loadClass('confirm', 'utilities');
 
 $objTable = $this->getObject('htmltable','htmlelements');
-
+$message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_herdsampling'));
+$backUri = $this->uri(array('action'=>'active_newherd'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 $nextUri = $this->uri(array('action'=>'active_surveillance'));
 $nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
 
-$campBox = new textinput('campName',$campName);
-$diseaseBox = new textinput('diseaseBox',$diseaseBox);
-
 
 $numberBox = new textinput('number',$number);
+$newherdidBox = new textinput('newherdid',$newherdid,'hidden');
 
-$officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'name', 'userid');
-$officerDrop->setSelected($officerId);
-$officerDrop->extra = 'disabled';
 
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
@@ -80,16 +76,6 @@ $objTable->width = NULL;
 $objTable->cssClass = 'min50';
 
 
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": ");
-$objTable->addCell($campBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_disease').":");
-$objTable->addCell($diseaseBox->show());
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($officerDrop->show());
-$objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_samplingdate').": ");
 $objTable->addCell($inputDate->show());
@@ -129,20 +115,40 @@ $objTable->addCell($this->objLanguage->languageText('phrase_vaccinationhistory')
 $objTable->addCell($this->objLanguage->languageText('word_action'), '', '', '', 'heading');
 
 $objTable->endRow();
+foreach($data as $line){
 $objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->startRow();
-$objTable->addCell('&nbsp');
+$objTable->addCell($line['sampleid']);
+$objTable->addCell($line['testdate']);
+$objTable->addCell($line['species']);
+$objTable->addCell($line['age']);
+$objTable->addCell($line['sampletype']);
+$objTable->addCell($line['testtype']);
+$objTable->addCell($line['number']);
+$objTable->addCell($line['vachist']);
+
+ $editUrl = $this->uri(array(
+            'action' => 'active_addsample',
+            'id' => $line['id'],
+            'newherdid' => $newherdid
+        ));
+ $icons = $objIcon->getEditIcon($editUrl);
+ $objIcon->title = $objLanguage->languageText('word_delete');
+ $objIcon->setIcon('delete');
+ $objConfirm = new confirm();
+ $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+            'action' => 'sampleview_delete',
+            'id' => $line['id'],
+        )) , $message);
+$icons.= $objConfirm->show();
+$objTable->addCell($icons);
 $objTable->endRow();
+
+}
 $objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
 $objTable->addCell($nextButton->show());
+$objTable->addCell($newherdidBox->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addsample')));
