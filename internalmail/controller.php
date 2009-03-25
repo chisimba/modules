@@ -1165,5 +1165,22 @@ class internalmail extends controller
     		return FALSE;
     	}
 	}
+	/**
+	*Method to get the list of users to be searched
+	*/
+	public function getSearchableUsers()
+	{
+		$users = $this->objUser->getAllUsers();
+
+		$arr = array();
+		foreach($users as $user)
+		{
+			$arr[$this->objUser->fullname($user['userid'])] = $user['username'];//$user['userid'];
+		}
+
+		return $arr;
+	}
+
+	
 }
 ?>
