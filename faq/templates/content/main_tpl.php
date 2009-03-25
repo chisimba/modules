@@ -48,8 +48,14 @@ $objTabs = $this->newObject('tabcontent', 'htmlelements');
 $objTabs->width = '95%';
 
 // Show Add Item link
+if ($this->isValid('add'))
+{
+	$addLink = $objLink->show();
+}else {
+	$addLink = "";
+}
 if (count($categories) > 0 && $this->userHasModifyAccess()) {
-    $objHeading->str .= ' '.$objLink->show().'<br>'.$tagCloudContent;
+    $objHeading->str .= ' '.$addLink.'<br>'.$tagCloudContent;
 }
 
 echo $objHeading->show();
