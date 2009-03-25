@@ -122,7 +122,7 @@ class internalmail extends controller
         		break;
         		
         	case 'searchusers':
-				$items = $this->objGroupAdminOps->getSearchableUsers();
+				$items = $this->getSearchableUsers();
 
 				$q = $this->getParam('q');
 				foreach ($items as $key=>$value) {
