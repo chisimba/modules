@@ -46,7 +46,7 @@ class faq extends controller
         $this->objTags = $this->getObject('dbfaqtags');
         // Get the activity logger class
         $this->objLog = $this->newObject('logactivity', 'logger');
-
+		$this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
         // Log this module call
         $this->objLog->log();
     }
@@ -175,6 +175,20 @@ class faq extends controller
             return TRUE;
         } else {
             return FALSE;
+        }
+    }
+    
+      /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
         }
     }
 
