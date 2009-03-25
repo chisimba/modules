@@ -1170,7 +1170,7 @@ class internalmail extends controller
 	*/
 	public function getSearchableUsers()
 	{
-		$users = $this->objUser->getAllUsers();
+		$users = $this->objUser->getAll();
 
 		$arr = array();
 		foreach($users as $user)
