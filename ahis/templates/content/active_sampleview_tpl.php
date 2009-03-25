@@ -55,21 +55,31 @@ $objConfirm = $this->loadClass('confirm', 'utilities');
 $objTable = $this->getObject('htmltable','htmlelements');
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
+if($i < $number){
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_newherd'));
+$i++;
+}
+else{
+$addUri = $this->uri(array('action'=>'active_newherd'));
+$addButton = new button('add', $this->objLanguage->languageText('word_add'), "javascript: document.location='$backUri'");
+
+
+}
+
+$backUri = $this->uri(array('action'=>'active_herdsampling'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$nextUri = $this->uri(array('action'=>'active_surveillance'));
-$nextButton = new button('cancel', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
+$finUri = $this->uri(array('action'=>'active_feedback','success'=>1));
+$finButton = new button('cancel', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
 
 
 $numberBox = new textinput('number',$number);
+$numberBox->extra = "readonly";
 $newherdidBox = new textinput('newherdid',$newherdid,'hidden');
-
+$idBox = new textinput('samplingid',$samplingid,'hidden');
 
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
-
 
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
@@ -115,6 +125,7 @@ $objTable->addCell($this->objLanguage->languageText('phrase_vaccinationhistory')
 $objTable->addCell($this->objLanguage->languageText('word_action'), '', '', '', 'heading');
 
 $objTable->endRow();
+
 foreach($data as $line){
 $objTable->startRow();
 $objTable->addCell($line['sampleid']);
@@ -147,8 +158,9 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
-$objTable->addCell($nextButton->show());
+$objTable->addCell($finButton->show());
 $objTable->addCell($newherdidBox->show());
+$objTable->addCell($idBox->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addsample')));

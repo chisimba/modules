@@ -10,6 +10,12 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
+		
+	'samplingid' => array(
+		'type' => 'text',
+		'length' => 32,
+        'notnull' => TRUE
+		),	
 	
     'sampleid' => array(
 		'type' => 'text',

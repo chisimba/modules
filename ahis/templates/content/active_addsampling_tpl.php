@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis Active Survaillance add Herd screen Template
+ * ahis Active Survaillance add sampling screen Template
  *
- * Template for capturing active surveillance for new herd 
+ * Template for capturing active surveillance for new sampling 
  * 
  * PHP version 5
  * 
@@ -24,7 +24,7 @@
  * @author    Rosina Ntow <rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: active_herdview_tpl.php 
+ * @version   $Id: active_samplingview_tpl.php 
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -40,19 +40,21 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 if ($id) {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_herd');
-    $formUri = $this->uri(array('action'=>'newherd_insert', 'id'=>$id));
-    $record = $this->objNewherd->getRow('id', $id);
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_samples');
+    $formUri = $this->uri(array('action'=>'herdsampling_insert', 'id'=>$id));
+    $record = $this->objSampling->getRow('id', $id);
+    $sentdate = $record['sentdate'];
+    $sampledate = $record['sampledate'];
+    $recieveddate = $record['recievddate'];
     
 } else {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_herd');
-    $formUri = $this->uri(array('action'=>'newherd_insert'));
-    $record['geolevel2'] = '';
-    $record['geolevel3'] = '';
-    $record['territory'] = '';
-    $record['farm'] = '';
-    $record['farmingtype'] = '';
-
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_samples');
+    $formUri = $this->uri(array('action'=>'herdsampling_insert'));
+    $record['number'] = '';
+    $record['sentdate'] = '';
+    $record['sampledate'] = '';
+    $record['recievddate'] = '';
+    
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
@@ -68,31 +70,26 @@ $this->loadClass('layer','htmlelements');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_newherd'));
+$backUri = $this->uri(array('action'=>'active_herdsampling'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 
-$territoryDrop = new dropdown('territory');
-$territoryDrop->addFromDB($arrayTerritory, 'name', 'name');
-$territoryDrop->setSelected($record['territory']);
-
-$farmsystemDrop = new dropdown('farmingsystem');
-$farmsystemDrop->addFromDB($arrayFarmingsystem, 'name', 'name');
-$farmsystemDrop->setSelected($record['farmingtype']);
-
-$geo2Drop = new dropdown('Geo2');
-$geo2Drop->addFromDB($arraygeo2, 'name', 'name');
-$geo2Drop->setSelected($geo2);
-
-$geo3Drop = new dropdown('Geo3');
-$geo3Drop->addFromDB($arraygeo3, 'name', 'name');
-$geo3Drop->setSelected($record['farmingtype']);
+$sampleDate = $this->newObject('datepicker','htmlelements');
+$sampleDate->setName('sampledate');
+$sampleDate->setDefaultDate($sampledate);
 
 
 
-$farmBox = new textinput('farm', $record['farmname']);
+$sentDate = $this->newObject('datepicker','htmlelements');
+$sentDate->setName('sentdate');
+$sentDate->setDefaultDate($sentdate);
+	
+$recievedDate = $this->newObject('datepicker','htmlelements');
+$recievedDate->setName('recieveddate');
+$recievedDate->setDefaultDate($recieveddate);
 
-$activeBox = new textinput('activeid',$activeid,'hidden');
+$numberBox = new textinput('number', $record['number']);
+
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
@@ -101,29 +98,21 @@ $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 
-$objTable->addCell($this->objLanguage->languageText('word_territory'));
-$objTable->addCell($territoryDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_datesamplessent'));
+$objTable->addCell($sentDate->show());
+
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel3'));
-$objTable->addCell($geo3Drop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_samplestaken'));
+$objTable->addCell($numberBox->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
-$objTable->addCell($geo2Drop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_datesamplesreceived').": ");
+$objTable->addCell($recievedDate->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_farm').": $tab");
-$objTable->addCell($farmBox->show());
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system')." $tab");
-$objTable->addCell($farmsystemDrop->show());
-$objTable->addCell($activeBox->show());
-$objTable->endRow();
-$objTable->startRow();
-$objTable->endRow();
-$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('phrase_samplingdate').": $tab");
+$objTable->addCell($sampleDate->show());
 $objTable->endRow();
 
 $objTable->startRow();
@@ -135,7 +124,8 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
-$objForm->addRule('farm', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
+$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());

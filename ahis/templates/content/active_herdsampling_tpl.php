@@ -48,25 +48,18 @@ $objHeading->type = 2;
 $this->loadClass('layer','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('textinput','htmlelements');
+$objConfirm = $this->loadClass('confirm', 'utilities');
+$objIcon = $this->newObject('geticon', 'htmlelements');
 
 $objTable = $this->getObject('htmltable','htmlelements');
-
+$message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
 $addButton = new button('add', $this->objLanguage->languageText('word_add'));
 $addButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_herddetails'));
+$backUri = $this->uri(array('action'=>'active_newherd'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$nextUri = $this->uri(array('action'=>'active_sampleview'));
-$nextButton = new button('next', $this->objLanguage->languageText('word_next'), "javascript: document.location='$nextUri'");
-
-$campBox = new textinput('campBox',$campBox);
-$diseaseBox = new textinput('diseaseBox',$diseaseBox);
 
 
-$officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'name', 'userid');
-$officerDrop->setSelected($officerId);
-$officerDrop->extra = 'disabled';
 
 
 $objTable->cellspacing = 2;
@@ -75,23 +68,9 @@ $objTable->cssClass = 'min50';
 
 
 $objTable->startRow();
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": </h6>");
-$objTable->addCell($campBox->show());
+$objTable->addCell('<h6>'.$this->objLanguage->languageText('word_sampling')." $tab");
 $objTable->addCell('&nbsp');
 $objTable->addCell('&nbsp');
-$objTable->addCell("<h6>".$this->objLanguage->languageText('word_disease').": </h6>");
-$objTable->addCell($diseaseBox->show());
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($officerDrop->show());
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->endRow();
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_sampling').": $tab");
-$objTable->addCell('');
-$objTable->addCell('');
 $objTable->endRow();
 
 $objLayer = new layer();
@@ -106,32 +85,52 @@ $objTable->cellspacing = 2;
 $objTable->width = '60%';
 $objTable->cssClass = 'min50';
 
+
+$newherdidBox = new textinput('newherdid',$newherdid,'hidden');
+
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_dateofsampling'),'','','','heading');
 
 $objTable->addCell($this->objLanguage->languageText('phrase_samplestaken'), '', '', '', 'heading');
 
 $objTable->addCell($this->objLanguage->languageText('phrase_datesamplessent'), '', '', '', 'heading');
-$objTable->addCell($this->objLanguage->languageText('phrase_datesamplesreceived')." ".$this->objLanguage->languageText('word_name'), '', '', '', 'heading');
+$objTable->addCell($this->objLanguage->languageText('phrase_datesamplesreceived'), '', '', '', 'heading');
 $objTable->addCell($this->objLanguage->languageText('word_action'), '', '', '', 'heading');
+$objTable->addCell($newherdidBox->show());
 $objTable->endRow();
+foreach($data as $line){
 $objTable->startRow();
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->addCell('');
-$objTable->startRow();
-$objTable->addCell('&nbsp');
+
+$farmUri = $this->uri(array('action'=>'active_sampleview','newherdid'=>$newherdid,'number'=>$line['number'],'id'=>$line['id']));
+$objLink = new link($farmUri);
+$objLink->link = $line['sampledate'];
+$objTable->addCell($objLink->show());
+$objTable->addCell($line['number']);
+$objTable->addCell($line['sentdate']);
+$objTable->addCell($line['recievddate']);
+$editUrl = $this->uri(array(
+            'action' => 'active_addsampling',
+            'id' => $line['id'],
+            'activeid' => $activeid
+        ));
+ $icons = $objIcon->getEditIcon($editUrl);
+ $objIcon->title = $objLanguage->languageText('word_delete');
+ $objIcon->setIcon('delete');
+ $objConfirm = new confirm();
+ $objConfirm->setConfirm($objIcon->show() , $this->uri(array(
+            'action' => 'herdsampling_delete',
+            'id' => $line['id'],
+        )) , $message);
+$icons.= $objConfirm->show();
+$objTable->addCell($icons);
 $objTable->endRow();
+}
 $objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
-$objTable->addCell($nextButton->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
-$objForm = new form('reportForm', $this->uri(array('action' => '')));
+$objForm = new form('reportForm', $this->uri(array('action' => 'active_addsampling')));
 $objForm->addToForm($objTable->show());
 
 $objLayer = new layer();

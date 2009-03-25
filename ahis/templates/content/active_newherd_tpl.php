@@ -84,8 +84,6 @@ $addButton = new button('add', $this->objLanguage->languageText('word_add'), "ja
 
 $backUri = $this->uri(array('action'=>'active_search'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$nextButton = new button('next', $this->objLanguage->languageText('word_next'));
-$nextButton->setToSubmit();
 
 $campBox = new dropdown('campName');
 $campBox->addFromDB($arrayCamp, 'campname', 'id',$campName);
@@ -155,7 +153,7 @@ $objTable->endRow();
 
 foreach($herd as $line){
 $objTable->startRow();
-$farmUri = $this->uri(array('action'=>'active_sampleview','id'=>$line['id']));
+$farmUri = $this->uri(array('action'=>'active_herdsampling','id'=>$line['id']));
 $objLink = new link($farmUri);
 $objLink->link = $line['territory'];
 $objTable->addCell($objLink->show());
@@ -188,7 +186,6 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
-$objTable->addCell($nextButton->show());
 $objTable->endRow(); 
 
 

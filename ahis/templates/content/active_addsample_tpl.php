@@ -197,6 +197,14 @@ $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $formUri);
 $objForm->addToForm($objTable->show());
+$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
+$objForm->addRule('sampleid', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
+$objForm->addRule('animalid', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'required');
+$objForm->addRule('spec', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 'ahis'), 'numeric');
+$objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
+$objForm->addRule('remarks', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());

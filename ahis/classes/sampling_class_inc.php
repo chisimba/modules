@@ -1,8 +1,8 @@
 <?php
 /**
- * ahis sampledetails Class
+ * ahis sampling Class
  *
- * file housing sampledetails class
+ * file housing sampling class
  * 
  * PHP version 5
  * 
@@ -20,11 +20,11 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * 
  * @category  Chisimba
- * @packsampledetails   ahis
+ * @packsampling   ahis
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: sampledetails_class_inc.php 12186 2009-01-21 14:55:17Z nic $
+ * @version   $Id: sampling_class_inc.php 12186 2009-01-21 14:55:17Z nic $
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -35,25 +35,25 @@ if (!
  * @name   $kewl_entry_point_run
  */
 $GLOBALS['kewl_entry_point_run']) {
-    die("You cannot view this psampledetails directly");
+    die("You cannot view this psampling directly");
 }
 // end security check
 
 
 /**
- * ahis sampledetails  Class
+ * ahis sampling  Class
  * 
- * class to connect to sampledetails table
+ * class to connect to sampling table
  * 
  * @category  Chisimba
- * @packsampledetails   ahis
+ * @packsampling   ahis
  * @author    Rosina Ntow<rntow@ug.edu.gh>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: sampledetails_class_inc.php 
+ * @version   $Id: sampling_class_inc.php 
  * @link      http://avoir.uwc.ac.za
  */
-class sampledetails extends dbtable {
+class sampling extends dbtable {
 	
     /**
      * Standard Chisimba init method
@@ -63,7 +63,7 @@ class sampledetails extends dbtable {
      */
 	public function init() {
 		try {
-			parent::init('tbl_ahis_sampledetails');
+			parent::init('tbl_ahis_sampling');
 		}
 		catch (customException $e)
 		{
@@ -72,14 +72,15 @@ class sampledetails extends dbtable {
 		}
 	}
 	
-	public function getsamples($id,$sid){
 	
-	$sql="SELECT * FROM tbl_ahis_sampledetails AS d WHERE 
-	     d.newherdid = '$id' AND 
-	     d.samplingid = '$sid'";
+	public function getsampling($id){
+	
+	$sql="SELECT * FROM tbl_ahis_sampling AS d WHERE 
+	     d.newherdid = '$id'";
 	     
 	return $this->getArray($sql);
 	
 	
 	}
+
 }
