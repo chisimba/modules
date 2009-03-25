@@ -59,7 +59,7 @@ class internalmail extends controller
         // system objects
         $this->objLanguage = $this->getObject('language', 'language');
         $this->objGroups = $this->newObject('managegroups', 'contextgroups');
-        $this->objGroupAdminOps = $this->newObject('groupops', 'groupadmin');
+        //$this->objGroupAdminOps = $this->newObject('groupops', 'groupadmin');
         $this->objGroupAdmin = $this->newObject('groupadminmodel', 'groupadmin');
         $this->objContext = $this->newObject('dbcontext', 'context');
         $this->objDate = $this->newObject('dateandtime', 'utilities');
