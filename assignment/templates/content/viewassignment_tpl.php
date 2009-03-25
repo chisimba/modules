@@ -72,7 +72,8 @@ echo $table->show();
 
 
 
-// If Lecturer, show list of assignments
+// If Lecturer, show list of assignments]
+
 if ($this->isValid('markassignments')) {
 
 
@@ -125,7 +126,7 @@ if ($this->isValid('markassignments')) {
     echo $table->show();
 
     // Show Student Views
-} else {
+} /*else {
 
     $submissions = $this->objAssignmentSubmit->getStudentAssignment($this->objUser->userId(), $assignment['id']);
 
@@ -267,7 +268,7 @@ if ($this->isValid('markassignments')) {
 
     }
 }
-
+*/
 $backLink = new link ($this->uri(NULL));
 $backLink->link = $this->objLanguage->languageText('mod_assignment_backtolist', 'assignment', 'Back to List of Assignments');
 
