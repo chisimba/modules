@@ -101,8 +101,10 @@ if (count($categories) == 0) {
                 )),
                 $objLanguage->languageText('phrase_suredelete')
             );
-
-            echo ' &nbsp; '.$editLink->show().' '.$objConfirm->show();
+			if ($this->isValid('add'))
+			{
+            	echo ' &nbsp; '.$editLink->show().' '.$objConfirm->show();
+			}
         }
 
         echo '</li>';
