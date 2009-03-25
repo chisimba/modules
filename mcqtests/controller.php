@@ -78,6 +78,7 @@ class mcqtests extends controller
         $this->objMail = $this->newObject('dbemail', 'internalmail');
         $this->objEmailFiles = $this->newObject('emailfiles', 'internalmail');
         $this->objWashout = $this->getObject('washout','utilities');
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
 
         // context
         $this->objContext = $this->newObject('dbcontext', 'context');
@@ -666,6 +667,20 @@ class mcqtests extends controller
     }
 
     /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
+        }
+    }
+    
+    /**
      * Method to display a list of tests in the test home page.
      *
      * @access private
@@ -691,6 +706,8 @@ class mcqtests extends controller
         $this->setVarByRef('data', $data);
         return 'index_tpl.php';
     }
+    
+    
 
     /**
      * Method to get the context child nodes and display form to add a new test.

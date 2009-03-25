@@ -37,7 +37,10 @@ $addUrl = $this->uri(array(
     'action' => 'addstep'
 ));
 $addIcon = $objIcon->getAddIcon($addUrl);
-$heading.= '&nbsp;&nbsp;&nbsp;'.$addIcon;
+if ($this->isValid('add'))
+{
+	$heading.= '&nbsp;&nbsp;&nbsp;'.$addIcon;
+}
 $this->setVarByRef('heading', $heading);
 if (!empty($testId)) {
     $testData = $this->dbTestadmin->getTests('', 'name', $testId);
@@ -118,9 +121,14 @@ if (!empty($data)) {
     $objTable->endRow();
 }
 echo $objTable->show();
-$objLink = new link($addUrl);
-$objLink->link = $addLabel;
-$links = $objLink->show();
+if ($this->isValid('add'))
+{
+	$objLink = new link($addUrl);
+	$objLink->link = $addLabel;
+	$links = $objLink->show();
+}else {
+	$links = "";
+}
 // Link to Assignment Management Module if registered
 if ($this->assignment) {
     $objLink = new link($this->uri('', 'assignmentadmin'));
