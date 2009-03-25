@@ -101,7 +101,8 @@ class interpreter extends object
         $this->lastResultDocument = '';
         $this->lastOpenLink = '';
         
-        $this->objCurl = $this->getObject('curlwrapper', 'utilities');
+        //$this->objCurl = $this->getObject('curlwrapper', 'utilities');
+        $this->objCurl = new curlwrapper_;
     }
 
     /**
@@ -130,6 +131,9 @@ class interpreter extends object
             *
             *      Workflow Patterns (Experimental):
             *      //Simplest Cases
+            *
+            *      [swf0]- 0 Straight "GET" type form submit: (Simplest Form Submit)
+            *              |<open><input><input * n>|
             *
             *      [swf1]- 1 anchor click to new page: (Simplest Anchor Click Case)
             *              <open><click type="anchor">
@@ -167,6 +171,9 @@ class interpreter extends object
             //Executing the aquired workflows
             foreach ($this->workflowSequence as $workflowSignature) {
                 switch ($workflowSignature) {
+                    case 'WF_SIGN_0':
+                        $this->lastResultDocument = $this->runSimpleGetWorkflow($this->openTagData, $this->inputTagData, $this->clickTagData);
+                    break;
                     case 'WF_SIGN_1':
                         $this->lastResultDocument = $this->runSimpleAnchorClickWorkflow($this->openTagData, $this->inputTagData, $this->clickTagData);
                     break;
@@ -211,6 +218,14 @@ class interpreter extends object
             array_push($this->tagSequence, $tagName);
             
             //Applying workflow signatures
+            //WF_0 - Simple Get Request
+            if (strtolower($tagName) == 'commit'
+             && strtolower($this->tagSequence[count($this->tagSequence) - 2]) == 'input') {
+                $workflowSignature = 'WF_SIGN_0';
+                array_push($this->workflowSequence, $workflowSignature);
+             }
+
+            
             //WF_1 - Simple Anchor Click
             if (strtolower($tagName) == 'click'
              && strtolower($this->tagSequence[count($this->tagSequence) - 2]) == 'open') {
@@ -288,7 +303,75 @@ class interpreter extends object
 
 
     /**
-     * This method will interpret, execute and return a document based on the swf1
+     * This method will interpret, execute and return a document based on the swf0
+     *      - Simple Workflow 0
+     *      [swf0]- Straight "GET" form submit
+     *              <open><input ... text><input ... checkbox><click name="submitBtnName">
+     *
+     *      Description: open link, fill in form, submit form
+     *
+     * @author: Charl Mert <charl.mert@gmail.com>
+     */
+    function runSimpleGetWorkflow($openTagData, $inputTagData, $clickTagData) {
+
+        //Setting the indexes
+        $openExCounter = 0;
+        $inputExCounter = 0;
+        $clickExCounter = 0;
+
+        //var_dump($this->lastResultDocument); exit;
+
+        $targetLink = $this->openTagData[$openExCounter]['link'];
+
+        $postArgs = '&';
+
+        //Adding All Inputs
+        foreach ($this->inputTagData as $inputTagData) {
+            //Gathering the text input
+            $inputName = $inputTagData['name'];
+            $inputText = $inputTagData['text'];
+
+            $postArgs .= $inputName . '=' . $inputText . '&';
+        }
+        $postArgs = substr($postArgs, 0, strlen($postArgs) - 1);
+        //$postArgs = urlencode($postArgs);
+
+        //Getting the first line of the form to strip attributes
+        $lines = explode("\n", $parentForm);
+
+        $targetUrl = $targetLink . urlencode($postArgs);
+        $targetUrlNonEnc = $targetLink . $postArgs;
+        
+        //var_dump($targetUrl); exit;
+        log_debug("Curl Simple Form Submit Workflow Target : $targetUrlNonEnc \nurlencoded: $targetUrl  \nPost Data : " . $postArgs);
+        //echo "$targetUrl";
+        //exit;
+
+        //TODO: Check when really to use encoded url's and when not to
+        //Using non encoded
+        $this->objCurl->initializeCurl($targetUrlNonEnc);
+        $this->lastOpenLink = $targetUrl;
+
+        //Submitting the form based on the form details gathered above
+        $resultDoc = $this->objCurl->sendPostData();
+        //TODO: RETURNS AFTER FIRST COMMIT, CHANGE TO INCLUDE MULTIPLE COMMITS PER WORKFLOW
+
+        $config = array('output-xhtml'=>true,
+                        'wrap' => 0,
+                        'wrap-attributes' => true
+                        );
+
+        $tidy = tidy_parse_string($resultDoc, $config);
+        $tidy->cleanRepair();
+        $resultDoc = $tidy;
+
+        return $resultDoc;
+    }
+
+
+
+    /**
+     * This method will interpret, execute and return a document based on the swf2
      *      - Simple Workflow 2
      *      [swf2]- 1 click -> form submit: (Simplest Form Submit Case)
      *              <open><input ... text><input ... checkbox><click name="submitBtnName">
@@ -368,6 +451,9 @@ class interpreter extends object
 
         //Getting the uri parts to build second relative target
         $uriParts = parse_url($targetLink);
+        if ($attrs['action'][0] == '/'){
+            $uriParts['path'] = '';
+        }
         //Stripping the scriptname
         $uriParts['path'] = str_replace(end(explode('/', $uriParts['path'])), '', $uriParts['path']);
         $targetUrl = $uriParts['scheme'] . '://'
@@ -375,20 +461,42 @@ class interpreter extends object
                     . $uriParts['path']
                     . $attrs['action'];
 
-        //TODO: Check if <form> method is POST then do:
+        //For debugging purposes only, for printing non urlencoded post args
+        $targetUrlNonEnc = $targetUrl;
+
+        //var_dump($uriParts);
+        //var_dump($attrs['action']); exit;
+        //Checking if <form> method is POST then do:
         if (strtolower($attrs['method']) != 'post'){
             if (strpos('?', $attrs['action']) !== false) {
                 $targetUrl .= '&' . urlencode($postArgs);
             } else {
                 $targetUrl .= '?' . urlencode($postArgs);
             }
+
+            //Same conditional just removed urlencode for post args
+            if (strpos('?', $attrs['action']) !== false) {
+                $targetUrlNonEnc .= '&' . $postArgs;
+            } else {
+                $targetUrlNonEnc .= '?' . $postArgs;
+            }
+
             $postArgs = false;
         }
 
         //var_dump($targetUrl); exit;
-        log_debug("Curl Simple Form Submit Workflow Target : " . $targetUrl . "\nPost Data : " . $postArgs);
+        log_debug("Curl Simple Form Submit Workflow Target : $targetUrlNonEnc \nurlencoded: $targetUrl  \nPost Data : " . $postArgs);
         //echo "$targetUrl";
         //exit;
+
+        //TODO: Revisit Curl HTTP Sessions and Check Code Below
+        if ($this->lastOpenLink != $targetUrl) {
+            //Re Initializing Curl
+            $this->objCurl->closeCurl();
+            $this->objCurl->initializeCurl($targetUrl);
+        }
+
+        $this->lastOpenLink = $targetUrl;
 
         //Submitting the form based on the form details gathered above
         $resultDoc = $this->objCurl->sendPostData($postArgs);
@@ -661,4 +769,435 @@ class interpreter extends object
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+* CUTTING FROM code_modules/utilities/curlwrapper_class_inc.php CLASS
+* TODO: to be merged
+*
+* Curl is a tool for transferring files with URL syntax
+*
+* This class is a wrapper for PHP's CURL functions integrated with
+* Chisimba's Proxy Configurations. Developers can simply instantiate
+* this class and request the page they want.
+*
+* @category  Chisimba
+* @package   utilities
+* @author Tohir Solomons
+* @author Derek Keats
+* @copyright 2007 AVOIR
+* @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+* @version   $Id: curlwrapper_class_inc.php 11250 2008-11-02 11:32:56Z charlvn $
+* @link      http://avoir.uwc.ac.za
+* Example:
+*   $objCurl = $this->getObject('curl', 'utilities');
+*   $objCurl->initializeCurl($url);
+*   echo $objCurl->getData();
+*   $objCurl->closeCurl();
+* Example:
+*    echo $objCurl->exec('http://ws.geonames.org/search?name_equals=Walvisbaai&style=full');
+*/
+
+class curlwrapper_ extends object
+{
+    /**
+    * @var array $proxyInfo Array Containing Proxy Details
+    * @access private
+    */
+    private $proxyInfo;
+
+    public $ch;
+    public $options = array();
+
+    /**
+    * Constructor
+    */
+    /*
+    public function init()
+    {
+        //TODO: reopen when merge complete
+        //$this->setupProxy();
+    }
+    */
+
+    public function curlwrapper_() {
+
+    }
+
+    /**
+    *
+    * Method to extract the proxy settings from the chisimba settings
+    * and prepare them for use in curl.
+    *
+    */
+    public function setupProxy()
+    {
+        // Load Config Object
+        $objConfig = $this->getObject('altconfig', 'config');
+        // Get Proxy String
+        $proxy = $objConfig->getProxy();
+        // Remove http:// from beginning of string
+        $proxy =  preg_replace('%\Ahttp://%i', '', $proxy);
+        // Create Empty Array
+        $this->proxyInfo = array('username'=>'','password'=>'','server'=>'','port'=>'',);
+        // Check if string has @, indicator of username/password and server/port
+        if (preg_match('/@/i', $proxy)) {
+            // Split string into username and password
+            preg_match_all('/(?P<userinfo>.*)@(?P<serverinfo>.*)/i', $proxy, $result, PREG_PATTERN_ORDER);
+            // If it has user information, perform further split
+            if (isset($result['userinfo'][0])) {
+                // Split at : to get username and password
+                $userInfo = explode(':', $result['userinfo'][0]);
+                // Record username if it exists
+                $this->proxyInfo['username'] = isset($userInfo[0]) ? $userInfo[0] : '';
+                // Record password if it exists
+                $this->proxyInfo['password'] = isset($userInfo[1]) ? $userInfo[1] : '';
+            }
+            // If it has server information, perform further split
+            if (isset($result['serverinfo'][0])) {
+                // Split at : to get server and port
+                $serverInfo = explode(':', $result['serverinfo'][0]);
+                // Record server if it exists
+                $this->proxyInfo['server'] = isset($serverInfo[0]) ? $serverInfo[0] : '';
+                // Record port if it exists
+                $this->proxyInfo['port'] = isset($serverInfo[1]) ? $serverInfo[1] : '';
+            }
+        // Else only has server and port details
+        } else {
+            // Split at : to get server and port
+            $serverInfo = explode(':', $proxy);
+            // Record server if it exists
+            $this->proxyInfo['server'] = isset($serverInfo[0]) ? $serverInfo[0] : '';
+            // Record port if it exists
+            $this->proxyInfo['port'] = isset($serverInfo[1]) ? $serverInfo[1] : '';
+        }
+    }
+
+    public function initializeCurl($url)
+    {
+        log_debug("\n\nCURL INITIALIZED: $url \n\n");
+        // Setup URL for Curl
+        $this->ch = curl_init($url);
+    }
+
+    public function closeCurl()
+    {
+        // Close the CURL
+        curl_close($this->ch);
+    }
+
+    /**
+    * Set a curl option.
+    *
+    * @link http://www.php.net/curl_setopt
+    * @param mixed $theOption One of the valid CURLOPT defines.
+    * @param mixed $theValue the value of the curl option.
+    *
+    */
+    public function setopt($theOption, $theValue)
+    {
+        curl_setopt($this->ch, $theOption, $theValue) ;
+        $this->options[$theOption] = $theValue ;
+    }
+
+    public function setProxy()
+    {
+        // Add Server Proxy if it exists
+        if ($this->proxyInfo['server'] != '') {
+            $this->setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+        }
+        // Add Port Proxy if it exists
+        if ($this->proxyInfo['port'] != '') {
+            $this->setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+        }
+        // Add Username for Proxy if it exists
+        if ($this->proxyInfo['username'] != '') {
+            $userNamePassword = $this->proxyInfo['username'];
+            // Add Password Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword .= ':'.$this->proxyInfo['password'];
+            }
+            $this->setopt ($this->ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+        }
+    }
+
+    /**
+     *
+     * Make sure all the options are set first
+     *
+     */
+    public function getUrl()
+    {
+        // Get the page
+        //curl_setopt($this->ch, CURLOPT_HEADER, FALSE);
+        //curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        $ch = curl_init($url);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
+    /**
+    * Method to get contents of a page using POST
+    * This method follows the location for when the server issues a redirect
+    * @param string $url URL of the Page
+    * @return string contents of the page
+    */
+    public function sendPostData($postargs=FALSE)
+    {
+        // Setup URL for Curl
+        if ($this->ch == null || $this->ch == '') {
+            log_debug ("\nCurl Handle NOT initialized!\n");
+            die ("\nCurl Handle NOT initialized!\n");
+        }
+
+        // More Curl settings
+        /*
+        curl_setopt($this->ch, CURLOPT_HEADER, TRUE); //Needed to follow 302 redirects
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, 1);
+        */
+
+        /*
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER , true);     // return web page
+        curl_setopt($this->ch, CURLOPT_HEADER         , true);   // return headers
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION , true);     // follow redirects
+        curl_setopt($this->ch, CURLOPT_ENCODING       , "");       // handle all encodings
+
+        curl_setopt($this->ch, CURLOPT_USERAGENT      , "spider"); // who am i
+        curl_setopt($this->ch, CURLOPT_AUTOREFERER    , true);     // set referer on redirect
+        curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT , 120);     // timeout on connect
+
+        curl_setopt($this->ch, CURLOPT_TIMEOUT        , 120);      // timeout on response
+        curl_setopt($this->ch, CURLOPT_MAXREDIRS      , 10);       // stop after 10 redirects
+        */
+
+        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg';
+        $headers[] = 'Connection: Keep-Alive';
+        $headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
+        $user_agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)';
+
+        $options = array(
+            //CURLOPT_HTTPHEADER      => $headers,
+            CURLOPT_RETURNTRANSFER  => 1,     // return web page
+            CURLOPT_HEADER          => 1,     // return headers
+            CURLOPT_FOLLOWLOCATION  => 1,     // follow redirects
+            CURLOPT_COOKIESESSION   => 1,     // Enable Session Cookies
+            CURLOPT_ENCODING        => "",       // handle all encodings
+
+            CURLOPT_USERAGENT       => $useragent, // who am i
+            CURLOPT_AUTOREFERER     => true,     // set referer on redirect
+            //CURLOPT_CONNECTTIMEOUT  => 120,      // timeout on connect
+
+            //CURLOPT_TIMEOUT         => 120,      // timeout on response
+            CURLOPT_MAXREDIRS       => 10,       // stop after 10 redirects
+            CURLOPT_COOKIEFILE      => '/var/www/fresh/usrfiles/webworkflow/cookies.txt',
+            CURLOPT_COOKIEJAR       => '/var/www/fresh/usrfiles/webworkflow/cookies.txt'
+        );
+
+        curl_setopt_array($this->ch, $options );
+
+        $uriParts = parse_url($url);
+        //Stripping the scriptname
+
+        if ($uriParts['host'] != 'localhost' &&
+            $uriParts['host'] != '127.0.0.1' ) {
+            // Add Server Proxy if it exists
+            if ($this->proxyInfo['server'] != '') {
+                curl_setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+            }
+
+            // Add Port Proxy if it exists
+            if ($this->proxyInfo['port'] != '') {
+                curl_setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+            }
+
+            // Add Username for Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword = $this->proxyInfo['username'];
+
+                // Add Password Proxy if it exists
+                if ($this->proxyInfo['username'] != '') {
+                    $userNamePassword .= ':'.$this->proxyInfo['password'];
+                }
+
+                curl_setopt ($this->ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+            }
+        }
+        //*/
+
+        log_debug("\n\n" . 'Curl->SendData() Post Data : ' . $postargs . "\n\n");
+        if($postargs !== FALSE){
+            curl_setopt ($this->ch, CURLOPT_POST, TRUE);
+            curl_setopt ($this->ch, CURLOPT_POSTFIELDS, $postargs);
+        }
+
+        // Get the page
+        $data = curl_exec ($this->ch);
+
+        $err     = curl_errno( $this->ch );
+        $errmsg  = curl_error( $this->ch );
+        $header  = curl_getinfo( $this->ch );
+
+        if ($err != ''){
+            log_debug('Curl Error: ' . $err);
+            log_debug('Curl Error Message: ' . $errmsg);
+        }
+
+        log_debug('Curl Header: ' . var_export($header, true));
+        //*/
+
+        // Return Data
+        return $data;
+    }
+
+    public function sendData($url, $postargs=FALSE)
+    {
+        $this->ch = curl_init($url);
+        //$this->setProxy();
+        if($postargs !== FALSE){
+            curl_setopt ($this->ch, CURLOPT_POST, TRUE);
+            curl_setopt ($this->ch, CURLOPT_POSTFIELDS, $postargs);
+        }
+        if($this->username !== FALSE && $this->password !== FALSE) {
+            curl_setopt($this->ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
+        }
+        curl_setopt($this->ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($this->ch, CURLOPT_NOBODY, 0);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION,1);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        if ($this->headers != ''){
+            curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+        }
+        $response = curl_exec($this->ch);
+        $this->responseInfo=curl_getinfo($this->ch);
+        curl_close($this->ch);
+        if(intval($this->responseInfo['http_code'])==200){
+            if(class_exists('SimpleXMLElement')){
+                $xml = new SimpleXMLElement($response);
+                return $xml;
+            }else{
+                return $response;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+
+
+    private function process($url,$postargs=FALSE)
+    {
+        $ch = curl_init($url);
+
+        if($postargs !== FALSE){
+            curl_setopt ($ch, CURLOPT_POST, TRUE);
+            curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
+        }
+
+        if($this->username !== FALSE && $this->password !== FALSE)
+            curl_setopt($this->ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
+
+        curl_setopt($this->ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($this->ch, CURLOPT_NOBODY, 0);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION,1);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+
+        $response = curl_exec($ch);
+
+        $this->responseInfo=curl_getinfo($ch);
+        curl_close($ch);
+
+
+        if(intval($this->responseInfo['http_code'])==200){
+            if(class_exists('SimpleXMLElement')){
+                $xml = new SimpleXMLElement($response);
+                return $xml;
+            }else{
+                return $response;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+
+
+    /**
+    * Method to transfer/get contents of a page
+    * @param string $url URL of the Page
+    * @return string contents of the page
+    */
+    public function exec($url)
+    {
+        // Setup URL for Curl
+        $ch = curl_init($url);
+
+        // More Curl settings
+        curl_setopt($this->ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // Add Server Proxy if it exists
+        if ($this->proxyInfo['server'] != '') {
+            curl_setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+        }
+
+        // Add Port Proxy if it exists
+        if ($this->proxyInfo['port'] != '') {
+            curl_setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+        }
+
+        // Add Username for Proxy if it exists
+        if ($this->proxyInfo['username'] != '') {
+            $userNamePassword = $this->proxyInfo['username'];
+
+            // Add Password Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword .= ':'.$this->proxyInfo['password'];
+            }
+
+            curl_setopt ($ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+        }
+
+        // Get the page
+        $data = curl_exec ($ch);
+
+        // Close the CURL
+        curl_close($ch);
+
+        // Return Data
+        return $data;
+    }
+}
+
+
 ?>
