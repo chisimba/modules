@@ -2431,7 +2431,7 @@
                 break;
             }
 
-            return $true;
+            return true;
         }
         
         /**
@@ -2459,7 +2459,7 @@
                 break;
             }
 
-            return $true;
+            return true;
         }
         
     }
