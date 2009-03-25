@@ -127,12 +127,13 @@ function showHideAddCategory()
 </script>
 ';
 
-echo '<p>'.$addLink->show()./*' / '.$returnToFaqLink->show().*/'</p>';
 
 if ($this->isValid('add'))
 {
-	echo '<div id="addfaqcategory" style="display:none;">';
+	echo '<p>'.$addLink->show()./*' / '.$returnToFaqLink->show().*/'</p>';
 }
+	echo '<div id="addfaqcategory" style="display:none;">';
+
 
 $objHeading = new htmlheading();
 $objHeading->type=3;
