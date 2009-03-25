@@ -64,6 +64,8 @@ class glossary extends controller
         // Collect information from the database.
         $this->objDT->retrieve('glossary');
         
+        $this->objContextGroups = $this->getObject('managegroups', 'contextgroups');
+        
         // Set Header & Footer Available for each page in Glossary
         $this->setVarByRef('header', $this->showGlossaryHeader());
         $this->setVarByRef('footer', $this->showGlossaryFooter());
@@ -673,6 +675,20 @@ $this->setVar('pageSuppressXML', TRUE);
         return $this->nextAction('edit', array('id'=>$this->getParam('id', null), 'message'=>'urldeleted'));
 	}
 	
+	  /**
+     * Method to override isValid to enable administrators to perform certain action
+     *
+     * @param $action Action to be taken
+     * @return boolean
+     */
+    public function isValid($action) {
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+            return TRUE;
+        } else {
+            return FALSE;//parent::isValid ( $action );
+        }
+    }
+	
 	/**
 	* Method to delete a See Also link between two terms
 	*
@@ -706,7 +722,7 @@ $this->setVar('pageSuppressXML', TRUE);
 		$this->loadClass('link', 'htmlelements');
         
         // Check if user has permission to add
-        if ($this->objDT->isValid('add')) {
+        if ($this->isValid('add')) {
             $glossaryAddLink = new link($this->uri(array( 'module'=> 'glossary', 'action' => 'add')));
             $addIcon =& $this->getObject('geticon', 'htmlelements');
             $addIcon->setIcon('add');
