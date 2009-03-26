@@ -157,7 +157,7 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete'
+                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save'
                                         );
         }
         catch(customException $e) {
@@ -1820,7 +1820,18 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objSurvey->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
-             
+             case 'animal_population_add':
+				return 'animal_population_add_tpl.php';
+			case 'addinspectiondata':
+				return 'add_inspectiondata.php';
+			case 'animal_slaughter_add':
+				return 'animal_slaughter_tpl.php';
+			case 'animal_population_save':
+				return $this->SaveData();				
+			case 'saveinspectiondata':
+				return $this->saveInspectionData();
+			case 'animal_slaughter_save':
+				return $this->saveSlaughterData();
             
             case 'view_reports':
             
@@ -1884,6 +1895,56 @@ class ahis extends controller {
         $this->unsetSession('ps_campName');
         
        }
+	   private function AddData()
+    {
+        return 'add_data.php';
+    }
+	
+	
+	private function SaveData()
+	{
+	//capture input		
+		$district = $this->getParam('district');
+		$classification = $this->getParam('classification');
+		$num_animals = $this->getParam('num_animals');
+		$animal_production = $this->getParam('animal_production');
+		$source = $this->getParam('source');		
+		$data= $this->objAnimalPopulation ->addData($district, $classification, $num_animals, $animal_production,$source);
+		
+		return $this->nextAction('');
+	
+	}
+	
+	private function saveInspectionData()
+	{
+	//capture input		
+		$district = $this->getParam('district');
+		$date =$this->getParam('inspectiondate');
+		$num_of_cases = $this->getParam('num_of_cases');
+		$num_at_risk = $this->getParam('num_at_risk');
+				
+		$data= $this->objMeatInspect->addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk);
+		
+		return $this->nextAction('');
+	
+	}
+	private function saveSlaughterData()
+	{
+	//capture input		
+		$district = $this->getParam('district');
+		$num_cattle =$this->getParam('num_cattle');
+		$num_sheep = $this->getParam('num_sheep');
+		$num_goats = $this->getParam('num_goats');
+		$num_pigs = $this->getParam('num_pigs');
+		$num_poultry = $this->getParam('num_poultry');
+		$other = $this->getParam('other');
+		$name = $this->getParam('name');
+		$remarks = $this->getParam('remarks');					
+		$data= $this->objSlaughter->addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks);
+		
+		return $this->nextAction('');
+	
+	}
     
     /**
      * Method to determine whether the user needs to be logged in

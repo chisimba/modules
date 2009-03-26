@@ -157,6 +157,18 @@ $link->link = $this->objLanguage->languageText('mod_ahis_causativeadmin', 'ahis'
 $objTable->addCell($link->show(),NULL,NULL,'center');
 $objTable->endRow();
 
+$objTable->startRow();
+$link = new link($this->uri(array('action' => 'animal_population_add')));
+$link->link = "Animal Population Admin";
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'addinspectiondata')));
+$link->link = "Meat Inspection Admin";
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$link = new link($this->uri(array('action' => 'animal_slaughter_add')));
+$link->link = "Animal Slaughter Admin";
+$objTable->addCell($link->show(),NULL,NULL,'center');
+$objTable->endRow();
+
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis'/>".$objTable->show());
 $objLayer->align = 'center';
