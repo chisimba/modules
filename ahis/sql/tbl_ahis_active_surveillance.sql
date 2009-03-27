@@ -58,7 +58,7 @@ $fields = array(
 	
 	
 	'comments' => array(
-		'type' => 'clob'
+		'type' => 'clob',
 		 'notnull' => FALSE 
 		)
 	

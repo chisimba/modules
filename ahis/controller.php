@@ -130,6 +130,12 @@ class ahis extends controller {
             $this->objViewReport = $this->getObject('report');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
+			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
+			  $this->objAnimalPopulation= $this->getObject('dbanimalpop');
+			 $this->objSlaughter= $this->getObject('ahis_slaughter');
+
+
+
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',
                                         'age_group_admin', 'title_admin', 'sex_admin', 'status_admin',
@@ -1821,11 +1827,11 @@ class ahis extends controller {
                 $this->objSurvey->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
              case 'animal_population_add':
-				return 'animal_population_add_tpl.php';
+				return 'animal_population_tpl.php';
 			case 'addinspectiondata':
-				return 'add_inspectiondata.php';
+				return 'meat_inspection_tpl.php';
 			case 'animal_slaughter_add':
-				return 'animal_slaughter_tpl.php';
+				return 'slaughter_tpl.php';
 			case 'animal_population_save':
 				return $this->SaveData();				
 			case 'saveinspectiondata':
