@@ -4,7 +4,7 @@ if(!$GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
 // end security check
-/**
+
 // Thi template displays the registered staff members
 
 //Load HTMl Objet Classes
