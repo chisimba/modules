@@ -1,6 +1,6 @@
 <?php
 /**
- * ahis Add Animal Slaughter Statistics
+ * ahis Add Animal Slaughter Template
  *
  * File containing the Add Animal Slaughter Statistics template
  * 
@@ -24,7 +24,7 @@
  * @author    Samuel Onyach <onyach@icsit.jkuat.ac.ke>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: add_animal_slaughter_tpl.php 
+ * @version   $Id: slaughter_tpl.php 
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -38,34 +38,26 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-$this->loadClass('htmlheading', 'htmlelements');
-$this->loadClass('form', 'htmlelements');
-$this->loadClass('textinput', 'htmlelements');
-$this->loadClass('textarea', 'htmlelements');
-$this->loadClass('button', 'htmlelements');
+  $title = 'Animal Slaughter';
+$objHeading = $this->getObject('htmlheading','htmlelements');
+$objHeading->str = $title;
+$objHeading->type = 2;
+
+$this->loadClass('textinput','htmlelements');
+$this->loadClass('dropdown','htmlelements');
+$this->loadClass('layer','htmlelements');
 $this->loadClass('label', 'htmlelements');
-$this->loadClass('dropdown', 'htmlelements');
 
-
-    $formAction = 'animal_slaughter_save';
-    $title = 'Slaughter';
+     $formAction = 'animal_slaughter_save';  
     $buttonText = 'Save';
 
-
-// Header
-$header = new htmlheading();
-$header->type = 1;
-$header->str = $title;
-//echo $header->show();
 
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
-$formTable->startRow();
-$formTable->addCell($header->show(),NULL,NULL,'center');
-$formTable->endRow();
+
 $district = new textinput('district');
 $district->size = 50;
 
@@ -167,8 +159,9 @@ $form->addToForm($button->show());
 $form->addToForm($btcancel->show());
 
 
-echo $form->show();
 
+$objLayer = new layer();
+$objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$form->show());
+$objLayer->align = 'center';
 
-?>
-
+echo $objLayer->show();
