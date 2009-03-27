@@ -8,6 +8,16 @@ echo $this->objLanguage->languageText("mod_userstats_totallogins","userstats")
 echo $this->objLanguage->languageText("mod_userstats_uniquelogins","userstats") 
   . ": " . $uniqueLogins . "<br />";
   
+//Number of males
+echo "Total Number of Males"
+  . ": " . $males . "<br />";
+
+//Number of females
+echo "Total Number of females"
+  . ": " . $females . "<br />";
+
+
+
 //Output the login history array
 if (isset($ar)) {
     $link = $this->newObject('link', 'htmlelements');
@@ -84,6 +94,25 @@ if (isset($ar)) {
         $emailLabel = $link->show();
     }
 
+
+//Add the table header linked for sex
+$this->sex = "Sex";
+$sexLabel = $this->sex;
+//$this->objLanguage->languageText("word_country");
+    if ($this->getParam('order', 'surname') != 'sex') {
+        $sexLabel = $this->uri(array(
+           'action' => 'viewloginhistory',
+           'order' => 'sex'), 'userstats');
+        //Make it a link
+        $link->href = $sexLabel;
+        $link->link = $this->sex;
+        $sexLabel = $link->show();
+    }
+
+
+
+
+
     //Add the table header linked for last on
     $lonLabel = $this->objLanguage->languageText("phrase_laston");
     if ($this->getParam('order', 'surname') != 'lastOn') {
@@ -107,6 +136,7 @@ if (isset($ar)) {
     $tableHd[] = $emailLabel;
     $tableHd[] = $lonLabel;
     $tableHd[] = $loginsLabel;
+    $tableHd[] = $sexLabel; 
     //Create the table header for display
     $objTable->addHeader($tableHd, "heading");
     //Initialize the odd/even counter
@@ -122,6 +152,7 @@ if (isset($ar)) {
         $tableRow[]=$line['emailaddress'];
         $tableRow[]=$line['laston'];
         $tableRow[]=$line['logins'];
+	$tableRow[]=$line['sex'];
         //Add the row to the table for output
         $objTable->addRow($tableRow, $oddOrEven);
         // Set rowcount for bitwise determination of odd or even

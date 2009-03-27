@@ -94,6 +94,17 @@ class userstats extends controller
         //Pass the total logins to the template
         $this->setVarByRef('totalLogins', $totalLogins);
         
+	//get gender history
+	$males = $objHist->getmales();
+	//pass the male logins to the template
+	$this->setvarByRef('males',$males);
+
+	//get number of females
+	$females = $objHist->getfemales();
+	//pass the female logins to the template
+	$this->setVarByRef('females',$females);
+	
+	
         //Get the number of unique logins (users)
         $uniqueLogins = $objHist->getUniqueLogins();
         //Pass the total logins to the template
