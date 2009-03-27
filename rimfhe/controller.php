@@ -68,6 +68,7 @@ Public fuction to instantiate required  objestc
 	public function dispatch()
 	{ 	
 		$action =$this ->getParam('action');
+		
 		$this->setLayoutTemplate('default_layout_tpl.php');
 		//if form is submitted
 		if($_POST){
@@ -138,6 +139,14 @@ Public fuction to instantiate required  objestc
 			return 'displaychapterinbook_tpl.php';
 			
 			case 'Graduating Doctoral Student':
+			return 'doctoralstudents_tpl.php';
+
+			case 'Edit Graduating Doctoral Student':
+			//Get id
+                	$id = $this->getParam('id');
+			$this->setVar('mode', 'edit');
+			$arrEditThis= $this->objDoctoralStudents->getRow('id', $id);
+			$this->setVarByRef('arrEdit', $arrEditThis);
 			return 'doctoralstudents_tpl.php';
 						
 			case 'Graduating Doctoral Student Info':
@@ -582,6 +591,13 @@ Public fuction to instantiate required  objestc
 			return 'doctoralstudents_tpl.php';
         	} 
 		else {
+			$editMode =$this ->getParam('editmode');
+			if($editMode == 'update'){				
+			$this->objDoctoralStudents->updateDoctoralStudents();
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Doctoral Student Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_update', 'rimfhe', $rep)));
+			}
 			//Return Error if Book with same title exist in data base
 			if($this->objDoctoralStudents->doctoralStudents() == FALSE){
 			$title = "<strong>$thesis</strong>";
@@ -591,8 +607,8 @@ Public fuction to instantiate required  objestc
 			}
 			else{
 			//Insert into data base
-			$this->nextAction('generalconfirmation');
-			return $this->objDoctoralStudents->doctoralStudents();
+			$this->objDoctoralStudents->doctoralStudents();
+			return $this->nextAction('Graduating Doctoral Student Info');
 			}
 		}
 	

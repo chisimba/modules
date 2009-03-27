@@ -51,22 +51,22 @@ $fields = array(
 		),
 	'regnumber' => array(
 		'type' => 'text',
-		'length'=> 20,
+		'length'=> 40,
 		'notnull' => TRUE
 		),
 	'deptschoool' => array(
 		'type' => 'text',
-		'length'=> 40,
+		'length'=> 100,
 		'notnull' => TRUE
 		),
 	'faculty' => array(
 		'type' => 'text',
-		'length'=> 40,
+		'length'=> 100,
 		'notnull' => TRUE
 		),
 	'thesistitle' => array(
 		'type' => 'text',
-		'length'=> 100,
+		'length'=> 300,
 		'notnull' => TRUE
 		),
 	'supervisorname' => array(

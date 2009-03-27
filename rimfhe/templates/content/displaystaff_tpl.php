@@ -33,24 +33,24 @@ $display = '<p>'.$header.'</p><hr />';
 //Show Header
 echo $display;
 
+//setup the table headings
+$table->startHeaderRow();
+$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('word_title', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_rank', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_appointment', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('phrase_staffnumber', 'system'));
+$table->addHeaderCell($this->objLanguage->languageText('phrase_emailaddress', 'system'));
+$table->endHeaderRow();
+
 $rowcount = 0;
 
 //setup the tables rows  and loop though the records
 if (count($arrDisplayStaff) > 0) {
-
-	//setup the table headings
-	$table->startHeaderRow();
-	$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_initials', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('phrase_firstname', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('word_title', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_rank', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_appointment', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('phrase_staffnumber', 'system'));
-	$table->addHeaderCell($this->objLanguage->languageText('phrase_emailaddress', 'system'));
-	$table->endHeaderRow();
 
 	//Loop through $arrDisplayStaff and set data in rows
 	foreach($arrDisplayStaff as $staffmember) {
