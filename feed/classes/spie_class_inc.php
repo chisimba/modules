@@ -246,6 +246,9 @@ class spie extends object
             $ret .= $this->getFeedTop()
               . '<div class="feed_render_default">';
             foreach ($fields as $field) {
+                if ($field=="pubDate") {
+                    $field="date";
+                }
                 $method = "get_" . $field;
                 $$field = $item->$method();
                 if ($field == "title") {
@@ -806,6 +809,22 @@ class spie extends object
     public function merge_items($urls,$start,$end,$limit)
     {
         return $this->objSimplePieWrapper->merge_items($urls,$start,$end,$limit);
+    }
+    
+    /**
+    *
+    * Wrapper method for force_feed in the SimplePie
+    * class being wrapped. See that class for details of the
+    * force_feed method.
+    *
+    * @return Void
+    * @access Public
+    * @param BOOLEAN TRUE|FALSE
+    *
+    */
+    public function forceFeed($enable)
+    {
+        return $this->objSimplePieWrapper->force_feed($enable);
     }
 
 }
