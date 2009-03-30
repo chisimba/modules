@@ -148,7 +148,8 @@ $timePicker = $this->newObject('timepicker', 'htmlelements');
 $timePicker->name = 'timefrom';
 
 if ($mode == 'edit') {
-    $timePicker->value = $event['timefrom'];
+    
+    $timePicker->setSelected($event['timefrom']);
 }
 
 $table->addCell($timeLabel->show());
@@ -158,10 +159,11 @@ $timePicker = $this->newObject('timepicker', 'htmlelements');
 $timePicker->name = 'timeto';
 
 if ($mode == 'edit') {
-    $timePicker->value = $event['timeto'];
+    $timePicker->setSelected($event['timeto']);
 }
 
 $to = $timePicker->show();
+
 $table->addCell('From '.$from.'&nbsp;To '.$to , NULL, NULL, NULL, NULL, 'colspan="3"');
 $table->endRow();
 // end - date inputs //
