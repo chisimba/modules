@@ -112,7 +112,7 @@ class dbForum extends dbTable
 			$forum_context = $context;
             $forum_workgroup = '';
             $forum_name = $title.' Forum';
-            $forum_description = 'This is the default discussion forum auto-generated for this context.';
+            $forum_description = 'This is the default discussion forum auto-generated for this course.';
             $enableDefaultForum = 'Y'; // Set to YES
 
             $newForumId = $this->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description, $enableDefaultForum);
