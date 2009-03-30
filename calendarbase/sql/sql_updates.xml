@@ -31,4 +31,21 @@
             </change>
         </data>
     </update>
+
+        <update>
+        <table>tbl_calendar</table>
+        <version>1.105</version>
+        <description>changed event details column from varchar 255 to text</description>
+        <data>
+
+            <change>
+                <eventdetails>
+                    <definition>
+                        <type>text</type>
+                    </definition>
+                </eventdetails>
+            </change>
+          
+        </data>
+    </update>
 </updates>
