@@ -3304,7 +3304,7 @@ You can create tables using pairs of vertical bars:
             $objDrop->addOption($line['id'], $line['wiki_name']);
         }
         $objDrop->setSelected($this->getSession('wiki_id'));
-        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}"';
+        $objDrop->extra = 'onchange="javascript:if(this.value != \'\'){$(\'form_select\').submit();}else{return false}" style="max-width:140px"';
         $selectDrop = $objDrop->show();
         
         $objForm = new form('select', $this->uri(array(
