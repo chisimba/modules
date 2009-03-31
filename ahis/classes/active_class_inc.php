@@ -82,7 +82,7 @@ class active extends dbtable {
 	public function getall($campaign){
 	
 	$sql="SELECT * FROM tbl_ahis_active_surveillance AS d WHERE 
-	     d.id = '$campaign'";
+	     d.campname = '$campaign'";
 	     
 	return $this->getArray($sql);
 	

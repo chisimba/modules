@@ -41,10 +41,6 @@ $GLOBALS['kewl_entry_point_run']) {
 
 $this->loadClass('link', 'htmlelements');
 
-$searchUri = $this->uri(array('action'=>'active_search'));
-$objLink = new link($searchUri);
-$objLink->link = $this->objLanguage->languageText('phrase_browsesurveillance');
-$searchLink = '<p>'.$objLink->show() .'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str =$this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('phrase_newcampaign');
@@ -72,7 +68,7 @@ $campNameBox = new textinput('campName', $campName);
 //$officerDrop = new textinput('officerId',$officerId);
 
 $officerDrop = new dropdown('officerId');
-$officerDrop->addFromDB($userList, 'userid', 'name');
+$officerDrop->addFromDB($userList, 'name', 'userid');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
 
@@ -130,7 +126,7 @@ $objForm->addRule('campName', $this->objLanguage->languageText('mod_ahis_campnam
 
 
 $objLayer = new layer();
-$objLayer->addToStr($searchLink.$objHeading->show()."<hr />".$objForm->show());
+$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
 $objLayer->align = 'center';
 
 

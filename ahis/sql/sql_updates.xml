@@ -1,71 +1,19 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
-<updates>
+<updates>   
     <update>
-        <table>tbl_ahis_passive_surveillance</table>
-        <version>0.038</version>
-        <description>Rename disease to diseaseid</description>
+        <table>tbl_ahis_sampledetails</table>
+        <version>0.047</version>
+        <description>Add samplingid to table</description>
         <data>
-            <rename>
-                <disease>
-                    <name>diseaseid</name>
-                    <type>text</type>
-                    <definition>
+            <add>
+                <name>samplingid</name>
+                <type>text</type>
+                <definition>
                         <type>text</type>
                         <length>32</length>
-                    </definition>
-                </disease>
-            </rename>
-        </data>
-    </update>
-    <update>
-        <table>tbl_ahis_passive_surveillance</table>
-        <version>0.039</version>
-        <description>Change location to id type field</description>
-        <data>
-            <rename>
-                <location>
-                    <name>locationid</name>
-                    <type>text</type>
-                    <definition>
-                        <type>text</type>
-                        <length>32</length>
-                    </definition>
-                </location>
-            </rename>
-        </data>
-    </update>
-    <update>
-        <table>tbl_ahis_passive_surveillance</table>
-        <version>0.040</version>
-        <description>Change causitive to id type field</description>
-        <data>
-            <rename>
-                <causitive>
-                    <name>causativeid</name>
-                    <type>text</type>
-                    <definition>
-                        <type>text</type>
-                        <length>32</length>
-                    </definition>
-                </causitive>
-            </rename>
-        </data>
-    </update>
-    <update>
-        <table>tbl_ahis_passive_surveillance</table>
-        <version>0.041</version>
-        <description>Change territoryid to geo2id</description>
-        <data>
-            <rename>
-                <territoryid>
-                    <name>geo2id</name>
-                    <type>text</type>
-                    <definition>
-                        <type>text</type>
-                        <length>32</length>
-                    </definition>
-                </territoryid>
-            </rename>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
         </data>
     </update>
 </updates>

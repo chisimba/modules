@@ -213,6 +213,7 @@ class ahis extends controller {
                 $this->setSession('ps_geo2Id' , $this->getParam('geo2Id'));
                 $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
+
                 $this->setSession('ps_reportType', $reportType);
                 switch ($reportType) {
                     case "init_01":
@@ -457,7 +458,6 @@ class ahis extends controller {
                //$this->setSession('ps_officerName',$this->objUser->fullName($officerId));
                $this->setVar('userList', $this->objAhisUser->getList());
                $this->setVar('officerId', $this->getSession('ps_officerId'));
-
                $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
                $this->setVar('arraysurvey', $this->objSurvey->getAll("ORDER BY NAME"));
                $this->setVar('disease', $this->getSession('ps_disease'));
@@ -469,6 +469,7 @@ class ahis extends controller {
             
                $campName = $this->getParam('campName', $this->getSession('ps_campName'));
                $officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
+
                $disease = $this->getParam('disease', $this->getSession('ps_disease'));
                $surveyTypeId = $this->getParam('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $comments = $this->getParam('comments', $this->getSession('ps_comments'));
@@ -493,7 +494,6 @@ class ahis extends controller {
             case 'active_insert':
                $campName = $this->getParam('campName', $this->getSession('ps_campName'));
                $officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
-
                $disease = $this->getParam('disease', $this->getSession('ps_disease'));
                $surveyTypeId = $this->getParam('surveyTypeId', $this->getSession('ps_surveyTypeId'));
                $comments = $this->getParam('comments', $this->getSession('ps_comments'));
@@ -513,10 +513,10 @@ class ahis extends controller {
                 $ps_array['sensitivity'] = $this->getParam('sensitivity');
                 $ps_array['specificity'] = $this->getParam('specificity');
                 $ps_array['testtype'] = $this->getParam('testtype');
-
+               //print_r($this->getSession('ps_officerId'));
                 $result = $this->objActive->insert($ps_array);
                                             
-                return $this->nextAction('active_feedback',array('success'=>$result));           
+                return $this->nextAction('active_newherd',array('success'=>$result));           
                 
             
             case 'active_feedback':
@@ -528,37 +528,28 @@ class ahis extends controller {
                 if ($success) {
                     $this->unsetActiveSession();
                 } 
-                 return  "active_feedback_tpl.php";
+                return $this->nextAction('select_officer'); 
+                          
                  
-            case 'active_search':
-            
-               $this->setVar('campName', $this->getSession('ps_campName'));
-               $this->setVar('arraySpecies', $this->objSpecies->getAll("ORDER BY NAME"));
-               $this->setVar('arrayTest', $this->objTest->getAll("ORDER BY NAME"));
-               $this->setVar('arrayCamp', $this->objActive->listcamp());
-               $this->setVar('arrayTerritory',$this->objTerritory->getAll("ORDER BY NAME"));
-               $this->setVar('arrayTestresult', $this->objTestresult->getAll("ORDER BY NAME"));                                 
-               $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
-               $this->setVar('territory', $this->getSession('ps_territory'));
-               $this->setVar('testresult', $this->getSession('ps_testresult'));
-
-               return 'active_search_tpl.php';
+           
             
                           
             case 'active_newherd': 
-               $campName=$this->getParam('campName',$this->getSession('ps_campName'));  
-               $territory=$this->getParam('territory',$this->getSession('ps_territory'));                                       
-               $this->setSession('ps_campName',$campName);                        
-               $this->setSession('ps_territory',$territory); 
+                           //print_r($this->getSession('ps_officerId'));
+              // $campName=$this->getParam('campName',$this->getSession('ps_campName'));  
+              // $territory=$this->getParam('territory',$this->getSession('ps_territory'));                                       
+               //$this->setSession('ps_campName',$campName);                        
+               //$this->setSession('ps_territory',$territory); 
                $data =$this->objActive->getall($this->getSession('ps_campName'));
-               $herd =$this->objNewherd->getherd($this->getSession('ps_campName'));
+               $herd =$this->objNewherd->getherd($data[0]['id']);
                $this->setVar('activeid',$data[0]['id']);
                $this->setVar('herd',$herd);
                $this->setVar('arrayCamp', $this->objActive->listcamp());
-               $this->setVar('arraydisease', $data);
+               $this->setVar('arraydisease', $this->objDisease->getAll());
                $this->setVar('userList', $this->objAhisUser->getList());
-               $this->setVar('arrayofficer', $data[0]['reporterid']);
+               //$this->setVar('arrayofficer', $data[0]['reporterid']);
                $this->setVar('officerId', $this->getSession('ps_officerId'));
+
                $this->setVar('campName', $this->getSession('ps_campName'));
                $this->setVar('disease', $this->getSession('ps_disease'));
                $this->setVar('success', $this->getParam('success'));

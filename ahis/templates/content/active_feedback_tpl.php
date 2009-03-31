@@ -56,7 +56,7 @@ if($success)
     $addUri = $this->uri(array('action'=>'passive_vaccine'));
 }
 if($success == 1){
-    $result = $this->objLanguage->languageText('mod_ahis_finished');
+    $result = $this->objLanguage->languageText('mod_ahis_finished','ahis');
 }
 
 

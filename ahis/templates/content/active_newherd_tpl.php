@@ -86,17 +86,17 @@ $backUri = $this->uri(array('action'=>'active_search'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $campBox = new dropdown('campName');
-$campBox->addFromDB($arrayCamp, 'campname', 'id',$campName);
+$campBox->addOption($campName);
 $campBox->extra = 'disabled';
 
 
 $diseaseBox = new dropdown('disease');
-$diseaseBox->addFromDB($arraydisease, 'disease', 'id');
+$diseaseBox->addFromDB($arraydisease, 'name', 'id');
 $diseaseBox->setSelected($disease);
 $diseaseBox->extra = 'disabled';
 
 $officerDrop = new dropdown('officerId');
-$officerDrop->addOption($arrayofficer);
+$officerDrop->addFromDb($userList,'name','userid');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
  
