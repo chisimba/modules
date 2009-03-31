@@ -82,8 +82,6 @@ if (isset($success)) {
 $addUri = $this->uri(array('action'=>'active_addherd', 'activeid'=>$activeid));
 $addButton = new button('add', $this->objLanguage->languageText('word_add'), "javascript: document.location='$addUri'");
 
-$backUri = $this->uri(array('action'=>'active_search'));
-$backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $campBox = new dropdown('campName');
 $campBox->addOption($campName);
@@ -184,7 +182,6 @@ $objTable->startRow();
 $objTable->addCell('&nbsp');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
 $objTable->endRow(); 
 
