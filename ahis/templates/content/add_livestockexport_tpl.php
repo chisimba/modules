@@ -32,7 +32,7 @@
 	$loadingIcon = $objIcon->show();
 
 	//title
-	$title = $this->objLanguage->languageText('mod_ahis_importtitle', 'ahis', 'Livestock Import');
+	$title = $this->objLanguage->languageText('mod_ahis_exporttitle', 'ahis', 'Livestock Export');
 	
 	// Header
 	$header = new htmlheading();
