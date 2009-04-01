@@ -1,8 +1,9 @@
 <?php
 $cssLayout =& $this->newObject('csslayout', 'htmlelements');
-$menuBar=& $this->getObject('sidemenu','toolbar');
+$menuBar=& $this->getObject('contextsidebar','context');
 
-$cssLayout->setLeftColumnContent($menuBar->menuContext());
+$cssLayout->setLeftColumnContent($menuBar->show());
+
 $cssLayout->setMiddleColumnContent($this->getContent());
 
 echo $cssLayout->show();
