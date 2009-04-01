@@ -55,22 +55,12 @@ $objConfirm = $this->loadClass('confirm', 'utilities');
 $objTable = $this->getObject('htmltable','htmlelements');
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
-if($i < $number){
-$addButton = new button('add', $this->objLanguage->languageText('word_add'));
+
+$addButton = new button('add', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_sample'));
 $addButton->setToSubmit();
-$i++;
-}
-else{
-$addUri = $this->uri(array('action'=>'active_newherd'));
-$addButton = new button('add', $this->objLanguage->languageText('word_add'), "javascript: document.location='$backUri'");
 
-
-}
-
-$backUri = $this->uri(array('action'=>'active_herdsampling'));
+$backUri = $this->uri(array('action'=>'active_newherd'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
-$finUri = $this->uri(array('action'=>'active_feedback','success'=>1));
-$finButton = new button('cancel', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
 
 
 $numberBox = new textinput('number',$number);
@@ -81,6 +71,7 @@ $idBox = new textinput('samplingid',$samplingid,'hidden');
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
 
+
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 $objTable->cssClass = 'min50';
@@ -90,11 +81,9 @@ $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_samplingdate').": ");
 $objTable->addCell($inputDate->show());
 
-$objTable->addCell($this->objLanguage->languageText('phrase_numberofsamples').": ");
-$objTable->addCell($numberBox->show());
-$objTable->endRow();
+
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_samples').": $tab");
+$objTable->addCell($this->objLanguage->languageText('word_samples').":");
 
 $objTable->endRow();
 
@@ -158,7 +147,6 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
-$objTable->addCell($finButton->show());
 $objTable->addCell($newherdidBox->show());
 $objTable->addCell($idBox->show());
 $objTable->endRow();

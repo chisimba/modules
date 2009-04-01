@@ -49,7 +49,7 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 
-$finButton = new button('finish', $this->objLanguage->languageText('word_finish'));
+$finButton = new button('next', $this->objLanguage->languageText('word_next'));
 $finButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_surveillance'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");

@@ -605,17 +605,18 @@ class ahis extends controller {
           
 
             case 'active_sampleview':
-               $samplingid = $this->getParam('id',$this->getSession('ps_id'));
+               //$samplingid = $this->getParam('id',$this->getSession('ps_id'));
+
                $this->setSession('ps_id',$samplingid);
-               $newherdid = $this->getParam('newherdid',$this->getSession('ps_newherdid'));
+               $newherdid = $this->getParam('id',$this->getSession('ps_newherdid'));
                $number = $this->getParam('number',$this->getSession('ps_number'));
                $this->setSession('ps_number',$number);
-               $data = $this->objSampledetails->getsamples($newherdid,$samplingid);
+               $data = $this->objSampledetails->getsamples($newherdid);
                $this->setVar('newherdid',$newherdid);
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                $this->setVar('data',$data);
 	            $this->setVar('number',$this->getSession('ps_number'));
-	            $this->setVar('samplingid',$this->getSession('ps_id'));
+	            //$this->setVar('samplingid',$this->getSession('ps_id'));
 	            $this->setVar('i',count($data));
                return 'active_sampleview_tpl.php';
                
@@ -641,7 +642,6 @@ class ahis extends controller {
                 $arrayherd = array();
                
                 $arrayherd['newherdid'] = $this->getParam('newherdid',$this->getSession('ps_newherdid'));
-                $arrayherd['samplingid'] = $this->getParam('samplingid',$this->getSession('ps_id'));
                 $arrayherd['species'] = $this->getParam('species');
                 $arrayherd['age'] = $this->getParam('age');
                 $arrayherd['sex'] = $this->getParam('sex');
@@ -651,7 +651,7 @@ class ahis extends controller {
                 $arrayherd['vachist'] = $this->getParam('vachistory');
                 $arrayherd['sampleid'] = $this->getParam('sampleid');
                 $arrayherd['animalid'] = $this->getParam('animalid');
-
+                $arrayherd['samplingdate'] = $this->getSession('ps_calenda', date('Y-m-d'));
                 $arrayherd['number'] = $this->getParam('number');
                 $arrayherd['remarks'] = $this->getParam('remarks');
                 $arrayherd['specification'] = $this->getParam('spec');
@@ -663,7 +663,8 @@ class ahis extends controller {
                     $this->objSampledetails->update('id', $id, $arrayherd);
                     $code = 3;
                 } else {
-                    $this->objSampledetails->insert($arrayherd);  
+                    $this->objSampledetails->insert($arrayherd); 
+
                     $code = 1;
                 } 
                
@@ -675,47 +676,9 @@ class ahis extends controller {
           
             
                 return $this->nextAction('active_sampleview', array('success'=>$code));
-            case 'active_herdsampling':
-               $newherdid = $this->getParam('id',$this->getSession('ps_newherdid'));
-               $this->setVar('newherdid',$newherdid);
-               $this->setVar('data',$this->objSampling->getsampling($newherdid));
-               return 'active_herdsampling_tpl.php';
-               
-            case 'active_addsampling':
-               $this->setVar('id', $this->getParam('id'));
-               $newherdid = $this->getParam('newherdid',$this->getSession('ps_newherdid'));
-               $this->setSession('ps_newherdid',$newherdid);
-               $this->setVar('id',$this->getParam('id'));
-               $this->setVar('newherdid',$this->getSession('ps_newherdid') );
-               $this->setVar('sampledate', $this->getSession('ps_calendardate', date('Y-m-d')));
-               $this->setVar('sentdate', $this->getSession('ps_calendardate', date('Y-m-d')));
-               $this->setVar('recieveddate', $this->getSession('ps_calendardate', date('Y-m-d')));
-               return 'active_addsampling_tpl.php'; 
-               
-            case 'herdsampling_insert':
-
-                $id = $this->getParam('id');
-                $arrayherd = array();
-                $arrayherd['newherdid'] = $this->getParam('newherdid',$this->getSession('ps_newherdid'));
-                $arrayherd['sampledate'] = $this->getParam('sampledate');
-                $arrayherd['sentdate'] = $this->getParam('sentdate');
-                $arrayherd['recievddate'] = $this->getParam('recieveddate');
-                $arrayherd['number'] = $this->getParam('number');
-
-                 if ($id) {
-                    $this->objSampling->update('id', $id, $arrayherd);
-                    $code = 3;
-                } else {
-                    $this->objSampling->insert($arrayherd);  
-                    $code = 1;
-                } 
-               
-                return $this->nextAction('active_herdsampling', array('success'=>$code));
-            case 'herdsampling_delete':
-                $id = $this->getParam('id');
-                $this->objSampling->delete('id', $id);
-                return $this->nextAction('active_herdsampling', array('success'=>2));
-                
+                      
+           
+          
             case 'admin':
 
                return 'admin_tpl.php';

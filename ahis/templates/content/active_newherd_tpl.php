@@ -82,6 +82,9 @@ if (isset($success)) {
 $addUri = $this->uri(array('action'=>'active_addherd', 'activeid'=>$activeid));
 $addButton = new button('add', $this->objLanguage->languageText('word_add'), "javascript: document.location='$addUri'");
 
+$finUri = $this->uri(array('action'=>'active_feedback','success'=>1));
+$finButton = new button('cancel', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
+
 
 $campBox = new dropdown('campName');
 $campBox->addOption($campName);
@@ -120,7 +123,6 @@ $objTable->addCell('');
 $objTable->addCell('');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_reportid').": $tab");
 $objTable->addCell('');
 $objTable->addCell('');
 $objTable->endRow();
@@ -151,13 +153,13 @@ $objTable->endRow();
 
 foreach($herd as $line){
 $objTable->startRow();
-$farmUri = $this->uri(array('action'=>'active_herdsampling','id'=>$line['id']));
-$objLink = new link($farmUri);
-$objLink->link = $line['territory'];
-$objTable->addCell($objLink->show());
+$objTable->addCell($line['territory']);
 $objTable->addCell($line['geolevel2']);
 $objTable->addCell($line['geolevel3']);
-$objTable->addCell($line['farmname']);
+$farmUri = $this->uri(array('action'=>'active_sampleview','id'=>$line['id']));
+$objLink = new link($farmUri);
+$objLink->link = $line['farmname'];
+$objTable->addCell($objLink->show());
 $objTable->addCell($line['farmingtype']);
 $objIcon->title = $objLanguage->languageText('word_edit');
  $editUrl = $this->uri(array(
@@ -183,6 +185,7 @@ $objTable->addCell('&nbsp');
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($addButton->show());
+$objTable->addCell($finButton->show());
 $objTable->endRow(); 
 
 
