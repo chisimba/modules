@@ -1,5 +1,21 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
-<updates>   
+<updates> 
+  <update>
+        <table>tbl_ahis_sampledetails</table>
+        <version>0.047</version>
+        <description>Add samplingid to table</description>
+        <data>
+            <add>
+                <name>samplingid</name>
+                <type>text</type>
+                <definition>
+                        <type>text</type>
+                        <length>32</length>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
+        </data>
+    </update>  
     <update>
         <table>tbl_ahis_sampledetails</table>
         <version>0.050</version>
