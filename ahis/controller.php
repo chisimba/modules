@@ -133,6 +133,7 @@ class ahis extends controller {
 			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
 			  $this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			 $this->objSlaughter= $this->getObject('ahis_slaughter');
+	    $this->objDeworming = $this->getObject('deworming');
 
 
 
