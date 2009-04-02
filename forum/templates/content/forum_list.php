@@ -80,7 +80,7 @@ foreach ($forums as $forum)
 
     $tblclass->startRow();
     $tblclass->addCell($objIcon->show(), 10, NULL, 'center');
-    $tblclass->addCell($forumName.'<br />'.$forum['forum_description'], '40%', 'center');
+    $tblclass->addCell($forumName.'<br />'.$this->objLanguage->abstractText($forum['forum_description']), '40%', 'center');
     $tblclass->addCell($forum['topics'], NULL, NULL, 'center');
     $tblclass->addCell($forum['posts'], 100, NULL, 'center');
 
