@@ -112,7 +112,7 @@ class dbForum extends dbTable
 			$forum_context = $context;
             $forum_workgroup = '';
             $forum_name = $title.' Forum';
-            $forum_description = 'This is the default discussion forum auto-generated for this course.';
+            $forum_description = $this->objLanguage->languageText('mod_forum_defaultdescription', 'forum');
             $enableDefaultForum = 'Y'; // Set to YES
 
             $newForumId = $this->insertSingle($forum_context, $forum_workgroup, $forum_name, $forum_description, $enableDefaultForum);
@@ -503,7 +503,7 @@ class dbForum extends dbTable
 			$forum_context = $context;
             $forum_workgroup = $workgroup;
             $forum_name = $title.' Forum';
-            $forum_description = 'This is the default discussion forum auto-generated for this workgroup.';
+            $forum_description = $this->objLanguage->languageText('mod_forum_defaultdecription', 'forum');
             $defaultForum = 'Y'; // Set to YES
 
             $forum_visible='Y';
