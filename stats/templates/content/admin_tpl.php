@@ -50,7 +50,8 @@ foreach ($students as $student) {
     $link->link = $student['studentno'];
     $objTable->startRow($class);
     $objTable->addCell($link->show());
-    $link->link = $this->objUser->fullName($student['studentno']);
+    $userId = $this->objUser->getUserId($student['studentno']);
+    $link->link = $this->objUser->fullName($userId);
     $objTable->addCell($link->show());
     $objTable->endRow();
     $class = ($class == 'odd')? "even" : "odd";
