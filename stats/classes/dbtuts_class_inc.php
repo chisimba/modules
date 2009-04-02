@@ -115,7 +115,7 @@ class dbtuts extends dbtable {
      * @access public
      */
     public function saveMark($userName, $password, $test, $mark, $time) {
-        $user = $this->objUser->getRow("WHERE username = '$userName' LIMIT 1"); //UserDetails($userId);
+        $user = $this->objUser->getRow("username", $userName); //UserDetails($userId);
         if ($password == $user['pass']) {
             $this->insert(array('studentno'=>$userName, 'testno'=>$test, 'mark'=>$mark, 'time'=>$time));
         }

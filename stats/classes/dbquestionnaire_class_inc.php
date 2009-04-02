@@ -84,7 +84,7 @@ class dbquestionnaire extends dbtable {
      * @access public
      */
     public function checkStudent($userName, $password) {
-        $user = $this->objUser->getRow("WHERE username = '$userName' LIMIT 1");
+        $user = $this->objUser->getRow("username", $userName);
         //$user = $this->objUser->getUserDetails($userId);
         $response = ($password == $user['pass'])? "true" : "";
         $response .= ($this->valueExists('studentno', $userName))? "1" : "0";       

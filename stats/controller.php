@@ -154,7 +154,7 @@ class stats extends controller {
             $this->nonce = $this->objTuts->readNonce($user);
             $nonce = $this->getParam('nonce');
             if ($nonce != $this->nonce) {
-                echo "no cheating!";
+                log_debug("no cheating!");
                 break;
             }
             $this->objTuts->saveMark($user, $pword, $test, $mark, $time);
