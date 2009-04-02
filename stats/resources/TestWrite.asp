@@ -20,7 +20,7 @@ $nonce = file_get_contents($filename);
 chmod($filename,"0700");
 
 
-$ch = curl_init("http://localhost/index.php?module=stats&action=testwrite&user=$user&test=$test&mark=$mark&time=$time&passwd=$password&nonce=$nonce");
+$ch = curl_init("http://eteach.uwc.ac.za/index.php?module=stats&action=testwrite&user=$user&test=$test&mark=$mark&time=$time&passwd=$password&nonce=$nonce");
 curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch,CURLOPT_FOLLOWLOCATION, 1);
 $response = curl_exec($ch);
