@@ -314,6 +314,28 @@ class jabberblog extends controller {
                 return 'viewsearch_tpl.php';
                 break;
 
+            case 'clouds':
+                $this->objTC = $this->getObject('tagcloud', 'utilities');
+                // get a list of the tags and their weights
+                $this->objTags = $this->getObject('dbtags', 'tagging');
+                $tags = $this->objTags->getHashTagsByModule('jabberblog');
+                // ok now get the weights
+                $tagarr = array();
+                foreach ( $tags as $tag) {
+                    $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->jposteruid);
+                    $tagarr['name'] = $tag['meta_value'];
+                    $tagarr['weight'] = $weight;
+                    $tagarr['url'] = $this->uri(array('action' => 'viewmeme', 'meme' => $tag['meta_value']), 'jabberblog');
+                    $tagarr['time'] = time();
+                    $taginfo[] = $tagarr;
+                }
+                $cloud = $this->objTC->buildCloud($taginfo);
+
+                $this->setVarByRef('cloud', $cloud);
+                return 'clouds_tpl.php';
+
+                break;
+
             case 'sioc':
                 $this->objSiocMaker = $this->getObject('siocmaker', 'siocexport');
                 // site data
@@ -377,7 +399,6 @@ class jabberblog extends controller {
 			    echo $this->objSiocMaker->dumpSioc($siocData);
 
 			    break;
-
 
             default :
                 die ( "unknown action" );

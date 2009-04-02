@@ -46,7 +46,6 @@ class commentapi extends object
 		try {
 			$this->objLanguage = $this->getObject('language', 'language');
 			$this->objUser =  $this->getObject("user", "security");
-			$this->objDbBlog = $this->getObject("dbblog", "blog");
 			$this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->showfullname = $this->sysConfig->getValue('show_fullname', 'blog');
 		}
@@ -461,6 +460,7 @@ class commentapi extends object
 	 */
 	public function grabPostInfo($pid)
 	{
+	    $this->objDbBlog = $this->getObject("dbblog", "blog");
 		return $this->objDbBlog->getPostById($pid);
 	}
 
