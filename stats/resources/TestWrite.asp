@@ -1,7 +1,7 @@
 <?php
 
 foreach ($_POST as $key => $value) {
-    $post[] = $value;
+    $post[] = urlencode($value);
 }
 
 $test = $post[0];

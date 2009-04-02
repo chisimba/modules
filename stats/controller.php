@@ -259,9 +259,9 @@ class stats extends controller {
                 $userId = $this->objUser->userId();
                 $user = $this->objUser->userName();
             }
-            $student = "$userName - ".$this->objUser->fullName($userId);
-            $this->setVar('userName', $userName);
-            $this->setVar('tutorials', $this->objTuts->getMarks($userName, $showAll));
+            $student = "$user - ".$this->objUser->fullName($userId);
+            $this->setVar('userName', $user);
+            $this->setVar('tutorials', $this->objTuts->getMarks($user, $showAll));
             $this->setVar('student', $student);
             $this->setVar('back', $back);
             $this->setVar('showAll',$showAll);
@@ -278,9 +278,9 @@ class stats extends controller {
             if (!$this->objUser->isLecturer()) {
                 return $this->nextAction('home');
             }
-            $this->objQuestionnaire->removeAll();
-            $this->objPostQuestionnaire->removeAll();
-            $this->objTuts->removeAll();
+            //$this->objQuestionnaire->removeAll();
+            //$this->objPostQuestionnaire->removeAll();
+            //$this->objTuts->removeAll();
             return $this->nextAction('admin');
         
         case "download":
