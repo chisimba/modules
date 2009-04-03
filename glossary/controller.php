@@ -25,26 +25,26 @@ class glossary extends controller
     public function init()
     {
         // Load User Class
-        $this->objUser =& $this->getObject('user', 'security');
+        $this->objUser = $this->getObject('user', 'security');
         
         // Load Language Class
         $this->objLanguage = &$this->getObject('language', 'language');
         $this->setVarByRef('objLanguage', $this->objLanguage);
         
         // Load Glossary Classes
-        $this->objGlossary =& $this->getObject('dbglossary');
-        $this->objGlossaryUrls =& $this->getObject('dbglossaryurls');
-        $this->objGlossarySeeAlso =& $this->getObject('dbglossaryseealso');
-        $this->objGlossaryImages =& $this->getObject('dbglossaryimages');
+        $this->objGlossary = $this->getObject('dbglossary');
+        $this->objGlossaryUrls = $this->getObject('dbglossaryurls');
+        $this->objGlossarySeeAlso = $this->getObject('dbglossaryseealso');
+        $this->objGlossaryImages = $this->getObject('dbglossaryimages');
         
         // Load File Upload Class for uploading images.
-        $this->objUploader =& $this->getObject('upload', 'filemanager');
+        $this->objUploader = $this->getObject('upload', 'filemanager');
         
         // Load File Upload Class's DB for erasing images.
-        $this->objUploadDB =& $this->getObject('dbfile', 'filemanager');
+        $this->objUploadDB = $this->getObject('dbfile', 'filemanager');
         
         // Get Context Code & Title
-        $this->contextObject =& $this->getObject('dbcontext', 'context');
+        $this->contextObject = $this->getObject('dbcontext', 'context');
  		$this->contextCode = $this->contextObject->getContextCode();
  		$this->contextTitle = $this->contextObject->getTitle();
         
