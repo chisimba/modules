@@ -185,13 +185,31 @@ class librarysearch extends controller
                 $result = $this->objWorkflow->getDocument($wfCode);
 
                 //Scrapping for OIAster
+				/*
                 if ($src['id'] == 'init_4') {
                     $regex = '/Your search retrieved ([0-9]+) records/';
-                    preg_match($regex, $html, $matches);
-                    $stats = $matches[1];
+                    preg_match($regex, $result, $matches);
+                    $stats = '<b>' . $matches[1] . '</b>' . ' Results found';
                 }
+				*/
+
+                //Scrapping for OIAster
+                if ($src['id'] == 'init_4') {
+                    $regex = '/Your search retrieved ([0-9]+) records/';
+                    preg_match($regex, $result, $matches);
+                    $stats = '<b>' . $matches[1] . '</b>' . ' Results found';
+                }
+
+                //Scrapping for OIAster
+                if ($src['id'] == 'init_5') {
+                    $regex = '/([0-9]+) books found/';
+                    preg_match($regex, $result, $matches);
+                    $stats = '<b>' . $matches[1] . '</b>' . ' Results found';
+                }
+
                 
                 log_debug($result);
+				//*/
             }
 
             $this->setVarByRef('stats',$stats);

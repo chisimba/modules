@@ -41,6 +41,16 @@
         <title>Emerald Fulltext</title>
         <description></description>
         <uri>http://www.emeraldinsight.com/ft</uri>
+        <workflow>
+            <![CDATA[
+<workflow>
+    <open>http://www.emeraldinsight.com/Insight/searchQuickOptions.do?searchTerm=Science&amp;shTab=All&amp;button_searchSimple=Search&amp;searchScreen=SIMPLE&amp;hdAction=&amp;hdPreviousBrowserId=-1432810470&amp;lpSearchHistoryID=&amp;shTab=All&amp;searchOptions=&amp;searchWithin=RD_ALL&amp;searchIncludeRTC=searchIncludeRTC&amp;searchIncludeRTC=searchNotIncludeRTC&amp;searchIncludeEBF=searchIncludeEBF&amp;searchIncludeEBF=searchNotIncludeEBF</open>
+    <input name="searchTerm">Science</input>
+    <commit/>
+</workflow>
+           ]]>
+        </workflow>
+
     </tbl_librarysearch_sources>
 
     <tbl_librarysearch_sources>
@@ -56,6 +66,23 @@
                     <input name="q1">[[[SEARCHTERM]]]</input>
                     <commit/>
                 </workflow>
+            ]]>
+        </workflow>
+    </tbl_librarysearch_sources>
+
+    <tbl_librarysearch_sources>
+        <id>init_5</id>
+        <cluster_id>init_3</cluster_id>
+        <title>Oxford Scholarship</title>
+        <description></description>
+        <uri>http://www.oxfordscholarship.com/oso/public/index.html</uri>
+        <workflow>
+            <![CDATA[
+<workflow>
+    <open>http://www.oxfordscholarship.com/search/query?</open>
+    <input name="quickSearchText">Science</input>
+    <commit/>
+</workflow>
             ]]>
         </workflow>
     </tbl_librarysearch_sources>

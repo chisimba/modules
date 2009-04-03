@@ -37,6 +37,9 @@ $script = <<<STARTSEARCH
             },
             success: function(data) {
                 //alert(data);
+				if (data == ''){
+					data = 'Couldn\'t Connect to Host';
+				}
                 jQuery('#' + divId).replaceWith(data);
             },
             error: function(data) {
