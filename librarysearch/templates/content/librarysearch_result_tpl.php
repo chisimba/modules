@@ -26,7 +26,8 @@ $script = <<<STARTSEARCH
         //targetDiv
         //alert (workflow);
 
-        var theUrl = "?module=librarysearch&action=execworkflow&id=" + sourceId + '&search_key=' + searchKey + '&subject_cluster=' + subjectCluster;
+        //var theUrl = "?module=librarysearch&action=execworkflow&id=" + sourceId + '&search_key=' + searchKey + '&subject_cluster=' + subjectCluster;
+        var theUrl = "http://www.google.com";
         //alert(theUrl);
         jQuery.ajax({
             url: theUrl,
@@ -35,6 +36,7 @@ $script = <<<STARTSEARCH
             beforeSend: function() {
             },
             success: function(data) {
+                alert(data);
                 jQuery('#' + divId).replaceWith(data);
             },
             error: function(data) {
