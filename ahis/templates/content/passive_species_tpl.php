@@ -58,12 +58,12 @@ $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));
 $yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 8);
-$yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
+//$yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 
 $geo2Drop = new dropdown('geo2Id');
 $geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
 $geo2Drop->setSelected($geo2Id);
-$geo2Drop->extra = 'disabled';
+//$geo2Drop->extra = 'disabled';
 
 $speciesDrop = new dropdown('speciesId');
 $speciesDrop->addFromDB($arraySpecies, 'name', 'id');

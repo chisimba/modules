@@ -21,7 +21,7 @@
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Samuel Onyach <onyach@icsit.jkuat.ac.ke>
+ * @author    Samuel Onyach <sonyach@icsit.jkuat.ac.ke>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: animal_population_tpl.php 
@@ -38,7 +38,7 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
- $title = 'Animal Population';
+ $title = 'Animal Population Census';
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $title;
 $objHeading->type = 2;
@@ -51,6 +51,15 @@ $this->loadClass('label', 'htmlelements');
     $formAction = 'animal_population_save';  
     $buttonText = 'Save';
 
+$geo2Drop = new dropdown('district');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
+$geo2Drop->setSelected($geo2Id); 
+
+//$geo2Drop->extra = 'disabled';
+
+$classDrop = new dropdown('classification');
+$classDrop->addFromDB($species, 'name', 'name'); 
+//$geo2Drop->setSelected($geo2Id); 
 
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
@@ -58,30 +67,25 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
 
-$district = new textinput('district');
+/*$district = new textinput('district','');
 $district->size = 50;
+//$district->extra='readonly';*/
 
 
 //district name
-$label = new label ('District', 'input_district');
+$label = new label ('District', 'district');
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($district->show(),NULL,NULL,'left');
+$formTable->addCell($geo2Drop->show());
 $formTable->endRow();
 
 //animal classification
 $label = new label ('Animal Classification', 'input_animal_class');
-$class=new dropdown('classification');
-
-$class->addOption('A','A');
-$class->addOption('B','B');
-$class->addOption('C','C');
-
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($class->show(),NULL,NULL,'left');
+$formTable->addCell($classDrop->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //number of animals
@@ -111,11 +115,8 @@ $formTable->endRow();
 
 // animal source	
 $label = new label ('Source', 'input_source');
-$source=new dropdown('source');
-$source->addOption('A','A');
-$source->addOption('B','B');
-$source->addOption('C','C');
-
+$source=new textinput('source');
+$source->size=50;
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($source->show(),NULL,NULL,'left');

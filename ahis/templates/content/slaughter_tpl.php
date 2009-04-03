@@ -21,7 +21,7 @@
  * 
  * @category  Chisimba
  * @package   ahis
- * @author    Samuel Onyach <onyach@icsit.jkuat.ac.ke>
+ * @author    Samuel Onyach <sonyach@icsit.jkuat.ac.ke>
  * @copyright 2009 AVOIR
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
  * @version   $Id: slaughter_tpl.php 
@@ -58,16 +58,18 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
 
-$district = new textinput('district');
-$district->size = 50;
-
+/*$district = new textinput('district');
+$district->size = 50;*/
+$geo2Drop = new dropdown('district');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
+$geo2Drop->setSelected($geo2Id); 
 
 //district name
 $label = new label ('District', 'input_district');
 
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($district->show(),NULL,NULL,'left');
+$formTable->addCell($geo2Drop->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label = new label ('Number of Cattle', 'input_no_cattle');

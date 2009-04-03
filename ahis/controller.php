@@ -212,6 +212,7 @@ class ahis extends controller {
             case 'report_filter':
                 $this->setSession('ps_officerId', $this->getParam('officerId'));
                 $this->setSession('ps_geo2Id' , $this->getParam('geo2Id'));
+
                 $this->setSession('ps_calendardate', $this->getParam('calendardate'));
                 $reportType = $this->getParam('reportType');
 
@@ -219,6 +220,12 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
+						case "init_02":
+                        return $this->nextAction('animal_population_add');
+						case "init_03":
+                        return $this->nextAction('addinspectiondata');
+						case "init_04":
+                        return $this->nextAction('animal_slaughter_add');
                        default:
                         return $this->nextAction('active_surveillance');
                 }
@@ -1782,10 +1789,14 @@ class ahis extends controller {
                 $this->objSurvey->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
              case 'animal_population_add':
+                $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+				 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'animal_population_tpl.php';
 			case 'addinspectiondata':
+			 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'meat_inspection_tpl.php';
 			case 'animal_slaughter_add':
+		 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'slaughter_tpl.php';
 			case 'animal_population_save':
 				return $this->SaveData();				

@@ -78,6 +78,9 @@ class report extends object {
             $this->objOutbreak = $this->getObject('outbreak');
             $this->objSpecies = $this->getObject('species');
             $this->objDisease = $this->getObject('disease');
+			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
+			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
+			 $this->objSlaughter= $this->getObject('ahis_slaughter');
             //$this->objCausative = $this->getObject('causative');
             
 		}
@@ -268,7 +271,54 @@ class report extends object {
 				}
 				return $csv;
 				
+			case 'init_02': 			//animal population
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel3'),'Animal Classification','Number Of Animals','Animal Production','Source');
+				
+				$populationRecords = $this->objAnimalPopulation->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($populationRecords as $report) {
+					
+					$row = array($report['district'],$report['classification'],$report['number'],$report['production'],$report['source']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
+				
+				case 'init_03': 			//meat inspection
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Inspection Date','Number Of Cases','Number At Risk');
+				
+				$inspectionRecords = $this->objMeatInspect->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($inspectionRecords as $report) {
+					
+					$row = array($report['district'],$report['inspection_date'],$report['num_of_cases'],$report['num_of_risks']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
+				case 'init_04': 			//slaughter
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Number Of Cattle','Number of Sheep','Number of Goats','Number of Pigs','Number of Poultry','Other','Name','Remarks');
+				
+				$slaughterRecords = $this->objSlaughter->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($slaughterRecords as $report) {
+					
+					$row = array($report['district'],$report['num_cattle'],$report['num_sheep'],$report['num_goats'],$report['num_pigs'],$report['num_poultry'],$report['other'],$report['name_of_other'],$report['remarks']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
+				
+		
+				
 		}
+		
 		
 	}
 }

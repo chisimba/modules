@@ -65,6 +65,13 @@ class dbanimalpop extends dbtable
 			
 	} 
   
-
+public function getDistrict($id){
+	
+	$sql="SELECT * FROM tbl_ahis_geography_level2 where id='$id' ";
+	     
+	return $this->getArray($sql);
+	
+	
+	}
 }
 ?>

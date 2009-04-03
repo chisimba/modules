@@ -58,16 +58,19 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
-$district = new textinput('district');
+/*$district = new textinput('district');
 $district->size = 50;
-
+*/
+$geo2Drop = new dropdown('district');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
+$geo2Drop->setSelected($geo2Id); 
 
 //district name
 $label = new label ('District', 'input_district');
 
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($district->show());
+$formTable->addCell($geo2Drop->show());
 $formTable->endRow();
 //date of inspection
 $datePicker = $this->newObject('datepicker', 'htmlelements');
