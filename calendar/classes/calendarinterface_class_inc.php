@@ -267,7 +267,7 @@ class calendarinterface extends object
     {
         
         if (count($this->preparedListArray) == 0) {
-            return '<div class="noRecordsMessage">No Events for this Month</div>';
+            return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendar_noeventsinmonth', 'calendar').'</div>';
         } else {
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->cssClass = 'eventslist';
@@ -290,7 +290,7 @@ class calendarinterface extends object
     {
         
         if (count($this->preparedEventsArray) == 0) {
-            return '<div class="noRecordsMessage">No Events for this Month</div>';
+            return '<div class="noRecordsMessage">'.$this->objLanguage->languageText('mod_calendar_noeventsinmonth', 'calendar').'</div>';
         } else {
             $table = $this->newObject('htmltable', 'htmlelements');
             $table->cssClass = 'eventslist';
