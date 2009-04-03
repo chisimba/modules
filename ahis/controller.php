@@ -220,13 +220,14 @@ class ahis extends controller {
                 switch ($reportType) {
                     case "init_01":
                         return $this->nextAction('passive_surveillance');
-						case "init_02":
+					case "init_02":
                         return $this->nextAction('animal_population_add');
-						case "init_03":
+					case "init_03":
                         return $this->nextAction('addinspectiondata');
-						case "init_04":
+					case "init_04":
                         return $this->nextAction('animal_slaughter_add');
-                       default:
+                    case "init_05":
+					default:
                         return $this->nextAction('active_surveillance');
                 }
             

@@ -16,6 +16,10 @@
 		<id>init_04</id>
 		<name>Slaughter</name>
 	</tbl_ahis_reporttype>
+	<tbl_ahis_reporttype>
+		<id>init_05</id>
+		<name>Active Surveillance</name>
+	</tbl_ahis_reporttype>
     
     <tbl_ahis_title>
         <id>init_01</id>
