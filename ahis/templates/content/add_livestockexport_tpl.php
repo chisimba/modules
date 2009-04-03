@@ -43,7 +43,6 @@
 	// Create Form
 $form = new form ('myForm', $this->uri(array('action'=>'valform'),'htmlelements'));
 
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
@@ -54,8 +53,8 @@ $input_district->size = 60;
 
 $formTable->startRow();
 $formTable->cellpadding = 5;
-$formTable->addCell($label_district->show());
-$formTable->addCell($input_district->show());
+$formTable->addCell($label_district->show(),NULL,NULL,'right');
+$formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label_pointentry = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_pointofentry', 'ahis', 'Point of Entry:'), 'pointofentry');
@@ -64,100 +63,103 @@ $input_pointentry = new textinput('pointofentry');
 $input_pointentry->size = 60;
 
 $formTable->startRow();
-$formTable->addCell($label_pointentry->show());
-$formTable->addCell($input_pointentry->show());
+$formTable->addCell($label_pointentry->show(),NULL,NULL,'right');
+$formTable->addCell($input_pointentry->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_animalorigin = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_animalorigin', 'ahis', 'Animal Origin: '), 'animalorigin');
+// animal origin	
+$label = new label ('Animal origin: ', 'input_source');
+$origin = new dropdown('origin');
+$origin->addOption('Select...','Select...');
+$origin->addOption('A','A');
+$origin->addOption('B','B');
+$origin->addOption('C','C');
 
-$input_animalorigin = new dropdown('animalorigin');
-$input_animalorigin->addOption('', $objLanguage->languageText('phrase_selectone', 'ahis', 'Select One').'...');
 $formTable->startRow();
-$formTable->addCell($label_animalorigin->show());
-$formTable->addCell($input_animalorigin->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($origin->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_animaldestination = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_destination', 'ahis', 'Animal Destination: '), 'animaldestination');
+// animal destination	
+$label = new label ('Animal destination: ', 'input_destination');
+$destination = new dropdown('destination');
+$destination->addOption('Select...','Select...');
+$destination->addOption('A','A');
+$destination->addOption('B','B');
+$destination->addOption('C','C');
 
-$input_animaldestination = new dropdown('animaldestination');
-$input_animaldestination->addOption('', $objLanguage->languageText('phrase_selectone', 'ahis', 'Select One').'...');
 $formTable->startRow();
-$formTable->addCell($label_animaldestination->show());
-$formTable->addCell($input_animaldestination->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($destination->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_animalclassification = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_classification', 'ahis', 'Animal Classification: '), 'animalclassification');
-$input_animalclassification = new dropdown('animalclassification');
-$input_animalclassification->addOption('', $objLanguage->languageText('phrase_selectone', 'ahis', 'Select One').'...');
+// animal classification	
+$label = new label ('Animal Classification: ', 'input_classification');
+$classification = new dropdown('classifiction');
+$classification->addOption('Select...','Select...');
+$classification->addOption('A','A');
+$classification->addOption('B','B');
+$classification->addOption('C','C');
+
 $formTable->startRow();
-$formTable->addCell($label_animalclassification->show());
-$formTable->addCell($input_animalclassification->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_products = new label('<div class="borderclass">'.$this->objLanguage->languageText('mod_ahis_products', 'ahis', 'Products'), 'products');
-$label_units = new label($this->objLanguage->languageText('mod_ahus_units', 'ahis', 'Units'), 'units');
+//products	
+$label = new label ('Product: ', 'input_product');
+$classification = new dropdown('origin');
+$classification->addOption('Select...','Select...');
+$classification->addOption('Eggs','Eggs');
+$classification->addOption('Milk','Milk');
+$classification->addOption('Cheese','Cheese');
+$classification->addOption('Poultry','Poultry');
+$classification->addOption('Beef','Beef');
+$classification->addOption('Skin','Skin');
+$classification->addOption('Hide','Hide');
+
+$units_label = new label('Product Quantity: ', 'input_unit');
+$units = new dropdown('unit');
+$units->addOption('Select...','Select...');
+$units->addOption('1','1');
+$units->addOption('2','2');
+$units->addOption('3','3');
+$units->addOption('4','4');
+$units->addOption('5','5');
+$units->addOption('6','6');
+$units->addOption('7','7');
+
 $formTable->startRow();
-$formTable->addCell($label_products->show());
-$formTable->addCell($label_units->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_eggs = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_eggs', 'ahis', 'Eggs'), 'eggs');
-$input_eggs = new textinput('eggs');
 $formTable->startRow();
-$formTable->addCell($label_eggs->show());
-$formTable->addCell($input_eggs->show());
+$formTable->addCell($units_label->show(),NULL,NULL,'right');
+$formTable->addCell($units->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_milk = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_milk', 'ahis', 'Milk'), 'milk');
-$input_milk = new textinput('milk');
-$formTable->startRow();
-$formTable->addCell($label_milk->show());
-$formTable->addCell($input_milk->show());
-$formTable->endRow();
+ //container-table
+$topTable = $this->newObject('htmltable', 'htmlelements');
+ $topTable->startRow();
+$topTable->addCell($formTable->show());
+$topTable->endRow();
+$form->addToForm($topTable->show());
+ 
+ $save = new button('livestock_export_save', 'Save');
+ $save->setToSubmit();
+ 
+ $cancel = new button('cancel','Cancel');
+$cancel->setToSubmit();
 
-$label_cheese = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_cheese', 'ahis', 'Cheese'), 'cheese');
-$input_cheese = new textinput('cheese');
-$formTable->startRow();
-$formTable->addCell($label_cheese->show());
-$formTable->addCell($input_cheese->show());
-$formTable->endRow();
-
-$label_poultry = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_poultry', 'ahis', 'Poultry'), 'poultry');
-$input_poultry = new textinput('poultry');
-$formTable->startRow();
-$formTable->addCell($label_poultry->show());
-$formTable->addCell($input_poultry->show());
-$formTable->endRow();
-
-$label_beef = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_beef', 'ahis', 'Beef'), 'beef');
-$input_beef = new textinput('beef');
-$formTable->startRow();
-$formTable->addCell($label_beef->show());
-$formTable->addCell($input_beef->show());
-$formTable->endRow();
-
-$label_skin = new label('<div class="newclass">'.$this->objLanguage->languageText('mod_ahis_skin', 'ahis', 'Skin/Hide'), 'skin');
-$input_skin = new textinput('skin');
-$formTable->startRow();
-$formTable->addCell($label_skin->show());
-$formTable->addCell($input_skin->show());
-$formTable->endRow();
-
-$save = new button ('saveform',$this->objLanguage->languageText('mod_ahis_save', 'ahis', 'Save'));
-$save->setToSubmit();
- $cancel = new button ('saveform', $this->objLanguage->languageText('mod_ahis_cancel', 'ahis', 'Cancel'));
-
+$form->addToForm($save->show(),NULL,NULL,'right');
+$form->addToForm($cancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
 $objLayer->align = 'center';
 
-echo $objLayer->show().$formTable->show().$tab.$tab.$tab.$tab.$tab.$tab.$tab.$save->show().$tab.$cancel->show();
-
-
-
- 
- //echo $formTable->show().'<br />'.$tab.$tab.$tab.$tab.$tab.$tab.$tab.$save->show().$tab.$cancel->show().'</div>'.$cssLayout->show();
+echo $objLayer->show(); 
 
 ?>
 

@@ -13,7 +13,7 @@ $fields = array(
 		'length' => 32,
 		'notnull' => 1
     ),
-	'districtid' => array(
+	'district' => array(
 		'type' => 'text',
 		'length' => 32,
 		'notnull' => 1

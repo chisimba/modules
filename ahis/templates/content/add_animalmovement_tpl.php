@@ -92,16 +92,21 @@ $input_district = new textinput('district');
 $input_district->size = 60;
 $formTable->startRow();
 $formTable->cellpadding = 5;
-$formTable->addCell($label_district->show());
-$formTable->addCell($input_district->show());
+$formTable->addCell($label_district->show(),NULL,NULL,'right');
+$formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_classification = new label('<div class="labels">'.$this->objLanguage->languageText('mod_movement_animalclassification','movement', 'Animal Classification: '),'animalclassification');
-$input_classification = new dropdown('animalclassification');
-$input_classification->addOption('', $objLanguage->languageText('phrase_selectone', 'movement', 'Select One').'...');
+// animal classification	
+$label = new label ('Animal Classification: ', 'input_source');
+$classification = new dropdown('origin');
+$classification->addOption('Select...','Select...');
+$classification->addOption('A','A');
+$classification->addOption('B','B');
+$classification->addOption('C','C');
+
 $formTable->startRow();
-$formTable->addCell($label_classification->show());
-$formTable->AddCell($input_classification->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label_purpose = new label('<div class="labels">'.$this->objLanguage->languageText('mod_movement_purpose', 'movement', 'Purpose: '), 'purpose');
@@ -113,47 +118,69 @@ $radio_rear = new radio ('purpose');
 $radio_rear->addOption('rear', $this->objLanguage->languageText('word_rearing', 'movement', 'Rearing'));
 
 $formTable->startRow();
-$formTable->addCell($label_purpose->show());
-$formTable->addCell($radio_slaughter->show());
+$formTable->addCell($label_purpose->show(),NULL,NULL,'right');
+$formTable->addCell($radio_slaughter->show(),NULL,NULL,'left');
 
 $formTable->startRow();
 $formTable->addCell('',40);
 $formTable->addCell($radio_rear->show(),40);
 $formTable->endRow();
 
-$label_origin = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_animalorigin', 'ahis', 'Animal Origin: '), 'animalorigin');
-$input_origin = new textinput('animalorigin');
-$input_origin->size = 60;
+// animal origin	
+$label = new label ('Animal origin: ', 'input_source');
+$origin = new dropdown('origin');
+$origin->addOption('Select...','Select...');
+$origin->addOption('A','A');
+$origin->addOption('B','B');
+$origin->addOption('C','C');
+
 $formTable->startRow();
-$formTable->addCell($label_origin->show());
-$formTable->addCell($input_origin->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($origin->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_destination = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_destination', 'ahis', 'Destination: '), 'destination');
-$input_destination = new textinput('destination');
-$input_destination->size = 60;
+// animal destination	
+$label = new label ('Animal destination: ', 'input_destination');
+$destination = new dropdown('destination');
+$destination->addOption('Select...','Select...');
+$destination->addOption('A','A');
+$destination->addOption('B','B');
+$destination->addOption('C','C');
+
 $formTable->startRow();
-$formTable->addCell($label_destination->show());
-$formTable->addCell($input_destination->show());
+$formTable->addCell($label->show(),NULL,NULL,'right');
+$formTable->addCell($destination->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
-$input_remarks = new textarea($this->objLanguage->languageText('remarks'));
+
+$input_remarks = $this->newObject('htmlarea', 'htmlelements');
 $formTable->startRow();
-$formTable->addCell($label_remarks->show());
-$formTable->addCell($input_remarks->show());
+$formTable->addCell($label_remarks->show(), NULL,NULL,'right');
+$formTable->addCell($input_remarks->show(),NULL,NULL,'left');
 $formTable->endRow();
+
+//container-table
+$topTable = $this->newObject('htmltable', 'htmlelements');
+ $topTable->startRow();
+$topTable->addCell($formTable->show());
+$topTable->endRow();
+$form->addToForm($topTable->show());
+ 
+ $save = new button('livestock_export_save', 'Save');
+ $save->setToSubmit();
+ 
+ $cancel = new button('cancel','Cancel');
+$cancel->setToSubmit();
+
+$form->addToForm($save->show(),NULL,NULL,'right');
+$form->addToForm($cancel->show());
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
 $objLayer->align = 'center';
 
-echo $objLayer->show();
-
-$save = new button ('saveform', $this->objLanguage->languageText('mod_ahis_save', 'ahis', 'Save'));
- 
- $cancel = new button ('saveform', $this->objLanguage->languageText('mod_ahis_cancel', 'ahis', 'Cancel'));
- echo $formTable->show().$tab.$tab.$tab.$tab.$tab.$tab.$save->show().'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$cancel->show().$cssLayout->show().'</div>';
+echo $objLayer->show(); 
 
 ?>
 <style type="text/css">

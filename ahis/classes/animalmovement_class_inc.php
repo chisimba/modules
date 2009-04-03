@@ -72,7 +72,23 @@ $GLOBALS['kewl_entry_point_run']) {
 		}
 	}
 	
-
+	
+	public function addAnimalMovementData($district, $classification, $purpose, $destination,$remarks)
+    {
+		$sql = $this->insert(array(
+			'district' => stripslashes($district),
+			'classification' =>$classification,
+			'purpose' => $purpose,
+			'destination' => $destination,
+			'remarks' => $remarks
+			));
+			if($sql)
+			return true;
+			else
+			return false;
+			
+	} 
+	
  }
 
 ?>
