@@ -58,7 +58,7 @@
          */
         public function getSource($sourceId)
         {
-            $source = $this->getAll("WHERE id = $sourceId");
+            $source = $this->getAll("WHERE id = '$sourceId'");
             $source = $source[0];
             if (empty($source)) {
                 return FALSE;

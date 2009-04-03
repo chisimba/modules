@@ -59,6 +59,22 @@ class librarysearch extends controller
                 $this->objSources = $this->getObject('dbsources', 'librarysearch');
                 $this->objClusters = $this->getObject('dbclusters', 'librarysearch');
 
+                $this->objWorkflow = $this->getObject('workflow', 'webworkflow');
+
+                $this->objLanguage =$this->newObject('language', 'language');
+                $this->loadClass('textinput', 'htmlelements');
+                $this->loadClass('checkbox', 'htmlelements');
+                $this->loadClass('radio', 'htmlelements');
+                $this->loadClass('dropdown', 'htmlelements');
+                $this->loadClass('form', 'htmlelements');
+                $this->loadClass('button', 'htmlelements');
+                $this->loadClass('link', 'htmlelements');
+                $this->loadClass('label', 'htmlelements');
+                $this->loadClass('hiddeninput', 'htmlelements');
+                $this->loadClass('textarea','htmlelements');
+                $this->loadClass('htmltable','htmlelements');
+                $this->loadClass('layer', 'htmlelements');
+
                 //Get the activity logger class and log this module call
                 $objLog = $this->getObject('logactivity', 'logger');
                 $objLog->log();
@@ -147,6 +163,43 @@ class librarysearch extends controller
             
             return "librarysearch_result_tpl.php";
         }
+
+
+        /**
+         * This method will return the child items for the particular
+         * section for use the the jquery Simple Tree Menu (Ajax)
+         *
+         * @access private
+         * @return string The populated cms_section_tpl.php template
+         *
+         */
+        private function _execworkflow()
+        {
+            $id = $this->getParam('id');
+            $searchKey = $this->getParam('search_key');
+            $cluster = $this->getParam('subject_cluster');
+
+            $src = $this->objSources->getSource($id);
+            if ($src['workflow'] != '') {
+                $wfCode = str_replace("[[[SEARCHTERM]]]", "$searchKey", $src['workflow']);
+                $result = $this->objWorkflow->getDocument($wfCode);
+
+                //Scrapping for OIAster
+                if ($src['id'] == 'init_4') {
+                    $regex = '/Your search retrieved ([0-9]+) records/';
+                    preg_match($regex, $html, $matches);
+                    $stats = $matches[1];
+                }
+                
+                log_debug($result);
+            }
+
+            $this->setVarByRef('stats',$stats);
+            
+            $this->setContentType('text/html');
+            return "scrape_result_tpl.php";
+        }
+
 
 	    /**
 	    *
