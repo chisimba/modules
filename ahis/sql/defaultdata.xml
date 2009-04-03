@@ -4,6 +4,18 @@
 		<id>init_01</id>
 		<name>Passive Surveillance</name>
 	</tbl_ahis_reporttype>
+	<tbl_ahis_reporttype>
+		<id>init_02</id>
+		<name>Animal Population Census</name>
+	</tbl_ahis_reporttype>
+	<tbl_ahis_reporttype>
+		<id>init_03</id>
+		<name>Meat Inspection</name>
+	</tbl_ahis_reporttype>
+	<tbl_ahis_reporttype>
+		<id>init_04</id>
+		<name>Slaughter</name>
+	</tbl_ahis_reporttype>
     
     <tbl_ahis_title>
         <id>init_01</id>

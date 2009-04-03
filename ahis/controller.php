@@ -1789,6 +1789,7 @@ class ahis extends controller {
                 $this->objSurvey->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
              case 'animal_population_add':
+			 		$this->setVar('d',$this->getSession('ps_geo2Id'));
                 $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
 				 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'animal_population_tpl.php';
