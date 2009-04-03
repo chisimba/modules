@@ -451,15 +451,4 @@ class faq extends controller
         $restrictedActions = array('add', 'addconfirm', 'edit', 'editconfirm', 'deleteconfirm', 'addcategory', 'addcategoryconfirm', 'editcategory', 'editcategoryconfirm', 'deletecategoryconfirm', 'managecategories');
         return in_array($action, $restrictedActions);
     }
-
-
-
-
-
-
-
-
-
-
 }
-?>
