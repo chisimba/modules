@@ -966,6 +966,15 @@ class survey extends controller {
 				}
 				break;
 
+			case 'exporttocsv':
+			    $surveyId = $this->getParam('survey_id');
+			    // debug
+			    $surveyId = 'gen5Srv53Nme5_4402_1237807735';
+			    $this->objExport = $this->getObject('dbexport');
+			    $this->objExport->createCSV($surveyId);
+
+			    break;
+
 			default :
 				// calls the default template to list all surveys
 				return $this->nextAction ( 'listsurveys' );
