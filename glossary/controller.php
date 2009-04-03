@@ -58,7 +58,7 @@ class glossary extends controller
         }
         
         // Permissions Module
-        $this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
+        $this->objDT = $this->getObject( 'decisiontable','decisiontable' );
         // Create the decision table for the current module
         $this->objDT->create('glossary');
         // Collect information from the database.
