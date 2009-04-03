@@ -82,7 +82,7 @@ $header->str = $title;
 //echo $header->show();
 
 // Create Form
-$form = new form ('myForm', $this->uri(array('action'=>'valform'),'htmlelements'));
+//$form = new form ('myForm', $this->uri(array('action'=>'animalmovement'),'htmlelements'));
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
@@ -97,8 +97,8 @@ $formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal classification	
-$label = new label ('Animal Classification: ', 'input_source');
-$classification = new dropdown('origin');
+$label = new label ('Animal Classification: ', 'classification');
+$classification = new dropdown('classification');
 $classification->addOption('Select...','Select...');
 $classification->addOption('A','A');
 $classification->addOption('B','B');
@@ -127,7 +127,7 @@ $formTable->addCell($radio_rear->show(),40);
 $formTable->endRow();
 
 // animal origin	
-$label = new label ('Animal origin: ', 'input_source');
+$label = new label ('Animal origin: ', 'origin');
 $origin = new dropdown('origin');
 $origin->addOption('Select...','Select...');
 $origin->addOption('A','A');
@@ -140,7 +140,7 @@ $formTable->addCell($origin->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal destination	
-$label = new label ('Animal destination: ', 'input_destination');
+$label = new label ('Animal destination: ', 'destination');
 $destination = new dropdown('destination');
 $destination->addOption('Select...','Select...');
 $destination->addOption('A','A');
@@ -154,11 +154,18 @@ $formTable->endRow();
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
 
-$input_remarks = $this->newObject('htmlarea', 'htmlelements');
+$remarks = new textarea();
 $formTable->startRow();
 $formTable->addCell($label_remarks->show(), NULL,NULL,'right');
-$formTable->addCell($input_remarks->show(),NULL,NULL,'left');
+$formTable->addCell($remarks->show(),NULL,NULL,'left');
 $formTable->endRow();
+
+$formAction = 'animalmovement_save';  
+    $buttonText = 'Save';
+	
+	// Create Form
+$form = new form ('add', $this->uri(array('action'=>$formAction)));
+
 
 //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
@@ -167,7 +174,7 @@ $topTable->addCell($formTable->show());
 $topTable->endRow();
 $form->addToForm($topTable->show());
  
- $save = new button('livestock_export_save', 'Save');
+ $save = new button('animalmovement_save', 'Save');
  $save->setToSubmit();
  
  $cancel = new button('cancel','Cancel');

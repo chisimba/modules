@@ -41,7 +41,7 @@
 	//echo $header->show();
 	
 	// Create Form
-$form = new form ('myForm', $this->uri(array('action'=>'valform'),'htmlelements'));
+//$form = new form ('myForm', $this->uri(array('action'=>'livestockexport'),'htmlelements'));
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
@@ -106,7 +106,7 @@ $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-//products	
+/*products	
 $label = new label ('Product: ', 'input_product');
 $classification = new dropdown('origin');
 $classification->addOption('Select...','Select...');
@@ -137,16 +137,66 @@ $formTable->endRow();
 $formTable->startRow();
 $formTable->addCell($units_label->show(),NULL,NULL,'right');
 $formTable->addCell($units->show(),NULL,NULL,'left');
+$formTable->endRow();*/
+
+$label_products = new label ('Products: ', 'products');
+$label_units = new label (' :Units', 'units');
+$formTable->startRow();
+$formTable->addCell($label_products->show(),NULL,NULL,'right');
+$formTable->addCell($label_units->show(),NULL,NULL,'left');
 $formTable->endRow();
 
+$label_eggs = new label('Eggs','eggs');
+$input_eggs = new textinput('eggs');
+$formTable->startRow();
+$formTable->addCell($label_eggs->show(),NULL,NULL,'right');
+$formTable->addCell($input_eggs->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+$label_milk = new label('Milk','milk');
+$milk = new textinput('milk');
+$formTable->startRow();
+$formTable->addCell($label_milk->show(),NULL,NULL,'right');
+$formTable->addCell($milk->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+$label_cheese = new label('Cheese','cheese');
+$input_cheese = new textinput('cheese');
+$formTable->startRow();
+$formTable->addCell($label_cheese->show(),NULL,NULL,'right');
+$formTable->addCell($input_cheese->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+$label_poultry = new label('Poultry','poutry');
+$poultry = new textinput('poultry');
+$formTable->startRow();
+$formTable->addCell($label_poultry->show(),NULL,NULL,'right');
+$formTable->addCell($poultry->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+$label_beef = new label('Beef','beef');
+$beef = new textinput('beef');
+$formTable->startRow();
+$formTable->addCell($label_beef->show(),NULL,NULL,'right');
+$formTable->addCell($beef->show(),NULL,NULL,'left');
+$formTable->endRow();
+
+	$formAction = 'livestockexport_save';  
+    $buttonText = 'Save';
+	
+	// Create Form
+$form = new form ('add', $this->uri(array('action'=>$formAction)));
+	
  //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
  $topTable->startRow();
 $topTable->addCell($formTable->show());
 $topTable->endRow();
 $form->addToForm($topTable->show());
+
+	
  
- $save = new button('livestock_export_save', 'Save');
+ $save = new button('livestockexport_save', 'Save');
  $save->setToSubmit();
  
  $cancel = new button('cancel','Cancel');

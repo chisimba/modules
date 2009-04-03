@@ -82,7 +82,9 @@ class report extends object {
 			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
 			 $this->objSlaughter= $this->getObject('ahis_slaughter');
             //$this->objCausative = $this->getObject('causative');
-            
+			$this->objAnimalmovement = $this->getObject('animalmovement');
+            $this->objLivestockimport = $this->getObject('livestockimport');
+			$this->objLivestockexport = $this->getObject('livestockexport');
 		}
 		catch (customException $e)
 		{
@@ -300,6 +302,7 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
+				
 				case 'init_04': 			//slaughter
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Number Of Cattle','Number of Sheep','Number of Goats','Number of Pigs','Number of Poultry','Other','Name','Remarks');
@@ -315,10 +318,54 @@ class report extends object {
 				}
 				return $csv;
 				
+			
 		
+		
+		case 'init_06'://animal movement
 				
-		}
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Purpose','Destination','Remarks');
+				
+				$movementRecords = $this->objAnimalmovement->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($movementRecords as $report) {
+					
+					$row = array($report['district'],$report['classification'],$report['purpose'],$report['destination'],$report['remarks']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
 		
+		case 'init_07': 			//livestock import
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units','Beef Units');
+				
+				$importRecords = $this->objLivestockimport->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($importRecords as $report) {
+					
+					$row = array($report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
+				
+		case 'init_08': 			//livestock export
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry', 'Beef Units');
+				
+				$exportRecords = $this->objAnimalPopulation->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($exportRecords as $report) {
+					
+					$row = array($report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
 		
+	}
 	}
 }

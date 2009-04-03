@@ -8,11 +8,7 @@ $options = array('comment' => 'The table contains the keywords for livestock imp
 
 // Fields
 $fields = array(
-	'id' => array(
-		'type' => 'text',
-		'length' => 32,
-		'notnull' => 1
-    ),
+	
 	'district' => array(
 		'type' => 'text',
 		'length' => 32,
@@ -41,21 +37,31 @@ $fields = array(
 		'length' => 255,
 		'notnull' => 1
     ),
-	'products' => array(
+	'eggs' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'milk' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'cheese' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'poultry' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'beef' => array(
 		'type' => 'text',
 		'length' => 255,
 		'notnull' => 1
     )
 );
-//create other indexes here...
-//create other indexes here...
-$name = 'tbl_ahis_livestockimport_idx';
-
-$indexes = array(
-                'fields' => array(
-                	'districtid' => array(),
-                	'keyword' => array(),
-                )
-        );
 
 ?>
