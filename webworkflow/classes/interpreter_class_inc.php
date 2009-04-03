@@ -102,7 +102,11 @@ class interpreter extends object
         $this->lastOpenLink = '';
         
         //$this->objCurl = $this->getObject('curlwrapper', 'utilities');
-        $this->objCurl = new curlwrapper_;
+
+        // Load Config Object
+        $objConfig = $this->getObject('altconfig', 'config');
+
+        $this->objCurl = new curlwrapper_($objConfig);
     }
 
     /**
@@ -846,8 +850,9 @@ class curlwrapper_ extends object
     }
     */
 
-    public function curlwrapper_() {
-
+    public function curlwrapper_($objConfig) {
+        $this->objConfig = $objConfig;
+        $this->setupProxy();
     }
 
     /**
@@ -859,7 +864,7 @@ class curlwrapper_ extends object
     public function setupProxy()
     {
         // Load Config Object
-        $objConfig = $this->getObject('altconfig', 'config');
+        $objConfig = $this->objConfig;
         // Get Proxy String
         $proxy = $objConfig->getProxy();
         // Remove http:// from beginning of string
@@ -904,6 +909,7 @@ class curlwrapper_ extends object
         log_debug("\n\nCURL INITIALIZED: $url \n\n");
         // Setup URL for Curl
         $this->ch = curl_init($url);
+        //$this->setupProxy();
     }
 
     public function closeCurl()
