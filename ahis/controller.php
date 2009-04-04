@@ -133,7 +133,12 @@ class ahis extends controller {
 			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
 			  $this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			 $this->objSlaughter= $this->getObject('ahis_slaughter');
+			 //$this->objAnimalmovement = $this->getObject('animalmovement');
 	    $this->objDeworming = $this->getObject('deworming');
+		
+		$this->objAnimalmovement = $this->getObject('animalmovement');
+		$this->objLivestockimport = $this->getObject('livestockimport');
+		$this->objLivestockexport = $this->getObject('livestockexport');
 
 
 
@@ -164,7 +169,7 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save'
+                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add'
                                         );
         }
         catch(customException $e) {
@@ -227,6 +232,15 @@ class ahis extends controller {
 					case "init_04":
                         return $this->nextAction('animal_slaughter_add');
                     case "init_05":
+					
+					case "init_06":
+						return $this->nextAction('animalmovement_add');
+					case "init_07":
+						return $this->nextAction('livestockimport_add');
+					case "init_08":
+						return $this->nextAction('livestockexport_add');
+					default:
+                        return $this->nextAction('active_surveillance');
 					default:
                         return $this->nextAction('active_surveillance');
                 }
@@ -1650,6 +1664,8 @@ class ahis extends controller {
             case 'farmingsystem_add':
                 $this->setVar('id', $this->getParam('id'));
                 return 'farmingsystem_add_tpl.php';
+				
+				
             
             case 'farmingsystem_insert':
                 $id = $this->getParam('id');
@@ -1665,6 +1681,8 @@ class ahis extends controller {
                     $code = 1;
                 }
                 return $this->nextAction('farmingsystem_admin', array('success'=>$code));
+				
+				
             case 'farmingsystem_delete':
                 $id = $this->getParam('id');
                 $this->objFarmingsystem->delete('id', $id);
@@ -1789,6 +1807,26 @@ class ahis extends controller {
                 $id = $this->getParam('id');
                 $this->objSurvey->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
+			
+			case 'animalmovement_add':
+				$this->setVar('id', $this->getParam('id'));
+				//$this->setVar('d',$this->getSession('ps_geo2Id'));
+				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+				return 'add_animalmovement_tpl.php';
+				
+			case 'livestockimport_add':
+				$this->setVar('id', $this->getParam('id'));
+				//$this->setVar('d',$this->getSession('ps_geo2Id'));
+				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+				return 'add_livestockimport_tpl.php';
+				
+			case 'livestockexport_add':
+				$this->setVar('id', $this->getParam('id'));
+				//$this->setVar('d',$this->getSession('ps_geo2Id'));
+				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+				return 'add_livestockexport_tpl.php';
+				
+				
              case 'animal_population_add':
 			 		$this->setVar('d',$this->getSession('ps_geo2Id'));
                 $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
@@ -1806,6 +1844,13 @@ class ahis extends controller {
 				return $this->saveInspectionData();
 			case 'animal_slaughter_save':
 				return $this->saveSlaughterData();
+				
+			case 'animalmovement_save':
+				return $this->saveAnimalmovementData();
+			case 'livestockimport_save':
+				return $this->saveLivestockimportData();
+			case 'livestockexport_save':
+            	return $this->saveLivestockexportData();
             
             case 'view_reports':
             
@@ -1918,6 +1963,59 @@ class ahis extends controller {
 		
 		return $this->nextAction('');
 	
+	}
+	
+	//function to add animal movement data
+	private function saveAnimalMovementData()
+	{
+		$district = $this->getParam('district');
+		$classification = $this->getParam('classification');
+		$purpose = $this->getParam('purpose');
+		$origin = $this->getParam('origin');
+		$destination = $this->getParam('destination');
+		$remarks = $this->getParam('remarks');
+		
+		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks);  
+							
+		return $this->nextAction('');
+	}
+	
+	//function to add livestock import data
+	private function saveLivestockimportData()
+	{
+		$district = $this->getParam('district');
+		$entrypoint = $this->getParam('entrypoint');
+		$destination = $this->getParam('destination');
+		$classification = $this->getParam('classification');
+		$origin = $this->getParam('origin');
+		$eggs = $this->getParam('eggs');
+		$milk = $this->getParam('milk');
+		$cheese = $this->getParam('cheese');
+		$poultry = $this->getParam('poultry');
+		$beef = $this->getParam('beef');
+		
+		$data= $this->objLivestockimport->addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
+							
+		return $this->nextAction('');
+	}
+	
+	//function to add livestock export data
+	private function saveLivestockexportData()
+	{
+		$district = $this->getParam('district');
+		$entrypoint = $this->getParam('entrypoint');
+		$destination = $this->getParam('destination');
+		$classification = $this->getParam('classification');
+		$origin = $this->getParam('origin');
+		$eggs = $this->getParam('eggs');
+		$milk = $this->getParam('milk');
+		$cheese = $this->getParam('cheese');
+		$poultry = $this->getParam('poultry');
+		$beef = $this->getParam('beef');
+		
+		$data= $this->objLivestockexport->addLivestockexportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
+														
+		return $this->nextAction('');
 	}
     
     /**
