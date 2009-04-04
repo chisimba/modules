@@ -1826,14 +1826,18 @@ class ahis extends controller {
 				return 'add_livestockexport_tpl.php';
 				
              case 'animal_population_add':
-			 		$this->setVar('d',$this->getSession('ps_geo2Id'));
-                $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
-				 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
+			 		$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		 			
 				return 'animal_population_tpl.php';
 			case 'addinspectiondata':
-			 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
-				return 'meat_inspection_tpl.php';
+				$id=$this->getSession('ps_geo2Id');
+			 	$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
+			return 'meat_inspection_tpl.php';
 			case 'animal_slaughter_add':
+				$id=$this->getSession('ps_geo2Id');
+				 $this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
+			return 'slaughter_tpl.php';
 		 		$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'slaughter_tpl.php';
 			case 'animal_population_save':
