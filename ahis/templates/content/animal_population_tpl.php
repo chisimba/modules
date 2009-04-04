@@ -51,54 +51,47 @@ $this->loadClass('label', 'htmlelements');
     $formAction = 'animal_population_save';  
     $buttonText = 'Save';
 
-$geo2Drop = new dropdown('district');
-$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
-$geo2Drop->setSelected($geo2Id); 
-
-//$geo2Drop->extra = 'disabled';
-
 $classDrop = new dropdown('classification');
 $classDrop->addFromDB($species, 'name', 'name'); 
-//$geo2Drop->setSelected($geo2Id); 
 
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
 
-
-/*$district = new textinput('district','');
-$district->size = 50;
-//$district->extra='readonly';*/
 
 
 //district name
-$label = new label ('District', 'district');
-
+$district = new textinput('district',$dist);
+//$district->extra='readonly';
+$label = new label ('District:', 'district');
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($geo2Drop->show());
+$formTable->addCell($label->show());
+$formTable->addCell($district->show());
 $formTable->endRow();
 
 //animal classification
-$label = new label ('Animal Classification', 'input_animal_class');
+$label = new label ('Animal Classification:', 'input_animal_class');
 
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($classDrop->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($classDrop->show());
 $formTable->endRow();
 
 //number of animals
-$label = new label ('Number of Animals', 'input_no_animal');
+$label = new label ('Number of Animals:', 'input_no_animal');
 $num_animals = new textinput('num_animals');
-$num_animals->size = 50;
+//$num_animals->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($num_animals->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($num_animals->show());
 $formTable->endRow();
 
 //animal production
-$label = new label ('Animal Production', ' input_production');
+$label = new label ('Animal Production:', ' input_production');
 $production = new dropdown('animal_production');
 
 $production->multiple=false; 
@@ -109,25 +102,20 @@ $production->addOption('Cheese', 'Cheese');
 $production->addOption('Beef', 'Beef');
 $production->addOption('Other','Other');
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($production->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($production->show());
 $formTable->endRow();	
 
 // animal source	
-$label = new label ('Source', 'input_source');
+$label = new label ('Source:', 'input_source');
 $source=new textinput('source');
-$source->size=50;
+//$source->size=50;
 $formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($source->show(),NULL,NULL,'left');
+$formTable->addCell($label->show());
+$formTable->addCell($source->show());
 $formTable->endRow();
-//container-table
-$topTable = $this->newObject('htmltable', 'htmlelements');
 
-$topTable->startRow();
-$topTable->addCell($formTable->show());
-$topTable->endRow();
-$form->addToForm($topTable->show());
+$form->addToForm($formTable->show());
 //buttons
 $button = new button ('animal_population_save', 'Save');
 $button->setToSubmit();

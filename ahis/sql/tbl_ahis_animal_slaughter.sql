@@ -43,19 +43,13 @@ $fields = array(
 		'notnull' => 1
 		),
 	'other' => array (
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 0
+		'type' => 'clob'
 	),
 	'name_of_other' => array (
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 0
+		'type' => 'clob'
 	),
 	'remarks' => array (
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 0
+		'type' => 'clob'
 	)				
 
 );

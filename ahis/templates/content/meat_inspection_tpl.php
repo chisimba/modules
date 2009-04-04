@@ -57,38 +57,33 @@ $this->loadClass('label', 'htmlelements');
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
-
-/*$district = new textinput('district');
-$district->size = 50;
-*/
-$geo2Drop = new dropdown('district');
-$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
-$geo2Drop->setSelected($geo2Id); 
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
 
 //district name
-$label = new label ('District', 'input_district');
-
+$district = new textinput('district',$dist);
+$label = new label ('District:', 'district');
 $formTable->startRow();
 $formTable->addCell($label->show());
-$formTable->addCell($geo2Drop->show());
+$formTable->addCell($district->show());
 $formTable->endRow();
 //date of inspection
 $datePicker = $this->newObject('datepicker', 'htmlelements');
 $datePicker->name = 'inspectiondate';
 $formTable->startRow();
-$formTable->addCell('Inspection Date (Date when disease was found)');
+$formTable->addCell('Inspection Date:');
 $formTable->addCell($datePicker->show());
 $formTable->endRow();
 
-
 //number of cases
-$label = new label ('Number of Cases', 'input_no_of_cases');
+$label = new label ('Number of Cases:', 'input_no_of_cases');
 $num_of_cases= new textinput('num_of_cases');
-$num_of_cases->size = 50;
+//$num_of_cases->size = 50;
 //number at risk
-$label2 = new label ('Number at Risk', 'input_no_at_risk');
+$label2 = new label ('Number at Risk:', 'input_no_at_risk');
 $num_at_risk = new textinput('num_at_risk');
-$num_at_risk->size = 50;
+//$num_at_risk->size = 50;
 
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -96,14 +91,7 @@ $formTable->addCell($num_of_cases->show());
 $formTable->addCell($label2->show());
 $formTable->addCell($num_at_risk->show());
 $formTable->endRow();
-
-//container-table
-$topTable = $this->newObject('htmltable', 'htmlelements');
-
-$topTable->startRow();
-$topTable->addCell($formTable->show());
-$topTable->endRow();
-$form->addToForm($topTable->show());
+$form->addToForm($formTable->show());
 //buttons
 $button = new button ('saveinspectiondata', 'Save');
 $button->setToSubmit();

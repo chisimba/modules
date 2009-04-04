@@ -47,108 +47,99 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 $this->loadClass('label', 'htmlelements');
-
+$this->loadClass('textarea','htmlelements');
      $formAction = 'animal_slaughter_save';  
     $buttonText = 'Save';
 
 
+/*$geo2Drop = new dropdown('district');
+$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
+$geo2Drop->setSelected($geo2Id); */
+//$geo2Drop->extra='disabled';
 // Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
-
-
-/*$district = new textinput('district');
-$district->size = 50;*/
-$geo2Drop = new dropdown('district');
-$geo2Drop->addFromDB($arrayGeo2, 'name', 'name'); 
-$geo2Drop->setSelected($geo2Id); 
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
 
 //district name
-$label = new label ('District', 'input_district');
-
+$district = new textinput('district',$dist);
+$label = new label ('District:','district');
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($geo2Drop->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($district->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Number of Cattle', 'input_no_cattle');
+$label = new label ('Number of Cattle:', 'input_no_cattle');
 $num_cattle = new textinput('num_cattle');
-$num_cattle->size = 50;
+//$num_cattle->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($num_cattle->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($num_cattle->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Number of Sheep', 'input_no_sheep');
+$label = new label ('Number of Sheep:', 'input_no_sheep');
 $num_sheep = new textinput('num_sheep');
-$num_sheep->size = 50;
+//$num_sheep->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($num_sheep->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($num_sheep->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Number of Goats', 'input_no_goat');
+$label = new label ('Number of Goats:', 'input_no_goat');
 $num_goats = new textinput('num_goats');
-$num_goats->size = 50;
+//$num_goats->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($num_goats->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($num_goats->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Number of Pigs', 'input_no_pigs');
+$label = new label ('Number of Pigs:', 'input_no_pigs');
 $num_pigs = new textinput('num_pigs');
-$num_pigs->size = 50;
+//$num_pigs->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($num_pigs->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($num_pigs->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Number of Poultry', 'input_no_poultry');
+$label = new label ('Number of Poultry:', 'input_no_poultry');
 $num_poultry = new textinput('num_poultry');
-$num_poultry->size = 50;
+//$num_poultry->size = 50;
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($num_poultry->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($num_poultry->show(),'left');
 $formTable->endRow();
 
-$label = new label ('Other', 'input_no_other');
+$label = new label ('Other:', 'input_no_other');
 $other = new textinput('other');
-$other->size = 50;
+//$other->size = 50;
 
-$label1 = new label (' Name', 'input_no_name');
+$label1 = new label (' Name:', 'input_no_name');
 $name = new textinput('name');
-$name->size = 50;
+//$name->size = 50;
 
 $formTable->startRow();
-$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;',NULL,NULL,'right');
-$formTable->addCell($other->show(),NULL,NULL,'left');
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($other->show(),'left');
 
-$formTable->addCell($label1->show(),NULL,NULL,'left');
+$formTable->addCell($label1->show(),'left');
 
-$formTable->addCell($name->show(),NULL,NULL,'left');
+$formTable->addCell($name->show(),'left');
 
 $formTable->endRow();
 
-$remarksTable = $this->newObject('htmltable', 'htmlelements');
+$label = new label ('Remarks:', 'remarks');
+$remarksBox = new textarea('remarks', $remarks, 4, 40);
 
-$htmlarea = $this->newObject('htmlarea', 'htmlelements');
-$htmlarea->name = 'remarks';
-
-$remarksTable->startRow();
-$remarksTable->addCell('Remarks',NULL,NULL,'right');
-$remarksTable->addCell($htmlarea->show());
-$remarksTable->endRow();
+$formTable->startRow();
+$formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
+$formTable->addCell($remarksBox->show(),'left');
+$formTable->endRow();
 
 
-//container-table
-$topTable = $this->newObject('htmltable', 'htmlelements');
-
-$topTable->startRow();
-$topTable->addCell($formTable->show());
-$topTable->endRow();
-$form->addToForm($topTable->show());
-$form->addToForm($remarksTable->show());
+$form->addToForm($formTable->show());
 
 //buttons
 $button = new button ('animal_slaughter_save', 'Save');
@@ -167,3 +158,5 @@ $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$form->show());
 $objLayer->align = 'center';
 
 echo $objLayer->show();
+
+
