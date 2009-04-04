@@ -133,12 +133,13 @@ class ahis extends controller {
 			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
 			  $this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			 $this->objSlaughter= $this->getObject('ahis_slaughter');
-			 //$this->objAnimalmovement = $this->getObject('animalmovement');
+
 	    $this->objDeworming = $this->getObject('deworming');
 		
 		$this->objAnimalmovement = $this->getObject('animalmovement');
 		$this->objLivestockimport = $this->getObject('livestockimport');
 		$this->objLivestockexport = $this->getObject('livestockexport');
+
 
 
 
@@ -239,8 +240,6 @@ class ahis extends controller {
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
-					default:
-                        return $this->nextAction('active_surveillance');
 					default:
                         return $this->nextAction('active_surveillance');
                 }
@@ -1826,7 +1825,6 @@ class ahis extends controller {
 				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
 				return 'add_livestockexport_tpl.php';
 				
-				
              case 'animal_population_add':
 			 		$this->setVar('d',$this->getSession('ps_geo2Id'));
                 $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
@@ -1836,7 +1834,7 @@ class ahis extends controller {
 			 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'meat_inspection_tpl.php';
 			case 'animal_slaughter_add':
-		 $this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
+		 		$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'slaughter_tpl.php';
 			case 'animal_population_save':
 				return $this->SaveData();				
@@ -1844,14 +1842,14 @@ class ahis extends controller {
 				return $this->saveInspectionData();
 			case 'animal_slaughter_save':
 				return $this->saveSlaughterData();
-				
+			
 			case 'animalmovement_save':
 				return $this->saveAnimalmovementData();
 			case 'livestockimport_save':
 				return $this->saveLivestockimportData();
 			case 'livestockexport_save':
             	return $this->saveLivestockexportData();
-            
+				
             case 'view_reports':
             
             default:
