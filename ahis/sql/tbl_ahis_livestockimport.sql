@@ -8,7 +8,11 @@ $options = array('comment' => 'The table contains the keywords for livestock imp
 
 // Fields
 $fields = array(
-	
+	'id' => array(
+		'type' => 'text',
+		'length' => 32,
+        'notnull' => TRUE
+		),
 	'district' => array(
 		'type' => 'text',
 		'length' => 32,

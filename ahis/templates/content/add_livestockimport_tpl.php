@@ -39,16 +39,12 @@
 	$header->type = 2;
 	$header->str = $title;
 	
-	
-	// Create Form
-//$form = new form ('myForm', $this->uri(array('action'=>'livestockimport'),'htmlelements'));
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
-$label_district = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_district', 'ahis', 'District Name:'), 'districtname');
-
-$input_district = new textinput('districtname');
-$input_district->size = 60;
+$label_district = new label ('District Name:', 'district');
+$input_district = new textinput('district');
+$input_district->size = 40;
 
 $formTable->startRow();
 $formTable->cellpadding = 5;
@@ -56,23 +52,20 @@ $formTable->addCell($label_district->show(),NULL,NULL,'right');
 $formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_pointentry = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_pointofentry', 'ahis', 'Point of Entry:'), 'pointofentry');
 
-$input_pointentry = new textinput('pointofentry');
-$input_pointentry->size = 60;
+$label_pointentry = new label ('Point of Entry:', 'entrypoint');
+$entrypoint= new textinput('entrypoint');
+$entrypoint->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label_pointentry->show(),NULL,NULL,'right');
-$formTable->addCell($input_pointentry->show(),NULL,NULL,'left');
+$formTable->addCell($entrypoint->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal origin	
-$label = new label ('Animal origin: ', 'input_source');
-$origin = new dropdown('origin');
-$origin->addOption('Select...','Select...');
-$origin->addOption('A','A');
-$origin->addOption('B','B');
-$origin->addOption('C','C');
+$label = new label ('Animal origin: ', 'origin');
+$origin = new textinput('origin');
+$origin->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -80,12 +73,9 @@ $formTable->addCell($origin->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal destination	
-$label = new label ('Animal destination: ', 'input_destination');
-$destination = new dropdown('destination');
-$destination->addOption('Select...','Select...');
-$destination->addOption('A','A');
-$destination->addOption('B','B');
-$destination->addOption('C','C');
+$label = new label ('Animal destination: ', 'destination');
+$destination = new textinput('destination');
+$destination->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -93,12 +83,9 @@ $formTable->addCell($destination->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal classification	
-$label = new label ('Animal Classification: ', 'input_classification');
-$classification = new dropdown('classifiction');
-$classification->addOption('Select...','Select...');
-$classification->addOption('A','A');
-$classification->addOption('B','B');
-$classification->addOption('C','C');
+$label = new label ('Animal Classification: ', 'classification');
+$classification = new textinput('classification');
+$classification->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -106,37 +93,6 @@ $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //products	
-$label = new label ('Product: ', 'input_product');
-/*$classification = new dropdown('origin');
-$classification->addOption('Select...','Select...');
-$classification->addOption('Eggs','Eggs');
-$classification->addOption('Milk','Milk');
-$classification->addOption('Cheese','Cheese');
-$classification->addOption('Poultry','Poultry');
-$classification->addOption('Beef','Beef');
-$classification->addOption('Skin','Skin');
-$classification->addOption('Hide','Hide');
-
-$units_label = new label('Product Quantity: ', 'input_unit');
-$units = new dropdown('unit');
-$units->addOption('Select...','Select...');
-$units->addOption('1','1');
-$units->addOption('2','2');
-$units->addOption('3','3');
-$units->addOption('4','4');
-$units->addOption('5','5');
-$units->addOption('6','6');
-$units->addOption('7','7');
-
-$formTable->startRow();
-$formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($classification->show(),NULL,NULL,'left');
-$formTable->endRow();
-
-$formTable->startRow();
-$formTable->addCell($units_label->show(),NULL,NULL,'right');
-$formTable->addCell($units->show(),NULL,NULL,'left');
-$formTable->endRow();*/
 
 $label_products = new label ('Products: ', 'products');
 $label_units = new label (' :Units', 'units');
@@ -145,35 +101,35 @@ $formTable->addCell($label_products->show(),NULL,NULL,'right');
 $formTable->addCell($label_units->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_eggs = new label('Eggs','eggs');
+$label_eggs = new label('Eggs: ','eggs');
 $eggs = new textinput('eggs');
 $formTable->startRow();
 $formTable->addCell($label_eggs->show(),NULL,NULL,'right');
 $formTable->addCell($eggs->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_milk = new label('Milk','milk');
+$label_milk = new label('Milk: ','milk');
 $milk = new textinput('milk');
 $formTable->startRow();
 $formTable->addCell($label_milk->show(),NULL,NULL,'right');
 $formTable->addCell($milk->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_cheese = new label('Cheese','cheese');
+$label_cheese = new label('Cheese: ','cheese');
 $cheese = new textinput('cheese');
 $formTable->startRow();
 $formTable->addCell($label_cheese->show(),NULL,NULL,'right');
 $formTable->addCell($cheese->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_poultry = new label('Poultry','poutry');
+$label_poultry = new label('Poultry: ','poutry');
 $poultry = new textinput('poultry');
 $formTable->startRow();
 $formTable->addCell($label_poultry->show(),NULL,NULL,'right');
 $formTable->addCell($poultry->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_beef = new label('Beef','beef');
+$label_beef = new label('Beef: ','beef');
 $beef = new textinput('beef');
 $formTable->startRow();
 $formTable->addCell($label_beef->show(),NULL,NULL,'right');

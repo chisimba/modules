@@ -8,7 +8,11 @@ $options = array('comment' => 'The table contains the keywords for animal moveme
 
 // Fields
 $fields = array(
-	
+	'id' => array(
+		'type' => 'text',
+		'length' => 32,
+        'notnull' => TRUE
+		),
 	'district' => array(
 		'type' => 'text',
 		'length' => 32,
@@ -20,6 +24,11 @@ $fields = array(
 		'notnull' => 1
     ),
 	'purpose' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'origin' => array(
 		'type' => 'text',
 		'length' => 255,
 		'notnull' => 1

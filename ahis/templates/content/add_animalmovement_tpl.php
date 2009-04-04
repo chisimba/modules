@@ -1,8 +1,6 @@
 <?php
 /**
- * ahis select_officer_tpl Template
- *
- * Template to select passive outbreak reporting officer
+ * 
  * 
  * PHP version 5
  * 
@@ -73,49 +71,39 @@ $loadingIcon = $objIcon->show();
 //title
 $title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
 
-$tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 // Header
 $header = new htmlheading();
 $header->type = 2;
 $header->str = $title;
-//echo $header->show();
-
-// Create Form
-//$form = new form ('myForm', $this->uri(array('action'=>'animalmovement'),'htmlelements'));
-
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
-$label_district = new label ('<div class="labels">'.$this->objLanguage->languageText('mod_movement_district', 'movement', 'District: '), 'district');
-$input_district = new textinput('district');
-$input_district->size = 60;
+$label_district = new label ('District: ', 'district');
+$district = new textinput('district');
+$district->size = 40;
 $formTable->startRow();
 $formTable->cellpadding = 5;
 $formTable->addCell($label_district->show(),NULL,NULL,'right');
-$formTable->addCell($input_district->show(),NULL,NULL,'left');
+$formTable->addCell($district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal classification	
 $label = new label ('Animal Classification: ', 'classification');
-$classification = new dropdown('classification');
-$classification->addOption('Select...','Select...');
-$classification->addOption('A','A');
-$classification->addOption('B','B');
-$classification->addOption('C','C');
+$classification = new textinput('classification');
+$classification->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_purpose = new label('<div class="labels">'.$this->objLanguage->languageText('mod_movement_purpose', 'movement', 'Purpose: '), 'purpose');
-
+$label_purpose = new label('Purpose: ', 'Purpose');
 $radio_slaughter = new radio ('purpose');
-$radio_slaughter->addOption('slaughter', $this->objLanguage->languageText('word_slaughtered', 'movement', 'Slaughtered'));
 
+$radio_slaughter->addOption('Slaughter', 'Slaughter');
 $radio_rear = new radio ('purpose');
-$radio_rear->addOption('rear', $this->objLanguage->languageText('word_rearing', 'movement', 'Rearing'));
+$radio_slaughter->addOption('Rear', 'rear');
 
 $formTable->startRow();
 $formTable->addCell($label_purpose->show(),NULL,NULL,'right');
@@ -128,11 +116,8 @@ $formTable->endRow();
 
 // animal origin	
 $label = new label ('Animal origin: ', 'origin');
-$origin = new dropdown('origin');
-$origin->addOption('Select...','Select...');
-$origin->addOption('A','A');
-$origin->addOption('B','B');
-$origin->addOption('C','C');
+$origin = new textinput('origin');
+$origin->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -141,11 +126,8 @@ $formTable->endRow();
 
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
-$destination = new dropdown('destination');
-$destination->addOption('Select...','Select...');
-$destination->addOption('A','A');
-$destination->addOption('B','B');
-$destination->addOption('C','C');
+$destination = new textinput('destination');
+$destination->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -154,7 +136,7 @@ $formTable->endRow();
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
 
-$remarks = new textarea();
+$remarks = new textarea('remarks');
 $formTable->startRow();
 $formTable->addCell($label_remarks->show(), NULL,NULL,'right');
 $formTable->addCell($remarks->show(),NULL,NULL,'left');

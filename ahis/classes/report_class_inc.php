@@ -318,10 +318,8 @@ class report extends object {
 				}
 				return $csv;
 				
-			
-		
-		
-		case 'init_06'://animal movement
+		//animal movement report generation
+		case 'init_06':
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Purpose','Destination','Remarks');
 				
@@ -335,32 +333,34 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
-		
-		case 'init_07': 			//livestock import
+			
+		//livestock import report generation		
+		case 'init_07': 			
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units','Beef Units');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units');
 				
 				$importRecords = $this->objLivestockimport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($importRecords as $report) {
 					
-					$row = array($report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
 				
-		case 'init_08': 			//livestock export
+		//livestock export report generation		
+		case 'init_08': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry', 'Beef Units');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Point of Entry','Origin of Animal','Destination of Animal','Animal Classification','Egg Units','Milk Units','Cheese Units','Poultry Units', 'Beef Units');
 				
-				$exportRecords = $this->objAnimalPopulation->getALL();
+				$exportRecords = $this->objLivestockexport->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($exportRecords as $report) {
 					
-					$row = array($report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
+					$row = array($report['district'],$report['entrypoint'],$report['origin'],$report['destination'],$report['classification'],$report['eggs'],$report['milk'],$report['cheese'],$report['poultry'],$report['beef']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
