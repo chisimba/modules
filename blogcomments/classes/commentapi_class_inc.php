@@ -244,8 +244,9 @@ class commentapi extends object
             $vemail = $this->objUser->email($viewerid);
             $fboxcontent = stripslashes($comm['comment_content']);
 
-            $authemail = "[".$authemail."]";
-            $authhead = NULL; //$auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
+            $authemail = explode('@', $authemail);
+            $authemail = $authemail[0];
+            $authhead = $authemail; //$auth; // . " " . $authemail; // . " (".htmlentities($authurl).")";
             if(isset($delIcon))
             {
                $fboxhead = $authhead; // . " " . $authemail;
