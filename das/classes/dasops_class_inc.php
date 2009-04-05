@@ -384,7 +384,7 @@ class dasops extends object {
 			'Reply-To: webmaster@example.com' . "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 
-		return mail($to, $subject, $message, $headers);
+		return mail($to, $subject, $body, $headers);
 	}
 	
 	
