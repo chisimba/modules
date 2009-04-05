@@ -18,8 +18,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 */
 class dbPostText extends dbTable
  {
-    
-    
+
+
 	/**
 	* Constructor method to define the table(default)
 	*/
@@ -29,12 +29,12 @@ class dbPostText extends dbTable
         $this->objTextStats =& $this->getObject('textstats', 'utilities');
         $this->objReadingEase =& $this->getObject('readingease', 'utilities');
     }
-    
-    
+
+
     /**
     * Insert a post into the database
     *
-    * @param string $post_id Record Id of the post 
+    * @param string $post_id Record Id of the post
     * @param string $post_title Title of the Post
     * @param string $post_text Text of the Post
     * @param string $language Language the post was made in
@@ -47,10 +47,10 @@ class dbPostText extends dbTable
     {
     	// Interim measure. Alternative, use regexp and replace with space
         $post_title = strip_tags($post_title);
-        
+
         // Clean up &nbsp;'s
         $post_text = $this->cleanUpPostText($post_text);
-        
+
         $this->insert(array(
     		'id'                    => $id,
     		'post_id'               => $post_id,
@@ -62,10 +62,10 @@ class dbPostText extends dbTable
             'wordcount'             => $this->objTextStats->count_words(strip_tags($post_text)),
     		'dateLastUpdated'       => strftime('%Y-%m-%d %H:%M:%S', mktime())
     	));
-    	
+
     	return $this->getLastInsertId();
     }
-    
+
     /**
     * Method to update a post's text and title - for editing
     * @param string $post_id Record Id of the post
@@ -76,15 +76,19 @@ class dbPostText extends dbTable
     {
         $filter = ' WHERE post_id = "'.$post_id.'" AND original_post="1" LIMIT 1';
         $results = $this->getAll($filter);
-        
+
         if (count($results) > 0) {
             $id = $results[0]['id'];
+            $post_text = stripslashes($post_text);
+            // unhtmlentities $document
+            $table = array_flip(get_html_translation_table(HTML_ENTITIES));
+            //$post_text = strtr($post_text, $table);
             return $this->update('id', $id, array('post_title' => $post_title, 'post_text' => $post_text));
         } else {
             return FALSE;
         }
     }
-    
+
     /**
     * Method to get all languages a post is in, or other languages the post is in.
     * @param string $id Record Id of the Post
@@ -97,14 +101,14 @@ class dbPostText extends dbTable
         if (isset($language)) {
             $sql .= ' AND language != "'.$language.'" ';
         }
-        
+
         return $this->getArray($sql);
     }
-    
+
     /**
     * This function cleans up a the &nbsp; that may occur in front of the text due to the WYSIWYG editor
     * It was affecting the word count. It tries to remove the &nbsp; ONLY if it starts in the first 5 letters - default
-    * This, hopefully, takes into account users 
+    * This, hopefully, takes into account users
     * @param string $postText Text to clean up
     * @param int $start - last point where the &nbsp; should start
     */
@@ -112,28 +116,28 @@ class dbPostText extends dbTable
     {
         // Check if there is a &nbsp; after tags has been stripped
         $firstCheckPost = strpos(strip_tags($postText), '&nbsp;');
-        
+
         // Check if this is STARTs in the first five letters
         if ($firstCheckPost < $start) {
-            
+
             // Now get TRUE position
             $pos = strpos($postText, '&nbsp;');
-            
+
             // Get the first portion of the text that contains the &nbsp;
             $portion = substr ($postText, 0, $pos+6);
             // Store the rest of the text elsewhere
             $rest = substr($postText, $pos+6);
-            
+
             // Remove the &nbsp in the first portion
-            $portion = str_replace("&nbsp;", "", $portion); 
-            
+            $portion = str_replace("&nbsp;", "", $portion);
+
             // Concatenate back
             $postText = $portion.$rest;
         }
-        
+
         return $postText;
     }
-    
+
     /**
     * Function to get a post in a particular language
     * @param string $postId Record Id of the Post
@@ -143,17 +147,17 @@ class dbPostText extends dbTable
     function getTranslatedPost($postId, $language)
     {
         $result = $this->getAll(' WHERE post_id=\''.$postId.'\' AND language=\''.strtolower($language).'\'');
-        
+
         if (count($result) == 0) {
             return FALSE;
         } else {
             return $result[0];
         }
     }
-    
-	
+
+
 }
 
 
-    
+
  ?>

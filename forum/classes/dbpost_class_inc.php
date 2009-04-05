@@ -287,7 +287,7 @@ class dbPost extends dbTable
         LEFT JOIN tbl_forum_post_text AS languagecheck ON (tbl_forum_post.id = languagecheck.post_id AND languagecheck.original_post=\'0\' AND tbl_forum_post_text.language != languagecheck.language)
         LEFT JOIN tbl_forum_post_ratings ON (tbl_forum_post.id = tbl_forum_post_ratings.post_id)
         WHERE tbl_forum_post.topic_id = \''.$topic.'\' GROUP BY tbl_forum_post.id ORDER BY post_order';
-        
+
         return $this->getArray($sql);
     }
 
@@ -345,6 +345,7 @@ class dbPost extends dbTable
             return NULL;
         } else {
             return $results[0];
+
         }
 
     }
@@ -1552,8 +1553,8 @@ function loadTranslation(post, lang) {
     {
         return $this->getRecordCount(' WHERE topic_id = "'.$topicid.'"');
     }
-    
-    
+
+
     /**
     * Insert a post into the database
     *
