@@ -99,4 +99,17 @@ class ahisuser extends dbtable {
 				ORDER BY u.surname";
 		return $this->objUser->getArray($sql);
 	}
+	
+	/**
+	 * Method to check whether a user is a asuperuser
+	 *
+	 * @param string $userId The user id of the user to check
+	 * @return true|false
+	 */
+	public function isSuperUser($userId) {
+		$id = $this->objUser->PKId($userId);
+		$row = $this->getRow('id', $id);
+		return ($row['superuser'] == '1') || ($userId == '1');
+	}
+	
 }

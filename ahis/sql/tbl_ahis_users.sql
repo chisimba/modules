@@ -65,6 +65,12 @@ $fields = array(
         'length' => '1',
         'notnull' => TRUE,
         'default' => 0        
+        ),
+    'superuser' => array(
+        'type' => 'integer',
+        'length' => '1',
+        'notnull' => TRUE,
+        'default' => 0        
         )
     );
 //create other indexes here...

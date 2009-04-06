@@ -36,6 +36,23 @@
             </add>
         </data>
     </update>                
+    <update>
+        <table>tbl_ahis_users</table>
+        <version>0.052</version>
+        <description>add superuser for report type admin</description>
+        <data>
+            <add>
+                <name>superuser</name>
+                <type>integer</type>
+                <definition>
+                        <type>integer</type>
+                        <length>1</length>
+                        <default>0</default>
+                        <notnull>TRUE</notnull>
+                </definition>
+            </add>
+        </data>
+    </update>                
          
 </updates>
 

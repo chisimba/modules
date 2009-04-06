@@ -849,6 +849,8 @@ class ahis extends controller {
                 $this->setVar('locations', $this->objTerritory->getAll());
                 $this->setVar('departments', $this->objDepartment->getAll());
                 $this->setVar('roles', $this->objRole->getAll());
+				$superDisabled = ($this->objAhisUser->isSuperUser($this->objUser->userId()))? '' : "'disabled = 'true'";
+				$this->setVar('superDisabled', $superDisabled);
                 return "add_employee_tpl.php";
             
             case 'employee_insert':
@@ -876,6 +878,11 @@ class ahis extends controller {
                     $ahisRecord['ahisuser'] = 0;
                     $record['isactive'] = 0;
                 }
+				if ($this->getParam('superuser')) {
+					$ahisRecord['superuser'] = 1;
+				} else {
+					$ahisRecord['superuser'] = 0;
+				}
                 $ahisRecord['locationid'] = $this->getParam('locationid');
                 $ahisRecord['departmentid'] = $this->getParam('departmentid');
                 $ahisRecord['roleid'] = $this->getParam('roleid');
@@ -1249,16 +1256,22 @@ class ahis extends controller {
                 $this->setVar('fieldName', 'name');
                 $this->setVar('searchStr', $searchStr);
                 $this->setVar('data', $data);
-                $this->setVar('allowEdit', TRUE);
+                $this->setVar('superUser', $this->objAhisUser->isSuperUser($this->objUser->userId()));
                 $this->setVar('editAction', 'report_add');
                 $this->setVar('success', $this->getParam('success'));
-                return 'admin_overview_tpl.php';
+                return 'report_admin_tpl.php';
             
             case 'report_add':
+				if (!$this->objAhisUser->isSuperUser($this->objUser->userId())) {
+					return $this->nextAction('admin');
+				}
                 $this->setVar('id', $this->getParam('id'));
                 return 'report_add_tpl.php';
             
             case 'report_insert':
+                if (!$this->objAhisUser->isSuperUser($this->objUser->userId())) {
+					return $this->nextAction('admin');
+				}
                 $id = $this->getParam('id');
                 $name = $this->getParam('name');
                 if ($this->objReport->valueExists('name', $name)) {
@@ -1274,6 +1287,9 @@ class ahis extends controller {
                 return $this->nextAction('report_admin', array('success'=>$code));
             
             case 'report_delete':
+                if (!$this->objAhisUser->isSuperUser($this->objUser->userId())) {
+					return $this->nextAction('admin');
+				}
                 $id = $this->getParam('id');
                 $this->objReport->delete('id', $id);
                 return $this->nextAction('report_admin', array('success'=>'2'));

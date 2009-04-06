@@ -11,6 +11,15 @@ function toggleAhisUser() {
     $('input_confirm').disabled =  !$('input_confirm').disabled;   
 }
 
+function toggleSuperUser() {
+    if ($('input_superuser').checked) {
+        if (!$('input_ahisuser').checked) {
+            $('input_ahisuser').checked = true;
+            toggleAhisUser();
+        }    
+    }
+}
+
 function resetDate(fieldName) {
     var today = new Date();
     

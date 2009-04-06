@@ -50,8 +50,7 @@ $name = 'tbl_ahis_animalmovement_idx';
 
 $indexes = array(
                 'fields' => array(
-                	'districtid' => array(),
-                	'keyword' => array(),
+                	'district' => array()
                 )
         );
 

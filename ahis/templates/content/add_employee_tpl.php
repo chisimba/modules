@@ -98,6 +98,9 @@ if (!$ahisRecord['ahisuser']) {
     $this->appendArrayVar('bodyOnLoad','toggleAhisUser();');
 }
 
+$superBox = new checkbox('superuser', NULL, $ahisRecord['superuser']);
+$superBox->extra = "onchange = 'toggleSuperUser();' $superDisabled";
+
 $titleDrop = new dropdown('titleid');
 $titleDrop->addFromDB($titles, 'name', 'id');
 $titleDrop->setSelected($ahisRecord['titleid']);
@@ -175,6 +178,11 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_ahisuser','ahis').": ");
 $objTable->addCell($ahisBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_superuser', 'ahis').": ");
+$objTable->addCell($superBox->show());
+$objTable->endRow();
+
+$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_username').": ");
 $objTable->addCell($usernameInput->show());
 $objTable->endRow();
