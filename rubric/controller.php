@@ -1060,5 +1060,42 @@ class rubric extends controller
 		}
         return "main_tpl.php";
     }
+
+    /**
+     * Checks if the user has access to make modifications to the rubrics.
+     *
+     * @return boolean True if the user can make modifications, false otherwise.
+     */
+    protected function userHasModifyAccess()
+    {
+        $limitedUsers = $this->objSysConfig->getValue('mod_rubric_limited_users', 'rubric');
+        if ($limitedUsers) {
+            $userId = $this->objUser->userId();
+            $groups = array('Site Admin', 'Lecturers');
+            $isMember = FALSE;
+            foreach ($groups as $group) {
+                $groupId = $this->objGroup->getId($group);
+                if ($this->objGroup->isGroupMember($userId, $groupId)) {
+                    $isMember = TRUE;
+                    break;
+                }
+            }
+            return $isMember;
+        } else {
+            return TRUE;
+        }
+    }
+
+    /**
+     * Checks if the given action is only available to certain user groups.
+     *
+     * @param string $action The name of the action to check.
+     * @return boolean True if the action is restricted, false otherwise.
+     */
+    protected function isRestricted($action)
+    {
+        $restrictedActions = array('createtable');
+        return in_array($action, $restrictedActions);
+    }
 }    
 ?>
