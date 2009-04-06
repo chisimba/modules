@@ -35,11 +35,20 @@ class rubric extends controller
     protected $objSysConfig;
 
     /**
+     * Instance of the groupadminmodel class of the groupadmin module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objGroup;
+
+    /**
     * The Init function
     */
     public function init()
     {
         $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $this->objGroup = $this->getObject('groupadminmodel', 'groupadmin');
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
 		  $this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
