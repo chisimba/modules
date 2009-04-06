@@ -20,17 +20,14 @@
 		<id>init_05</id>
 		<name>Active Surveillance</name>
 	</tbl_ahis_reporttype>
-	
 	<tbl_ahis_reporttype>
 		<id>init_06</id>
-		<name>Animal Movement</name>
+		<name>Livestock Movement</name>
 	</tbl_ahis_reporttype>
-	
 	<tbl_ahis_reporttype>
 		<id>init_07</id>
 		<name>Livestock Import</name>
 	</tbl_ahis_reporttype>
-	
 	<tbl_ahis_reporttype>
 		<id>init_08</id>
 		<name>Livestock Export</name>

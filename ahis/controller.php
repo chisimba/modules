@@ -232,14 +232,13 @@ class ahis extends controller {
                         return $this->nextAction('addinspectiondata');
 					case "init_04":
                         return $this->nextAction('animal_slaughter_add');
-                    case "init_05":
-					
-					case "init_06":
+                    case "init_06":
 						return $this->nextAction('animalmovement_add');
 					case "init_07":
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
+					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
                 }
