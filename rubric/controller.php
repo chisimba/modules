@@ -27,11 +27,19 @@ class rubric extends controller
 	public $objDbRubricAssessments;
 
     /**
+     * Instance of the dbsysconfig class of the sysconfig module.
+     *
+     * @access protected
+     * @var    object
+     */
+    protected $objSysConfig;
+
+    /**
     * The Init function
     */
     public function init()
     {
-      
+        $this->objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
         $this->objUser =& $this->getObject('user', 'security');
         $this->objLanguage =& $this->getObject('language','language');
 		  $this->objDbRubricTables =& $this->getObject('dbrubrictables'); 
