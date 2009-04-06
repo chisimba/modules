@@ -138,7 +138,7 @@ $objTable->endRow();
 $postal_address = new textinput("postal_address", "");
 $postal_address->size = 25;
 $postal_address->label = 'Post Address(must be filled out)';
-$form->addRule('postal_address', 'Please enter the Post Address', 'required');
+//$form->addRule('postal_address', 'Please enter the Post Address', 'required');
 $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_postaddress", 'eportfolio') . ":</b>"
 );
@@ -171,3 +171,4 @@ $objTable->endRow();
 $form->addToForm($objTable->show());
 echo $form->show();
 ?>
+

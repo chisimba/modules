@@ -27,7 +27,18 @@ $objTable->startRow();
 $objTable->addCell($objWashout->parseText("<b>" . $objLanguage->languageText("mod_eportfolio_lecturer", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
 $objTable->addCell($objWashout->parseText($objUser->fullName($myinstructor)) , null, "top", "left", null, null, null);
 $objTable->endRow();
-//display type
+
+// Spacer
+$objTable->startRow();
+$objTable->addCell('&nbsp;');
+$objTable->addCell('&nbsp;');
+$objTable->endRow();
+//display Language
+$objTable->startRow();
+$objTable->addCell($objWashout->parseText("<b>" . $label = $objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
+$objTable->addCell($objWashout->parseText($mylanguage) , null, "top", "left", null, null, null);
+$objTable->endRow();
+
 // Spacer
 $objTable->startRow();
 $objTable->addCell('&nbsp;');

@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
+	'type' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
 	'shortdescription' => array(
 		'type' => 'text',
 		),

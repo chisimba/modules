@@ -58,7 +58,7 @@ class dbEportfolio_Affiliation extends dbTable
      * @param string $finish The finish date
      * -- @param string $userId The user ID
      */
-    function insertSingle($type, $classification, $role, $organisation, $start, $finish) 
+    function insertSingle($type, $classification, $role, $organisation, $start, $finish, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $id = $this->insert(array(
@@ -68,7 +68,10 @@ class dbEportfolio_Affiliation extends dbTable
             'role' => $role,
             'organisation' => $organisation,
             'start' => $start,
-            'finish' => $finish
+            'finish' => $finish,
+            'shortdescription' => $shortdescription,
+            'longdescription' => $longdescription
+
         ));
         return $id;
     }
@@ -83,7 +86,7 @@ class dbEportfolio_Affiliation extends dbTable
      * @param string $finish The finish date
      * -- @param string $userId The user ID
      */
-    function updateSingle($id, $type, $classification, $role, $organisation, $start, $finish) 
+    function updateSingle($id, $type, $classification, $role, $organisation, $start, $finish, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $id = $this->update("id", $id, array(
@@ -93,7 +96,9 @@ class dbEportfolio_Affiliation extends dbTable
             'role' => $role,
             'organisation' => $organisation,
             'start' => $start,
-            'finish' => $finish
+            'finish' => $finish,
+            'shortdescription' => $shortdescription,
+            'longdescription' => $longdescription
         ));
     }
     /**

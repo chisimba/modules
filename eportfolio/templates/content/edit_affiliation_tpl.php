@@ -2,6 +2,7 @@
 // Load classes.
 $this->loadClass("form", "htmlelements");
 $this->loadClass("textinput", "htmlelements");
+$this->loadClass('textarea', 'htmlelements');
 $this->loadClass("button", "htmlelements");
 $this->loadClass("htmltable", 'htmlelements');
 $this->loadClass('dropdown', 'htmlelements');
@@ -100,7 +101,7 @@ $row = array(
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 $startField = $this->objPopupcal->show('start', 'yes', 'no', $start);
-$form->addRule('start', 'Please enter the start date', 'required');
+//$form->addRule('start', 'Please enter the start date', 'required');
 $row = array(
     $startField
 );
@@ -113,12 +114,48 @@ $row = array(
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 $startField = $this->objPopupcal->show('finish', 'yes', 'no', $finish);
-$form->addRule('finish', 'Please enter the finish date', 'required');
+//$form->addRule('finish', 'Please enter the finish date', 'required');
 $row = array(
     $startField
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
+//short description text box
+$objTable->startRow();
+$shortdescription = new textarea("shortdescription", $shortdescription);
+$form->addRule('shortdescription', 'Please enter a short description', 'required');
+$row = array(
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_shortdescription", 'eportfolio') . ":</b>"
+);
+$objTable->addCell($row[0], 140, 'top', 'right');
+$row = array(
+    $shortdescription->show()
+);
+$objTable->addCell($row[0], NULL, 'top', 'left');
+$objTable->endRow();
+//long description text field
+$objTable->startRow();
+$row = array(
+    "<b>" . $label = $objLanguage->languageText("mod_eportfolio_longdescription", 'eportfolio') . ":</b>"
+);
+$objTable->addCell($row[0], 140, 'top', 'right');
+//Add the WYSWYG editor
+$editor = $this->newObject('htmlarea', 'htmlelements');
+$editor->name = 'longdescription';
+$editor->height = '300px';
+$editor->width = '550px';
+$editor->setContent($longdescription);
+//To set the basic toolbar
+//$editor->setBasicToolBar();
+$editor->setContent($longdescription);
+//$objTable->addCell($editor->showFCKEditor(), NULL, "top", "center", NULL, "colspan=\"2\"");
+$row = array(
+    $editor->showFCKEditor()
+);
+//$form->addRule('longdescription', 'Please enter the long description','required');
+$objTable->addCell($row[0], NULL, 'top', 'left');
+$objTable->endRow();
+
 //Save button
 $button = new button("submit", $objLanguage->languageText("word_save")); //word_save
 $button->setToSubmit();

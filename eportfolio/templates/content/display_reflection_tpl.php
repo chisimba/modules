@@ -17,6 +17,18 @@ $objTable = new htmltable();
 $objTable->width = '60%';
 $objTable->attributes = " align='center' border='0'";
 $objTable->cellspacing = '12';
+//display Language
+// Spacer
+$objTable->startRow();
+$objTable->addCell('&nbsp;');
+$objTable->addCell('&nbsp;');
+$objTable->endRow();
+// display language
+$objTable->startRow();
+$objTable->addCell($objWashout->parseText("<b>" . $objLanguage->languageText("mod_eportfolio_wordlanguage", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
+$objTable->addCell($objWashout->parseText($language) , null, "top", "left", null, null, null);
+$objTable->endRow();
+
 //display user's names
 // Spacer
 $objTable->startRow();

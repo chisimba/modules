@@ -40,6 +40,7 @@ class eportfolio extends controller
         $this->objUserAdmin = &$this->getObject('useradmin_model2', 'security');
         $this->objUser = &$this->getObject('user', 'security');
         $this->objFile = &$this->getObject('dbfile', 'filemanager');
+	$this->objFolders = $this->getObject('dbfolder','filemanager');
         $this->objCleanUrl = $this->getObject('cleanurl', 'filemanager');
         $this->objDate = &$this->newObject('dateandtime', 'utilities');
         $this->objUserContext = $this->getObject('utils', 'contextpostlogin');
@@ -51,6 +52,7 @@ class eportfolio extends controller
         //        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
         $this->_objDBEssay = &$this->newObject('dbessay_book', 'essay');
         $this->objFSContext = $this->newObject('fscontext', 'context');
+        $this->objMysqlxml = &$this->newObject('mysqlxml_eportfolio', 'eportfolio');
         //        $this->lectGroupId = $this->_objGroupAdmin->getLeafId( array( $this->_objDBContext->getContextCode(), 'Lecturers' ) );
         // Get the DB object.
         $this->objDbAddressList = &$this->getObject('dbeportfolio_address', 'eportfolio');
@@ -99,9 +101,50 @@ class eportfolio extends controller
         $this->setVarByRef('userPid', $this->userPid);
         switch ($action) {
             case 'export':
-                $myid = $this->objUser->userId();
-                $address = $this->objExport->exportAddress($myid);
-                return $address;
+                $exportXML = $this->objMysqlxml->convertToXML();
+                return $exportXML;
+            case 'uploadeportfolio':
+		$this->setPageTemplate(NULL);  
+		$this->setLayoutTemplate(NULL);		          
+		$folder = $this->getParam('parentfolder', null);
+		$folderPath = $this->objFolders->getFolder($folder);
+                $importXML = $this->objMysqlxml->importFromXML($folderPath['folderpath']);
+                $this->setSession('displayconfirmationmessage', TRUE);                
+                return $this->nextAction('main', array('message'=>'uploadsuccessful'));
+            case 'uploaddonemessage':
+		$this->setPageTemplate(NULL);
+		$this->setLayoutTemplate(NULL);		            
+            	echo '<h3>' .$this->objLanguage->languageText ( 'mod_eportfolio_congratulations', 'eportfolio') .'!</h3><br></br><p>'.$this->objLanguage->languageText ( 'mod_eportfolio_successMessage', 'eportfolio') ."</p>";
+            	break;
+            case 'import':
+                $this->setLayoutTemplate('eportfolio_layout_tpl.php');
+                return 'upload_eportfolio_tpl.php';
+                break;
+            case 'checkfolder':
+		$this->setPageTemplate(NULL);
+		$this->setLayoutTemplate(NULL);
+		$code = $this->getParam('code');
+		switch(strtolower($code))
+		{
+		    case NULL:
+		        break;
+		    case 'root':
+		        echo 'reserved';
+		        break;
+		    default:
+			$filename = 'imsmanifest.xml';
+			$fileIdentification = 'Identification.xml';
+			$folderPath = $this->objFolders->getFolder($code);
+			$verifyFolder = $this->objFile->getFileFolder($filename, $folderPath['folderpath']);
+			$verifyFolderIdent = $this->objFile->getFileFolder($fileIdentification, $folderPath['folderpath']);
+			if ($verifyFolder[0]['filename']=='imsmanifest.xml' && $verifyFolderIdent[0]['filename']=='Identification.xml') {
+		            echo 'ok';
+		        } else {
+		            echo 'notok';
+		        }
+		}
+
+                break;
 	    case 'myview';
                 //$this->setLayoutTemplate('plain_layout_tpl.php');
                 $myid = $this->objUser->userId();
@@ -575,7 +618,7 @@ class eportfolio extends controller
             case "editassertionconfirm":
                 $myid = $this->getParam('id', null);
                 $this->setVarByRef('id', $myid);
-                $this->nextAction($this->objDbAssertionList->updateSingle($myid, $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
+                $this->nextAction($this->objDbAssertionList->updateSingle($myid, $this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
                 return $this->nextAction('main', NULL);
                 break;
 
@@ -585,7 +628,7 @@ class eportfolio extends controller
                 break;
 
             case "addassertionconfirm":
-                $id = $this->objDbAssertionList->insertSingle($this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
+                $id = $this->objDbAssertionList->insertSingle( $this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
                 //Create Assertion Folder
                 //check if the folder exist
                 if ($this->objFSContext->folderExists($contextCode) == FALSE) {
@@ -604,10 +647,12 @@ class eportfolio extends controller
                 $id = $this->getParam('id', null);
                 $this->setVarByRef('id', $id);
                 $list = $this->objDbAssertionList->listSingle($id);
+                $language = $list[0]['language'];
                 $rationale = $list[0]['rationale'];
                 $creation_date = $list[0]['creation_date'];
                 $shortdescription = $list[0]['shortdescription'];
                 $longdescription = $list[0]['longdescription'];
+                $this->setVarByRef('language', $language);
                 $this->setVarByRef('rationale', $rationale);
                 $this->setVarByref('creation_date', $creation_date);
                 $this->setVarByRef('shortdescription', $shortdescription);
@@ -621,11 +666,13 @@ class eportfolio extends controller
                 $this->setVarByRef('thisid', $thisid);
                 $mylist = $this->objDbAssertionList->listSingle($thisid);
                 $myinstructor = $mylist[0]['userid'];
+                $mylanguage = $mylist[0]['language'];
                 $myrationale = $mylist[0]['rationale'];
                 $mycreation_date = $mylist[0]['creation_date'];
                 $myshortdescription = $mylist[0]['shortdescription'];
                 $mylongdescription = $mylist[0]['longdescription'];
                 $this->setVarByRef('myinstructor', $myinstructor);
+                $this->setVarByRef('mylanguage', $mylanguage);
                 $this->setVarByRef('myrationale', $myrationale);
                 $this->setVarByref('mycreation_date', $mycreation_date);
                 $this->setVarByRef('myshortdescription', $myshortdescription);
@@ -645,11 +692,13 @@ class eportfolio extends controller
                 $this->setVarByRef('groupId', $groupId);
                 $mylist = $this->objDbAssertionList->listSingle($assertionId);
                 $myinstructor = $mylist[0]['userid'];
+                $mylanguage = $mylist[0]['language'];
                 $myrationale = $mylist[0]['rationale'];
                 $mycreation_date = $mylist[0]['creation_date'];
                 $myshortdescription = $mylist[0]['shortdescription'];
                 $mylongdescription = $mylist[0]['longdescription'];
                 $this->setVarByRef('myinstructor', $myinstructor);
+                $this->setVarByRef('mylanguage', $mylanguage);
                 $this->setVarByRef('myrationale', $myrationale);
                 $this->setVarByref('mycreation_date', $mycreation_date);
                 $this->setVarByRef('myshortdescription', $myshortdescription);
@@ -668,6 +717,7 @@ class eportfolio extends controller
                 $this->setVarByRef('ownerId', $ownerId);
                 $this->setVarByRef('groupId', $groupId);
                 $list = $this->objDbReflectionList->listSingle($reflectionId);
+                $language = $list[0]['language'];
                 $rationale = $list[0]['rationale'];
                 $creation_date = $list[0]['creation_date'];
                 $shortdescription = $list[0]['shortdescription'];
@@ -736,8 +786,10 @@ class eportfolio extends controller
                 $this->setVarByRef('ownerId', $ownerId);
                 $this->setVarByRef('groupId', $groupId);
                 $list = $this->objDbTranscriptList->listSingle($transcriptId);
+                $type = $list[0]['type'];
                 $shortdescription = $list[0]['shortdescription'];
                 $longdescription = $list[0]['longdescription'];
+                $this->setVarByRef('type', $type);
                 $this->setVarByRef('shortdescription', $shortdescription);
                 $this->setVarByRef('longdescription', $longdescription);
                 return "display_transcript_tpl.php";
@@ -779,12 +831,12 @@ class eportfolio extends controller
             case "editreflectionconfirm":
                 $myid = $this->getParam('id', null);
                 $this->setVarByRef('id', $myid);
-                $this->nextAction($this->objDbReflectionList->updateSingle($myid, $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
+                $this->nextAction($this->objDbReflectionList->updateSingle($myid, $this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
                 return $this->nextAction('main', NULL);
                 break;
 
             case "addreflectionconfirm":
-                $id = $this->objDbReflectionList->insertSingle($this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
+                $id = $this->objDbReflectionList->insertSingle($this->getParam('language', NULL) , $this->getParam('rationale', NULL) , $this->getParam('creation_date', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
                 return $this->nextAction('main', NULL);
                 break;
 
@@ -793,10 +845,12 @@ class eportfolio extends controller
                 $id = $this->getParam('id', null);
                 $this->setVarByRef('id', $id);
                 $list = $this->objDbReflectionList->listSingle($id);
+                $language = $list[0]['language'];
                 $rationale = $list[0]['rationale'];
                 $creation_date = $list[0]['creation_date'];
                 $shortdescription = $list[0]['shortdescription'];
                 $longdescription = $list[0]['longdescription'];
+                $this->setVarByRef('language', $language);
                 $this->setVarByRef('rationale', $rationale);
                 $this->setVarByref('creation_date', $creation_date);
                 $this->setVarByRef('shortdescription', $shortdescription);
@@ -921,7 +975,7 @@ class eportfolio extends controller
                 break;
 
             case "addaffiliationconfirm":
-                $id = $this->objDbAffiliationList->insertSingle($this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL));
+                $id = $this->objDbAffiliationList->insertSingle($this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
                 return $this->nextAction('main', NULL);
                 break;
 
@@ -958,12 +1012,16 @@ class eportfolio extends controller
                 $organisation = $list[0]['organisation'];
                 $start = $list[0]['start'];
                 $finish = $list[0]['finish'];
+               $shortdescription = $list[0]['shortdescription'];
+               $longdescription = $list[0]['longdescription'];
                 $this->setVarByRef('affiliation_type', $affiliation_type);
                 $this->setVarByRef('classification', $classification);
                 $this->setVarByRef('role', $role);
                 $this->setVarByRef('organisation', $organisation);
                 $this->setVarByRef('start', $start);
                 $this->setVarByref('finish', $finish);
+                $this->setVarByref('shortdescription', $shortdescription);
+                $this->setVarByref('longdescription', $longdescription);
                 return "edit_affiliation_tpl.php";
                 break;
 
@@ -977,7 +1035,7 @@ class eportfolio extends controller
             case "editaffiliationconfirm":
                 $myid = $this->getParam('id', null);
                 $this->setVarByRef('id', $myid);
-                $this->nextAction($this->objDbAffiliationList->updateSingle($myid, $this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL)));
+                $this->nextAction($this->objDbAffiliationList->updateSingle($myid, $this->getParam('affiliation_type', NULL) , $this->getParam('classification', NULL) , $this->getParam('role', NULL) , $this->getParam('organisation', NULL) , $this->getParam('start', NULL) , $this->getParam('finish', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
                 return $this->nextAction('main', NULL);
                 break;
 
@@ -1131,7 +1189,7 @@ class eportfolio extends controller
 
             case "addtranscriptconfirm":
                 //$link = $this->getParam('link', NULL);
-                $id = $this->objDbTranscriptList->insertSingle($this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
+                $id = $this->objDbTranscriptList->insertSingle($this->getParam('type', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL));
                 return $this->nextAction('main', NULL);
                 break;
 
@@ -1174,8 +1232,10 @@ class eportfolio extends controller
                 $id = $this->getParam('id', null);
                 $this->setVarByRef('id', $id);
                 $list = $this->objDbTranscriptList->listSingle($id);
+                $type = $list[0]['type'];
                 $shortdescription = $list[0]['shortdescription'];
                 $longdescription = $list[0]['longdescription'];
+                $this->setVarByRef('type', $type);
                 $this->setVarByRef('shortdescription', $shortdescription);
                 $this->setVarByRef('longdescription', $longdescription);
                 return "edit_transcript_tpl.php";
@@ -1184,7 +1244,7 @@ class eportfolio extends controller
             case "edittranscriptconfirm":
                 $myid = $this->getParam('id', null);
                 $this->setVarByRef('id', $myid);
-                $this->nextAction($this->objDbTranscriptList->updateSingle($myid, $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
+                $this->nextAction($this->objDbTranscriptList->updateSingle($myid, $this->getParam('type', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
                 return $this->nextAction('main', NULL);
                 break;
 

@@ -30,6 +30,22 @@ $row = array(
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
+//type Text box
+$type = new textinput("type", "");
+$type->size = 30;
+$form->addRule('type', 'Please enter Type', 'required');
+$row = array(
+"<b>" . $label = $objLanguage->languageText("mod_eportfolio_transcriptType", 'eportfolio') . ":</b>"
+);
+$objTable->startRow();
+$objTable->addCell($row[0], 140, 'top', 'right');
+$row = array(
+$type->show()
+);
+$objTable->addCell($row[0], Null, 'top', 'left');
+$objTable->endRow();
+
+
 //short description text field
 $textinput = new textarea("shortdescription", "");
 $form->addRule('shortdescription', 'Please enter the short description', 'required');

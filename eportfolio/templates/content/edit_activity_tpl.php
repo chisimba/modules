@@ -95,7 +95,7 @@ $row = array(
 );
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 $startField = $this->objPopupcal->show('activityFinish', 'yes', 'no', $activityFinish);
-$form->addRule('activityFinish', 'Please enter Activity Finish Date', 'required');
+//$form->addRule('activityFinish', 'Please enter Activity Finish Date', 'required');
 $row = array(
     $startField
 );

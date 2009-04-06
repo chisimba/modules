@@ -41,6 +41,15 @@ class dbEportfolio_Categorytypes extends dbTable
     }
     /**
      * Return record
+     * @param string $catType The category Type
+     * @return array The entries
+     */
+    function listByType($catType) 
+    {
+        return $this->getAll("WHERE type='" . $catType . "'");
+    }
+    /**
+     * Return record
      * @param string $category The category
      * @return array The entries
      */

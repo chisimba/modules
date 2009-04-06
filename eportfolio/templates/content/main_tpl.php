@@ -9,6 +9,8 @@ $this->loadClass('textinput', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('mouseoverpopup', 'htmlelements');
+$this->loadClass('mysqlxml_eportfolio', 'eportfolio');
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeading = &$this->getObject('htmlheading', 'htmlelements');
 $objinfoTitles = &$this->getObject('htmlheading', 'htmlelements');
@@ -71,11 +73,31 @@ $mngviewlink = new link($this->uri(array(
 )));
 $mngviewlink->link = $iconView->show();
 $linkviewManage = $mngviewlink->show();
+//Link to export eportfolio
+$iconExport = $this->getObject('geticon', 'htmlelements');
+$iconExport->setIcon('exportcvs');
+$iconExport->alt = $objLanguage->languageText("mod_eportfolio_export", 'eportfolio');
+$mngExportlink = new link($this->uri(array(
+    'module' => 'eportfolio',
+    'action' => 'export'
+)));
+$mngExportlink->link = $iconExport->show();
+$linkExportManage = $mngExportlink->show();
+//Link to import eportfolio
+$iconImport = $this->getObject('geticon', 'htmlelements');
+$iconImport->setIcon('importcvs');
+$iconImport->alt = $objLanguage->languageText("mod_eportfolio_import", 'eportfolio');
+$mngImportlink = new link($this->uri(array(
+    'module' => 'eportfolio',
+    'action' => 'import'
+)));
+$mngImportlink->link = $iconImport->show();
+$linkImportManage = $mngImportlink->show();
 //echo '<div align="center">'.$linkpdfManage.'</div>';
 //echo "</br>";
 $objHeading->type = 2;
 $objHeading->align = 'center';
-$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage. '    ' . $linkviewManage  . '</font>';
+$objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage. '    ' . $linkviewManage  . '    ' . $linkExportManage  . '    ' . $linkImportManage  . '</font>';
 echo $objHeading->show();
 $objHeading->align = 'left';
 $objinfoTitles->type = 1;
@@ -1888,4 +1910,24 @@ $tabBox->addTab(array(
     'content' => $this->getEportfolioUsers()
 ) , 'winclassic-tab-style-sheet');
 echo $tabBox->show();
+
+if ($this->getParam('message') == 'uploadsuccessful') {
+    //$uploadstatus = $this->getParam('status');
+    $alertBox = $this->getObject('alertbox', 'htmlelements');
+    $alertBox->putJs();
+    
+    echo "<script type='text/javascript'>
+ var browser=navigator.appName;
+ var b_version=parseFloat(b_version);
+ if(browser=='Microsoft Internet Explorer'){
+	alert('".str_replace('&amp;', '&', $this->uri(array('action'=>'uploaddonemessage')))."');
+ }else{
+	 jQuery.facebox(function() {
+	  jQuery.get('".str_replace('&amp;', '&', $this->uri(array('action'=>'uploaddonemessage')))."', function(data) {
+	    jQuery.facebox(data);
+	  })
+	 })
+ }
+</script>";
+}
 ?>

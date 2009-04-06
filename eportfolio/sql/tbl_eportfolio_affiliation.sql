@@ -36,6 +36,14 @@ $fields = array(
 		),
 	'finish' => array(
 		'type' => 'timestamp',
+		),
+	'shortdescription' => array(
+		'type' => 'text',
+		'length' => 255,
+		),
+	'longdescription' => array(
+		'type' => 'text',		
 		)
 	);
 ?>
+

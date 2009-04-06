@@ -50,17 +50,19 @@ class dbEportfolio_Reflection extends dbTable
     }
     /**
      * Insert a record
+     * @param string $language The language
      * @param string $rationale The rationale
      * @param string $creation_date The creation date
      * @param string $shortdescription The short description
      * @param string $longdescription The long description
      * -- @param string $userId The user ID
      */
-    function insertSingle($rationale, $creation_date, $shortdescription, $longdescription) 
+    function insertSingle($language, $rationale, $creation_date, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $id = $this->insert(array(
             'userid' => $userid,
+            'language' => $language,
             'rationale' => $rationale,
             'creation_date' => $creation_date,
             'shortdescription' => $shortdescription,
@@ -71,17 +73,19 @@ class dbEportfolio_Reflection extends dbTable
     /**
      * Update a record
      * @param string $id ID
+     * @param string $language The language
      * @param string $rationale The rationale
      * @param string $creation_date The creation date
      * @param string $shortdescription The short description
      * @param string $longdescription The long description
      * -- @param string $userId The user ID
      */
-    function updateSingle($id, $rationale, $creation_date, $shortdescription, $longdescription) 
+    function updateSingle($id, $language, $rationale, $creation_date, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $this->update("id", $id, array(
             'userid' => $userid,
+            'language' => $language,
             'rationale' => $rationale,
             'creation_date' => $creation_date,
             'shortdescription' => $shortdescription,

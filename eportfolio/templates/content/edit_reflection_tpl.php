@@ -30,7 +30,22 @@ $row = array(
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
-//type text box
+//language Text box
+$language = new textinput("language", $language);
+$language->size = 30;
+$form->addRule('language', 'Please enter the Language', 'required');
+$row = array(
+"<b>" . $label = $objLanguage->languageText("mod_eportfolio_language", 'eportfolio') . ":</b>"
+);
+$objTable->startRow();
+$objTable->addCell($row[0], 140, 'top', 'right');
+$row = array(
+$language->show()
+);
+$objTable->addCell($row[0], Null, 'top', 'left');
+$objTable->endRow();
+
+//rationale text box
 $textinput = new textinput("rationale", $rationale);
 $textinput->size = 40;
 $form->addRule('rationale', 'Please enter the rationale', 'required');

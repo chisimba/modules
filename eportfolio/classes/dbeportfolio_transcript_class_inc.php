@@ -54,11 +54,12 @@ class dbEportfolio_Transcript extends dbTable
      * @param string $longdescription The long description
      * -- @param string $userId The user ID
      */
-    function insertSingle($shortdescription, $longdescription) 
+    function insertSingle($type, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $id = $this->insert(array(
             'userid' => $userid,
+            'type' => $type,
             'shortdescription' => $shortdescription,
             'longdescription' => $longdescription
         ));
@@ -71,11 +72,12 @@ class dbEportfolio_Transcript extends dbTable
      * @param string $longdescription The long description
      * -- @param string $userId The user ID
      */
-    function updateSingle($id, $shortdescription, $longdescription) 
+    function updateSingle($id, $type, $shortdescription, $longdescription) 
     {
         $userid = $this->objUser->userId();
         $this->update("id", $id, array(
             'userid' => $userid,
+            'type' => $type,
             'shortdescription' => $shortdescription,
             'longdescription' => $longdescription
         ));

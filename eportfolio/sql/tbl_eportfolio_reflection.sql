@@ -15,6 +15,10 @@ $fields = array(
 		'type' => 'text',
 		'length' => 50,
 		),
+	'language' => array(
+		'type' => 'text',
+		'length' => 100,
+		),
 	'rationale' => array(
 		'type' => 'text',
 		'length' => 255,

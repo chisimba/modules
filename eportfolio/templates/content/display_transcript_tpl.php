@@ -17,6 +17,17 @@ $objHeading->type = 1;
 $ownersurname = $objUser->getSurname($ownerId);
 $objHeading->str = $ownersurname . $objLanguage->languageText("mod_eportfolio_es", 'eportfolio') . ' ' . $objLanguage->languageText("mod_eportfolio_wordtranscript", 'eportfolio');
 echo "<div align ='center'>" . $objHeading->show() . "</div>";
+//display type
+// Spacer
+$objTable->startRow();
+$objTable->addCell('&nbsp;');
+$objTable->addCell('&nbsp;');
+$objTable->endRow();
+// display user's names
+$objTable->startRow();
+$objTable->addCell($objWashout->parseText("<b>" . $label = $objLanguage->languageText("mod_eportfolio_contypes", 'eportfolio') . ":</b>") , null, "top", "right", null, null, null);
+$objTable->addCell($objWashout->parseText($type) , null, "top", "left", null, null, null);
+$objTable->endRow();
 //display short description
 // Spacer
 $objTable->startRow();
