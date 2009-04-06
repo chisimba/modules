@@ -69,6 +69,12 @@ class rubric extends controller
     {
         // Set the layout template.
         $this->setLayoutTemplate("layout_tpl.php");
+
+        // Check to ensure the user is allowed to execute this action.
+        if ($this->isRestricted($action) && !$this->userHasModifyAccess()) {
+            return 'access_denied_tpl.php';
+        }
+
         // 1. ignore action at moment as we only do one thing - say hello
         // 2. load the data object (calls the magical getObject which finds the
         //    appropriate file, includes it, and either instantiates the object,
