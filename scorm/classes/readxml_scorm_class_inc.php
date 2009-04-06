@@ -14,6 +14,10 @@ if (!$GLOBALS['kewl_entry_point_run'])
 class readxml_scorm extends object
 {
     /**
+    * @var groupAdminModel an object reference.
+    */
+    var $_objGroupAdminModel;
+    /**
     * @var treeMenu an object reference.
     */
     var $_objTreeMenu;
@@ -22,10 +26,9 @@ class readxml_scorm extends object
     */
     var $_extra;
     /**
-    * @var string Group Id of root node.
+    * @var string Context Id of root node.
     */
-    var $_rootNode;
-    
+    var $_rootNode;   
     /**
     * @var string Location of tree icons.
     */
@@ -53,7 +56,7 @@ class readxml_scorm extends object
     /**
     * @var string Target Window for Trees
     */
-    var $treeTargetWindow = NULL;
+    var $treeTargetWindow = Null;
 
 /**
 *
@@ -75,10 +78,11 @@ public function init()
         $this->_treeIcons = 'icons/tree/';
 
         $this->_arrTreeIcons = array();
-        $this->_arrTreeIcons['root'] = 'treebase';
-        $this->_arrTreeIcons['empty']['selected'] = 'treefolder-selected_white';
-        $this->_arrTreeIcons['empty']['open'] = 'treefolder-expanded_white';
-        $this->_arrTreeIcons['empty']['closed'] = 'treefolder_white';
+        $this->_arrTreeIcons['root'] = 'treefolder_green';
+        $this->_arrTreeIcons['subroot'] = 'treefolder_white';
+        $this->_arrTreeIcons['empty']['selected'] = 'folder-expanded_selected';
+        $this->_arrTreeIcons['empty']['open'] = 'treefolder-expanded_green';
+        $this->_arrTreeIcons['empty']['closed'] = 'treefolder_green';
 
 }
   
@@ -89,6 +93,20 @@ public function init()
 *@param string $courseFolder
 * @return array
 */
+public function readManifest2($rootFolder, $courseFolder=Null){
+
+	$doc = new DOMDocument();
+	$doc->load( 'usrfiles/'.$rootFolder.'/imsmanifest.xml' );
+
+	$books = $doc->getElementsByTagName( "item" );
+	$allbooks = $doc->getElementsByTagName( "organization" );
+	$resources = $doc->getElementsByTagName( "resource" );
+	$nodesItem = $books->item(0);
+	$content = $this->xmlMicroxTree($nodesItem,$resources,$rootFolder,$ident="");
+
+	$hiddenInput = new hiddeninput('input_rootFolder', $rootFolder);
+	return $content."<br /><input type='hidden' name='input_rootfolder' id='input_rootfolder' value='".$rootFolder."' />";
+}
 public function readManifest($rootFolder, $courseFolder=Null){
 
 	$doc = new DOMDocument();
@@ -97,124 +115,121 @@ public function readManifest($rootFolder, $courseFolder=Null){
 	$books = $doc->getElementsByTagName( "item" );
 	$allbooks = $doc->getElementsByTagName( "organization" );
 	$resources = $doc->getElementsByTagName( "resource" );
-	$arrIdentifier = array();
-	$nodeArrId = array();
-	$arrId = 0;
-	$nArr = 0;
 	$nodesItem = $books->item(0);
-//	$content = $this->getContent($nodesItem,$resources,$rootFolder);
-	$content = $this->xmlMicroxTree($nodesItem,$resources,$rootFolder,$ident="");
-/*
-$theNextArray = $this->xmlNextPage($pagePath=null,$rootFolder);
-$thePrevArray = $this->xmlPrevPage($pagePath=null,$rootFolder);
-var_dump($theNextArray);
-var_dump($thePrevArray);
-*/
-	//another method
-	//print_r($this->xml2array($books));
-	foreach( $books as $book )
-	{
-		//if($book->hasChildNodes()==true)
-		$nodes = $book->getElementsByTagName( "item" );
-/***********************/
-//		$nodesItem = $nodes->item(0);
-		//$NodList=$nodesItem->childNodes;
-		//$NodLength = $NodList->length;
-		//if($NodLength>0){
-//		$content = $this->getContent($Content,$nodesItem);
-		//}
-		//echo $Content;
-//		$NodList=$nodesItem->childNodes;
-//		$NodLength = $NodList->length;
-//		var_dump($NodLength);
-/*********************/
-		if($nodes->length!==0)
-		{
-			
-			foreach($nodes as $nodeArr)
-			{
-				$nodeArrRef = $nodeArr->getAttribute('identifier');
-				$nodeArrIdRef = $nodeArr->getAttribute('identifierref');	
-			 	//$nodeArrRef = $nodeArr->getElementsByTagName( "title" );
-			  	//$resnameArr = $nodeArrRef->item(0)->nodeValue;
-				$myCheck = in_array($nodeArrRef, $nodeArrId);
-				if($myCheck==FALSE){
-				$nodeArrId[$nArr] = $nodeArrRef;
-				}
-			//var_dump($myCheck);
-				$nArr = $nArr + 1;
-			}			
-			//var_dump($nodeArrRef);
-			
+//Prepare the tree
+        $this->_objTreeMenu =& new treemenu();
+	$menu  = &$this->_objTreeMenu;
+        $rootMenu = &$this->createRootNode();
+        $this->_objTreeMenu->addItem( $rootMenu );
 
-		}
-		$identifier = $book->getAttribute('identifier'); 
-		$arrIdentifier[$arrId] = "'".$identifier."'";
-		//$arrIdentifier['id'] = $arrIdentifier['id']."'".$arrId."'";
-		//$arrIdentifier['name'] = $arrIdentifier['name']."'".$identifier."'";
-		if($nodes->length!==0)
-		{
-		 	$res = $book->getElementsByTagName( "title" );
-		  	$resname = $res->item(0)->nodeValue;
-			/* get attribute */
+	$content = $this->xmlMicroxTree($nodesItem,$resources,$rootFolder,$ident="",$rootMenu,$rootMenu2=Null,$rootMenu3=Null,$rootMenu4=Null,$treenode=Null,$a=Null,$myLevl=Null);
 
-			$cid = $book->getAttribute('identifierref'); 
-			//an array to hold the tag id
-			//$identifier = $book->getAttribute('identifier'); 
-			//$arrIdentifier[$arrId] = "'".$identifier."'";
-			foreach ( $resources as $myresources ){
-				if( $myresources->getAttribute('identifier') ==  $cid ){
-					$resourcePath = $myresources->getAttribute('href');
-					//An Iframe with name content is the link target
-					$fullPath = '<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$resname.'</a>';
-				}
-			//}			
-			}
-			$navigation = $navigation."<div>$fullPath</div>";
-		} else {
-			//$rootNode = $book->getElementsByTagName( "item" );
-		//Display root node
-		 	$res = $book->getElementsByTagName( "title" );
-		  	$resname = $res->item(0)->nodeValue;
-			/* get attribute */
-			$cid = $book->getAttribute('identifierref'); 
-			//an array to hold the tag id
-			//$identifier = $book->getAttribute('identifier'); 
-			//$arrIdentifier[$arrId] = "'".$identifier."'";
-			foreach ( $resources as $myresources ){
-				if( $myresources->getAttribute('identifier') ==  $cid ){
-					$resourcePath = $myresources->getAttribute('href');
-					//An Iframe with name content is the link target
-					$fullPath = '&nbsp;&nbsp;&nbsp;<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$resname.'</a>';
-				}
-			}
-			$navigation = $navigation."<div>$fullPath</div>";
-		//end Display root node
-		//$arrId = $arrId + 1;
-		}
-		$arrId = $arrId + 1;
-	//$navigation = $navigation."<p>$fullPath</p>";
-	}
-	$parentNode = Null;
-//echo $content;
-//echo "<br />\n";
-//var_dump($nodeArrId);
-	//$staticMenu = $this->getStaticTree($arrIdentifier);
-
-	$xmlString = "<treemenu>";
-
-	foreach ($arrIdentifier as $Identifier) {
-		$xmlString = $xmlString.'<node text="'.$Identifier.'" icon="folder.gif" expandedIcon="folder-expanded.gif" />';
-		$element = $doc->getElementById('$Identifier');
-		$roughhWork = $roughhWork."$Identifier \n";
-	}
-	$xmlString = $xmlString."</treemenu>";
-        //$this->_objTreeMenu =& new treemenu();
-	//$xmlMenu = $this->_objTreeMenu->createFromXML($xmlString);
-	//return $navigation.'<br>'.$staticMenu;
 	$hiddenInput = new hiddeninput('input_rootFolder', $rootFolder);
-	return $content."<br /><input type='hidden' name='input_rootfolder' id='input_rootfolder' value='".$rootFolder."' />";
-//	return $content."<br /><span id='rootFolder'>".$rootFolder."</span>";
+	return $this->showDHTML()."<br /><input type='hidden' name='input_rootfolder' id='input_rootfolder' value='".$rootFolder."' />";
+}
+function xmlMicroxTree($nod,$resources,$rootFolder,$ident,$rootMenu=Null,$rootMenu2=Null,$rootMenu3=Null,$rootMenu4=Null,$treenode=Null,$a=Null,$myLevl=Null)
+{ 
+	$row = array();
+	$NodList=$nod->childNodes;
+	$treeTxt = "";//var to content temp
+    for( $j=0 ;  $j < $NodList->length; $j++ )
+    { 	//each child node
+      $nod2=$NodList->item($j);//Node j
+	//no white spaces
+	if($nod2->nodeType==1){
+		if($nod2->nodeName=="title"){
+		$treeTxt = "<br />\n".$treeTxt.$ident;
+		}
+		if($nod2->childNodes->length==0){//no children.Get nodeValue
+			$treeTxt = $treeTxt.$nod2->nodeValue;
+			$atribId = $nod2->parentNode->getAttribute('identifierref');
+			foreach ( $resources as $myresources ){
+				if( $myresources->getAttribute('identifier') ==  $atribId){
+					$resourcePath = $myresources->getAttribute('href');
+					//An Iframe with name content is the link target
+					$treeTxt = '<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$treeTxt.'</a>';
+				}
+			}
+
+			$treeTxt = $treeTxt."<br />\n";
+		}else if ($nod2->childNodes->length>0){//children.Get first child
+			//$treeTxt = $treeTxt.$nod2->firstChild->nodeValue;
+			$atribId = $nod2->parentNode->getAttribute('identifierref');
+			foreach ( $resources as $myresources ){
+				if( $myresources->getAttribute('identifier') ==  $atribId){
+					$resourcePath = $myresources->getAttribute('href');
+					//An Iframe with name content is the link target
+					$pageName = $nod2->firstChild->nodeValue;
+					$treeTxt = $treeTxt.'<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$pageName.'</a>';
+					if($treenode==Null){
+					  $row['id'] = $atribId;
+					  $row['uri'] = "";
+					  $row['text'] = '<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$pageName.'</a>';
+
+					  if(empty($a)){
+	                                    $a = 1;
+						  if(trim($pageName)!== ""){
+//		                                    echo $a." ".$row['text']."<br> ";
+				                    $treenode = &$this->createTreeNode( $row );			        	  
+		                                    $rootMenu->addItem( $treenode );
+		                                    $myLevl = 12;
+		                                  }
+	                                  }
+	                                }
+	                                else{  
+	                                  $a = $a+1;
+	                                  $subRow = array();
+					  $subRow['id'] = $atribId;
+					  $subRow['uri'] = "";
+					  $subRow['text'] = '<a href = "usrfiles/'.$rootFolder.'/'.$resourcePath.'" target = "content">'.$pageName.'</a>';
+
+					  if(trim($pageName)!== ""){
+						  if($myLevl==12){
+				                    $rootMenu2 = &$this->createTreeNode( $subRow );			        	  
+		                                    $treenode->addItem( $rootMenu2 );
+		                                    $myLevl = $myLevl + 12;
+		                                  }elseif($myLevl==24){
+				                    $rootMenu3 = &$this->createTreeNode( $subRow ); 	  
+		                                    $rootMenu2->addItem( $rootMenu3 );
+		                                    $myLevl = $myLevl + 12;
+		                                  }elseif($myLevl==36){
+				                    $rootMenu4 = &$this->createTreeNode( $subRow );			        	  
+		                                    $rootMenu3->addItem( $rootMenu4 );	                                   
+		                                    $myLevl = $myLevl + 12;
+		                                  }else{
+				                    $rootMenu5 = &$this->createTreeNode( $subRow );			        	  
+		                                    $rootMenu4->addItem( $rootMenu5 );
+		                                  }
+					  }
+
+/*
+					  if(trim($pageName)!== ""){
+						  if(strlen($ident)==12){
+				                    $rootMenu2 = &$this->createTreeNode( $subRow );			        	  
+		                                    $treenode->addItem( $rootMenu2 );
+		                                  }elseif(strlen($ident)==24){
+				                    $rootMenu3 = &$this->createTreeNode( $subRow );			        	  
+		                                    $rootMenu2->addItem( $rootMenu3 );	                                   
+		                                  }elseif(strlen($ident)==36){
+				                    $rootMenu4 = &$this->createTreeNode( $subRow );			        	  
+		                                    $rootMenu3->addItem( $rootMenu4 );	                                   
+		                                  }else{
+				                    $rootMenu5 = &$this->createTreeNode( $subRow );			        	  
+		                                    $rootMenu4->addItem( $rootMenu5 );
+		                                  }
+					  }
+*/
+	                                }
+
+				}
+			}
+		//recursive to child of children
+		$treeTxt = $treeTxt.$this->xmlMicroxTree($nod2,$resources,$rootFolder,$ident."&nbsp;&nbsp;",$rootMenu,$rootMenu2,$rootMenu3,$rootMenu4,$treenode, $a, $myLevl);
+
+		}
+	}
+     }
+     return $treeTxt;
 }
 
 function getContent($nod,$resources,$rootFolder)
@@ -228,7 +243,6 @@ function getContent($nod,$resources,$rootFolder)
         $nodemane=$nod2->nodeName;
         $nodevalue=$nod2->nodeValue;
         $nodeAttr=$nod2->attribute;
-var_dump($nodeAttr);
 	$NodeContent .=  $nodevalue.$nodeAttr."<br>";
 
 	$cid = $nod->getAttribute('identifierref'); 
@@ -246,7 +260,7 @@ var_dump($nodeAttr);
     }
    return $navigation;
 }
-function xmlMicroxTree($nod,$resources,$rootFolder,$ident)
+function xmlMicroxTree2($nod,$resources,$rootFolder,$ident)
 { 
 	$NodList=$nod->childNodes;	
 	$treeTxt = "";//var to content temp
@@ -367,72 +381,108 @@ function xmlPrevPage($pagePath,$rootFolder)
 	}
      return $nextPage;
 }
+    /**
+    * Method to get the tree menu object
+    * @access public
+    * @return object reference
+    */
+    function &getTreeMenu()
+    {
+        return $this->_objTreeMenu;
+    }
+    /**
+    * Method to create a tree node.
+    * @param  array   contains the current group row.
+    * @access private
+    * @return object  reference
+    */
+    function &createTreeNode( &$row )
+    {
+        // Initialize locals
+        $icons = $this->_arrTreeIcons;
+        $pageId   = $row['id'];
+        
+        $linkText = $row['text'];
+        $link = $row['uri'];
+
+        $icon   = $icons['empty']['closed'].'.gif';// Empty closed folder
+        $expand = $icons['empty']['open'].'.gif';// Empty expanded folder
+
+
+	$treenode = new treenode(  array (
+                    'text'         => $linkText,
+                    'link'         => $link,
+                    'value'        => $pageId,
+                    'icon'         => $icon,
+                    'expandedIcon' => $expand,
+                    'cssClass'     => '',
+                    'linkTarget'   => $this->treeTargetWindow
+                ));
+        return $treenode;
+    }
 
     /**
-    * Method to generate a tree that 
-    * will to used in the index.php file of 
-    * the static content
+    * Method to create a root node.
+    * @access private
+    * @return object  reference
     */
-    function getStaticTree($nodesArr)
+    function &createRootNode()
     {
-        $menu  = new treemenu();
-        $basenode = new treenode(array('text' => 'Static Cotent', 'link' => '', 'icon' => 'base.gif', 'expandedIcon' => 'base.gif'));    
-	$myid = 0;
-        foreach($nodesArr as $node)
-        {            
-            if($node[$myid] !== null)
-            {            
-                $basenode->addItem($this->getStaticChildNodes($nodesArr,$node[$myid],$node[$myid]));
-            }
-	    $myid = $myid + 1;
-        }
-        $menu->addItem($basenode);
-        //$menu->addItem($this->recurTree($rootnodeid,$rootlabel));
+        // Context Aware;
+        $icons = $this->_arrTreeIcons;
+        $this->_rootNode = NULL;
+        $treenode = new treenode( array ( 'text' => '<STRONG>Content List</STRONG>', 'icon' => $icons['root'].'.gif' ));
+        return $treenode;
 
-        // Create the presentation class
-        $treeMenu = &new dhtml($menu, array('images' => 'treeimages', 'defaultClass' => 'treeMenuDefault'));
-      
-        return $treeMenu->getMenu();
-     
-    }  
-    
-    /*
-    *Method to create a child node for the tree
-    * @access Private
-    * @param array $nodesArr : The list of nodes for a course
-    * @param string $parentId : The Id of the parent Node
-    * @param string $title : The Title of the node
-    * @return string $basenode : A tree node 
+    }
+    /**
+    * Method to create a tree menu object.
+    * @access private
+    * @return nothing
     */
-    function getStaticChildNodes($nodeArr,$parentId,$title){
-        //setup the link      
-        $link = $parentId.'.html';
-        //create a new tree node
-        $basenode = new treenode(array('text' => $title, 'link' => $link, 'icon' => NULL, 'expandedIcon' => NULL ));        
-        $myid = 0;
-        //search for more children
-        foreach ($nodeArr as $line) 
-        {   
-            if($line[$myid]==$parentId){
-                $basenode->addItem($this->getStaticChildNodes($nodeArr,$line[$myid],$line[$myId]));
-            }
-	    $myid = $myid + 1;
+    function createTreeMenu()
+    {
+        $this->_objTreeMenu =& new treemenu();
+        
+        $rootMenu = &$this->createRootNode();
+        $this->_objTreeMenu->addItem( $rootMenu );
+        
+        $this->recureTree( $this->_rootNode, $rootMenu );
+    }
+
+    /**
+    * Method to show the tree as a tree like structure.
+    * @access public
+    * @return string the HTML output
+    */
+    function showDHTML()
+    {
+        $this->_extra = array(
+            'images' => $this->objSkin->getCommonSkinURL().$this->_treeIcons,
+            'defaultClass' => 'treeMenuDefault' );
+
+        $dhtmlMenu = new dhtml( $this->_objTreeMenu, $this->_extra );
+        
+        $this->appendArrayVar('headerParams', $this->getJavascriptFile('TreeMenu.js','tree'));
+        
+        return $dhtmlMenu->getMenu();
+    }
+    
+    /**
+    * Method to build the tree structure.
+    * @access private
+    * @return nothing
+    */
+    function recureTree( &$node, &$parentNode )
+    {
+        $menu  = &$this->_objTreeMenu;
+        $newNode = &$this->createTreeNode( $node );
+        if  ( is_null( $parentNode ) ) {
+        	$menu->addItem( $newNode );
+        } else {
+        	$parentNode->addItem( $newNode );
         }
-        return $basenode;
     }
 
-
-function xml2array($n)
-{
-    $return=array();
-    foreach($n->childNodes as $nc){
-    ($nc->hasChildNodes())
-    ?($n->firstChild->nodeName== $n->lastChild->nodeName&&$n->childNodes->length>1)
-    ?$return[$nc->nodeName][]=$this->xml2array($item)
-    :$return[$nc->nodeName]=$this->xml2array($nc)
-    :$return=$nc->nodeValue;
-    }
-    return $return;
-}
 }
 ?>

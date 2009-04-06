@@ -11,7 +11,23 @@
 
 //AJAX to check if selected folder contains scorm
     
-    $this->appendArrayVar('headerParams', "
+    $this->appendArrayVar('headerParams', "<style type='text/css'>
+  div.small-box {
+  width:250px;
+  height:550px;
+  border:1px solid grey;
+  overflow:scroll;
+  font:30px;
+  }
+  div.big-box {
+  width:700px;
+  height:550px;
+  border:1px solid grey;
+  //overflow:scroll;
+  font:30px;
+  }
+
+</style>
     <script type='text/javascript'>
         
         // Flag Variable - Update message or not
@@ -185,25 +201,25 @@
 	$navigators = $this->objReadXml->readManifest($filePath);
 	//$navigators = $this->objReadXml->treeMenuXML($filePath);
 	$objTable = new htmltable();
-	$objTable->width='100%';
+	$objTable->width='950px';
 	$objTable->height='100%';
 	$objTable->attributes=" align='center' border='0'";
-	$objTable->cellspacing='12';
+	$objTable->cellspacing='5';
 	$row = array("<b>".$objLanguage->code2Txt("word_name").":</b>");
 	//$objIframe = new iframe();
 	//iframe to hold the API
 	$apiIFrame = '<iframe src="'.$getApi.'" name="API" height=0 width=10 frameborder=0 scrolling=no></iframe>';
 	//iframe to hold the content
-	$content = '<iframe id="IFRAME_content" src="usrfiles/'.$filePath.'/index.html" name="content" height=700 width=700 frameborder=0 scrolling=yes></iframe>';
+	$content = '<iframe id="IFRAME_content" src="usrfiles/'.$filePath.'/index.html" name="content" height=450 width=650 frameborder=0 scrolling=yes></iframe>';
 $testNavs = "<div id='divNavs' align = 'center'><span id='span_home'> <a href = 'usrfiles/".$filePath."/index.html' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prev'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_next'>&nbsp</next> </div>";
 $testNavsB = "<div id='divNavsb' align = 'center'><span id='span_homeb'> <a href = 'usrfiles/".$filePath."/index.html' target = 'content' id = 'home'> Home</a></span>"." &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <span id='span_prevb'>&nbsp</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id='span_nextb'>&nbsp</next> </div>";
 
 	// Spacer
 	$objTable->startRow();
 	    $objTable->addCell($apiIFrame);
-	    $objTable->addCell('<div id="div_navigators">'.$navigators."</div>");
+	    $objTable->addCell('<div id="div_navigators" class="small-box">'.$navigators."</div>");
 //	    $objTable->addCell($readXml);
-	    $objTable->addCell($testNavs."<br /><div id='divContent' align = 'right'>".$content."</div><br />".$testNavsB);
+	    $objTable->addCell('<div class="big-box">'.$testNavs."<br /><div id='divContent' align = 'center'>".$content."</div><br />".$testNavsB).'</div>';
 	$objTable->startRow();
 	    $objTable->addCell("&nbsp;");
 	    $objTable->addCell("&nbsp;");
