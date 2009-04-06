@@ -48,7 +48,7 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 
 
 $label_district = new label ('District Name:', 'district');
-$input_district = new textinput('district');
+$input_district = new textinput('district',$dist);
 //$input_district->size = 40;
 
 $formTable->startRow();
