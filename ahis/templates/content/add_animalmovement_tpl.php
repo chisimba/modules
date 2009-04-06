@@ -82,6 +82,7 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 
 $label_district = new label ('District: ', 'district');
 $district = new textinput('district',$dist);
+$district->extra = 'readonly';
 //$district->size = 40;
 $formTable->startRow();
 //$formTable->cellpadding = 5;
