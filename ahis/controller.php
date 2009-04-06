@@ -871,6 +871,7 @@ class ahis extends controller {
                 $ahisRecord['ahisuser'] = $this->getParam('ahisuser');
                 if ($ahisRecord['ahisuser']) {
                     $ahisRecord['ahisuser'] = 1;
+					$record['isactive'] = 1;
                     if ((!$record['username'] || !$password) && !$id) {
                         return $this->nextAction('create_employee', array('error'=>1, 'id'=>$id));
                     }
@@ -904,6 +905,7 @@ class ahis extends controller {
                     if (!empty($test)) {
                         return $this->nextAction('employee_admin', array('success'=>'4'));
                     }
+					$record['userid'] = mt_rand(1000,9999).date('ymd');
                     $id = $this->objUser->insert($record);
                     $code = 1;
                 }

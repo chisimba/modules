@@ -54,7 +54,7 @@ if ($id) {
     if (empty($ahisRecord)) {
         $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] =
         $ahisRecord['titleid'] = $ahisRecord['statusid'] = $ahisRecord['retired'] = '';
-        $ahisRecord['ahisuser'] = 0;
+        $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = 0;
         $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
     }
 } else {
@@ -62,7 +62,7 @@ if ($id) {
     $formUri = $this->uri(array('action'=>'employee_insert'));
     $record['surname'] = $record['firstname'] = $ahisRecord['statusid'] = $ahisRecord['titleid'] = $ahisRecord['retired'] =
     $record['username'] = $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] = '';
-    $ahisRecord['ahisuser'] = 0;
+    $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = 0;
     $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
 }
 
