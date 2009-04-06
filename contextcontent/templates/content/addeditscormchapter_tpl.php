@@ -52,6 +52,9 @@ $objIcon->setIcon('loader');
                 jQuery("#contextcodemessage").addClass("error");
                 jQuery("#input_contextcode").addClass("inputerror");
                 jQuery("#contextcodemessage").removeClass("success");
+                jQuery("#contextcodemessage2").html("Button is Disabled");   
+                jQuery("#contextcodemessage2").addClass("error");
+                jQuery("#submitbutton").attr("disabled", "disabled");                               
                 doUpdateMessage = false;
                 
             // Else Need to do Ajax Call
@@ -81,14 +84,18 @@ $objIcon->setIcon('loader');
                                 
                                 // IF code exists
                                 if (msg == "ok") {
+                                    jQuery("#contextcodemessage2").html("");                                
                                     jQuery("#contextcodemessage").html("Good! It contains scorm");
                                     jQuery("#contextcodemessage").addClass("success");
+                                    jQuery("#contextcodemessage2").removeClass("error");                                    
                                     jQuery("#contextcodemessage").removeClass("error");
                                     jQuery("#input_parentfolder").removeClass("inputerror");
                                     jQuery("#submitbutton").removeAttr("disabled");
 
                                 // Else
                                 } else {
+                                    jQuery("#contextcodemessage2").html("Button is Disabled");
+                                    jQuery("#contextcodemessage2").addClass("error");
                                     jQuery("#contextcodemessage").html("That folder does not contain a scorm course");
                                     jQuery("#contextcodemessage").addClass("error");
                                     jQuery("#input_parentfolder").addClass("inputerror");
@@ -151,7 +158,7 @@ if ($mode == 'edit') {
 $table->startRow();
 $table->addCell($label->show());
 //$table->addCell($htmlArea->show());
-$table->addCell($usrFolders.' <span id="contextcodemessage">'.$contextCodeMessage.'</span>');
+$table->addCell($usrFolders.' <pre id="contextcodemessage">'.$contextCodeMessage.'</pre>');
 $table->endRow();
 //spacer
 $table->startRow();
@@ -190,8 +197,9 @@ $form->addToForm($hiddeninput->show());
 
 
 $button = new button('submitbutton', $this->objLanguage->languageText('mod_contextcontent_chapter','contextcontent'));
+$button->cssId = 'submitbutton';
 $button->setToSubmit();
-$form->addToForm($button->show());
+$form->addToForm($button->show().' <pre id="contextcodemessage2">'.$contextCodeMessage.'</pre>');
 
 if ($mode == 'edit') {
     $hiddeninput = new hiddeninput('id', $id);
