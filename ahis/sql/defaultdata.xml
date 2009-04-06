@@ -32,6 +32,16 @@
 		<id>init_08</id>
 		<name>Livestock Export</name>
 	</tbl_ahis_reporttype>
+	
+	<tbl_ahis_reporttype>
+		<id>init_09</id>
+		<name>Vaccine Inventory</name>
+	</tbl_ahis_reporttype>
+	
+	<tbl_ahis_reporttype>
+		<id>init_10</id>
+		<name>Deworming</name>
+	</tbl_ahis_reporttype>
     
     <tbl_ahis_title>
         <id>init_01</id>

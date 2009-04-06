@@ -365,6 +365,36 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
+				
+		case 'init_09': 
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Vaccine Name','Total Doses On hand','Doses at start of Month','Doses at start of Month date','Doses at end of Month','Doses at end of Month Date','Doses Received During the Month','Doses Used', 'Doses Wasted');
+				
+				$vaccineInventoryRecords = $this->objVaccineInventory->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($vaccineInventoryRecords as $report) {
+					
+					$row = array($report['district_name'],$report['vaccine_name'],$report['total_doses_on_hand'],$report['dosesatstartmonth'],$report['dosesatstartmonthdate'],$report['dosesatendmonth'],$report['dosesatendmonthdate'],$report['monthdoses'],$report['dosesused'],$report['doseswasted']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
+				
+				case 'init_10': 
+				
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Type of Antiemetic','Remarks');
+				
+				$dewormingRecords = $this->objDeworming->getALL();
+				$csv = implode(",", $headerArray)."\n";
+				
+				foreach ($dewormingRecords as $report) {
+					
+					$row = array($report['district'],$report['animalclass'],$report['numanimals'],$report['antiemetictype'],$report['remarks']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
 		
 	}
 	}
