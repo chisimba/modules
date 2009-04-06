@@ -77,90 +77,90 @@ class dbwiki extends dbTable
         $this->objContext = $this->getObject('dbcontext', 'context');
         $this->objGroups = $this->getObject('managegroups', 'contextgroups');
     }
-    
+
 /* ----- Functions for changeing tables ----- */
 
-	/**
-	* Method to dynamically switch tables
-	*
-	* @access private
-	* @param string $table: The name of the table
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _changeTable($table)
-	{
-		try{
-			parent::init($table);
-			return TRUE;
-		}catch(customException $e){
-			customException::cleanUp();
-			return FALSE;
-		}
-	}
-	
-	/**
-	* Method to set the wiki table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setWiki()
-	{
+    /**
+    * Method to dynamically switch tables
+    *
+    * @access private
+    * @param string $table: The name of the table
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _changeTable($table)
+    {
+        try{
+            parent::init($table);
+            return TRUE;
+        }catch(customException $e){
+            customException::cleanUp();
+            return FALSE;
+        }
+    }
+
+    /**
+    * Method to set the wiki table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setWiki()
+    {
         return $this->_changeTable('tbl_wiki_wikis');
     }
 
-	/**
-	* Method to set the pages table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setPages()
-	{
+    /**
+    * Method to set the pages table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setPages()
+    {
         return $this->_changeTable('tbl_wiki_pages');
     }
 
-	/**
-	* Method to set the rating table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setRating()
-	{
+    /**
+    * Method to set the rating table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setRating()
+    {
         return $this->_changeTable('tbl_wiki_rating');
     }
 
-	/**
-	* Method to set the watch table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setWatch()
-	{
+    /**
+    * Method to set the watch table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setWatch()
+    {
         return $this->_changeTable('tbl_wiki_watch');
     }
 
-	/**
-	* Method to set the links table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setLinks()
-	{
+    /**
+    * Method to set the links table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setLinks()
+    {
         return $this->_changeTable('tbl_wiki_links');
     }
 
-	/**
-	* Method to set the forum table
-	*
-	* @access private
-	* @return boolean: TRUE on success FALSE on failure
-	*/
-	private function _setForum()
-	{
+    /**
+    * Method to set the forum table
+    *
+    * @access private
+    * @return boolean: TRUE on success FALSE on failure
+    */
+    private function _setForum()
+    {
         return $this->_changeTable('tbl_wiki_forum');
     }
 
@@ -185,10 +185,10 @@ class dbwiki extends dbTable
             return FALSE;
         }
     }
-    
+
     /**
     * Method to add a wiki
-    * 
+    *
     * @access public
     * @param string $name: The wiki name
     * @param string $desc: The wiki description
@@ -212,7 +212,7 @@ class dbwiki extends dbTable
         $this->personalMainPage();
         return $wikiId;
     }
-    
+
     /**
     * Method to check if a context has a wiki
     *
@@ -232,7 +232,7 @@ class dbwiki extends dbTable
             return FALSE;
         }
     }
-    
+
     /**
     * Method to get the context wiki
     *
@@ -253,7 +253,7 @@ class dbwiki extends dbTable
         }
         return $wikiId;
     }
-    
+
     /**
     * Method to auto create a context wiki
     *
@@ -269,7 +269,7 @@ class dbwiki extends dbTable
         );
         $descLabel = $this->objLanguage->code2Txt('mod_wiki_contextdesc', 'wiki', $array);
         $wikiLabel = $this->objLanguage->languageText('mod_wiki_name', 'wiki');
-        
+
         switch($data['access']){
             case 'Public':
                 $visibility = 1;
@@ -284,7 +284,7 @@ class dbwiki extends dbTable
                 $visibility = 1;
                 break;
         }
-        
+
         $this->_setWiki();
         $fields = array();
         $fields['group_type'] = 'context';
@@ -300,27 +300,34 @@ class dbwiki extends dbTable
         $this->contextMainPage();
         return $wikiId;
     }
-    
+
     /**
     * Method to get the public wikis
-    * 
+    * but this function is called also by blocks..so check if in context or not.
+    * If in context, then those
     * @access public
     * @return array|bool $data: The wiki data on success|FALSE on failure
     */
     public function getPublicWikis()
     {
         $this->_setWiki();
-        $sql = " WHERE wiki_visibility = '1'";
+        $sql = " WHERE wiki_visibility= '1'";
+        //are we in a context? if so, get hold of the context wikis too
+        if($this->objUser->isLoggedIn()){
+            $contextCode=$this->objContext->getContextCode();
+            $sql .= " OR group_id = '".$contextCode."'";
+        }
+      
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
         }
         return FALSE;
-    } 
-    
+    }
+
     /**
     * Method to get a wikis
-    * 
+    *
     * @access public
     * @param string $wikiId
     * @return array|bool $data: The wiki data on success|FALSE on failure
@@ -335,7 +342,7 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }
-    
+
     /**
     * Method to update the wiki visibility
     *
@@ -351,12 +358,14 @@ class dbwiki extends dbTable
         $fields['wiki_visibility'] = $visibility;
         $fields['date_created'] = date('Y-m-d H:i:s');
         $this->update('id', $id, $fields);
+        //print_r($fields);
+        //die();
         return $id;
     }
-    
+
     /**
     * Method to get the open wikis
-    * 
+    *
     * @access public
     * @return array|bool $data: The wiki data on success|FALSE on failure
     */
@@ -372,13 +381,13 @@ class dbwiki extends dbTable
             foreach($contexts as $context){
                 $sql .= " OR (group_type = 'context' AND group_id = '".$context."')";
             }
-        }        
+        }
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data;
         }
         return FALSE;
-    } 
+    }
 
 /* ----- Functions for tbl_wiki_pages ----- */
 
@@ -405,8 +414,8 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }
-    
-    
+
+
     /**
     * Method to auto create the main page after creating a personal wiki
     *
@@ -428,7 +437,7 @@ class dbwiki extends dbTable
         $fields['page_content'] = $text2Label."\n".$text3Label;
         $fields['version_comment'] = $text4Label;
         $fields['main_page'] = 1;
-        
+
         $this->addPage($fields);
     }
 
@@ -452,7 +461,7 @@ class dbwiki extends dbTable
         $fields['page_content'] = "* ".$text1Label."\n".$text3Label;
         $fields['version_comment'] = $text4Label;
         $fields['main_page'] = 1;
-        
+
         $this->addPage($fields);
     }
 
@@ -468,16 +477,16 @@ class dbwiki extends dbTable
         if(!is_array($data) || empty($data)){
             return FALSE;
         }
-        
+
         $data['wiki_id'] = $this->wikiId;
         $data['page_version'] = $this->getVersion($data['page_name']);
         $data['page_status'] = 1;
         $data['page_author_id'] = $this->userId;
         $data['date_created'] = date('Y-m-d H:i:s');
         $pageId = $this->insert($data);
-        return $pageId;                  
+        return $pageId;
     }
-    
+
     /**
     * Method to get all latest (current version) wiki pages
     *
@@ -498,7 +507,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get all wiki pages
@@ -514,7 +523,7 @@ class dbwiki extends dbTable
         $sql .= "     FROM tbl_wiki_pages GROUP BY page_name)";
         if(isset($this->wikiId))
         {
-        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+            $sql .= " AND wiki_id = '".$this->wikiId."'";
         }
         $sql .= " ORDER BY date_created DESC";
         $data = $this->getAll($sql);
@@ -522,7 +531,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get all wiki pages by name
@@ -533,11 +542,11 @@ class dbwiki extends dbTable
     */
     public function getPagesByName($name)
     {
-        $this->_setPages();        
+        $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
         if(isset($this->wikiId))
         {
-        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+            $sql .= " AND wiki_id = '".$this->wikiId."'";
         }
         $sql .= " ORDER BY page_version DESC";
         log_debug($sql);
@@ -546,7 +555,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get a wiki page by name
@@ -558,14 +567,14 @@ class dbwiki extends dbTable
     */
     public function getPage($name, $version = NULL)
     {
-        $this->_setPages();        
+        $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
         if(!empty($version)){
             $sql .= " AND page_version = '".$version."'";
         }
         if(isset($this->wikiId))
         {
-        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+            $sql .= " AND wiki_id = '".$this->wikiId."'";
         }
         $sql .= " ORDER BY page_version DESC";
         $data = $this->getAll($sql);
@@ -573,7 +582,7 @@ class dbwiki extends dbTable
             return $data[0];
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get a wiki page by id
@@ -584,14 +593,14 @@ class dbwiki extends dbTable
     */
     public function getPageById($id)
     {
-        $this->_setPages();        
+        $this->_setPages();
         $sql = "WHERE id = '".$id."'";
         $data = $this->getAll($sql);
         if(!empty($data)){
             return $data[0];
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get a main page
@@ -601,7 +610,7 @@ class dbwiki extends dbTable
     */
     public function getMainPage()
     {
-        $this->_setPages();        
+        $this->_setPages();
         $sql = "WHERE main_page = '1'";
         $sql .= " AND wiki_id = '".$this->wikiId."'";
         $sql .= " ORDER BY page_version DESC";
@@ -610,7 +619,7 @@ class dbwiki extends dbTable
             return $data[0];
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get recently added wiki pages
@@ -620,7 +629,7 @@ class dbwiki extends dbTable
     */
     public function getRecentlyAdded()
     {
-        $this->_setPages(); 
+        $this->_setPages();
         $sql = "WHERE page_version = 1";
         $sql .= " AND page_status < 5";
         $sql .= " AND wiki_id = '".$this->wikiId."'";
@@ -630,7 +639,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get recently updated wiki pages
@@ -648,7 +657,7 @@ class dbwiki extends dbTable
         $sql .= " AND page_status < 5";
         if(isset($this->wikiId))
         {
-        	$sql .= " AND wiki_id = '".$this->wikiId."'";
+            $sql .= " AND wiki_id = '".$this->wikiId."'";
         }
         $sql .= " ORDER BY date_created DESC LIMIT 5";
         $data = $this->getAll($sql);
@@ -656,8 +665,8 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }  
-    
+    }
+
     /**
     * Method to get recently updated wiki pages
     *
@@ -677,7 +686,7 @@ class dbwiki extends dbTable
         //log_debug($sql);
         $data = $this->getAll($sql);
         return $data;
-    }      
+    }
 
     /**
     * Method to edit a field
@@ -690,10 +699,10 @@ class dbwiki extends dbTable
     */
     public function editPageField($id, $field, $name)
     {
-        $this->_setPages();        
+        $this->_setPages();
         $this->update('id', $id, array($field => $value));
-    }    
-    
+    }
+
     /**
     * Method to mark a wiki page as deleted
     *
@@ -708,13 +717,13 @@ class dbwiki extends dbTable
         foreach($data as $line){
             $this->update('id', $line['id'], array(
                 'page_status' => 6,
-            ));
-        }        
+                ));
+        }
     }
-    
+
     /**
     * Method to restore a wiki page
-    * 
+    *
     * @access public
     * @param string $name: The page name to restore
     * @param integer $version: The page version to restore
@@ -726,7 +735,7 @@ class dbwiki extends dbTable
             'num' => $version,
         );
         $restoreLabel = $this->objLanguage->code2Txt('mod_wiki_restoration', 'wiki', $array);
-        
+
         $this->_setPages();
         $sql = "WHERE page_name = '".$name."'";
         $sql .= " AND page_version > '".$version."'";
@@ -736,7 +745,7 @@ class dbwiki extends dbTable
             foreach($overWrittenPages as $page){
                 $this->update('id', $page['id'], array(
                     'page_status' => 4,
-                ));
+                    ));
             }
         }
 
@@ -750,13 +759,13 @@ class dbwiki extends dbTable
         $pageToRestore['page_author_id'] = $this->userId;
         $pageToRestore['date_created'] = date('Y-m-d H:i:s');
         $pageId = $this->insert($pageToRestore);
-        
-        return $pageId;        
+
+        return $pageId;
     }
-    
+
     /**
     * Method to restore a wiki page
-    * 
+    *
     * @access public
     * @param string $name: The page name to restore
     * @param integer $version: The page version to restore
@@ -777,7 +786,7 @@ class dbwiki extends dbTable
             foreach($archivedPages as $page){
                 $this->update('id', $page['id'], array(
                     'page_status' => 5,
-                ));
+                    ));
             }
         }
 
@@ -791,11 +800,11 @@ class dbwiki extends dbTable
         $pageToReinstate['page_author_id'] = $this->userId;
         $pageToReinstate['date_created'] = date('Y-m-d H:i:s');
         $pageId = $this->insert($pageToReinstate);
-        
-        return $pageId;        
+
+        return $pageId;
     }
-    
-    /** 
+
+    /**
     * Method to get the page version for entry
     *
     * @access private
@@ -812,7 +821,7 @@ class dbwiki extends dbTable
         }
         return $version;
     }
-    
+
     /**
     * Method to search the wiki
     *
@@ -845,7 +854,7 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }
-    
+
     /**
     * Method to get a list of all authors and their page count
     *
@@ -864,7 +873,7 @@ class dbwiki extends dbTable
         }
         return FALSE;
     }
-    
+
     /**
     * Method to get a list of articles by an author
     *
@@ -887,10 +896,10 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
 /* ----- Functions for tbl_wiki_rating ----- */
-    
+
     /**
     * Method to add a wiki page rating
     *
@@ -908,7 +917,7 @@ class dbwiki extends dbTable
         $fields['page_name'] = $name;
         $fields['page_rating'] = $rating;
         $fields['creator_id'] = $this->userId;
-        
+
         return $ratingId = $this->insert($fields);
     }
 
@@ -949,7 +958,7 @@ class dbwiki extends dbTable
         );
         return $array;
     }
-    
+
     /**
     * Method to check if a user has rated a page
     *
@@ -1014,8 +1023,8 @@ class dbwiki extends dbTable
             $fields['wiki_id'] = $this->wikiId;
             $fields['page_name'] = $name;
             $fields['creator_id'] = $this->userId;
-        
-            $watchId = $this->insert($fields);                
+
+            $watchId = $this->insert($fields);
         }
         return $watchId;
     }
@@ -1032,7 +1041,7 @@ class dbwiki extends dbTable
     public function getUserPageWatch($name, $userId = NULL)
     {
         $userId = isset($userId) ? $userId : $this->userId;
-        
+
         $this->_setWatch();
         $sql = "WHERE wiki_id = '".$this->wikiId."'";
         $sql .= " AND page_name = '".$name."'";
@@ -1113,7 +1122,7 @@ class dbwiki extends dbTable
     }
 
 /* ----- Functions for tbl_wiki_links ----- */
-    
+
     /**
     * Method to add a interwiki link
     *
@@ -1125,7 +1134,7 @@ class dbwiki extends dbTable
     public function addLink($name, $link)
     {
         $this->_setLinks();
-        
+
         $wiki = $this->getLinkByName($name);
         if(!empty($wiki)){
             $linkId = $wiki['id'];
@@ -1153,7 +1162,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get an interwiki link
@@ -1171,7 +1180,7 @@ class dbwiki extends dbTable
             return $data[0];
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to get an interwiki link
@@ -1189,7 +1198,7 @@ class dbwiki extends dbTable
             return $data[0];
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to edit an interwiki link
@@ -1208,10 +1217,10 @@ class dbwiki extends dbTable
         $fields['wiki_link'] = $link;
         $fields['creator_id'] = $this->userId;
         $this->update('id', $id, $fields);
-    }    
+    }
 
 /* ----- Functions for tbl_wiki_forum ----- */
-    
+
     /**
     * Method to add a wiki discussion post
     *
@@ -1224,14 +1233,14 @@ class dbwiki extends dbTable
     public function addPost($name, $title, $content)
     {
         $this->_setForum();
-        
+
         $data = $this->getPosts($name);
         if(!empty($data)){
             $count = count($data) + 1;
         }else{
             $count = 1;
         }
-        
+
         $fields = array();
         $fields['wiki_id'] = $this->wikiId;
         $fields['page_name'] = $name;
@@ -1242,7 +1251,7 @@ class dbwiki extends dbTable
         $fields['author_id'] = $this->userId;
         $fields['date_created'] = date('Y-m-d H:i:s');
         $postId = $this->insert($fields);
-        
+
         return $postId;
     }
 
@@ -1264,7 +1273,7 @@ class dbwiki extends dbTable
             return $data;
         }
         return FALSE;
-    }    
+    }
 
     /**
     * Method to edit a wiki discussion post
@@ -1282,7 +1291,7 @@ class dbwiki extends dbTable
         $fields['post_content'] = $content;
         $fields['date_modified'] = date('Y-m-d H:i:s');
         $this->update('id', $id, $fields);
-    }    
+    }
 
     /**
     * Method to delete a wiki discussion post
@@ -1297,7 +1306,7 @@ class dbwiki extends dbTable
         $fields = array();
         $fields['post_status'] = '2';
         $this->update('id', $id, $fields);
-    }    
+    }
 
     /**
     * Method to restore a wiki discussion post
@@ -1312,6 +1321,6 @@ class dbwiki extends dbTable
         $fields = array();
         $fields['post_status'] = '1';
         $this->update('id', $id, $fields);
-    }    
+    }
 }
 ?>
