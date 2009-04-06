@@ -69,7 +69,8 @@ $link = new link($this->uri(array('action' => 'default')));
 $loadingIcon = $objIcon->show();
 
 //title
-$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
+//$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
+$title = 'Livestock movement';
 
 
 // Header
@@ -80,18 +81,19 @@ $header->str = $title;
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
 $label_district = new label ('District: ', 'district');
-$district = new textinput('district');
-$district->size = 40;
+$district = new textinput('district',$dist);
+//$district->size = 40;
 $formTable->startRow();
-$formTable->cellpadding = 5;
+//$formTable->cellpadding = 5;
 $formTable->addCell($label_district->show(),NULL,NULL,'right');
 $formTable->addCell($district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // animal classification	
 $label = new label ('Animal Classification: ', 'classification');
-$classification = new textinput('classification');
-$classification->size = 40;
+$classification = new dropdown('classification');
+$classification->addFromDB($species, 'name', 'name'); 
+
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -101,13 +103,15 @@ $formTable->endRow();
 $label_purpose = new label('Purpose: ', 'Purpose');
 $radio_slaughter = new radio ('purpose');
 
-$radio_slaughter->addOption('Slaughter', 'Slaughter');
+$radio_slaughter->addOption('Slaughtered', 'Slaughtered');
 $radio_rear = new radio ('purpose');
-$radio_slaughter->addOption('Rear', 'rear');
+$radio_slaughter->addOption('Rearing', 'Rearing');
 
 $formTable->startRow();
 $formTable->addCell($label_purpose->show(),NULL,NULL,'right');
 $formTable->addCell($radio_slaughter->show(),NULL,NULL,'left');
+
+
 
 $formTable->startRow();
 $formTable->addCell('',40);
@@ -117,7 +121,7 @@ $formTable->endRow();
 // animal origin	
 $label = new label ('Animal origin: ', 'origin');
 $origin = new textinput('origin');
-$origin->size = 40;
+//$origin->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -127,7 +131,7 @@ $formTable->endRow();
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
 $destination = new textinput('destination');
-$destination->size = 40;
+//$destination->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');

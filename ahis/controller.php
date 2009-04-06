@@ -1825,32 +1825,39 @@ class ahis extends controller {
                 return $this->nextAction('breed_admin', array('success'=>'2'));
 			
 			case 'animalmovement_add':
-				$this->setVar('id', $this->getParam('id'));
+					$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+				//$this->setVar('id', $this->getParam('id'));
 				//$this->setVar('d',$this->getSession('ps_geo2Id'));
 				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
 				return 'add_animalmovement_tpl.php';
 				
 			case 'livestockimport_add':
-				$this->setVar('id', $this->getParam('id'));
-				//$this->setVar('d',$this->getSession('ps_geo2Id'));
-				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+					$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objLivestockimport->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+					$this->setVar('geo2', $this->objGeo2 ->getAll("ORDER BY name"));
 				return 'add_livestockimport_tpl.php';
 				
 			case 'livestockexport_add':
-				$this->setVar('id', $this->getParam('id'));
-				//$this->setVar('d',$this->getSession('ps_geo2Id'));
-				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
+					$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objLivestockexport->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+					$this->setVar('geo2', $this->objGeo2 ->getAll("ORDER BY name"));
 				return 'add_livestockexport_tpl.php';
 				
              case 'animal_population_add':
 			 		$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
-                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		 			
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));		
 				return 'animal_population_tpl.php';
+				
 			case 'addinspectiondata':
 				$id=$this->getSession('ps_geo2Id');
 			 	$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
 			return 'meat_inspection_tpl.php';
+			
 			case 'animal_slaughter_add':
 				$id=$this->getSession('ps_geo2Id');
 				 $this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));

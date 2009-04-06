@@ -49,10 +49,10 @@ $formTable = $this->newObject('htmltable', 'htmlelements');
 
 $label_district = new label ('District Name:', 'district');
 $input_district = new textinput('district');
-$input_district->size = 40;
+//$input_district->size = 40;
 
 $formTable->startRow();
-$formTable->cellpadding = 5;
+//$formTable->cellpadding = 5;
 $formTable->addCell($label_district->show(),NULL,NULL,'right');
 $formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
@@ -60,7 +60,7 @@ $formTable->endRow();
 
 $label_pointentry = new label ('Point of Entry:', 'entrypoint');
 $entrypoint= new textinput('entrypoint');
-$entrypoint->size = 40;
+//$entrypoint->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label_pointentry->show(),NULL,NULL,'right');
@@ -69,8 +69,9 @@ $formTable->endRow();
 
 // animal origin	
 $label = new label ('Animal origin: ', 'origin');
-$origin = new textinput('origin');
-$origin->size = 40;
+$origin = new dropdown('origin');
+//$origin->size = 40;
+$origin->addFromDB($geo2, 'name', 'name');
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -79,8 +80,10 @@ $formTable->endRow();
 
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
-$destination = new textinput('destination');
-$destination->size = 40;
+$destination = new dropdown('destination');
+//$destination->addFromDB(,'destination','destination');
+$destination->addFromDB($geo2, 'name', 'name');
+//$destination->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
@@ -89,8 +92,9 @@ $formTable->endRow();
 
 // animal classification	
 $label = new label ('Animal Classification: ', 'classification');
-$classification = new textinput('classification');
-$classification->size = 40;
+$classification = new dropdown('classification');
+$classification->addFromDB($species, 'name', 'name');
+//$classification->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
