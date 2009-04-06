@@ -1,13 +1,13 @@
 <?php
 /**
  * Mailman Newsletter Controller
- * 
+ *
  * controller class for mailman newsletter package
- * 
+ *
  * PHP version 5
- * 
+ *
  * The license text...
- * 
+ *
  * @category  Chisimba
  * @package   mailmannews
  * @author    Paul Scott <pscott@uwc.ac.za>
@@ -31,9 +31,9 @@ $GLOBALS['kewl_entry_point_run']) {
 
 /**
  * Controller class for the mailman newsletter module
- * 
+ *
  * Controller class for the mailman newsletter module
- * 
+ *
  * @category  Chisimba
  * @package   mailmannews
  * @author    Paul Scott <pscott@uwc.ac.za>
@@ -48,20 +48,20 @@ class mailmannews extends controller
     /**
      * Description for public
      * @var    unknown
-     * @access public 
+     * @access public
      */
 	public $objLanguage;
 
     /**
      * Description for public
      * @var    unknown
-     * @access public 
+     * @access public
      */
 	public $objConfig;
-	
+
 	public $objMailmanSignup;
 	public $objUser;
-	
+
 	/**
      * Constructor method to instantiate objects and get variables
      */
@@ -87,10 +87,35 @@ class mailmannews extends controller
     {
         switch ($action) {
             default:
+                // A simple editor and a post to the list to send a newsletter
+                return 'sendletter_tpl.php';
+                break;
+
+            case 'sendnews':
+                $subject = $this->getParam('posttitle');
+                $content = $this->getParam('postcontent');
+                $this->sysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+                $objMailer = $this->getObject('email', 'mail');
+
+                $emailadd = $this->sysConfig->getValue('mailmannews_listsend', 'mailmannews');
+
+                $objMailer->setValue('to', array($emailadd));
+			    $objMailer->setValue('from', 'noreply');
+			    $objMailer->setValue('fromName', $this->objLanguage->languageText("mod_mailmannews_emailfromname", "mailmannews"));
+			    $objMailer->setValue('subject', $subject);
+			    $objMailer->setValue('body', strip_tags($content));
+			    if ($objMailer->send()) {
+		   		    $this->nextAction('');
+			    } else {
+			        return 'error_tpl.php';
+			    }
+                break;
+
+            case 'createlist':
             	$this->requiresLogin(FALSE);
             	return 'subscribe_tpl.php';
             	break;
-            	
+
             case 'subscribe':
             	$this->requiresLogin(FALSE);
             	$email = $this->getParam('email');
@@ -105,12 +130,12 @@ class mailmannews extends controller
             	//echo $email; die();
         }
     }
-    
+
     /**
     * Overide the login object in the parent class
     *
-    * @param  void  
-    * @return bool  
+    * @param  void
+    * @return bool
     * @access public
     */
 	public function requiresLogin($action)
