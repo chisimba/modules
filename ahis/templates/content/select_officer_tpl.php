@@ -53,6 +53,10 @@ $inputOfficer->addFromDB($userList, 'name', 'userid');
 $inputOfficer->setSelected($officerId);
 if (!$this->objUser->isAdmin()) {
     $inputOfficer->extra = 'disabled';
+    $hiddenOfficer = new textinput('officerId', $officerId, 'hidden');
+    $inputOfficer = $inputOfficer->show().$hiddenOfficer->show();
+} else {
+    $inputOfficer = $inputOfficer->show();
 }
 
 $inputGeo2 = new dropdown('geo2Id');
@@ -60,6 +64,10 @@ $inputGeo2->addFromDB($this->objGeo2->getAll("ORDER BY name"), 'name', 'id');
 $inputGeo2->setSelected($geo2Id);
 if (!$this->objUser->isAdmin()) {
     $inputGeo2->extra = 'disabled';
+    $hiddenGeo2 = new textinput('geo2Id', $geo2Id, 'hidden');
+    $inputGeo2 = $inputGeo2->show().$hiddenGeo2->show();
+} else {
+    $inputGeo2 = $inputGeo2->show();
 }
 
 $inputDate = $this->getObject('datepicker','htmlelements');
@@ -80,11 +88,11 @@ $objTable->width = NULL;
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($inputOfficer->show());
+$objTable->addCell($inputOfficer);
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": $tab");
-$objTable->addCell($inputGeo2->show());
+$objTable->addCell($inputGeo2);
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','ahis').": $tab");

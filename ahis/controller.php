@@ -90,7 +90,7 @@ class ahis extends controller {
         try {
             $this->objLanguage = $this->getObject('language', 'language');
             $this->objUser = $this->getObject('user', 'security');
-            
+            $this->objUserAdmin = $this->getObject('useradmin_model2', 'security');
             //Log this module call
             $this->objLog = $this->newObject('logactivity', 'logger');
             $this->objLog->log();
@@ -130,15 +130,15 @@ class ahis extends controller {
             $this->objViewReport = $this->getObject('report');
             $this->objSampledetails = $this->getObject('sampledetails');
             $this->objSampling = $this->getObject('sampling');
-			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
-			  $this->objAnimalPopulation= $this->getObject('dbanimalpop');
-			 $this->objSlaughter= $this->getObject('ahis_slaughter');
-
-	    $this->objDeworming = $this->getObject('deworming');
+			$this->objMeatInspect = $this->getObject('db_meat_inspection');
+			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
+			$this->objSlaughter= $this->getObject('ahis_slaughter');
+			
+			$this->objDeworming = $this->getObject('deworming');
 		
-		$this->objAnimalmovement = $this->getObject('animalmovement');
-		$this->objLivestockimport = $this->getObject('livestockimport');
-		$this->objLivestockexport = $this->getObject('livestockexport');
+			$this->objAnimalmovement = $this->getObject('animalmovement');
+			$this->objLivestockimport = $this->getObject('livestockimport');
+			$this->objLivestockexport = $this->getObject('livestockexport');
 
 
 
@@ -207,6 +207,12 @@ class ahis extends controller {
         }
         
         switch ($action) {
+			
+			case 'unset':
+				$this->unsetPassiveSession();
+				$this->unsetActiveSession();
+				return $this->nextAction('select_officer');
+				
         	case 'select_officer':
                 $this->setVar('userList', $this->objAhisUser->getList());
                 $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
@@ -849,7 +855,7 @@ class ahis extends controller {
                 $this->setVar('locations', $this->objTerritory->getAll());
                 $this->setVar('departments', $this->objDepartment->getAll());
                 $this->setVar('roles', $this->objRole->getAll());
-				$superDisabled = ($this->objAhisUser->isSuperUser($this->objUser->userId()))? '' : "'disabled = 'true'";
+				$superDisabled = ($this->objAhisUser->isSuperUser($this->objUser->userId()))? 0 : 1;
 				$this->setVar('superDisabled', $superDisabled);
                 return "add_employee_tpl.php";
             
@@ -859,10 +865,8 @@ class ahis extends controller {
                 $record['firstname'] = $this->getParam('name');
                 $test = $this->objUser->getAll("WHERE firstname = '{$record['firstname']}' AND surname = '{$record['surname']}'");
                 $record['username'] = $this->getParam('username');
-                $password = $this->getParam('password');
-                if ($password) {
-                    $record['pass'] = sha1($password);
-                }
+                $record['pass'] = $this->getParam('password');
+                
                 $ahisRecord['titleid'] = $this->getParam('titleid');
                 $ahisRecord['statusid'] = $this->getParam('statusid');
                 if ($ahisRecord['statusid'] == "init_02") {
@@ -872,7 +876,7 @@ class ahis extends controller {
                 if ($ahisRecord['ahisuser']) {
                     $ahisRecord['ahisuser'] = 1;
 					$record['isactive'] = 1;
-                    if ((!$record['username'] || !$password) && !$id) {
+                    if ((!$record['username'] || !$record['pass']) && !$id) {
                         return $this->nextAction('create_employee', array('error'=>1, 'id'=>$id));
                     }
                 } else {
@@ -905,10 +909,17 @@ class ahis extends controller {
                     if (!empty($test)) {
                         return $this->nextAction('employee_admin', array('success'=>'4'));
                     }
-					$record['userid'] = mt_rand(1000,9999).date('ymd');
-                    $id = $this->objUser->insert($record);
+					$userid = $this->objUserAdmin->generateUserId();
+                    $id = $this->objUserAdmin->addUser($userid, $record['username'], $record['pass'], NULL, $record['firstname'], $record['surname'], NULL, NULL, NULL, NULL, NULL, "useradmin", $record['isactive']);
+					//$id = $this->objUser->insert($record);
                     $code = 1;
                 }
+				if ($this->getParam('adminuser')) {
+					$urec = $this->objUserAdmin->getArray("SELECT perm_user_id FROM tbl_perms_perm_users WHERE auth_user_id = '$userid'");
+					$groupAdmin = $this->getObject('groupadminmodel', 'groupadmin');
+					$gid = $groupAdmin->getId("Site Admin");
+					$groupAdmin->addGroupUser($gid, $urec[0]['perm_user_id']);
+				}
                 if ($this->objAhisUser->valueExists('id', $id)) {
                     $this->objAhisUser->update('id', $id, $ahisRecord);
                 } else {

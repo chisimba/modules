@@ -8,7 +8,29 @@ function toggleRetiredDate() {
 function toggleAhisUser() {
     $('input_username').disabled = !$('input_username').disabled;
     $('input_password').disabled = !$('input_password').disabled;
-    $('input_confirm').disabled =  !$('input_confirm').disabled;   
+    $('input_confirm').disabled =  !$('input_confirm').disabled;
+    
+    if (!$('input_ahisuser').checked) {
+        if ($('input_adminuser').checked) {
+            $('input_adminuser').checked = false;
+        }
+        if ($('input_superuser').checked) {
+            $('input_superuser').checked = false;
+        }
+    }
+}
+
+function toggleAdminUser() {
+    if ($('input_adminuser').checked) {
+        if (!$('input_ahisuser').checked) {
+            $('input_ahisuser').checked = true;
+            toggleAhisUser();
+        }
+    } else {
+        if ($('input_superuser').checked) {
+            $('input_superuser').checked = false;
+        }
+    }
 }
 
 function toggleSuperUser() {
@@ -16,7 +38,10 @@ function toggleSuperUser() {
         if (!$('input_ahisuser').checked) {
             $('input_ahisuser').checked = true;
             toggleAhisUser();
-        }    
+        }
+        if (!$('input_adminuser').checked) {
+            $('input_adminuser').checked = true;
+        }
     }
 }
 

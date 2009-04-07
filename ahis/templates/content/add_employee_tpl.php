@@ -50,6 +50,11 @@ if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_employee');
     $formUri = $this->uri(array('action'=>'employee_insert', 'id'=>$id));
     $record = $this->objUser->getRow('id', $id);
+    if ($this->objUser->inAdminGroup($record['userid'])) {
+        $record['adminuser'] = 1;
+    } else {
+        $record['adminuser'] = 0;
+    }
     $ahisRecord = $this->objAhisUser->getRow('id', $id);
     if (empty($ahisRecord)) {
         $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] =
@@ -62,7 +67,7 @@ if ($id) {
     $formUri = $this->uri(array('action'=>'employee_insert'));
     $record['surname'] = $record['firstname'] = $ahisRecord['statusid'] = $ahisRecord['titleid'] = $ahisRecord['retired'] =
     $record['username'] = $ahisRecord['locationid'] = $ahisRecord['departmentid'] = $ahisRecord['roleid'] = '';
-    $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = 0;
+    $ahisRecord['ahisuser'] = $ahisRecord['superuser'] = $record['adminuser'] = 0;
     $ahisRecord['dateofbirth'] = $ahisRecord['datehired'] = $ahisRecord['dateretired'] = date('Y-m-d');
 }
 
@@ -99,7 +104,17 @@ if (!$ahisRecord['ahisuser']) {
 }
 
 $superBox = new checkbox('superuser', NULL, $ahisRecord['superuser']);
-$superBox->extra = "onchange = 'toggleSuperUser();' $superDisabled";
+$superBox->extra = "onchange = 'toggleSuperUser();'";
+if ($superDisabled) {
+    $superBox->extra .= " disabled='true'";
+    $superHidden = new textinput('superuser', 'hidden', $ahisRecord['superuser']);
+    $superBox = $superBox->show().$superHidden->show();
+} else {
+    $superBox = $superBox->show();
+}
+
+$adminBox = new checkbox('adminuser', NULL, $record['adminuser']);
+$adminBox->extra = "onchange = 'toggleAdminUser();'";
 
 $titleDrop = new dropdown('titleid');
 $titleDrop->addFromDB($titles, 'name', 'id');
@@ -178,13 +193,15 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_ahisuser','ahis').": ");
 $objTable->addCell($ahisBox->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_superuser', 'ahis').": ");
-$objTable->addCell($superBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_adminuser','ahis').": ");
+$objTable->addCell($adminBox->show());
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_username').": ");
 $objTable->addCell($usernameInput->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_superuser', 'ahis').": ");
+$objTable->addCell($superBox);
 $objTable->endRow();
 
 $objTable->startRow();
