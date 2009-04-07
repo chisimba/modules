@@ -865,8 +865,10 @@ class ahis extends controller {
                 $record['firstname'] = $this->getParam('name');
                 $test = $this->objUser->getAll("WHERE firstname = '{$record['firstname']}' AND surname = '{$record['surname']}'");
                 $record['username'] = $this->getParam('username');
-                $record['pass'] = $this->getParam('password');
-                
+                $password = $this->getParam('password');
+                if ($password) {
+					$record['pass'] = $password;
+				}
                 $ahisRecord['titleid'] = $this->getParam('titleid');
                 $ahisRecord['statusid'] = $this->getParam('statusid');
                 if ($ahisRecord['statusid'] == "init_02") {
@@ -903,6 +905,7 @@ class ahis extends controller {
                 }
 
                 if ($id) {
+					$record['pass'] = sha1($record['pass']);
                     $this->objUser->update('id', $id, $record);
                     $code = 3;
                 } else {
