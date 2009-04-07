@@ -595,7 +595,7 @@ class dbPost extends dbTable
                     $translateLink->href=$this->uri(array('action'=>'translate', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
                     $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost', 'forum');
 
-                    $return .= $translateLink->show();
+                    //$return .= $translateLink->show();
                 }
 
 
