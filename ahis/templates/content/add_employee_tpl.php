@@ -107,7 +107,7 @@ $superBox = new checkbox('superuser', NULL, $ahisRecord['superuser']);
 $superBox->extra = "onchange = 'toggleSuperUser();'";
 if ($superDisabled) {
     $superBox->extra .= " disabled='true'";
-    $superHidden = new textinput('superuser', 'hidden', $ahisRecord['superuser']);
+    $superHidden = new textinput('superuser', $ahisRecord['superuser'], 'hidden');
     $superBox = $superBox->show().$superHidden->show();
 } else {
     $superBox = $superBox->show();
