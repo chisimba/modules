@@ -1408,7 +1408,6 @@ class forum extends controller
         $dateLastUpdated = mktime();
 
         $attachment_id = $this->getParam('attachment');
-
         if ($attachment_id != '') {
             $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
         }
@@ -1442,7 +1441,6 @@ class forum extends controller
     private function handleAttachments($postId, $temporaryId)
     {
         $files = $this->objTempAttachments->getQuickList($temporaryId);
-
         foreach ($files AS $file)
         {
             $this->objPostAttachments->insertSingle($postId, $file['attachment_id'], $this->userId,mktime());
