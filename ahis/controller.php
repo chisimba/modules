@@ -1260,6 +1260,7 @@ class ahis extends controller {
                 return $this->nextAction('quality_admin', array('success'=>'2'));
             
             case 'report_admin':
+				echo $this->objUser->userId();
                 $searchStr = $this->getParam('searchStr');
                 $data = $this->objReport->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
                 $this->setVar('addLinkUri', $this->uri(array('action'=>'report_add')));

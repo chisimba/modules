@@ -109,6 +109,7 @@ class ahisuser extends dbtable {
 	public function isSuperUser($userId) {
 		$id = $this->objUser->PKId($userId);
 		$row = $this->getRow('id', $id);
+		var_dump($row);
 		return ($row['superuser'] == 1) || ($userId == 1);
 	}
 	
