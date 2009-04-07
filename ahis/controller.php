@@ -866,9 +866,6 @@ class ahis extends controller {
                 $test = $this->objUser->getAll("WHERE firstname = '{$record['firstname']}' AND surname = '{$record['surname']}'");
                 $record['username'] = $this->getParam('username');
                 $password = $this->getParam('password');
-                if ($password) {
-					$record['pass'] = $password;
-				}
                 $ahisRecord['titleid'] = $this->getParam('titleid');
                 $ahisRecord['statusid'] = $this->getParam('statusid');
                 if ($ahisRecord['statusid'] == "init_02") {
@@ -878,7 +875,7 @@ class ahis extends controller {
                 if ($ahisRecord['ahisuser']) {
                     $ahisRecord['ahisuser'] = 1;
 					$record['isactive'] = 1;
-                    if ((!$record['username'] || !$record['pass']) && !$id) {
+                    if ((!$record['username'] || !$password) && !$id) {
                         return $this->nextAction('create_employee', array('error'=>1, 'id'=>$id));
                     }
                 } else {
@@ -905,7 +902,9 @@ class ahis extends controller {
                 }
 
                 if ($id) {
-					$record['pass'] = sha1($record['pass']);
+					if ($password) {
+						$record['pass'] = sha1($password);
+					}
                     $this->objUser->update('id', $id, $record);
                     $code = 3;
                 } else {
@@ -913,7 +912,7 @@ class ahis extends controller {
                         return $this->nextAction('employee_admin', array('success'=>'4'));
                     }
 					$userid = $this->objUserAdmin->generateUserId();
-                    $id = $this->objUserAdmin->addUser($userid, $record['username'], $record['pass'], NULL, $record['firstname'], $record['surname'], NULL, NULL, NULL, NULL, NULL, "useradmin", $record['isactive']);
+                    $id = $this->objUserAdmin->addUser($userid, $record['username'], $password, NULL, $record['firstname'], $record['surname'], NULL, NULL, NULL, NULL, NULL, "useradmin", $record['isactive']);
 					//$id = $this->objUser->insert($record);
                     $code = 1;
                 }
