@@ -46,7 +46,6 @@ $this->loadClass('form','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 $icon = $this->newObject('geticon','htmlelements');
-var_dump($superUser);
 if ($superUser) {
     $addLink = new link($addLinkUri);
     $addLink->link = $addLinkText;
