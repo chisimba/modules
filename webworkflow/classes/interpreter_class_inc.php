@@ -107,6 +107,7 @@ class interpreter extends object
         $objConfig = $this->getObject('altconfig', 'config');
 
         $this->objCurl = new curlwrapper_($objConfig);
+        //$this->objCurl = new curlcmdwrapper_($objConfig);
     }
 
     /**
@@ -794,13 +795,6 @@ class interpreter extends object
 
 
 
-
-
-
-
-
-
-
 /**
 * CUTTING FROM code_modules/utilities/curlwrapper_class_inc.php CLASS
 * TODO: to be merged
@@ -1032,6 +1026,8 @@ class curlwrapper_ extends object
         $uriParts = parse_url($url);
         //Stripping the scriptname
 
+		log_debug($uriParts['host']);
+
         if ($uriParts['host'] != 'localhost' &&
             $uriParts['host'] != '127.0.0.1' ) {
             // Add Server Proxy if it exists
@@ -1082,6 +1078,446 @@ class curlwrapper_ extends object
         // Return Data
         return $data;
     }
+
+    public function sendData($url, $postargs=FALSE)
+    {
+        $this->ch = curl_init($url);
+        //$this->setProxy();
+        if($postargs !== FALSE){
+            curl_setopt ($this->ch, CURLOPT_POST, TRUE);
+            curl_setopt ($this->ch, CURLOPT_POSTFIELDS, $postargs);
+        }
+        if($this->username !== FALSE && $this->password !== FALSE) {
+            curl_setopt($this->ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
+        }
+        curl_setopt($this->ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($this->ch, CURLOPT_NOBODY, 0);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION,1);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        if ($this->headers != ''){
+            curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+        }
+        $response = curl_exec($this->ch);
+        $this->responseInfo=curl_getinfo($this->ch);
+        curl_close($this->ch);
+        if(intval($this->responseInfo['http_code'])==200){
+            if(class_exists('SimpleXMLElement')){
+                $xml = new SimpleXMLElement($response);
+                return $xml;
+            }else{
+                return $response;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+
+
+    private function process($url,$postargs=FALSE)
+    {
+        $ch = curl_init($url);
+
+        if($postargs !== FALSE){
+            curl_setopt ($ch, CURLOPT_POST, TRUE);
+            curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
+        }
+
+        if($this->username !== FALSE && $this->password !== FALSE)
+            curl_setopt($this->ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
+
+        curl_setopt($this->ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($this->ch, CURLOPT_NOBODY, 0);
+        curl_setopt($this->ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION,1);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+
+        $response = curl_exec($ch);
+
+        $this->responseInfo=curl_getinfo($ch);
+        curl_close($ch);
+
+
+        if(intval($this->responseInfo['http_code'])==200){
+            if(class_exists('SimpleXMLElement')){
+                $xml = new SimpleXMLElement($response);
+                return $xml;
+            }else{
+                return $response;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+
+
+    /**
+    * Method to transfer/get contents of a page
+    * @param string $url URL of the Page
+    * @return string contents of the page
+    */
+    public function exec($url)
+    {
+        // Setup URL for Curl
+        $ch = curl_init($url);
+
+        // More Curl settings
+        curl_setopt($this->ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // Add Server Proxy if it exists
+        if ($this->proxyInfo['server'] != '') {
+            curl_setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+        }
+
+        // Add Port Proxy if it exists
+        if ($this->proxyInfo['port'] != '') {
+            curl_setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+        }
+
+        // Add Username for Proxy if it exists
+        if ($this->proxyInfo['username'] != '') {
+            $userNamePassword = $this->proxyInfo['username'];
+
+            // Add Password Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword .= ':'.$this->proxyInfo['password'];
+            }
+
+            curl_setopt ($ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+        }
+
+        // Get the page
+        $data = curl_exec ($ch);
+
+        // Close the CURL
+        curl_close($ch);
+
+        // Return Data
+        return $data;
+    }
+}
+
+
+
+
+
+
+
+
+
+/**
+* CUTTING FROM code_modules/utilities/curlwrapper_class_inc.php CLASS
+* TODO: to be merged
+*
+* Curl is a tool for transferring files with URL syntax
+*
+* This class is a wrapper for PHP's CURL functions integrated with
+* Chisimba's Proxy Configurations. Developers can simply instantiate
+* this class and request the page they want.
+*
+* @category  Chisimba
+* @package   utilities
+* @author Tohir Solomons
+* @author Derek Keats
+* @copyright 2007 AVOIR
+* @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
+* @version   $Id: curlwrapper_class_inc.php 11250 2008-11-02 11:32:56Z charlvn $
+* @link      http://avoir.uwc.ac.za
+* Example:
+*   $objCurl = $this->getObject('curl', 'utilities');
+*   $objCurl->initializeCurl($url);
+*   echo $objCurl->getData();
+*   $objCurl->closeCurl();
+* Example:
+*    echo $objCurl->exec('http://ws.geonames.org/search?name_equals=Walvisbaai&style=full');
+*/
+
+class curlcmdwrapper_ extends object
+{
+    /**
+    * @var array $proxyInfo Array Containing Proxy Details
+    * @access private
+    */
+    private $proxyInfo;
+
+    public $ch;
+    public $options = array();
+
+    /**
+    * Constructor
+    */
+    /*
+    public function init()
+    {
+        //TODO: reopen when merge complete
+        //$this->setupProxy();
+    }
+    */
+
+    public function curlcmdwrapper_($objConfig) {
+        $this->objConfig = $objConfig;
+        $this->setupProxy();
+    }
+
+    /**
+    *
+    * Method to extract the proxy settings from the chisimba settings
+    * and prepare them for use in curl.
+    *
+    */
+    public function setupProxy()
+    {
+        // Load Config Object
+        $objConfig = $this->objConfig;
+        // Get Proxy String
+        $proxy = $objConfig->getProxy();
+        // Remove http:// from beginning of string
+        $proxy =  preg_replace('%\Ahttp://%i', '', $proxy);
+        // Create Empty Array
+        $this->proxyInfo = array('username'=>'','password'=>'','server'=>'','port'=>'',);
+        // Check if string has @, indicator of username/password and server/port
+        if (preg_match('/@/i', $proxy)) {
+            // Split string into username and password
+            preg_match_all('/(?P<userinfo>.*)@(?P<serverinfo>.*)/i', $proxy, $result, PREG_PATTERN_ORDER);
+            // If it has user information, perform further split
+            if (isset($result['userinfo'][0])) {
+                // Split at : to get username and password
+                $userInfo = explode(':', $result['userinfo'][0]);
+                // Record username if it exists
+                $this->proxyInfo['username'] = isset($userInfo[0]) ? $userInfo[0] : '';
+                // Record password if it exists
+                $this->proxyInfo['password'] = isset($userInfo[1]) ? $userInfo[1] : '';
+            }
+            // If it has server information, perform further split
+            if (isset($result['serverinfo'][0])) {
+                // Split at : to get server and port
+                $serverInfo = explode(':', $result['serverinfo'][0]);
+                // Record server if it exists
+                $this->proxyInfo['server'] = isset($serverInfo[0]) ? $serverInfo[0] : '';
+                // Record port if it exists
+                $this->proxyInfo['port'] = isset($serverInfo[1]) ? $serverInfo[1] : '';
+            }
+        // Else only has server and port details
+        } else {
+            // Split at : to get server and port
+            $serverInfo = explode(':', $proxy);
+            // Record server if it exists
+            $this->proxyInfo['server'] = isset($serverInfo[0]) ? $serverInfo[0] : '';
+            // Record port if it exists
+            $this->proxyInfo['port'] = isset($serverInfo[1]) ? $serverInfo[1] : '';
+        }
+    }
+
+    public function initializeCurl($url)
+    {
+        log_debug("\n\nCURL CMD INITIALIZED: $url \n\n");
+        // Setup URL for Curl
+        $this->url = $url;
+        //$this->setupProxy();
+		$this->createCache();
+    }
+
+    public function closeCurl()
+    {
+        // Close the CURL
+    }
+
+    /**
+    * Set a curl option.
+    *
+    * @link http://www.php.net/curl_setopt
+    * @param mixed $theOption One of the valid CURLOPT defines.
+    * @param mixed $theValue the value of the curl option.
+    *
+    */
+    public function setopt($theOption, $theValue)
+    {
+        curl_setopt($this->ch, $theOption, $theValue) ;
+        $this->options[$theOption] = $theValue ;
+    }
+
+    public function setProxy()
+    {
+        // Add Server Proxy if it exists
+        if ($this->proxyInfo['server'] != '') {
+            $this->setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+        }
+        // Add Port Proxy if it exists
+        if ($this->proxyInfo['port'] != '') {
+            $this->setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+        }
+        // Add Username for Proxy if it exists
+        if ($this->proxyInfo['username'] != '') {
+            $userNamePassword = $this->proxyInfo['username'];
+            // Add Password Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword .= ':'.$this->proxyInfo['password'];
+            }
+            $this->setopt ($this->ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+        }
+    }
+
+    /**
+     *
+     * Make sure all the options are set first
+     *
+     */
+    public function getUrl()
+    {
+        // Get the page
+        //curl_setopt($this->ch, CURLOPT_HEADER, FALSE);
+        //curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        $ch = curl_init($url);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
+    /**
+    * Method to get contents of a page using POST
+    * This method follows the location for when the server issues a redirect
+    * @param string $url URL of the Page
+    * @return string contents of the page
+    */
+    public function sendPostData($postargs=FALSE)
+    {
+
+        // More Curl settings
+        /*
+        curl_setopt($this->ch, CURLOPT_HEADER, TRUE); //Needed to follow 302 redirects
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, 1);
+        */
+
+        /*
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER , true);     // return web page
+        curl_setopt($this->ch, CURLOPT_HEADER         , true);   // return headers
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION , true);     // follow redirects
+        curl_setopt($this->ch, CURLOPT_ENCODING       , "");       // handle all encodings
+
+        curl_setopt($this->ch, CURLOPT_USERAGENT      , "spider"); // who am i
+        curl_setopt($this->ch, CURLOPT_AUTOREFERER    , true);     // set referer on redirect
+        curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT , 120);     // timeout on connect
+
+        curl_setopt($this->ch, CURLOPT_TIMEOUT        , 120);      // timeout on response
+        curl_setopt($this->ch, CURLOPT_MAXREDIRS      , 10);       // stop after 10 redirects
+        */
+
+
+
+
+
+		/*
+        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg';
+        $headers[] = 'Connection: Keep-Alive';
+        $headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
+        $user_agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)';
+
+        $options = array(
+            //CURLOPT_HTTPHEADER      => $headers,
+            CURLOPT_RETURNTRANSFER  => 1,     // return web page
+            CURLOPT_HEADER          => 1,     // return headers
+            CURLOPT_FOLLOWLOCATION  => 1,     // follow redirects
+            CURLOPT_COOKIESESSION   => 1,     // Enable Session Cookies
+            CURLOPT_ENCODING        => "",       // handle all encodings
+
+            CURLOPT_USERAGENT       => $useragent, // who am i
+            CURLOPT_AUTOREFERER     => true,     // set referer on redirect
+            //CURLOPT_CONNECTTIMEOUT  => 120,      // timeout on connect
+
+            //CURLOPT_TIMEOUT         => 120,      // timeout on response
+            CURLOPT_MAXREDIRS       => 10,       // stop after 10 redirects
+            CURLOPT_COOKIEFILE      => '/var/www/fresh/usrfiles/webworkflow/cookies.txt',
+            CURLOPT_COOKIEJAR       => '/var/www/fresh/usrfiles/webworkflow/cookies.txt'
+        );
+
+        curl_setopt_array($this->ch, $options );
+
+        $uriParts = parse_url($url);
+        //Stripping the scriptname
+
+		log_debug($uriParts['host']);
+
+        if ($uriParts['host'] != 'localhost' &&
+            $uriParts['host'] != '127.0.0.1' ) {
+            // Add Server Proxy if it exists
+            if ($this->proxyInfo['server'] != '') {
+                curl_setopt($this->ch, CURLOPT_PROXY, $this->proxyInfo['server']);
+            }
+
+            // Add Port Proxy if it exists
+            if ($this->proxyInfo['port'] != '') {
+                curl_setopt($this->ch, CURLOPT_PROXYPORT, $this->proxyInfo['port']);
+            }
+
+            // Add Username for Proxy if it exists
+            if ($this->proxyInfo['username'] != '') {
+                $userNamePassword = $this->proxyInfo['username'];
+
+                // Add Password Proxy if it exists
+                if ($this->proxyInfo['username'] != '') {
+                    $userNamePassword .= ':'.$this->proxyInfo['password'];
+                }
+
+                curl_setopt ($this->ch, CURLOPT_PROXYUSERPWD, $userNamePassword);
+            }
+        }
+        //*/
+
+        log_debug("\n\n" . 'CurlCMD->SendData() Post Data : ' . $postargs . "\n\n");
+		
+		$cmdPost = '';
+        if($postargs !== FALSE){
+			$postStr = str_replace('&amp;', '&', $postargs);
+			$pParts = explode('&', $postStr);
+			foreach ($pParts as $prt) {
+				$cmdPost .= ' -d '.$prt.' ';
+			}
+        }
+
+        // Get the page
+
+        $basePath = $this->objConfig->getcontentBasePath()."webworkflows/";
+		$tmpFileName = $basePath . 'searchoutput_' . date('Ymd-hms'). '.html';
+		//Executing Server Side curl executable
+		$exec_str = "curl -o \"$tmpFileName\" -x http://cache.uwc.ac.za:8080 $cmdPost " . '"' . $this->url . '"';
+
+		//echo $exec_str . "\n";
+
+		exec($exec_str);
+		$data = file_get_contents($tmpFileName);
+
+        // Return Data
+        return $data;
+    }
+
+    /**
+     * Method to make sure the output cache exists
+     *
+     * @param $methods An array of full method prototype declarations: e.g. "function someMethod ()"[0]
+     * @access public
+     * @return HTML
+     */
+    public function createCache() 
+    {
+
+        $this->basePath = $this->objConfig->getcontentBasePath()."webworkflows/";
+        
+        //Ensuring the base directory exists
+        if(!file_exists($this->basePath))
+        {
+            mkdir($this->basePath, 0777, true);
+        }
+
+        return TRUE;
+    }
+
+
+
 
     public function sendData($url, $postargs=FALSE)
     {
