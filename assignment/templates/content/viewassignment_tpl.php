@@ -172,8 +172,8 @@ if ($this->isValid('markassignments')) {
             $table->addCell($submission['datesubmitted']);
 
             if($assignment['closing_date'] > date('Y-m-d H:i')) {
-                $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
-                $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_notmarked', 'assignment', 'Not Marked').'</em>');
+                $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_willnotdisplay', 'assignment', 'Not Marked').'</em>');
+                $table->addCell('<em>'.$this->objLanguage->languageText('mod_assignment_willnotdisplay', 'assignment', 'Not Marked').'</em>');
 
             } else {
 
