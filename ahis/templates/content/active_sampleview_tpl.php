@@ -56,7 +56,7 @@ $objTable = $this->getObject('htmltable','htmlelements');
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
 
-$addButton = new button('add', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_another')."".$this->objLanguage->languageText('word_sample'));
+$addButton = new button('add', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_another')." ".$this->objLanguage->languageText('word_sample'));
 $addButton->setToSubmit();
 
 $finUri = $this->uri(array('action'=>'active_feedback','success'=>1));

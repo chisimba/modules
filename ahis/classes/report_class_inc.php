@@ -85,6 +85,7 @@ class report extends object {
 			$this->objAnimalmovement = $this->getObject('animalmovement');
             $this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
+			$this->objActive = $this->getObject('active');
 		}
 		catch (customException $e)
 		{
@@ -410,7 +411,21 @@ class report extends object {
 									 $this->objLanguage->languageText('phrase_vaccinationhistory'),$this->objLanguage->languageText('word_number'),
 									 $this->objLanguage->languageText('word_remarks'));
 									 
-				$activerecords = $this->objActive->getactive();
+				$activeRecords = $this->objActive->getactive();
+				
+				$csv = implode(",", $headerArray)."\n";
+				foreach ($activeRecords as $report) {
+					
+					$row = array($report['campname'],$report['reporterid'],$report['disease'],$report['surveytype'],$report['comments'],
+					$report['testtype'],$report['sensitivity'],$report['specificity'],$report['territory'],$report['geolevel3'],
+					$report['geolevel2'],$report['farmname'],$report['farmingtype'],$report['sampleid'],$report['animalid'],
+					$report['species'],$report['age'],$report['sex'],$report['sampletype'],$report['testtype'],
+					$report['testdate'],$report['testresult'],$report['specification'],$report['vachist'],$report['number'],
+					$report['remarks']);
+					
+					$csv .= implode(",", $row)."\n";
+				}
+				return $csv;
 	}
 	}
 }
