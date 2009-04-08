@@ -387,9 +387,9 @@ class announcements extends controller
                 $deleteLink->link = $objIcon->show();
 				
                 $table->startRow();
-                $table->addCell($objDateTime->formatDate($announcement['createdon']), 150);
-                $table->addCell($link->show());
-                $table->addCell($this->objUser->fullName($announcement['createdby']), 200);
+                $table->addCell($objDateTime->formatDate($announcement['createdon']), '15%');
+                $table->addCell($link->show(),'50%');
+                $table->addCell($this->objUser->fullName($announcement['createdby']), '20%');
                 
                 if ($announcement['contextid'] == 'site') {
                     $type = $this->objLanguage->languageText('mod_announcements_siteword', 'announcements', 'Site');
@@ -399,7 +399,7 @@ class announcements extends controller
                 
                 $table->addCell($type, 200);
 				if ($this->checkPermission($announcement['id'])) {
-					$table->addCell($deleteLink->show(), 200);
+					$table->addCell($deleteLink->show(), '15%');
 				}
                 $table->endRow();
                 
