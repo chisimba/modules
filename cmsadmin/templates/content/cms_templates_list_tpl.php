@@ -16,10 +16,9 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 
-$selectbutton=$this->newObject('button','htmlelements'); 
-$selectbutton->setOnClick("javascript:SetAllCheckBoxes('SelectAll', 'arrayList[]', true);"); 
-$selectbutton->setValue('Select All');
-$selectbutton->setToSubmit(); 
+if (!isset($middleColumnContent)) {
+	$middleColumnContent = '';
+}
 
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $tbl = $this->newObject('htmltable', 'htmlelements');
@@ -46,21 +45,7 @@ $display = '<p>'.$header.$headShow.'</p><hr />';
 echo $display;
 // Show Form
 
-//Get Selectall js
-print $this->getJavascriptFile('selectall.js');
-//echo $objRound->show($header.$headShow);//$tbl->show());
 echo $objLayer->show();//$tbl->show());
-//get the sections
-
-//Get cms type
-$cmsType = 'treeMenu';
-//set up select
-// Buttons to Select All
-
-
-$txt_task = new textinput('task',null,'hidden');
-//$objCheck->setOnClick("javascript:SetAllCheckBoxes('document.getElementById('form_select')'), 'arrayList[]', true);"); 
-
 $table = new htmltable();
 $table->cellspacing = '2';
 $table->cellpadding = '5';
@@ -147,20 +132,6 @@ if (count($arrTemplates) > 0) {
 }
 
 
-//Link to switch between root nodes and all nodes
-$objViewAllLink =& $this->newObject('link', 'htmlelements');
-if($viewType == 'root') {
-    $objViewAllLink->link = $this->objLanguage->languageText('mod_cmsadmin_viewsummaryallsections', 'cmsadmin');
-    $objViewAllLink->href = $this->uri(array('action' => 'sections', 'viewType' => 'all'), 'cmsadmin');
-} else {
-    $objViewAllLink->link = $this->objLanguage->languageText('mod_cmsadmin_viewrootsectionsonly', 'cmsadmin');
-    $objViewAllLink->href = $this->uri(array('action' => 'sections', 'viewType' => 'root'), 'cmsadmin');
-}
-//Create new section link
-$objAddSectionLink =& $this->newObject('link', 'htmlelements');
-$objAddSectionLink->href = $this->uri(array('action' => 'addsection'), 'cmsadmin');
-$objAddSectionLink->link = $this->objLanguage->languageText('mod_cmsadmin_createnewsection', 'cmsadmin');
-
 $frm_select = new form('select', $this->uri(array('action' => 'select'), 'cmsadmin'));
 $frm_select->id = 'select';
 
@@ -169,7 +140,6 @@ $objLayer->id = 'templateListTable';
 $objLayer->str = $table->show();
 
 $frm_select->addToForm($objLayer->show());
-$frm_select->addToForm($txt_task->show());
 //print out the page
 //$middleColumnContent = "<hr />";
 
