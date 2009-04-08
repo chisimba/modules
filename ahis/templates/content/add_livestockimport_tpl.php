@@ -40,7 +40,6 @@
 	$header = new htmlheading();
 	$header->type = 2;
 	$header->str = $title;
-	
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 
@@ -99,7 +98,6 @@ $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //products	
-
 $label_products = new label ('Products: ', 'products');
 $label_units = new label (' :Units', 'units');
 $formTable->startRow();
@@ -147,6 +145,18 @@ $formAction = 'livestockimport_save';
 	
 	// Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
+
+//form validations
+$form->addRule('district', $this->objLanguage->languageText('mod_ahis_animaldistrictreq','ahis'),'required');
+$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointreq','ahis'),'required');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_animaloriginreq','ahis'),'required');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_animaldestinationreq','ahis'),'required');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_animalclassificationreq','ahis'),'required');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsreq','ahis'),'required');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkreq','ahis'),'required');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheesereq','ahis'),'required');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryreq','ahis'),'required');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefreq','ahis'),'required');
 
  //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');

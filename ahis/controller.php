@@ -2014,6 +2014,33 @@ class ahis extends controller {
 		$destination = $this->getParam('destination');
 		$remarks = $this->getParam('remarks');
 		
+		/*$error = '';
+		if(empty($district))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_districterror','ahis');
+		}
+		if(empty($classification))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_classificationerror','ahis');
+		}
+		if(empty($purpose))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_purposeerror','ahis');
+		}
+		if(empty($origin))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_orginerror','ahis');
+		}
+		if(empty($destination))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_destinationerror','ahis');
+		}
+		if(empty($remarks))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_remarkserror','ahis');
+		}*/
+		//echo $error;
+		
 		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks);  
 							
 		return $this->nextAction('');
@@ -2033,6 +2060,44 @@ class ahis extends controller {
 		$poultry = $this->getParam('poultry');
 		$beef = $this->getParam('beef');
 		
+		/*$error = '';
+		if(empty($district))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_districterror','ahis');
+		}
+		if(empty($entrypoint))
+		{
+			$error .= $this->ojLanguage->languageText('mod_ahis_entrypointerror','ahis');
+		}
+		if(empty($destination))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_destinationerror','ahis');
+		}
+		if(empty($origin))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_originerror','ahis');
+		}
+		if(empty($eggs))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_eggserror','ahis');
+		}
+		if(empty($milk))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_milkerror','ahis');
+		}
+		if(empty($cheese))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis');
+		}
+		if(empty($poultry))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_poultryerror','ahis');
+		}
+		if(empty($beef))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_beeferror','ahis');
+		}*/
+		
 		$data= $this->objLivestockimport->addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
 							
 		return $this->nextAction('');
@@ -2051,6 +2116,44 @@ class ahis extends controller {
 		$cheese = $this->getParam('cheese');
 		$poultry = $this->getParam('poultry');
 		$beef = $this->getParam('beef');
+		
+		/*$error = '';
+		if(empty($district))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_districterror','ahis');
+		}
+		if(empty($entrypoint))
+		{
+			$error .= $this->ojLanguage->languageText('mod_ahis_entrypointerror','ahis');
+		}
+		if(empty($destination))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_destinationerror','ahis');
+		}
+		if(empty($origin))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_originerror','ahis');
+		}
+		if(empty($eggs))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_eggserror','ahis');
+		}
+		if(empty($milk))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_milkerror','ahis');
+		}
+		if(empty($cheese))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis');
+		}
+		if(empty($poultry))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_poultryerror','ahis');
+		}
+		if(empty($beef))
+		{
+			$error .= $this->objLanguage->languageText('mod_ahis_beeferror','ahis');
+		}*/
 		
 		$data= $this->objLivestockexport->addLivestockexportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
 														

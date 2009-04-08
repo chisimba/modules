@@ -72,7 +72,6 @@ $loadingIcon = $objIcon->show();
 //$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
 $title = 'Livestock movement';
 
-
 // Header
 $header = new htmlheading();
 $header->type = 2;
@@ -95,7 +94,6 @@ $label = new label ('Animal Classification: ', 'classification');
 $classification = new dropdown('classification');
 $classification->addFromDB($species, 'name', 'name'); 
 
-
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($classification->show(),NULL,NULL,'left');
@@ -111,8 +109,6 @@ $radio_slaughter->addOption('Rearing', 'Rearing');
 $formTable->startRow();
 $formTable->addCell($label_purpose->show(),NULL,NULL,'right');
 $formTable->addCell($radio_slaughter->show(),NULL,NULL,'left');
-
-
 
 $formTable->startRow();
 $formTable->addCell('',40);
@@ -147,18 +143,30 @@ $formTable->addCell($label_remarks->show(), NULL,NULL,'right');
 $formTable->addCell($remarks->show(),NULL,NULL,'left');
 $formTable->endRow();
 
+$formTable->startRow();
+$formTable->addCell($error, NULL, NULL, NULL, NULL, "colspan=2");
+$formTable->endRow();
+
 $formAction = 'animalmovement_save';  
     $buttonText = 'Save';
 	
 	// Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
+//form validations
+$form->addRule('district', $this->objLanguage->languageText('mod_ahis_animaldistrictreq','ahis'),'required');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_animalclassificationreq','ahis'),'required');
+$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_animalpurposereq','ahis'),'required');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_animaloriginreq','ahis'),'required');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_animaldestinationreq','ahis'),'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarksreq', 'ahis'), 'required');
 
 //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
  $topTable->startRow();
 $topTable->addCell($formTable->show());
 $topTable->endRow();
+
 $form->addToForm($topTable->show());
  
  $save = new button('animalmovement_save', 'Save');

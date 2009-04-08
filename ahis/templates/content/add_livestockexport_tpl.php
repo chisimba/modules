@@ -43,9 +43,7 @@
 	// Create Form
 //$form = new form ('myForm', $this->uri(array('action'=>'livestockexport'),'htmlelements'));
 
-
 $formTable = $this->newObject('htmltable', 'htmlelements');
-
 
 $label_district = new label ('District Name:', 'district');
 $input_district = new textinput('district',$dist);
@@ -57,7 +55,6 @@ $formTable->startRow();
 $formTable->addCell($label_district->show(),NULL,NULL,'right');
 $formTable->addCell($input_district->show(),NULL,NULL,'left');
 $formTable->endRow();
-
 
 $label_pointentry = new label ('Point of Entry:', 'entrypoint');
 $entrypoint= new textinput('entrypoint');
@@ -82,7 +79,6 @@ $formTable->endRow();
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
 $destination = new dropdown('destination');
-//$destination->addFromDB(,'destination','destination');
 $destination->addFromDB($geo2, 'name', 'name');
 //$destination->size = 40;
 
@@ -103,7 +99,6 @@ $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 //products	
-
 $label_products = new label ('Products: ', 'products');
 $label_units = new label (' :Units', 'units');
 $formTable->startRow();
@@ -151,7 +146,19 @@ $formTable->endRow();
 	
 	// Create Form
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
-	
+
+//form validations
+$form->addRule('district', $this->objLanguage->languageText('mod_ahis_animaldistrictreq','ahis'),'required');
+$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointreq','ahis'),'required');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_animaloriginreq','ahis'),'required');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_animaldestinationreq','ahis'),'required');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_animalclassificationreq','ahis'),'required');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsreq','ahis'),'required');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkreq','ahis'),'required');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheesereq','ahis'),'required');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryreq','ahis'),'required');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefreq','ahis'),'required');
+
  //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
  $topTable->startRow();
@@ -159,8 +166,6 @@ $topTable->addCell($formTable->show());
 $topTable->endRow();
 $form->addToForm($topTable->show());
 
-	
- 
  $save = new button('livestockexport_save', 'Save');
  $save->setToSubmit();
  

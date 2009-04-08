@@ -321,14 +321,14 @@ class report extends object {
 		//animal movement report generation
 		case 'init_06':
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Purpose','Destination','Remarks');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Purpose','Origin of Animal','Destination of Animal','Remarks');
 				
 				$movementRecords = $this->objAnimalmovement->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($movementRecords as $report) {
 					
-					$row = array($report['district'],$report['classification'],$report['purpose'],$report['destination'],$report['remarks']);
+					$row = array($report['district'],$report['classification'],$report['purpose'],$report['origin'],$report['destination'],$report['remarks']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
