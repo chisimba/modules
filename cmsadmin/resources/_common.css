@@ -340,3 +340,13 @@ font-size: 0.8em;
 #bodydiv {
     min-width: 
 }
+
+.clearboth {
+    clear : both;
+}
+
+#cmsheadercontainer {
+	padding-bottom : 10px;
+	border-bottom : 1px solig #ededed;
+	background-color: pink;
+}

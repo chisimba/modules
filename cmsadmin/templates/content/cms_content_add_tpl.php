@@ -128,10 +128,9 @@ $objLayer->str = $topNav;
 $header .= $objLayer->show();
 
 $objLayer->str = '';
-$objLayer->border = '; clear:both; margin:0px; padding:0px;';
 $headShow = $objLayer->show();
 
-$display = '<p>'.$header.$headShow.'</p><hr />';
+$display = '<p> '.$header.$headShow.'</p> <p class="clearboth"/>';
 //Show Header
 echo $display;
 // Show Form

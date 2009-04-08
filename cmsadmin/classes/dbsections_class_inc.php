@@ -418,13 +418,11 @@ class dbsections extends dbTable
 			$description = str_ireplace("<br />", " <br /> ",$description);
 			
 			//Preventing Duplicates (title, parentId as key)
-			/*
 			$isDuplicate = $this->isDuplicateSection($title,$parentId);
 
 			if ($isDuplicate == TRUE){
 				return FALSE;
 			}
-			*/
 			
 			if($pageNum == 'custom') {
 				$numPageDisplay = $customNum;
@@ -497,7 +495,7 @@ class dbsections extends dbTable
          */
         public function isDuplicateSection($name, $parentid) {
 			//Preventing Duplicates (title, parentId as key)
-			$checkData = $this->query("SELECT id FROM tbl_cms_sections WHERE id = '$parentid' AND title = '$name'");
+			$checkData = $this->query("SELECT id FROM tbl_cms_sections WHERE parentId = '$parentid' AND title = '$name'");
 			if (isset($checkData[0]['id'])) {
 				return TRUE;
 			} else {
