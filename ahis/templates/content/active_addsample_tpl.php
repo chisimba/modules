@@ -53,12 +53,12 @@ $this->loadClass('layer','htmlelements');
 
 
 if ($id) {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_samples');
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_sample');
     $formUri = $this->uri(array('action'=>'sampleview_insert', 'id'=>$id));
     $record = $this->objSampledetails->getRow('id', $id);
     
 } else {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_samples');
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_sample');
     $formUri = $this->uri(array('action'=>'sampleview_insert'));
     $record['sampleid'] = '';
     $record['animalid'] = '';
@@ -79,12 +79,18 @@ $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $hstr;
 $objHeading->type = 2;
 
-$addButton = new button('add', $this->objLanguage->languageText('word_add'));
-$addButton->setToSubmit();
+$nextButton = new button('next', $this->objLanguage->languageText('word_next'));
+$nextButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_sampleview'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 
+$campBox = new textinput('campname',$campName);
+$campBox->extra = "readonly";
+$farmBox = new textinput('farm',$farm);
+$farmBox->extra = "readonly";
+$farmsysBox = new textinput('farmingsystem',$farmingsystem);
+$farmsysBox->extra = "readonly";
 
 
 $inputDate = $this->getObject('datepicker','htmlelements');
@@ -131,9 +137,27 @@ $objTable->cellspacing = 2;
 $objTable->width = NULL;
 $objTable->cssClass = 'min50';
 
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": ");
+$objTable->addCell($campBox->show());
+$objTable->endRow();
 
 $objTable->startRow();
 
+$objTable->addCell($this->objLanguage->languageText('word_farm').":");
+$objTable->addCell($farmBox->show());
+$objTable->endRow();
+
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system').":");
+$objTable->addCell($farmsysBox->show());
+$objTable->endRow();
+
+$objTable->startRow();
+
+//$objTable->addCell('&nbsp');
+$objTable->endRow();
+$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('phrase_sampleid'));
 $objTable->addCell($sampleidBox->show());
 $objTable->endRow();
@@ -189,8 +213,8 @@ $objTable->startRow();
 $objTable->addCell('&nbsp');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($backButton->show());
-$objTable->addCell($addButton->show());
+//$objTable->addCell($backButton->show());
+$objTable->addCell($nextButton->show());
 $objTable->endRow();
 
 

@@ -40,12 +40,12 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 if ($id) {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_herd');
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_edit')."  ".$this->objLanguage->languageText('word_farm');
     $formUri = $this->uri(array('action'=>'newherd_insert', 'id'=>$id));
     $record = $this->objNewherd->getRow('id', $id);
     
 } else {
-    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_herd');
+    $hstr = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_add')."  ".$this->objLanguage->languageText('word_farm');
     $formUri = $this->uri(array('action'=>'newherd_insert'));
     $record['geolevel2'] = '';
     $record['geolevel3'] = '';
@@ -66,8 +66,8 @@ $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
 
-$addButton = new button('add', $this->objLanguage->languageText('word_add'));
-$addButton->setToSubmit();
+$nextButton = new button('next', $this->objLanguage->languageText('word_next'));
+$nextButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_newherd'));
 $backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
@@ -127,8 +127,8 @@ $objTable->startRow();
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($backButton->show());
-$objTable->addCell($addButton->show());
+//$objTable->addCell($backButton->show());
+$objTable->addCell($nextButton->show());
 $objTable->endRow();
 
 

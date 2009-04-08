@@ -56,11 +56,11 @@ $objTable = $this->getObject('htmltable','htmlelements');
 $message = $this->objLanguage->languageText('mod_ahis_confirmdel','ahis');
 
 
-$addButton = new button('add', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_sample'));
+$addButton = new button('add', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_another')."".$this->objLanguage->languageText('word_sample'));
 $addButton->setToSubmit();
 
-$backUri = $this->uri(array('action'=>'active_newherd'));
-$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$finUri = $this->uri(array('action'=>'active_feedback','success'=>1));
+$finButton = new button('finish', $this->objLanguage->languageText('word_finish'), "javascript: document.location='$finUri'");
 
 
 $numberBox = new textinput('number',$number);
@@ -145,8 +145,8 @@ $objTable->endRow();
 
 }
 $objTable->startRow();
-$objTable->addCell($backButton->show());
 $objTable->addCell($addButton->show());
+$objTable->addCell($finButton->show());
 $objTable->addCell($newherdidBox->show());
 $objTable->addCell($idBox->show());
 $objTable->endRow();

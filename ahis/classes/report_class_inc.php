@@ -381,7 +381,7 @@ class report extends object {
 				}
 				return $csv;
 				
-				case 'init_10': 
+		 case 'init_10': 
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Type of Antiemetic','Remarks');
 				
@@ -395,7 +395,22 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
+		default:
 		
+		      $headerArray = array($this->objLanguage->languageText('phrase_campaignname'),
+									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),$this->objLanguage->languageText('word_disease'),
+									 $this->objLanguage->languageText('phrase_surveytypes'),$this->objLanguage->languageText('word_comments'),
+									 $this->objLanguage->languageText('phrase_testtype'),$this->objLanguage->languageText('word_sensitivity'),
+									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_territory'),$this->objLanguage->languageText('phrase_geolevel3'),
+									 $this->objLanguage->languageText('phrase_geolevel2'),$this->objLanguage->languageText('word_farm'),$this->objLanguage->languageText('phrase_farmingsystem'),
+									 $this->objLanguage->languageText('phrase_sampleid'),$this->objLanguage->languageText('phrase_animalid'),
+									 $this->objLanguage->languageText('word_species'),$this->objLanguage->languageText('word_age'),
+									 $this->objLanguage->languageText('word_sex'),$this->objLanguage->languageText('phrase_sampletype'),$this->objLanguage->languageText('phrase_testtype'),
+									 $this->objLanguage->languageText('phrase_dateoftesting'),$this->objLanguage->languageText('phrase_testresult'),$this->objLanguage->languageText('word_specification'),
+									 $this->objLanguage->languageText('phrase_vaccinationhistory'),$this->objLanguage->languageText('word_number'),
+									 $this->objLanguage->languageText('word_remarks'));
+									 
+				$activerecords = $this->objActive->getactive();
 	}
 	}
 }

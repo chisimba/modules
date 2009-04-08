@@ -96,5 +96,19 @@ class active extends dbtable {
 	     
 	return $this->getArray($sql);
 	}
+ 
+   public function getactive(){
+        $sql = "SELECT active.* FROM tbl_ahis_active_surveillance AS active,";
+        $sql.= " tbl_ahis_newherd AS farm, tbl_ahis_sampledetails AS sample";
 
+        $sql.= " WHERE active.id = farm.activeid";
+        $sql.= " AND farm.id= sample.newherdid";
+        $sql.= " ORDER BY campname DESC";
+        $data = $this->getArray($sql);
+        if (!empty($data)) {
+            return $data;
+        }
+        return FALSE;
+   
+   }
 }

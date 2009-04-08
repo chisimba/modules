@@ -63,7 +63,7 @@ $diseaseDrop->addFromDB($arraydisease, 'name', 'name');
 $diseaseDrop->setSelected($disease);
 $diseaseDrop->extra = 'disabled';
 
-$activeBox = new textinput('activeid',$activeid,'hidden');
+//$activeBox = new textinput('activeid',$activeid,'hidden');
 $campBox = new textinput('campName',$campName);
 $sensitivityBox = new textinput('sensitivity', $sensitivity);
 $specificityBox = new textinput('specificity', $specificity);
@@ -94,7 +94,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_specificity').": $tab");
 $objTable->addCell($specificityBox->show());
-$objTable->addCell($activeBox->show());
+//$objTable->addCell($activeBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('&nbsp');

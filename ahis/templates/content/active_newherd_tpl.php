@@ -41,7 +41,7 @@ $GLOBALS['kewl_entry_point_run']) {
 
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_new')." ".$this->objLanguage->languageText('word_herd');
+$objHeading->str = $this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('word_new')." ".$this->objLanguage->languageText('word_farm');
 $objHeading->type = 2;
 
 
