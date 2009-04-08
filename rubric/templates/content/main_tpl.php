@@ -75,7 +75,10 @@
             $viewLink->link = $table['title'];
             $viewLinkItem = $viewLink->show();
         } else {
-            $viewLinkItem = $table['title'];
+        	$viewLink = new link ($this->uri(array('action'=>'viewtable', 'tableId'=>$table['id'])));
+            $viewLink->link = $table['title'];
+            $viewLinkItem = $viewLink->show();
+            
         }
         
         
