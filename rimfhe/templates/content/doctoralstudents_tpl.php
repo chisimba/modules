@@ -1,30 +1,37 @@
-
 <?php
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
 // end security check
-/**
+
 if(!isset($mode)){
 $mode = '';
 }
 $this->loadClass('htmlheading', 'htmlelements');
-$mode = $mode;
+
 /*
  *The Tilte of The Page
  */
  $pageHeading = new htmlheading();
  $pageHeading->type = 2;
+
+/*
+ * New Changes
+ */
 if($mode =='edit'){
 $editMode= 'update';
- $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingdoc', 'rimfhe', 'Edit Graduating Doctoral Students');
+ $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingeditdoctoral', 'rimfhe');
 }
 else{
  $pageHeading->str = $this->objLanguage->languageText('mod_rimfhe_pgheadingdoctoral', 'rimfhe');
 $editMode= '';
 }
- echo '<br />'.$pageHeading->show();
+/*
+ * End New Changes
+ */
+
+echo '<br />'.$pageHeading->show();
 
 /*
  *The heading of the Form
@@ -35,10 +42,11 @@ $editMode= '';
 
 //All fields are Required
 $header2 = $this->objLanguage->languageText('mod_rimfhe_requiredsupervisor', 'rimfhe');
+
 // Show if no Error
 if($mode!='fixerror'){
- echo '<br />'.$formheader->show();
- echo '<span style="color:red;font-size:12px;">'.$header2.'<br /><br /></span>';
+echo '<br />'.$formheader->show();
+echo '<span style="color:red;font-size:12px;">'.$header2.'<br /><br /></span>';
 }
 //load the required form elements
 $this->formElements->sendElements();
@@ -69,6 +77,9 @@ $table =new htmltable('registration');
 $table->width ='80%';
 $table->startRow();
 
+/*
+ * New Changes
+ */
 //hidden id field to be used for update purposes
 if($mode == 'edit'){
 $txtId = new textinput("doctoralid", $arrEdit['id'], 'hidden');
@@ -77,6 +88,9 @@ $table->addCell(NULL, 150, NULL, 'left');
 $table->addCell($txtId->show(), 150, NULL, 'left');
 $table->endRow();
 }
+/*
+ * End New Changes
+ */
 
 //Input and label for Surname
 $objSurname = new textinput('surname');
@@ -142,42 +156,42 @@ $table->addCell($objGender->show(), 150, NULL, 'left');
 $table->endRow();
 
 //Input and label for Department/Scool/Division
-	$table->startRow();
-	$objDepartment = new dropdown ('department');
-	$departmentLabel = new label($dept.'&nbsp;', 'department');
-	$departments=array("Academic Development", "Accounting", "Afrikaans", "Anthropology & Sociology", "Biodiversity & Conservation", "Biotechnology", "Chemistry", "Computer Sciences", "Dietetics", "Earth Sciences", "Economics", "English", "Foreign Languages", "Geography", "History", "Human Ecology", "Industrial Psychology", "Information Systems", "Library & Info.", "Linguistics", "Management", "Mathematics", "Medical Bioscience", "Nursing", "Occupational Therapy", "Pharmacy", "Philosophy", "Physics", "Physiotherapy", "Political Studies", "Psychology", "Public Administration", "Religion & Theology", "Social Work", "Sport, Recreation & Exercise", "Statistics", "Women & Gender", "Xhosa", "School of Government", "School of Natural Medicine", "School of Pharmacy", "School of Public Health");
-	foreach ($departments as $department)
-	{
-	       $objDepartment->addOption($department,$department);
-		if($mode == 'fixerror'){
-		$objDepartment->setSelected($this->getParam('department'));
-		}
-		if($mode == 'edit'){
-		$objDepartment->setSelected($arrEdit['deptschoool']);
-		}
-	}	
-	$table->addCell($departmentLabel->show(), 150, NULL, 'left');
-	$table->addCell($objDepartment ->show(), 150, NULL, 'left');
-	$table->endRow();
+$table->startRow();
+$objDepartment = new dropdown ('department');
+$departmentLabel = new label($dept.'&nbsp;', 'department');
+$departments=array("Academic Development", "Accounting", "Afrikaans", "Anthropology & Sociology", "Biodiversity & Conservation", "Biotechnology", "Chemistry", "Computer Sciences", "Dietetics", "Earth Sciences", "Economics", "English", "Foreign Languages", "Geography", "History", "Human Ecology", "Industrial Psychology", "Information Systems", "Library & Info.", "Linguistics", "Management", "Mathematics", "Medical Bioscience", "Nursing", "Occupational Therapy", "Pharmacy", "Philosophy", "Physics", "Physiotherapy", "Political Studies", "Psychology", "Public Administration", "Religion & Theology", "Social Work", "Sport, Recreation & Exercise", "Statistics", "Women & Gender", "Xhosa", "School of Government", "School of Natural Medicine", "School of Pharmacy", "School of Public Health");
+foreach ($departments as $department)
+{
+       $objDepartment->addOption($department,$department);
+	if($mode == 'fixerror'){
+	$objDepartment->setSelected($this->getParam('department'));
+	}
+	if($mode == 'edit'){
+	$objDepartment->setSelected($arrEdit['deptschoool']);
+	}
+}	
+$table->addCell($departmentLabel->show(), 150, NULL, 'left');
+$table->addCell($objDepartment ->show(), 150, NULL, 'left');
+$table->endRow();
 
-	//Input and label for Faculty
-	$table->startRow();
-	$objFaculty = new dropdown ('faculty');
-	$facultyLabel = new label($faculty.'&nbsp;', 'faculty');
-	$faculties=array("Arts", "Community & Health", "Dentistry", "Economic & Management", "Education", "Law", "Natural Science");
-	foreach ($faculties as $faculty)
-	{
-	       $objFaculty->addOption($faculty,$faculty);
-		if($mode == 'fixerror'){
-		$objFaculty->setSelected($this->getParam('faculty'));
-		}
-		if($mode == 'edit'){
-		$objFaculty->setSelected($arrEdit['faculty']);
-		}
-	}		
-	$table->addCell($facultyLabel->show(), 150, NULL, 'left');
-	$table->addCell($objFaculty ->show(), 150, NULL, 'left');
-	$table->endRow();
+//Input and label for Faculty
+$table->startRow();
+$objFaculty = new dropdown ('faculty');
+$facultyLabel = new label($faculty.'&nbsp;', 'faculty');
+$faculties=array("Arts", "Community & Health", "Dentistry", "Economic & Management", "Education", "Law", "Natural Science");
+foreach ($faculties as $faculty)
+{
+       $objFaculty->addOption($faculty,$faculty);
+	if($mode == 'fixerror'){
+	$objFaculty->setSelected($this->getParam('faculty'));
+	}
+	if($mode == 'edit'){
+	$objFaculty->setSelected($arrEdit['faculty']);
+	}
+}		
+$table->addCell($facultyLabel->show(), 150, NULL, 'left');
+$table->addCell($objFaculty ->show(), 150, NULL, 'left');
+$table->endRow();
 
 //Input and label for Student Number
 $table->startRow();
@@ -210,7 +224,7 @@ $table->endRow();
 /*
  * the Supervisor names are stored with HTML tgas in the Database
  * based on the Supervisors Affiliate.
- * carry out some PHp operations to reverse tags and 
+ * carry out some PHP operations to reverse tags and 
  * distinguish affiliates
  */
 

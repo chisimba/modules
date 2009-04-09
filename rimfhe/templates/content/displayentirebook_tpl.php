@@ -1,5 +1,13 @@
 <?php
+/*
+ * This template displays Entire Books
+ */
 
+// security check - must be included in all scripts
+if(!$GLOBALS['kewl_entry_point_run']){
+    die("You cannot view this page directly");
+}
+// end security check
 //Load HTMl Objet Classes
 $objH = $this->newObject('htmlheading', 'htmlelements');
 $link =  $this->newObject('link', 'htmlelements');
@@ -19,12 +27,19 @@ $authortable =  $this->newObject('htmltable', 'htmlelements');
  *New Stuff Added
  */
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
+//Edit Icon
 $objIcon->setIcon('edit');
 $objIcon->alt = 'Edit';
 $objIcon->title = 'Edit';
 $editIcon = $objIcon->show();
 
+//Delete Icon
+$objIcon->setIcon('delete');
+$objIcon->alt = 'Delete';
+$objIcon->title = 'Delete';
+$deleteIcon = $objIcon->show();
+
+//Add Icon
 $objIcon->setIcon('add');
 $objIcon->align = 'top';
 $objIcon->alt = 'Add New Book/Monogragh';
@@ -61,16 +76,32 @@ $display = '<p>'.$header.'&nbsp;&nbsp;&nbsp; '.$link->show().'</p><hr />';
 //Show Header
 echo $display;
 
+//update notification
+$updateComment = $this->getParam('comment');
+if(!empty($updateComment)){
+	echo '<span style="color:#D00000">'.$updateComment.'</span>';
+	echo '<br /><br />';
+}
+
+//delete notification
+$deleteComment = $this->getParam('deletecomment');
+if(!empty($deleteComment)){
+	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+	echo '<br /><br />';
+}
+
 //Set up fields heading
 $table->startHeaderRow();
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_title', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_isbn', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_publisher', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstchapterpageno', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastchapterpageno', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe'));	
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'), 120);
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstchapterpageno', 'rimfhe'), 80);
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastchapterpageno', 'rimfhe'), 80);
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'), 80);
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_peer', 'rimfhe') , 80);
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));	
 $table->endHeaderRow();
 
 $rowcount = 0;
@@ -91,6 +122,16 @@ if ( count($arrDisplayBooks) > 0) {
 	$tableRow[] = $entirebook['lastchapterpageno'];
 	$tableRow[] = $entirebook['totalpages'];
 	$tableRow[] = $entirebook['peerreviewed'];
+	$editlink = new link($this->uri(array('action'=>'Edit Book', 'id'=> $entirebook['id'])));
+	$editlink->link = $editIcon;
+	$tableRow[] = $editlink->show();
+
+	$delArray = array('action' => 'deleteentirebook', 'confirm'=>'yes', 'id'=>$entirebook['id']);
+	$title = $entirebook['booktitle'];
+	$rep = array('TITLE' => $title);
+	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+	$deleteIcon = $objIcon->getDeleteIconWithConfirm($entirebook['id'], $delArray,'rimfhe',$deletephrase);
+	$tableRow[] = $deleteIcon;
 		
 	$table->addRow($tableRow, $oddOrEven);
 	
@@ -104,4 +145,5 @@ else{
 echo $table->show();
 echo '<p>'.'&nbsp;'.'</p>';
 echo '<p>'.$addlink->show().'</p>';
+echo '<p>'.'&nbsp;'.'</p>';
 ?>

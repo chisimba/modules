@@ -25,7 +25,7 @@ $objAccrJournal->link='Accredited Journal';
  */
 //View Accredited Journal Article
 $objViewJournalf = new link($this->uri(array('action'=>'Accredted Journal Articles Info')));
-$objViewJournalf->link='Accredted Journal Details';
+$objViewJournalf->link='Accredited Journal Articles';
 $c = $objViewJournalf->show();
 
 /*//link to Entire Book data entry page

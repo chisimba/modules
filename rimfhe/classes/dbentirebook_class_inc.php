@@ -30,6 +30,7 @@ class dbentirebook extends dbtable
 		
 	public function entireBook()
 	{
+		$id = $this->getParam('bookid');//get record id when in edit mode	
 		$bookname = $this->getParam('bookname');
 		$isbn= $this->getParam('isbnnumber');
 		$publishinghouse= $this->getParam('publishinghouse');
@@ -55,7 +56,7 @@ class dbentirebook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author1 = $author1.'<br />';
+				$author1 = '<span>'.$author1.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -73,7 +74,7 @@ class dbentirebook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author2 = $author2.'<br />';
+				$author2 = '<span>'.$author2.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -90,7 +91,7 @@ class dbentirebook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author3 = $author3.'<br />';
+				$author3 = '<span>'.$author3.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -107,7 +108,7 @@ class dbentirebook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author4 = $author4.'<br />';				
+				$author4 = '<span>'.$author4.'</span><br />';			
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -129,15 +130,21 @@ class dbentirebook extends dbtable
 				'totalpages'=> $pagetotal,
 				'peerreviewed' => $peerreview,
 			);
-
-		//Cheeck if book with same title is already in the database
-		$where = "WHERE booktitle='" . $bookname . "'";
-		$checkRecord = $this->getAll($where);
-		if(count($checkRecord) > 0){
-		return FALSE;
+		//if not edite mode, add record tp database
+		if(empty($id)){
+			//Cheeck if book with same title is already in the database
+			$where = "WHERE booktitle='" . $bookname . "'";
+			$checkRecord = $this->getAll($where);
+			if(count($checkRecord) > 0){
+				return FALSE;
+			}
+			else{
+				return $this->insert($fields);
+			}
 		}
 		else{
-		return $this->insert($fields);
+		//update record
+		return $this->update('id', $id, $fields);
 		}
 		
 	}//end entireBook

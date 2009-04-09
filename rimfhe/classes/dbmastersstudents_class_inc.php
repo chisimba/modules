@@ -30,6 +30,7 @@ class dbmastersstudents extends dbtable
 		
 	public function mastersStudents()
 	{
+		$id = $this->getParam('mastersid');//get record id when in edit mode
 		$surname = $this->getParam('surname');
 		$initials= $this->getParam('initials');
 		$firstname= $this->getParam('firstname');
@@ -100,14 +101,21 @@ class dbmastersstudents extends dbtable
 				'degree' =>$degree
 			);
 
-		//Cheeck if book with same title is already in the database
-		$where = "WHERE thesistitle='".$thesis."'";
-		$checkRecord = $this->getAll($where);
-		if(count($checkRecord) > 0){
-		return FALSE;
+		//if not edite mode, add record tp database
+		if(empty($id)){
+			//Cheeck if book with same title is already in the database
+			$where = "WHERE thesistitle='".$thesis."'";
+			$checkRecord = $this->getAll($where);
+			if(count($checkRecord) > 0){
+				return FALSE;
+			}
+			else{
+				return $this->insert($fields);
+			}
 		}
 		else{
-		return $this->insert($fields);
+			//update record
+			return $this->update('id', $id, $fields);
 		}
 	}//end
 

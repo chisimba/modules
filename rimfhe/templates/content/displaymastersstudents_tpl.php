@@ -1,7 +1,15 @@
 <?php
-// Thi template displays the registered staff members
+/* 
+ * This template displays the Gradute masters Students
+ */
 
-//Load HTMl Objet Classes
+// security check - must be included in all scripts
+if(!$GLOBALS['kewl_entry_point_run']){
+    die("You cannot view this page directly");
+}
+// end security check
+
+// Load HTMl Objet Classes
 
 $objH = $this->newObject('htmlheading', 'htmlelements');
 $link =  $this->newObject('link', 'htmlelements');
@@ -17,9 +25,10 @@ $objLayer = $this->newObject('layer', 'htmlelements');
 
 $authortable =  $this->newObject('htmltable', 'htmlelements');
 
-/*****
- *New Stuff Added
- */
+/**
+ * New Stuff Added
+ **/
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $objIcon->setIcon('edit');
@@ -27,6 +36,13 @@ $objIcon->alt = 'Edit';
 $objIcon->title = 'Edit';
 $editIcon = $objIcon->show();
 
+// Delete Icon
+$objIcon->setIcon('delete');
+$objIcon->alt = 'Delete';
+$objIcon->title = 'Delete';
+$deleteIcon = $objIcon->show();
+
+// Add Icon
 $objIcon->setIcon('add');
 $objIcon->align = 'top';
 $objIcon->alt = 'Add New Graduating Masters Student';
@@ -67,6 +83,20 @@ $display = '<p>'.$header.'&nbsp;&nbsp;&nbsp; '.$link->show().'</p><hr />';
 //Show Header
 echo $display;
 
+//update notification
+$updateComment = $this->getParam('comment');
+if(!empty($updateComment)){
+	echo '<span style="color:#D00000">'.$updateComment.'</span>';
+	echo '<br /><br />';
+}
+
+//delete notification
+$deleteComment = $this->getParam('deletecomment');
+if(!empty($deleteComment)){
+	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+	echo '<br /><br />';
+}
+
 //Set up fields heading
 $table->startHeaderRow();
 $table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
@@ -78,7 +108,9 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_department', 
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_faculty', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisor', 'rimfhe'));
-$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));	
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 $table->endHeaderRow();
 
 $rowcount = 0;
@@ -102,18 +134,29 @@ if ( count($arrDisplayMasters) > 0) {
 	$tableRow[] = $mastersstudents['thesistitle'];
 	$tableRow[] = $mastersstudents['supervisorname'];
 	$tableRow[] = $mastersstudents['degree'];
-		
+	$editlink = new link($this->uri(array('action'=>'Edit Graduating Masters Student', 'id'=> $mastersstudents['id'])));
+	$editlink->link = $editIcon;
+	$tableRow[] = $editlink->show();
+
+	$delArray = array('action' => 'deletemastersstudent', 'confirm'=>'yes', 'id'=>$mastersstudents['id']);
+	$title = $mastersstudents['thesistitle'];
+	$rep = array('TITLE' => $title);
+	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+	$deleteIcon = $objIcon->getDeleteIconWithConfirm($mastersstudents['id'], $delArray,'rimfhe',$deletephrase);
+	$tableRow[] = $deleteIcon;
+
 	$table->addRow($tableRow, $oddOrEven);
 	
 	$rowcount = ($rowcount == 0) ? 1 : 0;
 	}	
 }
 else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';
-	
+    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_rimfhe_norecord', 'rimfhe', 'No record has been entered').'</div>';	
 }
- echo $table->show();
+
+echo $table->show();
 echo '<p>'.'&nbsp;'.'</p>';
 echo '<p>'.$addlink->show().'</p>';
 echo '<p>'.$objMastersStudSummary->show().'</p>';
+echo '<p>'.'&nbsp;'.'</p>';
 ?>

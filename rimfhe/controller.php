@@ -122,8 +122,42 @@ Public fuction to instantiate required  objestc
 			$this->setVarByRef('arrJournal', $arrJournal);
 			return 'displayaccrjournal_tpl.php';  
 				
+			case 'Edit Journal Articles':
+			//Get id
+                	$id = $this->getParam('id');
+			$this->setVar('mode', 'edit');
+			$arrEditThis= $this->objAccreditedJournal->getRow('id', $id);
+			$this->setVarByRef('arrEdit', $arrEditThis);
+			return 'accreditedjournal_tpl.php';	
+
+			case 'deletejournalarticle':
+			$deleteRowId = $this->getParam('id');
+			$arrDeletedRow = $this->objAccreditedJournal->getRow('id', $deleteRowId);
+			$rowToDelete = $arrDeletedRow['articletitle'];
+               		$this->objAccreditedJournal->delete('id', $deleteRowId);			
+               		$title = "<strong>$rowToDelete</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Accredted Journal Articles Info',array('deletecomment'=> $this->objLanguage->code2Txt('mod_notify_delete', 'rimfhe', $rep)));
+
 			case 'Entire Book/Monogragh':
 			return 'entirebook_tpl.php';
+			
+			case 'Edit Book':
+			//Get id
+                	$id = $this->getParam('id');
+			$this->setVar('mode', 'edit');
+			$arrEditThis= $this->objEntireBook->getRow('id', $id);
+			$this->setVarByRef('arrEdit', $arrEditThis);
+			return 'entirebook_tpl.php';
+
+			case 'deleteentirebook':
+			$deleteRowId = $this->getParam('id');
+			$arrDeletedRow = $this->objEntireBook->getRow('id', $deleteRowId);
+			$rowToDelete = $arrDeletedRow['booktitle'];
+               		$this->objEntireBook->delete('id', $deleteRowId);			
+               		$title = "<strong>$rowToDelete</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Entire Book/Monogragh Details',array('deletecomment'=> $this->objLanguage->code2Txt('mod_notify_delete', 'rimfhe', $rep)));
 		
 			case 'Entire Book/Monogragh Details':
 			$arrDisplayBooks = $this->objEntireBook->getAllEntireBooks();
@@ -132,7 +166,24 @@ Public fuction to instantiate required  objestc
 			
 			case 'Chapter In a Book':			
 			return 'chapterinbook_tpl.php';
-						
+			
+			case 'Edit Chapter In Book':
+			//Get id
+                	$id = $this->getParam('id');
+			$this->setVar('mode', 'edit');
+			$arrEditThis= $this->objChapterInBook->getRow('id', $id);
+			$this->setVarByRef('arrEdit', $arrEditThis);
+			return 'chapterinbook_tpl.php';
+
+			case 'deletechapterinbook':
+			$deleteRowId = $this->getParam('id');
+			$arrDeletedRow = $this->objChapterInBook->getRow('id', $deleteRowId);
+			$rowToDelete = $arrDeletedRow['chaptertitle'];
+               		$this->objChapterInBook->delete('id', $deleteRowId);			
+               		$title = "<strong>$rowToDelete</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Chapter In a Book Details',array('deletecomment'=> $this->objLanguage->code2Txt('mod_notify_delete', 'rimfhe', $rep)));
+			
 			case 'Chapter In a Book Details':
 			$arrDisplayBooks = $this->objChapterInBook->getAllChapterInBooks();
 			$this->setVarByRef('arrDisplayBooks', $arrDisplayBooks);
@@ -148,6 +199,15 @@ Public fuction to instantiate required  objestc
 			$arrEditThis= $this->objDoctoralStudents->getRow('id', $id);
 			$this->setVarByRef('arrEdit', $arrEditThis);
 			return 'doctoralstudents_tpl.php';
+	
+			case 'deletedoctoralstudents':
+			$deleteRowId = $this->getParam('id');
+			$arrDeletedRow = $this->objDoctoralStudents->getRow('id', $deleteRowId);
+			$rowToDelete = $arrDeletedRow['thesistitle'];
+               		$this->objDoctoralStudents->delete('id', $deleteRowId);			
+               		$title = "<strong>$rowToDelete</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Doctoral Student Info',array('deletecomment'=> $this->objLanguage->code2Txt('mod_notify_delete', 'rimfhe', $rep)));
 						
 			case 'Graduating Doctoral Student Info':
 			$arrDisplayDoctoral= $this->objDoctoralStudents->getAllDoctoralStudents();
@@ -166,6 +226,23 @@ Public fuction to instantiate required  objestc
 			case 'Graduating Masters Student':
 			return 'mastersstudents_tpl.php';
 			
+			case 'Edit Graduating Masters Student':
+			//Get id
+                	$id = $this->getParam('id');
+			$this->setVar('mode', 'edit');
+			$arrEditThis= $this->objMastersStudents->getRow('id', $id);
+			$this->setVarByRef('arrEdit', $arrEditThis);
+			return 'mastersstudents_tpl.php';
+
+			case 'deletemastersstudent':
+			$deleteRowId = $this->getParam('id');
+			$arrDeletedRow = $this->objMastersStudents->getRow('id', $deleteRowId);
+			$rowToDelete = $arrDeletedRow['thesistitle'];
+               		$this->objMastersStudents->delete('id', $deleteRowId);			
+               		$title = "<strong>$rowToDelete</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Masters Student Info',array('deletecomment'=> $this->objLanguage->code2Txt('mod_notify_delete', 'rimfhe', $rep)));
+
 			case 'Graduating Masters Student Info':
 			$arrDisplayMasters= $this->objMastersStudents->getAllMastersStudents();
 			$this->setVarByRef('arrDisplayMasters', $arrDisplayMasters);
@@ -359,7 +436,13 @@ Public fuction to instantiate required  objestc
 			return 'accreditedjournal_tpl.php';
         } 
 	else {	
-		
+		$editMode =$this ->getParam('editmode');
+		if($editMode == 'update'){				
+		$this->objAccreditedJournal->accreditedJournal();
+		$title = "<strong>$articletitle</strong>";
+		$rep = array('TITLE' => $title);
+		return$this->nextAction('Accredted Journal Articles Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_update', 'rimfhe', $rep)));
+		}		
 		//Return Error if Book with same title exist in data base
 		if($this->objAccreditedJournal->accreditedJournal() == FALSE){
 		$title = "<strong>$articletitle</strong>";
@@ -367,10 +450,12 @@ Public fuction to instantiate required  objestc
 		$this->setVar('title',$this->objLanguage->code2Txt('mod_recordexists_data', 'rimfhe', $rep));
 		 return 'recordexists_tpl.php';
 		}
-		else{
+		else{	
 		//Insert into data base
-		$this->nextAction('generalconfirmation');
-		return $this->objAccreditedJournal->accreditedJournal();
+		$this->objAccreditedJournal->accreditedJournal();
+		$title = "<strong>$articletitle</strong>";
+		$rep = array('TITLE' => $title);
+		return$this->nextAction('Accredted Journal Articles Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe' ,$rep)));
 		}
 	     }
 	}//end addAccretedJournal
@@ -429,6 +514,13 @@ Public fuction to instantiate required  objestc
 			return 'entirebook_tpl.php';
         } 
 	else {	
+		$editMode =$this ->getParam('editmode');
+		if($editMode == 'update'){				
+		$this->objEntireBook->entireBook();
+		$title = "<strong>$bookname</strong>";
+		$rep = array('TITLE' => $title);
+		return$this->nextAction('Entire Book/Monogragh Details',array('comment'=> $this->objLanguage->code2Txt('mod_notify_update', 'rimfhe', $rep)));
+		}	
 		//Return Error if Book with same title exist in data base
 		if($this->objEntireBook->entireBook() == FALSE){
 		$title = "<strong>$bookname</strong>";
@@ -437,9 +529,11 @@ Public fuction to instantiate required  objestc
 		 return 'recordexists_tpl.php';
 		}
 		else{
-		//Insert into data base
-		$this->nextAction('generalconfirmation');
-		return $this->objEntireBook->entireBook();
+		//Insert into data base		
+		$this->objEntireBook->entireBook();
+		$title = "<strong>$bookname</strong>";
+		$rep = array('TITLE' => $title);
+		return$this->nextAction('Entire Book/Monogragh Details',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe', $rep)));
 		}
 	      }
 	
@@ -507,6 +601,13 @@ Public fuction to instantiate required  objestc
 			return 'chapterinbook_tpl.php';
 		} 
 		else {
+			$editMode =$this ->getParam('editmode');
+			if($editMode == 'update'){				
+			$this->objChapterInBook->chaperterInBook();
+			$title = "<strong>$bookname</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Chapter In a Book Details',array('comment'=> $this->objLanguage->code2Txt('mod_notify_update', 'rimfhe', $rep)));
+		}	
 			//Return Error if Book with same title exist in data base
 			if($this->objChapterInBook->chaperterInBook() == FALSE){
 			$title = "<strong>$chaptertile</strong>";
@@ -516,8 +617,10 @@ Public fuction to instantiate required  objestc
 			}
 			else{
 			//Insert into data base
-			$this->nextAction('generalconfirmation');
-			return $this->objChapterInBook->chaperterInBook();
+			$this->objChapterInBook->chaperterInBook();
+			$title = "<strong>$chaptertile</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Chapter In a Book Details',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe' ,$rep)));
 			}
 		}
 	
@@ -608,7 +711,9 @@ Public fuction to instantiate required  objestc
 			else{
 			//Insert into data base
 			$this->objDoctoralStudents->doctoralStudents();
-			return $this->nextAction('Graduating Doctoral Student Info');
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Doctoral Student Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe', $rep)));
 			}
 		}
 	
@@ -681,6 +786,13 @@ Public fuction to instantiate required  objestc
 			return 'mastersstudents_tpl.php';
         } 
 		else {
+			$editMode =$this ->getParam('editmode');
+			if($editMode == 'update'){				
+			$this->objMastersStudents->mastersStudents();
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Masters Student Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_update', 'rimfhe', $rep)));
+			}
 			//Return Error if Book with same title exist in data base
 			if($this->objMastersStudents->mastersStudents() == FALSE){
 			$title = "<strong>$thesis</strong>";
@@ -690,8 +802,10 @@ Public fuction to instantiate required  objestc
 			}
 			else{
 			//Insert into data base
-			$this->nextAction('generalconfirmation');
-			return $this->objMastersStudents->mastersStudents();
+			$this->objMastersStudents->mastersStudents();
+			$title = "<strong>$thesis</strong>";
+			$rep = array('TITLE' => $title);
+			return$this->nextAction('Graduating Masters Student Info',array('comment'=> $this->objLanguage->code2Txt('mod_notify_add', 'rimfhe', $rep)));
 			}
 		}
 	

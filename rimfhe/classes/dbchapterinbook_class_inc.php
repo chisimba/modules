@@ -29,7 +29,8 @@ class dbchapterinbook extends dbtable
 	}//end init()
 		
 	public function chaperterInBook()
-	{
+	{	
+		$id = $this->getParam('chapterinbookid');//get record id when in edit mode
 		$bookname = $this->getParam('bookname');
 		$isbn= $this->getParam('isbnnumber');
 		$editors= $this->getParam('editors');
@@ -45,9 +46,7 @@ class dbchapterinbook extends dbtable
 		$author4affiliate= $this->getParam('author4affiliate');	
 		$firstpage= $this->getParam('firstpage');
 		$lastpage= $this->getParam('lastpage');
-		$pagetotal= ($lastpage - $firstpage) + 1;
-
-		
+		$pagetotal= ($lastpage - $firstpage) + 1;		
 		
 		//check which author fieild is not empty
 		if (!empty($author1)){
@@ -58,7 +57,7 @@ class dbchapterinbook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author1 = $author1.'<br />';
+				$author1 = '<span>'.$author2.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -76,7 +75,7 @@ class dbchapterinbook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author2 = $author2.'<br />';
+				$author2 = '<span>'.$author2.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -93,7 +92,7 @@ class dbchapterinbook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author3 = $author3.'<br />';
+				$author3 = '<span>'.$author3.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -110,7 +109,7 @@ class dbchapterinbook extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author4 = $author4.'<br />';				
+				$author4 = '<span>'.$author4.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -134,17 +133,24 @@ class dbchapterinbook extends dbtable
 				'pagetotal'=> $pagetotal,
 				'peerreviewed' => $peerreview
 			);
+		
+
+		if(empty($id)){
 		//Cheeck if book with same title is already in the database
 		$where = "WHERE chaptertitle='".$chaptertile."'";
 		$checkRecord = $this->getAll($where);
-		if(count($checkRecord) > 0){
-		return FALSE;
+			if(count($checkRecord) > 0){
+				return FALSE;
+			}
+			else{
+				return $this->insert($fields);
+			}
 		}
 		else{
-		return $this->insert($fields);
-		}
-		
-	}//end addStaffDetails	
+			//update record
+			return $this->update('id', $id, $fields);
+			}		
+	}//end chaperterInBook
 	
 	public function getAllChapterInBooks()
 	{						
@@ -159,5 +165,5 @@ class dbchapterinbook extends dbtable
     		$return = $result[0]['totalchapterinbook'];
 		return $return; 
 	}
-}//end dbstaffmember
+}//end class
 ?>

@@ -15,7 +15,8 @@ class dbaccreditedjournal extends dbtable
 	}//end init()
 		
 	public function accreditedJournal()
-	{			
+	{	
+		$id = $this->getParam('journalid');//get record id when in edit mode		
 		$journalname = $this->getParam('journalname');
 		$journalcategorys= $this->getParam('category');
 		$articletitle= $this->getParam('articletitle');
@@ -43,7 +44,7 @@ class dbaccreditedjournal extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author1 = $author1.'<br />';
+				$author1 = '<span>'.$author1.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -61,7 +62,7 @@ class dbaccreditedjournal extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author2 = $author2.'<br />';
+				$author2 = '<span>'.$author2.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -78,7 +79,7 @@ class dbaccreditedjournal extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author3 = $author3.'<br />';
+				$author3 = '<span>'.$author3.'</span><br />';
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -95,7 +96,7 @@ class dbaccreditedjournal extends dbtable
 				$fractionalweightedavg=0.67;
 				break;
 				case 'UWC Student':
-				$author4 = $author4.'<br />';				
+				$author4 = '<span>'.$author4.'</span><br />';				
 				$fractionalweightedavg=NULL;
 				break;
 				case 'External Author':
@@ -118,14 +119,21 @@ class dbaccreditedjournal extends dbtable
 				'pagetotal'=> $pagetotal,
 				'authorname' => $author
 				);
-		//Cheeck if book with same title is already in the database
-		$where = "WHERE articletitle='".$articletitle."'";
-		$checkRecord = $this->getAll($where);
-		if(count($checkRecord) > 0){
-		return FALSE;
+		//if not edite mode, add record tp database
+		if (empty($id)){
+			//Cheeck if book with same title is already in the database
+			$where = "WHERE articletitle='".$articletitle."'";
+			$checkRecord = $this->getAll($where);
+			if(count($checkRecord) > 0){
+				return FALSE;
+			}
+			else{
+				return $this->insert($fields);
+			}
 		}
 		else{
-		return $this->insert($fields);
+		//update record
+		return $this->update('id', $id, $fields);
 		}
 		
 	}//end 
@@ -145,5 +153,5 @@ class dbaccreditedjournal extends dbtable
 	}
 	
 	
-}//end dbstaffmember
+}//end 
 ?>

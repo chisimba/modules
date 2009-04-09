@@ -1,6 +1,9 @@
 <?php
-// Thi template displays the registered staff members
-
+// security check - must be included in all scripts
+if(!$GLOBALS['kewl_entry_point_run']){
+    die("You cannot view this page directly");
+}
+// end security check
 //Load HTMl Objet Classes
 
 $objH = $this->newObject('htmlheading', 'htmlelements');
@@ -21,12 +24,19 @@ $authortable =  $this->newObject('htmltable', 'htmlelements');
  *New Stuff Added
  */
 $objIcon = $this->newObject('geticon', 'htmlelements');
-
+//Edit record
 $objIcon->setIcon('edit');
 $objIcon->alt = 'Edit';
 $objIcon->title = 'Edit';
 $editIcon = $objIcon->show();
 
+//Delete record Icon 
+$objIcon->setIcon('delete'); 
+$objIcon->alt = 'Delete'; 
+$objIcon->title = 'Delete'; 
+$deleteIcon = $objIcon->show();  
+
+//Add Record Icon
 $objIcon->setIcon('add');
 $objIcon->align = 'top';
 $objIcon->alt = 'Add New Journal Articles';
@@ -62,6 +72,19 @@ $display = '<p>'.$header.'&nbsp;&nbsp;&nbsp; '.$link->show().'</p><hr />';
 
 //Show Header
 echo $display;
+//update notification
+$updateComment = $this->getParam('comment');
+if(!empty($updateComment)){
+	echo '<span style="color:#D00000">'.$updateComment.'</span>';
+	echo '<br /><br />';
+}
+
+//delete notification
+$deleteComment = $this->getParam('deletecomment');
+if(!empty($deleteComment)){
+	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+	echo '<br /><br />';
+}
 
 //Set up fields heading
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_journalname', 'rimfhe'));
@@ -73,6 +96,8 @@ $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_firstpage', '
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_lastpage', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_pagetotal', 'rimfhe'));
 $table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_authors', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
+$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 $table->endHeaderRow();
 
 $rowcount = 0;
@@ -94,7 +119,17 @@ if ( count($arrJournal) > 0) {
 	$tableRow[] = $journal['lastpageno'];
 	$tableRow[] = $journal['pagetotal'];
 	$tableRow[] = $journal['authorname'];
-	
+	$editlink = new link($this->uri(array('action'=>'Edit Journal Articles', 'id'=> $journal['id'])));
+	$editlink->link = $editIcon;
+	$tableRow[] = $editlink->show();
+
+	$delArray = array('action' => 'deletejournalarticle', 'confirm'=>'yes', 'id'=>$journal['id']);
+	$title = $journal['articletitle'];
+	$rep = array('TITLE' => $title);
+	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+	$deleteIcon = $objIcon->getDeleteIconWithConfirm($journal['id'], $delArray,'rimfhe',$deletephrase);
+	$tableRow[] = $deleteIcon;
+
 	$table->addRow($tableRow, $oddOrEven);
 	
 	$rowcount = ($rowcount == 0) ? 1 : 0;

@@ -1,11 +1,13 @@
 <?php
+/*
+ * This template displays Graduate Doctoral Students
+ */
+
 // security check - must be included in all scripts
 if(!$GLOBALS['kewl_entry_point_run']){
     die("You cannot view this page directly");
 }
 // end security check
-
-// Thi template displays the registered staff members
 
 //Load HTMl Objet Classes
 
@@ -22,16 +24,13 @@ $this->loadClass('htmltable', 'htmlelements');
 $objLayer = $this->newObject('layer', 'htmlelements');
 
 $authortable =  $this->newObject('htmltable', 'htmlelements');
-/*****
- *New Stuff Added
- */
+
 $objIcon = $this->newObject('geticon', 'htmlelements');
 
 $objIcon->setIcon('edit');
 $objIcon->alt = 'Edit';
 $objIcon->title = 'Edit';
 $editIcon = $objIcon->show();
-//$editlink = new link($this->uri(array('action'=>'Edit Graduating Doctoral Student',)));
 
 //Delete Icon
 $objIcon->setIcon('delete');
@@ -54,10 +53,6 @@ $addlink->link = 'Add New Doctoral Student';
 //link to Graduating Doctoral Students Summary Page
 $objGradDocStudSummar = new link($this->uri(array('action'=>'Graduating Doctoral Students Summary')));
 $objGradDocStudSummar->link='Doctoral Students Summary';
-
-/*
- *End New Stuf
- */
 
 $table = new htmltable();
 $table->cellspacing = '2';
@@ -82,9 +77,17 @@ echo $display;
 //update notification
 $updateComment = $this->getParam('comment');
 if(!empty($updateComment)){
-	echo '<span style="color:green">'.$updateComment.'</span>';
+	echo '<span style="color:#D00000">'.$updateComment.'</span>';
 	echo '<br /><br />';
 }
+
+//delete notification
+$deleteComment = $this->getParam('deletecomment');
+if(!empty($deleteComment)){
+	echo '<span style="color:#D00000;">'.$deleteComment.'</span>';
+	echo '<br /><br />';
+}
+
 //Set up fields heading
 	$table->startHeaderRow();
 	$table->addHeaderCell($this->objLanguage->languageText('word_surname', 'system'));
@@ -97,8 +100,8 @@ if(!empty($updateComment)){
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_thesistitle', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_supervisor', 'rimfhe'));
 	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_degree', 'rimfhe'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deg', 'rimfhe', 'Edit'));
-	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_de', 'rimfhe', 'Del'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_editlink', 'rimfhe'));
+	$table->addHeaderCell($this->objLanguage->languageText('mod_rimfhe_deletelink', 'rimfhe'));
 	$table->endHeaderRow();
 	
 $rowcount = 0;
@@ -125,8 +128,12 @@ if ( count($arrDisplayDoctoral) > 0) {
 	$editlink->link = $editIcon;
 	$tableRow[] = $editlink->show();
 
-	//$deletelink->link = $deletIcon;
-	$tableRow[] = $deleteIcon;
+	$delArray = array('action' => 'deletedoctoralstudents', 'confirm'=>'yes', 'id'=>$doctoralstudents['id']);
+	$title = $doctoralstudents['thesistitle'];
+	$rep = array('TITLE' => $title);
+	$deletephrase = $this->objLanguage->code2Txt('mod_confirm_delete', 'rimfhe', $rep );
+	$deleteIcon = $objIcon->getDeleteIconWithConfirm($doctoralstudents['id'], $delArray,'rimfhe',$deletephrase);
+	$tableRow[] = $deleteIcon;		
 
 	$table->addRow($tableRow, $oddOrEven);
 	
