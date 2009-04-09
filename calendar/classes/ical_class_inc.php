@@ -14,7 +14,7 @@ if (!$GLOBALS['kewl_entry_point_run'])
 * @package eventscalendar
 * @version 1
 *
-* 
+*
 */
 
 
@@ -22,8 +22,8 @@ if (!$GLOBALS['kewl_entry_point_run'])
 require_once('icalcreator_class_inc.php');
 class ical extends dbTable
 {
-  
-    
+
+
     /**
      *Constructor
      **/
@@ -36,7 +36,7 @@ class ical extends dbTable
              ,'CALDESC'      => 'Calendar test file'
              ,'TIMEZONE'     => 'Harare/Pretoria'
              );
-        $this->config = $settings;
+        $this->config = $setup;
         //$this->objDBCalendar =
         $this->objCalendar =& $this->getObject('dbcalendar', 'calendarbase');
         /** initialize calendar */
@@ -67,8 +67,8 @@ class ical extends dbTable
         //print '<pre>';
         //print $this->calendar->createCalendar();
     }
-    
-    
+
+
     /**
      *Method to formulate the calendar event
      *so that that it is ready for the iCal creator to render it
@@ -78,11 +78,11 @@ class ical extends dbTable
      */
     public function addEvents($events)
     {
-        
+
         foreach ($events as $event)
         {
             $noTime = "00:00:00";
-            
+
             $vevent = new vevent(); // create an event calendar component
             if ($event['timefrom'] == $noTime && $event['timeto'] == $noTime)
             {
@@ -95,11 +95,11 @@ class ical extends dbTable
                 $timetoArr = split(":", $event['timeto']);
                 $vevent->setProperty( 'dtstart', array( 'year'=>$dateArr[0], 'month'=>$dateArr[1], 'day'=>$dateArr[2], 'hour'=>$timefromArr[0], 'min'=>$timefromArr[1],  'sec'=>$timefromArr[2] ));
                 $vevent->setProperty( 'dtend',  array( 'year'=>$dateArr[0], 'month'=>$dateArr[1], 'day'=>$dateArr[2], 'hour'=>$timetoArr[0], 'min'=>$timetoArr[1], 'sec'=>$timetoArr[2] ));
-                
-            }
-            
 
-            
+            }
+
+
+
             //if ($events['location']){
             //    $vevent->setProperty( 'LOCATION', 'Central Placa' ); // property name - case independent
             //}
@@ -107,11 +107,11 @@ class ical extends dbTable
             $vevent->setProperty( 'description', htmlentities($event['eventdetails']) );
             //$vevent->setProperty( 'comment', 'This is a comment' );
             //$vevent->setProperty( 'attendee', 'attendee1@icaldomain.net' );
-            $this->calendar->setComponent ( $vevent ); // add event to calendar            
-        }    
-        
-        
+            $this->calendar->setComponent ( $vevent ); // add event to calendar
+        }
+
+
     }
-    
+
 }
 ?>

@@ -33,7 +33,7 @@ class calendar extends controller
         $this->objUser =& $this->getObject('user', 'security');
         $this->setVarByRef('fullname', $this->objUser->fullname());
         $this->userId = $this->objUser->userId();
-	
+
 
         // Determine if user is in a context
         $this->contextCode = $this->objContext->getContextCode();
@@ -52,9 +52,9 @@ class calendar extends controller
         $objContextCondition = &$this->getObject('contextcondition','contextpermissions');
         $this->isContextLecturer = $objContextCondition->isContextMember('Lecturers');
 
-        $this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
-        $this->objDT->create('calendar');
-        $this->objDT->retrieve('calendar');
+        //$this->objDT = &$this->getObject( 'decisiontable','decisiontable' );
+        //$this->objDT->create('calendar');
+        //$this->objDT->retrieve('calendar');
 
         // Give User Lecturer Rights if User is Admin
         //if ($this->isValid('manage_course_event')) {
@@ -108,13 +108,13 @@ class calendar extends controller
     function dispatch($action=Null)
     {
         $this->setVar('pageSuppressXML',true);
-        
+
         if ($this->isInContext) {
             $this->setLayoutTemplate('calendar_layout_tpl.php');
         } else {
             $this->setLayoutTemplate('user_layout_tpl.php');
         }
-        
+
         switch ($action)
         {
             case 'add':
@@ -161,20 +161,20 @@ class calendar extends controller
         $year = $this->getParam('year', date('Y'));
         $this->setVarByRef('month', $month);
         $this->setVarByRef('year', $year);
-        
+
         $this->objCalendarInterface->setupCalendar($month, $year);
-        
+
         $eventsCalendar = $this->objCalendarInterface->getCalendar();
-        
+
         $this->setVarByRef('userEvents', $this->objCalendarInterface->numUserEvents);
         $this->setVarByRef('contextEvents', $this->objCalendarInterface->numContextEvents);
         $this->setVarByRef('otherContextEvents', $this->objCalendarInterface->numOtherEvents);
         $this->setVarByRef('siteEvents', $this->objCalendarInterface->numSiteEvents);
-        
+
         $this->setVarByRef('eventsCalendar', $eventsCalendar);
         $this->setVarByRef('calendarNavigation', $this->objCalendarInterface->getNav());
         $this->setVarByRef('eventsList', $this->objCalendarInterface->getEventsList());
-        
+
         return 'calendar_tpl.php';
     }
 
@@ -233,7 +233,7 @@ class calendar extends controller
             {
                 case 0: // Save User Event
                     //$event = $this->objCalendar->insertMultiDayUserEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->userId, $this->userId, $timeFrom, $timeTo);
-                   
+
  		break;
                 case 1: // Save Course Event
                     $event = $this->objCalendar->insertMultiDayContextEvent ($date, $date2, $eventtitle, $eventdetails, $eventurl, $this->contextCode, $this->userId, $this->userId);
@@ -245,7 +245,7 @@ class calendar extends controller
                     break;
 
             }
-            
+
         } else {
             // Insert Single Day event
             switch ($eventFor)
@@ -346,25 +346,25 @@ class calendar extends controller
         $eventurl  = $this->getParam('url');
         $multidayevent  = $this->getParam('multidayevent');
         $multiday_event_original = $this->getParam('multiday_event_original');
-        
+
         $timeFrom = $this->getParam('timefrom');
         $timeTo = $this->getParam('timeto');
-        
+
         $event = $this->objCalendar->getSingle($id);
-        
+
         if ($event != FALSE) {
             $returnevents = 'all';
-            
+
             //var_dump($event);
-            
+
             $this->objCalendar->deleteBatch($id);
-            
+
             return $this->saveEvent($event['userorcontext']);
         } else {
             return $this->nextAction(NULL);
         }
-        
-        
+
+
 
     }
 
@@ -422,7 +422,7 @@ class calendar extends controller
         $this->setVar('pageSuppressBanner', TRUE);
         $this->setVar('pageSuppressContainer', TRUE);
         $this->setVar('suppressFooter', TRUE);
-        
+
         $bodyParams = 'class="popupwindow" ';
         $this->setVar('bodyParams', $bodyParams);
 
