@@ -86,6 +86,8 @@ class report extends object {
             $this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
 			$this->objActive = $this->getObject('active');
+			$this->objVaccineInventory=$this->getObject('vaccineinventory');
+			$this->objDeworming=$this->getObject('deworming');
 		}
 		catch (customException $e)
 		{

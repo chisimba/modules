@@ -135,6 +135,7 @@ class ahis extends controller {
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
 			
 			$this->objDeworming = $this->getObject('deworming');
+			$this->objVaccineInventory=$this->getObject('vaccineinventory');
 		
 			$this->objAnimalmovement = $this->getObject('animalmovement');
 			$this->objLivestockimport = $this->getObject('livestockimport');
@@ -170,7 +171,7 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add'
+                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add','deworming_add','deworming_save','vaccine_inventory_add','vaccine_inventory_save'
                                         );
         }
         catch(customException $e) {
@@ -244,6 +245,10 @@ class ahis extends controller {
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
+					case "init_09":
+						return $this->nextAction('deworming_add');
+					case "init_10":
+						return $this->nextAction('vaccine_inventory_add');
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
@@ -1878,6 +1883,15 @@ class ahis extends controller {
 				return $this->saveLivestockimportData();
 			case 'livestockexport_save':
             	return $this->saveLivestockexportData();
+				
+			case 'vaccine_inventory_add':
+				return 'vaccine_inventory_tpl.php';
+			case 'vaccine_inventory_save':
+				return $this->saveVaccineInventoryData();
+			case 'deworming_add':
+				return 'deworming_tpl.php';
+			case 'deworming_save':
+				return $this->saveDewormingData();
 				
             case 'view_reports':
             

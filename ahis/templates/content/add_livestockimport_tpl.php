@@ -147,16 +147,16 @@ $formAction = 'livestockimport_save';
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
-$form->addRule('district', $this->objLanguage->languageText('mod_ahis_animaldistrictreq','ahis'),'required');
-$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointreq','ahis'),'required');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_animaloriginreq','ahis'),'required');
-$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_animaldestinationreq','ahis'),'required');
-$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_animalclassificationreq','ahis'),'required');
-$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsreq','ahis'),'required');
-$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkreq','ahis'),'required');
-$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheesereq','ahis'),'required');
-$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryreq','ahis'),'required');
-$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefreq','ahis'),'required');
+$form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
+$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointerror','ahis'),'required');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'required');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'required');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'required');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
 
  //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');

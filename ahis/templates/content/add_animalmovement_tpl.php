@@ -154,12 +154,12 @@ $formAction = 'animalmovement_save';
 $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
-$form->addRule('district', $this->objLanguage->languageText('mod_ahis_animaldistrictreq','ahis'),'required');
-$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_animalclassificationreq','ahis'),'required');
-$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_animalpurposereq','ahis'),'required');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_animaloriginreq','ahis'),'required');
-$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_animaldestinationreq','ahis'),'required');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarksreq', 'ahis'), 'required');
+$form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
+$form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
+$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'required');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
 
 //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
