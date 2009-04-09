@@ -1776,8 +1776,12 @@ You can create tables using pairs of vertical bars:
                 $author = $this->objUser->fullname($authorId);
                 $date = $this->objDate->formatDate($line['date_created']);
                 $type = $line['main_page'];
-                $locked = $line['page_lock'];
-                $lockerId = $line['page_locker_id'];
+                if(isset($line['page_lock'])) {
+                    $locked = $line['page_lock'];
+                }
+                if(isset($line['page_locker_id'])) {
+                    $lockerId = $line['page_locker_id'];
+                }
 
                 // page name link
                 $objLink = new link($this->uri(array(
