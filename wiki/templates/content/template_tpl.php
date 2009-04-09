@@ -21,10 +21,11 @@ if(isset($popup) || isset($iframe)){
     //$this->setVar('pageSuppressContainer', TRUE);
     $this->setVar('pageSuppressSearch', TRUE);
     $this->setVar('pageSuppressToolbar', TRUE);
-    $this->setVar('suppressFooter', TRUE);    
+    $this->setVar('suppressFooter', TRUE);
 }else{
     $this->setLayoutTemplate('layout_tpl.php');
 }
 $this->setVar('pageSuppressXML', TRUE);
+//header("Content-Type: text/html;charset=utf-8");
 echo $templateContent;
 ?>

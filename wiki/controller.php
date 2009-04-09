@@ -143,6 +143,7 @@ class wiki extends controller {
                 $templateContent = $this->objWikidisplay->showFormattingRules();
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('popup', TRUE);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -150,6 +151,7 @@ class wiki extends controller {
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showAddPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -186,6 +188,7 @@ class wiki extends controller {
                 $templateContent = $this->objWikidisplay->submitIframe($name, $content);
                 $this->setVarByRef('templateContent', $templateContent);
                 $this->setVar('iframe', TRUE);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -229,6 +232,7 @@ class wiki extends controller {
             case 'view_all':
                 $templateContent = $this->objWikidisplay->showAllPages();
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -250,6 +254,7 @@ class wiki extends controller {
                 $tab = $this->getParam('tab', 0);
                 $templateContent = $this->objWikidisplay->showMain($name, $version, $tab);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -264,6 +269,7 @@ class wiki extends controller {
                 }
                 $templateContent = $this->objWikidisplay->showMain($name);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -280,6 +286,7 @@ class wiki extends controller {
                 $data = $this->objDbwiki->searchWiki($column, $value);
                 $templateContent = $this->objWikidisplay->showSearch($data);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -287,12 +294,14 @@ class wiki extends controller {
                 $author = $this->getParam('author');
                 $templateContent = $this->objWikidisplay->showAuthors($author);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
             case 'validate_name':
                 $name = $this->getParam('name');
                 $divContent = $this->objWikidisplay->showValidateName($name);
+                //header("Content-Type: text/html;charset=utf-8");
                 return $divContent;
                 break;
 
@@ -300,6 +309,7 @@ class wiki extends controller {
                 $name = $this->getParam('name');
                 $content = $this->getParam('wikiContent');
                 $divContent = $this->objWikidisplay->showPreview($name, $content);
+                header("Content-Type: text/html;charset=utf-8");
                 return $divContent;
                 break;
 
@@ -307,6 +317,7 @@ class wiki extends controller {
                 $name = $this->getParam('name');
                 $templateContent = $this->objWikidisplay->showDeletedPage($name);
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -344,12 +355,14 @@ class wiki extends controller {
             case 'view_ranking':
                 $templateContent = $this->objWikidisplay->showRanking();
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
             case 'view_watchlist':
                 $templateContent = $this->objWikidisplay->showWatchlist();
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -386,6 +399,7 @@ class wiki extends controller {
             case 'view_links':
                 $templateContent = $this->objWikidisplay->showLinks();
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -440,6 +454,7 @@ class wiki extends controller {
             case 'add_wiki':
                 $templateContent = $this->objWikidisplay->showAddWiki();
                 $this->setVarByRef('templateContent', $templateContent);
+                header("Content-Type: text/html;charset=utf-8");
                 return 'template_tpl.php';
                 break;
 
@@ -456,13 +471,13 @@ class wiki extends controller {
                 $this->setSession('wiki_id', $wikiId);
                 return $this->nextAction('view_page', array(), 'wiki');
                 break;
-                
+
             case 'change_visibility':
                 $wikiId = $this->getParam('wikiId');
                 $visibility = $this->getParam('visibility');
                 $this->objDbwiki->editWiki($wikiId, $visibility);
                 return $this->nextAction('view_page', array(), 'wiki');
-                
+
             case 'context_wiki':
                 $contextCode = $this->getParam('contextCode');
                 $this->objDbwiki->createContextWiki($contextCode);
