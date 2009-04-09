@@ -130,7 +130,7 @@ $header .= $objLayer->show();
 $objLayer->str = '';
 $headShow = $objLayer->show();
 
-$display = '<p> '.$header.$headShow.'</p> <p class="clearboth"/>';
+$display = '<p> '.$header.$headShow.'</p> <p class="clearboth"/><br/>';
 //Show Header
 echo $display;
 // Show Form

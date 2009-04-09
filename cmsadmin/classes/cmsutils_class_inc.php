@@ -1307,7 +1307,7 @@
                 $end_pub = $publishing_end->show('end_date', 'yes', 'no', '');
                 //Author Alias
                 $author = new textinput('author_alias',null,null,20);
-                $lbl_author = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
+                $lbl_author_alias = new label( $this->objLanguage->languageText('mod_cmsadmin_author_alias','cmsadmin'),'author_alias');
 
 
                 //Pre-populated dropdown
@@ -1585,15 +1585,15 @@
             //add items to tables for good layout
 
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_pdf->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_advanced->addCell($lbl_pdf->show(), '120px', 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_pdf->show());
             $tbl_advanced->endRow();
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_email->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_advanced->addCell($lbl_email->show(), '120px', 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_email->show());
             $tbl_advanced->endRow();
             $tbl_advanced->startRow();
-            $tbl_advanced->addCell($lbl_print->show(), null, 'top', null, 'cmstinyvspacer');
+            $tbl_advanced->addCell($lbl_print->show(), '120px', 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_print->show());
             $tbl_advanced->endRow();
 
@@ -2540,7 +2540,7 @@
             }
 
             $dropdown->setSelected($setSelected);
-            
+            $dropdown->setId('input_parent_section');
             return $dropdown;
         }
 
@@ -5042,17 +5042,19 @@
 
             if ($editmode) {
                 //Set ordering as hidden field
-                $sections = new hiddeninput('parent', $arrContent['sectionid']);
                 //$objOrdering = new hiddeninput('ordering', $arrContent['ordering']);
-
-            } else {
-                if (isset($section) && !empty($section)) {
-                    //$sections = $this->getContentTreeDropdown($section, FALSE);
-                    $sections = $this->getSectionList($section, FALSE);
-                } else {
-                    //$sections = $this->getContentTreeDropdown(NULL, FALSE);
-                    $sections = $this->getSectionList(NULL, FALSE);
+                
+                //$sectionsHiddenInput = new hiddeninput('parent', $arrContent['sectionid']);
+                if (!isset($section)) {
+                    $section = $arrContent['sectionid'];
                 }
+
+                $sections = $this->getSectionList($section, FALSE);
+            } else {
+                if (!isset($section)) {
+                    $section = NULL;
+                }
+                $sections = $this->getSectionList($section, FALSE);
             }
 
             $tableContainer = new htmlTable();
@@ -5085,36 +5087,22 @@
             $table->addCell('', null, 'top', null, 'cmsvspacer');
             $table->endRow();
 
-            $tableTitleInput = new htmltable();
-            $tableTitleInput->cellspacing = "0";
-            $tableTitleInput->cellpadding = "0";
-            $tableTitleInput->border = "0";
+            $tableInput = new htmltable();
+            $tableInput->cellspacing = "0";
+            $tableInput->cellpadding = "0";
+            $tableInput->border = "0";
 
-            $tableTitleInput->startRow();
-            $tableTitleInput->addCell($this->objLanguage->languageText('word_title'), '50px', '', '', '', '');
-            $tableTitleInput->addCell($titleInput->show(), '', '', '', '', '');
-            $tableTitleInput->endRow();
+            $tableInput->startRow();
+            $tableInput->addCell($this->objLanguage->languageText('word_title'), '30px', '', '', '', '');
+            $tableInput->addCell($titleInput->show(), '', '', '', '', '');
+            $tableInput->addCell($this->objLanguage->languageText('word_section'),'50px', '', '', '', '');
+            $tableInput->addCell($sections->show(),'120px', '', '', '', '');
+            $tableInput->endRow();
+
 
             $table->startRow();
             //$table->addCell($this->objLanguage->languageText('word_title').': ' . $titleInput->show());
-            $table->addCell($tableTitleInput->show());
-
-            $tableSectionInput = new htmltable();
-            $tableSectionInput->cellspacing = "0";
-            $tableSectionInput->cellpadding = "0";
-            $tableSectionInput->border = "0";
-
-            $tableSectionInput->startRow();
-            $tableSectionInput->addCell($this->objLanguage->languageText('word_section'),'50px', '', '', '', '');
-            $tableSectionInput->addCell($sections->show(),'', '', '', '', '');
-            $tableSectionInput->endRow();
-
-            if (!$editmode) {
-                //$table->addCell($this->objLanguage->languageText('word_section').': ' . $sections->show());
-                $table->addCell($tableSectionInput->show());
-            } else {
-                $table->addCell($sections->show());
-            }
+            $table->addCell($tableInput->show());
 
             $table->endRow();
 
