@@ -68,8 +68,10 @@ $this->loadClass('layer','htmlelements');
 
 $nextButton = new button('next', $this->objLanguage->languageText('word_next'));
 $nextButton->setToSubmit();
-$backUri = $this->uri(array('action'=>'active_newherd'));
-$backButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$addButton = new button('next', $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_another')." ".$this->objLanguage->languageText('word_farm'));
+$addButton->setToSubmit();
+//$addUri = $this->uri(array('action'=>'active_newherd'));
+//$addButton = new button('cancel', $this->objLanguage->languageText('word_add'), "javascript: document.location='$addUri'");
 
 
 $territoryDrop = new dropdown('territory');
@@ -127,7 +129,7 @@ $objTable->startRow();
 $objTable->endRow();
 
 $objTable->startRow();
-//$objTable->addCell($backButton->show());
+$objTable->addCell($addButton->show());
 $objTable->addCell($nextButton->show());
 $objTable->endRow();
 

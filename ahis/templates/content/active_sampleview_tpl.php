@@ -66,8 +66,8 @@ $finButton = new button('finish', $this->objLanguage->languageText('word_finish'
 $numberBox = new textinput('number',$number);
 $numberBox->extra = "readonly";
 $newherdidBox = new textinput('newherdid',$newherdid,'hidden');
-$idBox = new textinput('samplingid',$samplingid,'hidden');
-
+//$dataBox = new textinput('data',$data,'hidden');
+//$idBox = new textinput('samplingid',$samplingid,'hidden');
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
 
@@ -114,8 +114,10 @@ $objTable->addCell($this->objLanguage->languageText('phrase_vaccinationhistory')
 $objTable->addCell($this->objLanguage->languageText('word_action'), '', '', '', 'heading');
 
 $objTable->endRow();
-
-foreach($data as $line){
+//print_r($data);
+foreach($data as $var){
+foreach($datan as $line){
+if($var['id']==$line['newherdid']){
 $objTable->startRow();
 $objTable->addCell($line['sampleid']);
 $objTable->addCell($line['testdate']);
@@ -142,13 +144,14 @@ $objTable->addCell($line['vachist']);
 $icons.= $objConfirm->show();
 $objTable->addCell($icons);
 $objTable->endRow();
-
+}
+}
 }
 $objTable->startRow();
 $objTable->addCell($addButton->show());
 $objTable->addCell($finButton->show());
 $objTable->addCell($newherdidBox->show());
-$objTable->addCell($idBox->show());
+//$objTable->addCell($dataBox->show());
 $objTable->endRow();
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm', $this->uri(array('action' => 'active_addsample')));

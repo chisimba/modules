@@ -72,6 +72,7 @@ if ($id) {
     $record['vachist'] = '';
     $record['number'] = '';
     $record['remarks'] = '';
+    $record['newherdid']='';
 
 }
 
@@ -87,10 +88,10 @@ $backButton = new button('back', $this->objLanguage->languageText('word_back'), 
 
 $campBox = new textinput('campname',$campName);
 $campBox->extra = "readonly";
-$farmBox = new textinput('farm',$farm);
-$farmBox->extra = "readonly";
-$farmsysBox = new textinput('farmingsystem',$farmingsystem);
-$farmsysBox->extra = "readonly";
+//$farmBox = new textinput('farm',$farm);
+//$farmBox->extra = "readonly";
+//$farmsysBox = new textinput('farmingsystem',$farmingsystem);
+//$farmsysBox->extra = "readonly";
 
 
 $inputDate = $this->getObject('datepicker','htmlelements');
@@ -100,7 +101,10 @@ $inputDate->setDefaultDate($calendardate);
 //$testDate->setName('dateTest');
 //$testDate->setDefaultDate($calenderdate);
 
-
+$farmDrop = new dropdown('farm');
+$farmDrop->addFromDB($newherd, 'farmname', 'id');
+$farmDrop->setSelected($record['newherdid']);
+//print_r($farmDrop);
 $speciesDrop = new dropdown('species');
 $speciesDrop->addFromDB($arraySpecies, 'name', 'name');
 $speciesDrop->setSelected($record['species']);
@@ -145,13 +149,13 @@ $objTable->endRow();
 $objTable->startRow();
 
 $objTable->addCell($this->objLanguage->languageText('word_farm').":");
-$objTable->addCell($farmBox->show());
+$objTable->addCell($farmDrop->show());
 $objTable->endRow();
 
-$objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system').":");
-$objTable->addCell($farmsysBox->show());
-$objTable->endRow();
+//$objTable->startRow();
+//$objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system').":");
+//$objTable->addCell($farmsysBox->show());
+//$objTable->endRow();
 
 $objTable->startRow();
 

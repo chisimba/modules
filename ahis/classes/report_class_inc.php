@@ -427,6 +427,7 @@ class report extends object {
 					
 					$csv .= implode(",", $row)."\n";
 				}
+			
 				return $csv;
 	}
 	}

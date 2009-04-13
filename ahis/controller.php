@@ -460,7 +460,7 @@ class ahis extends controller {
                         //csv
                         $csv = $this->objViewReport->generateCSV($year, $month, $reportType);
                         header("Content-Type: application/csv"); 
-                        header("Content-length: " . sizeof($csv)); 
+                       //header("Content-length: " . sizeof($csv)); 
                         header("Content-Disposition: attachment; filename=$fileName.csv"); 
                         echo $csv;
                         break;
@@ -486,8 +486,8 @@ class ahis extends controller {
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));
-               //$officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
-               //$this->setSession('ps_officerName',$this->objUser->fullName($officerId));
+
+
                $this->setVar('userList', $this->objAhisUser->getList());
                $this->setVar('officerId', $this->getSession('ps_officerId'));
                $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
@@ -512,10 +512,10 @@ class ahis extends controller {
 	            $this->setSession('ps_surveyTypeId',$surveyTypeId);
 	            $this->setSession('ps_comments',$comments);
 	            
-	            //$data =$this->objActive->getcamp($this->getSession('ps_campName'));
-               //$this->setSession('ps_qualityId', $qualityId);
 
-               //$this->setVar('activeid',$data[0]['id']);
+
+
+
                $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
                $this->setVar('arraytest', $this->objTest->getAll("ORDER BY NAME"));
                $this->setVar('campName', $this->getSession('ps_campName'));
@@ -595,7 +595,6 @@ class ahis extends controller {
        
             case 'newherd_insert':
                 $id = $this->getParam('id');
-                $this->getParam('activeid');
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
@@ -614,27 +613,30 @@ class ahis extends controller {
                     $this->objNewherd->insert($arrayherd);  
                     $code = 1;
                 }             
-              
-                return $this->nextAction('active_addsample', array('success'=>$code));
+               $div = $this->getParam('next');
+               //print_r($div);
+               if($div ==$this->objLanguage->languageText('word_next'))
+               {
+                return $this->nextAction('active_addsample');
+               }else
+                return $this->nextAction('active_addherd');
+                
             case 'newherd_delete':
                $id = $this->getParam('id');
                $this->objNewherd->delete('id', $id);
                return $this->nextAction('active_newherd', array('success'=>'2'));
           
 
-            case 'active_sampleview':
-               //$samplingid = $this->getParam('id',$this->getSession('ps_id'));
-
-               $this->setSession('ps_id',$samplingid);
-               $newherdid = $this->getParam('id',$this->getSession('ps_newherdid'));
-               $number = $this->getParam('number',$this->getSession('ps_number'));
+            case 'active_sampleview':
+               $newherdid = $this->getSession('ps_newherdid');
                $this->setSession('ps_number',$number);
-               $data = $this->objSampledetails->getsamples($newherdid);
+               $data = $this->getSession('ps_newherd');
+               $datan= $this->objSampledetails->getall();
                $this->setVar('newherdid',$newherdid);
                $this->setVar('calendardate', $this->getSession('ps_calendardate', date('Y-m-d')));
                $this->setVar('data',$data);
+               $this->setVar('datan',$datan);
 	            $this->setVar('number',$this->getSession('ps_number'));
-	            //$this->setVar('samplingid',$this->getSession('ps_id'));
 	            $this->setVar('i',count($data));
                return 'active_sampleview_tpl.php';
                
@@ -642,12 +644,12 @@ class ahis extends controller {
             
                $newherdid =$this->objNewherd->getherd($this->getSession('ps_activeid'));
                $this->setSession('ps_newherdid',$newherdid[0]['id']);
+               $this->setSession('ps_newherd',$newherdid);
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('farm',$this->getSession('ps_farm'));
                $this->setVar('farmingsystem',$this->getSession('ps_farmingsystem'));
                $this->setVar('campName', $this->getSession('ps_campName'));
-               $this->setVar('newherdid',$this->getSession('ps_newherdid') );
-               $this->setVar('herd',$herd[0]['id']);
+               $this->setVar('newherd',$this->getSession('ps_newherd'));
                $this->setVar('arraySpecies',$this->objSpecies->getAll("ORDER BY NAME"));
                $this->setVar('arrayAge',$this->objAge->getAll("ORDER BY NAME"));
                $this->setVar('arraySex',$this->objSex->getAll("ORDER BY NAME"));
@@ -660,8 +662,9 @@ class ahis extends controller {
                
            case 'sampleview_insert':
                 $id = $this->getParam('id');
+                $this->setSession('ps_newherdid',$this->getParam('farm'));
                 $arrayherd = array();
-                $arrayherd['newherdid'] = $this->getParam('newherdid',$this->getSession('ps_newherdid'));
+                $arrayherd['newherdid'] = $this->getParam('newherdid',$this->getParam('farm'));
                 $arrayherd['species'] = $this->getParam('species');
                 $arrayherd['age'] = $this->getParam('age');
                 $arrayherd['sex'] = $this->getParam('sex');
@@ -677,7 +680,8 @@ class ahis extends controller {
                 $arrayherd['specification'] = $this->getParam('spec');
                 $arrayherd['testdate'] = $this->getParam('calendardate');
 
-
+                //print_r($arrayherd);
+                $this->setSession('ps_data',$arrayherd);
                
                 if ($id) {
                     $this->objSampledetails->update('id', $id, $arrayherd);
@@ -689,6 +693,7 @@ class ahis extends controller {
                 } 
                
                 return $this->nextAction('active_sampleview', array('success'=>$code));
+                
             case 'sampleview_delete':
                $id = $this->getParam('id');
                $this->objSampledetails->delete('id', $id);
