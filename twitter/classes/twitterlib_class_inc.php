@@ -124,16 +124,11 @@ class twitterlib extends object
      */
     public function updateStatus($status)
     {
-        log_debug("Updating stats $status now");
         $twittername = $this->_objUserParams->getValue('twittername');
         $twitterpassword = $this->_objUserParams->getValue('twitterpassword');
-        log_debug($twittername.$twitterpassword);
         if ($twittername && $twitterpassword) {
-            log_debug("initting connection");
             $this->_objTwitterRemote->initializeConnection($twittername, $twitterpassword);
-            log_debug("Updating status");
-            //$this->_objTwitterRemote->updateStatus($status);
-            log_debug("posted $status to Twitter");
+            $this->_objTwitterRemote->updateStatus($status);
         }
     }
 }

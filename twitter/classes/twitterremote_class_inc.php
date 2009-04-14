@@ -150,15 +150,7 @@ class twitterremote extends object
         $auth = $this->userName.":".$this->password;
         $url = 'http://'.$auth.'@twitter.com/statuses/update.xml';
         $postargs = array('status' => urlencode($status));
-        //$url = $url.$postargs;
-        //return $this->process($url, $postargs);
-        //$this->oC->initializeCurl($url);
-        //$this->oC->setopt(CURLOPT_HEADER, FALSE);
-        //$this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
-        log_debug("About to send data...");
         $xmlStr = $this->process($url, $postargs);
-        //$this->oC->closeCurl();
-        log_debug($xmlStr);
         return $xmlStr;
     }
 
@@ -421,7 +413,6 @@ class twitterremote extends object
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
 
         $response = curl_exec($ch);
-log_debug($response);
         $this->responseInfo=curl_getinfo($ch);
         curl_close($ch);
 
