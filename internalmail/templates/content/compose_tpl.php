@@ -35,6 +35,8 @@ $headerParams = $this->getJavascriptFile('compose.js', 'internalmail');
 $this->appendArrayVar('headerParams', $headerParams);
 
 
+
+
 // set up html elements
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeader = $this->loadClass('htmlheading', 'htmlelements');
@@ -383,19 +385,20 @@ $(":text, textarea").result(findValueCallback).next().click(function() {
 		$(this).prev().search();
 	});
 
-
-	$("#suggest4").autocomplete(\'index.php?module=internalmail&action=searchusers\', {
+	$("#suggest4").autocomplete(\'index.php?module=internalmail&action=searchusers\');
+/*, {
 		width: 300,
 		multiple: false,
 		matchContains: true,
 		formatItem: formatItem,
 		formatResult: formatResult,
 		
-	}).result(function (evt, data, formatted) {				
+	}).result(function (evt, data, formatted) {
+
 					$("#hiddensuggest4").val(data[1]);
 					});
 
-
+*/
 	$("#clear").click(function() {
 		$(":input").unautocomplete();
 	});
@@ -423,6 +426,7 @@ function submitSearchForm(frm)
 	//groupId = frm.groupid.value;
 	if(username)
 	{
+
 		addRecipient(username);
 	}
 	
