@@ -371,14 +371,14 @@ class report extends object {
 				
 		case 'init_09': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Vaccine Name','Total Doses On hand','Doses at start of Month','Doses at start of Month date','Doses at end of Month','Doses at end of Month Date','Doses Received During the Month','Doses Used', 'Doses Wasted');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Vaccine Name','Total Doses in hand','Doses at start of Month','Start of Month date','Doses at end of Month','End of Month Date','Doses Received During the Month','Doses Used', 'Doses Wasted');
 				
 				$vaccineInventoryRecords = $this->objVaccineInventory->getALL();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($vaccineInventoryRecords as $report) {
 					
-					$row = array($report['district_name'],$report['vaccine_name'],$report['total_doses_on_hand'],$report['dosesatstartmonth'],$report['dosesatstartmonthdate'],$report['dosesatendmonth'],$report['dosesatendmonthdate'],$report['monthdoses'],$report['dosesused'],$report['doseswasted']);
+					$row = array($report['district'],$report['vaccinename'],$report['doses'],$report['dosesstartofmonth'],$report['startmonth'],$report['dosesendofmonth'],$report['endmonth'],$report['dosesreceived'],$report['dosesused'],$report['doseswasted']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
@@ -393,7 +393,7 @@ class report extends object {
 				
 				foreach ($dewormingRecords as $report) {
 					
-					$row = array($report['district'],$report['animalclass'],$report['numanimals'],$report['antiemetictype'],$report['remarks']);
+					$row = array($report['district'],$report['classification'],$report['numberofanimals'],$report['antiemitictype'],$report['remarks']);
 					
 					$csv .= implode(",", $row)."\n";
 				}

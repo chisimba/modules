@@ -140,6 +140,9 @@ class ahis extends controller {
 			$this->objAnimalmovement = $this->getObject('animalmovement');
 			$this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
+			
+			$this->objAnimaldeworming = $this->getObject('animaldeworming');
+			$this->objAnimalvaccine = $this->getObject('animalvaccine');
 
 
 
@@ -171,7 +174,7 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add','deworming_add','deworming_save','vaccine_inventory_add','vaccine_inventory_save'
+                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add','deworming_add','animalvaccine_add','deworming_save','vaccine_inventory_add','vaccine_inventory_save','animaldeworming_add'
                                         );
         }
         catch(customException $e) {
@@ -245,10 +248,15 @@ class ahis extends controller {
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
+					//case "init_09":
+						//return $this->nextAction('deworming_add');
 					case "init_09":
-						return $this->nextAction('deworming_add');
+						return $this->nextAction('animalvaccine_add');
 					case "init_10":
-						return $this->nextAction('vaccine_inventory_add');
+						return $this->nextAction('animaldeworming_add');
+					//case "init_10":
+						//return $this->nextAction('vaccine_add');
+						
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
@@ -594,10 +602,18 @@ class ahis extends controller {
        
        
             case 'newherd_insert':
+
+                $id = $this->getParam('id');
+                $this->getParam('activeid');
+                $this->setSession('ps_activeid',$this->getParam('activeid'));
+                $this->setSession('ps_farm',$this->getParam('farm'));
+                $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
+
                 $id = $this->getParam('id');
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
+
                 
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
@@ -627,7 +643,8 @@ class ahis extends controller {
                return $this->nextAction('active_newherd', array('success'=>'2'));
           
 
-            case 'active_sampleview':
+            case 'active_sampleview':
+
                $newherdid = $this->getSession('ps_newherdid');
                $this->setSession('ps_number',$number);
                $data = $this->getSession('ps_newherd');
@@ -1839,9 +1856,6 @@ class ahis extends controller {
 					$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
                 	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
-				//$this->setVar('id', $this->getParam('id'));
-				//$this->setVar('d',$this->getSession('ps_geo2Id'));
-				//$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));
 				return 'add_animalmovement_tpl.php';
 				
 			case 'livestockimport_add':
@@ -1857,6 +1871,21 @@ class ahis extends controller {
                 	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
 					$this->setVar('geo2', $this->objGeo2 ->getAll("ORDER BY name"));
 				return 'add_livestockexport_tpl.php';
+				
+			case 'animaldeworming_add':
+					$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
+					return 'animaldeworming_tpl.php';
+			
+			case 'animalvaccine_add':
+					$id=$this->getSession('ps_geo2Id');
+			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
+                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
+					$this->setVar('vaccination', $this->objVaccination ->getAll("ORDER BY name"));
+					return 'animalvaccine_tpl.php';
 				
              case 'animal_population_add':
 			 		$id=$this->getSession('ps_geo2Id');
@@ -1875,6 +1904,7 @@ class ahis extends controller {
 			return 'slaughter_tpl.php';
 		 		$this->setVar('arrayGeo2', $this->objGeo2->getAll("ORDER BY name"));				
 				return 'slaughter_tpl.php';
+				
 			case 'animal_population_save':
 				return $this->SaveData();				
 			case 'saveinspectiondata':
@@ -1888,9 +1918,16 @@ class ahis extends controller {
 				return $this->saveLivestockimportData();
 			case 'livestockexport_save':
             	return $this->saveLivestockexportData();
+			
+			case 'animaldeworming_save':
+				return $this->saveAnimaldewormingData();
+				
+			case 'animalvaccine_save':
+				return $this->saveAnimalvaccineData();	
 				
 			case 'vaccine_inventory_add':
 				return 'vaccine_inventory_tpl.php';
+				
 			case 'vaccine_inventory_save':
 				return $this->saveVaccineInventoryData();
 			case 'deworming_add':
@@ -2167,6 +2204,40 @@ class ahis extends controller {
 		return $this->nextAction('');
 	}
     
+	//function to add animal deworming data
+	private function saveAnimaldewormingData()
+	{
+		$district = $this->getParam('district');
+		$classification = $this->getParam('classification');
+		$numberofanimals = $this->getParam('numberofanimals');
+		$antiemitictype = $this->getParam('antiemitictype');
+		$remarks = $this->getParam('remarks');
+		
+		
+		$data = $this->objAnimaldeworming->addAnimalDewormingData($district,$classification,$numberofanimals,$antiemitictype,$remarks);  
+							
+		return $this->nextAction('');
+	}
+	
+	
+	//function to add animal vaccine data
+	private function saveAnimalvaccineData()
+	{
+		$district = $this->getParam('district');
+		$vaccinename = $this->getParam('vaccinename');
+		$doses = $this->getParam('doses');
+		$doses_start = $this->getParam('dosesstartofmonth');
+		$datePicker = $this->getParam('startmonth');
+		$doses_end = $this->getParam('dosesendofmonth');
+		$datePicker = $this->getParam('endmonth');
+		$doses_received = $this->getParam('dosesreceived');
+		$doses_used = $this->getParam('dosesused');
+		$doses_wasted= $this->getParam('doseswasted');
+		
+		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePicker,$doses_received,$doses_used,$doses_wasted);  
+							
+		return $this->nextAction('');
+	}
     /**
      * Method to determine whether the user needs to be logged in
      * 

@@ -15,37 +15,37 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'vaccine' => array(
+	'vaccinename' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'totaldosesonhand' => array(
+	'doses' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'startmonthdose' => array(
+	'dosesstartofmonth' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'startmonthdate' => array(
+	'startmonth' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'endmonthdose' => array(
+	'dosesendofmonth' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'endmonthdate' => array(
+	'endmonth' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
-	'monthdoses' => array(
+	'dosesreceived' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
@@ -62,8 +62,5 @@ $fields = array(
 		)
 	
     );
-//create other indexes here...
-
-$name = 'index_tbl_ahis_vaccine_inventory';
 
 ?>

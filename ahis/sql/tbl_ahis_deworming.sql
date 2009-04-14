@@ -1,43 +1,45 @@
 <?php
 
+// Table Name
 $tablename = 'tbl_ahis_deworming';
 
-$options = array('comment'=> 'table to deworming details','collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+//Options line for comments, encoding and character set
+$options = array('comment' => 'The table contains the keywords for deworming', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
+// Fields
 $fields = array(
 	'id' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
 		),
+	'district' => array(
+		'type' => 'text',
+		'length' => 32,
+		'notnull' => 1
+    ),
+	'classification' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'numberofanimals' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
+	'antiemitictype' => array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => 1
+    ),
 	
-    'district' => array(
+	'remarks' => array(
 		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),		
-    'animalclass' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),
-    'numanimals' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),
-    'antiemetictype' => array(
-		'type' => 'text',
-		'length' => 64,
-        'notnull' => TRUE
-		),
-      'remarks' => array(
-		'type' => 'clob',
-		
-		),
-		
-		
-	
-    );
+		'length' => 255,
+		'notnull' => 1
+    )
+);
+
 
 ?>

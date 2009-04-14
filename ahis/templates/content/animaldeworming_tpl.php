@@ -70,7 +70,7 @@ $loadingIcon = $objIcon->show();
 
 //title
 //$title = $this->objLanguage->languageText('mod_movement_title', 'movement', 'Animal Movement');
-$title = 'Livestock movement';
+$title = 'Deworming';
 
 // Header
 $header = new htmlheading();
@@ -78,34 +78,7 @@ $header->type = 2;
 $header->str = $title;
 
 
-/*if (isset($success)) {
 
-    $objMsg = $this->getObject('timeoutmessage','htmlelements');
-    $objMsg->setHideTypeToNone();
-    switch ($success) {
-        case 1:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_added', 'ahis')."<br />");
-            break;
-        case 2:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_deleted', 'ahis')."<br />");
-            break;
-        case 3:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_updated', 'ahis')."<br />");
-
-            break;
-        case 4:
-            $objMsg->setMessage("<span class='error'>".$this->objLanguage->languageText('mod_ahis_duplicate', 'ahis')."</span><br />");
-            $objMsg->setTimeOut('0');
-            break;
-    }
-
-    $msg = $objMsg->show();
-
-} 
-else 
-{
-    $msg = 'Try adding the record again.';
-}*/
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
@@ -125,47 +98,33 @@ $formTable->endRow();
 $label = new label ('Animal Classification: ', 'classification');
 $classification = new dropdown('classification');
 $classification->addFromDB($species, 'name', 'name'); 
-
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
 $formTable->addCell($classification->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$label_purpose = new label('Purpose: ', 'Purpose');
-$radio_slaughter = new radio ('purpose');
 
-$radio_slaughter->addOption('Slaughtered', 'Slaughtered');
-$radio_rear = new radio ('purpose');
-$radio_slaughter->addOption('Rearing', 'Rearing');
-
-$formTable->startRow();
-$formTable->addCell($label_purpose->show(),NULL,NULL,'right');
-$formTable->addCell($radio_slaughter->show(),NULL,NULL,'left');
-
-$formTable->startRow();
-$formTable->addCell('',40);
-$formTable->addCell($radio_rear->show(),40);
-$formTable->endRow();
 
 // animal origin	
-$label = new label ('Animal origin: ', 'origin');
-$origin = new textinput('origin');
+$label = new label ('Number of animals dewormed: ', 'numberofanimals');
+$number_animals = new textinput('numberofanimals');
 //$origin->size = 40;
 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($origin->show(),NULL,NULL,'left');
+$formTable->addCell($number_animals->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-// animal destination	
-$label = new label ('Animal destination: ', 'destination');
-$destination = new textinput('destination');
-//$destination->size = 40;
-
+// antiemitic type
+$label = new label ('Type of Antiemitic: ', 'antiemitictype');
+$antiemitictype = new dropdown('antiemitictype');
+$antiemitictype->addFromDB($control, 'name', 'name'); 
 $formTable->startRow();
 $formTable->addCell($label->show(),NULL,NULL,'right');
-$formTable->addCell($destination->show(),NULL,NULL,'left');
+$formTable->addCell($antiemitictype->show(),NULL,NULL,'left');
 $formTable->endRow();
+
+
 
 $label_remarks = new label('<div class="labels">'.$this->objLanguage->languageText('mod_ahis_remarks', 'ahis', 'Remarks: '), 'remarks');
 
@@ -179,7 +138,7 @@ $formTable->startRow();
 $formTable->addCell($error, NULL, NULL, NULL, NULL, "colspan=2");
 $formTable->endRow();
 
-$formAction = 'animalmovement_save';  
+$formAction = 'animaldeworming_save';  
     $buttonText = 'Save';
 	
 	// Create Form
@@ -188,9 +147,8 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
-$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'required');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
-$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
+$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'required');
+$form->addRule('antiemitictype', $this->objLanguage->languageText('mod_ahis_antiemiticerror','ahis'),'required');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
 
 //container-table
@@ -201,7 +159,7 @@ $topTable->endRow();
 
 $form->addToForm($topTable->show());
  
- $save = new button('animalmovement_save', 'Save');
+ $save = new button('animaldeworming_save', 'Save');
  $save->setToSubmit();
  
  $cancel = new button('cancel','Cancel');

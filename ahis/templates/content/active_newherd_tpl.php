@@ -102,7 +102,6 @@ $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
  
 
-
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
 $objTable->cssClass = 'min50';
