@@ -123,6 +123,7 @@ class cms extends controller
                 $this->_objPreview = $this->getObject('dbcontentpreview', 'cmsadmin');
                 // instantiate the database object for sections
                 $this->_objSections = $this->getObject('dbsections', 'cmsadmin');
+                $this->_objSecurity = $this->getObject('dbsecurity', 'cmsadmin');
 
                 $this->_objSimpleTree = $this->getObject('simplecontenttree', 'cmsadmin');
 
@@ -435,21 +436,28 @@ class cms extends controller
          */
         private function _showfulltext()
         {
-                $this->setLayoutTemplate('cms_layout_tpl.php');
-                $fromadmin = $this->getParam('fromadmin', FALSE);
-                $sectionId = $this->getParam('sectionid', NULL);
-                $rss = $this->rss->getUserRss($sectionId);
-                $this->setVarByRef('rss', $rss);
-                $this->setVarByRef('sectionId', $sectionId);
-                $this->setVarByRef('fromadmin', $fromadmin);
-                $page = $this->_objContent->getContentPageFiltered($this->getParam('id'));
-                $siteTitle = $page['title'];
-                $this->setVarByRef('pageTitle', $siteTitle);
-                $this->bbcode = $this->getObject('washout', 'utilities');
-                $content = $this->objLayout->showBody();
-                $content = $this->bbcode->parseText($content);
-                $this->setVarByRef('content',$content);
-                return 'cms_content_tpl.php';
+			//Security Check for Public Access
+            if (!$this->_objSecurity->isContentPublic($page['id'])) {
+				$this->setVar('errMessage','You have to log in to access this item');
+				$this->setVar('mustlogin',TRUE);
+				return 'cms_nopermissions_tpl.php';
+            }
+
+            $this->setLayoutTemplate('cms_layout_tpl.php');
+            $fromadmin = $this->getParam('fromadmin', FALSE);
+            $sectionId = $this->getParam('sectionid', NULL);
+            $rss = $this->rss->getUserRss($sectionId);
+            $this->setVarByRef('rss', $rss);
+            $this->setVarByRef('sectionId', $sectionId);
+            $this->setVarByRef('fromadmin', $fromadmin);
+            $page = $this->_objContent->getContentPageFiltered($this->getParam('id'));
+            $siteTitle = $page['title'];
+            $this->setVarByRef('pageTitle', $siteTitle);
+            $this->bbcode = $this->getObject('washout', 'utilities');
+            $content = $this->objLayout->showBody();
+            $content = $this->bbcode->parseText($content);
+            $this->setVarByRef('content',$content);
+            return 'cms_content_tpl.php';
         }
 
         /**

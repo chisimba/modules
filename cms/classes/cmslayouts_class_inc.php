@@ -480,7 +480,6 @@ jQuery(document).ready(function(){
     public function getEditLink($id,$a_param = null) {
 		//Security Check for write access to this content item
 		if (!$this->_objSecurity->canUserWriteContent($id)){
-			
 			return "";
 		}
 
@@ -1120,13 +1119,12 @@ jQuery(document).ready(function(){
          * @return string The page content to be displayed
          */
         public function showBody($isPreview = false)
-
         {   
             $objFeatureBox = $this->newObject('featurebox', 'navigation');
             $contentId = $this->getParam('id');
             $lbWritten = $this->objLanguage->languageText('phrase_writtenby');
             $page = $this->_objContent->getContentPageFiltered($contentId);
-
+			
             //Including Meta Tags Here
             $this->appendArrayVar('metaKeywords', $page['metakey']);
             $this->appendArrayVar('metaDescriptions', $page['metadesc']);
