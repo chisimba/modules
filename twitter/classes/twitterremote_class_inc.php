@@ -156,7 +156,7 @@ class twitterremote extends object
         $this->oC->setopt(CURLOPT_HEADER, FALSE);
         $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
 
-        $xmlStr = $this->oC->getUrl();
+        $xmlStr = $this->oC->sendData($url, $postargs);
         $this->oC->closeCurl();
         log_debug($xmlStr);
         return $xmlStr;
