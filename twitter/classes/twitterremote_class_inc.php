@@ -147,9 +147,19 @@ class twitterremote extends object
     */
     public function updateStatus($status)
     {
-        $url = 'http://twitter.com/statuses/update.xml';
-        $postargs = 'status='.urlencode($status);
-        return $this->process($url, $postargs);
+        $auth = $this->userName.":".$this->password;
+        $url = 'http://'.$auth.'@twitter.com/statuses/update.xml';
+        $postargs = array('status' => urlencode($status));
+        //$url = $url.$postargs;
+        //return $this->process($url, $postargs);
+        $this->oC->initializeCurl($url);
+        $this->oC->setopt(CURLOPT_HEADER, FALSE);
+        $this->oC->setopt(CURLOPT_RETURNTRANSFER, 1);
+
+        $xmlStr = $this->oC->getUrl();
+        $this->oC->closeCurl();
+        log_debug($xmlStr);
+        return $xmlStr;
     }
 
     /**
@@ -294,7 +304,7 @@ class twitterremote extends object
     {
         $xml = $this->getStatus();
         if(is_object($xml)) {
-            $ret = "<div name=\"myLastTweet\" id=\"myLastTweet\">" . $xml->status->text;
+            $ret = "<div id=\"myLastTweet\">" . $xml->status->text;
             if ($showTime) {
                 $objHumanizeDate = $this->getObject("translatedatedifference", "utilities");
                 $fixedTime = strtotime($xml->status->created_at);

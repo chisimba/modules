@@ -126,10 +126,11 @@ class twitterlib extends object
     {
         $twittername = $this->_objUserParams->getValue('twittername');
         $twitterpassword = $this->_objUserParams->getValue('twitterpassword');
-
         if ($twittername && $twitterpassword) {
             $this->_objTwitterRemote->initializeConnection($twittername, $twitterpassword);
+            log_debug("Updating status");
             $this->_objTwitterRemote->updateStatus($status);
+            log_debug("posted $status to Twitter");
         }
     }
 }
