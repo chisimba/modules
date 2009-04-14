@@ -436,6 +436,7 @@ class cms extends controller
          */
         private function _showfulltext()
         {
+			$page['id'] = $this->getParam('id');
 			//Security Check for Public Access
             if (!$this->_objSecurity->isContentPublic($page['id'])) {
 				$this->setVar('errMessage','You have to log in to access this item');

@@ -1040,7 +1040,17 @@ jQuery(document).ready(function(){
 			$objMindMap = $this->getObject('parse4mindmap', 'filters');
             $objMath = $this->getObject('parse4mathml', 'filters');
             $orderType = $arrSection['ordertype'];
+	
+			if (!isset($arrSection['showintroduction'])) {
+				$arrSection['showintroduction'] = '';
+			}
+
             $showIntro = stripslashes($arrSection['showintroduction']);
+
+			if (!isset($arrSection['showdate'])) {
+				$arrSection['showdate'] = '';
+			}
+
             $showDate = $arrSection['showdate'];
             $description = stripslashes($arrSection['description']);
             $imagesrc = $arrSection['link'];
