@@ -34,9 +34,6 @@ if (!$GLOBALS['kewl_entry_point_run']) {
 $headerParams = $this->getJavascriptFile('compose.js', 'internalmail');
 $this->appendArrayVar('headerParams', $headerParams);
 
-
-
-
 // set up html elements
 $objIcon = $this->newObject('geticon', 'htmlelements');
 $objHeader = $this->loadClass('htmlheading', 'htmlelements');
@@ -303,6 +300,8 @@ $attachmentsTable = $objTable->show();
 
 // set up buttons
 $objButton = new button('submitbutton', $sendLabel);
+//$objButton->extra = ' onclick="SubmitForm(\'composeform\')"';
+//$objButton->extra = 'onclick="$(\'form_composeform\').submit();"';
 /*$objButton->extra = ' onclick="javascript:
     if($(\'input_recipient\').value!=\'\'){
         $(\'form_composeform\').sendbutton.value=\'Send\';
@@ -331,6 +330,12 @@ $objForm->extra = ' enctype="multipart/form-data"';
 $objForm->addToForm($composeTable);
 $objForm->addToForm($attachmentsTable);
 $objForm->addToForm($hiddenInput);
+
+$objLink1 = new link($this->uri(array('action'=>'sendmail')));
+                $objLink1->link='Send';
+                $objLink1->title='send title';
+
+$objForm->addToForm($objLink1->show());
 $objForm->addToForm($buttons);
 $composeForm = $objForm->show();
 
@@ -367,6 +372,16 @@ $this->appendArrayVar('headerParams', $str);
 
 	
 	$str = '<script type="text/javascript">
+
+        function SubmitForm()
+        {
+          daForm = document.getElementById("composeform");
+          daForm.actions ="index.php?module=internalmail&action=sendemail";
+          daForm.submit();
+
+       }
+
+
 $().ready(function() {
 
 	function findValueCallback(event, data, formatted) {
@@ -385,7 +400,10 @@ $(":text, textarea").result(findValueCallback).next().click(function() {
 		$(this).prev().search();
 	});
 
-	$("#suggest4").autocomplete(\'index.php?module=internalmail&action=searchusers\');
+	$("#suggest4").autocomplete(\'index.php?module=internalmail&action=searchusers\').result(function (evt, data, formatted) {
+
+					$("#hiddensuggest4").val(data[1]);
+					});
 /*, {
 		width: 300,
 		multiple: false,
