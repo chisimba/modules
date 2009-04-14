@@ -1,0 +1,9 @@
+TODO List for Jabberblog module:
+
+1. Sitemap as a sitemap.xml file
+2. Multi user
+3. Aggregator
+4. Clean up template code and abstract layout to object
+5. Fix Twitter code - done!
+6. FaceBook integration
+
