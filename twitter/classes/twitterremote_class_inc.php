@@ -413,10 +413,10 @@ log_debug($postargs);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         //curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         $response = curl_exec($ch);
-        log_debug($response);
+        //log_debug($response);
         $this->responseInfo=curl_getinfo($ch);
         curl_close($ch);
-        log_debug($this->responseInfo);
+        //log_debug($this->responseInfo);
 
 
         if(intval($this->responseInfo['http_code'])==200){
