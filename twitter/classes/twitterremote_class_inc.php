@@ -149,7 +149,7 @@ class twitterremote extends object
     {
         $auth = $this->userName.":".$this->password;
         $url = 'http://'.$auth.'@twitter.com/statuses/update.xml';
-        $postargs = array('status' => urlencode($status));
+        $postargs = 'status='.urlencode($status);
         $xmlStr = $this->process($url, $postargs);
         return $xmlStr;
     }
@@ -395,26 +395,28 @@ class twitterremote extends object
     private function process($url,$postargs=false)
     {
         $ch = curl_init($url);
-
+log_debug($postargs);
         if($postargs !== false){
-            curl_setopt ($ch, CURLOPT_POST, true);
+            curl_setopt ($ch, CURLOPT_POST, 1);
             curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
+
         }
 
         if($this->userName !== false && $this->password !== false)
             curl_setopt($ch, CURLOPT_USERPWD, $this->userName.':'.$this->password);
 
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_NOBODY, 0);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+        //curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        //curl_setopt($ch, CURLOPT_NOBODY, 0);
+        //curl_setopt($ch, CURLOPT_HEADER, 0);
+        //curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
+        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-
+        //curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         $response = curl_exec($ch);
+        log_debug($response);
         $this->responseInfo=curl_getinfo($ch);
         curl_close($ch);
+        log_debug($this->responseInfo);
 
 
         if(intval($this->responseInfo['http_code'])==200){
