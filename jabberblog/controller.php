@@ -83,6 +83,7 @@ class jabberblog extends controller {
                 // Get other places to upstream content to
                 $this->objTwitterLib = $this->getObject ( 'twitterlib', 'twitter' );
             }
+
             // Get the sysconfig variables for the Jabber user to set up the connection.
             $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
             $this->jserver = $this->objSysConfig->getValue ( 'jabberserver', 'jabberblog' );
