@@ -300,7 +300,7 @@ $attachmentsTable = $objTable->show();
 
 // set up buttons
 $objButton = new button('submitbutton', $sendLabel);
-//$objButton->extra = ' onclick="SubmitForm(\'composeform\')"';
+$objButton->extra = ' onclick="SubmitForm()"';
 //$objButton->extra = 'onclick="$(\'form_composeform\').submit();"';
 /*$objButton->extra = ' onclick="javascript:
     if($(\'input_recipient\').value!=\'\'){
@@ -310,7 +310,7 @@ $objButton = new button('submitbutton', $sendLabel);
         alert(\''.$requiredLabel.'\');
         $(\'form_composeform\').surname.focus();
     }"';*/
-$objButton->setToSubmit();
+//$objButton->setToSubmit();
 $buttons = '<br />'.$objButton->show();
 
 $objButton = new button('cancelbutton', $cancelLabel);
@@ -331,11 +331,7 @@ $objForm->addToForm($composeTable);
 $objForm->addToForm($attachmentsTable);
 $objForm->addToForm($hiddenInput);
 
-$objLink1 = new link($this->uri(array('action'=>'sendmail')));
-                $objLink1->link='Send';
-                $objLink1->title='send title';
 
-$objForm->addToForm($objLink1->show());
 $objForm->addToForm($buttons);
 $composeForm = $objForm->show();
 
@@ -375,10 +371,7 @@ $this->appendArrayVar('headerParams', $str);
 
         function SubmitForm()
         {
-          daForm = document.getElementById("composeform");
-          daForm.actions ="index.php?module=internalmail&action=sendemail";
-          daForm.submit();
-
+          document.composeform.submit();
        }
 
 
