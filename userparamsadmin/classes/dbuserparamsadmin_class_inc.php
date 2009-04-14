@@ -138,9 +138,14 @@ class dbuserparamsadmin extends object
      * @access public
      *
      */
-    public function setUid($un)
+    public function setUid($un = NULL, $id = NULL)
     {
-        $this->uid = $this->objUser->getUserId($un);
+       // if(is_null($un)) {
+       //     $this->uid = $id;
+        //}
+        //else {
+            $this->uid = $this->objUser->getUserId($un);
+        //}
     }
 
     /**
