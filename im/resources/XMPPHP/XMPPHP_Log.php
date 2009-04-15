@@ -34,7 +34,7 @@
  * @copyright  2008 Nathanael C. Fritz
  * @version	$Id$
  */
-class XMPPHP_Log {
+class XMPPHP_Log_old {
 	
 	const LEVEL_ERROR   = 0;
 	const LEVEL_WARNING = 1;
