@@ -327,6 +327,7 @@ class jbviewer extends object {
             $taginfo[] = $tagarr;
         }
         $cloud .= $this->objTC->buildCloud($taginfo);
+        $cloud .= "<br />";
 
         $lheader = new htmlHeading ( );
         $lheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_loctags', 'jabberblog' );
@@ -346,7 +347,8 @@ class jbviewer extends object {
             $tagarr2['time'] = time();
             $taginfo2[] = $tagarr2;
         }
-        $cloud .= $this->objTC->buildCloud($taginfo2);
+        $this->objTC2 = $this->newObject('tagcloud', 'utilities');
+        $cloud .= $this->objTC2->buildCloud($taginfo2);
 
         return $cloud;
 
