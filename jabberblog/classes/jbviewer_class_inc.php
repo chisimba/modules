@@ -310,8 +310,9 @@ class jbviewer extends object {
         // set up the hasthtags header
         $hheader = new htmlHeading ( );
         $hheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_hashtags', 'jabberblog' );
-        $hheader->type = 2;
+        $hheader->type = 1;
         $cloud = $hheader->show();
+        $cloud .= "<br />";
 
         // Get the hashtags
         $tags = $this->objTags->getHashTagsByModule('jabberblog');
@@ -329,21 +330,23 @@ class jbviewer extends object {
 
         $lheader = new htmlHeading ( );
         $lheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_loctags', 'jabberblog' );
-        $lheader->type = 2;
+        $lheader->type = 1;
         $cloud .= $lheader->show();
+        $cloud .= "<br />";
+
         // and now the location tags
         $ltags = $this->objTags->getLocTagsByModule('jabberblog');
         // ok now get the weights
-        $tagarr = array();
-        foreach ( $ltags as $tag) {
-            $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->jposteruid);
-            $tagarr['name'] = $tag['meta_value'];
-            $tagarr['weight'] = $weight;
-            $tagarr['url'] = $this->uri(array('action' => 'viewloc', 'loc' => $tag['meta_value']), 'jabberblog');
-            $tagarr['time'] = time();
-            $taginfo[] = $tagarr;
+        $tagarr2 = array();
+        foreach ( $ltags as $ltag) {
+            $weight = $this->objTags->getTagWeight($ltag['meta_value'], $this->jposteruid);
+            $tagarr2['name'] = $ltag['meta_value'];
+            $tagarr2['weight'] = $weight;
+            $tagarr2['url'] = $this->uri(array('action' => 'viewloc', 'loc' => $ltag['meta_value']), 'jabberblog');
+            $tagarr2['time'] = time();
+            $taginfo2[] = $tagarr2;
         }
-        $cloud .= $this->objTC->buildCloud($taginfo);
+        $cloud .= $this->objTC->buildCloud($taginfo2);
 
         return $cloud;
 
