@@ -67,7 +67,7 @@ class jabberblog extends controller {
         try {
             // Include the needed libs from resources
             include ($this->getResourcePath ( 'XMPPHP/XMPP.php', 'im' ));
-            include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
+            //include ($this->getResourcePath ( 'XMPPHP/XMPPHP_Log.php', 'im' ));
             $this->objUser = $this->getObject ( 'user', 'security' );
             $this->objUserParams = $this->getObject ( 'dbuserparamsadmin', 'userparamsadmin' );
             $this->userJid = $this->objUserParams->getValue ( 'Jabber ID' );

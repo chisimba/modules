@@ -37,21 +37,13 @@ $this->appendArrayVar ( 'headerParams', $script );
 $middleColumn .= $header->show ();
 $middleColumn .= $output;
 
-$objLT = $this->getObject ( 'block_lasttweet', 'twitter' );
-
 if (! $this->objUser->isLoggedIn ()) {
     $leftColumn .= $objImView->showUserMenu ();
-    $leftColumn .= $objImView->getStatsBox ();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
-    // show the last tweet block from the 'ol twitter stream
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 } else {
     $leftColumn .= $this->leftMenu->show ();
-    $leftColumn .= $objImView->getStatsBox ();
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show () );
-    $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 }
 
+$leftColumn .= $objImView->renderBoxen();
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
 echo $cssLayout->show ();

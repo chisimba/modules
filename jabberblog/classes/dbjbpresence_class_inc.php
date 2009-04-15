@@ -53,7 +53,12 @@ class dbjbpresence extends dbTable {
             $insarr ['status'] = 'available';
         }
         $insarr ['presshow'] = $userarr ['show'];
-        $insarr ['useragent'] = $userSplit [1];
+        if(isset($userSplit [1])) {
+            $insarr ['useragent'] = $userSplit [1];
+        }
+        else {
+            $insarr ['useragent'] = 'Unknown';
+        }
         if ($status === FALSE) {
             $this->insert ( $insarr, 'tbl_jabberblog_presence' );
         } else {
