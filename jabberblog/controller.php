@@ -56,6 +56,7 @@ class jabberblog extends controller {
     public $objDbSubs;
     public $objModules;
     public $objDbTags;
+    public $objViewer;
 
     /**
      *
@@ -75,6 +76,7 @@ class jabberblog extends controller {
             $this->objLanguage = $this->getObject ( 'language', 'language' );
             $this->objBack = $this->getObject ( 'background', 'utilities' );
             $this->objDbIm = $this->getObject ( 'dbjbim' );
+            $this->objViewer = $this->getObject('jbviewer');
             $this->objDbImPres = $this->getObject ( 'dbjbpresence' );
             $this->objDbSubs = $this->getObject('dbsubs');
             $this->objModules = $this->getObject ( 'modules', 'modulecatalogue' );
@@ -316,22 +318,7 @@ class jabberblog extends controller {
                 break;
 
             case 'clouds':
-                $this->objTC = $this->getObject('tagcloud', 'utilities');
-                // get a list of the tags and their weights
-                $this->objTags = $this->getObject('dbtags', 'tagging');
-                $tags = $this->objTags->getHashTagsByModule('jabberblog');
-                // ok now get the weights
-                $tagarr = array();
-                foreach ( $tags as $tag) {
-                    $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->jposteruid);
-                    $tagarr['name'] = $tag['meta_value'];
-                    $tagarr['weight'] = $weight;
-                    $tagarr['url'] = $this->uri(array('action' => 'viewmeme', 'meme' => $tag['meta_value']), 'jabberblog');
-                    $tagarr['time'] = time();
-                    $taginfo[] = $tagarr;
-                }
-                $cloud = $this->objTC->buildCloud($taginfo);
-
+                $cloud = $this->objViewer->doTags();
                 $this->setVarByRef('cloud', $cloud);
                 return 'clouds_tpl.php';
 

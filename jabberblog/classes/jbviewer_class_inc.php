@@ -301,5 +301,52 @@ class jbviewer extends object {
 
         return $leftColumn;
     }
+
+    public function doTags() {
+        $this->objTC = $this->getObject('tagcloud', 'utilities');
+        // get a list of the tags and their weights
+        $this->objTags = $this->getObject('dbtags', 'tagging');
+        $this->loadClass ( 'htmlheading', 'htmlelements' );
+        // set up the hasthtags header
+        $hheader = new htmlHeading ( );
+        $hheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_hashtags', 'jabberblog' );
+        $hheader->type = 2;
+        $cloud = $hheader->show();
+
+        // Get the hashtags
+        $tags = $this->objTags->getHashTagsByModule('jabberblog');
+        // ok now get the weights
+        $tagarr = array();
+        foreach ( $tags as $tag) {
+            $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->jposteruid);
+            $tagarr['name'] = $tag['meta_value'];
+            $tagarr['weight'] = $weight;
+            $tagarr['url'] = $this->uri(array('action' => 'viewmeme', 'meme' => $tag['meta_value']), 'jabberblog');
+            $tagarr['time'] = time();
+            $taginfo[] = $tagarr;
+        }
+        $cloud .= $this->objTC->buildCloud($taginfo);
+
+        $lheader = new htmlHeading ( );
+        $lheader->str = $this->objLanguage->languageText ( 'mod_jabberblog_loctags', 'jabberblog' );
+        $lheader->type = 2;
+        $cloud .= $lheader->show();
+        // and now the location tags
+        $ltags = $this->objTags->getLocTagsByModule('jabberblog');
+        // ok now get the weights
+        $tagarr = array();
+        foreach ( $ltags as $tag) {
+            $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->jposteruid);
+            $tagarr['name'] = $tag['meta_value'];
+            $tagarr['weight'] = $weight;
+            $tagarr['url'] = $this->uri(array('action' => 'viewloc', 'loc' => $tag['meta_value']), 'jabberblog');
+            $tagarr['time'] = time();
+            $taginfo[] = $tagarr;
+        }
+        $cloud .= $this->objTC->buildCloud($taginfo);
+
+        return $cloud;
+
+    }
 }
 ?>
