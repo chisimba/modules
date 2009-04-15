@@ -107,7 +107,7 @@ class imviewer extends object {
             } else {
                 $presence = $this->inactiveIcon;
             }
-		
+
 	    	$this->objLink->href = $this->uri(array('action' => 'viewreassign', 'patient' => $fuser), 'das');
 	    	$this->objLink->link = $reassignIcon;
 			$resassignLink = $this->objLink->show();
@@ -138,7 +138,7 @@ class imviewer extends object {
                             new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', {okText:'Send', callback: function(form, value) { return 'module=im&action=reply&msgid=" . $lastmsgId . "&fromuser=" . $msg ['person'] . "&myparam=' + escape(value) }})
                         </script>
 			</p><p class=\"im_reassign\">&nbsp;".$resassignLink.'</p>';
-			
+
             $box .= '<td width="400px"><a name="'.$msg ['person'].'"></a><div class="im_default" >' . '<p class="im_source"><b>' . $msg ['person'] . '</b></p><p style ="height : 200px; overflow : auto;" class="im_message">' . $prevmessages . '</p><p>' . $ajax . '</p></div></td>';
 
             //var_dump($msg);
@@ -164,9 +164,9 @@ class imviewer extends object {
 	{
 		if(count($msgs) > 0)
 		{
-			
+
 			$anchor = $this->getObject('link', 'htmlelements');
-			$str = '	<ul>';                                            
+			$str = '	<ul>';
 			$class = ' class="first" ';
 
 			foreach($msgs as $msg)
@@ -184,7 +184,7 @@ class imviewer extends object {
 		} else {
 			return "";
 		}
-	
+
 	}
 
 	/**
@@ -193,14 +193,16 @@ class imviewer extends object {
 	public function getStatsBox()
 	{
 		//number of live conversations
-		
+
 		$str = '<table><tr><td>Live Consersations</td><td>233</td></tr>';
-		
+
 		$str .= '<tr><td>Messages</td><td>2343</td></tr>';
 
 
 		$str .= '</table>';
 		return $this->objFeatureBox->show('Stats', $str);
 	}
+
+
 }
 ?>
