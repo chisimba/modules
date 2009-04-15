@@ -50,7 +50,7 @@ $scripts .= '<script type="text/javascript">
  
 		</script>';
 
-$this->appendArrayVar('headerParams', $scripts);
+//$this->appendArrayVar('headerParams', $scripts);
 
 $script = $this->getJavaScriptFile('das.js');
 $this->appendArrayVar('headerParams', $script);

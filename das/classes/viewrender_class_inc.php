@@ -179,6 +179,7 @@ class viewrender extends object {
 				$ajax = "<p class=\"im_source\" id=\"replydiv" . $lastmsgId . "\">Reply..</p>
 					   <p class=\"im_source\">
 								<script charset=\"utf-8\">
+								
 						new Ajax.InPlaceEditor('replydiv" . $lastmsgId . "', 'index.php', { 	okText:'Send', 	
 														cancelText: 'Cancel',
 														savingControl: 'link',  
@@ -443,7 +444,7 @@ class viewrender extends object {
         $blocks = $this->renderLinkList($this->objDbIm->getMessagesByActiveUser(
                                  $this->objUser->userId()));
                                  
-        $blocks .= $this->getChatBlock();
+       // $blocks .= $this->getChatBlock();
         
         return $blocks;
     }
