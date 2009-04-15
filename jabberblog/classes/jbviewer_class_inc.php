@@ -297,7 +297,7 @@ class jbviewer extends object {
         $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show ()."<br />".$sioclink->show()."<br />".$cloudLink->show() );
         $leftColumn .= $this->searchBox();
         // show the last tweet block from the 'ol twitter stream
-        $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ) );//, $objLT->show () );
+        $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
 
         return $leftColumn;
     }
