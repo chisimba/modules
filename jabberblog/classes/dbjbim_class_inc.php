@@ -63,12 +63,30 @@ class dbjbim extends dbTable {
             $objImView = $this->getObject('jbviewer');
             $objImView->parseHashtags($recarr['msgbody'], $itemid);
             $objImView->parseAtTags($recarr['msgbody'], $itemid);
+            $this->appendSitemap($itemid);
+
+            return $itemid;
         }
     }
 
     public function getRange($start, $num) {
         $range = $this->getAll ( "ORDER BY datesent ASC LIMIT {$start}, {$num}" );
         return array_reverse ( $range );
+    }
+
+    public function appendSitemap($itemid) {
+        // add to the blog sitemap
+        $this->objConfig = $this->getObject('altconfig', 'config');
+        $maparray = array('url' => $this->uri(array('action' => 'viewsingle', 'postid' => $itemid)), 'lastmod' => $this->now(), 'changefreq' => 'daily', 'priority' => 0.5 );
+        $smarr = array($maparray);
+        $sitemap = $this->getObject('sitemap', 'utilities');
+        if(!file_exists($this->objConfig->getsiteRootPath().'jblogsitemap.xml')) {
+            $smxml = $sitemap->createSiteMap($smarr);
+            $sitemap->writeSitemap($smxml, 'jblogsitemap');
+        }
+        else {
+            $smxml = $sitemap->updateSiteMap($maparray, 'jblogsitemap');
+       	}
     }
 
     public function getAllPosts() {

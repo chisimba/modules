@@ -220,9 +220,9 @@ class jabberblog extends controller {
                                         $poster = explode('/', $pl['from']);
                                         $poster = $poster[0];
                                         if($poster == $this->jposter) {
-                                            $this->objDbIm->addRecord ( $pl );
+                                            $add = $this->objDbIm->addRecord ( $pl );
                                             // Update Twitter
-                                            if ($this->objTwitterLib && $pl ['body']) {
+                                            if ($this->objTwitterLib && $pl ['body'] && $add) {
                                                 // check for 140 char length restriction.
                                                 if(strlen($pl['body']) < 100 ) {
                                                     //log_debug( $pl ['body'].": ".$this->uri(''));
