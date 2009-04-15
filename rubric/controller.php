@@ -73,7 +73,7 @@ class rubric extends controller
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
             return TRUE;
         } else {
-            return FALSE;//parent::isValid ( $action );
+            parent::isValid ( $action );
         }
     }
     
