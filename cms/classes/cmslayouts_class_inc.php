@@ -202,7 +202,13 @@ $this->appendArrayVar('headerParams',$script);
         $objLayer = new layer();
         $objLayer->str = $objTreeMenu->getCMSTree($currentNode);
         $objLayer->id = 'cmsnavigation';
-        return $objLayer->show();
+
+        $table = new htmltable();
+        $table->startRow();
+        $table->addCell($objLayer->show());
+        $table->endRow();
+            
+        return $table->show();
        	//$display = $objTreeMenu->getSimpleCMSTree($currentNode);
         //return $display;
     }
