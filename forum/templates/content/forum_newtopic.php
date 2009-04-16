@@ -270,12 +270,12 @@ if ($forum['attachments'] == 'Y') {
     $form->addToForm($objSelectFile->show());
 
     $hiddeninput = new hiddeninput('id', $id);
-    //$form->addToForm($hiddeninput->show());
+    $form->addToForm($hiddeninput->show());
 
     $button = new button('save_attachment_button', 'Attach File');
     $button->extra='onclick="saveAttachment(this.parentNode)"';
     //$button->setToSubmit();
-    $form->addToForm(' &nbsp; &nbsp; '.$button->show());
+    //$form->addToForm(' &nbsp; &nbsp; '.$button->show());
 
    
    
