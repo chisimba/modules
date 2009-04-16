@@ -208,6 +208,9 @@ if ($forum['attachments'] == 'Y') {
     $objSelectFile = $this->newObject('selectfile', 'filemanager');
     $objSelectFile->name = 'attachment';
     $form->addToForm($objSelectFile->show());
+
+    $addTable->addCell($form->show());
+
     $addTable->endRow();
 }
 
