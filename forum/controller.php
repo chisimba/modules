@@ -514,6 +514,11 @@ class forum extends controller
     */
     public function saveNewTopic()
     {
+
+        $tempPostId=$_POST['temporaryId'];
+        $this->saveTempAttachmentIfAny($tempPostId);
+
+
         $forum_id = $_POST['forum'];
         $type_id = $_POST['discussionType'];
         $post_parent = 0;
@@ -1026,6 +1031,8 @@ class forum extends controller
     */
     public function saveReply()
     {
+        $tempPostId=$_POST['temporaryId'];
+        $this->saveTempAttachmentIfAny($tempPostId);
 
         if ($_POST['replytype'] == 'reply') {
             $post_parent = $_POST['parent'];
@@ -1395,6 +1402,24 @@ class forum extends controller
         $this->setVar('suppressFooter', TRUE);
 
         return 'forum_attachments.php';
+    }
+
+    /**
+    * Method to save temp attahc
+    */
+    public function saveTempAttachmentIfAny($temp_id)
+    {
+
+        
+        $userId = $this->objUser->userId();
+        $dateLastUpdated = mktime();
+
+        $attachment_id = $this->getParam('attachment');
+        if ($attachment_id != '') {
+            $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
+        }
+
+        return $this->nextAction('attachments', array('id'=>$temp_id, 'attachment'=>$attachment_id));
     }
 
     /**
