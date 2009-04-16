@@ -214,7 +214,7 @@ $xmlTemplateFile = '<?xml version="1.0" encoding="utf-8" ?>
         {
             //Create htmlcleaner object
             $objHtmlCleaner = $this->newObject('htmlcleaner', 'utilities');
-            
+
             //Get details of the new entry
             $title = $this->getParam('title');
             $imagePath = $this->getParam('imagepath',null);
@@ -246,76 +246,43 @@ $xmlTemplateFile = '<?xml version="1.0" encoding="utf-8" ?>
             return $newId;
         }
 
-        /**
-         * Method to save a record to the database specifying all params
-         *
-         * @param string $title The title of the page
-         * @param string $sectionid The id of the section in which the template will appear
-         * @param bool $published Whether page will be visible or not
-         * @param bool $access True if "registered" page False if "public" page
-         * @param string $introText The introduction template
-         * @param string $fullText The main template of the page
-         * @param string $ccLicence The cc licence of the template
-         * @param bool $isFrontPage Whether page will appear on the front page or not
-         * @access public
-         * @return bool
-         */
-        public function addNewPage($title, $sectionid, $published, $access, $introText, $fullText, $isFrontPage, $ccLicence)
-        {
-            $introText = str_ireplace("<br />", " <br /> ", $introText);
-            $fullText = str_ireplace("<br />", " <br /> ", $fullText);
-            $override_date = $this->getParam('overide_date',null);
-            $start_publish = $this->getParam('publish_date',null);
-            $end_publish = $this->getParam('end_date',null);
-            if ($override_date!=null) {
-                $override_date =  $this->now();
-            }
-            $creatorid = $this->getParam('creator',null);
-            if ($creatorid==NUll) {
-                $creatorid = $this->_objUser->userId();
-            }
 
-            $access = $this->getParam('access');
-            $created_by = $this->getParam('author_alias',null);
-                        
-            $introText = str_ireplace("<br />", " <br /> ", $this->getParam('intro'));
-            $fullText = str_ireplace("<br />", " <br /> ", $this->getParam('body'));
-            $metakey = $this->getParam('keyword',null);
-            $metadesc = $this->getParam('description',null);
-            $ccLicence = $this->getParam('creativecommons');
-            $hide_title = $this->getParam('hide_title','0');
+        /**
+         * Method to add a template to the database
+         * @param string $title The title of the new section
+         * @param string $description The Description of the template
+         * @param string $body The content of the template
+         * @param string $imagePath The path to the templates description image
+         * @param bool $published Whether template will be visible or not
+         * @access public
+         * @return templateId on success and FALSE on faliure
+         */
+        public function addTemplate($title, $description, $body, $imagePath, $published)
+        {
+            $creatorid = $this->_objUser->userId();
+
+            $fullText = str_ireplace("<br />", " <br /> ", $body);
 
             $newArr = array(
                           'title' => $title ,
-                          'sectionid' => $sectionid,
-                          'introtext' => addslashes($introText),
+                          'description' => $description ,
+                          'image' => $imagePath ,
                           'body' => addslashes($fullText),
-                          'access' => $access,
-                          'ordering' => $this->getOrdering($sectionid),
                           'published' => $published,
-                          'hide_title' => $hide_title,
-                          'created' =>  $this->now(),
-                          'modified' => $this->now(),
-                          'post_lic' => $ccLicence,
-                          'created_by' => $creatorid,
-                          'created_by_alias'=>$created_by,
-                          'checked_out'=> $creatorid,
-                          'checked_out_time'=> $this->now(),
-                          'metakey'=>$metakey,
-                          'metadesc'=>$metadesc,
-                          'start_publish'=>$start_publish,
-                          'end_publish'=>$$end_publish
+                          'created' => $this->now(),
+                          'created_by' => $creatorid
             );
-
             $newId = $this->insert($newArr);
             $newArr['id'] = $newId;
-            $this->luceneIndex($newArr);
-            if ($isFrontPage == 'on') {
-                $this->_objFrontPage->add($newId);
-            }
+
+            //Saving the FCKEditor Templates XML File
+            $this->saveXml();
 
             return $newId;
         }
+
+
+
 
         /**
          * Method to edit a record
@@ -357,40 +324,6 @@ $xmlTemplateFile = '<?xml version="1.0" encoding="utf-8" ?>
             
             return $result;
         }
-
-        /**
-         * Method to update a template record's body text
-         *
-         * @param string $id The id of the record that needs to be changed
-         * @access public
-         * @return bool
-         */
-        public function updateTemplateBody($templateid, $body)
-        {  
-            $fields['body'] = $body;
-            $this->update('id', $templateid, $fields);	
-            return TRUE;
-        }
-
-
-        /**
-    *
-    * Method to return all template items with href data
-    *
-    * @return arr template records with body that has href="..." in it
-    * @access public
-    *
-    */
-        public function getHrefTemplateRecords($sectionid = '') {
-            if ($sectionid != ''){
-                $data = $this->getAll("WHERE body like '%href=%' AND sectionid='$sectionid'");
-            } else {
-                $data = $this->getAll("WHERE body like '%href=%'");
-            }
-            return $data;
-        }
-
-
 
         /**
         * Method to delete a template

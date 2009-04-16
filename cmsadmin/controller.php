@@ -190,7 +190,7 @@
                 $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common.css'.'">'));
 
                 //jQuery pngFix behaves wierdly in ies4linux but works on windows machines
-                //$this->_objJQuery->loadPngFixPlugin();
+                $this->_objJQuery->loadPngFixPlugin();
 
             } catch (customException $e){
                 throw customException($e->getMessage());
@@ -295,8 +295,15 @@
                 return 'cms_template_add_tpl.php';
 
                 case 'createtemplate':
-                //Save the content page
-                $templateId = $this->_objTemplate->add();
+
+                //Get details of the new entry
+                $title = $this->getParam('title');
+                $description = $this->getParam('description');
+                $body = $this->getParam('body');
+                $imagePath = $this->getParam('imagepath',null);
+                $published = ($this->getParam('published') == '1') ? 1 : 0;
+
+                $templateId = $this->_objTemplate->addTemplate($title, $description, $body, $imagePath, $published);
                 return $this->nextAction('templates', array('id' => $templateId), 'cmsadmin');
 
                 case 'getmenuchildnodes':
