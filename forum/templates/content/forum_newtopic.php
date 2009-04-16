@@ -18,7 +18,66 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 
+//for multiple attachement
 
+	$str = '<script type="text/javascript">
+   var http_request = false;
+   function makePOSTRequest(url, parameters) {
+      http_request = false;
+      if (window.XMLHttpRequest) { // Mozilla, Safari,...
+         http_request = new XMLHttpRequest();
+         if (http_request.overrideMimeType) {
+         	// set type accordingly to anticipated content type
+            //http_request.overrideMimeType(\'text/xml\');
+            http_request.overrideMimeType(\'text/html\');
+         }
+      } else if (window.ActiveXObject) { // IE
+         try {
+            http_request = new ActiveXObject("Msxml2.XMLHTTP");
+         } catch (e) {
+            try {
+               http_request = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {}
+         }
+      }
+      if (!http_request) {
+         alert(\'Cannot create XMLHTTP instance\');
+         return false;
+      }
+
+      http_request.onreadystatechange = alertContents;
+      http_request.open(\'POST\', url, true);
+      http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      http_request.setRequestHeader("Content-length", parameters.length);
+      http_request.setRequestHeader("Connection", "close");
+      http_request.send(parameters);
+   }
+
+   function alertContents() {
+      if (http_request.readyState == 4) {
+         if (http_request.status == 200) {
+            //alert(http_request.responseText);
+            result = http_request.responseText;
+             //document.write(result);
+            //document.getElementById(\'myspan\').innerHTML = result;
+         } else {
+            alert(\'There was a problem with the request.\');
+         }
+      }
+   }
+
+   function saveAttachment(obj) {
+
+      var poststr = "action=saveattachment&id=popop&attachment=cccccccc";
+      makePOSTRequest(\'index.php\', poststr);
+
+   }
+
+
+
+   </script>';
+	$this->appendArrayVar('headerParams', $str);
+// encodeURI( document.getElementById("id").value )
 $header = new htmlheading();
 $header->type=1;
 
@@ -45,17 +104,17 @@ $addTable->cellpadding = 10;
 
 // Title
 $addTable->startRow();
-    $subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system').':', 'input_title');
-    $addTable->addCell($subjectLabel->show(), 120);
+$subjectLabel = new label($this->objLanguage->languageText('word_subject', 'system').':', 'input_title');
+$addTable->addCell($subjectLabel->show(), 120);
 
-    $titleInput = new textinput('title');
-    $titleInput->size = 50;
+$titleInput = new textinput('title');
+$titleInput->size = 50;
 
-    if ($mode == 'fix') {
-        $titleInput->value = $details['title'];
-    }
+if ($mode == 'fix') {
+    $titleInput->value = $details['title'];
+}
 
-    $addTable->addCell($titleInput->show());
+$addTable->addCell($titleInput->show());
 
 $addTable->endRow();
 
@@ -63,43 +122,43 @@ $addTable->endRow();
 
 $addTable->startRow();
 
-    $discussionTypeLabel = new label('<nobr>'.$this->objLanguage->languageText('mod_forum_typeoftopic', 'forum').':</nobr>', 'input_discussionType');
-    $addTable->addCell($discussionTypeLabel->show(), 120);
+$discussionTypeLabel = new label('<nobr>'.$this->objLanguage->languageText('mod_forum_typeoftopic', 'forum').':</nobr>', 'input_discussionType');
+$addTable->addCell($discussionTypeLabel->show(), 120);
 
-    $discussionType = new dropdown('discussionType');
-
-
-    foreach ($discussionTypes as $element)
-    {
-        $discussionType->addOption($element['id'], $element['type_name']);
-    }
+$discussionType = new dropdown('discussionType');
 
 
-    $counter = 0;
-    $objIcon =& $this->getObject('geticon', 'htmlelements');
-
-    $objRadioButton = new radio('discussionType');
-    $objRadioButton->setTableColumns(3);
-    $objRadioButton->setBreakSpace('table');
+foreach ($discussionTypes as $element)
+{
+    $discussionType->addOption($element['id'], $element['type_name']);
+}
 
 
-    foreach ($discussionTypes as $element)
-    {
-        $objIcon->setIcon($element['type_icon'], NULL, 'icons/forum/');
+$counter = 0;
+$objIcon =& $this->getObject('geticon', 'htmlelements');
 
-        $objRadioButton->addOption($element['id'], $objIcon->show().' '.htmlentities($element['type_name']));
+$objRadioButton = new radio('discussionType');
+$objRadioButton->setTableColumns(3);
+$objRadioButton->setBreakSpace('table');
 
-        //$objRadioButton->extra = 'onclick="changeLabel();"';
-    }
 
-    // TODO: Set to NULL and add client side validation
-    if ($mode == 'fix') {
-        $objRadioButton->setSelected($details['type']);
-    } else {
-        $objRadioButton->setSelected($discussionTypes[0]['id']);
-    }
+foreach ($discussionTypes as $element)
+{
+    $objIcon->setIcon($element['type_icon'], NULL, 'icons/forum/');
 
-    $addTable->addCell($objRadioButton->show());
+    $objRadioButton->addOption($element['id'], $objIcon->show().' '.htmlentities($element['type_name']));
+
+    //$objRadioButton->extra = 'onclick="changeLabel();"';
+}
+
+// TODO: Set to NULL and add client side validation
+if ($mode == 'fix') {
+    $objRadioButton->setSelected($details['type']);
+} else {
+    $objRadioButton->setSelected($discussionTypes[0]['id']);
+}
+
+$addTable->addCell($objRadioButton->show());
 
 
 
@@ -131,31 +190,31 @@ if ($this->objUser->isCourseAdmin() || $this->objUser->isCourseAdmin()) {
 
 $addTable->startRow();
 
-    $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
-    $addTable->addCell($languageLabel->show(), 120);
+$languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
+$addTable->addCell($languageLabel->show(), 120);
 
-    //$language =& $this->newObject('language','language');
-    $languageDropdown = new dropdown('language');
+//$language =& $this->newObject('language','language');
+$languageDropdown = new dropdown('language');
 
 
-    $languageCodes = & $this->newObject('languagecode','language');
+$languageCodes = & $this->newObject('languagecode','language');
 
-    // Sort Associative Array by Language, not ISO Code
-    $languageList = $languageCodes->iso_639_2_tags->codes;
+// Sort Associative Array by Language, not ISO Code
+$languageList = $languageCodes->iso_639_2_tags->codes;
 
-    asort($languageList);
+asort($languageList);
 
-    foreach ($languageList as $key => $value) {
-        $languageDropdown->addOption($key, $value);
-    }
+foreach ($languageList as $key => $value) {
+    $languageDropdown->addOption($key, $value);
+}
 
-    if ($mode == 'fix') {
-        $languageDropdown->setSelected($details['language']);
-    } else {
-        $languageDropdown->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
-    }
+if ($mode == 'fix') {
+    $languageDropdown->setSelected($details['language']);
+} else {
+    $languageDropdown->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
+}
 
-    $addTable->addCell($languageDropdown->show());
+$addTable->addCell($languageDropdown->show());
 
 $addTable->endRow();
 
@@ -187,7 +246,7 @@ $addTable->endRow();
 
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
-
+/*
     $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 120);
 
@@ -199,6 +258,39 @@ if ($forum['attachments'] == 'Y') {
 
     $addTable->addCell($attachmentIframe->show());
 
+    $addTable->endRow();*/
+
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+    $addTable->addCell($attachmentsLabel->show(), 120);
+
+    $form = new form('saveattachment', $this->uri(array('action'=>'saveattachment')));
+
+    $objSelectFile = $this->newObject('selectfile', 'filemanager');
+    $objSelectFile->name = 'attachment';
+    $form->addToForm($objSelectFile->show());
+
+    $hiddeninput = new hiddeninput('id', $id);
+    //$form->addToForm($hiddeninput->show());
+
+    $button = new button('save_attachment_button', 'Attach File');
+    $button->extra='onclick="saveAttachment(this.parentNode)"';
+    //$button->setToSubmit();
+    $form->addToForm(' &nbsp; &nbsp; '.$button->show());
+
+   
+   
+    if (count($files) > 0) {
+
+    foreach ($files AS $file)
+    {
+        $icon = $objIcon->getDeleteIconWithConfirm($file['id'], array('action'=>'deleteattachment', 'id'=>$file['id'], 'attachmentwindow'=>$id), 'forum', 'Are you sure wou want to remove this attachment');
+        $link ='<li>'.$file['filename'].' '.$icon.'</li>';
+        $form->addToForm($link);
+    }
+
+   }
+    
+    $addTable->addCell($form->show());
     $addTable->endRow();
 }
 // ------------------------------
@@ -207,28 +299,28 @@ if ($forum['attachments'] == 'Y') {
 // Show Forum Subscriptions if enabled
 
 if ($forum['subscriptions'] == 'Y') {
-	$addTable->startRow();
-	$addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification').':');
-	$subscriptionsRadio = new radio ('subscriptions');
-	$subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
-	$subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
-	$subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
-	$subscriptionsRadio->setBreakSpace('<br />');
+    $addTable->startRow();
+    $addTable->addCell($this->objLanguage->languageText('mod_forum_emailnotification', 'forum', 'Email Notification').':');
+    $subscriptionsRadio = new radio ('subscriptions');
+    $subscriptionsRadio->addOption('nosubscriptions', $this->objLanguage->languageText('mod_forum_donotsubscribetothread', 'forum', 'Do not subscribe to this thread'));
+    $subscriptionsRadio->addOption('topicsubscribe', $this->objLanguage->languageText('mod_forum_notifytopic', 'forum', 'Notify me via email when someone replies to this thread'));
+    $subscriptionsRadio->addOption('forumsubscribe', $this->objLanguage->languageText('mod_forum_notifyforum', 'forum', 'Notify me of ALL new topics and replies in this forum.'));
+    $subscriptionsRadio->setBreakSpace('<br />');
 
-	if ($forumSubscription) {
-		$subscriptionsRadio->setSelected('forumsubscribe');
-		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
-	} else {
-		$subscriptionsRadio->setSelected('nosubscriptions');
-		$subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
+    if ($forumSubscription) {
+        $subscriptionsRadio->setSelected('forumsubscribe');
+        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtoforum', 'forum', 'You are currently subscribed to the forum, receiving notification of all new posts and replies.');
+    } else {
+        $subscriptionsRadio->setSelected('nosubscriptions');
+        $subscribeMessage = $this->objLanguage->languageText('mod_forum_youaresubscribedtonumbertopic', 'forum', 'You are currently subscribed to [NUM] topics.');
         $subscribeMessage = str_replace('[NUM]', $numTopicSubscriptions, $subscribeMessage);
-	}
+    }
 
-	$div = '
-	<div class="forumTangentIndent">'.$subscribeMessage.'</div>';
+    $div = '
+    <div class="forumTangentIndent">'.$subscribeMessage.'</div>';
 
-	$addTable->addCell($subscriptionsRadio->show().$div);
-	$addTable->endRow();
+    $addTable->addCell($subscriptionsRadio->show().$div);
+    $addTable->endRow();
 }
 
 $addTable->startRow();
