@@ -1849,7 +1849,27 @@
 
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
 
+            $table = new htmltable();
+            $table->startRow();
+            $table->addCell('Navigation Links');
+            $table->endRow();
+            $table->startRow();
+            $table->addCell($cmsAdminLink);
+            $table->endRow();
+            $table->startRow();
+            $table->addCell($createRss);
+            $table->endRow();
+            $table->startRow();
+            $table->addCell($menuMangement);
+            $table->endRow();
+            $table->startRow();
+            $table->addCell($filemanager);
+            $table->endRow();
+            
+            $nav .= $objFeatureBox->showContent($table->show());
+            
             //$nav .= $viewCmsLink.'<br /><br />';
+            /*
             $nav .= $objFeatureBox->showContent('Navigation Links',
                                         '<br />
                                         <div id="cmsleftcontrolpanel">
@@ -1859,6 +1879,7 @@
                                         '.$filemanager.'
                                         </div>
                                         ');
+            */
             $nav .= '<br />';
 			$nav .= "</div>";
 
