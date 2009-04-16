@@ -187,7 +187,7 @@ $addTable->endRow();
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
     
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+  /*  $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 100);
     
     $attachmentIframe = new iframe();
@@ -197,7 +197,17 @@ if ($forum['attachments'] == 'Y') {
     $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id'], 'type'=>$forumtype)); 
     
     $addTable->addCell($attachmentIframe->show());
-    
+   
+   */
+
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+    $addTable->addCell($attachmentsLabel->show(), 120);
+
+    $form = new form('saveattachment', $this->uri(array('action'=>'saveattachment')));
+
+    $objSelectFile = $this->newObject('selectfile', 'filemanager');
+    $objSelectFile->name = 'attachment';
+    $form->addToForm($objSelectFile->show());
     $addTable->endRow();
 }
 
