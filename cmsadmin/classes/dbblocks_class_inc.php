@@ -174,16 +174,18 @@ class dbblocks extends dbTable
 
             $block = $this->getCmsBlock($blockId);
             //var_dump($block['blockid'] . ' == ' . $blockId);
+			$result = FALSE;
+
             if ($blockId == $block['id']){
                 //echo "updating block " . $blockId . '<br/>';
-                $this->update('id', $idField, $newArr);
+                $result = $this->update('id', $idField, $newArr);
             } else {
                 //echo "inserting block " . $newArr['blockid'] . '<br/>';
-                $this->insert($newArr);
+                $result = $this->insert($newArr);
             }
 
 
-            return $newId;
+            return $result;
         }
 
         /**
@@ -967,7 +969,12 @@ class dbblocks extends dbTable
         public function getCmsBlock($blockId)
         {
             $entry = $this->getArray('SELECT * FROM tbl_cms_blocks WHERE blockid = \''.$blockId.'\'');
-            $entry = $entry['0'];
+
+			if (isset($entry[0])) {
+	            $entry = $entry[0];
+			} else {
+				$entry = FALSE;
+			}
 
             return $entry;
         }
