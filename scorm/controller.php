@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Scorm controller
  *
@@ -24,7 +25,7 @@
  * @author    Paul Mungai <pwando@uonbi.ac.ke>
  * @copyright 2008 Paul Mungai
  * @license   http://www.gnu.org/licenses/gpl-2.0.txt The GNU General Public License
- * @version   $Id: controller.php 9085 2008-05-08 17:55:52Z paul $ //correct this
+ * @version   CVS: $Id: controller.php 9085 2008-05-08 17:55:52Z paul $ //correct this
  * @link      http://avoir.uwc.ac.za
  */
 // security check - must be included in all scripts
@@ -76,8 +77,6 @@ class scorm extends controller
 	    $this->objTreeNode =& $this->loadClass('treenode', 'tree');
 		//remove this objContext
         $this->objContext = $this->getObject('dbcontext', 'context');
-
-
     }
 
     /**
@@ -142,7 +141,10 @@ class scorm extends controller
         }
 
     }
-
+    private function __default()
+    {
+                return 'notscormcontent_tpl.php';
+    }
     /**
     *
     * Method to convert the action parameter into the name of
@@ -158,7 +160,7 @@ class scorm extends controller
         if ($this->validAction($action)) {
             return '__'.$action;
         } else {
-            return '__viewscorm';
+            return '__default';
         }
     }
 
@@ -210,7 +212,5 @@ class scorm extends controller
                 }
         }
     }
-
-
 }
 ?>

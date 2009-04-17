@@ -381,6 +381,45 @@ function xmlPrevPage($pagePath,$rootFolder)
 	}
      return $nextPage;
 }
+function xmlFirstPage($rootFolder)
+{ 
+	$doc = new DOMDocument();
+	$doc->load( 'usrfiles/'.$rootFolder.'/imsmanifest.xml' );
+	//get the kewl_root_path
+	$rootPath = $this->objConfig->getsiteRoot();
+	$books = $doc->getElementsByTagName( "item" );
+	$resources = $doc->getElementsByTagName( "resource" );
+	$nod = $books->item(0);
+	$NodList=$nod->childNodes;	
+	$treeTxt = "";//var to content temp
+	if($arrId==null){
+		$arrId = 0;
+	}
+	foreach( $books as $book )
+	{
+		$nodes = $book->getElementsByTagName( "item" );
+		//Display root node
+	 	$res = $book->getElementsByTagName( "title" );
+	  	$resname = $res->item(0)->nodeValue;
+		/* get attribute */
+		$cid = $book->getAttribute('identifierref'); 
+		foreach ( $resources as $myresources ){
+			if( $myresources->getAttribute('identifier') ==  $cid ){
+				$resourcePath = $myresources->getAttribute('href');
+				$fullPath = $rootPath.'usrfiles/'.$rootFolder.'/'.$resourcePath;
+				$arrPath[$arrId] = $fullPath;
+				$arrId = $arrId + 1;
+			}
+		}
+	}
+	//step through the array and get next page
+	foreach($arrPath as $key=>$myarrPath){
+		if ($arrPath[$key]==0){
+			$firstPage = $arrPath[0];
+		}
+	}
+     return $firstPage;
+}
     /**
     * Method to get the tree menu object
     * @access public
