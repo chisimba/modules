@@ -29,7 +29,6 @@ $fields = array(
         ),
     'eventdetails' => array(
         'type' => 'text',
-        'length' => 255
         ),
     'eventurl' => array(
         'type' => 'text',
@@ -76,11 +75,11 @@ $fields = array(
         ),
     'moduleevent_table' => array(
         'type' => 'text',
-        'length' => '255',
+        'length' => 255,
         ),
     'moduleevent_id' => array(
         'type' => 'text',
-        'length' => '32',
+        'length' => 32,
         ),
     );
 
