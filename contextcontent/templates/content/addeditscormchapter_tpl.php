@@ -142,7 +142,6 @@ $table->addCell("&nbsp;");
 $table->addCell("&nbsp;");
 $table->endRow();
 
-$label = new label ($this->objLanguage->languageText('mod_scorm_selectscormfolder','scorm'), 'input_scormfolder');
 //$htmlArea = $this->newObject('htmlarea', 'htmlelements');
 //$htmlArea->name = 'intro';
 //$htmlArea->context = TRUE;
@@ -154,7 +153,7 @@ if ($mode == 'edit') {
 } else {
 	$usrFolders = $this->objFolders->getTreedropdown(Null);
 }
-
+$label = new label ($this->objLanguage->languageText('mod_scorm_selectscormfolder','scorm'), 'input_parentfolder');
 $table->startRow();
 $table->addCell($label->show());
 //$table->addCell($htmlArea->show());
