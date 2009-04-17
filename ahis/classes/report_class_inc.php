@@ -398,6 +398,7 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 				return $csv;
+
 		default:
 		
 		      $headerArray = array($this->objLanguage->languageText('phrase_campaignname'),
@@ -413,9 +414,11 @@ class report extends object {
 									 $this->objLanguage->languageText('phrase_vaccinationhistory'),$this->objLanguage->languageText('word_number'),
 									 $this->objLanguage->languageText('word_remarks'));
 									 
-				$activeRecords = $this->objActive->getactive();
+				$activeRecords = $this->objActive->getactive($year,$month);
 				
 				$csv = implode(",", $headerArray)."\n";
+
+				if(!empty($activeRecords)){
 				foreach ($activeRecords as $report) {
 					
 					$row = array($report['campname'],$report['reporterid'],$report['disease'],$report['surveytype'],$report['comments'],
@@ -428,6 +431,8 @@ class report extends object {
 					$csv .= implode(",", $row)."\n";
 				}
 			
+
+				}
 				return $csv;
 	}
 	}

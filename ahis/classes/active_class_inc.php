@@ -97,12 +97,13 @@ class active extends dbtable {
 	return $this->getArray($sql);
 	}
  
-   public function getactive(){
+   public function getactive($year,$month){
         $sql = "SELECT active.*,farm.*,sample.* FROM tbl_ahis_active_surveillance AS active,";
         $sql.= " tbl_ahis_newherd AS farm, tbl_ahis_sampledetails AS sample";
 
         $sql.= " WHERE active.id = farm.activeid";
         $sql.= " AND farm.id= sample.newherdid";
+        $sql.= " AND YEAR(sample.samplingdate) = '$year' AND MONTH(sample.samplingdate) = '$month'";
         $sql.= " ORDER BY active.campname ASC";
         $data = $this->getArray($sql);
         if (!empty($data)) {
