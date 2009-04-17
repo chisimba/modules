@@ -145,7 +145,6 @@ class cmsadminChecklist extends PHPUnit_Framework_TestCase
  	/*
 	 * Checking Data Management Methods : dbcontent_class_inc.php
 	 */
-
    
 	public function test_dbcontent_data_management() {
 
@@ -563,6 +562,12 @@ $result = $this->dbcontent->editContent($id ,
         $this->recordCountBefore = count($result);
 
 
+//Preparing the database for tests
+$section = $this->dbsections->getAll(" WHERE title = 'Test Title Unit Test' ");
+if ($section[0]['id'] != '') {
+    $this->dbsections->permanentlyDelete($section[0]['id']);
+}
+
 //Save the section
 $parentId = 0;
 $title = 'Test Title Unit Test';
@@ -603,7 +608,8 @@ $result = $this->dbsections->addSection($title,
 
         $this->assertNotEquals('', $result, 'Warning: dbsections->addSection(...) Returned \'\'');
         $this->assertNotEquals(null, $result, 'Warning: dbsections->addSection(...) Returned NULL');
-
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbsections->addSection(...) Returned FALSE');
+        
         //Checking that the fields where added correctly
         $record = $this->dbsections->getAll(" WHERE id = '{$this->currentId}' ");
         $record = $record[0];
@@ -703,6 +709,7 @@ $result = $this->dbsections->addSection($title,
 //Edit the section
 $id = $this->secondId;
 $parentId = 'init_1';
+$rootId = '0';
 $title = 'Test Title Unit Test Edited';
 $menuText = 'Test Menu Text Unit Test Edited';
 $access = null;
@@ -722,6 +729,7 @@ $contextCode = 'Edited';
 //Edit Section
 $result = $this->dbsections->editSection($id,
                             $parentId,
+                            $rootId,
                             $title,
                             $menuText,
                             $access,
@@ -807,24 +815,27 @@ $data = array(
 "show_introduction" => "y",
 "userid" => "init_1");
 
-        $result = $this->dbsections->luceneIndex($data);
+        //TODO: Make luceneIndex method return something meaningfull
+        //$result = $this->dbsections->luceneIndex($data);
         //Checking Result
-        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->luceneIndex($data) returned FALSE');
+        //$this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->luceneIndex($data) returned FALSE');
         //-------------------------------------------
 
 
         //--------- Checking dbsections Remove Lucene Index -----------
+        //TODO: Make luceneIndex return something meaningfull
+        /*
         $result = $this->dbsections->removeLuceneIndex($this->secondId);
         //Checking Result
         $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->luceneIndex($data) returned FALSE');
+        */
         //-------------------------------------------
 
         //--------- Checking dbsections isDuplicateSection -----------
-        $result = $this->dbsections->isDuplicateSection($name,$parentid);
+        $result = $this->dbsections->isDuplicateSection($title,$parentId);
         //Checking Result
-        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->luceneIndex($data) returned FALSE');
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbsections->isDuplicateSection(\''.$title . '\',\'' . $parentId . '\'); returned FALSE');
         //-------------------------------------------
-        
 
         //--------- Checking dbsections isDuplicateSection -----------
         $result = $this->dbsections->isSections();
@@ -838,94 +849,750 @@ $data = array(
         $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
         //-------------------------------------------
 
-        //--------- Checking dbsections hasNodes -----------
+        //--------- Checking dbsections hasChildContent -----------
+        //TODO: Set up a useful test case to check for child content
+        /*
         $result = $this->dbsections->hasChildContent($this->currentId);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: hasChildContent('.$this->currentId.' returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+
+        //--------- Checking dbsections hasChildSections -----------
+        $result = $this->dbsections->hasChildSections($parentId);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: $this->dbsections->hasChildSections('.$parentId.') returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        //-------------------------------------------
+
+        //--------- Checking dbsections getLevel -----------
+        $result = $this->dbsections->getLevel($this->currentId);
         //Checking Result (There should be sections, haven't deleted anything yet)
         $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
         //-------------------------------------------
 
+        //--------- Checking dbsections getRootNodeId -----------
+        $result = $this->dbsections->getRootNodeId($this->currentId);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertEquals(0, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        //-------------------------------------------
 
-    public function cmsadmin_dbsections_hasChildSections($id) {
-        return $this->dbsections->hasChildSections($id);
-    }
+        //--------- Checking dbsections hasNodes -----------
+        $result = $this->dbsections->getAllSections();
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        //-------------------------------------------
 
-    public function cmsadmin_dbsections_getLevel($id) {
-        return $this->dbsections->getLevel($id);
-    }
-
-    public function cmsadmin_dbsections_getRootNodeId($id) {
-        return $this->dbsections->getRootNodeId($id);
-    }
-
-    public function cmsadmin_dbsections_getAllSections() {
-        return $this->dbsections->getAllSections();
-    }
-
-    public function cmsadmin_dbsections_getSubSectionsInSection($sectionId,$order,$isPublished) {
-        return $this->dbsections->getSubSectionsInSection($sectionId,$order,$isPublished);
-    }
-
-    public function cmsadmin_dbsections_getSubSectionsInRoot($rootId,$order,$isPublished) {
-        return $this->dbsections->getSubSectionsInRoot($rootId,$order,$isPublished);
-    }
-
-    public function cmsadmin_dbsections_getSubSectionsForLevel($rootId,$level,$order,$isPublished) {
-        return $this->dbsections->getSubSectionsForLevel($rootId,$level,$order,$isPublished);
-    }
-
-    public function cmsadmin_dbsections_getNumSubSections($sectionId) {
-        return $this->dbsections->getNumSubSections($sectionId);
-    }
-
-    public function cmsadmin_dbsections_deleteSection($id) {
-        return $this->dbsections->deleteSection($id);
-    }
-
-    public function cmsadmin_dbsections_unarchiveSection($id) {
-        return $this->dbsections->unarchiveSection($id);
-    }
-
-    public function cmsadmin_dbsections_unarchiveSectionsection($id) {
-        return $this->dbsections->unarchiveSectionsection($id);
-    }
-
-    public function cmsadmin_dbsections_getOrdering($parentid) {
-        return $this->dbsections->getOrdering($parentid);
-    }
-
-    public function cmsadmin_dbsections_getOrderingLink($id) {
-        return $this->dbsections->getOrderingLink($id);
-    }
-
-    public function cmsadmin_dbsections_getPageOrderType($orderType) {
-        return $this->dbsections->getPageOrderType($orderType);
-    }
-
-
-
-        //--------- Checking trashContent -----------
+        //--------- Checking dbsections hasNodes -----------
         /*
-        $id = $this->currentId;
-        $result = $this->dbcontent->trashContent($id);
-        //Checking Result
-        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->trashContent($id) returned FALSE');
+        $result = $this->dbsections->getSubSectionsInRoot($rootId,$order,$isPublished);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->getSubSectionsForLevel($rootId,$level,$order,$isPublished);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->getNumSubSections($sectionId);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->deleteSection($id);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->unarchiveSection($id);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->unarchiveSectionsection($id);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->getOrdering($parentid);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->getOrderingLink($id);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+        //--------- Checking dbsections hasNodes -----------
+        /*
+        $result = $this->dbsections->getPageOrderType($orderType);
+        //Checking Result (There should be sections, haven't deleted anything yet)
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->isSections() returned FALSE This is highly dependant on the fact that the database is only being accessed by this unit test runner');
+        */
+        //-------------------------------------------
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ *
+ * ===============================================================================================
+ *
+ */
+
+
+
+
+
+
+
+/*
+     * =============== Logical Add Data Methods =======dbtemplate_class_inc.php========
+     */
+
+    public function cmsadmin_dbtemplate_init() {
+        return $this->dbtemplate->init();
+    }
+
+    public function cmsadmin_dbtemplate_saveXml() {
+        return $this->dbtemplate->saveXml();
+    }
+
+    public function cmsadmin_dbtemplate_getChildTemplate($sectionid,$admin,$filter) {
+        return $this->dbtemplate->getChildTemplate($sectionid,$admin,$filter);
+    }
+
+    public function cmsadmin_dbtemplate_add() {
+        return $this->dbtemplate->add();
+    }
+
+    public function cmsadmin_dbtemplate_addNewPage($title,$sectionid,$published,$access,$introText,$fullText,$isFrontPage,$ccLicence) {
+        return $this->dbtemplate->addNewPage($title,$sectionid,$published,$access,$introText,$fullText,$isFrontPage,$ccLicence);
+    }
+
+    public function cmsadmin_dbtemplate_getHrefTemplateRecords($sectionid) {
+        return $this->dbtemplate->getHrefTemplateRecords($sectionid);
+    }
+
+    public function cmsadmin_dbtemplate_getTemplatePages($filter) {
+        return $this->dbtemplate->getTemplatePages($filter);
+    }
+
+    public function cmsadmin_dbtemplate_getArchivePages($filter) {
+        return $this->dbtemplate->getArchivePages($filter);
+    }
+
+    public function cmsadmin_dbtemplate_getTemplatePage($id) {
+        return $this->dbtemplate->getTemplatePage($id);
+    }
+
+    public function cmsadmin_dbtemplate_getTemplatePageFiltered($id,$filter) {
+        return $this->dbtemplate->getTemplatePageFiltered($id,$filter);
+    }
+
+    public function cmsadmin_dbtemplate_getPagesInSection($sectionId,$isPublished) {
+        return $this->dbtemplate->getPagesInSection($sectionId,$isPublished);
+    }
+
+    public function cmsadmin_dbtemplate_getPagesInSectionJoinFront($sectionId) {
+        return $this->dbtemplate->getPagesInSectionJoinFront($sectionId);
+    }
+
+    public function cmsadmin_dbtemplate_getTitles($title,$limit) {
+        return $this->dbtemplate->getTitles($title,$limit);
+    }
+
+    public function cmsadmin_dbtemplate_getLatestTitles($n) {
+        return $this->dbtemplate->getLatestTitles($n);
+    }
+
+    public function cmsadmin_dbtemplate_getNumberOfPagesInSection($sectionId) {
+        return $this->dbtemplate->getNumberOfPagesInSection($sectionId);
+    }
+
+    public function cmsadmin_dbtemplate_getPageOrder($pageId) {
+        return $this->dbtemplate->getPageOrder($pageId);
+    }
+
+    public function cmsadmin_dbtemplate_getOrdering($sectionId) {
+        return $this->dbtemplate->getOrdering($sectionId);
+    }
+
+    public function cmsadmin_dbtemplate_getOrderingLink($sectionid,$id) {
+        return $this->dbtemplate->getOrderingLink($sectionid,$id);
+    }
+
+    public function cmsadmin_dbtemplate_html2txt($document,$scrub) {
+        return $this->dbtemplate->html2txt($document,$scrub);
+    }
+
+    public function cmsadmin_dbtemplate_luceneIndex($data) {
+        return $this->dbtemplate->luceneIndex($data);
+    }
+
+    public function cmsadmin_dbtemplate_getParent($templateId) {
+        return $this->dbtemplate->getParent($templateId);
+    }
+
+    public function cmsadmin_dbtemplate_getRow($pk_field,$pk_value) {
+        return $this->dbtemplate->getRow($pk_field,$pk_value);
+    }
+
+    public function cmsadmin_dbtemplate_update($pkfield,$pkvalue,$fields,$tablename) {
+        return $this->dbtemplate->update($pkfield,$pkvalue,$fields,$tablename);
+    }
+
+    public function cmsadmin_dbtemplate_delete($pkfield,$pkvalue,$tablename) {
+        return $this->dbtemplate->delete($pkfield,$pkvalue,$tablename);
+    }
+
+    public function cmsadmin_dbtemplate_join($sqlJoinType,$tblJoinTo,$join,$tblJoinFrom) {
+        return $this->dbtemplate->join($sqlJoinType,$tblJoinTo,$join,$tblJoinFrom);
+    }
+
+    public function cmsadmin_dbtemplate_now() {
+        return $this->dbtemplate->now();
+    }
+
+    public function cmsadmin_dbtemplate_getParam($name,$default) {
+        return $this->dbtemplate->getParam($name,$default);
+    }
+
+    public function cmsadmin_dbtemplate_uri($params,$moduleName,$uriMode,$omitServerName,$javascriptCompatibility) {
+        return $this->dbtemplate->uri($params,$moduleName,$uriMode,$omitServerName,$javascriptCompatibility);
+    }
+
+    public function cmsadmin_dbtemplate_newObject($name,$moduleName) {
+        return $this->dbtemplate->newObject($name,$moduleName);
+    }
+
+    public function cmsadmin_dbtemplate_getObject($name,$moduleName) {
+        return $this->dbtemplate->getObject($name,$moduleName);
+    }
+
+
+
+    /*
+     * =============== Logical Edit Data Methods =======dbtemplate_class_inc.php========
+     */
+
+    public function cmsadmin_dbtemplate_edit() {
+        return $this->dbtemplate->edit();
+    }
+
+    public function cmsadmin_dbtemplate_updateTemplateBody($templateid,$body) {
+        return $this->dbtemplate->updateTemplateBody($templateid,$body);
+    }
+
+    public function cmsadmin_dbtemplate_trashTemplate($id) {
+        return $this->dbtemplate->trashTemplate($id);
+    }
+
+    public function cmsadmin_dbtemplate_reorderTemplate($id) {
+        return $this->dbtemplate->reorderTemplate($id);
+    }
+
+    public function cmsadmin_dbtemplate_undelete($id) {
+        return $this->dbtemplate->undelete($id);
+    }
+
+    public function cmsadmin_dbtemplate_togglePublish($id) {
+        return $this->dbtemplate->togglePublish($id);
+    }
+
+    public function cmsadmin_dbtemplate_publish($id,$task) {
+        return $this->dbtemplate->publish($id,$task);
+    }
+
+    public function cmsadmin_dbtemplate_resetSection($sectionId) {
+        return $this->dbtemplate->resetSection($sectionId);
+    }
+
+    public function cmsadmin_dbtemplate_unarchiveSection($sectionId) {
+        return $this->dbtemplate->unarchiveSection($sectionId);
+    }
+
+    public function cmsadmin_dbtemplate_changeOrder($sectionid,$id,$ordering) {
+        return $this->dbtemplate->changeOrder($sectionid,$id,$ordering);
+    }
+
+    public function cmsadmin_dbtemplate_getAll($filter) {
+        return $this->dbtemplate->getAll($filter);
+    }
+
+    public function cmsadmin_dbtemplate_getArray($stmt) {
+        return $this->dbtemplate->getArray($stmt);
+    }
+
+    public function cmsadmin_dbtemplate_insert($fields,$tablename) {
+        return $this->dbtemplate->insert($fields,$tablename);
+    }
+
+
+
+    /*
+     * =============== Logical Delete Data Methods =======dbtemplate_class_inc.php========
+     */
+
+    public function cmsadmin_dbtemplate_deleteTemplate($id) {
+        return $this->dbtemplate->deleteTemplate($id);
+    }
+
+
+
+
+
+
+
+
+
+    /*
+     * Checking Data Management Methods : dbtemplate_class_inc.php
+     */
+
+    public function test_dbtemplate_data_management() {
+
+//Retrieve Content Records
+$result = $this->dbcontent->getTemplatePages('');
+$this->recordCountBefore = count($result);
+
+//Add Template
+//TODO: Should these be declared as individual members / fixtures?
+
+$title = 'CMS Unit Test ' . date("YMD");
+$published = 0;
+$override_date = null;
+$start_publish = null;
+$end_publish = null;
+$creatorid = 'init_1';
+$show_title = 'y';
+$show_author = 'y';
+$show_date = 'y';
+$show_pdf = 'y';
+$show_email = 'y';
+$show_print = 'y';
+$access = null;
+$created_by = 'init_1';
+$introText = 'Unit Test Intro Text ';
+$fullText = 'Unit Test Full Text';
+$metakey = 'Unit Test Meta Key';
+$metadesc = 'Unit Test Meta Description';
+$ccLicence = null;
+$sectionId = 'init_1';
+
+$result = $this->dbtemplate->addTemplate($title,
+                    $published,
+                    $override_date,
+                    $start_publish,
+                    $end_publish,
+                    $creatorid,
+                    $show_title,
+                    $show_author,
+                    $show_date,
+                    $show_pdf,
+                    $show_email,
+                    $show_print,
+                    $access,
+                    $created_by,
+                    $introText,
+                    $fullText,
+                    $metakey,
+                    $metadesc,
+                    $ccLicence,
+                    $sectionId);
+
+        $this->currentId = $result;
+
+        //TODO: check if the are params before displaying (...) for warnings
+
+        $this->assertNotEquals('', $result, 'Warning: dbcontent->addContent(...) Returned \'\'');
+        $this->assertNotEquals(null, $result, 'Warning: dbcontent->addContent(...) Returned NULL');
+
+        //Checking that the fields where added correctly
+        $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+        $record = $record[0];
+
+        //Checking ID
+        $this->assertNotEquals(FALSE, ($this->cmsadmin_tbl_cms_content_id($record) == $this->currentId));
+        $this->assertNotEquals('', $this->cmsadmin_tbl_cms_content_id($record));
+
+        //Checking Title
+        $this->assertEquals($title, $this->cmsadmin_tbl_cms_content_title($record));
+
+        //Checking Published
+        $this->assertEquals($published, $this->cmsadmin_tbl_cms_content_published($record));
+
+        //Checking Override_date
+        $this->assertNotEquals($override_date, $this->cmsadmin_tbl_cms_content_override_date($record));
+
+        //Checking Start Publish
+        $this->assertEquals($start_publish, $this->cmsadmin_tbl_cms_content_start_publish($record));
+
+        //Checking End Publish
+        $this->assertEquals($end_publish, $this->cmsadmin_tbl_cms_content_end_publish($record));
+
+        //Checking creatorid
+        $this->assertEquals($creatorid, $this->cmsadmin_tbl_cms_content_created_by($record));
+
+        //Checking Show Title
+        $this->assertEquals($show_title, $this->cmsadmin_tbl_cms_content_show_title($record));
+
+        //Checking Show Author
+        $this->assertEquals($show_author, $this->cmsadmin_tbl_cms_content_show_author($record));
+
+        //Checking Show Date
+        $this->assertEquals($show_date, $this->cmsadmin_tbl_cms_content_show_date($record));
+
+        //Checking Show Pdf
+        $this->assertEquals($show_pdf, $this->cmsadmin_tbl_cms_content_show_pdf($record));
+
+        //Checking Show Email
+        $this->assertEquals($show_email, $this->cmsadmin_tbl_cms_content_show_email($record));
+
+        //Checking Show Print
+        $this->assertEquals($show_print, $this->cmsadmin_tbl_cms_content_show_print($record));
+
+        //Checking Access
+        $this->assertEquals($access, $this->cmsadmin_tbl_cms_content_access($record));
+
+        //Checking Created By
+        $this->assertEquals($created_by, $this->cmsadmin_tbl_cms_content_created_by($record));
+
+        //Checking IntroText
+        $this->assertEquals($introText, $this->cmsadmin_tbl_cms_content_introtext($record));
+
+        //Checking FullText
+        $this->assertEquals($fullText, $this->cmsadmin_tbl_cms_content_body($record));
+
+        //Checking Metakey
+        $this->assertEquals($metakey, $this->cmsadmin_tbl_cms_content_metakey($record));
+
+        //Checking Meta Description
+        $this->assertEquals($metadesc, $this->cmsadmin_tbl_cms_content_metadesc($record));
+
+        //Checking Licence
+        $this->assertEquals($ccLicence, $this->cmsadmin_tbl_cms_content_post_lic($record));
+
+        //Checking Meta Description
+        $this->assertEquals($sectionId, $this->cmsadmin_tbl_cms_content_sectionid($record));
+
+
+
+$id = $this->currentId;
+$title = 'Unit Test Title Edited';
+$sectionId = 'init_2';
+$published = 1;
+$access = 1;
+$introText = 'Unit Test Intro Text Edited';
+$fullText = 'Unit Test Full Text Edited';
+$override_date = '2008-01-01 00:00:00';
+$start_publish = '2008-01-01 00:00:00';
+$start_publish = '2008-01-01 00:00:00';
+$end_publish = '2008-01-01 00:00:00';
+$override_date = '2008-01-01 00:00:00';
+$metakey = 'Unit Test Meta Key Edited';
+$metadesc = 'Unit Test Meta Description Edited';
+$ccLicence = 'New Licence';
+$show_title = 'n';
+$show_author = 'y';
+$show_date = 'n';
+$show_pdf = 'y';
+$show_email = 'n';
+$show_print = 'y';
+
+$result = $this->dbcontent->editContent($id ,
+                        $title ,
+                        $sectionId ,
+                        $published ,
+                        $access ,
+                        $introText ,
+                        $fullText ,
+                        $override_date ,
+                        $start_publish ,
+                        $end_publish ,
+                        $metakey ,
+                        $metadesc ,
+                        $ccLicence ,
+                        $show_title ,
+                        $show_author ,
+                        $show_date ,
+                        $show_pdf ,
+                        $show_email ,
+                        $show_print);
+
+
+        //Checking that content fields were properly edited
+
+        $this->assertNotEquals('', $result, 'Warning: dbcontent->editContent(...) Returned \'\'');
+        $this->assertNotEquals(null, $result, 'Warning: dbcontent->editContent(...) Returned NULL');
+        $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->editContent(...) Returned FALSE');
 
         //Checking that the fields where edited correctly
         $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
         $record = $record[0];
 
-        //Checking Trash
-        $this->assertEquals(1, $this->cmsadmin_tbl_cms_content_trash($record));
+        //Checking ID
+        $this->assertNotEquals(FALSE, ($this->cmsadmin_tbl_cms_content_id($record) == $this->currentId));
+        $this->assertNotEquals('', $this->cmsadmin_tbl_cms_content_id($record));
 
-        //Checking Ordering
-        $this->assertEquals('', $this->cmsadmin_tbl_cms_content_ordering($record));
+        //Checking Title
+        $this->assertEquals($title, $this->cmsadmin_tbl_cms_content_title($record));
+
+        //Checking Published
+        $this->assertEquals($published, $this->cmsadmin_tbl_cms_content_published($record));
+
+        //Checking Override_date
+        $this->assertEquals($override_date, $this->cmsadmin_tbl_cms_content_override_date($record));
+
+        //Checking Start Publish
+        $this->assertEquals($start_publish, $this->cmsadmin_tbl_cms_content_start_publish($record));
 
         //Checking End Publish
-        $this->assertNotEquals('', $this->cmsadmin_tbl_cms_content_end_publish($record));
-        */
-        //-------------------------------------------
+        $this->assertEquals($end_publish, $this->cmsadmin_tbl_cms_content_end_publish($record));
+
+        //Checking creatorid
+        $this->assertEquals($creatorid, $this->cmsadmin_tbl_cms_content_created_by($record));
+
+        //Checking Show Title
+        $this->assertEquals($show_title, $this->cmsadmin_tbl_cms_content_show_title($record));
+
+        //Checking Show Author
+        $this->assertEquals($show_author, $this->cmsadmin_tbl_cms_content_show_author($record));
+
+        //Checking Show Date
+        $this->assertEquals($show_date, $this->cmsadmin_tbl_cms_content_show_date($record));
+
+        //Checking Show Pdf
+        $this->assertEquals($show_pdf, $this->cmsadmin_tbl_cms_content_show_pdf($record));
+
+        //Checking Show Email
+        $this->assertEquals($show_email, $this->cmsadmin_tbl_cms_content_show_email($record));
+
+        //Checking Show Print
+        $this->assertEquals($show_print, $this->cmsadmin_tbl_cms_content_show_print($record));
+
+        //Checking Access
+        $this->assertEquals($access, $this->cmsadmin_tbl_cms_content_access($record));
+
+        //Checking Created By
+        $this->assertEquals($created_by, $this->cmsadmin_tbl_cms_content_created_by($record));
+
+        //Checking IntroText
+        $this->assertEquals($introText, $this->cmsadmin_tbl_cms_content_introtext($record));
+
+        //Checking FullText
+        $this->assertEquals($fullText, $this->cmsadmin_tbl_cms_content_body($record));
+
+        //Checking Metakey
+        $this->assertEquals($metakey, $this->cmsadmin_tbl_cms_content_metakey($record));
+
+        //Checking Meta Description
+        $this->assertEquals($metadesc, $this->cmsadmin_tbl_cms_content_metadesc($record));
+
+        //Checking Licence
+        $this->assertEquals($ccLicence, $this->cmsadmin_tbl_cms_content_post_lic($record));
+
+        //Checking Meta Description
+        $this->assertEquals($sectionId, $this->cmsadmin_tbl_cms_content_sectionid($record));
+
+
+
+    /*
+     * =============== Logical Edit Data Methods =======dbcontent_class_inc.php========
+     */
+        //DEPRICATED
+        //return $this->dbcontent->edit();
+
+    //--------- Checking updateContentBody -----------
+    $contentid = $this->currentId;
+    $body = 'PHPUNIT Test Update Body';
+    $result = $this->dbcontent->updateContentBody($contentid,$body);
+    //Checking Result
+    $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->trashContent($id) returned FALSE');
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Body
+    $this->assertEquals($body, $this->cmsadmin_tbl_cms_content_body($record));
+    //------------------------------------------------
+
+
+    //--------- Checking trashContent -----------
+    $id = $this->currentId;
+    $result = $this->dbcontent->trashContent($id);
+    //Checking Result
+    $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->trashContent($id) returned FALSE');
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Trash
+    $this->assertEquals(1, $this->cmsadmin_tbl_cms_content_trash($record));
+
+    //Checking Ordering
+    $this->assertEquals('', $this->cmsadmin_tbl_cms_content_ordering($record));
+
+    //Checking End Publish
+    $this->assertNotEquals('', $this->cmsadmin_tbl_cms_content_end_publish($record));
+    //-------------------------------------------
+
+
+    //--------- Checking reorderContent -----------
+    /*
+    $id = $this->currentId;
+    $result = $this->dbcontent->reorderContent($id);
+    //Checking Result
+    $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->trashContent($id) returned FALSE');
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Trash
+    $this->assertEquals(1, $this->cmsadmin_tbl_cms_content_trash($record));
+    */
+    //---------------------------------------------
+
+
+    //--------- Checking Undelete -----------
+    $result = $this->dbcontent->undelete($this->currentId);
+    //Checking Result
+    $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->undelete($id) Returned FALSE - Was the item successfully restored?');
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Trash
+    $this->assertEquals(0, $this->cmsadmin_tbl_cms_content_trash($record));
+    //---------------------------------------------
+
+
+    //--------- Checking Toggle Publish -----------
+    //Checking Undelete
+    $this->assertNotEquals(FALSE, $result, 'Warning: dbcontent->togglePublish($id) Returned FALSE - Was the item successfully restored?');
+
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Published
+    $varPublished = $this->cmsadmin_tbl_cms_content_published($record);
+
+    $result = $this->dbcontent->togglePublish($id);
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Publish
+    $this->assertNotEquals($varPublished, $this->cmsadmin_tbl_cms_content_trash($record));
+    //---------------------------------------------
+
+
+    //--------- Checking Publish : TASK publish -----------
+    $id = $this->currentId;
+    $task = 'publish';
+    $result = $this->dbcontent->publish($id,$task);
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Publish
+    $this->assertEquals(1, $this->cmsadmin_tbl_cms_content_published($record));
+    //---------------------------------------------
+
+    //--------- Checking Publish : TASK unpublish -----------
+    $id = $this->currentId;
+    $task = 'unpublish';
+    $result = $this->dbcontent->publish($id,$task);
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Publish
+    $this->assertEquals(0, $this->cmsadmin_tbl_cms_content_published($record));
+    //---------------------------------------------
+
+    /*
+    public function cmsadmin_dbcontent_resetSection($sectionId) {
+        return $this->dbcontent->resetSection($sectionId);
+    }
+
+    public function cmsadmin_dbcontent_unarchiveSection($sectionId) {
+        return $this->dbcontent->unarchiveSection($sectionId);
+    }
+    */
+
+    //--------- Checking Publish : TASK unpublish -----------
+    //TODO: Complete changeOrder
+    //      Add Test Data (One section with a couple of content items)
+    /*
+    $id = $this->currentId;
+    $sectionid = 'init_1';
+    $task = 'unpublish';
+    $result = $this->dbcontent->changeOrder($sectionid,$id,$ordering);
+    */
+
+    /*
+     * =============== Logical Delete Data Methods =======dbcontent_class_inc.php========
+     */
+
+    $id = $this->currentId;
+    $result = $this->dbcontent->deleteContent($id);
+
+    //Checking that the fields where edited correctly
+    $record = $this->dbcontent->getAll(" WHERE id = '{$this->currentId}' ");
+    $record = $record[0];
+
+    //Checking Publish
+    $this->assertEquals(0, count($record));
 
     }
+
 
 
     /*
@@ -6104,198 +6771,6 @@ $result = $this->dbcontent->addContent($title,
     }
 
 
-
-    /*
-     * =============== Logical Add Data Methods =======dbtemplate_class_inc.php========
-     */
-
-    public function cmsadmin_dbtemplate_init() {
-        return $this->dbtemplate->init();
-    }
-
-    public function cmsadmin_dbtemplate_saveXml() {
-        return $this->dbtemplate->saveXml();
-    }
-
-    public function cmsadmin_dbtemplate_getChildTemplate($sectionid,$admin,$filter) {
-        return $this->dbtemplate->getChildTemplate($sectionid,$admin,$filter);
-    }
-
-    public function cmsadmin_dbtemplate_add() {
-        return $this->dbtemplate->add();
-    }
-
-    public function cmsadmin_dbtemplate_addNewPage($title,$sectionid,$published,$access,$introText,$fullText,$isFrontPage,$ccLicence) {
-        return $this->dbtemplate->addNewPage($title,$sectionid,$published,$access,$introText,$fullText,$isFrontPage,$ccLicence);
-    }
-
-    public function cmsadmin_dbtemplate_getHrefTemplateRecords($sectionid) {
-        return $this->dbtemplate->getHrefTemplateRecords($sectionid);
-    }
-
-    public function cmsadmin_dbtemplate_getTemplatePages($filter) {
-        return $this->dbtemplate->getTemplatePages($filter);
-    }
-
-    public function cmsadmin_dbtemplate_getArchivePages($filter) {
-        return $this->dbtemplate->getArchivePages($filter);
-    }
-
-    public function cmsadmin_dbtemplate_getTemplatePage($id) {
-        return $this->dbtemplate->getTemplatePage($id);
-    }
-
-    public function cmsadmin_dbtemplate_getTemplatePageFiltered($id,$filter) {
-        return $this->dbtemplate->getTemplatePageFiltered($id,$filter);
-    }
-
-    public function cmsadmin_dbtemplate_getPagesInSection($sectionId,$isPublished) {
-        return $this->dbtemplate->getPagesInSection($sectionId,$isPublished);
-    }
-
-    public function cmsadmin_dbtemplate_getPagesInSectionJoinFront($sectionId) {
-        return $this->dbtemplate->getPagesInSectionJoinFront($sectionId);
-    }
-
-    public function cmsadmin_dbtemplate_getTitles($title,$limit) {
-        return $this->dbtemplate->getTitles($title,$limit);
-    }
-
-    public function cmsadmin_dbtemplate_getLatestTitles($n) {
-        return $this->dbtemplate->getLatestTitles($n);
-    }
-
-    public function cmsadmin_dbtemplate_getNumberOfPagesInSection($sectionId) {
-        return $this->dbtemplate->getNumberOfPagesInSection($sectionId);
-    }
-
-    public function cmsadmin_dbtemplate_getPageOrder($pageId) {
-        return $this->dbtemplate->getPageOrder($pageId);
-    }
-
-    public function cmsadmin_dbtemplate_getOrdering($sectionId) {
-        return $this->dbtemplate->getOrdering($sectionId);
-    }
-
-    public function cmsadmin_dbtemplate_getOrderingLink($sectionid,$id) {
-        return $this->dbtemplate->getOrderingLink($sectionid,$id);
-    }
-
-    public function cmsadmin_dbtemplate_html2txt($document,$scrub) {
-        return $this->dbtemplate->html2txt($document,$scrub);
-    }
-
-    public function cmsadmin_dbtemplate_luceneIndex($data) {
-        return $this->dbtemplate->luceneIndex($data);
-    }
-
-    public function cmsadmin_dbtemplate_getParent($templateId) {
-        return $this->dbtemplate->getParent($templateId);
-    }
-
-    public function cmsadmin_dbtemplate_getRow($pk_field,$pk_value) {
-        return $this->dbtemplate->getRow($pk_field,$pk_value);
-    }
-
-    public function cmsadmin_dbtemplate_update($pkfield,$pkvalue,$fields,$tablename) {
-        return $this->dbtemplate->update($pkfield,$pkvalue,$fields,$tablename);
-    }
-
-    public function cmsadmin_dbtemplate_delete($pkfield,$pkvalue,$tablename) {
-        return $this->dbtemplate->delete($pkfield,$pkvalue,$tablename);
-    }
-
-    public function cmsadmin_dbtemplate_join($sqlJoinType,$tblJoinTo,$join,$tblJoinFrom) {
-        return $this->dbtemplate->join($sqlJoinType,$tblJoinTo,$join,$tblJoinFrom);
-    }
-
-    public function cmsadmin_dbtemplate_now() {
-        return $this->dbtemplate->now();
-    }
-
-    public function cmsadmin_dbtemplate_getParam($name,$default) {
-        return $this->dbtemplate->getParam($name,$default);
-    }
-
-    public function cmsadmin_dbtemplate_uri($params,$moduleName,$uriMode,$omitServerName,$javascriptCompatibility) {
-        return $this->dbtemplate->uri($params,$moduleName,$uriMode,$omitServerName,$javascriptCompatibility);
-    }
-
-    public function cmsadmin_dbtemplate_newObject($name,$moduleName) {
-        return $this->dbtemplate->newObject($name,$moduleName);
-    }
-
-    public function cmsadmin_dbtemplate_getObject($name,$moduleName) {
-        return $this->dbtemplate->getObject($name,$moduleName);
-    }
-
-
-
-    /*
-     * =============== Logical Edit Data Methods =======dbtemplate_class_inc.php========
-     */
-
-    public function cmsadmin_dbtemplate_edit() {
-        return $this->dbtemplate->edit();
-    }
-
-    public function cmsadmin_dbtemplate_updateTemplateBody($templateid,$body) {
-        return $this->dbtemplate->updateTemplateBody($templateid,$body);
-    }
-
-    public function cmsadmin_dbtemplate_trashTemplate($id) {
-        return $this->dbtemplate->trashTemplate($id);
-    }
-
-    public function cmsadmin_dbtemplate_reorderTemplate($id) {
-        return $this->dbtemplate->reorderTemplate($id);
-    }
-
-    public function cmsadmin_dbtemplate_undelete($id) {
-        return $this->dbtemplate->undelete($id);
-    }
-
-    public function cmsadmin_dbtemplate_togglePublish($id) {
-        return $this->dbtemplate->togglePublish($id);
-    }
-
-    public function cmsadmin_dbtemplate_publish($id,$task) {
-        return $this->dbtemplate->publish($id,$task);
-    }
-
-    public function cmsadmin_dbtemplate_resetSection($sectionId) {
-        return $this->dbtemplate->resetSection($sectionId);
-    }
-
-    public function cmsadmin_dbtemplate_unarchiveSection($sectionId) {
-        return $this->dbtemplate->unarchiveSection($sectionId);
-    }
-
-    public function cmsadmin_dbtemplate_changeOrder($sectionid,$id,$ordering) {
-        return $this->dbtemplate->changeOrder($sectionid,$id,$ordering);
-    }
-
-    public function cmsadmin_dbtemplate_getAll($filter) {
-        return $this->dbtemplate->getAll($filter);
-    }
-
-    public function cmsadmin_dbtemplate_getArray($stmt) {
-        return $this->dbtemplate->getArray($stmt);
-    }
-
-    public function cmsadmin_dbtemplate_insert($fields,$tablename) {
-        return $this->dbtemplate->insert($fields,$tablename);
-    }
-
-
-
-    /*
-     * =============== Logical Delete Data Methods =======dbtemplate_class_inc.php========
-     */
-
-    public function cmsadmin_dbtemplate_deleteTemplate($id) {
-        return $this->dbtemplate->deleteTemplate($id);
-    }
 
 
 
