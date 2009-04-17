@@ -1,6 +1,21 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
+?>
+
+<script type="text/javascript">
+    //<![CDATA[
+
+    function SubmitForm()
+    {
+        document.forms["newTopicForm"].submit();
+    }
+
+    //]]>
+</script>
+
+<?
+
 
 $objHighlightLabels = $this->getObject('highlightlabels', 'htmlelements');
 echo $objHighlightLabels->show();
@@ -18,65 +33,6 @@ $this->loadClass('radio', 'htmlelements');
 $this->loadClass('hiddeninput', 'htmlelements');
 
 
-//for multiple attachement
-
-	$str = '<script type="text/javascript">
-   var http_request = false;
-   function makePOSTRequest(url, parameters) {
-      http_request = false;
-      if (window.XMLHttpRequest) { // Mozilla, Safari,...
-         http_request = new XMLHttpRequest();
-         if (http_request.overrideMimeType) {
-         	// set type accordingly to anticipated content type
-            //http_request.overrideMimeType(\'text/xml\');
-            http_request.overrideMimeType(\'text/html\');
-         }
-      } else if (window.ActiveXObject) { // IE
-         try {
-            http_request = new ActiveXObject("Msxml2.XMLHTTP");
-         } catch (e) {
-            try {
-               http_request = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
-         }
-      }
-      if (!http_request) {
-         alert(\'Cannot create XMLHTTP instance\');
-         return false;
-      }
-
-      http_request.onreadystatechange = alertContents;
-      http_request.open(\'POST\', url, true);
-      http_request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      http_request.setRequestHeader("Content-length", parameters.length);
-      http_request.setRequestHeader("Connection", "close");
-      http_request.send(parameters);
-   }
-
-   function alertContents() {
-      if (http_request.readyState == 4) {
-         if (http_request.status == 200) {
-            //alert(http_request.responseText);
-            result = http_request.responseText;
-             //document.write(result);
-            //document.getElementById(\'myspan\').innerHTML = result;
-         } else {
-            alert(\'There was a problem with the request.\');
-         }
-      }
-   }
-
-   function saveAttachment(obj) {
-
-      var poststr = "action=saveattachment&id=popop&attachment=cccccccc";
-      makePOSTRequest(\'index.php\', poststr);
-
-   }
-
-
-
-   </script>';
-	$this->appendArrayVar('headerParams', $str);
 // encodeURI( document.getElementById("id").value )
 $header = new htmlheading();
 $header->type=1;
@@ -289,7 +245,11 @@ if ($forum['attachments'] == 'Y') {
     }
 
    }
-    
+    $hiddenForumInput = new hiddeninput('forum', $forumid);
+    $form->addToForm($hiddenForumInput->show());
+
+    $hiddenTemporaryId = new hiddeninput('temporaryId', $temporaryId);
+    $form->addToForm($hiddenTemporaryId->show());
     $addTable->addCell($form->show());
     $addTable->endRow();
 }
@@ -328,7 +288,8 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
-$submitButton->setToSubmit();
+//$submitButton->setToSubmit();
+$submitButton->extra = ' onclick="SubmitForm()"';
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $returnUrl = $this->uri(array('action'=>'forum', 'id'=>$forumid, 'type'=>$forumtype));
@@ -341,11 +302,7 @@ $addTable->endRow();
 $newTopicForm->addToForm($addTable->show());
 
 
-$hiddenForumInput = new hiddeninput('forum', $forumid);
-$newTopicForm->addToForm($hiddenForumInput->show());
 
-$hiddenTemporaryId = new hiddeninput('temporaryId', $temporaryId);
-$newTopicForm->addToForm($hiddenTemporaryId->show());
 
 
 echo $newTopicForm->show();

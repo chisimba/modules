@@ -6,7 +6,20 @@ ob_start();
 /**
 * This template displays a topic in a flat view format
 */
+?>
 
+<script type="text/javascript">
+    //<![CDATA[
+
+    function SubmitForm()
+    {
+        document.forms["postReplyForm"].submit();
+    }
+
+    //]]>
+</script>
+
+<?
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
@@ -79,6 +92,32 @@ $ratingsForm = new form('savepostratings', $this->uri(array('action'=>'savepostr
 
 $ratingsForm->addToForm($thread);
 
+$hiddenTypeInput = new textinput('discussionType');
+$hiddenTypeInput->fldType = 'hidden';
+$hiddenTypeInput->value = $post['type_id'];
+$ratingsForm->addToForm($hiddenTypeInput->show());
+
+
+$hiddenTangentInput = new textinput('parent');
+$hiddenTangentInput->fldType = 'hidden';
+$hiddenTangentInput->value = $post['post_id'];
+$ratingsForm->addToForm($hiddenTangentInput->show());
+
+$topicHiddenInput = new textinput('topic');
+$topicHiddenInput->fldType = 'hidden';
+$topicHiddenInput->value = $post['topic_id'];
+$ratingsForm->addToForm($topicHiddenInput->show());
+
+$hiddenForumInput = new textinput('forum');
+$hiddenForumInput->fldType = 'hidden';
+$hiddenForumInput->value = $forum['id'];
+$ratingsForm->addToForm($hiddenForumInput->show());
+
+$hiddenTemporaryId = new textinput('temporaryId');
+$hiddenTemporaryId->fldType = 'hidden';
+$hiddenTemporaryId->value = $temporaryId;
+$ratingsForm->addToForm($hiddenTemporaryId->show());
+
 // Determine whether to show the submit form for the ratings form
 // Without this button, form is a waste, but need to make efficient
 if ($showRatingsForm) {
@@ -90,10 +129,7 @@ if ($showRatingsForm) {
         $ratingsForm->addToForm('<p align="right">'.$objButton->show().'</p>');
     }
 
-    // These elements are need for the redirect
-    $hiddenTopicId = new textinput('topic', $post['topic_id']);
-    $hiddenTopicId->fldType = 'hidden';
-    $ratingsForm->addToForm($hiddenTopicId->show());
+
 }
 
 echo $ratingsForm->show();
@@ -141,7 +177,7 @@ echo '<p align="center">';
 
 
 // if ($post['status'] != 'CLOSE' && !$forumlocked) {
-    // echo $replylink->show().' / ';
+// echo $replylink->show().' / ';
 // }
 
 if ((!$forumlocked && $this->objUser->isCourseAdmin()) || $forumtype == 'workgroup') {

@@ -1,6 +1,21 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
+?>
+
+<script type="text/javascript">
+    //<![CDATA[
+
+    function SubmitForm()
+    {
+        document.forms["postReplyForm"].submit();
+    }
+
+    //]]>
+</script>
+
+<?
+
 
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -81,7 +96,7 @@ $addTable->endRow();
 if ($forum['attachments'] == 'Y') {
     $addTable->startRow();
     
-    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+   /* $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
     $addTable->addCell($attachmentsLabel->show(), 100);
     
     $attachmentIframe = new iframe();
@@ -89,10 +104,49 @@ if ($forum['attachments'] == 'Y') {
     $attachmentIframe->height='100';
     $attachmentIframe->frameborder='0';
     $attachmentIframe->src= $this->uri(array('module' => 'forum', 'action' => 'attachments', 'id'=>$temporaryId, 'forum' => $forum['id'])); 
-    
-    $addTable->addCell($attachmentIframe->show());
+    */
+
+
+    $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+    $addTable->addCell($attachmentsLabel->show(), 120);
+
+    $form = new form('saveattachment', $this->uri(array('action'=>'saveattachment')));
+
+    $objSelectFile = $this->newObject('selectfile', 'filemanager');
+    $objSelectFile->name = 'attachment';
+    $form->addToForm($objSelectFile->show());
+
+    $hiddenTypeInput = new textinput('discussionType');
+    $hiddenTypeInput->fldType = 'hidden';
+    $hiddenTypeInput->value = $post['type_id'];
+    $form->addToForm($hiddenTypeInput->show());
+
+    $topicHiddenInput = new textinput('topic');
+    $topicHiddenInput->fldType = 'hidden';
+    $topicHiddenInput->value = $post['topic_id'];
+    $form->addToForm($topicHiddenInput->show());
+
+    $hiddenForumInput = new textinput('forum');
+    $hiddenForumInput->fldType = 'hidden';
+    $hiddenForumInput->value = $forum['id'];
+    $form->addToForm($hiddenForumInput->show());
+
+    $hiddenPostId = new textinput('post_id');
+    $hiddenPostId->fldType = 'hidden';
+    $hiddenPostId->value = $post['post_id'];
+    $form->addToForm($hiddenPostId->show());
+
+    $hiddenTemporaryId = new textinput('temporaryId');
+    $hiddenTemporaryId->fldType = 'hidden';
+    $hiddenTemporaryId->value = $temporaryId;
+    $form->addToForm($hiddenTemporaryId->show());
+
+
+    $addTable->addCell($form->show());
     
     $addTable->endRow();
+
+
 }
 
 // ------------------------------
@@ -102,7 +156,8 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitform', $this->objLanguage->languageText('word_submit'));
-$submitButton->setToSubmit();
+//$submitButton->setToSubmit();
+$submitButton->extra = ' onclick="SubmitForm()"';
 
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel'));
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id']));
@@ -114,30 +169,6 @@ $addTable->endRow();
 
 $postReplyForm->addToForm($addTable);
 
-$hiddenTypeInput = new textinput('discussionType');
-$hiddenTypeInput->fldType = 'hidden';
-$hiddenTypeInput->value = $post['type_id'];
-$postReplyForm->addToForm($hiddenTypeInput->show());
-
-$topicHiddenInput = new textinput('topic');
-$topicHiddenInput->fldType = 'hidden';
-$topicHiddenInput->value = $post['topic_id'];
-$postReplyForm->addToForm($topicHiddenInput->show());
-
-$hiddenForumInput = new textinput('forum');
-$hiddenForumInput->fldType = 'hidden';
-$hiddenForumInput->value = $forum['id'];
-$postReplyForm->addToForm($hiddenForumInput->show());
-
-$hiddenPostId = new textinput('post_id');
-$hiddenPostId->fldType = 'hidden';
-$hiddenPostId->value = $post['post_id'];
-$postReplyForm->addToForm($hiddenPostId->show());
-
-$hiddenTemporaryId = new textinput('temporaryId');
-$hiddenTemporaryId->fldType = 'hidden';
-$hiddenTemporaryId->value = $temporaryId;
-$postReplyForm->addToForm($hiddenTemporaryId->show());
 
 echo $postReplyForm->show();
 

@@ -5,8 +5,18 @@ ob_start();
 /**
 * This template displays a topic in a single view format
 */
+?>
+<script type="text/javascript">
+    //<![CDATA[
 
+    function SubmitForm()
+    {
+        document.forms["postReplyForm"].submit();
+    }
 
+    //]]>
+</script>
+<?
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('form', 'htmlelements');

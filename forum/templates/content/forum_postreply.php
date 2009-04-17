@@ -56,8 +56,14 @@ function clearForTangent()
         }
     }
 
-
 }
+
+ function SubmitForm()
+    {
+    document.forms["postReplyForm"].submit();
+    }
+
+
 //]]>
 </script>
 <?php
@@ -209,6 +215,33 @@ if ($forum['attachments'] == 'Y') {
     $objSelectFile->name = 'attachment';
     $form->addToForm($objSelectFile->show());
 
+
+    $hiddenTypeInput = new textinput('discussionType');
+    $hiddenTypeInput->fldType = 'hidden';
+    $hiddenTypeInput->value = $post['type_id'];
+    $form->addToForm($hiddenTypeInput->show());
+
+
+    $hiddenTangentInput = new textinput('parent');
+    $hiddenTangentInput->fldType = 'hidden';
+    $hiddenTangentInput->value = $post['post_id'];
+    $form->addToForm($hiddenTangentInput->show());
+
+    $topicHiddenInput = new textinput('topic');
+    $topicHiddenInput->fldType = 'hidden';
+    $topicHiddenInput->value = $post['topic_id'];
+    $form->addToForm($topicHiddenInput->show());
+
+    $hiddenForumInput = new textinput('forum');
+    $hiddenForumInput->fldType = 'hidden';
+    $hiddenForumInput->value = $forum['id'];
+    $form->addToForm($hiddenForumInput->show());
+
+    $hiddenTemporaryId = new textinput('temporaryId');
+    $hiddenTemporaryId->fldType = 'hidden';
+    $hiddenTemporaryId->value = $temporaryId;
+    $form->addToForm($hiddenTemporaryId->show());
+
     $addTable->addCell($form->show());
 
     $addTable->endRow();
@@ -252,8 +285,8 @@ $addTable->startRow();
 $addTable->addCell(' ');
 
 $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit', 'system'));
-$submitButton->setToSubmit();
-
+//$submitButton->setToSubmit();
+$submitButton->extra = ' onclick="SubmitForm()"';
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_cancel', 'system'));
 $returnUrl = $this->uri(array('action'=>'thread', 'id'=>$post['topic_id'], 'type'=>$forumtype));
 $cancelButton->setOnClick("window.location='$returnUrl'");
@@ -264,31 +297,7 @@ $addTable->endRow();
 
 $postReplyForm->addToForm($addTable);
 
-$hiddenTypeInput = new textinput('discussionType');
-$hiddenTypeInput->fldType = 'hidden';
-$hiddenTypeInput->value = $post['type_id'];
-$postReplyForm->addToForm($hiddenTypeInput->show());
 
-
-$hiddenTangentInput = new textinput('parent');
-$hiddenTangentInput->fldType = 'hidden';
-$hiddenTangentInput->value = $post['post_id'];
-$postReplyForm->addToForm($hiddenTangentInput->show());
-
-$topicHiddenInput = new textinput('topic');
-$topicHiddenInput->fldType = 'hidden';
-$topicHiddenInput->value = $post['topic_id'];
-$postReplyForm->addToForm($topicHiddenInput->show());
-
-$hiddenForumInput = new textinput('forum');
-$hiddenForumInput->fldType = 'hidden';
-$hiddenForumInput->value = $forum['id'];
-$postReplyForm->addToForm($hiddenForumInput->show());
-
-$hiddenTemporaryId = new textinput('temporaryId');
-$hiddenTemporaryId->fldType = 'hidden';
-$hiddenTemporaryId->value = $temporaryId;
-$postReplyForm->addToForm($hiddenTemporaryId->show());
 
 echo $postReplyForm->show();
 

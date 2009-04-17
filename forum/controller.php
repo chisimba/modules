@@ -209,6 +209,7 @@ class forum extends controller
                 return $this->showSingleThread($this->getParam('id'));
 
             case 'flatview';
+
                 return $this->showFlatView($this->getParam('id'));
 
             case 'postreply':
@@ -650,9 +651,11 @@ class forum extends controller
     */
     public function viewTopic($topic_id, $message=NULL, $post = NULL)
     {
-        $action = $this->getSession('forumdisplay', 'flatview');
 
-        return $this->nextAction($action, array('id'=>$topic_id, 'message'=>$message,'post'=>$post, 'type'=>$this->forumtype, 'type'=>$this->forumtype));
+
+        $action = $this->getSession('forumdisplay', 'flatview');
+   
+       return $this->nextAction($action, array('id'=>$topic_id, 'message'=>$message,'post'=>$post, 'type'=>$this->forumtype, 'type'=>$this->forumtype));
     }
 
     /**
@@ -873,16 +876,15 @@ class forum extends controller
     */
     public function showFlatView($topic_id)
     {
+     
         // Store View as a Preference
         $this->setSession('forumdisplay', 'flatview');
-
-        // Update Views
+       
+       // Update Views
         $this->objTopic->updateTopicViews($topic_id);
 
         // Get details on the topic
         $post = $this->objPost->getRootPost ($topic_id);
-
-
 
         // Check if the topic exists, else call an error message
         if ($post == NULL) {
@@ -1026,11 +1028,14 @@ class forum extends controller
         }
     }
 
+
+
     /**
     * Method to save a reply to a topic
     */
     public function saveReply()
     {
+      
         $tempPostId=$_POST['temporaryId'];
         $this->saveTempAttachmentIfAny($tempPostId);
 
@@ -1042,11 +1047,17 @@ class forum extends controller
             $post_tangent_parent = $_POST['parent'];
         }
 
+
         $parentPostDetails = $this->objPost->getRow('id', $_POST['parent']);
 
-        $forum_id = $_POST['forum'];
-        $topic_id = $_POST['topic'];
-        $type_id = $_POST['discussionType'];
+        $forum_id =$_POST['forum'];
+        $topic_id =$_POST['topic'];
+       
+
+        //we need this because IE is failing to pass it over
+        $this->setSession('current_topic_id', $topic_id);
+
+        $type_id = $this->getSession('discussionType'); //$_POST['discussionType'];
         $post_title = $_POST['title'];
         $post_text = $_POST['message'];
         $language = $_POST['language'];
@@ -1127,12 +1138,15 @@ class forum extends controller
     */
     public function editPost($id)
     {
+
         $post = $this->objPost->getPostWithText($id);
 
         if ($post['replypost'] == NULL && $this->objPost->checkOkToEdit($post['datelastupdated'], $post['userid'])) {
             $this->setVarByRef('post', $post);
 
-            $forum = $this->objForum->getForum($post['forum_id']);
+
+
+           $forum = $this->objForum->getForum($post['forum_id']);
 
             // Check if user has access to workgroup forum else redirect
             $this->checkWorkgroupAccessOrRedirect($forum);
@@ -1163,6 +1177,11 @@ class forum extends controller
     */
     public function updatePost()
     {
+
+
+        $tempPostId= $_POST['temporaryId'];
+        $this->saveTempAttachmentIfAny($tempPostId);
+
         $post_id = $_POST['post_id'];
         $title = $_POST['title'];
         $text = $_POST['message'];
@@ -1418,7 +1437,7 @@ class forum extends controller
         if ($attachment_id != '') {
             $this->objTempAttachments->insertSingle($temp_id, $attachment_id, $userId, $dateLastUpdated);
         }
-
+        $this->unsetSession('temporaryId');
         return $this->nextAction('attachments', array('id'=>$temp_id, 'attachment'=>$attachment_id));
     }
 

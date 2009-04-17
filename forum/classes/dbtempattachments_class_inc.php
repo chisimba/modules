@@ -55,7 +55,7 @@ class dbtempattachments extends dbTable
     }
     
     /**
-    * Method to subscribe a user to the forum
+    * Method to save a temprary attachement
     *
     * @param string $temp_id: Temporary Id of the post before it is being posted
     * @param string $attachment_id: File Id of attachment

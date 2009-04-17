@@ -1,5 +1,5 @@
 <?php
-  // security check - must be included in all scripts
+// security check - must be included in all scripts
 if (!$GLOBALS['kewl_entry_point_run'])
 {
     die("You cannot view this page directly");
@@ -19,7 +19,7 @@ $this->loadClass('link', 'htmlelements');
 * This class returns arrays of recordset from the database table 'tbl_forum_post' and also helps with the display of topics
 */
 class dbPost extends dbTable
- {
+{
     /**
     *  $var Boolean Variable to flag whether to show the reply-to-post link
     */
@@ -83,8 +83,8 @@ class dbPost extends dbTable
         $this->objLanguage = $this->getObject('language', 'language');
 
         // Load Forum Subscription classes
-          $this->objForumSubscriptions = $this->getObject('dbforumsubscriptions');
-          $this->objTopicSubscriptions = $this->getObject('dbtopicsubscriptions');
+        $this->objForumSubscriptions = $this->getObject('dbforumsubscriptions');
+        $this->objTopicSubscriptions = $this->getObject('dbtopicsubscriptions');
 
         $this->objTranslatedDate = $this->getObject('translatedatedifference', 'utilities');
         $this->objDateTime = $this->getObject('dateandtime', 'utilities');
@@ -165,7 +165,7 @@ class dbPost extends dbTable
             'rght'                  => $rightPointer,
             'level'                 => $level,
             'datelastupdated'       => strftime('%Y-%m-%d %H:%M:%S', mktime())
-        ));
+            ));
 
         return $this->getLastInsertId();
     }
@@ -425,181 +425,181 @@ class dbPost extends dbTable
         $this->threadDisplayLevel = $post['level'];
         //$return .= $post['post_parent'].' '.$post['post_id']; - just for testing
         $return .= '<div class="newForumContainer" '.$margin.'>'."\r\n";
-            $return .= '<div class="newForumTopic">'."\r\n";
-                $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
+        $return .= '<div class="newForumTopic">'."\r\n";
+        $return .= '<img class="forumUserPicture" src="'.$this->objUserPic->smallUserPicture($post['userid']).'"  /> ';
 
-                if ($this->showModeration) {
-                    $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$post['post_id'])));
-                    $deleteLink->link = $moderatePostIcon;
-                    $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
-                    $return .= $deleteLink->show();
+        if ($this->showModeration) {
+            $deleteLink = new link ($this->uri(array('action'=>'moderatepost', 'id'=>$post['post_id'])));
+            $deleteLink->link = $moderatePostIcon;
+            $deleteLink->title = $this->objLanguage->languageText('mod_forum_moderatepost', 'forum');
+            $return .= $deleteLink->show();
+        }
+
+        // Check if the contractible layers should be implemented
+        if ($makeContractible) {
+            $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\''.$post['post_id'].'\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
+
+        }
+
+
+        if ($this->showFullName) {
+
+            // Start of the Title Area
+            $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+
+        } else {
+            // Start of the Title Area
+            $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['username'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+        }
+        // Ebd Title Area
+        $return .= '</div>'."\r\n";
+
+
+        // Start of the content area
+        $return .= '<div class="newForumContent" id="'.$post['post_id'].'" style="display:block">'."\r\n";
+        if ($post['post_tangent_parent'] != '0' && $post['level'] == 1) {
+            $tangentParent = $this->getPostWithText($post['post_tangent_parent']);
+
+            $return .= '<div class="forumTangentIndent">';
+
+            $link =& $this->getObject ('link', 'htmlelements');
+            $link->href = $this->uri(array('action'=>'thread', 'id'=>$tangentParent['topic_id'], 'type'=>$this->forumtype));
+            $link->link = stripslashes($tangentParent['post_title']);
+            $link->anchor = $tangentParent['post_id'];
+
+            $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum').' '.$link->show().' by '.$tangentParent['firstname'].' '.$tangentParent['surname'].'</strong><br /><br />';
+            $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
+            $return .= '</div>';
+        }
+        $return .= '<div id="loading_'.$post['post_id'].'"></div>';
+        $return .= '<div id="text_'.$post['post_id'].'">'.$this->objWashoutFilters->parseText(
+            $this->objScriptClear->removeScript( // Apply Script Removal Filters
+                stripslashes( // Remove Slashes
+                    $post['post_text']
+                ))).'</div><br clear="both" />';
+
+        // Check if the post has attachments
+        if ($post['attachment_id'] != NULL) {
+
+            $attachments = $this->objPostAttachments->getAttachments($post['post_id']);
+
+            // By Pass if attachment has been deleted.
+            if (count($attachments) != 0) {
+                $return .= '<br /><br /><br /><p><strong>'.$this->objLanguage->languageText('word_attachments').':</strong></p>';
+
+                $this->objFileIcons = $this->newObject('fileicons', 'files');
+
+                //$return .= '<ul>';
+
+                foreach ($attachments AS $attachment)
+                {
+                    $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
+                    $downloadlink->link = $attachment['filename'];
+                    //$downloadlink->target = '_blank';
+                    $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
                 }
 
-                // Check if the contractible layers should be implemented
-                if ($makeContractible) {
-                    $return .= '<img src="modules/forum/resources/contract.gif" align="right" onclick="expandcontent(\''.$post['post_id'].'\')"  style="cursor:hand; cursor:pointer; padding-right: 20px;" />';
+                //$return .= '</ul>';
+            }
 
-                }
+        }
 
+        // Check if allowed to show ratings
+        // $this->repliesAllowed is a boolean that takes into consideration many things
+        // Is the forum unlocked? Is the post unlocked
+        if ($this->showRatings && $this->repliesAllowed) {
+            // Start Ratings
+            $this->loadclass('dropdown', 'htmlelements');
+            $dropdown = new dropdown($post['post_id']);
 
-                if ($this->showFullName) {
+            if ($post['rating'] == NULL) {
+                $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_forum_selectarating', 'forum').'...');
+            }
 
-                    // Start of the Title Area
-                    $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['firstname'].' '.$post['surname'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
+            foreach ($this->forumRatingsArray as $rating)
+            {
+                $dropdown->addOption($rating['id'], $rating['rating_description']);
+            }
 
-                } else {
-                    // Start of the Title Area
-                    $return .= '<div class="forumTopicTitle"><strong>'.stripslashes($post['post_title']).'</strong><br />by '.$post['username'].' - '.$this->objDateTime->formatDateOnly($post['datelastupdated']).' at '.$this->objDateTime->formatTime($post['datelastupdated']).' ('.$this->objTranslatedDate->getDifference($post['datelastupdated']).') </div>';
-                }
-                // Ebd Title Area
-            $return .= '</div>'."\r\n";
+            if (isset($post['rating']) && $post['rating'] != NULL) {
+                $dropdown->setSelected($post['rating']);
+            }
 
+            $return .= '<div align="right">'.$dropdown->show().'</div>';
+            // End Ratings
+        }
 
-            // Start of the content area
-            $return .= '<div class="newForumContent" id="'.$post['post_id'].'" style="display:block">'."\r\n";
-                if ($post['post_tangent_parent'] != '0' && $post['level'] == 1) {
-                    $tangentParent = $this->getPostWithText($post['post_tangent_parent']);
+        //Check if replies allowed
+        if ($this->repliesAllowed) {
+            $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
+            $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
+            $return .= '<br />'.$link->show();
+        }
 
-                    $return .= '<div class="forumTangentIndent">';
+        // Check if user can edit post
+        if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost']) ) {
 
-                    $link =& $this->getObject ('link', 'htmlelements');
-                    $link->href = $this->uri(array('action'=>'thread', 'id'=>$tangentParent['topic_id'], 'type'=>$this->forumtype));
-                    $link->link = stripslashes($tangentParent['post_title']);
-                    $link->anchor = $tangentParent['post_id'];
+            // Check whether to start a paragraph or pipe
+            if ($this->repliesAllowed) {
+                $return .= ' | ';
+            } else {
+                $return .= '<p>';
+            }
 
-                    $return .= '<strong>'.$this->objLanguage->languageText('mod_forum_topicisatangentto', 'forum').' '.$link->show().' by '.$tangentParent['firstname'].' '.$tangentParent['surname'].'</strong><br /><br />';
-                    $return .= $this->objScriptClear->removeScript($tangentParent['post_text']);
-                    $return .= '</div>';
-                }
-                $return .= '<div id="loading_'.$post['post_id'].'"></div>';
-                $return .= '<div id="text_'.$post['post_id'].'">'.$this->objWashoutFilters->parseText(
-                                   $this->objScriptClear->removeScript( // Apply Script Removal Filters
-                                        stripslashes( // Remove Slashes
-                                            $post['post_text']
-                            ))).'</div><br clear="both" />';
+            $editlink = new link($this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
+            $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
 
-                // Check if the post has attachments
-                if ($post['attachment_id'] != NULL) {
-
-                    $attachments = $this->objPostAttachments->getAttachments($post['post_id']);
-
-                    // By Pass if attachment has been deleted.
-                    if (count($attachments) != 0) {
-                        $return .= '<br /><br /><br /><p><strong>'.$this->objLanguage->languageText('word_attachments').':</strong></p>';
-
-                        $this->objFileIcons = $this->newObject('fileicons', 'files');
-
-                        //$return .= '<ul>';
-
-                        foreach ($attachments AS $attachment)
-                        {
-                            $downloadlink = new link($this->uri(array('action'=>'downloadattachment', 'id'=>$attachment['id'], 'topic'=> $post['topic_id'], 'type'=>$this->forumtype)));
-                            $downloadlink->link = $attachment['filename'];
-                            //$downloadlink->target = '_blank';
-                            $return .= $this->objFileIcons->getFileIcon($attachment['filename']).' '.$downloadlink->show().'<br />';
-                        }
-
-                        //$return .= '</ul>';
-                    }
-
-                }
-
-                // Check if allowed to show ratings
-                // $this->repliesAllowed is a boolean that takes into consideration many things
-                // Is the forum unlocked? Is the post unlocked
-                if ($this->showRatings && $this->repliesAllowed) {
-                    // Start Ratings
-                    $this->loadclass('dropdown', 'htmlelements');
-                    $dropdown = new dropdown($post['post_id']);
-
-                    if ($post['rating'] == NULL) {
-                        $dropdown->addOption('n/a', $this->objLanguage->languageText('mod_forum_selectarating', 'forum').'...');
-                    }
-
-                    foreach ($this->forumRatingsArray as $rating)
-                    {
-                        $dropdown->addOption($rating['id'], $rating['rating_description']);
-                    }
-
-                    if (isset($post['rating']) && $post['rating'] != NULL) {
-                        $dropdown->setSelected($post['rating']);
-                    }
-
-                    $return .= '<div align="right">'.$dropdown->show().'</div>';
-                    // End Ratings
-                }
-
-                //Check if replies allowed
-                if ($this->repliesAllowed) {
-                    $link = new link($this->uri(array('action'=>'postreply', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
-                    $link->link = $this->objLanguage->languageText('mod_forum_postreply', 'forum');
-                    $return .= '<br />'.$link->show();
-                }
-
-                // Check if user can edit post
-                if ($this->editingPostsAllowed && $post['replypost'] == NULL && $this->checkOkToEdit($post['datelastupdated'], $post['userid'], $post['replypost']) ) {
-
-                    // Check whether to start a paragraph or pipe
-                    if ($this->repliesAllowed) {
-                        $return .= ' | ';
-                    } else {
-                        $return .= '<p>';
-                    }
-
-                    $editlink = new link($this->uri(array('action'=>'editpost', 'id'=>$post['post_id'], 'type'=>$this->forumtype)));
-                    $editlink->link = $this->objLanguage->languageText('mod_forum_editpost', 'forum');
-
-                    $return .= $editlink->show();
-                }
+            $return .= $editlink->show();
+        }
 
 
-                $return .= '<hr />';
+        $return .= '<hr />';
 
 
 
-                // Check if other languages exist
-                if (isset($post['anotherlanguage']) && $post['anotherlanguage'] != '') {
-                    $link = new link ('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$post['language'].'\');');
-                    $link-> link = $this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')';
+        // Check if other languages exist
+        if (isset($post['anotherlanguage']) && $post['anotherlanguage'] != '') {
+            $link = new link ('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$post['language'].'\');');
+            $link-> link = $this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')';
 
-                    $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$link->show().'</strong>. ';
+            $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$link->show().'</strong>. ';
 
-                    // Start text
-                    $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein', 'forum').' ';
+            // Start text
+            $return .= $this->objLanguage->languageText('mod_forum_alsoavailablein', 'forum').' ';
 
-                    // Get list of languages
-                    $languages = $this->objPostText->getPostLanguages($post['post_id'], $post['language']);
+            // Get list of languages
+            $languages = $this->objPostText->getPostLanguages($post['post_id'], $post['language']);
 
-                    $comma = '';
+            $comma = '';
 
-                    // Loop through the languages
-                    foreach ($languages as $language)
-                    {
-                        $link = new link('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$language['language'].'\');');
-                        //$link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
-                        $link->link = $this->objLanguageCode->getLanguage($language['language']).' ('.strtoupper($language['language']).')';
+            // Loop through the languages
+            foreach ($languages as $language)
+            {
+                $link = new link('javascript:loadTranslation(\''.$post['post_id'].'\', \''.$language['language'].'\');');
+                //$link->href = $this->uri(array('action'=>'viewtranslation', 'id'=>$language['id'], 'type'=>$this->forumtype));
+                $link->link = $this->objLanguageCode->getLanguage($language['language']).' ('.strtoupper($language['language']).')';
 
-                        $return .= $comma.$link->show();
-                        $comma = ', ';
-                    }
+                $return .= $comma.$link->show();
+                $comma = ', ';
+            }
 
-                    // Add a full stop for courtesy
-                    $return .= '. ';
+            // Add a full stop for courtesy
+            $return .= '. ';
 
-                } else {
-                    $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
-                }
+        } else {
+            $return .= $this->objLanguage->languageText('mod_forum_postmadein', 'forum').' <strong>'.$this->objLanguageCode->getLanguage($post['language']).' ('.strtoupper($post['language']).')</strong>. ';
+        }
 
-                if ($this->forumLocked == FALSE) {
-                    $translateLink =& $this->getObject ('link', 'htmlelements');
-                    $translateLink->href=$this->uri(array('action'=>'translate', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
-                    $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost', 'forum');
+        if ($this->forumLocked == FALSE) {
+            $translateLink =& $this->getObject ('link', 'htmlelements');
+            $translateLink->href=$this->uri(array('action'=>'translate', 'id'=>$post['post_id'], 'type'=>$this->forumtype));
+            $translateLink->link = $this->objLanguage->languageText('mod_forum_translatepost', 'forum');
 
-                    //$return .= $translateLink->show();
-                }
+            //$return .= $translateLink->show();
+        }
 
 
-            $return .= '</div>'."\r\n";// End newForumContent
+        $return .= '</div>'."\r\n";// End newForumContent
         $return .= '</div>'."\r\n"; // End newForumContainer
 
         // Start of the contractible area for children of the posts
@@ -1024,22 +1024,22 @@ class dbPost extends dbTable
 
             $addTable->startRow();
 
-                $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
-                $addTable->addCell($languageLabel->show(), 100);
+            $languageLabel = new label($this->objLanguage->languageText('word_language', 'system').':', 'input_language');
+            $addTable->addCell($languageLabel->show(), 100);
 
-                $languageList = new dropdown('language');
-                $languageCodes = & $this->getObject('languagecode','language');
+            $languageList = new dropdown('language');
+            $languageCodes = & $this->getObject('languagecode','language');
 
-                // Sort Associative Array by Language, not ISO Code
-                asort($languageCodes->iso_639_2_tags->codes);
+            // Sort Associative Array by Language, not ISO Code
+            asort($languageCodes->iso_639_2_tags->codes);
 
-                foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
-                    $languageList->addOption($key, $value);
-                }
+            foreach ($languageCodes->iso_639_2_tags->codes as $key => $value) {
+                $languageList->addOption($key, $value);
+            }
 
-                $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
+            $languageList->setSelected($languageCodes->getISO($this->objLanguage->currentLanguage()));
 
-                $addTable->addCell($languageList->show());
+            $addTable->addCell($languageList->show());
 
             $addTable->endRow();
 
@@ -1085,14 +1085,42 @@ class dbPost extends dbTable
                 $addTable->addCell($attachmentIframe->show());
 */
 
-               $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
-               $addTable->addCell($attachmentsLabel->show(), 120);
+                $attachmentsLabel = new label($this->objLanguage->languageText('mod_forum_attachments', 'forum').':', 'attachments');
+                $addTable->addCell($attachmentsLabel->show(), 120);
 
                 $form = new form('saveattachment', $this->uri(array('action'=>'saveattachment')));
 
                 $objSelectFile = $this->newObject('selectfile', 'filemanager');
                 $objSelectFile->name = 'attachment';
                 $form->addToForm($objSelectFile->show());
+
+
+                $hiddenTypeInput = new textinput('discussionType');
+                $hiddenTypeInput->fldType = 'hidden';
+                $hiddenTypeInput->value = $post['type_id'];
+                $form->addToForm($hiddenTypeInput->show());
+
+
+                $hiddenTangentInput = new textinput('parent');
+                $hiddenTangentInput->fldType = 'hidden';
+                $hiddenTangentInput->value = $post['post_id'];
+                $form->addToForm($hiddenTangentInput->show());
+
+                $topicHiddenInput = new textinput('topic');
+                $topicHiddenInput->fldType = 'hidden';
+                $topicHiddenInput->value = $post['topic_id'];
+                $form->addToForm($topicHiddenInput->show());
+
+                $hiddenForumInput = new textinput('forum');
+                $hiddenForumInput->fldType = 'hidden';
+                $hiddenForumInput->value = $forum['id'];
+                $form->addToForm($hiddenForumInput->show());
+
+                $hiddenTemporaryId = new textinput('temporaryId');
+                $hiddenTemporaryId->fldType = 'hidden';
+                $hiddenTemporaryId->value = $temporaryId;
+                $form->addToForm($hiddenTemporaryId->show());
+
                 $addTable->addCell($form->show());
                 $addTable->endRow();
             }
@@ -1144,7 +1172,8 @@ class dbPost extends dbTable
             $addTable->addCell(' ');
 
             $submitButton = new button('submitbutton', $this->objLanguage->languageText('word_submit'));
-            $submitButton->setToSubmit();
+            $submitButton->extra = ' onclick="SubmitForm()"';
+            //$submitButton->setToSubmit();
 
 
             if ($showCancel) {
@@ -1154,6 +1183,8 @@ class dbPost extends dbTable
 
                 $addTable->addCell($submitButton->show().' / '.$cancelButton->show());
             } else {
+                
+
                 $addTable->addCell($submitButton->show());
             }
 
@@ -1161,32 +1192,10 @@ class dbPost extends dbTable
 
             $postReplyForm->addToForm($addTable);
 
-            $hiddenTypeInput = new textinput('discussionType');
-            $hiddenTypeInput->fldType = 'hidden';
-            $hiddenTypeInput->value = $post['type_id'];
-            $postReplyForm->addToForm($hiddenTypeInput->show());
 
-
-            $hiddenTangentInput = new textinput('parent');
-            $hiddenTangentInput->fldType = 'hidden';
-            $hiddenTangentInput->value = $post['post_id'];
-            $postReplyForm->addToForm($hiddenTangentInput->show());
-
-            $topicHiddenInput = new textinput('topic');
-            $topicHiddenInput->fldType = 'hidden';
-            $topicHiddenInput->value = $post['topic_id'];
-            $postReplyForm->addToForm($topicHiddenInput->show());
-
-            $hiddenForumInput = new textinput('forum');
-            $hiddenForumInput->fldType = 'hidden';
-            $hiddenForumInput->value = $forum['id'];
-            $postReplyForm->addToForm($hiddenForumInput->show());
-
-            $hiddenTemporaryId = new textinput('temporaryId');
-            $hiddenTemporaryId->fldType = 'hidden';
-            $hiddenTemporaryId->value = $temporaryId;
-            $postReplyForm->addToForm($hiddenTemporaryId->show());
-
+            // IE is not getting values from hidden textinputs...hence we pass them via session vars
+            $this->setSession('temporaryId',$temporaryId);
+          
             return $this->showTangentJavaScript($defaultTitle).$postReplyForm->show();
         }
     }
@@ -1435,8 +1444,8 @@ function clearForTangent()
 
         $this->update('id', $parent, array('lft'=>$left, 'rght'=>$right, 'level'=>$level));
 
-       // return the right value of this node + 1
-       return $right+1;
+        // return the right value of this node + 1
+        return $right+1;
     }
 
     /**
@@ -1585,9 +1594,9 @@ function loadTranslation(post, lang) {
         //echo $post_parent;
 
         if ($post_parent == '0') {
-           // $lastRightPointer = $this->getLastRightPointer($forum_id);
-          //  $leftPointer = $lastRightPointer+1;
-          //  $rightPointer = $lastRightPointer+2;
+            // $lastRightPointer = $this->getLastRightPointer($forum_id);
+            //  $leftPointer = $lastRightPointer+1;
+            //  $rightPointer = $lastRightPointer+2;
             $level = 1;
         } else {
           /*  $lastRightPointer = $this->getPostRightPointer($post_parent);
@@ -1611,7 +1620,7 @@ function loadTranslation(post, lang) {
             'rght'                => null,
             'level'                => $level,
             'datelastupdated' => strftime('%Y-%m-%d %H:%M:%S', mktime())
-        ));
+            ));
 
         return $this->getLastInsertId();
     }
@@ -1621,4 +1630,4 @@ function loadTranslation(post, lang) {
 
 
 
- ?>
+?>

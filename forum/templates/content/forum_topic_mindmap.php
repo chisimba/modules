@@ -1,7 +1,19 @@
 <?php
 //Sending display to 1 column layout
 ob_start();
+?>
 
+<script type="text/javascript">
+    //<![CDATA[
+
+    function SubmitForm()
+    {
+        document.forms["postReplyForm"].submit();
+    }
+
+    //]]>
+</script>
+<?
 /**
 * This template displays a topic in a freemind view format
 */
