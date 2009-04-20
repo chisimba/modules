@@ -47,7 +47,7 @@ $fields = array(
         'notnull' => TRUE,
         'default' => 'g'
         ),
-    'show_mail' => array(
+    'show_email' => array(
         'type' => 'text',
         'length' => 1,
         'notnull' => TRUE,
