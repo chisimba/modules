@@ -268,7 +268,7 @@ class blog extends controller
      */
     protected $objUserParams;
 
-    public function init() 
+    public function init()
     {
         try {
             //grab the blogimporter class, just in case we need it.
@@ -344,7 +344,7 @@ class blog extends controller
      * @param  string $action String indicating action to be taken
      * @return string template
      */
-    public function dispatch($action = Null) 
+    public function dispatch($action = Null)
     {
         switch ($action) {
             default:
@@ -382,23 +382,23 @@ class blog extends controller
                     $this->setVarByRef('posts', $posts);
                     $this->setVarByRef('linkcats', $linkcats);
                     $this->setVarByRef('cats', $catarr);
-                    
+
                     //return the template!
                     // $this->setVar('pageSuppressXML', TRUE);
                     return 'randblog_tpl.php';
                     break;
                 }
-                
+
                 // the blog aggregator case:
                 if (!empty($blog_action) && $blog_action == 'aggregate') {
-                    
+
                     // get the latest posts and display em...
                     $this->objLanguage = $this->getObject('language', 'language');
                     $this->blogPosts = $this->getObject('blogposts', 'blog');
                     $posts = $this->blogPosts->showLastTenPosts();
                     // var_dump($posts);
                     $this->setVarByRef('posts', $posts);
-                    
+
                     // dummy vals so tpl doesn't complain
                     $this->setVarByRef('stickypost', NULL);
                     //send all that to the template
@@ -409,7 +409,7 @@ class blog extends controller
                     return 'randblog_tpl.php';
                     break;
                 }
-               
+
                 //check if the user is logged in
                 if ($this->objUser->isLoggedIn() == TRUE) {
                     //get the action
@@ -474,7 +474,7 @@ class blog extends controller
                 return 'randblog_tpl.php';
                 break;
                 // The siteblog function added by Irshaad Hoosain
-                
+
             case 'siteblog':
                 //get the category ID if any
                 $catid = $this->getParam('catid');
@@ -484,7 +484,7 @@ class blog extends controller
                     //fix the user id just in case
                     if ($this->objUser->isLoggedIn() == TRUE) {
                         $userid = 1; //$this->objUser->userId();
-                        
+
                     } else {
                         $this->nextAction('');
                         exit;
@@ -619,7 +619,7 @@ class blog extends controller
                         exit;
                     }
                     //}
-                    
+
                 }
                 break;
 
@@ -710,7 +710,7 @@ class blog extends controller
                 //who's blog is this?
                 if (isset($bloggerprofile['blog_name'])) {
                     $fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
-                    
+
                 } else {
                     $fullname = htmlentities($this->objUser->fullname($userid));
                 }
@@ -719,7 +719,7 @@ class blog extends controller
                 //description
                 if (isset($bloggerprofile['blog_descrip'])) {
                     $feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
-                    
+
                 } else {
                     $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
                 }
@@ -743,7 +743,7 @@ class blog extends controller
                         'userid' => $userid
                     )); //todo - add this to the posts table!
                     //description
-                    $itemDescription = $feeditems['post_content'];
+                    $itemDescription = stripslashes($feeditems['post_content']);
                     //where are we getting this from
                     $itemSource = $this->objConfig->getSiteRoot() . "index.php?module=blog&userid=" . $userid;
                     //feed author
@@ -813,7 +813,7 @@ class blog extends controller
                 //who's blog is this?
                 if (isset($bloggerprofile['blog_name'])) {
                     $fullname = htmlentities($bloggerprofile['blog_name']); //$this->getParam('blog_name');
-                    
+
                 } else {
                     $fullname = htmlentities($this->objUser->fullname($userid));
                 }
@@ -822,7 +822,7 @@ class blog extends controller
                 //description
                 if (isset($bloggerprofile['blog_descrip'])) {
                     $feedDescription = htmlentities($bloggerprofile['blog_descrip']); //$this->getParam('blog_name');
-                    
+
                 } else {
                     $feedDescription = htmlentities($this->objLanguage->languageText("mod_blog_blogof", "blog")) . " " . $fullname;
                 }
@@ -972,7 +972,7 @@ class blog extends controller
                         $posts = $this->objDbBlog->getLastPosts(10, $userid);
                     }
                     //$posts = $this->objDbBlog->getAllPosts($userid, 0);//getAbsAllPostsNoDrafts($userid);
-                    
+
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $this->setVarByRef('latestpost', $latestpost);
@@ -1016,7 +1016,7 @@ class blog extends controller
                 } else {
                     //otherwise grab all the Published posts
                     $posts = $this->objDbBlog->getAllPosts($userid, 0); //getAbsAllPostsNoDrafts($userid);
-                    
+
                 }
                 $latestpost[0] = $this->objDbBlog->getLatestPost($userid);
                 $this->setVarByRef('latestpost', $latestpost);
@@ -1066,7 +1066,7 @@ class blog extends controller
                 $mode = $this->getParam('mode');
                 switch ($mode) {
                         //return a specific template for the chosen mode
-                        
+
                     case 'writepost':
                         return 'writepost_tpl.php';
                         break;
@@ -1092,7 +1092,7 @@ class blog extends controller
                 // return the default template for no mode set
                 return 'blogadminmenu_tpl.php';
                 break;
-            
+
             case 'adminpg':
                 $this->objblogPosts->managePosts($this->objUser->userId());
 
@@ -1134,8 +1134,8 @@ class blog extends controller
                         break;
                     }
                     $this->objblogCategories->quickCatAdd($list, $userid);
-                    $this->nextAction(''); 
-                    
+                    $this->nextAction('');
+
                     break;
                 }
                 if ($mode == 'edit') {
@@ -1356,7 +1356,7 @@ class blog extends controller
                     exit;
                 }
                 $id = $this->getParam('id');
-                
+
                 // Changes by Tohir
                 // Allow admin to delete
                 // check user is deleting own post
@@ -1368,7 +1368,7 @@ class blog extends controller
                     if ($post['userid'] == $this->objUser->userId() || $this->objUser->isAdmin()) {
                         $this->objDbBlog->deletePost($id);
                         if ($nextAction = $this->getParam('nextAction')) {
-                            return $this->nextAction($nextAction);   
+                            return $this->nextAction($nextAction);
                         }
                         return $this->nextAction('blogadmin', array(
                                     'mode' => 'editpost'
@@ -1377,8 +1377,8 @@ class blog extends controller
                         return $this->nextAction(NULL);
                     }
                 }
-                
-                
+
+
                 break;
 
             case 'postedit':
@@ -2156,7 +2156,7 @@ class blog extends controller
                 $this->objDbBlog->deletePage($pageid);
                 $this->nextAction('setpage');
                 break;
-                
+
             case 'viewgeoblog':
                 $userid = $this->getParam('userid');
                 $this->setVarByRef('userid', $userid);
@@ -2180,7 +2180,7 @@ class blog extends controller
                 $objApi = $this->getObject('blogxmlrpc');
                 $objApi->serve();
                 break;
-            
+
             case 'updatesearch':
                 $this->objDbBlog->updateSearch();
                 return $this->nextAction('allblogs');
@@ -2194,9 +2194,9 @@ class blog extends controller
                     'userid' => $this->objUser->userId()
                 ));
                 //echo $id; die();
-                
+
             } //action
-            
+
         }
         /**
          * Overide the login object in the parent class
@@ -2205,7 +2205,7 @@ class blog extends controller
          * @return bool
          * @access public
          */
-        public function requiresLogin($action) 
+        public function requiresLogin($action)
         {
             $actionsRequiringLogin = array(
                 'blogadmin', 'viewblog'
