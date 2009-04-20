@@ -147,9 +147,9 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
-$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'required');
+$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'numeric');
 $form->addRule('antiemitictype', $this->objLanguage->languageText('mod_ahis_antiemiticerror','ahis'),'required');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'letteronly');
 
 //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');

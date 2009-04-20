@@ -160,6 +160,8 @@ $formTable->endRow();
 // animal destination	
 $label = new label ('Animal destination: ', 'destination');
 $destination = new textinput('destination');
+//$destination->label = 'Must contain only letters of the alphabet.';
+//$form->addRule('destination','Animal destination must contain letters of the alphabet only.', 'letteronly');
 //$destination->size = 40;
 
 $formTable->startRow();
@@ -188,9 +190,10 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
-$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'required');
-$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
-$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
+//$form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'select');
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'letteronly');
+$form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'letteronly');
+//$form->addRule('destination','Animal destination must contain letters of the alphabet only.', 'letteronly');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
 
 //container-table

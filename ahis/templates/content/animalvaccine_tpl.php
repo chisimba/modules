@@ -134,13 +134,13 @@ $formTable->addCell($doses_end->show(),NULL,NULL,'left');
 //$formTable->addCell($datePickerOne->show(),NULL,NULL,'left');
 $formTable->endRow();
 
-$datePicker = $this->newObject('datepicker', 'htmlelements');
-$datePicker->name = 'endmonth';
-$label_end = new label('Month end date: ','startmonth');
+$datePickerOne = $this->newObject('datepicker', 'htmlelements');
+$datePickerOne->name = 'endmonth';
+$label_end = new label('Month end date: ','endmonth');
 
 $formTable->startRow();
 $formTable->addCell($label_end->show(),NULL,NULL,'right');
-$formTable->addCell($datePicker->show(),NULL,NULL,'left');
+$formTable->addCell($datePickerOne->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 $label_received = new label ('Total doses received in month: ', 'dosesreceived');
@@ -174,14 +174,14 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('vaccinename', $this->objLanguage->languageText('mod_ahis_vaccinenameerror','ahis'),'required');
-$form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'required');
-$form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'required');
-//$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startmontherror','ahis'),'required');
-$form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'required');
-//$form->addRule('endmonth', $this->objLanguage->languageText('mod_ahis_endmontherror','ahis'),'required');
-$form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'required');
-$form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'required');
-$form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'required');
+$form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'numeric');
+$form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'numeric');
+//$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startmontherror','ahis'),'datenotfuture');
+$form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'numeric');
+//$form->addRule('endmonth', $this->objLanguage->languageText('mod_ahis_endmontherror','ahis'),'datenotfuture');
+$form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'numeric');
+$form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'numeric');
+$form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'numeric');
 
 //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');

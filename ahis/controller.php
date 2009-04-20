@@ -2229,12 +2229,12 @@ class ahis extends controller {
 		$doses_start = $this->getParam('dosesstartofmonth');
 		$datePicker = $this->getParam('startmonth');
 		$doses_end = $this->getParam('dosesendofmonth');
-		$datePicker = $this->getParam('endmonth');
+		$datePickerOne = $this->getParam('endmonth');
 		$doses_received = $this->getParam('dosesreceived');
 		$doses_used = $this->getParam('dosesused');
 		$doses_wasted= $this->getParam('doseswasted');
 		
-		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePicker,$doses_received,$doses_used,$doses_wasted);  
+		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted);  
 							
 		return $this->nextAction('');
 	}
