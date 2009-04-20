@@ -369,7 +369,7 @@ class report extends object {
 				}
 				return $csv;
 				
-		case 'init_09': 
+		case 'init_10': 
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Vaccine Name','Total Doses in hand','Doses at start of Month','Start of Month date','Doses at end of Month','End of Month Date','Doses Received During the Month','Doses Used', 'Doses Wasted');
 				
@@ -384,7 +384,7 @@ class report extends object {
 				}
 				return $csv;
 				
-		 case 'init_10': 
+		 case 'init_09': 
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Type of Antiemetic','Remarks');
 				

@@ -244,6 +244,11 @@ class ahis extends controller {
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
+					case "init_09":
+                        return $this->nextAction('deworming_add');
+                    case "init_10":
+                        return $this->nextAction('vaccine_add');
+						
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
