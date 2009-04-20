@@ -245,9 +245,9 @@ class ahis extends controller {
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
 					case "init_09":
-                        return $this->nextAction('deworming_add');
+                        return $this->nextAction('animaldeworming_add');
                     case "init_10":
-                        return $this->nextAction('vaccine_add');
+                        return $this->nextAction('animalvaccine_add');
 						
 					case "init_05":
 					default:
@@ -1917,8 +1917,6 @@ class ahis extends controller {
 				
 			case 'vaccine_inventory_save':
 				return $this->saveVaccineInventoryData();
-			case 'deworming_add':
-				return 'deworming_tpl.php';
 			case 'deworming_save':
 				return $this->saveDewormingData();
 				
