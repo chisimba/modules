@@ -135,14 +135,10 @@ class ahis extends controller {
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
 			
 			$this->objDeworming = $this->getObject('deworming');
-			$this->objVaccineInventory=$this->getObject('vaccineinventory');
 		
 			$this->objAnimalmovement = $this->getObject('animalmovement');
 			$this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
-			
-			$this->objAnimaldeworming = $this->getObject('animaldeworming');
-			$this->objAnimalvaccine = $this->getObject('animalvaccine');
 
 
 
@@ -174,7 +170,7 @@ class ahis extends controller {
                                         'sample_delete','species_add','species_insert','species_delete','survey_add',
                                         'survey_insert','survey_delete','farmingsystem_add','farmingsystem_insert',
                                         'farmingsystem_delete','vaccinationhistory_add','vaccinationhistory_insert',
-                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add','deworming_add','animalvaccine_add','deworming_save','vaccine_inventory_add','vaccine_inventory_save','animaldeworming_add'
+                                        'vaccinationhistory_delete','animal_population_add','animal_population_save','addinspectiondata','saveinspectiondata','animal_slaughter_add','animal_slaughter_save', 'animalmovement_add', 'livestockimport_add', 'livestockexport_add'
                                         );
         }
         catch(customException $e) {
@@ -248,15 +244,6 @@ class ahis extends controller {
 						return $this->nextAction('livestockimport_add');
 					case "init_08":
 						return $this->nextAction('livestockexport_add');
-					//case "init_09":
-						//return $this->nextAction('deworming_add');
-					case "init_09":
-						return $this->nextAction('animalvaccine_add');
-					case "init_10":
-						return $this->nextAction('animaldeworming_add');
-					//case "init_10":
-						//return $this->nextAction('vaccine_add');
-						
 					case "init_05":
 					default:
                         return $this->nextAction('active_surveillance');
@@ -468,7 +455,7 @@ class ahis extends controller {
                         //csv
                         $csv = $this->objViewReport->generateCSV($year, $month, $reportType);
                         header("Content-Type: application/csv"); 
-                       //header("Content-length: " . sizeof($csv)); 
+                        header("Content-length: " . sizeof($csv)); 
                         header("Content-Disposition: attachment; filename=$fileName.csv"); 
                         echo $csv;
                         break;
@@ -494,8 +481,8 @@ class ahis extends controller {
                 
             case 'active_surveillance':
                $this->setVar('campName', $this->getSession('ps_campName'));
-
-
+               //$officerId = $this->getParam('officerId', $this->getSession('ps_officerId'));
+               //$this->setSession('ps_officerName',$this->objUser->fullName($officerId));
                $this->setVar('userList', $this->objAhisUser->getList());
                $this->setVar('officerId', $this->getSession('ps_officerId'));
                $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
@@ -520,10 +507,10 @@ class ahis extends controller {
 	            $this->setSession('ps_surveyTypeId',$surveyTypeId);
 	            $this->setSession('ps_comments',$comments);
 	            
+	            //$data =$this->objActive->getcamp($this->getSession('ps_campName'));
+               //$this->setSession('ps_qualityId', $qualityId);
 
-
-
-
+               //$this->setVar('activeid',$data[0]['id']);
                $this->setVar('arraydisease', $this->objDisease->getAll("ORDER BY NAME"));
                $this->setVar('arraytest', $this->objTest->getAll("ORDER BY NAME"));
                $this->setVar('campName', $this->getSession('ps_campName'));
@@ -604,16 +591,9 @@ class ahis extends controller {
             case 'newherd_insert':
 
                 $id = $this->getParam('id');
-                $this->getParam('activeid');
                 $this->setSession('ps_activeid',$this->getParam('activeid'));
                 $this->setSession('ps_farm',$this->getParam('farm'));
                 $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
-
-                $id = $this->getParam('id');
-                $this->setSession('ps_activeid',$this->getParam('activeid'));
-                $this->setSession('ps_farm',$this->getParam('farm'));
-                $this->setSession('ps_farmingsystem',$this->getParam('farmingsystem'));
-
                 
                 $arrayherd = array();
                 $arrayherd['territory'] = $this->getParam('territory');
@@ -659,13 +639,15 @@ class ahis extends controller {
                
             case 'active_addsample':
             
-               $newherdid =$this->objNewherd->getherd($this->getSession('ps_activeid'));
+               $newherdid = $this->objNewherd->getherd($this->getSession('ps_activeid'));
                $this->setSession('ps_newherdid',$newherdid[0]['id']);
                $this->setSession('ps_newherd',$newherdid);
                $this->setVar('id',$this->getParam('id'));
                $this->setVar('farm',$this->getSession('ps_farm'));
                $this->setVar('farmingsystem',$this->getSession('ps_farmingsystem'));
                $this->setVar('campName', $this->getSession('ps_campName'));
+               $this->setVar('newherdid',$this->getSession('ps_newherdid') );
+               $this->setVar('herd',$herd[0]['id']);
                $this->setVar('newherd',$this->getSession('ps_newherd'));
                $this->setVar('arraySpecies',$this->objSpecies->getAll("ORDER BY NAME"));
                $this->setVar('arrayAge',$this->objAge->getAll("ORDER BY NAME"));
