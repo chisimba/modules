@@ -209,6 +209,42 @@ class dbtuts extends dbtable {
         }
         
     }
+    
+    /**
+     * Method to export the tut marks to csv
+     *
+     * @access public
+     * @return string csv string of results
+     */
+    public function export() {
+        $sql = "SELECT DISTINCT studentno FROM tbl_stats_tuts";
+        $students = $this->getArray($sql);
+        $data = "Student Number, Name";
+        for ($i=1;$i<17;$i++) {
+            $data .= ", Tutorial $i";
+        }
+        $data .= "\n";
+        foreach ($students as $student) {
+            $userId = $this->objUser->getUserId($student['studentno']);
+            $line = $student['studentno'].", ".$this->objUser->fullName($userId);
+            
+            for ($i=1;$i<17;$i++) {
+                $mark = $this->getArray("SELECT MAX(mark) AS max_mark, time
+                                        FROM tbl_stats_tuts
+                                        WHERE studentno = '{$student['studentno']}'
+                                        AND testno = '$i'
+                                        GROUP BY studentno");
+                if (isset($mark[0])) {
+                    $line .= ", {$mark[0]['max_mark']}";
+                } else {
+                    $line .= ", --";
+                }
+            }
+            $data .= "$line\n";
+        }
+        
+        return $data;
+    }
 }
 
 ?>

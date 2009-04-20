@@ -101,7 +101,8 @@ class dbpostquestionnaire extends dbtable {
         $data .= "\n";
         
         foreach ($all as $one) {
-            $line = $this->objUser->fullName($one['studentno']);
+            $userId = $this->objUser->getUserId($one['studentno']);
+            $line = $this->objUser->fullName($userId);
             foreach ($one as $key => $field) {
                 if ($key != 'id' && $key != 'puid') {
                     $line .= ",".$field;

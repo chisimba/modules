@@ -287,14 +287,21 @@ class stats extends controller {
             if (!$this->objUser->isLecturer()) {
                 return $this->nextAction('home');
             }
+            $type = $this->getParam('type');
             $this->setLayoutTemplate(null);
             $this->setPageTemplate(null);
-		    if ($this->getParam('type') == '1') {
-                $data = $this->objQuestionnaire->export();
-                $name = "pre_questionnaires.csv";
-            } else {
-                $data = $this->objPostQuestionnaire->export();
-                $name = "post_questionnaires.csv";
+		    switch ($type) {
+                case '1':
+                    $data = $this->objQuestionnaire->export();
+                    $name = "pre_questionnaires.csv";
+                    break;
+                case '2':
+                    $data = $this->objPostQuestionnaire->export();
+                    $name = "post_questionnaires.csv";
+                    break;
+                default:
+                    $data = $this->objTuts->export();
+                    $name = "tut_results.csv";
             }
             $this->setVar('fileName', $name);
             $this->setVar('data', $data);

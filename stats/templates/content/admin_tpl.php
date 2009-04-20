@@ -62,9 +62,12 @@ $leftContent = $listHead->show().$objTable->show();
 $listHead->str = $this->objLanguage->languageText("mod_stats_adminfunc",'stats');
 $listHead->type = 4;
 
+$link->link($this->uri(array('action'=>'download', 'type' => '3')));
+$link->link = $this->objLanguage->languageText("mod_stats_exportmarks","stats");
+$list = "<ul><li>".$link->show();
 $link->link($this->uri(array('action'=>'download', 'type' => '1')));
 $link->link = $this->objLanguage->languageText("mod_stats_downloadpreq","stats");
-$list = "<ul><li>".$link->show();
+$list .= "</li><li>".$link->show();
 $link->link($this->uri(array('action'=>'download', 'type' => '2')));
 $link->link = $this->objLanguage->languageText("mod_stats_downloadpostq","stats");
 $list .= "</li><li>".$link->show();
