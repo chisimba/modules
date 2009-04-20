@@ -189,8 +189,24 @@
                 //Loading CMSAdmin Common Styles
                 $this->appendArrayVar('headerParams', '<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common.css'.'">'));
 
+                //Loading CMSAdmin Common Styles IE <6 Fixes
+				$loadie6 = '
+				<!--[if lte IE 6]>
+					<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common_ie6.css').'">
+				<![endif]-->
+				';
+                $this->appendArrayVar('headerParams', $loadie6);
+
+                //Loading CMSAdmin Common Styles IE 7> Fixes
+				$loadie7 = '
+				<!--[if gte IE 7]>
+					<link rel="stylesheet" type="text/css" href="'.$this->getResourceUri('_common_ie7.css').'">
+				<![endif]-->
+				';
+                $this->appendArrayVar('headerParams', $loadie7);
+				
                 //jQuery pngFix behaves wierdly in ies4linux but works on windows machines
-                //$this->_objJQuery->loadPngFixPlugin();
+                $this->_objJQuery->loadPngFixPlugin();
 
             } catch (customException $e){
                 throw customException($e->getMessage());
