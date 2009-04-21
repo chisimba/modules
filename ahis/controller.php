@@ -134,14 +134,13 @@ class ahis extends controller {
 			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
 			
-			$this->objDeworming = $this->getObject('deworming');
-		
 			$this->objAnimalmovement = $this->getObject('animalmovement');
 			$this->objLivestockimport = $this->getObject('livestockimport');
 			$this->objLivestockexport = $this->getObject('livestockexport');
 
 
-
+			$this->objAnimaldeworming = $this->getObject('animaldeworming');
+            $this->objAnimalvaccine = $this->getObject('animalvaccine');
 
                        
             $this->adminActions = array('admin', 'employee_admin', 'geography_level3_admin',

@@ -101,7 +101,7 @@ $objTable->endRow();
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'view_reports')));
 $objForm->addToForm($objTable->show());
-$objForm->addRule($field, $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
+$objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
 
 if ($enter) {
     $report = $this->objViewReport->generateReport($year, $month, $reportType);

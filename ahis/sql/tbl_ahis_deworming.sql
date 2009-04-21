@@ -20,24 +20,22 @@ $fields = array(
     ),
 	'classification' => array(
 		'type' => 'text',
-		'length' => 255,
+		'length' => 32,
 		'notnull' => 1
     ),
 	'numberofanimals' => array(
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 1
+		'type' => 'integer',
+		'length' => 11,
+		'notnull' => 1,
+        'default' => 0
     ),
 	'antiemitictype' => array(
 		'type' => 'text',
-		'length' => 255,
+		'length' => 32,
 		'notnull' => 1
     ),
-	
 	'remarks' => array(
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 1
+		'type' => 'clob'
     )
 );
 

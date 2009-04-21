@@ -87,7 +87,7 @@ class report extends object {
 			$this->objLivestockexport = $this->getObject('livestockexport');
 			$this->objActive = $this->getObject('active');
 			$this->objVaccineInventory=$this->getObject('vaccineinventory');
-			$this->objDeworming=$this->getObject('deworming');
+			$this->objAnimalDeworming=$this->getObject('animaldeworming');
 		}
 		catch (customException $e)
 		{
@@ -388,7 +388,7 @@ class report extends object {
 				
 				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Type of Antiemetic','Remarks');
 				
-				$dewormingRecords = $this->objDeworming->getALL();
+				$dewormingRecords = $this->objAnimalDeworming->getAll();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($dewormingRecords as $report) {
