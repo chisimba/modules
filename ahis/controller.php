@@ -213,6 +213,7 @@ class ahis extends controller {
 				return $this->nextAction('select_officer');
 				
         	case 'select_officer':
+				$this->setVar('feedback', $this->getParam('feedback'));
                 $this->setVar('userList', $this->objAhisUser->getList());
                 $this->setVar('officerId', $this->getSession('ps_officerId', $this->objUser->userId()));
                 $this->setVar('geo2Id', $this->getSession('ps_geo2Id', $this->objAhisUser->getGeo2Id()));
@@ -2200,7 +2201,7 @@ class ahis extends controller {
 		
 		$data = $this->objAnimaldeworming->addAnimalDewormingData($district,$classification,$numberofanimals,$antiemitictype,$remarks);  
 							
-		return $this->nextAction('');
+		return $this->nextAction('select_officer', array('feedback'=>'1'));
 	}
 	
 	
@@ -2220,7 +2221,7 @@ class ahis extends controller {
 		
 		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted);  
 							
-		return $this->nextAction('');
+		return $this->nextAction('select_officer', array('feedback'=>'1'));
 	}
     /**
      * Method to determine whether the user needs to be logged in

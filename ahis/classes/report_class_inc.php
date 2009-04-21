@@ -79,8 +79,8 @@ class report extends object {
             $this->objSpecies = $this->getObject('species');
             $this->objDisease = $this->getObject('disease');
 			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
-			 $this->objMeatInspect = $this->getObject('db_meat_inspection');
-			 $this->objSlaughter= $this->getObject('ahis_slaughter');
+			$this->objMeatInspect = $this->getObject('db_meat_inspection');
+			$this->objSlaughter= $this->getObject('ahis_slaughter');
             //$this->objCausative = $this->getObject('causative');
 			$this->objAnimalmovement = $this->getObject('animalmovement');
             $this->objLivestockimport = $this->getObject('livestockimport');

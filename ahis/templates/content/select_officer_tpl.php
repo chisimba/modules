@@ -47,6 +47,13 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 
+if (isset($feedback)) {
+    $timeout = $this->getObject('timeoutmessage', 'htmlelements');
+    $timeout->setMessage($this->objLanguage->languageText('mod_ahis_added', 'ahis'));
+    $msg = $timeout->show();
+} else {
+    $msg = '';
+}
 
 $inputOfficer = new dropdown('officerId');
 $inputOfficer->addFromDB($userList, 'name', 'userid');
@@ -115,7 +122,7 @@ $objForm->addToForm($objTable->show());
 $objForm->addRule('calendardate', $this->objLanguage->languageText('mod_ahis_valdatereport', 'ahis'), 'datenotfuture');
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());
+$objLayer->addToStr($objHeading->show()."<hr class='ahis' />$msg".$objForm->show());
 $objLayer->align = 'center';
 
 echo $objLayer->show();
