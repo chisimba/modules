@@ -5806,6 +5806,9 @@ $this->appendArrayVar('headerParams', $script);
                 //$ftable = $ftable->show();
             }
 
+            if (!isset($objBlocksLinkDisplay)) {
+                $objBlocksLinkDisplay = '';
+            }   
 
             $tbl->cellpadding = 3;
             $tbl->align = "left";
