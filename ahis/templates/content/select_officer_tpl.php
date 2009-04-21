@@ -47,7 +47,7 @@ $this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 
-if (isset($feedback)) {
+if ($feedback) {
     $timeout = $this->getObject('timeoutmessage', 'htmlelements');
     $timeout->setMessage($this->objLanguage->languageText('mod_ahis_added', 'ahis'));
     $msg = $timeout->show();

@@ -46,24 +46,37 @@ $this->loadClass('form','htmlelements');
 $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer', 'htmlelements');
 
+if ($id) {
+    $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_location');
+    $formUri = $this->uri(array('action'=>'territory_insert', 'id'=>$id));
+    $record = $this->objTerritory->getRow('id', $id);
+} else {
+    $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_location');
+    $formUri = $this->uri(array('action'=>'territory_insert'));
+    $record['name'] = $record['northlatitude'] = $record['southlatitude'] = $record['eastlongitude'] =
+    $record['westlongitude'] = $record['geo2id'] = $record['area'] = $record['unitofmeasure'] = '';
+}
+
+
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->type = 2;
-$objHeading->str = $this->objLanguage->languageText('mod_ahis_createterritory', 'ahis');
+$objHeading->str = $hStr;
 
-$nameText = new textinput('territory');
-$latNText = new textinput('latitude_north');
-$latSText = new textinput('latitude_south');
-$lonEText = new textinput('longitude_east');
-$lonWText = new textinput('longitude_west');
-$areaText = new textinput('area');
-$unitText = new textinput('unit_of_measure');
+$nameText = new textinput('territory', $record['name']);
+$latNText = new textinput('latitude_north', $record['northlatitude']);
+$latSText = new textinput('latitude_south', $record['southlatitude']);
+$lonEText = new textinput('longitude_east', $record['eastlongitude']);
+$lonWText = new textinput('longitude_west', $record['westlongitude']);
+$areaText = new textinput('area', $record['area']);
+$unitText = new textinput('unit_of_measure', $record['unitofmeasure']);
 
 $geo2Drop = new dropdown('geo2');
 $geo2Drop->addFromDB($geo2, 'name', 'id');
+$geo2Drop->setSelected($record['geo2id']);
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_enter'));
 $sButton->setToSubmit();
-$backUri = $this->uri(array('action' => 'admin'));
+$backUri = $this->uri(array('action' => 'territory_admin'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -107,7 +120,7 @@ $objTable->addCell($sButton->show());
 $objTable->addCell($bButton->show());
 $objTable->endRow();
 
-$objForm = new form("territoryform", $this->uri(array('action' => 'territory_insert')));
+$objForm = new form("territoryform", $formUri);
 $objForm->addToForm($objTable->show());
 $objForm->addRule('territory', $this->objLanguage->languageText('mod_ahis_territoryrequired', 'ahis'), 'required');
 $objForm->addRule('latitude_north', $this->objLanguage->languageText('mod_ahis_latitudenorthrequired', 'ahis'), 'required');

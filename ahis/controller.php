@@ -793,17 +793,41 @@ class ahis extends controller {
                 $this->objGeo2->delete('id', $id);
                 return $this->nextAction('geography_level2_admin', array('success'=>'2'));
             
-            case 'create_territory':
+            case 'territory_admin':
+				$searchStr = $this->getParam('searchStr');
+                $data = $this->objTerritory->getAll("WHERE name LIKE '%$searchStr%' ORDER BY name");
+                $this->setVar('addLinkUri', $this->uri(array('action'=>'create_territory')));
+                $this->setVar('addLinkText', $this->objLanguage->languageText('mod_ahis_locationadd','ahis'));
+                $this->setVar('headingText', $this->objLanguage->languageText('mod_ahis_locationadmin','ahis'));
+                $this->setVar('action', $action);
+                $this->setVar('columnName', $this->objLanguage->languageText('word_name'));
+                $this->setVar('deleteAction', 'territory_delete');
+                $this->setVar('fieldName', 'name');
+                $this->setVar('searchStr', $searchStr);
+                $this->setVar('data', $data);
+                $this->setVar('allowEdit', TRUE);
+                $this->setVar('editAction', 'create_territory');
+                $this->setVar('success', $this->getParam('success'));
+                return 'admin_overview_tpl.php';
+			
+			case 'territory_delete':
+				$id = $this->getParam('id');
+                $this->objTerritory->delete('id', $id);
+                return $this->nextAction('territory_admin', array('success'=>'2'));
+				
+			case 'create_territory':
                 if ($this->objGeo2->getRecordCount() < 1) {
                     $this->setVar('message', $this->objLanguage->languageText('mod_ahis_nogeo2','ahis'));
                     $this->setVar('location', $this->uri(array('action'=>'geography_level2_admin')));
                     return 'redirect_tpl.php';
                 }
+				$this->setVar('id', $this->getParam('id'));
                 $geo2 = $this->objGeo2->getAll("ORDER BY name");
                 $this->setVar('geo2',$geo2);
                 return "add_territory_tpl.php";
             
             case 'territory_insert':
+				$id = $this->getParam('id');
                 $rec['name'] = $this->getParam('territory');
                 $rec['northlatitude'] = $this->getParam('latitude_north');
                 $rec['southlatitude'] = $this->getParam('latitude_south');
@@ -812,8 +836,17 @@ class ahis extends controller {
                 $rec['geo2id'] = $this->getParam('geo2');
                 $rec['area'] = $this->getParam('area');
                 $rec['unitofmeasure'] = $this->getParam('unit_of_measure');
-                $this->objTerritory->insert($rec);
-                return $this->nextAction('admin');
+                if ($id) {
+                    $this->objTerritory->update('id', $id, $rec);
+                    $success = '3';
+                } else {
+					if ($this->objTerritory->valueExists('name',$rec['name'])) {
+						return $this->nextAction('territory_admin', array('success'=>'4'));
+					}
+                    $this->objTerritory->insert($rec);
+                    $success = '1';
+                }
+                return $this->nextAction('territory_admin', array('success'=>$success));
             
             case 'employee_admin':
                 $searchStr = $this->getParam('searchStr');
