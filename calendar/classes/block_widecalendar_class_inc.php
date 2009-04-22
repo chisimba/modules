@@ -31,8 +31,9 @@ class block_widecalendar extends object
         
         $addEvent = new link ($this->uri(array('action'=>'add'), 'calendar'));
         $addEvent->link = $this->objLanguage->languageText('mod_calendarbase_addevent', 'calendarbase', 'Add an Event');
-        
-        $str .= '<p>'.$calendarLink->show().' / '.$addEvent->show().'</p>';
+
+        $eventsList= $this->objCalendarInterface->getEventsList();
+        $str .= '<p>'.$calendarLink->show().' / '.$addEvent->show().'</p>'.$eventsList;
         
         return $str;
     }
