@@ -141,6 +141,11 @@
         public function init()
         {
             try {       
+				// Supressing Prototype and Setting jQuery Version with Template Variables
+                $this->setVar('SUPPRESS_PROTOTYPE', true);
+                $this->setVar('SUPPRESS_JQUERY', false);
+                $this->setVar('JQUERY_VERSION', '1.3.2');			
+			
                 // instantiate object
                 $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
@@ -207,6 +212,9 @@
 				
                 //jQuery pngFix behaves wierdly in ies4linux but works on windows machines
                 $this->_objJQuery->loadPngFixPlugin();
+
+				//Loading the ipod style menu
+                $this->_objJQuery->loadFgMenuPlugin();
 
             } catch (customException $e){
                 throw customException($e->getMessage());

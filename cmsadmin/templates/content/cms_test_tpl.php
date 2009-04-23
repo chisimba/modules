@@ -1,11 +1,93 @@
 <?PHP
 
 
+
+//Testing FG Menu
+$jQuery = $this->newObject('jquery', 'htmlelements');
+$jQuery->loadFgMenuPlugin();
+
+ob_start();
+?>
+<style>
+.hidden {
+	display: none;
+}
+
+#cmscontrolpanelitems li {
+	background-image : url('');
+}
+</style>
+
+<script type="text/javascript">
+jQuery(function(){
+		jQuery('#cmscontrolpanelmenu').menu({
+			content: jQuery('#cmscontrolpanelmenu').next().html(),
+			backLink: false
+		});
+    });
+</script>
+<?php
+$script = ob_get_contents();
+ob_end_clean();
+
+$this->appendArrayVar('headerParams', $script);
+
+/* //Only implementing this for Control Panel type tree
+$objCmsTree =$this->newObject('sectionstreemenu', 'cmsadmin');
+echo $objCmsTree->getCMSAdminTree($currentNode);
+*/
+
+//Default Menu Below:
+?>
+
+<a tabindex="0" href="#news-items-2" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">Control Panel</a>
+<div id="cmscontrolpanelitems" class="hidden">
+<ul>
+
+	<li><a href="#">Content</a>
+		<ul>
+			<li><a href="#">Add Content</a></li>
+		</ul>
+	</li>
+	<li><a href="#">Sections</a>
+		<ul>
+			<li><a href="#">Add Section</a></li>
+		</ul>
+	</li>
+	<li><a href="#">Templates</a>
+		<ul>
+			<li><a href="#">Add Template</a></li>
+		</ul>
+	</li>
+	<li><a href="#">RSS Feeds</a>
+		<ul>
+			<li><a href="#">Add RSS Feed</a></li>
+		</ul>
+	</li>
+	<li><a href="#">Archive</a></li>
+	
+</ul>
+</div>
+
+<?PHP
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
    Recursive deleting of a given directory
 
 */
-
+/*
 $objDir = $this->getObject('dir', 'files');
 
 if ($objDir->deleteRecursive('/home/charl/trash/kim_wits')) {

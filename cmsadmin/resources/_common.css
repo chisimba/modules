@@ -348,3 +348,13 @@ font-size: 0.8em;
 	border-bottom : 1px solig #ededed;
 	background-color: pink;
 }
+
+.hidden {
+	display : none;
+}
+
+#cmscontrolpanelmenu {
+	color: white;
+	font-size: 15px;
+	padding: 3px;
+}

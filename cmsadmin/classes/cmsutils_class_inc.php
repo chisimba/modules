@@ -1849,9 +1849,75 @@
 
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
 
+			
+			ob_start();
+			?>
+			<script type="text/javascript">
+			jQuery(function(){
+					jQuery('#cmscontrolpanelmenu').menu({
+						content: jQuery('#cmscontrolpanelmenu').next().html(),
+						crumbDefaultText: '',
+						backLink: true
+					});
+				});
+				
+			jQuery(document).ready(function(){
+				jQuery('#btnaddcontent').livequery('click',function(){
+					alert(jQuery('#menuSelection').html());
+					//document.href.location = '?module=cmsadmin&amp;action=addcontent';
+				});
+			});
+			</script>
+			<?php
+			$script = ob_get_contents();
+			ob_end_clean();
+
+			$this->appendArrayVar('headerParams', $script);			
+
+			$cmsControlPanel = '
+			<a tabindex="0" href="#cmscontrolpenel" class="fg-button fg-button-icon-right ui-widget ui-state-default ui-corner-all" id="cmscontrolpanelmenu">Quick Menu</a>
+			<div id="cmscontrolpanelitems" class="hidden">
+			<ul>
+				<li><a href="?module=cmsadmin&amp;action=frontpages">Edit Front Page</a></li>
+				
+				<li><a href="#">Content</a>
+					<ul>
+						<li><a id="btnaddcontent" href="?module=cmsadmin&amp;action=addcontent">Add a Content Item</a></li>
+					</ul>
+				</li>
+				<li><a href="?module=cmsadmin&amp;action=sections">Sections</a>
+					<ul>
+						<li><a href="?module=cmsadmin&amp;action=sections">View Sections</a></li>
+						<li><a href="?module=cmsadmin&amp;action=addsection">Add a Section</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Templates</a>
+					<ul>
+						<li><a href="#">Add Template</a></li>
+					</ul>
+				</li>
+				<li><a href="#">RSS Feeds</a>
+					<ul>
+						<li><a href="#">Add RSS Feed</a></li>
+					</ul>
+				</li>
+				<li><a href="?module=cmsadmin&amp;action=permissions">Permissions</a></li>
+				<li><a href="?module=cmsadmin&amp;action=menustyle">Menu</a></li>
+				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
+				<li><a href="?module=shorturl&ref=cmsadmin">Short URLs</a></li>
+				<li><a href="?module=cmsadmin&amp;action=filemanager">Upload Files</a></li>
+				<li><a href="?module=sysconfig&action=step2&pmodule_id=cmsadmin">Configuration</a></li>
+				
+			</ul>
+			</div>
+
+			';
+
             $table = new htmltable();
+			$table->width = '100%';
+			
             $table->startRow();
-            $table->addCell('Navigation Links');
+            $table->addCell($cmsControlPanel);
             $table->endRow();
             $table->startRow();
             $table->addCell($cmsAdminLink);
