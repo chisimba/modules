@@ -69,11 +69,14 @@ class rubric extends controller
      * @param $action Action to be taken
      * @return boolean
      */
-    public function isValid($action) {		
-        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer()) {
+    public function isValid($action) {	
+    	
+    	$validActions = array('viewtable');
+    		
+        if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer() || in_array($action, $validActions)) {
             return TRUE;
         } else {
-            return parent::isValid ( $action );
+            return FALSE;//parent::isValid ( $action );
         }
     }
     
