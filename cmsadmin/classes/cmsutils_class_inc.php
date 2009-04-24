@@ -1338,6 +1338,7 @@
 
 
             if (is_array($arrContent)) {
+			
                 $show_title = 'g';
                 if (isset($arrContent['show_title'])) {
                     $show_title = $arrContent['show_title'];
@@ -1409,6 +1410,7 @@
             $tbl_basic->addCell($lbl_author->show(), null, 'top', null, 'cmstinyvspacer');
             $tbl_basic->addCell($opt_author->show());
             $tbl_basic->endRow();
+			
             $tbl_basic->startRow();
             $tbl_basic->addCell($lbl_date->show(), null, 'top', null, 'cmstinyvspacer');
             $tbl_basic->addCell($opt_date->show());
@@ -1536,6 +1538,19 @@
                 if (isset($arrContent['show_print'])) {
                     $show_print = $arrContent['show_print'];
                 }
+				
+				$show_flag = 'g';
+                if (isset($arrContent['show_flag'])) {
+                    $show_flag = $arrContent['show_flag'];
+                }
+
+				//flag option
+                $opt_flag = new dropdown('show_flag');
+                $opt_flag->addOption('g',"-Global-Option-");
+                $opt_flag->addOption("y",'yes');
+                $opt_flag->addOption("n",'no');
+                $opt_flag->setSelected($show_flag);
+                $lbl_flag = new label($this->objLanguage->languageText('mod_cmsadmin_show_flag','cmsadmin'),'show_flag');
 
                 //pdf option
                 $opt_pdf = new dropdown('show_pdf');
@@ -1560,6 +1575,14 @@
                 $lbl_print = new label($this->objLanguage->languageText('mod_cmsadmin_show_print','cmsadmin'),'show_print');
 
             }else{
+				//flag option
+                $opt_flag = new dropdown('show_flag');
+                $opt_flag->addOption('g',"-Global-Option-");
+                $opt_flag->addOption("y",'yes');
+                $opt_flag->addOption("n",'no');
+                $opt_flag->setSelected('g');
+                $lbl_flag = new label($this->objLanguage->languageText('mod_cmsadmin_show_flag','cmsadmin'),'show_flag');
+			
                 //pdf option
                 $opt_pdf = new dropdown('show_pdf');
                 $opt_pdf->addOption('g',"-Global-Option-");
@@ -1596,6 +1619,10 @@
             $tbl_advanced->addCell($lbl_print->show(), '120px', 'top', null, 'cmstinyvspacer');
             $tbl_advanced->addCell($opt_print->show());
             $tbl_advanced->endRow();
+            $tbl_advanced->startRow();
+            $tbl_advanced->addCell($lbl_flag->show(), '120px', 'top', null, 'cmstinyvspacer');
+            $tbl_advanced->addCell($opt_flag->show());
+            $tbl_advanced->endRow();
 
            /**
             * Defining Items for Metadata
@@ -1629,7 +1656,6 @@
             }else{
                 $tbl_meta->addCell("<input type=\"button\" class=\"button\" value=\"{$this->objLanguage->languageText('mod_cmsadmin_add_section_button','cmsadmin')}\" onclick=\"f=document.getElementById('form_addfrm');f.keyword.value=document.getElementById('form_addfrm').parent.options[document.getElementById('form_addfrm').parent.selectedIndex].text+', '+f.title.value+f.keyword.value;\" />");
             }
-
 
             //Moved outside of the tabs due to slow load issue
             /*
@@ -1910,7 +1936,6 @@
 				
 			</ul>
 			</div>
-
 			';
 
             $table = new htmltable();
@@ -1918,6 +1943,9 @@
 			
             $table->startRow();
             $table->addCell($cmsControlPanel);
+            $table->endRow();
+            $table->startRow();
+            $table->addCell('&nbsp;');
             $table->endRow();
             $table->startRow();
             $table->addCell($cmsAdminLink);

@@ -297,6 +297,7 @@
                     $show_pdf,
                     $show_email,
                     $show_print,
+                    $show_flag,
                     $access,
                     $created_by,
                     $introText,
@@ -339,6 +340,7 @@
                           'show_pdf' => $show_pdf,
                           'show_email' => $show_email,
                           'show_print' => $show_print,
+                          'show_flag' => $show_flag,
                           'created' => $create_date,
                           'override_date' => $override_date,
                           'modified' => $this->now(),
@@ -567,7 +569,8 @@
                                     $show_date = 'g',
                                     $show_pdf = 'g',
                                     $show_email = 'g',
-                                    $show_print = 'g')
+                                    $show_print = 'g',
+                                    $show_flag = 'g')
         {
             $published = ($published == '1') ? 1 : 0;
 
@@ -601,6 +604,7 @@
                           'show_pdf' => $show_pdf,
                           'show_email' => $show_email,
                           'show_print' => $show_print,
+                          'show_flag' => $show_flag,
                           'post_lic' => $ccLicence,
                           'checked_out'=> $modifiedBy,
                           'checked_out_time'=> $this->now(),

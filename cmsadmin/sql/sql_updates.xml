@@ -570,10 +570,24 @@
         </rename>
     </data>
 
-    
   </update>
 
-
+  <update>
+    <table>tbl_cms_content</table>
+    <version>1.614</version>
+    <description> Content Flagging Field - show_flag</description>
+    
+    <data>
+      <add>
+        <name>show_flag</name>
+        <type>text</type>
+        <length>1</length>
+        <notnull>0</notnull>
+        <default>g</default>
+      </add>
+    </data>
+  </update>
+  
 </updates>
 
 

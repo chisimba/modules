@@ -906,6 +906,8 @@
                 $show_pdf = $this->getParam('show_pdf','g');
                 $show_email = $this->getParam('show_email','g');
                 $show_print = $this->getParam('show_print','g');
+
+                $show_flag = $this->getParam('show_flag','g');
                 
                 $access = $this->getParam('access');
                 $created_by = $this->getParam('title_alias',null);
@@ -927,6 +929,7 @@
                                                 $show_pdf,
                                                 $show_email,
                                                 $show_print,
+                                                $show_flag,
                                                 $access,
                                                 $created_by,
                                                 $introText,
@@ -966,7 +969,8 @@
                     $show_pdf = $this->getParam('show_pdf','g');
                     $show_email = $this->getParam('show_email','g');
                     $show_print = $this->getParam('show_print','g');
-                    
+                    $show_flag = $this->getParam('show_flag','g');
+					
                     $this->_objContent->editContent($contentId ,
                                                     $title ,
                                                     $sectionId ,
@@ -985,7 +989,8 @@
                                                     $show_date ,
                                                     $show_pdf ,
                                                     $show_email ,
-                                                    $show_print);
+                                                    $show_print,
+													$show_flag);
 
                     $mustApply = $this->getParam('must_apply');
     

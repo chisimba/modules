@@ -59,6 +59,12 @@ $fields = array(
         'notnull' => TRUE,
         'default' => 'g'
         ),
+    'show_flag' => array(
+        'type' => 'text',
+        'length' => 1,
+        'notnull' => TRUE,
+        'default' => 'g'
+        ),
 	'trash' => array(
 		'type' => 'integer',
         'length' => 1,
