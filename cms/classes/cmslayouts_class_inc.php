@@ -1195,6 +1195,28 @@ jQuery(document).ready(function(){
             }
             $iconList = $this->objCC->show($cclic);
 
+			$objIcon = $this->newObject('geticon', 'htmlelements');
+			//Not visible
+			$objIcon->setIcon('redflag');
+			$objIcon->title = $this->objLanguage->languageText('flag_content');
+			$flagContent = $objIcon->show();
+
+
+            if(isset($page['show_flag'])) {
+                if ($page['show_flag'] == 'g'){
+                    //Checking the global sys config
+                    $globalShowDate = $this->_objSysConfig->getValue('SHOW_FLAG', 'cmsadmin');
+                    if ($globalShowDate == 'n') {
+                        $flagContent = '';
+                    }
+                }
+                if ($page['show_flag'] == 'n'){
+                    $flagContent = '';
+                }
+            }
+			
+			$iconList .= $flagContent;
+			
             //table of non logged in options
             //Set the table name
             $tblnl = $this->newObject('htmltable', 'htmlelements');
@@ -1204,7 +1226,7 @@ jQuery(document).ready(function(){
             $tblnl->addCell($bookmark->show(),null,null,'left'); //bookmark link(s)
             $tblnl->addCell('<em class="date">'.$this->objLanguage->languageText("mod_cms_lastupdated", "cms").':' .$this->objDate->formatDate($page['modified']).'</em>',null,null,'left');               
             $tblnl->addCell($iconList); //cc licence
-                    
+            
             // Print & pdf icons
             $this->objIcon->setIcon('pdf', 'png', 'icons/cms/');
             $objLink = new link($this->uri(''));
@@ -1347,7 +1369,7 @@ jQuery(document).ready(function(){
             }
 
             $strBody .= $showDateText;
-
+			
             $strBody .= '<hr />';
             //parse for mindmaps
             $page['body'] = $objMindMap->parse($page['body']);
@@ -1356,7 +1378,7 @@ jQuery(document).ready(function(){
             $strBody .= stripslashes($page['body']);
             $strBody .= '<hr /><p />';
             $objLayer = new layer();
-            $objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() ."</center><hr/><p/>";
+            $objLayer->str = $tblh->show().$strBody ."<p /><center>".$tblnl->show() . "</center><hr/><p/>";
             $objLayer->id = 'cmscontent';
         
         	return $objLayer->show();
