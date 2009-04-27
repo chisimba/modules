@@ -214,13 +214,13 @@ class realtimemanager extends Object
         $maxMemory=$objSysConfig->getValue('MAX_MEMORY', 'realtime');
         //  $cmd = "java -Xms".$minMemory."m -Xmx".$maxMemory."m -cp .:".
         $this->objConfig = $this->getObject('altconfig', 'config');
-        $cmd = "java -Xms32m -Xmx64m -cp ";
+        $cmd = "java -Xms64m -Xmx128m -cp ";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-common-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-classroom-base-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-instructor-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-user-1.0.2.jar:";
         $cmd.=$this->objConfig->getModulePath()."/realtime/resources/realtime-launcher-1.0.2.jar  avoir.realtime.classroom.SlidesServer ".$slideServerId." ".$supernodeHost." ".$supernodePort." >/dev/null &";
-     //   echo $cmd;
+      //  echo $cmd;
         system($cmd,$return_value);
     }
 

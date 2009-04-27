@@ -152,7 +152,15 @@ class webpresent extends controller
         $latestFiles = $this->objFiles->getLatestPresentations();
         $this->setVarByRef('latestFiles', $latestFiles);
 
-        return 'home_tpl.php';
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $hometpl=$objSysConfig->getValue('HOMETPL', 'webpresent');
+        $permittedTypes = array ('newhome', 'home');
+
+        // Check that period is valid, if not, show daily result
+        if (!in_array($hometpl, $permittedTypes)) {
+            $period = 'home';
+        }
+        return $hometpl.'_tpl.php';
     }
 
 

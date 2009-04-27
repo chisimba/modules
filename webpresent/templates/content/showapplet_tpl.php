@@ -5,9 +5,9 @@
     } 
 </script>
 <?php
-echo '<h1>Realtime is currently temporarily under maintenance.</h1>';
+/*echo '<h1>Realtime is currently temporarily under maintenance.</h1>';
 echo '<a href="'.$this->objConfig->getSiteRoot().'/index.php?module=webpresent&action=home">Back to presentations</a>';
-/*
+
     $userLevel;
     $isLoggedIn='false';
 
@@ -85,5 +85,65 @@ echo '<a href="'.$this->objConfig->getSiteRoot().'/index.php?module=webpresent&a
     echo '<param name=isSessionPresenter value="'.$isPresenter.'">';
     echo '</applet>';
     echo '</center>';
-*/
+
+
+   echo '   <?xml version="1.0" encoding="utf-8"?>';
+  echo '<!-- JNLP File for Classroom launcher -->';
+
+  echo '<jnlp spec="1.0+"';
+  echo '      codebase="http://localhost/chisimba_modules/realtime/resources/" ';
+   echo '     href="classroom-1.jnlp">';
+    echo ' <information>';
+    echo '    <title>Realtime Classroom</title>';
+    echo '    <vendor>AVOIR</vendor>';
+    echo '    <description>Realtime Classroom</description>';
+    echo '    <homepage href="http://avoir.uwc.ac.za"/>';
+    echo '    <description kind="short">Realtime Virtual Classroom</description>';
+    echo '    <icon href="images/logo.png"/> ';
+    echo '    <icon kind="splash" href="images/splash_realtime.png"/> ';
+    echo '    <offline-allowed/>';
+    echo ' </information>';
+   echo '  <resources>     ';
+     echo '	<jar href="realtime-launcher-1.0.1.jar"/>   ';
+  echo '	<j2se version="1.5+"';
+  echo '	      href="http://java.sun.com/products/autodl/j2se"/>';
+    echo ' </resources>';
+   echo '  <application-desc main-class="avoir.realtime.tcp.launcher.RealtimeLauncher">';
+   echo '    <argument>localhost</argument>';
+    echo '   <argument>22225</argument>';
+  echo '<argument>s2</argument>';
+  echo ' <argument>s2</argument>';
+  echo ' <argument>false</argument>';
+   echo '<argument>contextCode</argument>';
+  echo '   </application-desc>';
+  echo '<security>';
+  echo '   <all-permissions/>';
+  echo '</security> ';
+echo '</jnlp>';
+
+ */
+
+echo '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
+echo '<jnlp codebase="http://chameleon.uwc.ac.za/classroom" href="launch.jnlp" spec="1.0+">';
+echo '    <information>';
+echo '        <title>InstanceLauncher</title>';
+echo '        <vendor>developer</vendor>';
+echo '        <homepage href=""/>';
+echo '        <description>InstanceLauncher</description>';
+ echo '       <description kind="short">InstanceLauncher</description>';
+ echo '   <offline-allowed/>';
+echo '</information>';
+echo '<security>';
+echo '<all-permissions/>';
+echo '</security>';
+echo '    <resources>';
+echo '<j2se version="1.5+"/>';
+echo '<jar eager="true" href="InstanceLauncher.jar" main="true"/>';
+echo '    </resources>';
+echo '    <application-desc main-class="avoir.realtime.launcher.Main">';
+echo '    </application-desc>';
+echo '</jnlp>';
+
+
 ?>
+ */

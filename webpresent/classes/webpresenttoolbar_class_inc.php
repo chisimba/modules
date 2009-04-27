@@ -95,7 +95,7 @@ class webpresenttoolbar extends object
         $home = $this->generateItem(NULL, '_default', 'Home', $usedDefault);
 
         // Return Toolbar
-        return '<div id="modernbricksmenu"><ul>'.$home.$str.'</ul><div id="modernbricksmenuline">&nbsp;</div>';
+        return '<div id="modernbricksmenum"><ul>'.$home.$str.'</ul><div id="modernbricksmenuline">&nbsp;</div>';
 
 
     }

@@ -182,6 +182,10 @@ class dbwebpresentfiles extends dbtable
     {
         return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 10');
     }
+    public function getLatestPresentation()
+    {
+        return $this->getAll(' ORDER BY dateuploaded DESC LIMIT 1');
+    }
 
     public function getByUser($user, $order='dateuploaded DESC')
     {

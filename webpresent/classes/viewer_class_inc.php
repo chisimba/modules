@@ -125,7 +125,23 @@
             }
             return $flashContent;
         }
-
+        public function showFeaturedFlash($id)
+        {
+            $flashFile = $this->objConfig->getcontentBasePath().'webpresent/'. $id .'/' . $id.'.swf';
+            if (file_exists($flashFile)) {
+                $flashFile = $this->uri(array('action'=>'getflash', 'id'=>$id));
+                //$this->objConfig->getcontentPath().'webpresent/' .$id .'/'. $id.'.swf';
+                $flashContent = '
+             <div style="border: 1px solid #000; width: 270px; height: 270px; text-align: center;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="280" height="280">
+             <param name="movie" value="'.$flashFile.'">
+             <param name="quality" value="high">
+             <embed src="'.$flashFile.'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="270" height="270"></embed>
+            </object></div>';
+            } else {
+                $flashContent = '<div class="noRecordsMessage" style="border: 1px solid #000; width: 270px; height: 270px; text-align: center;">Flash Version of Presentation being converted</div>';
+            }
+            return $flashContent;
+        }
         /**
          *
          * A method to return the flash presentation for rendering in the page
@@ -454,7 +470,7 @@
 
             if (file_exists($source)) {
 
-                return '<img src="'.$relLink.'" '.$title.' style="border:1px solid #000;" />';
+                return '<img src="'.$relLink.'" '.$title.' class="thumbnail" />';
             } else {
                 $source = $this->objConfig->getcontentBasePath().'webpresent/'.$id.'/img0.jpg';
                 $relLink = $this->objConfig->getcontentPath().'webpresent/'.$id.'/img0.jpg';
