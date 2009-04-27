@@ -34,7 +34,7 @@ class viewerutils extends object
         $filename='';
         $latestFile = $objFiles->getLatestPresentation();
         $flashContent='';
-        $fileLink='';
+        $fileStr='';
         if (count($latestFile) == 0) {
             $latestFileContent = '';
         } else {
@@ -59,7 +59,7 @@ class viewerutils extends object
                 $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
                 $fileLink->link =$linkname;
                 $fileLink->title = $filename;
-
+                $fileStr=$fileLink->show();
             }
         }
           $str='<div id="sidebar" class="c41r">
@@ -71,7 +71,7 @@ class viewerutils extends object
                    </ul>
 
                    <ul class="statslist">
-                     <li>'.$fileLink->show().'</li>
+                     <li>'.$fileStr.'</li>
                     <li>'.$flashContent.'</li>
                    </ul>
 
