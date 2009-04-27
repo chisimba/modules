@@ -293,7 +293,7 @@ public function getTagCloudContent($tagCloud){
 
                 $column++;
                 $counter++;
-                if($column >1){
+                if($column >1 || count($latestFiles) ==1){
                     $row.='</div>';
                     $row.='</div>';
                     $content .=$row;
