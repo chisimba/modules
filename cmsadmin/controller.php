@@ -222,6 +222,29 @@
             }	    
         }
 
+        /**
+        *
+        * This is a method that overrides the parent class to stipulate whether
+        * the current module requires login. Having it set to false gives public
+        * access to this module including all its actions.
+        *
+        * @access public
+        * @return bool FALSE
+        */
+        public function requiresLogin()
+        {
+			$action = $this->getParam('action', '');
+			switch ($action) {
+				case 'ajaxforms':
+					return FALSE;
+				break;
+				default :
+					return TRUE;
+				break;
+			}
+        }
+		
+		
        /**
         * Method to handle actions from templates
         * 
@@ -258,6 +281,12 @@
 		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
 
+				case 'ajaxforms':
+					$this->setContentType('text/html');
+					
+					return 'cms_ajax_forms_tpl.php';
+				break;
+				
                 case 'previewcontent':
                     //var_dump('HERE'); exit;
                     $previewId = $this->_objPreview->add();

@@ -6548,11 +6548,49 @@ $this->appendArrayVar('headerParams', $script);
         }
 
 
+	   /**
+		* Method to return the Flag Options Form (to be returned via AJAX)
+		*
+		* @access public
+		*/
+		public function getFlagOptionsForm()
+		{
+			$objForm = new form('editfrm', $this->uri(array('action' => 'addmenu')));
+            $objForm->setDisplayType(3);
 
+			$tbl = new htmlTable();
+			$tbl->width = "100%";
+			$tbl->cellspacing = "0";
+			$tbl->cellpadding = "10";
+			$tbl->border = "0";
+			$tbl->attributes = "align ='center'";
+			
+			$tbl->startRow();
+			$tbl->addCell('Why are you flagging this content item:', '', '', '', 'boxy_td_left', '','');
+			$tbl->endRow();
+			
+			$objDropDown = new dropdown('flag_options');
+			$objDropDown->addOption('0', 'Grammar or Spelling Mistakes');
+			$objDropDown->addOption('1', 'Obscene Language');
+			$objDropDown->addOption('2', 'Nudity, Pornographic Material');
+			$objDropDown->setSelected('0');
+			
+			$tbl->startRow();
+			$tbl->addCell($objDropDown->show(), '', '', '', 'boxy_td_left', '','');
+			$tbl->endRow();
 
+			// Submit Button
+            $button = new button('submitform', 'Flag this Item');
+            $button->setToSubmit();
 
-
-
+			
+			$objForm->addToForm($tbl->show());
+			$objForm->addToForm($button->show());
+			
+			$display = $objForm->show();
+			
+			return $display;
+		}
 
 
 
