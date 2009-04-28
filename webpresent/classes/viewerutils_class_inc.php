@@ -97,7 +97,7 @@ $list = $objStats->getMostViewedList();
               <li><a href="#" class="selected">Statistics</a></li>
               </ul>
            <div class="tower">
-           <font style="font-size:13pt;color:#0091B9;">
+           <font style="font-size:13pt;color:#5e6eb5;">
            
            Most Viewed
            
@@ -123,7 +123,7 @@ $list = $objStats->getMostDownloadedList();
            <div class="subcr">
 
            <div class="tower">
-           <font style="font-size:13pt;color:#0091B9;">
+           <font style="font-size:13pt;color:#5e6eb5;">
             Most Downloaded
            </font>
            <p>
