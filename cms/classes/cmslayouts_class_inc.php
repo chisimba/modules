@@ -26,7 +26,16 @@ class cmslayouts extends object
     public function init()
     {
         try{
-            $this->objConfig = $this->getObject('altconfig', 'config');
+			// Supressing Prototype and Setting jQuery Version with Template Variables
+			$this->setVar('SUPPRESS_PROTOTYPE', false); //Can't stop prototype in the public space as this might impact blocks
+			$this->setVar('SUPPRESS_JQUERY', false);
+			$this->setVar('JQUERY_VERSION', '1.3.2');			
+		
+			$this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+			
+			$this->_objJQuery->loadCluetipPlugin();
+			
+			$this->objConfig = $this->getObject('altconfig', 'config');
             $this->_objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $this->_objSecurity =$this->newObject('dbsecurity', 'cmsadmin');
             $this->_objSections =$this->newObject('dbsections', 'cmsadmin');
@@ -36,7 +45,7 @@ class cmslayouts extends object
             $this->_objHtmlBlock =$this->newObject('dbhtmlblock', 'cmsadmin');
             $this->_objCmsUtils =$this->newObject('cmsutils', 'cmsadmin');
             $this->objModule=&$this->getObject('modules','modulecatalogue');
-               
+            
             $this->objUser = $this->newObject('user', 'security');
             $this->objDate = $this->getObject('dateandtime', 'utilities');
             $this->objLanguage = $this->getObject('language', 'language');
@@ -1198,9 +1207,21 @@ jQuery(document).ready(function(){
 			$objIcon = $this->newObject('geticon', 'htmlelements');
 			//Not visible
 			$objIcon->setIcon('redflag');
-			$objIcon->title = $this->objLanguage->languageText('flag_content');
-			$flagContent = $objIcon->show();
+			$objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
+			$objIcon->extra = 'id="hover_redflag"';
+			$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions">' . $objIcon->show();
 
+$script = <<<SCRIPT
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery('#flag_link').cluetip({sticky: true, closePosition: 'title', arrows: true});
+});
+
+
+</script>
+SCRIPT;
+
+$this->appendArrayVar('headerParams', $script);
 
             if(isset($page['show_flag'])) {
                 if ($page['show_flag'] == 'g'){
@@ -1815,6 +1836,6 @@ jQuery(document).ready(function(){
             return $objLink->show();
         }
     }
-        
+		
 }
 ?>

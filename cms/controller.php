@@ -172,7 +172,7 @@ class cms extends controller
         }
 
         /**
-         *
+        *
         * This is a method that overrides the parent class to stipulate whether
         * the current module requires login. Having it set to false gives public
         * access to this module including all its actions.
@@ -256,8 +256,6 @@ class cms extends controller
         	 */
         	return $this->$method();
         }
-
-
 
 
         /**
