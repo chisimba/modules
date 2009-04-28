@@ -74,6 +74,7 @@ class tabsmenu extends object
         // Load Classes Required
         $this->loadClass('link','htmlelements');
         $this->objUser = $this->getObject('user', 'security');
+        $this->objConfig = $this->getObject('altconfig', 'config');
         
         $this->objLanguage = $this->getObject('language', 'language');
         
@@ -171,12 +172,6 @@ class tabsmenu extends object
      */
     private function generateOutput()
     {
-        
-        // Logout is always last
-        if ($this->objUser->isLoggedIn()) {
-            $this->menuItems['logout'] = array('text'=>$this->objLanguage->languageText('word_logout', 'system', 'Logout'), 'link'=>$this->uri(array('action'=>'logoff'), 'security'));
-        }
-        
         $str = '<ul class="glossytabs">';
         
         foreach ($this->menuItems as $menuItem=>$menuInfo)
@@ -197,6 +192,15 @@ class tabsmenu extends object
         }
         
         $str .= '</ul>';
+        
+        // Logout is always last
+        if ($this->objUser->isLoggedIn()) {
+            $logoutLink = new Link($this->uri(array('action'=>'logoff'), 'security'));
+            $path = $this->objConfig->getskinRoot().$this->objConfig->getdefaultSkin()."/images/logout.jpg";
+            $logoutLink->link = "<img src='$path'/>";
+            $str .= "<div id='logoutdiv'>".$logoutLink->show()."</div>";
+        }
+        
         
         return $str;
     }

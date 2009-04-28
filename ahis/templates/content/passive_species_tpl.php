@@ -51,9 +51,12 @@ $this->loadClass('form','htmlelements');
 
 $sButton = new button('enter', $this->objLanguage->languageText('word_next'));
 $sButton->setToSubmit();
+$sButton->setCSS('nextButton');
 $backUri = $this->uri(array('action'=>'passive_outbreak'));
 $bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveSpecies()");
+$cButton->setCSS('cancelButton');
 
 $refNoBox = new textinput('refNo', $refNo);
 $monthBox = new textinput('month', date('F', strtotime($calendardate)));

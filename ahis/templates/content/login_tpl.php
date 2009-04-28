@@ -49,8 +49,10 @@ $objModule   = new textinput('mod', 'ahis', 'hidden');
 
 $enterButton = new button('login',$this->objLanguage->languageText('word_enter'));
 $enterButton->setToSubmit();
+$enterButton->setCSS('goButton');
 $clearButton = new button('clear',$this->objLanguage->languageText('word_clear'),
                           "javascript: $('input_username').value = $('input_password').value = '';");
+$clearButton->setCSS('cancelButton');
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTable = $this->getObject('htmltable','htmlelements');

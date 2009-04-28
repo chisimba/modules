@@ -51,9 +51,10 @@ $this->loadClass('form','htmlelements');
 
 $sButton = new button('enter', $this->objLanguage->languageText('mod_ahis_runreport', 'ahis'));
 $sButton->setToSubmit();
+$sButton->setCSS('create_reportButton');
 $backUri = $this->uri(array('action'=>'view_reports'));
 $bButton = new button('back', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$backUri'");
-
+$bButton->setCSS('cancelButton');
 $yearBox = new textinput('year', $year, 'text', 5);
 
 $monthDrop = new dropdown('month');
@@ -62,12 +63,14 @@ for ($i=1; $i<=12; $i++) {
     $monthDrop->addOption(date('m', $date), date('F', $date));
 }
 $monthDrop->setSelected($month);
-$outputDrop = new dropdown('outputType');
-$outputDrop->addOption(1, 'CSV');
-$outputDrop->setSelected(1);
+//$outputDrop = new dropdown('outputType');
+//$outputDrop->addOption(1, 'CSV');
+//$outputDrop->setSelected(1);
 //$outputDrop->addOption(2, $this->objLanguage->languageText('phrase_onscreen'));
 //$outputDrop->addOption(3, 'PDF');
 //$outputDrop->setSelected($outputType);
+$outputDrop = new textinput('outputType', '1', 'hidden');
+
 $reportDrop = new dropdown('reportType');
 $reportDrop->addFromDB($reportTypes, 'name', 'id');
 $reportDrop->setSelected($reportType);
@@ -75,26 +78,27 @@ $reportDrop->setSelected($reportType);
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-$objTable->cssClass = 'min50';
+//$objTable->cssClass = 'min50';
 
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_month').": ");
-$objTable->addCell($monthDrop->show());
-$objTable->addCell($this->objLanguage->languageText('word_year').": ");
-$objTable->addCell($yearBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_selectmonthyear', 'ahis').":$tab");
+$objTable->addCell($monthDrop->show()." ".$yearBox->show());
+//$objTable->addCell($this->objLanguage->languageText('word_year').": ");
+//$objTable->addCell($yearBox->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outputtype').": ");
-$objTable->addCell($outputDrop->show());
-$objTable->addCell($this->objLanguage->languageText('phrase_report').": ");
-$objTable->addCell($reportDrop->show());
+//$objTable->addCell($this->objLanguage->languageText('phrase_outputtype').": ");
+//$objTable->addCell($outputDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_report').": $tab");
+$objTable->addCell($reportDrop->show().$outputDrop->show());
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($sButton->show());
-$objTable->addCell('');
-$objTable->addCell($bButton->show());
+$objTable->addCell($sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButton->show());
+//$objTable->addCell('');
+//$objTable->addCell();
 $objTable->addCell('');
 $objTable->endRow();
 
@@ -109,8 +113,9 @@ if ($enter) {
     $report = "";
 }
 
-$objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show().$report);
-$objLayer->align = 'center';
+//$objLayer = new layer();
+//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show().$report);
+//$objLayer->align = 'center';
 
-echo $objLayer->show();
+//echo $objLayer->show();
+echo $objHeading->show()."<br />".$objForm->show().$report;

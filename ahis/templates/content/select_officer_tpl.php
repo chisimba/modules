@@ -58,6 +58,7 @@ if ($feedback) {
 $inputOfficer = new dropdown('officerId');
 $inputOfficer->addFromDB($userList, 'name', 'userid');
 $inputOfficer->setSelected($officerId);
+$inputOfficer->cssClass = "select_officer";
 if (!$this->objUser->isAdmin()) {
     $inputOfficer->extra = 'disabled';
     $hiddenOfficer = new textinput('officerId', $officerId, 'hidden');
@@ -69,6 +70,7 @@ if (!$this->objUser->isAdmin()) {
 $inputGeo2 = new dropdown('geo2Id');
 $inputGeo2->addFromDB($this->objGeo2->getAll("ORDER BY name"), 'name', 'id');
 $inputGeo2->setSelected($geo2Id);
+$inputGeo2->cssClass = "select_officer";
 if (!$this->objUser->isAdmin()) {
     $inputGeo2->extra = 'disabled';
     $hiddenGeo2 = new textinput('geo2Id', $geo2Id, 'hidden');
@@ -79,13 +81,16 @@ if (!$this->objUser->isAdmin()) {
 
 $inputDate = $this->getObject('datepicker','htmlelements');
 $inputDate->setDefaultDate($calendardate);
+
 $allReportTypes = $this->objReport->getAll("ORDER BY name");
 $inputType = new dropdown('reportType');
 $inputType->addFromDB($allReportTypes, 'name', 'id');
 $inputType->setSelected($reportType);
+$inputType->cssClass = "select_officer";
 
 $buttonNext = new button('next',$this->objLanguage->languageText('word_next'));
 $buttonNext->setToSubmit();
+$buttonNext->setCSS('nextButton');
 $buttonBack = new button('back',$this->objLanguage->languageText('word_back'));
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -121,8 +126,9 @@ $objForm->addToForm($objTable->show());
 //$objForm->addRule('district', $this->objLanguage->languageText('mod_ahis_districtrule','ahis'), 'required');
 $objForm->addRule('calendardate', $this->objLanguage->languageText('mod_ahis_valdatereport', 'ahis'), 'datenotfuture');
 
-$objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr class='ahis' />$msg".$objForm->show());
-$objLayer->align = 'center';
+//$objLayer = new layer();
+//$objLayer->addToStr($objHeading->show()."<hr class='ahis' />$msg".$objForm->show());
+//$objLayer->align = 'center';
+//echo $objLayer->show();
 
-echo $objLayer->show();
+echo $objHeading->show()."<br />".$objForm->show();
