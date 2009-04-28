@@ -461,7 +461,7 @@ class dbwebpresentdownloadcounter extends dbtable
         }
 
         // Return Links + Content
-        return $linksContent.$content;
+        return $content;
     }
 
 

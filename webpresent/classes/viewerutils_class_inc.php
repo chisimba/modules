@@ -54,7 +54,9 @@ class viewerutils extends object
                     $filename = htmlentities($file['title']);
                 }
 
-                $preview = $objView->getPresentationFirstSlide($file['id'],$filename);
+                $link = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
+                $link->link = $objView->getPresentationFirstSlide($file['id'],$filename);
+                $preview=$link->show();
                 $linkname = $objTrim->strTrim($filename, 45);
                 $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
                 $fileLink->link =$linkname;
@@ -62,6 +64,9 @@ class viewerutils extends object
                 $fileStr=$fileLink->show();
             }
         }
+
+      
+
           $str='<div id="sidebar" class="c41r">
                    <div class="statstabs">
                    <div class="statslistcontainer">
@@ -93,7 +98,9 @@ $list = $objStats->getMostViewedList();
               </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#0091B9;">
-            Most Viewed
+           
+           Most Viewed
+           
            </font>
            <p>
            <ul class="statslist">
@@ -163,10 +170,16 @@ public function getTagCloudContent($tagCloud){
                    <div class="statslistcontainer">
 
                    <ul class="paneltabs">
+                   <li><a href="javascript:void(0);" class="selected">About</a></li>
+                   </ul>
+                   <br/>
+                   <p>
+                   This is a presentation sharing and conversion system. It allows users to upload PowerPoint and OpenOffice presentations, tag them, make them searchable, and have them converted into various formats such as PDF and SWF.
+                   </p>
+                   <ul class="paneltabs">
                    <li><a href="javascript:void(0);" class="selected">Tags</a></li>
                    </ul>
-
-                  <ul class="statslist">
+                   <ul class="statslist">
                    <li>'.$tagCloud.'</li>
 
                    </ul>
@@ -222,9 +235,19 @@ public function getTagCloudContent($tagCloud){
             $objTrim = $this->getObject('trimstr', 'strings');
             $content='';
             $counter = 0;
-            $title='<ul class="paneltabs">
+            $title='
+           
+           <h1>Wits Presentation System </h1>
+           
+            <ul class="paneltabs">
               <li><a href="#" class="selected">Latest 10 Uploads</a></li>
-              </ul>';
+                  </ul>
+                   <br/>
+                   <p>
+                   Here you will find the 10 latest uploads, each with presentation
+   tag, the uploader and the licence. Click on any of the links to get more information
+                   </p>
+              ';
             $row='<div class="sectionstats">';
             $row.='<div class="subcolumns">';
             $column=0;
