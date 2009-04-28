@@ -33,7 +33,7 @@ class viewerutils extends object
         $objView = $this->getObject("viewer", "webpresent");
         $filename='';
         $latestFile = $objFiles->getLatestPresentation();
-        $flashContent='';
+        $preview='';
         $fileStr='';
         if (count($latestFile) == 0) {
             $latestFileContent = '';
@@ -54,7 +54,7 @@ class viewerutils extends object
                     $filename = htmlentities($file['title']);
                 }
 
-                $flashContent = $objView->showFeaturedFlash($file['id']);
+                $preview = $objView->getPresentationFirstSlide($file['id'],$filename);
                 $linkname = $objTrim->strTrim($filename, 45);
                 $fileLink = new link ($this->uri(array('action'=>'view', 'id'=>$file['id'])));
                 $fileLink->link =$linkname;
@@ -72,7 +72,7 @@ class viewerutils extends object
 
                    <ul class="statslist">
                      <li>'.$fileStr.'</li>
-                    <li>'.$flashContent.'</li>
+                    '.$preview.'
                    </ul>
 
                    </div>
@@ -88,7 +88,9 @@ $list = $objStats->getMostViewedList();
 
     $str='<div class="c15r">
            <div class="subcr">
-
+           <ul class="paneltabs">
+              <li><a href="#" class="selected">Statistics</a></li>
+              </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#0091B9;">
             Most Viewed
@@ -164,10 +166,10 @@ public function getTagCloudContent($tagCloud){
                    <li><a href="javascript:void(0);" class="selected">Tags</a></li>
                    </ul>
 
+                  <ul class="statslist">
+                   <li>'.$tagCloud.'</li>
 
-                   '.$tagCloud.'
-
-
+                   </ul>
                    </div>
                    </div>
                    </div>';
@@ -179,10 +181,6 @@ public function getTagCloudContent($tagCloud){
         $str='<div class="'.$colType.'">
               <div class="subcl">
               <div class="sectionstats_content">
-
-              <ul class="paneltabs">
-              <li><a href="#" class="selected">'.$filename.'</a></li>
-              </ul>
 
               <div class="statslistcontainer">
 
@@ -196,9 +194,9 @@ public function getTagCloudContent($tagCloud){
               </h3>
               <div class="clear"></div>
               </li>
-              <li><a  href="#">'.$tags.'</a></li>
-              <li>'.$uploader.'</li>
-              <li>'.$licence.'</li>
+              <li><strong>Tags:</strong><a  href="#">'.$tags.'</a></li>
+              <li><strong>By:</strong>'.$uploader.'</li>
+              '.$licence.'
               </ul>
 
               </div>
@@ -224,9 +222,13 @@ public function getTagCloudContent($tagCloud){
             $objTrim = $this->getObject('trimstr', 'strings');
             $content='';
             $counter = 0;
+            $title='<ul class="paneltabs">
+              <li><a href="#" class="selected">Latest 10 Uploads</a></li>
+              </ul>';
             $row='<div class="sectionstats">';
             $row.='<div class="subcolumns">';
             $column=0;
+            
 
             foreach ($latestFiles as $file)
             {
@@ -303,7 +305,7 @@ public function getTagCloudContent($tagCloud){
                 }
             }
 
-            return $content;
+            return $title.$content;
         }
     }
 
