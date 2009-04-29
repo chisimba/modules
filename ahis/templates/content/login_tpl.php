@@ -68,7 +68,7 @@ $objTable->addCell($objPassword->show().$objModule->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell($clearButton->show());
+$objTable->addCell("&nbsp;".$clearButton->show());
 $objTable->addCell($enterButton->show(), NULL, 'top', 'right');
 $objTable->endRow();
 

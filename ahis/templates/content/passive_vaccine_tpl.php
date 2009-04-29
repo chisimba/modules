@@ -59,15 +59,16 @@ $bButton->setCSS('backButton');
 $cButton = new button('clear', $this->objLanguage->languageText('word_clear'), "javascript: clearPassiveVaccine()");
 $cButton->setCSS('cancelButton');
 
-$refNoBox = new textinput('refNo', $refNo);
-$monthBox = new textinput('month', date('F', strtotime($calendardate)));
-$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 8);
+$refNoBox = new textinput('refNo', $refNo, 20);
+$monthBox = new textinput('month', date('F', strtotime($calendardate)), 'text', 13);
+$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 4);
 $yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 
 $geo2Drop = new dropdown('geo2Id');
 $geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
 $geo2Drop->setSelected($geo2Id);
 $geo2Drop->extra = 'disabled';
+$geo2Drop->cssClass = "passive_vaccine";
 
 $manufactureDate = $this->newObject('datepicker','htmlelements');
 $manufactureDate->setName('dateManufactured');
@@ -76,51 +77,54 @@ $expireDate = $this->newObject('datepicker','htmlelements');
 $expireDate->setName('dateExpire');
 $expireDate->setDefaultDate(date('Y-m-d'));
 
-$sourceBox = new textinput('source');
-$batchBox = new textinput('batch');
+$sourceBox = new textinput('source', NULL, 'text', 20);
+$batchBox = new textinput('batch', NULL, 'text', 20);
 
 $panvacCheck = new checkbox('panvac');
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-$objTable->cssClass = 'min50';
+//$objTable->cssClass = 'min50';
+
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').": ");
-$objTable->addCell($refNoBox->show());
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
-$objTable->addCell($geo2Drop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').":$tab");
+$objTable->addCell($refNoBox->show(), NULL, 'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_month').": ");
-$objTable->addCell($monthBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_year').": ");
-$objTable->addCell($yearBox->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').":$tab");
+$objTable->addCell($geo2Drop->show(), NULL, 'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_vacsource', 'ahis').": ");
-$objTable->addCell($sourceBox->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_batch', 'ahis').": ");
-$objTable->addCell($batchBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_monthandyear', 'ahis').":$tab");
+$objTable->addCell($monthBox->show()."&nbsp; ".$yearBox->show(), NULL, 'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_manufacturedate', 'ahis').": ");
-$objTable->addCell($manufactureDate->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_expiredate', 'ahis').": ");
-$objTable->addCell($expireDate->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_vacsource', 'ahis').":$tab");
+$objTable->addCell($sourceBox->show(), NULL, 'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_panvactested', 'ahis').": ");
-$objTable->addCell($panvacCheck->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_batch', 'ahis').":$tab");
+$objTable->addCell($batchBox->show(), NULL, 'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_manufacturedate', 'ahis').":$tab");
+$objTable->addCell($manufactureDate->show(), NULL, 'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_expiredate', 'ahis').":$tab");
+$objTable->addCell($expireDate->show(), NULL, 'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_panvactested', 'ahis').":$tab");
+$objTable->addCell($panvacCheck->show(), NULL, 'center');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($bButton->show());
-$objTable->addCell($cButton->show());
-$objTable->addCell($sButton->show(), NULL, 'top', 'right');
-$objTable->addCell('');
+$objTable->addCell("&nbsp;".$bButton->show().$tab.$cButton->show().$tab.$sButton->show());
 $objTable->endRow();
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'passive_save')));
@@ -129,11 +133,12 @@ $objForm->addRule('dateManufactured', $this->objLanguage->languageText('mod_ahis
 $objForm->addRule('source', $this->objLanguage->languageText('mod_ahis_valvacsourcerequired', 'ahis'), 'required');
 $objForm->addRule('batch', $this->objLanguage->languageText('mod_ahis_valvacbatchrequired', 'ahis'), 'required');
 
-$objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
-$objLayer->align = 'center';
+//$objLayer = new layer();
+//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+//$objLayer->align = 'center';
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
-echo $objLayer->show();
+//echo $objLayer->show();
+echo $objHeading->show()."<br />".$objForm->show();

@@ -61,12 +61,15 @@ $cButton->setCSS('cancelButton');
 $geo2Drop = new dropdown('geo2Id');
 $geo2Drop->addFromDB($arrayGeo2, 'name', 'id');
 $geo2Drop->setSelected($geo2Id);
+$geo2Drop->cssClass = 'passive_surveillance';
 $oStatusDrop = new dropdown('oStatusId');
 $oStatusDrop->addFromDB($arrayOutbreakStatus, 'name', 'id');
 $oStatusDrop->setSelected($oStatusId);
+$oStatusDrop->cssClass = 'passive_surveillance';
 $qualityDrop = new dropdown('qualityId');
 $qualityDrop->addFromDB($arrayQuality, 'name', 'id');
 $qualityDrop->setSelected($qualityId);
+$qualityDrop->cssClass = 'passive_surveillance';
 
 $preparedDate = $this->newObject('datepicker','htmlelements');
 $preparedDate->setName('datePrepared');
@@ -81,63 +84,65 @@ $isReportedDate = $this->newObject('datepicker','htmlelements');
 $isReportedDate->setName('dateIsReported');
 $isReportedDate->setDefaultDate($dateIsReported);
 
-$refNoBox = new textinput('refNo', $refNo);
-$monthBox = new textinput('month', date('F', strtotime($calendardate)));
-$yearBox = new textinput('year', date('Y', strtotime($calendardate)));
+$refNoBox = new textinput('refNo', $refNo, 'text', 30);
+$monthBox = new textinput('month', date('F', strtotime($calendardate)),'text', 23);
+$yearBox = new textinput('year', date('Y', strtotime($calendardate)), 'text', 4);
 $yearBox->extra = $monthBox->extra = $refNoBox->extra = "readonly";
 //if (!$this->objUser->isAdmin()) {
     $geo2Drop->extra = 'disabled';
 //}
-$remarksBox = new textarea('remarks', $remarks, 4, 40);
+$remarksBox = new textarea('remarks', $remarks, 4, 29);
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-$objTable->cssClass = 'min50';
+//$objTable->cssClass = 'min50';
+
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').": ");
-$objTable->addCell($refNoBox->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_outbreakref').":$tab");
+$objTable->addCell($refNoBox->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_month').": ");
-$objTable->addCell($monthBox->show());
-$objTable->addCell($this->objLanguage->languageText('word_year').": ");
-$objTable->addCell($yearBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_monthandyear', 'ahis').":$tab");
+$objTable->addCell($monthBox->show()."&nbsp; ".$yearBox->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": ");
-$objTable->addCell($geo2Drop->show());
-$objTable->addCell($this->objLanguage->languageText('phrase_outbreak').": ");
-$objTable->addCell($oStatusDrop->show());
+$objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').":$tab");
+$objTable->addCell($geo2Drop->show(),NULL,'center');
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('phrase_outbreak').":$tab");
+$objTable->addCell($oStatusDrop->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateprepared', 'ahis').": ");
-$objTable->addCell($preparedDate->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate', 'ahis').": ");
-$objTable->addCell($IBARDate->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_dateprepared', 'ahis').":$tab");
+$objTable->addCell($preparedDate->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_dvsdate', 'ahis').": ");
-$objTable->addCell($receivedDate->show());
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_isreporteddate', 'ahis').": ");
-$objTable->addCell($isReportedDate->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_ibardate', 'ahis').":$tab");
+$objTable->addCell($IBARDate->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_quality').": ");
-$objTable->addCell($qualityDrop->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_dvsdate', 'ahis').":$tab");
+$objTable->addCell($receivedDate->show(),NULL,'center');
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_remarks').": ");
-$objTable->addCell($remarksBox->show());
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_isreporteddate', 'ahis').":$tab");
+$objTable->addCell($isReportedDate->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('phrase_quality').":$tab");
+$objTable->addCell($qualityDrop->show(),NULL,'center');
+$objTable->endRow();
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('word_remarks').":$tab");
+$objTable->addCell($remarksBox->show(),NULL,'center');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($bButton->show());
-$objTable->addCell($cButton->show());
-$objTable->addCell($sButton->show(),NULL,'top','right');
-$objTable->addCell('');
+$objTable->addCell("&nbsp;".$bButton->show().$tab.$cButton->show().$tab.$sButton->show());
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');
@@ -148,11 +153,12 @@ $objForm->addRule('dateIBAR', $this->objLanguage->languageText('mod_ahis_valdate
 $objForm->addRule('dateReceived', $this->objLanguage->languageText('mod_ahis_valdatedvs', 'ahis'), 'datenotfuture');
 $objForm->addRule('dateIsReported', $this->objLanguage->languageText('mod_ahis_valdateisreported', 'ahis'), 'datenotfuture');
 
-$objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
-$objLayer->align = 'center';
+//$objLayer = new layer();
+//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
+//$objLayer->align = 'center';
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
-echo $objLayer->show();
+//echo $objLayer->show();
+echo $objHeading->show()."<br />".$objForm->show();

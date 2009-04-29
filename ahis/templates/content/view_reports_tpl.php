@@ -96,7 +96,7 @@ $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButton->show());
+$objTable->addCell("&nbsp;".$sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButton->show());
 //$objTable->addCell('');
 //$objTable->addCell();
 $objTable->addCell('');
