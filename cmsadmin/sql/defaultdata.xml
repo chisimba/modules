@@ -206,5 +206,40 @@
      <created_by>init_1</created_by>
    </tbl_cms_templates>
    
+   <tbl_cms_flag_options>
+     <id>init_1</id>
+     <title>Missing Image(s)</title>
+     <text>Missing Image(s)</text>
+     <published>1</published>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_flag_options>
+   
+   <tbl_cms_flag_options>
+     <id>init_2</id>
+     <title>Broken links</title>
+     <text>Broken link in page</text>
+     <published>1</published>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_flag_options>
+   
+   <tbl_cms_flag_options>
+     <id>init_3</id>
+     <title>Outdated</title>
+     <text>Content is out of date</text>
+     <published>1</published>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_flag_options>   
+
+   <tbl_cms_flag_options>
+     <id>init_4</id>
+     <title>Violation of policy</title>
+     <text>Violation of website policy</text>
+     <published>1</published>
+     <created>now()</created>
+     <created_by>init_1</created_by>
+   </tbl_cms_flag_options>   
    
 </defaultdata>

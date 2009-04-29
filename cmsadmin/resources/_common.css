@@ -359,6 +359,10 @@ font-size: 0.8em;
 	padding: 3px;
 }
 
+.contentfeaturebox a:hover {
+	text-decoration: none;
+}
+
 .fg-menu-container li{
 	line-height: 1.4em;
 	padding-left: 25px;

@@ -477,6 +477,11 @@
             $url = '?module=shorturl&ref=cmsadmin';
             $icnShortURL = $objIcon->getCleanBlockIcon($url, 'shorturl60x60', $link, 'png', 'icons/cms/');
 
+			//Flag URL link
+            $link = $this->objLanguage->languageText('mod_cmsadmin_flag', 'cmsadmin'); 
+            $url = $this->uri(array('action' => 'flag'));
+            $icnFlag = $objIcon->getCleanBlockIcon($url, 'flag', $link, 'png', 'icons/cms/');
+			
             //Configuration link
             $link = $this->objLanguage->languageText('mod_cmsadmin_config', 'cmsadmin'); 
             $url = '?module=sysconfig&action=step2&pmodule_id=cmsadmin';
@@ -500,6 +505,7 @@
             $tbl->endRow();
 
             $tbl->startRow();
+            $tbl->addCell($icnFlag);
             $tbl->addCell($icnConfig);
             $tbl->endRow();
 

@@ -281,6 +281,15 @@
 		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
 
+				case 'flag':
+                    $topNav = $this->_objUtils->topNav('flag');
+                    $arrFlagOptions = $this->_objFlag->getOptions();
+
+                    $this->setVarByRef('topNav',$topNav);
+                    $this->setVarByRef('arrFlagOptions', $arrFlagOptions);
+					return 'cms_flag_list_tpl.php';
+				break;
+				
 				case 'ajaxforms':
 					$this->setContentType('text/html');
 					
