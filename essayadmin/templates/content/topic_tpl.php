@@ -246,14 +246,13 @@ $objTable->row_attributes=' height="10"';
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->endRow();
-//var_dump($objTable);
+
 /************** Build form **********************/
 
 $objForm = new form('topic',$this->uri(array('action'=>'savetopic')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('percentage', $errPercent, 'numeric');
 $objForm->addRule('topicarea', $errTopic, 'required');
-//var_dump($objForm);
 
 /************** Display page ********************/
 
