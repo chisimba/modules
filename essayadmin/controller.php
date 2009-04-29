@@ -623,7 +623,6 @@ class essayadmin extends controller
                 $percent = $val['percentage'];
 
                 // display in table
-              //  var_dump($date);                
                 $date = $this->objDateformat->formatDate($val['closing_date']);
                 $objTable->row_attributes=' height="25"';
                 $objTable->startRow();
