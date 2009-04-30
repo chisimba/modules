@@ -1209,7 +1209,7 @@ jQuery(document).ready(function(){
 			$objIcon->setIcon('redflag');
 			$objIcon->title = $this->objLanguage->languageText('mod_cms_flag_content', 'cms');
 			$objIcon->extra = 'id="hover_redflag"';
-			$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions">' . $objIcon->show();
+			$flagContent = '<a id="flag_link" href="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'" rel="?module=cmsadmin&action=ajaxforms&type=showflagoptions&id='.$page['id'].'">' . $objIcon->show();
 
 $script = <<<SCRIPT
 <script type="text/javascript">
