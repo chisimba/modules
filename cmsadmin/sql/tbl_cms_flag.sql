@@ -20,7 +20,11 @@ $fields = array(
 	'created_by' => array(
 		'type' => 'text',
 		'length' => 255
-		)
+		),
+    'ip_addr' => array(
+        'type' => 'text',
+        'length' => 255
+        )
 	);
 
 ?>

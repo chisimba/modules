@@ -61,20 +61,16 @@
          * Method to add a template to the database
          * @param string $title The title of the new flag option
          * @param string $text The Description of the flag option
-         * @param bool $published Whether flag option will be visible or not
-         * @access public
          * @return flagOptionId on success and FALSE on faliure
          */
-        public function addOption($title, $text, $published)
+        public function addOption($title, $text)
         {
             $creatorid = $this->_objUser->userId();
 
-            $fullText = str_ireplace("<br />", " <br /> ", $body);
-
             $newArr = array(
                           'title' => $title ,
-                          'text' => $description ,
-                          'published' => $imagePath ,
+                          'text' => $text ,
+                          'published' => '1' ,
                           'created' => $this->now(),
                           'created_by' => $creatorid
             );
@@ -89,20 +85,15 @@
          * @param string $id The id of the flag option to edit
          * @param string $title The title of the new flag option
          * @param string $text The Description of the flag option
-         * @param bool $published Whether flag option will be visible or not
-         * @access public
          * @return flagOptionId on success and FALSE on faliure
          */
-        public function editOption($id, $title, $text, $published)
+        public function editOption($id, $title, $text)
         {
             $creatorid = $this->_objUser->userId();
 
-            $fullText = str_ireplace("<br />", " <br /> ", $body);
-
             $newArr = array(
                           'title' => $title ,
-                          'text' => $description ,
-                          'published' => $imagePath ,
+                          'text' => $text ,
                           'created' => $this->now(),
                           'created_by' => $creatorid
             );
@@ -131,7 +122,7 @@
        /**
         * Method to retrieve an option record
         *
-        * @param string $id 
+        * @param string $id
         * @return boolean
         * @access public
         */
@@ -139,14 +130,52 @@
         {
             $result = $this->getAll(" WHERE id = '{$id}'");
 
-			if (!empty($result)) {
-				return FALSE;
-			}
-            
+            if (!empty($result)) {
+                return FALSE;
+            }
+
             return $result;
         }
 
-		
+
+       /**
+        * Method to retrieve all option records
+        *
+        * @param string $id
+        * @return boolean
+        * @access public
+        */
+        public function getOptions()
+        {
+            $result = $this->getAll();
+
+            if (empty($result)) {
+                return FALSE;
+            }
+
+            return $result;
+        }
+
+
+       /**
+        * Method to retrieve all published option records
+        *
+        * @param string $id
+        * @return boolean
+        * @access public
+        */
+        public function getPublishedOptions()
+        {
+            $result = $this->getAll(" WHERE published = '1'");
+
+            if (empty($result)) {
+                return FALSE;
+            }
+
+            return $result;
+        }
+
+
         /**
          * Method to toggle the publish field
          *
@@ -166,6 +195,29 @@
             }
         }
 
+        /**
+         * Method to publish or unpublish template
+         *
+         * @param string id The id if the template
+         * @param string $task Publish or unpublish
+         * @access public
+         * @return boolean
+         * @author Megan Watson, Charl Mert
+         */
+        public function publish($id, $task = 'publish')
+        {
+            switch($task){
+                case 'publish':
+                $fields['published'] = 1;
+                break;
+                case 'unpublish':
+                $fields['published'] = 0;
+                break;
+            }
+            $newId = $this->update('id', $id, $fields);
+
+            return $newId;
+        }
 
 	}
 

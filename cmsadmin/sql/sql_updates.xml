@@ -587,7 +587,22 @@
       </add>
     </data>
   </update>
-  
+
+  <update>
+    <table>tbl_cms_flag</table>
+    <version>1.617</version>
+    <description> Added IP Address Field - ip_addr</description>
+
+    <data>
+      <add>
+        <name>ip_addr</name>
+        <type>text</type>
+        <length>32</length>
+        <notnull>0</notnull>
+      </add>
+    </data>
+  </update>
+
 </updates>
 
 

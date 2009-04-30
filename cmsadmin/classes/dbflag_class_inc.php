@@ -68,13 +68,18 @@
         {
             $creatorid = $this->_objUser->userId();
 
-            $fullText = str_ireplace("<br />", " <br /> ", $body);
+            if (isset($_SERVER['REMOTE_ADDR'])) {
+                $ipAddr = $_SERVER['REMOTE_ADDR'];
+            } else {
+                $ipAddr = '';
+            }
 
             $newArr = array(
                           'content_id' => $contentId ,
-                          'content_id' => $contentId ,
+                          'option_id' => $optionId ,
                           'created' => $this->now(),
-                          'created_by' => $creatorid
+                          'created_by' => $creatorid,
+                          'ip_addr' => $ipAddr
             );
             $newId = $this->insert($newArr);
 			

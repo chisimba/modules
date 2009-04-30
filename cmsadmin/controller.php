@@ -131,6 +131,23 @@
          */
         public $_objSecurity;
 
+        /**
+         * The Flag object
+         *
+         * @access public
+         * @var object
+         */
+        public $_objFlag;
+
+
+        /**
+         * The Flag Options object
+         *
+         * @access public
+         * @var object
+         */
+        public $_objFlagOptions;
+
 
         /**
          * Class Constructor
@@ -146,8 +163,12 @@
                 $this->setVar('SUPPRESS_JQUERY', false);
                 $this->setVar('JQUERY_VERSION', '1.3.2');			
 			
-                // instantiate object
                 $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
+                $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
+                $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
+
+                $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
+                
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
                 $this->_objPreview =  $this->newObject('dbcontentpreview', 'cmsadmin');
                 $this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
@@ -171,7 +192,7 @@
                 $this->objTreeNodes =  $this->newObject('treenodes', 'cmsadmin');
                 $this->dbMenuStyle =  $this->newObject('dbmenustyles', 'cmsadmin');
                 $this->_objCMSLayouts =  $this->newObject('cmslayouts', 'cms');
-
+                
                 //feeds classes
                 $this->objFeed = $this->getObject('feeds', 'feed');
 
@@ -238,6 +259,11 @@
 				case 'ajaxforms':
 					return FALSE;
 				break;
+                
+                case 'flagcontent':
+                    return FALSE;
+                break;
+                
 				default :
 					return TRUE;
 				break;
@@ -283,19 +309,53 @@
 
 				case 'flag':
                     $topNav = $this->_objUtils->topNav('flag');
-                    $arrFlagOptions = $this->_objFlag->getOptions();
+                    $arrFlagOptions = $this->_objFlagOptions->getOptions();
+
+                    if ($arrFlagOptions == FALSE) {
+                        $arrFlagOptions = array();
+                    }
 
                     $this->setVarByRef('topNav',$topNav);
                     $this->setVarByRef('arrFlagOptions', $arrFlagOptions);
 					return 'cms_flag_list_tpl.php';
 				break;
-				
-				case 'ajaxforms':
-					$this->setContentType('text/html');
-					
-					return 'cms_ajax_forms_tpl.php';
-				break;
-				
+
+                case 'flagcontent':
+                    $contentId = $this->getParam('id');
+                    $optionId = $this->getParam('flag_options');
+                    $this->_objFlag->addFlag($contentId, $optionId);
+
+                    $this->setVarByRef('id', $contentId);
+                    $this->setLayoutTemplate('cms_single_column_layout_tpl.php');
+
+                return 'cms_flag_success_tpl.php';
+
+                case 'flagpublish':
+                    $id = $this->getParam('id');
+                    $mode = $this->getParam('mode');
+                    $this->_objFlagOptions->publish($id, $mode);
+
+                return $this->nextAction('flag');
+
+                case 'addeditflagoption':
+                    $id = $this->getParam('id', '');
+
+                    $title = $this->getParam('txtTitle', '');
+                    $text = $this->getParam('txtText', '');
+
+                    if ($id != '') {
+                        $this->_objFlagOptions->editOption($id, $title, $text);
+                    } else {
+                        $this->_objFlagOptions->addOption($title, $text);
+                    }
+                    return $this->nextAction('flag', array(NULL), 'cmsadmin');
+
+
+                case 'ajaxforms':
+                    $this->setContentType('text/html');
+
+                return 'cms_ajax_forms_tpl.php';
+	
                 case 'previewcontent':
                     //var_dump('HERE'); exit;
                     $previewId = $this->_objPreview->add();
@@ -305,8 +365,6 @@
                 $templateId = $this->getParam('id', null);
                 $this->_objTemplate->edit();
                 return $this->nextAction('templates', array('id' => $templateId), 'cmsadmin');
-
-                break;
 
                 case 'deletetemplate':
                 $this->_objTemplate->deleteTemplate($this->getParam('id'));

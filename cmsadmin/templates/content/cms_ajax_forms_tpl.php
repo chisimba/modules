@@ -13,7 +13,11 @@ $id = $this->getParam('id', '');
 $type = $this->getParam('type', '');
 switch($type){
     case 'showflagoptions':
-        echo $this->_objUtils->getFlagOptionsForm();
+        echo $this->_objUtils->getFlagOptionsForm($id);
+    break;
+    
+    case 'showflagoptionsaddform':
+        echo $this->_objUtils->getAddFlagOptionAddForm();
     break;
 
     default:

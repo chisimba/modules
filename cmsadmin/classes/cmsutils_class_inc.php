@@ -125,6 +125,8 @@
         {
             try {
                 $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
+                $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
+                $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
                 $this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
                 $this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
@@ -246,16 +248,16 @@
             return $objDropDown->show();
         }
 
-                /**
-                 * Method to get the layout options for a section
-                 * At the moment there are 4 types of layouts
-                 * The layouts will be diplayed as images for selection
-                 * The layouts templates will be displayed as images
-                 *
-                 * @param string $name The of the of the field
-                 * @return string Html for selecting layout type
-                 * @access public
-                 */
+       /**
+        * Method to get the layout options for a section
+        * At the moment there are 4 types of layouts
+        * The layouts will be diplayed as images for selection
+        * The layouts templates will be displayed as images
+        *
+        * @param string $name The of the of the field
+        * @return string Html for selecting layout type
+        * @access public
+        */
         public function getLayoutOptions($name, $id)
         {
             $objLayouts =$this->newObject('dblayouts', 'cmsadmin');
@@ -582,6 +584,22 @@
             $this->appendArrayVar('headerParams', $script);
 
             switch ($action) {
+
+                case 'flag':
+
+                // New
+                $url = '#';
+                $linkText = $this->objLanguage->languageText('word_new');
+                $iconList .= $icon_publish->getCleanTextIcon('btn_new', $url, 'new', $linkText, 'png', 'icons/cms/');
+
+                // Cancel
+                $url = "javascript:history.back();";
+                $linkText = ucwords($this->objLanguage->languageText('word_back'));
+                $iconList .= $icon_publish->getCleanTextIcon('', $url, 'back', $linkText, 'png', 'icons/cms/');
+
+                return '<p style="align:right;">'.$iconList.'</p>';
+                break;
+            
                 case 'viewtemplates':
 
                 // New
@@ -1880,7 +1898,6 @@
             }
 
             $objFeatureBox = $this->getObject('featurebox', 'navigation');
-
 			
 			ob_start();
 			?>
@@ -6556,12 +6573,12 @@ $this->appendArrayVar('headerParams', $script);
 
 	   /**
 		* Method to return the Flag Options Form (to be returned via AJAX)
-		*
+		* @param $contentId Id of the content item being flagged
 		* @access public
 		*/
-		public function getFlagOptionsForm()
+		public function getFlagOptionsForm($contentId)
 		{
-			$objForm = new form('editfrm', $this->uri(array('action' => 'addmenu')));
+			$objForm = new form('frmaddflag', $this->uri(array('action' => 'flagcontent', 'id' => $contentId)));
             $objForm->setDisplayType(3);
 
 			$tbl = new htmlTable();
@@ -6576,9 +6593,13 @@ $this->appendArrayVar('headerParams', $script);
 			$tbl->endRow();
 			
 			$objDropDown = new dropdown('flag_options');
-			$objDropDown->addOption('0', 'Grammar or Spelling Mistakes');
-			$objDropDown->addOption('1', 'Obscene Language');
-			$objDropDown->addOption('2', 'Nudity, Pornographic Material');
+
+            $flagOptions = $this->_objFlagOptions->getPublishedOptions();
+
+            foreach ($flagOptions as $opt) {
+                $objDropDown->addOption($opt['id'], $opt['text']);
+            }
+            
 			$objDropDown->setSelected('0');
 			
 			$tbl->startRow();
@@ -6588,7 +6609,6 @@ $this->appendArrayVar('headerParams', $script);
 			// Submit Button
             $button = new button('submitform', 'Flag this Item');
             $button->setToSubmit();
-
 			
 			$objForm->addToForm($tbl->show());
 			$objForm->addToForm($button->show());
@@ -6598,8 +6618,100 @@ $this->appendArrayVar('headerParams', $script);
 			return $display;
 		}
 
+   /**
+    * Method to return the Boxy flag option add form
+    *
+    * @param string $id The id of the form to be edited
+    * @access public
+    */
+        public function getAddFlagOptionAddForm($id = '')
+        {
+            //Load Edit Values when supplied with id
+            if ($id != ''){
+                $arrFlagOptions = $this->_objFlagOptions->getOption($id);
+            }
+            
+            $table = new htmlTable();
+            $table->width = "100%";
+            $table->cellspacing = "0";
+            $table->cellpadding = "10";
+            $table->border = "0";
+            $table->attributes = "align ='center'";
 
+            $tbl = new htmlTable();
+            $tbl->width = "100%";
+            $tbl->cellspacing = "0";
+            $tbl->cellpadding = "10";
+            $tbl->border = "0";
+            $tbl->attributes = "align ='center'";
 
+            //TODO: Add Language Items for these
+            //Match
+            $lblTitle = 'Title :';
+
+            if (!isset($arrFlagOptions['title'])){
+                $arrFlagOptions['title'] = '';
+            }
+
+            $txtTitle = "<input type='text' id='txtTitle' name='txtTitle' class='match_target_url_init' value='$arrFlagOptions[title]'/>";
+
+            $tbl->startRow();
+            $tbl->addCell($lblTitle, '', '', '', 'boxy_td_left', '','');
+            $tbl->addCell($txtTitle, '', 'top', 'left');
+            $tbl->endRow();
+
+            //Target
+            $lblText = 'Text';
+
+            if (!isset($arrFlagOptions['text'])){
+                $arrFlagOptions['text'] = '';
+            }
+
+            $txtText = "<input type='text' id='txtText' name='txtText' class='match_target_url_init' value='$arrFlagOptions[text]'/>";
+
+            $tbl->startRow();
+            $tbl->addCell($lblText, '', '', '', 'boxy_td_left', '','');
+            $tbl->addCell($txtText, '', 'top', 'left');
+            $tbl->endRow();
+
+            //Submit/Cancel
+            $btnOk = "<input type='submit' id='sData' name='sData' value='Save' style='width:50px;'/>";
+            //$btnOk = "<input type='button' id='frm_submit_btn_$id' name='frm_add_submit' value='Save' style='width:50px;'/>";
+            $btnCancel = "<input type='button' id='cancel' name='cancel' value='Cancel' style='width:50px;' onclick='Boxy.get(this).hide(); return false'/>";
+
+            $tbl1 = new htmlTable();
+            $tbl1->width = "100%";
+            $tbl1->cellspacing = "0";
+            $tbl1->cellpadding = "0";
+            $tbl1->border = "0";
+            $tbl1->attributes = "align ='center'";
+
+            $tbl1->startRow();
+            $tbl1->addCell($btnOk.' '.$btnCancel, '', '', 'center', '', '','');
+            $tbl1->endRow();
+
+            if ($id != '') {
+                $action = '<input type="hidden" name="oper" value="edit" />';
+                $action .= '<input type="hidden" name="id" value="'.$arrFlagOptions['id'].'" />';
+            } else {
+                $action = '';
+            }
+            
+            //Adding All to Container here
+            $table->startRow();
+            $table->addCell($tbl->show()/*.$layer->show()*/.'<div style="padding-bottom:10px"></div>'.$tbl1->show(), '', '', 'center', '', '','');
+            $table->endRow();
+            
+            //Stripping New Lines and preparing for boxy input = (Facebook style window)
+            $display = '<form id="frm_addgrid_'.$id.'" class="Form" name="frm_addgrid" action="?module=cmsadmin&action=addeditflagoption" method="POST">';
+            $display .= str_replace("\n", '',$table->show());
+            $display = str_replace("\n\r", '', $display);
+            
+            $display .= $action;
+            $display .= '</form>';
+            
+            return $display;
+        }
 
 
 
