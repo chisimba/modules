@@ -156,6 +156,8 @@ $fields = array(
 	);
 	$name = 'contextcode';
 
+$name = 'idx_cms_sections';
+
 $indexes = array(
                 'fields' => array(
                 	'id' => array()
