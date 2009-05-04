@@ -330,6 +330,12 @@
 
                 return 'cms_flag_success_tpl.php';
 
+                case 'deleteflagoption':
+                    $id = $this->getParam('id');
+                    $this->_objFlagOptions->deleteOption($id);
+
+                return $this->nextAction('flag', array(NULL), 'cmsadmin');
+
                 case 'flagpublish':
                     $id = $this->getParam('id');
                     $mode = $this->getParam('mode');
@@ -348,7 +354,7 @@
                     } else {
                         $this->_objFlagOptions->addOption($title, $text);
                     }
-                    return $this->nextAction('flag', array(NULL), 'cmsadmin');
+                return $this->nextAction('flag', array(NULL), 'cmsadmin');
 
 
                 case 'ajaxforms':

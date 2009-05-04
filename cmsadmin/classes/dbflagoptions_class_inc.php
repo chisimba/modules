@@ -97,7 +97,7 @@
                           'created' => $this->now(),
                           'created_by' => $creatorid
             );
-            $newId = $this->update($id, $newArr);
+            $newId = $this->update('id', $id, $newArr);
 			
             return $newId;
         }
@@ -128,13 +128,13 @@
         */
         public function getOption($id)
         {
-            $result = $this->getAll(" WHERE id = '{$id}'");
+            $result = $this->getAll(" WHERE id = '$id'");
 
-            if (!empty($result)) {
+            if (empty($result[0])) {
                 return FALSE;
             }
 
-            return $result;
+            return $result[0];
         }
 
 

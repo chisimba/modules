@@ -6588,31 +6588,42 @@ $this->appendArrayVar('headerParams', $script);
 			$tbl->border = "0";
 			$tbl->attributes = "align ='center'";
 			
-			$tbl->startRow();
-			$tbl->addCell('Why are you flagging this content item:', '', '', '', 'boxy_td_left', '','');
-			$tbl->endRow();
-			
 			$objDropDown = new dropdown('flag_options');
 
             $flagOptions = $this->_objFlagOptions->getPublishedOptions();
 
-            foreach ($flagOptions as $opt) {
-                $objDropDown->addOption($opt['id'], $opt['text']);
-            }
-            
-			$objDropDown->setSelected('0');
-			
-			$tbl->startRow();
-			$tbl->addCell($objDropDown->show(), '', '', '', 'boxy_td_left', '','');
-			$tbl->endRow();
+			if (!empty($flagOptions)) {
 
-			// Submit Button
-            $button = new button('submitform', 'Flag this Item');
-            $button->setToSubmit();
-			
-			$objForm->addToForm($tbl->show());
-			$objForm->addToForm($button->show());
-			
+                /*
+                $tbl->startRow();
+                $tbl->addCell('Why are you flagging this content item:', '', '', '', 'boxy_td_left', '','');
+                $tbl->endRow();
+                */
+                
+                foreach ($flagOptions as $opt) {
+                    $objDropDown->addOption($opt['id'], $opt['text']);
+                }
+
+				$objDropDown->setSelected('0');
+
+				$tbl->startRow();
+				$tbl->addCell($objDropDown->show(), '', '', '', 'boxy_td_left', '','');
+				$tbl->endRow();
+
+				// Submit Button
+            	$button = new button('submitform', 'Flag this Item');
+	            $button->setToSubmit();
+                
+                $objForm->addToForm($tbl->show());
+				$objForm->addToForm('<br/>'.$button->show());
+
+			} else {
+				$tbl->startRow();
+				$tbl->addCell('No published flag options have been loaded.', '', '', '', 'boxy_td_left', '','');
+				$tbl->endRow();
+                $objForm->addToForm($tbl->show());
+			}
+						
 			$display = $objForm->show();
 			
 			return $display;
@@ -6652,7 +6663,7 @@ $this->appendArrayVar('headerParams', $script);
             if (!isset($arrFlagOptions['title'])){
                 $arrFlagOptions['title'] = '';
             }
-
+            
             $txtTitle = "<input type='text' id='txtTitle' name='txtTitle' class='match_target_url_init' value='$arrFlagOptions[title]'/>";
 
             $tbl->startRow();
@@ -6692,7 +6703,7 @@ $this->appendArrayVar('headerParams', $script);
 
             if ($id != '') {
                 $action = '<input type="hidden" name="oper" value="edit" />';
-                $action .= '<input type="hidden" name="id" value="'.$arrFlagOptions['id'].'" />';
+                $action .= '<input type="hidden" name="id" value="'.$id.'" />';
             } else {
                 $action = '';
             }
@@ -6710,6 +6721,38 @@ $this->appendArrayVar('headerParams', $script);
             $display .= $action;
             $display .= '</form>';
             
+            return $display;
+        }
+
+
+   /**
+    * Method to return the Boxy flag option add form
+    *
+    * @param string $id The id of the form to be edited
+    * @access public
+    */
+        public function getDeleteConfirmForm($id = '')
+        {
+
+$innerHtml = <<<HTSRC
+<table>
+<tr style="padding-bottom:20px;">
+    <td>Are you sure you want to delete this item?</td>
+</tr>
+<tr>
+    <td align="center">
+        <form action="?module=cmsadmin&action=deleteflagoption&confirm=yes&id={$id}" method="POST">
+            <input id="rm_{$id}" value = 'Yes' type="submit" style="width:50px;"/>
+            <input type="button" onclick='Boxy.get(this).hide(); return false' value="No" style="width:50px;"/>
+            <input type="button" onclick='Boxy.get(this).hide(); return false' value="Cancel" style="width:50px;"/>
+        </form>
+    </td>
+</tr>
+</table>
+HTSRC;
+            $display = str_replace("\n", '',$innerHtml);
+            $display = str_replace("\n\r", '', $display);
+
             return $display;
         }
 

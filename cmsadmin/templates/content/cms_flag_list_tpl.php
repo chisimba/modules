@@ -99,22 +99,40 @@ if (count($arrFlagOptions) > 0) {
 	    //Create delete icon
         //TODO: Enable Security
 		//if ($this->_objSecurity->canUserWriteSection($flagOption['id'])){
+
+            /*
 		    $delArray = array('action' => 'deletetemplate', 'confirm'=>'yes', 'id'=>$flagOption['id']);
-		    $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdeltemplate', 'cmsadmin');
+            $deletephrase = $this->objLanguage->languageText('mod_cmsadmin_confirmdeltemplate', 'cmsadmin');
 		    $delIcon = $objIcon->getDeleteIconWithConfirm($flagOption['id'], $delArray,'cmsadmin',$deletephrase);
+            */
+            
+            $objIcon->setIcon('bigtrash');
+            $deleteIcon = "<a id='btn_del_{$flagOption['id']}' title='Delete' href='javascript:void(0)'>".$objIcon->show()."</a>";
+
+            $innerHtml = $this->_objUtils->getDeleteConfirmForm($flagOption['id']);
+            $this->_objBox->setHtml($innerHtml);
+            $this->_objBox->setTitle('Add Flag Option');
+            $this->_objBox->attachClickEvent("btn_del_{$flagOption['id']}");
+
+
 		//} else {
 		//	$delIcon = '';
 		//}
-		
 	    
 	    //edit icon
         //TODO: Enable Security
 		//if ($this->_objSecurity->canUserWriteSection($flagOption['id'])){
-	    	$editIcon = $objIcon->getEditIcon($this->uri(array('action' => 'addflagoption', 'id' => $flagOption['id'])));
+            $span = '<span id="'.'btn_add_' . $flagOption['id'].'">'.$objIcon->getEditIcon('#') . '</span>';
+	    	$editIcon = $span;
+
+            $innerHtml = $this->_objUtils->getAddFlagOptionAddForm($flagOption['id']);
+            $this->_objBox->setHtml($innerHtml);
+            $this->_objBox->setTitle('Add Flag Option');
+            $this->_objBox->attachClickEvent('btn_add_' . $flagOption['id']);
+
 		//} else {
 		//	$editIcon = '';
 		//}
-	    
 	
 	    $tableRow = array();
 	    //$tableRow[] = $objCheck->show();
@@ -131,7 +149,7 @@ if (count($arrFlagOptions) > 0) {
         }
         */
         
-        $tableRow[] = '<nobr>'.$editIcon.$delIcon.'</nobr>';
+        $tableRow[] = '<nobr>'.$editIcon.$deleteIcon.'</nobr>';
 
 	    $table->addRow($tableRow, $oddOrEven);
 	
