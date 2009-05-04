@@ -556,22 +556,6 @@
     </data>
   </update>
 
-
-  <update>
-    <table>tbl_cms_sections</table>
-    <version>1.610</version>
-    <description>Fixing add content bug</description>
-
-    <data>
-        <rename>
-            <show_mail>
-                <name>show_email</name>
-            </show_mail>
-        </rename>
-    </data>
-
-  </update>
-
   <update>
     <table>tbl_cms_content</table>
     <version>1.614</version>
