@@ -1,4 +1,4 @@
-<?php
+<?
 /*
 * Template to display the lecturers comment on an assignment.
 * @package assignment

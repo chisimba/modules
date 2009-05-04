@@ -37,7 +37,7 @@ $objTable = $this->newObject('htmltable', 'htmlelements');
 $objTable->startHeaderRow();
 $objTable->addHeaderCell($this->objLanguage->languageText('word_name', 'system', 'Name'),'20%');
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_assignmenttype', 'assignment', 'Assignment Type'), '13%');
-$objTable->addHeaderCell($this->objLanguage->languageText('word_description', 'system', 'Description'));
+//$objTable->addHeaderCell($this->objLanguage->languageText('word_description', 'system', 'Description'));
 $objTable->addHeaderCell($this->objLanguage->code2Txt('mod_assignment_lecturer', 'assignment', NULL, '[-author-]'),'15%');
 $objTable->addHeaderCell($this->objLanguage->languageText('mod_assignment_closingdate', 'assignment', 'Closing Date'),'15%');
 $objTable->addHeaderCell($this->objLanguage->languageText('word_status', 'system', 'Status'),'8%');
@@ -115,7 +115,7 @@ if (count($assignments) == 0) {
             $objTable->startRow();
             $objTable->addCell($objLink->show(),'20%','','',$class);
             $objTable->addCell($format,'13%','','',$class);
-            $objTable->addCell($objTrim->strTrim(strip_tags($assignment['description']), 50),'','','',$class);
+            //$objTable->addCell($objTrim->strTrim(strip_tags($assignment['description']), 50),'','','',$class);
             $objTable->addCell($this->objUser->fullname($assignment['userid']),'15%','','',$class);
             $objTable->addCell($this->objDate->formatDate($assignment['closing_date']),'15%','','',$class);
             $objTable->addCell($status,'8%','','',$class);
