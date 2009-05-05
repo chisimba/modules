@@ -15,15 +15,7 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-	
 	'territory' => array(
-		'type' => 'text',
-		'length' => 32,
-        'notnull' => TRUE
-		),
-	
-
-	'geolevel3' => array(
 		'type' => 'text',
 		'length' => 32,
         'notnull' => TRUE
@@ -33,20 +25,16 @@ $fields = array(
 		'length' => 32,
         'notnull' => TRUE
 		),
-   
-	
 	'farmname' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		),
-		
 	'farmingtype' => array(
 		'type' => 'text',
 		'length' => 64,
         'notnull' => TRUE
 		)
-	
     );
 //create other indexes here...
 

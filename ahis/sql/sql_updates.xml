@@ -37,17 +37,6 @@
         </data>
     </update> 
     <update>
-        <table>tbl_ahis_newherd</table>
-        <version>0.063</version>
-        <description>remove geolevel3 from table </description>
-        <data>
-            <remove>geolevel3</remove>                
-            
-        </data>
-
-        
-    </update>                
-    <update>
         <table>tbl_ahis_users</table>
         <version>0.052</version>
         <description>add superuser for report type admin</description>
@@ -64,7 +53,14 @@
             </add>
         </data>
     </update>                
-         
+         <update>
+        <table>tbl_ahis_newherd</table>
+        <version>0.065</version>
+        <description>remove geolevel3 from table </description>
+        <data>
+            <remove>geolevel3</remove>                
+        </data>        
+    </update>    
 </updates>
 
 
