@@ -66,6 +66,7 @@ class dbessay_topics extends dbTable
                 $sql .= ' where '.$filter;
         }
         $sql .= ' ORDER BY closing_date';
+        //echo "[$sql]";
         $rows = $this->getArray($sql);
 
         if(!empty($rows)){

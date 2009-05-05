@@ -1,4 +1,5 @@
 <?php
+//echo '<pre>'.$buffer.'</pre>';
 /*
 * Template for main essay management page.
 * @package essay
@@ -19,7 +20,7 @@ echo $list;
 if ($objUser->isCourseAdmin()) {
     $link = new link ($this->uri(NULL, 'essayadmin'));
     $link->link = $this->objLanguage->languageText('mod_essayadmin_desc', 'essayadmin', 'Essay Management');
-    
+
     echo $link->show();
 }
 

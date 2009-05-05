@@ -1,5 +1,10 @@
 <?php
 
+define('ESSAY_CANBOOK', 1);
+define('ESSAY_BOOKEDBYSTUDENT',2);
+define('ESSAY_BOOKED', 3);
+define('ESSAY_CANNOTBOOK', 4);
+
 /**
 * Controller class for the Essay Management Module.
 * @copyright (c) 2004 UWC
@@ -35,8 +40,8 @@ class essay extends controller
         // Check if the module is registered and redirect if not.
         // Check if the assignment module is registered and can be linked to.
  	$this->objModules = $this->newObject('modules','modulecatalogue');
-    
-       
+
+
 	 $this->objModules = $this->newObject('modules','modulecatalogue');
         if(!$this->objModules->checkIfRegistered('essayadmin')){
             return $this->nextAction('notregistered',array(),'redirect');
@@ -44,7 +49,7 @@ class essay extends controller
         $this->assignment = FALSE;
         if($this->objModules->checkIfRegistered('Assignment Management', 'assignment')){
             $this->assignment = TRUE;
-        } 
+        }
 
 
 
@@ -63,8 +68,8 @@ class essay extends controller
 		$this->loadclass('checkbox','htmlelements');
 		$this->loadclass('textarea','htmlelements');
 		$this->loadclass('iframe','htmlelements');
-		
-		
+
+
         $this->objLayer=new layer();
         $this->objLink=new link();
         $this->objInput=new textinput();
@@ -73,7 +78,7 @@ class essay extends controller
         $this->objText=new textarea();
         $this->objIcon= $this->newObject('geticon','htmlelements');
         $this->objIframe=new iframe();
-		
+
         // Get an instance of the confirmation object
         $this->objConfirm= $this->newObject('confirm','utilities');
         // Get an instance of the language object
@@ -90,9 +95,9 @@ class essay extends controller
         $this->objHelp = $this->newObject('helplink','help');
      //   $this->objDate = $this->newObject('simplecal','datetime');
         $this->objDate = $this->newObject('datepicker','htmlelements');
-        
+
         $this->objDateformat = $this->newObject('dateandtime','utilities');
-        
+
 	$this->objFile = $this->newObject('upload','filemanager');
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
@@ -149,24 +154,27 @@ class essay extends controller
                 // check if force 1 student per essay and fetch all bookings in topic
                 $filter = "where topicid='$id'";
                 if($topic[0]['forceone']==1){
-                    $booked=$this->dbbook->getBooking($filter);
+                    $allBookings=$this->dbbook->getBooking($filter);
                 }else{
-                    $booked=NULL;
+                    $allBookings=NULL;
                 }
                 // fetch current users booking
                 $filter .= " and studentid='".$this->userId."'";
-                $studentbook=$this->dbbook->getBooking($filter);
+                $studentBooking=$this->dbbook->getBooking($filter);
 
                 // get table display[0]['essayid']
-                $list=$this->getEssays($essays,$topic,$studentbook,$booked);
+		ob_start();
+                $list=$this->getEssays($essays,$topic,$studentBooking,$allBookings,$topic[0]['forceone']==1);
+		$this->setVar('buffer', ob_get_contents());
+		ob_end_clean();
 
-				//print_r($essays)."  ".print_r($topic)."  ".print_r($studentbook)."  ".print_r($booked);		
+				//print_r($essays)."  ".print_r($topic)."  ".print_r($studentbook)."  ".print_r($booked);
 
 
 				$this->setVarByRef('list',$list);
                 $template='essay_tpl.php';
-                
-					             
+
+
             break;
 
             // display notes in a pop up window
@@ -209,53 +217,74 @@ class essay extends controller
             break;
 
             case 'bookessay':
-		// get id of essay
-                $id=$this->getParam('book_id');
-                // get topic id
-                $topic=$this->getParam('book_id');
-                // get student id (use pk value)
-                $student=$this->userId;
-		$fields=array('studentid'=>$student,'essayid'=>$id,'topicid'=>$topic,'context'=>$this->contextcode);
-		$this->dbbook->bookEssay($fields);
-		$this->nextAction('view',array('id'=>$topic));
+                $studentId=$this->userId;
+                $topicId=$this->getParam('id');
+                $essayId=$this->getParam('essay');
+				$fields=array(
+					'studentid'=>$studentId,
+					'essayid'=>$essayId,
+					'topicid'=>$topicId,
+					'context'=>$this->contextcode
+				);
+				$this->dbbook->bookEssay($fields);
+				return $this->nextAction('view',array('id'=>$topicId));
             break;
 
             case 'unbook':
-                // get topic id
-                $topic=$this->getParam('book_id');
-                // get student id (use pk value)
-                $student=$this->userId;
-                // delete booking
-                $this->dbbook->deleteBooking(NULL," where topicid='$topic' and studentid='$student'");
-                $this->nextAction('view',array('id'=>$topic));
+                $studentId=$this->userId;
+                $topicId=$this->getParam('id');
+                $essayId=$this->getParam('essay');
+                $this->dbbook->deleteBooking(
+					NULL,
+					"
+					WHERE
+						studentid='$studentId'
+						AND topicid='$topicId'
+						AND essayid='$essayId'
+					");
+                return $this->nextAction('view',array('id'=>$topicId));
             break;
-
 
  	    // display students essays details
             case 'viewallessays':
+            case 'viewessays':
+		ob_start();
            		$data=$this->getStudentEssays();
+		$this->setVar('buffer', ob_get_contents());
+		ob_end_clean();
+		//return "dump_tpl.php";
             	$this->setVarByRef('data',$data);
            	$template='view_essays_tpl.php';
   	    break;
 
 
-            // display students essays details
-            case 'viewessays':
-  				$data=$this->getStudentEssays();
-                $this->setVarByRef('data',$data);
-                $template='view_essays_tpl.php';
-            break;
- 			
+//            // display students essays details
+//            case 'viewessays':
+//  				$data=$this->getStudentEssays();
+//                $this->setVarByRef('data',$data);
+//                $template='view_essays_tpl.php';
+//            break;
 
+
+            // display page to upload essay
+            case 'uploadessay':
+				// get message (if already submitted)
+                $msg=$this->getParam('msg');
+                $this->setVarByRef('msg',$msg);
+                // get booking number
+                $bookId=$this->getParam('bookid');
+                $this->setVarByRef('bookId',$bookId);
+                $template='upload_tpl.php';
+            break;
             // upload an essay for marking or a marked essay & marks & comment
             case 'uploadsubmit':
 				// get topic id
-                $topic=$this->getParam('id');
+//                $topic=$this->getParam('id');
                 // get booking id
-                $book=$this->getParam('book');
+                $bookId=$this->getParam('bookid');
 				//proper fileID
 				$fileId = $this->getParam('file');
-				//print $fileId;                 
+				//print $fileId;
 				$msg = '';
                 $postSubmit = $this->getParam('submit');
                 // exit upload form
@@ -265,49 +294,35 @@ class essay extends controller
                 // upload essay and return to form
                 if($postSubmit==$this->objLanguage->languageText('mod_essay_upload', 'essay')){
 						// change the file name to fullname_studentId
-		                $studentid = $this->userId;
-		                $name = $this->user;
+//		                $name = $this->user;
+//		                $studentid = $this->userId;
 		                // upload file to database into the filemanager database
 						//$arrayfiledetails = $this->objFile->uploadFile('file');
 					    // save file id and submit date to database
 		                $fields=array('studentfileid'=>$fileId, 'submitdate'=>date('Y-m-d H:i:s'));
-		                $this->dbbook->bookEssay($fields,$book);
-						$this->objFileRegister->registerUse($fileId, 'essay', 'tbl_essay_book', $book, 'studentfileid', $this->contextcode, '', TRUE);	
+		                $this->dbbook->bookEssay($fields,$bookId);
+						$this->objFileRegister->registerUse($fileId, 'essay', 'tbl_essay_book', $bookId, 'studentfileid', $this->contextcode, '', TRUE);
 		                // display success message
 		                $msg = $this->objLanguage->languageText('mod_essay_uploadsuccess','essay');
 		                $this->setVarByRef('msg',$msg);
                     }
-                
-                return $this->nextAction('uploadessay',array('book'=>$book,'msg'=>$msg,'id'=>$topic));
+
+                return $this->nextAction('uploadessay',array('bookid'=>$bookId,'msg'=>$msg/*,'id'=>$topic*/));
             break;
-
-
-            // display page to upload essay
-            case 'uploadessay':
-		// get message (if already submitted)
-                $msg=$this->getParam('msg');
-                $this->setVarByRef('msg',$msg);
-                // get booking number
-                $id=$this->getParam('book_id');
-                $this->setVarByRef('book',$id);
-                $template='upload_tpl.php';
-            break;
-
-
-  
-
-
             case 'download':
                 $template='download_tpl.php';
                 $this->setPageTemplate('download_page_tpl.php');
             break;
 
             default:
+		ob_start();
                 $topics = $this->getTopicData();
                 $list=$this->getTopics($topics);
                 $this->setVarByRef('list',$list);
-
+		$this->setVar('buffer', ob_get_contents());
+		ob_end_clean();
                 $template='essay_tpl.php';
+                break;
             }
         return $template;
     }
@@ -319,7 +334,7 @@ class essay extends controller
     */
     public function getTopics($topics)
     {
-
+		//var_dump($topics);
         // set up html elements
         $objTable=new htmltable();
         $objLayer=$this->objLayer;
@@ -383,9 +398,9 @@ class essay extends controller
                 $this->objLink->title=$title;
                 $view=$this->objLink->show();
 
-                
-                
-                  
+
+
+
                 // display in table
                 $objTable->row_attributes=' height="25"';
                 $objTable->startRow();
@@ -394,62 +409,66 @@ class essay extends controller
                 $objTable->addCell($val['date'],'','center','',$class);
 
 
-
+				/* Jeremy - this code does not work anymore (the functionality of the module has changed)
 				// Testing new code here :
 				$link_obj = $this->loadClass('link', 'htmlelements');
 				$link_obj = new link($this->uri(array(
-					'action' => 'uploadessay', 'book_id'=>$val['id']    
+					'action' => 'uploadessay', 'book_id'=>$val['id']
 				)));
 				$link_obj->link = "Upload";
 				$upload_icon = $link_obj->show();
-				// [Testing new code here ] end 
+				// [Testing new code here ] end
 
 				$link_obj = $this->loadClass('link', 'htmlelements');
 				$link_obj = new link($this->uri(array(
-					'action' => 'bookessay' ,'book_id'=>$val['id']  
+					'action' => 'bookessay' ,'book_id'=>$val['id']
 				)));
 				$link_obj->link = "Book";
 				$book_link_icon = $link_obj->show();
 
+		 		$objTable->addCell($upload_icon,'','center','',$class);
+                $objTable->addCell('&nbsp;'$book_link_icon,'','center','',$class);
 
- 		$objTable->addCell($upload_icon,'','center','',$class);
-                $objTable->addCell($book_link_icon,'','center','',$class);
-
+				*/
 
                 $objTable->endRow();
             }
         }else{
             $objTable->startRow();
-            $objTable->addCell($noTopics,'','','','noRecordsMessage','colspan="5"');
+            $objTable->addCell($noTopics,'','','','noRecordsMessage','colspan="3"');
             $objTable->endRow();
         }
+        /* Jeremy -
         $objTable->row_attributes=' height="15"';
         $objTable->startRow();
-        $objTable->addCell('','','','','',' colspan="4"');
+        $objTable->addCell('','','','','',' colspan="3"');
         $objTable->endRow();
+        */
 
-	/** 21 January 2008 , view link bug fix 
+	/** 21 January 2008 , view link bug fix
 	* 	Jameel Adam
 	*	Caveats : dunno whats up !
 	**/
-		
+
         //$objLink = new link($this->uri(array('action'=>'viewessays')));
         //$objLink->link = $viewSubmitted;
         //$back = $objLink->show();
 
 	// Testing new code here :
-	$link_obj = $this->loadClass('link', 'htmlelements');
+	//$link_obj =
+	$this->loadClass('link', 'htmlelements');
 	$link_obj = new link($this->uri(array(
-	    'action' => 'viewallessays'    
+	    'action' => 'viewallessays'
 	)));
 	$link_obj->link = $viewSubmitted;
 	$back = $link_obj->show();
-	// [Testing new code here ] end 
+	// [Testing new code here ] end
 
         if($this->assignment){
             $objLink = new link($this->uri(array(''), 'assignment'));
             $objLink->link = $assignmentLabel;
-            $back .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$objLink->show();
+            //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            $back .= '&nbsp;/&nbsp;'.$objLink->show();
         }
         $objLayer->align = 'center';
         $objLayer->border = 0;
@@ -470,8 +489,14 @@ class essay extends controller
     * @param bool $booked Flag whether only one student can book an essay, if TRUE prevent another student booking it
     * @return string $objTable Table containing essay info for display.
     */
-    public function getEssays($essays,$topic,$studentbook=TRUE,$booked=TRUE)
+
+    public function getEssays($essays,$topic,$studentBooking=TRUE,$allBookings=TRUE, $forceOne=FALSE)
     {
+	    //,,=TRUE,
+//	    var_dump($essays);
+//	    var_dump($topic);
+//	    var_dump($studentBooking);
+//	    var_dump($allBookings);
         // set up html elements
         $objTable = new htmltable();
         $objTable2 = new htmltable();
@@ -534,37 +559,34 @@ class essay extends controller
         $str=$objLayer->show().$objHead->show();
         $str .= '<p>'.$explainBook.'</p>';
 		  //$str .= $explainBook;
-		  
+
 
     /************************* Display essay list in table ***********************/
 
 
-        // check if essay has been submitted and marked, display flag
-        if(!empty($studentbook[0]['essayid'])){
-            $studentessay = $studentbook[0]['essayid']; 
+        // check if essay has been booked, submitted and marked, display flag
+        if(!empty($studentBooking[0]['essayid'])){
+            $studentessay = $studentBooking[0]['essayid'];
         }else{
             $studentessay = FALSE;
-		
+
         }
-
-            
-
-
-        if(!empty($studentbook[0]['submitdate'])){
-            $essaysubmit=$studentbook[0]['submitdate'];
+        if(!empty($studentBooking[0]['submitdate'])){
+            $essaysubmit=$studentBooking[0]['submitdate'];
         }else{
             $essaysubmit=NULL;
         }
-        if(!empty($studentbook[0]['mark'])){
-            $essaymark=$studentbook[0]['mark'];
+        if(!empty($studentBooking[0]['mark'])){
+            $essaymark=$studentBooking[0]['mark'];
         }else{
             $essaymark=NULL;
         }
-        $i=0;$book=FALSE;$book1=FALSE;
+        $i=0;
+//		$book=FALSE;$book1=FALSE;
         // check if student has booked an essay
-        if($studentessay){
-            $book1=TRUE;
-        }
+//        if($studentessay){
+//            $book1=TRUE;
+//        }
 
 
         // set up table
@@ -577,28 +599,49 @@ class essay extends controller
                 $class = ($i++%2) ? 'even':'odd';
                 $id = $val['id'];
 
+
+
                 // check if student booked essay
                 if($studentessay){
                     if($studentessay==$id){
-                        $book1=FALSE;
-                        $book=TRUE;
+	                    $booked = ESSAY_BOOKEDBYSTUDENT;
+//                        $book1=FALSE;
+//                        $book=TRUE;
                     }else{
-                        $book1=TRUE;
-                        $book=FALSE;
+						$booked = ESSAY_CANNOTBOOK;
+//	                      $booking =
+//                        $book1=TRUE;
+//                        $book=FALSE;
                     }
                 }else{
                     // if force one: check if essay is booked
-                    if($booked){
-                        foreach($booked as $item){
-                            if($item['essayid']==$id){
-                                $book1=TRUE;
-                                break;
-                            }else{
-                                $book1=FALSE;
-                            }
+                    if($forceOne/*$allBookings*/){
+	                    $isBooked = FALSE;
+	                    if (!empty($allBookings)) {
+	                        foreach($allBookings as $booking){
+	                            if($booking['essayid']==$id){
+	//                                $book1=TRUE;
+	                                $isBooked = TRUE;
+	                                break;
+	                            }
+	//							else{
+	//                                $book1=FALSE;
+	//                            }
+	                        }
+	                    }
+                        if ($isBooked) {
+                        	$booked = ESSAY_BOOKED;
                         }
+                        else {
+							$booked = ESSAY_CANBOOK;
+						}
                     }
+                    else {
+						$booked = ESSAY_CANBOOK;
+					}
                 }
+
+				//echo "$booked";
 
                 // display notes for essay in a pop-up window
                 $this->objIcon->setIcon('notes');
@@ -611,53 +654,89 @@ class essay extends controller
                 $msg='';$mark='';
 
                 // if student has booked an essay, unlink others, change action to unbook
-                
 
-		if(!$book1==false){
-		                
-		    	if($book){
-                        $this->objLink = new link($this->uri(array('action'=>'unbook','essay'=>$id,'id'=>$topic[0]['id'])));
-                        $this->objLink->title=$title5;
-                        $this->objIcon->title=$title5;
-                        $msg = ' <br />';
-                        $msg.=$this->objLanguage->languageText('mod_essay_bookby','essay').' '.$this->user;
-                    }else{
-                        $this->objLink = new link($this->uri(array('action'=>'bookessay','essay'=>$id,'id'=>$topic[0]['id'])));
-                        $this->objLink->title=$title4;
-                        $this->objIcon->title=$title4;
-                    }
-                    
-                    //var_dump ($essaysubmit);
+		//echo "[".($book1?'TRUE':'FALSE')."]";
+//		if(!$isBooked){
 
-                    // if student has submitted, remove link to unbook
-                    if($essaysubmit==NULL){
-    
-                        $this->objLink->link=$val['topic'];
-                        $view=$this->objLink->show();
+				$icons = '';
 
+		    	if($booked == ESSAY_CANBOOK){
+	                    // Setup icon
                         $this->objIcon->setIcon('bullet');
-                        $this->objIcon->extra='';
+//                        $this->objIcon->title=$title5;
+                        $this->objIcon->title=$title4;
+	                    $this->objIcon->extra='';
+                        // Create link
+                        $this->objLink = new link($this->uri(array('action'=>'bookessay','essay'=>$id,'id'=>$topic[0]['id'])));
+                        $this->objLink->link=$val['topic'];
+                        $this->objLink->title=$title4;
+                        $view=$this->objLink->show();
                         $this->objLink->link=$this->objIcon->show();
                         $bookicon=$this->objLink->show();
-
-					
-
-                    }else{
-	                  $view = '<b>'.$val['topic'].'</b>';
-                        $bookicon='';
-                        if($essaymark!=NULL){
-                            $mark = '<b>'.$marklabel.':</b> '.$essaymark.'&nbsp;%';
-                        }
-                    }
-                }else{
-                    $view = '<b>'.$val['topic'].'</b>';
-                    $this->objIcon->setIcon('bullet');
-                    $extra='';
-                    $bookicon='';
-
+		                $icons .= $bookicon;
                 }
 
-                $icons = $bookicon;
+		    	if($booked == ESSAY_BOOKEDBYSTUDENT){
+	                    if($essaysubmit==NULL){
+		                    // Setup icon
+	                        $this->objIcon->setIcon('bullet');
+	                        $this->objIcon->title=$title5;
+	                        $this->objIcon->extra='';
+	                        // Create link
+	                        $this->objLink = new link($this->uri(array('action'=>'unbook','essay'=>$id,'id'=>$topic[0]['id'])));
+	                        $this->objLink->link=$val['topic'];
+	                        $this->objLink->title=$title5;
+	                        $view=$this->objLink->show();
+	                        $this->objLink->link=$this->objIcon->show();
+	                        $bookicon=$this->objLink->show();
+	                        $msg = ' <br />';
+	                        $msg.=$this->objLanguage->languageText('mod_essay_bookby','essay').' '.$this->user;
+			                $icons .= $bookicon;
+	                    }
+						else {
+							//if student has submitted, remove link to unbook
+			                $view = '<b>'.$val['topic'].'</b>';
+	                        $bookicon='';
+
+			                $icons .= $bookicon;
+
+	                        if($essaymark==NULL){
+		                        $msg = $this->objLanguage->languageText('mod_essay_statussubmitted', 'essay');
+	                        }
+	                        else {
+	                            $mark = '<b>'.$marklabel.':</b> '.$essaymark.'&nbsp;%';
+		                        $msg = $this->objLanguage->languageText('mod_essay_statusmarked', 'essay');
+	                        }
+	                    }
+                }
+//				else
+
+                    //var_dump ($essaysubmit);
+
+//                }else{
+		    	if($booked == ESSAY_CANNOTBOOK){
+                    $view = '<b>'.$val['topic'].'</b>';
+                    $msg = $this->objLanguage->languageText('mod_essay_statuscannotbook', 'essay');
+                    //$this->objIcon->setIcon('bullet');
+//                    $extra='';
+//                    $bookicon='';
+
+//                    $bookicon='';
+//
+//	                $icons .= $bookicon;
+                }
+		    	if($booked == ESSAY_BOOKED){
+                    $view = '<b>'.$val['topic'].'</b>';
+                    $msg = $this->objLanguage->languageText('mod_essay_statusalreadybooked', 'essay');
+                    //$this->objIcon->setIcon('bullet');
+//                    $extra='';
+//                    $bookicon='';
+
+//                    $bookicon='';
+//
+//	                $icons .= $bookicon;
+                }
+
 
                 if(strlen($val['notes']) > 150){
                     $pos = strpos($val['notes'], ' ', 150);
@@ -669,7 +748,7 @@ class essay extends controller
                 $objTable->row_attributes=' height="25"';
                 $objTable->startRow();
                 $objTable->addCell($i, '2%', 'center','',$class);
-                $objTable->addCell($view .$msg,'30%','center','',$class);
+                $objTable->addCell($view . '&nbsp;'.$msg,'30%','center','',$class);
                 $objTable->addCell($mark,'','left','',$class);
                 $objTable->addCell($notes,'58%','left','',$class);
                 $objTable->addCell($icons,'','center','left',$class);
@@ -677,17 +756,17 @@ class essay extends controller
             }
         }else{
             $objTable->startRow();
-           $objTable->addCell($noEssays,'','','','noRecordsMessage','colspan="5"');
+            $objTable->addCell($noEssays,'','','','noRecordsMessage','colspan="5"');
             $objTable->endRow();
 
-		
+
         }
         $objTable->row_attributes=' height="10"';
         $objTable->startRow();
         $objTable->addCell('','','','','','colspan="5"');
         $objTable->endRow();
 
-	
+
 
     /******************** Form to return to topic list ************************/
 
@@ -700,7 +779,7 @@ class essay extends controller
         $objLink->link=$viewSubmitted;
         $back.=$objLink->show();
 
-        $objLayer->align='center';
+        //$objLayer->align='center';
         $objLayer->border=0;
         $objLayer->str=$back;
 
@@ -724,10 +803,14 @@ class essay extends controller
 
         if($data){
             foreach($data as $key=>$item){
+	            //var_dump($item);
                 // get essay info: topic, num
                 $essay=$this->dbessays->getEssay($item['essayid'],'id, topic');
+                //var_dump($essay);
 
                 $data[$key]['essay']=$essay[0]['topic'];
+                //var_dump($data[$key]);
+
 
                 // get topic info: closing date
                 $topic=$this->dbtopic->getTopic($item['topicid'],'name, closing_date, bypass');
@@ -745,6 +828,7 @@ class essay extends controller
                 }else{
                     $data[$key]['mark']='submit';
                 }
+                //var_dump($data[$key]);
             }
         }
 
@@ -762,6 +846,7 @@ class essay extends controller
 
         // get topic info
         $topics=$this->dbtopic->getTopic(NULL,NULL,"context='".$this->contextcode."'");
+        //var_dump($topics);
         $data=array();
 
         // count number of marked essays & number of submitted essays in each topic

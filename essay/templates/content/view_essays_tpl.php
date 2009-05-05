@@ -1,4 +1,5 @@
 <?php
+//echo '<pre>'.$buffer.'</pre>';
 /*
 * Template to view list of essays for a student.
 * @package essay
@@ -13,7 +14,7 @@ $this->setLayoutTemplate('essay_layout_tpl.php');
 
 $this->objDateformat = $this->newObject('dateandtime','utilities');
 
- $this->loadclass('htmltable','htmlelements'); 
+ $this->loadclass('htmltable','htmlelements');
   $objPopup=&$this->loadClass('windowpop','htmlelements');
 
 // set up html elements
@@ -68,7 +69,8 @@ foreach($data as $item){
 
     $objTable->startRow();
     $objTable->addCell($item['name'],'','','',$class);
-    $objTable->addCell($item['essayid'],'','','',$class);
+    //$objTable->addCell($item['essayid'],'','','',$class);
+    $objTable->addCell($item['essay'],'','','',$class);
     $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
 
     if(!empty($item['submitdate'])){
@@ -80,11 +82,13 @@ foreach($data as $item){
    if($item['mark']=='submit'){
         // if essay hasn't been submitted: display submit icon
         // check if closing date has passed
-        if($item['date'] > date('Y-m-d')){
+//        echo "[{$item['date']}]";
+//        echo "[".date('Y-m-d H:i:s')."]";
+        if(date('Y-m-d H:i:s') > $item['date']){
 	            $mark='';
 	            $load = $lbClosed;
         }else{
-	            $this->objLink->link($this->uri(array('action'=>'uploadessay','book'=>$item['id'])));
+	            $this->objLink->link($this->uri(array('action'=>'uploadessay','bookid'=>$item['id'])));
                 $this->objIcon->setIcon('submit2');
 	            $this->objIcon->extra='';
                 $this->objIcon->title=$submittitle;
@@ -94,18 +98,23 @@ foreach($data as $item){
         }
     }else if($item['mark']){
         // if mark exists: display mark and download icon and view comments icon
-        $this->objLink->link($this->uri(array('action'=>'download','fileid'=>$item['lecturerfileid'])));
-        $this->objIcon->setIcon('download');
-        $this->objIcon->extra='';
-        $this->objIcon->title=$downloadhead;
-        $this->objLink->link=$this->objIcon->show();
-        $downlink=$this->objLink->show();
+	    if (!is_null($item['lecturerfileid'])) {
+	        $this->objLink->link($this->uri(array('action'=>'download','fileid'=>$item['lecturerfileid'])));
+	        $this->objIcon->setIcon('download');
+	        $this->objIcon->extra='';
+	        $this->objIcon->title=$downloadhead;
+	        $this->objLink->link=$this->objIcon->show();
+	        $downlink=$this->objLink->show();
+        }
+        else {
+	        $downlink=$this->objLanguage->languageText('mod_essay_nomarkedessayavailable', 'essay');
+		}
         //$this->objLink->link('#');
         //$this->objIcon->setIcon('comment_view');
         $this->objIcon->title=$commenthead;
     	$this->objIcon->setIcon('comment_view');
    	 	$commentIcon = $this->objIcon->show();
-        
+
         $objPopup = new windowpop();
     	$objPopup->set('location',$this->uri(array('action'=>'showcomment','book'=>$item['id'],'essay'=>$item['essay'])));
     	$objPopup->set('linktext',$commentIcon);
@@ -119,7 +128,7 @@ foreach($data as $item){
         //$this->objIcon->title=$commenthead;
         //$this->objLink->link=$this->objIcon->show();
 
-        $mark=$item['mark'].'&nbsp;&nbsp;&nbsp;'.$objPopup->show();
+        $mark=$item['mark'].'&nbsp;%<br />'.$objPopup->show();
         $load=$downlink;
     }else{
         // if no mark
@@ -144,7 +153,7 @@ echo $objTable->show();
 $this->objLink->link($this->uri(''));
 $this->objLink->link=$topichome;
 
-$objLayer->align='center';
+//$objLayer->align='center';
 $objLayer->str=$this->objLink->show();
 echo $objLayer->show();
 ?>

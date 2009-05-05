@@ -29,13 +29,13 @@ $wordstudent=ucwords($this->objLanguage->languageText('mod_context_readonly'));
 $this->setVarByRef('heading',$head);
 
 // get booked essays in topic
-$data=$this->dbbook->getBooking("where id='$book'");
+$data=$this->dbbook->getBooking("where id='$bookId'");
 
 // get essay title
 $essay=$this->dbessays->getEssay($data[0]['essayid'],'topic');
 $essaytitle=$essay[0]['topic'];
 
-//setup filemanager 
+//setup filemanager
 $objSelectFile->name ='file';
 
 // display essay title
@@ -102,7 +102,7 @@ $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($btn1,'','','right');
-$objTable->addCell('&nbsp;&nbsp;&nbsp;&nbsp;'.$btn4,'','','left');
+$objTable->addCell($btn4,'','','left');
 $objTable->endRow();
 
 $objTable->row_attributes=' height="10"';
@@ -111,8 +111,8 @@ $objTable->addCell('');
 $objTable->endRow();
 
 /************************* set up form ******************************/
-$book=$this->getParam('book');
-$this->objForm = new form('upload',$this->uri(array('action'=>'uploadsubmit','book'=>$book, 'fileId'=>$fileId)));
+//$bookId=$this->getParam('bookid');
+$this->objForm = new form('upload',$this->uri(array('action'=>'uploadsubmit','bookid'=>$bookId /*, 'fileid'=>$fileId*/)));
 $this->objForm->extra=" ENCTYPE='multipart/form-data'";
 $this->objForm->addToForm($objTable->show());
 /************************* display page ******************************/
