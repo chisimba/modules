@@ -64,7 +64,7 @@ $diseaseDrop->setSelected($disease);
 $diseaseDrop->extra = 'disabled';
 
 //$activeBox = new textinput('activeid',$activeid,'hidden');
-$campBox = new textinput('campName',$campName);
+$campBox = new textinput('campName',$campName,'hidden');
 $sensitivityBox = new textinput('sensitivity', $sensitivity);
 $specificityBox = new textinput('specificity', $specificity);
 $campBox->extra ="readonly";
@@ -77,8 +77,8 @@ $objTable->cssClass = 'min50';
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":");
-$objTable->addCell($campBox->show());
-$objTable->addCell('');
+
+$objTable->addCell($campName);
 $objTable->addCell('');
 $objTable->addCell($this->objLanguage->languageText('word_disease').": ");
 $objTable->addCell($diseaseDrop->show());
@@ -97,6 +97,7 @@ $objTable->addCell($specificityBox->show());
 //$objTable->addCell($activeBox->show());
 $objTable->endRow();
 $objTable->startRow();
+$objTable->addCell($campBox->show());
 $objTable->addCell('&nbsp');
 $objTable->endRow();
 
@@ -119,8 +120,8 @@ $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_vals
 $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_valspec', 'ahis'), 'required');
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$objForm->show());
-$objLayer->align = 'center';
+$objLayer->addToStr($objHeading->show()."<br />".$objForm->show());
+//$objLayer->align = 'center';
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

@@ -74,8 +74,17 @@ class newherd extends dbtable {
 	
 	public function getherd($campaign){
 	
-	$sql="SELECT id,farmname FROM tbl_ahis_newherd AS d WHERE 
+	$sql="SELECT * FROM tbl_ahis_newherd AS d WHERE 
 	     d.activeid = '$campaign'";
+	     
+	return $this->getArray($sql);
+	
+}
+
+public function getfarm($farmid){
+	
+	$sql="SELECT * FROM tbl_ahis_newherd AS d WHERE 
+	     d.id = '$farmid'";
 	     
 	return $this->getArray($sql);
 	

@@ -72,13 +72,5 @@ class sampledetails extends dbtable {
 		}
 	}
 	
-	public function getsamples($id){
-	
-	$sql="SELECT * FROM tbl_ahis_sampledetails AS d WHERE 
-	     d.newherdid = '$id' ";
-	     
-	return $this->getArray($sql);
-	
-	
-	}
+
 }

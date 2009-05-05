@@ -72,6 +72,10 @@ $officerDrop->addFromDB($userList, 'name', 'userid');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
 
+
+$geo2level = new textinput('geo2',$geo2Id,'hidden');
+$reportdate = new textinput('reportdate',$reportdate,'hidden');
+
 $diseaseDrop = new dropdown('disease');
 $diseaseDrop->addFromDB($arraydisease, 'name', 'name');
 $diseaseDrop->setSelected($disease);
@@ -90,6 +94,8 @@ $objTable->cssClass = 'min50';
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": ");
 $objTable->addCell($campNameBox->show());
+$objTable->addCell($geo2level->show());
+$objTable->addCell($reportdate->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
@@ -126,12 +132,12 @@ $objForm->addRule('campName', $this->objLanguage->languageText('mod_ahis_campnam
 
 
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show());
-$objLayer->align = 'center';
+$objLayer->addToStr($objHeading->show()."<br />".$objForm->show());
+//$objLayer->align = 'center';
 
 
-$scriptUri = $this->getResourceURI('util.js');
-$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
+//$scriptUri = $this->getResourceURI('util.js');
+//$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
 
 
 echo $objLayer->show();

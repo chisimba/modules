@@ -71,4 +71,14 @@ class territory extends dbtable {
 			exit;
 		}
 	}
+	
+	
+	public function getgeo2($geo2){
+	
+	
+	$sql="SELECT * FROM tbl_ahis_territory AS d WHERE 
+	     d.geo2id = '$geo2'";
+	     
+	return $this->getArray($sql);
+	}
 }

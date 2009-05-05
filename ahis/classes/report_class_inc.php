@@ -78,6 +78,7 @@ class report extends object {
             $this->objOutbreak = $this->getObject('outbreak');
             $this->objSpecies = $this->getObject('species');
             $this->objDisease = $this->getObject('disease');
+            $this->objAhisUser = $this->getObject('ahisuser');
 			$this->objAnimalPopulation= $this->getObject('dbanimalpop');
 			$this->objMeatInspect = $this->getObject('db_meat_inspection');
 			$this->objSlaughter= $this->getObject('ahis_slaughter');
@@ -405,7 +406,7 @@ class report extends object {
 									 $this->objLanguage->languageText('mod_ahis_reportofficer','ahis'),$this->objLanguage->languageText('word_disease'),
 									 $this->objLanguage->languageText('phrase_surveytypes'),$this->objLanguage->languageText('word_comments'),
 									 $this->objLanguage->languageText('phrase_testtype'),$this->objLanguage->languageText('word_sensitivity'),
-									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_territory'),$this->objLanguage->languageText('phrase_geolevel3'),
+									 $this->objLanguage->languageText('word_specificity'),$this->objLanguage->languageText('word_territory'),
 									 $this->objLanguage->languageText('phrase_geolevel2'),$this->objLanguage->languageText('word_farm'),$this->objLanguage->languageText('phrase_farmingsystem'),
 									 $this->objLanguage->languageText('phrase_sampleid'),$this->objLanguage->languageText('phrase_animalid'),
 									 $this->objLanguage->languageText('word_species'),$this->objLanguage->languageText('word_age'),
@@ -415,20 +416,23 @@ class report extends object {
 									 $this->objLanguage->languageText('word_remarks'));
 									 
 				$activeRecords = $this->objActive->getactive($year,$month);
-				
+				$data = $this->objAhisUser->getList();
 				$csv = implode(",", $headerArray)."\n";
 
 				if(!empty($activeRecords)){
 				foreach ($activeRecords as $report) {
+				foreach($data as $var){if($report['reporterid']==$var['userid']){
 					
-					$row = array($report['campname'],$report['reporterid'],$report['disease'],$report['surveytype'],$report['comments'],
-					$report['testtype'],$report['sensitivity'],$report['specificity'],$report['territory'],$report['geolevel3'],
+					$row = array($report['campname'],$var['name'],$report['disease'],$report['surveytype'],$report['comments'],
+					$report['testtype'],$report['sensitivity'],$report['specificity'],$report['territory'],
 					$report['geolevel2'],$report['farmname'],$report['farmingtype'],$report['sampleid'],$report['animalid'],
 					$report['species'],$report['age'],$report['sex'],$report['sampletype'],$report['testtype'],
 					$report['testdate'],$report['testresult'],$report['specification'],$report['vachist'],$report['number'],
 					$report['remarks']);
 					
 					$csv .= implode(",", $row)."\n";
+					}
+				}
 				}
 			
 

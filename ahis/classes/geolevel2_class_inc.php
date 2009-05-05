@@ -71,4 +71,12 @@ class geolevel2 extends dbtable {
 			exit;
 		}
 	}
+	
+	public function getgeo($id){
+	
+	$sql="SELECT name FROM tbl_ahis_geography_level2 AS d WHERE 
+	     d.id = '$id'";
+	     
+	return $this->getArray($sql);
+	}
 }
