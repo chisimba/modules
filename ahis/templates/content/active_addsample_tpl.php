@@ -170,7 +170,7 @@ $remarksBox = new textarea('remarks', $record['remarks']);
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellpadding =4;
 $objTable->cellspacing = 2;
-$objTable->width = '60%';
+//$objTable->width = '60%';
 //$objTable->cssClass = 'min50';
 
 $objTable->startRow();
@@ -215,7 +215,8 @@ $objTable->cellspacing = 2;
 $objTable->width = '90%';
 $objTable->cssClass = 'min50';
 
-$objTable->startRow();$objTable->addCell($this->objLanguage->languageText('phrase_sampleid'),'','','','heading');
+$objTable->startRow();
+$objTable->addCell($this->objLanguage->languageText('phrase_sampleid'),'','','','heading');
 $objTable->addCell($this->objLanguage->languageText('word_species'), '', '', '', 'heading');
 $objTable->addCell($this->objLanguage->languageText('word_farm'), '', '', '', 'heading');
 $objTable->addCell($this->objLanguage->languageText('phrase_farmingsystem'), '', '', '', 'heading');
@@ -368,10 +369,6 @@ $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 $objForm->addRule('remarks', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 
-$objLayer = new layer();
-$objLayer->addToStr("<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)." ".$objForm->show());
-$objLayer->align = 'center';
-
-echo $objLayer->show();
+echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)." ".$objForm->show();
 
 ?>
