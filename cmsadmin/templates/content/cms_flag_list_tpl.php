@@ -16,11 +16,17 @@ $this->loadClass('checkbox', 'htmlelements');
 $this->loadClass('button', 'htmlelements');
 $this->loadClass('htmltable', 'htmlelements');
 
-//Stripping new lines for js compatibility
+//Boxy New Flag Option Form
 $innerHtml = $this->_objUtils->getAddFlagOptionAddForm();
 $this->_objBox->setHtml($innerHtml);
 $this->_objBox->setTitle('Add Flag Option');
 $this->_objBox->attachClickEvent('btn_new');
+
+//Boxy New Email Form
+$innerHtml = $this->_objUtils->getAddEmailForm();
+$this->_objBox->setHtml($innerHtml);
+$this->_objBox->setTitle('Add Email to Alert');
+$this->_objBox->attachClickEvent('btn_add_email');
 
 if (!isset($middleColumnContent)) {
 	$middleColumnContent = '';
@@ -51,9 +57,16 @@ echo $display;
 // Show Form
 
 echo $objLayer->show();//$tbl->show());
+
+
 $table = new htmltable();
 $table->cellspacing = '2';
 $table->cellpadding = '5';
+
+
+$h3->str = '<p>'. $this->objLanguage->languageText('mod_cmsadmin_flag_options', 'cmsadmin').'</p>';
+echo $h3->show();
+
 
 //setup the table headings
 $table->startHeaderRow();
@@ -111,7 +124,7 @@ if (count($arrFlagOptions) > 0) {
 
             $innerHtml = $this->_objUtils->getDeleteConfirmForm($flagOption['id']);
             $this->_objBox->setHtml($innerHtml);
-            $this->_objBox->setTitle('Add Flag Option');
+            $this->_objBox->setTitle('Confirm');
             $this->_objBox->attachClickEvent("btn_del_{$flagOption['id']}");
 
 
@@ -150,34 +163,104 @@ if (count($arrFlagOptions) > 0) {
         */
         
         $tableRow[] = '<nobr>'.$editIcon.$deleteIcon.'</nobr>';
-
+        
 	    $table->addRow($tableRow, $oddOrEven);
-	
+        
 	    $rowcount = ($rowcount == 0) ? 1 : 0;
-
+        
 	}
-    $noRecords = false;
 }else{
-    echo  '<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_no_flag_options_found', 'cmsadmin').'</div>';
-	$noRecords = true;
+    $table->startRow();
+    $table->addCell('<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_no_flag_options_found', 'cmsadmin').'</div>', '', 'top', 'center', '', 'colspan="4"');
+    $table->endRow();
 }
-
 
 $frm_select = new form('select', $this->uri(array('action' => 'select'), 'cmsadmin'));
 $frm_select->id = 'select';
 
 $objLayer = new layer();
-$objLayer->id = 'templateListTable';
+$objLayer->id = 'listTable';
 $objLayer->str = $table->show();
 
 $frm_select->addToForm($objLayer->show());
-//print out the page
-//$middleColumnContent = "<hr />";
 
-if (!$noRecords) {
-    $middleColumnContent .= $frm_select->show();
+$addEmailText = $this->objLanguage->languageText('mod_cmsadmin_flag_add_email', 'cmsadmin');
+
+$h3->str = '<hr>'. $this->objLanguage->languageText('mod_cmsadmin_flag_email', 'cmsadmin');
+$frm_select->addToForm('<p>' . $h3->show() . "<a id='btn_add_email' href='#'>$addEmailText</a> </p>");
+
+$tableEmail = new htmltable();
+$tableEmail->cellspacing = '2';
+$tableEmail->cellpadding = '5';
+
+$tableEmail->startHeaderRow();
+$tableEmail->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_word_name', 'cmsadmin'));
+$tableEmail->addHeaderCell($this->objLanguage->languageText('mod_cmsadmin_word_email', 'cmsadmin'));
+$tableEmail->addHeaderCell($this->objLanguage->languageText('word_options'));
+$tableEmail->endHeaderRow();
+
+$rowcount = 0;
+
+if (!isset($arrEmail)) {
+    $arrEmail = array();
 }
 
+//setup the tables rows  and loop though the records
+if (count($arrEmail) > 0) {
+    foreach($arrEmail as $email) {
+        //Set odd even row colour
+        $oddOrEven = ($rowcount == 0) ? "even" : "odd";
+
+        //$emailThumb = '<img src="'.$email['image'].'" width="100px" height="70px"/>';
+
+        //Set up select form
+        $objCheck = new checkbox('arrayList[]');
+        $objCheck->setValue($email['id']);
+        $objCheck->extra = "onclick=\"javascript: ToggleMainBox('select', 'toggle', this.checked);\"";
+
+        //Trash
+        $objIcon->setIcon('bigtrash');
+        $deleteIcon = "<a id='btn_del_mail_{$email['id']}' title='Delete' href='javascript:void(0)'>".$objIcon->show()."</a>";
+
+        $innerHtml = $this->_objUtils->getDeleteConfirmForm($email['id'], 'flagemail');
+        $this->_objBox->setHtml($innerHtml);
+        $this->_objBox->setTitle('Confirm');
+        $this->_objBox->attachClickEvent("btn_del_mail_{$email['id']}");
+
+
+        //Edit
+        $span = '<span id="'.'btn_add_mail_' . $email['id'].'">'.$objIcon->getEditIcon('#') . '</span>';
+        $editIcon = $span;
+
+        $innerHtml = $this->_objUtils->getAddEmailForm($email['id']);
+        $this->_objBox->setHtml($innerHtml);
+        $this->_objBox->setTitle('Edit Alert Email');
+        $this->_objBox->attachClickEvent('btn_add_mail_' . $email['id']);
+
+        $tableRow = array();
+        $tableRow[] = html_entity_decode($email['name']);
+        $tableRow[] = $email['email'];
+
+        $tableRow[] = '<nobr>'.$editIcon.$deleteIcon.'</nobr>';
+
+        $tableEmail->addRow($tableRow, $oddOrEven);
+
+        $rowcount = ($rowcount == 0) ? 1 : 0;
+
+    }
+}else{
+    $tableEmail->startRow();
+    $tableEmail->addCell('<div class="noRecordsMessage">'.$objLanguage->languageText('mod_cmsadmin_no_email_found', 'cmsadmin').'</div>', '', 'top', 'center', '', 'colspan="4"');
+    $tableEmail->endRow();
+}
+
+$objLayer = new layer();
+$objLayer->id = 'listTable';
+$objLayer->str = $tableEmail->show();
+
+$frm_select->addToForm($objLayer->show());
+
+$middleColumnContent .= $frm_select->show();
 $middleColumnContent .= '&nbsp;'.'<br/>';
 
 echo $middleColumnContent;

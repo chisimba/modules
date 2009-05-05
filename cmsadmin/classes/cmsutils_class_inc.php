@@ -127,6 +127,7 @@
                 $this->_objQuery =  $this->newObject('jquery', 'htmlelements');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
+                $this->_objFlagEmail =  $this->newObject('dbflagemail', 'cmsadmin');
                 $this->_objTemplate =  $this->newObject('dbtemplate', 'cmsadmin');
                 $this->_objPageMenu =  $this->newObject('dbpagemenu', 'cmsadmin');
                 $this->_objSecurity =  $this->newObject('dbsecurity', 'cmsadmin');
@@ -6731,7 +6732,7 @@ $this->appendArrayVar('headerParams', $script);
     * @param string $id The id of the form to be edited
     * @access public
     */
-        public function getDeleteConfirmForm($id = '')
+        public function getDeleteConfirmForm($id = '', $type = 'flagoption')
         {
 
 $innerHtml = <<<HTSRC
@@ -6741,7 +6742,7 @@ $innerHtml = <<<HTSRC
 </tr>
 <tr>
     <td align="center">
-        <form action="?module=cmsadmin&action=deleteflagoption&confirm=yes&id={$id}" method="POST">
+        <form action="?module=cmsadmin&action=delete{$type}&confirm=yes&id={$id}" method="POST">
             <input id="rm_{$id}" value = 'Yes' type="submit" style="width:50px;"/>
             <input type="button" onclick='Boxy.get(this).hide(); return false' value="No" style="width:50px;"/>
             <input type="button" onclick='Boxy.get(this).hide(); return false' value="Cancel" style="width:50px;"/>
@@ -6756,6 +6757,101 @@ HTSRC;
             return $display;
         }
 
+
+   /**
+    * Method to return the Boxy flag option add form
+    *
+    * @param string $id The id of the form to be edited
+    * @access public
+    */
+        public function getAddEmailForm($id = '')
+        {
+            //Load Edit Values when supplied with id
+            if ($id != ''){
+                $arrFlagEmails = $this->_objFlagEmail->getEmail($id);
+            }
+            
+            $table = new htmlTable();
+            $table->width = "100%";
+            $table->cellspacing = "0";
+            $table->cellpadding = "10";
+            $table->border = "0";
+            $table->attributes = "align ='center'";
+
+            $tbl = new htmlTable();
+            $tbl->width = "100%";
+            $tbl->cellspacing = "0";
+            $tbl->cellpadding = "10";
+            $tbl->border = "0";
+            $tbl->attributes = "align ='center'";
+
+            //TODO: Add Language Items for these
+            //Match
+            $lblName = 'Name :';
+
+            if (!isset($arrFlagEmails['name'])){
+                $arrFlagEmails['name'] = '';
+            }
+
+            $txtName = "<input type='text' id='txtName' name='txtName' class='match_target_url_init' value='".$arrFlagEmails['name']."'/>";
+
+            $tbl->startRow();
+            $tbl->addCell($lblName, '', '', '', 'boxy_td_left', '','');
+            $tbl->addCell($txtName, '', 'top', 'left');
+            $tbl->endRow();
+
+            //Target
+            $lblEmail = 'Email';
+
+            if (!isset($arrFlagEmails['email'])){
+                $arrFlagEmails['email'] = '';
+            }
+
+            $txtEmail = "<input type='text' id='txtEmail' name='txtEmail' class='match_target_url_init' value='".$arrFlagEmails['email']."'/>";
+
+            $tbl->startRow();
+            $tbl->addCell($lblEmail, '', '', '', 'boxy_td_left', '','');
+            $tbl->addCell($txtEmail, '', 'top', 'left');
+            $tbl->endRow();
+
+            //Submit/Cancel
+            $btnOk = "<input type='submit' id='sData' name='sData' value='Save' style='width:50px;'/>";
+            //$btnOk = "<input type='button' id='frm_submit_btn_$id' name='frm_add_submit' value='Save' style='width:50px;'/>";
+            $btnCancel = "<input type='button' id='cancel' name='cancel' value='Cancel' style='width:50px;' onclick='Boxy.get(this).hide(); return false'/>";
+
+            $tbl1 = new htmlTable();
+            $tbl1->width = "100%";
+            $tbl1->cellspacing = "0";
+            $tbl1->cellpadding = "0";
+            $tbl1->border = "0";
+            $tbl1->attributes = "align ='center'";
+
+            $tbl1->startRow();
+            $tbl1->addCell($btnOk.' '.$btnCancel, '', '', 'center', '', '','');
+            $tbl1->endRow();
+
+            if ($id != '') {
+                $action = '<input type="hidden" name="oper" value="edit" />';
+                $action .= '<input type="hidden" name="id" value="'.$id.'" />';
+            } else {
+                $action = '';
+            }
+
+            //Adding All to Container here
+            $table->startRow();
+            $table->addCell($tbl->show()/*.$layer->show()*/.'<div style="padding-bottom:10px"></div>'.$tbl1->show(), '', '', 'center', '', '','');
+            $table->endRow();
+
+            //Stripping New Lines and preparing for boxy input = (Facebook style window)
+            $display = '<form id="frm_addgrid_'.$id.'" class="Form" name="frm_addgrid" action="?module=cmsadmin&action=addeditflagemail" method="POST">';
+            $display .= str_replace("\n", '',$table->show());
+            $display = str_replace("\n\r", '', $display);
+
+            $display .= $action;
+            $display .= '</form>';
+
+            return $display;
+        }
 
 
     }

@@ -114,11 +114,11 @@
         {
             $result = $this->getAll(" WHERE id = '{$id}'");
 
-			if (!empty($result)) {
+			if (empty($result[0])) {
 				return FALSE;
 			}
             
-            return $result;
+            return $result[0];
         }
 
 	}

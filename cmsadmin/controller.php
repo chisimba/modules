@@ -166,6 +166,8 @@
                 $this->_objJQuery = $this->newObject('jquery', 'htmlelements');
                 $this->_objFlag =  $this->newObject('dbflag', 'cmsadmin');
                 $this->_objFlagOptions =  $this->newObject('dbflagoptions', 'cmsadmin');
+                $this->_objFlagEmail =  $this->newObject('dbflagemail', 'cmsadmin');
+                $this->_objFlagUtils =  $this->newObject('flagutils', 'cmsadmin');
 
                 $this->_objBox = $this->newObject('jqboxy', 'htmlelements');
                 
@@ -307,16 +309,41 @@
 		        //return 'cms_test_tpl.php';
                 return 'cms_main_tpl.php';
 
+                case 'deleteflagemail':
+                    $id = $this->getParam('id');
+                    $this->_objFlagEmail->deleteEmail($id);
+
+                return $this->nextAction('flag', array(NULL), 'cmsadmin');
+
+                case 'addeditflagemail':
+                    $id = $this->getParam('id', '');
+
+                    $name = $this->getParam('txtName', '');
+                    $email = $this->getParam('txtEmail', '');
+
+                    if ($id != '') {
+                        $this->_objFlagEmail->editEmail($id, $name, $email);
+                    } else {
+                        $this->_objFlagEmail->addEmail($name, $email);
+                    }
+                return $this->nextAction('flag', array(NULL), 'cmsadmin');
+
 				case 'flag':
                     $topNav = $this->_objUtils->topNav('flag');
                     $arrFlagOptions = $this->_objFlagOptions->getOptions();
+                    $arrEmail = $this->_objFlagEmail->getAll();
 
                     if ($arrFlagOptions == FALSE) {
                         $arrFlagOptions = array();
                     }
 
+                    if ($arrEmail == FALSE) {
+                        $arrEmail = array();
+                    }
+
                     $this->setVarByRef('topNav',$topNav);
                     $this->setVarByRef('arrFlagOptions', $arrFlagOptions);
+                    $this->setVarByRef('arrEmail', $arrEmail);
 					return 'cms_flag_list_tpl.php';
 				break;
 
@@ -324,8 +351,11 @@
                     $contentId = $this->getParam('id');
                     $optionId = $this->getParam('flag_options');
                     $this->_objFlag->addFlag($contentId, $optionId);
+                    
+                    $result = $this->_objFlagUtils->sendEmailAlerts($contentId, $optionId);
 
                     $this->setVarByRef('id', $contentId);
+                    $this->setVarByRef('result', $result);
                     $this->setLayoutTemplate('cms_single_column_layout_tpl.php');
 
                 return 'cms_flag_success_tpl.php';
