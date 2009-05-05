@@ -124,12 +124,16 @@ class jbviewer extends object {
             $clink = $this->getObject ( 'link', 'htmlelements' );
             $clink->href = $this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) );
             $clink->link = $this->objLanguage->languageText ( "mod_jabberblog_leavecomment", "jabberblog" );
+            // set up a link for Tweet this
+            $tlink = $this->newObject ( 'link', 'htmlelements' );
+            $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".$this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) );
+            $tlink->link = $this->objLanguage->languageText ( "mod_jabberblog_tweetthis", "jabberblog" );
             // get the comment count
             $comments = $this->objComment->getCount ( $msgid );
 
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")", nl2br ( $msgbody ) . "<br />" );
+            $ret .= $objFeaturebox->showContent ( '<strong>' . $this->objUser->fullName ( $this->jposteruid ) . '</strong> on ' . $msg ['datesent'] . " " . $clink->show () . "  (" . $comments . ")"." ".$tlink->show(), nl2br ( $msgbody ) . "<br />" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );
