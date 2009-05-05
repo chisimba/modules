@@ -52,7 +52,7 @@ $this->loadClass('form','htmlelements');
 $sButton = new button('enter', $this->objLanguage->languageText('mod_ahis_runreport', 'ahis'));
 $sButton->setToSubmit();
 $sButton->setCSS('create_reportButton');
-$backUri = $this->uri(array('action'=>'view_reports'));
+$backUri = $this->uri(array('action'=>'home'));
 $bButton = new button('back', $this->objLanguage->languageText('word_clear'), "javascript: document.location='$backUri'");
 $bButton->setCSS('cancelButton');
 $yearBox = new textinput('year', $year, 'text', 5);

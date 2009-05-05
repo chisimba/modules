@@ -212,6 +212,9 @@ class ahis extends controller {
 				$this->unsetActiveSession();
 				return $this->nextAction('select_officer');
 				
+			case 'home':
+				return 'home_tpl.php';
+				
         	case 'select_officer':
 				$this->setVar('feedback', $this->getParam('feedback'));
                 $this->setVar('userList', $this->objAhisUser->getList());
@@ -1956,7 +1959,7 @@ class ahis extends controller {
             case 'view_reports':
             
             default:
-                return $this->nextAction('select_officer');
+                return $this->nextAction('home');
             	
         }
     }

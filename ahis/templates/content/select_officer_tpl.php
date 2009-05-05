@@ -91,7 +91,9 @@ $inputType->cssClass = "select_officer";
 $buttonNext = new button('next',$this->objLanguage->languageText('word_next'));
 $buttonNext->setToSubmit();
 $buttonNext->setCSS('nextButton');
-$buttonBack = new button('back',$this->objLanguage->languageText('word_back'));
+$backUri = $this->uri(array('action'=>'home'));
+$buttonBack = new button('back',$this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
+$buttonBack->setCSS('cancelButton');
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTable = $this->getObject('htmltable','htmlelements');
@@ -115,8 +117,8 @@ $objTable->addCell($this->objLanguage->languageText('mod_ahis_reporttype','ahis'
 $objTable->addCell($inputType->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell(/*$buttonBack->show()*/'');
-$objTable->addCell($buttonNext->show(),NULL,'top','right');
+$objTable->addCell('');
+$objTable->addCell($buttonBack->show()."$tab$tab$tab$tab".$buttonNext->show(),NULL,'top','right');
 $objTable->endRow();
 
 $this->loadClass('form','htmlelements');

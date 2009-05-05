@@ -52,7 +52,7 @@ $objSubHeading->str = $this->objLanguage->languageText('mod_ahis_arisusers', 'ah
 
 $objDataHeading = $this->newObject('htmlheading', 'htmlelements');
 $objDataHeading->type = 3;
-$objDataHeading->str = $this->objLanguage->languageText('mod_ahis_dataentry', 'ahis');
+$objDataHeading->str = $this->objLanguage->languageText('mod_ahis_editdataentry', 'ahis');
 
 $employeeLink = new link($this->uri(array('action' => 'employee_admin')));
 $employeeLink->link = $this->objLanguage->languageText('mod_ahis_employeeadmin', 'ahis');
