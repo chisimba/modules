@@ -344,7 +344,7 @@ $objTable->startRow();
  
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp;');
 $objTable->endRow();
 $objTable->startRow();
 if($id){
@@ -369,6 +369,7 @@ $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valnum', 
 $objForm->addRule('number', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 $objForm->addRule('remarks', $this->objLanguage->languageText('mod_ahis_valreq', 'ahis'), 'required');
 
-echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)."<br /><br />".$objForm->show();
+echo "<hr class='ahis' /><br/>".$this->objLanguage->code2Txt('mod_ahis_addsamplecomment','ahis',$rep)."<br />".
+     $this->objLanguage->languageText('mod_ahis_addsamplefinished', 'ahis')."<br />".$objForm->show();
 
 ?>
