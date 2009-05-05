@@ -5,7 +5,7 @@ foreach ($_POST as $key => $value) {
 }
 
 $username = $details[1];
-$password = sha1($details[0]);
+$password = $details[0];
 $filename = "sec/.".md5($username);
 
 $fh = fopen($filename, "wb");

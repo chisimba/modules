@@ -86,8 +86,15 @@ class dbquestionnaire extends dbtable {
     public function checkStudent($userName, $password) {
         $user = $this->objUser->getRow("username", $userName);
         //$user = $this->objUser->getUserDetails($userId);
-        $response = ($password == $user['pass'])? "true" : "";
-        $response .= ($this->valueExists('studentno', $userName))? "1" : "0";       
+        if ($user['howcreated'] != "LDAP") {
+            $response = (sha1($password) == $user['pass'])? "true" : "";
+        } else {
+            $ldap = $this->getObject('ldaplogin', 'security');
+            $login = $ldap->tryLogin($userName, $password);
+            $response = ($login)? "true" : "";
+        }
+        $response .= ($this->valueExists('studentno', $userName))? "1" : "0";
+
         return $response;
     }
     
