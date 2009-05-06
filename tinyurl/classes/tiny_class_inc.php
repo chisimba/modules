@@ -132,10 +132,10 @@ class tiny extends object {
         if (!preg_match('/^http:\/\/tinyurl.com\/[a-z0-9]+/i', $url)) {
             throw new customException('Invalid TinyURL ' . $url);
         }
-        $this->objCurl->initializeCurl($uri);
+        $this->objCurl->initializeCurl($url);
         // set some options
         $this->objCurl->setProxy();
-        $this->objCurl->setopt(CURLOPT_URL, $uri);
+        $this->objCurl->setopt(CURLOPT_URL, $url);
         $this->objCurl->setopt(CURLOPT_FOLLOWLOCATION, true);
         $this->objCurl->setopt(CURLOPT_HEADER, true);
         $this->objCurl->setopt(CURLOPT_NOBODY, true);
