@@ -116,7 +116,7 @@ class dbtuts extends dbtable {
      */
     public function saveMark($userName, $password, $test, $mark, $time) {
         $user = $this->objUser->getRow("username", $userName); //UserDetails($userId);
-        if (sha1($user['pass']) == sha1("--LDAP--")) {
+        if ($user['pass'] == sha1("--LDAP--")) {
             $objLdap = $this->getObject('ldaplogin','security');
             if ($objLdap->tryLogin($userName, $password)) {
                 $this->insert(array('studentno'=>$userName, 'testno'=>$test, 'mark'=>$mark, 'time'=>$time));
