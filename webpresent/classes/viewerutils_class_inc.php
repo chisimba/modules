@@ -15,19 +15,7 @@ if (!
 class viewerutils extends object
 {
 
-    
-    public function getLatestUploadsNavigator(){
-
-        $str=      '<div class="c15l">
-            <div id="lu_nav"></div>
-            <h1>Latest Uploads</h1>
-            <p>
-                <img src="skins/wits_webpresent/images/arrow_left.png" id="lu_goprev" alt=""/>
-                <img src="skins/wits_webpresent/images/arrow_right.png" id="lu_gonext" alt=""/>
-            </p>
-        </div>';
-        return $str;
-    }
+ 
     public function getLatestUpload(){
         $objFiles = $this->getObject('dbwebpresentfiles');
         $objView = $this->getObject("viewer", "webpresent");
@@ -64,15 +52,15 @@ class viewerutils extends object
                 $fileStr=$fileLink->show();
             }
         }
-
-      
+          $objLanguage = $this->getObject('language', 'language');
+          $featuredPresentationsStr=$objLanguage->languageText("mod_webpresent_featuredpresentation", "webpresent");
 
           $str='<div id="sidebar" class="c41r">
                    <div class="statstabs">
                    <div class="statslistcontainer">
 
                    <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">Featured Presentation</a></li>
+                   <li><a href="javascript:void(0);" class="selected">'.$featuredPresentationsStr.'</a></li>
                    </ul>
 
                    <ul class="statslist">
@@ -89,17 +77,18 @@ class viewerutils extends object
 public function getMostViewed(){
 $objStats = $this->getObject('dbwebpresentviewcounter');
 $list = $objStats->getMostViewedList();
-
-
+$objLanguage = $this->getObject('language', 'language');
+$statisticStr=$objLanguage->languageText("mod_webpresent_statistics", "webpresent");
+$mostViewedStr=$objLanguage->languageText("mod_webpresent_mostviewed", "webpresent");
     $str='<div class="c15r">
            <div class="subcr">
            <ul class="paneltabs">
-              <li><a href="#" class="selected">Statistics</a></li>
+              <li><a href="#" class="selected">'.$statisticStr.'</a></li>
               </ul>
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
            
-           Most Viewed
+          '.$mostViewedStr.'
            
            </font>
            <p>
@@ -119,12 +108,14 @@ return $str;
 public function getMostDownloaded(){
 $objStats = $this->getObject('dbwebpresentdownloadcounter');
 $list = $objStats->getMostDownloadedList();
+$objLanguage = $this->getObject('language', 'language');
+$mostDownloadedStr=$objLanguage->languageText("mod_webpresent_mostdownloaded", "webpresent");
     $str='<div class="c15r">
            <div class="subcr">
 
            <div class="tower">
            <font style="font-size:13pt;color:#5e6eb5;">
-            Most Downloaded
+            '.$mostDownloadedStr.'
            </font>
            <p>
            <ul class="statslist">
@@ -142,12 +133,15 @@ return $str;
 public function getMostUploaded(){
 $objStats = $this->getObject('dbwebpresentuploadscounter');
 $list = $objStats->getMostUploadedList();
+$objLanguage = $this->getObject('language', 'language');
+$mostUploadsStr=$objLanguage->languageText("mod_webpresent_mostuploaded", "webpresent");
+
     $str='<div class="c15r">
            <div class="subcr">
 
            <div class="tower">
            <font style="font-size:13pt;color:#0091B9;">
-            Most Uploads
+            '.$mostUploadsStr.'
            </font>
            <p>
            <ul class="statslist">
@@ -164,17 +158,19 @@ return $str;
 }
 
 public function getTagCloudContent($tagCloud){
-
+   $objLanguage = $this->getObject('language', 'language');
+   $aboutStr=$objLanguage->languageText("mod_webpresent_aboutstr", "webpresent");
+   $aboutWord=$objLanguage->languageText("mod_webpresent_aboutword", "webpresent");
    $cloud= '<div id="sidebar" class="c41r">
                    <div class="statstabs">
                    <div class="statslistcontainer">
 
                    <ul class="paneltabs">
-                   <li><a href="javascript:void(0);" class="selected">About</a></li>
+                   <li><a href="javascript:void(0);" class="selected">'.$aboutWord.'</a></li>
                    </ul>
                    <br/>
                    <p>
-                   This is a presentation sharing and conversion system. It allows users to upload PowerPoint and OpenOffice presentations, tag them, make them searchable, and have them converted into various formats such as PDF and SWF.
+                   '.$aboutStr.'
                    </p>
                    <ul class="paneltabs">
                    <li><a href="javascript:void(0);" class="selected">Tags</a></li>
@@ -207,8 +203,8 @@ public function getTagCloudContent($tagCloud){
               </h3>
               <div class="clear"></div>
               </li>
-              <li><strong>Tags:</strong><a  href="#">'.$tags.'</a></li>
-              <li><strong>By:</strong>'.$uploader.'</li>
+              <li><strong>Tags: </strong><a  href="#">'.$tags.'</a></li>
+              <li><strong>By: </strong>'.$uploader.'</li>
               '.$licence.'
               </ul>
 
@@ -226,7 +222,9 @@ public function getTagCloudContent($tagCloud){
         $objUser = $this->getObject('user', 'security');
         $objTags = $this->getObject('dbwebpresenttags');
         $latestFiles = $objFiles->getLatestPresentations();
-        $objConfig = $this->getObject('altconfig', 'config');
+        $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
+        $latest10Desc=$objLanguage->languageText("mod_webpresent_latest10desc", "webpresent");
+        $latest10Str=$objLanguage->languageText("mod_webpresent_latest10str", "webpresent");
         if (count($latestFiles) == 0) {
             $latestFilesContent = '';
         } else {
@@ -235,17 +233,18 @@ public function getTagCloudContent($tagCloud){
             $objTrim = $this->getObject('trimstr', 'strings');
             $content='';
             $counter = 0;
+            $homepagetitle=$objSysConfig->getValue('HOME_PAGE_TITLE', 'webpresent');
+            
             $title='
            
-           <h1>Wits Presentation System </h1>
+           <h1>'.$homepagetitle.'</h1>
            
             <ul class="paneltabs">
-              <li><a href="#" class="selected">Latest 10 Uploads</a></li>
+              <li><a href="#" class="selected">'.$latest10Str.'</a></li>
                   </ul>
                    <br/>
                    <p>
-                   Here you will find the 10 latest uploads, each with presentation
-   tag, the uploader and the licence. Click on any of the links to get more information
+                '.$latest10Desc.'
                    </p>
               ';
             $row='<div class="sectionstats">';
