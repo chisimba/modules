@@ -28,6 +28,7 @@ $head=$list.' '.$this->objLanguage->languageText('mod_essay_of','essay').' '.$th
 $topichead=$this->objLanguage->languageText('mod_essay_topic','essay');
 $essayhead=$this->objLanguage->languageText('mod_essay_essay','essay');
 $datehead=$this->objLanguage->languageText('mod_essay_closedate','essay');
+$bypasshead=$this->objLanguage->languageText('mod_essay_bypass', 'essay');
 $submithead=$this->objLanguage->languageText('mod_essay_datesubmitted','essay');
 $lblSubmitted=$this->objLanguage->languageText('mod_essay_submitted','essay');
 $markhead=$this->objLanguage->languageText('mod_essay_mark','essay');
@@ -49,6 +50,7 @@ $tableHd=array();
 $tableHd[]=$topichead;
 $tableHd[]=$essayhead;
 $tableHd[]=$datehead;
+$tableHd[]=$bypasshead;
 $tableHd[]=$submithead;
 $tableHd[]=$markhead;
 $tableHd[]=$loadhead;
@@ -67,24 +69,12 @@ $i=0;
 foreach($data as $item){
     $class = ($i++%2) ? 'even':'odd';
 
-    $objTable->startRow();
-    $objTable->addCell($item['name'],'','','',$class);
-    //$objTable->addCell($item['essayid'],'','','',$class);
-    $objTable->addCell($item['essay'],'','','',$class);
-    $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
-
-    if(!empty($item['submitdate'])){
-        $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
-    }else{
-        $objTable->addCell('','','','',$class);
-    }
-
    if($item['mark']=='submit'){
         // if essay hasn't been submitted: display submit icon
         // check if closing date has passed
 //        echo "[{$item['date']}]";
 //        echo "[".date('Y-m-d H:i:s')."]";
-        if(date('Y-m-d H:i:s') > $item['date']){
+        if(date('Y-m-d H:i:s') > $item['date'] && $item['bypass'] == 'NO'){
 	            $mark='';
 	            $load = $lbClosed;
         }else{
@@ -134,6 +124,18 @@ foreach($data as $item){
         // if no mark
         $mark = '';
         $load = $lblSubmitted;
+    }
+
+    $objTable->startRow();
+    $objTable->addCell($item['name'],'','','',$class);
+    //$objTable->addCell($item['essayid'],'','','',$class);
+    $objTable->addCell($item['essay'],'','','',$class);
+    $objTable->addCell($this->objDateformat->formatDate($item['date']),'','','',$class);
+	$objTable->addCell($item['bypass'],'','','',$class);
+    if(!empty($item['submitdate'])){
+        $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
+    }else{
+        $objTable->addCell('','','','',$class);
     }
 
     $objTable->addCell($mark,'','','',$class);

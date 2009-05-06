@@ -816,10 +816,11 @@ class essay extends controller
                 $topic=$this->dbtopic->getTopic($item['topicid'],'name, closing_date, bypass');
 
                 $data[$key]['name']=$topic[0]['name'];
+                $data[$key]['date']=$topic[0]['closing_date'];
                 if($topic[0]['bypass']){
-                    $data[$key]['date']='';
+                    $data[$key]['bypass']='YES';
                 }else{
-                    $data[$key]['date']=$topic[0]['closing_date'];
+                    $data[$key]['bypass']='NO';
                 }
 
                 // get booking info: check if submitted or marked
