@@ -204,6 +204,9 @@ class interpreter extends object
      */
     function parseWorkflow($workflow) {
         //$elems = simplexml_load_string($workflow);
+		$workflow = str_replace('&amp;', '&', $workflow);
+		$workflow = str_replace('&', '&amp;', $workflow);
+		
         $xml = new SimpleXMLElement($workflow);
 
         //Grabbing all of the elements under "workflow"
