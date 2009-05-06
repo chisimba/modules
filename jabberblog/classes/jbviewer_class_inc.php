@@ -239,7 +239,7 @@ class jbviewer extends object {
             $hashlink = $this->getObject ( 'link', 'htmlelements' );
             $hashlink->href = $this->uri ( array ('meme' => $item, 'action' => 'viewmeme' ) );
             $hashlink->link = $item;
-            $str = str_replace($results[0][$counter], $hashlink->show()." ", $str);
+            //$str = str_replace($results[0][$counter], $hashlink->show()." ", $str);
             $counter++;
         }
 
@@ -272,7 +272,7 @@ class jbviewer extends object {
             $atlink = $this->getObject ( 'link', 'htmlelements' );
             $atlink->href = $this->uri ( array ('loc' => $item, 'action' => 'viewloc' ) );
             $atlink->link = $item;
-            $str = str_replace($results[0][$counter], $atlink->show()." ", $str);
+            //$str = str_replace($results[0][$counter], $atlink->show()." ", $str);
             $counter++;
         }
 
