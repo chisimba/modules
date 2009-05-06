@@ -47,7 +47,7 @@ $GLOBALS ['kewl_entry_point_run']) {
  *
  * Viewer class for rendering an array of messages to the browser
  *
- * @author Derek Keats
+ * @author Paul Scott
  * @package IM
  *
  */
@@ -63,6 +63,7 @@ class jbviewer extends object {
     public $objLanguage;
     public $uImage;
     public $objWashout;
+    public $teeny;
 
     /**
      *
@@ -83,6 +84,7 @@ class jbviewer extends object {
         $this->jposteruid = $this->objSysConfig->getValue ( 'jposteruid', 'jabberblog' );
         $this->uImage = $this->objUser->getSmallUserImage ( $this->jposteruid );
         $this->objWashout = $this->getObject ( 'washout', 'utilities' );
+        $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
     }
 
     public function renderSingle($msg) {
@@ -126,7 +128,7 @@ class jbviewer extends object {
             $clink->link = $this->objLanguage->languageText ( "mod_jabberblog_leavecomment", "jabberblog" );
             // set up a link for Tweet this
             $tlink = $this->newObject ( 'link', 'htmlelements' );
-            $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".urlencode($this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) ));
+            $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".$this->teeny->create(urlencode($this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) )));
             $tlink->link = $this->objLanguage->languageText ( "mod_jabberblog_tweetthis", "jabberblog" );
             // get the comment count
             $comments = $this->objComment->getCount ( $msgid );
