@@ -126,7 +126,7 @@ class jbviewer extends object {
             $clink->link = $this->objLanguage->languageText ( "mod_jabberblog_leavecomment", "jabberblog" );
             // set up a link for Tweet this
             $tlink = $this->newObject ( 'link', 'htmlelements' );
-            $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".$this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) );
+            $tlink->href = "http://twitter.com/home/?status=".$this->objLanguage->languageText ( "mod_jabberblog_interestingpost", "jabberblog" ).": ".urlencode($this->uri ( array ('postid' => $msgid, 'action' => 'viewsingle' ) ));
             $tlink->link = $this->objLanguage->languageText ( "mod_jabberblog_tweetthis", "jabberblog" );
             // get the comment count
             $comments = $this->objComment->getCount ( $msgid );
