@@ -129,7 +129,31 @@ class tiny extends object {
      * @static
      */
     public function lookup($url) {
+        if (!preg_match('/^http:\/\/tinyurl.com\/[a-z0-9]+/i', $url)) {
+            throw new customException('Invalid TinyURL ' . $url);
+        }
+        $this->objCurl->initializeCurl($uri);
+        // set some options
+        $this->objCurl->setProxy();
+        $this->objCurl->setopt(CURLOPT_URL, $uri);
+        $this->objCurl->setopt(CURLOPT_FOLLOWLOCATION, true);
+        $this->objCurl->setopt(CURLOPT_HEADER, true);
+        $this->objCurl->setopt(CURLOPT_NOBODY, true);
+        $this->objCurl->setopt(CURLOPT_RETURNTRANSFER, true);
+        $this->objCurl->setopt(CURLOPT_USERAGENT, 'Chisimba');
 
+        $result = $this->objCurl->getUrl($url);
+
+        $this->objCurl->closeCurl();
+
+        $m = array();
+        if (preg_match("/Location: (.*)\n/", $result, $m)) {
+            if (isset($m[1]) && preg_match('/^https?:\/\//i', $m[1])) {
+                return trim($m[1]);
+            }
+        }
+
+        throw new customException('No redirection found');
     }
 }
 ?>

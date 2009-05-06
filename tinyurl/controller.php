@@ -68,6 +68,11 @@ class tinyurl extends controller {
                 $url = $this->getParam('url', 'http://avoir.uwc.ac.za');
                 echo $this->teeny->create($url);
                 break;
+
+            case 'lookupurl':
+                $url = $this->getParam('url', 'http://tr.im/kCSG');
+                echo $this->teeny->lookup($url);
+                break;
         }
     }
 
