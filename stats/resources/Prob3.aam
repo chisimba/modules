@@ -1,9 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	p30000.aas	0	15247
-seg	all	p30001.aas	15247	15955
-seg	all	p30002.aas	31202	8348
-# HTML_PARAMS: WIDTH=493 HEIGHT=337 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=5649147

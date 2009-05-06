@@ -1,7 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	logi0000.aas	0	9692
-# HTML_PARAMS: WIDTH=227 HEIGHT=168 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22508018

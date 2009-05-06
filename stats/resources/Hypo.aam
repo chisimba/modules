@@ -1,9 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	hypo0000.aas	0	15914
-seg	all	hypo0001.aas	15914	15724
-seg	all	hypo0002.aas	31638	12095
-# HTML_PARAMS: WIDTH=392 HEIGHT=312 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22478596

@@ -1,9 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	tim0000.aas	0	16818
-seg	all	tim0001.aas	16818	17106
-seg	all	tim0002.aas	33924	6848
-# HTML_PARAMS: WIDTH=547 HEIGHT=398 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22792516

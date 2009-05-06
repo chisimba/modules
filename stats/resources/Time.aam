@@ -1,9 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	time0000.aas	0	15882
-seg	all	time0001.aas	15882	15652
-seg	all	time0002.aas	31534	14883
-# HTML_PARAMS: WIDTH=462 HEIGHT=380 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22763171

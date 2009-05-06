@@ -1,8 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	menu0000.aas	0	15472
-seg	all	menu0001.aas	15472	12567
-# HTML_PARAMS: WIDTH=334 HEIGHT=385 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22521856

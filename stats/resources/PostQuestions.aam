@@ -1,8 +1,0 @@
-ver	0	7
-get	.
-put	DOWNLOAD
-seg	all	post0000.aas	0	15409
-seg	all	post0001.aas	15409	12981
-# HTML_PARAMS: WIDTH=494 HEIGHT=394 BGCOLOR=FFFFFF
-opt	all	BypassSecurityDialog=FALSE
-opt	all	UniqueID=22555156
