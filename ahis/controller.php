@@ -455,9 +455,20 @@ class ahis extends controller {
                 $outputType = $this->getParam('outputType', 2);
                 $reportType = $this->getParam('reportType');
                 $month = $this->getParam('month', date('m'));
+            
                 $year = $this->getParam('year', date('Y'));
+                    $currentyear = date('Y');
+                $currentmonth = date('m');
+                
+               
+               
+              
+
+                        
+                
                 $reportName = $this->objReport->getRow('id', $reportType);
                 $fileName = str_replace(" ", "_", "{$reportName['name']}_$month-$year");
+                 if($currentyear >= $year ){
                 switch ($outputType) {
                     case 1:
                         //csv
@@ -483,8 +494,24 @@ class ahis extends controller {
                         $this->setVar('outputType', $outputType);
                         $this->setVar('reportType', $reportType);
                         $this->setVar('enter', $this->getParam('enter'));
+                      
+                      
+                        
+                        $this->setVar('value', $output);
                         return "view_reports_tpl.php";
                 }
+                }else {
+                        $this->setVar('reportTypes', $this->objReport->getAll("ORDER BY name"));
+                        $this->setVar('year', $year);
+                        $this->setVar('month', $month);
+                        //$this->setVar('outputType', $outputType);
+                        $this->setVar('reportType', $reportType);
+                        //$this->setVar('enter', $this->getParam('enter'));
+                        $output = 'kjdklsl';
+                        $this->setVar('value', $output);
+                        return "view_reports_tpl.php";
+                }
+
                 
                 break;
                 

@@ -38,7 +38,11 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
-
+ $objMsg = $this->getObject('timeoutmessage','htmlelements');
+    $objMsg->setHideTypeToNone();
+    if(isset($value)){
+     $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis')."<br />");
+    }
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $this->objLanguage->languageText('mod_ahis_viewreports', 'ahis');
 $objHeading->type = 2;
@@ -100,6 +104,7 @@ $objTable->addCell("&nbsp;".$sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButto
 //$objTable->addCell('');
 //$objTable->addCell();
 $objTable->addCell('');
+
 $objTable->endRow();
 
 
@@ -108,6 +113,7 @@ $objForm->addToForm($objTable->show());
 $objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
 
 if ($enter) {
+
     $report = $this->objViewReport->generateReport($year, $month, $reportType);
 } else {
     $report = "";
@@ -116,6 +122,6 @@ if ($enter) {
 //$objLayer = new layer();
 //$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show().$report);
 //$objLayer->align = 'center';
-
+   $msg = $objMsg->show();
 //echo $objLayer->show();
-echo $objHeading->show()."<br />".$objForm->show().$report;
+echo $objHeading->show()."<br /> ".$msg."<br />".$objForm->show().$report;
