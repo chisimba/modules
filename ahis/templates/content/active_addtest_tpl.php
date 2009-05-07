@@ -53,6 +53,8 @@ $finButton = new button('next', $this->objLanguage->languageText('word_next'));
 $finButton->setToSubmit();
 $backUri = $this->uri(array('action'=>'active_surveillance'));
 $backButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$finButton->setCSS('nextButton');
+$backButton->setCSS('backButton');
 
 $testTypeDrop = new dropdown('testtype');
 $testTypeDrop->addFromDB($arraytest, 'name', 'name');
@@ -69,18 +71,18 @@ $sensitivityBox = new textinput('sensitivity', $sensitivity);
 $specificityBox = new textinput('specificity', $specificity);
 $campBox->extra ="readonly";
 
+$tab = '&nbsp;&nbsp;&nbsp;&nbsp;';
 
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-$objTable->cssClass = 'min50';
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":");
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":$tab");
 
 $objTable->addCell($campName);
 $objTable->addCell('');
-$objTable->addCell($this->objLanguage->languageText('word_disease').": ");
+$objTable->addCell($this->objLanguage->languageText('word_disease').": $tab");
 $objTable->addCell($diseaseDrop->show());
 $objTable->endRow();
 $objTable->startRow();
@@ -98,15 +100,15 @@ $objTable->addCell($specificityBox->show());
 $objTable->endRow();
 $objTable->startRow();
 $objTable->addCell($campBox->show());
-$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp;');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
 $objTable->addCell($backButton->show());
 
-$objTable->addCell($nbsp);
-$objTable->addCell($nbsp);
+$objTable->addCell('&nbsp;');
+$objTable->addCell('&nbsp;');
 $objTable->addCell($finButton->show());//,'top','right');
 $objTable->addCell('');
 $objTable->endRow();
@@ -121,7 +123,6 @@ $objForm->addRule('specificity', $this->objLanguage->languageText('mod_ahis_vals
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<br />".$objForm->show());
-//$objLayer->align = 'center';
 
 $scriptUri = $this->getResourceURI('util.js');
 $this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");

@@ -54,6 +54,8 @@ if ($id) {
 
 }
 
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $hstr;
 $objHeading->type = 2;
@@ -93,15 +95,15 @@ $geo2Box->addFromDB($arraygeo2,'name', 'id');
 $geo2Box->setSelected($geo2);
 $geo2Box->extra = 'disabled';
 
-$campNameBox = new textinput('campname',$campName,'hidden');
+$campNameBox = new textinput('campname',$campName,'text',20);
 $campNameBox->extra ="readonly";
-$diseaseBox = new textinput('disease',$disease,'hidden');
+$diseaseBox = new textinput('disease',$disease,'text',20);
 $diseaseBox->extra ="readonly";
 //$reporterBox = new textinput('reporter',$reporter);
-$surveyBox = new textinput('survey',$survey,'hidden');
+$surveyBox = new textinput('survey',$survey,'text');
 $surveyBox->extra ="readonly";
 //$geo2Box = new textinput('geo2',$geo2);
-$reportdateBox = new textinput('reportdate',$reportdate,'hidden');
+$reportdateBox = new textinput('reportdate',$reportdate,'text',10);
 $reportdateBox->extra ="readonly";
 
 $territoryDrop = new dropdown('territory');
@@ -120,32 +122,31 @@ $farmBox = new textinput('farm', $record['farmname']);
 $activeBox = new textinput('activeid',$activeid,'hidden');
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
-$objTable->width = '60%';
-$objTable->cssClass = 'min50';
+$objTable->width = NULL;
 
 $objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('word_campaign').": $tab");
-$objTable->addCell("<b>".$campName."</b>");
+$objTable->addCell($campNameBox->show().$tab);
 $objTable->addCell($this->objLanguage->languageText('word_disease').": $tab");
-$objTable->addCell("<b>".$disease."</b>");
+$objTable->addCell($diseaseBox->show().$tab);
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
-$objTable->addCell($reporterBox->show());
+$objTable->addCell($reporterBox->show().$tab);
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_surveytype').": ");
-$objTable->addCell("<b>".$survey."</b>");
+$objTable->addCell($this->objLanguage->languageText('phrase_surveytype').": $tab");
+$objTable->addCell($surveyBox->show().$tab);
 $objTable->addCell($this->objLanguage->languageText('phrase_geolevel2').": $tab");
-$objTable->addCell($geo2Box->show());
+$objTable->addCell($geo2Box->show().$tab);
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_reportdate','ahis').": $tab");
-$objTable->addCell("<b>".$reportdate."</b>");
+$objTable->addCell($reportdateBox->show().$tab);
 $objTable->endRow();
 
-$objTable->startRow();
+/*$objTable->startRow();
 $objTable->addCell($campNameBox->show());
 $objTable->addCell($diseaseBox->show());
 $objTable->addCell($surveyBox->show());
 $objTable->addCell($reportdateBox->show());
-$objTable->endRow();
+$objTable->endRow();*/
 
 $this->loadClass('form','htmlelements');
 $objForm = new form('reportForm');
@@ -167,7 +168,8 @@ $objTable->cellspacing = 2;
 $objTable->width = '90%';
 $objTable->cssClass = 'min50';
 
-$objTable->startRow();
+$objTable->startRow();
+
 $objTable->addCell($this->objLanguage->languageText('word_farm')." ".$this->objLanguage->languageText('word_name'), '', '', '', 'heading');
 $objTable->addCell($this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system'), '', '', '', 'heading');
 $objTable->addCell($this->objLanguage->languageText('word_location'), '', '', '', 'heading');

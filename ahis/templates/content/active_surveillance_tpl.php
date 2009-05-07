@@ -44,10 +44,7 @@ $this->loadClass('link', 'htmlelements');
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str =$this->objLanguage->languageText('phrase_active')." ".$this->objLanguage->languageText('phrase_newcampaign');
-
 $objHeading->type = 2;
-
-
 
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('textarea','htmlelements');
@@ -55,23 +52,18 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('button','htmlelements');
 $this->loadClass('layer','htmlelements');
 
-
-
 $okButton = new button('ok', $this->objLanguage->languageText('word_next'));
 $okButton->setToSubmit();
+$okButton->setCSS('nextButton');
 $cancelUri = $this->uri(array('action'=>'select_officer'));
 $cancelButton = new button('cancel', $this->objLanguage->languageText('word_back'), "javascript: document.location='$cancelUri'");
-
-
-
+$cancelButton->setCss('backButton');
 $campNameBox = new textinput('campName', $campName);
-//$officerDrop = new textinput('officerId',$officerId);
 
 $officerDrop = new dropdown('officerId');
 $officerDrop->addFromDB($userList, 'name', 'userid');
 $officerDrop->setSelected($officerId);
 $officerDrop->extra = 'disabled';
-
 
 $geo2level = new textinput('geo2',$geo2Id,'hidden');
 $reportdate = new textinput('reportdate',$reportdate,'hidden');
@@ -88,40 +80,38 @@ $commentsBox = new textarea('comments', $comments , 4, 40);
 $objTable = $this->getObject('htmltable','htmlelements');
 $objTable->cellspacing = 2;
 $objTable->width = NULL;
-$objTable->cssClass = 'min50';
-
+$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+$tabx4 = "$tab$tab$tab$tab";
 
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').": ");
+$objTable->addCell($this->objLanguage->languageText('word_campaign')." ".$this->objLanguage->languageText('word_name').":$tab");
 $objTable->addCell($campNameBox->show());
 $objTable->addCell($geo2level->show());
 $objTable->addCell($reportdate->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').": $tab");
+$objTable->addCell($this->objLanguage->languageText('mod_ahis_reportofficer','ahis').":$tab");
 $objTable->addCell($officerDrop->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_disease').": ");
+$objTable->addCell($this->objLanguage->languageText('word_disease').":$tab");
 $objTable->addCell($diseaseDrop->show());
 $objTable->endRow();
-$objTable->addCell($this->objLanguage->languageText('phrase_surveytype').": ");
+$objTable->addCell($this->objLanguage->languageText('phrase_surveytype').":$tab");
 $objTable->addCell($surveyTypeDrop->show());
 $objTable->endRow();
 $objTable->startRow();
-$objTable->addCell($this->objLanguage->languageText('word_comments').": ");
+$objTable->addCell($this->objLanguage->languageText('word_comments').":$tab");
 $objTable->addCell($commentsBox->show());
 $objTable->endRow();
 
 $objTable->startRow();
-$objTable->addCell('&nbsp');
+$objTable->addCell('&nbsp;');
 $objTable->endRow();
 
 $objTable->startRow();
 $objTable->addCell('');
-$objTable->addCell($cancelButton->show());
-$objTable->addCell($okButton->show(),NULL);//,'top','right');
-$objTable->addCell('');
+$objTable->addCell($cancelButton->show()."$tabx4$tabx4$tabx4".$okButton->show(), NULL, 'top', 'right');
 $objTable->endRow();
 
 
@@ -133,12 +123,6 @@ $objForm->addRule('campName', $this->objLanguage->languageText('mod_ahis_campnam
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<br />".$objForm->show());
-//$objLayer->align = 'center';
-
-
-//$scriptUri = $this->getResourceURI('util.js');
-//$this->appendArrayVar('headerParams', "<script type='text/javascript' src='$scriptUri'></script>");
-
 
 echo $objLayer->show();
 ?>
