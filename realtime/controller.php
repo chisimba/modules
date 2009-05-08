@@ -387,7 +387,7 @@
             $objSysConfig = $this->getObject('dbsysconfig', 'sysconfig');
             $supernodeHost=$objSysConfig->getValue('SUPERNODE_HOST', 'realtime');
             $supernodePort=$objSysConfig->getValue('SUPERNODE_PORT', 'realtime');
-                        $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
+            $mediaServerHost=$objSysConfig->getValue('MEDIA_SERVER_HOST', 'realtime');
             $audioMICPort=$objSysConfig->getValue('AUDIO_MIC_PORT', 'realtime');
             $audioSpeakerPort=$objSysConfig->getValue('AUDIO_SPEAKER_PORT', 'realtime');
             $username=$this->objUser->userName();
