@@ -11,6 +11,19 @@
             </add>
         </data>
     </update>
+     <update>
+        <table>tbl_assignment</table>
+        <version>0.341</version>
+        <description>Added opening date - when assignments become visible to students</description>
+        <data>
+            <add>
+                <name>assesment_type</name>
+                <type>text</type>
+                <notnull>1</notnull>                
+                <default>0</default>
+            </add>
+        </data>
+    </update>
     <update>
         <table>tbl_assignment_submit</table>
         <version>0.314</version>

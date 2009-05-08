@@ -124,7 +124,7 @@
          * @param <type> $closing_date
          * @return <type>
          */
-        public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date)
+        public function addAssignment($name, $context, $description, $resubmit, $format, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
         {
             return $this->insert(array(
                 'name' => $name,
@@ -136,6 +136,7 @@
                 'percentage' => $percentage,
                 'opening_date' => $opening_date,
                 'closing_date' => $closing_date,
+                'assesment_type' => $assesment_type,
                 'userid' => $this->objUser->userId(),
                 'last_modified' => date('Y-m-d H:i:s',time()),
                 'updated' => date('Y-m-d H:i:s',time())
@@ -153,7 +154,7 @@
          * @param <type> $closing_date
          * @return <type>
          */
-        public function updateAssignment($id, $name, $description, $resubmit, $mark, $percentage, $opening_date, $closing_date)
+        public function updateAssignment($id, $name, $description, $resubmit, $mark, $percentage, $opening_date, $closing_date, $assesment_type)
         {
             return $this->update('id', $id, array(
                 'name' => $name,
@@ -163,6 +164,7 @@
                 'percentage' => $percentage,
                 'opening_date' => $opening_date,
                 'closing_date' => $closing_date,
+                'assesment_type' => $assesment_type,
                 'userid' => $this->objUser->userId(),
                 'last_modified' => date('Y-m-d H:i:s',time()),
                 'updated' => date('Y-m-d H:i:s',time())
