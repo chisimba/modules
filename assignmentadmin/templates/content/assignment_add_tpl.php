@@ -131,7 +131,7 @@ $objTable->addCell($objLabel->show());
 $objTable->addCell($objRadio->show());
 $objTable->endRow();
 
-$objLabel = new label($isreflectionLabel.':', 'input_assesmentype');
+$objLabel = new label($isreflectionLabel.'? :', 'input_assesmentype');
 $objRadio = new radio('assesment_type');
 $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
 $objRadio->addOption(1,$yesLabel);
