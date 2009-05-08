@@ -492,8 +492,9 @@ class ahis extends controller {
                         $this->setVar('outputType', $outputType);
                         $this->setVar('reportType', $reportType);
                         $this->setVar('enter', $this->getParam('enter'));
-						$this->setVar('error', $error);
-						
+						if ($error) {
+							$this->setVar('error', $error);
+						}
                         return "view_reports_tpl.php";
                 }
 				
