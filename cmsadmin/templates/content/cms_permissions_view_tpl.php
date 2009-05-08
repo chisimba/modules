@@ -6,6 +6,15 @@
 * @package cmsadmin
 */
 
+if (!isset($layoutData)) {
+	$layoutData = array();
+	$layoutData['name'] = '';
+}
+
+if (!isset($tblDetails)) {
+	$tblDetails = '';
+}
+
     $parentId = $this->getParam('parent');
 
 
