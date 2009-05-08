@@ -455,30 +455,27 @@ class ahis extends controller {
                 $outputType = $this->getParam('outputType', 2);
                 $reportType = $this->getParam('reportType');
                 $month = $this->getParam('month', date('m'));
-            
+				$error = $this->getParam('error');
                 $year = $this->getParam('year', date('Y'));
-                    $currentyear = date('Y');
+                $currentyear = date('Y');
                 $currentmonth = date('m');
                 
-               
-               
-              
-
-                        
-                
-                $reportName = $this->objReport->getRow('id', $reportType);
+				$reportName = $this->objReport->getRow('id', $reportType);
                 $fileName = str_replace(" ", "_", "{$reportName['name']}_$month-$year");
-                 if($currentyear >= $year ){
+                if($year > $currentyear ) {
+					return $this->nextAction('view_reports', array('outputType'=>2,'reportType'=>$reportType,'month'=>$month,'year'=>$currentyear,'error'=>'year'));
+				}
+				
                 switch ($outputType) {
                     case 1:
                         //csv
                         $csv = $this->objViewReport->generateCSV($year, $month, $reportType);
-                        
                         header("Content-Type: application/csv"); 
                         header("Content-length: " . sizeof($csv)); 
                         header("Content-Disposition: attachment; filename=$fileName.csv"); 
                         echo $csv;
                         break;
+					
                     case 3:
                         //pdf
                         $html = $this->objViewReport->generateReport($year, $month, $reportType, 'true');
@@ -487,32 +484,19 @@ class ahis extends controller {
                         //$objPDF->generatePDF($html, "$fileName.pdf");
                         echo "$html <br />not yet implemented";
                         break;
-                    default:
+                    
+					default:
                         $this->setVar('reportTypes', $this->objReport->getAll("ORDER BY name"));
                         $this->setVar('year', $year);
                         $this->setVar('month', $month);
                         $this->setVar('outputType', $outputType);
                         $this->setVar('reportType', $reportType);
                         $this->setVar('enter', $this->getParam('enter'));
-                      
-                      
-                        
-                        $this->setVar('value', $output);
+						$this->setVar('error', $error);
+						
                         return "view_reports_tpl.php";
                 }
-                }else {
-                        $this->setVar('reportTypes', $this->objReport->getAll("ORDER BY name"));
-                        $this->setVar('year', $year);
-                        $this->setVar('month', $month);
-                        //$this->setVar('outputType', $outputType);
-                        $this->setVar('reportType', $reportType);
-                        //$this->setVar('enter', $this->getParam('enter'));
-                        $output = 'kjdklsl';
-                        $this->setVar('value', $output);
-                        return "view_reports_tpl.php";
-                }
-
-                
+				
                 break;
                 
             case 'active_surveillance':

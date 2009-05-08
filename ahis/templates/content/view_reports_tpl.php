@@ -38,11 +38,14 @@ $GLOBALS['kewl_entry_point_run']) {
     die("You cannot view this page directly");
 }
 // end security check
- $objMsg = $this->getObject('timeoutmessage','htmlelements');
-    $objMsg->setHideTypeToNone();
-    if(isset($value)){
-     $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis')."<br />");
-    }
+
+$msg = '<br />';
+if(isset($error)) {
+        $objMsg = $this->getObject('timeoutmessage','htmlelements');
+        $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
+        $msg = $objMsg->show()."<br />";
+}
+
 $objHeading = $this->getObject('htmlheading','htmlelements');
 $objHeading->str = $this->objLanguage->languageText('mod_ahis_viewreports', 'ahis');
 $objHeading->type = 2;
@@ -112,16 +115,11 @@ $objForm = new form('reportForm', $this->uri(array('action' => 'view_reports')))
 $objForm->addToForm($objTable->show());
 $objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
 
-if ($enter) {
+if (isset($enter) && $enter) {
 
     $report = $this->objViewReport->generateReport($year, $month, $reportType);
 } else {
     $report = "";
 }
 
-//$objLayer = new layer();
-//$objLayer->addToStr($objHeading->show()."<hr />".$objForm->show().$report);
-//$objLayer->align = 'center';
-   $msg = $objMsg->show();
-//echo $objLayer->show();
-echo $objHeading->show()."<br /> ".$msg."<br />".$objForm->show().$report;
+echo $objHeading->show().$msg.$objForm->show().$report;
