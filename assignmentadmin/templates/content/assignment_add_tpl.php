@@ -37,6 +37,7 @@ $yesLabel = $this->objLanguage->languageText('word_yes');
 $noLabel = $this->objLanguage->languageText('word_no');
 $onlineLabel = $this->objLanguage->languageText('mod_assignmentadmin_online','assignmentadmin');
 $uploadLabel = $this->objLanguage->languageText('mod_assignmentadmin_upload','assignmentadmin');
+$isreflectionLabel = $this->objLanguage->languageText('mod_assignmentadmin_isreflection','assignmentadmin');
 $saveLabel = $this->objLanguage->languageText('word_save');
 $exitLabel = $this->objLanguage->languageText('word_cancel');
 $selectLabel = $this->objLanguage->languageText('mod_assignmentadmin_selectdate','assignmentadmin');
@@ -124,6 +125,18 @@ $objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
 $objRadio->addOption(1,$yesLabel);
 $objRadio->addOption(0,$noLabel);
 $objRadio->setSelected($resubmit);
+
+$objTable->startRow();
+$objTable->addCell($objLabel->show());
+$objTable->addCell($objRadio->show());
+$objTable->endRow();
+
+$objLabel = new label($isreflectionLabel.':', 'input_assesmentype');
+$objRadio = new radio('assesment_type');
+$objRadio->setBreakSpace('&nbsp;&nbsp;&nbsp;&nbsp;');
+$objRadio->addOption(1,$yesLabel);
+$objRadio->addOption(0,$noLabel);
+$objRadio->setSelected($assesmentype);
 
 $objTable->startRow();
 $objTable->addCell($objLabel->show());

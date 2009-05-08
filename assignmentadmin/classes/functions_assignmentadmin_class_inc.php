@@ -293,7 +293,7 @@ class functions_assignmentadmin extends object
         $percentage= $this->getParam('percentage', '');
         $closing_date=$this->getParam('date', '');
         $last_modified= date('Y-m-d H:i:s',time());
-
+        $assesment_type=$this->getParam('assesment_type','');
         $fields = array();
         $fields['name'] =$name;
         $fields['format'] = $format;
@@ -306,11 +306,11 @@ class functions_assignmentadmin extends object
         $fields['userId'] = $this->userId;
         $fields['context'] = $this->contextCode;
         $fields['last_modified'] =$last_modified;
-
+        $fields['assesment_type'] =$assesment_type;
         if($id==NULL)
-        $id = $this->dbAssignment->addAssignment($name, $this->contextCode, $clean_text, $resubmit, $format, $mark, $percentage, $last_modified, $closing_date);
+        $id = $this->dbAssignment->addAssignment($name, $this->contextCode, $clean_text, $resubmit, $format, $mark, $percentage, $last_modified, $closing_date,$assesment_type);
         else
-        $this->dbAssignment->updateAssignment($id,$name, $clean_text, $resubmit, $format, $mark, $percentage, $last_modified, $closing_date);
+        $this->dbAssignment->updateAssignment($id,$name, $clean_text, $resubmit, $format, $mark, $percentage, $last_modified, $closing_date,$assesment_type);
         return $id;
     }
 
