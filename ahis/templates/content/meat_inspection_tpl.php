@@ -63,6 +63,8 @@ $formTable->cssClass = 'min50';
 
 //district name
 $district = new textinput('district',$dist);
+$district->extra='readonly';
+
 $label = new label ('District:', 'district');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -70,7 +72,7 @@ $formTable->addCell($district->show());
 $formTable->endRow();
 //date of inspection
 $datePicker = $this->newObject('datepicker', 'htmlelements');
-$datePicker->name = 'inspectiondate';
+$datePicker->setName('inspectiondate');
 $formTable->startRow();
 $formTable->addCell('Inspection Date:');
 $formTable->addCell($datePicker->show());
@@ -92,12 +94,17 @@ $formTable->addCell($label2->show());
 $formTable->addCell($num_at_risk->show());
 $formTable->endRow();
 $form->addToForm($formTable->show());
+$form->addRule('inspectiondate', 'Please enter valid source', 'datenotfuture');
+$form->addRule('num_of_cases', 'Please enter number of cases', 'required');
+$form->addRule('num_of_cases', 'Please enter a valid number', 'numeric');
+$form->addRule('num_at_risk', 'Please enter number at risk', 'required');
+$form->addRule('num_at_risk', 'Please enter a valid number', 'numeric');
 //buttons
 $button = new button ('saveinspectiondata', 'Save');
 $button->setToSubmit();
 
-$btcancel = new button ('cancel', 'Cancel');
-$btcancel->setToSubmit();
+$backUri = $this->uri(array('action'=>'select_officer'));
+$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
 
 $form->addToForm($button->show());
 $form->addToForm($btcancel->show());

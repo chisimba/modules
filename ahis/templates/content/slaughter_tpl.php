@@ -66,6 +66,7 @@ $formTable->cssClass = 'min50';
 
 //district name
 $district = new textinput('district',$dist);
+$district->extra='readonly';
 $label = new label ('District:','district');
 $formTable->startRow();
 $formTable->addCell($label->show().'&nbsp;&nbsp;&nbsp;','right');
@@ -116,7 +117,7 @@ $label = new label ('Other:', 'input_no_other');
 $other = new textinput('other');
 //$other->size = 50;
 
-$label1 = new label (' Name:', 'input_no_name');
+$label1 = new label (' Number:', 'input_no');
 $name = new textinput('name');
 //$name->size = 50;
 
@@ -140,13 +141,20 @@ $formTable->endRow();
 
 
 $form->addToForm($formTable->show());
+$form->addRule('num_cattle', 'Please enter valid number ', 'numeric');
+$form->addRule('num_sheep', 'Please enter valid number ', 'numeric');
+$form->addRule('num_goats', 'Please enter valid number ', 'numeric');
+$form->addRule('num_pigs', 'Please enter valid number ', 'numeric');
+$form->addRule('num_poultry', 'Please enter valid number ', 'numeric');
+$form->addRule('other', 'Please enter valid value ', 'lettersonly');
+$form->addRule('name', 'Please enter valid number ', 'numeric');
 
 //buttons
 $button = new button ('animal_slaughter_save', 'Save');
 $button->setToSubmit();
 
-$btcancel = new button ('cancel', 'Cancel');
-$btcancel->setToSubmit();
+$backUri = $this->uri(array('action'=>'select_officer'));
+$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
 
 $form->addToForm($button->show());
 $form->addToForm($btcancel->show());

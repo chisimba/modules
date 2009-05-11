@@ -54,8 +54,7 @@ $this->loadClass('label', 'htmlelements');
 $classDrop = new dropdown('classification');
 $classDrop->addFromDB($species, 'name', 'name'); 
 
-// Create Form
-$form = new form ('add', $this->uri(array('action'=>$formAction)));
+
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
 $formTable->cellspacing = 2;
@@ -66,7 +65,7 @@ $formTable->cssClass = 'min50';
 
 //district name
 $district = new textinput('district',$dist);
-//$district->extra='readonly';
+$district->extra='readonly';
 $label = new label ('District:', 'district');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -96,10 +95,10 @@ $production = new dropdown('animal_production');
 
 $production->multiple=false; 
 
-$production->addOption('Milk','Milk');
-$production->addOption('Eggs', 'Eggs');
-$production->addOption('Cheese', 'Cheese');
 $production->addOption('Beef', 'Beef');
+$production->addOption('Cheese', 'Cheese');
+$production->addOption('Eggs', 'Eggs');
+$production->addOption('Milk','Milk');
 $production->addOption('Other','Other');
 $formTable->startRow();
 $formTable->addCell($label->show());
@@ -115,16 +114,23 @@ $formTable->addCell($label->show());
 $formTable->addCell($source->show());
 $formTable->endRow();
 
+// Create Form
+$form = new form ('add', $this->uri(array('action'=>$formAction)));
 $form->addToForm($formTable->show());
+$form->addRule('num_animals', 'Please enter number of animals', 'required');
+$form->addRule('num_animals', 'Please enter valid number ', 'numeric');
+$form->addRule('source', 'Please enter valid source', 'lettersonly');
+
 //buttons
 $button = new button ('animal_population_save', 'Save');
 $button->setToSubmit();
-
-$btcancel = new button ('cancel', 'Cancel');
-$btcancel->setToSubmit();
+$backUri = $this->uri(array('action'=>'select_officer'));
+$btcancel = new button('cancel', 'Cancel', "javascript: document.location='$backUri'");
+//$btcancel->setToSubmit();
 
 $form->addToForm($button->show());
 $form->addToForm($btcancel->show());
+
 
 $objLayer = new layer();
 $objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$form->show());
