@@ -69,16 +69,16 @@ class rubric extends controller
      * @param $action Action to be taken
      * @return boolean
      */
-   /* public function isValid($action) {	
+    public function isValid($action) {	
     	
-    	$validActions = array('viewtable','assessment');
+    	$validActions = array('viewtable','assessments');
     		
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer() || in_array($action, $validActions)) {
             return TRUE;
         } else {
             return FALSE;//parent::isValid ( $action );
         }
-    }*/
+    }
     
     /**
     * The dispatch funtion
