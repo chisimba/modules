@@ -47,15 +47,14 @@
     $tblclass->endHeaderRow();    
 
     // Display the assessments.
-
+//var_dump($assessments);
+//var_dump($this->objUser->isContextStudent());
     $oddOrEven = "odd";    
 	foreach ($assessments as $assessment) {
 		// Only allow assessment if permissions are set or it  is your assessment.
-		/*if ($this->isValid('viewassessment')
-            && ($this->objUser->isContextLecturer()
-			|| $this->objUser->isContextStudent()
-			&& $this->objUser->userName() == $assessment['studentNo'])){
-*/
+		if ($this->isValid('viewassessment')
+			|| ($this->objUser->userName() == $assessment['studentno'])){
+
 			$tblclass->startRow();
 	        $oddOrEven = ($oddOrEven=="even")? "odd":"even";
 	            
@@ -119,7 +118,7 @@
 	        
 	        $tblclass->addCell($options, "null", "top", "left", $oddOrEven, null);
 	        $tblclass->endRow();
-		//}
+		}
 	}    
     echo $tblclass->show();
 

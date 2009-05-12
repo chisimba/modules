@@ -24,7 +24,7 @@
     $tblclass->border='0';
     $tblclass->cellspacing='1';
     $tblclass->cellpadding='5';
-    
+                                                              
     $pageTitle->type=3;
 	if ($contextCode == "root"){
         $pageTitle->str.='<br />'.ucwords($objLanguage->code2Txt("rubric_predefined","rubric"));
@@ -70,16 +70,16 @@
     $oddOrEven = "odd";
 	foreach ($tables as $table) {
         
-        if ($this->isValid('assessments')) {
+       //if ($this->isValid('assessments')) {
             $viewLink = new link ($this->uri(array('action'=>'assessments', 'tableId'=>$table['id'])));
             $viewLink->link = $table['title'];
             $viewLinkItem = $viewLink->show();
-        } else {
+        /*} else {
         	$viewLink = new link ($this->uri(array('action'=>'viewtable', 'tableId'=>$table['id'])));
             $viewLink->link = $table['title'];
             $viewLinkItem = $viewLink->show();
             
-        }
+        }*/
         
         
 
