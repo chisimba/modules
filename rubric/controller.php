@@ -71,7 +71,7 @@ class rubric extends controller
      */
     public function isValid($action) {	
     	
-    	$validActions = array('viewtable');
+    	$validActions = array('viewtable','assessment');
     		
         if ($this->objUser->isAdmin () || $this->objContextGroups->isContextLecturer() || in_array($action, $validActions)) {
             return TRUE;
