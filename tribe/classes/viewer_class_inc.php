@@ -115,7 +115,12 @@ class viewer extends object {
             $msgid = $msg ['id'];
             $sentat = $this->objLanguage->languageText ( 'mod_im_sentat', 'tribe' );
             $fromuser = $this->objLanguage->languageText ( 'mod_im_sentfrom', 'tribe' );
-            $user = $this->objUser->userName ( $msg['userid'] );
+            if($msg['userid'] == NULL) {
+                $user = $this->objLanguage->languageText("mod_tribe_unknownuser", "tribe");
+            }
+            else {
+                $user = $this->objUser->userName ( $msg['userid'] );
+            }
             // The link to users page
             $userlink = $this->getObject ( 'link', 'htmlelements' );
             $userlink->href = $this->uri ( array ('user' => $user, 'action' => 'myhome' ) );
@@ -138,13 +143,13 @@ class viewer extends object {
         $this->objSysConfig = $this->getObject ( 'dbsysconfig', 'sysconfig' );
         $this->juser = $this->objSysConfig->getValue ( 'jabberuser', 'tribe' );
         $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'tribe' );
-        $str = $this->objLanguage->languageText ( "mod_jabberblog_subinfo", "tribe" ).": ".$this->juser."@".$this->jdomain;
+        $str = $this->objLanguage->languageText ( "mod_tribe_subinfo", "tribe" ).": ".$this->juser."@".$this->jdomain;
         $str .= "<br />";
         $str .= "<br />";
-        $str .= $this->objLanguage->languageText ( "mod_jabberblog_nomsgs", "tribe" );
+        $str .= $this->objLanguage->languageText ( "mod_tribe_nomsgs", "tribe" );
         $str .= " " . $this->objDbIm->getNoMsgs ();
         $str .= "<br />";
-        $str .= $this->objLanguage->languageText ( "mod_jabberblog_numsubs", "tribe" );
+        $str .= $this->objLanguage->languageText ( "mod_tribe_numsubs", "tribe" );
         $str .= " " . $this->objDbSubs->getNoSubs ();
 
         return $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_tribe_stats", "tribe" ), $str );
@@ -176,7 +181,7 @@ class viewer extends object {
         $qseekform->addToForm($this->objsTButton->show());
         $qseekform = $qseekform->show();
         $objFeatureBox = $this->getObject('featurebox', 'navigation');
-        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_qseek", "jabberblog") , $this->objLanguage->languageText("mod_tribe_qseekinstructions", "tribe") . "<br />" . $qseekform);
+        $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_qseek", "tribe") , $qseekform);
 
         return $ret;
     }
@@ -209,7 +214,7 @@ class viewer extends object {
         foreach ($results[1] as $item)
         {
             $memetag = array($item);
-            // add the $item to tbl_tags as a jabberblog meme for later
+            // add the $item to tbl_tags as a tribe meme for later
             $objTags = $this->getObject('dbtags', 'tagging');
             $objTags->insertHashTags($memetag, $userid, $itemId, 'tribe', NULL, NULL);
             $counter++;
@@ -282,7 +287,7 @@ class viewer extends object {
         foreach ($results[1] as $item)
         {
             $memetag = array($item);
-            // add the $item to tbl_tags as a jabberblog meme for later
+            // add the $item to tbl_tags as a tribe meme for later
             $objTags = $this->getObject('dbtags', 'tagging');
             $objTags->insertStarTags($memetag, $userid, $itemId, 'tribe', NULL, NULL);
             $counter++;
@@ -317,20 +322,20 @@ class viewer extends object {
 
         $rssLink = $this->newObject ( 'link', 'htmlelements' );
         $rssLink->href = $this->uri ( array ('action' => 'rss' ) );
-        $rssLink->link = $this->objLanguage->languageText ( "mod_jabberblog_showrss", "jabberblog" );
+        $rssLink->link = $this->objLanguage->languageText ( "mod_tribe_showrss", "tribe" );
 
         $cloudLink = $this->newObject ( 'link', 'htmlelements' );
         $cloudLink->href = $this->uri ( array ('action' => 'clouds' ) );
-        $cloudLink->link = $this->objLanguage->languageText ( "mod_jabberblog_showtagclouds", "jabberblog" );
+        $cloudLink->link = $this->objLanguage->languageText ( "mod_tribe_showtagclouds", "tribe" );
 
         $objLT = $this->getObject ( 'block_lasttweet', 'twitter' );
 
         //$leftColumn .= $this->getStatsBox ();
-        $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_feed", "jabberblog" ), $rssLink->show ()."<br />".$sioclink->show()."<br />".$cloudLink->show() );
+        $leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_tribe_stuff", "tribe" ), $rssLink->show ()."<br />".$sioclink->show()."<br />".$cloudLink->show() );
         $leftColumn .= $this->searchBox();
         $leftColumn .= $this->userChecker();
         // show the last tweet block from the 'ol twitter stream
-        //$leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_jabberblog_twitterfeed", "jabberblog" ), $objLT->show () );
+        //$leftColumn .= $this->objFeatureBox->show ( $this->objLanguage->languageText ( "mod_tribe_twitterfeed", "tribe" ), $objLT->show () );
 
         return $leftColumn;
     }
@@ -373,7 +378,7 @@ class viewer extends object {
         $cloud .= "<br />";
 
         // and now the location tags
-        $ltags = $this->objTags->getLocTagsByModule('jabberblog');
+        $ltags = $this->objTags->getStarTagsByModule('tribe');
         // ok now get the weights
         $tagarr2 = array();
         $taginfo2 = NULL;
@@ -439,7 +444,12 @@ class viewer extends object {
             // check the JID exists in the table
             $jid = $this->dbUsers->getJidfromUserId($uid);
             if ($jid != NULL) {
-                return $this->objLanguage->languageText("mod_tribe_loggedinas", "tribe")." ".$jid;
+                $objFeatureBox = $this->getObject('featurebox', 'navigation');
+                $user = $this->objUser->userName();
+                $userlink = $this->getObject ( 'link', 'htmlelements' );
+                $userlink->href = $this->uri ( array ('user' => $user, 'action' => 'myhome' ) );
+                $userlink->link = $user;
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_loggedinas", "tribe"), $userlink->show()."<br />"."(".$jid.")");
             }
             else {
                 return $this->showSignupBox();

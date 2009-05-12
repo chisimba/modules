@@ -1,7 +1,7 @@
 <?php
 header ( "Content-Type: text/html;charset=utf-8" );
 $cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
-$cssLayout->setNumColumns ( 2 );
+$cssLayout->setNumColumns ( 3 );
 
 // get the sidebar object
 $this->leftMenu = $this->newObject ( 'usermenu', 'toolbar' );

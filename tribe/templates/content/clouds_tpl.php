@@ -17,7 +17,7 @@ $header = new htmlHeading ( );
 $header->str = $this->objLanguage->languageText ( 'mod_tribe_tribe', 'tribe' ) . " " . $this->objUser->fullName ( $this->objUser->userId() );
 $header->type = 1;
 
-$middleColumn .= $header->show();
+//$middleColumn .= $header->show();
 $middleColumn .= $cloud;
 
 if (! $this->objUser->isLoggedIn ()) {

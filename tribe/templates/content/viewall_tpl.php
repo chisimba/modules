@@ -1,7 +1,7 @@
 <?php
 header ( "Content-Type: text/html;charset=utf-8" );
 $cssLayout = $this->newObject ( 'csslayout', 'htmlelements' );
-$cssLayout->setNumColumns ( 2 );
+$cssLayout->setNumColumns ( 3 );
 
 // get the sidebar object
 $this->leftMenu = $this->newObject ( 'usermenu', 'toolbar' );
@@ -10,7 +10,7 @@ $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
 $this->objShare = $this->getObject('share', 'toolbar');
-$this->objShare->setup($this->uri(''), 'My bloody web', 'Super Interesting Post! ');
+$this->objShare->setup($this->uri(''), 'My thought stream', 'Interesting! ');
 
 $middleColumn = $this->objShare->show();
 $leftColumn = NULL;
@@ -34,7 +34,7 @@ if (! $this->objUser->isLoggedIn ()) {
    // $leftColumn .= $objImView->showUserMenu ();
 
 } else {
-    $leftColumn .= $this->leftMenu->show ();
+    //$leftColumn .= $this->leftMenu->show ();
 }
 
 $leftColumn .= $objImView->renderBoxen();

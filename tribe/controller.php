@@ -144,7 +144,7 @@ class tribe extends controller {
                 $meme = $this->getParam('meme', NULL);
                 $posts = $this->objDbTags->getPostsBySpecTag($meme, 'hashtag', 'tribe');
                 foreach($posts as $post) {
-                    $im = $this->objDbIm->getSingle($post['item_id']);
+                    $im = $this->objDbMsgs->getSingle($post['item_id']);
                     $msgs[] = $im[0];
                 }
                 $this->setVarByRef('msgs', $msgs);
@@ -156,7 +156,7 @@ class tribe extends controller {
                 $loc = $this->getParam('loc', NULL);
                 $posts = $this->objDbTags->getPostsBySpecTag($loc, 'attag', 'tribe');
                 foreach($posts as $post) {
-                    $im = $this->objDbIm->getSingle($post['item_id']);
+                    $im = $this->objDbMsgs->getSingle($post['item_id']);
                     $msgs[] = $im[0];
                 }
                 $this->setVarByRef('msgs', $msgs);
