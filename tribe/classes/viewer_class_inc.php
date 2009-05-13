@@ -67,6 +67,7 @@ class viewer extends object {
     public $dbUsers;
     public $objDbAt;
     public $objDBIM;
+    public $objConfig;
 
     /**
      *
@@ -77,6 +78,7 @@ class viewer extends object {
      */
     public function init() {
         $this->objLanguage = $this->getObject ( 'language', 'language' );
+        $this->objConfig = $this->getObject('altconfig', 'config');
         $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
         $this->objIcon = $this->getObject ( 'geticon', 'htmlelements' );
         $this->objLink = $this->getObject ( 'link', 'htmlelements' );
@@ -358,6 +360,19 @@ class viewer extends object {
         return $rightColumn;
     }
 
+    public function renderTopBoxen() {
+        $sitename = $this->objConfig->getSiteName();
+        $this->objShare = $this->getObject('share', 'toolbar');
+        $this->objShare->setup($this->uri(''), $sitename, $sitename.' Post: ');
+        $middleColumn = $this->objShare->show();
+
+        $vaLink = $this->newObject ( 'link', 'htmlelements' );
+        $vaLink->href = $this->uri ( array ('action' => 'viewall' ) );
+        $vaLink->link = $this->objLanguage->languageText ( "mod_tribe_viewpublic", "tribe" );
+        $middleColumn .= " ".$vaLink->show();
+        return $middleColumn;
+    }
+
     public function getAtReplies($userid, $limit) {
         $replies = $this->objDbAt->getReplies($userid, $limit);
         $repstr = NULL;
@@ -478,7 +493,13 @@ class viewer extends object {
                 $userlink = $this->getObject ( 'link', 'htmlelements' );
                 $userlink->href = $this->uri ( array ('user' => $user, 'action' => 'myhome' ) );
                 $userlink->link = $user;
-                return $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_loggedinas", "tribe"), $userlink->show()."<br />"."(".$jid.")");
+                // Link to change the jid if needs be
+                //$changelink = $this->newObject ( 'link', 'htmlelements' );
+                //$changelink->href = $this->uri ( array ('user' => $user, 'action' => 'changejid' ) );
+                //$changelink->link = $this->objLanguage->languageText("mod_tribe_changejid", "tribe");
+                $changelink = $this->getObject('alertbox', 'htmlelements');
+
+                return $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_loggedinas", "tribe"), $userlink->show()."<br />"."(".$jid.")"."<br />".$changelink->show($this->objLanguage->languageText("mod_tribe_changejid", "tribe"), $this->uri(array('action' => 'changejid'))));
             }
             else {
                 return $this->showSignupBox();
@@ -493,12 +514,20 @@ class viewer extends object {
 
     }
 
-    public function showSignupBox() {
+    public function showSignupBox($mode = NULL) {
         // show a box to register a jid and start playing!
         $this->loadClass('textinput', 'htmlelements');
-        $ajform = new form('addjid', $this->uri(array('action' => 'addjid')));
+        if ($mode == 'update') {
+            $ajform = new form('addjid', $this->uri(array('action' => 'addjid', 'mode' => 'update')));
+        }
+        else {
+            $ajform = new form('addjid', $this->uri(array('action' => 'addjid')));
+        }
         $ajform->addRule('jid', $this->objLanguage->languageText("mod_tribe_phrase_jidreq", "tribe") , 'required');
         $ajterm = new textinput('jid');
+        if($mode == 'update') {
+            $ajterm->setValue($this->dbUsers->getJidfromUserId($this->objUser->userId()));
+        }
         $ajterm->size = 15;
         $ajform->addToForm($ajterm->show());
         $this->obajButton = new button($this->objLanguage->languageText('word_add', 'system'));

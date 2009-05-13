@@ -9,17 +9,12 @@ $this->loadClass ( 'htmlheading', 'htmlelements' );
 $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
-$this->objShare = $this->getObject('share', 'toolbar');
-$this->objShare->setup($this->uri(''), 'My bloody web', 'Super Interesting Post! ');
 
-$middleColumn = $this->objShare->show();
 $leftColumn = NULL;
 $rightColumn = NULL;
+$middleColumn = NULL;
 
-// Add in a heading
-$header = new htmlHeading ( );
-$header->str = $this->objLanguage->languageText ( 'mod_tribe_tribe', 'tribe' ) . " " . $this->objUser->fullName ( $this->objUser->userId() );
-$header->type = 1;
+$middleColumn .= $objImView->renderTopBoxen();
 
 $objPagination = $this->newObject ( 'pagination', 'navigation' );
 $objPagination->module = 'tribe';
@@ -30,12 +25,12 @@ $objPagination->currentPage = $pages - 1;
 
 
 $middleColumn .= '<br/>' . $objPagination->show ();
-$userid = $this->objUser->userid();
+$userid = $this->objUser->userId();
 if (! $this->objUser->isLoggedIn ()) {
    // $leftColumn .= $objImView->showUserMenu ();
 
 } else {
-    $leftColumn .= $this->leftMenu->show ();
+    //$leftColumn .= $this->leftMenu->show ();
 }
 
 $leftColumn .= $objImView->renderLeftBoxen();

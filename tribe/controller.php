@@ -114,8 +114,11 @@ class tribe extends controller {
                 return 'viewall_ajax_tpl.php';
                 break;
 
-            case 'viewall' :
             case NULL :
+                $this->nextAction('myhome');
+                break;
+
+            case 'viewall' :
                 $count = $this->objDbMsgs->getRecordCount ();
                 $pages = ceil ( $count / 10 );
                 $this->setVarByRef ( 'pages', $pages );
@@ -239,13 +242,23 @@ class tribe extends controller {
 
             case 'addjid':
                 $jid = $this->getParam('jid');
-                $this->dbUsers->addRecord($this->objUser->userid(), $jid);
+                $mode = $this->getParam('mode', NULL);
+                if($mode == NULL) {
+                    $this->dbUsers->addRecord($this->objUser->userid(), $jid);
+                }
+                else {
+                    $this->dbUsers->updateJid($this->objUser->userId(), $jid);
+                }
                 $this->nextAction('');
 
                 break;
 
+            case 'changejid' :
+                echo $this->objImView->showSignupBox('update');
+                break;
+
             case 'myhome':
-                $user = $this->getParam('user', null);
+                $user = $this->getParam('user', $this->objUser->userName());
                 $data = $this->objUser->lookupData($user);
                 // get the posts of the user
                 $userid = $data['userid'];

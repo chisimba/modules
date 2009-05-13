@@ -65,6 +65,14 @@ class dbusers extends dbTable {
         }
     }
 
+    public function updateJid($userid, $jid) {
+        $old = $this->getAll("WHERE userid = '$userid'");
+        $old = $old[0];
+        $old['jid'] = $jid;
+
+        return $this->update('id', $old['id'], $old);
+    }
+
     public function inactiveRecord($jid) {
         $actarr = array('userid' => $userid, 'jid' => $jid, 'status' => 0);
         if($this->userExists($jid) === TRUE) {
