@@ -65,6 +65,8 @@ class viewer extends object {
     public $objWashout;
     public $teeny;
     public $dbUsers;
+    public $objDbAt;
+    public $objDBIM;
 
     /**
      *
@@ -84,6 +86,7 @@ class viewer extends object {
         $this->objWashout = $this->getObject ( 'washout', 'utilities' );
         $this->teeny = $this->getObject ( 'tiny', 'tinyurl');
         $this->dbUsers = $this->getObject('dbusers');
+        $this->objDbAt = $this->getObject('dbatreplies');
     }
 
     public function renderSingle($msg) {
@@ -312,7 +315,7 @@ class viewer extends object {
         return $str;
     }
 
-    public function renderBoxen() {
+    public function renderLeftBoxen() {
         $leftColumn = NULL;
         $objIcon = $this->newObject ( 'geticon', 'htmlelements' );
         $this->loadClass('href', 'htmlelements');
@@ -340,6 +343,32 @@ class viewer extends object {
         return $leftColumn;
     }
 
+    public function renderRightBoxen($userid) {
+        $rightColumn = NULL;
+        if($userid != NULL) {
+            // get the @ replies
+            $atlimit = 10;
+            $atreplies = $this->getAtReplies($userid, $atlimit);
+            $rightColumn .= $this->objFeatureBox->show ("Last $atlimit @ replies", $atreplies, 1);
+            $rightColumn .= $this->objFeatureBox->show ('Groups', 'Groups that I subscribe to', 2);
+
+        }
+        $rightColumn .= $this->objFeatureBox->show ('10 New groups', 'Groups that have just been created', 3);
+
+        return $rightColumn;
+    }
+
+    public function getAtReplies($userid, $limit) {
+        $replies = $this->objDbAt->getReplies($userid, $limit);
+        $repstr = NULL;
+        foreach ($replies as $rep) {
+            $name = $this->objUser->userName($rep['fromid']);
+            $msg = $this->objDBIM->getPostById($rep['msgid']);
+            $repstr .= $name.": ".$msg[0]['msgbody']."<hr />";
+        }
+        return $repstr;
+
+    }
     public function doTags() {
 
         // get a list of the tags and their weights
@@ -358,7 +387,7 @@ class viewer extends object {
         $tagarr = array();
         $taginfo = NULL;
         foreach ( $tags as $tag) {
-            $weight = $this->objTags->getTagWeight($tag['meta_value'], $this->objUser->userId());
+            $weight = $this->objTags->getModuleTagWeight($tag['meta_value'], 'tribe');
             $tagarr['name'] = $tag['meta_value'];
             $tagarr['weight'] = $weight;
             $tagarr['url'] = $this->uri(array('action' => 'viewmeme', 'meme' => $tag['meta_value']), 'tribe');
@@ -366,7 +395,7 @@ class viewer extends object {
             $taginfo[] = $tagarr;
         }
         if($taginfo != NULL) {
-            $this->objTC = $this->getObject('tagcloud', 'utilities');
+            $this->objTC = $this->newObject('tagcloud', 'utilities');
             $cloud .= $this->objTC->buildCloud($taginfo);
             $cloud .= "<br />";
         }
@@ -383,7 +412,7 @@ class viewer extends object {
         $tagarr2 = array();
         $taginfo2 = NULL;
         foreach ( $ltags as $ltag) {
-            $weight = $this->objTags->getTagWeight($ltag['meta_value'], $this->objUser->userId());
+            $weight = $this->objTags->getModuleTagWeight($ltag['meta_value'], 'tribe');
             $tagarr2['name'] = $ltag['meta_value'];
             $tagarr2['weight'] = $weight;
             $tagarr2['url'] = $this->uri(array('action' => 'viewloc', 'loc' => $ltag['meta_value']), 'tribe');

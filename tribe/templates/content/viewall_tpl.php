@@ -14,11 +14,7 @@ $this->objShare->setup($this->uri(''), 'My thought stream', 'Interesting! ');
 
 $middleColumn = $this->objShare->show();
 $leftColumn = NULL;
-
-// Add in a heading
-$header = new htmlHeading ( );
-$header->str = $this->objLanguage->languageText ( 'mod_tribe_tribe', 'tribe' ) . " " . $this->objUser->fullName ( $this->objUser->userId() );
-$header->type = 1;
+$rightColumn = NULL;
 
 $objPagination = $this->newObject ( 'pagination', 'navigation' );
 $objPagination->module = 'tribe';
@@ -29,16 +25,20 @@ $objPagination->currentPage = $pages - 1;
 
 $middleColumn .= '<br/>' . $objPagination->show ();
 //$middleColumn .= $objImView->renderOutputForBrowser($msgs);
-
+$userid = $this->objUser->userid();
 if (! $this->objUser->isLoggedIn ()) {
+
    // $leftColumn .= $objImView->showUserMenu ();
 
 } else {
     //$leftColumn .= $this->leftMenu->show ();
 }
 
-$leftColumn .= $objImView->renderBoxen();
+$leftColumn .= $objImView->renderLeftBoxen();
+$rightColumn .= $objImView->renderRightBoxen($userid);
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
+$cssLayout->setRightColumnContent ( $rightColumn );
+
 echo $cssLayout->show ();

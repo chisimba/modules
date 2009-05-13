@@ -14,6 +14,7 @@ $this->objShare->setup($this->uri(''), 'My bloody web', 'Super Interesting Post!
 
 $middleColumn = $this->objShare->show();
 $leftColumn = NULL;
+$rightColumn = NULL;
 
 // Add in a heading
 $header = new htmlHeading ( );
@@ -29,7 +30,7 @@ $objPagination->currentPage = $pages - 1;
 
 
 $middleColumn .= '<br/>' . $objPagination->show ();
-
+$userid = $this->objUser->userid();
 if (! $this->objUser->isLoggedIn ()) {
    // $leftColumn .= $objImView->showUserMenu ();
 
@@ -37,8 +38,11 @@ if (! $this->objUser->isLoggedIn ()) {
     $leftColumn .= $this->leftMenu->show ();
 }
 
-$leftColumn .= $objImView->renderBoxen();
+$leftColumn .= $objImView->renderLeftBoxen();
+$rightColumn .= $objImView->renderRightBoxen($userid);
 
 $cssLayout->setMiddleColumnContent ( $middleColumn );
 $cssLayout->setLeftColumnContent ( $leftColumn );
+$cssLayout->setRightColumnContent ( $rightColumn );
+
 echo $cssLayout->show ();

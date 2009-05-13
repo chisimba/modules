@@ -395,7 +395,6 @@ class tribe extends controller {
                                         $atarr = array('toid' => $toid, 'fromid' => $fromid, 'msgid' => $add, 'tribegroup' => '');
                                         // add the at reply to the atreplies table
                                         $this->objAt->addRecord($atarr);
-
                                         // send to user
                                         if($uid != NULL) {
                                             $poster = $this->dbUsers->getUsernamefromJid($poster);

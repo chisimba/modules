@@ -52,5 +52,9 @@ class dbatreplies extends dbTable {
         $itemid = $this->insert ( $atarr, 'tbl_tribe_atreplies' );
         return $itemid;
     }
+
+    public function getReplies($userid, $limit) {
+        return $this->getAll ( "WHERE toid = '$userid' AND fromid != 'NULL' ORDER BY datesent DESC LIMIT {$limit}" );
+    }
 }
 ?>
