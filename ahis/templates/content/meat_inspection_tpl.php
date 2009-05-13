@@ -48,8 +48,14 @@ $this->loadClass('dropdown','htmlelements');
 $this->loadClass('layer','htmlelements');
 $this->loadClass('label', 'htmlelements');
 
+$msg = '<br />';
 
+if(($output=='yes')) {
+        $objMsg = $this->getObject('timeoutmessage','htmlelements');
+        $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
+        $msg = $objMsg->show()."<br />";
 
+}
   $formAction = 'saveinspectiondata';
   
     $buttonText = 'Save';
@@ -109,7 +115,7 @@ $btcancel = new button('cancel', 'Cancel', "javascript: document.location='$back
 $form->addToForm($button->show());
 $form->addToForm($btcancel->show());
 $objLayer = new layer();
-$objLayer->addToStr($objHeading->show()."<hr class='ahis' />".$form->show());
+$objLayer->addToStr($objHeading->show()." ".$msg."<hr class='ahis' />".$form->show());
 $objLayer->align = 'center';
 
 echo $objLayer->show();

@@ -60,6 +60,21 @@
         <data>
             <remove>geolevel3</remove>                
         </data>        
+    </update> 
+    <update>
+        <table>tbl_ahis_animalmovement</table>
+        <version>0.072</version>
+        <description>change remarks from notnull to null </description>
+        <data>
+            <change>
+            <remarks>
+            <definition>
+                     <type>clob</type>  
+                     
+                </definition>
+                </remarks>
+            </change>                
+        </data>        
     </update>    
 </updates>
 

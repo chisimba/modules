@@ -37,6 +37,14 @@ $GLOBALS['kewl_entry_point_run']) {
 }
 // end security check
 
+$msg = '<br />';
+
+if(($output=='yes')) {
+        $objMsg = $this->getObject('timeoutmessage','htmlelements');
+        $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
+        $msg = $objMsg->show()."<br />";
+
+}
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('form', 'htmlelements');
 $this->loadClass('textinput', 'htmlelements');
@@ -148,7 +156,7 @@ $save = new button('animalvaccine_save', 'Save');
 $save->setToSubmit();
 
 $backUri = $this->uri(array('action' => 'select_officer'));
-$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
 
 $formTable->startRow();
 $formTable->addCell($bButton->show(),NULL,NULL,'right');
@@ -167,17 +175,24 @@ $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districter
 //$form->addRule('vaccinename', $this->objLanguage->languageText('mod_ahis_vaccinenameerror','ahis'),'required');
 $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'numeric');
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'numeric');
+$form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'required');
+$form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'required');
+
 //$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startmontherror','ahis'),'datenotfuture');
 $form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'numeric');
+$form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'required');
 //$form->addRule('endmonth', $this->objLanguage->languageText('mod_ahis_endmontherror','ahis'),'datenotfuture');
 $form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'numeric');
+$form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'required');
 $form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'numeric');
 $form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'numeric');
+$form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'required');
+$form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'required');
 
 $form->addToForm($formTable->show());
 
 $objLayer = new layer();
-$objLayer->addToStr($header->show()."<hr />".$form->show());
+$objLayer->addToStr($header->show()." ".$msg."<hr />".$form->show());
 $objLayer->align = 'center';
 
 echo $objLayer->show(); 

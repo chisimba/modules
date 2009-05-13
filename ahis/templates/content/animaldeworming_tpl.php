@@ -91,7 +91,7 @@ $formTable->addCell($number_animals->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // antiemitic type
-$label = new label ('Type of Antiemitic: ', 'antiemitictype');
+$label = new label ('Control Measure: ', 'antiemitictype');
 $antiemitictype = new dropdown('antiemitictype');
 $antiemitictype->addFromDB($control, 'name', 'name'); 
 $formTable->startRow();
@@ -118,7 +118,7 @@ $save = new button('animaldeworming_save', 'Save');
 $save->setToSubmit();
  
 $backUri = $this->uri(array('action'=>'select_officer'));
-$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$bButton = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
 
 $formTable->startRow();
 $formTable->addCell($bButton->show(),NULL,NULL,'right');
@@ -134,6 +134,7 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
+$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'required');
 $form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'numeric');
 $form->addRule('antiemitictype', $this->objLanguage->languageText('mod_ahis_antiemiticerror','ahis'),'required');
 $form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'letteronly');

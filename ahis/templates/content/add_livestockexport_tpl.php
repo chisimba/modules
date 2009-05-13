@@ -149,14 +149,19 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
-$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointerror','ahis'),'letteronly');
+$form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypointerror','ahis'),'required');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
 $form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'numeric');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'required');
 $form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'numeric');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'required');
 $form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'numeric');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'required');
 $form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'numeric');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
 $form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'numeric');
 
  //container-table
@@ -169,8 +174,9 @@ $form->addToForm($topTable->show());
  $save = new button('livestockexport_save', 'Save');
  $save->setToSubmit();
  
- $cancel = new button('cancel','Cancel');
-$cancel->setToSubmit();
+ $backUri = $this->uri(array('action'=>'select_officer'));
+$cancel = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
+
 
 $form->addToForm($save->show(),NULL,NULL,'right');
 $form->addToForm($cancel->show());

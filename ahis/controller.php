@@ -611,7 +611,13 @@ class ahis extends controller {
                 return $this->nextAction('home'); 
                          
                  
-           
+           case 'animal_feedback':
+              $success = $this->getParam('success');
+             if ($success) {
+                    $this->unsetAnimalSession();
+                } 
+                 
+             return $this->nextAction('home');
 
                           
              
@@ -1973,9 +1979,10 @@ class ahis extends controller {
 			case 'animalvaccine_add':
 					$id=$this->getSession('ps_geo2Id');
 			 		$this->setVar('dist',$this->objAnimalmovement->getDistrict($id));
-                	$this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
+               $this->setVar('species', $this->objSpecies ->getAll("ORDER BY name"));
 					$this->setVar('control', $this->objControl ->getAll("ORDER BY name"));
 					$this->setVar('vaccination', $this->objVaccination ->getAll("ORDER BY name"));
+					$this->setVar('output',$this->getParam('output'));
 					return 'animalvaccine_tpl.php';
 				
              case 'animal_population_add':
@@ -1986,7 +1993,10 @@ class ahis extends controller {
 				
 			case 'addinspectiondata':
 				$id=$this->getSession('ps_geo2Id');
+				$output = $this->getParam('output');
 			 	$this->setVar('dist',$this->objAnimalPopulation->getDistrict($id));
+			 	$this->setVar('output',$output);
+
 			return 'meat_inspection_tpl.php';
 			
 			case 'animal_slaughter_add':
@@ -2070,6 +2080,7 @@ class ahis extends controller {
         $this->unsetSession('ps_production');
         $this->unsetSession('ps_recovered');
         $this->unsetSession('ps_prophylactic');
+        $this->unsetSession('ps_reportType');
     }
     
     
@@ -2084,8 +2095,15 @@ class ahis extends controller {
         $this->unsetSession('ps_comments');
         $this->unsetSession('ps_surveyTypeId');
         $this->unsetSession('ps_campName');
+        $this->unsetSession('ps_reportType');
         
        }
+       
+     private function unsetAnimalSession(){
+        $this->unsetSession('ps_officerId');
+        $this->unsetSession('ps_geo2Id');
+        $this->unsetSession('ps_reportType');
+     }
 	   private function AddData()
     {
         return 'add_data.php';
@@ -2102,7 +2120,7 @@ class ahis extends controller {
 		$source = $this->getParam('source');		
 		$data= $this->objAnimalPopulation ->addData($district, $classification, $num_animals, $animal_production,$source);
 		
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>1));
 	
 	}
 	
@@ -2113,10 +2131,39 @@ class ahis extends controller {
 		$date =$this->getParam('inspectiondate');
 		$num_of_cases = $this->getParam('num_of_cases');
 		$num_at_risk = $this->getParam('num_at_risk');
-				
+		
+      $currentyear = date('Y');
+      $currentmonth = date('m');
+      $currentday = date('d');
+       $dist =split("-", $date);
+      if($currentyear < $dist[0]){
+
+ 
+      $output = 'yes';
+
+      return $this->nextAction('addinspectiondata',array('output'=>$output));
+      }else
+      if($currentyear == $dist[0])
+        {
+        if($currentmonth<$dist[1]){
+          
+      $output = 'yes';
+
+      return $this->nextAction('addinspectiondata',array('output'=>$output));
+        
+      }
+
+      if($currentday < $dist[2]){
+      $output = 'yes';
+
+      return $this->nextAction('addinspectiondata',array('output'=>$output));
+      }
+      }
 		$data= $this->objMeatInspect->addMeatInspectionData($district, $date, $num_of_cases, $num_at_risk);
 		
 		return $this->nextAction('');
+
+		
 	
 	}
 	private function saveSlaughterData()
@@ -2133,7 +2180,7 @@ class ahis extends controller {
 		$remarks = $this->getParam('remarks');					
 		$data= $this->objSlaughter->addSlaughterData($district, $num_cattle, $num_sheep, $num_goats,$num_pigs,$num_poultry,$other,$name,$remarks);
 		
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	
 	}
 	
@@ -2176,7 +2223,7 @@ class ahis extends controller {
 		
 		$data = $this->objAnimalmovement->addAnimalMovementData($district,$classification,$purpose,$origin,$destination,$remarks);  
 							
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}
 	
 	//function to add livestock import data
@@ -2233,7 +2280,7 @@ class ahis extends controller {
 		
 		$data= $this->objLivestockimport->addLivestockimportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
 							
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}
 	
 	//function to add livestock export data
@@ -2290,7 +2337,7 @@ class ahis extends controller {
 		
 		$data= $this->objLivestockexport->addLivestockexportData($district,$entrypoint,$destination,$classification,$origin,$eggs,$milk,$cheese,$poultry,$beef);
 														
-		return $this->nextAction('');
+		return $this->nextAction('animal_feedback',array('success'=>'1'));
 	}
     
 	//function to add animal deworming data
@@ -2305,7 +2352,7 @@ class ahis extends controller {
 		
 		$data = $this->objAnimaldeworming->addAnimalDewormingData($district,$classification,$numberofanimals,$antiemitictype,$remarks);  
 							
-		return $this->nextAction('select_officer', array('feedback'=>'1'));
+		return $this->nextAction('animal_feedback', array('success'=>'1'));
 	}
 	
 	
@@ -2322,10 +2369,59 @@ class ahis extends controller {
 		$doses_received = $this->getParam('dosesreceived');
 		$doses_used = $this->getParam('dosesused');
 		$doses_wasted= $this->getParam('doseswasted');
-		
+
+		 $val = $this->validateDate($datePicker);
+        
+		 if($val=='yes'){
+		   return $this->nextAction('animalvaccine_add',array('output'=>$val));
+		 }
+		 
+		 $val1 = $this->validateDate($datePickerOne);
+		  if($val1=='yes'){
+		   return $this->nextAction('animalvaccine_add',array('output'=>$val1));
+		 }
 		$data = $this->objAnimalvaccine->addAnimalVaccineData($district,$vaccinename,$doses,$doses_start,$datePicker,$doses_end,$datePickerOne,$doses_received,$doses_used,$doses_wasted);  
 							
-		return $this->nextAction('select_officer', array('feedback'=>'1'));
+		return $this->nextAction('animal_feedback', array('success'=>'1'));
+	}
+	
+	/**
+	*Method to validate date to ensure that no future date is added
+	*
+	*/
+	
+	private function validateDate($dateval){
+
+	 $currentyear = date('Y');
+      $currentmonth = date('m');
+      $currentday = date('d');
+       $dist =split("-", $dateval);
+      if($currentyear < $dist[0]){
+	
+ 
+      $next = 'yes';
+
+      return $next;
+      }else
+      if($currentyear == $dist[0])
+        {
+        if($currentmonth<$dist[1]){
+          
+     
+      $next = 'yes';
+
+      return $next;
+        
+      }
+
+      if($currentday < $dist[2]){
+     
+      $next = 'yes';
+
+      return $next;
+      }
+      }
+	
 	}
     /**
      * Method to determine whether the user needs to be logged in
@@ -2333,6 +2429,7 @@ class ahis extends controller {
      * @return boolean TRUE|FALSE 
      * @access public 
      */
+     
      public function requiresLogin() {
             return FALSE;
      }

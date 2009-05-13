@@ -119,7 +119,8 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 $form->addToForm($formTable->show());
 $form->addRule('num_animals', 'Please enter number of animals', 'required');
 $form->addRule('num_animals', 'Please enter valid number ', 'numeric');
-$form->addRule('source', 'Please enter valid source', 'lettersonly');
+$form->addRule('source', 'Please enter source of animals', 'required');
+$form->addRule('source', 'Please enter valid source', 'letteronly');
 
 //buttons
 $button = new button ('animal_population_save', 'Save');

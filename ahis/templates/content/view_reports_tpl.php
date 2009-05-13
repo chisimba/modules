@@ -40,7 +40,7 @@ $GLOBALS['kewl_entry_point_run']) {
 // end security check
 
 $msg = '<br />';
-if(isset($error)) {
+if(isset($output)) {
         $objMsg = $this->getObject('timeoutmessage','htmlelements');
         $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_promptyear', 'ahis'));
         $msg = $objMsg->show()."<br />";

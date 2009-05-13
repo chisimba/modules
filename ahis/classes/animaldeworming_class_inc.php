@@ -77,9 +77,9 @@ $GLOBALS['kewl_entry_point_run']) {
     {
 		$sql = $this->insert(array(
 			'district' => stripslashes($district),
-			'classification' =>$classification,
-			'numberofanimals' => $numberofanimals,
-			'antiemitictype' => $antiemitictype,
+			'animalclass' =>$classification,
+			'numanimals' => $numberofanimals,
+			'antiemetictype' => $antiemitictype,
 			'remarks' => $remarks
 			));//echo $sql;
 			if($sql)

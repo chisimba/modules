@@ -387,14 +387,14 @@ class report extends object {
 				
 		 case 'init_09': 
 				
-				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Type of Antiemetic','Remarks');
+				$headerArray = array($this->objLanguage->languageText('phrase_geolevel2'),'Animal Classification','Number of animals Dewormed','Control Measure','Remarks');
 				
 				$dewormingRecords = $this->objAnimalDeworming->getAll();
 				$csv = implode(",", $headerArray)."\n";
 				
 				foreach ($dewormingRecords as $report) {
 					
-					$row = array($report['district'],$report['classification'],$report['numberofanimals'],$report['antiemitictype'],$report['remarks']);
+					$row = array($report['district'],$report['animalclass'],$report['numanimals'],$report['antiemetictype'],$report['remarks']);
 					
 					$csv .= implode(",", $row)."\n";
 				}
