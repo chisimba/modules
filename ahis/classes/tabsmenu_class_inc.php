@@ -162,6 +162,7 @@ class tabsmenu extends object
                 $this->default = 'admin';
                 break;
             case 'view_reports':
+            case 'gis_reports':
                 $this->default = 'report';
                 break;
         }

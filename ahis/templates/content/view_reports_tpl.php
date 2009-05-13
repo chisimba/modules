@@ -47,8 +47,12 @@ if(isset($error)) {
 }
 
 $objHeading = $this->getObject('htmlheading','htmlelements');
-$objHeading->str = $this->objLanguage->languageText('mod_ahis_viewreports', 'ahis');
+$objHeading->str = $this->objLanguage->languageText('mod_ahis_viewspreadreports', 'ahis');
 $objHeading->type = 2;
+
+$gisHeading = $this->newObject('htmlheading','htmlelements');
+$gisHeading->str = $this->objLanguage->languageText('mod_ahis_viewgisreports', 'ahis');
+$gisHeading->type = 2;
 
 $this->loadClass('textinput','htmlelements');
 $this->loadClass('dropdown','htmlelements');
@@ -89,6 +93,9 @@ $objTable->width = NULL;
 
 $tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
 $objTable->startRow();
+$objTable->addCell($objHeading->show());
+$objTable->endRow();
+$objTable->startRow();
 $objTable->addCell($this->objLanguage->languageText('mod_ahis_selectmonthyear', 'ahis').":$tab");
 $objTable->addCell($monthDrop->show()." ".$yearBox->show());
 //$objTable->addCell($this->objLanguage->languageText('word_year').": ");
@@ -107,13 +114,46 @@ $objTable->addCell("&nbsp;".$sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButto
 //$objTable->addCell('');
 //$objTable->addCell();
 $objTable->addCell('');
-
 $objTable->endRow();
-
 
 $objForm = new form('reportForm', $this->uri(array('action' => 'view_reports')));
 $objForm->addToForm($objTable->show());
 $objForm->addRule('year', $this->objLanguage->languageText('mod_ahis_valyear', 'ahis'), 'numeric');
+
+$gisDrop = new dropdown('report');
+$gisDrop->addOption(1, 'Active Sureveillance');
+$gisDrop->addOption(2, 'Passive Surveillance');
+$gisDrop->setSelected(2);
+
+$spacer = "&nbsp;&nbsp;";
+$gisTable = $this->newObject('htmltable', 'htmlelements');
+$gisTable->cellspacing = 3;
+$gisTable->width = NULL;
+$gisTable->cssClass = 'borderleft';
+$gisTable->startRow();
+$gisTable->addCell($gisHeading->show());
+$gisTable->endRow();
+$gisTable->startRow();
+$gisTable->addCell($spacer.$this->objLanguage->languageText('mod_ahis_reporttype','ahis').": ");
+$gisTable->endRow();
+$gisTable->startRow();
+$gisTable->addCell($spacer.$gisDrop->show());
+$gisTable->endRow();
+$gisTable->startRow();
+$gisTable->addCell("$spacer&nbsp;".$sButton->show()."&nbsp; &nbsp;&nbsp &nbsp;".$bButton->show());
+$gisTable->endRow();
+
+$gisForm = new form('gisForm', $this->uri(array('action' => 'gis_reports')));
+$gisForm->addToForm($gisTable->show());
+
+$bigTable = $this->newObject('htmltable', 'htmlelements');
+$bigTable->width = NULL;
+$bigTable->cellspacing = 8;
+$bigTable->cellpadding = 8;
+$bigTable->startRow();
+$bigTable->addCell($objForm->show());
+$bigTable->addCell($gisForm->show());
+$bigTable->endRow();
 
 if (isset($enter) && $enter) {
 
@@ -122,4 +162,4 @@ if (isset($enter) && $enter) {
     $report = "";
 }
 
-echo $objHeading->show().$msg.$objForm->show().$report;
+echo $msg.$bigTable->show().$report;
