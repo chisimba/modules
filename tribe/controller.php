@@ -35,6 +35,7 @@ class tribe extends controller {
     public $objDbMsgs;
     public $dbUsers;
     public $objImView;
+    public $objAt;
 
     /**
      *
@@ -60,6 +61,7 @@ class tribe extends controller {
             $this->objDbMsgs = $this->getObject('dbmsgs');
             $this->objImView = $this->getObject('viewer');
             $this->dbUsers = $this->getObject('dbusers');
+            $this->objAt = $this->getObject('dbatreplies');
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -154,7 +156,7 @@ class tribe extends controller {
 
             case 'viewloc':
                 $loc = $this->getParam('loc', NULL);
-                $posts = $this->objDbTags->getPostsBySpecTag($loc, 'attag', 'tribe');
+                $posts = $this->objDbTags->getPostsBySpecTag($loc, 'startag', 'tribe');
                 foreach($posts as $post) {
                     $im = $this->objDbMsgs->getSingle($post['item_id']);
                     $msgs[] = $im[0];
@@ -272,6 +274,28 @@ class tribe extends controller {
                 return 'viewuser_ajax_tpl.php';
                 break;
 
+            case 'creategroup' :
+
+                break;
+
+            case 'leavegroup' :
+
+                break;
+
+            case 'joingroup' :
+
+
+                break;
+
+            case 'deletegroup' :
+
+
+                break;
+
+            case 'mygroups' :
+
+                break;
+
             default :
                 die ( "unknown action" );
                 break;
@@ -363,8 +387,15 @@ class tribe extends controller {
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
                                 if(is_array($fwd)) {
                                     foreach($fwd as $f) {
+                                        // get the userid from the username as well
                                         // lookup user jid and userid etc
                                         $uid = $this->dbUsers->getJidfromUsername($f);
+                                        $toid = $this->dbUsers->getUserIdfromJid($uid);
+                                        $fromid = $this->dbUsers->getUserIdfromJid($poster);
+                                        $atarr = array('toid' => $toid, 'fromid' => $fromid, 'msgid' => $add, 'tribegroup' => '');
+                                        // add the at reply to the atreplies table
+                                        $this->objAt->addRecord($atarr);
+
                                         // send to user
                                         if($uid != NULL) {
                                             $poster = $this->dbUsers->getUsernamefromJid($poster);

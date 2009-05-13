@@ -1,9 +1,9 @@
 <?php
 // Table Name
-$tablename = 'tbl_tribe_msgs';
+$tablename = 'tbl_tribe_atreplies';
 
 //Options line for comments, encoding and character set
-$options = array('comment' => 'tribe data', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
+$options = array('comment' => 'tribe replies', 'collate' => 'utf8_general_ci', 'character_set' => 'utf8');
 
 // Fields
 $fields = array(
@@ -11,20 +11,17 @@ $fields = array(
         'type' => 'text',
         'length' => 32
         ),
-    'userid' => array(
+    'toid' => array(
         'type' => 'text',
         'length' => 32
     ),
-    'msgtype' => array(
+    'msgid' => array(
         'type' => 'text',
         'length' => 255,
         ),
-    'msgfrom' => array(
+    'fromid' => array(
         'type' => 'text',
         'length' => 255,
-        ),
-    'msgbody' => array(
-        'type' => 'clob',
         ),
     'datesent' => array(
         'type' => 'timestamp',
