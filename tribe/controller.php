@@ -139,7 +139,7 @@ class tribe extends controller {
             case 'jbsearch':
                 // search
                 $term = $this->getParam('searchterm');
-                $msgs = $this->objDbIm->keySearch($term);
+                $msgs = $this->objDbMsgs->keySearch($term);
                 $this->setVarByRef('msgs', $msgs);
 
                 return 'viewsearch_tpl.php';

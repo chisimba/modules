@@ -351,11 +351,11 @@ class viewer extends object {
             // get the @ replies
             $atlimit = 10;
             $atreplies = $this->getAtReplies($userid, $atlimit);
-            $rightColumn .= $this->objFeatureBox->show ("Last $atlimit @ replies", $atreplies, 1);
-            $rightColumn .= $this->objFeatureBox->show ('Groups', 'Groups that I subscribe to', 2);
+            $rightColumn .= $this->objFeatureBox->show ("Last $atlimit @ replies", $atreplies);
+            $rightColumn .= $this->objFeatureBox->show ('Groups', 'Groups that I subscribe to');
 
         }
-        $rightColumn .= $this->objFeatureBox->show ('10 New groups', 'Groups that have just been created', 3);
+        $rightColumn .= $this->objFeatureBox->show ('10 New groups', 'Groups that have just been created');
 
         return $rightColumn;
     }
