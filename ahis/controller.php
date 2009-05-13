@@ -1827,7 +1827,7 @@ class ahis extends controller {
             case 'farmingsystem_delete':
                 $id = $this->getParam('id');
                 $this->objFarmingsystem->delete('id', $id);
-                return $this->nextAction('survey_admin', array('success'=>'2'));
+                return $this->nextAction('farmingsystem_admin', array('success'=>'2'));
              
             
             case 'vaccinationhistory_admin':
@@ -1946,7 +1946,7 @@ class ahis extends controller {
                 return $this->nextAction('breed_admin', array('success'=>$code));
             case 'breed_delete':
                 $id = $this->getParam('id');
-                $this->objSurvey->delete('id', $id);
+                $this->objBreed->delete('id', $id);
                 return $this->nextAction('breed_admin', array('success'=>'2'));
 			
 			case 'animalmovement_add':

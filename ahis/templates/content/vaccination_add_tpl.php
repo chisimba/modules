@@ -48,7 +48,7 @@ $this->loadClass('layer','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('phrase_vaccinationhistory');
     $formUri = $this->uri(array('action'=>'vaccination_insert', 'id'=>$id));
-    $record = $this->objvaccination->getRow('id', $id);
+    $record = $this->objVaccination->getRow('id', $id);
 } else {
     $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('phrase_vaccinationhistory');
     $formUri = $this->uri(array('action'=>'vaccination_insert'));

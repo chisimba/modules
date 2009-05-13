@@ -48,7 +48,7 @@ $this->loadClass('layer','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system');
     $formUri = $this->uri(array('action'=>'farmingsystem_insert', 'id'=>$id));
-    $record = $this->objfarmingsystem->getRow('id', $id);
+    $record = $this->objFarmingsystem->getRow('id', $id);
 } else {
     $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_farming')." ".$this->objLanguage->languageText('word_system');
     $formUri = $this->uri(array('action'=>'farmingsystem_insert'));

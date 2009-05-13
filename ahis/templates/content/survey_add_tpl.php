@@ -48,7 +48,7 @@ $this->loadClass('layer','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_survey');
     $formUri = $this->uri(array('action'=>'survey_insert', 'id'=>$id));
-    $record = $this->objsurvey->getRow('id', $id);
+    $record = $this->objSurvey->getRow('id', $id);
 } else {
     $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_survey');
     $formUri = $this->uri(array('action'=>'survey_insert'));

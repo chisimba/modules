@@ -48,7 +48,7 @@ $this->loadClass('layer','htmlelements');
 if ($id) {
     $hStr = $this->objLanguage->languageText('word_edit')." ".$this->objLanguage->languageText('word_breed');
     $formUri = $this->uri(array('action'=>'breed_insert', 'id'=>$id));
-    $record = $this->objbreed->getRow('id', $id);
+    $record = $this->objBreed->getRow('id', $id);
 } else {
     $hStr = $this->objLanguage->languageText('word_add')." ".$this->objLanguage->languageText('word_breed');
     $formUri = $this->uri(array('action'=>'breed_insert'));
