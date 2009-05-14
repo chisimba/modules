@@ -113,5 +113,19 @@ class dbgroupmembers extends dbTable {
         }
     }
 
+    public function removePerson($userid, $groupid) {
+        parent::init('tbl_tribe_groupmembers');
+        if($this->isAMember($userid, $groupid)) {
+            $rec = $this->getAll("WHERE userid = '$userid' AND groupid = '$groupid'");
+            $rec = $rec[0];
+            $res = $this->delete('id', $rec['id'], 'tbl_tribe_groupmembers');
+
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+
 }
 ?>

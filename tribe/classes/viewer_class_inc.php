@@ -404,7 +404,11 @@ class viewer extends object {
                 $str .= "(".$grp['privacy'].")"." ".$jLink->show()."<br />";
             }
             elseif($this->objUser->isLoggedIn() && $member == TRUE)  {
-                $str .= "(".$grp['privacy'].")"." Member!"."<br />";
+                $remLink = $this->newObject ( 'link', 'htmlelements' );
+                $remLink->href = $this->uri ( array ('action' => 'leavegroup', 'groupid' => $grp['id'], 'userid' => $this->objUser->userId() ) );
+                $remLink->link = $this->objLanguage->languageText ( "mod_tribe_leavegroup", "tribe" );
+
+                $str .= "(".$grp['privacy'].")"." ".$remLink->show()."<br />";
             }
             else {
                 $str .= "(".$grp['privacy'].")"."<br />";

@@ -37,6 +37,7 @@ class tribe extends controller {
     public $objImView;
     public $objAt;
     public $objGroups;
+    public $objMembers;
 
     /**
      *
@@ -64,6 +65,7 @@ class tribe extends controller {
             $this->dbUsers = $this->getObject('dbusers');
             $this->objAt = $this->getObject('dbatreplies');
             $this->objGroups = $this->getObject('dbgroups');
+            $this->objMembers = $this->getObject('dbgroupmembers');
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -331,12 +333,16 @@ class tribe extends controller {
                 break;
 
             case 'leavegroup' :
+                $userid = $this->objUser->userId();
+                $groupid = $this->getParam('groupid');
+                $this->objMembers->removePerson($userid, $groupid);
 
+                $this->nextAction('');
                 break;
 
             case 'joingroup' :
                 // join  a group
-                $this->objMembers = $this->getObject('dbgroupmembers');
+
                 $groupid = $this->getParam('groupid');
                 $userid = $this->objUser->userId();
                 $jid  = $this->dbUsers->getJidfromUserId($userid);
