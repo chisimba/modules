@@ -1,7 +1,7 @@
 /************************************************************************************************************
 (C) www.dhtmlgoodies.com, September 2005
 
-This is a script from www.dhtmlgoodies.com. You will find this and a lot of other scripts at our website.	
+This is a script from www.dhtmlgoodies.com. You will find this and a lot of other scripts at our website.
 
 Terms of use:
 You are free to use this script as long as the copyright message is kept intact. However, you may not
@@ -14,7 +14,7 @@ Alf Magne Kalleland
 
 ************************************************************************************************************/
 
-var form_widget_amount_slider_handle = 'modules/essayadmin/resources/slider_handle.gif';
+var form_widget_amount_slider_handle = 'packages/essayadmin/resources/slider_handle.gif';
 var slider_handle_image_obj = false;
 var sliderObjectArray = new Array();
 var slider_counter = 0;
@@ -26,7 +26,7 @@ var sliderHandleWidth = 9;
 
 function form_widget_cancel_event()
 {
-	return false;		
+	return false;
 }
 
 function getImageSliderHeight(){
@@ -44,7 +44,7 @@ function getImageSliderHeight(){
 
 function positionSliderImage(e,theIndex)
 {
-	
+
 	if(!theIndex)theIndex = this.getAttribute('sliderIndex');
 	var theValue = sliderObjectArray[theIndex]['formTarget'].value;
 	if(!theValue.match(/^[0-9]*$/g))theValue=sliderObjectArray[theIndex]['min'] +'';
@@ -53,25 +53,25 @@ function positionSliderImage(e,theIndex)
 	sliderObjectArray[theIndex]['formTarget'].value = theValue;
 	var handleImg = document.getElementById('slider_handle' + theIndex);
 	var ratio = sliderObjectArray[theIndex]['width'] / (sliderObjectArray[theIndex]['max']-sliderObjectArray[theIndex]['min']);
-	var currentValue = sliderObjectArray[theIndex]['formTarget'].value-sliderObjectArray[theIndex]['min'];		
-	handleImg.style.left = Math.round(currentValue * ratio) + 'px';	
+	var currentValue = sliderObjectArray[theIndex]['formTarget'].value-sliderObjectArray[theIndex]['min'];
+	handleImg.style.left = Math.round(currentValue * ratio) + 'px';
 }
 
 
 
 function adjustFormValue(theIndex)
 {
-	var handleImg = document.getElementById('slider_handle' + theIndex);	
+	var handleImg = document.getElementById('slider_handle' + theIndex);
 	var ratio = sliderObjectArray[theIndex]['width'] / (sliderObjectArray[theIndex]['max']-sliderObjectArray[theIndex]['min']);
 	var currentPos = handleImg.style.left.replace('px','');
 	sliderObjectArray[theIndex]['formTarget'].value = Math.round(currentPos / ratio) + sliderObjectArray[theIndex]['min'];
-	
+
 }
-	
+
 function initMoveSlider(e)
 {
 
-	if(document.all)e = event;	
+	if(document.all)e = event;
 	slideInProgress = true;
 	event_start_x = e.clientX;
 	handle_start_x = this.style.left.replace('px','');
@@ -81,8 +81,8 @@ function initMoveSlider(e)
 
 function startMoveSlider(e)
 {
-	if(document.all)e = event;	
-	if(!slideInProgress)return;	
+	if(document.all)e = event;
+	if(!slideInProgress)return;
 	var leftPos = handle_start_x/1 + e.clientX/1 - event_start_x;
 	if(leftPos<0)leftPos = 0;
 	if(leftPos/1>sliderObjectArray[currentSliderIndex]['width'])leftPos = sliderObjectArray[currentSliderIndex]['width'];
@@ -101,23 +101,23 @@ function stopMoveSlider()
 function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeAction)
 {
 	if(!slider_handle_image_obj){
-		getImageSliderHeight();		
+		getImageSliderHeight();
 	}
-			
+
 	slider_counter = slider_counter +1;
 	sliderObjectArray[slider_counter] = new Array();
 	sliderObjectArray[slider_counter] = {"width":width - sliderHandleWidth,"min":min,"max":max,"formTarget":formTarget,"onchangeAction":onchangeAction};
-	
+
 	formTarget.setAttribute('sliderIndex',slider_counter);
 	formTarget.onchange = positionSliderImage;
 	var parentObj = document.createElement('DIV');
 
-	
+
 	parentObj.style.height = '12px';	// The height of the image
 	parentObj.style.position = 'relative';
 	parentObj.id = 'slider_container' + slider_counter;
 	document.getElementById(targetElId).appendChild(parentObj);
-	
+
 	var obj = document.createElement('DIV');
 	obj.className = 'form_widget_amount_slider';
 	obj.innerHTML = '<span></span>';
@@ -126,7 +126,7 @@ function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeA
 	obj.style.position = 'absolute';
 	obj.style.bottom = '0px';
 	parentObj.appendChild(obj);
-	
+
 	var handleImg = document.createElement('IMG');
 	handleImg.style.position = 'absolute';
 	handleImg.style.left = '0px';
@@ -134,20 +134,20 @@ function form_widget_amount_slider(targetElId,formTarget,width,min,max,onchangeA
 	handleImg.src = slider_handle_image_obj.src;
 	handleImg.id = 'slider_handle' + slider_counter;
 	handleImg.onmousedown = initMoveSlider;
-	
+
 	parentObj.style.width = obj.offsetWidth + 'px';
-	
+
 	if(document.body.onmouseup){
 		if(document.body.onmouseup.toString().indexOf('stopMoveSlider')==-1){
 			alert('You allready have an onmouseup event assigned to the body tag');
 		}
 	}else{
-		document.body.onmouseup = stopMoveSlider;	
-		document.body.onmousemove = startMoveSlider;	
+		document.body.onmouseup = stopMoveSlider;
+		document.body.onmousemove = startMoveSlider;
 	}
 	handleImg.ondragstart = form_widget_cancel_event;
 	parentObj.appendChild(handleImg);
 	positionSliderImage(false,slider_counter);
-	
-	
+
+
 }

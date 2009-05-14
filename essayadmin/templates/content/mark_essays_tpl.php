@@ -16,7 +16,7 @@ $this->objDateformat =  $this->newObject('dateandtime', 'utilities');
 $this->objFile= $this->newObject('upload','filemanager');
 
 $topic=$topicdata[0]['name'];
-$duedate=0;
+//$duedate=0;
 $duedate=$topicdata[0]['closing_date'];
 
 $this->loadClass('htmltable','htmlelements');
@@ -51,13 +51,13 @@ $rubricLabel = $this->objLanguage->languageText('mod_rubric_name');
 * new language items added 20/mar/06
 * @author: otim samuel, sotim@dicts.mak.ac.ug
 */
-$unmarked=0;
+//$unmarked=0;
 $unmarked=$this->objLanguage->languageText('mod_essayadmin_unmarked','essayadmin');
-$markrow=0;
+//$markrow=0;
 $markrow=$this->objLanguage->languageText('mod_essayadmin_mark','essayadmin');
-$closingdate=0;
+//$closingdate=0;
 $closingdate=$this->objLanguage->languageText('mod_essayadmin_closedate','essayadmin');
-$downloadEssays=0;
+//$downloadEssays=0;
 $downloadEssays=$this->objLanguage->languageText('mod_essayadmin_downloadessays', 'essayadmin');
 
 /****************** set up table headers ************************/
@@ -133,7 +133,7 @@ if(!empty($data)){
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
 */
 		$objTable->addCell($item['studentid'],'','','',$class);
-        $objTable->addCell($topicdata[0]['name'],'','','',$class);
+        $objTable->addCell($item['essay']/*$topicdata[0]['name']*/,'','','',$class);
         $objTable->addCell($this->objDateformat->formatDate($item['submitdate']),'','','',$class);
         $objTable->addCell($mark,'','','center',$class);
         $objTable->addCell($loadicons,'','','center',$class,' colspan=2');
@@ -163,11 +163,11 @@ if(!empty($data)){
 			$fsize=0;
 			$fsize=$fdata[0]['size'];
 			$ftype=0;
-			$ftype=$fdata[0]['filetype']; 
+			$ftype=$fdata[0]['filetype'];
 			$fId2=0;
-			$fId2=$fdata[0]['fileId']; 
+			$fId2=$fdata[0]['fileId'];
 			/*$flist=$this->objFile->getArray("select id from tbl_essay_blob where fileId='$fId2' order by segment");
-		
+
 			$line=array();
 			foreach ($flist as $line)
 			{
@@ -234,7 +234,7 @@ $fileUploader->savePath = '/etd/essayadmin/'; // This will then be saved in usrf
 $fileUploader->overwriteExistingFile = TRUE;
 
 // Upload. Returns result as an array
-$results = $fileUploader->uploadFile('fileupload1'); // This corresponds with the name of the input - 
+$results = $fileUploader->uploadFile('fileupload1'); // This corresponds with the name of the input -
 //<input type="file"  name="fileupload1" />;
 
 //$fd = fopen($filename, "wb");

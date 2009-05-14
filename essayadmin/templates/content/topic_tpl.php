@@ -52,21 +52,24 @@ echo $javascript;
 // Set up data, passed as a variable from controller
 if(!empty($data)){
 // put date in correct format
-    
+
     $did=$data[0]['id'];
     $dTopic=$data[0]['name'];
     $dDescription=$data[0]['description'];
     $dInstructions=$data[0]['instructions'];
-    $dDate=$this->objDateformat->formatDate($data[0]['closing_date']);
+    $dDate=$data[0]['closing_date']; //$this->objDateformat->formatDate($data[0]['closing_date']);
+    //echo "($dDate)";
+    //echo gettype($data[0]['bypass']);
+    //echo gettype($data[0]['forceone']);
     $dBypass=$data[0]['bypass'];
     $dForce=$data[0]['forceone'];
     $dPercent=$data[0]['percentage'];
 }else {
-    $did='';
+    $did=NULL;
     $dTopic='';
     $dDescription='';
     $dInstructions='';
-    $dDate=date('Y-m-d');
+    $dDate=date('Y-m-d H:i:s');
     $dBypass='';
     $dForce='';
     $dPercent=0;
@@ -162,7 +165,7 @@ $this->objIcon->setIcon('select_date');
 $this->objIcon->alt=$this->objLanguage->languageText('mod_essayadmin_datepick','essayadmin');*/
 
 $this->objpopcal =&$this->getObject('datepickajax','popupcalendar');
-$this->objpopcal->show('closing_date','yes','no',$dDate); 
+$this->objpopcal->show('closing_date','yes','no',$dDate);
 
 // $this->objessaydate = $this->newObject('datepicker','htmlelements');
 //$name = 'closing_date';
@@ -182,9 +185,9 @@ $this->objpopcal->show('closing_date','yes','no',$dDate);
 //$this->objLink->extra = "onclick=\"$onclick\"";
 //$this->objLink->link = $this->objIcon->show();
 
-$this->objCheck = new checkbox('bypass','',$dBypass);
+$this->objCheck = new checkbox('bypass','',$dBypass=='1');
 $bycheck=$this->objCheck->show();
-$this->objCheck = new checkbox('force','',$dForce);
+$this->objCheck = new checkbox('force','',$dForce=='1');
 $fcheck=$this->objCheck->show();
 
 $objTable->row_attributes=' height="25"';
@@ -215,10 +218,14 @@ $objTable->endRow();
 
 /*********************** hidden elements ************************/
 
-$this->objInput = new textinput('id',$did);
-$this->objInput->fldType='hidden';
-$hidden=$this->objInput->show();
-
+if (!is_null($did)) {
+	$this->objInput = new textinput('id',$did);
+	$this->objInput->fldType='hidden';
+	$hidden=$this->objInput->show();
+}
+else {
+	$hidden='';
+}
 $objTable->row_attributes=' height="10"';
 $objTable->startRow();
 $objTable->addCell($hidden);
@@ -265,7 +272,7 @@ $objLayer->str = $objForm->show();
 echo $objLayer->show();
 
 
-// exit form
+// exit form -- Cancel button
 $this->objForm = new form('exit',$this->uri(array('action' => 'savetopic')));
 $this->objInput = new textinput('save', $exit);
 $this->objInput->fldType = 'hidden';

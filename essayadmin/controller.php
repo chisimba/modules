@@ -50,7 +50,7 @@ class essayadmin extends controller
             $this->objRubric = $this->getObject('dbrubricassessments', 'rubric');
             $this->rubric = TRUE;
         }
-  
+
 	    // Get instances of the module classes
         $this->dbessays=  $this->getObject('dbessays', 'essay');
         $this->dbtopic=  $this->getObject('dbessay_topics', 'essay');
@@ -58,7 +58,7 @@ class essayadmin extends controller
         // Get instances of the html elements:
         // form, table, link, textinput, button, icon, layer, checkbox, textarea, iframe
         $this->loadclass('htmltable','htmlelements');
-        $this->loadClass('checkbox', 'htmlelements');    
+        $this->loadClass('checkbox', 'htmlelements');
         $this->loadclass('form','htmlelements');
         $this->loadClass('htmltable','htmlelements');
         $this->loadClass('layer','htmlelements');
@@ -81,7 +81,7 @@ class essayadmin extends controller
         $this->objContext= $this->getObject('dbcontext','context');
         $this->objHelp = $this->newObject('helplink','help');
        	$this->objDateformat = $this->newObject('dateandtime','utilities');
-        $this->objDate = $this->newObject('datepicker','htmlelements');    
+        $this->objDate = $this->newObject('datepicker','htmlelements');
         // Log this call if registered
         if(!$this->objModules->checkIfRegistered('logger', 'logger')){
             //Get the activity logger class
@@ -104,8 +104,8 @@ class essayadmin extends controller
 		* check if the essayadmin dir has been created
 		* @author: otim samuel, sotim@dicts.mak.ac.ug
 		*/
-      $this->setVar('pageSuppressXML',true);		
-		
+      $this->setVar('pageSuppressXML',true);
+
 		$essayadmindir=0;
 		$essayadminpath=0;
 		$essayadmindir="usrfiles/essayadmin/";
@@ -116,7 +116,7 @@ class essayadmin extends controller
 		$essayadminDownloadLink=0;
 		$essayadminDownloadLink=$this->uri($parametersArray);
 		/*
-		* $essayadminDownloadLink is currently made up of 
+		* $essayadminDownloadLink is currently made up of
 		* http://nextgen.mak.ac.ug/index.php?module=essayadmin
 		* or the equivalent. required is to remove
 		* index.php?module=essayadmin or its equivalent
@@ -132,14 +132,14 @@ class essayadmin extends controller
 		$essayadminReplacement=ereg_replace("&","&amp;",$essayadminReplacement);
 		$essayadminDownloadLink=ereg_replace($essayadminReplacement,"",$essayadminDownloadLink);
 		$essayadminDownloadLink.=$essayadmindir;
-		
+
 		if(!is_dir($essayadmindir)) {
 			mkdir($essayadmindir, 0777);
 		}
 		$this->setVar('essayadmindir',$essayadmindir);
 		$this->setVar('essayadminpath',$essayadminpath);
 		$this->setVar('essayadminDownloadLink',$essayadminDownloadLink);
-		
+
 		//remove all zip files older than 24hrs, or 86,400 seconds
 		//$this->objDbZip->deleteOldFiles();
 
@@ -184,7 +184,9 @@ class essayadmin extends controller
 //echo "</pre>";
 
             if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
-                $id=$this->getParam('id');
+	            $id=isset($_POST['id'])?$_POST['id']:NULL;
+                //$id=$this->getParam('id',NULL);
+                //echo gettype($id)."[$id]";
 
                 // get time in correct format
                 $date=array_fill(0,3,0);
@@ -207,25 +209,22 @@ class essayadmin extends controller
                 $fields['percentage']=$this->getParam('percentage', '');
                 $fields['closing_date']= $this->getParam('closing_date');
 
-                $bypass = $this->getParam('bypass', NULL);
-                $force = $this->getParam('force', NULL);
+                $bypass = $this->getParam('bypass',NULL);
+                $force = $this->getParam('force',NULL);
+                //echo "[$bypass]";
+                //echo "[$force]";
+                //die;
 
-                if(isset($bypass) && !is_null($bypass)){
-                    $fields['bypass'] = 1;
-                }else{
-                    $fields['bypass'] = 0;
-                }
+                $fields['bypass'] = ($bypass == 'on')?'1':'0';
+	            $fields['forceone'] = ($force == 'on')?'1':'0';
 
-                if(isset($force) && !is_null($force)){
-                    $fields['forceone'] = 1;
-                }else{
-                    $fields['forceone'] = 0;
-                }
-
-                $this->dbtopic->addTopic($fields,$id);
-                if(empty($id)){
+                if(is_null($id)){
+	                $this->dbtopic->addTopic($fields);
                     $id=$this->dbtopic->getLastInsertId();
                 }
+                else {
+	                $this->dbtopic->addTopic($fields,$id);
+				}
 
                 // set confirmation message
                 $message = $this->objLanguage->languageText('mod_essayadmin_confirmtopic','essayadmin');
@@ -280,8 +279,8 @@ class essayadmin extends controller
 
         // list student essay submissions
         case 'mark':
-       
-   
+
+
         case 'viewmarktopic':
             // get topic id
             $id=$this->getParam('id');
@@ -343,7 +342,7 @@ class essayadmin extends controller
             $confirm = NULL;
             if($this->getParam('save')==$this->objLanguage->languageText('word_save')){
                 $id=$this->getParam('essay');
-             
+
                 $fields=array();
                 $fields['topicid']=$this->getParam('id', '');
                 $fields['topic']=$this->getParam('essaytopic', '');
@@ -406,7 +405,7 @@ class essayadmin extends controller
             $topic=$this->getParam('id');
             // exit upload form
             $postSubmit = $this->getParam('save');
-            
+
             if($postSubmit ==$this->objLanguage->languageText('word_exit')){
                 return $this->nextAction('marktopic',array('id'=>$topic));
             }
@@ -421,10 +420,10 @@ class essayadmin extends controller
                 // insert / update database
                 $fields=array('mark'=>$mark,'comment'=>$comment);
                 $this->dbbook->bookEssay($fields,$book);
-                $msg='';
+                //$msg='';
                 return $this->nextAction('marktopic',array('id'=>$topic));
             }
-			
+
             // upload essay and return to form
             if($postSubmit==$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin')){
                 // get booking id
@@ -439,25 +438,64 @@ class essayadmin extends controller
 
                 // upload file to database, overwrite original file
                 $arrayfiledetails = $this->objFile->uploadFile('file');
-				
-				if ($arrayfiledetails['success']){	
-				
+
+				if ($arrayfiledetails === FALSE){
+	            	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadfailureunknown', 'essayadmin');
+				}
+				else if (!$arrayfiledetails['success']) {
+					switch ($arrayfiledetails['reason']) {
+					case 'bannedfile':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_bannedfile', 'essayadmin');
+						break;
+					case 'partialuploaded':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_partialuploaded', 'essayadmin');
+						break;
+					case 'nouploadedfileprovided':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_nouploadedfileprovided', 'essayadmin');
+						break;
+					case 'doesnotmeetextension':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_doesnotmeetextension', 'essayadmin');
+						break;
+					case 'needsoverwrite':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_needsoverwrite', 'essayadmin');
+						break;
+					case 'filecouldnotbesaved':
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_filecouldnotbesaved', 'essayadmin');
+						break;
+					default:
+						$reason = $this->objLanguage->languageText('mod_essayadmin_fileupload_unknownreason', 'essayadmin');
+					}
+	            	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadfailure', 'essayadmin')."<br />"
+					.$reason;
+					/*
+						." REASON: ".$arrayfiledetails['reason']."<br />"
+						." FILENAME: ".$arrayfiledetails['name']."<br />"
+						." SIZE: ".$arrayfiledetails['size']."<br />"
+						." MIMETYPE: ".$arrayfiledetails['mimetype']."<br />"
+						." ERRORCODE: ".$arrayfiledetails['errorcode']
+					;
+					*/
+				}
+				else {
 					$fields=array('lecturerfileid'=>$arrayfiledetails['fileid'],'mark'=>$mark,'comment'=>$comment);
                     $this->dbbook->bookEssay($fields,$book);
-                    
+
                 	// display success message
                 	$msg = $this->objLanguage->languageText('mod_essayadmin_uploadsuccess','essayadmin');
-                	$this->setVarByRef('msg',$msg);
+                	//$this->setVarByRef('msg',$msg);
             	}
-			}                	
-            return $this->nextAction('upload', array('book'=>$book,'msg'=>$msg,'id'=>$topic));
+			}
+			$this->setSession('MSG',$msg);
+            return $this->nextAction('upload', array('book'=>$book,/*'msg'=>$msg,*/'id'=>$topic));
         break;
 
         // display page to upload essay
         case 'upload':
             // get message (if already submitted)
-            $msg=$this->getParam('msg');
-            $this->setVarByRef('msg',$msg);
+//            $msg=$this->getParam('msg');
+			$msg = $this->getSession('MSG','');
+            $this->unsetSession('MSG');
+            $this->setVar('msg',$msg);
             // get booking number
             $id=$this->getParam('book');
             $this->setVarByRef('book',$id);
@@ -744,7 +782,7 @@ class essayadmin extends controller
         $objTable2->addCell($topic[0]['percentage'].' %','80%','','','even');
         $objTable2->endRow();
 
-               
+
         $date = $this->objDateformat->formatDate($topic[0]['closing_date']);
         $objTable2->startRow();
         $objTable2->addCell('<b>'.$duedate.'</b>','20%','','','odd');
@@ -767,7 +805,7 @@ class essayadmin extends controller
         $objTable->width='99%';
         $objTable->cellpadding=5;
         $objTable->cellspacing=2;
-  
+
         if(!empty($essays)){
             foreach($essays as $val){
                 $class = ($i++%2)? 'even':'odd';

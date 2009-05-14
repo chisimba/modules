@@ -1,4 +1,11 @@
 <?php
+//echo '<pre>';
+//$msg = $this->getSession('MSG','');
+//echo "[".$msg."]\n";
+//$this->setVarByRef('msg',$msg);
+//$this->unsetSession('MSG');
+//echo '</pre>';
+
 /*
 * Template for uploading essays.
 * @package essayadmin
@@ -10,7 +17,7 @@
 
 $styleSheet=0;
 $styleSheet="
-<style type=\"text/css\">	
+<style type=\"text/css\">
 .form_widget_amount_slider{
 	border-top:1px solid #9d9c99;
 	border-left:1px solid #9d9c99;
@@ -27,7 +34,7 @@ echo $styleSheet;
 
 //javascript for the slider
 $str=0;
-$str='<script language="JavaScript" src="modules/essayadmin/resources/dhtmlslider.js" type="text/JavaScript"></script>';
+$str='<script language="JavaScript" src="'.$this->getResourceUri('dhtmlslider.js').'" type="text/javascript"></script>';
 //append to the top of the page
 $this->appendArrayVar('headerParams', $str);
 
@@ -36,7 +43,7 @@ $this->setLayoutTemplate('essayadmin_layout_tpl.php');
 
 //setting up of htmlelements helpers
 $this->loadclass('timeoutmessage','htmlelements');
-$this->loadClass('dropdown', 'htmlelements');    
+$this->loadClass('dropdown', 'htmlelements');
 $this->loadclass('textinput','htmlelements');
 $this->loadClass('htmltable','htmlelements');
 
@@ -44,11 +51,11 @@ $this->loadClass('htmltable','htmlelements');
 $objTable = new htmltable();
 $objSubTable = new htmltable();
 $objSubTable->width="60%";
-$objLayer=$this->objLayer;
+//$objLayer=$this->objLayer;
 
 //set up htmlelements objects.
 $objConfirm 	= 		$this->getObject('timeoutmessage','htmlelements');
-
+$objConfirm->timeout = 0;
 // set up language items
 $essayhead=$this->objLanguage->languageText('mod_essayadmin_essay','essayadmin');
 $btnupload=$this->objLanguage->languageText('mod_essayadmin_upload','essayadmin');
@@ -230,7 +237,8 @@ $objTable->addCell('&nbsp;&nbsp;&nbsp;'.$btn2,'30%','','left');
 $objTable->endRow();
 
 // display confirmation message
-if(!empty($msg)){
+//if(!empty($msg)){
+if($msg != ''){
     $objConfirm->setMessage($msg);
     $confirmMsg = $objConfirm->show();
 }else{
