@@ -112,7 +112,7 @@ class passive extends dbtable {
 				'geolayer3'		=> $this->objGeo3->getName($geo2['geo3id']),
 				'geolayer2'		=> $geo2['name'],
 				'year'			=> date('Y', strtotime($row['reportdate'])),
-				'month'			=> date('f', strtotime($row['reportdate'])),
+				'month'			=> date('n', strtotime($row['reportdate'])),
 				'animal'		=> $this->objSpecies->getName($row['speciesid']),
 				'diseasetype'	=> $this->objDisease->getName($row['diseaseid']),
 				'period'		=> 'Unknown',
