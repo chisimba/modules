@@ -126,7 +126,7 @@ class passive extends dbtable {
 				'culled'		=> 'Unknown',
 				'vaccinated'	=> $row['vaccinated'],
 				'reportdate'	=> $row['reportdate'],
-				'source'		=> 'Unknown'
+				'source'		=> 'Open ARIS'
 			);
 			$count++;
 		}

@@ -210,13 +210,6 @@ function failureCallback(errorCode) {
 
 // "row" is 0-based, to make lookup work
 var dataJSONObject = '.$jsonData.';
-		/*{"results": [
-        {"row": "0", "refno": "ABC-12", "lat": 20, "long": "6", "geolayer3": "Mali", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(8) Jan-Apr 2006", "locationname": "Jaji", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-        {"row": "1", "refno": "CBC-37", "lat": 22, "long": "3", "geolayer3": "Nigeria", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(9) May-Aug 2006", "locationname": "Noni", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-        {"row": "2", "refno": "AAC-52", "lat": 24, "long": "0", "geolayer3": "Niger", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(10) Sep-Dec 2006", "locationname": "Ratiani", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-        {"row": "3", "refno": "AHZ-23", "lat": 27, "long": "9", "geolayer3": "Elsewhere", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(11) Jan-Apr 2007", "locationname": "Gauli", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"}
-    ]
-};*/
 
 function submitQuery() {
 	if (document.getElementById("txtOutbreakRefNo").value > "") {
@@ -321,17 +314,17 @@ function doPoint(point) {
 		  dataJSONObject.results[point].geolayer3 + ", " + dataJSONObject.results[point].locationname + "<BR/><BR/>" +
 		  "Outbreak Summary" + "<BR/><BR/>" +
 		  "<table>" +
-		  "<tr><td>Period:</td><td>" + dataJSONObject.results[point].period + "</td></tr>" +
+		  //"<tr><td>Period:</td><td>" + dataJSONObject.results[point].period + "</td></tr>" +
 		  "<tr><td>Country:</td><td>" + dataJSONObject.results[point].geolayer3 + "</td></tr>" +
 		  "<tr><td>District:</td><td>" + dataJSONObject.results[point].geolayer2 + "</td></tr>" +
-		  "<tr><td>Location name, if given:</td><td>" + dataJSONObject.results[point].locationname + "</td></tr>" +
+		  "<tr><td>Location:</td><td>" + dataJSONObject.results[point].locationname + "</td></tr>" +
 		  "<tr><td>Outbreak Start:</td><td>" + dataJSONObject.results[point].outbreakstart + "</td></tr>" +
 		  "<tr><td>Poultry at risk:</td><td>" + dataJSONObject.results[point].poultryatrisk + "</td></tr>" +
 		  "<tr><td>Cases:</td><td>" + dataJSONObject.results[point].cases + "</td></tr>" +
 		  "<tr><td>Deaths:</td><td>" + dataJSONObject.results[point].deaths + "</td></tr>" +
 		  "<tr><td>Destroyed:</td><td>" + dataJSONObject.results[point].destroyed + "</td></tr>" +
 		  "<tr><td>Slaughtered:</td><td>" + dataJSONObject.results[point].slaughtered + "</td></tr>" +
-		  "<tr><td>Culled:</td><td>" + dataJSONObject.results[point].culled + "</td></tr>" +
+		  //"<tr><td>Culled:</td><td>" + dataJSONObject.results[point].culled + "</td></tr>" +
 		  "<tr><td>Vaccinated:</td><td>" + dataJSONObject.results[point].vaccinated + "</td></tr>" +
 		  "<tr><td>Report date:</td><td>" + dataJSONObject.results[point].reportdate + "</td></tr>" +
 		  "<tr><td>Source:</td><td>" + dataJSONObject.results[point].source + "</td></tr>" +
