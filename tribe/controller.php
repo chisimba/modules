@@ -265,7 +265,7 @@ class tribe extends controller {
                 break;
 
             case 'addjidajax' :
-                echo $this->objImView->showSignupBox();
+                echo $this->objImView->showSignupBox('ajax');
                 break;
 
             case 'myhome':
@@ -335,8 +335,14 @@ class tribe extends controller {
                 break;
 
             case 'joingroup' :
+                // join  a group
+                $this->objMembers = $this->getObject('dbgroupmembers');
+                $groupid = $this->getParam('groupid');
+                $userid = $this->objUser->userId();
+                $jid  = $this->dbUsers->getJidfromUserId($userid);
+                $this->objMembers->addRecord($userid, $groupid, $jid);
 
-
+                $this->nextAction('');
                 break;
 
             case 'deletegroup' :

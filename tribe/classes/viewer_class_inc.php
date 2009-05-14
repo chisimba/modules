@@ -359,7 +359,7 @@ class viewer extends object {
             }
             else {
                 $addlink = $this->getObject('alertbox', 'htmlelements');
-                $rightColumn .= $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $this->objLanguage->languageText("mod_tribe_addjidnow", "tribe")); //$this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $addlink->show($this->objLanguage->languageText("mod_tribe_addjidnow", "tribe"), $this->uri(array('action' => 'addjidajax'))));
+                $rightColumn .= $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $addlink->show($this->objLanguage->languageText("mod_tribe_addjidnow", "tribe"), $this->uri(array('action' => 'addjidajax')))); // $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $this->objLanguage->languageText("mod_tribe_addjidnow", "tribe"));
             }
 
         }
@@ -560,7 +560,9 @@ class viewer extends object {
         else {
             $ajform = new form('addjid', $this->uri(array('action' => 'addjid')));
         }
-        $ajform->addRule('jid', $this->objLanguage->languageText("mod_tribe_phrase_jidreq", "tribe") , 'required');
+        if ($mode != 'ajax') {
+            $ajform->addRule('jid', $this->objLanguage->languageText("mod_tribe_phrase_jidreq", "tribe") , 'required');
+        }
         $ajterm = new textinput('jid');
         if($mode == 'update') {
             $ajterm->setValue($this->dbUsers->getJidfromUserId($this->objUser->userId()));

@@ -57,7 +57,7 @@ class dbusers extends dbTable {
                 $person = $this->getAll("WHERE jid = '$jid'");
                 $id = $person[0]['id'];
 
-                return $this->update ( 'id', $id, $insarr, 'tbl_jabberblog_subs' );
+                return $this->update ( 'id', $id, $insarr, 'tbl_tribe_users' );
             }
             else {
                 return FALSE;
