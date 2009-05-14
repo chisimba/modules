@@ -39,9 +39,7 @@ $fields = array(
 		'notnull' => 1
     ),
 	'remarks' => array(
-		'type' => 'text',
-		'length' => 255,
-		'notnull' => 1
+		'type' => 'clob'
     )
 );
 //create other indexes here...
