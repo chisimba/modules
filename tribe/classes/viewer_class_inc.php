@@ -352,10 +352,12 @@ class viewer extends object {
             $atlimit = 10;
             $atreplies = $this->getAtReplies($userid, $atlimit);
             $rightColumn .= $this->objFeatureBox->show ("Last $atlimit @ replies", $atreplies);
-            $rightColumn .= $this->objFeatureBox->show ('Groups', 'Groups that I subscribe to');
+            $createGrpLink = $this->getObject('alertbox', 'htmlelements');
+            $rightColumn .= $this->objFeatureBox->show ('Groups', $createGrpLink->show($this->objLanguage->languageText("mod_tribe_creategroup", "tribe"), $this->uri(array('action' => 'creategrpform')))."<br />". "bunch more groups");
 
         }
-        $rightColumn .= $this->objFeatureBox->show ('10 New groups', 'Groups that have just been created');
+        $number = 10;
+        $rightColumn .= $this->objFeatureBox->show ("Latest $number groups", $this->showLatestGrpsBox($number));
 
         return $rightColumn;
     }
@@ -371,6 +373,38 @@ class viewer extends object {
         $vaLink->link = $this->objLanguage->languageText ( "mod_tribe_viewpublic", "tribe" );
         $middleColumn .= " ".$vaLink->show();
         return $middleColumn;
+    }
+
+    public function showLatestGrpsBox($number) {
+        $this->objGroups = $this->getObject('dbgroups');
+        $this->objGrpMembers = $this->getObject('dbgroupmembers');
+        $arr = $this->objGroups-> getLastPublic($number);
+        $str = NULL;
+        foreach($arr as $grp) {
+            $jLink = $this->newObject ( 'link', 'htmlelements' );
+            $jLink->href = $this->uri ( array ('action' => 'joingroup', 'groupid' => $grp['id'] ) );
+            $jLink->link = $this->objLanguage->languageText ( "mod_tribe_joingroup", "tribe" );
+
+            $str .= $grp['groupname']." ";
+            // check that the user is not already a member
+            if($this->objGrpMembers->isAMember($this->objUser->userId(), $grp['id'])) {
+                $member = TRUE;
+            }
+            else {
+                $member = FALSE;
+            }
+            if($this->objUser->isLoggedIn() && $member != TRUE) {
+                $str .= "(".$grp['privacy'].")"." ".$jLink->show()."<br />";
+            }
+            elseif($this->objUser->isLoggedIn() && $member == TRUE)  {
+                $str .= "(".$grp['privacy'].")"." Member!"."<br />";
+            }
+            else {
+                $str .= "(".$grp['privacy'].")"."<br />";
+            }
+        }
+
+        return $str;
     }
 
     public function getAtReplies($userid, $limit) {
@@ -493,10 +527,6 @@ class viewer extends object {
                 $userlink = $this->getObject ( 'link', 'htmlelements' );
                 $userlink->href = $this->uri ( array ('user' => $user, 'action' => 'myhome' ) );
                 $userlink->link = $user;
-                // Link to change the jid if needs be
-                //$changelink = $this->newObject ( 'link', 'htmlelements' );
-                //$changelink->href = $this->uri ( array ('user' => $user, 'action' => 'changejid' ) );
-                //$changelink->link = $this->objLanguage->languageText("mod_tribe_changejid", "tribe");
                 $changelink = $this->getObject('alertbox', 'htmlelements');
 
                 return $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_loggedinas", "tribe"), $userlink->show()."<br />"."(".$jid.")"."<br />".$changelink->show($this->objLanguage->languageText("mod_tribe_changejid", "tribe"), $this->uri(array('action' => 'changejid'))));
@@ -539,6 +569,27 @@ class viewer extends object {
         $ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_join", "tribe") , $this->objLanguage->languageText("mod_tribe_joininstructions", "tribe") . "<br />" . $ajform);
 
         return $ret;
+    }
+
+    public function createGroupBox() {
+        // show a box to register a group and start playing!
+        $this->loadClass('textinput', 'htmlelements');
+        $gform = new form('creategroup', $this->uri(array('action' => 'creategroup')));
+        $gform->addRule('groupname', $this->objLanguage->languageText("mod_tribe_phrase_groupnamereq", "tribe") , 'required');
+        $gname = new textinput('groupname');
+        // privacy dropdown
+
+        $gname->size = 30;
+        $gform->addToForm($gname->show());
+        $this->obGButton = new button($this->objLanguage->languageText('word_creatgroup', 'tribe'));
+        $this->obGButton->setValue($this->objLanguage->languageText('word_creategroup', 'tribe'));
+        $this->obGButton->setToSubmit();
+        $gform->addToForm($this->obGButton->show());
+        $gform = $gform->show();
+        //$objFeatureBox = $this->getObject('featurebox', 'navigation');
+        //$ret = $objFeatureBox->show($this->objLanguage->languageText("mod_tribe_creategroup", "tribe") , $this->objLanguage->languageText("mod_tribe_joininstructions", "tribe") . "<br />" . $ajform);
+
+        return $gform;
     }
 }
 ?>

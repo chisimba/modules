@@ -36,6 +36,7 @@ class tribe extends controller {
     public $dbUsers;
     public $objImView;
     public $objAt;
+    public $objGroups;
 
     /**
      *
@@ -62,6 +63,7 @@ class tribe extends controller {
             $this->objImView = $this->getObject('viewer');
             $this->dbUsers = $this->getObject('dbusers');
             $this->objAt = $this->getObject('dbatreplies');
+            $this->objGroups = $this->getObject('dbgroups');
 
             if ($this->objModules->checkIfRegistered ( 'twitter' )) {
                 // Get other places to upstream content to
@@ -115,7 +117,12 @@ class tribe extends controller {
                 break;
 
             case NULL :
-                $this->nextAction('myhome');
+                if($this->objUser->isLoggedIn()) {
+                    $this->nextAction('myhome');
+                }
+                else {
+                    $this->nextAction('viewall');
+                }
                 break;
 
             case 'viewall' :
@@ -191,7 +198,7 @@ class tribe extends controller {
 			    $siteData = array();
 			    $siteData['url'] = $this->uri(array('module' => 'tribe'));
 			    $siteData['name'] = "Tribes";
-			    $siteData['description'] = ''; //$this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' );
+			    $siteData['description'] = ''; //$this->objSysConfig->getValue ( 'jposterprofile', 'tribe' );
 
 			    $fora = array();
 			    $fora[0]['id'] = $userid;
@@ -205,7 +212,7 @@ class tribe extends controller {
 			    $this->objSiocMaker->setFora($fora);
 			    $this->objSiocMaker->setUsers($users);
 
-			    $this->objSiocMaker->createForum($userid, $this->uri(array('module' => 'tribe', 'userid' => $userid)), $userid, 'Tribes', $this->objSysConfig->getValue ( 'jposterprofile', 'jabberblog' ));
+			    $this->objSiocMaker->createForum($userid, $this->uri(array('module' => 'tribe', 'userid' => $userid)), $userid, 'Tribes', $this->objSysConfig->getValue ( 'jposterprofile', 'tribe' ));
 
 			    $posts = $this->objDbMsgs->getAllPosts();
 
@@ -288,7 +295,35 @@ class tribe extends controller {
                 break;
 
             case 'creategroup' :
+                $groupname = $this->getParam('groupname');
+                $privacy = $this->getParam('privacy', 'public');
+                $jid = $this->dbUsers->getJidfromUserId($this->objUser->userId());
+                $insarr = array('groupname' => $groupname, 'privacy' => $privacy);
+                $code = $this->objGroups->addRecord($insarr, $jid);
+                if($code === 1) {
+                    log_debug("only valid users allowed to create groups");
+                    $this->nextAction('');
+                }
+                elseif($code === 2) {
+                    log_debug("A Group by the name $groupname already exists");
+                    $this->nextAction('');
+                }
+                elseif($code === 3) {
+                    log_debug("Group $groupname has been created");
+                    $this->popMessage($jid, 'groupcreated', $groupname);
+                    // create a system user so that we don't get a user conflict with groups
+                    // This is a crappy way of doing it, but best I can come up with for now... Ideas welcome!
+                    $objUA = $this->getObject('useradmin_model2', 'security');
+                    $objUA->addUser($objUA->generateUserId(), $groupname, rand(0, 56000), 'mr', $groupname, $groupname, 'fake@tribemodule.chisimba', 'M', "ZA", '', '', 'useradmin', '0');
+                    $this->nextAction('');
+                }
+                else {
+                    die("unknown code");
+                }
+                break;
 
+            case 'creategrpform' :
+                echo $this->objImView->createGroupBox();
                 break;
 
             case 'leavegroup' :
@@ -373,7 +408,7 @@ class tribe extends controller {
                                     $poster = $poster[0];
                                     //$this->objDbSubs->addRecord($poster);
                                     // send a message saying that you are now subscribed back
-                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_subscribed', 'tribe'));
+                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_subscribed', 'tribe'));
                                     continue;
 
                                 case 'unsubscribe':
@@ -382,7 +417,7 @@ class tribe extends controller {
                                     // remove the JID to the subscribers table
                                     //$this->objDbSubs->inactiveRecord($poster);
                                     // send a message saying that you are now unsubscribed back
-                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_unsubscribed', 'tribe'));
+                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_unsubscribed', 'tribe'));
                                     continue;
 
                                 case 'NULL' :
@@ -395,7 +430,7 @@ class tribe extends controller {
                                 $poster = $poster[0];
                                 $add = $this->objDbMsgs->addRecord ( $pl );
                                 // send a message to the poster
-                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_jabberblog_msgadded', 'jabberblog'));
+                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 // check for any @user tags and send the message to them too
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
                                 if(is_array($fwd)) {
@@ -448,6 +483,23 @@ class tribe extends controller {
         //$call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
         break;
 
+    }
+
+    public function  popMessage($jid, $type, $groupname) {
+        $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
+        if($type == 'groupcreated') {
+            $msg = $this->objLanguage->languageText("mod_tribe_groupcreated", "tribe")." ".$groupname;
+        }
+        else {
+            $msg = "yo";
+        }
+        $conn->connect();
+        $conn->processUntil('session_start');
+        $conn->presence();
+        $conn->message($jid, $msg);
+        $conn->disconnect();
+
+        return;
     }
 }
 ?>
