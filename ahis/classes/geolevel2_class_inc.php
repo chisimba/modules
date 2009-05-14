@@ -72,6 +72,18 @@ class geolevel2 extends dbtable {
 		}
 	}
 	
+	
+	/**
+	 * Method to get the name field of a row based on the id
+	 *
+	 * @param string $id The id of the row in question
+	 * @return string the name
+	 */
+	public function getName($id) {
+		$row = $this->getRow('id', $id);
+		return (is_array($row))? $row['name'] : FALSE;
+	}
+	
 	public function getgeo($id){
 	
 	$sql="SELECT name FROM tbl_ahis_geography_level2 AS d WHERE 

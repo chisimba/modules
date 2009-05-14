@@ -513,14 +513,8 @@ class ahis extends controller {
 					$this->setVar('geo3', $geo3);
 					$this->setVar('species', $species);
 					$this->setVar('diseases', $diseases);
+					$this->setVar('jsonData', $this->objPassive->getJSONData());
 					
-					$this->setVar('jsonData','{"results": [
-								{"row": "0", "refno": "ABC-12", "lat": 20, "long": "6", "geolayer3": "Mali", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(8) Jan-Apr 2006", "locationname": "Jaji", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-								{"row": "1", "refno": "CBC-37", "lat": 22, "long": "3", "geolayer3": "Nigeria", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(9) May-Aug 2006", "locationname": "Noni", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-								{"row": "2", "refno": "AAC-52", "lat": 24, "long": "0", "geolayer3": "Niger", "geolayer2": "East", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(10) Sep-Dec 2006", "locationname": "Ratiani", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"},
-								{"row": "3", "refno": "AHZ-23", "lat": 27, "long": "9", "geolayer3": "Elsewhere", "geolayer2": "Large", "year": "1995", "month": "08", "animal": "bird", "diseasetype": "flu", "period": "(11) Jan-Apr 2007", "locationname": "Gauli", "outbreakstart": "10/01/2006", "poultryatrisk": "46,000.0000", "cases": "42,000.0000", "deaths": "40,000", "destroyed": "", "slaughtered": "", "culled": "", "vaccinated":"", "reportdate": "09/02/2006", "source": "OIE_Report"}
-							]
-						}');
 					return "view_gis_reports_tpl.php";
 				}
                 

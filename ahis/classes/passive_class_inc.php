@@ -64,6 +64,12 @@ class passive extends dbtable {
 	public function init() {
 		try {
 			parent::init('tbl_ahis_passive_surveillance');
+			$this->objSpecies = $this->getObject('species');
+			$this->objTerritory = $this->getObject('territory');
+			$this->objDisease = $this->getObject('disease');
+			$this->objGeo2 = $this->getObject('geolevel2');
+			$this->objGeo3 = $this->getObject('geolevel3');
+			
 		}
 		catch (customException $e)
 		{
@@ -82,5 +88,48 @@ class passive extends dbtable {
 				FROM tbl_ahis_passive_surveillance";
 		$result = $this->getArray($sql);
 		return (empty($result[0]))? 1000 : $result[0]['refno'] + 1;
+	}
+	
+	/**
+	 * Method to return all passive surveillance data in JSON
+	 * format to be used in the Google Earth GIS plugin
+	 *
+	 * @return JSON array of all data
+	 * */
+	public function getJSONData() {
+		$allData = $this->getAll("ORDER BY reportdate DESC");
+		$count = 0;
+		$results = array();
+		foreach ($allData as $row) {
+			
+			$geo2 = $this->objGeo2->getRow('id', $row['geo2id']);
+			
+			$results[] = array(
+				'row' 			=> $count,
+				'refno'			=> $row['refno'],
+				'lat'			=> $row['latitude'],
+				'long'			=> $row['longitude'],
+				'geolayer3'		=> $this->objGeo3->getName($geo2['geo3id']),
+				'geolayer2'		=> $geo2['name'],
+				'year'			=> date('Y', strtotime($row['reportdate'])),
+				'month'			=> date('f', strtotime($row['reportdate'])),
+				'animal'		=> $this->objSpecies->getName($row['speciesid']),
+				'diseasetype'	=> $this->objDisease->getName($row['diseaseid']),
+				'period'		=> 'Unknown',
+				'locationname'	=> $this->objTerritory->getName($row['locationid']),
+				'outbreakstart'	=> $row['occurencedate'],
+				'poultryatrisk'	=> $row['susceptible'],
+				'cases'			=> $row['cases'],
+				'deaths'		=> $row['deaths'],
+				'destroyed'		=> $row['destroyed'],
+				'slaughtered'	=> $row['slaughtered'],
+				'culled'		=> 'Unknown',
+				'vaccinated'	=> $row['vaccinated'],
+				'reportdate'	=> $row['reportdate'],
+				'source'		=> 'Unknown'
+			);
+			$count++;
+		}
+		return json_encode(array('results'=>$results));
 	}
 }

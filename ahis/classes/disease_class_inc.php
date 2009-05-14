@@ -71,4 +71,15 @@ class disease extends dbtable {
 			exit;
 		}
 	}
+	
+	/**
+	 * Method to get the name field of a row based on the id
+	 *
+	 * @param string $id The id of the row in question
+	 * @return string the name
+	 */
+	public function getName($id) {
+		$row = $this->getRow('id', $id);
+		return (is_array($row))? $row['name'] : FALSE;
+	}
 }
