@@ -320,7 +320,7 @@ function doPoint(point) {
 		  "<tr><td>Location:</td><td>" + dataJSONObject.results[point].locationname + "</td></tr>" +
 		  "<tr><td>Outbreak Start:</td><td>" + dataJSONObject.results[point].outbreakstart + "</td></tr>" +
 		  "<tr><td>Animal:</td><td>" + dataJSONObject.results[point].animal + "</td></tr>" +
-		  "<tr><td>Disease:</td><td>" + dataJSONObject.results[point].diseasetype + "</td></tr>" +
+		  //"<tr><td>Disease:</td><td>" + dataJSONObject.results[point].diseasetype + "</td></tr>" +
 		  "<tr><td>Cases:</td><td>" + dataJSONObject.results[point].cases + "</td></tr>" +
 		  "<tr><td>Deaths:</td><td>" + dataJSONObject.results[point].deaths + "</td></tr>" +
 		  "<tr><td>Destroyed:</td><td>" + dataJSONObject.results[point].destroyed + "</td></tr>" +
