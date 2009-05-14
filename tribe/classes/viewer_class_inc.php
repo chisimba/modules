@@ -353,11 +353,18 @@ class viewer extends object {
             $atreplies = $this->getAtReplies($userid, $atlimit);
             $rightColumn .= $this->objFeatureBox->show ("Last $atlimit @ replies", $atreplies);
             $createGrpLink = $this->getObject('alertbox', 'htmlelements');
-            $rightColumn .= $this->objFeatureBox->show ('Groups', $createGrpLink->show($this->objLanguage->languageText("mod_tribe_creategroup", "tribe"), $this->uri(array('action' => 'creategrpform')))."<br />". "bunch more groups");
+            $ujid = $this->dbUsers->getJidfromUserId($this->objUser->userId());
+            if($ujid != NULL) {
+                $rightColumn .= $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $createGrpLink->show($this->objLanguage->languageText("mod_tribe_creategroup", "tribe"), $this->uri(array('action' => 'creategrpform'))));
+            }
+            else {
+                $addlink = $this->getObject('alertbox', 'htmlelements');
+                $rightColumn .= $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $this->objLanguage->languageText("mod_tribe_addjidnow", "tribe")); //$this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_groups", "tribe"), $addlink->show($this->objLanguage->languageText("mod_tribe_addjidnow", "tribe"), $this->uri(array('action' => 'addjidajax'))));
+            }
 
         }
         $number = 10;
-        $rightColumn .= $this->objFeatureBox->show ("Latest $number groups", $this->showLatestGrpsBox($number));
+        $rightColumn .= $this->objFeatureBox->show ($this->objLanguage->languageText("mod_tribe_latest", "tribe")." ".$number." ".$this->objLanguage->languageText("mod_tribe_groups", "tribe"), $this->showLatestGrpsBox($number));
 
         return $rightColumn;
     }

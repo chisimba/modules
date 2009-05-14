@@ -264,6 +264,10 @@ class tribe extends controller {
                 echo $this->objImView->showSignupBox('update');
                 break;
 
+            case 'addjidajax' :
+                echo $this->objImView->showSignupBox();
+                break;
+
             case 'myhome':
                 $user = $this->getParam('user', $this->objUser->userName());
                 $data = $this->objUser->lookupData($user);
