@@ -23,8 +23,7 @@ $fields = array(
    'notnull'  =>  0
    ),
    'objective'   =>  array(
-   'type'      =>  'text',
-   'length'    =>  32,
+   'type'      =>  'clob',
    'notnull'  =>  0 
    ),
    'updated'    =>  array(
