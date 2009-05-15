@@ -114,5 +114,10 @@ class dbgroups extends dbTable {
         return $this->getAll("WHERE privacy = 'public' AND status = '1' LIMIT {$number}");
     }
 
+    public function getGroupInfo($groupname) {
+        $res = $this->getAll("WHERE groupname = '$groupname'");
+        return $res[0];
+    }
+
 }
 ?>

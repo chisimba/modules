@@ -64,6 +64,11 @@ class dbgroupmembers extends dbTable {
         }
     }
 
+    public function getAllUsers($groupid) {
+        parent::init ( 'tbl_tribe_groupmembers' );
+        return $this->getALL("WHERE groupid = '$groupid'");
+    }
+
     public function inactiveRecord($groupid) {
 
     }

@@ -31,7 +31,7 @@ $fields = array(
         ),
     'tribegroup' => array(
         'type' => 'text',
-        'length' => 50,
+        'length' => 100,
         ),
     );
 ?>

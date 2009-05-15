@@ -289,6 +289,13 @@ class tribe extends controller {
                 $userid = $data['userid'];
 
                 $count = $this->objDbMsgs->getUserRecordCount ($userid);
+                if($count == 0) {
+                    // the user may be a group
+                    $count = $this->objDbMsgs->getGroupRecordCount($user);
+                    $groupname = $user;
+                    $this->setVarByRef('groupname', $groupname);
+                    // TODO: add in the group logic here
+                }
                 $pages = ceil ( $count / 10 );
                 $this->setVarByRef ( 'pages', $pages );
                 $this->setVarByRef ( 'userid', $userid );
@@ -300,12 +307,13 @@ class tribe extends controller {
 
             case 'viewuserajax' :
                 $userid = $this->getParam('userid');
+                $groupname = $this->getParam('groupname', NULL);
                 $page = intval ( $this->getParam ( 'page', 0 ) );
                 if ($page < 0) {
                     $page = 0;
                 }
                 $start = $page * 10;
-                $msgs = $this->objDbMsgs->getUserRange($start, 10, $userid);
+                $msgs = $this->objDbMsgs->getUserRange($start, 10, $userid, $groupname);
                 $this->setVarByRef ( 'msgs', $msgs );
 
                 header("Content-Type: text/html;charset=utf-8");
@@ -379,7 +387,6 @@ class tribe extends controller {
 
             case 'joingroup' :
                 // join  a group
-
                 $groupid = $this->getParam('groupid');
                 $userid = $this->objUser->userId();
                 $jid  = $this->dbUsers->getJidfromUserId($userid);
@@ -453,7 +460,7 @@ class tribe extends controller {
                     switch ($event [0]) {
                         case  'reply':
                             log_debug("reply to message...");
-                            log_debug($pl);
+                            //log_debug($pl);
                             break;
 
                         case 'message' :
@@ -497,37 +504,49 @@ class tribe extends controller {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
-                                $add = $this->objDbMsgs->addRecord ( $pl );
+
                                 // send a message to the poster
                                 $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 // check for any @user tags and send the message to them too
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
                                 if(is_array($fwd)) {
                                     foreach($fwd as $f) {
-                                        // get the userid from the username as well
-                                        // lookup user jid and userid etc
-                                        $uid = $this->dbUsers->getJidfromUsername($f);
-                                        $toid = $this->dbUsers->getUserIdfromJid($uid);
-                                        $fromid = $this->dbUsers->getUserIdfromJid($poster);
-                                        $atarr = array('toid' => $toid, 'fromid' => $fromid, 'msgid' => $add, 'tribegroup' => '');
-                                        // add the at reply to the atreplies table
-                                        $this->objAt->addRecord($atarr);
-                                        // send to user
-                                        if($uid != NULL) {
-                                            $poster = $this->dbUsers->getUsernamefromJid($poster);
-                                            $this->conn->message($uid, "@".$poster." says: ".$pl['body']);
+                                        // check if the @ tag is a group name
+                                        if($this->objGroups->groupExists($f)) {
+                                            // get the group info and id
+                                            $info = $this->objGroups->getGroupInfo($f);
+                                            $add = $this->objDbMsgs->addRecord ( $pl, $info['groupname'] );
+                                            // get the userid of all members
+                                            $list = $this->objMembers->getAllUsers($info['id']);
+                                            foreach($list as $member) {
+                                                // send on the message
+                                                $memberjid = $this->dbUsers->getJidFromUserId($member['userid']);
+                                                if($memberjid != NULL) {
+                                                    $poster = $this->dbUsers->getUsernamefromJid($poster);
+                                                    $this->conn->message($memberjid, "@".$poster." says: ".$pl['body']);
+                                                }
+                                            }
                                         }
                                         else {
-                                            $this->conn->message($pl['from'], "Invalid user!");
+                                            $add = $this->objDbMsgs->addRecord ( $pl );
+                                            // @ user is not a group, just a regular person
+                                            $uid = $this->dbUsers->getJidfromUsername($f);
+                                            $toid = $this->dbUsers->getUserIdfromJid($uid);
+                                            $fromid = $this->dbUsers->getUserIdfromJid($poster);
+                                            $atarr = array('toid' => $toid, 'fromid' => $fromid, 'msgid' => $add, 'tribegroup' => '');
+                                            // add the at reply to the atreplies table
+                                            $this->objAt->addRecord($atarr);
+                                            // send to user
+                                            if($uid != NULL) {
+                                                $poster = $this->dbUsers->getUsernamefromJid($poster);
+                                                $this->conn->message($uid, "@".$poster." says: ".$pl['body']);
+                                            }
+                                            else {
+                                                $this->conn->message($pl['from'], "Invalid user!");
+                                            }
                                         }
                                     }
                                 }
-
-                                /* send out a mass message to the subscribers
-                                $active = $this->objDbSubs->getActive();
-                                foreach ($active as $user) {
-                                    $this->conn->message($user['jid'], $pl['body']." ".$this->uri(''));
-                                } */
                             }
                             break;
 

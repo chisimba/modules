@@ -47,7 +47,7 @@ class dbmsgs extends dbTable {
      * @param array $pl
      * @return string $id
      */
-    public function addRecord($pl) {
+    public function addRecord($pl, $groupname = NULL) {
         $userSplit = explode ( '/', $pl ['from'] );
         $userSplit2 = explode ( "/", $userSplit [0] );
         $times = $this->now ();
@@ -56,7 +56,7 @@ class dbmsgs extends dbTable {
         $recarr ['msgfrom'] = $userSplit2 [0];
         $recarr ['msgbody'] = $pl ['body'];
         $recarr ['userid']  = $this->dbUsers->getUserIdfromJid($userSplit2 [0]);
-        log_debug($recarr);
+        $recarr ['tribegroup'] = $groupname;
 
         // Check for empty messages
         if ($recarr ['msgbody'] == "") {
@@ -80,13 +80,22 @@ class dbmsgs extends dbTable {
         return array_reverse ( $range );
     }
 
-    public function getUserRange($start, $num, $userid) {
-        $range = $this->getAll ( "WHERE userid = '$userid' ORDER BY datesent ASC LIMIT {$start}, {$num}" );
+    public function getUserRange($start, $num, $userid, $groupname = NULL) {
+        if($groupname == NULL) {
+            $range = $this->getAll ( "WHERE userid = '$userid' ORDER BY datesent ASC LIMIT {$start}, {$num}" );
+        }
+        else {
+            $range = $this->getAll ( "WHERE tribegroup = '$groupname' ORDER BY datesent ASC LIMIT {$start}, {$num}" );
+        }
         return array_reverse ( $range );
     }
 
     public function getUserRecordCount($userid) {
         return $this->getRecordCount("WHERE userid = '$userid'");
+    }
+
+    public function getGroupRecordCount($groupname) {
+        return $this->getRecordCount("WHERE tribegroup = '$groupname'");
     }
 
     public function appendSitemap($itemid) {

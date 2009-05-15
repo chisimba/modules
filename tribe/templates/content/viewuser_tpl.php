@@ -34,10 +34,12 @@ $rightColumn = NULL;
 $middleColumn = NULL;
 
 $middleColumn .= $objImView->renderTopBoxen();
-
+if(!isset($groupname)) {
+    $groupname = NULL;
+}
 $objPagination = $this->newObject ( 'pagination', 'navigation' );
 $objPagination->module = 'tribe';
-$objPagination->action = 'viewuserajax&userid='.$userid;
+$objPagination->action = 'viewuserajax&userid='.$userid.'&groupname='.$groupname;
 $objPagination->id = 'tribe';
 $objPagination->numPageLinks = $pages;
 $objPagination->currentPage = $pages - 1;
