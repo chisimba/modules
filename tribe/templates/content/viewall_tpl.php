@@ -11,7 +11,13 @@ $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
 $this->objShare = $this->getObject('share', 'toolbar');
 $this->objShare->setup($this->uri(''), 'My thought stream', 'Interesting! ');
-
+$this->objDia = $this->getObject('jqdialogue', 'htmlelements');
+$groupfail = FALSE;
+if($groupfail == TRUE) {
+    $this->objDia->setTitle('title');
+    $this->objDia->setContent('some content');
+    echo $this->objDia->show();
+}
 $middleColumn = $this->objShare->show();
 $leftColumn = NULL;
 $rightColumn = NULL;

@@ -110,6 +110,10 @@ class viewer extends object {
     public function renderOutputForBrowser($msgs) {
         $ret = NULL;
         foreach ( $msgs as $msg ) {
+            $msgtbl = $this->newObject('htmltable', 'htmlelements');
+            $msgtbl->cellpadding = 5;
+            $msgtbl->cellspacing = 5;
+            $msgtbl->startRow();
             $msgbody = $this->objWashout->parseText ( $msg ['msgbody'] );
             // run the parsers on the body
             $msgbody = $this->renderHashTags( $msgbody );
@@ -125,14 +129,19 @@ class viewer extends object {
             }
             else {
                 $user = $this->objUser->userName ( $msg['userid'] );
+
             }
+            $uimage = $this->objUser->getSmallUserImage($msg['userid'], $user);
+            $msgtbl->addCell($uimage, 1);
+            $msgtbl->addCell(nl2br($msgbody));
+            $msgtbl->endRow();
             // The link to users page
             $userlink = $this->getObject ( 'link', 'htmlelements' );
             $userlink->href = $this->uri ( array ('user' => $user, 'action' => 'myhome' ) );
             $userlink->link = $user;
             // alt featurebox
             $objFeaturebox = $this->getObject ( 'featurebox', 'navigation' );
-            $ret .= $objFeaturebox->showContent ( '<strong>' . $userlink->show() . '</strong>' ." ".$this->deltaTimes($msg ['datesent']), nl2br ( $msgbody ) . "<br />" );
+            $ret .= $objFeaturebox->showContent ( '<strong>' . $userlink->show() . '</strong>' ." ".$this->deltaTimes($msg ['datesent']), $msgtbl->show() . "<br />" );
             $ret .= "<hr />";
         }
         header ( "Content-Type: text/html;charset=utf-8" );

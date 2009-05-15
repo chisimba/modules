@@ -302,6 +302,7 @@ class tribe extends controller {
 
             case 'creategroup' :
                 $groupname = $this->getParam('groupname');
+
                 $privacy = $this->getParam('privacy', 'public');
                 $jid = $this->dbUsers->getJidfromUserId($this->objUser->userId());
                 $insarr = array('groupname' => $groupname, 'privacy' => $privacy);
@@ -359,6 +360,22 @@ class tribe extends controller {
             case 'mygroups' :
 
                 break;
+
+            case 'bigdata' :
+
+                $x = 0;
+                $end = 2000000;
+                while($x < $end) {
+                    $users = array('1', '247703', '9679090513', '3458090513');
+                    $randid = array_rand($users, 1);
+                    $tim = $this->objDbMsgs->now();
+                    $datarr = array('userid' => $users[$randid], 'msgtype' => 'chat', 'msgfrom' => 'test', 'msgbody' => "Numba: ".rand(0, 100000), 'datesent' => $tim);
+                    $this->objDbMsgs->insert ( $datarr, 'tbl_tribe_msgs' );
+                    echo $x."... <br />";
+                    $x++;
+
+                }
+                die();
 
             default :
                 die ( "unknown action" );
