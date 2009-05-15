@@ -56,6 +56,7 @@ class dbmsgs extends dbTable {
         $recarr ['msgfrom'] = $userSplit2 [0];
         $recarr ['msgbody'] = $pl ['body'];
         $recarr ['userid']  = $this->dbUsers->getUserIdfromJid($userSplit2 [0]);
+        $userid= $recarr['userid'];
         if(isset($groupname)) {
             $recarr ['tribegroup'] = $groupname;
         }

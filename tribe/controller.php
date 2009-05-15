@@ -507,12 +507,11 @@ class tribe extends controller {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
-
-                                // send a message to the poster
-                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
+log_debug("Entering checks");
                                 // check for any @user tags and send the message to them too
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
-                                if(is_array($fwd)) {
+log_debug($fwd);
+                                if(!empty($fwd)) {
                                     foreach($fwd as $f) {
                                         // check if the @ tag is a group name
                                         if($this->objGroups->groupExists($f)) {
@@ -544,6 +543,7 @@ class tribe extends controller {
                                             if($uid != NULL) {
                                                 $poster = $this->dbUsers->getUsernamefromJid($poster);
                                                 $this->conn->message($uid, "@".$poster." says: ".$pl['body']);
+                                                $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                             }
                                             else {
                                                 $this->conn->message($pl['from'], "Invalid user!");
@@ -552,8 +552,11 @@ class tribe extends controller {
                                     }
                                 }
                                 else {
+                                    log_debug("not an @ tag");
                                     // not an @ tag
                                     $add = $this->objDbMsgs->addRecord ( $pl, NULL);
+                                    // send a message to the poster
+                                    $this->conn->message($pl['from'], $this->objLanguage->languageText('mod_tribe_msgadded', 'tribe'));
                                 }
                             }
                             break;
