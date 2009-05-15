@@ -12,10 +12,19 @@ $objWashout = $this->getObject ( 'washout', 'utilities' );
 $this->objShare = $this->getObject('share', 'toolbar');
 $this->objShare->setup($this->uri(''), 'My thought stream', 'Interesting! ');
 $this->objDia = $this->getObject('jqdialogue', 'htmlelements');
-$groupfail = FALSE;
-if($groupfail == TRUE) {
-    $this->objDia->setTitle('title');
-    $this->objDia->setContent('some content');
+if(!isset($groupfail) || empty($groupfail)) {
+    $groupfail = NULL;
+    $message = NULL;
+}
+
+if($groupfail == 'TRUE') {
+    $this->objDia->setTitle('Error!');
+    $this->objDia->setContent($message);
+    echo $this->objDia->show();
+}
+if($groupfail == 'FALSE') {
+    $this->objDia->setTitle('Success!');
+    $this->objDia->setContent($message);
     echo $this->objDia->show();
 }
 $middleColumn = $this->objShare->show();

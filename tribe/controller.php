@@ -119,15 +119,23 @@ class tribe extends controller {
                 break;
 
             case NULL :
+                $message = $this->getParam('message', NULL);
+                $groupfail = $this->getParam('groupfail', NULL);
+                //var_dump($groupfail); die();
                 if($this->objUser->isLoggedIn()) {
-                    $this->nextAction('myhome');
+                    $this->nextAction('myhome', array('message' => $message, 'groupfail' => $groupfail));
                 }
                 else {
-                    $this->nextAction('viewall');
+                    $this->nextAction('viewall', array('message' => $message, 'groupfail' => $groupfail));
                 }
                 break;
 
             case 'viewall' :
+                $groupfail = $this->getParam('groupfail', NULL);
+                $message = $this->getParam('message', NULL);
+                $this->setVarByRef ( 'groupfail', $groupfail );
+                $this->setVarByRef ( 'message', $message );
+
                 $count = $this->objDbMsgs->getRecordCount ();
                 $pages = ceil ( $count / 10 );
                 $this->setVarByRef ( 'pages', $pages );
@@ -271,6 +279,10 @@ class tribe extends controller {
                 break;
 
             case 'myhome':
+                $groupfail = $this->getParam('groupfail', NULL);
+                $message = $this->getParam('message', NULL);
+                $this->setVarByRef ( 'groupfail', $groupfail );
+                $this->setVarByRef ( 'message', $message );
                 $user = $this->getParam('user', $this->objUser->userName());
                 $data = $this->objUser->lookupData($user);
                 // get the posts of the user
@@ -302,27 +314,51 @@ class tribe extends controller {
 
             case 'creategroup' :
                 $groupname = $this->getParam('groupname');
-
                 $privacy = $this->getParam('privacy', 'public');
+                // we need to do some validation here so that group names are kept sane. Validation on client side seems
+                // busted when used in conjunction with the facebox thingy
+                $result = ereg ("^[A-Za-z0-9]+$", $groupname );
+
+                if($result == FALSE) {
+                    // we have a space or something nasty in the groupname
+                    $groupfail = 'TRUE';
+                    $message = $this->objLanguage->languageText("mod_tribe_invalidgroupname", "tribe");
+                    $this->setVarByRef('message', $message);
+                    $this->setVarByRef('groupfail', $groupfail);
+                    $this->nextAction('', array('message' => $message, 'groupfail' => $groupfail));
+                    break;
+                }
                 $jid = $this->dbUsers->getJidfromUserId($this->objUser->userId());
                 $insarr = array('groupname' => $groupname, 'privacy' => $privacy);
                 $code = $this->objGroups->addRecord($insarr, $jid);
                 if($code === 1) {
                     log_debug("only valid users allowed to create groups");
-                    $this->nextAction('');
+                    $groupfail = 'TRUE';
+                    $message = $this->objLanguage->languageText("mod_tribe_onlyvalidusersgroup", "tribe");
+                    $this->setVarByRef('message', $message);
+                    $this->setVarByRef('groupfail', $groupfail);
+                    $this->nextAction('', array('message' => $message, 'groupfail' => $groupfail));
                 }
                 elseif($code === 2) {
                     log_debug("A Group by the name $groupname already exists");
-                    $this->nextAction('');
+                    $groupfail = 'TRUE';
+                    $message = $this->objLanguage->languageText("mod_tribe_groupexists", "tribe");
+                    $this->setVarByRef('message', $message);
+                    $this->setVarByRef('groupfail', $groupfail);
+                    $this->nextAction('', array('message' => $message, 'groupfail' => $groupfail));
                 }
                 elseif($code === 3) {
+                    $groupfail = 'FALSE';
                     log_debug("Group $groupname has been created");
                     $this->popMessage($jid, 'groupcreated', $groupname);
                     // create a system user so that we don't get a user conflict with groups
                     // This is a crappy way of doing it, but best I can come up with for now... Ideas welcome!
                     $objUA = $this->getObject('useradmin_model2', 'security');
                     $objUA->addUser($objUA->generateUserId(), $groupname, rand(0, 56000), 'mr', $groupname, $groupname, 'fake@tribemodule.chisimba', 'M', "ZA", '', '', 'useradmin', '0');
-                    $this->nextAction('');
+                    $message = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
+                    $this->setVarByRef('message', $message);
+                    $this->setVarByRef('groupfail', $groupfail);
+                    $this->nextAction('',array('message' => $message, 'groupfail' => $groupfail));
                 }
                 else {
                     die("unknown code");
@@ -521,11 +557,9 @@ class tribe extends controller {
     public function  popMessage($jid, $type, $groupname) {
         $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
         if($type == 'groupcreated') {
-            $msg = $this->objLanguage->languageText("mod_tribe_groupcreated", "tribe")." ".$groupname;
+            $msg = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
         }
-        else {
-            $msg = "yo";
-        }
+
         $conn->connect();
         $conn->processUntil('session_start');
         $conn->presence();

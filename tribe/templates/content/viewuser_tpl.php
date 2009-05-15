@@ -9,6 +9,25 @@ $this->loadClass ( 'htmlheading', 'htmlelements' );
 $objImView = $this->getObject ( 'viewer' );
 $this->objFeatureBox = $this->getObject ( 'featurebox', 'navigation' );
 $objWashout = $this->getObject ( 'washout', 'utilities' );
+$this->objDia = $this->getObject('jqdialogue', 'htmlelements');
+//var_dump($message);
+//var_dump($groupfail);
+
+if(!isset($groupfail) || empty($groupfail)) {
+    $groupfail = NULL;
+    $message = NULL;
+}
+
+if($groupfail == 'TRUE') {
+    $this->objDia->setTitle('Error!');
+    $this->objDia->setContent($message);
+    echo $this->objDia->show();
+}
+if($groupfail == 'FALSE') {
+    $this->objDia->setTitle('Success!');
+    $this->objDia->setContent($message);
+    echo $this->objDia->show();
+}
 
 $leftColumn = NULL;
 $rightColumn = NULL;
@@ -22,7 +41,6 @@ $objPagination->action = 'viewuserajax&userid='.$userid;
 $objPagination->id = 'tribe';
 $objPagination->numPageLinks = $pages;
 $objPagination->currentPage = $pages - 1;
-
 
 $middleColumn .= '<br/>' . $objPagination->show ();
 $userid = $this->objUser->userId();
