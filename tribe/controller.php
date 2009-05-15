@@ -38,6 +38,7 @@ class tribe extends controller {
     public $objAt;
     public $objGroups;
     public $objMembers;
+    public $postJID;
 
     /**
      *
@@ -81,6 +82,7 @@ class tribe extends controller {
             $this->jclient = $this->objSysConfig->getValue ( 'jabberclient', 'tribe' );
             $this->jdomain = $this->objSysConfig->getValue ( 'jabberdomain', 'tribe' );
 
+            $this->postJID = $this->juser."@".$this->jdomain;
             $this->conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
 
         } catch ( customException $e ) {
@@ -266,6 +268,7 @@ class tribe extends controller {
                 else {
                     $this->dbUsers->updateJid($this->objUser->userId(), $jid);
                 }
+                $this->popMessage($jid, 'registerjid', NULL);
                 $this->nextAction('');
 
                 break;
@@ -440,13 +443,13 @@ class tribe extends controller {
     public function handleMessages() {
         log_debug("Starting messagehandler");
 
-        /*
+
         // This is a looooong running task... Lets use the background class to handle it
         //check the connection status
         $status = $this->objBack->isUserConn ();
         //keep the user connection alive even if the browser is closed
         $callback = $this->objBack->keepAlive ();
-        */
+
 
         // Now the code is backrounded and cannot be aborted! Be careful now...
         $this->conn->autoSubscribe ();
@@ -568,7 +571,7 @@ class tribe extends controller {
         }
         // OK something went wrong, make sure the sysadmin knows about it!
         $email = $this->objConfig->getsiteEmail ();
-        //$call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
+        $call2 = $this->objBack->setCallBack ( $email, $this->objLanguage->languageText ( 'mod_im_msgsubject', 'im' ), $this->objLanguage->languageText ( 'mod_im_callbackmsg', 'im' ) );
         break;
 
     }
@@ -577,6 +580,10 @@ class tribe extends controller {
         $conn = new XMPPHP_XMPP ( $this->jserver, intval ( $this->jport ), $this->juser, $this->jpass, $this->jclient, $this->jdomain, $printlog = FALSE, $loglevel = XMPPHP_Log::LEVEL_ERROR );
         if($type == 'groupcreated') {
             $msg = $this->objLanguage->languageText("mod_tribe_yourgroup", "tribe")." ".$groupname." ".$this->objLanguage->languageText("mod_tribe_hasbeencreated", "tribe");
+        }
+
+        if($type == 'registerjid') {
+            $msg = $this->objLanguage->languageText("mod_tribe_jidregistered", "tribe")." ".$this->postJID;
         }
 
         $conn->connect();
