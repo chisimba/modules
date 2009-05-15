@@ -530,6 +530,7 @@ class tribe extends controller {
                                                 }
                                             }
                                         }
+
                                         else {
                                             $add = $this->objDbMsgs->addRecord ( $pl );
                                             // @ user is not a group, just a regular person
@@ -549,6 +550,10 @@ class tribe extends controller {
                                             }
                                         }
                                     }
+                                }
+                                else {
+                                    // not an @ tag
+                                    $add = $this->objDbMsgs->addRecord ( $pl, NULL);
                                 }
                             }
                             break;
