@@ -56,7 +56,9 @@ class dbmsgs extends dbTable {
         $recarr ['msgfrom'] = $userSplit2 [0];
         $recarr ['msgbody'] = $pl ['body'];
         $recarr ['userid']  = $this->dbUsers->getUserIdfromJid($userSplit2 [0]);
-        $recarr ['tribegroup'] = $groupname;
+        if(isset($groupname)) {
+            $recarr ['tribegroup'] = $groupname;
+        }
 
         // Check for empty messages
         if ($recarr ['msgbody'] == "") {
