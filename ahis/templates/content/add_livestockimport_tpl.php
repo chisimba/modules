@@ -40,8 +40,14 @@
 	$header = new htmlheading();
 	$header->type = 2;
 	$header->str = $title;
-
+	
+	
 $formTable = $this->newObject('htmltable', 'htmlelements');
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
+
+//$formTable = $this->newObject('htmltable', 'htmlelements');
 
 $label_district = new label ('District Name:', 'district');
 $input_district = new textinput('district', $dist);
@@ -107,6 +113,7 @@ $formTable->endRow();
 
 $label_eggs = new label('Eggs: ','eggs');
 $eggs = new textinput('eggs');
+$eggs->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_eggs->show(),NULL,NULL,'right');
 $formTable->addCell($eggs->show(),NULL,NULL,'left');
@@ -114,6 +121,7 @@ $formTable->endRow();
 
 $label_milk = new label('Milk: ','milk');
 $milk = new textinput('milk');
+$milk->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_milk->show(),NULL,NULL,'right');
 $formTable->addCell($milk->show(),NULL,NULL,'left');
@@ -121,6 +129,7 @@ $formTable->endRow();
 
 $label_cheese = new label('Cheese: ','cheese');
 $cheese = new textinput('cheese');
+$cheese->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_cheese->show(),NULL,NULL,'right');
 $formTable->addCell($cheese->show(),NULL,NULL,'left');
@@ -128,6 +137,7 @@ $formTable->endRow();
 
 $label_poultry = new label('Poultry: ','poutry');
 $poultry = new textinput('poultry');
+$poultry->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_poultry->show(),NULL,NULL,'right');
 $formTable->addCell($poultry->show(),NULL,NULL,'left');
@@ -135,6 +145,7 @@ $formTable->endRow();
 
 $label_beef = new label('Beef: ','beef');
 $beef = new textinput('beef');
+$beef->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_beef->show(),NULL,NULL,'right');
 $formTable->addCell($beef->show(),NULL,NULL,'left');
@@ -153,15 +164,15 @@ $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror'
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
-$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'numeric');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsnumbererror','ahis'),'numeric');
 $form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'required');
-$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'numeric');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milknumbererror','ahis'),'numeric');
 $form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'required');
-$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'numeric');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheesenumbererror','ahis'),'numeric');
 $form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'required');
-$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'numeric');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultrynumbererror','ahis'),'numeric');
 $form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
-$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'numeric');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefnumbererror','ahis'),'numeric');
 
 
  //container-table
@@ -178,8 +189,15 @@ $cancel = new button('back', $this->objLanguage->languageText('word_cancel'), "j
 
  
 
+ //$cancel = new button('cancel','Cancel');
+//$cancel->setToSubmit();
+
+
+$backUri = $this->uri(array('action' => 'select_officer'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+$form->addToForm($bButton->show());
 $form->addToForm($save->show(),NULL,NULL,'right');
-$form->addToForm($cancel->show());
+
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
@@ -187,29 +205,3 @@ $objLayer->align = 'center';
 
 echo $objLayer->show(); 
 ?>
-
-<style type="text/css">
-	.labels
-	{
-		padding-left:60px;	
-	}
-	.inputtextboxes
-	{
-		/*padding-left:200;*/
-	}
-	.borderclass
-	{
-	/*border:thin;*/
-	color:#CC0000;
-	/*border-width:thick;
-	border:1px solid #888;
-	size:portrait;*/
-	padding-left:150px;
-	
-	}
-	.newclass
-	{
-	padding-left:150px;
-	/*border:1px solid #888;*/
-	}
-</style>

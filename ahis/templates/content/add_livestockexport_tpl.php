@@ -40,6 +40,11 @@
 	$header->str = $title;
 	//echo $header->show();
 	
+	$formTable = $this->newObject('htmltable', 'htmlelements');
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
+	
 	// Create Form
 //$form = new form ('myForm', $this->uri(array('action'=>'livestockexport'),'htmlelements'));
 
@@ -108,13 +113,16 @@ $formTable->endRow();
 
 $label_eggs = new label('Eggs: ','eggs');
 $eggs = new textinput('eggs');
+//$eggs->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_eggs->show(),NULL,NULL,'right');
 $formTable->addCell($eggs->show(),NULL,NULL,'left');
+//$eggs = array('age' => array('rule' => array('numeric')));
 $formTable->endRow();
 
 $label_milk = new label('Milk: ','milk');
 $milk = new textinput('milk');
+//$milk->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_milk->show(),NULL,NULL,'right');
 $formTable->addCell($milk->show(),NULL,NULL,'left');
@@ -122,6 +130,7 @@ $formTable->endRow();
 
 $label_cheese = new label('Cheese: ','cheese');
 $cheese = new textinput('cheese');
+//$cheese->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_cheese->show(),NULL,NULL,'right');
 $formTable->addCell($cheese->show(),NULL,NULL,'left');
@@ -129,6 +138,7 @@ $formTable->endRow();
 
 $label_poultry = new label('Poultry: ','poutry');
 $poultry = new textinput('poultry');
+//$poultry->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_poultry->show(),NULL,NULL,'right');
 $formTable->addCell($poultry->show(),NULL,NULL,'left');
@@ -136,6 +146,7 @@ $formTable->endRow();
 
 $label_beef = new label('Beef: ','beef');
 $beef = new textinput('beef');
+//$beef->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_beef->show(),NULL,NULL,'right');
 $formTable->addCell($beef->show(),NULL,NULL,'left');
@@ -153,33 +164,63 @@ $form->addRule('entrypoint', $this->objLanguage->languageText('mod_ahis_entrypoi
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
-$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
-$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'numeric');
-$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'required');
-$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'numeric');
-$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'required');
-$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'numeric');
-$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'required');
-$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'numeric');
-$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
-$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'numeric');
 
+//$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'numeric');
+
+
+/*if(is_numeric($eggs))
+echo "Pass test";
+else
+echo "Please use only numbers";*/
+
+
+//$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'numeric');
+//$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'numeric');
+//$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'numeric');
+
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggserror','ahis'),'required');
+$form->addRule('eggs', $this->objLanguage->languageText('mod_ahis_eggsnumbererror','ahis'),'numeric');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milkerror','ahis'),'required');
+$form->addRule('milk', $this->objLanguage->languageText('mod_ahis_milknumbererror','ahis'),'numeric');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheeseerror','ahis'),'required');
+$form->addRule('cheese', $this->objLanguage->languageText('mod_ahis_cheesenumbererror','ahis'),'numeric');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultryerror','ahis'),'required');
+$form->addRule('poultry', $this->objLanguage->languageText('mod_ahis_poultrynumbererror','ahis'),'numeric');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beeferror','ahis'),'required');
+$form->addRule('beef', $this->objLanguage->languageText('mod_ahis_beefnumbererror','ahis'),'numeric');
+
+
+if (isset($error)) {
+    $formTable->startRow();
+    $formTable->addCell($error, NULL, NULL, NULL, NULL, "colspan=2");
+    $formTable->endRow();
+}
  //container-table
 $topTable = $this->newObject('htmltable', 'htmlelements');
- $topTable->startRow();
+$topTable->startRow();
 $topTable->addCell($formTable->show());
 $topTable->endRow();
 $form->addToForm($topTable->show());
 
+
+
  $save = new button('livestockexport_save', 'Save');
  $save->setToSubmit();
  
- $backUri = $this->uri(array('action'=>'select_officer'));
-$cancel = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
 
+ //$cancel = new button('cancel','Cancel');
+//$cancel->setToSubmit();
+$backUri = $this->uri(array('action' => 'select_officer'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
+
+// $backUri = $this->uri(array('action'=>'select_officer'));
+//$cancel = new button('back', $this->objLanguage->languageText('word_cancel'), "javascript: document.location='$backUri'");
+
+
+$form->addToForm($bButton->show());
 
 $form->addToForm($save->show(),NULL,NULL,'right');
-$form->addToForm($cancel->show());
+
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
@@ -214,3 +255,18 @@ echo $objLayer->show();
 	/*border:1px solid #888;*/
 	}
 </style>
+<script language="javascript" type="text/javascript">
+
+function numberVal()
+{
+	alert('Insert numerics only.');	
+}
+
+function isNumeric(val)
+{
+	if(val==isNumeric(val))
+	return(parseFloat(val,10)==(val*1));
+	else
+		alert('Nini.');
+}
+</script>

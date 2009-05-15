@@ -116,3 +116,8 @@ function clearPassiveVaccine() {
     resetDate('dateExpire');
     $('input_panvac').checked = false;
 }
+
+function numberVal()
+{
+	alert('Insert numerics only.');	
+}

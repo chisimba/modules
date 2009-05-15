@@ -83,6 +83,7 @@ $formTable->endRow();
 // animal origin	
 $label = new label ('Number of animals dewormed: ', 'numberofanimals');
 $number_animals = new textinput('numberofanimals');
+//$number_animals->extra = "onclick = 'numberVal();'";
 //$origin->size = 40;
 
 $formTable->startRow();
@@ -135,9 +136,9 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'required');
-$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserror','ahis'),'numeric');
-$form->addRule('antiemitictype', $this->objLanguage->languageText('mod_ahis_antiemiticerror','ahis'),'required');
-$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'letteronly');
+$form->addRule('numberofanimals', $this->objLanguage->languageText('mod_ahis_numberofanimalserrorone','ahis'),'numeric');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror','ahis'),'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'letteronly');
 
 $form->addToForm($formTable->show());
 
@@ -147,4 +148,6 @@ $objLayer->align = 'center';
 
 echo $objLayer->show(); 
 
+
 ?>
+

@@ -78,10 +78,20 @@ $formTable->addCell($district->show(),NULL,NULL,'left');
 $formTable->endRow();
 
 // vaccine name	
+//$label = new label ('Vaccine name: ', 'vaccinename');
+//$vaccinename = new dropdown('vaccinename');
+//$vaccinename->addFromDB($vaccination, 'name', 'name');
+//$vaccinename->addOption('vibe','vibe');
+//$formTable->startRow();
+//$formTable->addCell($label->show());
+//$formTable->addCell($vaccinename->show(),NULL,NULL,'left');
+//$formTable->endRow();
+
+// vaccine name	
 $label = new label ('Vaccine name: ', 'vaccinename');
 $vaccinename = new dropdown('vaccinename');
-$vaccinename->addFromDB($vaccination, 'name', 'name');
-$vaccinename->addOption('vibe','vibe');
+$vaccinename->addFromDB($vaccination, 'name', 'name'); 
+
 $formTable->startRow();
 $formTable->addCell($label->show());
 $formTable->addCell($vaccinename->show(),NULL,NULL,'left');
@@ -93,6 +103,8 @@ $formTable->endRow();
 
 $label_doses = new label ('Total doses in hand: ', 'doses');
 $doses = new textinput('doses');
+//$doses->extra = "onclick = 'numberVal();'";
+
 $formTable->startRow();
 $formTable->addCell($label_doses->show());
 $formTable->addCell($doses->show(),NULL,NULL,'left');
@@ -100,6 +112,7 @@ $formTable->endRow();
 
 $label_start = new label ('Total doses at start of month: ', 'dosesstartofmonth');
 $doses_start = new textinput('dosesstartofmonth');
+//$doses_start->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_start->show());
 $formTable->addCell($doses_start->show(),NULL,NULL,'left');
@@ -116,6 +129,7 @@ $formTable->endRow();
 
 $label_end = new label ('Total doses at end of month: ', 'dosesendofmonth');
 $doses_end = new textinput('dosesendofmonth');
+//$doses_end->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_end->show());
 $formTable->addCell($doses_end->show(),NULL,NULL,'left');
@@ -133,6 +147,7 @@ $formTable->endRow();
 
 $label_received = new label ('Total doses received in month: ', 'dosesreceived');
 $doses_received= new textinput('dosesreceived');
+//$doses_received->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_received->show());
 $formTable->addCell($doses_received->show(),NULL,NULL,'left');
@@ -140,6 +155,7 @@ $formTable->endRow();
 
 $label_used = new label ('Doses used: ', 'dosesused');
 $doses_used= new textinput('dosesused');
+//$doses_used->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_used->show());
 $formTable->addCell($doses_used->show(),NULL,NULL,'left');
@@ -147,10 +163,13 @@ $formTable->endRow();
 
 $label_wasted = new label ('Doses wasted: ', 'doseswasted');
 $doses_wasted= new textinput('doseswasted');
+//$doses_wasted->extra = "onclick = 'numberVal();'";
 $formTable->startRow();
 $formTable->addCell($label_wasted->show());
 $formTable->addCell($doses_wasted->show(),NULL,NULL,'left');
 $formTable->endRow();
+		
+
 
 $save = new button('animalvaccine_save', 'Save');
 $save->setToSubmit();
@@ -172,22 +191,26 @@ $form = new form ('add', $this->uri(array('action'=>$formAction)));
 
 //form validations
 $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districterror','ahis'),'required');
-//$form->addRule('vaccinename', $this->objLanguage->languageText('mod_ahis_vaccinenameerror','ahis'),'required');
-$form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'numeric');
-$form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'numeric');
+
 $form->addRule('doses', $this->objLanguage->languageText('mod_ahis_doseserror','ahis'),'required');
+$form->addRule('doses', $this->objLanguage->languageText('mod_ahis_dosesnumbererror','ahis'),'numeric');
 $form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_starterror','ahis'),'required');
+$form->addRule('dosesstartofmonth', $this->objLanguage->languageText('mod_ahis_startnumbererror','ahis'),'numeric');
 
 //$form->addRule('startmonth', $this->objLanguage->languageText('mod_ahis_startmontherror','ahis'),'datenotfuture');
-$form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'numeric');
+
 $form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_enderror','ahis'),'required');
+$form->addRule('dosesendofmonth', $this->objLanguage->languageText('mod_ahis_endnumbererror','ahis'),'numeric');
+
 //$form->addRule('endmonth', $this->objLanguage->languageText('mod_ahis_endmontherror','ahis'),'datenotfuture');
-$form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'numeric');
 $form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivederror', 'ahis'), 'required');
-$form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'numeric');
-$form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'numeric');
+$form->addRule('dosesreceived', $this->objLanguage->languageText('mod_ahis_receivednumbererror', 'ahis'), 'numeric');
 $form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usederror', 'ahis'), 'required');
+$form->addRule('dosesused', $this->objLanguage->languageText('mod_ahis_usednumbererror', 'ahis'), 'numeric');
 $form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastederror', 'ahis'), 'required');
+$form->addRule('doseswasted', $this->objLanguage->languageText('mod_ahis_wastednumbererror', 'ahis'), 'numeric');
+
+
 
 $form->addToForm($formTable->show());
 
@@ -197,4 +220,6 @@ $objLayer->align = 'center';
 
 echo $objLayer->show(); 
 
+
 ?>
+

@@ -77,35 +77,12 @@ $header = new htmlheading();
 $header->type = 2;
 $header->str = $title;
 
+$formTable = $this->newObject('htmltable', 'htmlelements');
+$formTable->cellspacing = 2;
+$formTable->width = NULL;
+$formTable->cssClass = 'min50';
 
-/*if (isset($success)) {
 
-    $objMsg = $this->getObject('timeoutmessage','htmlelements');
-    $objMsg->setHideTypeToNone();
-    switch ($success) {
-        case 1:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_added', 'ahis')."<br />");
-            break;
-        case 2:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_deleted', 'ahis')."<br />");
-            break;
-        case 3:
-            $objMsg->setMessage($this->objLanguage->languageText('mod_ahis_updated', 'ahis')."<br />");
-
-            break;
-        case 4:
-            $objMsg->setMessage("<span class='error'>".$this->objLanguage->languageText('mod_ahis_duplicate', 'ahis')."</span><br />");
-            $objMsg->setTimeOut('0');
-            break;
-    }
-
-    $msg = $objMsg->show();
-
-} 
-else 
-{
-    $msg = 'Try adding the record again.';
-}*/
 
 
 $formTable = $this->newObject('htmltable', 'htmlelements');
@@ -192,26 +169,40 @@ $form->addRule('district', $this->objLanguage->languageText('mod_ahis_districter
 $form->addRule('classification', $this->objLanguage->languageText('mod_ahis_classificationerror','ahis'),'required');
 $form->addRule('purpose', $this->objLanguage->languageText('mod_ahis_purposeerror','ahis'),'select');
 $form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerror','ahis'),'required');
+
+$form->addRule('origin', $this->objLanguage->languageText('mod_ahis_originerrorone','ahis'),'letteronly');
+
 $form->addRule('destination', $this->objLanguage->languageText('mod_ahis_destinationerror','ahis'),'required');
-//$form->addRule('destination','Animal destination must contain letters of the alphabet only.', 'letteronly');
-//$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
+$form->addRule('destination','Animal destination must contain letters only.', 'letteronly');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserror', 'ahis'), 'required');
+$form->addRule('remarks', $this->objLanguage->languageText('mod_ahis_remarkserrorone', 'ahis'), 'required');
+
 
 //container-table
-$topTable = $this->newObject('htmltable', 'htmlelements');
- $topTable->startRow();
-$topTable->addCell($formTable->show());
-$topTable->endRow();
+//$topTable = $this->newObject('htmltable', 'htmlelements');
+ //$topTable->startRow();
+//$topTable->addCell($formTable->show());
+//$topTable->endRow();
 
-$form->addToForm($topTable->show());
- 
+$form->addToForm($formTable->show());
+
+ if (isset($error)) {
+    $formTable->startRow();
+    $formTable->addCell($error, NULL, NULL, NULL, NULL, "colspan=2");
+    $formTable->endRow();
+}
+
  $save = new button('animalmovement_save', 'Save');
  $save->setToSubmit();
  
- $cancel = new button('cancel','Cancel');
-$cancel->setToSubmit();
+ //$cancel = new button('cancel','Cancel');
+//$cancel->setToSubmit();
+$backUri = $this->uri(array('action' => 'select_officer'));
+$bButton = new button('back', $this->objLanguage->languageText('word_back'), "javascript: document.location='$backUri'");
 
+$form->addToForm($bButton->show());
 $form->addToForm($save->show(),NULL,NULL,'right');
-$form->addToForm($cancel->show());
+
 
 $objLayer = new layer();
 $objLayer->addToStr($header->show()."<hr />".$form->show());
@@ -220,13 +211,3 @@ $objLayer->align = 'center';
 echo $objLayer->show(); 
 
 ?>
-<style type="text/css">
-	.labels
-	{
-		padding-left:100px;		
-	}
-	.inputtextboxes
-	{
-		padding-left:200;
-	}
-</style>
