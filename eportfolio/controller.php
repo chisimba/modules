@@ -48,7 +48,10 @@ class eportfolio extends controller
         $this->objUrl = $this->getObject('url', 'strings');
         $this->_objGroupAdmin = &$this->newObject('groupadminmodel', 'groupadmin');
         $this->_objManageGroups = &$this->newObject('managegroups', 'contextgroups');
+        $this->objGroupsOps = $this->getObject('groupops', 'groupadmin');
+        $this->objGroupUsers = $this->getObject('groupusersdb', 'groupadmin');
         $this->_objDBContext = &$this->newObject('dbcontext', 'context');
+        $this->objContextUsers = $this->getObject('contextusers','contextgroups');
         //        $this->_objDBAssgnment = &$this->newObject('dbassignment','assignment');
         $this->_objDBEssay = &$this->newObject('dbessay_book', 'essay');
         $this->objFSContext = $this->newObject('fscontext', 'context');
@@ -1247,7 +1250,30 @@ class eportfolio extends controller
                 $this->nextAction($this->objDbTranscriptList->updateSingle($myid, $this->getParam('type', NULL) , $this->getParam('shortdescription', NULL) , $this->getParam('longdescription', NULL)));
                 return $this->nextAction('main', NULL);
                 break;
-
+            case "viewgroups":
+            	$this->setLayoutTemplate('eportfolio_layout_tpl.php');
+            	$this->setSession('showconfirmation', TRUE);
+                $myId = $this->getParam('id', null);
+		if(empty($myId))
+		$myId = $this->getSession('groupId', $groupId);
+                $this->setSession('groupId', $myId);
+		return $this->groupsHome($myId);
+		break;
+            case 'searchforusers':
+                return $this->searchForUsers();
+                break;
+            case 'viewsearchresults';
+	        $groupId = $this->getSession('groupId', $groupId);
+                return $this->getResults($this->getParam('page', 1));
+                break;
+            case 'addusers':
+                return $this->updateUserRoles();
+		break;
+            case 'removeuser':
+//		var_dump($this->getParam('userid'));
+//		exit;
+                return $this->removeUserFromGroup($this->getParam('userid'), $this->getParam('group'));
+		break;
             default:
                 return $this->showUserDetailsForm();
                 break;
@@ -1257,6 +1283,204 @@ class eportfolio extends controller
     {
         return 'main_tpl.php';
     }
+     /**
+    * Method to remove a user from a group
+    * @param string $userId User Id of the User
+    * @param string $group Group to be deleted from - either lecturers, students or guest
+    */
+    private function removeUserFromGroup($userId=NULL, $groupId=NULL)
+    {
+        if ($userId == '') {
+            return $this->nextAction(NULL, array('message'=>'nouseridprovidedfordelete'));
+        }
+        //$pkId = $this->objUser->PKId($userId);
+        $permid = $this->objGroupsOps->getUserByUserId($userId);
+	$pkId = $permid['perm_user_id'];
+        $deleteMember = $this->_objGroupAdmin->deleteGroupUser($groupId, $pkId);
+        return $this->nextAction('viewgroups', array('message'=>'userdeletedfromgroup'));
+    }
+
+    /**
+    * Method to show the list of users in a context
+    */
+    private function groupsHome($group)
+    {
+        // Generate an array of users in the context, and send it to page template
+        $this->prepareContextUsersArray();
+        
+        // Default Values for Search
+        $searchFor = $this->getSession('searchfor', '');
+        $this->setVar('searchfor', $searchFor);
+        
+        $field = $this->getSession('field', 'firstName');
+        $course=$this->getSession('course','course');
+        //$group=$this->getSession('group','group');
+        $this->setVar('field', $field);
+        $this->setVar('course', $course);
+        $this->setVar('group', $group);
+        
+        $confirmation = $this->getSession('showconfirmation', FALSE);
+        
+        $this->setVar('showconfirmation', $confirmation);
+        
+        //$this->setSession('showconfirmation', FALSE);
+        
+        
+        //Ehb-added-begin
+         $currentContextCode=$this->_objDBContext->getContextCode();
+                $where="where contextCode<>"."'".$currentContextCode."'";
+                $data=$this->_objDBContext->getAll($where);
+                $this->setVarByRef('data',$data);
+                    //Ehb-added-End
+      
+        
+        return 'grouphome_tpl.php';
+    }
+    
+    /**
+    * Method to Prepare a List of Users in a Context sorted by lecturer, student, guest
+    * The results are sent to the template
+    */
+    private function prepareContextUsersArray()
+    {
+        // Get Context Code
+        $contextCode = $this->_objDBContext->getContextCode();
+        $filter = " ORDER BY surname ";
+        
+        // Guests
+        //$gid=$this->_objGroupAdmin->getLeafId(array($contextCode,'Guest'));
+        $groupId = $this->getSession('groupId', $groupId);
+        $guests = $this->_objGroupAdmin->getGroupUsers($groupId, array('userid', 'firstName', 'surname', 'title', 'emailAddress', 'country', 'sex', 'staffnumber'), $filter);
+        $guestsArray = array();
+		if (count($guests) > 0)
+		{
+			foreach ($guests as $guest)
+			{
+				$guestsArray[] = $guest['userid'];
+			}
+		}
+        // Send to Template
+        $this->setVarByRef('guests', $guestsArray);
+        $this->setVarByRef('guestDetails', $guests);
+    }
+    /**
+    * Method to Update User Roles
+    */
+    private function updateUserRoles()
+    {
+        $groupId = $this->getSession('groupId', $groupId);        
+     
+        $changedItems = $_POST['changedItems'];
+        
+        $changedItems = explode(',', $changedItems);
+        array_shift($changedItems); 
+        $changedItems = array_unique($changedItems); 
+		
+        $groups =  $this->_objGroupAdmin->getTopLevelGroups();
+        foreach ($changedItems as $item)
+        {
+			$permid = $this->objGroupsOps->getUserByUserId($item);
+			$pkId = $permid['perm_user_id'];	
+			
+			//remove users 
+			$this->objGroupsOps->removeUser($groupId, $pkId);
+                    	$this->_objGroupAdmin->addGroupUser($groupId, $pkId);
+        }
+       // die;
+        return $this->nextAction('viewgroups', array('message'=>'usersupdated'));
+    }
+
+    /**
+    * Method to Show the Results for a Search
+    * @param int $page - Page of Results to show
+    */
+    private function getResults($page = 1)
+    {
+        $searchFor = $this->getSession('searchfor', '');
+        $field = $this->getSession('field', 'firstName');
+        
+         //Ehb-added-begin
+        $course=$this->getSession('course','course');
+        $group=$this->getSession('group','group');
+           //Ehb-added-End
+        $order = $this->getSession('order', 'firstName');
+        $numResults = $this->getSession('numresults', 20);
+        $groupId = $this->getSession('groupId', $groupId);
+        
+         
+        
+        $this->setVar('searchfor', $searchFor);
+        $this->setVar('field', $field);
+        $this->setVar('order', $order);
+        $this->setVar('numresults', $numResults);
+           //Ehb-added-begin
+        $this->setVar('course', $course);
+        $this->setVar('group', $group);
+           //Ehb-added-End
+        // Prevent Corruption of Page Value - Negative Values
+        if ($page < 1) {
+            $page = 1;
+        }
+        $currentContextCode=$this->_objDBContext->getContextCode();
+        $results = $this->objContextUsers->searchUsers($searchFor, $field, $order, $numResults, ($page-1),$course,$group);
+       
+        $this->setVarByRef('results', $results);
+        
+        $countResults = $this->objContextUsers->countResults();
+        
+        $this->setVarByRef('countResults', $countResults);
+        
+        $this->setVarByRef('page', $page);
+        
+        
+        $paging = $this->objContextUsers->generatePaging($searchFor, $field, $order, $numResults, ($page-1));
+        $this->setVarByRef('paging', $paging);
+        $contextCode = $this->_objDBContext->getContextCode();
+        $this->setVarByRef('contextCode', $contextCode);
+        
+        //Ehb-added-begin
+        $currentContextCode=$this->_objDBContext->getContextCode();
+                $where="where contextCode<>"."'".$currentContextCode."'";
+                $data=$this->_objDBContext->getAll($where);            
+                $this->setVarByRef('data',$data);
+                    //Ehb-added-End
+        
+        // Get Users into Arrays
+        $this->prepareContextUsersArray();
+        
+        
+        return 'searchresults_tpl.php';
+    }
+    /**
+    * Method to search for Users
+    * This function sets them as a session and then redirects to the results
+    */
+    private function searchForUsers()
+    {
+        $searchFor = $this->getParam('search');
+        $this->setSession('searchfor', $searchFor);
+        
+        $field = $this->getParam('field');
+        $this->setSession('field', $field);
+        
+        
+        //Ehb-added-begin
+       $course=$this->getParam('course');
+        $this->setSession('course', $course);
+        
+        $group=$this->getParam('group');
+        $this->setSession('group',$group);
+      //Ehb-added-End
+        
+        $order = $this->getParam('order');
+        $this->setSession('order', $order);
+                       
+        $numResults = $this->getParam('results');
+        $this->setSession('numresults', $numResults);
+        
+        return $this->nextAction('viewsearchresults');
+    }
+    
     /**
      * Method to get a list of courses a user is registered for
      * @return array
@@ -1383,7 +1607,7 @@ class eportfolio extends controller
     function processManagegroup($myId) 
     {
         $groupId = $myId;
-        if ($this->getParam('button') == 'save' && $groupId <> '') {
+         if ($this->getParam('button') == 'save' && $groupId <> '') {
             // Get the revised member ids
             if (is_array($this->getParam('list2'))) {
                 $list = $this->getParam('list2');
@@ -1392,14 +1616,18 @@ class eportfolio extends controller
             }
             // Get the original member ids
             $fields = array(
-                'tbl_users.id'
+                'id'
             );
-            $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields);
-            $oldList = $this->_objGroupAdmin->getField($memberList, 'id');
+            $memberList = &$this->_objGroupAdmin->getGroupUsers($groupId, $fields, Null);
+            //var_dump($memberList);
+            //$oldList = $this->_objGroupAdmin->getField($memberList, 'id');
             // Get the added member ids
-            $addList = array_diff($list, $oldList);
+            //$addList = array_diff($list, $oldList);
+            $addList = array_diff($list, $memberList);
+//            var_dump($addList);
             // Get the deleted member ids
-            $delList = array_diff($oldList, $list);
+            $delList = array_diff($memberList, $list);
+//                        var_dump($delList);
             // Add these members
             foreach($addList as $userId) {
                 $this->_objGroupAdmin->addGroupUser($groupId, $userId);
@@ -1469,7 +1697,9 @@ class eportfolio extends controller
             'tbl_users.id'
         );
         $memberList = $this->_objGroupAdmin->getGroupUsers($myid, $fields);
+        if(!empty($memberList))
         $memberIds = $this->_objGroupAdmin->getField($memberList, 'id');
+	if(!empty($memberIds)){
         $filter = "'" . implode("', '", $memberIds) . "'";
         // Users list need the firstname, surname, and userId fields.
         $fields = array(
@@ -1479,6 +1709,11 @@ class eportfolio extends controller
         );
         $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
         sort($usersList);
+        }else{
+        $filter = "";
+        $usersList = $this->_objGroupAdmin->getUsers($fields, " WHERE id NOT IN($filter)");
+        sort($usersList);        
+        }
         // Members list dropdown
         $lstMembers = $this->newObject('dropdown', 'htmlelements');
         $lstMembers->name = 'list2[]';
@@ -1502,10 +1737,14 @@ class eportfolio extends controller
         $lstUsers = $this->newObject('dropdown', 'htmlelements');
         $lstUsers->name = 'list1[]';
         $lstUsers->extra = ' multiple="multiple" style="width:100pt"  size="10" ondblclick="moveSelectedOptions(this.form[\'list1[]\'],this.form[\'list2[]\'],true)"';
+	if(!empty($usersList)){
         foreach($usersList as $user) {
             $fullName = $user['firstname'] . " " . $user['surname'];
             $userPKId = $user['id'];
             $lstUsers->addOption($userPKId, $fullName);
+        }
+        }else{
+         //   $lstUsers->addOption(Null, Null);
         }
         $tblLayoutU = &$this->newObject('htmltable', 'htmlelements');
         $tblLayoutU->row_attributes = 'align="center"';
@@ -1709,10 +1948,18 @@ class eportfolio extends controller
         // For each subgroup
         foreach($this->_arrSubGroups as $groupName => $groupId) {
             $newGroupId = $this->_objGroupAdmin->addGroup($groupName, $this->objUser->PKId($this->objUser->userId()) . ' ' . $groupName, $eportfolioGroupId);
+            // then add them as subGroups of the parent Group.
+            $data = array(
+                'group_id' => $eportfolioGroupId,
+                'subgroup_id' => $newGroupId
+            );
+            $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
             $this->_arrSubGroups[$groupName]['id'] = $newGroupId;
+            $newGroupId = $this->_objGroupAdmin->addGroupUser( $newGroupId, $this->objUser->userId() );
+            
         } // End foreach subgroup
         // Add groupMembers
-        $this->addGroupMembers();
+        //$this->addGroupMembers();
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userid, $title);
     } // End createGroups
@@ -1726,11 +1973,20 @@ class eportfolio extends controller
     {
         // user Pk id
         $userPid = $this->objUser->PKId($this->objUser->userId());
-        $usergroupId = $this->_objGroupAdmin->getId($userPid, $pkField = 'name');
+        $usergroupId = $this->_objGroupAdmin->getId($userPid);
         // Add subgroup
         $newGroupId = $this->_objGroupAdmin->addGroup($title, $userPid . ' ' . $groupName, $usergroupId);
+            // then add them as subGroups of the parent Group.
+            $data = array(
+                'group_id' => $usergroupId,
+                'subgroup_id' => $newGroupId
+            );
+            $newSubGroupId = $this->objLuAdmin->perm->assignSubGroup($data);
+
         // Add groupMembers
-        $this->addGroupMembers();
+        //$this->addGroupMembers();
+	$groupId = $this->_objGroupAdmin->addGroupUser( $newGroupId, $this->objUser->userId() );
+        
         // Now create the ACLS
         $this->_objManageGroups->createAcls($userPid, $title);
     } // End createGroups
@@ -1774,11 +2030,19 @@ class eportfolio extends controller
             'module' => 'eportfolio',
             'action' => 'add_group'
         )));
-        $addlink->link = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . ' ' . $iconAdd->show();
-        //$addlink->link = 'Add Group'.' '.$iconAdd->show();
+        $addlink->link = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' ' . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio');
+       $objLink = &$this->getObject('link', 'htmlelements');
+       $objLink->link($this->uri(array(
+	   'module' => 'eportfolio',
+	   'action' => 'add_group'
+       )));
+       $objLink->link = $iconAdd->show();
+       $mylinkAdd = $objLink->show();
+ 
+        $addlink->link = 'Add Group';
         $linkAdd = $addlink->show();
         $linkstableRow = array(
-            '<hr/>' . $linkAdd
+            '<hr/>' . $linkAdd.' '.$mylinkAdd
         );
         $linkstable->addRow($linkstableRow);
         //	$str .= $mngfeatureBox->show(NULL,$linkstable->show());
@@ -1786,17 +2050,26 @@ class eportfolio extends controller
         //Get group id
         $userPid = $this->objUser->PKId($this->objUser->userId());
         $this->setVarByRef('userPid', $this->userPid);
-        $usergroupId = $this->_objGroupAdmin->getId($userPid, $pkField = 'name');
+        $usergroupId = $this->_objGroupAdmin->getId($userPid);
+
         //get the descendents.
-        $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+//        $usersubgroups = $this->_objGroupAdmin->getChildren($usergroupId);
+        $usersubgroups = $this->_objGroupAdmin->getSubgroups($usergroupId);
         foreach($usersubgroups as $subgroup) {
             // The member list of this group
+	    $myGroupId = array();
+            foreach(array_keys($subgroup) as $myGrpId){         
+	     $myGroupId[] = $myGrpId;
+	    } 
+       }
             $fields = array(
                 'firstName',
                 'surname',
                 'tbl_users.id'
             );
-            $membersList = $this->_objGroupAdmin->getGroupUsers($subgroup['id'], $fields);
+       foreach($myGroupId as $groupId){
+            $membersList = $this->_objGroupAdmin->getGroupUsers($groupId, $fields);
+	    $groupName = $this->_objGroupAdmin->getName( $groupId );
             foreach($membersList as $users) {
                 if ($users) {
                     $fullName = $users['firstname'] . " " . $users['surname'];
@@ -1807,19 +2080,20 @@ class eportfolio extends controller
                     $table->addRow($tableRow);
                 } else {
                     $tableRow = array(
-                        '<div align="center" style="font-size:small;font-weight:bold;color:#CCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_eportfolio_wordManage', 'eportfolio') . '</div>'
+                        '<div align="left" style="font-size:small;font-weight:bold;color:#sCCCCCC;font-family: Helvetica, sans-serif;">' . $this->objLanguage->languageText('mod_eportfolio_wordManage', 'eportfolio') . '</div>'
                     );
                     $table->addRow($tableRow);
                 }
             }
+            
             //Add Users
             $iconManage = $this->getObject('geticon', 'htmlelements');
             $iconManage->setIcon('add_icon');
-            $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $subgroup['name'];
+            $iconManage->alt = $objLanguage->languageText("mod_eportfolio_add", 'eportfolio') . ' / ' . $objLanguage->languageText("word_edit") . ' ' . $groupName;
             $mnglink = new link($this->uri(array(
                 'module' => 'eportfolio',
-                'action' => 'manage_group',
-                'id' => $subgroup["id"]
+                'action' => 'viewgroups',
+                'id' => $groupId
             )));
             //	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$subgroup['name'].' '.$iconManage->show();
             $mnglink->link = $iconManage->show();
@@ -1827,11 +2101,11 @@ class eportfolio extends controller
             //Manage Group
             $iconShare = $this->getObject('geticon', 'htmlelements');
             $iconShare->setIcon('fileshare');
-            $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $subgroup['name'] . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
+            $iconShare->alt = $objLanguage->languageText("mod_eportfolio_configure", 'eportfolio') . ' ' . $groupName . ' ' . $this->objLanguage->code2Txt("mod_eportfolio_view", 'eportfolio');
             $mnglink = new link($this->uri(array(
                 'module' => 'eportfolio',
                 'action' => 'manage_eportfolio',
-                'id' => $subgroup["id"]
+                'id' => $groupId
             )));
             //	    		$mnglink->link = $objLanguage->languageText("mod_eportfolio_wordManage",'eportfolio').' '.$this->objLanguage->code2Txt("mod_eportfolio_wordEportfolio",'eportfolio').' '.$iconShare->show();
             $mnglink->link = $iconShare->show();
@@ -1840,8 +2114,8 @@ class eportfolio extends controller
                 '<hr/>' . $linkManage . '   ' . $linkMng
             );
             $table->addRow($tableRow);
-            $textinput = new textinput("groupname", $subgroup['name']);
-            $str.= $mngfeatureBox->show($subgroup['name'], $table->show());
+            $textinput = new textinput("groupname", $groupName);
+            $str.= $mngfeatureBox->show($groupName, $table->show());
             $table = &$this->newObject('htmltable', 'htmlelements');
             $managelink = new link();
         } //end foreach

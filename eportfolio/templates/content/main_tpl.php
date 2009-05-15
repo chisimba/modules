@@ -1,4 +1,5 @@
 <?php
+
 $this->loadClass('link', 'htmlelements');
 $this->loadClass('htmlheading', 'htmlelements');
 $this->loadClass('radio', 'htmlelements');
@@ -53,6 +54,7 @@ $objHeading->align = 'center';
 $objHeading->str = '<font color="#EC4C00">' . $objLanguage->languageText("mod_eportfolio_maintitle", 'eportfolio') . '</font>';
 echo $objHeading->show();
 echo "</br>";
+
 //Link to print pdf
 $iconPdf = $this->getObject('geticon', 'htmlelements');
 $iconPdf->setIcon('pdf');
@@ -99,32 +101,47 @@ $objHeading->type = 2;
 $objHeading->align = 'center';
 $objHeading->str = '<font color="#FF8800">' . $objUser->fullName() . ' ' . $objLanguage->languageText("mod_eportfolio_viewEportfolio", 'eportfolio') . '    ' . $linkpdfManage. '    ' . $linkviewManage  . '    ' . $linkExportManage  . '    ' . $linkImportManage  . '</font>';
 echo $objHeading->show();
+
 $objHeading->align = 'left';
 $objinfoTitles->type = 1;
 $objaddressTitles->type = 1;
 $objcontactTitles->type = 1;
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+
+$this->_objUser = $this->getObject ( 'user', 'security' );
+//$hasAccess = $this->objEngine->_objUser->isContextLecturer();
+//$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess = $this->_objUser->isAdmin();
+
 $this->setVar('pageSuppressXML', true);
 $link = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'view_contact'
 )));
 $link->link = 'View Identification Details';
+
 //echo '<br clear="left" />'.$link->show();
 //Create Owner and Guest group for user
-$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
+//$eportfoliogrpList = $this->_objGroupAdmin->getId($this->objUser->PKId($this->objUser->userId()) , $pkField = 'name');
+
+$eportfoliogrpList = $this->_objGroupAdmin->getId($name = $this->objUser->PKId($this->objUser->userId()));
+
 if (empty($eportfoliogrpList)) {
     //Add User to context groups
     $title = $this->objUser->PKId($this->objUser->userId()) . ' ' . $objUser->getSurname();
     $this->createGroups($this->objUser->PKId($this->objUser->userId()) , $title);
 }
+
 //End Create
 //View Other's eportfolio
 //getUserDirectGroups
 $groupexists = 0;
-$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->PKId($this->objUser->userId()));
 $myPid = $this->objUser->PKId($this->objUser->userId());
+//$myGroups = $this->_objGroupAdmin->getUserGroups($this->objUser->userId());
+$myGroupsId = $this->_objGroupAdmin->getId($myPid);
+$myGroups = $this->_objGroupAdmin->getSubgroups($myGroupsId);
+//var_dump($myGroups);
+
 // Create a table object for eportfolio
 $epTable = &$this->newObject("htmltable", "htmlelements");
 $epTable->border = 0;
@@ -136,7 +153,12 @@ $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_owner", 'ep
 $epTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_wordGroup", 'eportfolio') . "</b>", '', '', 'left', '', '');
 $epTable->endRow();
 foreach($myGroups as $groupId) {
-    $filter = " WHERE id = '$groupId'";
+    //get the array key value
+    foreach(array_keys($groupId) as $myGrpId)
+     $groupId = $myGrpId;
+
+    $filter = " WHERE id = '".$groupId."'";
+/*    
     $parentId = $this->_objGroupAdmin->getGroups($fields = array(
         "id",
         "name",
@@ -144,6 +166,12 @@ foreach($myGroups as $groupId) {
     ) , $filter);
     $myparentId = $parentId[0];
     $ownerId = $this->_objGroupAdmin->getname($myparentId['parent_id']);
+*/
+$myownerId = $this->_objGroupAdmin->getGroupUsers( $groupId, $fields = null, $filter = null );
+
+
+$ownerId=$myownerId[0]['perm_user_id'];
+    //if ($ownerId !== $myPid) 
     if ($ownerId !== $myPid) {
         $fullname = $this->objUserAdmin->getUserDetails($ownerId);
         if (!empty($fullname)) {
@@ -171,12 +199,14 @@ foreach($myGroups as $groupId) {
         }
     }
 }
+
 if ($groupexists == 0) {
     $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
     $epTable->startRow();
     $epTable->addCell($notestsLabel, '', '', 'left', '', 'colspan="3"');
     $epTable->endRow();
 }
+
 //View Other's eportfolio
 //Start Address View
 $notestsLabel = $this->objLanguage->languageText('mod_eportfolio_norecords', 'eportfolio');
@@ -269,6 +299,7 @@ $mainlink = new link($this->uri(array(
     'module' => 'eportfolio',
     'action' => 'add_address'
 )));
+
 $mainlink->link = $objLanguage->languageText("mod_eportfolio_addAddress", 'eportfolio');
 $addressTable->startRow();
 $addressTable->addCell($mainlink->show() , '', '', '', '', '', 'colspan="8"');
@@ -313,9 +344,11 @@ $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_countr
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_areacode", 'eportfolio') . "</b>");
 $contactTable->addCell("<b>" . $objLanguage->languageText("mod_eportfolio_contactnumber", 'eportfolio') . "</b>");
 $contactTable->endRow();
+
 // Step through the list of contacts
 if (!empty($contactList)) {
     foreach($contactList as $contactItem) {
+
         // Display each field for contacts
         $cattype = $this->objDbCategorytypeList->listSingle($contactItem['type']);
         $modetype = $this->objDbCategorytypeList->listSingle($contactItem['contact_type']);
@@ -481,7 +514,7 @@ if (empty($demographicsList)) {
     $demographicsTable->addCell($demographicsobjHeading->show() , '', '', '', '', 'colspan="4"');
     $demographicsTable->endRow();
     //echo $objHeading->show();
-    
+
 } else {
     $demographicsobjHeading->str = $objLanguage->languageText("mod_eportfolio_demographics", 'eportfolio');
     $demographicsTable->startRow();
@@ -1331,8 +1364,8 @@ $reflectionTable->endRow();
 // echo $reflectionTable->show();
 //End View Reflection
 //View assertions
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess = $this->_objUser->isAdmin();
 //$this->setVar('pageSuppressXML',true);
 if (!$hasAccess) {
     //Language Items
@@ -1355,7 +1388,7 @@ if (!$hasAccess) {
     $assertionsobjHeading->type = 3;
     $assertionsobjHeading->str = $objLanguage->languageText("mod_eportfolio_wordAssertion", 'eportfolio') . '&nbsp;&nbsp;&nbsp;' . $assertionslinkAdd;
     //  echo $assertionsobjHeading->show();
-    $Id = $this->_objGroupAdmin->getUserGroups($userPid);
+//    $Id = $this->_objGroupAdmin->getUserGroups($userPid);
     // Create a table object
     $assertionstable = &$this->newObject("htmltable", "htmlelements");
     $assertionstable->border = 0;
@@ -1373,11 +1406,17 @@ if (!$hasAccess) {
     $assertionstable->endRow();
     // Step through the list of addresses.
     $class = NULL;
-    if (!empty($Id)) {
-        foreach($Id as $groupId) {
+//    if (!empty($Id))
+      if (!empty($myGroups)) {
+        foreach($myGroups as $groupId) {
             //Get the group parent_id
-            $parentId = $this->_objGroupAdmin->getParent($groupId);
-            foreach($parentId as $myparentId) {
+	    foreach(array_keys($groupId) as $myGrpId)
+	     $groupId = $myGrpId;
+
+//            $parentId = $this->_objGroupAdmin->getParent($groupId);
+	$myownerId = $this->_objGroupAdmin->getGroupUsers( $groupId, $fields = null, $filter = null );
+//var_dump($myownerId[0]['perm_user_id']);
+//            foreach($parentId as $myparentId) {
                 //Get the name from group table
                 $assertionId = $this->_objGroupAdmin->getName($myparentId['parent_id']);
                 $assertionslist = $this->objDbAssertionList->listSingle($assertionId);
@@ -1404,13 +1443,14 @@ if (!$hasAccess) {
                     $assertionstable->endRow();
                 }
                 unset($myparentId);
-            }
+            //}
             unset($groupId);
         }
     } else {
         $assertionstable->startRow();
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
+
     }
     //echo $assertionstable->show();
     
@@ -1527,6 +1567,7 @@ if (!$hasAccess) {
         $assertionstable->startRow();
         $assertionstable->addCell($notestsLabel, '', '', '', 'noRecordsMessage', 'colspan="5"');
         $assertionstable->endRow();
+
     }
     //echo $assertionstable->show();
     $assertionsaddlink = new link($this->uri(array(
@@ -1540,10 +1581,11 @@ if (!$hasAccess) {
     //echo $assertionstable->show();
     
 } //end else hasAccess
+
 //End View Assertions
 //View category
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess = $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 if ($hasAccess) {
     //Language Items
@@ -1643,8 +1685,8 @@ if ($hasAccess) {
 }
 //End View category
 //View categorytype
-$hasAccess = $this->objEngine->_objUser->isContextLecturer();
-$hasAccess|= $this->objEngine->_objUser->isAdmin();
+$hasAccess = $this->_objUser->isContextLecturer();
+$hasAccess = $this->_objUser->isAdmin();
 $this->setVar('pageSuppressXML', true);
 if ($hasAccess) {
     //Language Items
@@ -1862,6 +1904,7 @@ $this->objmainTab->addTab(array(
     'name' => $this->objLanguage->code2Txt("mod_eportfolio_wordReflections", 'eportfolio') ,
     'content' => $reflectionpage
 ));
+
 //assertions Title
 $objassertionsTitles->str = $objUser->getSurname() . $objLanguage->languageText("mod_eportfolio_assertionList", 'eportfolio');
 $assertionspage.= $featureBox->show($objassertionsTitles->show() , $assertionstable->show() , 'box10', 'default', TRUE);

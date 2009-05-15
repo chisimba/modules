@@ -37,6 +37,7 @@ $row = array(
 );
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
+/*
 //parent goal label
 $row = array(
     "<b>" . $label = $objLanguage->languageText("mod_eportfolio_parent", 'eportfolio') . ":</b>"
@@ -63,6 +64,7 @@ $row = array(
 $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
 //end Goals drop down list
+*/
 //type drop down list
 $mydropdown = new dropdown('goal_type');
 if (!empty($categorytypeList)) {

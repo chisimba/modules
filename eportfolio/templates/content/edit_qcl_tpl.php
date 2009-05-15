@@ -96,12 +96,12 @@ $objTable->addCell($row[0], Null, 'top', 'left');
 $objTable->endRow();
 //award date text field
 $row = array(
-    "<b>" . $label = $objLanguage->code2Txt("mod_eportfolio_qclawarddate", 'eportfolio') . ":</b>"
+    "<b>" . $label = $objLanguage->code2Txt("mod_eportfolio_activityfinish", 'eportfolio') . ":</b>"
 );
 $objTable->startRow();
 $objTable->addCell($row[0], 140, 'bottom', 'right');
 $startField = $this->objPopupcal->show('award_date', 'yes', 'no', $award_date);
-$form->addRule('award_date', 'Please enter the award date', 'required');
+$form->addRule('award_date', 'Please enter the finish date', 'required');
 $row = array(
     $startField
 );

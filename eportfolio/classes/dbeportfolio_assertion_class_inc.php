@@ -100,4 +100,3 @@ class dbEportfolio_Assertion extends dbTable
     }
 }
 ?>
-
