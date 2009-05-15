@@ -507,10 +507,8 @@ class tribe extends controller {
                                 // Bang the array into a table to keep a record of it.
                                 $poster = explode('/', $pl['from']);
                                 $poster = $poster[0];
-log_debug("Entering checks");
                                 // check for any @user tags and send the message to them too
                                 $fwd = $this->objImView->getAtTagsArr($pl['body']);
-log_debug($fwd);
                                 if(!empty($fwd)) {
                                     foreach($fwd as $f) {
                                         // check if the @ tag is a group name
@@ -552,7 +550,6 @@ log_debug($fwd);
                                     }
                                 }
                                 else {
-                                    log_debug("not an @ tag");
                                     // not an @ tag
                                     $add = $this->objDbMsgs->addRecord ( $pl, NULL);
                                     // send a message to the poster
